@@ -72,11 +72,14 @@
     <labelShortAdj>water-dependent</labelShortAdj>
     <description>Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long.</description>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>1</biostatMet>
+    <biostatMet>2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_WaterDependent</iconPath>
     <iconColor>(0.4, 0.6, 0.9)</iconColor>
+    <enablesNeeds>
+      <li>Wetness</li>
+    </enablesNeeds>
   </GeneDef>
 
 

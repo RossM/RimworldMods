@@ -1,4 +1,31 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
+  <ThoughtDef>
+    <defName>NeedBeauty</defName>
+    <workerClass>XylRacesNixie.ThoughtWorker_NeedWetness</workerClass>
+    <stages>
+      <li>
+        <label>parched</label>
+        <description>My skin is cracked and bleeding. Please! I need water!</description>
+        <baseMoodEffect>-10</baseMoodEffect>
+      </li>
+      <li>
+        <label>very dry skin</label>
+        <description>My skin is dry and itchy. It's very unpleasant.</description>
+        <baseMoodEffect>-6</baseMoodEffect>
+      </li>
+      <li>
+        <label>dry skin</label>
+        <description>My skin is a bit dry. I should find some water.</description>
+        <baseMoodEffect>-3</baseMoodEffect>
+      </li>
+      <li>
+        <label>soaking wet</label>
+        <description>I'm soaking wet and I love it!</description>
+        <baseMoodEffect>3</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
 </Defs>
