@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <JobDef>
+    <defName>Swim</defName>
+    <driverClass>XylRacesNixie.JobDriver_Swim</driverClass>
+    <reportString>going for a swim.</reportString>
+    <joyDuration>8000</joyDuration>
+  </JobDef>
+
+</Defs>

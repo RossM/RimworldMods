@@ -42,14 +42,15 @@ namespace XylRacesNixie
         {
             get
             {
-                return CurLevel switch
-                {
-                    >= 0.90f => WetnessCategory.Wet,
-                    >= 0.67f => WetnessCategory.Neutral,
-                    >= 0.34f => WetnessCategory.Dry,
-                    >= 0.01f => WetnessCategory.VeryDry,
-                    _ => WetnessCategory.Parched
-                };
+                if (CurLevel >= 0.90f)
+                    return WetnessCategory.Wet;
+                if (CurLevel >= 0.67f)
+                    return WetnessCategory.Neutral;
+                if (CurLevel >= 0.34f)
+                    return WetnessCategory.Dry;
+                if (CurLevel >= 0.01f)
+                    return WetnessCategory.VeryDry;
+                return WetnessCategory.Parched;
             }
         }
     }

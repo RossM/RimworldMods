@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 
 namespace XylRacesNixie
@@ -12,14 +7,15 @@ namespace XylRacesNixie
     {
         protected override ThoughtState CurrentStateInternal(Pawn p)
         {
-            return p.needs.TryGetNeed<Need_Wetness>()?.CurCategory switch
-            {
-                WetnessCategory.Parched => ThoughtState.ActiveAtStage(0),
-                WetnessCategory.VeryDry => ThoughtState.ActiveAtStage(1),
-                WetnessCategory.Dry => ThoughtState.ActiveAtStage(2),
-                WetnessCategory.Wet => ThoughtState.ActiveAtStage(3),
-                _ => ThoughtState.Inactive,
-            };
+            if (p.needs.TryGetNeed<Need_Wetness>()?.CurCategory == WetnessCategory.Parched)
+                return ThoughtState.ActiveAtStage(0);
+            if (p.needs.TryGetNeed<Need_Wetness>()?.CurCategory == WetnessCategory.VeryDry)
+                return ThoughtState.ActiveAtStage(1);
+            if (p.needs.TryGetNeed<Need_Wetness>()?.CurCategory == WetnessCategory.Dry)
+                return ThoughtState.ActiveAtStage(2);
+            if (p.needs.TryGetNeed<Need_Wetness>()?.CurCategory == WetnessCategory.Wet)
+                return ThoughtState.ActiveAtStage(3);
+            return ThoughtState.Inactive;
         }
     }
 }
