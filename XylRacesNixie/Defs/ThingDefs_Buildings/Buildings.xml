@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <ThingDef ParentName="BuildingBase">
+    <defName>Shower</defName>
+    <label>shower</label>
+    <description>A shower that can satisfy the wetness need of water-dependent pawns.</description>
+    <graphicData>
+      <texPath>Things/Building/Joy/Shower</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1.5,1.5)</drawSize>
+      <drawOffset>(0,0,0.25)</drawOffset>
+    </graphicData>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <thingCategories>
+      <li>BuildingsMisc</li>
+    </thingCategories>
+    <altitudeLayer>Building</altitudeLayer>
+    <rotatable>false</rotatable>
+    <minTechLevelToBuild>Medieval</minTechLevelToBuild>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <statBases>
+      <MaxHitPoints>100</MaxHitPoints>
+      <WorkToBuild>1200</WorkToBuild>
+      <Mass>10</Mass>
+      <Flammability>0.0</Flammability>
+    </statBases>
+    <stuffCategories>
+      <li>Metallic</li>
+    </stuffCategories>
+    <building>
+      <paintable>true</paintable>
+    </building>
+    <costStuffCount>50</costStuffCount>
+    <pathCost>14</pathCost>
+    <designationCategory>Misc</designationCategory>
+    <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+  </ThingDef>
+</Defs>

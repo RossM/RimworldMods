@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <GeneDef>
+    <defName>PsyBeckon</defName>
+    <label>beckon</label>
+    <description>Carriers automatically learn the Beckon psycast, which psychically commands the target to approach the caster.</description>
+    <iconPath>UI/Abilities/Beckon</iconPath>
+    <displayCategory>Ability</displayCategory>
+    <marketValueFactor>1.5</marketValueFactor>
+    <abilities>
+      <li>Beckon</li>
+    </abilities>
+    <descriptionHyperlinks>
+      <AbilityDef>Beckon</AbilityDef>
+    </descriptionHyperlinks>
+    <biostatMet>-2</biostatMet>
+    <symbolPack>
+      <wholeNameSymbols>
+        <li><symbol>siren</symbol></li>
+        <li><symbol>caller</symbol></li>
+      </wholeNameSymbols>
+      <prefixSymbols>
+        <li><symbol>song</symbol></li>
+        <li><symbol>dream</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>caller</symbol></li>
+        <li><symbol>singer</symbol></li>
+      </suffixSymbols>
+    </symbolPack>
+ </GeneDef>
+
+  <GeneDef>
+    <defName>Scaleskin</defName>
+    <label>scaleskin</label>
+    <labelShortAdj>scaleskinned</labelShortAdj>
+    <description>Carriers of this gene grow tough scales all over their body, which gives some protection against damage.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-3</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>400</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Scaleskin</iconPath>
+    <iconColor>(0.4, 0.65, 0.75)</iconColor>
+    <hairTagFilter>
+      <whitelist>true</whitelist>
+      <tags>
+        <li>Bald</li>
+      </tags>
+    </hairTagFilter>
+      <beardTagFilter>
+      <whitelist>true</whitelist>
+      <tags>
+        <li>NoBeard</li>
+      </tags>
+    </beardTagFilter>
+    <exclusionTags>
+      <li>HairStyle</li>
+      <li>Fur</li>
+      <li>BeardStyle</li>
+    </exclusionTags>
+    <statOffsets>
+      <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
+      <ArmorRating_Blunt>0.15</ArmorRating_Blunt>
+    </statOffsets>
+    <missingGeneRomanceChanceFactor>0.2</missingGeneRomanceChanceFactor>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>WaterDependent</defName>
+    <label>water dependent</label>
+    <labelShortAdj>water-dependent</labelShortAdj>
+    <description>Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>1</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>500</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_WaterDependent</iconPath>
+    <iconColor>(0.4, 0.6, 0.9)</iconColor>
+  </GeneDef>
+
+
+</Defs>
