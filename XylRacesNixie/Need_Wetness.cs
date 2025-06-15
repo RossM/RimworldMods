@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace XylRacesNixie
@@ -24,11 +25,11 @@ namespace XylRacesNixie
                 {
                     TerrainDef terrain = this.pawn.Position.GetTerrain(this.pawn.Map);
                     WeatherDef curWeatherLerped = this.pawn.Map.weatherManager.CurWeatherLerped;
-                    if (terrain.traversedThought?.defName == "SoakingWet")
+
+                    if (terrain.IsWater)
                         lastInstantWetness = 1.0f;
-                    else if (curWeatherLerped.weatherThought?.defName == "SoakingWet" &&
-                             !this.pawn.Position.Roofed(this.pawn.Map))
-                        lastInstantWetness = 1.0f;
+                    else if (!this.pawn.Position.Roofed(this.pawn.Map))
+                        lastInstantWetness = Mathf.Clamp01(curWeatherLerped.rainRate / 0.25f);
                     else
                         lastInstantWetness = 0.0f;
                 }
