@@ -9,6 +9,8 @@ namespace XylRacesNixie
         private int lastInstantWetnessCheckTick;
         private float lastInstantWetness;
 
+        public bool IsShowering { get; set; }
+
         public Need_Wetness(Pawn pawn) : base(pawn)
         {
         }
@@ -19,6 +21,9 @@ namespace XylRacesNixie
                 if (lastInstantWetnessCheckTick == Find.TickManager.TicksGame) return lastInstantWetness;
                 lastInstantWetnessCheckTick = Find.TickManager.TicksGame;
 
+                if (IsShowering && !(pawn.CurJob?.GetCachedDriver(pawn) is JobDriver_TakeShower))
+                    IsShowering = false;
+
                 if (!this.pawn.Spawned)
                     lastInstantWetness = 0.0f;
                 else
@@ -26,14 +31,15 @@ namespace XylRacesNixie
                     TerrainDef terrain = this.pawn.Position.GetTerrain(this.pawn.Map);
                     WeatherDef curWeatherLerped = this.pawn.Map.weatherManager.CurWeatherLerped;
 
-                    if (terrain.IsWater)
+                    if (IsShowering)
+                        lastInstantWetness = 1.0f;
+                    else if (terrain.IsWater)
                         lastInstantWetness = 1.0f;
                     else if (!this.pawn.Position.Roofed(this.pawn.Map))
                         lastInstantWetness = Mathf.Clamp01(curWeatherLerped.rainRate / 0.25f);
                     else
                         lastInstantWetness = 0.0f;
                 }
-
 
                 return lastInstantWetness;
             }

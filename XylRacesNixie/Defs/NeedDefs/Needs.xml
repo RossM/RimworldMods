@@ -10,6 +10,8 @@
     <seekerRisePerHour>0.6667</seekerRisePerHour>
     <seekerFallPerHour>0.0139</seekerFallPerHour>
     <onlyIfCausedByGene>true</onlyIfCausedByGene>
+    <freezeWhileSleeping>false</freezeWhileSleeping>
+    <freezeInMentalState>false</freezeInMentalState>
   </NeedDef>
 
 </Defs>

@@ -1,11 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Patch>
   
-  <!--<Operation Class="PatchOperationInsert">
+  <Operation Class="PatchOperationInsert">
     <xpath>Defs/ThinkTreeDef//li[@Class="JobGiver_Meditate"]</xpath>
     <value>
-      <li Class="XylRacesNixie.JobGiver_GetWetness" />
+      <li Class="XylRacesNixie.JobGiver_GetWetness">
+        <thingDefs>
+          <li>Shower</li>
+        </thingDefs>
+        <showerJobDef>TakeShower</showerJobDef>
+      </li>
     </value>
-  </Operation>-->
+  </Operation>
 
 </Patch>

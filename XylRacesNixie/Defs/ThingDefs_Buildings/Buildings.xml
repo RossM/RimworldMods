@@ -17,6 +17,7 @@
     </thingCategories>
     <altitudeLayer>Building</altitudeLayer>
     <rotatable>false</rotatable>
+    <hasInteractionCell>True</hasInteractionCell>
     <minTechLevelToBuild>Medieval</minTechLevelToBuild>
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
     <statBases>
@@ -24,13 +25,14 @@
       <WorkToBuild>1200</WorkToBuild>
       <Mass>10</Mass>
       <Flammability>0.0</Flammability>
+      <Beauty>-2</Beauty>
     </statBases>
     <stuffCategories>
       <li>Metallic</li>
     </stuffCategories>
-    <building>
-      <paintable>true</paintable>
-    </building>
+    <placeWorkers>
+      <li>PlaceWorker_PreventInteractionSpotOverlap</li>
+    </placeWorkers>
     <costStuffCount>50</costStuffCount>
     <pathCost>14</pathCost>
     <designationCategory>Misc</designationCategory>
