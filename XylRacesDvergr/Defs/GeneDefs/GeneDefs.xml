@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <GeneDef>
+    <defName>Industrious</defName>
+    <label>industrious</label>
+    <labelShortAdj>industrious</labelShortAdj>
+    <description>Carriers of this gene are exceptionally fast workers.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-3</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>400</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Industrious</iconPath>
+    <iconColor>(0.4, 0.75, 0.90)</iconColor>
+    <statOffsets>
+      <WorkSpeedGlobal>0.15</WorkSpeedGlobal>
+    </statOffsets>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>Moody</defName>
+    <label>moody</label>
+    <labelShortAdj>moody</labelShortAdj>
+    <description>Carriers of this gene always have the Tortured Artist trait, which gives them a permanent mood debuff but also grants a chance to gain creative inspiration after a mental break.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>3</biostatMet>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <iconColor>(0.80, 0.20, 0.10)</iconColor>
+    <forcedTraits>
+      <li>
+        <def>TorturedArtist</def>
+      </li>
+    </forcedTraits>
+  </GeneDef>
+
+</Defs>

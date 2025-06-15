@@ -42,22 +42,8 @@
     <displayOrderInCategory>400</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_Scaleskin</iconPath>
     <iconColor>(0.4, 0.65, 0.75)</iconColor>
-    <hairTagFilter>
-      <whitelist>true</whitelist>
-      <tags>
-        <li>Bald</li>
-      </tags>
-    </hairTagFilter>
-      <beardTagFilter>
-      <whitelist>true</whitelist>
-      <tags>
-        <li>NoBeard</li>
-      </tags>
-    </beardTagFilter>
     <exclusionTags>
-      <li>HairStyle</li>
       <li>Fur</li>
-      <li>BeardStyle</li>
     </exclusionTags>
     <statOffsets>
       <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
