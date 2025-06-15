@@ -5,7 +5,7 @@
     <defName>TakeShower</defName>
     <driverClass>XylRacesNixie.JobDriver_TakeShower</driverClass>
     <reportString>taking a shower.</reportString>
-    <joyDuration>8000</joyDuration>
+    <joyDuration>3000</joyDuration>
   </JobDef>
 
 </Defs>

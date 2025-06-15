@@ -23,9 +23,12 @@ namespace XylRacesNixie
 
             var need_wetness = pawn.needs?.TryGetNeed<Need_Wetness>();
 
+            var startTick = Find.TickManager.TicksGame;
+
             Toil work = ToilMaker.MakeToil("MakeNewToils");
             work.defaultCompleteMode = ToilCompleteMode.Delay;
             work.defaultDuration = job.def.joyDuration;
+            work.WithProgressBar(TargetIndex.A, () => (float)(Find.TickManager.TicksGame - startTick) / job.def.joyDuration);
             work.AddPreTickIntervalAction((int delta) =>
             {
                 if (need_wetness != null && need_wetness.CurLevel > 0.9999f)

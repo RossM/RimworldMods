@@ -7,7 +7,7 @@
     <label>wetness</label>
     <description>People with the water dependence gene need to keep their skin moist by periodically soaking in water. This need can be met by standing in water, being outside in the rain, or using a shower.</description>
     <minIntelligence>Humanlike</minIntelligence>
-    <seekerRisePerHour>0.6667</seekerRisePerHour>
+    <seekerRisePerHour>0.2641</seekerRisePerHour>
     <seekerFallPerHour>0.0139</seekerFallPerHour>
     <onlyIfCausedByGene>true</onlyIfCausedByGene>
     <freezeWhileSleeping>false</freezeWhileSleeping>
