@@ -1,0 +1,10 @@
+C:\Users\rossm\Source\Repos\RimworldMods\XylRacesDvergr\bin\Debug\net4.7.1\XylRacesDvergr.dll
+C:\Users\rossm\Source\Repos\RimworldMods\XylRacesDvergr\bin\Debug\net4.7.1\XylRacesDvergr.pdb
+C:\Users\rossm\Source\Repos\RimworldMods\XylRacesDvergr\obj\Debug\net4.7.1\XylRacesDvergr.csproj.AssemblyReference.cache
+C:\Users\rossm\Source\Repos\RimworldMods\XylRacesDvergr\obj\Debug\net4.7.1\XylRacesDvergr.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\rossm\Source\Repos\RimworldMods\XylRacesDvergr\obj\Debug\net4.7.1\XylRacesDvergr.AssemblyInfoInputs.cache
+C:\Users\rossm\Source\Repos\RimworldMods\XylRacesDvergr\obj\Debug\net4.7.1\XylRacesDvergr.AssemblyInfo.cs
+C:\Users\rossm\Source\Repos\RimworldMods\XylRacesDvergr\obj\Debug\net4.7.1\XylRacesDvergr.csproj.CoreCompileInputs.cache
+C:\Users\rossm\Source\Repos\RimworldMods\XylRacesDvergr\obj\Debug\net4.7.1\XylRacesDvergr.sourcelink.json
+C:\Users\rossm\Source\Repos\RimworldMods\XylRacesDvergr\obj\Debug\net4.7.1\XylRacesDvergr.dll
+C:\Users\rossm\Source\Repos\RimworldMods\XylRacesDvergr\obj\Debug\net4.7.1\XylRacesDvergr.pdb

@@ -1,0 +1,53 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\rossm\\Source\\Repos\\RimworldMods\\XylRacesDvergr\\XylRacesDvergr.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\rossm\\Source\\Repos\\RimworldMods\\XylRacesDvergr\\XylRacesDvergr.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\rossm\\Source\\Repos\\RimworldMods\\XylRacesDvergr\\XylRacesDvergr.csproj",
+        "projectName": "XylRacesDvergr",
+        "projectPath": "C:\\Users\\rossm\\Source\\Repos\\RimworldMods\\XylRacesDvergr\\XylRacesDvergr.csproj",
+        "packagesPath": "C:\\Users\\rossm\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\rossm\\Source\\Repos\\RimworldMods\\XylRacesDvergr\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\rossm\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net4.7.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://www.nuget.org/api/v2/": {}
+        },
+        "frameworks": {
+          "net471": {
+            "targetAlias": "net4.7.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net471": {
+          "targetAlias": "net4.7.1",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
