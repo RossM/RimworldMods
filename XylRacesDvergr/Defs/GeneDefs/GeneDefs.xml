@@ -57,9 +57,9 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>Fungivore</defName>
-    <label>fungivore</label>
-    <labelShortAdj>fungivorous</labelShortAdj>
+    <defName>FungusEater</defName>
+    <label>fungus eater</label>
+    <labelShortAdj>fungus-eating</labelShortAdj>
     <description>Carriers of this gene have special digestive enzymes that extract more nutrition from raw fungus - but they don't do anything about the taste.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
@@ -72,6 +72,9 @@
     <statFactors>
       <RawFungusNutritionFactor>1.8</RawFungusNutritionFactor>
     </statFactors>
+    <customEffectDescriptions>
+      <li>Enables building: Fungus still.</li>
+    </customEffectDescriptions>
   </GeneDef>
 
 </Defs>

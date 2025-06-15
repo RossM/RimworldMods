@@ -66,6 +66,9 @@
     <enablesNeeds>
       <li>Wetness</li>
     </enablesNeeds>
+    <customEffectDescriptions>
+      <li>Enables building: Shower.</li>
+    </customEffectDescriptions>
   </GeneDef>
 
 
