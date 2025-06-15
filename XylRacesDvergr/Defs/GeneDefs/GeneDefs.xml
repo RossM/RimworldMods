@@ -77,4 +77,28 @@
     </customEffectDescriptions>
   </GeneDef>
 
+  <GeneDef ParentName="GeneEarsBase">
+    <defName>Ears_SmallPointed</defName>
+    <label>small pointed ears</label>
+    <description>Carriers of this gene have smaller pointed ears.</description>
+    <iconPath>UI/Icons/Genes/Gene_EarPointed</iconPath>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <texPath>Things/Pawn/Humanlike/HeadAttachments/SmallPointedEars/SmallPointedEars</texPath>
+        <colorType>Skin</colorType>
+        <parentTagDef>Head</parentTagDef>
+        <useSkinShader>true</useSkinShader>
+        <useRottenColor>true</useRottenColor>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <drawData>
+          <defaultData>
+            <layer>61</layer>
+          </defaultData>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+  </GeneDef>
+
 </Defs>
