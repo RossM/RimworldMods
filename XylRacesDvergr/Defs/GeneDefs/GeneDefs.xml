@@ -35,4 +35,20 @@
     </forcedTraits>
   </GeneDef>
 
+  <GeneDef>
+    <defName>Stoic</defName>
+    <label>stoic</label>
+    <labelShortAdj>stoic</labelShortAdj>
+    <description>Carriers of this gene are hard to phase.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Stoic</iconPath>
+    <iconColor>(0.5, 0.5, 0.5)</iconColor>
+    <statOffsets>
+      <MentalBreakThreshold>-0.09</MentalBreakThreshold>
+    </statOffsets>
+  </GeneDef>
+
 </Defs>
