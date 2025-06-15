@@ -1,6 +1,5 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using Verse;
 using Verse.AI;
 
@@ -79,7 +78,6 @@ namespace XylRacesCore
             // TODO: Hook up GoSwimming when Odyssey comes out
 
             Thing bestThing = FindBestShower(pawn);
-            Log.Message($"Best shower: {bestThing}");
             if (bestThing != null)
                 return JobMaker.MakeJob(showerJobDef, bestThing);
 

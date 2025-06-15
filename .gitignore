@@ -5,3 +5,6 @@ XylRacesNixie/.vs/XylRacesNixie/v17/.suo
 /XylRacesNixie/Assemblies
 /XylRacesNixie/obj
 *.user
+/Source/.vs
+/Source/obj
+/Source/bin
