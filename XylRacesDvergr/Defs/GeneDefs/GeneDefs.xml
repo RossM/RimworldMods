@@ -18,16 +18,18 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>Moody</defName>
-    <label>moody</label>
-    <labelShortAdj>moody</labelShortAdj>
-    <description>Carriers of this gene always have the Tortured Artist trait, which gives them a permanent mood debuff but also grants a chance to gain creative inspiration after a mental break.</description>
+    <defName>Melancholy</defName>
+    <label>melancholy</label>
+    <labelShortAdj>melancholy</labelShortAdj>
+    <description>Carriers of this gene always have the tortured artist trait, which gives them a permanent mood penalty but also grants a chance to gain creative inspiration after a mental break.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
-    <iconColor>(0.80, 0.20, 0.10)</iconColor>
+    <iconPath>UI/Icons/Genes/Gene_Melancholy</iconPath>
+    <exclusionTags>
+      <li>Mood</li>
+    </exclusionTags>
     <forcedTraits>
       <li>
         <def>TorturedArtist</def>
@@ -39,16 +41,19 @@
     <defName>Stoic</defName>
     <label>stoic</label>
     <labelShortAdj>stoic</labelShortAdj>
-    <description>Carriers of this gene are hard to phase.</description>
+    <description>Carriers of this gene are mentally tough and won't break down under stresses that would crack most people.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Mood</displayCategory>
-    <displayOrderInCategory>100</displayOrderInCategory>
+    <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_Stoic</iconPath>
     <iconColor>(0.5, 0.5, 0.5)</iconColor>
     <statOffsets>
       <MentalBreakThreshold>-0.09</MentalBreakThreshold>
     </statOffsets>
+    <statFactors>
+      <CertaintyLossFactor MayRequire="Ludeon.RimWorld.Ideology">0.5</CertaintyLossFactor>
+    </statFactors>
   </GeneDef>
 
 </Defs>
