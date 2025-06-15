@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <XenotypeDef>
+    <defName>Nixie</defName>
+    <label>nixie</label>
+    <description>TODO.</description>
+    <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
+    <genes>
+      <li>PsyBeckon</li>
+      <li>PsychicAbility_Enhanced</li>
+      <li>NakedSpeed</li>
+      <li>WebbedPhalanges</li>
+      <li>Mood_Pessimist</li>
+      <li>MinTemp_LargeDecrease</li>
+      <li>MaxTemp_SmallDecrease</li>
+      <li>Hair_BaldOnly</li>
+      <li>Ears_Pointed</li>
+      <li>Hair_LightBlue</li>
+      <li>Hair_LightTeal</li>
+      <li>Skin_Blue</li>
+      <li>Nearsighted</li>
+      <li>Scaleskin</li>
+      <li>WaterDependent</li>
+    </genes>
+  </XenotypeDef>
+  
+</Defs>
