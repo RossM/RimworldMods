@@ -81,7 +81,7 @@
     <defName>Ears_SmallPointed</defName>
     <label>small pointed ears</label>
     <description>Carriers of this gene have smaller pointed ears.</description>
-    <iconPath>UI/Icons/Genes/Gene_EarPointed</iconPath>
+    <iconPath>UI/Icons/Genes/Gene_EarSmallPointed</iconPath>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
