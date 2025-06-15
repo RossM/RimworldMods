@@ -18,7 +18,6 @@
     <altitudeLayer>Building</altitudeLayer>
     <rotatable>false</rotatable>
     <hasInteractionCell>True</hasInteractionCell>
-    <minTechLevelToBuild>Medieval</minTechLevelToBuild>
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
     <statBases>
       <MaxHitPoints>100</MaxHitPoints>
@@ -27,6 +26,9 @@
       <Flammability>0.0</Flammability>
       <Beauty>-2</Beauty>
     </statBases>
+    <researchPrerequisites>
+      <li>ComplexFurniture</li>
+    </researchPrerequisites>
     <stuffCategories>
       <li>Metallic</li>
     </stuffCategories>
@@ -37,5 +39,12 @@
     <pathCost>14</pathCost>
     <designationCategory>Misc</designationCategory>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_BuildableDef">
+        <genePrerequisites>
+          <li>WaterDependent</li>
+        </genePrerequisites>
+      </li>
+    </modExtensions>
   </ThingDef>
 </Defs>

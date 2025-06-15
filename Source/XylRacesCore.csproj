@@ -4,6 +4,7 @@
     <TargetFramework>net4.7.1</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +24,7 @@
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;bin\Debug\net4.7.1\XylRacesCore.dll&quot; &quot;..\XylRacesCore\Assemblies\XylRacesCore.dll&quot;"/>
+    <Exec Command="copy &quot;bin\Debug\net4.7.1\XylRacesCore.dll&quot; &quot;..\XylRacesCore\Assemblies\XylRacesCore.dll&quot;" />
   </Target>
 
 </Project>
