@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <StatDef>
+    <defName>RawMeatNutritionFactor</defName>
+    <label>raw meat nutrition multiplier</label>
+    <description>A multiplier on how nutritious raw meat is for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>RawAnimalProductNutritionFactor</defName>
+    <label>raw animal product nutrition multiplier</label>
+    <description>A multiplier on how nutritious raw animal products are for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>RawNonMeatNutritionFactor</defName>
+    <label>raw plant nutrition multiplier</label>
+    <description>A multiplier on how nutritious raw plant-based food is for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>CookedMeatNutritionFactor</defName>
+    <label>cooked meat nutrition multiplier</label>
+    <description>A multiplier on how nutritious cooked meat is for this person.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>CookedAnimalProductNutritionFactor</defName>
+    <label>cooked meat nutrition multiplier</label>
+    <description>A multiplier on how nutritious cooked animal products are for this person.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>CookedNonMeatNutritionFactor</defName>
+    <label>cooked plant nutrition multiplier</label>
+    <description>A multiplier on how nutritious cooked plant-based food is for this person.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+
+</Defs>

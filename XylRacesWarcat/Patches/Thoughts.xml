@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+
+  <Operation Class="PatchOperationAdd" MayRequire="Ludeon.RimWorld.Ideology">
+    <xpath>Defs/ThoughtDef[defName="AteMeat_Abhorrent"]/nullifyingTraits</xpath>
+    <value>
+      <li>Carnivore</li>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd" MayRequire="Ludeon.RimWorld.Ideology">
+    <xpath>Defs/ThoughtDef[defName="AteMeat_Know_Abhorrent"]/nullifyingTraits</xpath>
+    <value>
+      <li>Carnivore</li>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd" MayRequire="Ludeon.RimWorld.Ideology">
+    <xpath>Defs/ThoughtDef[defName="AteMeat_Horrible"]/nullifyingTraits</xpath>
+    <value>
+      <li>Carnivore</li>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd" MayRequire="Ludeon.RimWorld.Ideology">
+    <xpath>Defs/ThoughtDef[defName="AteMeat_Know_Horrible"]/nullifyingTraits</xpath>
+    <value>
+      <li>Carnivore</li>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd" MayRequire="Ludeon.RimWorld.Ideology">
+    <xpath>Defs/ThoughtDef[defName="AteMeat_Disapproved"]/nullifyingTraits</xpath>
+    <value>
+      <li>Carnivore</li>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd" MayRequire="Ludeon.RimWorld.Ideology">
+    <xpath>Defs/ThoughtDef[defName="AteMeat_Know_Disapproved"]/nullifyingTraits</xpath>
+    <value>
+      <li>Carnivore</li>
+    </value>
+  </Operation>
+
+</Patch>

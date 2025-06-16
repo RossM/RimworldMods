@@ -18,6 +18,52 @@
     </forcedTraits>
   </GeneDef>
 
+  <GeneDef>
+    <defName>MeatDependence</defName>
+    <label>meat dependence</label>
+    <labelShortAdj>meat-eating</labelShortAdj>
+    <description>TODO.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>3</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <exclusionTags>
+      <li>MeatDependenceWithHerbivoreStomach</li>
+    </exclusionTags>
+    <forcedTraits>
+      <li>
+        <def>Carnivore</def>
+      </li>
+    </forcedTraits>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>CarnivoreStomach</defName>
+    <label>carnivore stomach</label>
+    <labelShortAdj>carnivorous</labelShortAdj>
+    <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw meat, but are poor at digesting plant-based foods. They never get negative thoughts from eating meat.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <exclusionTags>
+      <li>Digestion</li>
+      <li>Diet</li>
+    </exclusionTags>
+    <statFactors>
+      <RawMeatNutritionFactor>1.8</RawMeatNutritionFactor>
+      <RawNonMeatNutritionFactor>0.5</RawNonMeatNutritionFactor>
+      <CookedNonMeatNutritionFactor>0.8</CookedNonMeatNutritionFactor>
+    </statFactors>
+    <forcedTraits>
+      <li>
+        <def>Carnivore</def>
+      </li>
+    </forcedTraits>
+  </GeneDef>
+
   <GeneDef ParentName="GeneEyeColor">
     <defName>Eyes_Yellow</defName>
     <label>yellow eyes</label>

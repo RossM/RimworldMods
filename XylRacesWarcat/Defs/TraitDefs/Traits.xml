@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <TraitDef>
+    <defName>Carnivore</defName>
+    <commonality>0</commonality>
+    <degreeDatas>
+      <li>
+        <label>carnivore</label>
+        <description>{PAWN_nameDef} loves meat, even raw meat, and never gets negative thoughts from eating meat or from seeing others do so.</description>
+        <disallowedThoughtsFromIngestion>
+          <li>
+            <meatSource>Undefined</meatSource>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+          <li>
+            <meatSource>Insect</meatSource>
+            <thoughts>
+              <li>AteRawFood</li>
+              <li>AteInsectMeatDirect</li>
+              <li>AteInsectMeatAsIngredient</li>
+            </thoughts>
+          </li>
+          <li>
+            <meatSource>Humanlike</meatSource>
+            <thoughts>
+              <li>AteRawFood</li>
+              <li>AteHumanlikeMeatDirect</li>
+              <li>AteHumanlikeMeatAsIngredient</li>
+            </thoughts>
+          </li>
+        </disallowedThoughtsFromIngestion>
+      </li>
+    </degreeDatas>
+  </TraitDef>
+
+</Defs>
