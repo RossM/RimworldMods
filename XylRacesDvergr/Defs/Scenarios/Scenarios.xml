@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-  <ScenarioDef ParentName="ScenarioBase">
+  <ScenarioDef ParentName="ScenarioBase" MayRequire="Ludeon.RimWorld.Royalty">
     <defName>DvergrFortress</defName>
     <label>Dvergr fortress</label>
     <description>TODO.</description>
