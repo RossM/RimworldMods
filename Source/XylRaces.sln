@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesNixie", "..\XylRace
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesWarcat", "..\XylRacesWarcat\XylRacesWarcat.csproj", "{2958E926-8897-46B8-BBDA-F7E9B81A2DEB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesCoreDefs", "..\XylRacesCore\XylRacesCoreDefs.csproj", "{4ACCBE22-C875-4ED5-A6C1-7ECAF6B6CD7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{2958E926-8897-46B8-BBDA-F7E9B81A2DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2958E926-8897-46B8-BBDA-F7E9B81A2DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2958E926-8897-46B8-BBDA-F7E9B81A2DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ACCBE22-C875-4ED5-A6C1-7ECAF6B6CD7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ACCBE22-C875-4ED5-A6C1-7ECAF6B6CD7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ACCBE22-C875-4ED5-A6C1-7ECAF6B6CD7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ACCBE22-C875-4ED5-A6C1-7ECAF6B6CD7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
