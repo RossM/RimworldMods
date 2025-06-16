@@ -5,7 +5,7 @@
     <xpath>Defs/ThoughtDef[defName="SoakingWet"]</xpath>
     <value>
       <nullifyingGenes>
-        <li>WaterDependent</li>
+        <li>WetSkin</li>
       </nullifyingGenes>
     </value>
   </Operation>

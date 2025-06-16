@@ -53,15 +53,15 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>WaterDependent</defName>
-    <label>water dependent</label>
-    <labelShortAdj>water-dependent</labelShortAdj>
+    <defName>WetSkin</defName>
+    <label>wet skin</label>
+    <labelShortAdj>wet-skinned</labelShortAdj>
     <description>Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_WaterDependent</iconPath>
+    <iconPath>UI/Icons/Genes/Gene_WetSkin</iconPath>
     <iconColor>(0.4, 0.6, 0.9)</iconColor>
     <enablesNeeds>
       <li>Wetness</li>
