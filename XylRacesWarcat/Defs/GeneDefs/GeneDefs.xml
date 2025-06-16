@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <GeneDef>
+    <defName>Fast reflexes</defName>
+    <label>fast reflexes</label>
+    <labelShortAdj>fast</labelShortAdj>
+    <description>Carriers of this gene have excellent reflexes that allow them to dodge melee attacks and evade traps.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <forcedTraits>
+      <li>
+        <def>Nimble</def>
+      </li>
+    </forcedTraits>
+  </GeneDef>
+
+  <GeneDef ParentName="GeneEyeColor">
+    <defName>Eyes_Yellow</defName>
+    <label>yellow eyes</label>
+    <labelShortAdj>yellow-eyed</labelShortAdj>
+    <description>Carriers of this gene have yellow-pigmented eyes.</description>
+    <iconPath>UI/Icons/Genes/Gene_YellowEyes</iconPath>
+    <displayOrderInCategory>2</displayOrderInCategory>
+    <renderNodeProperties>
+      <li Class="PawnRenderNodeProperties_Eye">
+        <texPath>Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Male/YellowEyes_Male</texPath>
+        <texPathFemale>Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Female/YellowEyes_Female</texPathFemale>
+        <anchorTag>RightEye</anchorTag>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <parentTagDef>Head</parentTagDef>
+        <drawSize>0.2</drawSize>
+        <side>Right</side>
+        <drawData>
+          <defaultData>
+            <layer>54</layer>
+            <offset>(0, 0, -0.25)</offset>
+          </defaultData>
+        </drawData>
+      </li>
+      <li Class="PawnRenderNodeProperties_Eye">
+        <texPath>Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Male/YellowEyes_Male</texPath>
+        <texPathFemale>Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Female/YellowEyes_Female</texPathFemale>
+        <anchorTag>LeftEye</anchorTag>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <parentTagDef>Head</parentTagDef>
+        <drawSize>0.2</drawSize>
+        <side>Left</side>
+        <drawData>
+          <defaultData>
+            <layer>54</layer>
+            <offset>(0, 0, -0.25)</offset>
+            <flip>true</flip>
+          </defaultData>
+          <dataWest>
+            <flip>false</flip>
+          </dataWest>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+  </GeneDef>
+
+
+</Defs>

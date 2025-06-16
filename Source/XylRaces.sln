@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesDvergr", "..\XylRac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesNixie", "..\XylRacesNixie\XylRacesNixie.csproj", "{99F09417-A33E-4A3C-B3AA-8CE79E2EEF65}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesWarcat", "..\XylRacesWarcat\XylRacesWarcat.csproj", "{2958E926-8897-46B8-BBDA-F7E9B81A2DEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{99F09417-A33E-4A3C-B3AA-8CE79E2EEF65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99F09417-A33E-4A3C-B3AA-8CE79E2EEF65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99F09417-A33E-4A3C-B3AA-8CE79E2EEF65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2958E926-8897-46B8-BBDA-F7E9B81A2DEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2958E926-8897-46B8-BBDA-F7E9B81A2DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2958E926-8897-46B8-BBDA-F7E9B81A2DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2958E926-8897-46B8-BBDA-F7E9B81A2DEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
