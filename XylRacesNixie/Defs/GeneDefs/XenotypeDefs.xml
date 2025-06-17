@@ -4,7 +4,7 @@
   <XenotypeDef>
     <defName>Nixie</defName>
     <label>nixie</label>
-    <description>TODO.</description>
+    <description>Engineered for life on water planets, these beautiful sirens are distinguished by their scaly skin and innate psychic abilities. They are only comfortable in wet environments.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <genes>
       <li>PsyBeckon</li>

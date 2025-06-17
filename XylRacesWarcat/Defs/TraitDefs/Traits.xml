@@ -34,6 +34,31 @@
         </disallowedThoughtsFromIngestion>
       </li>
     </degreeDatas>
+    <conflictingTraits>
+      <li>Psychopath</li>
+    </conflictingTraits>
   </TraitDef>
 
-</Defs>
+  <TraitDef>
+    <defName>Herbivore</defName>
+    <commonality>0</commonality>
+    <degreeDatas>
+      <li>
+        <label>herbivore</label>
+        <description>{PAWN_nameDef} loves plant-based foods, even raw, and never gets negative thoughts from eating plant-based foods or from seeing others do so.</description>
+        <disallowedThoughtsFromIngestion>
+          <li>
+            <meatSource>NotMeat</meatSource>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </disallowedThoughtsFromIngestion>
+      </li>
+    </degreeDatas>
+    <conflictingTraits>
+      <li>Psychopath</li>
+    </conflictingTraits>
+  </TraitDef>
+
+  </Defs>
