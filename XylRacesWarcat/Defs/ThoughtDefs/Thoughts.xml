@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThoughtDef>
+    <defName>Moody_Down</defName>
+    <workerClass>ThoughtWorker_HediffThoughtRandom</workerClass>
+    <developmentalStageFilter>Adult</developmentalStageFilter>
+    <hediff>Moody</hediff>
+    <labelInBracketsExtraForHediff>upset</labelInBracketsExtraForHediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>bad mood</label>
+        <description>I'm just upset today. I feel like punching something.</description>
+        <baseMoodEffect>-12</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>Moody_Up</defName>
+    <workerClass>ThoughtWorker_HediffThoughtRandom</workerClass>
+    <developmentalStageFilter>Adult</developmentalStageFilter>
+    <hediff>Moody</hediff>
+    <labelInBracketsExtraForHediff>happy</labelInBracketsExtraForHediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>good mood</label>
+        <description>I'm so happy right now!</description>
+        <baseMoodEffect>12</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+</Defs>

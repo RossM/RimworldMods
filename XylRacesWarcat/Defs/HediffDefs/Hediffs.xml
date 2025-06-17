@@ -51,7 +51,7 @@
       </li>
       <li Class="HediffCompProperties_Disappears">
         <!--1 hour-->
-        <disappearsAfterTicks>2400</disappearsAfterTicks>
+        <disappearsAfterTicks>2500</disappearsAfterTicks>
         <showRemainingTime>true</showRemainingTime>
       </li>
     </comps>
@@ -82,7 +82,7 @@
     <comps>
       <li Class="HediffCompProperties_Disappears">
          <!--12 hours--> 
-        <disappearsAfterTicks>28800</disappearsAfterTicks>
+        <disappearsAfterTicks>30000</disappearsAfterTicks>
         <showRemainingTime>true</showRemainingTime>
       </li>
     </comps>
@@ -95,6 +95,31 @@
           </li>
         </capMods>
         <painOffset>0.2</painOffset>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef>
+    <defName>Moody</defName>
+    <label>moody</label>
+    <description>This character is genetically predisposed to severely fluctuating moods.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <!-- 8~16 hours -->
+        <disappearsAfterTicks>20000~40000</disappearsAfterTicks>
+        <showRemainingTime>false</showRemainingTime>
+      </li>
+      <li Class="HediffCompProperties_GiveRandomSituationalThought">
+        <thoughtDefs>
+          <li>Moody_Up</li>
+          <li>Moody_Down</li>
+        </thoughtDefs>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
       </li>
     </stages>
   </HediffDef>

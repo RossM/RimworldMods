@@ -10,26 +10,40 @@ namespace XylRacesCore
 {
     public class Gene_Hediff : Gene
     {
-        public List<Hediff> LinkedHediffs;
-
         public override void PostAdd()
         {
-            var extension = def.GetModExtension<ModExtension_GeneDef>();
-            if (Active && extension?.hediffGivers != null)
+            var extension = def.GetModExtension<ModExtension_GeneDef_Hediff>();
+            if (Active && extension?.hediffGivers != null && extension.applyImmediately)
             {
-                LinkedHediffs = new List<Hediff>();
                 foreach (var hediffGiver in extension.hediffGivers) 
-                    hediffGiver.TryApply(pawn, LinkedHediffs);
+                    hediffGiver.TryApply(pawn);
             }
             base.PostAdd();
         }
 
+        public override void TickInterval(int delta)
+        {
+            base.TickInterval(delta);
+
+            var extension = def.GetModExtension<ModExtension_GeneDef_Hediff>();
+            if (Active && extension?.hediffGivers != null && extension.mtbDays > 0.0f && pawn.IsHashIntervalTick(60, delta))
+            {
+                foreach (var hediffGiver in extension.hediffGivers)
+                {
+                    if (Rand.MTBEventOccurs(extension.mtbDays, 60000f, 60f))
+                        hediffGiver.TryApply(pawn);
+                }
+            }
+        }
+
         public override void PostRemove()
         {
-            if (LinkedHediffs != null)
+            var extension = def.GetModExtension<ModExtension_GeneDef_Hediff>();
+            if (Active && extension?.hediffGivers != null)
             {
-                foreach (var linkedHediff in LinkedHediffs)
-                    pawn.health.RemoveHediff(linkedHediff);
+                foreach (var hediffGiver in extension.hediffGivers)
+                    foreach (var hediff in pawn.health.hediffSet.hediffs.Where(hediff => hediff.def == hediffGiver.hediff).ToList())
+                        pawn.health.RemoveHediff(hediff);
             }
 
             base.PostRemove();

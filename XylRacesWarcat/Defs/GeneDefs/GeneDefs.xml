@@ -174,7 +174,7 @@
     <defName>RetractableClaws</defName>
     <label>retractable claws</label>
     <labelShortAdj>claws</labelShortAdj>
-    <description>Carriers of this gene have retractable claws that function as a weapon.</description>
+    <description>Carriers of this gene have retractable claws that function as weapons.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Violence</displayCategory>
@@ -182,9 +182,9 @@
     <iconPath>UI/Icons/Genes/Gene_RetractableClaws</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef">
+      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
         <hediffGivers>
-          <li Class="HediffGiver_Refresh">
+          <li Class="HediffGiver_Event">
             <hediff>RetractableClaws</hediff>
             <partsToAffect>
               <li>Hand</li>
@@ -192,6 +192,7 @@
             <countToAffect>2</countToAffect>
           </li>
         </hediffGivers>
+        <applyImmediately>true</applyImmediately>
       </li>
     </modExtensions>
   </GeneDef>
@@ -200,15 +201,38 @@
     <defName>FeralRage</defName>
     <label>feral rage</label>
     <description>Carriers have the ability to enter a frenzied state which increases movement and melee attack speed, and decreases pain. After the frenzy ends there is a backlash which reduces movement speed and causes pain.</description>
-    <iconPath>UI/Icons/Genes/Gene_FeralRage</iconPath>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
     <displayCategory>Ability</displayCategory>
+    <iconPath>UI/Icons/Genes/Gene_FeralRage</iconPath>
     <abilities>
       <li>FeralRage</li>
     </abilities>
     <descriptionHyperlinks>
       <AbilityDef>FeralRage</AbilityDef>
     </descriptionHyperlinks>
-    <biostatMet>-2</biostatMet>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <defName>Moody</defName>
+    <label>moody</label>
+    <description>Carriers of this gene have a volatile emotional state. They randomly get good and bad moods.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>1</biostatMet>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>201</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>Moody</hediff>
+          </li>
+        </hediffGivers>
+        <mtbDays>2</mtbDays>
+      </li>
+    </modExtensions>
   </GeneDef>
 
 </Defs>
