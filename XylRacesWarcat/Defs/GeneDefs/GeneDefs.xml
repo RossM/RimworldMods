@@ -10,7 +10,7 @@
     <biostatMet>-2</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <iconPath>UI/Icons/Genes/Gene_FastReflexes</iconPath>
     <forcedTraits>
       <li>
         <def>Nimble</def>
@@ -27,7 +27,7 @@
     <biostatMet>3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <iconPath>UI/Icons/Genes/Gene_MeatDependence</iconPath>
     <forcedTraits>
       <li>
         <def>Carnivore</def>
@@ -44,7 +44,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <iconPath>UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>
     <exclusionTags>
       <li>Digestion</li>
       <li>Diet</li>
@@ -136,7 +136,8 @@
     <defName>FacialStripes</defName>
     <label>facial stripes</label>
     <description>Carriers of this gene have striped skin on their face.</description>
-    <iconPath>UI/Icons/Genes/Gene_YellowEyes</iconPath>
+    <iconPath>UI/Icons/Genes/Gene_FacialStripes</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <displayCategory>Cosmetic</displayCategory>
     <displayOrderInCategory>501</displayOrderInCategory>
     <biostatCpx>0</biostatCpx>
@@ -178,7 +179,8 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <iconPath>UI/Icons/Genes/Gene_RetractableClaws</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <modExtensions>
       <li Class="XylRacesCore.ModExtension_GeneDef">
         <hediffGivers>
@@ -198,7 +200,7 @@
     <defName>FeralRage</defName>
     <label>feral rage</label>
     <description>Carriers have the ability to enter a frenzied state which increases movement and melee attack speed, and decreases pain. After the frenzy ends there is a backlash which reduces movement speed and causes pain.</description>
-    <iconPath>UI/Abilities/Beckon</iconPath>
+    <iconPath>UI/Icons/Genes/Gene_FeralRage</iconPath>
     <displayCategory>Ability</displayCategory>
     <abilities>
       <li>FeralRage</li>
