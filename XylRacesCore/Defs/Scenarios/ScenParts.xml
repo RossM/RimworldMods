@@ -10,4 +10,13 @@
     <summaryPriority>461</summaryPriority>
   </ScenPartDef>
 
+  <ScenPartDef>
+    <defName>StartingSlaves</defName>
+    <label>start with slave(s)</label>
+    <scenPartClass>XylRacesCore.ScenPart_StartingSlaves</scenPartClass>
+    <category>StartingImportant</category>
+    <selectionWeight>1.0</selectionWeight>
+    <summaryPriority>310</summaryPriority>
+  </ScenPartDef>
+
 </Defs>

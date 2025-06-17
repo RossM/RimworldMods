@@ -11,7 +11,7 @@ namespace XylRacesCore
 {
     public class ScenPart_ForcedXenotype : ScenPart_PawnModifier
     {
-        protected XenotypeDef xenotype;
+        public XenotypeDef xenotype;
 
         public override void ExposeData()
         {

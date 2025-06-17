@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Verse;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
 
 namespace XylRacesCore
 {
