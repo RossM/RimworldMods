@@ -73,7 +73,7 @@
       <RawFungusNutritionFactor>1.8</RawFungusNutritionFactor>
     </statFactors>
     <customEffectDescriptions>
-      <li>Enables building: Fungus still.</li>
+      <li>Enables building: Fungus still</li>
     </customEffectDescriptions>
   </GeneDef>
 
