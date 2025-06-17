@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <HediffDef>
+    <hediffClass>XylRacesCore.Hediff_Weapon</hediffClass>
+    <defName>RetractableClaws</defName>
+    <label>retractable claws</label>
+    <description>Retractable claws. They can perform rapid slashing attacks, but are poor at penetrating armor.</description>
+    <addedPartProps>
+      <solid>true</solid>
+    </addedPartProps>
+    <countsAsAddedPartOrImplant>true</countsAsAddedPartOrImplant>
+    <comps>
+      <li Class="HediffCompProperties_VerbGiver">
+        <tools>
+          <li>
+            <label>claw</label>
+            <capacities>
+              <li>Scratch</li>
+            </capacities>
+            <power>15</power>
+            <armorPenetration>0.0</armorPenetration>
+            <cooldownTime>1.2</cooldownTime>
+            <alwaysTreatAsWeapon>true</alwaysTreatAsWeapon>
+            <soundMeleeHit>MeleeHit_BionicSlash</soundMeleeHit>
+            <soundMeleeMiss>MeleeMiss_BionicSlash</soundMeleeMiss>
+          </li>
+        </tools>
+      </li>
+    </comps>
+  </HediffDef>
+
+</Defs>

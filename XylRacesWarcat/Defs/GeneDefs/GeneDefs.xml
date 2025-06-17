@@ -168,4 +168,30 @@
     </exclusionTags>
   </GeneDef>
 
+  <GeneDef>
+    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <defName>RetractableClaws</defName>
+    <label>retractable claws</label>
+    <labelShortAdj>claws</labelShortAdj>
+    <description>Carriers of this gene have retractable claws that function as a weapon.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayCategory>Violence</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef">
+        <hediffGivers>
+          <li Class="HediffGiver_Refresh">
+            <hediff>RetractableClaws</hediff>
+            <partsToAffect>
+              <li>Hand</li>
+            </partsToAffect>
+            <countToAffect>2</countToAffect>
+          </li>
+        </hediffGivers>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
 </Defs>
