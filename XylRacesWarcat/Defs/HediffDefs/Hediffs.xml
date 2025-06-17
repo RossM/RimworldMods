@@ -6,6 +6,7 @@
     <defName>RetractableClaws</defName>
     <label>retractable claws</label>
     <description>Retractable claws. They can perform rapid slashing attacks, but are poor at penetrating armor.</description>
+    <initialSeverity>1.0</initialSeverity>
     <addedPartProps>
       <solid>true</solid>
     </addedPartProps>
@@ -28,6 +29,73 @@
         </tools>
       </li>
     </comps>
+  </HediffDef>
+
+  <HediffDef>
+    <defName>FeralRage</defName>
+    <label>feral rage</label>
+    <description>A temporary frenzy state. It increases movement and melee attack speed, and decreases pain.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <initialSeverity>1.0</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="HediffCompProperties_ReplaceHediff">
+        <compClass>XylRacesCore.HediffComp_ReplaceOnRemoval</compClass>
+        <manuallyTriggered>true</manuallyTriggered>
+        <hediffs>
+          <li>
+            <hediff>FeralRageBacklash</hediff>
+          </li>
+        </hediffs>
+      </li>
+      <li Class="HediffCompProperties_Disappears">
+        <disappearsAfterTicks>2400</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>0.5</offset>
+          </li>
+        </capMods>
+        <painFactor>0.5</painFactor>
+        <statFactors>
+          <MeleeCooldownFactor>0.75</MeleeCooldownFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef>
+    <defName>FeralRageBacklash</defName>
+    <label>feral rage (backlash)</label>
+    <description>Recovering from a frenzy state. Causes pain and decreases movement speed.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <initialSeverity>1.0</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>true</isBad>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+         12 hours 
+        <disappearsAfterTicks>28800</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>-0.2</offset>
+          </li>
+        </capMods>
+        <painOffset>0.2</painOffset>
+      </li>
+    </stages>
   </HediffDef>
 
 </Defs>

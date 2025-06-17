@@ -7,6 +7,7 @@
     <description>These graceful predators originated as an attempt to create super soldiers by splicing large cat DNA into humans. They are genetically incapable of producing certain nutrients and require a continuous supply of raw meat to stay healthy.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <genes>
+      <li>FeralRage</li>
       <li>FastReflexes</li>
       <li>Aggression_HyperAggressive</li>
       <li>Sleepy</li>
@@ -20,6 +21,7 @@
       <li>Body_Standard</li>
       <li>Body_Thin</li>
       <li>RetractableClaws</li>
+      <li>StrongStomach</li>
       <li>CarnivoreStomach</li>
       <li>MeatDependence</li>
       <li>AptitudeRemarkable_Melee</li>

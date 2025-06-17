@@ -194,4 +194,19 @@
     </modExtensions>
   </GeneDef>
 
+  <GeneDef>
+    <defName>FeralRage</defName>
+    <label>feral rage</label>
+    <description>Carriers have the ability to enter a frenzied state which increases movement and melee attack speed, and decreases pain. After the frenzy ends there is a backlash which reduces movement speed and causes pain.</description>
+    <iconPath>UI/Abilities/Beckon</iconPath>
+    <displayCategory>Ability</displayCategory>
+    <abilities>
+      <li>FeralRage</li>
+    </abilities>
+    <descriptionHyperlinks>
+      <AbilityDef>FeralRage</AbilityDef>
+    </descriptionHyperlinks>
+    <biostatMet>-2</biostatMet>
+  </GeneDef>
+
 </Defs>
