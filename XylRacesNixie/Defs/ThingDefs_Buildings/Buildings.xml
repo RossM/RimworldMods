@@ -42,7 +42,7 @@
     <modExtensions>
       <li Class="XylRacesCore.ModExtension_BuildableDef">
         <genePrerequisites>
-          <li>WetSkin</li>
+          <li>Aquatic</li>
         </genePrerequisites>
       </li>
     </modExtensions>

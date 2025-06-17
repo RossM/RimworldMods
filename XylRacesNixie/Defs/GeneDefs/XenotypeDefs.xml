@@ -16,12 +16,12 @@
       <li>MaxTemp_SmallDecrease</li>
       <li>Hair_BaldOnly</li>
       <li>Ears_Pointed</li>
-      <li>Hair_LightBlue</li>
-      <li>Hair_LightTeal</li>
+      <li>Hair_SnowWhite</li>
       <li>Skin_Blue</li>
       <li>Nearsighted</li>
+      <li>Beauty_Pretty</li>
       <li>Scaleskin</li>
-      <li>WetSkin</li>
+      <li>Aquatic</li>
     </genes>
   </XenotypeDef>
   

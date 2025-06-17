@@ -49,19 +49,18 @@
       <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
       <ArmorRating_Blunt>0.15</ArmorRating_Blunt>
     </statOffsets>
-    <missingGeneRomanceChanceFactor>0.2</missingGeneRomanceChanceFactor>
   </GeneDef>
 
   <GeneDef>
-    <defName>WetSkin</defName>
-    <label>wet skin</label>
-    <labelShortAdj>wet-skinned</labelShortAdj>
+    <defName>Aquatic</defName>
+    <label>aquatic</label>
+    <labelShortAdj>aquatic</labelShortAdj>
     <description>Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long.</description>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>2</biostatMet>
+    <biostatMet>3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_WetSkin</iconPath>
+    <iconPath>UI/Icons/Genes/Gene_Aquatic</iconPath>
     <iconColor>(0.4, 0.6, 0.9)</iconColor>
     <enablesNeeds>
       <li>Wetness</li>
