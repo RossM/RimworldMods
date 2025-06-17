@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+    <xpath>Defs/GeneDef[defName="FacialRidges"]</xpath>
+    <value>
+      <exclusionTags>
+        <li>Face</li>
+      </exclusionTags>
+    </value>
+  </Operation>
+  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+    <xpath>Defs/GeneDef[defName="Brow_Heavy"]</xpath>
+    <value>
+      <exclusionTags>
+        <li>Brow</li>
+      </exclusionTags>
+    </value>
+  </Operation>
+
+</Patch>

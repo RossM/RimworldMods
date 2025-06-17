@@ -7,7 +7,7 @@
     <degreeDatas>
       <li>
         <label>carnivore</label>
-        <description>{PAWN_nameDef} loves meat, even raw meat, and never gets negative thoughts from eating meat or from seeing others do so.</description>
+        <description>{PAWN_nameDef} loves meat, even raw, and never gets negative thoughts from eating meat or from seeing others do so.</description>
         <disallowedThoughtsFromIngestion>
           <li>
             <meatSource>Undefined</meatSource>
