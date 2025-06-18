@@ -8,7 +8,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    internal class ModExtension_GeneDef_DietDependency : DefModExtension
+    public class ModExtension_GeneDef_DietDependency : DefModExtension
     {
         public HediffDef hediffDef;
         public FoodKind foodKind = FoodKind.Any;

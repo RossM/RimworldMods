@@ -13,6 +13,8 @@ namespace XylRacesCore
     {
         public int lastIngestedTick;
 
+        public ModExtension_GeneDef_DietDependency DefModExtension => def.GetModExtension<ModExtension_GeneDef_DietDependency>();
+
         public override bool Active
         {
             get
@@ -30,7 +32,7 @@ namespace XylRacesCore
             get
             {
                 List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
-                var extension = def.GetModExtension<ModExtension_GeneDef_DietDependency>();
+                var extension = DefModExtension;
                 if (extension == null)
                     return null;
                 return hediffs.FirstOrDefault(hediff => hediff.def == extension?.hediffDef);
@@ -48,7 +50,7 @@ namespace XylRacesCore
         {
             if (Active)
             {
-                var extension = def.GetModExtension<ModExtension_GeneDef_DietDependency>();
+                var extension = DefModExtension;
                 if (extension == null)
                     return;
                 var hediff = HediffMaker.MakeHediff(extension.hediffDef, pawn);
@@ -68,7 +70,7 @@ namespace XylRacesCore
 
         public override void Notify_IngestedThing(Thing food, int numTaken)
         {
-            var extension = def.GetModExtension<ModExtension_GeneDef_DietDependency>();
+            var extension = DefModExtension;
             if (extension == null)
             {
                 Log.Warning("Gene_DietDependency.Notify_IngestedThing called without a ModExtension_GeneDef_DietDependency");

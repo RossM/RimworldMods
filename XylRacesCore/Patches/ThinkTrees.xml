@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationInsert">
+    <xpath>Defs/ThinkTreeDef//li[@Class="JobGiver_SatisfyChemicalNeed"]</xpath>
+    <value>
+      <li Class="XylRacesCore.JobGiver_SatisfyDietDependency" />
+    </value>
+  </Operation>
+
+</Patch>

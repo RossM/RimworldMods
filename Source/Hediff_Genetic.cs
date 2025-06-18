@@ -25,8 +25,6 @@ namespace XylRacesCore
             }
         }
 
-        public bool ShouldSatify => Severity >= def.stages[2].minSeverity - 0.1f;
-
         public Gene LinkedGene
         {
             get
@@ -46,7 +44,7 @@ namespace XylRacesCore
                         }
                         else if (t is Gene_Hediff gene_hediff)
                         {
-                            if (gene_hediff.def.GetModExtension<ModExtension_GeneDef_Hediff>()?.hediffGivers.Any(g => g.hediff == def) ?? false)
+                            if (gene_hediff.DefModExtension?.hediffGivers.Any(g => g.hediff == def) ?? false)
                             {
                                 cachedGene = gene_hediff;
                                 break;
