@@ -2,6 +2,14 @@
 <Patch>
 
   <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+    <xpath>Defs/GeneDef[defName="RobustDigestion"]</xpath>
+    <value>
+      <exclusionTags>
+        <li>Digestion</li>
+      </exclusionTags>
+    </value>
+  </Operation>
+  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
     <xpath>Defs/GeneDef[defName="FacialRidges"]</xpath>
     <value>
       <exclusionTags>

@@ -16,7 +16,7 @@ namespace XylRacesCore
 
         public override float GetPriority(Pawn pawn)
         {
-            if (pawn.health.hediffSet.hediffs.Any((Hediff x) => ShouldSatisfy(x)))
+            if (pawn.health.hediffSet.hediffs.Any(ShouldSatisfy))
             {
                 return ThinkNodePriority.Food + 0.01f;
             }
@@ -41,13 +41,14 @@ namespace XylRacesCore
             tmpDietDependencies.SortBy((Hediff_DietDependency x) => 0f - x.Severity);
             for (int num = 0; num < tmpDietDependencies.Count; num++)
             {
-                Thing food = FindFoodFor(pawn, tmpDietDependencies[num]);
+                Hediff_DietDependency hediff_dietDependency = tmpDietDependencies[num];
+                Thing food = FindFoodFor(pawn, hediff_dietDependency);
                 if (food != null)
                 {
-                    var nutritionPer = FoodUtility.NutritionForEater(pawn, food);
-                    var nutritionNeeded = tmpDietDependencies[num].Severity / GetGeneFor(pawn, tmpDietDependencies[num])
-                        .DefModExtension.severityReductionPerNutrition;
-                    var count = Mathf.CeilToInt(nutritionPer / nutritionNeeded);
+                    float nutritionPer = FoodUtility.NutritionForEater(pawn, food);
+                    float severityReductionPerNutrition = GetGeneFor(pawn, hediff_dietDependency).DefModExtension.severityReductionPerNutrition;
+                    float nutritionNeeded = hediff_dietDependency.Severity / severityReductionPerNutrition;
+                    int count = Mathf.CeilToInt(nutritionPer / nutritionNeeded);
 
                     tmpDietDependencies.Clear();
                     Pawn pawn2 = (food.ParentHolder as Pawn_InventoryTracker)?.pawn;
@@ -66,21 +67,17 @@ namespace XylRacesCore
 
         private bool ShouldSatisfy(Hediff hediff)
         {
-            if (!(hediff is Hediff_DietDependency hediff_DietDependency))
-            {
-                return false;
-            }
-            return hediff_DietDependency.ShouldSatisfy;
+            return hediff is Hediff_DietDependency hediff_DietDependency && hediff_DietDependency.ShouldSatisfy;
         }
 
         private Thing FindFoodFor(Pawn pawn, Hediff_DietDependency dependency)
         {
             ThingOwner<Thing> innerContainer = pawn.inventory.innerContainer;
-            for (int i = 0; i < innerContainer.Count; i++)
+            foreach (Thing item in innerContainer)
             {
-                if (FoodValidator(pawn, dependency, innerContainer[i]))
+                if (FoodValidator(pawn, dependency, item))
                 {
-                    return innerContainer[i];
+                    return item;
                 }
             }
             Thing thing = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.FoodSource), PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, (Thing x) => FoodValidator(pawn, dependency, x));

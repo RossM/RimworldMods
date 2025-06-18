@@ -60,7 +60,6 @@
     <iconPath>UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>
     <exclusionTags>
       <li>Digestion</li>
-      <li>Diet</li>
     </exclusionTags>
     <statFactors>
       <RawMeatNutritionFactor>1.8</RawMeatNutritionFactor>
@@ -83,10 +82,9 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <iconPath>UI/Icons/Genes/Gene_HerbivoreStomach</iconPath>
     <exclusionTags>
       <li>Digestion</li>
-      <li>Diet</li>
     </exclusionTags>
     <statFactors>
       <RawNonMeatNutritionFactor>1.8</RawNonMeatNutritionFactor>
