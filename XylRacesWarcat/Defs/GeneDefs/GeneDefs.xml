@@ -23,7 +23,7 @@
     <defName>MeatDependence</defName>
     <label>meat dependence</label>
     <labelShortAdj>meat-dependent</labelShortAdj>
-    <description>Carriers of this gene are unable to make certain vital nutrients themselves and must get them in their diet by eating raw meat. Without regular raw meat they will suffer from pain, muscle weakness, and eventually coma and death.</description>
+    <description>Carriers of this gene are unable to synthesize certain essential nutrients and must obtain them by eating raw meat. After age 13, they become dependent on raw meat to survive. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
@@ -208,6 +208,9 @@
         <applyImmediately>true</applyImmediately>
       </li>
     </modExtensions>
+    <exclusionTags>
+      <li>Hands</li>
+    </exclusionTags>
   </GeneDef>
 
   <GeneDef>

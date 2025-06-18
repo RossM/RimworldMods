@@ -129,7 +129,7 @@
   <HediffDef>
     <defName>GeneticMeatNeed</defName>
     <label>raw meat dependency</label>
-    <description>This person has an inability to produce certain necessary nutrients and must get them in their diet by eating raw meat. Without raw meat, their body cannot maintain itself in a healthy state and they will suffer degrading health and mood until they die.\n\nTakes effect after age: 13.</description>
+    <description>This individual is unable to synthesize certain essential nutrients and must obtain them by eating raw meat. After age 13, they become dependent on raw meat to survive. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death.</description>
     <hediffClass>XylRacesCore.Hediff_Genetic</hediffClass>
     <everCurableByItem>false</everCurableByItem>
     <initialSeverity>0</initialSeverity>
