@@ -94,7 +94,7 @@
             <offset>-0.2</offset>
           </li>
         </capMods>
-        <painOffset>0.2</painOffset>
+        <painOffset>0.1</painOffset>
       </li>
     </stages>
   </HediffDef>
