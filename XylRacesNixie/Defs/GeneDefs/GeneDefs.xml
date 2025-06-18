@@ -16,17 +16,18 @@
     </descriptionHyperlinks>
     <biostatMet>-2</biostatMet>
     <symbolPack>
-      <wholeNameSymbols>
-        <li><symbol>siren</symbol></li>
-        <li><symbol>caller</symbol></li>
-      </wholeNameSymbols>
       <prefixSymbols>
+        <li><symbol>siren</symbol></li>
         <li><symbol>song</symbol></li>
         <li><symbol>dream</symbol></li>
+        <li><symbol>echo</symbol></li>
+        <li><symbol>mind</symbol></li>
+        <li><symbol>ego</symbol></li>
       </prefixSymbols>
       <suffixSymbols>
         <li><symbol>caller</symbol></li>
         <li><symbol>singer</symbol></li>
+        <li><symbol>muse</symbol></li>
       </suffixSymbols>
     </symbolPack>
  </GeneDef>
@@ -49,6 +50,19 @@
       <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
       <ArmorRating_Blunt>0.15</ArmorRating_Blunt>
     </statOffsets>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>scale</symbol></li>
+        <li><symbol>armor</symbol></li>
+        <li><symbol>hide</symbol></li>
+        <li><symbol>croc</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>hide</symbol></li>
+        <li><symbol>back</symbol></li>
+        <li><symbol>scale</symbol></li>
+      </suffixSymbols>
+    </symbolPack>
   </GeneDef>
 
   <GeneDef>
@@ -68,6 +82,20 @@
     <customEffectDescriptions>
       <li>Enables building: Shower</li>
     </customEffectDescriptions>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>moist</symbol></li>
+        <li><symbol>damp</symbol></li>
+        <li><symbol>wet</symbol></li>
+        <li><symbol>slick</symbol></li>
+        <li><symbol>gill</symbol></li>
+        <li><symbol>fish</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>skin</symbol></li>
+        <li><symbol>fin</symbol></li>
+      </suffixSymbols>
+    </symbolPack>
   </GeneDef>
 
 

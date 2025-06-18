@@ -15,6 +15,23 @@
     <statOffsets>
       <WorkSpeedGlobal>0.15</WorkSpeedGlobal>
     </statOffsets>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>work</symbol></li>
+        <li><symbol>task</symbol></li>
+        <li><symbol>drive</symbol></li>
+        <li><symbol>press</symbol></li>
+        <li><symbol>forge</symbol></li>
+        <li><symbol>labor</symbol></li>
+        <li><symbol>hearth</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>grinder</symbol></li>
+        <li><symbol>maker</symbol></li>
+        <li><symbol>smith</symbol></li>
+        <li><symbol>delver</symbol></li>
+      </suffixSymbols>
+    </symbolPack>    
   </GeneDef>
 
   <GeneDef>
@@ -35,6 +52,16 @@
         <def>TorturedArtist</def>
       </li>
     </forcedTraits>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>gloom</symbol></li>
+        <li><symbol>moan</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>spark</symbol></li>
+        <li><symbol>wrought</symbol></li>
+      </suffixSymbols>
+    </symbolPack>
   </GeneDef>
 
   <GeneDef>
@@ -54,6 +81,20 @@
     <statFactors>
       <CertaintyLossFactor MayRequire="Ludeon.RimWorld.Ideology">0.5</CertaintyLossFactor>
     </statFactors>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>steel</symbol></li>
+        <li><symbol>stone</symbol></li>
+        <li><symbol>iron</symbol></li>
+        <li><symbol>firm</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>mind</symbol></li>
+        <li><symbol>heart</symbol></li>
+        <li><symbol>core</symbol></li>
+        <li><symbol>will</symbol></li>
+      </suffixSymbols>
+    </symbolPack>    
   </GeneDef>
 
   <GeneDef>
@@ -75,6 +116,20 @@
     <customEffectDescriptions>
       <li>Enables building: Fungus still</li>
     </customEffectDescriptions>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>fungi</symbol></li>
+        <li><symbol>shroom</symbol></li>
+        <li><symbol>myco</symbol></li>
+        <li><symbol>spore</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>gut</symbol></li>
+        <li><symbol>eater</symbol></li>
+        <li><symbol>muncher</symbol></li>
+        <li><symbol>bloom</symbol></li>
+      </suffixSymbols>
+    </symbolPack>
   </GeneDef>
 
   <GeneDef ParentName="GeneEarsBase">
@@ -99,6 +154,17 @@
         </drawData>
       </li>
     </renderNodeProperties>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>fox</symbol></li>
+        <li><symbol>fey</symbol></li>
+        <li><symbol>point</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>ear</symbol></li>
+        <li><symbol>tips</symbol></li>
+      </suffixSymbols>
+    </symbolPack>
   </GeneDef>
 
 </Defs>
