@@ -6,6 +6,7 @@
     <label>nixie</label>
     <description>Engineered for life on water planets, these beautiful sirens are distinguished by their scaly skin and innate psychic abilities. They are only comfortable in wet environments.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
+    <inheritable>true</inheritable>
     <genes>
       <li>PsyBeckon</li>
       <li>PsychicAbility_Enhanced</li>

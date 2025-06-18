@@ -10,7 +10,9 @@
     <addedPartProps>
       <solid>true</solid>
     </addedPartProps>
-    <countsAsAddedPartOrImplant>true</countsAsAddedPartOrImplant>
+    <everCurableByItem>false</everCurableByItem>
+    <keepOnBodyPartRestoration>true</keepOnBodyPartRestoration>
+    <isBad>false</isBad>
     <comps>
       <li Class="HediffCompProperties_VerbGiver">
         <tools>
@@ -152,6 +154,7 @@
         <minSeverity>3</minSeverity>
         <lifeThreatening>true</lifeThreatening>
         <painOffset>0.5</painOffset>
+        <mentalBreakMtbDays>1.0</mentalBreakMtbDays>
         <capMods>
           <li>
             <capacity>Manipulation</capacity>

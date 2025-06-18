@@ -6,6 +6,7 @@
     <label>dvergr</label>
     <description>TODO.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
+    <inheritable>true</inheritable>
     <genes>
       <li>PsychicAbility_Dull</li>
       <li>MoveSpeed_Slow</li>
