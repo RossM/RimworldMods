@@ -19,10 +19,11 @@
   </GeneDef>
 
   <GeneDef>
+    <geneClass>XylRacesCore.Gene_DietDependency</geneClass>
     <defName>MeatDependence</defName>
     <label>meat dependence</label>
     <labelShortAdj>meat-dependent</labelShortAdj>
-    <description>TODO.</description>
+    <description>Carriers of this gene are unable to make certain vital nutrients themselves and must get them in their diet by eating raw meat. Without regular raw meat they will suffer from pain, muscle weakness, and eventually coma and death.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
@@ -33,6 +34,18 @@
         <def>Carnivore</def>
       </li>
     </forcedTraits>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_DietDependency">
+        <hediffDef>GeneticMeatNeed</hediffDef>
+        <foodKind>Meat</foodKind>
+        <rawOnly>true</rawOnly>
+        <!-- 
+        Each piece of raw meat is 0.09 nutrition after the carnivore stomach bonus, so it will take a bit more than 11
+        raw meat per day to keep the diet dependency under control.
+        -->
+        <severityReductionPerNutrition>1.0</severityReductionPerNutrition>
+      </li>
+    </modExtensions>
   </GeneDef>
 
   <GeneDef>
