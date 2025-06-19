@@ -65,7 +65,7 @@
             <offset>0.5</offset>
           </li>
         </capMods>
-        <painFactor>0.5</painFactor>
+        <painFactor>0.25</painFactor>
         <statFactors>
           <MeleeCooldownFactor>0.75</MeleeCooldownFactor>
         </statFactors>

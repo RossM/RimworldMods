@@ -4,7 +4,7 @@
   <AbilityDef>
     <defName>FeralRage</defName>
     <label>feral rage</label>
-    <description>Enter a state of feral rage, giving increased movement speed (+20%), faster melee attacks (x0.75), and decreased pain (x50%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%).</description>
+    <description>Enter a state of feral rage, giving increased movement speed (+50%), faster melee attacks (x0.75), and decreased pain (x25%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%).</description>
     <iconPath>UI/Icons/Genes/Gene_FeralRage</iconPath>
     <!-- 1 day -->
     <cooldownTicksRange>60000</cooldownTicksRange>
