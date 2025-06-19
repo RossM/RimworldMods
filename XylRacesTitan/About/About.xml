@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+
+  <packageId>Xylthixlm.Races.Titan</packageId>
+  <name>Xyl's Races: Titan</name>
+  <author>Xylthixlm</author>
+  <description>TODO</description>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>Ludeon.RimWorld.Biotech</packageId>
+      <displayName>Biotech</displayName>
+    </li>
+    <li>
+      <packageId>Xylthixlm.Races.Core</packageId>
+      <displayName>Xyl's Races Core</displayName>
+      <downloadUrl>https://github.com/RossM/RimworldMods/releases/latest</downloadUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>Xylthixlm.Races.Core</li>
+  </loadAfter>
+
+</ModMetaData>
