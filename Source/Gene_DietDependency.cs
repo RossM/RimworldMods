@@ -90,25 +90,8 @@ namespace XylRacesCore
 
             var severityReduction = nutrition * extension.severityReductionPerNutrition;
 
-            if (extension.foodKind == FoodUtility.GetFoodKind(food))
-            {
+            if (ValidateFood(food))
                 ReduceSeverity(severityReduction);
-                return;
-            }
-
-            if (!food.def.IsProcessedFood) 
-                return;
-            if (extension.rawOnly)
-                return;
-
-            var compIngredients = food.TryGetComp<CompIngredients>();
-            if (compIngredients == null)
-                return;
-            if (Enumerable.Any(compIngredients.ingredients, ingredient => extension.foodKind == FoodUtility.GetFoodKind(ingredient)))
-            {
-                ReduceSeverity(severityReduction);
-                return;
-            }
         }
 
         public void ReduceSeverity(float severityReduction)
@@ -129,6 +112,35 @@ namespace XylRacesCore
         {
             base.ExposeData();
             Scribe_Values.Look(ref lastIngestedTick, "lastIngestedTick", 0);
+        }
+
+        public bool ValidateFood(Thing food)
+        {
+            float nutrition = FoodUtility.NutritionForEater(pawn, food);
+            if (nutrition <= 0.0f)
+                return false;
+
+            var extension = DefModExtension;
+            if (extension == null)
+            {
+                Log.Warning("Gene_DietDependency.ValidateFood called without a ModExtension_GeneDef_DietDependency");
+                return false;
+            }
+            if (extension.foodKind == FoodUtility.GetFoodKind(food))
+                return true;
+
+            if (!food.def.IsProcessedFood)
+                return false;
+            if (extension.rawOnly)
+                return false;
+
+            var compIngredients = food.TryGetComp<CompIngredients>();
+            if (compIngredients == null)
+                return false;
+            if (Enumerable.Any(compIngredients.ingredients, ingredient => extension.foodKind == FoodUtility.GetFoodKind(ingredient)))
+                return true;
+
+            return false;
         }
     }
 }

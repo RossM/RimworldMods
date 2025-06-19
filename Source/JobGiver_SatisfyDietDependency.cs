@@ -101,7 +101,7 @@ namespace XylRacesCore
             return null;
         }
 
-        private bool FoodValidator(Pawn pawn, Hediff_DietDependency dependency, Thing food)
+        private static bool FoodValidator(Pawn pawn, Hediff_DietDependency dependency, Thing food)
         {
             if (!food.def.IsIngestible)
                 return false;
@@ -113,26 +113,7 @@ namespace XylRacesCore
                 return false;
             }
 
-            float nutrition = FoodUtility.NutritionForEater(pawn, food);
-            if (nutrition <= 0.0f)
-                return false;
-
-            var extension = gene.DefModExtension;
-            if (extension.foodKind == FoodUtility.GetFoodKind(food))
-                return true;
-
-            if (!food.def.IsProcessedFood)
-                return false;
-            if (extension.rawOnly)
-                return false;
-
-            var compIngredients = food.TryGetComp<CompIngredients>();
-            if (compIngredients == null)
-                return false;
-            if (Enumerable.Any(compIngredients.ingredients, ingredient => extension.foodKind == FoodUtility.GetFoodKind(ingredient)))
-                return true;
-
-            return false;
+            return gene.ValidateFood(food);
         }
 
         private static Gene_DietDependency GetGeneFor(Pawn pawn, Hediff_DietDependency dependency)
