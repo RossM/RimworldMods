@@ -84,6 +84,23 @@
   </GeneDef>-->
 
   <GeneDef>
+    <defName>Joyless</defName>
+    <label>joyless</label>
+    <description>Carriers of this gene are genetically incapable of feeling joy. They have no need for recreation, and get no mood bonuses or penalties from it. </description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>1</biostatMet>
+    <iconPath>UI/Icons/Genes/Gene_FacialStripes</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <displayCategory>Cosmetic</displayCategory>
+    <displayOrderInCategory>501</displayOrderInCategory>
+    <disablesNeeds>
+      <li>Joy</li>
+    </disablesNeeds>
+  </GeneDef>
+
+
+  <!-- Shared with Dvergr -->
+  <GeneDef>
     <defName>Stoic</defName>
     <label>stoic</label>
     <labelShortAdj>stoic</labelShortAdj>
