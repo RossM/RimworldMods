@@ -181,7 +181,7 @@
     </stages>
     <comps>
       <li Class="HediffCompProperties_SeverityPerDay">
-        <severityPerDay>1.0</severityPerDay>
+        <severityPerDay>0.5</severityPerDay>
         <minAge>13</minAge>
       </li>
     </comps>

@@ -43,7 +43,7 @@
         Each piece of raw meat is 0.09 nutrition after the carnivore stomach bonus, so it will take a bit more than 11
         raw meat per day to keep the diet dependency under control.
         -->
-        <severityReductionPerNutrition>1.0</severityReductionPerNutrition>
+        <severityReductionPerNutrition>0.5</severityReductionPerNutrition>
       </li>
     </modExtensions>
   </GeneDef>
