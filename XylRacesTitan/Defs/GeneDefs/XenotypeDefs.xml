@@ -21,6 +21,7 @@
       <li>Giant</li>
       <li>Body_Hulk</li>
       <li>MineralizedSkin</li>
+      <!--<li MayRequire="Ludeon.RimWorld.Odyssey">Vacuum_Resistant</li>-->
       <li>AptitudeRemarkable_Construction</li>
       <li>AptitudePoor_Medicine</li>
       <li>AptitudePoor_Social</li>
