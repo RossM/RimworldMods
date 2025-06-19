@@ -93,7 +93,10 @@ namespace XylRacesCore
             var severityReduction = nutrition * extension.severityReductionPerNutrition;
 
             if (extension.foodKind == FoodUtility.GetFoodKind(food))
+            {
                 ReduceSeverity(severityReduction);
+                return;
+            }
 
             if (!food.def.IsProcessedFood) 
                 return;
@@ -106,6 +109,7 @@ namespace XylRacesCore
             if (Enumerable.Any(compIngredients.ingredients, ingredient => extension.foodKind == FoodUtility.GetFoodKind(ingredient)))
             {
                 ReduceSeverity(severityReduction);
+                return;
             }
         }
 
