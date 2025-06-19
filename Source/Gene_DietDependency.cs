@@ -77,8 +77,6 @@ namespace XylRacesCore
                 return;
             }
 
-            Log.Message(string.Format("Ingested {0} ({1}) x {2}", food.Label, food.def.defName, numTaken));
-
             float nutrition = FoodUtility.NutritionForEater(pawn, food);
 
             if (numTaken > 0)
