@@ -36,7 +36,7 @@ namespace XylRacesCore
                     {
                         if (t is Gene_DietDependency gene_dietDependency)
                         {
-                            if (gene_dietDependency.def.GetModExtension<ModExtension_GeneDef_DietDependency>()?.hediffDef == def)
+                            if (gene_dietDependency.DefModExtension?.hediffDef == def)
                             {
                                 cachedGene = gene_dietDependency;
                                 break;
