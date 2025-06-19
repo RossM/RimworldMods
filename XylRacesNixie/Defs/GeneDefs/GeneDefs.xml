@@ -39,8 +39,8 @@
     <description>Carriers of this gene grow tough scales all over their body, which gives some protection against damage.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-3</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>400</displayOrderInCategory>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_Scaleskin</iconPath>
     <iconColor>(0.4, 0.65, 0.75)</iconColor>
     <exclusionTags>

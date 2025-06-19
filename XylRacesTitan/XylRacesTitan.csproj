@@ -14,6 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Textures\Things\Pawn\Humanlike\HeadAttachments\Osteoliths\" />
+    <Folder Include="Textures\UI\Icons\Genes\" />
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
