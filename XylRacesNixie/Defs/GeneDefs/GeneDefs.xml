@@ -9,10 +9,10 @@
     <displayCategory>Ability</displayCategory>
     <marketValueFactor>1.5</marketValueFactor>
     <abilities>
-      <li>Beckon</li>
+      <li>SirenBeckon</li>
     </abilities>
     <descriptionHyperlinks>
-      <AbilityDef>Beckon</AbilityDef>
+      <AbilityDef>SirenBeckon</AbilityDef>
     </descriptionHyperlinks>
     <biostatMet>-2</biostatMet>
     <symbolPack>

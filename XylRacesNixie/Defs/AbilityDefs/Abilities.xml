@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- 
+  This is mostly identical to the Beckon psycast, but modified so that it works without a psylink.
+  -->
+  <AbilityDef>
+    <defName>SirenBeckon</defName>
+    <label>beckon</label>
+    <description>Psychically command the target to approach the caster.</description>
+    <iconPath>UI/Abilities/Beckon</iconPath>
+    <category>Psychic</category>
+    <warmupSound>PsycastCastLoop</warmupSound>
+    <writeCombatLog>True</writeCombatLog>
+    <hotKey>Misc6</hotKey>
+    <casterMustBeCapableOfViolence>false</casterMustBeCapableOfViolence>
+    <cooldownTicksRange>2500</cooldownTicksRange>
+    <statBases>
+      <Ability_Duration>8</Ability_Duration>
+    </statBases>
+    <verbProperties>
+      <verbClass>Verb_CastAbility</verbClass>
+      <requireLineOfSight>True</requireLineOfSight>
+      <warmupTime>0.25</warmupTime>
+      <range>19.9</range>
+      <targetParams>
+        <canTargetBuildings>False</canTargetBuildings>
+        <canTargetAnimals>True</canTargetAnimals>
+        <neverTargetIncapacitated>True</neverTargetIncapacitated>
+        <thingCategory>Item</thingCategory>
+        <mapObjectTargetsMustBeAutoAttackable>False</mapObjectTargetsMustBeAutoAttackable>
+      </targetParams>
+    </verbProperties>
+    <comps>
+      <li Class ="CompProperties_AbilityForceJob">
+        <compClass>CompAbilityEffect_ForceJob</compClass>
+        <jobDef>GotoMindControlled</jobDef>
+        <destination>Caster</destination>
+        <durationMultiplier>PsychicSensitivity</durationMultiplier>
+        <psychic>True</psychic>
+      </li>
+      <li Class="CompProperties_AbilityFleckOnTarget">
+        <fleckDef>PsycastPsychicEffect</fleckDef>
+      </li>
+    </comps>
+  </AbilityDef>
+
+</Defs>
