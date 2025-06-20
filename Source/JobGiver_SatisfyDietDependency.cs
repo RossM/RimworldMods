@@ -16,7 +16,7 @@ namespace XylRacesCore
 
         public override float GetPriority(Pawn pawn)
         {
-            if (pawn.health.hediffSet.hediffs.Any(ShouldSatisfy))
+            if (pawn.health.hediffSet.hediffs.Any(hediff => hediff is Hediff_DietDependency { ShouldSatisfy: true }))
             {
                 return ThinkNodePriority.Food + 0.01f;
             }
@@ -29,7 +29,7 @@ namespace XylRacesCore
             List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
             for (int i = 0; i < hediffs.Count; i++)
             {
-                if (ShouldSatisfy(hediffs[i]))
+                if (hediffs[i] is Hediff_DietDependency { ShouldSatisfy: true })
                 {
                     tmpDietDependencies.Add((Hediff_DietDependency)hediffs[i]);
                 }
@@ -46,9 +46,9 @@ namespace XylRacesCore
                 if (food != null)
                 {
                     float nutritionPer = FoodUtility.NutritionForEater(pawn, food);
-                    float severityReductionPerNutrition = GetGeneFor(pawn, hediff_dietDependency).DefModExtension.severityReductionPerNutrition;
+                    float severityReductionPerNutrition = hediff_dietDependency.Gene.DefModExtension.severityReductionPerNutrition;
                     float nutritionNeeded = hediff_dietDependency.Severity / severityReductionPerNutrition;
-                    int count = Mathf.CeilToInt(nutritionPer / nutritionNeeded);
+                    int count = Mathf.CeilToInt(nutritionNeeded / nutritionPer);
 
                     tmpDietDependencies.Clear();
                     Pawn pawn2 = (food.ParentHolder as Pawn_InventoryTracker)?.pawn;
@@ -58,16 +58,12 @@ namespace XylRacesCore
                     else
                         job = JobMaker.MakeJob(JobDefOf.Ingest, food);
                     job.count = Mathf.Min(food.stackCount, count);
+                    job.ingestTotalCount = true;
                     return job;
                 }
             }
             tmpDietDependencies.Clear();
             return null;
-        }
-
-        private bool ShouldSatisfy(Hediff hediff)
-        {
-            return hediff is Hediff_DietDependency hediff_DietDependency && hediff_DietDependency.ShouldSatisfy;
         }
 
         private Thing FindFoodFor(Pawn pawn, Hediff_DietDependency dependency)
@@ -108,7 +104,7 @@ namespace XylRacesCore
             if (food.IsForbidden(pawn))
                 return false;
 
-            Gene_DietDependency gene = GetGeneFor(pawn, dependency);
+            Gene_DietDependency gene = dependency.Gene;
             if (gene == null)
             {
                 Log.Warning(string.Format("DrugValidator: Couldn't find corresponding gene for {0}", dependency));
@@ -116,12 +112,6 @@ namespace XylRacesCore
             }
 
             return gene.ValidateFood(food);
-        }
-
-        private static Gene_DietDependency GetGeneFor(Pawn pawn, Hediff_DietDependency dependency)
-        {
-            var gene = pawn.genes.GenesListForReading.OfType<Gene_DietDependency>().FirstOrDefault(g => g.DefModExtension?.hediffDef == dependency.def);
-            return gene;
         }
     }
 }
