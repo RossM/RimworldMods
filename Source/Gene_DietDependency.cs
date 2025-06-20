@@ -116,6 +116,9 @@ namespace XylRacesCore
 
         public bool ValidateFood(Thing food)
         {
+            if (food.Destroyed || !food.IngestibleNow)
+                return false;
+
             float nutrition = FoodUtility.NutritionForEater(pawn, food);
             if (nutrition <= 0.0f)
                 return false;

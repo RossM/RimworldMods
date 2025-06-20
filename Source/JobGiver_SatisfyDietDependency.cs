@@ -105,6 +105,8 @@ namespace XylRacesCore
         {
             if (!food.def.IsIngestible)
                 return false;
+            if (food.IsForbidden(pawn))
+                return false;
 
             Gene_DietDependency gene = GetGeneFor(pawn, dependency);
             if (gene == null)
