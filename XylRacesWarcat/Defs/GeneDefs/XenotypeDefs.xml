@@ -9,9 +9,11 @@
     <inheritable>true</inheritable>
     <genes>
       <li>FeralRage</li>
+      <li>Moody</li>
       <li>FastReflexes</li>
       <li>Aggression_HyperAggressive</li>
-      <li>Moody</li>
+      <li>MeleeDamage_Strong</li>
+      <li>RetractableClaws</li>
       <li>Sleepy</li>
       <li>Libido_High</li>
       <li>Eyes_Yellow</li>
@@ -21,10 +23,10 @@
       <li>FacialStripes</li>
       <li>Body_Standard</li>
       <li>Body_Thin</li>
-      <li>RetractableClaws</li>
       <li>DarkVision</li>
       <li>CarnivoreStomach</li>
       <li>MeatDependence</li>
+      <li>AptitudeTerrible_Shooting</li>
       <li>AptitudeRemarkable_Melee</li>
       <li>AptitudePoor_Animals</li>
     </genes>
