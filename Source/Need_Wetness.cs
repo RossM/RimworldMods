@@ -18,7 +18,8 @@ namespace XylRacesCore
         public override float CurInstantLevel {
             get
             {
-                if (lastInstantWetnessCheckTick == Find.TickManager.TicksGame) return lastInstantWetness;
+                if (lastInstantWetnessCheckTick == Find.TickManager.TicksGame) 
+                    return lastInstantWetness;
                 lastInstantWetnessCheckTick = Find.TickManager.TicksGame;
 
                 if (IsShowering && !(pawn.CurJob?.GetCachedDriver(pawn) is JobDriver_TakeShower))

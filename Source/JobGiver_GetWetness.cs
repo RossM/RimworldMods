@@ -30,6 +30,34 @@ namespace XylRacesCore
                 validator: t => CanInteractWith(pawn, t));
         }
 
+        public static bool IsValidWaterTileFor(Pawn pawn, IntVec3 x)
+        {
+            if (PawnUtility.KnownDangerAt(x, pawn.Map, pawn)) 
+                return false;
+            if (x.GetTerrain(pawn.Map).toxicBuildupFactor != 0f) 
+                return false;
+            if (x.Fogged(pawn.Map)) 
+                return false;
+            if (!x.Standable(pawn.Map)) 
+                return false;
+
+            WeatherDef curWeatherLerped = pawn.Map.weatherManager.CurWeatherLerped;
+            if (curWeatherLerped.rainRate > 0.25f && !x.Roofed(pawn.Map))
+                return true;
+
+            if (x.GetTerrain(pawn.Map).IsWater) 
+                return true;
+
+            return false;
+        }
+
+
+        private bool TryFindWaterTile(Pawn pawn, out IntVec3 result)
+        {
+            return RCellFinder.TryFindRandomCellNearWith(pawn.Position, x => IsValidWaterTileFor(pawn, x), pawn.Map, out result);
+
+        }
+
         private void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
@@ -77,9 +105,22 @@ namespace XylRacesCore
         {
             // TODO: Hook up GoSwimming when Odyssey comes out
 
+            if (IsValidWaterTileFor(pawn, pawn.Position))
+            {
+                var job = JobMaker.MakeJob(JobDefOf.Wait);
+                job.expiryInterval = 2000;
+                return job;
+            }
+
             Thing bestThing = FindBestShower(pawn);
             if (bestThing != null)
                 return JobMaker.MakeJob(showerJobDef, bestThing);
+
+            if (TryFindWaterTile(pawn, out var result))
+            {
+                var job = JobMaker.MakeJob(JobDefOf.Goto, result);
+                return job;
+            }
 
             return null;
         }
