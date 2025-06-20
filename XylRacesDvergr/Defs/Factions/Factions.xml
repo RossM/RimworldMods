@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <FactionDef ParentName="OutlanderRoughBase">
+    <defName>OutlanderRoughDvergr</defName>
+    <label>rough dvergr union</label>
+    <description>These people have lived here for decades or centuries, and have lost most of the technology that brought them to this world. They usually work with simple machinery and defend themselves with advanced gunpowder weapons.\n\nThey are concerned with the practical matters of trade, trust, and survival.\n\nThis particular group has a streak of barbarity in them.</description>
+    <factionIconPath>World/WorldObjects/Expanding/TownRough</factionIconPath>
+    <xenotypeSet Inherit="False">
+      <xenotypeChances>
+        <Dvergr>0.9</Dvergr>
+        <Baseliner>0.05</Baseliner>
+        <Dirtmole>0.025</Dirtmole>
+        <Titan MayRequire="Xylthixlm.Races.Titan">0.025</Titan>
+      </xenotypeChances>
+    </xenotypeSet>
+    <requiredMemes>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
+    </requiredMemes>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_FactionDef">
+        <allowedHilliness>
+          <li>LargeHills</li>
+          <li>Mountainous</li>
+        </allowedHilliness>
+      </li>
+    </modExtensions>
+  </FactionDef>
+
+</Defs>
