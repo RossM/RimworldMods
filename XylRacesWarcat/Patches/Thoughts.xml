@@ -11,6 +11,14 @@
     </value>
   </Operation>
   <Operation Class="XylRacesCore.PatchOperationAddOrMerge" MayRequire="Ludeon.RimWorld.Ideology">
+    <xpath>Defs/ThoughtDef[defName="AteCorpse"]</xpath>
+    <value>
+      <nullifyingTraits>
+        <li>Carnivore</li>
+      </nullifyingTraits>
+    </value>
+  </Operation>
+  <Operation Class="XylRacesCore.PatchOperationAddOrMerge" MayRequire="Ludeon.RimWorld.Ideology">
     <xpath>Defs/ThoughtDef[starts-with(defName,"AteNonMeat_")]</xpath>
     <value>
       <nullifyingTraits>
