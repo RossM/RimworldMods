@@ -22,10 +22,10 @@ namespace XylRacesCore
                 float originalLevel = pawn.health.capacities.GetLevel(CompProperties.originalCapacity);
                 float substituteLevel = pawn.health.capacities.GetLevel(CompProperties.substituteCapacity);
                 if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Maximum &&
-                    substituteLevel < originalLevel)
+                    substituteLevel <= originalLevel)
                     return false;
                 if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Minimum &&
-                    substituteLevel > originalLevel)
+                    substituteLevel >= originalLevel)
                     return false;
                 return true;
             }
