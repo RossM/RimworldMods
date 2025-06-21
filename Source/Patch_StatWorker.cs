@@ -119,7 +119,7 @@ namespace XylRacesCore
             {
                 PawnCapacityDef capacity = item.capacity;
 
-                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity);
+                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
                 if (foundHediff != null)
                     capacity = foundHediff.CompProperties.substituteCapacity;
 
@@ -159,7 +159,7 @@ namespace XylRacesCore
             {
                 PawnCapacityDef capacity = item.capacity;
 
-                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity);
+                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
                 if (foundHediff != null)
                     capacity = foundHediff.CompProperties.substituteCapacity;
 
@@ -273,7 +273,7 @@ namespace XylRacesCore
             {
                 PawnCapacityDef capacity = pawnCapacityOffset.capacity;
 
-                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity);
+                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
                 if (foundHediff != null)
                     capacity = foundHediff.CompProperties.substituteCapacity;
 
@@ -294,7 +294,7 @@ namespace XylRacesCore
             {
                 PawnCapacityDef capacity = pawnCapacityFactor.capacity;
 
-                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity);
+                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
                 if (foundHediff != null)
                     capacity = foundHediff.CompProperties.substituteCapacity;
 
@@ -304,12 +304,21 @@ namespace XylRacesCore
             return num;
         }
 
-        private static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity)
+        private static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
         {
-            Hediff_SubstituteCapacity foundHediff = pawn.health.hediffSet.hediffs
-                .OfType<Hediff_SubstituteCapacity>()
-                .FirstOrDefault(h => h.CompProperties.originalCapacity == capacity && h.Active);
+            Hediff_SubstituteCapacity foundHediff = pawn.health.hediffSet.hediffs.OfType<Hediff_SubstituteCapacity>().FirstOrDefault(CheckFn);
             return foundHediff;
+
+            bool CheckFn(Hediff_SubstituteCapacity h)
+            {
+                if (h.CompProperties.originalCapacity != capacity)
+                    return false;
+                if (!h.Active)
+                    return false;
+                if (h.CompProperties.excludeStats != null && h.CompProperties.excludeStats.Contains(stat))
+                    return false;
+                return true;
+            }
         }
     }
 }

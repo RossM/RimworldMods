@@ -15,6 +15,9 @@
         <originalCapacity>Sight</originalCapacity>
         <substituteCapacity>Hearing</substituteCapacity>
         <mode>Maximum</mode>
+        <excludeStats>
+          <li>ReadingSpeed</li>
+        </excludeStats>
       </li>
     </comps>
   </HediffDef>

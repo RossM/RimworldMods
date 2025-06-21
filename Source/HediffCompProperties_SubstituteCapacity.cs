@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RimWorld;
 using Verse;
 
 namespace XylRacesCore
@@ -19,6 +20,7 @@ namespace XylRacesCore
         public SubstitutionMode mode;
         public PawnCapacityDef originalCapacity;
         public PawnCapacityDef substituteCapacity;
+        public List<StatDef> excludeStats;
 
         public HediffCompProperties_SubstituteCapacity()
         {
