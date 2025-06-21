@@ -203,10 +203,12 @@ namespace XylRacesCore
                 yield break;
             }
 
+            Log.Message(string.Format("XylRacesCore: localIndexForNum = {0}", localIndexForNum));
+
             foreach (var instruction in instructionsList)
             {
                 // Matches in the line "if (stat.capacityOffsets != null)"
-                if (localIndexForNum != 0 && !foundCapacityOffsets &&
+                if (!foundCapacityOffsets &&
                     instruction.LoadsField(AccessTools.Field(typeof(StatDef), nameof(StatDef.capacityOffsets))))
                 {
                     // stat.CapacityFactors -> GetValueUnfinalized_CapacityOffsets(); null
@@ -232,7 +234,7 @@ namespace XylRacesCore
                 }
 
                 // Matches in the line "if (stat.capacityFactors != null)"
-                if (localIndexForNum != 0 && !foundCapacityFactors &&
+                if (!foundCapacityFactors &&
                     instruction.LoadsField(AccessTools.Field(typeof(StatDef), nameof(StatDef.capacityFactors))))
                 {
                     // stat.CapacityFactors -> GetValueUnfinalized_CapacityFactors(); null
