@@ -19,7 +19,6 @@ namespace XylRacesCore
         {
             bool foundCapacityOffsets = false;
             bool foundCapacityFactors = false;
-            bool foundCurStage = false;
 
             foreach (var instruction in instructions)
             {
@@ -35,14 +34,12 @@ namespace XylRacesCore
                     yield return new CodeInstruction(OpCodes.Pop);
 
                     // Read this, req, sb, and whitespace from arguments
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return new CodeInstruction(OpCodes.Ldarg_2);
-                    yield return new CodeInstruction(OpCodes.Ldarg, 4);
+                    yield return CodeInstruction.LoadArgument(0);
+                    yield return CodeInstruction.LoadArgument(1);
+                    yield return CodeInstruction.LoadArgument(2);
+                    yield return CodeInstruction.LoadArgument(4);
                     // Call our new function
-                    yield return new CodeInstruction(OpCodes.Call,
-                        AccessTools.Method(typeof(Patch_StatWorker),
-                            nameof(GetOffsetsAndFactorsExplanation_CapacityOffsets)));
+                    yield return CodeInstruction.Call(() => GetOffsetsAndFactorsExplanation_CapacityOffsets);
 
                     // Put a null on the stack so the "if (capacityOffsets != null)" block is skipped
                     yield return new CodeInstruction(OpCodes.Ldnull);
@@ -61,33 +58,15 @@ namespace XylRacesCore
                     yield return new CodeInstruction(OpCodes.Pop);
 
                     // Read this, req, sb, and whitespace from arguments
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return new CodeInstruction(OpCodes.Ldarg_2);
-                    yield return new CodeInstruction(OpCodes.Ldarg, 4);
+                    yield return CodeInstruction.LoadArgument(0);
+                    yield return CodeInstruction.LoadArgument(1);
+                    yield return CodeInstruction.LoadArgument(2);
+                    yield return CodeInstruction.LoadArgument(4);
                     // Call our new function
-                    yield return new CodeInstruction(OpCodes.Call,
-                        AccessTools.Method(typeof(Patch_StatWorker),
-                            nameof(GetOffsetsAndFactorsExplanation_CapacityFactors)));
+                    yield return CodeInstruction.Call(() => GetOffsetsAndFactorsExplanation_CapacityFactors);
 
                     // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
                     yield return new CodeInstruction(OpCodes.Ldnull);
-                    continue;
-                }
-
-                // Matches in the line "HediffStage curStage = hediffs[num4].CurStage;"
-                if (!foundCurStage &&
-                    instruction.Calls(AccessTools.PropertyGetter(typeof(Hediff), nameof(Hediff.CurStage))))
-                {
-                    // hediffs[num4].CurStage -> GetOffsetsAndFactorsExplanation_CurStage(hediffs[num4])
-
-                    foundCurStage = true;
-
-                    // We have the hediff on the stack, so we just call our method to check it
-                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Patch_StatWorker),
-                        nameof(GetOffsetsAndFactorsExplanation_CurStage)));
-                    // The HediffStage or null is now on the stack
-
                     continue;
                 }
 
@@ -197,13 +176,37 @@ namespace XylRacesCore
         [HarmonyTranspiler, HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
         static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            var instructionsList = new List<CodeInstruction>(instructions);
+
             bool foundCapacityOffsets = false;
             bool foundCapacityFactors = false;
-        
-            foreach (var instruction in instructions)
+
+            int localIndexForNum = -1;
+
+            for (int i = 0; i < instructionsList.Count - 1; i++)
+            {
+                // Match in the line "float num = GetBaseValueFor(req);"
+                if (instructionsList[i].Calls(AccessTools.Method(typeof(StatWorker), nameof(StatWorker.GetBaseValueFor))) &&
+                    instructionsList[i + 1].IsStloc())
+                {
+                    localIndexForNum = instructionsList[i + 1].LocalIndex();
+                    break;
+                }
+            }
+
+            if (localIndexForNum < 0)
+            {
+                // "num" is not in field 0. Abort!
+                Log.Error("XylRacesCore: Local for 'num' not found");
+                foreach (var instruction in instructionsList)
+                    yield return instruction;
+                yield break;
+            }
+
+            foreach (var instruction in instructionsList)
             {
                 // Matches in the line "if (stat.capacityOffsets != null)"
-                if (!foundCapacityOffsets &&
+                if (localIndexForNum != 0 && !foundCapacityOffsets &&
                     instruction.LoadsField(AccessTools.Field(typeof(StatDef), nameof(StatDef.capacityOffsets))))
                 {
                     // stat.CapacityFactors -> GetValueUnfinalized_CapacityOffsets(); null
@@ -214,16 +217,14 @@ namespace XylRacesCore
                     yield return new CodeInstruction(OpCodes.Pop);
 
                     // Read this, req from arguments
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.LoadArgument(0);
+                    yield return CodeInstruction.LoadArgument(1);
                     // Read num from locals
-                    yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    yield return CodeInstruction.LoadLocal(localIndexForNum);
                     // Call our new function
-                    yield return new CodeInstruction(OpCodes.Call,
-                        AccessTools.Method(typeof(Patch_StatWorker),
-                            nameof(GetValueUnfinalized_CapacityOffsets)));
+                    yield return CodeInstruction.Call(() => GetValueUnfinalized_CapacityOffsets);
                     // Save num to locals
-                    yield return new CodeInstruction(OpCodes.Stloc_0);
+                    yield return CodeInstruction.StoreLocal(localIndexForNum);
 
                     // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
                     yield return new CodeInstruction(OpCodes.Ldnull);
@@ -231,7 +232,7 @@ namespace XylRacesCore
                 }
 
                 // Matches in the line "if (stat.capacityFactors != null)"
-                if (!foundCapacityFactors &&
+                if (localIndexForNum != 0 && !foundCapacityFactors &&
                     instruction.LoadsField(AccessTools.Field(typeof(StatDef), nameof(StatDef.capacityFactors))))
                 {
                     // stat.CapacityFactors -> GetValueUnfinalized_CapacityFactors(); null
@@ -242,16 +243,14 @@ namespace XylRacesCore
                     yield return new CodeInstruction(OpCodes.Pop);
 
                     // Read this, req from arguments
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.LoadArgument(0);
+                    yield return CodeInstruction.LoadArgument(1);
                     // Read num from locals
-                    yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    yield return CodeInstruction.LoadLocal(localIndexForNum);
                     // Call our new function
-                    yield return new CodeInstruction(OpCodes.Call,
-                        AccessTools.Method(typeof(Patch_StatWorker),
-                            nameof(GetValueUnfinalized_CapacityFactors)));
+                    yield return CodeInstruction.Call(() => GetValueUnfinalized_CapacityFactors);
                     // Save num to locals
-                    yield return new CodeInstruction(OpCodes.Stloc_0);
+                    yield return CodeInstruction.StoreLocal(localIndexForNum);
 
                     // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
                     yield return new CodeInstruction(OpCodes.Ldnull);
