@@ -24,13 +24,9 @@ namespace XylRacesCore
 
         public override void DoEditInterface(Listing_ScenEdit listing)
         {
-
-            Rect scenPartRect = listing.GetScenPartRect(this, ScenPart.RowHeight * 2f + 1f);
-            Listing_Standard listing_Standard = new Listing_Standard();
-            listing_Standard.Begin(scenPartRect.TopHalf());
-            listing_Standard.ColumnWidth = scenPartRect.width;
-            listing_Standard.TextFieldNumeric(ref count, ref countBuf, 1f);
-            listing_Standard.End();
+            Rect scenPartRect = listing.GetScenPartRect(this, ScenPart.RowHeight * 1f + 1f);
+            scenPartRect.height = ScenPart.RowHeight;
+            Widgets.TextFieldNumeric(scenPartRect, ref count, ref countBuf, 1);
         }
 
         public override string Summary(Scenario scen)
@@ -42,7 +38,7 @@ namespace XylRacesCore
         {
             if (tag == "PlayerStartsWith")
             {
-                yield return "Slave".TranslateSimple().CapitalizeFirst() + " x" + count;
+                yield return "slave".TranslateSimple().CapitalizeFirst() + " x" + count;
             }
         }
 

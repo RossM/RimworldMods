@@ -19,4 +19,22 @@
     <summaryPriority>310</summaryPriority>
   </ScenPartDef>
 
+  <ScenPartDef MayRequire="Ludeon.Rimworld.Royalty">
+    <defName>PsylinkLevels</defName>
+    <label>start with psylink levels</label>
+    <scenPartClass>XylRacesCore.ScenPart_PsylinkLevels</scenPartClass>
+    <category>StartingImportant</category>
+    <selectionWeight>1.0</selectionWeight>
+    <summaryPriority>311</summaryPriority>
+  </ScenPartDef>
+
+  <ScenPartDef MayRequire="Ludeon.Rimworld.Royalty">
+    <defName>Psycasts</defName>
+    <label>start with psycast</label>
+    <scenPartClass>XylRacesCore.ScenPart_Psycast</scenPartClass>
+    <category>StartingImportant</category>
+    <selectionWeight>1.0</selectionWeight>
+    <summaryPriority>312</summaryPriority>
+  </ScenPartDef>
+
 </Defs>
