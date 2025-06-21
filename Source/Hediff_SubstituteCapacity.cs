@@ -43,31 +43,34 @@ namespace XylRacesCore
                     stage.statOffsets = new List<StatModifier>();
                     stage.statFactors = new List<StatModifier>();
 
-                    foreach (var statDef in DefDatabase<StatDef>.AllDefs)
+                    if (Active)
                     {
-                        PawnCapacityOffset pawnCapacityOffset = statDef.capacityOffsets?
-                            .Where(o => o.capacity == CompProperties.originalCapacity).FirstOrDefault();
-                        if (pawnCapacityOffset != null)
+                        foreach (var statDef in DefDatabase<StatDef>.AllDefs)
                         {
-                            float offset = GetOffset(pawnCapacityOffset);
-
-                            if (offset != 0)
+                            PawnCapacityOffset pawnCapacityOffset = statDef.capacityOffsets?
+                                .Where(o => o.capacity == CompProperties.originalCapacity).FirstOrDefault();
+                            if (pawnCapacityOffset != null)
                             {
-                                stage.statOffsets.Add(new StatModifier()
-                                    { stat = statDef, value = offset });
+                                float offset = GetOffset(pawnCapacityOffset);
+
+                                if (offset != 0)
+                                {
+                                    stage.statOffsets.Add(new StatModifier()
+                                        { stat = statDef, value = offset });
+                                }
                             }
-                        }
 
-                        PawnCapacityFactor pawnCapacityFactor = statDef.capacityFactors?
-                            .Where(o => o.capacity == CompProperties.originalCapacity).FirstOrDefault();
-                        if (pawnCapacityFactor != null)
-                        {
-                            float factor = GetFactor(pawnCapacityFactor);
-
-                            if (factor != 1.0f)
+                            PawnCapacityFactor pawnCapacityFactor = statDef.capacityFactors?
+                                .Where(o => o.capacity == CompProperties.originalCapacity).FirstOrDefault();
+                            if (pawnCapacityFactor != null)
                             {
-                                stage.statFactors.Add(new StatModifier()
-                                    {stat = statDef, value = factor });
+                                float factor = GetFactor(pawnCapacityFactor);
+
+                                if (factor != 1.0f)
+                                {
+                                    stage.statFactors.Add(new StatModifier()
+                                        { stat = statDef, value = factor });
+                                }
                             }
                         }
                     }
@@ -81,32 +84,34 @@ namespace XylRacesCore
             }
         }
 
+        public bool Active
+        {
+            get
+            {
+                float originalLevel = pawn.health.capacities.GetLevel(CompProperties.originalCapacity);
+                float substituteLevel = pawn.health.capacities.GetLevel(CompProperties.substituteCapacity);
+                if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Maximum &&
+                    substituteLevel < originalLevel)
+                    return false;
+                if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Minimum &&
+                    substituteLevel > originalLevel)
+                    return false;
+                return true;
+            }
+        }
+
         private float GetOffset(PawnCapacityOffset pawnCapacityOffset)
         {
-            float originalLevel = pawn.health.capacities.GetLevel(CompProperties.originalCapacity);
-            float substituteLevel = pawn.health.capacities.GetLevel(CompProperties.substituteCapacity);
-            if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Maximum && substituteLevel < originalLevel)
-                return 0.0f;
-            if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Minimum && substituteLevel > originalLevel)
-                return 0.0f;
-
-            float originalOffset = pawnCapacityOffset.GetOffset(originalLevel);
-            float substituteOffset = pawnCapacityOffset.GetOffset(substituteLevel);
+            float originalOffset = pawnCapacityOffset.GetOffset(pawn.health.capacities.GetLevel(CompProperties.originalCapacity));
+            float substituteOffset = pawnCapacityOffset.GetOffset(pawn.health.capacities.GetLevel(CompProperties.substituteCapacity));
 
             return substituteOffset - originalOffset;
         }
 
         private float GetFactor(PawnCapacityFactor pawnCapacityFactor)
         {
-            float originalLevel = pawn.health.capacities.GetLevel(CompProperties.originalCapacity);
-            float substituteLevel = pawn.health.capacities.GetLevel(CompProperties.substituteCapacity);
-            if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Maximum && substituteLevel < originalLevel)
-                return 1.0f;
-            if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Minimum && substituteLevel > originalLevel)
-                return 1.0f;
-
-            float originalFactor = pawnCapacityFactor.GetFactor(originalLevel);
-            float substituteFactor = pawnCapacityFactor.GetFactor(substituteLevel);
+            float originalFactor = pawnCapacityFactor.GetFactor(pawn.health.capacities.GetLevel(CompProperties.originalCapacity));
+            float substituteFactor = pawnCapacityFactor.GetFactor(pawn.health.capacities.GetLevel(CompProperties.substituteCapacity));
 
             originalFactor = Mathf.Lerp(1, originalFactor, pawnCapacityFactor.weight);
             substituteFactor = Mathf.Lerp(1, substituteFactor, pawnCapacityFactor.weight);
