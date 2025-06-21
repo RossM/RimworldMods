@@ -1,4 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  
+
+  <GeneDef>
+    <defName>Blind</defName>
+    <label>blind</label>
+    <description>Carriers of this gene are blind.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>5</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>400</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Industrious</iconPath>
+    <iconColor>(0.75, 0.25, 0.25)</iconColor>
+    <capMods>
+      <li>
+        <capacity>Sight</capacity>
+        <setMax>0</setMax>
+      </li>
+    </capMods>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <defName>Echolocation</defName>
+    <label>echolocation</label>
+    <description>Carriers of this gene use echolocation.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>400</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Industrious</iconPath>
+    <iconColor>(0.25, 0.75, 0.25)</iconColor>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>Echolocation</hediff>
+          </li>
+        </hediffGivers>
+        <applyImmediately>true</applyImmediately>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
 </Defs>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <HediffDef>
+    <hediffClass>XylRacesCore.Hediff_SubstituteCapacity</hediffClass>
+    <defName>Echolocation</defName>
+    <label>echolocation</label>
+    <description>This character has echolocation.</description>
+    <initialSeverity>1.0</initialSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <keepOnBodyPartRestoration>true</keepOnBodyPartRestoration>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="XylRacesCore.HediffCompProperties_SubstituteCapacity">
+        <originalCapacity>Sight</originalCapacity>
+        <substituteCapacity>Hearing</substituteCapacity>
+        <mode>Maximum</mode>
+      </li>
+    </comps>
+  </HediffDef>
+
+</Defs>
