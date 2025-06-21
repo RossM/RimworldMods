@@ -2,6 +2,7 @@
 <Defs>
 
   <GeneDef>
+    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
     <defName>Blind</defName>
     <label>blind</label>
     <description>Carriers of this gene are blind.</description>
@@ -11,12 +12,20 @@
     <displayOrderInCategory>400</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_Industrious</iconPath>
     <iconColor>(0.75, 0.25, 0.25)</iconColor>
-    <capMods>
-      <li>
-        <capacity>Sight</capacity>
-        <setMax>0</setMax>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>GeneticBlindness</hediff>
+            <partsToAffect>
+              <li>Eye</li>
+            </partsToAffect>
+            <countToAffect>2</countToAffect>
+          </li>
+        </hediffGivers>
+        <applyImmediately>true</applyImmediately>
       </li>
-    </capMods>
+    </modExtensions>
   </GeneDef>
 
   <GeneDef>
@@ -35,6 +44,9 @@
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>Echolocation</hediff>
+            <partsToAffect>
+              <li>Head</li>
+            </partsToAffect>
           </li>
         </hediffGivers>
         <applyImmediately>true</applyImmediately>
