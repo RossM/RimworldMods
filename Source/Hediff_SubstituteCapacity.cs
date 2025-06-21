@@ -15,75 +15,6 @@ namespace XylRacesCore
     {
         public HediffCompProperties_SubstituteCapacity CompProperties => GetComp<HediffComp_SubstituteCapacity>().Properties;
 
-        [Unsaved(false)]
-        private HediffStage stage;
-
-        [Unsaved(false)] 
-        private bool processing = false;
-
-        public override HediffStage CurStage
-        {
-            get
-            {
-                if (processing)
-                    return stage;
-                try
-                {
-                    processing = true;
-
-                    stage = new HediffStage();
-                    if (def.stages != null)
-                    {
-                        foreach (var field in typeof(HediffStage).GetFields())
-                        {
-                            field.SetValue(stage, field.GetValue(def.stages[CurStageIndex]));
-                        }
-                    }
-
-                    stage.statOffsets = new List<StatModifier>();
-                    stage.statFactors = new List<StatModifier>();
-
-                    if (Active)
-                    {
-                        foreach (var statDef in DefDatabase<StatDef>.AllDefs)
-                        {
-                            PawnCapacityOffset pawnCapacityOffset = statDef.capacityOffsets?
-                                .Where(o => o.capacity == CompProperties.originalCapacity).FirstOrDefault();
-                            if (pawnCapacityOffset != null)
-                            {
-                                float offset = GetOffset(pawnCapacityOffset);
-
-                                if (offset != 0)
-                                {
-                                    stage.statOffsets.Add(new StatModifier()
-                                        { stat = statDef, value = offset });
-                                }
-                            }
-
-                            PawnCapacityFactor pawnCapacityFactor = statDef.capacityFactors?
-                                .Where(o => o.capacity == CompProperties.originalCapacity).FirstOrDefault();
-                            if (pawnCapacityFactor != null)
-                            {
-                                float factor = GetFactor(pawnCapacityFactor);
-
-                                if (factor != 1.0f)
-                                {
-                                    stage.statFactors.Add(new StatModifier()
-                                        { stat = statDef, value = factor });
-                                }
-                            }
-                        }
-                    }
-
-                    return stage;
-                }
-                finally
-                {
-                    processing = false;
-                }
-            }
-        }
-
         public bool Active
         {
             get
@@ -100,26 +31,47 @@ namespace XylRacesCore
             }
         }
 
-        private float GetOffset(PawnCapacityOffset pawnCapacityOffset)
+        public override string Description
         {
-            float originalOffset = pawnCapacityOffset.GetOffset(pawn.health.capacities.GetLevel(CompProperties.originalCapacity));
-            float substituteOffset = pawnCapacityOffset.GetOffset(pawn.health.capacities.GetLevel(CompProperties.substituteCapacity));
+            get
+            {
+                StringBuilder sb = new StringBuilder(base.Description);
 
-            return substituteOffset - originalOffset;
+                sb.AppendLine();
+                sb.AppendLine();
+
+                ExtraDescription(sb);
+
+                return sb.ToString();
+            }
         }
 
-        private float GetFactor(PawnCapacityFactor pawnCapacityFactor)
+        private void ExtraDescription(StringBuilder sb)
         {
-            float originalFactor = pawnCapacityFactor.GetFactor(pawn.health.capacities.GetLevel(CompProperties.originalCapacity));
-            float substituteFactor = pawnCapacityFactor.GetFactor(pawn.health.capacities.GetLevel(CompProperties.substituteCapacity));
+            sb.Append(CompProperties.substituteCapacity.LabelCap + " is used instead of " + CompProperties.originalCapacity.LabelCap
+                      + " for stat calculations");
+            if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Maximum)
+                sb.Append(" if it is higher");
+            if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Minimum)
+                sb.Append(" if it is lower");
+            sb.Append(".");
+        }
 
-            originalFactor = Mathf.Lerp(1, originalFactor, pawnCapacityFactor.weight);
-            substituteFactor = Mathf.Lerp(1, substituteFactor, pawnCapacityFactor.weight);
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+        {
+            foreach (var statDrawEntry in base.SpecialDisplayStats(req))
+                yield return statDrawEntry;
 
-            if (originalFactor == 0)
-                return 1.0f;
+            var difference = pawn.health.capacities.GetLevel(CompProperties.substituteCapacity) -
+                             pawn.health.capacities.GetLevel(CompProperties.originalCapacity);
+            if (!Active)
+                difference = 0;
 
-            return substituteFactor / originalFactor;
+            StringBuilder sb = new StringBuilder();
+            ExtraDescription(sb);
+
+            yield return new StatDrawEntry(StatCategoryDefOf.CapacityEffects, "Effective " + CompProperties.originalCapacity.label,
+                difference.ToStringPercentSigned(), sb.ToString(), 1);
         }
     }
 }

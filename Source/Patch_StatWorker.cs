@@ -15,10 +15,10 @@ namespace XylRacesCore
     public class Patch_StatWorker
     {
         [HarmonyTranspiler, HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            bool foundCapacityFactors = false;
             bool foundCapacityOffsets = false;
+            bool foundCapacityFactors = false;
             bool foundCurStage = false;
 
             foreach (var instruction in instructions)
@@ -39,12 +39,10 @@ namespace XylRacesCore
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return new CodeInstruction(OpCodes.Ldarg_2);
                     yield return new CodeInstruction(OpCodes.Ldarg, 4);
-#pragma warning disable CS8974 // Converting method group to non-delegate type
                     // Call our new function
                     yield return new CodeInstruction(OpCodes.Call,
                         AccessTools.Method(typeof(Patch_StatWorker),
                             nameof(GetOffsetsAndFactorsExplanation_CapacityOffsets)));
-#pragma warning restore CS8974 // Converting method group to non-delegate type
 
                     // Put a null on the stack so the "if (capacityOffsets != null)" block is skipped
                     yield return new CodeInstruction(OpCodes.Ldnull);
@@ -67,12 +65,10 @@ namespace XylRacesCore
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return new CodeInstruction(OpCodes.Ldarg_2);
                     yield return new CodeInstruction(OpCodes.Ldarg, 4);
-#pragma warning disable CS8974 // Converting method group to non-delegate type
                     // Call our new function
                     yield return new CodeInstruction(OpCodes.Call,
                         AccessTools.Method(typeof(Patch_StatWorker),
                             nameof(GetOffsetsAndFactorsExplanation_CapacityFactors)));
-#pragma warning restore CS8974 // Converting method group to non-delegate type
 
                     // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
                     yield return new CodeInstruction(OpCodes.Ldnull);
@@ -91,7 +87,7 @@ namespace XylRacesCore
                     yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Patch_StatWorker),
                         nameof(GetOffsetsAndFactorsExplanation_CurStage)));
                     // The HediffStage or null is now on the stack
-                    
+
                     continue;
                 }
 
@@ -123,9 +119,7 @@ namespace XylRacesCore
             {
                 PawnCapacityDef capacity = item.capacity;
 
-                Hediff_SubstituteCapacity foundHediff = pawn.health.hediffSet.hediffs
-                    .OfType<Hediff_SubstituteCapacity>()
-                    .FirstOrDefault(h => h.CompProperties.originalCapacity == capacity && h.Active);
+                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity);
                 if (foundHediff != null)
                     capacity = foundHediff.CompProperties.substituteCapacity;
 
@@ -165,9 +159,7 @@ namespace XylRacesCore
             {
                 PawnCapacityDef capacity = item.capacity;
 
-                Hediff_SubstituteCapacity foundHediff = pawn.health.hediffSet.hediffs
-                    .OfType<Hediff_SubstituteCapacity>()
-                    .FirstOrDefault(h => h.CompProperties.originalCapacity == capacity && h.Active);
+                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity);
                 if (foundHediff != null)
                     capacity = foundHediff.CompProperties.substituteCapacity;
 
@@ -200,6 +192,124 @@ namespace XylRacesCore
                 return null;
 
             return hediff.CurStage;
+        }
+
+        [HarmonyTranspiler, HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
+        static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            bool foundCapacityOffsets = false;
+            bool foundCapacityFactors = false;
+        
+            foreach (var instruction in instructions)
+            {
+                // Matches in the line "if (stat.capacityOffsets != null)"
+                if (!foundCapacityOffsets &&
+                    instruction.LoadsField(AccessTools.Field(typeof(StatDef), nameof(StatDef.capacityOffsets))))
+                {
+                    // stat.CapacityFactors -> GetValueUnfinalized_CapacityOffsets(); null
+
+                    foundCapacityOffsets = true;
+
+                    // Toss the input that was going to be used for the load
+                    yield return new CodeInstruction(OpCodes.Pop);
+
+                    // Read this, req from arguments
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    // Read num from locals
+                    yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    // Call our new function
+                    yield return new CodeInstruction(OpCodes.Call,
+                        AccessTools.Method(typeof(Patch_StatWorker),
+                            nameof(GetValueUnfinalized_CapacityOffsets)));
+                    // Save num to locals
+                    yield return new CodeInstruction(OpCodes.Stloc_0);
+
+                    // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
+                    yield return new CodeInstruction(OpCodes.Ldnull);
+                    continue;
+                }
+
+                // Matches in the line "if (stat.capacityFactors != null)"
+                if (!foundCapacityFactors &&
+                    instruction.LoadsField(AccessTools.Field(typeof(StatDef), nameof(StatDef.capacityFactors))))
+                {
+                    // stat.CapacityFactors -> GetValueUnfinalized_CapacityFactors(); null
+
+                    foundCapacityFactors = true;
+
+                    // Toss the input that was going to be used for the load
+                    yield return new CodeInstruction(OpCodes.Pop);
+
+                    // Read this, req from arguments
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    // Read num from locals
+                    yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    // Call our new function
+                    yield return new CodeInstruction(OpCodes.Call,
+                        AccessTools.Method(typeof(Patch_StatWorker),
+                            nameof(GetValueUnfinalized_CapacityFactors)));
+                    // Save num to locals
+                    yield return new CodeInstruction(OpCodes.Stloc_0);
+
+                    // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
+                    yield return new CodeInstruction(OpCodes.Ldnull);
+                    continue;
+                }
+
+                yield return instruction;
+            }
+        }
+
+        static float GetValueUnfinalized_CapacityOffsets(StatWorker instance, StatRequest req, float num)
+        {
+            var pawn = (Pawn)req.Thing;
+            var stat = (StatDef)AccessTools.Field(typeof(StatWorker), "stat").GetValue(instance);
+            if (stat.capacityOffsets == null)
+                return num;
+
+            foreach (PawnCapacityOffset pawnCapacityOffset in stat.capacityOffsets)
+            {
+                PawnCapacityDef capacity = pawnCapacityOffset.capacity;
+
+                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity);
+                if (foundHediff != null)
+                    capacity = foundHediff.CompProperties.substituteCapacity;
+
+                num += pawnCapacityOffset.GetOffset(pawn.health.capacities.GetLevel(capacity));
+            }
+
+            return num;
+        }
+
+        static float GetValueUnfinalized_CapacityFactors(StatWorker instance, StatRequest req, float num)
+        {
+            var pawn = (Pawn)req.Thing;
+            var stat = (StatDef)AccessTools.Field(typeof(StatWorker), "stat").GetValue(instance);
+            if (stat.capacityFactors == null)
+                return num;
+
+            foreach (PawnCapacityFactor pawnCapacityFactor in stat.capacityFactors)
+            {
+                PawnCapacityDef capacity = pawnCapacityFactor.capacity;
+
+                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity);
+                if (foundHediff != null)
+                    capacity = foundHediff.CompProperties.substituteCapacity;
+
+                float factor = pawnCapacityFactor.GetFactor(pawn.health.capacities.GetLevel(capacity));
+                num = Mathf.Lerp(num, num * factor, pawnCapacityFactor.weight);
+            }
+            return num;
+        }
+
+        private static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity)
+        {
+            Hediff_SubstituteCapacity foundHediff = pawn.health.hediffSet.hediffs
+                .OfType<Hediff_SubstituteCapacity>()
+                .FirstOrDefault(h => h.CompProperties.originalCapacity == capacity && h.Active);
+            return foundHediff;
         }
     }
 }
