@@ -12,24 +12,15 @@ namespace XylRacesCore
         {
             if (DebugSettings.godMode)
                 return;
+            if (__result == false)
+                return;
 
             BuildableDef def = __instance.PlacingDef;
             ModExtension_BuildableDef extension = def.GetModExtension<ModExtension_BuildableDef>();
             if (extension == null) 
                 return;
 
-            if (extension.genePrerequisites != null)
-            {
-                foreach (var gene in extension.genePrerequisites)
-                {
-                    if (!__instance.Map.mapPawns.PawnsInFaction(Faction.OfPlayer)
-                            .Any((Pawn p) => p.genes?.HasActiveGene(gene) ?? false))
-                    {
-                        __result = false;
-                        return;
-                    }
-                }
-            }
+            __result = extension.ValidateBuild(__instance.Map);
         }
     }
 }
