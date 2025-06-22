@@ -15,51 +15,21 @@ namespace XylRacesCore
     public class Patch_TileFinder
     {
         [HarmonyPrefix]
-        static void Prefix(PlanetLayer layer, Faction faction, bool mustBeAutoChoosable, ref Predicate<PlanetTile> extraValidator)
+        static void Prefix(PlanetLayer layer, Faction faction, bool mustBeAutoChoosable,
+            ref Predicate<PlanetTile> extraValidator)
         {
             var extension = faction?.def?.GetModExtension<ModExtension_FactionDef>();
             if (extension == null)
                 return;
 
-            if (extension.waterRequired)
+            var oldValidator = extraValidator;
+            extraValidator = planetTile =>
             {
-                var oldValidator = extraValidator;
-                extraValidator = planetTile =>
-                {
-                    if (oldValidator != null && !oldValidator(planetTile))
-                        return false;
-                    if (planetTile.Tile is not SurfaceTile surfaceTile) 
-                        return false;
-                    //Log.Message(string.Format("surfaceTile: {0}", surfaceTile));
-                    return surfaceTile.IsCoastal || surfaceTile.Rivers is { Count: > 0 };
-                };
-            }
+                if (oldValidator != null && !oldValidator(planetTile))
+                    return false;
 
-            if (extension.allowedBiomes != null)
-            {
-                var oldValidator = extraValidator;
-                extraValidator = planetTile =>
-                {
-                    if (oldValidator != null && !oldValidator(planetTile))
-                        return false;
-                    if (planetTile.Tile is not SurfaceTile surfaceTile) 
-                        return false;
-                    return surfaceTile.Biomes.Any(biomeDef => extension.allowedBiomes.Contains(biomeDef));
-                };
-            }
-
-            if (extension.allowedHilliness != null)
-            {
-                var oldValidator = extraValidator;
-                extraValidator = planetTile =>
-                {
-                    if (oldValidator != null && !oldValidator(planetTile))
-                        return false;
-                    if (planetTile.Tile is not SurfaceTile surfaceTile)
-                        return false;
-                    return extension.allowedHilliness.Contains(surfaceTile.hilliness);
-                };
-            }
+                return extension.ValidatePlanetTile(planetTile);
+            };
         }
     }
 }

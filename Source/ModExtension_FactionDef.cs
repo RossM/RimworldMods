@@ -14,5 +14,22 @@ namespace XylRacesCore
         public List<BiomeDef> allowedBiomes;
         public List<Hilliness> allowedHilliness;
         public bool waterRequired = false;
+
+        public bool ValidatePlanetTile(PlanetTile planetTile)
+        {
+            if (planetTile.Tile is not SurfaceTile surfaceTile)
+                return false;
+
+            if (waterRequired && !surfaceTile.IsCoastal && surfaceTile.Rivers is not { Count: > 0 }) 
+                return false;
+
+            if (allowedBiomes != null && !surfaceTile.Biomes.Any(biomeDef => allowedBiomes.Contains(biomeDef))) 
+                return false;
+
+            if (allowedHilliness != null && !allowedHilliness.Contains(surfaceTile.hilliness)) 
+                return false;
+
+            return true;
+        }
     }
 }
