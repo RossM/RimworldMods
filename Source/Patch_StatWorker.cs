@@ -34,7 +34,8 @@ namespace XylRacesCore
                 {
                     new()
                     {
-                        Match =
+                        SaveLocals = true,
+                        Pattern =
                         [
                             // Match to find the local "pawn" is stored in
                             new CodeInstruction(OpCodes.Isinst, typeof(Pawn)),
@@ -45,13 +46,11 @@ namespace XylRacesCore
                     new()
                     {
                         Min = 1, Max = 0,
-                        PreserveOriginal = true,
-                        KeepLocals = false,
-                        Match =
+                        Pattern =
                         [
                             CodeInstruction.LoadField(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
                         ],
-                        Replace =
+                        Output =
                         [
                             CodeInstruction.StoreLocal(1),
                             // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
@@ -77,15 +76,13 @@ namespace XylRacesCore
                     new()
                     {
                         Min = 1, Max = 1,
-                        PreserveOriginal = true,
-                        KeepLocals = false,
                         Chained = true,
-                        Match =
+                        Pattern =
                         [
                             // sb.AppendLine(whitespace + "    " + text + ": " + offset.ToStringSign() + text2 + " (" + text3 + ")");
                             CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]),
                         ],
-                        Replace =
+                        Output =
                         [
                             // AppendSubstitutionDescription(sb, whitespace, foundHediff, pawn);
                             // sb
@@ -103,13 +100,11 @@ namespace XylRacesCore
                     new()
                     {
                         Min = 1, Max = 0,
-                        PreserveOriginal = true,
-                        KeepLocals = false,
-                        Match =
+                        Pattern =
                         [
                             CodeInstruction.LoadField(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
                         ],
-                        Replace =
+                        Output =
                         [
                             CodeInstruction.StoreLocal(1),
                             // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
@@ -135,15 +130,13 @@ namespace XylRacesCore
                     new()
                     {
                         Min = 1, Max = 1,
-                        PreserveOriginal = true,
-                        KeepLocals = false,
                         Chained = true,
-                        Match =
+                        Pattern =
                         [
                             // sb.AppendLine(whitespace + "    " + text8 + ": x" + text9 + " (" + text10 + ")");
                             CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]),
                         ],
-                        Replace =
+                        Output =
                         [
                             // AppendSubstitutionDescription(sb, whitespace, foundHediff, pawn);
                             // sb
@@ -195,7 +188,8 @@ namespace XylRacesCore
                 {
                     new()
                     {
-                        Match =
+                        SaveLocals = true,
+                        Pattern =
                         [
                             // Match to find the local "pawn" is stored in
                             new CodeInstruction(OpCodes.Isinst, typeof(Pawn)),
@@ -206,12 +200,11 @@ namespace XylRacesCore
                     new()
                     {
                         Min = 1, Max = 0,
-                        PreserveOriginal = true,
-                        Match =
+                        Pattern =
                         [
                             CodeInstruction.LoadField(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
                         ],
-                        Replace =
+                        Output =
                         [
                             CodeInstruction.StoreLocal(1),
                             // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
@@ -235,12 +228,11 @@ namespace XylRacesCore
                     new()
                     {
                         Min = 1, Max = 0,
-                        PreserveOriginal = true,
-                        Match =
+                        Pattern =
                         [
                             CodeInstruction.LoadField(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
                         ],
-                        Replace =
+                        Output =
                         [
                             CodeInstruction.StoreLocal(1),
                             // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);

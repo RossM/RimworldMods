@@ -18,11 +18,11 @@ namespace XylRacesCore
         public class Rule
         {
             public int Min = 1, Max = 1;
-            public bool PreserveOriginal = false;
-            public bool KeepLocals = true;
+            public bool Replace = false;
+            public bool SaveLocals = false;
             public bool Chained = false;
-            public CodeInstruction[] Match;
-            public CodeInstruction[] Replace;
+            public CodeInstruction[] Pattern;
+            public CodeInstruction[] Output;
         }
 
         public List<Rule> Rules = new();
@@ -48,29 +48,29 @@ namespace XylRacesCore
                 int matchCount = 0;
 
                 for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[matches.Count - 1].end + 1 : 0;
-                     instructionIndex <= instructions.Count - rule.Match.Length;
+                     instructionIndex <= instructions.Count - rule.Pattern.Length;
                      instructionIndex++)
                 {
                     bool isMatch = true;
                     var tempLocalIndexMap = new Dictionary<int, int>();
 
-                    for (int matchIndex = 0; matchIndex < rule.Match.Length; matchIndex++)
+                    for (int patternIndex = 0; patternIndex < rule.Pattern.Length; patternIndex++)
                     {
-                        var inst = instructions[instructionIndex + matchIndex];
-                        var matchInst = rule.Match[matchIndex];
+                        var inst = instructions[instructionIndex + patternIndex];
+                        var patternInst = rule.Pattern[patternIndex];
 
                         if (debug)
-                            Log.Message(string.Format("COMPARE {0} : {1}", matchInst, inst));
+                            Log.Message(string.Format("COMPARE {0} : {1}", patternInst, inst));
 
                         // For a load or store, map the local indexes in the pattern to the actual local indexes used
                         // in the function
-                        if (matchInst.IsStloc())
+                        if (patternInst.IsStloc())
                         {
                             isMatch = inst.IsStloc();
                             if (!isMatch)
                                 break;
 
-                            int localIndex = matchInst.LocalIndex();
+                            int localIndex = patternInst.LocalIndex();
                             int targetIndex = inst.LocalIndex();
 
                             if (localIndexMap.TryGetValue(localIndex, out int substituteIndex))
@@ -80,16 +80,16 @@ namespace XylRacesCore
                             else
                                 tempLocalIndexMap.Add(localIndex, targetIndex);
                         }
-                        else if (matchInst.opcode.Value == OpCodes.Ldloca.Value ||
-                                 matchInst.opcode.Value == OpCodes.Ldloca_S.Value)
+                        else if (patternInst.opcode.Value == OpCodes.Ldloca.Value ||
+                                 patternInst.opcode.Value == OpCodes.Ldloca_S.Value)
                         {
-                            isMatch = inst.opcode == matchInst.opcode;
+                            isMatch = inst.opcode == patternInst.opcode;
                             if (!isMatch)
                                 break;
 
                             throw new NotSupportedException();
                         }
-                        else if (matchInst.IsLdloc())
+                        else if (patternInst.IsLdloc())
                         {
                             isMatch = inst.IsLdloc() && 
                                       inst.opcode.Value != OpCodes.Ldloca.Value &&
@@ -97,7 +97,7 @@ namespace XylRacesCore
                             if (!isMatch)
                                 break;
 
-                            int localIndex = matchInst.LocalIndex();
+                            int localIndex = patternInst.LocalIndex();
 
                             // There is something very weird going on here. This may be a Harmony bug.
                             int targetIndex = inst.operand is LocalBuilder lb ? lb.LocalIndex : inst.LocalIndex();
@@ -111,18 +111,18 @@ namespace XylRacesCore
                         }
                         // For convenience, let call also match callvirt. Nobody wants to worry about
                         // the difference when writing patterns.
-                        else if (matchInst.opcode.Value == OpCodes.Call.Value)
+                        else if (patternInst.opcode.Value == OpCodes.Call.Value)
                         {
                             isMatch = (inst.opcode.Value == OpCodes.Call.Value ||
                                        inst.opcode.Value == OpCodes.Callvirt.Value) &&
-                                      inst.operand.Equals(matchInst.operand);
+                                      inst.operand.Equals(patternInst.operand);
                         }
-                        else if (matchInst.operand == null)
+                        else if (patternInst.operand == null)
                         {
-                            isMatch = inst.opcode.Value == matchInst.opcode.Value && inst.operand == null;
+                            isMatch = inst.opcode.Value == patternInst.opcode.Value && inst.operand == null;
                         }
                         else
-                            isMatch = inst.Is(matchInst.opcode, matchInst.operand);
+                            isMatch = inst.Is(patternInst.opcode, patternInst.operand);
 
                         if (!isMatch)
                             break;
@@ -135,14 +135,14 @@ namespace XylRacesCore
                     {
                         rule = rule,
                         start = instructionIndex,
-                        end = instructionIndex + rule.Match.Length - 1,
+                        end = instructionIndex + rule.Pattern.Length - 1,
                         privateMap = tempLocalIndexMap,
                     };
                     if (debug)
                         Log.Message(string.Format("MATCH #{0} {1}-{2}", ruleIndex, matchData.start, matchData.end));
 
                     matches.Add(matchData);
-                    if (rule.KeepLocals)
+                    if (rule.SaveLocals)
                         localIndexMap.AddRange(tempLocalIndexMap);
                     matchCount++;
                     if (rule.Max > 0 && matchCount >= rule.Max)
@@ -174,9 +174,9 @@ namespace XylRacesCore
             {
                 var match = sortedMatches.FirstOrDefault(r => r.start == instructionIndex);
 
-                if (match?.rule.Replace != null)
+                if (match?.rule.Output != null)
                 {
-                    if (match.rule.PreserveOriginal)
+                    if (!match.rule.Replace)
                     {
                         for (int i = match.start; i <= match.end; i++)
                             outInstructions.Add(instructions[i]);
@@ -184,10 +184,8 @@ namespace XylRacesCore
 
                     instructionIndex = match.end;
 
-                    for (int replacementIndex = 0; replacementIndex < match.rule.Replace.Length; replacementIndex++)
+                    foreach (CodeInstruction replaceInst in match.rule.Output)
                     {
-                        var replaceInst = match.rule.Replace[replacementIndex];
-
                         if (replaceInst.IsStloc())
                         {
                             int localIndex = replaceInst.LocalIndex();
@@ -237,7 +235,6 @@ namespace XylRacesCore
 
                         if (debug)
                             Log.Message(string.Format("EMIT {0}", outInstructions[outInstructions.Count - 1]));
-
                     }
                 }
                 else
