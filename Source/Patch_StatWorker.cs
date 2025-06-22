@@ -165,84 +165,6 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        static void GetOffsetsAndFactorsExplanation_CapacityOffsets(StatWorker instance, RimWorld.StatRequest req,
-            StringBuilder sb, string whitespace)
-        {
-            var pawn = (Pawn)req.Thing;
-            var stat = (StatDef)statField.GetValue(instance);
-
-            if (stat.capacityOffsets == null)
-                return;
-
-            sb.AppendLine(whitespace + ("StatsReport_Health".CanTranslate()
-                ? "StatsReport_Health".Translate()
-                : "StatsReport_HealthFactors".Translate()));
-            foreach (PawnCapacityOffset item in stat.capacityOffsets.OrderBy((PawnCapacityOffset hfa) =>
-                         hfa.capacity.listOrder))
-            {
-                PawnCapacityDef capacity = item.capacity;
-
-                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
-                if (foundHediff != null)
-                    capacity = foundHediff.CompProperties.substituteCapacity;
-
-                float offset = item.GetOffset(pawn.health.capacities.GetLevel(capacity));
-                string offsetInfo = Mathf.Min(pawn.health.capacities.GetLevel(capacity), item.max).ToStringPercent() +
-                                    ", " + "HealthOffsetScale".Translate(item.scale + "x");
-                if (item.max < 999f)
-                {
-                    offsetInfo += ", " + "HealthFactorMaxImpact".Translate(item.max.ToStringPercent());
-                }
-
-                sb.AppendLine(whitespace + "    " + capacity.GetLabelFor(pawn).CapitalizeFirst() + ": " +
-                              offset.ToStringSign() + instance.ValueToString(offset, finalized: false) + " (" +
-                              offsetInfo + ")");
-
-                if (foundHediff != null) 
-                    sb.AppendLine(whitespace + "        " + foundHediff.DescriptionFor(pawn));
-            }
-        }
-
-        static void GetOffsetsAndFactorsExplanation_CapacityFactors(StatWorker instance, RimWorld.StatRequest req,
-            StringBuilder sb, string whitespace)
-        {
-            var pawn = (Pawn)req.Thing;
-            var stat = (StatDef)statField.GetValue(instance);
-            if (stat.capacityFactors == null)
-                return;
-
-            sb.AppendLine(whitespace + ("StatsReport_Health".CanTranslate()
-                ? "StatsReport_Health".Translate()
-                : "StatsReport_HealthFactors".Translate()));
-
-            foreach (PawnCapacityFactor item in stat.capacityFactors.OrderBy((PawnCapacityFactor hfa) =>
-                         hfa.capacity.listOrder))
-            {
-                PawnCapacityDef capacity = item.capacity;
-
-                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
-                capacity = ConditionalSetCapacity(foundHediff, capacity);
-
-                float factor = item.GetFactor(pawn.health.capacities.GetLevel(capacity));
-                string factorInfo = "HealthFactorPercentImpact".Translate(item.weight.ToStringPercent());
-                if (item.max < 999f)
-                {
-                    factorInfo += ", " + "HealthFactorMaxImpact".Translate(item.max.ToStringPercent());
-                }
-
-                if (item.allowedDefect != 0f)
-                {
-                    factorInfo += ", " +
-                                  "HealthFactorAllowedDefect".Translate((1f - item.allowedDefect).ToStringPercent());
-                }
-
-                sb.AppendLine(whitespace + "    " + capacity.GetLabelFor(pawn).CapitalizeFirst() + ": x" +
-                              factor.ToStringPercent() + " (" + factorInfo + ")");
-
-                AppendSubstitutionDescription(sb, whitespace, foundHediff, pawn);
-            }
-        }
-
         private static void AppendSubstitutionDescription(StringBuilder sb, string whitespace,
             Hediff_SubstituteCapacity foundHediff, Pawn pawn)
         {
@@ -255,14 +177,6 @@ namespace XylRacesCore
             if (foundHediff != null)
                 capacity = foundHediff.CompProperties.substituteCapacity;
             return capacity;
-        }
-
-        static HediffStage GetOffsetsAndFactorsExplanation_CurStage(Hediff hediff)
-        {
-            if (hediff is Hediff_SubstituteCapacity { Active: true })
-                return null;
-
-            return hediff.CurStage;
         }
 
         [HarmonyTranspiler, HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
