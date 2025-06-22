@@ -17,61 +17,63 @@ namespace XylRacesCore
         [HarmonyTranspiler, HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
         static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            bool foundCapacityOffsets = false;
-            bool foundCapacityFactors = false;
+            var instructionsList = new List<CodeInstruction>(instructions);
 
-            foreach (var instruction in instructions)
+            var substitutions = new List<TranspilerUtil.Substitution>()
             {
-                // Matches in the line "if (stat.capacityOffsets != null)"
-                if (!foundCapacityOffsets &&
-                    instruction.LoadsField(AccessTools.Field(typeof(StatDef), nameof(StatDef.capacityOffsets))))
+                new()
                 {
-                    // stat.CapacityOffsets -> GetOffsetsAndFactorsExplanation_CapacityOffsets(); null
+                    // Matches in the line "if (stat.capacityOffsets != null)"
+                    Match =
+                    [
+                        CodeInstruction.LoadField(typeof(StatDef), nameof(StatDef.capacityOffsets))
+                    ],
+                    Replace =
+                    [
+                        // Toss the input that was going to be used for the load
+                        new CodeInstruction(OpCodes.Pop),
 
-                    foundCapacityOffsets = true;
+                        // Read this, req, sb, and whitespace from arguments
+                        CodeInstruction.LoadArgument(0),
+                        CodeInstruction.LoadArgument(1),
+                        CodeInstruction.LoadArgument(2),
+                        CodeInstruction.LoadArgument(4),
+                        // Call our new function
+                        CodeInstruction.Call(() => GetOffsetsAndFactorsExplanation_CapacityOffsets),
 
-                    // Toss the input that was going to be used for the load
-                    yield return new CodeInstruction(OpCodes.Pop);
-
-                    // Read this, req, sb, and whitespace from arguments
-                    yield return CodeInstruction.LoadArgument(0);
-                    yield return CodeInstruction.LoadArgument(1);
-                    yield return CodeInstruction.LoadArgument(2);
-                    yield return CodeInstruction.LoadArgument(4);
-                    // Call our new function
-                    yield return CodeInstruction.Call(() => GetOffsetsAndFactorsExplanation_CapacityOffsets);
-
-                    // Put a null on the stack so the "if (capacityOffsets != null)" block is skipped
-                    yield return new CodeInstruction(OpCodes.Ldnull);
-                    continue;
-                }
-
-                // Matches in the line "if (stat.capacityFactors != null)"
-                if (!foundCapacityFactors &&
-                    instruction.LoadsField(AccessTools.Field(typeof(StatDef), nameof(StatDef.capacityFactors))))
+                        // Put a null on the stack so the "if (capacityOffsets != null)" block is skipped
+                        new CodeInstruction(OpCodes.Ldnull)
+                    ]
+                },
+                new()
                 {
-                    // stat.CapacityFactors -> GetOffsetsAndFactorsExplanation_CapacityFactors(); null
+                    // Matches in the line "if (stat.capacityFactors != null)"
+                    Match = new[]
+                    {
+                        CodeInstruction.LoadField(typeof(StatDef), nameof(StatDef.capacityFactors)),
+                    },
+                    Replace = new[]
+                    {
+                        // Toss the input that was going to be used for the load
+                        new CodeInstruction(OpCodes.Pop),
 
-                    foundCapacityFactors = true;
+                        // Read this, req, sb, and whitespace from arguments
+                        CodeInstruction.LoadArgument(0),
+                        CodeInstruction.LoadArgument(1),
+                        CodeInstruction.LoadArgument(2),
+                        CodeInstruction.LoadArgument(4),
+                        // Call our new function
+                        CodeInstruction.Call(() => GetOffsetsAndFactorsExplanation_CapacityFactors),
 
-                    // Toss the input that was going to be used for the load
-                    yield return new CodeInstruction(OpCodes.Pop);
+                        // Put a null on the stack so the "if (capacityOffsets != null)" block is skipped
+                        new CodeInstruction(OpCodes.Ldnull),
+                    }
+                },
+            };
 
-                    // Read this, req, sb, and whitespace from arguments
-                    yield return CodeInstruction.LoadArgument(0);
-                    yield return CodeInstruction.LoadArgument(1);
-                    yield return CodeInstruction.LoadArgument(2);
-                    yield return CodeInstruction.LoadArgument(4);
-                    // Call our new function
-                    yield return CodeInstruction.Call(() => GetOffsetsAndFactorsExplanation_CapacityFactors);
-
-                    // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
-                    yield return new CodeInstruction(OpCodes.Ldnull);
-                    continue;
-                }
-
-                yield return instruction;
-            }
+            if (!TranspilerUtil.MatchAndReplace(substitutions, ref instructionsList, out string reason))
+                Log.Error(string.Format("XylRacesCore.Patch_StatWorker.GetOffsetsAndFactorsExplanation_Transpiler: {0}", reason));
+            return instructionsList;
         }
 
         private static TaggedString HediffLabel(Hediff_SubstituteCapacity foundHediff)
@@ -178,89 +180,74 @@ namespace XylRacesCore
         {
             var instructionsList = new List<CodeInstruction>(instructions);
 
-            bool foundCapacityOffsets = false;
-            bool foundCapacityFactors = false;
-
-            int localIndexForNum = -1;
-
-            for (int i = 0; i < instructionsList.Count - 1; i++)
+            var substitutions = new List<TranspilerUtil.Substitution>()
             {
-                // Match in the line "float num = GetBaseValueFor(req);"
-                if (instructionsList[i].Calls(AccessTools.Method(typeof(StatWorker), nameof(StatWorker.GetBaseValueFor))) &&
-                    instructionsList[i + 1].IsStloc())
+                new()
                 {
-                    localIndexForNum = instructionsList[i + 1].LocalIndex();
-                    break;
-                }
-            }
-
-            if (localIndexForNum < 0)
-            {
-                // "num" is not in field 0. Abort!
-                Log.Error("XylRacesCore: Local for 'num' not found");
-                foreach (var instruction in instructionsList)
-                    yield return instruction;
-                yield break;
-            }
-
-            Log.Message(string.Format("XylRacesCore: localIndexForNum = {0}", localIndexForNum));
-
-            foreach (var instruction in instructionsList)
-            {
-                // Matches in the line "if (stat.capacityOffsets != null)"
-                if (!foundCapacityOffsets &&
-                    instruction.LoadsField(AccessTools.Field(typeof(StatDef), nameof(StatDef.capacityOffsets))))
+                    // Match in the line "float num = GetBaseValueFor(req);"
+                    Match =
+                    [
+                        CodeInstruction.Call(typeof(StatWorker), nameof(StatWorker.GetBaseValueFor)),
+                        CodeInstruction.StoreLocal(0),
+                    ],
+                },
+                new()
                 {
-                    // stat.CapacityFactors -> GetValueUnfinalized_CapacityOffsets(); null
+                    // Matches in the line "if (stat.capacityOffsets != null)"
+                    Match = new[]
+                    {
+                        CodeInstruction.LoadField(typeof(StatDef), nameof(StatDef.capacityOffsets)),
+                    },
+                    Replace = new[]
+                    {
+                        // Toss the input that was going to be used for the load
+                        new CodeInstruction(OpCodes.Pop),
 
-                    foundCapacityOffsets = true;
+                        // Read this, req from arguments
+                        CodeInstruction.LoadArgument(0),
+                        CodeInstruction.LoadArgument(1),
+                        // Read num from locals
+                        CodeInstruction.LoadLocal(0),
+                        // Call our new function
+                        CodeInstruction.Call(() => GetValueUnfinalized_CapacityOffsets),
+                        // Save num to locals
+                        CodeInstruction.StoreLocal(0),
 
-                    // Toss the input that was going to be used for the load
-                    yield return new CodeInstruction(OpCodes.Pop);
-
-                    // Read this, req from arguments
-                    yield return CodeInstruction.LoadArgument(0);
-                    yield return CodeInstruction.LoadArgument(1);
-                    // Read num from locals
-                    yield return CodeInstruction.LoadLocal(localIndexForNum);
-                    // Call our new function
-                    yield return CodeInstruction.Call(() => GetValueUnfinalized_CapacityOffsets);
-                    // Save num to locals
-                    yield return CodeInstruction.StoreLocal(localIndexForNum);
-
-                    // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
-                    yield return new CodeInstruction(OpCodes.Ldnull);
-                    continue;
-                }
-
-                // Matches in the line "if (stat.capacityFactors != null)"
-                if (!foundCapacityFactors &&
-                    instruction.LoadsField(AccessTools.Field(typeof(StatDef), nameof(StatDef.capacityFactors))))
+                        // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
+                        new CodeInstruction(OpCodes.Ldnull),
+                    }
+                },
+                new()
                 {
-                    // stat.CapacityFactors -> GetValueUnfinalized_CapacityFactors(); null
+                    // Matches in the line "if (stat.capacityFactors != null)"
+                    Match = new[]
+                    {
+                        CodeInstruction.LoadField(typeof(StatDef), nameof(StatDef.capacityFactors)),
+                    },
+                    Replace = new[]
+                    {
+                        // Toss the input that was going to be used for the load
+                        new CodeInstruction(OpCodes.Pop),
 
-                    foundCapacityFactors = true;
+                        // Read this, req from arguments
+                        CodeInstruction.LoadArgument(0),
+                        CodeInstruction.LoadArgument(1),
+                        // Read num from locals
+                        CodeInstruction.LoadLocal(0),
+                        // Call our new function
+                        CodeInstruction.Call(() => GetValueUnfinalized_CapacityFactors),
+                        // Save num to locals
+                        CodeInstruction.StoreLocal(0),
 
-                    // Toss the input that was going to be used for the load
-                    yield return new CodeInstruction(OpCodes.Pop);
+                        // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
+                        new CodeInstruction(OpCodes.Ldnull),
+                    }
+                },
+            };
 
-                    // Read this, req from arguments
-                    yield return CodeInstruction.LoadArgument(0);
-                    yield return CodeInstruction.LoadArgument(1);
-                    // Read num from locals
-                    yield return CodeInstruction.LoadLocal(localIndexForNum);
-                    // Call our new function
-                    yield return CodeInstruction.Call(() => GetValueUnfinalized_CapacityFactors);
-                    // Save num to locals
-                    yield return CodeInstruction.StoreLocal(localIndexForNum);
-
-                    // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
-                    yield return new CodeInstruction(OpCodes.Ldnull);
-                    continue;
-                }
-
-                yield return instruction;
-            }
+            if (!TranspilerUtil.MatchAndReplace(substitutions, ref instructionsList, out string reason))
+                Log.Error(string.Format("XylRacesCore.Patch_StatWorker.GetValueUnfinalized_Transpiler: {0}", reason));
+            return instructionsList;
         }
 
         static float GetValueUnfinalized_CapacityOffsets(StatWorker instance, StatRequest req, float num)
