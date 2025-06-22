@@ -13,34 +13,44 @@ namespace XylRacesCore
 {
     public class InstructionMatcher
     {
-        public class Substitution
+        public class Rule
         {
+            public int Min = 1, Max = 1;
             public CodeInstruction[] Match;
             public CodeInstruction[] Replace;
         }
 
-        public List<Substitution> Substitutions = new();
+        public List<Rule> Rules = new();
+
+        class MatchData
+        {
+            public Rule rule;
+            public int start, end;
+        }
 
         public bool MatchAndReplace(ref List<CodeInstruction> instructions, out string reason, bool debug = false)
         {
             var localIndexMap = new Dictionary<int, int>();
-            var substitutionLocations = new List<int>(Enumerable.Repeat(-1, Substitutions.Count));
+            var matches = new List<MatchData>();
             reason = "Success";
 
             // Check and make sure that all the substitutions apply. Also work out the indexes of all locals.
-            for (int substitutionIndex = 0; substitutionIndex < Substitutions.Count; substitutionIndex++)
+            for (var ruleIndex = 0; ruleIndex < Rules.Count; ruleIndex++)
             {
-                var substitution = Substitutions[substitutionIndex];
+                Rule rule = Rules[ruleIndex];
+                int matchCount = 0;
 
-                for (int instructionIndex = 0; instructionIndex <= instructions.Count - substitution.Match.Length; instructionIndex++)
+                for (int instructionIndex = 0;
+                     instructionIndex <= instructions.Count - rule.Match.Length;
+                     instructionIndex++)
                 {
-                    bool matches = true;
+                    bool isMatch = true;
                     var tempLocalIndexMap = new Dictionary<int, int>();
 
-                    for (int matchIndex = 0; matchIndex < substitution.Match.Length; matchIndex++)
+                    for (int matchIndex = 0; matchIndex < rule.Match.Length; matchIndex++)
                     {
                         var inst = instructions[instructionIndex + matchIndex];
-                        var matchInst = substitution.Match[matchIndex];
+                        var matchInst = rule.Match[matchIndex];
 
                         if (debug)
                             Log.Message(string.Format("COMPARE {0} : {1}", matchInst, inst));
@@ -49,27 +59,27 @@ namespace XylRacesCore
                         // in the function
                         if (matchInst.IsStloc())
                         {
-                            matches = inst.IsStloc();
-                            if (!matches)
+                            isMatch = inst.IsStloc();
+                            if (!isMatch)
                                 break;
 
                             if (localIndexMap.TryGetValue(matchInst.LocalIndex(), out int localIndex))
-                                matches = inst.LocalIndex() == localIndex;
+                                isMatch = inst.LocalIndex() == localIndex;
                             else if (tempLocalIndexMap.TryGetValue(matchInst.LocalIndex(), out localIndex))
-                                matches = inst.LocalIndex() == localIndex;
+                                isMatch = inst.LocalIndex() == localIndex;
                             else
                                 tempLocalIndexMap.Add(matchInst.LocalIndex(), inst.LocalIndex());
                         }
                         else if (matchInst.IsLdloc())
                         {
-                            matches = inst.IsLdloc();
-                            if (!matches)
+                            isMatch = inst.IsLdloc();
+                            if (!isMatch)
                                 break;
 
                             if (localIndexMap.TryGetValue(matchInst.LocalIndex(), out int localIndex))
-                                matches = inst.LocalIndex() == localIndex;
+                                isMatch = inst.LocalIndex() == localIndex;
                             else if (tempLocalIndexMap.TryGetValue(matchInst.LocalIndex(), out localIndex))
-                                matches = inst.LocalIndex() == localIndex;
+                                isMatch = inst.LocalIndex() == localIndex;
                             else
                                 tempLocalIndexMap.Add(matchInst.LocalIndex(), inst.LocalIndex());
                         }
@@ -77,32 +87,45 @@ namespace XylRacesCore
                         // the difference when writing patterns.
                         else if (matchInst.opcode.Value == System.Reflection.Emit.OpCodes.Call.Value)
                         {
-                            matches = (inst.opcode.Value == System.Reflection.Emit.OpCodes.Call.Value ||
+                            isMatch = (inst.opcode.Value == System.Reflection.Emit.OpCodes.Call.Value ||
                                        inst.opcode.Value == System.Reflection.Emit.OpCodes.Callvirt.Value) &&
                                       inst.operand.Equals(matchInst.operand);
                         }
                         else
-                            matches = inst.Is(matchInst.opcode, matchInst.operand);
+                            isMatch = inst.Is(matchInst.opcode, matchInst.operand);
 
-                        if (!matches)
+                        if (!isMatch)
                             break;
                     }
 
-                    if (!matches)
+                    if (!isMatch)
                         continue;
 
-                    substitutionLocations[substitutionIndex] = instructionIndex;
+                    matches.Add(new MatchData()
+                    {
+                        rule = rule,
+                        start = instructionIndex,
+                        end = instructionIndex + rule.Match.Length - 1,
+                    });
                     localIndexMap.AddRange(tempLocalIndexMap);
-                    break;
+                    matchCount++;
+                    if (rule.Max > 0 && matchCount >= rule.Max)
+                        break;
+                }
+
+                if (matchCount < rule.Min)
+                {
+                    reason = string.Format("Not enough matches found for substitution #{0}", ruleIndex);
+                    return false;
                 }
             }
 
-            // Check that everything match successfully
-            for (int substitutionLocationIndex = 0; substitutionLocationIndex < substitutionLocations.Count; substitutionLocationIndex++)
+            var sortedMatches = matches.OrderBy(m => m.start).ToList();
+            for (int i = 0; i < sortedMatches.Count - 1; i++)
             {
-                if (substitutionLocations[substitutionLocationIndex] < 0)
+                if (sortedMatches[i].end >= sortedMatches[i + 1].start)
                 {
-                    reason = string.Format("No match found for substitution #{0}", substitutionLocationIndex);
+                    reason = "Overlapping matches";
                     return false;
                 }
             }
@@ -111,29 +134,15 @@ namespace XylRacesCore
             var outInstructions = new List<CodeInstruction>();
             for (int instructionIndex = 0; instructionIndex < instructions.Count; instructionIndex++)
             {
-                var matchingSubstitutions = new List<InstructionMatcher.Substitution>();
-                for (int substitutionIndex = 0; substitutionIndex < Substitutions.Count; substitutionIndex++)
+                var match = sortedMatches.FirstOrDefault(r => r.start == instructionIndex);
+
+                if (match?.rule.Replace != null)
                 {
-                    InstructionMatcher.Substitution substitution = Substitutions[substitutionIndex];
-                    if (substitution.Replace != null && substitutionLocations[substitutionIndex] == instructionIndex) 
-                        matchingSubstitutions.Add(substitution);
-                }
+                    instructionIndex = match.end;
 
-                if (matchingSubstitutions.Count > 1)
-                {
-                    reason = string.Format("Multiple substitutions found at instruction #{0} = {1}", instructionIndex, instructions[instructionIndex]);
-                    return false;
-                }
-
-                if (matchingSubstitutions.Count == 1)
-                {
-                    var substitution = matchingSubstitutions[0];
-
-                    instructionIndex += substitution.Match.Length - 1;
-
-                    for (int replacementIndex = 0; replacementIndex < substitution.Replace.Length; replacementIndex++)
+                    for (int replacementIndex = 0; replacementIndex < match.rule.Replace.Length; replacementIndex++)
                     {
-                        var replaceInst = substitution.Replace[replacementIndex];
+                        var replaceInst = match.rule.Replace[replacementIndex];
                         if (replaceInst.IsStloc())
                         {
                             // Make sure that the local was mapped. If not this is a problem with the pattern

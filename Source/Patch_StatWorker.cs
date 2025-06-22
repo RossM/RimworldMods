@@ -24,7 +24,7 @@ namespace XylRacesCore
 
             var instructionMatcher = new InstructionMatcher()
             {
-                Substitutions =
+                Rules =
                 {
                     new()
                     {
@@ -177,7 +177,7 @@ namespace XylRacesCore
 
             var instructionMatcher = new InstructionMatcher()
             {
-                Substitutions =
+                Rules =
                 {
                     new()
                     {
