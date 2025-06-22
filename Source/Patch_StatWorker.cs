@@ -296,8 +296,7 @@ namespace XylRacesCore
 
         private static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
         {
-            Hediff_SubstituteCapacity foundHediff = pawn.health.hediffSet.hediffs.OfType<Hediff_SubstituteCapacity>().FirstOrDefault(CheckFn);
-            return foundHediff;
+            return pawn.health.hediffSet.hediffs.OfType<Hediff_SubstituteCapacity>().FirstOrDefault(CheckFn);
 
             bool CheckFn(Hediff_SubstituteCapacity h)
             {
