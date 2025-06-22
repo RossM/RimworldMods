@@ -76,6 +76,32 @@ namespace XylRacesCore
                     },
                     new()
                     {
+                        Min = 1, Max = 1,
+                        PreserveOriginal = true,
+                        KeepLocals = false,
+                        Chained = true,
+                        Match =
+                        [
+                            // sb.AppendLine(whitespace + "    " + text + ": " + offset.ToStringSign() + text2 + " (" + text3 + ")");
+                            CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]),
+                        ],
+                        Replace =
+                        [
+                            // AppendSubstitutionDescription(sb, whitespace, foundHediff, pawn);
+                            // sb
+                            CodeInstruction.LoadArgument(2),
+                            // whitespace
+                            CodeInstruction.LoadArgument(4),
+                            // foundHediff
+                            CodeInstruction.LoadLocal(2),
+                            // pawn
+                            CodeInstruction.LoadLocal(0),
+                            // Call
+                            CodeInstruction.Call(() => AppendSubstitutionDescription),
+                        ],
+                    },
+                    new()
+                    {
                         Min = 1, Max = 0,
                         PreserveOriginal = true,
                         KeepLocals = false,
@@ -108,133 +134,13 @@ namespace XylRacesCore
                     },
                     new()
                     {
-                        Min = 1, Max = 0,
+                        Min = 1, Max = 1,
                         PreserveOriginal = true,
                         KeepLocals = false,
-                        Match =
-                        [
-                            // sb.AppendLine(whitespace + "    " + text + ": " + offset.ToStringSign() + text2 + " (" + text3 + ")");
-                            // temp = new string[9]
-                            new CodeInstruction(OpCodes.Ldc_I4_S, (sbyte)9),
-                            new CodeInstruction(OpCodes.Newarr, typeof(string)),
-                            // temp[0] = whitespace
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_0),
-                            CodeInstruction.LoadArgument(4), 
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[1] = "    "
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_1),
-                            new CodeInstruction(OpCodes.Ldstr, "    "),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[2] = text
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_2),
-                            CodeInstruction.LoadLocal(5),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[3] = ": "
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_3),
-                            new CodeInstruction(OpCodes.Ldstr, ": "),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[4] = offset.ToStringSign()
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_4),
-                            CodeInstruction.LoadLocal(6),
-                            CodeInstruction.Call(() => GenText.ToStringSign),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[5] = text2
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_5),
-                            CodeInstruction.LoadLocal(7),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[6] = " ("
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_6),
-                            new CodeInstruction(OpCodes.Ldstr, " ("),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[7] = text3
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_7),
-                            CodeInstruction.LoadLocal(8),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[8] = ")"
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_8),
-                            new CodeInstruction(OpCodes.Ldstr, ")"),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // concat them together
-                            CodeInstruction.Call(typeof(string), nameof(string.Concat), [typeof(string[])]),
-                            CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]),
-                        ],
-                        Replace =
-                        [
-                            // AppendSubstitutionDescription(sb, whitespace, foundHediff, pawn);
-                            // sb
-                            CodeInstruction.LoadArgument(2),
-                            // whitespace
-                            CodeInstruction.LoadArgument(4),
-                            // foundHediff
-                            CodeInstruction.LoadLocal(2),
-                            // pawn
-                            CodeInstruction.LoadLocal(0),
-                            // Call
-                            CodeInstruction.Call(() => AppendSubstitutionDescription), 
-                        ],
-                    },
-                    new()
-                    {
-                        Min = 1, Max = 0,
-                        PreserveOriginal = true,
-                        KeepLocals = false,
+                        Chained = true,
                         Match =
                         [
                             // sb.AppendLine(whitespace + "    " + text8 + ": x" + text9 + " (" + text10 + ")");
-                            // temp = new string[8]
-                            new CodeInstruction(OpCodes.Ldc_I4_8),
-                            new CodeInstruction(OpCodes.Newarr, typeof(string)),
-                            // temp[0] = whitespace
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_0),
-                            CodeInstruction.LoadArgument(4),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[1] = "    "
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_1),
-                            new CodeInstruction(OpCodes.Ldstr, "    "),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[2] = text8
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_2),
-                            CodeInstruction.LoadLocal(5),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[3] = ": x"
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_3),
-                            new CodeInstruction(OpCodes.Ldstr, ": x"),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[4] = text9
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_4),
-                            CodeInstruction.LoadLocal(6),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp56] = " ("
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_5),
-                            new CodeInstruction(OpCodes.Ldstr, " ("),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[6] = text10
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_6),
-                            CodeInstruction.LoadLocal(8),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // temp[7] = ")"
-                            new CodeInstruction(OpCodes.Dup),
-                            new CodeInstruction(OpCodes.Ldc_I4_7),
-                            new CodeInstruction(OpCodes.Ldstr, ")"),
-                            new CodeInstruction(OpCodes.Stelem_Ref),
-                            // concat them together
-                            CodeInstruction.Call(typeof(string), nameof(string.Concat), [typeof(string[])]),
                             CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]),
                         ],
                         Replace =

@@ -20,6 +20,7 @@ namespace XylRacesCore
             public int Min = 1, Max = 1;
             public bool PreserveOriginal = false;
             public bool KeepLocals = true;
+            public bool Chained = false;
             public CodeInstruction[] Match;
             public CodeInstruction[] Replace;
         }
@@ -46,7 +47,7 @@ namespace XylRacesCore
                 Rule rule = Rules[ruleIndex];
                 int matchCount = 0;
 
-                for (int instructionIndex = 0;
+                for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[matches.Count - 1].end + 1 : 0;
                      instructionIndex <= instructions.Count - rule.Match.Length;
                      instructionIndex++)
                 {
