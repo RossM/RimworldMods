@@ -8,6 +8,8 @@ using HarmonyLib;
 using Mono.Cecil.Cil;
 using Verse;
 using System.Reflection.Emit;
+using RimWorld;
+using OpCodes = System.Reflection.Emit.OpCodes;
 
 namespace XylRacesCore
 {
@@ -16,6 +18,8 @@ namespace XylRacesCore
         public class Rule
         {
             public int Min = 1, Max = 1;
+            public bool PreserveOriginal = false;
+            public bool KeepLocals = true;
             public CodeInstruction[] Match;
             public CodeInstruction[] Replace;
         }
@@ -27,6 +31,7 @@ namespace XylRacesCore
         {
             public Rule rule;
             public int start, end;
+            public Dictionary<int, int> privateMap;
         }
 
         public bool MatchAndReplace(ref List<CodeInstruction> instructions, out string reason, ILGenerator generator = null, bool debug = false)
@@ -64,33 +69,56 @@ namespace XylRacesCore
                             if (!isMatch)
                                 break;
 
-                            if (localIndexMap.TryGetValue(matchInst.LocalIndex(), out int localIndex))
-                                isMatch = inst.LocalIndex() == localIndex;
-                            else if (tempLocalIndexMap.TryGetValue(matchInst.LocalIndex(), out localIndex))
-                                isMatch = inst.LocalIndex() == localIndex;
+                            int localIndex = matchInst.LocalIndex();
+                            int targetIndex = inst.LocalIndex();
+
+                            if (localIndexMap.TryGetValue(localIndex, out int substituteIndex))
+                                isMatch = targetIndex == substituteIndex;
+                            else if (tempLocalIndexMap.TryGetValue(localIndex, out substituteIndex))
+                                isMatch = targetIndex == substituteIndex;
                             else
-                                tempLocalIndexMap.Add(matchInst.LocalIndex(), inst.LocalIndex());
+                                tempLocalIndexMap.Add(localIndex, targetIndex);
                         }
-                        else if (matchInst.IsLdloc())
+                        else if (matchInst.opcode.Value == OpCodes.Ldloca.Value ||
+                                 matchInst.opcode.Value == OpCodes.Ldloca_S.Value)
                         {
-                            isMatch = inst.IsLdloc();
+                            isMatch = inst.opcode == matchInst.opcode;
                             if (!isMatch)
                                 break;
 
-                            if (localIndexMap.TryGetValue(matchInst.LocalIndex(), out int localIndex))
-                                isMatch = inst.LocalIndex() == localIndex;
-                            else if (tempLocalIndexMap.TryGetValue(matchInst.LocalIndex(), out localIndex))
-                                isMatch = inst.LocalIndex() == localIndex;
+                            throw new NotSupportedException();
+                        }
+                        else if (matchInst.IsLdloc())
+                        {
+                            isMatch = inst.IsLdloc() && 
+                                      inst.opcode.Value != OpCodes.Ldloca.Value &&
+                                      inst.opcode.Value != OpCodes.Ldloca_S.Value;
+                            if (!isMatch)
+                                break;
+
+                            int localIndex = matchInst.LocalIndex();
+
+                            // There is something very weird going on here. This may be a Harmony bug.
+                            int targetIndex = inst.operand is LocalBuilder lb ? lb.LocalIndex : inst.LocalIndex();
+
+                            if (localIndexMap.TryGetValue(localIndex, out int substituteIndex))
+                                isMatch = targetIndex == substituteIndex;
+                            else if (tempLocalIndexMap.TryGetValue(localIndex, out substituteIndex))
+                                isMatch = targetIndex == substituteIndex;
                             else
-                                tempLocalIndexMap.Add(matchInst.LocalIndex(), inst.LocalIndex());
+                                tempLocalIndexMap.Add(localIndex, targetIndex);
                         }
                         // For convenience, let call also match callvirt. Nobody wants to worry about
                         // the difference when writing patterns.
-                        else if (matchInst.opcode.Value == System.Reflection.Emit.OpCodes.Call.Value)
+                        else if (matchInst.opcode.Value == OpCodes.Call.Value)
                         {
-                            isMatch = (inst.opcode.Value == System.Reflection.Emit.OpCodes.Call.Value ||
-                                       inst.opcode.Value == System.Reflection.Emit.OpCodes.Callvirt.Value) &&
+                            isMatch = (inst.opcode.Value == OpCodes.Call.Value ||
+                                       inst.opcode.Value == OpCodes.Callvirt.Value) &&
                                       inst.operand.Equals(matchInst.operand);
+                        }
+                        else if (matchInst.operand == null)
+                        {
+                            isMatch = inst.opcode.Value == matchInst.opcode.Value && inst.operand == null;
                         }
                         else
                             isMatch = inst.Is(matchInst.opcode, matchInst.operand);
@@ -102,13 +130,19 @@ namespace XylRacesCore
                     if (!isMatch)
                         continue;
 
-                    matches.Add(new MatchData()
+                    var matchData = new MatchData()
                     {
                         rule = rule,
                         start = instructionIndex,
                         end = instructionIndex + rule.Match.Length - 1,
-                    });
-                    localIndexMap.AddRange(tempLocalIndexMap);
+                        privateMap = tempLocalIndexMap,
+                    };
+                    if (debug)
+                        Log.Message(string.Format("MATCH #{0} {1}-{2}", ruleIndex, matchData.start, matchData.end));
+
+                    matches.Add(matchData);
+                    if (rule.KeepLocals)
+                        localIndexMap.AddRange(tempLocalIndexMap);
                     matchCount++;
                     if (rule.Max > 0 && matchCount >= rule.Max)
                         break;
@@ -141,19 +175,22 @@ namespace XylRacesCore
 
                 if (match?.rule.Replace != null)
                 {
-                    instructionIndex = match.end;
+                    if (match.rule.PreserveOriginal)
+                        outInstructions.Add(instructions[instructionIndex]);
+                    else
+                        instructionIndex = match.end;
 
                     for (int replacementIndex = 0; replacementIndex < match.rule.Replace.Length; replacementIndex++)
                     {
                         var replaceInst = match.rule.Replace[replacementIndex];
 
-                        if (debug)
-                            Log.Message(string.Format("EMIT {0}", replaceInst));
-
                         if (replaceInst.IsStloc())
                         {
                             int localIndex = replaceInst.LocalIndex();
                             if (localIndexMap.TryGetValue(localIndex, out int substituteIndex))
+                            {
+                            }
+                            else if (match.privateMap.TryGetValue(localIndex, out substituteIndex))
                             {
                             }
                             else if (LocalTypes != null && localIndex < LocalTypes.Count && generator != null)
@@ -175,6 +212,9 @@ namespace XylRacesCore
                             if (localIndexMap.TryGetValue(localIndex, out int substituteIndex))
                             {
                             }
+                            else if (match.privateMap.TryGetValue(localIndex, out substituteIndex))
+                            {
+                            }
                             else if (LocalTypes != null && localIndex < LocalTypes.Count && generator != null)
                             {
                                 substituteIndex = generator.DeclareLocal(LocalTypes[localIndex]).LocalIndex;
@@ -190,11 +230,18 @@ namespace XylRacesCore
                         }
                         else
                             outInstructions.Add(replaceInst);
+
+                        if (debug)
+                            Log.Message(string.Format("EMIT {0}", outInstructions[outInstructions.Count - 1]));
+
                     }
                 }
                 else
                 {
                     outInstructions.Add(instructions[instructionIndex]);
+                    if (debug)
+                        Log.Message(string.Format("COPY {0}", outInstructions[outInstructions.Count - 1]));
+
                 }
             }
 
