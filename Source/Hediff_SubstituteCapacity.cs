@@ -73,5 +73,16 @@ namespace XylRacesCore
             yield return new StatDrawEntry(StatCategoryDefOf.CapacityEffects, "Effective " + CompProperties.originalCapacity.label,
                 difference.ToStringPercentSigned(), sb.ToString(), 1);
         }
+
+        public bool Validate(StatDef statDef, PawnCapacityDef pawnCapacityDef)
+        {
+            if (CompProperties.originalCapacity != pawnCapacityDef)
+                return false;
+            if (!Active)
+                return false;
+            if (CompProperties.excludeStats != null && CompProperties.excludeStats.Contains(statDef))
+                return false;
+            return true;
+        }
     }
 }

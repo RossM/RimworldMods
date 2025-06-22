@@ -299,18 +299,7 @@ namespace XylRacesCore
 
         private static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
         {
-            return pawn.health.hediffSet.hediffs.OfType<Hediff_SubstituteCapacity>().FirstOrDefault(CheckFn);
-
-            bool CheckFn(Hediff_SubstituteCapacity h)
-            {
-                if (h.CompProperties.originalCapacity != capacity)
-                    return false;
-                if (!h.Active)
-                    return false;
-                if (h.CompProperties.excludeStats != null && h.CompProperties.excludeStats.Contains(stat))
-                    return false;
-                return true;
-            }
+            return pawn.health.hediffSet.hediffs.OfType<Hediff_SubstituteCapacity>().FirstOrDefault(hediff => hediff.Validate(stat, capacity));
         }
     }
 }
