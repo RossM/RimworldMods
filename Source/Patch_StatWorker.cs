@@ -124,7 +124,9 @@ namespace XylRacesCore
 
                 if (foundHediff != null)
                 {
-                    sb.AppendLine(whitespace + "        " + HediffLabel(foundHediff));
+                    var modifier = pawn.health.capacities.GetLevel(foundHediff.CompProperties.substituteCapacity) -
+                                   pawn.health.capacities.GetLevel(foundHediff.CompProperties.originalCapacity);
+                    sb.AppendLine(whitespace + "        " + HediffLabel(foundHediff) + " (" + modifier.ToStringPercentSigned() + ")");
                 }
             }
         }
