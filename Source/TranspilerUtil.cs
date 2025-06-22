@@ -21,6 +21,7 @@ namespace XylRacesCore
         }
 
         public List<Rule> Rules = new();
+        public List<Type> LocalTypes = new();
 
         class MatchData
         {
@@ -28,7 +29,7 @@ namespace XylRacesCore
             public int start, end;
         }
 
-        public bool MatchAndReplace(ref List<CodeInstruction> instructions, out string reason, bool debug = false)
+        public bool MatchAndReplace(ref List<CodeInstruction> instructions, out string reason, ILGenerator generator = null, bool debug = false)
         {
             var localIndexMap = new Dictionary<int, int>();
             var matches = new List<MatchData>();
@@ -130,6 +131,8 @@ namespace XylRacesCore
                 }
             }
 
+            var declaredLocals = new List<LocalBuilder>(LocalTypes.Count);
+
             // Make the substitutions
             var outInstructions = new List<CodeInstruction>();
             for (int instructionIndex = 0; instructionIndex < instructions.Count; instructionIndex++)
@@ -143,25 +146,47 @@ namespace XylRacesCore
                     for (int replacementIndex = 0; replacementIndex < match.rule.Replace.Length; replacementIndex++)
                     {
                         var replaceInst = match.rule.Replace[replacementIndex];
+
+                        if (debug)
+                            Log.Message(string.Format("EMIT {0}", replaceInst));
+
                         if (replaceInst.IsStloc())
                         {
-                            // Make sure that the local was mapped. If not this is a problem with the pattern
-                            if (!localIndexMap.TryGetValue(replaceInst.LocalIndex(), out int localIndex))
+                            int localIndex = replaceInst.LocalIndex();
+                            if (localIndexMap.TryGetValue(localIndex, out int substituteIndex))
                             {
-                                reason = string.Format("Replacement pattern uses local index #{0} but it wasn't used in a match pattern", replaceInst.LocalIndex());
+                            }
+                            else if (LocalTypes != null && localIndex < LocalTypes.Count && generator != null)
+                            {
+                                substituteIndex = generator.DeclareLocal(LocalTypes[localIndex]).LocalIndex;
+                                localIndexMap.Add(localIndex, substituteIndex);
+                            }
+                            else
+                            {
+                                reason = string.Format("Replacement pattern uses unknown local index #{0}", localIndex);
                                 return false;
                             }
-                            outInstructions.Add(CodeInstruction.StoreLocal(localIndex));
+
+                            outInstructions.Add(CodeInstruction.StoreLocal(substituteIndex));
                         }
                         else if (replaceInst.IsLdloc())
                         {
-                            // Make sure that the local was mapped. If not this is a problem with the pattern
-                            if (!localIndexMap.TryGetValue(replaceInst.LocalIndex(), out int localIndex))
+                            int localIndex = replaceInst.LocalIndex();
+                            if (localIndexMap.TryGetValue(localIndex, out int substituteIndex))
                             {
-                                reason = string.Format("Replacement pattern uses local index #{0} but it wasn't used in a match pattern", replaceInst.LocalIndex());
+                            }
+                            else if (LocalTypes != null && localIndex < LocalTypes.Count && generator != null)
+                            {
+                                substituteIndex = generator.DeclareLocal(LocalTypes[localIndex]).LocalIndex;
+                                localIndexMap.Add(localIndex, substituteIndex);
+                            }
+                            else
+                            {
+                                reason = string.Format("Replacement pattern uses unknown local index #{0}", localIndex);
                                 return false;
                             }
-                            outInstructions.Add(CodeInstruction.LoadLocal(localIndex));
+
+                            outInstructions.Add(CodeInstruction.LoadLocal(substituteIndex));
                         }
                         else
                             outInstructions.Add(replaceInst);

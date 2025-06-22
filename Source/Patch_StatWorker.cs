@@ -171,124 +171,63 @@ namespace XylRacesCore
         }
 
         [HarmonyTranspiler, HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
-        static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
 
             var instructionMatcher = new InstructionMatcher()
             {
+                LocalTypes = 
+                {
+                    typeof(Pawn),
+                    typeof(PawnCapacityDef),
+                },
                 Rules =
                 {
                     new()
                     {
-                        // Match in the line "float num = GetBaseValueFor(req);"
                         Match =
                         [
-                            CodeInstruction.Call(typeof(StatWorker), nameof(StatWorker.GetBaseValueFor)),
-                            CodeInstruction.StoreLocal(0),
+                            new CodeInstruction(OpCodes.Isinst, typeof(Pawn)),
+                            CodeInstruction.StoreLocal(0), 
+                        ]
+                    },
+
+                    new()
+                    {
+                        Min = 1, Max = 0,
+                        Match =
+                        [
+                            CodeInstruction.LoadField(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
                         ],
-                    },
-
-                    new()
-                    {
-                        // Matches in the line "if (stat.capacityOffsets != null)"
-                        Match = new[]
-                        {
-                            CodeInstruction.LoadField(typeof(StatDef), nameof(StatDef.capacityOffsets)),
-                        },
-                        Replace = new[]
-                        {
-                            // Toss the input that was going to be used for the load
-                            new CodeInstruction(OpCodes.Pop),
-
-                            // Read this, req from arguments
-                            CodeInstruction.LoadArgument(0),
-                            CodeInstruction.LoadArgument(1),
-                            // Read num from locals
+                        Replace =
+                        [
+                            CodeInstruction.LoadField(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
+                            CodeInstruction.StoreLocal(1),
+                            // Load pawn
                             CodeInstruction.LoadLocal(0),
-                            // Call our new function
-                            CodeInstruction.Call(() => GetValueUnfinalized_CapacityOffsets),
-                            // Save num to locals
-                            CodeInstruction.StoreLocal(0),
-
-                            // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
-                            new CodeInstruction(OpCodes.Ldnull),
-                        }
+                            // Load capacity
+                            CodeInstruction.LoadLocal(1),
+                            // Load this.stat
+                            CodeInstruction.LoadArgument(0), 
+                            CodeInstruction.LoadField(typeof(StatWorker), "stat"),
+                            // Call GetSubstituteCapacity
+                            CodeInstruction.Call(() => GetSubstituteCapacity), 
+                        ]
                     },
-
-                    new()
-                    {
-                        // Matches in the line "if (stat.capacityFactors != null)"
-                        Match = new[]
-                        {
-                            CodeInstruction.LoadField(typeof(StatDef), nameof(StatDef.capacityFactors)),
-                        },
-                        Replace = new[]
-                        {
-                            // Toss the input that was going to be used for the load
-                            new CodeInstruction(OpCodes.Pop),
-
-                            // Read this, req from arguments
-                            CodeInstruction.LoadArgument(0),
-                            CodeInstruction.LoadArgument(1),
-                            // Read num from locals
-                            CodeInstruction.LoadLocal(0),
-                            // Call our new function
-                            CodeInstruction.Call(() => GetValueUnfinalized_CapacityFactors),
-                            // Save num to locals
-                            CodeInstruction.StoreLocal(0),
-
-                            // Put a null on the stack so the "if (capacityFactors != null)" block is skipped
-                            new CodeInstruction(OpCodes.Ldnull),
-                        }
-                    }
                 }
             };
-            if (!instructionMatcher.MatchAndReplace(ref instructionsList, out string reason))
+            if (!instructionMatcher.MatchAndReplace(ref instructionsList, out string reason, generator))
                 Log.Error(string.Format("XylRacesCore.Patch_StatWorker.GetValueUnfinalized_Transpiler: {0}", reason));
             return instructionsList;
         }
 
-        static float GetValueUnfinalized_CapacityOffsets(StatWorker instance, StatRequest req, float num)
+        private static PawnCapacityDef GetSubstituteCapacity(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
         {
-            var pawn = (Pawn)req.Thing;
-            var stat = (StatDef)statField.GetValue(instance);
-            if (stat.capacityOffsets == null)
-                return num;
-
-            foreach (PawnCapacityOffset pawnCapacityOffset in stat.capacityOffsets)
-            {
-                PawnCapacityDef capacity = pawnCapacityOffset.capacity;
-
-                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
-                if (foundHediff != null)
-                    capacity = foundHediff.CompProperties.substituteCapacity;
-
-                num += pawnCapacityOffset.GetOffset(pawn.health.capacities.GetLevel(capacity));
-            }
-
-            return num;
-        }
-
-        static float GetValueUnfinalized_CapacityFactors(StatWorker instance, StatRequest req, float num)
-        {
-            var pawn = (Pawn)req.Thing;
-            var stat = (StatDef)statField.GetValue(instance);
-            if (stat.capacityFactors == null)
-                return num;
-
-            foreach (PawnCapacityFactor pawnCapacityFactor in stat.capacityFactors)
-            {
-                PawnCapacityDef capacity = pawnCapacityFactor.capacity;
-
-                Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
-                if (foundHediff != null)
-                    capacity = foundHediff.CompProperties.substituteCapacity;
-
-                float factor = pawnCapacityFactor.GetFactor(pawn.health.capacities.GetLevel(capacity));
-                num = Mathf.Lerp(num, num * factor, pawnCapacityFactor.weight);
-            }
-            return num;
+            Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
+            if (foundHediff != null)
+                capacity = foundHediff.CompProperties.substituteCapacity;
+            return capacity;
         }
 
         private static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
