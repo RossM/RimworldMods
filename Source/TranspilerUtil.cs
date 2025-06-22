@@ -11,7 +11,7 @@ using System.Reflection.Emit;
 
 namespace XylRacesCore
 {
-    public static class TranspilerUtil
+    public class InstructionMatcher
     {
         public class Substitution
         {
@@ -19,16 +19,18 @@ namespace XylRacesCore
             public CodeInstruction[] Replace;
         }
 
-        public static bool MatchAndReplace(List<Substitution> substitutions, ref List<CodeInstruction> instructions, out string reason, bool debug = false)
+        public List<Substitution> Substitutions = new();
+
+        public bool MatchAndReplace(ref List<CodeInstruction> instructions, out string reason, bool debug = false)
         {
             var localIndexMap = new Dictionary<int, int>();
-            var substitutionLocations = new List<int>(Enumerable.Repeat(-1, substitutions.Count));
+            var substitutionLocations = new List<int>(Enumerable.Repeat(-1, Substitutions.Count));
             reason = "Success";
 
             // Check and make sure that all the substitutions apply. Also work out the indexes of all locals.
-            for (int substitutionIndex = 0; substitutionIndex < substitutions.Count; substitutionIndex++)
+            for (int substitutionIndex = 0; substitutionIndex < Substitutions.Count; substitutionIndex++)
             {
-                var substitution = substitutions[substitutionIndex];
+                var substitution = Substitutions[substitutionIndex];
 
                 for (int instructionIndex = 0; instructionIndex <= instructions.Count - substitution.Match.Length; instructionIndex++)
                 {
@@ -109,10 +111,10 @@ namespace XylRacesCore
             var outInstructions = new List<CodeInstruction>();
             for (int instructionIndex = 0; instructionIndex < instructions.Count; instructionIndex++)
             {
-                var matchingSubstitutions = new List<Substitution>();
-                for (int substitutionIndex = 0; substitutionIndex < substitutions.Count; substitutionIndex++)
+                var matchingSubstitutions = new List<InstructionMatcher.Substitution>();
+                for (int substitutionIndex = 0; substitutionIndex < Substitutions.Count; substitutionIndex++)
                 {
-                    Substitution substitution = substitutions[substitutionIndex];
+                    InstructionMatcher.Substitution substitution = Substitutions[substitutionIndex];
                     if (substitution.Replace != null && substitutionLocations[substitutionIndex] == instructionIndex) 
                         matchingSubstitutions.Add(substitution);
                 }
