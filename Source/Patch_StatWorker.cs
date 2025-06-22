@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace XylRacesCore
     [HarmonyPatch(typeof(StatWorker))]
     public class Patch_StatWorker
     {
+        private static readonly FieldInfo statField = AccessTools.Field(typeof(StatWorker), "stat");
+
         [HarmonyTranspiler, HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
         static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -87,7 +90,7 @@ namespace XylRacesCore
             StringBuilder sb, string whitespace)
         {
             var pawn = (Pawn)req.Thing;
-            var stat = (StatDef)AccessTools.Field(typeof(StatWorker), "stat").GetValue(instance);
+            var stat = (StatDef)statField.GetValue(instance);
 
             if (stat.capacityOffsets == null)
                 return;
@@ -127,7 +130,7 @@ namespace XylRacesCore
             StringBuilder sb, string whitespace)
         {
             var pawn = (Pawn)req.Thing;
-            var stat = (StatDef)AccessTools.Field(typeof(StatWorker), "stat").GetValue(instance);
+            var stat = (StatDef)statField.GetValue(instance);
             if (stat.capacityFactors == null)
                 return;
 
@@ -255,7 +258,7 @@ namespace XylRacesCore
         static float GetValueUnfinalized_CapacityOffsets(StatWorker instance, StatRequest req, float num)
         {
             var pawn = (Pawn)req.Thing;
-            var stat = (StatDef)AccessTools.Field(typeof(StatWorker), "stat").GetValue(instance);
+            var stat = (StatDef)statField.GetValue(instance);
             if (stat.capacityOffsets == null)
                 return num;
 
@@ -276,7 +279,7 @@ namespace XylRacesCore
         static float GetValueUnfinalized_CapacityFactors(StatWorker instance, StatRequest req, float num)
         {
             var pawn = (Pawn)req.Thing;
-            var stat = (StatDef)AccessTools.Field(typeof(StatWorker), "stat").GetValue(instance);
+            var stat = (StatDef)statField.GetValue(instance);
             if (stat.capacityFactors == null)
                 return num;
 
