@@ -386,13 +386,13 @@ namespace XylRacesCore
                     new()
                     {
                         Min = 1, Max = 0,
+                        PreserveOriginal = true,
                         Match =
                         [
                             CodeInstruction.LoadField(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
                         ],
                         Replace =
                         [
-                            CodeInstruction.LoadField(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
                             CodeInstruction.StoreLocal(1),
                             // Load pawn
                             CodeInstruction.LoadLocal(0),
@@ -403,6 +403,29 @@ namespace XylRacesCore
                             CodeInstruction.LoadField(typeof(StatWorker), "stat"),
                             // Call GetSubstituteCapacity
                             CodeInstruction.Call(() => GetSubstituteCapacity), 
+                        ]
+                    },
+
+                    new()
+                    {
+                        Min = 1, Max = 0,
+                        PreserveOriginal = true,
+                        Match =
+                        [
+                            CodeInstruction.LoadField(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
+                        ],
+                        Replace =
+                        [
+                            CodeInstruction.StoreLocal(1),
+                            // Load pawn
+                            CodeInstruction.LoadLocal(0),
+                            // Load capacity
+                            CodeInstruction.LoadLocal(1),
+                            // Load this.stat
+                            CodeInstruction.LoadArgument(0),
+                            CodeInstruction.LoadField(typeof(StatWorker), "stat"),
+                            // Call GetSubstituteCapacity
+                            CodeInstruction.Call(() => GetSubstituteCapacity),
                         ]
                     },
                 }

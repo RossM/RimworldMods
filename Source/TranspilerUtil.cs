@@ -176,9 +176,12 @@ namespace XylRacesCore
                 if (match?.rule.Replace != null)
                 {
                     if (match.rule.PreserveOriginal)
-                        outInstructions.Add(instructions[instructionIndex]);
-                    else
-                        instructionIndex = match.end;
+                    {
+                        for (int i = match.start; i <= match.end; i++)
+                            outInstructions.Add(instructions[i]);
+                    }
+
+                    instructionIndex = match.end;
 
                     for (int replacementIndex = 0; replacementIndex < match.rule.Replace.Length; replacementIndex++)
                     {
