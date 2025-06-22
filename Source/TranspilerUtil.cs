@@ -129,6 +129,8 @@ namespace XylRacesCore
                 {
                     var substitution = matchingSubstitutions[0];
 
+                    instructionIndex += substitution.Match.Length - 1;
+
                     for (int replacementIndex = 0; replacementIndex < substitution.Replace.Length; replacementIndex++)
                     {
                         var replaceInst = substitution.Replace[replacementIndex];
