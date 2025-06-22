@@ -49,10 +49,10 @@ namespace XylRacesCore
             XmlNode node = value.node;
             bool result = false;
 
-            foreach (object item in xml.SelectNodes(xpath))
+            foreach (XmlNode xmlNode in xml.SelectNodes(xpath))
             {
                 result = true;
-                XmlNode xmlNode = item as XmlNode;
+                XmlDocument xmlNodeOwnerDocument = xmlNode.OwnerDocument;
                 if (order == Order.Append)
                 {
                     foreach (XmlNode childNode in node.ChildNodes)
@@ -61,10 +61,10 @@ namespace XylRacesCore
                         if (existingNode != null)
                         {
                             foreach (XmlNode grandchildNode in childNode.ChildNodes)
-                                existingNode.AppendChild(xmlNode.OwnerDocument.ImportNode(grandchildNode, deep: true));
+                                existingNode.AppendChild(xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
                         }
                         else
-                            xmlNode.AppendChild(xmlNode.OwnerDocument.ImportNode(childNode, deep: true));
+                            xmlNode.AppendChild(xmlNodeOwnerDocument.ImportNode(childNode, deep: true));
                     }
                 }
                 else if (order == Order.Prepend)
@@ -76,10 +76,10 @@ namespace XylRacesCore
                         if (existingNode != null)
                         {
                             foreach (XmlNode grandchildNode in childNode.ChildNodes)
-                                existingNode.PrependChild(xmlNode.OwnerDocument.ImportNode(grandchildNode, deep: true));
+                                existingNode.PrependChild(xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
                         }
                         else
-                            xmlNode.PrependChild(xmlNode.OwnerDocument.ImportNode(childNode, deep: true));
+                            xmlNode.PrependChild(xmlNodeOwnerDocument.ImportNode(childNode, deep: true));
                     }
                 }
             }
