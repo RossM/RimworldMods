@@ -104,7 +104,7 @@ namespace XylRacesCore
             {
                 foreach (var gene in eater.genes.GenesListForReading.OfType<Gene_DietDependency>())
                 {
-                    if (gene.ValidateFood(foodSource) && gene.LinkedHediff.Severity >= 0.5f)
+                    if (gene.ValidateFood(foodSource) && ((Hediff_DietDependency)gene.LinkedHediff).ShouldSatisfy)
                         __result += 100f;
                 }
             }

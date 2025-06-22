@@ -9,7 +9,7 @@ namespace XylRacesCore
 {
     internal class Hediff_DietDependency : Hediff_Genetic
     {
-        public bool ShouldSatisfy => Severity >= def.stages[2].minSeverity - 0.2f;
+        public bool ShouldSatisfy => Severity >= def.stages[2].minSeverity - 0.5f;
 
         [Unsaved(false)]
         private Gene_DietDependency cachedGene;
