@@ -21,32 +21,16 @@ namespace XylRacesCore
                 var foodKind = FoodUtility.GetFoodKind(foodSource);
 
                 if (foodDef.IsFungus)
-                {
-                    StatDef rawFungusNutritionFactor =
-                        DefDatabase<StatDef>.GetNamed("RawFungusNutritionFactor", errorOnFail: false);
-                    return rawFungusNutritionFactor != null ? eater.GetStatValue(rawFungusNutritionFactor) : 1.0f;
-                }
+                    return eater.GetStatValue("RawFungusNutritionFactor");
 
                 if (foodKind == FoodKind.Meat)
-                {
-                    StatDef rawMeatNutritionFactor =
-                        DefDatabase<StatDef>.GetNamed("RawMeatNutritionFactor", errorOnFail: false);
-                    return rawMeatNutritionFactor != null ? eater.GetStatValue(rawMeatNutritionFactor) : 1.0f;
-                }
+                    return eater.GetStatValue("RawMeatNutritionFactor");
 
                 if (foodDef.IsAnimalProduct)
-                {
-                    StatDef rawAnimalProductNutritionFactor =
-                        DefDatabase<StatDef>.GetNamed("RawAnimalProductNutritionFactor", errorOnFail: false);
-                    return rawAnimalProductNutritionFactor != null ? eater.GetStatValue(rawAnimalProductNutritionFactor) : 1.0f;
-                }
+                    return eater.GetStatValue("RawAnimalProductNutritionFactor");
 
                 if (foodKind == FoodKind.NonMeat)
-                {
-                    StatDef rawNonMeatNutritionFactor =
-                        DefDatabase<StatDef>.GetNamed("RawNonMeatNutritionFactor", errorOnFail: false);
-                    return rawNonMeatNutritionFactor != null ? eater.GetStatValue(rawNonMeatNutritionFactor) : 1.0f;
-                }
+                    return eater.GetStatValue("RawNonMeatNutritionFactor");
 
                 return 1.0f;
             }
@@ -74,27 +58,21 @@ namespace XylRacesCore
                     float multiplier = 0.0f;
                     float divisor = 0.0f;
 
-                    StatDef cookedMeatNutritionFactor =
-                        DefDatabase<StatDef>.GetNamed("CookedMeatNutritionFactor", errorOnFail: false);
-                    if (cookedMeatNutritionFactor != null && hasMeat)
+                    if (hasMeat)
                     {
-                        multiplier += eater.GetStatValue(cookedMeatNutritionFactor);
+                        multiplier += eater.GetStatValue("CookedMeatNutritionFactor");
                         divisor += 1.0f;
                     }
 
-                    StatDef cookedAnimalProductNutritionFactor =
-                        DefDatabase<StatDef>.GetNamed("CookedAnimalProductNutritionFactor", errorOnFail: false);
-                    if (cookedAnimalProductNutritionFactor != null && hasAnimalProduct)
+                    if (hasAnimalProduct)
                     {
-                        multiplier += eater.GetStatValue(cookedAnimalProductNutritionFactor);
+                        multiplier += eater.GetStatValue("CookedAnimalProductNutritionFactor");
                         divisor += 1.0f;
                     }
 
-                    StatDef cookedNonMeatNutritionFactor =
-                        DefDatabase<StatDef>.GetNamed("CookedNonMeatNutritionFactor", errorOnFail: false);
-                    if (cookedNonMeatNutritionFactor != null && hasNonMeat)
+                    if (hasNonMeat)
                     {
-                        multiplier += eater.GetStatValue(cookedNonMeatNutritionFactor);
+                        multiplier += eater.GetStatValue("CookedNonMeatNutritionFactor");
                         divisor += 1.0f;
                     }
 

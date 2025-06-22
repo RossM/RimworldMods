@@ -20,7 +20,7 @@ namespace XylRacesCore
             if (extension == null) 
                 return;
 
-            __result = extension.ValidateBuild(__instance.Map);
+            __result = extension.ValidateBuildable(__instance.Map);
         }
     }
 }
