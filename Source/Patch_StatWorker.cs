@@ -82,13 +82,6 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        private static TaggedString HediffLabel(Hediff_SubstituteCapacity foundHediff)
-        {
-            return (foundHediff.LabelCap + ": " +
-                    foundHediff.CompProperties.originalCapacity.LabelCap +
-                    " -> " + foundHediff.CompProperties.substituteCapacity.LabelCap);
-        }
-
         static void GetOffsetsAndFactorsExplanation_CapacityOffsets(StatWorker instance, RimWorld.StatRequest req,
             StringBuilder sb, string whitespace)
         {
@@ -122,12 +115,8 @@ namespace XylRacesCore
                               offset.ToStringSign() + instance.ValueToString(offset, finalized: false) + " (" +
                               offsetInfo + ")");
 
-                if (foundHediff != null)
-                {
-                    var modifier = pawn.health.capacities.GetLevel(foundHediff.CompProperties.substituteCapacity) -
-                                   pawn.health.capacities.GetLevel(foundHediff.CompProperties.originalCapacity);
-                    sb.AppendLine(whitespace + "        " + HediffLabel(foundHediff) + " (" + modifier.ToStringPercentSigned() + ")");
-                }
+                if (foundHediff != null) 
+                    sb.AppendLine(whitespace + "        " + foundHediff.DescriptionFor(pawn));
             }
         }
 
@@ -168,12 +157,8 @@ namespace XylRacesCore
                 sb.AppendLine(whitespace + "    " + capacity.GetLabelFor(pawn).CapitalizeFirst() + ": x" +
                               factor.ToStringPercent() + " (" + factorInfo + ")");
 
-                if (foundHediff != null)
-                {
-                    var modifier = pawn.health.capacities.GetLevel(foundHediff.CompProperties.substituteCapacity) -
-                                pawn.health.capacities.GetLevel(foundHediff.CompProperties.originalCapacity);
-                    sb.AppendLine(whitespace + "        " + HediffLabel(foundHediff) + " (" + modifier.ToStringPercentSigned() + ")");
-                }
+                if (foundHediff != null) 
+                    sb.AppendLine(whitespace + "        " + foundHediff.DescriptionFor(pawn));
             }
         }
 

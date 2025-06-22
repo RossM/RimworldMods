@@ -84,5 +84,13 @@ namespace XylRacesCore
                 return false;
             return true;
         }
+
+        public TaggedString DescriptionFor(Pawn pawn)
+        {
+            float modifier = (pawn.health.capacities.GetLevel(CompProperties.substituteCapacity) -
+                              pawn.health.capacities.GetLevel(CompProperties.originalCapacity));
+            return LabelCap + ": " + CompProperties.originalCapacity.LabelCap + " -> " + 
+                   CompProperties.substituteCapacity.LabelCap + " (" + modifier.ToStringPercentSigned() + ")";
+        }
     }
 }
