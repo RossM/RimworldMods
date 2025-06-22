@@ -214,15 +214,21 @@ namespace XylRacesCore
                         Replace =
                         [
                             CodeInstruction.StoreLocal(1),
+                            // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
                             // Load pawn
                             CodeInstruction.LoadLocal(0),
                             // Load capacity
                             CodeInstruction.LoadLocal(1),
                             // Load this.stat
-                            CodeInstruction.LoadArgument(0), 
+                            CodeInstruction.LoadArgument(0),
                             CodeInstruction.LoadField(typeof(StatWorker), "stat"),
-                            // Call GetSubstituteCapacity
-                            CodeInstruction.Call(() => GetSubstituteCapacity), 
+                            // Call FindHediffFor
+                            CodeInstruction.Call(() => FindHediffFor),
+                            // capacity = ConditionalSetCapacity(foundHediff, capacity);
+                            // Load the capacity
+                            CodeInstruction.LoadLocal(1),
+                            // Call ConditionalSetCapacity (because I don't want to emit an if)
+                            CodeInstruction.Call(() => ConditionalSetCapacity),
                         ]
                     },
 
@@ -237,6 +243,7 @@ namespace XylRacesCore
                         Replace =
                         [
                             CodeInstruction.StoreLocal(1),
+                            // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
                             // Load pawn
                             CodeInstruction.LoadLocal(0),
                             // Load capacity
@@ -244,8 +251,13 @@ namespace XylRacesCore
                             // Load this.stat
                             CodeInstruction.LoadArgument(0),
                             CodeInstruction.LoadField(typeof(StatWorker), "stat"),
-                            // Call GetSubstituteCapacity
-                            CodeInstruction.Call(() => GetSubstituteCapacity),
+                            // Call FindHediffFor
+                            CodeInstruction.Call(() => FindHediffFor),
+                            // capacity = ConditionalSetCapacity(foundHediff, capacity);
+                            // Load the capacity
+                            CodeInstruction.LoadLocal(1),
+                            // Call ConditionalSetCapacity (because I don't want to emit an if)
+                            CodeInstruction.Call(() => ConditionalSetCapacity),
                         ]
                     },
                 }
@@ -253,14 +265,6 @@ namespace XylRacesCore
             if (!instructionMatcher.MatchAndReplace(ref instructionsList, out string reason, generator))
                 Log.Error(string.Format("XylRacesCore.Patch_StatWorker.GetValueUnfinalized_Transpiler: {0}", reason));
             return instructionsList;
-        }
-
-        private static PawnCapacityDef GetSubstituteCapacity(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
-        {
-            Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
-            if (foundHediff != null)
-                capacity = foundHediff.CompProperties.substituteCapacity;
-            return capacity;
         }
 
         private static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
