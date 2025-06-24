@@ -6,13 +6,14 @@
     <label>beckon</label>
     <description>Carriers automatically learn the Beckon psycast, which psychically commands the target to approach the caster.</description>
     <iconPath>UI/Abilities/Beckon</iconPath>
+    <geneClass>XylRacesCore.Gene_Psycast</geneClass>
     <displayCategory>Ability</displayCategory>
     <marketValueFactor>1.5</marketValueFactor>
     <abilities>
-      <li>SirenBeckon</li>
+      <li>Beckon</li>
     </abilities>
     <descriptionHyperlinks>
-      <AbilityDef>SirenBeckon</AbilityDef>
+      <AbilityDef>Beckon</AbilityDef>
     </descriptionHyperlinks>
     <biostatMet>-2</biostatMet>
     <symbolPack>

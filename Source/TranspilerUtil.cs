@@ -179,7 +179,11 @@ namespace XylRacesCore
                     if (!match.rule.Replace)
                     {
                         for (int i = match.start; i <= match.end; i++)
+                        {
                             outInstructions.Add(instructions[i]);
+                            if (debug)
+                                Log.Message(string.Format("COPYMATCH {0}", outInstructions[outInstructions.Count - 1]));
+                        }
                     }
 
                     instructionIndex = match.end;

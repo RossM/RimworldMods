@@ -263,5 +263,18 @@ namespace XylRacesCore
         {
             return pawn.health.hediffSet.hediffs.OfType<Hediff_SubstituteCapacity>().FirstOrDefault(hediff => hediff.Validate(stat, capacity));
         }
+
+        [HarmonyPostfix, HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
+        public static void ShouldShowFor_Postfix(StatWorker __instance, StatRequest req, ref bool __result)
+        {
+            if (req.Thing is Pawn pawn && pawn.HasPsycastGene())
+            {
+                if (statField.GetValue(__instance) == StatDefOf.PsychicEntropyRecoveryRate) 
+                    __result = true;
+                if (statField.GetValue(__instance) == StatDefOf.PsychicEntropyMax)
+                    __result = true;
+            }
+        }
     }
+
 }
