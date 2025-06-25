@@ -35,4 +35,13 @@
     <biostatMet>-2</biostatMet>
   </GeneDef>
 
+  <GeneDef ParentName="GeneSkinColorOverride">
+    <defName>Skin_DarkGreen</defName>
+    <label>dark green skin</label>
+    <labelShortAdj>dark green</labelShortAdj>
+    <description>Carriers of this gene produce a pigment that gives their skin a dark green color.</description>
+    <skinColorOverride>(81,132,32)</skinColorOverride>
+    <displayOrderInCategory>0</displayOrderInCategory>
+  </GeneDef>
+  
 </Defs>
