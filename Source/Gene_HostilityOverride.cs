@@ -9,14 +9,14 @@ namespace XylRacesCore
 {
     public class Gene_HostilityOverride : Gene
     {
-        private ModExtension_GeneDef_HostilityOverride DefExtension =>
+        private ModExtension_GeneDef_HostilityOverride DefExt =>
             def.GetModExtension<ModExtension_GeneDef_HostilityOverride>();
 
         public int lastHostileActionTick = -99999;
 
         public void Notify_PawnDamagedThing(Thing thing, DamageInfo dinfo, DamageWorker.DamageResult DamageResult)
         {
-            if (DefExtension.DisableHostilityFrom(thing))
+            if (DefExt.DisableHostilityFrom(thing))
             {
                 lastHostileActionTick = Find.TickManager.TicksGame;
             }
@@ -24,7 +24,7 @@ namespace XylRacesCore
 
         public bool DisableHostilityFrom(Pawn pawn)
         {
-            return Active && Find.TickManager.TicksGame >= lastHostileActionTick + DefExtension.violationDisableTicks && DefExtension.DisableHostilityFrom(pawn);
+            return Active && Find.TickManager.TicksGame >= lastHostileActionTick + DefExt.violationDisableTicks && DefExt.DisableHostilityFrom(pawn);
         }
     }
 }

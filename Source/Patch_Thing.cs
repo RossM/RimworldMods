@@ -27,7 +27,7 @@ namespace XylRacesCore
                 if (!dietDependency.ValidateFood(__instance))
                     continue;
 
-                float severityReductionPerNutrition = dietDependency.DefModExtension.severityReductionPerNutrition;
+                float severityReductionPerNutrition = dietDependency.DefExt.severityReductionPerNutrition;
                 float nutritionForNeed = dietDependency.LinkedHediff.Severity / severityReductionPerNutrition;
                 nutritionWanted = Math.Max(nutritionWanted, nutritionForNeed);
             }

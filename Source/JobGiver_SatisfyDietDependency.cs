@@ -46,7 +46,7 @@ namespace XylRacesCore
                 if (food != null)
                 {
                     float nutritionPer = FoodUtility.NutritionForEater(pawn, food);
-                    float severityReductionPerNutrition = hediff_dietDependency.Gene.DefModExtension.severityReductionPerNutrition;
+                    float severityReductionPerNutrition = hediff_dietDependency.Gene.DefExt.severityReductionPerNutrition;
                     float nutritionNeeded = hediff_dietDependency.Severity / severityReductionPerNutrition;
                     int count = Mathf.CeilToInt(nutritionNeeded / nutritionPer);
 

@@ -10,11 +10,11 @@ namespace XylRacesCore
 {
     public class Gene_Hediff : Gene
     {
-        public ModExtension_GeneDef_Hediff DefModExtension => def.GetModExtension<ModExtension_GeneDef_Hediff>();
+        public ModExtension_GeneDef_Hediff DefExt => def.GetModExtension<ModExtension_GeneDef_Hediff>();
 
         public override void PostAdd()
         {
-            var extension = DefModExtension;
+            var extension = DefExt;
             if (Active && extension?.hediffGivers != null && extension.applyImmediately)
             {
                 foreach (var hediffGiver in extension.hediffGivers) 
@@ -27,7 +27,7 @@ namespace XylRacesCore
         {
             base.TickInterval(delta);
 
-            var extension = DefModExtension;
+            var extension = DefExt;
             if (Active && extension?.hediffGivers != null && extension.mtbDays > 0.0f && pawn.IsHashIntervalTick(60, delta))
             {
                 foreach (var hediffGiver in extension.hediffGivers)
@@ -40,7 +40,7 @@ namespace XylRacesCore
 
         public override void PostRemove()
         {
-            var extension = DefModExtension;
+            var extension = DefExt;
             if (Active && extension?.hediffGivers != null)
             {
                 foreach (var hediffGiver in extension.hediffGivers)
