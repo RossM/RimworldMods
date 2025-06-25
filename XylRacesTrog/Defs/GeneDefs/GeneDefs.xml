@@ -5,7 +5,7 @@
     <geneClass>XylRacesCore.Gene_HostilityOverride</geneClass>
     <defName>InsectPheromones</defName>
     <label>insect pheromones</label>
-    <description>Carriers of this gene produce special insect pheromones which make wild insects not attack them.</description>
+    <description>Carriers of this gene produce special pheromones which make wild insects not attack them.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
@@ -78,7 +78,7 @@
     <geneClass>XylRacesCore.Gene_Atavism</geneClass>
     <defName>GeneticAtavism</defName>
     <label>genetic atavism</label>
-    <description>Carriers of this gene have a chance of getting a random extra gene.</description>
+    <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
     <biostatCpx>0</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
