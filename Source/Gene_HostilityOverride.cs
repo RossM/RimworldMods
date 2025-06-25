@@ -22,7 +22,7 @@ namespace XylRacesCore
             }
         }
 
-        public bool DisableHostilityFrom(Pawn pawn)
+        public bool DisableHostilityFrom(Thing thing)
         {
             return Active && Find.TickManager.TicksGame >= lastHostileActionTick + DefExt.violationDisableTicks && DefExt.DisableHostilityFrom(pawn);
         }
