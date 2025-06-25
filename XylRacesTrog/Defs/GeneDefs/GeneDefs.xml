@@ -73,4 +73,18 @@
     </modExtensions>
   </GeneDef>
 
+
+  <GeneDef>
+    <geneClass>XylRacesCore.Gene_Atavism</geneClass>
+    <defName>GeneticAtavism</defName>
+    <label>genetic atavism</label>
+    <description>Carriers of this gene have a chance of getting a random extra gene.</description>
+    <biostatCpx>0</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>500</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_RetractableClaws</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+  </GeneDef>
+
 </Defs>
