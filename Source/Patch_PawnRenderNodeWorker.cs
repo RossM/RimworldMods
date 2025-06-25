@@ -17,11 +17,11 @@ namespace XylRacesCore
         [HarmonyPostfix]
         static void Postfix(PawnRenderNode node, PawnDrawParms parms, ref UnityEngine.Vector3 __result)
         {
-            List<Gene> genesGenesListForReading = parms.pawn?.genes?.GenesListForReading;
-            if (genesGenesListForReading == null)
+            List<Gene> genes = parms.pawn?.genes?.GenesListForReading;
+            if (genes == null)
                 return;
 
-            foreach (var gene in genesGenesListForReading)
+            foreach (var gene in genes)
             {
                 var extension = gene.def.GetModExtension<ModExtension_GeneDef_Rendering>();
                 if (extension != null)

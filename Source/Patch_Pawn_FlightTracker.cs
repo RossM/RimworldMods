@@ -23,10 +23,10 @@ namespace XylRacesCore
             if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Gene_Flight>() is { } gene)
             {
                 gene.Notify_JobStarted(job);
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 }
