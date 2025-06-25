@@ -13,13 +13,13 @@
     <hostile>false</hostile>
     <targetRequired>false</targetRequired>
     <statBases>
-      <Ability_Duration>1</Ability_Duration>
+      <Ability_Duration>0</Ability_Duration>
     </statBases>
     <verbProperties>
       <verbClass>Verb_CastAbility</verbClass>
       <label>toxic burst</label>
       <drawAimPie>false</drawAimPie>
-      <warmupTime>0.5</warmupTime>
+      <warmupTime>1</warmupTime>
       <violent>false</violent>
       <targetable>false</targetable>
       <targetParams>

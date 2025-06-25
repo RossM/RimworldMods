@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <XenotypeDef>
+    <defName>Trog</defName>
+    <label>trog</label>
+    <description>TODO.</description>
+    <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
+    <inheritable>true</inheritable>
+    <genes>
+      <li>ToxicBurst</li>
+      <li>Immunity_Strong</li>
+      <li>MoveSpeed_Slow</li>
+      <li>ToxicEnvironmentResistance_Partial</li>
+      <li>UVSensitivity_Mild</li>
+      <li>Aggression_Aggressive</li>
+      <li>MeleeDamage_Strong</li>
+      <li>Pain_Reduced</li>
+      <li>Beauty_VeryUgly</li>
+      <li>Hair_BaldOnly</li>
+      <li>Brow_Heavy</li>
+      <li>Headbone_MiniHorns</li>
+      <li>Skin_DarkGreen</li>
+      <li>Skin_Green</li>
+      <li>Learning_Slow</li>
+      <li>DarkVision</li>
+      <li>BioRejection</li>
+      <li>InsectPheromones</li>
+      <li>PollutionRush</li>
+      <li>AptitudeStrong_Mining</li>
+      <li>AptitudeStrong_Animals</li>
+      <li>AptitudeTerrible_Intellectual</li>
+      <li>AddictionResistant_Psychite</li>
+    </genes>
+  </XenotypeDef>
+  
+</Defs>
