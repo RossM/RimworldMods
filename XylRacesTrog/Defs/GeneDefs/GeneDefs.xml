@@ -43,5 +43,34 @@
     <skinColorOverride>(81,132,32)</skinColorOverride>
     <displayOrderInCategory>0</displayOrderInCategory>
   </GeneDef>
-  
+
+  <GeneDef>
+    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <defName>BioRejection</defName>
+    <label>bio-rejection</label>
+    <description>Carriers of this gene have a severe allergic reaction to any sort of artificial implant or body part. They will suffer continual pain until the implant or part is removed.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>500</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_RetractableClaws</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <suppressedTraits>
+      <li>
+        <def>Transhumanist</def>
+      </li>
+    </suppressedTraits>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>BioRejection</hediff>
+            <countToAffect>1</countToAffect>
+          </li>
+        </hediffGivers>
+        <applyImmediately>true</applyImmediately>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
 </Defs>
