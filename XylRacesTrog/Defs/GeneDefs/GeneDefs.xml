@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <GeneDef>
+    <geneClass>XylRacesCore.Gene_HostilityOverride</geneClass>
+    <defName>InsectPheromones</defName>
+    <label>insect pheromones</label>
+    <description>Carriers of this gene produce special insect pheromones which make wild insects not attack them.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>500</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_FastReflexes</iconPath>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_HostilityOverride">
+        <disableHostilityFromFaction>Insect</disableHostilityFromFaction>
+        <violationDisableTicks>2500</violationDisableTicks>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+</Defs>

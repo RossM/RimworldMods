@@ -44,7 +44,7 @@ namespace XylRacesCore
         static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!FixupGetPsycastLevel.MatchAndReplace(ref instructionsList, out string reason, generator, debug:true))
+            if (!FixupGetPsycastLevel.MatchAndReplace(ref instructionsList, out string reason, generator))
                 Log.Error(string.Format("XylRacesCore.Patch_StatWorker.GetOffsetsAndFactorsExplanation_Transpiler: {0}", reason));
             return instructionsList;
         }

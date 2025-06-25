@@ -32,5 +32,17 @@ namespace XylRacesCore
                 nutritionWanted = Math.Max(nutritionWanted, nutritionForNeed);
             }
         }
+
+        [HarmonyPrefix, HarmonyPatch("TakeDamage")]
+        public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
+        {
+            List<Gene> genes = (dinfo.Instigator as Pawn)?.genes?.GenesListForReading;
+            if (genes == null)
+                return;
+            foreach (var gene in genes.OfType<Gene_HostilityOverride>())
+            {
+                gene.Notify_PawnDamagedThing(__instance, dinfo, __result);
+            }
+        }
     }
 }
