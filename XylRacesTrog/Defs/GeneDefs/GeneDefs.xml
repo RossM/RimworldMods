@@ -85,6 +85,21 @@
     <displayOrderInCategory>500</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_RetractableClaws</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_Atavism">
+        <biostatArcMin>0</biostatArcMin>
+        <biostatArcMax>0</biostatArcMax>
+        <biostatCpxMin>1</biostatCpxMin>
+        <biostatCpxMax>99</biostatCpxMax>
+        <biostatMetMin>-2</biostatMetMin>
+        <biostatMetMax>2</biostatMetMax>
+        <geneChance>0.5</geneChance>
+        <extraGeneChance>0.5</extraGeneChance>
+        <extraGenes>
+          <li>Instability_Mild</li>
+        </extraGenes>
+      </li>
+    </modExtensions>
   </GeneDef>
 
 </Defs>

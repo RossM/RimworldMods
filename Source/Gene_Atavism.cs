@@ -10,18 +10,19 @@ namespace XylRacesCore
     public class Gene_Atavism : Gene
     {
         public List<Gene> addedGenes;
+        public ModExtension_GeneDef_Atavism DefExt => def.GetModExtension<ModExtension_GeneDef_Atavism>();
 
         public override void PostAdd()
         {
             base.PostAdd();
 
-            if (Rand.Chance(0.5f))
+            if (Rand.Chance(DefExt.geneChance))
             {
                 AddGene(DefDatabase<GeneDef>.AllDefsListForReading.RandomElementByWeight(GeneWeight));
 
-                if (Rand.Chance(0.5f))
+                if (DefExt.extraGenes != null && Rand.Chance(DefExt.extraGeneChance))
                 {
-                    AddGene(DefDatabase<GeneDef>.GetNamed("Instability_Mild"));
+                    AddGene(DefExt.extraGenes.RandomElement());
                 }
             }
         }
@@ -37,14 +38,11 @@ namespace XylRacesCore
 
         float GeneWeight(GeneDef def)
         {
-            // No genes requiring archite capsules
-            if (def.biostatArc != 0)
+            if (def.biostatArc < DefExt.biostatArcMin || def.biostatArc > DefExt.biostatArcMax)
                 return 0.0f;
-            // No purely cosmetic genes
-            if (def.biostatCpx == 0)
+            if (def.biostatCpx < DefExt.biostatCpxMin || def.biostatCpx > DefExt.biostatCpxMax)
                 return 0.0f;
-            // No genes with too large an effect on metabolic efficiency
-            if (def.biostatMet is < -2 or > 2)
+            if (def.biostatMet < DefExt.biostatMetMin || def.biostatMet > DefExt.biostatMetMax)
                 return 0.0f;
 
             // No genes with requirements, unless they are met by the pawn's xenotype
