@@ -86,4 +86,29 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
 
+  <StatDef>
+    <defName>ResistanceFallRate</defName>
+    <label>global resistance loss factor</label>
+    <description>A multiplier on how quickly this character's resistance falls when they are being recruited.</description>
+    <category>PawnSocial</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>WillFallRate</defName>
+    <label>global will loss factor</label>
+    <description>A multiplier on how quickly this character's will falls when they are being enslaved.</description>
+    <category>PawnSocial</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+
 </Defs>

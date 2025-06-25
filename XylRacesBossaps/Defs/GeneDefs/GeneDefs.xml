@@ -1,4 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
+  <GeneDef>
+    <defName>PainReversal</defName>
+    <label>pain reversal</label>
+    <description>Carriers of this gene have scrambled senses that make them feel pain as pleasurable.</description>
+    <iconPath>UI/Icons/Genes/Gene_PainReduced</iconPath>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayCategory>Pain</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <forcedTraits>
+      <li>
+        <def>Masochist</def>
+      </li>
+    </forcedTraits>
+  </GeneDef>
+  
+  <GeneDef ParentName="GeneAggressionBase">
+    <defName>Docile</defName>
+    <label>docile</label>
+    <description>Carriers of this gene are generally docile. They are less likely to start prison breaks or have violent mental breaks, and never start social fights. They are also easier to convert, recruit, enslave, or keep enslaved.</description>
+    <iconPath>UI/Icons/Genes/Gene_DeadCalm</iconPath>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <socialFightChanceFactor>0</socialFightChanceFactor>
+    <aggroMentalBreakSelectionChanceFactor>0.25</aggroMentalBreakSelectionChanceFactor>
+    <prisonBreakMTBFactor>4</prisonBreakMTBFactor><!-- Never prison breaks -->
+    <statFactors>
+      <SlaveSuppressionFallRate MayRequire="Ludeon.RimWorld.Ideology">0.25</SlaveSuppressionFallRate>
+      <CertaintyLossFactor MayRequire="Ludeon.RimWorld.Ideology">2</CertaintyLossFactor>
+      <ResistanceFallRate>2</ResistanceFallRate>
+      <WillFallRate>2</WillFallRate>
+    </statFactors>
+  </GeneDef>
+
 </Defs>
