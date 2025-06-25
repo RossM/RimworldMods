@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  
+  <AbilityDef>
+    <defName>ToxicBurst</defName>
+    <label>toxic burst</label>
+    <description>Releases a cloud of toxic gas in an area around the user. The user is affected by the gas normally.</description>
+    <iconPath>UI/Abilities/ReleaseDeadlifeDust</iconPath>
+    <cooldownTicksRange>300000</cooldownTicksRange> <!-- 5 days -->
+    <showPsycastEffects>false</showPsycastEffects>
+    <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
+    <casterMustBeCapableOfViolence>false</casterMustBeCapableOfViolence>
+    <hostile>false</hostile>
+    <targetRequired>false</targetRequired>
+    <statBases>
+      <Ability_Duration>1</Ability_Duration>
+    </statBases>
+    <verbProperties>
+      <verbClass>Verb_CastAbility</verbClass>
+      <label>toxic burst</label>
+      <drawAimPie>false</drawAimPie>
+      <warmupTime>0.5</warmupTime>
+      <violent>false</violent>
+      <targetable>false</targetable>
+      <targetParams>
+        <canTargetSelf>true</canTargetSelf>
+      </targetParams>
+      <!--<soundCast>DeadlifeRelease</soundCast>-->
+    </verbProperties>
+    <comps>
+      <li Class="CompProperties_AbilityReleaseGas">
+        <gasType>ToxGas</gasType>
+        <cellsToFill>30</cellsToFill>
+      </li>
+    </comps>
+  </AbilityDef>
+
+  
+</Defs>
