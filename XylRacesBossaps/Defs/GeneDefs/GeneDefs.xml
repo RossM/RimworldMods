@@ -20,7 +20,7 @@
   <GeneDef ParentName="GeneAggressionBase">
     <defName>Docile</defName>
     <label>docile</label>
-    <description>Carriers of this gene are generally docile. They are less likely to start prison breaks or have violent mental breaks, and never start social fights. They are also easier to convert, recruit, enslave, or keep enslaved.</description>
+    <description>Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They are also less likely to start prison breaks or have violent mental breaks, and never start social fights.</description>
     <iconPath>UI/Icons/Genes/Gene_DeadCalm</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
@@ -30,10 +30,19 @@
     <prisonBreakMTBFactor>4</prisonBreakMTBFactor><!-- Never prison breaks -->
     <statFactors>
       <SlaveSuppressionFallRate MayRequire="Ludeon.RimWorld.Ideology">0.25</SlaveSuppressionFallRate>
-      <CertaintyLossFactor MayRequire="Ludeon.RimWorld.Ideology">2</CertaintyLossFactor>
-      <ResistanceFallRate>2</ResistanceFallRate>
-      <WillFallRate>2</WillFallRate>
+      <WillFallRate>4</WillFallRate>
     </statFactors>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>HerdInstinct</defName>
+    <label>herd instinct</label>
+    <description>Carriers of this gene need the comfort of being in a large group. They get a mood penalty if there are too few members of the colony.</description>
+    <iconPath>UI/Icons/Genes/Gene_PainReduced</iconPath>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>500</displayOrderInCategory>
   </GeneDef>
 
 </Defs>

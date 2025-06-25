@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThoughtDef>
+    <defName>HerdInstinct</defName>
+    <thoughtClass>XylRacesCore.Thought_Situational_HerdInstinct</thoughtClass>
+    <workerClass>XylRacesCore.ThoughtWorker_HerdInstinct</workerClass>
+    <requiredGenes>
+      <li>HerdInstinct</li>
+    </requiredGenes>
+    <stages>
+      <li>
+        <label>herd instinct alone</label>
+        <description>I'm so lonely. I need a herd!</description>
+        <baseMoodEffect>-12</baseMoodEffect>
+      </li>
+      <li>
+        <label>herd instinct in small group</label>
+        <description>This herd is so small. We need more members.</description>
+        <baseMoodEffect>-6</baseMoodEffect>
+      </li>
+      <li>
+        <label>herd instinct in large group</label>
+        <description>Our herd is strong.</description>
+        <baseMoodEffect>3</baseMoodEffect>
+      </li>
+      <li>
+        <label>herd instinct in huge group</label>
+        <description>Our herd has so many members! I love it!</description>
+        <baseMoodEffect>6</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>DocileEnslaved</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <workerClass>XylRacesCore.ThoughtWorker_Enslaved</workerClass>
+    <requiredGenes>
+      <li>Docile</li>
+    </requiredGenes>
+    <stages>
+      <li>
+        <label>docile enslaved</label>
+        <description>It's so comforting having someone else to tell me what to do.</description>
+        <baseMoodEffect>20</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+</Defs>
