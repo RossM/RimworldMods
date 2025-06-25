@@ -9,6 +9,14 @@ using Verse;
 
 namespace XylRacesCore
 {
+    public class ModExtension_GeneDef_DietDependency : DefModExtension
+    {
+        public HediffDef hediffDef;
+        public FoodKind foodKind = FoodKind.Any;
+        public bool rawOnly = false;
+        public float severityReductionPerNutrition = 1f;
+    }
+
     public class Gene_DietDependency : Gene
     {
         public int lastIngestedTick;
@@ -23,6 +31,7 @@ namespace XylRacesCore
                 {
                     return !pawn.IsGhoul;
                 }
+
                 return false;
             }
         }
@@ -65,6 +74,7 @@ namespace XylRacesCore
             {
                 pawn.health.RemoveHediff(linkedHediff);
             }
+
             base.PostRemove();
         }
 
@@ -73,7 +83,8 @@ namespace XylRacesCore
             var extension = DefExt;
             if (extension == null)
             {
-                Log.Warning("Gene_DietDependency.Notify_IngestedThing called without a ModExtension_GeneDef_DietDependency");
+                Log.Warning(
+                    "Gene_DietDependency.Notify_IngestedThing called without a ModExtension_GeneDef_DietDependency");
                 return;
             }
 
@@ -99,12 +110,14 @@ namespace XylRacesCore
             var linkedHediff = LinkedHediff;
             if (linkedHediff != null)
             {
-                linkedHediff.Severity = Math.Max(linkedHediff.def.initialSeverity, linkedHediff.Severity - severityReduction);
+                linkedHediff.Severity = Math.Max(linkedHediff.def.initialSeverity,
+                    linkedHediff.Severity - severityReduction);
             }
             else
             {
                 AddHediff();
             }
+
             lastIngestedTick = Find.TickManager.TicksGame;
         }
 
@@ -129,6 +142,7 @@ namespace XylRacesCore
                 Log.Warning("Gene_DietDependency.ValidateFood called without a ModExtension_GeneDef_DietDependency");
                 return false;
             }
+
             if (extension.foodKind == FoodUtility.GetFoodKind(food))
                 return true;
 
@@ -140,7 +154,8 @@ namespace XylRacesCore
             var compIngredients = food.TryGetComp<CompIngredients>();
             if (compIngredients == null)
                 return false;
-            if (Enumerable.Any(compIngredients.ingredients, ingredient => extension.foodKind == FoodUtility.GetFoodKind(ingredient)))
+            if (Enumerable.Any(compIngredients.ingredients,
+                    ingredient => extension.foodKind == FoodUtility.GetFoodKind(ingredient)))
                 return true;
 
             return false;

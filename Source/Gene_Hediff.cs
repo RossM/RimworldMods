@@ -8,6 +8,13 @@ using Verse;
 
 namespace XylRacesCore
 {
+    public class ModExtension_GeneDef_Hediff : DefModExtension
+    {
+        public List<HediffGiver> hediffGivers;
+        public bool applyImmediately = false;
+        public float mtbDays = 0.0f;
+    }
+
     public class Gene_Hediff : Gene
     {
         public ModExtension_GeneDef_Hediff DefExt => def.GetModExtension<ModExtension_GeneDef_Hediff>();
@@ -17,9 +24,10 @@ namespace XylRacesCore
             var extension = DefExt;
             if (Active && extension?.hediffGivers != null && extension.applyImmediately)
             {
-                foreach (var hediffGiver in extension.hediffGivers) 
+                foreach (var hediffGiver in extension.hediffGivers)
                     hediffGiver.TryApply(pawn);
             }
+
             base.PostAdd();
         }
 
@@ -28,7 +36,8 @@ namespace XylRacesCore
             base.TickInterval(delta);
 
             var extension = DefExt;
-            if (Active && extension?.hediffGivers != null && extension.mtbDays > 0.0f && pawn.IsHashIntervalTick(60, delta))
+            if (Active && extension?.hediffGivers != null && extension.mtbDays > 0.0f &&
+                pawn.IsHashIntervalTick(60, delta))
             {
                 foreach (var hediffGiver in extension.hediffGivers)
                 {
@@ -44,8 +53,9 @@ namespace XylRacesCore
             if (Active && extension?.hediffGivers != null)
             {
                 foreach (var hediffGiver in extension.hediffGivers)
-                    foreach (var hediff in pawn.health.hediffSet.hediffs.Where(hediff => hediff.def == hediffGiver.hediff).ToList())
-                        pawn.health.RemoveHediff(hediff);
+                foreach (var hediff in pawn.health.hediffSet.hediffs.Where(hediff => hediff.def == hediffGiver.hediff)
+                             .ToList())
+                    pawn.health.RemoveHediff(hediff);
             }
 
             base.PostRemove();

@@ -7,6 +7,16 @@ using Verse;
 
 namespace XylRacesCore
 {
+    public class ModExtension_GeneDef_Atavism : DefModExtension
+    {
+        public int biostatArcMin, biostatArcMax;
+        public int biostatCpxMin, biostatCpxMax;
+        public int biostatMetMin, biostatMetMax;
+        public float geneChance = 1.0f;
+        public float extraGeneChance = 1.0f;
+        public List<GeneDef> extraGenes;
+    }
+
     public class Gene_Atavism : Gene
     {
         public List<Gene> addedGenes;
@@ -54,7 +64,8 @@ namespace XylRacesCore
             {
                 if (def == gene)
                     return 0.0f;
-                if (def.exclusionTags != null && gene.exclusionTags != null && def.exclusionTags.Union(gene.exclusionTags).Any())
+                if (def.exclusionTags != null && gene.exclusionTags != null &&
+                    def.exclusionTags.Union(gene.exclusionTags).Any())
                     return 0.0f;
             }
 
@@ -65,7 +76,7 @@ namespace XylRacesCore
         {
             base.PostRemove();
 
-            if (addedGenes == null) 
+            if (addedGenes == null)
                 return;
 
             foreach (var gene in addedGenes)
