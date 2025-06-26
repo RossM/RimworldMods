@@ -11,11 +11,15 @@ namespace XylRacesCore
 {
     public class Gene_Hyperlactation : Gene
     {
-        private bool allowMilking;
+        public bool allowMilking;
 
         public float FoodPerChargeMultiplier => 4;
 
+        public float ChargePerItem => 0.1f;
+
         private static HediffDef HyperlactatingHediff;
+
+        public HediffComp_Lactating LactationCharge => GetPawnLactationHediff(pawn).TryGetComp<HediffComp_Lactating>();
 
         public override bool Active
         {
@@ -77,6 +81,19 @@ namespace XylRacesCore
             Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(HyperlactatingHediff) ??
                             pawn.health.AddHediff(HyperlactatingHediff);
             hediff.Severity = 1.0f;
+        }
+
+        public static Hediff GetPawnLactationHediff(Pawn pawn)
+        {
+            PatchLactation.Hyperlactating ??= DefDatabase<HediffDef>.GetNamed("Hyperlactating");
+
+            return pawn.health.hediffSet.GetFirstHediffOfDef(PatchLactation.Hyperlactating) ??
+                   pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.Lactating);
+        }
+
+        public static bool HasPawnLactationHediff(Pawn pawn)
+        {
+            return GetPawnLactationHediff(pawn) != null;
         }
     }
 }

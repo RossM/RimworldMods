@@ -49,7 +49,7 @@
         <onlyMessageForColonistsOrPrisoners>true</onlyMessageForColonistsOrPrisoners>
       </li>
       <li Class="HediffCompProperties_Lactating">
-        <ticksToFullCharge>30000</ticksToFullCharge>
+        <ticksToFullCharge>60000</ticksToFullCharge>
         <!-- 6 hrs: 2 to feed a baby and 4 to recover. -->
         <initialCharge>0.5</initialCharge>
         <fullChargeAmount>0.5</fullChargeAmount>

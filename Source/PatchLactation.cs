@@ -16,19 +16,6 @@ namespace XylRacesCore
     {
         public static HediffDef Hyperlactating = null;
 
-        public static Hediff GetPawnLactationHediff(Pawn pawn)
-        {
-            Hyperlactating ??= DefDatabase<HediffDef>.GetNamed("Hyperlactating");
-
-            return pawn.health.hediffSet.GetFirstHediffOfDef(Hyperlactating) ??
-                   pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.Lactating);
-        }
-
-        public static bool HasPawnLactationHediff(Pawn pawn)
-        {
-            return GetPawnLactationHediff(pawn) != null;
-        }
-
         private static readonly InstructionMatcher Fixup = new()
         {
             Rules =
@@ -47,7 +34,7 @@ namespace XylRacesCore
                     ],
                     Output =
                     [
-                        CodeInstruction.Call(() => GetPawnLactationHediff),
+                        CodeInstruction.Call(() => Gene_Hyperlactation.GetPawnLactationHediff),
                     ]
                 },
                 new()
@@ -64,7 +51,7 @@ namespace XylRacesCore
                     ],
                     Output =
                     [
-                        CodeInstruction.Call(() => HasPawnLactationHediff),
+                        CodeInstruction.Call(() => Gene_Hyperlactation.HasPawnLactationHediff),
                     ]
                 },
             }
