@@ -166,6 +166,12 @@ namespace XylRacesCore
                 }
             }
 
+            if (matches.Count == 0)
+            {
+                reason = "No matches";
+                return false;
+            }
+
             var declaredLocals = new List<LocalBuilder>(LocalTypes.Count);
 
             // Make the substitutions

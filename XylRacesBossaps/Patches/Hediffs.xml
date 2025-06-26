@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<Patch>
+  
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/HediffDef[defName="Lactating"]</xpath>
+    <attribute>Name</attribute>
+    <value>Lactating</value>
+  </Operation>
+
+</Patch>

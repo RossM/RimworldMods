@@ -34,4 +34,41 @@
     </modExtensions>
   </HediffDef>
 
+  <HediffDef ParentName="Lactating">
+    <defName>Hyperlactating</defName>
+    <label>hyperlactating</label>
+    <description>The condition of being able to breastfeed a baby. The breasts are actively producing and storing milk. This character produces milk continually as long as they get adequate food.\n\nPeople who are lactating will have a harder time becoming pregnant.</description>
+    <comps Inherit="False">
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>0</severityPerDay>
+      </li>
+      <li Class="HediffCompProperties_MessageOnRemoval">
+        <messageOnNonZeroSeverity>false</messageOnNonZeroSeverity>
+        <message>{0} is no longer lactating.</message>
+        <messageType>SilentInput</messageType>
+        <onlyMessageForColonistsOrPrisoners>true</onlyMessageForColonistsOrPrisoners>
+      </li>
+      <li Class="HediffCompProperties_Lactating">
+        <ticksToFullCharge>30000</ticksToFullCharge>
+        <!-- 6 hrs: 2 to feed a baby and 4 to recover. -->
+        <initialCharge>0.5</initialCharge>
+        <fullChargeAmount>0.5</fullChargeAmount>
+        <labelInBrackets>milk fullness {CHARGEFACTOR_percentage}</labelInBrackets>
+        <minChargeToActivate>0.031</minChargeToActivate>
+        <!-- some hysteresis so when breastfeeding starts we're sure it can continue for a while. -->
+      </li>
+      <li Class="HediffCompProperties_RemoveIfOtherHediff">
+        <hediffs>
+          <li>Malnutrition</li>
+        </hediffs>
+        <stages>2~</stages>
+        <mtbHours>4</mtbHours>
+        <message>{0} is no longer lactating due to malnutrition.</message>
+        <messageType>SilentInput</messageType>
+        <onlyMessageForColonistsOrPrisoners>true</onlyMessageForColonistsOrPrisoners>
+      </li>
+    </comps>
+
+  </HediffDef>
+
 </Defs>
