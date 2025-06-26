@@ -42,6 +42,12 @@ namespace XylRacesCore
             }
         }
 
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref fullSinceTick, "fullSinceTick");
+        }
+
         public override IEnumerable<Gizmo> GetGizmos()
         {
             if (!Active)
