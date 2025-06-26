@@ -37,7 +37,7 @@
   <GeneDef>
     <defName>HerdInstinct</defName>
     <label>herd instinct</label>
-    <description>Carriers of this gene need the comfort of being in a large group. They get a mood penalty if there are too few members of the colony.</description>
+    <description>Carriers of this gene need the comfort of being in a large group. They get a mood penalty if there are too few members of the colony. They also don't mind sleeping in a barracks.</description>
     <iconPath>UI/Icons/Genes/Gene_PainReduced</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>

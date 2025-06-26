@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<Patch>
+  
+  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+    <xpath>Defs/ThoughtDef[defName="SleptInBarracks"]</xpath>
+    <value>
+      <nullifyingGenes>
+        <li>HerdInstinct</li>
+      </nullifyingGenes>
+    </value>
+  </Operation>
+
+</Patch>
