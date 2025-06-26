@@ -133,7 +133,6 @@
     <defName>Milked</defName>
     <thoughtClass>Thought_MemorySocial</thoughtClass>
     <durationDays>10</durationDays>
-    <stackLimit>4</stackLimit>
     <nullifyingTraits>
       <li>Masochist</li>
     </nullifyingTraits>
@@ -149,7 +148,6 @@
   <ThoughtDef>
     <defName>MilkedMood</defName>
     <durationDays>10</durationDays>
-    <stackLimit>4</stackLimit>
     <nullifyingTraits>
       <li>Masochist</li>
     </nullifyingTraits>
@@ -165,7 +163,6 @@
     <defName>Milked_Masochist</defName>
     <thoughtClass>Thought_MemorySocial</thoughtClass>
     <durationDays>10</durationDays>
-    <stackLimit>4</stackLimit>
     <requiredTraits>
       <li>Masochist</li>
     </requiredTraits>
@@ -184,7 +181,6 @@
   <ThoughtDef>
     <defName>MilkedMood_Masochist</defName>
     <durationDays>10</durationDays>
-    <stackLimit>4</stackLimit>
     <requiredTraits>
       <li>Masochist</li>
     </requiredTraits>
