@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Verse;
 using Verse.AI;
+using static UnityEngine.GraphicsBuffer;
 
 namespace XylRacesCore
 {
@@ -35,12 +36,14 @@ namespace XylRacesCore
                 if (need_wetness != null)
                     need_wetness.IsShowering = true;
                 pawn.AllComps.Add(comp);
+                pawn.Drawer.renderer.SetAllGraphicsDirty();
             };
             work.AddFinishAction(() =>
             {
                 if (need_wetness != null)
                     need_wetness.IsShowering = false;
                 pawn.AllComps.Remove(comp);
+                pawn.Drawer.renderer.SetAllGraphicsDirty();
             });
             yield return work;
         }

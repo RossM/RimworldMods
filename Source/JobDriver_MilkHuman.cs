@@ -73,12 +73,14 @@ namespace XylRacesCore
             this.FailOnNotCasualInterruptible(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
             Toil toil = ToilMaker.MakeToil("MakeNewToils");
+            var hideClothes = new Comp_RenderProperties { hideClothes = true };
             toil.initAction = delegate
             {
                 Pawn actor = toil.actor;
-                Pawn obj = (Pawn)job.GetTarget(TargetIndex.A).Thing;
                 actor.pather.StopDead();
-                PawnUtility.ForceWait(obj, 15000, null, maintainPosture: true);
+                PawnUtility.ForceWait(Target, 15000, null, maintainPosture: true);
+                Target?.AllComps.Add(hideClothes);
+                Target?.Drawer.renderer.SetAllGraphicsDirty();
             };
             toil.tickIntervalAction = delegate (int delta)
             {
@@ -97,6 +99,8 @@ namespace XylRacesCore
                 {
                     Target.jobs.EndCurrentJob(JobCondition.InterruptForced);
                 }
+                Target?.AllComps.Remove(hideClothes);
+                Target?.Drawer.renderer.SetAllGraphicsDirty();
             });
             toil.FailOnDespawnedOrNull(TargetIndex.A);
             toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
