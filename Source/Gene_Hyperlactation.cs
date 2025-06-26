@@ -5,6 +5,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace XylRacesCore
@@ -95,5 +96,7 @@ namespace XylRacesCore
         {
             return GetPawnLactationHediff(pawn) != null;
         }
+
+        public int MilkCount => Mathf.FloorToInt((this.LactationCharge?.Charge ?? 0) / this.ChargePerItem);
     }
 }

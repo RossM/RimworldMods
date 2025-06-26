@@ -42,7 +42,7 @@ namespace XylRacesCore
             
             ThingDef milkDef = DefDatabase<ThingDef>.GetNamed("Milk");
 
-            int qty = Mathf.FloorToInt(lactationCharge.Charge / gene.ChargePerItem);
+            int qty = gene.MilkCount;
             lactationCharge.GreedyConsume(gene.ChargePerItem * qty);
 
             if (!Rand.Chance(doer.GetStatValue(StatDefOf.AnimalGatherYield)))
@@ -69,17 +69,17 @@ namespace XylRacesCore
             this.FailOnDowned(TargetIndex.A);
             this.FailOnNotCasualInterruptible(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
-            Toil wait = ToilMaker.MakeToil("MakeNewToils");
-            wait.initAction = delegate
+            Toil toil = ToilMaker.MakeToil("MakeNewToils");
+            toil.initAction = delegate
             {
-                Pawn actor = wait.actor;
+                Pawn actor = toil.actor;
                 Pawn obj = (Pawn)job.GetTarget(TargetIndex.A).Thing;
                 actor.pather.StopDead();
                 PawnUtility.ForceWait(obj, 15000, null, maintainPosture: true);
             };
-            wait.tickIntervalAction = delegate (int delta)
+            toil.tickIntervalAction = delegate (int delta)
             {
-                Pawn actor = wait.actor;
+                Pawn actor = toil.actor;
                 actor.skills.Learn(SkillDefOf.Animals, 0.13f * (float)delta);
                 gatherProgress += actor.GetStatValue(StatDefOf.AnimalGatherSpeed) * (float)delta;
                 if (gatherProgress >= WorkTotal)
@@ -88,25 +88,20 @@ namespace XylRacesCore
                     actor.jobs.EndCurrentJob(JobCondition.Succeeded);
                 }
             };
-            wait.AddFinishAction(delegate
+            toil.AddFinishAction(delegate
             {
                 if (Target != null && Target.CurJobDef == JobDefOf.Wait_MaintainPosture)
                 {
                     Target.jobs.EndCurrentJob(JobCondition.InterruptForced);
                 }
             });
-            wait.FailOnDespawnedOrNull(TargetIndex.A);
-            wait.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
-            wait.AddEndCondition(() => MilkNutrition(Target) >= 0.25 ? JobCondition.Ongoing : JobCondition.Incompletable);
-            wait.defaultCompleteMode = ToilCompleteMode.Never;
-            wait.WithProgressBar(TargetIndex.A, () => gatherProgress / WorkTotal);
-            wait.activeSkill = () => SkillDefOf.Animals;
-            yield return wait;
-        }
-
-        private float MilkNutrition(Pawn pawn)
-        {
-            return pawn.FirstGeneOfType<Gene_Hyperlactation>()?.LactationCharge?.Charge ?? 0;
+            toil.FailOnDespawnedOrNull(TargetIndex.A);
+            toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
+            toil.AddEndCondition(() => Target.FirstGeneOfType<Gene_Hyperlactation>()?.MilkCount is > 0 ? JobCondition.Ongoing : JobCondition.Incompletable);
+            toil.defaultCompleteMode = ToilCompleteMode.Never;
+            toil.WithProgressBar(TargetIndex.A, () => gatherProgress / WorkTotal);
+            toil.activeSkill = () => SkillDefOf.Animals;
+            yield return toil;
         }
     }
 }

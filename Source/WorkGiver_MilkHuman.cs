@@ -34,15 +34,12 @@ namespace XylRacesCore
 
             if (!gene.allowMilking)
                 return false;
-            if (target.Drafted)
-                return false;
-            if (!target.jobs.IsCurrentJobPlayerInterruptible())
+            if (!target.CanCasuallyInteractNow())
                 return false;
             if (!pawn.CanReserve(target))
                 return false;
 
-            var lactationCharge = gene.LactationCharge;
-            return lactationCharge?.Charge >= gene.ChargePerItem;
+            return gene.MilkCount > 0;
         }
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
