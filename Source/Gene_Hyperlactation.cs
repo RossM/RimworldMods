@@ -12,7 +12,8 @@ namespace XylRacesCore
 {
     public class Gene_Hyperlactation : Gene
     {
-        public bool allowMilking;
+        public bool allowMilking = false;
+        public bool onlyMilkWhenFull = true;
 
         public int? fullSinceTick;
 
@@ -47,6 +48,7 @@ namespace XylRacesCore
             base.ExposeData();
             Scribe_Values.Look(ref fullSinceTick, "fullSinceTick");
             Scribe_Values.Look(ref allowMilking, "allowMilking");
+            Scribe_Values.Look(ref onlyMilkWhenFull, "onlyMilkWhenFull");
         }
 
         public override IEnumerable<Gizmo> GetGizmos()
@@ -59,10 +61,20 @@ namespace XylRacesCore
             yield return new Command_Toggle
             {
                 defaultLabel = "Allow milking",
-                defaultDesc = "Allow other characters to milk this character when she has enough milk.",
+                defaultDesc = "Allow other characters to milk this character.",
                 isActive = () => allowMilking,
                 toggleAction = () => { allowMilking = !allowMilking; }
             };
+            if (allowMilking)
+            {
+                yield return new Command_Toggle
+                {
+                    defaultLabel = "Only milk when full",
+                    defaultDesc = "Only allow milking when this character's breast milk is full.",
+                    isActive = () => onlyMilkWhenFull,
+                    toggleAction = () => { onlyMilkWhenFull = !onlyMilkWhenFull; }
+                };
+            }
         }
 
         public override void PostAdd()
@@ -114,10 +126,7 @@ namespace XylRacesCore
 
         public static Hediff GetPawnLactationHediff(Pawn pawn)
         {
-            PatchLactation.Hyperlactating ??= DefDatabase<HediffDef>.GetNamed("Hyperlactating");
-
-            return pawn.health.hediffSet.GetFirstHediffOfDef(PatchLactation.Hyperlactating) ??
-                   pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.Lactating);
+            return pawn.health.hediffSet.hediffs.FirstOrDefault(h => h.TryGetComp<HediffComp_Lactating>() != null);
         }
 
         public static bool HasPawnLactationHediff(Pawn pawn)
@@ -125,6 +134,18 @@ namespace XylRacesCore
             return GetPawnLactationHediff(pawn) != null;
         }
 
-        public int MilkCount => Mathf.FloorToInt((this.LactationCharge?.Charge ?? 0) / this.ChargePerItem);
+        public int MilkCount => Mathf.FloorToInt((LactationCharge?.Charge ?? 0) / ChargePerItem);
+
+        public bool ReadyToMilk()
+        {
+            if (!allowMilking)
+                return false;
+
+            int requiredCount = 1;
+            if (onlyMilkWhenFull)
+                requiredCount = Mathf.FloorToInt(LactationCharge.Props.fullChargeAmount / ChargePerItem);
+
+            return MilkCount >= requiredCount;
+        }
     }
 }

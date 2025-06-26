@@ -41,7 +41,7 @@ namespace XylRacesCore
             if (!pawn.CanReserve(target))
                 return false;
 
-            return gene.MilkCount > 0;
+            return gene.ReadyToMilk();
         }
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
