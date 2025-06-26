@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <XenotypeDef>
+    <defName>Bossaps</defName>
+    <label>bossaps</label>
+    <description>TODO.</description>
+    <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
+    <inheritable>true</inheritable>
+    <genes>
+      <li>HerdInstinct</li>
+      <li>Docile</li>
+      <li>LargeHorns</li>
+      <li>Rage</li>
+      <li>Robust</li>
+      <li>PainReversal</li>
+      <li>Fertile</li>
+      <li>Hyperlactation</li>
+      <li>Hair_LongOnly</li>
+      <li>Body_Standard</li>
+      <li>Body_Fat</li>
+      <li>Body_Hulk</li>
+      <li>Gender_UsuallyFemale</li>
+      <li>Nearsighted</li>
+      <li>HerbivoreStomach</li>
+    </genes>
+  </XenotypeDef>
+  
+</Defs>

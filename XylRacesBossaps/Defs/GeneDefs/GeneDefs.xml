@@ -2,6 +2,31 @@
 <Defs>
 
   <GeneDef>
+    <defName>HerbivoreStomach</defName>
+    <label>herbivore stomach</label>
+    <labelShortAdj>herbivorous</labelShortAdj>
+    <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw plant-based foods, but are poor at digesting meat. They never get negative thoughts from eating plant-based foods.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_HerbivoreStomach</iconPath>
+    <exclusionTags>
+      <li>Digestion</li>
+    </exclusionTags>
+    <statFactors>
+      <RawNonMeatNutritionFactor>1.8</RawNonMeatNutritionFactor>
+      <RawMeatNutritionFactor>0.5</RawMeatNutritionFactor>
+      <CookedMeatNutritionFactor>0.8</CookedMeatNutritionFactor>
+    </statFactors>
+    <forcedTraits>
+      <li>
+        <def>Herbivore</def>
+      </li>
+    </forcedTraits>
+  </GeneDef>
+
+  <GeneDef>
     <defName>PainReversal</defName>
     <label>pain reversal</label>
     <description>Carriers of this gene have scrambled senses that make them feel pain as pleasurable.</description>
