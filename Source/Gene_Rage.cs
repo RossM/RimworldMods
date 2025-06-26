@@ -7,16 +7,16 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class ModExtension_GeneDef_Berserker : DefModExtension
+    public class ModExtension_GeneDef_Rage : DefModExtension
     {
         public float chance = 1.0f;
         public HediffDef hediffDef;
         public float severity;
     }
 
-    public class Gene_Berserker : Gene
+    public class Gene_Rage : Gene
     {
-        public ModExtension_GeneDef_Berserker DefExt => def.GetModExtension<ModExtension_GeneDef_Berserker>();
+        public ModExtension_GeneDef_Rage DefExt => def.GetModExtension<ModExtension_GeneDef_Rage>();
 
         public void Notify_DamageTaken(DamageInfo dinfo, DamageWorker.DamageResult damageResult)
         {

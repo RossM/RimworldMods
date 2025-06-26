@@ -2,8 +2,8 @@
 <Defs>
 
   <HediffDef>
-    <defName>Berserk</defName>
-    <label>berserk</label>
+    <defName>Rage</defName>
+    <label>rage</label>
     <description>A temporary frenzy state. The character moves faster and feels almost no pain, but can't be controlled until the frenzy ends.</description>
     <hediffClass>XylRacesCore.Hediff_ForceBehavior</hediffClass>
     <initialSeverity>1.0</initialSeverity>
@@ -24,6 +24,9 @@
             <offset>0.5</offset>
           </li>
         </capMods>
+        <statFactors>
+          <MeleeDamageFactor>1.5</MeleeDamageFactor>
+        </statFactors>
         <painFactor>0.1</painFactor>
       </li>
     </stages>

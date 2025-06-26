@@ -44,7 +44,7 @@ namespace XylRacesCore
             List<Gene> instanceGenes = (__instance as Pawn)?.genes?.GenesListForReading;
             if (instanceGenes != null)
             {
-                foreach (var gene in instanceGenes.OfType<Gene_Berserker>())
+                foreach (var gene in instanceGenes.OfType<Gene_Rage>())
                 {
                     gene.Notify_DamageTaken(dinfo, __result);
                 }
