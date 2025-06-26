@@ -20,11 +20,11 @@ namespace XylRacesCore
                 new()
                 {
                     Min = 1, Max = 1,
-                    Replace = true,
+                    Mode = InstructionMatcher.OutputMode.InsertBefore,
                     Pattern =
                     [
                         // PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo(pawn, faction.def, request, xenotype);
-                        // At this point 'pawn is on the top of the stack
+                        // At this point 'pawn' is on the top of the stack
                         CodeInstruction.LoadLocal(0),
                         CodeInstruction.LoadField(typeof(Faction), "def"),
                         CodeInstruction.LoadArgument(0),
@@ -38,19 +38,10 @@ namespace XylRacesCore
                         new CodeInstruction(OpCodes.Dup),
                         // Load 'request'
                         CodeInstruction.LoadArgument(0),
-                        // new CodeInstruction(OpCodes.Ldobj, typeof(PawnGenerationRequest)),
                         // Load 'xenotype'
                         new CodeInstruction(OpCodes.Ldloc_S, 4),
                         // Call our fixup
                         CodeInstruction.Call(() => ModifyGenderByGenes),
-
-                        // Emit the original call
-                        CodeInstruction.LoadLocal(0),
-                        CodeInstruction.LoadField(typeof(Faction), "def"),
-                        CodeInstruction.LoadArgument(0),
-                        new CodeInstruction(OpCodes.Ldobj, typeof(PawnGenerationRequest)),
-                        new CodeInstruction(OpCodes.Ldloc_S, 4),
-                        CodeInstruction.Call(typeof(PawnBioAndNameGenerator), "GiveAppropriateBioAndNameTo"),
 
                     ],
                 }
@@ -73,7 +64,7 @@ namespace XylRacesCore
             var gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
                        request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
                        request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ?? 
-                       xenotype.AllGenes.FirstOrDefault(HasGenderRatio);
+                       xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
             if (gene != null)
             {
                 pawn.gender = Rand.Chance(gene.GetModExtension<ModExtension_GeneDef_GenderRatio>().femaleChance)

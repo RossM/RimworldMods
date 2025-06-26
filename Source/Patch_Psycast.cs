@@ -20,7 +20,7 @@ namespace XylRacesCore
                 new()
                 {
                     Min = 1, Max = 0,
-                    Replace = true,
+                    Mode = InstructionMatcher.OutputMode.Replace,
                     Pattern =
                     [
                         CodeInstruction.Call(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel)),

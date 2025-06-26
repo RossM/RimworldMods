@@ -15,10 +15,17 @@ namespace XylRacesCore
 {
     public class InstructionMatcher
     {
+        public enum OutputMode
+        {
+            Replace,
+            InsertBefore,
+            InsertAfter,
+        }
+
         public class Rule
         {
             public int Min = 1, Max = 1;
-            public bool Replace = false;
+            public OutputMode Mode = OutputMode.InsertAfter;
             public bool SaveLocals = false;
             public bool Chained = false;
             public CodeInstruction[] Pattern;
@@ -182,7 +189,7 @@ namespace XylRacesCore
 
                 if (match?.rule.Output != null)
                 {
-                    if (!match.rule.Replace)
+                    if (match.rule.Mode == OutputMode.InsertAfter)
                     {
                         for (int i = match.start; i <= match.end; i++)
                         {
@@ -246,6 +253,17 @@ namespace XylRacesCore
                         if (debug)
                             Log.Message(string.Format("EMIT {0}", outInstructions[outInstructions.Count - 1]));
                     }
+
+                    if (match.rule.Mode == OutputMode.InsertBefore)
+                    {
+                        for (int i = match.start; i <= match.end; i++)
+                        {
+                            outInstructions.Add(instructions[i]);
+                            if (debug)
+                                Log.Message(string.Format("COPYMATCH {0}", outInstructions[outInstructions.Count - 1]));
+                        }
+                    }
+
                 }
                 else
                 {

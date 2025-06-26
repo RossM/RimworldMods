@@ -23,7 +23,7 @@ namespace XylRacesCore
                 new()
                 {
                     Min = 0, Max = 0,
-                    Replace = true,
+                    Mode = InstructionMatcher.OutputMode.Replace,
                     Pattern =
                     [
                         CodeInstruction.LoadField(typeof(Pawn), "health"),
@@ -40,7 +40,7 @@ namespace XylRacesCore
                 new()
                 {
                     Min = 0, Max = 0,
-                    Replace = true,
+                    Mode = InstructionMatcher.OutputMode.Replace,
                     Pattern =
                     [
                         CodeInstruction.LoadField(typeof(Pawn), "health"),
