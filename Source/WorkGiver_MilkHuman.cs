@@ -27,6 +27,8 @@ namespace XylRacesCore
         {
             if (t is not Pawn target)
                 return false;
+            if (pawn == target)
+                return false;
 
             var gene = target.FirstGeneOfType<Gene_Hyperlactation>();
             if (gene == null)

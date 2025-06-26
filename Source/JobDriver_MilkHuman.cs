@@ -71,6 +71,7 @@ namespace XylRacesCore
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             this.FailOnDowned(TargetIndex.A);
             this.FailOnNotCasualInterruptible(TargetIndex.A);
+            this.FailOnSomeonePhysicallyInteracting(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
             Toil toil = ToilMaker.MakeToil("MakeNewToils");
             var hideClothes = new Comp_RenderProperties { hideClothes = true };
