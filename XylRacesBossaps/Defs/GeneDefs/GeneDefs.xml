@@ -45,4 +45,22 @@
     <displayOrderInCategory>500</displayOrderInCategory>
   </GeneDef>
 
+  <GeneDef>
+    <geneClass>XylRacesCore.Gene_Berserker</geneClass>
+    <defName>Berserker</defName>
+    <label>berserker</label>
+    <description>Carriers of this gene have a chance of going berserk when they are damaged in combat, melee attacking the nearest enemy until all enemies are dead. They receive stat bonuses while berserk. This ability can't be controlled.</description>
+    <iconPath>UI/Icons/Genes/Gene_PainReduced</iconPath>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>4</biostatMet>
+    <displayCategory>Violence</displayCategory>
+    <displayOrderInCategory>500</displayOrderInCategory>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_Berserker">
+        <chance>0.25</chance>
+        <hediffDef>Berserk</hediffDef>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
 </Defs>

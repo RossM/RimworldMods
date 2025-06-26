@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using HarmonyLib;
+using Verse;
+using Verse.AI;
+
+namespace XylRacesCore
+{
+    [HarmonyPatch(typeof(Pawn_Thinker))]
+    public class Patch_Pawn_Thinker
+    {
+        [HarmonyPrefix, HarmonyPatch(nameof(Pawn_Thinker.MainThinkTree), MethodType.Getter)]
+        static bool MainThinkTree_Prefix(Pawn_Thinker __instance, ref ThinkTreeDef __result)
+        {
+            var pawn = __instance.pawn;
+            foreach (var hediff in pawn.health.hediffSet.hediffs.OfType<Hediff_ForceBehavior>())
+            {
+                __result = hediff.DefExt.thinkTree;
+                return false;
+            }
+
+            return true;
+        }
+    }
+}

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<Defs>
+  
+  <ThinkTreeDef>
+    <defName>AttackBerserk</defName>
+    <thinkRoot Class="ThinkNode_Priority">
+      <subNodes>
+        <li Class="JobGiver_WanderColony">
+          <maxDanger>None</maxDanger>
+        </li>
+      </subNodes>
+    </thinkRoot>
+  </ThinkTreeDef>
+
+</Defs>
