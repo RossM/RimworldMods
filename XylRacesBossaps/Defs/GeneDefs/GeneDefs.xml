@@ -74,4 +74,67 @@
     </customEffectDescriptions>
   </GeneDef>
 
+  <GeneDef Name="GenderRatioBase" Abstract="True">
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Reproduction</displayCategory>
+    <displayOrderInCategory>600</displayOrderInCategory>
+    <exclusionTags>
+      <li>Gender</li>
+    </exclusionTags>
+  </GeneDef>
+
+  <GeneDef Parent="GenderRatioBase">
+    <defName>Gender_AlwaysFemale</defName>
+    <label>always female</label>
+    <description>Carriers of this gene are always female.</description>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_GenderRatio">
+        <femaleChance>1.0</femaleChance>
+      </li>
+    </modExtensions>
+    <customEffectDescriptions>
+      <li>Gender: always female</li>
+    </customEffectDescriptions>
+  </GeneDef>
+  <GeneDef Parent="GenderRatioBase">
+    <defName>Gender_UsuallyFemale</defName>
+    <label>usually female</label>
+    <description>Carriers of this gene are mostly female.</description>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_GenderRatio">
+        <femaleChance>0.75</femaleChance>
+      </li>
+    </modExtensions>
+    <customEffectDescriptions>
+      <li>Gender: 75% female, 25% male</li>
+    </customEffectDescriptions>
+  </GeneDef>
+  <GeneDef Parent="GenderRatioBase">
+    <defName>Gender_UsuallyMale</defName>
+    <label>usually male</label>
+    <description>Carriers of this gene are mostly male.</description>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_GenderRatio">
+        <femaleChance>0.25</femaleChance>
+      </li>
+    </modExtensions>
+    <customEffectDescriptions>
+      <li>Gender: 25% female, 75% male</li>
+    </customEffectDescriptions>
+  </GeneDef>
+  <GeneDef Parent="GenderRatioBase">
+    <defName>Gender_AlwaysMale</defName>
+    <label>always male</label>
+    <description>Carriers of this gene are always male.</description>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_GenderRatio">
+        <femaleChance>0.0</femaleChance>
+      </li>
+    </modExtensions>
+    <customEffectDescriptions>
+      <li>Gender: always male</li>
+    </customEffectDescriptions>
+  </GeneDef>
+
 </Defs>
