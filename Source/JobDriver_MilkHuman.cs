@@ -82,6 +82,7 @@ namespace XylRacesCore
                 PawnUtility.ForceWait(Target, 15000, null, maintainPosture: true);
                 Target?.AllComps.Add(hideClothes);
                 Target?.Drawer.renderer.SetAllGraphicsDirty();
+                Target?.rotationTracker.FaceTarget(actor);
             };
             toil.tickIntervalAction = delegate (int delta)
             {
