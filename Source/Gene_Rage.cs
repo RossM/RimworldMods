@@ -20,7 +20,7 @@ namespace XylRacesCore
 
         public void Notify_DamageTaken(DamageInfo dinfo, DamageWorker.DamageResult damageResult)
         {
-            Log.Message(string.Format("Gene_Berserker.Notify_DamageTaken({0}, {1})", dinfo, damageResult));
+            Log.Message(string.Format("Gene_Rage.Notify_DamageTaken({0}, {1})", dinfo, damageResult));
 
             if (!Rand.Chance(DefExt.chance))
                 return;

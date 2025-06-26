@@ -5,7 +5,6 @@
     <defName>PainReversal</defName>
     <label>pain reversal</label>
     <description>Carriers of this gene have scrambled senses that make them feel pain as pleasurable.</description>
-    <iconPath>UI/Icons/Genes/Gene_PainReduced</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Pain</displayCategory>
@@ -21,7 +20,6 @@
     <defName>Docile</defName>
     <label>docile</label>
     <description>Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They are also less likely to start prison breaks or have violent mental breaks, and never start social fights.</description>
-    <iconPath>UI/Icons/Genes/Gene_DeadCalm</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayOrderInCategory>100</displayOrderInCategory>
@@ -38,9 +36,8 @@
     <defName>HerdInstinct</defName>
     <label>herd instinct</label>
     <description>Carriers of this gene need the comfort of being in a large group. They get a mood penalty if there are too few members of the colony. They also don't mind sleeping in a barracks.</description>
-    <iconPath>UI/Icons/Genes/Gene_PainReduced</iconPath>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>-1</biostatMet>
+    <biostatMet>1</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
   </GeneDef>
@@ -50,7 +47,6 @@
     <defName>Rage</defName>
     <label>rage</label>
     <description>Carriers of this gene have a chance of going into a blind range when they are damaged in combat, charging the nearest enemy and fighting in melee until all enemies are dead. During this state they are faster, stronger, and nearly immune to pain. This ability can't be controlled.</description>
-    <iconPath>UI/Icons/Genes/Gene_PainReduced</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>4</biostatMet>
     <displayCategory>Violence</displayCategory>
@@ -68,12 +64,14 @@
     <defName>Hyperlactation</defName>
     <label>hyperlactation</label>
     <description>Female carriers of this gene produce large amounts of breast milk, and lactate even when not pregnant or breastfeeding. This gene is inactive on males and on females younger than 13.</description>
-    <iconPath>UI/Icons/Genes/Gene_PainReduced</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
     <minAgeActive>13</minAgeActive>
+    <customEffectDescriptions>
+      <li>Enables being milked</li>
+    </customEffectDescriptions>
   </GeneDef>
 
 </Defs>

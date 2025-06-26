@@ -53,7 +53,7 @@
     <durationDays>1</durationDays>
     <stackLimit>1</stackLimit>
     <requiredGenes>
-      <li>Docile</li>
+      <li>HerdInstinct</li>
     </requiredGenes>
     <stages>
       <li>
@@ -102,6 +102,100 @@
         <label>wondrously impressive barracks with herd instinct</label>
         <description>I slept in a barracks that was simply wondrous. </description>
         <baseMoodEffect>8</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>SoreBreasts</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <workerClass>XylRacesCore.ThoughtWorker_SoreBreasts</workerClass>
+    <stages>
+      <li>
+        <label>full breasts</label>
+        <description>My breasts are getting full and heavy. This is slightly uncomfortable.</description>
+        <baseMoodEffect>-2</baseMoodEffect>
+      </li>
+      <li>
+        <label>sore breasts</label>
+        <description>My breasts are full, heavy, and sore. This is very uncomfortable.</description>
+        <baseMoodEffect>-4</baseMoodEffect>
+      </li>
+      <li>
+        <label>very sore breasts</label>
+        <description>My breasts are very full, heavy, and sore. This very uncomfortable.</description>
+        <baseMoodEffect>-6</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>Milked</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>10</durationDays>
+    <stackLimit>4</stackLimit>
+    <nullifyingTraits>
+      <li>Masochist</li>
+    </nullifyingTraits>
+    <stages>
+      <li>
+        <label>milked</label>
+        <labelSocial>milked me</labelSocial>
+        <description>I was milked like an animal. It was humiliating.</description>
+        <baseOpinionOffset>-5</baseOpinionOffset>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>MilkedMood</defName>
+    <durationDays>10</durationDays>
+    <stackLimit>4</stackLimit>
+    <nullifyingTraits>
+      <li>Masochist</li>
+    </nullifyingTraits>
+    <stages>
+      <li>
+        <label>milked</label>
+        <description>I was milked like an animal. It was humiliating.</description>
+        <baseMoodEffect>-5</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>Milked_Masochist</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>10</durationDays>
+    <stackLimit>4</stackLimit>
+    <requiredTraits>
+      <li>Masochist</li>
+    </requiredTraits>
+    <replaceThoughts>
+      <li>Milked</li>
+    </replaceThoughts>
+    <stages>
+      <li>
+        <label>masochist milked</label>
+        <labelSocial>milked me</labelSocial>
+        <description>I was milked like an animal. It was thrilling.</description>
+        <baseOpinionOffset>5</baseOpinionOffset>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>MilkedMood_Masochist</defName>
+    <durationDays>10</durationDays>
+    <stackLimit>4</stackLimit>
+    <requiredTraits>
+      <li>Masochist</li>
+    </requiredTraits>
+    <replaceThoughts>
+      <li>MilkedMood</li>
+    </replaceThoughts>
+    <stages>
+      <li>
+        <label>masochist milked</label>
+        <description>I was milked like an animal. It was thrilling.</description>
+        <baseMoodEffect>2</baseMoodEffect>
       </li>
     </stages>
   </ThoughtDef>

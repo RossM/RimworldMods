@@ -7,8 +7,6 @@
     <description>Carriers of this gene are exceptionally large. They can take more damage, carry more, and are more resistant to drugs and toxins, but are also easier to hit with ranged weapons.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
-    <iconPath>UI/Icons/Genes/Gene_FacialStripes</iconPath>
-    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>501</displayOrderInCategory>
     <modExtensions>
@@ -35,8 +33,6 @@
     <biostatMet>-3</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>201</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Scaleskin</iconPath>
-    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
@@ -89,8 +85,6 @@
     <description>Carriers of this gene are genetically incapable of feeling joy. They have no need for recreation, and get no mood bonuses or penalties from it. </description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>1</biostatMet>
-    <iconPath>UI/Icons/Genes/Gene_FacialStripes</iconPath>
-    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>501</displayOrderInCategory>
     <disablesNeeds>

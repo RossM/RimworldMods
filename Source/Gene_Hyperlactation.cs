@@ -14,13 +14,23 @@ namespace XylRacesCore
     {
         public bool allowMilking;
 
-        public float FoodPerChargeMultiplier => 4;
+        public int? fullSinceTick;
 
         public float ChargePerItem => 0.1f;
 
         private static HediffDef HyperlactatingHediff;
 
         public HediffComp_Lactating LactationCharge => GetPawnLactationHediff(pawn).TryGetComp<HediffComp_Lactating>();
+
+        public ThoughtDef fullThoughtDef => DefDatabase<ThoughtDef>.GetNamed("SoreBreasts");
+
+        public IEnumerable<ThoughtDef> milkedThoughts =
+        [
+            DefDatabase<ThoughtDef>.GetNamed("Milked"),
+            DefDatabase<ThoughtDef>.GetNamed("MilkedMood"),
+            DefDatabase<ThoughtDef>.GetNamed("Milked_Masochist"),
+            DefDatabase<ThoughtDef>.GetNamed("MilkedMood_Masochist"),
+        ];
 
         public override bool Active
         {
@@ -57,11 +67,22 @@ namespace XylRacesCore
 
         public override void TickInterval(int delta)
         {
+            if (!Active)
+                return;
+
             base.TickInterval(delta);
 
             if (pawn.IsHashIntervalTick(60, delta))
             {
                 AddHediff();
+
+                if (LactationCharge != null && LactationCharge.Charge >= LactationCharge.Props.fullChargeAmount)
+                {
+                    //Log.Message(string.Format("fullSinceTick: {0}", fullSinceTick));
+                    fullSinceTick ??= Find.TickManager.TicksGame;
+                }
+                else
+                    fullSinceTick = null;
             }
         }
 

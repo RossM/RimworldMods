@@ -10,8 +10,6 @@
     <biostatMet>5</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Industrious</iconPath>
-    <iconColor>(0.75, 0.25, 0.25)</iconColor>
     <modExtensions>
       <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
         <hediffGivers>
@@ -37,8 +35,6 @@
     <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Industrious</iconPath>
-    <iconColor>(0.25, 0.75, 0.25)</iconColor>
     <modExtensions>
       <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
         <hediffGivers>
