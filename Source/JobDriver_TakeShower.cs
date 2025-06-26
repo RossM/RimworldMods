@@ -21,31 +21,33 @@ namespace XylRacesCore
 
             var startTick = Find.TickManager.TicksGame;
 
-            Toil work = ToilMaker.MakeToil("MakeNewToils");
-            work.defaultCompleteMode = ToilCompleteMode.Delay;
-            work.defaultDuration = job.def.joyDuration;
-            work.WithProgressBar(TargetIndex.A, () => (float)(Find.TickManager.TicksGame - startTick) / job.def.joyDuration);
-            work.AddPreTickIntervalAction((int delta) =>
+            Toil toil = ToilMaker.MakeToil("MakeNewToils");
+            toil.defaultCompleteMode = ToilCompleteMode.Delay;
+            toil.defaultDuration = job.def.joyDuration;
+            toil.WithProgressBar(TargetIndex.A, () => (float)(Find.TickManager.TicksGame - startTick) / job.def.joyDuration);
+            toil.AddPreTickIntervalAction((int delta) =>
             {
                 if (need_wetness != null && need_wetness.CurLevel > 0.9999f)
                     pawn.jobs.curDriver.EndJobWith(JobCondition.Succeeded);
             });
             var comp = new Comp_RenderProperties { hideClothes = true };
-            work.initAction = () =>
+            toil.initAction = () =>
             {
                 if (need_wetness != null)
                     need_wetness.IsShowering = true;
                 pawn.AllComps.Add(comp);
                 pawn.Drawer.renderer.SetAllGraphicsDirty();
+                pawn.Rotation = Rot4.South;
             };
-            work.AddFinishAction(() =>
+            toil.AddFinishAction(() =>
             {
                 if (need_wetness != null)
                     need_wetness.IsShowering = false;
                 pawn.AllComps.Remove(comp);
                 pawn.Drawer.renderer.SetAllGraphicsDirty();
             });
-            yield return work;
+            toil.handlingFacing = true;
+            yield return toil;
         }
     }
 }
