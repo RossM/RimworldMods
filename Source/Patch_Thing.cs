@@ -18,11 +18,7 @@ namespace XylRacesCore
         [HarmonyPrefix, HarmonyPatch("IngestedCalculateAmounts")]
         public static void IngestedCalculateAmounts_Prefix(Thing __instance, Pawn ingester, ref float nutritionWanted)
         {
-            var dietDependencies = ingester.genes?.GenesListForReading.OfType<Gene_DietDependency>();
-            if (dietDependencies == null)
-                return;
-
-            foreach (var dietDependency in dietDependencies)
+            foreach (var dietDependency in ingester.GenesOfType<Gene_DietDependency>())
             {
                 if (!dietDependency.ValidateFood(__instance))
                     continue;

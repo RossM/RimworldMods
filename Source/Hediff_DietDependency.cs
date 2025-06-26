@@ -20,8 +20,7 @@ namespace XylRacesCore
             {
                 if (cachedGene == null)
                 {
-                    cachedGene = pawn.genes.GenesListForReading.OfType<Gene_DietDependency>()
-                        .FirstOrDefault(g => g.DefExt?.hediffDef == def);
+                    cachedGene = pawn.FirstGeneOfType<Gene_DietDependency>(g => g.DefExt?.hediffDef == def);
                 }
 
                 return cachedGene;

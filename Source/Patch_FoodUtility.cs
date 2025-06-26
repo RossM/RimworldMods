@@ -24,13 +24,10 @@ namespace XylRacesCore
             __result += ThingDefOf.MealSimple.ingestible.optimalityOffsetHumanlikes * ((nutritionFactor - 1.0f) / 0.8f);
 
             // Check if this food satisfies a diet dependency
-            if (eater.genes != null)
+            foreach (var gene in eater.GenesOfType<Gene_DietDependency>())
             {
-                foreach (var gene in eater.genes.GenesListForReading.OfType<Gene_DietDependency>())
-                {
-                    if (gene.ValidateFood(foodSource) && ((Hediff_DietDependency)gene.LinkedHediff).ShouldSatisfy)
-                        __result += 100f;
-                }
+                if (gene.ValidateFood(foodSource) && ((Hediff_DietDependency)gene.LinkedHediff).ShouldSatisfy)
+                    __result += 100f;
             }
         }
     }

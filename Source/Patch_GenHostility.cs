@@ -33,12 +33,12 @@ namespace XylRacesCore
             if ((pawn.kindDef.hostileToAll) || (pawn2.kindDef.hostileToAll))
                 return true;
 
-            if (pawn.genes != null && pawn.genes.GenesListForReading.OfType<Gene_HostilityOverride>().Any(g => g.DisableHostilityFrom(pawn2)))
+            if (pawn.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostilityFrom(pawn2)))
             {
                 __result = false;
                 return false;
             }
-            if (pawn2.genes != null && pawn2.genes.GenesListForReading.OfType<Gene_HostilityOverride>().Any(g => g.DisableHostilityFrom(pawn)))
+            if (pawn2.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostilityFrom(pawn)))
             {
                 __result = false;
                 return false;
