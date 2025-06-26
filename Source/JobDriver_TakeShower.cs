@@ -4,7 +4,7 @@ using Verse.AI;
 
 namespace XylRacesCore
 {
-    internal class JobDriver_TakeShower : JobDriver
+    public class JobDriver_TakeShower : JobDriver
     {
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -29,15 +29,18 @@ namespace XylRacesCore
                 if (need_wetness != null && need_wetness.CurLevel > 0.9999f)
                     pawn.jobs.curDriver.EndJobWith(JobCondition.Succeeded);
             });
+            var comp = new Comp_RenderProperties { hideClothes = true };
             work.initAction = () =>
             {
                 if (need_wetness != null)
                     need_wetness.IsShowering = true;
+                pawn.AllComps.Add(comp);
             };
             work.AddFinishAction(() =>
             {
                 if (need_wetness != null)
                     need_wetness.IsShowering = false;
+                pawn.AllComps.Remove(comp);
             });
             yield return work;
         }
