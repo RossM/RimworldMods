@@ -46,6 +46,7 @@ namespace XylRacesCore
         {
             base.ExposeData();
             Scribe_Values.Look(ref fullSinceTick, "fullSinceTick");
+            Scribe_Values.Look(ref allowMilking, "allowMilking");
         }
 
         public override IEnumerable<Gizmo> GetGizmos()
