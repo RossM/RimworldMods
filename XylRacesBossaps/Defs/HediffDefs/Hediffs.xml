@@ -71,7 +71,35 @@
         <onlyMessageForColonistsOrPrisoners>true</onlyMessageForColonistsOrPrisoners>
       </li>
     </comps>
+  </HediffDef>
 
+  <HediffDef>
+    <hediffClass>XylRacesCore.Hediff_Weapon</hediffClass>
+    <defName>LargeHorns</defName>
+    <label>large horns</label>
+    <description>Large, dangerous horns that can be used as a weapon.</description>
+    <initialSeverity>1.0</initialSeverity>
+    <addedPartProps>
+      <solid>true</solid>
+    </addedPartProps>
+    <everCurableByItem>false</everCurableByItem>
+    <keepOnBodyPartRestoration>true</keepOnBodyPartRestoration>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="HediffCompProperties_VerbGiver">
+        <tools>
+          <li>
+            <label>gore</label>
+            <capacities>
+              <li>Stab</li>
+            </capacities>
+            <power>22</power>
+            <cooldownTime>3.0</cooldownTime>
+            <alwaysTreatAsWeapon>true</alwaysTreatAsWeapon>
+          </li>
+        </tools>
+      </li>
+    </comps>
   </HediffDef>
 
 </Defs>

@@ -137,4 +137,48 @@
     </customEffectDescriptions>
   </GeneDef>
 
+  <GeneDef>
+    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <defName>LargeHorns</defName>
+    <label>large horns</label>
+    <description>Carriers of this gene have large horns that function as a weapon.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayCategory>Violence</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <texPath>Things/Pawn/Humanlike/HeadAttachments/MiniHorns/MiniHorns</texPath>
+        <color>(255, 255, 255)</color>
+        <parentTagDef>Head</parentTagDef>
+        <drawData>
+          <defaultData>
+            <layer>80</layer>
+          </defaultData>
+          <dataNorth>
+            <layer>10</layer>
+          </dataNorth>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+    <modExtensions>
+      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>LargeHorns</hediff>
+            <partsToAffect>
+              <li>Head</li>
+            </partsToAffect>
+          </li>
+        </hediffGivers>
+        <applyImmediately>true</applyImmediately>
+      </li>
+    </modExtensions>
+    <exclusionTags>
+      <li>Headbone</li>
+    </exclusionTags>
+  </GeneDef>
+  
 </Defs>
