@@ -99,6 +99,9 @@
         <degree>-2</degree>
       </li>
     </suppressedTraits>
+    <exclusionTags>
+      <li>MelancholyAndEvenTemper</li>
+    </exclusionTags>
     <symbolPack>
       <prefixSymbols>
         <li><symbol>steel</symbol></li>

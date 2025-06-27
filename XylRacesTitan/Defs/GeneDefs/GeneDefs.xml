@@ -92,4 +92,74 @@
     </disablesNeeds>
   </GeneDef>
 
+  <GeneDef>
+    <defName>EvenTemper</defName>
+    <label>even temper</label>
+    <description>Carriers of this gene are have very stable neurochemistry which prevents them from developing some mental traits, both positive and negative. </description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>501</displayOrderInCategory>
+    <suppressedTraits>
+      <li>
+        <def>NaturalMood</def>
+        <degree>2</degree>
+      </li>
+      <li>
+        <def>NaturalMood</def>
+        <degree>1</degree>
+      </li>
+      <li>
+        <def>NaturalMood</def>
+        <degree>-1</degree>
+      </li>
+      <li>
+        <def>NaturalMood</def>
+        <degree>-2</degree>
+      </li>
+      <li>
+        <def>Nerves</def>
+        <degree>2</degree>
+      </li>
+      <li>
+        <def>Nerves</def>
+        <degree>1</degree>
+      </li>
+      <li>
+        <def>Nerves</def>
+        <degree>-1</degree>
+      </li>
+      <li>
+        <def>Nerves</def>
+        <degree>-2</degree>
+      </li>
+      <li>
+        <def>Neurotic</def>
+        <degree>2</degree>
+      </li>
+      <li>
+        <def>Neurotic</def>
+        <degree>1</degree>
+      </li>
+      <li>
+        <def>Bloodlust</def>
+      </li>
+      <li>
+        <def>TooSmart</def>
+      </li>
+      <li>
+        <def>Greedy</def>
+      </li>
+      <li>
+        <def>Jealous</def>
+      </li>
+      <li>
+        <def>TorturedArtist</def>
+      </li>
+    </suppressedTraits>
+    <exclusionTags>
+      <li>MelancholyAndEvenTemper</li>
+    </exclusionTags>
+  </GeneDef>
+
 </Defs>
