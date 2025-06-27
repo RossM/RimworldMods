@@ -95,7 +95,7 @@
   <GeneDef>
     <defName>EvenTemper</defName>
     <label>even temper</label>
-    <description>Carriers of this gene are have very stable neurochemistry which prevents them from developing some mental traits, both positive and negative. </description>
+    <description>Carriers of this gene are have very stable neurochemistry with less variation between individuals.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
