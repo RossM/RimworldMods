@@ -156,5 +156,13 @@ namespace XylRacesCore
             soreness = Mathf.FloorToInt((float)(Find.TickManager.TicksGame - fullSinceTick.Value) / DefExt.ticksPerSorenessStage);
             return true;
         }
+
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
+        {
+            var props = Lactating.Props;
+            float milkPerDay = props.fullChargeAmount * 60000f / (props.ticksToFullCharge * DefExt.chargePerItem);
+            yield return new StatDrawEntry(StatCategoryDefOf.PawnFood, "Milk production",
+                milkPerDay.ToStringByStyle(ToStringStyle.FloatOne) + " / day", "The number of milk items this character can produce in a day if well fed.", 1);
+        }
     }
 }

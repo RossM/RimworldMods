@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -62,6 +63,12 @@ namespace XylRacesCore
         public bool ForceHostility(Thing thing)
         {
             return extraEnemies.Contains(thing);
+        }
+
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
+        {
+            yield return new StatDrawEntry(StatCategoryDefOf.PawnCombat, "Rage chance",
+                DefExt.chance.ToStringPercent(), "The chance of this character flying into a rage when damaged. While enraged, the character is uncontrollable and automatically charges at nearby enemies.", 1);
         }
     }
 }

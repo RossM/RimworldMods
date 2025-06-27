@@ -127,6 +127,7 @@
   </GeneDef>
 
   <GeneDef Parent="GenderRatioBase">
+    <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
     <defName>Gender_AlwaysFemale</defName>
     <label>always female</label>
     <description>Carriers of this gene are always female.</description>
@@ -140,6 +141,7 @@
     </customEffectDescriptions>
   </GeneDef>
   <GeneDef Parent="GenderRatioBase">
+    <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
     <defName>Gender_UsuallyFemale</defName>
     <label>usually female</label>
     <description>Carriers of this gene are mostly female.</description>
@@ -153,6 +155,7 @@
     </customEffectDescriptions>
   </GeneDef>
   <GeneDef Parent="GenderRatioBase">
+    <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
     <defName>Gender_UsuallyMale</defName>
     <label>usually male</label>
     <description>Carriers of this gene are mostly male.</description>
@@ -166,6 +169,7 @@
     </customEffectDescriptions>
   </GeneDef>
   <GeneDef Parent="GenderRatioBase">
+    <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
     <defName>Gender_AlwaysMale</defName>
     <label>always male</label>
     <description>Carriers of this gene are always male.</description>
