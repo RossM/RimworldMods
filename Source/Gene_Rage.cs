@@ -28,8 +28,6 @@ namespace XylRacesCore
 
         public void Notify_DamageTaken(DamageInfo dinfo, DamageWorker.DamageResult damageResult)
         {
-            Log.Message(string.Format("Gene_Rage.Notify_DamageTaken({0}, {1})", dinfo, damageResult));
-
             Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
 
             if (hediff == null && !Rand.Chance(DefExt.chance))
