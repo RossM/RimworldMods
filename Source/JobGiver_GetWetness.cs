@@ -12,7 +12,7 @@ namespace XylRacesCore
 
         public override ThinkNode DeepCopy(bool resolve = true)
         {
-            JobGiver_GetWetness obj = (JobGiver_GetWetness)base.DeepCopy(resolve);
+            var obj = (JobGiver_GetWetness)base.DeepCopy(resolve);
             obj.thingDefs = thingDefs;
             obj.showerJobDef = showerJobDef;
             return obj;
@@ -70,13 +70,13 @@ namespace XylRacesCore
                 outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(thingDefs[0]));
                 return;
             }
-            for (int i = 0; i < thingDefs.Count; i++)
+            foreach (ThingDef def in thingDefs)
             {
-                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(thingDefs[i]));
+                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(def));
             }
         }
 
-        private bool CanInteractWith(Pawn pawn, Thing t)
+        private static bool CanInteractWith(Pawn pawn, Thing t)
         {
             if (!pawn.CanReserve(t, 1))
             {

@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 using Verse;
 
 namespace XylRacesCore
-{
+{ 
+    public interface IGene_HediffSource
+    {
+        bool CausesHediff(HediffDef hediffDef);
+    }
 
     public class Hediff_Genetic : HediffWithComps
     {
@@ -32,23 +36,12 @@ namespace XylRacesCore
                 if (cachedGene == null && pawn.genes != null)
                 {
                     List<Gene> genesListForReading = pawn.genes.GenesListForReading;
-                    foreach (Gene t in genesListForReading)
+                    foreach (Gene gene in genesListForReading)
                     {
-                        if (t is Gene_DietDependency gene_dietDependency)
+                        if (gene is IGene_HediffSource hediffSource && hediffSource.CausesHediff(def))
                         {
-                            if (gene_dietDependency.DefExt?.hediffDef == def)
-                            {
-                                cachedGene = gene_dietDependency;
-                                break;
-                            }
-                        }
-                        else if (t is Gene_Hediff gene_hediff)
-                        {
-                            if (gene_hediff.DefExt?.hediffGivers.Any(g => g.hediff == def) ?? false)
-                            {
-                                cachedGene = gene_hediff;
-                                break;
-                            }
+                            cachedGene = gene;
+                            break;
                         }
                     }
                 }
@@ -58,18 +51,8 @@ namespace XylRacesCore
 
         public override float Severity
         {
-            get
-            {
-                if (LinkedGene == null || !LinkedGene.Active)
-                {
-                    return def.initialSeverity;
-                }
-                return base.Severity;
-            }
-            set
-            {
-                base.Severity = value;
-            }
+            get => LinkedGene is not { Active: true } ? def.initialSeverity : base.Severity;
+            set => base.Severity = value;
         }
     }
 }

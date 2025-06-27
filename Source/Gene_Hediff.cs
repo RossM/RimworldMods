@@ -15,7 +15,7 @@ namespace XylRacesCore
         public float mtbDays = 0.0f;
     }
 
-    public class Gene_Hediff : Gene
+    public class Gene_Hediff : Gene, IGene_HediffSource
     {
         public GeneDefExtension_Hediff DefExt => def.GetModExtension<GeneDefExtension_Hediff>();
 
@@ -59,6 +59,11 @@ namespace XylRacesCore
             }
 
             base.PostRemove();
+        }
+
+        public bool CausesHediff(HediffDef hediffDef)
+        {
+            return DefExt?.hediffGivers.Any(g => g.hediff == hediffDef) ?? false;
         }
     }
 }

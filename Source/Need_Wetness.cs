@@ -4,39 +4,45 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class Need_Wetness : Need_Seeker
+    public enum WetnessCategory : byte
+    {
+        Parched,
+        VeryDry,
+        Dry,
+        Neutral,
+        Wet,
+    }
+
+    public class Need_Wetness(Pawn pawn) : Need_Seeker(pawn)
     {
         private int lastInstantWetnessCheckTick;
         private float lastInstantWetness;
 
         public bool IsShowering { get; set; }
 
-        public Need_Wetness(Pawn pawn) : base(pawn)
+        public override float CurInstantLevel
         {
-        }
-
-        public override float CurInstantLevel {
             get
             {
-                if (lastInstantWetnessCheckTick == Find.TickManager.TicksGame) 
+                if (lastInstantWetnessCheckTick == Find.TickManager.TicksGame)
                     return lastInstantWetness;
                 lastInstantWetnessCheckTick = Find.TickManager.TicksGame;
 
-                if (IsShowering && !(pawn.CurJob?.GetCachedDriver(pawn) is JobDriver_TakeShower))
+                if (IsShowering && pawn.CurJob?.GetCachedDriver(pawn) is not JobDriver_TakeShower)
                     IsShowering = false;
 
-                if (!this.pawn.Spawned)
+                if (!pawn.Spawned)
                     lastInstantWetness = 0.0f;
                 else
                 {
-                    TerrainDef terrain = this.pawn.Position.GetTerrain(this.pawn.Map);
-                    WeatherDef curWeatherLerped = this.pawn.Map.weatherManager.CurWeatherLerped;
+                    TerrainDef terrain = pawn.Position.GetTerrain(pawn.Map);
+                    WeatherDef curWeatherLerped = pawn.Map.weatherManager.CurWeatherLerped;
 
                     if (IsShowering)
                         lastInstantWetness = 1.0f;
                     else if (terrain.IsWater)
                         lastInstantWetness = 1.0f;
-                    else if (!this.pawn.Position.Roofed(this.pawn.Map))
+                    else if (!pawn.Position.Roofed(pawn.Map))
                         lastInstantWetness = Mathf.Clamp01(curWeatherLerped.rainRate / 0.25f);
                     else
                         lastInstantWetness = 0.0f;
@@ -50,15 +56,14 @@ namespace XylRacesCore
         {
             get
             {
-                if (CurLevel >= 0.90f)
-                    return WetnessCategory.Wet;
-                if (CurLevel >= 0.67f)
-                    return WetnessCategory.Neutral;
-                if (CurLevel >= 0.34f)
-                    return WetnessCategory.Dry;
-                if (CurLevel >= 0.01f)
-                    return WetnessCategory.VeryDry;
-                return WetnessCategory.Parched;
+                return CurLevel switch
+                {
+                    >= 0.90f => WetnessCategory.Wet,
+                    >= 0.67f => WetnessCategory.Neutral,
+                    >= 0.34f => WetnessCategory.Dry,
+                    >= 0.01f => WetnessCategory.VeryDry,
+                    _ => WetnessCategory.Parched
+                };
             }
         }
     }

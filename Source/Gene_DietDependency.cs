@@ -17,7 +17,7 @@ namespace XylRacesCore
         public float severityReductionPerNutrition = 1f;
     }
 
-    public class Gene_DietDependency : Gene
+    public class Gene_DietDependency : Gene, IGene_HediffSource
     {
         public int lastIngestedTick;
 
@@ -159,6 +159,11 @@ namespace XylRacesCore
                 return true;
 
             return false;
+        }
+
+        public bool CausesHediff(HediffDef hediffDef)
+        {
+            return DefExt?.hediffDef == hediffDef;
         }
     }
 }
