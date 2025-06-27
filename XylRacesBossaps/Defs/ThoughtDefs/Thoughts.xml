@@ -110,6 +110,9 @@
     <defName>SoreBreasts</defName>
     <thoughtClass>Thought_Situational</thoughtClass>
     <workerClass>XylRacesCore.ThoughtWorker_SoreBreasts</workerClass>
+    <requiredGenes>
+      <li>Hyperlactation</li>
+    </requiredGenes>
     <stages>
       <li>
         <label>full breasts</label>

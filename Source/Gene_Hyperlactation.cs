@@ -16,7 +16,6 @@ namespace XylRacesCore
         public HediffDef hediff;
         public List<ThoughtDef> milkedThoughts;
         public Gender? activeGender;
-        public bool causesSoreBreasts;
         public int ticksPerSorenessStage = 60000;
 
         [NoTranslate]
@@ -168,8 +167,6 @@ namespace XylRacesCore
         public bool TryGetSoreness(out int soreness)
         {
             soreness = -1;
-            if (!DefExt.causesSoreBreasts)
-                return false;
             if (fullSinceTick == null)
                 return false;
             soreness = Mathf.FloorToInt((float)(Find.TickManager.TicksGame - fullSinceTick.Value) / DefExt.ticksPerSorenessStage);
