@@ -5,8 +5,7 @@
     <defName>AttackBerserk</defName>
     <thinkRoot Class="ThinkNode_Priority">
       <subNodes>
-        <li Class="JobGiver_WanderColony">
-          <maxDanger>None</maxDanger>
+        <li Class="XylRacesCore.JobGiver_BerserkEnemiesOnly">
         </li>
       </subNodes>
     </thinkRoot>
