@@ -81,6 +81,24 @@
     <statFactors>
       <CertaintyLossFactor MayRequire="Ludeon.RimWorld.Ideology">0.5</CertaintyLossFactor>
     </statFactors>
+    <suppressedTraits>
+      <li>
+        <def>Nerves</def>
+        <degree>2</degree>
+      </li>
+      <li>
+        <def>Nerves</def>
+        <degree>1</degree>
+      </li>
+      <li>
+        <def>Nerves</def>
+        <degree>-1</degree>
+      </li>
+      <li>
+        <def>Nerves</def>
+        <degree>-2</degree>
+      </li>
+    </suppressedTraits>
     <symbolPack>
       <prefixSymbols>
         <li><symbol>steel</symbol></li>

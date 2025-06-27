@@ -8,11 +8,10 @@
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>
-      <li>PsychicAbility_Dull</li>
       <li>MoveSpeed_Slow</li>
       <li>Melancholy</li>
       <li>Stoic</li>
-      <li>Robust</li>
+      <li>Pain_Reduced</li>
       <li>Beauty_Ugly</li>
       <li>Hair_BaldOnly</li>
       <li>Hair_ShortOnly</li>
