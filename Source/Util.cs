@@ -8,7 +8,7 @@ namespace XylRacesCore
 {
     public static class Util
     {
-        public static float GetStatValue(this Pawn eater, string defName, float defaultValue = 1.0f)
+        public static float GetStatValue(this Pawn eater, string defName, float defaultValue)
         {
             StatDef rawFungusNutritionFactor =
                 DefDatabase<StatDef>.GetNamed(defName, errorOnFail: false);

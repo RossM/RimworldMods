@@ -14,7 +14,7 @@ namespace XylRacesCore
         [HarmonyPrefix, HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedsPsyfocus), MethodType.Getter)]
         public static bool NeedsPsyfocus_Prefix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
         {
-            __result = Psy.NeedsPsyfocus(__instance.Pawn);
+            __result = __instance.Pawn.NeedsPsyfocus();
             return false;
         }
 

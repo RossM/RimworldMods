@@ -32,7 +32,7 @@ namespace XylRacesCore
                         // Load this.def
                         CodeInstruction.LoadField(typeof(Ability), "def"),
                         // Call replacement function
-                        CodeInstruction.Call(typeof(Psy), nameof(Psy.GetPsylinkLevelFor)),
+                        CodeInstruction.Call(typeof(PsyHelpers), nameof(PsyHelpers.GetPsylinkLevelFor)),
                     ]
                 }
             }

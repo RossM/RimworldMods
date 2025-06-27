@@ -3,7 +3,7 @@ using Verse;
 
 namespace XylRacesCore;
 
-public static class Food
+public static class FoodHelpers
 {
     public static float GetExtraNutritionFactor(Pawn eater, Thing foodSource, ThingDef foodDef)
     {
@@ -12,16 +12,16 @@ public static class Food
             var foodKind = FoodUtility.GetFoodKind(foodSource);
 
             if (foodDef.IsFungus)
-                return eater.GetStatValue("RawFungusNutritionFactor");
+                return eater.GetStatValue("RawFungusNutritionFactor", 1.0f);
 
             if (foodKind == FoodKind.Meat)
-                return eater.GetStatValue("RawMeatNutritionFactor");
+                return eater.GetStatValue("RawMeatNutritionFactor", 1.0f);
 
             if (foodDef.IsAnimalProduct)
-                return eater.GetStatValue("RawAnimalProductNutritionFactor");
+                return eater.GetStatValue("RawAnimalProductNutritionFactor", 1.0f);
 
             if (foodKind == FoodKind.NonMeat)
-                return eater.GetStatValue("RawNonMeatNutritionFactor");
+                return eater.GetStatValue("RawNonMeatNutritionFactor", 1.0f);
 
             return 1.0f;
         }
@@ -51,30 +51,23 @@ public static class Food
 
                 if (hasMeat)
                 {
-                    multiplier += eater.GetStatValue("CookedMeatNutritionFactor");
+                    multiplier += eater.GetStatValue("CookedMeatNutritionFactor", 1.0f);
                     divisor += 1.0f;
                 }
 
                 if (hasAnimalProduct)
                 {
-                    multiplier += eater.GetStatValue("CookedAnimalProductNutritionFactor");
+                    multiplier += eater.GetStatValue("CookedAnimalProductNutritionFactor", 1.0f);
                     divisor += 1.0f;
                 }
 
                 if (hasNonMeat)
                 {
-                    multiplier += eater.GetStatValue("CookedNonMeatNutritionFactor");
+                    multiplier += eater.GetStatValue("CookedNonMeatNutritionFactor", 1.0f);
                     divisor += 1.0f;
                 }
 
-                if (divisor > 0)
-                {
-                    return multiplier / divisor;
-                }
-                else
-                {
-                    return 1.0f;
-                }
+                return divisor > 0 ? multiplier / divisor : 1.0f;
             }
 
             return 1.0f;

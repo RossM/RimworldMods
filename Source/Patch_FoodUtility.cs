@@ -11,14 +11,14 @@ namespace XylRacesCore
         [HarmonyPostfix, HarmonyPatch(nameof(FoodUtility.NutritionForEater))]
         static void NutritionForEater_Postfix(Pawn eater, Thing food, ref float __result)
         {
-            __result *= Food.GetExtraNutritionFactor(eater, food, food.def);
+            __result *= FoodHelpers.GetExtraNutritionFactor(eater, food, food.def);
         }
 
         [HarmonyPostfix, HarmonyPatch(nameof(FoodUtility.FoodOptimality))]
         static void FoodOptimality_Postfix(Pawn eater, Thing foodSource, ThingDef foodDef, float dist,
             bool takingToInventory, ref float __result)
         {
-            float nutritionFactor = Food.GetExtraNutritionFactor(eater, foodSource, foodDef);
+            float nutritionFactor = FoodHelpers.GetExtraNutritionFactor(eater, foodSource, foodDef);
 
             // Adjust based on nutrition
             __result += ThingDefOf.MealSimple.ingestible.optimalityOffsetHumanlikes * ((nutritionFactor - 1.0f) / 0.8f);

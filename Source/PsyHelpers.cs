@@ -9,7 +9,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public static class Psy
+    public static class PsyHelpers
     {
         public static int GetPsylinkLevelFor(this Pawn pawn, AbilityDef def)
         {
@@ -29,20 +29,14 @@ namespace XylRacesCore
             return pawn.HasGeneOfType<Gene_Psycast>();
         }
 
-        public static bool NeedsPsyfocus(Pawn pawn)
+        public static bool NeedsPsyfocus(this Pawn pawn)
         {
             if (pawn.psychicEntropy.Psylink == null && !pawn.HasPsycastGene())
-            {
                 return false;
-            }
             if (pawn.Suspended)
-            {
                 return false;
-            }
             if (!pawn.Spawned && !pawn.IsCaravanMember())
-            {
                 return false;
-            }
             return true;
         }
     }
