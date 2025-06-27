@@ -88,7 +88,7 @@
 
   <StatDef>
     <defName>RawFungusFoodPoisonChanceOffset</defName>
-    <label>fungus food poisoning chance</label>
+    <label>raw fungus food poisoning chance</label>
     <description>An adjustment to the chance of getting food poisoning from eating raw fungus.</description>
     <category>PawnFood</category>
     <toStringStyle>PercentZero</toStringStyle>
