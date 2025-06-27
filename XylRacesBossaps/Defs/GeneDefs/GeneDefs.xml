@@ -80,6 +80,7 @@
     <biostatMet>3</biostatMet>
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Rage</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_Rage">
         <chance>0.25</chance>
