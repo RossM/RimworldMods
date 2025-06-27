@@ -26,8 +26,8 @@
       <li>DarkVision</li>
       <li>CarnivoreStomach</li>
       <li>MeatDependence</li>
-      <li>AptitudeTerrible_Shooting</li>
       <li>AptitudeRemarkable_Melee</li>
+      <li>AptitudePoor_Shooting</li>
       <li>AptitudePoor_Animals</li>
     </genes>
   </XenotypeDef>

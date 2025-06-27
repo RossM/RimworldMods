@@ -79,6 +79,9 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
+    <customEffectDescriptions>
+      <li>Extra gene chance: 50%</li>
+    </customEffectDescriptions>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_Atavism">
         <biostatArc>0~0</biostatArc>

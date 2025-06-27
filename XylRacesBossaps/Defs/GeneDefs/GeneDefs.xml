@@ -121,16 +121,19 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>600</displayOrderInCategory>
+    <selectionWeight>0</selectionWeight>
     <exclusionTags>
       <li>Gender</li>
     </exclusionTags>
   </GeneDef>
 
-  <GeneDef Parent="GenderRatioBase">
+  <GeneDef ParentName="GenderRatioBase">
     <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
     <defName>Gender_AlwaysFemale</defName>
     <label>always female</label>
-    <description>Carriers of this gene are always female.</description>
+    <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is heritable.</description>
+    <displayOrderInCategory>601</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_AlwaysFemale</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>1.0</femaleChance>
@@ -140,11 +143,13 @@
       <li>Gender: always female</li>
     </customEffectDescriptions>
   </GeneDef>
-  <GeneDef Parent="GenderRatioBase">
+  <GeneDef ParentName="GenderRatioBase">
     <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
     <defName>Gender_UsuallyFemale</defName>
     <label>usually female</label>
-    <description>Carriers of this gene are mostly female.</description>
+    <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is heritable.</description>
+    <displayOrderInCategory>602</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_UsuallyFemale</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>0.75</femaleChance>
@@ -154,11 +159,14 @@
       <li>Gender: 75% female, 25% male</li>
     </customEffectDescriptions>
   </GeneDef>
-  <GeneDef Parent="GenderRatioBase">
+  <GeneDef ParentName="GenderRatioBase">
     <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
     <defName>Gender_UsuallyMale</defName>
     <label>usually male</label>
-    <description>Carriers of this gene are mostly male.</description>
+    <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is heritable.</description>
+    <displayOrderInCategory>603</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_UsuallyMale</iconPath>
+
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>0.25</femaleChance>
@@ -168,11 +176,13 @@
       <li>Gender: 25% female, 75% male</li>
     </customEffectDescriptions>
   </GeneDef>
-  <GeneDef Parent="GenderRatioBase">
+  <GeneDef ParentName="GenderRatioBase">
     <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
     <defName>Gender_AlwaysMale</defName>
     <label>always male</label>
-    <description>Carriers of this gene are always male.</description>
+    <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is heritable.</description>
+    <displayOrderInCategory>604</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_AlwaysMale</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>0.0</femaleChance>
