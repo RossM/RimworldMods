@@ -8,8 +8,19 @@ using Verse;
 
 namespace XylRacesCore
 {
+    public class CompProperties_AbilityWaterskipWetness : CompProperties_AbilityEffect
+    {
+        public float satisfaction = 0.5f;
+
+        public CompProperties_AbilityWaterskipWetness()
+        {
+            compClass = typeof(CompAbilityEffect_WaterskipWetness);
+        }
+    }
+
     public class CompAbilityEffect_WaterskipWetness : CompAbilityEffect
     {
+        public new CompProperties_AbilityWaterskipWetness Props => ((CompProperties_AbilityWaterskipWetness)props);
 
         public override void Apply(LocalTargetInfo target, LocalTargetInfo dest)
         {
@@ -28,7 +39,7 @@ namespace XylRacesCore
                     {
                         var wetnessNeed = pawn.needs?.AllNeeds.OfType<Need_Wetness>().FirstOrDefault();
                         if (wetnessNeed != null)
-                            wetnessNeed.CurLevel += ((CompProperties_AbilityWaterskipWetness) Props).satisfaction;
+                            wetnessNeed.CurLevel += Props.satisfaction;
                     }
                 }
             }

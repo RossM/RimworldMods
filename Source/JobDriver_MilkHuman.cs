@@ -39,7 +39,7 @@ namespace XylRacesCore
             foreach (var thoughtDef in gene.DefExt.milkedThoughts)
                 Target.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);
 
-            var lactationCharge = gene.LactationCharge;
+            var lactationCharge = gene.Lactating;
             if (lactationCharge == null)
                 return;
             

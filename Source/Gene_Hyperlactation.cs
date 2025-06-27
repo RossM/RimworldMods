@@ -29,7 +29,7 @@ namespace XylRacesCore
 
         public GeneDefExtension_Hyperlactation DefExt => def.GetModExtension<GeneDefExtension_Hyperlactation>();
 
-        public HediffComp_Lactating LactationCharge => GetPawnLactationHediff(pawn).TryGetComp<HediffComp_Lactating>();
+        public HediffComp_Lactating Lactating => GetPawnLactationHediff(pawn).TryGetComp<HediffComp_Lactating>();
 
         public override bool Active
         {
@@ -67,6 +67,7 @@ namespace XylRacesCore
                 isActive = () => allowMilking,
                 toggleAction = () => { allowMilking = !allowMilking; }
             };
+
             if (allowMilking)
             {
                 yield return new Command_Toggle
@@ -98,7 +99,7 @@ namespace XylRacesCore
 
             AddHediff();
 
-            if (LactationCharge != null && LactationCharge.Charge >= LactationCharge.Props.fullChargeAmount)
+            if (Lactating != null && Lactating.Charge >= Lactating.Props.fullChargeAmount)
                 fullSinceTick ??= Find.TickManager.TicksGame;
             else
                 fullSinceTick = null;
@@ -131,7 +132,7 @@ namespace XylRacesCore
             return GetPawnLactationHediff(pawn) != null;
         }
 
-        public int MilkCount => Mathf.FloorToInt((LactationCharge?.Charge ?? 0) / DefExt.chargePerItem);
+        public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / DefExt.chargePerItem);
 
         public bool ReadyToMilk()
         {
@@ -140,7 +141,7 @@ namespace XylRacesCore
 
             int requiredCount = 1;
             if (onlyMilkWhenFull)
-                requiredCount = Mathf.FloorToInt(LactationCharge.Props.fullChargeAmount / DefExt.chargePerItem);
+                requiredCount = Mathf.FloorToInt(Lactating.Props.fullChargeAmount / DefExt.chargePerItem);
 
             return MilkCount >= requiredCount;
         }
