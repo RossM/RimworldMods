@@ -54,15 +54,18 @@ namespace XylRacesCore
             base.TickInterval(delta);
             if (pawn.IsHashIntervalTick(60, delta))
             {
-                Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
-                if (hediff == null)
-                    extraEnemies.Clear();
+                if (extraEnemies != null)
+                {
+                    Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
+                    if (hediff == null)
+                        extraEnemies.Clear();
+                }
             }
         }
 
         public bool ForceHostility(Thing thing)
         {
-            return extraEnemies.Contains(thing);
+            return extraEnemies != null && extraEnemies.Contains(thing);
         }
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
