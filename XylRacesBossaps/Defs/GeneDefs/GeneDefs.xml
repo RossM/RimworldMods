@@ -88,7 +88,7 @@
     <geneClass>XylRacesCore.Gene_Hyperlactation</geneClass>
     <defName>Hyperlactation</defName>
     <label>hyperlactation</label>
-    <description>Female carriers of this gene produce large amounts of breast milk, and lactate even when not pregnant or breastfeeding. This gene is inactive on males and on females younger than 13.</description>
+    <description>Female carriers of this gene produce large amounts of breast milk, and lactate even when not pregnant or breastfeeding. This gene is inactive on males.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
