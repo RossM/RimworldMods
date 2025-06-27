@@ -37,6 +37,7 @@
     <biostatMet>-2</biostatMet>
     <displayCategory>Pain</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_PainReversal</iconPath>
     <forcedTraits>
       <li>
         <def>Masochist</def>
