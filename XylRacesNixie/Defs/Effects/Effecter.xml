@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <EffecterDef>
+    <defName>ShowerSplash</defName>
+    <children>
+      <li>
+        <subEffecterClass>SubEffecter_SprayerChance</subEffecterClass>
+        <positionRadius>0.15</positionRadius>
+        <fleckDef>WaterskipSplashParticles</fleckDef>
+        <chancePerTick>0.9</chancePerTick>
+        <positionOffset>(0,0,0.55)</positionOffset>
+        <speed>2.5</speed>
+        <scale>0.1</scale>
+        <angle>165~195</angle>
+        <absoluteAngle>true</absoluteAngle>
+        <positionLerpFactor>1</positionLerpFactor>
+        <fleckUsesAngleForVelocity>true</fleckUsesAngleForVelocity>
+      </li>
+    </children>
+  </EffecterDef>
+
+</Defs>

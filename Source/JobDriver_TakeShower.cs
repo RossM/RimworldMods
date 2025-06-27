@@ -19,12 +19,12 @@ namespace XylRacesCore
 
             var need_wetness = pawn.needs?.TryGetNeed<Need_Wetness>();
 
-            var startTick = Find.TickManager.TicksGame;
+            //var startTick = Find.TickManager.TicksGame;
 
             Toil toil = ToilMaker.MakeToil("MakeNewToils");
             toil.defaultCompleteMode = ToilCompleteMode.Delay;
             toil.defaultDuration = job.def.joyDuration;
-            toil.WithProgressBar(TargetIndex.A, () => (float)(Find.TickManager.TicksGame - startTick) / job.def.joyDuration);
+            //toil.WithProgressBar(TargetIndex.A, () => (float)(Find.TickManager.TicksGame - startTick) / job.def.joyDuration);
             toil.AddPreTickIntervalAction((int delta) =>
             {
                 if (need_wetness != null && need_wetness.CurLevel > 0.9999f)
@@ -46,6 +46,8 @@ namespace XylRacesCore
                 pawn.AllComps.Remove(comp);
                 pawn.Drawer.renderer.SetAllGraphicsDirty();
             });
+            EffecterDef effecterDef = DefDatabase<EffecterDef>.GetNamed("ShowerSplash");
+            toil.WithEffect(effecterDef, TargetIndex.A);
             toil.handlingFacing = true;
             yield return toil;
         }
