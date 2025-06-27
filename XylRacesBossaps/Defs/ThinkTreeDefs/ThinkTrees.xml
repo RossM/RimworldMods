@@ -2,10 +2,13 @@
 <Defs>
   
   <ThinkTreeDef>
-    <defName>AttackBerserk</defName>
+    <defName>AttackRage</defName>
     <thinkRoot Class="ThinkNode_Priority">
       <subNodes>
-        <li Class="XylRacesCore.JobGiver_BerserkEnemiesOnly">
+        <li Class="XylRacesCore.JobGiver_Rage">
+        </li>
+        <li Class="JobGiver_RunRandom">
+          <maxDanger>Deadly</maxDanger>
         </li>
       </subNodes>
     </thinkRoot>

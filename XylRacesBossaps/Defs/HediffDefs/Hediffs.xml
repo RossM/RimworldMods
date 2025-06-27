@@ -11,8 +11,8 @@
     <isBad>true</isBad>
     <comps>
       <li Class="HediffCompProperties_Disappears">
-        <!--1 hour-->
-        <disappearsAfterTicks>2500</disappearsAfterTicks>
+        <!--30 seconds-->
+        <disappearsAfterTicks>1800</disappearsAfterTicks>
         <showRemainingTime>true</showRemainingTime>
       </li>
     </comps>
@@ -32,7 +32,8 @@
     </stages>
     <modExtensions>
       <li Class="XylRacesCore.HediffDefExtension_ForceBehavior">
-        <thinkTree>AttackBerserk</thinkTree>
+        <thinkTree>AttackRage</thinkTree>
+        <mentalState>Rage</mentalState>
       </li>
     </modExtensions>
   </HediffDef>

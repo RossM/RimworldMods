@@ -24,21 +24,23 @@ namespace XylRacesCore
                 return true;
             if ((a.Faction == null && a.TryGetComp<CompCauseGameCondition>() != null) || (b.Faction == null && b.TryGetComp<CompCauseGameCondition>() != null))
                 return true;
-            Pawn pawn = a as Pawn;
-            Pawn pawn2 = b as Pawn;
+
+            var pawn = a as Pawn;
+            var pawn2 = b as Pawn;
+
             if (pawn == null || pawn2 == null)
                 return true;
             if ((bool)methodIsActivityDormant.Invoke(null, [pawn]) || (bool)methodIsActivityDormant.Invoke(null, [pawn2]))
                 return true;
-            if ((pawn.kindDef.hostileToAll) || (pawn2.kindDef.hostileToAll))
+            if (pawn.kindDef.hostileToAll || pawn2.kindDef.hostileToAll)
                 return true;
 
-            if (pawn.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostilityFrom(pawn2)))
+            if (pawn.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostility(pawn2)))
             {
                 __result = false;
                 return false;
             }
-            if (pawn2.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostilityFrom(pawn)))
+            if (pawn2.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostility(pawn)))
             {
                 __result = false;
                 return false;

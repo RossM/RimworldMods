@@ -27,7 +27,6 @@ namespace XylRacesCore
                     __result *= extension.bodySizeFactor;
                 }
             }
-
         }
 
         [HarmonyPostfix, HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
@@ -45,7 +44,6 @@ namespace XylRacesCore
                     __result *= extension.healthScaleFactor;
                 }
             }
-
         }
     }
 }

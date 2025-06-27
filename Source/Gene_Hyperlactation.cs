@@ -57,6 +57,8 @@ namespace XylRacesCore
                 yield break;
             if (!pawn.Spawned)
                 yield break;
+            if (!pawn.IsColonistPlayerControlled)
+                yield break;
 
             yield return new Command_Toggle
             {

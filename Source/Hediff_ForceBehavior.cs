@@ -12,6 +12,7 @@ namespace XylRacesCore
     public class HediffDefExtension_ForceBehavior : DefModExtension
     {
         public ThinkTreeDef thinkTree;
+        public MentalStateDef mentalState;
     }
 
     public class Hediff_ForceBehavior : HediffWithComps
@@ -22,8 +23,13 @@ namespace XylRacesCore
         {
             base.PostAdd(dinfo);
 
-            RestUtility.WakeUp(pawn);
             pawn.jobs.StopAll();
+
+            if (DefExt.mentalState != null)
+            {
+                pawn.mindState.mentalStateHandler.TryStartMentalState(DefExt.mentalState, forced: true, forceWake: true,
+                    causedByDamage: true);
+            }
         }
 
         public override void Tick()
@@ -39,6 +45,9 @@ namespace XylRacesCore
             base.PostRemoved();
 
             pawn.jobs.StopAll();
+
+            if (DefExt.mentalState != null)
+                pawn.mindState.mentalStateHandler.CurState.RecoverFromState();
         }
     }
 }

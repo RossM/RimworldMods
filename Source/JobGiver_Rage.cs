@@ -9,7 +9,7 @@ using Verse.AI;
 
 namespace XylRacesCore
 {
-    public class JobGiver_BerserkEnemiesOnly : ThinkNode_JobGiver
+    public class JobGiver_Rage : ThinkNode_JobGiver
     {
         private const int MinMeleeChaseTicks = 420;
 
@@ -37,7 +37,7 @@ namespace XylRacesCore
 
         private Thing FindAttackTarget(Pawn pawn)
         {
-            return (Thing)AttackTargetFinder.BestAttackTarget(pawn, TargetScanFlags.NeedReachable | TargetScanFlags.NeedThreat, IsGoodTarget, 0f, maxAttackDistance, default(IntVec3), float.MaxValue, canBashDoors: true);
+            return (Thing)AttackTargetFinder.BestAttackTarget(pawn, TargetScanFlags.NeedReachable, IsGoodTarget, 0f, maxAttackDistance, canBashDoors: true);
         }
 
         protected virtual bool IsGoodTarget(Thing thing)
@@ -51,7 +51,7 @@ namespace XylRacesCore
 
         public override ThinkNode DeepCopy(bool resolve = true)
         {
-            JobGiver_BerserkEnemiesOnly obj = (JobGiver_BerserkEnemiesOnly)base.DeepCopy(resolve);
+            JobGiver_Rage obj = (JobGiver_Rage)base.DeepCopy(resolve);
             obj.maxAttackDistance = maxAttackDistance;
             return obj;
         }
