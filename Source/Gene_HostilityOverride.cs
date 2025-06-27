@@ -47,8 +47,7 @@ namespace XylRacesCore
 
         public bool DisableHostility(Thing thing)
         {
-            return Active && Find.TickManager.TicksGame >= lastHostileActionTick + DefExt.violationDisableTicks &&
-                   DisableHostilityFrom(pawn);
+            return Active && Find.TickManager.TicksGame >= lastHostileActionTick + DefExt.violationDisableTicks && DisableHostilityFrom(thing);
         }
     }
 }
