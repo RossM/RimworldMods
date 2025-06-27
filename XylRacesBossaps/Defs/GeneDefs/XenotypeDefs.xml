@@ -8,6 +8,7 @@
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>
+      <li>MoveSpeed_Quick</li>
       <li>HerdInstinct</li>
       <li>Docile</li>
       <li>LargeHorns</li>
@@ -23,6 +24,8 @@
       <li>Gender_UsuallyFemale</li>
       <li>Nearsighted</li>
       <li>HerbivoreStomach</li>
+      <li>AptitudePoor_Cooking</li>
+      <li>AptitudePoor_Crafting</li>
     </genes>
   </XenotypeDef>
   
