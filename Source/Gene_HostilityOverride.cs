@@ -9,10 +9,15 @@ namespace XylRacesCore
 {
     public class Gene_HostilityOverride : Gene
     {
-        private GeneDefExtension_HostilityOverride DefExt =>
-            def.GetModExtension<GeneDefExtension_HostilityOverride>();
+        private GeneDefExtension_HostilityOverride DefExt => def.GetModExtension<GeneDefExtension_HostilityOverride>();
 
-        public int lastHostileActionTick = -99999;
+        public int lastHostileActionTick = int.MinValue;
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref lastHostileActionTick, "lastHostileActionTick", int.MinValue);
+        }
 
         public void Notify_PawnDamagedThing(Thing thing, DamageInfo dinfo, DamageWorker.DamageResult DamageResult)
         {
