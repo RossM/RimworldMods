@@ -21,13 +21,12 @@ namespace XylRacesCore
             {
                 float originalLevel = pawn.health.capacities.GetLevel(CompProperties.originalCapacity);
                 float substituteLevel = pawn.health.capacities.GetLevel(CompProperties.substituteCapacity);
-                if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Maximum &&
-                    substituteLevel <= originalLevel)
-                    return false;
-                if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Minimum &&
-                    substituteLevel >= originalLevel)
-                    return false;
-                return true;
+                return CompProperties.mode switch
+                {
+                    HediffCompProperties_SubstituteCapacity.SubstitutionMode.Maximum => (substituteLevel > originalLevel),
+                    HediffCompProperties_SubstituteCapacity.SubstitutionMode.Minimum => (substituteLevel < originalLevel),
+                    _ => true
+                };
             }
         }
 
@@ -62,8 +61,8 @@ namespace XylRacesCore
             foreach (var statDrawEntry in base.SpecialDisplayStats(req))
                 yield return statDrawEntry;
 
-            var difference = pawn.health.capacities.GetLevel(CompProperties.substituteCapacity) -
-                             pawn.health.capacities.GetLevel(CompProperties.originalCapacity);
+            float difference = pawn.health.capacities.GetLevel(CompProperties.substituteCapacity) -
+                               pawn.health.capacities.GetLevel(CompProperties.originalCapacity);
             if (!Active)
                 difference = 0;
 
