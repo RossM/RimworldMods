@@ -22,6 +22,12 @@ namespace XylRacesCore
         public List<Gene> addedGenes;
         public GeneDefExtension_Atavism DefExt => def.GetModExtension<GeneDefExtension_Atavism>();
 
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Collections.Look(ref addedGenes, "addedGenes", LookMode.Reference);
+        }
+
         public override void PostAdd()
         {
             base.PostAdd();

@@ -48,6 +48,12 @@ namespace XylRacesCore
             }
         }
 
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref lastIngestedTick, "lastIngestedTick", 0);
+        }
+
         public override void PostAdd()
         {
             base.PostAdd();
@@ -119,12 +125,6 @@ namespace XylRacesCore
             }
 
             lastIngestedTick = Find.TickManager.TicksGame;
-        }
-
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Values.Look(ref lastIngestedTick, "lastIngestedTick", 0);
         }
 
         public bool ValidateFood(Thing food)
