@@ -5,7 +5,7 @@
     <defName>ToxicBurst</defName>
     <label>toxic burst</label>
     <description>Releases a cloud of toxic gas in an area around the user. The user is affected by the gas normally.</description>
-    <iconPath>UI/Abilities/ReleaseDeadlifeDust</iconPath>
+    <iconPath>UI/Abilities/ToxicBurst</iconPath>
     <cooldownTicksRange>300000</cooldownTicksRange> <!-- 5 days -->
     <showPsycastEffects>false</showPsycastEffects>
     <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>

@@ -13,7 +13,7 @@
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="UI\Icons\Genes\" />
+    <Folder Include="Textures\UI\Icons\Genes\" />
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
