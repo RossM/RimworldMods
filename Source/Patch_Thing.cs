@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
@@ -49,7 +50,40 @@ namespace XylRacesCore
                     gene.Notify_DamageTaken(dinfo, __result);
                 }
             }
+        }
 
+        private static readonly InstructionMatcher FixupIngested = new()
+        {
+            Rules =
+            {
+                new()
+                {
+                    Min = 1, Max = 0,
+                    Mode = InstructionMatcher.OutputMode.InsertBefore,
+                    Pattern =
+                    [
+                        CodeInstruction.LoadArgument(1),
+                        CodeInstruction.Call(typeof(FoodUtility), nameof(FoodUtility.GetFoodPoisonChanceFactor)), 
+                        new CodeInstruction(OpCodes.Mul),
+                    ],
+                    Output =
+                    [
+                        CodeInstruction.LoadArgument(1),
+                        CodeInstruction.LoadArgument(0),
+                        CodeInstruction.Call(typeof(FoodHelpers), nameof(FoodHelpers.GetFoodPoisoningChanceOffset)),
+                        new CodeInstruction(OpCodes.Sub),
+                    ]
+                }
+            }
+        };
+
+        [HarmonyTranspiler, HarmonyPatch("Ingested")]
+        static IEnumerable<CodeInstruction> Ingested_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        {
+            var instructionsList = new List<CodeInstruction>(instructions);
+            if (!FixupIngested.MatchAndReplace(ref instructionsList, out string reason, generator))
+                Log.Error(string.Format("XylRacesCore.Patch_Thing.Ingested_Transpiler: {0}", reason));
+            return instructionsList;
         }
     }
 }

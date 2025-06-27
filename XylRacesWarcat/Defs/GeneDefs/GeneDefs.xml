@@ -66,6 +66,9 @@
       <RawNonMeatNutritionFactor>0.5</RawNonMeatNutritionFactor>
       <CookedNonMeatNutritionFactor>0.8</CookedNonMeatNutritionFactor>
     </statFactors>
+    <statOffsets>
+      <RawMeatFoodPoisonChanceOffset>-0.02</RawMeatFoodPoisonChanceOffset>
+    </statOffsets>
     <forcedTraits>
       <li>
         <def>Carnivore</def>

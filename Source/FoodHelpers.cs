@@ -12,7 +12,8 @@ public static class FoodHelpers
             var foodKind = FoodUtility.GetFoodKind(foodSource);
 
             if (foodDef.IsFungus)
-                return eater.GetStatValue("RawFungusNutritionFactor", 1.0f);
+                return eater.GetStatValue("RawFungusNutritionFactor", 1.0f) * 
+                       eater.GetStatValue("RawNonMeatNutritionFactor", 1.0f);
 
             if (foodKind == FoodKind.Meat)
                 return eater.GetStatValue("RawMeatNutritionFactor", 1.0f);
@@ -72,5 +73,30 @@ public static class FoodHelpers
 
             return 1.0f;
         }
+    }
+    public static float GetFoodPoisoningChanceOffset(Pawn eater, Thing foodSource)
+    {
+        var foodDef = foodSource.def;
+
+        if (foodDef.IsProcessedFood) 
+            return 0.0f;
+        
+        var foodKind = FoodUtility.GetFoodKind(foodSource);
+
+        if (foodDef.IsFungus)
+            return eater.GetStatValue("RawFungusFoodPoisoningChanceOffset", 0.0f) +
+                   eater.GetStatValue("RawNonMeatFoodPoisoningChanceOffset", 0.0f);
+
+        if (foodKind == FoodKind.Meat)
+            return eater.GetStatValue("RawMeatFoodPoisoningChanceOffset", 0.0f);
+
+        if (foodDef.IsAnimalProduct)
+            return eater.GetStatValue("RawAnimalProductFoodPoisoningChanceOffset", 0.0f);
+
+        if (foodKind == FoodKind.NonMeat)
+            return eater.GetStatValue("RawNonMeatFoodPoisoningChanceOffset", 0.0f);
+
+        return 0.0f;
+
     }
 }

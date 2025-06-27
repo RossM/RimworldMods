@@ -18,8 +18,10 @@
       <RawNonMeatNutritionFactor>1.8</RawNonMeatNutritionFactor>
       <RawMeatNutritionFactor>0.5</RawMeatNutritionFactor>
       <CookedMeatNutritionFactor>0.8</CookedMeatNutritionFactor>
-      <RawNonMeatFoodPoisonChanceOffset>-0.02</RawNonMeatFoodPoisonChanceOffset>
     </statFactors>
+    <statOffsets>
+      <RawNonMeatFoodPoisonChanceOffset>-0.02</RawNonMeatFoodPoisonChanceOffset>
+    </statOffsets>
     <forcedTraits>
       <li>
         <def>Herbivore</def>
