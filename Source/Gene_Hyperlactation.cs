@@ -10,6 +10,16 @@ using Verse;
 
 namespace XylRacesCore
 {
+    public class GeneDefExtension_Hyperlactation : DefModExtension
+    {
+        public float chargePerItem = 0.1f;
+        public HediffDef hediff;
+        public List<ThoughtDef> milkedThoughts;
+        public Gender? activeGender;
+        public bool causesSoreBreasts;
+        public int ticksPerSorenessStage = 60000;
+    }
+
     public class Gene_Hyperlactation : Gene
     {
         public bool allowMilking = false;
@@ -17,21 +27,9 @@ namespace XylRacesCore
 
         public int? fullSinceTick;
 
-        public float ChargePerItem => 0.1f;
-
-        private static HediffDef HyperlactatingHediff;
+        public GeneDefExtension_Hyperlactation DefExt => def.GetModExtension<GeneDefExtension_Hyperlactation>();
 
         public HediffComp_Lactating LactationCharge => GetPawnLactationHediff(pawn).TryGetComp<HediffComp_Lactating>();
-
-        public ThoughtDef fullThoughtDef => DefDatabase<ThoughtDef>.GetNamed("SoreBreasts");
-
-        public IEnumerable<ThoughtDef> milkedThoughts =
-        [
-            DefDatabase<ThoughtDef>.GetNamed("Milked"),
-            DefDatabase<ThoughtDef>.GetNamed("MilkedMood"),
-            DefDatabase<ThoughtDef>.GetNamed("Milked_Masochist"),
-            DefDatabase<ThoughtDef>.GetNamed("MilkedMood_Masochist"),
-        ];
 
         public override bool Active
         {
@@ -39,7 +37,9 @@ namespace XylRacesCore
             {
                 if (!base.Active)
                     return false;
-                return pawn?.gender == Gender.Female;
+                if (DefExt.activeGender == null)
+                    return true;
+                return pawn?.gender == DefExt.activeGender;
             }
         }
 
@@ -93,26 +93,21 @@ namespace XylRacesCore
 
             base.TickInterval(delta);
 
-            if (pawn.IsHashIntervalTick(60, delta))
-            {
-                AddHediff();
+            if (!pawn.IsHashIntervalTick(60, delta)) 
+                return;
 
-                if (LactationCharge != null && LactationCharge.Charge >= LactationCharge.Props.fullChargeAmount)
-                {
-                    //Log.Message(string.Format("fullSinceTick: {0}", fullSinceTick));
-                    fullSinceTick ??= Find.TickManager.TicksGame;
-                }
-                else
-                    fullSinceTick = null;
-            }
+            AddHediff();
+
+            if (LactationCharge != null && LactationCharge.Charge >= LactationCharge.Props.fullChargeAmount)
+                fullSinceTick ??= Find.TickManager.TicksGame;
+            else
+                fullSinceTick = null;
         }
 
         private void AddHediff()
         {
             if (!Active)
                 return;
-
-            HyperlactatingHediff ??= DefDatabase<HediffDef>.GetNamed("Hyperlactating");
 
             if (pawn.health.hediffSet.HasHediff(HediffDefOf.Malnutrition))
                 return;
@@ -121,8 +116,8 @@ namespace XylRacesCore
             if (lactatingHediff != null)
                 pawn.health.RemoveHediff(lactatingHediff);
 
-            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(HyperlactatingHediff) ??
-                            pawn.health.AddHediff(HyperlactatingHediff);
+            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff) ??
+                            pawn.health.AddHediff(DefExt.hediff);
             hediff.Severity = 1.0f;
         }
 
@@ -136,7 +131,7 @@ namespace XylRacesCore
             return GetPawnLactationHediff(pawn) != null;
         }
 
-        public int MilkCount => Mathf.FloorToInt((LactationCharge?.Charge ?? 0) / ChargePerItem);
+        public int MilkCount => Mathf.FloorToInt((LactationCharge?.Charge ?? 0) / DefExt.chargePerItem);
 
         public bool ReadyToMilk()
         {
@@ -145,9 +140,20 @@ namespace XylRacesCore
 
             int requiredCount = 1;
             if (onlyMilkWhenFull)
-                requiredCount = Mathf.FloorToInt(LactationCharge.Props.fullChargeAmount / ChargePerItem);
+                requiredCount = Mathf.FloorToInt(LactationCharge.Props.fullChargeAmount / DefExt.chargePerItem);
 
             return MilkCount >= requiredCount;
+        }
+
+        public bool TryGetSoreness(out int soreness)
+        {
+            soreness = -1;
+            if (!DefExt.causesSoreBreasts)
+                return false;
+            if (fullSinceTick == null)
+                return false;
+            soreness = Mathf.FloorToInt((float)(Find.TickManager.TicksGame - fullSinceTick.Value) / DefExt.ticksPerSorenessStage);
+            return true;
         }
     }
 }

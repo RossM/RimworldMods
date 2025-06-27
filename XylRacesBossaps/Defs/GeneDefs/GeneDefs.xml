@@ -97,6 +97,20 @@
     <customEffectDescriptions>
       <li>Enables being milked</li>
     </customEffectDescriptions>
+    <modExtensions>
+      <li Class="XylRacesCore.GeneDefExtension_Hyperlactation">
+        <chargePerItem>0.1</chargePerItem>
+        <hediff>Hyperlactating</hediff>
+        <milkedThoughts>
+          <li>Milked</li>
+          <li>MilkedMood</li>
+          <li>Milked_Masochist</li>
+          <li>MilkedMood_Masochist</li>
+        </milkedThoughts>
+        <activeGender>Female</activeGender>
+        <causesSoreBreasts>true</causesSoreBreasts>
+      </li>
+    </modExtensions>
   </GeneDef>
 
   <GeneDef Name="GenderRatioBase" Abstract="True">

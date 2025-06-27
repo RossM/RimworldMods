@@ -36,7 +36,7 @@ namespace XylRacesCore
             if (gene == null)
                 return;
 
-            foreach (var thoughtDef in gene.milkedThoughts)
+            foreach (var thoughtDef in gene.DefExt.milkedThoughts)
                 Target.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);
 
             var lactationCharge = gene.LactationCharge;
@@ -46,7 +46,7 @@ namespace XylRacesCore
             ThingDef milkDef = DefDatabase<ThingDef>.GetNamed("Milk");
 
             int qty = gene.MilkCount;
-            lactationCharge.GreedyConsume(gene.ChargePerItem * qty);
+            lactationCharge.GreedyConsume(gene.DefExt.chargePerItem * qty);
 
             if (!Rand.Chance(doer.GetStatValue(StatDefOf.AnimalGatherYield)))
             {
