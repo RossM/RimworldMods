@@ -202,11 +202,13 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_LargeHorns</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
-        <texPath>Things/Pawn/Humanlike/HeadAttachments/MiniHorns/MiniHorns</texPath>
+        <texPath>Things/Pawn/Humanlike/HeadAttachments/LargeHorns/LargeHorns</texPath>
         <color>(255, 255, 255)</color>
         <parentTagDef>Head</parentTagDef>
         <drawData>
