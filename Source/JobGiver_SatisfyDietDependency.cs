@@ -48,8 +48,7 @@ namespace XylRacesCore
                         continue;
 
                     float nutritionPer = FoodUtility.NutritionForEater(pawn, food);
-                    float severityReductionPerNutrition = dietDependency.Gene.DefExt.severityReductionPerNutrition;
-                    float nutritionNeeded = dietDependency.Severity / severityReductionPerNutrition;
+                    float nutritionNeeded = dietDependency.Severity / dietDependency.SeverityReductionPerNutrition;
                     int count = Mathf.CeilToInt(nutritionNeeded / nutritionPer);
 
                     Pawn pawn2 = (food.ParentHolder as Pawn_InventoryTracker)?.pawn;

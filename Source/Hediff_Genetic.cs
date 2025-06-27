@@ -17,15 +17,15 @@ namespace XylRacesCore
         [Unsaved(false)]
         private Gene cachedGene;
 
-        public override bool ShouldRemove => LinkedGene is not { Active: true };
+        public override bool ShouldRemove => Gene is not { Active: true };
 
-        public Gene LinkedGene => cachedGene ??=
+        public Gene Gene => cachedGene ??=
             pawn.genes?.GenesListForReading.FirstOrDefault(gene =>
                 gene is IGene_HediffSource hediffSource && hediffSource.CausesHediff(def));
 
         public override float Severity
         {
-            get => LinkedGene is not { Active: true } ? def.initialSeverity : base.Severity;
+            get => Gene is not { Active: true } ? def.initialSeverity : base.Severity;
             set => base.Severity = value;
         }
     }

@@ -11,15 +11,8 @@ namespace XylRacesCore
     {
         public bool ShouldSatisfy => Severity >= def.stages[2].minSeverity - 0.5f;
 
-        [Unsaved(false)]
-        private Gene_DietDependency cachedGene;
+        public new Gene_DietDependency Gene => (Gene_DietDependency)base.Gene;
 
-        public Gene_DietDependency Gene
-        {
-            get
-            {
-                return cachedGene ??= pawn.FirstGeneOfType<Gene_DietDependency>(g => g.DefExt?.hediffDef == def);
-            }
-        }
+        public float SeverityReductionPerNutrition => Gene.DefExt.severityReductionPerNutrition;
     }
 }
