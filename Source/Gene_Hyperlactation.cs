@@ -18,6 +18,23 @@ namespace XylRacesCore
         public Gender? activeGender;
         public bool causesSoreBreasts;
         public int ticksPerSorenessStage = 60000;
+
+        [NoTranslate]
+        public string iconPath = "Things/Item/Resource/Milk";
+
+        [Unsaved(false)] 
+        private Texture2D cachedIcon;
+
+        public Texture2D Icon
+        {
+            get
+            {
+                cachedIcon ??= iconPath.NullOrEmpty()
+                    ? BaseContent.BadTex
+                    : ContentFinder<Texture2D>.Get(iconPath) ?? BaseContent.BadTex;
+                return cachedIcon;
+            }
+        }
     }
 
     public class Gene_Hyperlactation : Gene
@@ -65,7 +82,8 @@ namespace XylRacesCore
                 defaultLabel = "Allow milking",
                 defaultDesc = "Allow other characters to milk this character.",
                 isActive = () => allowMilking,
-                toggleAction = () => { allowMilking = !allowMilking; }
+                toggleAction = () => { allowMilking = !allowMilking; },
+                icon = DefExt.Icon,
             };
 
             if (allowMilking)
@@ -75,7 +93,8 @@ namespace XylRacesCore
                     defaultLabel = "Only milk when full",
                     defaultDesc = "Only allow milking when this character's breast milk is full.",
                     isActive = () => onlyMilkWhenFull,
-                    toggleAction = () => { onlyMilkWhenFull = !onlyMilkWhenFull; }
+                    toggleAction = () => { onlyMilkWhenFull = !onlyMilkWhenFull; },
+                    icon = DefExt.Icon,
                 };
             }
         }

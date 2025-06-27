@@ -112,6 +112,7 @@
         </milkedThoughts>
         <activeGender>Female</activeGender>
         <causesSoreBreasts>true</causesSoreBreasts>
+        <iconPath>Things/Item/Resource/Milk</iconPath>
       </li>
     </modExtensions>
   </GeneDef>
