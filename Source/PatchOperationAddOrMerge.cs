@@ -47,7 +47,7 @@ namespace XylRacesCore
         protected override bool ApplyWorker(XmlDocument xml)
         {
             XmlNode node = value.node;
-            bool result = false;
+            var result = false;
 
             foreach (XmlNode xmlNode in xml.SelectNodes(xpath))
             {

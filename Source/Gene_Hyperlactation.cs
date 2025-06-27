@@ -139,7 +139,7 @@ namespace XylRacesCore
             if (!allowMilking)
                 return false;
 
-            int requiredCount = 1;
+            var requiredCount = 1;
             if (onlyMilkWhenFull)
                 requiredCount = Mathf.FloorToInt(Lactating.Props.fullChargeAmount / DefExt.chargePerItem);
 

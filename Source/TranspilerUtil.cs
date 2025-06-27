@@ -52,16 +52,16 @@ namespace XylRacesCore
             for (var ruleIndex = 0; ruleIndex < Rules.Count; ruleIndex++)
             {
                 Rule rule = Rules[ruleIndex];
-                int matchCount = 0;
+                var matchCount = 0;
 
                 for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[matches.Count - 1].end + 1 : 0;
                      instructionIndex <= instructions.Count - rule.Pattern.Length;
                      instructionIndex++)
                 {
-                    bool isMatch = true;
+                    var isMatch = true;
                     var tempLocalIndexMap = new Dictionary<int, int>();
 
-                    for (int patternIndex = 0; patternIndex < rule.Pattern.Length; patternIndex++)
+                    for (var patternIndex = 0; patternIndex < rule.Pattern.Length; patternIndex++)
                     {
                         var inst = instructions[instructionIndex + patternIndex];
                         var patternInst = rule.Pattern[patternIndex];
@@ -164,7 +164,7 @@ namespace XylRacesCore
             }
 
             var sortedMatches = matches.OrderBy(m => m.start).ToList();
-            for (int i = 0; i < sortedMatches.Count - 1; i++)
+            for (var i = 0; i < sortedMatches.Count - 1; i++)
             {
                 if (sortedMatches[i].end >= sortedMatches[i + 1].start)
                 {
@@ -183,7 +183,7 @@ namespace XylRacesCore
 
             // Make the substitutions
             var outInstructions = new List<CodeInstruction>();
-            for (int instructionIndex = 0; instructionIndex < instructions.Count; instructionIndex++)
+            for (var instructionIndex = 0; instructionIndex < instructions.Count; instructionIndex++)
             {
                 var match = sortedMatches.FirstOrDefault(r => r.start == instructionIndex);
 

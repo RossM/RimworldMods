@@ -12,7 +12,7 @@ namespace XylRacesCore
     {
         public float GetMeleeDPSValueUnfinalized(StatRequest req, bool applyPostProcess = true)
         {
-            HediffCompProperties_VerbGiver verbGiver = def.CompProps<HediffCompProperties_VerbGiver>();
+            var verbGiver = def.CompProps<HediffCompProperties_VerbGiver>();
             var verbs = verbGiver.verbs;
             var tools = verbGiver.tools;
             ;
@@ -32,7 +32,7 @@ namespace XylRacesCore
 
         public string GetMeleeDPSExplanationUnfinalized(StatRequest req, ToStringNumberSense numberSense)
         {
-            HediffCompProperties_VerbGiver verbGiver = def.CompProps<HediffCompProperties_VerbGiver>();
+            var verbGiver = def.CompProps<HediffCompProperties_VerbGiver>();
             var verbs = verbGiver.verbs;
             var tools = verbGiver.tools;
             ;
@@ -40,7 +40,7 @@ namespace XylRacesCore
             IEnumerable<VerbUtility.VerbPropertiesWithSource> enumerable = from x in VerbUtility.GetAllVerbProperties(verbs, tools)
                 where x.verbProps.IsMeleeAttack
                 select x;
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             foreach (VerbUtility.VerbPropertiesWithSource item in enumerable)
             {
                 float damage = item.verbProps.AdjustedMeleeDamageAmount(item.tool, currentWeaponUser, req.Thing, null);
@@ -64,9 +64,9 @@ namespace XylRacesCore
             foreach (var statDrawEntry in base.SpecialDisplayStats(req))
                 yield return statDrawEntry;
 
-            string extraLabelPart = "";
+            var extraLabelPart = "";
 
-            HediffCompProperties_VerbGiver hediffCompProperties_VerbGiver = def.CompProps<HediffCompProperties_VerbGiver>();
+            var hediffCompProperties_VerbGiver = def.CompProps<HediffCompProperties_VerbGiver>();
             if (hediffCompProperties_VerbGiver != null && !hediffCompProperties_VerbGiver.tools.NullOrEmpty())
             {
                 Tool tool = hediffCompProperties_VerbGiver.tools[0];

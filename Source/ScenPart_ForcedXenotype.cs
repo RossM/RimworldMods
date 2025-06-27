@@ -24,7 +24,7 @@ namespace XylRacesCore
             Rect scenPartRect = listing.GetScenPartRect(this, ScenPart.RowHeight * 3f);
             if (Widgets.ButtonText(scenPartRect.TopPart(0.333f), xenotype.LabelCap))
             {
-                List<FloatMenuOption> list = new List<FloatMenuOption>();
+                var list = new List<FloatMenuOption>();
                 foreach (XenotypeDef item in DefDatabase<XenotypeDef>.AllDefs.OrderBy((XenotypeDef xd) => xd.label))
                 {
                     XenotypeDef localDef = item;

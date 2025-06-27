@@ -42,16 +42,12 @@ namespace XylRacesCore
 
         protected virtual bool IsGoodTarget(Thing thing)
         {
-            if (thing is Pawn { Spawned: not false, Downed: false } pawn)
-            {
-                return !pawn.IsPsychologicallyInvisible();
-            }
-            return false;
+            return thing is Pawn { Spawned: not false, Downed: false } pawn && !pawn.IsPsychologicallyInvisible();
         }
 
         public override ThinkNode DeepCopy(bool resolve = true)
         {
-            JobGiver_Rage obj = (JobGiver_Rage)base.DeepCopy(resolve);
+            var obj = (JobGiver_Rage)base.DeepCopy(resolve);
             obj.maxAttackDistance = maxAttackDistance;
             return obj;
         }

@@ -18,12 +18,7 @@ namespace XylRacesCore
         {
             get
             {
-                if (cachedGene == null)
-                {
-                    cachedGene = pawn.FirstGeneOfType<Gene_DietDependency>(g => g.DefExt?.hediffDef == def);
-                }
-
-                return cachedGene;
+                return cachedGene ??= pawn.FirstGeneOfType<Gene_DietDependency>(g => g.DefExt?.hediffDef == def);
             }
         }
     }

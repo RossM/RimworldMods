@@ -28,7 +28,7 @@ namespace XylRacesCore
         {
             Rect scenPartRect = listing.GetScenPartRect(this, ScenPart.RowHeight * 2f + 1f);
 
-            Listing_Standard listing_Standard = new Listing_Standard();
+            var listing_Standard = new Listing_Standard();
             listing_Standard.Begin(scenPartRect.TopHalf());
             listing_Standard.ColumnWidth = scenPartRect.width;
             listing_Standard.TextFieldNumeric(ref count, ref countBuf, 1f);
@@ -38,7 +38,7 @@ namespace XylRacesCore
             {
                 return;
             }
-            List<FloatMenuOption> list = new List<FloatMenuOption>();
+            var list = new List<FloatMenuOption>();
             foreach (AbilityDef item in PossiblePsycasts())
             {
                 AbilityDef localDef = item;
@@ -75,7 +75,7 @@ namespace XylRacesCore
 
         public override void GenerateIntoMap(Map map)
         {
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 if (!map.mapPawns.FreeColonists.Where(CanLearnPsycast).TryRandomElement(out Pawn pawn))
                     return; 

@@ -30,9 +30,9 @@ public static class Food
             var compIngredients = foodSource.TryGetComp<CompIngredients>();
             if (compIngredients != null)
             {
-                bool hasMeat = false;
-                bool hasAnimalProduct = false;
-                bool hasNonMeat = false;
+                var hasMeat = false;
+                var hasAnimalProduct = false;
+                var hasNonMeat = false;
 
                 foreach (var ingredient in compIngredients.ingredients)
                 {
@@ -46,8 +46,8 @@ public static class Food
                         hasAnimalProduct = true;
                 }
 
-                float multiplier = 0.0f;
-                float divisor = 0.0f;
+                var multiplier = 0.0f;
+                var divisor = 0.0f;
 
                 if (hasMeat)
                 {

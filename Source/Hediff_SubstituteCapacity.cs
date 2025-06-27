@@ -35,7 +35,7 @@ namespace XylRacesCore
         {
             get
             {
-                StringBuilder sb = new StringBuilder(base.Description);
+                var sb = new StringBuilder(base.Description);
 
                 sb.AppendLine();
                 sb.AppendLine();
@@ -67,7 +67,7 @@ namespace XylRacesCore
             if (!Active)
                 difference = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             ExtraDescription(sb);
 
             yield return new StatDrawEntry(StatCategoryDefOf.CapacityEffects, "Effective " + CompProperties.originalCapacity.label,

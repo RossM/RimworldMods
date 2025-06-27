@@ -16,7 +16,8 @@ namespace XylRacesCore
         public override void CompPostPostRemoved()
         {
             base.CompPostPostRemoved();
-            if (hasTriggered) return;
+            if (hasTriggered) 
+                return;
             hasTriggered = true;
             Trigger();
         }

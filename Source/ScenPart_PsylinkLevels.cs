@@ -26,7 +26,7 @@ namespace XylRacesCore
 
         public override void GenerateIntoMap(Map map)
         {
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 Pawn pawn = map.mapPawns.FreeColonists.RandomElementByWeight(PawnWeight);
                 if (pawn != null)
@@ -62,7 +62,7 @@ namespace XylRacesCore
             if (levelOffset > 0)
             {
                 float num = Math.Min(levelOffset, mainPsylinkSource.def.maxSeverity - (float)mainPsylinkSource.level);
-                for (int i = 0; (float)i < num; i++)
+                for (var i = 0; (float)i < num; i++)
                 {
                     pawn.psychicEntropy?.Notify_GainedPsylink();
                 }

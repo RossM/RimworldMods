@@ -49,9 +49,9 @@ namespace XylRacesCore
 
         public override IEnumerable<Thing> PlayerStartingThings()
         {
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                PawnGenerationRequest request = new PawnGenerationRequest(PawnKindDefOf.Slave, null);
+                var request = new PawnGenerationRequest(PawnKindDefOf.Slave, null);
                 Pawn slave = PawnGenerator.GeneratePawn(request);
                 slave.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave);
                 yield return slave;

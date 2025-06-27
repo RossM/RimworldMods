@@ -27,11 +27,11 @@ namespace XylRacesCore
         {
             tmpDietDependencies.Clear();
             List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
-            for (int i = 0; i < hediffs.Count; i++)
+            foreach (Hediff hediff in hediffs)
             {
-                if (hediffs[i] is Hediff_DietDependency { ShouldSatisfy: true })
+                if (hediff is Hediff_DietDependency { ShouldSatisfy: true } dietDependency)
                 {
-                    tmpDietDependencies.Add((Hediff_DietDependency)hediffs[i]);
+                    tmpDietDependencies.Add(dietDependency);
                 }
             }
             if (!tmpDietDependencies.Any())
@@ -39,18 +39,19 @@ namespace XylRacesCore
                 return null;
             }
             tmpDietDependencies.SortBy((Hediff_DietDependency x) => 0f - x.Severity);
-            for (int num = 0; num < tmpDietDependencies.Count; num++)
+            try
             {
-                Hediff_DietDependency hediff_dietDependency = tmpDietDependencies[num];
-                Thing food = FindFoodFor(pawn, hediff_dietDependency);
-                if (food != null)
+                foreach (Hediff_DietDependency dietDependency in tmpDietDependencies)
                 {
+                    Thing food = FindFoodFor(pawn, dietDependency);
+                    if (food == null)
+                        continue;
+
                     float nutritionPer = FoodUtility.NutritionForEater(pawn, food);
-                    float severityReductionPerNutrition = hediff_dietDependency.Gene.DefExt.severityReductionPerNutrition;
-                    float nutritionNeeded = hediff_dietDependency.Severity / severityReductionPerNutrition;
+                    float severityReductionPerNutrition = dietDependency.Gene.DefExt.severityReductionPerNutrition;
+                    float nutritionNeeded = dietDependency.Severity / severityReductionPerNutrition;
                     int count = Mathf.CeilToInt(nutritionNeeded / nutritionPer);
 
-                    tmpDietDependencies.Clear();
                     Pawn pawn2 = (food.ParentHolder as Pawn_InventoryTracker)?.pawn;
                     Job job;
                     if (pawn2 != null && pawn2 != pawn)
@@ -61,9 +62,13 @@ namespace XylRacesCore
                     job.ingestTotalCount = true;
                     return job;
                 }
+
+                return null;
             }
-            tmpDietDependencies.Clear();
-            return null;
+            finally
+            {
+                tmpDietDependencies.Clear();
+            }
         }
 
         private Thing FindFoodFor(Pawn pawn, Hediff_DietDependency dependency)
@@ -72,25 +77,22 @@ namespace XylRacesCore
             foreach (Thing item in innerContainer)
             {
                 if (FoodValidator(pawn, dependency, item))
-                {
                     return item;
-                }
             }
             Thing thing = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.FoodSource), PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, (Thing x) => FoodValidator(pawn, dependency, x));
             if (thing != null)
-            {
                 return thing;
-            }
-            if (pawn.IsColonist && pawn.Map != null)
+
+            if (!pawn.IsColonist || pawn.Map == null) 
+                return null;
+            
+            foreach (Pawn spawnedColonyAnimal in pawn.Map.mapPawns.SpawnedColonyAnimals)
             {
-                foreach (Pawn spawnedColonyAnimal in pawn.Map.mapPawns.SpawnedColonyAnimals)
+                foreach (Thing item in spawnedColonyAnimal.inventory.innerContainer)
                 {
-                    foreach (Thing item in spawnedColonyAnimal.inventory.innerContainer)
+                    if (FoodValidator(pawn, dependency, item) && !spawnedColonyAnimal.IsForbidden(pawn) && pawn.CanReach(spawnedColonyAnimal, PathEndMode.OnCell, Danger.Some))
                     {
-                        if (FoodValidator(pawn, dependency, item) && !spawnedColonyAnimal.IsForbidden(pawn) && pawn.CanReach(spawnedColonyAnimal, PathEndMode.OnCell, Danger.Some))
-                        {
-                            return item;
-                        }
+                        return item;
                     }
                 }
             }
@@ -107,7 +109,7 @@ namespace XylRacesCore
             Gene_DietDependency gene = dependency.Gene;
             if (gene == null)
             {
-                Log.Warning(string.Format("DrugValidator: Couldn't find corresponding gene for {0}", dependency));
+                Log.Warning(string.Format("FoodValidator: Couldn't find corresponding gene for {0}", dependency));
                 return false;
             }
 
