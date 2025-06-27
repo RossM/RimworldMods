@@ -21,7 +21,7 @@ namespace XylRacesCore
 
             foreach (var gene in genesGenesListForReading)
             {
-                var extension = gene.def.GetModExtension<ModExtension_GeneDef_Pawn>();
+                var extension = gene.def.GetModExtension<GeneDefExtension_Pawn>();
                 if (extension != null)
                 {
                     __result *= extension.bodySizeFactor;
@@ -39,7 +39,7 @@ namespace XylRacesCore
 
             foreach (var gene in genesGenesListForReading)
             {
-                var extension = gene.def.GetModExtension<ModExtension_GeneDef_Pawn>();
+                var extension = gene.def.GetModExtension<GeneDefExtension_Pawn>();
                 if (extension != null)
                 {
                     __result *= extension.healthScaleFactor;

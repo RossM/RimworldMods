@@ -8,7 +8,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class ModExtension_GeneDef_Hediff : DefModExtension
+    public class GeneDefExtension_Hediff : DefModExtension
     {
         public List<HediffGiver> hediffGivers;
         public bool applyImmediately = false;
@@ -17,7 +17,7 @@ namespace XylRacesCore
 
     public class Gene_Hediff : Gene
     {
-        public ModExtension_GeneDef_Hediff DefExt => def.GetModExtension<ModExtension_GeneDef_Hediff>();
+        public GeneDefExtension_Hediff DefExt => def.GetModExtension<GeneDefExtension_Hediff>();
 
         public override void PostAdd()
         {

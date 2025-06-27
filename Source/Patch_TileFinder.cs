@@ -18,7 +18,7 @@ namespace XylRacesCore
         static void Prefix(PlanetLayer layer, Faction faction, bool mustBeAutoChoosable,
             ref Predicate<PlanetTile> extraValidator)
         {
-            var extension = faction?.def?.GetModExtension<ModExtension_FactionDef>();
+            var extension = faction?.def?.GetModExtension<FactionDefExtension>();
             if (extension == null)
                 return;
 

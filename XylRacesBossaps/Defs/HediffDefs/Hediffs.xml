@@ -31,7 +31,7 @@
       </li>
     </stages>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_Hediff_ForceBehavior">
+      <li Class="XylRacesCore.HediffDefExtension_ForceBehavior">
         <thinkTree>AttackBerserk</thinkTree>
       </li>
     </modExtensions>

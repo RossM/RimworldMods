@@ -7,7 +7,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class ModExtension_GeneDef_Rendering : DefModExtension
+    public class GeneDefExtension_Rendering : DefModExtension
     {
         public float scale = 1.0f;
     }

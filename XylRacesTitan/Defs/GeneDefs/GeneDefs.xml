@@ -10,10 +10,10 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>501</displayOrderInCategory>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_Rendering">
+      <li Class="XylRacesCore.GeneDefExtension_Rendering">
         <scale>1.1</scale>
       </li>
-      <li Class="XylRacesCore.ModExtension_GeneDef_Pawn">
+      <li Class="XylRacesCore.GeneDefExtension_Pawn">
         <bodySizeFactor>1.5</bodySizeFactor>
         <healthScaleFactor>1.3</healthScaleFactor>
       </li>

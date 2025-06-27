@@ -11,7 +11,7 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_HostilityOverride">
+      <li Class="XylRacesCore.GeneDefExtension_HostilityOverride">
         <disableHostilityFromFaction>Insect</disableHostilityFromFaction>
         <violationDisableTicks>2500</violationDisableTicks>
       </li>
@@ -57,7 +57,7 @@
       </li>
     </suppressedTraits>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
+      <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>BioRejection</hediff>
@@ -80,7 +80,7 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_Atavism">
+      <li Class="XylRacesCore.GeneDefExtension_Atavism">
         <biostatArc>0~0</biostatArc>
         <biostatCpx>1~99</biostatCpx>
         <biostatMet>-2~2</biostatMet>

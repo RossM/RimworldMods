@@ -9,8 +9,8 @@ namespace XylRacesCore
 {
     public class Gene_HostilityOverride : Gene
     {
-        private ModExtension_GeneDef_HostilityOverride DefExt =>
-            def.GetModExtension<ModExtension_GeneDef_HostilityOverride>();
+        private GeneDefExtension_HostilityOverride DefExt =>
+            def.GetModExtension<GeneDefExtension_HostilityOverride>();
 
         public int lastHostileActionTick = -99999;
 

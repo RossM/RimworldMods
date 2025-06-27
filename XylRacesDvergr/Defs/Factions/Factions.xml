@@ -18,7 +18,7 @@
       <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
     </requiredMemes>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_FactionDef">
+      <li Class="XylRacesCore.FactionDefExtension">
         <allowedHilliness>
           <li>LargeHills</li>
           <li>Mountainous</li>

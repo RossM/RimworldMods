@@ -8,7 +8,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class ModExtension_GeneDef_HostilityOverride : DefModExtension
+    public class GeneDefExtension_HostilityOverride : DefModExtension
     {
         public FactionDef disableHostilityFromFaction;
         public AnimalType? disableHostilityFromAnimalType;

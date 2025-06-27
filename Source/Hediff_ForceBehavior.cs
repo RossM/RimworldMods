@@ -9,14 +9,14 @@ using Verse.AI;
 
 namespace XylRacesCore
 {
-    public class ModExtension_Hediff_ForceBehavior : DefModExtension
+    public class HediffDefExtension_ForceBehavior : DefModExtension
     {
         public ThinkTreeDef thinkTree;
     }
 
     public class Hediff_ForceBehavior : HediffWithComps
     {
-        public ModExtension_Hediff_ForceBehavior DefExt => def.GetModExtension<ModExtension_Hediff_ForceBehavior>();
+        public HediffDefExtension_ForceBehavior DefExt => def.GetModExtension<HediffDefExtension_ForceBehavior>();
 
         public override void PostAdd(DamageInfo? dinfo)
         {

@@ -11,7 +11,7 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
+      <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>GeneticBlindness</hediff>
@@ -36,7 +36,7 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
+      <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>Echolocation</hediff>

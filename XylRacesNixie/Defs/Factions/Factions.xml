@@ -26,7 +26,7 @@
     <maxConfigurableAtWorldCreation>9999</maxConfigurableAtWorldCreation>
     <configurationListOrderPriority>30</configurationListOrderPriority>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_FactionDef">
+      <li Class="XylRacesCore.FactionDefExtension">
         <waterRequired>true</waterRequired>
       </li>
     </modExtensions>

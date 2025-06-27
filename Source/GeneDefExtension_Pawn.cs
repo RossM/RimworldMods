@@ -7,7 +7,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class ModExtension_GeneDef_Pawn : DefModExtension
+    public class GeneDefExtension_Pawn : DefModExtension
     {
         public float bodySizeFactor = 1.0f;
         public float healthScaleFactor = 1.0f;

@@ -7,7 +7,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class ModExtension_GeneDef_Rage : DefModExtension
+    public class GeneDefExtension_Rage : DefModExtension
     {
         public float chance = 1.0f;
         public HediffDef hediffDef;
@@ -16,7 +16,7 @@ namespace XylRacesCore
 
     public class Gene_Rage : Gene
     {
-        public ModExtension_GeneDef_Rage DefExt => def.GetModExtension<ModExtension_GeneDef_Rage>();
+        public GeneDefExtension_Rage DefExt => def.GetModExtension<GeneDefExtension_Rage>();
 
         public void Notify_DamageTaken(DamageInfo dinfo, DamageWorker.DamageResult damageResult)
         {

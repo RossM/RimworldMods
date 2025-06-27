@@ -67,14 +67,14 @@ namespace XylRacesCore
                        xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
             if (gene != null)
             {
-                pawn.gender = Rand.Chance(gene.GetModExtension<ModExtension_GeneDef_GenderRatio>().femaleChance)
+                pawn.gender = Rand.Chance(gene.GetModExtension<GeneDefExtension_GenderRatio>().femaleChance)
                     ? Gender.Female : Gender.Male;
             }
         }
 
         static bool HasGenderRatio(GeneDef gene)
         {
-            return gene.GetModExtension<ModExtension_GeneDef_GenderRatio>() != null;
+            return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
         }
 
         [HarmonyPostfix, HarmonyPatch(nameof(PawnGenerator.GetXenotypeForGeneratedPawn))]

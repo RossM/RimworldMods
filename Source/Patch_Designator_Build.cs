@@ -16,7 +16,7 @@ namespace XylRacesCore
                 return;
 
             BuildableDef def = __instance.PlacingDef;
-            ModExtension_BuildableDef extension = def.GetModExtension<ModExtension_BuildableDef>();
+            BuildableDefExtension extension = def.GetModExtension<BuildableDefExtension>();
             if (extension == null) 
                 return;
 

@@ -9,7 +9,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class ModExtension_GeneDef_DietDependency : DefModExtension
+    public class GeneDefExtension_DietDependency : DefModExtension
     {
         public HediffDef hediffDef;
         public FoodKind foodKind = FoodKind.Any;
@@ -21,7 +21,7 @@ namespace XylRacesCore
     {
         public int lastIngestedTick;
 
-        public ModExtension_GeneDef_DietDependency DefExt => def.GetModExtension<ModExtension_GeneDef_DietDependency>();
+        public GeneDefExtension_DietDependency DefExt => def.GetModExtension<GeneDefExtension_DietDependency>();
 
         public override bool Active
         {
@@ -84,7 +84,7 @@ namespace XylRacesCore
             if (extension == null)
             {
                 Log.Warning(
-                    "Gene_DietDependency.Notify_IngestedThing called without a ModExtension_GeneDef_DietDependency");
+                    "Gene_DietDependency.Notify_IngestedThing called without a GeneDefExtension_DietDependency");
                 return;
             }
 
@@ -139,7 +139,7 @@ namespace XylRacesCore
             var extension = DefExt;
             if (extension == null)
             {
-                Log.Warning("Gene_DietDependency.ValidateFood called without a ModExtension_GeneDef_DietDependency");
+                Log.Warning("Gene_DietDependency.ValidateFood called without a GeneDefExtension_DietDependency");
                 return false;
             }
 

@@ -9,7 +9,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class ModExtension_FactionDef : DefModExtension
+    public class FactionDefExtension : DefModExtension
     {
         public List<BiomeDef> allowedBiomes;
         public List<Hilliness> allowedHilliness;

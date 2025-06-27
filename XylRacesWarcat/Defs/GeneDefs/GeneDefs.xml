@@ -35,7 +35,7 @@
       </li>
     </forcedTraits>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_DietDependency">
+      <li Class="XylRacesCore.GeneDefExtension_DietDependency">
         <hediffDef>GeneticMeatNeed</hediffDef>
         <foodKind>Meat</foodKind>
         <rawOnly>true</rawOnly>
@@ -168,7 +168,7 @@
     <iconPath>UI/Icons/Genes/Gene_RetractableClaws</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
+      <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>RetractableClaws</hediff>
@@ -213,7 +213,7 @@
     <displayOrderInCategory>201</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
+      <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>Moody</hediff>

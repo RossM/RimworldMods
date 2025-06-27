@@ -7,7 +7,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class ModExtension_GeneDef_Atavism : DefModExtension
+    public class GeneDefExtension_Atavism : DefModExtension
     {
         public IntRange biostatArc;
         public IntRange biostatCpx;
@@ -20,7 +20,7 @@ namespace XylRacesCore
     public class Gene_Atavism : Gene
     {
         public List<Gene> addedGenes;
-        public ModExtension_GeneDef_Atavism DefExt => def.GetModExtension<ModExtension_GeneDef_Atavism>();
+        public GeneDefExtension_Atavism DefExt => def.GetModExtension<GeneDefExtension_Atavism>();
 
         public override void PostAdd()
         {

@@ -40,7 +40,7 @@
     <designationCategory>Misc</designationCategory>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_BuildableDef">
+      <li Class="XylRacesCore.BuildableDefExtension">
         <genePrerequisites>
           <li>Aquatic</li>
         </genePrerequisites>

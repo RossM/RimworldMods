@@ -77,7 +77,7 @@
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_Rage">
+      <li Class="XylRacesCore.GeneDefExtension_Rage">
         <chance>0.25</chance>
         <hediffDef>Rage</hediffDef>
       </li>
@@ -114,7 +114,7 @@
     <label>always female</label>
     <description>Carriers of this gene are always female.</description>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_GenderRatio">
+      <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>1.0</femaleChance>
       </li>
     </modExtensions>
@@ -127,7 +127,7 @@
     <label>usually female</label>
     <description>Carriers of this gene are mostly female.</description>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_GenderRatio">
+      <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>0.75</femaleChance>
       </li>
     </modExtensions>
@@ -140,7 +140,7 @@
     <label>usually male</label>
     <description>Carriers of this gene are mostly male.</description>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_GenderRatio">
+      <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>0.25</femaleChance>
       </li>
     </modExtensions>
@@ -153,7 +153,7 @@
     <label>always male</label>
     <description>Carriers of this gene are always male.</description>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_GenderRatio">
+      <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>0.0</femaleChance>
       </li>
     </modExtensions>
@@ -189,7 +189,7 @@
       </li>
     </renderNodeProperties>
     <modExtensions>
-      <li Class="XylRacesCore.ModExtension_GeneDef_Hediff">
+      <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>LargeHorns</hediff>

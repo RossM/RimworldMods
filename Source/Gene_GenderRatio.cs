@@ -10,7 +10,7 @@ namespace XylRacesCore
 {
     public class Gene_GenderRatio : Gene
     {
-        public ModExtension_GeneDef_GenderRatio DefExt => def.GetModExtension<ModExtension_GeneDef_GenderRatio>();
+        public GeneDefExtension_GenderRatio DefExt => def.GetModExtension<GeneDefExtension_GenderRatio>();
 
         public Gender GetGender()
         {
@@ -18,7 +18,7 @@ namespace XylRacesCore
         }
     }
 
-    public class ModExtension_GeneDef_GenderRatio : DefModExtension
+    public class GeneDefExtension_GenderRatio : DefModExtension
     {
         public float femaleChance = 0.5f;
     }

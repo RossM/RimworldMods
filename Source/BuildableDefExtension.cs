@@ -4,7 +4,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class ModExtension_BuildableDef : DefModExtension
+    public class BuildableDefExtension : DefModExtension
     {
         public List<GeneDef> genePrerequisites;
 

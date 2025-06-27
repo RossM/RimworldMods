@@ -23,7 +23,7 @@ namespace XylRacesCore
 
             foreach (var gene in genes)
             {
-                var extension = gene.def.GetModExtension<ModExtension_GeneDef_Rendering>();
+                var extension = gene.def.GetModExtension<GeneDefExtension_Rendering>();
                 if (extension != null)
                 {
                     __result *= extension.scale;
