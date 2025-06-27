@@ -50,4 +50,21 @@
     </modExtensions>
   </GeneDef>
 
+  <GeneDef>
+    <defName>PsyFocus</defName>
+    <label>focus</label>
+    <description>Carriers automatically learn the Focus psycast, which boosts the target's sight, hearing and moving capacities.</description>
+    <iconPath>UI/Abilities/Focus</iconPath>
+    <geneClass>XylRacesCore.Gene_Psycast</geneClass>
+    <displayCategory>Ability</displayCategory>
+    <abilities>
+      <li>Focus</li>
+    </abilities>
+    <descriptionHyperlinks>
+      <AbilityDef>Focus</AbilityDef>
+    </descriptionHyperlinks>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+  </GeneDef>
+
 </Defs>
