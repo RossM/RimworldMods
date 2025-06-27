@@ -81,12 +81,9 @@
     <displayOrderInCategory>500</displayOrderInCategory>
     <modExtensions>
       <li Class="XylRacesCore.ModExtension_GeneDef_Atavism">
-        <biostatArcMin>0</biostatArcMin>
-        <biostatArcMax>0</biostatArcMax>
-        <biostatCpxMin>1</biostatCpxMin>
-        <biostatCpxMax>99</biostatCpxMax>
-        <biostatMetMin>-2</biostatMetMin>
-        <biostatMetMax>2</biostatMetMax>
+        <biostatArc>0~0</biostatArc>
+        <biostatCpx>1~99</biostatCpx>
+        <biostatMet>-2~2</biostatMet>
         <geneChance>0.5</geneChance>
         <extraGeneChance>0.5</extraGeneChance>
         <extraGenes>

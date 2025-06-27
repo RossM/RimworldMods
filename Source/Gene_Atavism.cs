@@ -9,9 +9,9 @@ namespace XylRacesCore
 {
     public class ModExtension_GeneDef_Atavism : DefModExtension
     {
-        public int biostatArcMin, biostatArcMax;
-        public int biostatCpxMin, biostatCpxMax;
-        public int biostatMetMin, biostatMetMax;
+        public IntRange biostatArc;
+        public IntRange biostatCpx;
+        public IntRange biostatMet;
         public float geneChance = 1.0f;
         public float extraGeneChance = 1.0f;
         public List<GeneDef> extraGenes;
@@ -48,11 +48,11 @@ namespace XylRacesCore
 
         float GeneWeight(GeneDef def)
         {
-            if (def.biostatArc < DefExt.biostatArcMin || def.biostatArc > DefExt.biostatArcMax)
+            if (def.biostatArc < DefExt.biostatArc.min || def.biostatArc > DefExt.biostatArc.max)
                 return 0.0f;
-            if (def.biostatCpx < DefExt.biostatCpxMin || def.biostatCpx > DefExt.biostatCpxMax)
+            if (def.biostatCpx < DefExt.biostatCpx.min || def.biostatCpx > DefExt.biostatCpx.max)
                 return 0.0f;
-            if (def.biostatMet < DefExt.biostatMetMin || def.biostatMet > DefExt.biostatMetMax)
+            if (def.biostatMet < DefExt.biostatMet.min || def.biostatMet > DefExt.biostatMet.max)
                 return 0.0f;
 
             // No genes with requirements, unless they are met by the pawn's xenotype
