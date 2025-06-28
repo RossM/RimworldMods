@@ -52,6 +52,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Docile</iconPath>
     <socialFightChanceFactor>0</socialFightChanceFactor>
     <aggroMentalBreakSelectionChanceFactor>0.25</aggroMentalBreakSelectionChanceFactor>
     <prisonBreakMTBFactor>4</prisonBreakMTBFactor><!-- Never prison breaks -->
@@ -69,6 +70,8 @@
     <biostatMet>1</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_HerdInstinct</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
   </GeneDef>
 
   <GeneDef>
@@ -98,6 +101,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Hyperlactation</iconPath>
     <minAgeActive>13</minAgeActive>
     <customEffectDescriptions>
       <li>Enables being milked</li>
