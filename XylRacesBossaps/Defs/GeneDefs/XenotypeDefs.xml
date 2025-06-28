@@ -8,7 +8,6 @@
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>
-      <li>MoveSpeed_Quick</li>
       <li>HerdInstinct</li>
       <li>Docile</li>
       <li>LargeHorns</li>
@@ -17,15 +16,15 @@
       <li>PainReversal</li>
       <li>Fertile</li>
       <li>Hyperlactation</li>
+      <li>Gender_UsuallyFemale</li>
       <li>Hair_LongOnly</li>
       <li>Body_Standard</li>
       <li>Body_Fat</li>
       <li>Body_Hulk</li>
-      <li>Gender_UsuallyFemale</li>
       <li>Nearsighted</li>
       <li>HerbivoreStomach</li>
       <li>AptitudePoor_Cooking</li>
-      <li>AptitudePoor_Crafting</li>
+      <li>AptitudeStrong_Plants</li>
     </genes>
   </XenotypeDef>
   
