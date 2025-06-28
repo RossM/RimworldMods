@@ -2,10 +2,10 @@
 <Defs>
   
   <ThinkTreeDef>
-    <defName>AttackRage</defName>
+    <defName>SeeingRed</defName>
     <thinkRoot Class="ThinkNode_Priority">
       <subNodes>
-        <li Class="XylRacesCore.JobGiver_Rage">
+        <li Class="XylRacesCore.JobGiver_SeeingRed">
         </li>
         <li Class="JobGiver_RunRandom">
           <maxDanger>Deadly</maxDanger>

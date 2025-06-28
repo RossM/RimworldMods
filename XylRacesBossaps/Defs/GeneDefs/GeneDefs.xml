@@ -75,19 +75,19 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Gene_Rage</geneClass>
-    <defName>Rage</defName>
-    <label>rage</label>
+    <geneClass>XylRacesCore.Gene_SeeingRed</geneClass>
+    <defName>SeeingRed</defName>
+    <label>seeing red</label>
     <description>Carriers of this gene have a chance of going into a blind range when they are damaged in combat, charging the nearest enemy and fighting in melee until all enemies are dead. During this state they are faster, stronger, and nearly immune to pain. This ability can't be controlled.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Rage</iconPath>
+    <iconPath>UI/Icons/Genes/Gene_SeeingRed</iconPath>
     <modExtensions>
-      <li Class="XylRacesCore.GeneDefExtension_Rage">
+      <li Class="XylRacesCore.GeneDefExtension_SeeingRed">
         <chance>0.25</chance>
-        <hediffDef>Rage</hediffDef>
+        <hediffDef>SeeingRed</hediffDef>
       </li>
     </modExtensions>
   </GeneDef>

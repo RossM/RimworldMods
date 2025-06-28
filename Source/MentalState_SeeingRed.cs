@@ -9,11 +9,11 @@ using Verse.AI;
 
 namespace XylRacesCore
 {
-    public class MentalState_Rage : MentalState
+    public class MentalState_SeeingRed : MentalState
     {
         public override bool ForceHostileTo(Thing t)
         {
-            return pawn.HasGeneOfType<Gene_Rage>(g => g.ForceHostility(t));
+            return pawn.HasGeneOfType<Gene_SeeingRed>(g => g.ForceHostility(t));
         }
 
         public override RandomSocialMode SocialModeMax()

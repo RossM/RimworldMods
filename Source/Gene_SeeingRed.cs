@@ -8,14 +8,14 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class GeneDefExtension_Rage : DefModExtension
+    public class GeneDefExtension_SeeingRed : DefModExtension
     {
         public float chance = 1.0f;
         public HediffDef hediffDef;
         public float severity;
     }
 
-    public class Gene_Rage : Gene
+    public class Gene_SeeingRed : Gene
     {
         public HashSet<Thing> extraEnemies;
 
@@ -25,7 +25,7 @@ namespace XylRacesCore
             Scribe_Collections.Look(ref extraEnemies, "extraEnemies", LookMode.Reference);
         }
 
-        public GeneDefExtension_Rage DefExt => def.GetModExtension<GeneDefExtension_Rage>();
+        public GeneDefExtension_SeeingRed DefExt => def.GetModExtension<GeneDefExtension_SeeingRed>();
 
         public void Notify_DamageTaken(DamageInfo dinfo, DamageWorker.DamageResult damageResult)
         {

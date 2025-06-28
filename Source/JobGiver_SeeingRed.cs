@@ -9,7 +9,7 @@ using Verse.AI;
 
 namespace XylRacesCore
 {
-    public class JobGiver_Rage : ThinkNode_JobGiver
+    public class JobGiver_SeeingRed : ThinkNode_JobGiver
     {
         private const int MinMeleeChaseTicks = 420;
 
@@ -47,7 +47,7 @@ namespace XylRacesCore
 
         public override ThinkNode DeepCopy(bool resolve = true)
         {
-            var obj = (JobGiver_Rage)base.DeepCopy(resolve);
+            var obj = (JobGiver_SeeingRed)base.DeepCopy(resolve);
             obj.maxAttackDistance = maxAttackDistance;
             return obj;
         }

@@ -2,8 +2,8 @@
 <Defs>
 
   <HediffDef>
-    <defName>Rage</defName>
-    <label>rage</label>
+    <defName>SeeingRed</defName>
+    <label>seeing red</label>
     <description>A temporary frenzy state. The character moves faster and feels almost no pain, but can't be controlled until the frenzy ends.</description>
     <hediffClass>XylRacesCore.Hediff_ForceBehavior</hediffClass>
     <initialSeverity>1.0</initialSeverity>
@@ -32,8 +32,8 @@
     </stages>
     <modExtensions>
       <li Class="XylRacesCore.HediffDefExtension_ForceBehavior">
-        <thinkTree>AttackRage</thinkTree>
-        <mentalState>Rage</mentalState>
+        <thinkTree>SeeingRed</thinkTree>
+        <mentalState>SeeingRed</mentalState>
       </li>
     </modExtensions>
   </HediffDef>

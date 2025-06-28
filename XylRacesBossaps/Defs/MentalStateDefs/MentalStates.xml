@@ -2,12 +2,12 @@
 <Defs>
 
   <MentalStateDef ParentName="Berserk">
-    <defName>Rage</defName>
-    <stateClass>XylRacesCore.MentalState_Rage</stateClass>
-    <label>rage</label>
+    <defName>SeeingRed</defName>
+    <stateClass>XylRacesCore.MentalState_SeeingRed</stateClass>
+    <label>seeing red</label>
     <minTicksBeforeRecovery>99999999</minTicksBeforeRecovery>
     <maxTicksBeforeRecovery>99999999</maxTicksBeforeRecovery>
-    <baseInspectLine>Mental state: Rage</baseInspectLine>
+    <baseInspectLine>Mental state: Seeing red</baseInspectLine>
     <beginLetter></beginLetter>
     <recoveryMessage></recoveryMessage>
   </MentalStateDef>
