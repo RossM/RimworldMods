@@ -44,6 +44,15 @@
     <displayOrderInCategory>0</displayOrderInCategory>
   </GeneDef>
 
+  <GeneDef ParentName="GeneSkinColorOverride">
+    <defName>Skin_Olive</defName>
+    <label>olive skin</label>
+    <labelShortAdj>olive</labelShortAdj>
+    <description>Carriers of this gene produce a pigment that gives their skin an olive color.</description>
+    <skinColorOverride>(105,100,59)</skinColorOverride>
+    <displayOrderInCategory>0</displayOrderInCategory>
+  </GeneDef>
+
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Hediff</geneClass>
     <defName>BioRejection</defName>
