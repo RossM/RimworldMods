@@ -21,7 +21,7 @@
   <GeneDef>
     <defName>ToxicBurst</defName>
     <label>toxic burst</label>
-    <description>Carriers have the ability to release a cloud of toxic gas around them from a special organ in their body. The gas affects the user normally.</description>
+    <description>Carriers have the ability to release a cloud of toxic gas around them from a special gland located near their anus. The gas affects the user normally.</description>
     <displayCategory>Ability</displayCategory>
     <iconPath>UI/Abilities/ToxicBurst</iconPath>
     <abilities>
