@@ -10,6 +10,7 @@
     <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_InsectPheromones</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_HostilityOverride">
         <disableHostilityFromFaction>Insect</disableHostilityFromFaction>
@@ -52,6 +53,7 @@
     <biostatMet>2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_BioRejection</iconPath>
     <suppressedTraits>
       <li>
         <def>Transhumanist</def>
@@ -80,6 +82,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_GeneticAtavism</iconPath>
     <customEffectDescriptions>
       <li>Extra gene chance: 50%</li>
     </customEffectDescriptions>
