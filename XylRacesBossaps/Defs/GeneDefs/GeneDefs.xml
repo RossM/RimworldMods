@@ -254,6 +254,8 @@
     <defName>Ears_Cow</defName>
     <label>cow ears</label>
     <description>Carriers of this gene have cow-like ears.</description>
+    <iconPath>UI/Icons/Genes/Gene_CowEars</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
