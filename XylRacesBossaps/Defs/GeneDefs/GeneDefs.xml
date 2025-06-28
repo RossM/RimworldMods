@@ -249,5 +249,28 @@
       <li>Headbone</li>
     </exclusionTags>
   </GeneDef>
-  
+
+  <GeneDef ParentName="GeneEarsBase">
+    <defName>Ears_Cow</defName>
+    <label>cow ears</label>
+    <description>Carriers of this gene have cow-like ears.</description>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <texPath>Things/Pawn/Humanlike/HeadAttachments/CowEars/CowEars</texPath>
+        <colorType>Skin</colorType>
+        <parentTagDef>Head</parentTagDef>
+        <useSkinShader>true</useSkinShader>
+        <useRottenColor>true</useRottenColor>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <drawData>
+          <defaultData>
+            <layer>70</layer>
+          </defaultData>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+  </GeneDef>
+
 </Defs>
