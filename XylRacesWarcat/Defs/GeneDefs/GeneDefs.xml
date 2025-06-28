@@ -192,7 +192,7 @@
   <GeneDef>
     <defName>FeralRage</defName>
     <label>feral rage</label>
-    <description>Carriers have the ability to enter a state of feral rage, giving increased movement speed (+50%), faster melee attacks (x0.75), and decreased pain (x25%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%).</description>
+    <description>Carriers have the ability to enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%).</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Ability</displayCategory>

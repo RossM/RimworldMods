@@ -36,7 +36,7 @@
   <HediffDef>
     <defName>FeralRage</defName>
     <label>feral rage</label>
-    <description>A temporary frenzy state. It increases movement and melee attack speed, and decreases pain.</description>
+    <description>A temporary frenzy state. It increases movement and melee attack speed.</description>
     <hediffClass>HediffWithComps</hediffClass>
     <initialSeverity>1.0</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
@@ -65,9 +65,8 @@
             <offset>0.5</offset>
           </li>
         </capMods>
-        <painFactor>0.25</painFactor>
         <statFactors>
-          <MeleeCooldownFactor>0.75</MeleeCooldownFactor>
+          <MeleeCooldownFactor>0.67</MeleeCooldownFactor>
         </statFactors>
       </li>
     </stages>
