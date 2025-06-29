@@ -8,6 +8,7 @@
     <minTicksBeforeRecovery>99999999</minTicksBeforeRecovery>
     <maxTicksBeforeRecovery>99999999</maxTicksBeforeRecovery>
     <baseInspectLine>Mental state: Seeing red</baseInspectLine>
+    <nameColor>(0.8,0.1,0.2)</nameColor>
     <beginLetter></beginLetter>
     <recoveryMessage></recoveryMessage>
   </MentalStateDef>

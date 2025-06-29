@@ -4,7 +4,7 @@
   <HediffDef>
     <defName>SeeingRed</defName>
     <label>seeing red</label>
-    <description>A temporary frenzy state. The character moves faster and feels almost no pain, but can't be controlled until the frenzy ends.</description>
+    <description>A temporary frenzy state. The character can't be controlled until the frenzy ends.</description>
     <hediffClass>XylRacesCore.Hediff_ForceBehavior</hediffClass>
     <initialSeverity>1.0</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
@@ -34,6 +34,7 @@
       <li Class="XylRacesCore.HediffDefExtension_ForceBehavior">
         <thinkTree>SeeingRed</thinkTree>
         <mentalState>SeeingRed</mentalState>
+        <iconPath>UI/Icons/Genes/Gene_SeeingRed</iconPath>
       </li>
     </modExtensions>
   </HediffDef>
@@ -90,7 +91,7 @@
       <li Class="HediffCompProperties_VerbGiver">
         <tools>
           <li>
-            <label>gore</label>
+            <label>thrust</label>
             <capacities>
               <li>Stab</li>
             </capacities>

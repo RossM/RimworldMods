@@ -13,11 +13,20 @@ namespace XylRacesCore
     {
         public ThinkTreeDef thinkTree;
         public MentalStateDef mentalState;
+        public string iconPath;
     }
 
     public class Hediff_ForceBehavior : HediffWithComps
     {
+        private MoteBubble mote;
+
         public HediffDefExtension_ForceBehavior DefExt => def.GetModExtension<HediffDefExtension_ForceBehavior>();
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_References.Look(ref mote, "mote");
+        }
 
         public override void PostAdd(DamageInfo? dinfo)
         {
@@ -30,12 +39,20 @@ namespace XylRacesCore
                 pawn.mindState.mentalStateHandler.TryStartMentalState(DefExt.mentalState, forced: true, forceWake: true,
                     causedByDamage: true);
             }
+
+            if (DefExt.iconPath != null)
+            {
+                mote = MoteMaker.MakeThoughtBubble(pawn, DefExt.iconPath, maintain: true);
+                Log.Message(string.Format("Mote: {0}", mote));
+            }
         }
 
         public override void Tick()
         {
             base.Tick();
-            
+
+            mote?.Maintain();
+
             if (pawn.Downed)
                 pawn.health.RemoveHediff(this);
         }
@@ -48,6 +65,8 @@ namespace XylRacesCore
 
             if (DefExt.mentalState != null)
                 pawn.mindState.mentalStateHandler.CurState.RecoverFromState();
+
+            mote?.Destroy();
         }
     }
 }
