@@ -54,7 +54,7 @@
     <labelShortAdj>carnivorous</labelShortAdj>
     <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw meat, but are poor at digesting plant-based foods. They never get negative thoughts from eating meat.</description>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>0</biostatMet>
+    <biostatMet>1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>

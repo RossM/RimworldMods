@@ -7,7 +7,7 @@
     <labelShortAdj>herbivorous</labelShortAdj>
     <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw plant-based foods, but are poor at digesting meat. They never get negative thoughts from eating plant-based foods.</description>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>0</biostatMet>
+    <biostatMet>1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_HerbivoreStomach</iconPath>
