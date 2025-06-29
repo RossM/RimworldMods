@@ -48,13 +48,12 @@
   <GeneDef ParentName="GeneAggressionBase">
     <defName>Docile</defName>
     <label>docile</label>
-    <description>Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They are also less likely to start prison breaks or have violent mental breaks, and never start social fights.</description>
+    <description>Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They are also less likely to start prison breaks, and never start social fights.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_Docile</iconPath>
     <socialFightChanceFactor>0</socialFightChanceFactor>
-    <aggroMentalBreakSelectionChanceFactor>0.25</aggroMentalBreakSelectionChanceFactor>
     <prisonBreakMTBFactor>4</prisonBreakMTBFactor><!-- Never prison breaks -->
     <statFactors>
       <SlaveSuppressionFallRate MayRequire="Ludeon.RimWorld.Ideology">0.25</SlaveSuppressionFallRate>
