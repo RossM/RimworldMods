@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <IncidentDef>
+    <defName>WildBossapsHerd</defName>
+    <label>wild bossaps herd</label>
+    <category>Misc</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>XylRacesCore.IncidentWorker_WildTribe</workerClass>
+    <baseChance>0.5</baseChance>
+    <populationEffect>IncreaseMedium</populationEffect>
+    <letterLabel>{0} wander in</letterLabel>
+    <letterText>A herd of wild {0} has wandered into the area.\n\nYou may attempt to tame them, or capture and enslave them.\n\nThey will leave the area in a few days.</letterText>
+    <letterDef>NeutralEvent</letterDef>
+    <modExtensions>
+      <li Class="XylRacesCore.IncidentDefExtension_WildTribe">
+        <xenotype>Bossaps</xenotype>
+        <pawnsCount>2 ~ 4</pawnsCount>
+        <exitMapTicks>180000 ~ 30000</exitMapTicks> <!-- 3 to 5 days -->
+        <forcedTraits>
+          <li>
+            <trait>Nudist</trait>
+            <chance>0.3</chance>
+          </li>
+          <li>
+            <trait>Ascetic</trait>
+            <chance>0.3</chance>
+          </li>
+        </forcedTraits>
+        <forbiddenMemes>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Cannibal</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Darkness</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Raider</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Transhumanist</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
+          <li MayRequire="Ludeon.RimWorld.Anomaly">Inhuman</li>
+        </forbiddenMemes>
+        <preferredMemes>
+          <li MayRequire="Ludeon.RimWorld.Ideology">AnimalPersonhood</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">NaturePrimacy</li>
+        </preferredMemes>
+      </li>
+    </modExtensions>
+  </IncidentDef>
+
+</Defs>
