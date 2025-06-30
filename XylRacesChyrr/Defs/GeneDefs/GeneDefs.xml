@@ -5,7 +5,7 @@
     <geneClass>XylRacesCore.Gene_Hediff</geneClass>
     <defName>Blind</defName>
     <label>blind</label>
-    <description>Carriers of this gene are totally blind.</description>
+    <description>Carriers of this gene have non-functional eyes, making them totally blind.\n\nBlindness grants a +50% bonus to psychic sensitivity.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>5</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
