@@ -18,7 +18,7 @@
       <li Class="XylRacesCore.IncidentDefExtension_WildTribe">
         <xenotype>Bossaps</xenotype>
         <pawnsCount>2 ~ 4</pawnsCount>
-        <exitMapTicks>180000 ~ 30000</exitMapTicks> <!-- 3 to 5 days -->
+        <exitMapTicks>180000 ~ 300000</exitMapTicks> <!-- 3 to 5 days -->
         <forcedTraits>
           <li>
             <trait>Nudist</trait>
