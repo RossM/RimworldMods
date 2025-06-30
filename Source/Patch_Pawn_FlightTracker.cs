@@ -15,12 +15,10 @@ namespace XylRacesCore
     [HarmonyPatch(typeof(Pawn_FlightTracker))]
     public class Patch_Pawn_FlightTracker
     {
-        private static readonly FieldInfo pawnField = AccessTools.Field(typeof(Pawn_FlightTracker), "pawn");
-
         [HarmonyPrefix, HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
         public static bool Notify_JobStarted_Prefix(Pawn_FlightTracker __instance, Job job)
         {
-            var pawn = (Pawn)pawnField.GetValue(__instance);
+            var pawn = __instance.Get<Pawn>("pawn");
             if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Gene_Flight>() is { } gene)
             {
                 gene.Notify_JobStarted(job);
@@ -32,7 +30,7 @@ namespace XylRacesCore
 
         public static void FlightTick_Prefix(Pawn_FlightTracker __instance)
         {
-            var pawn = (Pawn)pawnField.GetValue(__instance);
+            var pawn = __instance.Get<Pawn>("pawn");
             if (pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
             {
                 if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Gene_Flight>() is { } gene)
