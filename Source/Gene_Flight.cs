@@ -96,7 +96,7 @@ namespace XylRacesCore
             if (!flight.CanEverFly)
                 return;
 
-            bool tryFlying = allowFlight && (!flyOnlyWhenDrafted || pawn.Drafted) && (pawn.CurJob?.def.tryStartFlying != false || flight.Flying);
+            bool tryFlying = allowFlight && (!flyOnlyWhenDrafted || pawn.Drafted);
             if (flight.Flying)
             {
                 if (!tryFlying)
@@ -105,10 +105,7 @@ namespace XylRacesCore
             else
             {
                 if (tryFlying)
-                {
-                    Log.Message(string.Format("{0}: Taking off", pawn));
                     flight.StartFlying();
-                }
             }
         }
 
