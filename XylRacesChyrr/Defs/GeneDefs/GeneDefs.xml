@@ -5,11 +5,12 @@
     <geneClass>XylRacesCore.Gene_Hediff</geneClass>
     <defName>Blind</defName>
     <label>blind</label>
-    <description>Carriers of this gene are blind.</description>
+    <description>Carriers of this gene are totally blind.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>5</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Blind</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
@@ -24,17 +25,21 @@
         <applyImmediately>true</applyImmediately>
       </li>
     </modExtensions>
+    <customEffectDescriptions>
+      <li>Sight: 0%</li>
+    </customEffectDescriptions>
   </GeneDef>
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Hediff</geneClass>
     <defName>Echolocation</defName>
     <label>echolocation</label>
-    <description>Carriers of this gene use echolocation.</description>
+    <description>Carriers of this gene can use high-frequency sound waves to gain many of the benefits of sight even if totally blind.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_Echolocation</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
@@ -48,6 +53,9 @@
         <applyImmediately>true</applyImmediately>
       </li>
     </modExtensions>
+    <customEffectDescriptions>
+      <li>Sight: use hearing if higher</li>
+    </customEffectDescriptions>
   </GeneDef>
 
   <GeneDef>
