@@ -71,11 +71,12 @@
     <geneClass>XylRacesCore.Gene_Flight</geneClass>
     <defName>BatWings</defName>
     <label>bat wings</label>
-    <description>Carriers of this gene have bat-like wings instead of arms.</description>
+    <description>Carriers of this gene have bat-like wings instead of arms, allowing them to fly for short periods.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Movement</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
+    <iconPath>UI/Icons/Genes/Gene_BatWings</iconPath>
     <capMods>
       <li>
         <capacity>Manipulation</capacity>
@@ -83,11 +84,12 @@
       </li>
     </capMods>
     <statOffsets>
-      <MaxFlightTime>30</MaxFlightTime>
-      <FlightCooldown>10</FlightCooldown>
+      <MaxFlightTime>10</MaxFlightTime>
+      <FlightCooldown>30</FlightCooldown>
     </statOffsets>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_Flight">
+        <iconPath>UI/Icons/Genes/Gene_BatWings</iconPath>
       </li>
     </modExtensions>
   </GeneDef>

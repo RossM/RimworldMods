@@ -33,6 +33,7 @@ namespace XylRacesCore
     public class Gene_Flight : Gene
     {
         public bool allowFlight = false;
+        public bool flyOnlyWhenDrafted = false;
 
         public GeneDefExtension_Flight DefExt => def.GetModExtension<GeneDefExtension_Flight>();
 
@@ -40,6 +41,7 @@ namespace XylRacesCore
         {
             base.ExposeData();
             Scribe_Values.Look(ref allowFlight, "allowFlight", false);
+            Scribe_Values.Look(ref flyOnlyWhenDrafted, "flyOnlyWhenDrafted", false);
         }
 
 
@@ -60,6 +62,18 @@ namespace XylRacesCore
                 toggleAction = () => { allowFlight = !allowFlight; },
                 icon = DefExt.Icon,
             };
+
+            if (allowFlight)
+            {
+                yield return new Command_Toggle
+                {
+                    defaultLabel = "Fly only when drafted",
+                    defaultDesc = "Restrict this character to only fly when drafted.",
+                    isActive = () => flyOnlyWhenDrafted,
+                    toggleAction = () => { flyOnlyWhenDrafted = !flyOnlyWhenDrafted; },
+                    icon = DefExt.Icon,
+                };
+            }
         }
 
         public void Notify_JobStarted(Job job)
@@ -82,8 +96,7 @@ namespace XylRacesCore
             if (!flight.CanEverFly)
                 return;
 
-            bool tryFlying = allowFlight && (pawn.CurJob?.def.tryStartFlying != false || flight.Flying);
-            //bool tryFlying = allowFlight;
+            bool tryFlying = allowFlight && (!flyOnlyWhenDrafted || pawn.Drafted) && (pawn.CurJob?.def.tryStartFlying != false || flight.Flying);
             if (flight.Flying)
             {
                 if (!tryFlying)
@@ -97,6 +110,15 @@ namespace XylRacesCore
                     flight.StartFlying();
                 }
             }
+        }
+
+        // If a downed flying pawn lands on a non-walkable tile, they are killed and their corpse destroyed.
+        // This would be unfortunate, so try to move the pawn to a better position.
+        public void Notify_Downed()
+        {
+            var newCell = CellFinder.StandableCellNear(pawn.Position, pawn.Map, 5f);
+            if (newCell != IntVec3.Invalid)
+                pawn.Position = newCell;
         }
     }
 }
