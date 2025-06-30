@@ -11,31 +11,25 @@ namespace XylRacesCore
 {
     public static class ReflectionHelpers
     {
-        public delegate TResult FieldAccessor<out TResult>(object obj);
-
         private static readonly Dictionary<(Type, string), object> getAccessors = new ();
 
         public static TResult Get<TResult>(this object obj, string fieldName)
         {
-            var fieldAccessor = GetAccessor<TResult>(obj, fieldName);
-            return fieldAccessor(obj);
+            return GetAccessor<TResult>(obj.GetType(), fieldName)(obj);
         }
 
-        public static FieldAccessor<TResult> GetAccessor<TResult>(object obj, string fieldName)
+        public static Func<object, TResult> GetAccessor<TResult>(Type type, string fieldName)
         {
-            var type = obj.GetType();
             if (!getAccessors.TryGetValue((type, fieldName), out var accessor))
             {
                 FieldInfo fieldDef = AccessTools.Field(type, fieldName);
-                var parameter = Expression.Variable(typeof(object), "obj");
-                var lambda = Expression.Lambda<FieldAccessor<TResult>>(
-                    Expression.MakeMemberAccess(Expression.Convert(parameter, type), fieldDef), parameter);
-                accessor = lambda.Compile();
+                ParameterExpression parameter = Expression.Variable(typeof(object), "obj");
+                accessor = Expression.Lambda<Func<object, TResult>>(
+                    Expression.MakeMemberAccess(Expression.Convert(parameter, type), fieldDef), parameter).Compile();
                 getAccessors.Add((type, fieldName), accessor);
             }
 
-            var fieldAccessor = (FieldAccessor<TResult>)accessor;
-            return fieldAccessor;
+            return (Func<object, TResult>)accessor;
         }
     }
 }
