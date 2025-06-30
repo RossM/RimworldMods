@@ -92,4 +92,35 @@
     </modExtensions>
   </GeneDef>
 
+  <GeneDef>
+    <defName>Nocturnal</defName>
+    <label>nocturnal</label>
+    <description>Carriers of this gene are naturally active at night.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>500</displayOrderInCategory>
+    <forcedTraits>
+      <li>
+        <def>NightOwl</def>
+      </li>
+    </forcedTraits>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>KeenEars</defName>
+    <label>keen ears</label>
+    <description>Carriers of this gene have improved hearing.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>500</displayOrderInCategory>
+    <capMods>
+      <li>
+        <capacity>Hearing</capacity>
+        <offset>0.2</offset>
+      </li>
+    </capMods>
+  </GeneDef>
+
 </Defs>
