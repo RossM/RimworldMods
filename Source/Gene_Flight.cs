@@ -35,6 +35,8 @@ namespace XylRacesCore
         public bool allowFlight = false;
         public bool flyOnlyWhenDrafted = false;
 
+        [Unsaved(false)] private bool wasFlying;
+
         public GeneDefExtension_Flight DefExt => def.GetModExtension<GeneDefExtension_Flight>();
 
         public override void ExposeData()
@@ -85,13 +87,17 @@ namespace XylRacesCore
         {
             base.Tick();
 
-            if (!pawn.IsPlayerControlled)
-                return;
-
-            Log.Message(string.Format("Flight: {0} {1}", pawn.flight?.CanEverFly, pawn.flight?.Flying));
-
             Pawn_FlightTracker flight = pawn.flight;
             if (flight == null)
+                return;
+
+            if (flight.Flying != wasFlying)
+            {
+                pawn.Drawer.renderer.SetAllGraphicsDirty();
+                wasFlying = flight.Flying;
+            }
+
+            if (!pawn.IsPlayerControlled)
                 return;
             if (!flight.CanEverFly)
                 return;

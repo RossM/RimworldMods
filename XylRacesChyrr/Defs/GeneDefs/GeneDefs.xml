@@ -85,6 +85,29 @@
     <displayCategory>Movement</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_BatWings</iconPath>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>XylRacesCore.PawnRenderNode_Wings</nodeClass>
+        <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
+        <texPaths>
+          <li>Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWings</li>
+          <li>Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWingsExtended</li>
+        </texPaths>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <color>(255, 255, 255)</color>
+        <parentTagDef>Body</parentTagDef>
+        <drawData>
+          <defaultData>
+            <layer>10</layer>
+            <offset>(0,0,-0.1)</offset>
+          </defaultData>
+          <dataNorth>
+            <layer>80</layer>
+            <offset>(0,0,-0.1)</offset>
+          </dataNorth>
+        </drawData>
+      </li>
+    </renderNodeProperties>
     <capMods>
       <li>
         <capacity>Manipulation</capacity>
