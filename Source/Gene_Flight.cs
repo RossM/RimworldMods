@@ -101,7 +101,7 @@ namespace XylRacesCore
             if (!flight.CanEverFly)
                 return;
 
-            if (!flight.Flying && autoFly && pawn.pather.Moving)
+            if (!flight.Flying && autoFly && pawn.pather.Moving && pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
                 flight.StartFlying();
 
             // Workaround for bug in `Pawn_FlightTracker`
