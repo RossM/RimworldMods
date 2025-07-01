@@ -4,7 +4,7 @@
   <AbilityDef>
     <defName>SonicWave</defName>
     <label>sonic wave</label>
-    <description>Releases a wave of high-intensity ultrasonic noise in a targeted direction. The noise will stun any creature with hearing.</description>
+    <description>Releases a wave of high-intensity ultrasonic noise at a target. The noise will stun any creature with hearing nearby.</description>
     <cooldownTicksRange>300000</cooldownTicksRange>
     <aiCanUse>true</aiCanUse>
     <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
@@ -15,15 +15,14 @@
     <verbProperties>
       <verbClass>Verb_CastAbility</verbClass>
       <range>7.9</range>
-      <warmupTime>0.25</warmupTime>
+      <warmupTime>1</warmupTime>
       <targetParams>
-        <canTargetLocations>true</canTargetLocations>
       </targetParams>
     </verbProperties>
     <comps>
       <li Class="XylRacesCore.CompProperties_AbilitySonicWave">
         <range>7.9</range>
-        <lineWidthEnd>9</lineWidthEnd>
+        <radius>2.5</radius>
         <canHitFilledCells>true</canHitFilledCells>
         <durationMultiplierCapacity>Hearing</durationMultiplierCapacity>
       </li>

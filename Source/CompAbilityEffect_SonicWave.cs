@@ -12,7 +12,7 @@ namespace XylRacesCore
     public class CompProperties_AbilitySonicWave : CompProperties_AbilityEffectWithDuration
     {
         public float range;
-        public float lineWidthEnd;
+        public float radius;
         public bool canHitFilledCells;
 
         public PawnCapacityDef durationMultiplierCapacity;
@@ -88,35 +88,19 @@ namespace XylRacesCore
             {
                 return tmpCells;
             }
-            float targetDistance = (targetPosition - Pawn.Position).LengthHorizontal;
-            float scaledX = (float)(targetPosition.x - Pawn.Position.x) / targetDistance;
-            float scaledY = (float)(targetPosition.z - Pawn.Position.z) / targetDistance;
-            targetPosition.x = Mathf.RoundToInt((float)Pawn.Position.x + scaledX * Props.range);
-            targetPosition.z = Mathf.RoundToInt((float)Pawn.Position.z + scaledY * Props.range);
-            float angle = Vector3.SignedAngle(targetPosition.ToVector3Shifted().Yto0() - vector, Vector3.right, Vector3.up);
-            float num3 = Props.lineWidthEnd / 2f;
-            float num4 = Mathf.Sqrt(Mathf.Pow((targetPosition - Pawn.Position).LengthHorizontal, 2f) + Mathf.Pow(num3, 2f));
-            float num5 = 57.29578f * Mathf.Asin(num3 / num4);
-            int cellsInRadius = GenRadial.NumCellsInRadius(Props.range);
+
+            int cellsInRadius = GenRadial.NumCellsInRadius(Props.radius);
             for (int i = 0; i < cellsInRadius; i++)
             {
-                IntVec3 intVec2 = Pawn.Position + GenRadial.RadialPattern[i];
-                if (CanUseCell(intVec2) && Mathf.Abs(Mathf.DeltaAngle(Vector3.SignedAngle(intVec2.ToVector3Shifted().Yto0() - vector, Vector3.right, Vector3.up), angle)) <= num5)
+                IntVec3 intVec2 = targetPosition + GenRadial.RadialPattern[i];
+                if (CanUseCell(intVec2))
                 {
                     tmpCells.Add(intVec2);
                 }
             }
-            List<IntVec3> list = GenSight.BresenhamCellsBetween(Pawn.Position, targetPosition);
-            for (var i = 0; i < list.Count; i++)
-            {
-                IntVec3 intVec3 = list[i];
-                if (!tmpCells.Contains(intVec3) && CanUseCell(intVec3))
-                {
-                    tmpCells.Add(intVec3);
-                }
-            }
-
+            
             return tmpCells;
+
             bool CanUseCell(IntVec3 c)
             {
                 if (!c.InBounds(Pawn.Map))
@@ -131,7 +115,7 @@ namespace XylRacesCore
                 {
                     return false;
                 }
-                if (!c.InHorDistOf(Pawn.Position, Props.range))
+                if (!c.InHorDistOf(targetPosition, Props.radius))
                 {
                     return false;
                 }
