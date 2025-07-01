@@ -2,7 +2,7 @@
 <Defs>
 
   <XenotypeDef>
-    <defName>Titan</defName>
+    <defName>XylTitan</defName>
     <label>titan</label>
     <description>These stony giants are genetically engineered for construction in hostile environments. They are incredibly tough and resistant to most forms of environmental damage, but their large size makes them easy to hit with ranged weapons.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
@@ -15,15 +15,15 @@
       <li>MaxTemp_SmallIncrease</li>
       <li>ToxResist_Partial</li>
       <li>FireResistant</li>
-      <li>MineralizedSkin</li>
+      <li>XylMineralizedSkin</li>
       <li>Libido_Low</li>
       <li>Beauty_Ugly</li>
       <li>Hair_BaldOnly</li>
       <li>Beard_NoBeardOnly</li>
       <li>Body_Hulk</li>
-      <li>EvenTemper</li>
-      <li>Giant</li>
-      <li>Joyless</li>
+      <li>XylEvenTemper</li>
+      <li>XylGiant</li>
+      <li>XylJoyless</li>
       <li>AptitudeRemarkable_Construction</li>
       <li>AptitudePoor_Social</li>
       <li>AptitudeTerrible_Intellectual</li>

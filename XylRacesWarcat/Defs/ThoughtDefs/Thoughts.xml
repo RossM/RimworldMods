@@ -2,10 +2,10 @@
 <Defs>
 
   <ThoughtDef>
-    <defName>Moody_Down</defName>
+    <defName>XylMoody_Down</defName>
     <workerClass>ThoughtWorker_HediffThoughtRandom</workerClass>
     <developmentalStageFilter>Adult</developmentalStageFilter>
-    <hediff>Moody</hediff>
+    <hediff>XylMoody</hediff>
     <labelInBracketsExtraForHediff>upset</labelInBracketsExtraForHediff>
     <validWhileDespawned>true</validWhileDespawned>
     <stages>
@@ -18,10 +18,10 @@
   </ThoughtDef>
 
   <ThoughtDef>
-    <defName>Moody_Up</defName>
+    <defName>XylMoody_Up</defName>
     <workerClass>ThoughtWorker_HediffThoughtRandom</workerClass>
     <developmentalStageFilter>Adult</developmentalStageFilter>
-    <hediff>Moody</hediff>
+    <hediff>XylMoody</hediff>
     <labelInBracketsExtraForHediff>happy</labelInBracketsExtraForHediff>
     <validWhileDespawned>true</validWhileDespawned>
     <stages>

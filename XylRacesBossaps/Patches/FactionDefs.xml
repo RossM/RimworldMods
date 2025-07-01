@@ -4,7 +4,7 @@
   <Operation Class="PatchOperationAdd">
     <xpath>Defs/FactionDef[@Name="OutlanderFactionBase"]/xenotypeSet/xenotypeChances</xpath>
     <value>
-      <Bossaps>0.025</Bossaps>
+      <XylBossaps>0.025</XylBossaps>
     </value>
   </Operation>
 

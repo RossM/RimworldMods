@@ -2,7 +2,7 @@
 <Defs>
 
   <StatDef>
-    <defName>RawMeatNutritionFactor</defName>
+    <defName>XylRawMeatNutritionFactor</defName>
     <label>raw meat nutrition multiplier</label>
     <description>A multiplier on how nutritious raw meat is for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
     <category>PawnFood</category>
@@ -14,7 +14,7 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>RawAnimalProductNutritionFactor</defName>
+    <defName>XylRawAnimalProductNutritionFactor</defName>
     <label>raw animal product nutrition multiplier</label>
     <description>A multiplier on how nutritious raw animal products are for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
     <category>PawnFood</category>
@@ -26,7 +26,7 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>RawNonMeatNutritionFactor</defName>
+    <defName>XylRawNonMeatNutritionFactor</defName>
     <label>raw plant nutrition multiplier</label>
     <description>A multiplier on how nutritious raw plant-based food is for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
     <category>PawnFood</category>
@@ -38,7 +38,7 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>CookedMeatNutritionFactor</defName>
+    <defName>XylCookedMeatNutritionFactor</defName>
     <label>cooked meat nutrition multiplier</label>
     <description>A multiplier on how nutritious cooked meat is for this person.</description>
     <category>PawnFood</category>
@@ -50,7 +50,7 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>CookedAnimalProductNutritionFactor</defName>
+    <defName>XylCookedAnimalProductNutritionFactor</defName>
     <label>cooked meat nutrition multiplier</label>
     <description>A multiplier on how nutritious cooked animal products are for this person.</description>
     <category>PawnFood</category>
@@ -62,7 +62,7 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>CookedNonMeatNutritionFactor</defName>
+    <defName>XylCookedNonMeatNutritionFactor</defName>
     <label>cooked plant nutrition multiplier</label>
     <description>A multiplier on how nutritious cooked plant-based food is for this person.</description>
     <category>PawnFood</category>
@@ -74,7 +74,7 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>RawFungusNutritionFactor</defName>
+    <defName>XylRawFungusNutritionFactor</defName>
     <label>raw fungus nutrition multiplier</label>
     <description>A multiplier on how nutritious raw fungus is for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
     <category>PawnFood</category>
@@ -87,7 +87,7 @@
   </StatDef>
 
   <StatDef>
-    <defName>RawFungusFoodPoisonChanceOffset</defName>
+    <defName>XylRawFungusFoodPoisonChanceOffset</defName>
     <label>raw fungus food poisoning chance</label>
     <description>An adjustment to the chance of getting food poisoning from eating raw fungus.</description>
     <category>PawnFood</category>
@@ -98,7 +98,7 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>RawMeatFoodPoisonChanceOffset</defName>
+    <defName>XylRawMeatFoodPoisonChanceOffset</defName>
     <label>raw meat food poisoning chance</label>
     <description>An adjustment to the chance of getting food poisoning from eating raw meat.</description>
     <category>PawnFood</category>
@@ -109,7 +109,7 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>RawAnimalProductFoodPoisonChanceOffset</defName>
+    <defName>XylRawAnimalProductFoodPoisonChanceOffset</defName>
     <label>raw animal product food poisoning chance</label>
     <description>An adjustment to the chance of getting food poisoning from eating raw animal products.</description>
     <category>PawnFood</category>
@@ -120,7 +120,7 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>RawNonMeatFoodPoisonChanceOffset</defName>
+    <defName>XylRawNonMeatFoodPoisonChanceOffset</defName>
     <label>raw plant food poisoning chance</label>
     <description>An adjustment to the chance of getting food poisoning from eating raw plant-based foods.</description>
     <category>PawnFood</category>
@@ -132,7 +132,7 @@
   </StatDef>
 
   <StatDef>
-    <defName>ResistanceFallRate</defName>
+    <defName>XylResistanceFallRate</defName>
     <label>global resistance loss factor</label>
     <description>A multiplier on how quickly this character's resistance falls when they are being recruited.</description>
     <category>PawnSocial</category>
@@ -144,7 +144,7 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>WillFallRate</defName>
+    <defName>XylWillFallRate</defName>
     <label>global will loss factor</label>
     <description>A multiplier on how quickly this character's will falls when they are being enslaved.</description>
     <category>PawnSocial</category>

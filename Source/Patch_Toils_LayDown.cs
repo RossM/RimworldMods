@@ -23,7 +23,7 @@ namespace XylRacesCore
                     ThoughtDef thoughtDef = null;
                     if (room.Role == RoomRoleDefOf.Barracks)
                     {
-                        thoughtDef = DefDatabase<ThoughtDef>.GetNamed("SleptInBarracks_HerdInstinct");
+                        thoughtDef = DefDatabase<ThoughtDef>.GetNamed("XylSleptInBarracks_HerdInstinct");
                     }
                     if (thoughtDef != null)
                     {

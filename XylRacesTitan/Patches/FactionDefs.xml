@@ -4,19 +4,19 @@
   <Operation Class="PatchOperationAdd">
     <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet/xenotypeChances</xpath>
     <value>
-      <Titan>0.025</Titan>
+      <XylTitan>0.025</XylTitan>
     </value>
   </Operation>
   <Operation Class="PatchOperationAdd">
     <xpath>Defs/FactionDef[defName="Pirate"]/xenotypeSet/xenotypeChances</xpath>
     <value>
-      <Titan>0.025</Titan>
+      <XylTitan>0.025</XylTitan>
     </value>
   </Operation>
   <Operation Class="PatchOperationAdd">
     <xpath>Defs/FactionDef[@Name="OutlanderFactionBase"]/xenotypeSet/xenotypeChances</xpath>
     <value>
-      <Titan>0.05</Titan>
+      <XylTitan>0.05</XylTitan>
     </value>
   </Operation>
 

@@ -2,7 +2,7 @@
 <Defs>
 
   <RecipeDef>
-    <defName>Make_Wort_Fungus</defName>
+    <defName>XylMake_Wort_Fungus</defName>
     <label>make wort from fungus</label>
     <description>Make wort from raw fungus.</description>
     <jobString>Making wort.</jobString>

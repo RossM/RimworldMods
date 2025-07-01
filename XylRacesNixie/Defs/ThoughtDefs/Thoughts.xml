@@ -2,7 +2,7 @@
 <Defs>
 
   <ThoughtDef>
-    <defName>NeedWetness</defName>
+    <defName>XylNeedWetness</defName>
     <workerClass>XylRacesCore.ThoughtWorker_NeedWetness</workerClass>
     <stages>
       <li>

@@ -2,7 +2,7 @@
 <Defs>
   
   <ThinkTreeDef>
-    <defName>SeeingRed</defName>
+    <defName>XylSeeingRed</defName>
     <thinkRoot Class="ThinkNode_Priority">
       <subNodes>
         <li Class="XylRacesCore.JobGiver_SeeingRed">

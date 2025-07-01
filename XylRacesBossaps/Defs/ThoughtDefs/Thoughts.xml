@@ -2,11 +2,11 @@
 <Defs>
 
   <ThoughtDef>
-    <defName>HerdInstinct</defName>
+    <defName>XylHerdInstinct</defName>
     <thoughtClass>XylRacesCore.Thought_Situational_HerdInstinct</thoughtClass>
     <workerClass>XylRacesCore.ThoughtWorker_HerdInstinct</workerClass>
     <requiredGenes>
-      <li>HerdInstinct</li>
+      <li>XylHerdInstinct</li>
     </requiredGenes>
     <stages>
       <li>
@@ -33,11 +33,11 @@
   </ThoughtDef>
 
   <ThoughtDef>
-    <defName>DocileEnslaved</defName>
+    <defName>XylDocileEnslaved</defName>
     <thoughtClass>Thought_Situational</thoughtClass>
     <workerClass>XylRacesCore.ThoughtWorker_Enslaved</workerClass>
     <requiredGenes>
-      <li>Docile</li>
+      <li>XylDocile</li>
     </requiredGenes>
     <stages>
       <li>
@@ -49,11 +49,11 @@
   </ThoughtDef>
 
   <ThoughtDef>
-    <defName>SleptInBarracks_HerdInstinct</defName>
+    <defName>XylSleptInBarracks_HerdInstinct</defName>
     <durationDays>1</durationDays>
     <stackLimit>1</stackLimit>
     <requiredGenes>
-      <li>HerdInstinct</li>
+      <li>XylHerdInstinct</li>
     </requiredGenes>
     <stages>
       <li>
@@ -107,11 +107,11 @@
   </ThoughtDef>
 
   <ThoughtDef>
-    <defName>SoreBreasts</defName>
+    <defName>XylSoreBreasts</defName>
     <thoughtClass>Thought_Situational</thoughtClass>
     <workerClass>XylRacesCore.ThoughtWorker_SoreBreasts</workerClass>
     <requiredGenes>
-      <li>Hyperlactation</li>
+      <li>XylHyperlactation</li>
     </requiredGenes>
     <stages>
       <li>
@@ -133,7 +133,7 @@
   </ThoughtDef>
 
   <ThoughtDef>
-    <defName>Milked</defName>
+    <defName>XylMilked</defName>
     <thoughtClass>Thought_MemorySocial</thoughtClass>
     <durationDays>10</durationDays>
     <nullifyingTraits>
@@ -149,7 +149,7 @@
     </stages>
   </ThoughtDef>
   <ThoughtDef>
-    <defName>MilkedMood</defName>
+    <defName>XylMilkedMood</defName>
     <durationDays>10</durationDays>
     <nullifyingTraits>
       <li>Masochist</li>
@@ -163,14 +163,14 @@
     </stages>
   </ThoughtDef>
   <ThoughtDef>
-    <defName>Milked_Masochist</defName>
+    <defName>XylMilked_Masochist</defName>
     <thoughtClass>Thought_MemorySocial</thoughtClass>
     <durationDays>10</durationDays>
     <requiredTraits>
       <li>Masochist</li>
     </requiredTraits>
     <replaceThoughts>
-      <li>Milked</li>
+      <li>XylMilked</li>
     </replaceThoughts>
     <stages>
       <li>
@@ -182,13 +182,13 @@
     </stages>
   </ThoughtDef>
   <ThoughtDef>
-    <defName>MilkedMood_Masochist</defName>
+    <defName>XylMilkedMood_Masochist</defName>
     <durationDays>10</durationDays>
     <requiredTraits>
       <li>Masochist</li>
     </requiredTraits>
     <replaceThoughts>
-      <li>MilkedMood</li>
+      <li>XylMilkedMood</li>
     </replaceThoughts>
     <stages>
       <li>

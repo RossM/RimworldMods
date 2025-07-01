@@ -2,7 +2,7 @@
 <Defs>
 
   <TraitDef>
-    <defName>Carnivore</defName>
+    <defName>XylCarnivore</defName>
     <commonality>0</commonality>
     <degreeDatas>
       <li>
@@ -35,12 +35,12 @@
       </li>
     </degreeDatas>
     <conflictingTraits>
-      <li>Herbivore</li>
+      <li>XylHerbivore</li>
     </conflictingTraits>
   </TraitDef>
 
   <TraitDef>
-    <defName>Herbivore</defName>
+    <defName>XylHerbivore</defName>
     <commonality>0</commonality>
     <degreeDatas>
       <li>
@@ -57,7 +57,7 @@
       </li>
     </degreeDatas>
     <conflictingTraits>
-      <li>Carnivore</li>
+      <li>XylCarnivore</li>
     </conflictingTraits>
   </TraitDef>
 

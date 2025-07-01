@@ -6,9 +6,9 @@
     <value>
       <li Class="XylRacesCore.JobGiver_GetWetness">
         <thingDefs>
-          <li>Shower</li>
+          <li>XylShower</li>
         </thingDefs>
-        <showerJobDef>TakeShower</showerJobDef>
+        <showerJobDef>XylTakeShower</showerJobDef>
       </li>
     </value>
   </Operation>

@@ -2,30 +2,30 @@
 <Defs>
 
   <XenotypeDef>
-    <defName>Warcat</defName>
+    <defName>XylWarcat</defName>
     <label>warcat</label>
     <description>These graceful predators originated as an attempt to create super soldiers by splicing large cat DNA into humans. They are genetically incapable of producing certain nutrients and require a continuous supply of raw meat to stay healthy.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>
-      <li>FeralRage</li>
-      <li>Moody</li>
-      <li>FastReflexes</li>
+      <li>XylFeralRage</li>
+      <li>XylMoody</li>
+      <li>XylFastReflexes</li>
       <li>Aggression_HyperAggressive</li>
       <li>MeleeDamage_Strong</li>
-      <li>RetractableClaws</li>
+      <li>XylRetractableClaws</li>
       <li>Sleepy</li>
       <li>Libido_High</li>
-      <li>Eyes_Yellow</li>
+      <li>XylEyes_Yellow</li>
       <li>Hair_LongOnly</li>
       <li>Beard_NoBeardOnly</li>
       <li>Ears_Cat</li>
-      <li>FacialStripes</li>
+      <li>XylFacialStripes</li>
       <li>Body_Standard</li>
       <li>Body_Thin</li>
       <li>DarkVision</li>
-      <li>CarnivoreStomach</li>
-      <li>MeatDependence</li>
+      <li>XylCarnivoreStomach</li>
+      <li>XylMeatDependence</li>
       <li>AptitudeRemarkable_Melee</li>
       <li>AptitudePoor_Shooting</li>
       <li>AptitudePoor_Animals</li>

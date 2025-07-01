@@ -2,27 +2,27 @@
 <Defs>
 
   <XenotypeDef>
-    <defName>Dvergr</defName>
+    <defName>XylDvergr</defName>
     <label>dvergr</label>
     <description>TODO.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>
       <li>PsychicAbility_Dull</li>
-      <li>Melancholy</li>
-      <li>Stoic</li>
+      <li>XylMelancholy</li>
+      <li>XylStoic</li>
       <li>Pain_Reduced</li>
       <li>Hair_BaldOnly</li>
       <li>Hair_ShortOnly</li>
       <li>Beard_BushyOnly</li>
-      <li>Ears_SmallPointed</li>
+      <li>XylEars_SmallPointed</li>
       <li>Skin_LightGray</li>
       <li>Skin_SlateGray</li>
       <li>Skin_InkBlack</li>
       <li>StrongStomach</li>
-      <li>FungusEater</li>
+      <li>XylFungusEater</li>
       <li>DarkVision</li>
-      <li>Industrious</li>
+      <li>XylIndustrious</li>
       <li>AptitudeStrong_Construction</li>
       <li>AptitudeStrong_Mining</li>
       <li>AptitudeStrong_Crafting</li>

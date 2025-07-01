@@ -2,7 +2,7 @@
 <Defs>
 
   <NeedDef>
-    <defName>Wetness</defName>
+    <defName>XylWetness</defName>
     <needClass>XylRacesCore.Need_Wetness</needClass>
     <label>wetness</label>
     <description>People with the water dependence gene need to keep their skin moist by periodically soaking in water. This need can be met by standing in water, being outside in the rain, or using a shower.</description>

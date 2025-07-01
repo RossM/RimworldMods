@@ -11,7 +11,7 @@ namespace XylRacesCore
 {
     public class WorkGiver_MilkHuman : WorkGiver_Scanner
     {
-        private JobDef JobDef => DefDatabase<JobDef>.GetNamed("MilkHuman");
+        private JobDef JobDef => DefDatabase<JobDef>.GetNamed("XylMilkHuman");
 
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {

@@ -2,7 +2,7 @@
 <Defs>
 
   <GeneDef>
-    <defName>FastReflexes</defName>
+    <defName>XylFastReflexes</defName>
     <label>fast reflexes</label>
     <labelShortAdj>fast</labelShortAdj>
     <description>Carriers of this gene have excellent reflexes that allow them to dodge melee attacks and evade traps.</description>
@@ -20,7 +20,7 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_DietDependency</geneClass>
-    <defName>MeatDependence</defName>
+    <defName>XylMeatDependence</defName>
     <label>meat dependence</label>
     <labelShortAdj>meat-dependent</labelShortAdj>
     <description>Carriers of this gene are unable to synthesize certain essential nutrients and must obtain them by eating raw meat. After age 13, they become dependent on raw meat to survive. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death.</description>
@@ -31,12 +31,12 @@
     <iconPath>UI/Icons/Genes/Gene_MeatDependence</iconPath>
     <forcedTraits>
       <li>
-        <def>Carnivore</def>
+        <def>XylCarnivore</def>
       </li>
     </forcedTraits>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_DietDependency">
-        <hediffDef>GeneticMeatNeed</hediffDef>
+        <hediffDef>XylGeneticMeatNeed</hediffDef>
         <foodKind>Meat</foodKind>
         <rawOnly>true</rawOnly>
         <!-- 
@@ -49,7 +49,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>CarnivoreStomach</defName>
+    <defName>XylCarnivoreStomach</defName>
     <label>carnivore stomach</label>
     <labelShortAdj>carnivorous</labelShortAdj>
     <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw meat, but are poor at digesting plant-based foods. They never get negative thoughts from eating meat.</description>
@@ -62,22 +62,22 @@
       <li>Digestion</li>
     </exclusionTags>
     <statFactors>
-      <RawMeatNutritionFactor>1.8</RawMeatNutritionFactor>
-      <RawNonMeatNutritionFactor>0.5</RawNonMeatNutritionFactor>
-      <CookedNonMeatNutritionFactor>0.8</CookedNonMeatNutritionFactor>
+      <XylRawMeatNutritionFactor>1.8</XylRawMeatNutritionFactor>
+      <XylRawNonMeatNutritionFactor>0.5</XylRawNonMeatNutritionFactor>
+      <XylCookedNonMeatNutritionFactor>0.8</XylCookedNonMeatNutritionFactor>
     </statFactors>
     <statOffsets>
-      <RawMeatFoodPoisonChanceOffset>-0.02</RawMeatFoodPoisonChanceOffset>
+      <XylRawMeatFoodPoisonChanceOffset>-0.02</XylRawMeatFoodPoisonChanceOffset>
     </statOffsets>
     <forcedTraits>
       <li>
-        <def>Carnivore</def>
+        <def>XylCarnivore</def>
       </li>
     </forcedTraits>
   </GeneDef>
 
   <GeneDef ParentName="GeneEyeColor">
-    <defName>Eyes_Yellow</defName>
+    <defName>XylEyes_Yellow</defName>
     <label>yellow eyes</label>
     <labelShortAdj>yellow-eyed</labelShortAdj>
     <description>Carriers of this gene have yellow-pigmented eyes.</description>
@@ -122,7 +122,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>FacialStripes</defName>
+    <defName>XylFacialStripes</defName>
     <label>facial stripes</label>
     <description>Carriers of this gene have striped skin on their face.</description>
     <iconPath>UI/Icons/Genes/Gene_FacialStripes</iconPath>
@@ -160,7 +160,7 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Hediff</geneClass>
-    <defName>RetractableClaws</defName>
+    <defName>XylRetractableClaws</defName>
     <label>retractable claws</label>
     <labelShortAdj>claws</labelShortAdj>
     <description>Carriers of this gene have retractable claws that function as weapons.</description>
@@ -174,7 +174,7 @@
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
-            <hediff>RetractableClaws</hediff>
+            <hediff>XylRetractableClaws</hediff>
             <partsToAffect>
               <li>Hand</li>
             </partsToAffect>
@@ -190,7 +190,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>FeralRage</defName>
+    <defName>XylFeralRage</defName>
     <label>feral rage</label>
     <description>Carriers have the ability to enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%).</description>
     <biostatCpx>1</biostatCpx>
@@ -198,16 +198,16 @@
     <displayCategory>Ability</displayCategory>
     <iconPath>UI/Icons/Genes/Gene_FeralRage</iconPath>
     <abilities>
-      <li>FeralRage</li>
+      <li>XylFeralRage</li>
     </abilities>
     <descriptionHyperlinks>
-      <AbilityDef>FeralRage</AbilityDef>
+      <AbilityDef>XylFeralRage</AbilityDef>
     </descriptionHyperlinks>
   </GeneDef>
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Hediff</geneClass>
-    <defName>Moody</defName>
+    <defName>XylMoody</defName>
     <label>moody</label>
     <description>Carriers of this gene have a volatile emotional state. They randomly get good and bad moods.</description>
     <biostatCpx>1</biostatCpx>
@@ -219,7 +219,7 @@
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
-            <hediff>Moody</hediff>
+            <hediff>XylMoody</hediff>
           </li>
         </hediffGivers>
         <mtbDays>2</mtbDays>

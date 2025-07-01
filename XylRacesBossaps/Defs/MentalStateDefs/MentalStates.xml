@@ -2,7 +2,7 @@
 <Defs>
 
   <MentalStateDef ParentName="Berserk">
-    <defName>SeeingRed</defName>
+    <defName>XylSeeingRed</defName>
     <stateClass>XylRacesCore.MentalState_SeeingRed</stateClass>
     <label>seeing red</label>
     <minTicksBeforeRecovery>99999999</minTicksBeforeRecovery>

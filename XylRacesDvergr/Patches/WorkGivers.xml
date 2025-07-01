@@ -4,7 +4,7 @@
   <Operation Class="PatchOperationAdd">
     <xpath>Defs/WorkGiverDef[defName="DoBillsBrew"]/fixedBillGiverDefs</xpath>
     <value>
-      <li>FungusStill</li>
+      <li>XylFungusStill</li>
     </value>
   </Operation>
 

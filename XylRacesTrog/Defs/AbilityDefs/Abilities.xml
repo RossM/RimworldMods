@@ -2,7 +2,7 @@
 <Defs>
   
   <AbilityDef>
-    <defName>ToxicBurst</defName>
+    <defName>XylToxicBurst</defName>
     <label>toxic burst</label>
     <description>Releases a cloud of toxic gas in an area around the user. The user is affected by the gas normally.</description>
     <iconPath>UI/Abilities/ToxicBurst</iconPath>

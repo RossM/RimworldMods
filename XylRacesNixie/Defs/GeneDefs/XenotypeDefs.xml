@@ -2,27 +2,27 @@
 <Defs>
 
   <XenotypeDef>
-    <defName>Nixie</defName>
+    <defName>XylNixie</defName>
     <label>nixie</label>
     <description>Engineered for life on water planets, these beautiful sirens are distinguished by their scaly skin and innate psychic abilities. They are only comfortable in wet environments.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>
-      <li>PsyBeckon</li>
+      <li>XylPsyBeckon</li>
       <li>PsychicAbility_Enhanced</li>
       <li>NakedSpeed</li>
       <li>WebbedPhalanges</li>
       <li>Mood_Pessimist</li>
       <li>MinTemp_LargeDecrease</li>
       <li>MaxTemp_SmallDecrease</li>
-      <li>Scaleskin</li>
+      <li>XylScaleskin</li>
       <li>MeleeDamage_Weak</li>
       <li>Beauty_Pretty</li>
       <li>Hair_BaldOnly</li>
       <li>Ears_Pointed</li>
       <li>Hair_SnowWhite</li>
       <li>Skin_Blue</li>
-      <li>Aquatic</li>
+      <li>XylAquatic</li>
       <li>AptitudePoor_Mining</li>
       <li>AptitudePoor_Plants</li>
       <li>AptitudeStrong_Social</li>

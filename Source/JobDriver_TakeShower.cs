@@ -46,7 +46,7 @@ namespace XylRacesCore
                 pawn.AllComps.Remove(comp);
                 pawn.Drawer.renderer.SetAllGraphicsDirty();
             });
-            EffecterDef effecterDef = DefDatabase<EffecterDef>.GetNamed("ShowerSplash");
+            EffecterDef effecterDef = DefDatabase<EffecterDef>.GetNamed("XylShowerSplash");
             toil.WithEffect(effecterDef, TargetIndex.A);
             toil.handlingFacing = true;
             yield return toil;

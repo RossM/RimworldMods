@@ -4,7 +4,7 @@
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Genie</xpath>
     <value>
-      <Nixie>0.025</Nixie>
+      <XylNixie>0.025</XylNixie>
     </value>
   </Operation>
 

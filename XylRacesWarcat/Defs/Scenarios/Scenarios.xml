@@ -2,7 +2,7 @@
 <Defs>
 
   <ScenarioDef ParentName="ScenarioBase">
-    <defName>WarcatTribe</defName>
+    <defName>XylWarcatTribe</defName>
     <label>Warcat Tribe</label>
     <description>TODO.</description>
     <scenario>
@@ -27,10 +27,10 @@
 
         <!-- Player pawns modifiers -->
         <li Class="XylRacesCore.ScenPart_ForcedXenotype">
-          <def>ForcedXenotype</def>
+          <def>XylForcedXenotype</def>
           <chance>1</chance>
           <context>PlayerStarter</context>
-          <xenotype>Warcat</xenotype>
+          <xenotype>XylWarcat</xenotype>
         </li>
 
         <!-- Player starting things -->
@@ -60,7 +60,7 @@
           <count>2</count>
         </li>-->
         <li Class="XylRacesCore.ScenPart_StartingSlaves">
-          <def>StartingSlaves</def>
+          <def>XylStartingSlaves</def>
           <count>2</count>
         </li>
 

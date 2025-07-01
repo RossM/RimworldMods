@@ -3,7 +3,7 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Hediff</geneClass>
-    <defName>Blind</defName>
+    <defName>XylBlind</defName>
     <label>blind</label>
     <description>Carriers of this gene have non-functional eyes, making them totally blind.\n\nBlindness grants a +50% bonus to psychic sensitivity.</description>
     <biostatCpx>1</biostatCpx>
@@ -15,7 +15,7 @@
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
-            <hediff>GeneticBlindness</hediff>
+            <hediff>XylGeneticBlindness</hediff>
             <partsToAffect>
               <li>Eye</li>
             </partsToAffect>
@@ -72,7 +72,7 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Hediff</geneClass>
-    <defName>Echolocation</defName>
+    <defName>XylEcholocation</defName>
     <label>echolocation</label>
     <description>Carriers of this gene can use high-frequency sound waves to gain many of the benefits of sight even if totally blind.</description>
     <biostatCpx>1</biostatCpx>
@@ -84,7 +84,7 @@
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
-            <hediff>Echolocation</hediff>
+            <hediff>XylEcholocation</hediff>
             <partsToAffect>
               <li>Head</li>
             </partsToAffect>
@@ -100,7 +100,7 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Hediff</geneClass>
-    <defName>Precognition</defName>
+    <defName>XylPrecognition</defName>
     <label>precognition</label>
     <description>Carriers of this gene can see a short distance into the future, giving bonuses to dodging and accuracy in combat. The effect scales with psychic sensitivity.</description>
     <biostatCpx>1</biostatCpx>
@@ -111,7 +111,7 @@
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
-            <hediff>Precognition</hediff>
+            <hediff>XylPrecognition</hediff>
             <partsToAffect>
               <li>Head</li>
             </partsToAffect>
@@ -128,7 +128,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>PsyFocus</defName>
+    <defName>XylPsyFocus</defName>
     <label>focus</label>
     <description>Carriers automatically learn the Focus psycast, which boosts the target's sight, hearing and moving capacities.</description>
     <iconPath>UI/Abilities/Focus</iconPath>
@@ -146,7 +146,7 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Flight</geneClass>
-    <defName>BatWings</defName>
+    <defName>XylBatWings</defName>
     <label>bat wings</label>
     <description>Carriers of this gene have bat-like wings, allowing them to fly for short periods.</description>
     <biostatCpx>1</biostatCpx>
@@ -195,7 +195,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>Nocturnal</defName>
+    <defName>XylNocturnal</defName>
     <label>nocturnal</label>
     <description>Carriers of this gene are naturally active at night.</description>
     <biostatCpx>1</biostatCpx>
@@ -210,7 +210,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>KeenEars</defName>
+    <defName>XylKeenEars</defName>
     <label>keen ears</label>
     <description>Carriers of this gene have improved hearing.</description>
     <biostatCpx>1</biostatCpx>
@@ -226,15 +226,15 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>SonicWave</defName>
+    <defName>XylSonicWave</defName>
     <label>sonic wave</label>
     <description>Carriers are able to release a wave of high-intensity ultrasonic noise in at a target. The noise will stun any non-mechanoid creature nearby.</description>
     <displayCategory>Ability</displayCategory>
     <abilities>
-      <li>SonicWave</li>
+      <li>XylSonicWave</li>
     </abilities>
     <descriptionHyperlinks>
-      <AbilityDef>SonicWave</AbilityDef>
+      <AbilityDef>XylSonicWave</AbilityDef>
     </descriptionHyperlinks>
     <biostatMet>-2</biostatMet>
   </GeneDef>

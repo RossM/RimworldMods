@@ -2,7 +2,7 @@
 <Defs>
 
   <ThingDef ParentName="BenchBase">
-    <defName>FungusStill</defName>
+    <defName>XylFungusStill</defName>
     <label>fungus still</label>
     <description>A work station with that can produce wort from raw fungus. Wort must be fermented to finally become beer.</description>
     <thingClass>Building_WorkTable</thingClass>
@@ -42,7 +42,7 @@
     <interactionCellOffset>(0,0,-1)</interactionCellOffset>
     <surfaceType>Item</surfaceType>
     <recipes>
-      <li>Make_Wort_Fungus</li>
+      <li>XylMake_Wort_Fungus</li>
     </recipes>
     <inspectorTabs>
       <li>ITab_Bills</li>
@@ -61,7 +61,7 @@
     <modExtensions>
       <li Class="XylRacesCore.BuildableDefExtension">
         <genePrerequisites>
-          <li>FungusEater</li>
+          <li>XylFungusEater</li>
         </genePrerequisites>
       </li>
     </modExtensions>

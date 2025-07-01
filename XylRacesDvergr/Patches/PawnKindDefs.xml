@@ -4,7 +4,7 @@
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Dirtmole</xpath>
     <value>
-      <Dvergr>0.05</Dvergr>
+      <XylDvergr>0.05</XylDvergr>
     </value>
   </Operation>
 

@@ -4,7 +4,7 @@
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Hussar</xpath>
     <value>
-      <Titan>0.025</Titan>
+      <XylTitan>0.025</XylTitan>
     </value>
   </Operation>
 

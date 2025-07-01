@@ -2,7 +2,7 @@
 <Defs>
   
   <WorkGiverDef>
-    <defName>MilkHuman</defName>
+    <defName>XylMilkHuman</defName>
     <label>milk humans</label>
     <giverClass>XylRacesCore.WorkGiver_MilkHuman</giverClass>
     <workType>Handling</workType>

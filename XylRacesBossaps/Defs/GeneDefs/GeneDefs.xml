@@ -2,7 +2,7 @@
 <Defs>
 
   <GeneDef>
-    <defName>HerbivoreStomach</defName>
+    <defName>XylHerbivoreStomach</defName>
     <label>herbivore stomach</label>
     <labelShortAdj>herbivorous</labelShortAdj>
     <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw plant-based foods, but are poor at digesting meat. They never get negative thoughts from eating plant-based foods.</description>
@@ -15,22 +15,22 @@
       <li>Digestion</li>
     </exclusionTags>
     <statFactors>
-      <RawNonMeatNutritionFactor>1.8</RawNonMeatNutritionFactor>
-      <RawMeatNutritionFactor>0.5</RawMeatNutritionFactor>
-      <CookedMeatNutritionFactor>0.8</CookedMeatNutritionFactor>
+      <XylRawNonMeatNutritionFactor>1.8</XylRawNonMeatNutritionFactor>
+      <XylRawMeatNutritionFactor>0.5</XylRawMeatNutritionFactor>
+      <XylCookedMeatNutritionFactor>0.8</XylCookedMeatNutritionFactor>
     </statFactors>
     <statOffsets>
-      <RawNonMeatFoodPoisonChanceOffset>-0.02</RawNonMeatFoodPoisonChanceOffset>
+      <XylRawNonMeatFoodPoisonChanceOffset>-0.02</XylRawNonMeatFoodPoisonChanceOffset>
     </statOffsets>
     <forcedTraits>
       <li>
-        <def>Herbivore</def>
+        <def>XylHerbivore</def>
       </li>
     </forcedTraits>
   </GeneDef>
 
   <GeneDef>
-    <defName>PainReversal</defName>
+    <defName>XylPainReversal</defName>
     <label>pain reversal</label>
     <description>Carriers of this gene have scrambled senses that make them feel pain as pleasurable.</description>
     <biostatCpx>1</biostatCpx>
@@ -46,7 +46,7 @@
   </GeneDef>
   
   <GeneDef ParentName="GeneAggressionBase">
-    <defName>Docile</defName>
+    <defName>XylDocile</defName>
     <label>docile</label>
     <description>Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They are also less likely to start prison breaks, and never start social fights.</description>
     <biostatCpx>1</biostatCpx>
@@ -57,12 +57,12 @@
     <prisonBreakMTBFactor>4</prisonBreakMTBFactor><!-- Never prison breaks -->
     <statFactors>
       <SlaveSuppressionFallRate MayRequire="Ludeon.RimWorld.Ideology">0.25</SlaveSuppressionFallRate>
-      <WillFallRate>4</WillFallRate>
+      <XylWillFallRate>4</XylWillFallRate>
     </statFactors>
   </GeneDef>
 
   <GeneDef>
-    <defName>HerdInstinct</defName>
+    <defName>XylHerdInstinct</defName>
     <label>herd instinct</label>
     <description>Carriers of this gene need the comfort of being in a large group. They get a mood penalty if there are too few members of the colony. They also don't mind sleeping in a barracks.</description>
     <biostatCpx>1</biostatCpx>
@@ -80,7 +80,7 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_SeeingRed</geneClass>
-    <defName>SeeingRed</defName>
+    <defName>XylSeeingRed</defName>
     <label>seeing red</label>
     <description>Carriers of this gene have a chance of going into a blind range when they are damaged in combat, charging the nearest enemy and fighting in melee until all enemies are dead. During this state they are faster, stronger, and nearly immune to pain. This ability can't be controlled.</description>
     <biostatCpx>1</biostatCpx>
@@ -91,14 +91,14 @@
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_SeeingRed">
         <chance>0.25</chance>
-        <hediffDef>SeeingRed</hediffDef>
+        <hediffDef>XylSeeingRed</hediffDef>
       </li>
     </modExtensions>
   </GeneDef>
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Hyperlactation</geneClass>
-    <defName>Hyperlactation</defName>
+    <defName>XylHyperlactation</defName>
     <label>hyperlactation</label>
     <description>Female carriers of this gene produce large amounts of breast milk, and lactate even when not pregnant or breastfeeding. This gene is inactive on males.</description>
     <biostatCpx>1</biostatCpx>
@@ -113,12 +113,12 @@
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_Hyperlactation">
         <chargePerItem>0.1</chargePerItem>
-        <hediff>Hyperlactating</hediff>
+        <hediff>XylHyperlactating</hediff>
         <milkedThoughts>
-          <li>Milked</li>
-          <li>MilkedMood</li>
-          <li>Milked_Masochist</li>
-          <li>MilkedMood_Masochist</li>
+          <li>XylMilked</li>
+          <li>XylMilkedMood</li>
+          <li>XylMilked_Masochist</li>
+          <li>XylMilkedMood_Masochist</li>
         </milkedThoughts>
         <activeGender>Female</activeGender>
         <iconPath>Things/Item/Resource/Milk</iconPath>
@@ -126,7 +126,7 @@
     </modExtensions>
   </GeneDef>
 
-  <GeneDef Name="GenderRatioBase" Abstract="True">
+  <GeneDef Name="XylGenderRatioBase" Abstract="True">
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
@@ -137,9 +137,9 @@
     </exclusionTags>
   </GeneDef>
 
-  <GeneDef ParentName="GenderRatioBase">
+  <GeneDef ParentName="XylGenderRatioBase">
     <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
-    <defName>Gender_AlwaysFemale</defName>
+    <defName>XylGender_AlwaysFemale</defName>
     <label>always female</label>
     <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is heritable.</description>
     <displayOrderInCategory>601</displayOrderInCategory>
@@ -153,9 +153,9 @@
       <li>Gender: always female</li>
     </customEffectDescriptions>
   </GeneDef>
-  <GeneDef ParentName="GenderRatioBase">
+  <GeneDef ParentName="XylGenderRatioBase">
     <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
-    <defName>Gender_UsuallyFemale</defName>
+    <defName>XylGender_UsuallyFemale</defName>
     <label>usually female</label>
     <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is heritable.</description>
     <displayOrderInCategory>602</displayOrderInCategory>
@@ -169,14 +169,13 @@
       <li>Gender: 75% female, 25% male</li>
     </customEffectDescriptions>
   </GeneDef>
-  <GeneDef ParentName="GenderRatioBase">
+  <GeneDef ParentName="XylGenderRatioBase">
     <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
-    <defName>Gender_UsuallyMale</defName>
+    <defName>XylGender_UsuallyMale</defName>
     <label>usually male</label>
     <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is heritable.</description>
     <displayOrderInCategory>603</displayOrderInCategory>
     <iconPath>UI/Icons/Genes/Gene_UsuallyMale</iconPath>
-
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>0.25</femaleChance>
@@ -186,9 +185,9 @@
       <li>Gender: 25% female, 75% male</li>
     </customEffectDescriptions>
   </GeneDef>
-  <GeneDef ParentName="GenderRatioBase">
+  <GeneDef ParentName="XylGenderRatioBase">
     <geneClass>XylRacesCore.Gene_GenderRatio</geneClass>
-    <defName>Gender_AlwaysMale</defName>
+    <defName>XylGender_AlwaysMale</defName>
     <label>always male</label>
     <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is heritable.</description>
     <displayOrderInCategory>604</displayOrderInCategory>
@@ -205,7 +204,7 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Hediff</geneClass>
-    <defName>LargeHorns</defName>
+    <defName>XylLargeHorns</defName>
     <label>large horns</label>
     <description>Carriers of this gene have large horns that function as a weapon.</description>
     <biostatCpx>1</biostatCpx>
@@ -235,7 +234,7 @@
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
-            <hediff>LargeHorns</hediff>
+            <hediff>XylLargeHorns</hediff>
             <partsToAffect>
               <li>Head</li>
             </partsToAffect>
@@ -250,7 +249,7 @@
   </GeneDef>
 
   <GeneDef ParentName="GeneEarsBase">
-    <defName>Ears_Cow</defName>
+    <defName>XylEars_Cow</defName>
     <label>cow ears</label>
     <description>Carriers of this gene have cow-like ears.</description>
     <iconPath>UI/Icons/Genes/Gene_CowEars</iconPath>

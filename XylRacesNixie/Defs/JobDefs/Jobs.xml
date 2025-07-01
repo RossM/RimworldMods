@@ -2,7 +2,7 @@
 <Defs>
 
   <JobDef>
-    <defName>TakeShower</defName>
+    <defName>XylTakeShower</defName>
     <driverClass>XylRacesCore.JobDriver_TakeShower</driverClass>
     <reportString>taking a shower.</reportString>
     <joyDuration>3000</joyDuration>

@@ -3,7 +3,7 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_HostilityOverride</geneClass>
-    <defName>InsectPheromones</defName>
+    <defName>XylInsectPheromones</defName>
     <label>insect pheromones</label>
     <description>Carriers of this gene produce special pheromones which make wild insects not attack them.</description>
     <biostatCpx>1</biostatCpx>
@@ -20,23 +20,23 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>ToxicBurst</defName>
+    <defName>XylToxicBurst</defName>
     <label>toxic burst</label>
     <description>Carriers have the ability to release a cloud of toxic gas around them from a special gland located near their anus. The gas affects the user normally.</description>
     <displayCategory>Ability</displayCategory>
     <iconPath>UI/Abilities/ToxicBurst</iconPath>
     <abilities>
-      <li>ToxicBurst</li>
+      <li>XylToxicBurst</li>
     </abilities>
     <descriptionHyperlinks>
-      <AbilityDef>ToxicBurst</AbilityDef>
+      <AbilityDef>XylToxicBurst</AbilityDef>
     </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
   </GeneDef>
 
   <GeneDef ParentName="GeneSkinColorOverride">
-    <defName>Skin_DarkGreen</defName>
+    <defName>XylSkin_DarkGreen</defName>
     <label>dark green skin</label>
     <labelShortAdj>dark green</labelShortAdj>
     <description>Carriers of this gene produce a pigment that gives their skin a dark green color.</description>
@@ -45,7 +45,7 @@
   </GeneDef>
 
   <GeneDef ParentName="GeneSkinColorOverride">
-    <defName>Skin_Olive</defName>
+    <defName>XylSkin_Olive</defName>
     <label>olive skin</label>
     <labelShortAdj>olive</labelShortAdj>
     <description>Carriers of this gene produce a pigment that gives their skin an olive color.</description>
@@ -55,7 +55,7 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Hediff</geneClass>
-    <defName>BioRejection</defName>
+    <defName>XylBioRejection</defName>
     <label>bio-rejection</label>
     <description>Carriers of this gene have a severe allergic reaction to any sort of artificial implant or body part. They will suffer continual pain until the implant or part is removed.</description>
     <biostatCpx>1</biostatCpx>
@@ -72,7 +72,7 @@
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
-            <hediff>BioRejection</hediff>
+            <hediff>XylBioRejection</hediff>
             <countToAffect>1</countToAffect>
           </li>
         </hediffGivers>
@@ -84,7 +84,7 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Gene_Atavism</geneClass>
-    <defName>GeneticAtavism</defName>
+    <defName>XylGeneticAtavism</defName>
     <label>genetic atavism</label>
     <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
     <biostatCpx>0</biostatCpx>

@@ -3,7 +3,7 @@
 
   <HediffDef>
     <hediffClass>XylRacesCore.Hediff_Weapon</hediffClass>
-    <defName>RetractableClaws</defName>
+    <defName>XylRetractableClaws</defName>
     <label>retractable claws</label>
     <description>Retractable claws. They can perform rapid slashing attacks, but are poor at penetrating armor.</description>
     <initialSeverity>1.0</initialSeverity>
@@ -34,7 +34,7 @@
   </HediffDef>
 
   <HediffDef>
-    <defName>FeralRage</defName>
+    <defName>XylFeralRage</defName>
     <label>feral rage</label>
     <description>A temporary frenzy state. It increases movement and melee attack speed.</description>
     <hediffClass>HediffWithComps</hediffClass>
@@ -47,7 +47,7 @@
         <manuallyTriggered>true</manuallyTriggered>
         <hediffs>
           <li>
-            <hediff>FeralRageBacklash</hediff>
+            <hediff>XylFeralRageBacklash</hediff>
           </li>
         </hediffs>
       </li>
@@ -73,7 +73,7 @@
   </HediffDef>
 
   <HediffDef>
-    <defName>FeralRageBacklash</defName>
+    <defName>XylFeralRageBacklash</defName>
     <label>feral rage (backlash)</label>
     <description>Recovering from a frenzy state. Causes pain and decreases movement speed.</description>
     <hediffClass>HediffWithComps</hediffClass>
@@ -101,7 +101,7 @@
   </HediffDef>
 
   <HediffDef>
-    <defName>Moody</defName>
+    <defName>XylMoody</defName>
     <label>moody</label>
     <description>This character is genetically predisposed to severely fluctuating moods.</description>
     <hediffClass>HediffWithComps</hediffClass>
@@ -113,8 +113,8 @@
       </li>
       <li Class="HediffCompProperties_GiveRandomSituationalThought">
         <thoughtDefs>
-          <li>Moody_Up</li>
-          <li>Moody_Down</li>
+          <li>XylMoody_Up</li>
+          <li>XylMoody_Down</li>
         </thoughtDefs>
       </li>
     </comps>
@@ -126,7 +126,7 @@
   </HediffDef>
 
   <HediffDef>
-    <defName>GeneticMeatNeed</defName>
+    <defName>XylGeneticMeatNeed</defName>
     <label>raw meat dependency</label>
     <description>This individual is unable to synthesize certain essential nutrients and must obtain them by eating raw meat. After age 13, they become dependent on raw meat to survive. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death.</description>
     <hediffClass>XylRacesCore.Hediff_DietDependency</hediffClass>

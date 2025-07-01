@@ -2,13 +2,13 @@
 <Defs>
 
   <FactionDef ParentName="FactionBase">
-    <defName>TribeCannibalWarcat</defName>
+    <defName>XylTribeCannibalWarcat</defName>
     <label>cannibal warcat tribe</label>
     <description>These people have been here a very long time. Maybe their ancestors crashed here a thousand years ago. Maybe they survived some cataclysm that destroyed a technological civilization here. In any case, the tribals are mostly nomadic people who live off the land using primitive tools and weapons.\n\nDespite their apparent technological weakness, the tribals can be dangerous enemies because of their skill with low-tech warfare, their numbers, and their hardiness.\n\nThis particular tribe is driven by a blood-and-honor culture; you will not be able to ally with them!</description>
     <factionIconPath>World/WorldObjects/Expanding/VillageSavage</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>
-        <Warcat>999</Warcat>
+        <XylWarcat>999</XylWarcat>
       </xenotypeChances>
     </xenotypeSet>
     <colorSpectrum>

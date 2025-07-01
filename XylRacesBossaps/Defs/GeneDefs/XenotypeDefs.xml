@@ -2,28 +2,28 @@
 <Defs>
 
   <XenotypeDef>
-    <defName>Bossaps</defName>
+    <defName>XylBossaps</defName>
     <label>bossaps</label>
     <description>TODO.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>
-      <li>HerdInstinct</li>
-      <li>Docile</li>
-      <li>LargeHorns</li>
-      <li>SeeingRed</li>
+      <li>XylHerdInstinct</li>
+      <li>XylDocile</li>
+      <li>XylLargeHorns</li>
+      <li>XylSeeingRed</li>
       <li>Robust</li>
-      <li>PainReversal</li>
+      <li>XylPainReversal</li>
       <li>Fertile</li>
-      <li>Hyperlactation</li>
-      <li>Gender_UsuallyFemale</li>
+      <li>XylHyperlactation</li>
+      <li>XylGender_UsuallyFemale</li>
       <li>Hair_LongOnly</li>
       <li>Body_Standard</li>
       <li>Body_Fat</li>
       <li>Body_Hulk</li>
-      <li>Ears_Cow</li>
+      <li>XylEars_Cow</li>
       <li>Nearsighted</li>
-      <li>HerbivoreStomach</li>
+      <li>XylHerbivoreStomach</li>
       <li>AptitudePoor_Cooking</li>
       <li>AptitudeStrong_Plants</li>
     </genes>

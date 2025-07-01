@@ -4,7 +4,7 @@
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Impid</xpath>
     <value>
-      <Chyrr>0.025</Chyrr>
+      <XylChyrr>0.025</XylChyrr>
     </value>
   </Operation>
 

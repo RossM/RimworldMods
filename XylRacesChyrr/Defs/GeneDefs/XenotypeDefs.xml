@@ -2,24 +2,24 @@
 <Defs>
 
   <XenotypeDef>
-    <defName>Chyrr</defName>
+    <defName>XylChyrr</defName>
     <label>chyrr</label>
     <description>TODO.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>
-      <li>PsyFocus</li>
-      <li>SonicWave</li>
-      <li>BatWings</li>
+      <li>XylPsyFocus</li>
+      <li>XylSonicWave</li>
+      <li>XylBatWings</li>
       <li>MinTemp_SmallIncrease</li>
       <li>MaxTemp_SmallIncrease</li>
       <li>Delicate</li>
       <li>Skin_Orange</li>
-      <li>Blind</li>
-      <li>Echolocation</li>
-      <li>Precognition</li>
-      <li>KeenEars</li>
-      <li>Nocturnal</li>
+      <li>XylBlind</li>
+      <li>XylEcholocation</li>
+      <li>XylPrecognition</li>
+      <li>XylKeenEars</li>
+      <li>XylNocturnal</li>
       <li>AptitudePoor_Shooting</li>
       <li>AptitudePoor_Plants</li>
     </genes>

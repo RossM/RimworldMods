@@ -2,13 +2,13 @@
 <Defs>
 
   <XenotypeDef>
-    <defName>Trog</defName>
+    <defName>XylTrog</defName>
     <label>trog</label>
     <description>TODO.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>
-      <li>ToxicBurst</li>
+      <li>XylToxicBurst</li>
       <li>Immunity_Strong</li>
       <li>MoveSpeed_Slow</li>
       <li>ToxicEnvironmentResistance_Partial</li>
@@ -21,14 +21,14 @@
       <li>Brow_Heavy</li>
       <li>Headbone_Human</li>
       <li>Headbone_MiniHorns</li>
-      <li>Skin_DarkGreen</li>
+      <li>XylSkin_DarkGreen</li>
       <li>Skin_Green</li>
-      <li>Skin_Olive</li>
+      <li>XylSkin_Olive</li>
       <li>Learning_Slow</li>
       <li>DarkVision</li>
-      <li>BioRejection</li>
-      <li>GeneticAtavism</li>
-      <li>InsectPheromones</li>
+      <li>XylBioRejection</li>
+      <li>XylGeneticAtavism</li>
+      <li>XylInsectPheromones</li>
       <li>PollutionRush</li>
       <li>AptitudeStrong_Mining</li>
       <li>AptitudeStrong_Animals</li>

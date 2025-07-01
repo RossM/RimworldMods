@@ -2,7 +2,7 @@
 <Defs>
   
   <JobDef>
-    <defName>MilkHuman</defName>
+    <defName>XylMilkHuman</defName>
     <driverClass>XylRacesCore.JobDriver_MilkHuman</driverClass>
     <reportString>milking TargetA.</reportString>
     <allowOpportunisticPrefix>true</allowOpportunisticPrefix>

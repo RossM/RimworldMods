@@ -2,7 +2,7 @@
 <Defs>
 
   <EffecterDef>
-    <defName>ShowerSplash</defName>
+    <defName>XylShowerSplash</defName>
     <children>
       <li>
         <subEffecterClass>SubEffecter_SprayerChance</subEffecterClass>

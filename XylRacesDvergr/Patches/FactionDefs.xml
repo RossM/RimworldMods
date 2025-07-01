@@ -4,13 +4,13 @@
   <Operation Class="PatchOperationAdd">
     <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet/xenotypeChances</xpath>
     <value>
-      <Dvergr>0.025</Dvergr>
+      <XylDvergr>0.025</XylDvergr>
     </value>
   </Operation>
   <Operation Class="PatchOperationAdd">
     <xpath>Defs/FactionDef[defName="Pirate"]/xenotypeSet/xenotypeChances</xpath>
     <value>
-      <Dvergr>0.05</Dvergr>
+      <XylDvergr>0.05</XylDvergr>
     </value>
   </Operation>
 

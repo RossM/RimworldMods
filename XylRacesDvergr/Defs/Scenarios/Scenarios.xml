@@ -2,7 +2,7 @@
 <Defs>
 
   <ScenarioDef ParentName="ScenarioBase" MayRequire="Ludeon.RimWorld.Royalty">
-    <defName>DvergrFortress</defName>
+    <defName>XylDvergrFortress</defName>
     <label>Dvergr fortress</label>
     <description>TODO.</description>
     <scenario>
@@ -17,10 +17,10 @@
         </li>
 
         <li Class="XylRacesCore.ScenPart_ForcedXenotype">
-          <def>ForcedXenotype</def>
+          <def>XylForcedXenotype</def>
           <chance>1</chance>
           <context>PlayerStarter</context>
-          <xenotype>Dvergr</xenotype>
+          <xenotype>XylDvergr</xenotype>
         </li>
 
         <!-- Starting techs -->

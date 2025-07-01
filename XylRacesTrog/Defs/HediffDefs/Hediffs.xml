@@ -3,7 +3,7 @@
 
   <HediffDef>
     <hediffClass>XylRacesCore.Hediff_BioRejection</hediffClass>
-    <defName>BioRejection</defName>
+    <defName>XylBioRejection</defName>
     <label>bio-rejection</label>
     <description>Suffering from a severe allergic reaction to artificial body parts or implants. The only way to stop the reaction is to remove the artificial parts.</description>
     <initialSeverity>0.0</initialSeverity>

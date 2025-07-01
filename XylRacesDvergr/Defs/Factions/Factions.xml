@@ -2,16 +2,16 @@
 <Defs>
 
   <FactionDef ParentName="OutlanderRoughBase">
-    <defName>OutlanderRoughDvergr</defName>
+    <defName>XylOutlanderRoughDvergr</defName>
     <label>rough dvergr union</label>
     <description>These people have lived here for decades or centuries, and have lost most of the technology that brought them to this world. They usually work with simple machinery and defend themselves with advanced gunpowder weapons.\n\nThey are concerned with the practical matters of trade, trust, and survival.\n\nThis particular group has a streak of barbarity in them.</description>
     <factionIconPath>World/WorldObjects/Expanding/TownRough</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>
-        <Dvergr>0.9</Dvergr>
+        <XylDvergr>0.9</XylDvergr>
         <Baseliner>0.05</Baseliner>
         <Dirtmole>0.025</Dirtmole>
-        <Titan MayRequire="Xylthixlm.Races.Titan">0.025</Titan>
+        <XylTitan MayRequire="Xylthixlm.Races.Titan">0.025</XylTitan>
       </xenotypeChances>
     </xenotypeSet>
     <requiredMemes>

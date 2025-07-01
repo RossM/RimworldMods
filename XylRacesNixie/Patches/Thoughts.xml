@@ -5,14 +5,14 @@
     <xpath>Defs/ThoughtDef[defName="SoakingWet"]</xpath>
     <value>
       <nullifyingGenes>
-        <li>Aquatic</li>
+        <li>XylAquatic</li>
       </nullifyingGenes>
     </value>
   </Operation>
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/ThoughtDef/nullifyingGenes/li[text()="Furskin"]</xpath>
     <value>
-      <li>Scaleskin</li>
+      <li>XylScaleskin</li>
     </value>
   </Operation>
 

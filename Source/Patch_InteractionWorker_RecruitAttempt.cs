@@ -15,7 +15,7 @@ namespace XylRacesCore
     {
         static StatDef StatDefOfResistanceFallRate()
         {
-            return DefDatabase<StatDef>.GetNamed("ResistanceFallRate");
+            return DefDatabase<StatDef>.GetNamed("XylResistanceFallRate");
         }
 
         private static readonly InstructionMatcher ApplyResistanceFallRate = new()

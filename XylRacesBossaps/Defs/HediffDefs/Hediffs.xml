@@ -2,7 +2,7 @@
 <Defs>
 
   <HediffDef>
-    <defName>SeeingRed</defName>
+    <defName>XylSeeingRed</defName>
     <label>seeing red</label>
     <description>A temporary frenzy state. The character can't be controlled until the frenzy ends.</description>
     <hediffClass>XylRacesCore.Hediff_ForceBehavior</hediffClass>
@@ -32,15 +32,15 @@
     </stages>
     <modExtensions>
       <li Class="XylRacesCore.HediffDefExtension_ForceBehavior">
-        <thinkTree>SeeingRed</thinkTree>
-        <mentalState>SeeingRed</mentalState>
+        <thinkTree>XylSeeingRed</thinkTree>
+        <mentalState>XylSeeingRed</mentalState>
         <iconPath>UI/Icons/Genes/Gene_SeeingRed</iconPath>
       </li>
     </modExtensions>
   </HediffDef>
 
   <HediffDef ParentName="Lactating">
-    <defName>Hyperlactating</defName>
+    <defName>XylHyperlactating</defName>
     <label>hyperlactating</label>
     <description>The condition of being able to breastfeed a baby. The breasts are actively producing and storing milk. This character produces milk continually as long as they get adequate food.\n\nPeople who are lactating will have a harder time becoming pregnant.</description>
     <comps Inherit="False">
@@ -77,7 +77,7 @@
 
   <HediffDef>
     <hediffClass>XylRacesCore.Hediff_Weapon</hediffClass>
-    <defName>LargeHorns</defName>
+    <defName>XylLargeHorns</defName>
     <label>large horns</label>
     <description>Large, dangerous horns that can be used as a weapon.</description>
     <initialSeverity>1.0</initialSeverity>

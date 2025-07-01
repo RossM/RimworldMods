@@ -4,7 +4,7 @@
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Yttakin</xpath>
     <value>
-      <Bossaps>0.025</Bossaps>
+      <XylBossaps>0.025</XylBossaps>
     </value>
   </Operation>
 

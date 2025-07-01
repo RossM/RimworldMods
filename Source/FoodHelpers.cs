@@ -35,11 +35,11 @@ public static class FoodHelpers
         {
             return GetBestFoodType(foodDef) switch
             {
-                FoodType.Fungus => eater.GetStatValue("RawFungusNutritionFactor", 1.0f) *
-                                   eater.GetStatValue("RawNonMeatNutritionFactor", 1.0f),
-                FoodType.Meat => eater.GetStatValue("RawMeatNutritionFactor", 1.0f),
-                FoodType.AnimalProduct => eater.GetStatValue("RawAnimalProductNutritionFactor", 1.0f),
-                FoodType.NonMeat => eater.GetStatValue("RawNonMeatNutritionFactor", 1.0f),
+                FoodType.Fungus => eater.GetStatValue("XylRawFungusNutritionFactor", 1.0f) *
+                                   eater.GetStatValue("XylRawNonMeatNutritionFactor", 1.0f),
+                FoodType.Meat => eater.GetStatValue("XylRawMeatNutritionFactor", 1.0f),
+                FoodType.AnimalProduct => eater.GetStatValue("XylRawAnimalProductNutritionFactor", 1.0f),
+                FoodType.NonMeat => eater.GetStatValue("XylRawNonMeatNutritionFactor", 1.0f),
                 _ => 1.0f
             };
         }
@@ -75,19 +75,19 @@ public static class FoodHelpers
 
             if (hasMeat)
             {
-                multiplier += eater.GetStatValue("CookedMeatNutritionFactor", 1.0f);
+                multiplier += eater.GetStatValue("XylCookedMeatNutritionFactor", 1.0f);
                 divisor += 1.0f;
             }
 
             if (hasAnimalProduct)
             {
-                multiplier += eater.GetStatValue("CookedAnimalProductNutritionFactor", 1.0f);
+                multiplier += eater.GetStatValue("XylCookedAnimalProductNutritionFactor", 1.0f);
                 divisor += 1.0f;
             }
 
             if (hasNonMeat)
             {
-                multiplier += eater.GetStatValue("CookedNonMeatNutritionFactor", 1.0f);
+                multiplier += eater.GetStatValue("XylCookedNonMeatNutritionFactor", 1.0f);
                 divisor += 1.0f;
             }
 
@@ -105,11 +105,11 @@ public static class FoodHelpers
 
         return GetBestFoodType(foodSource.def) switch
         {
-            FoodType.Fungus => eater.GetStatValue("RawFungusFoodPoisoningChanceOffset", 0.0f) +
-                               eater.GetStatValue("RawNonMeatFoodPoisoningChanceOffset", 0.0f),
-            FoodType.Meat => eater.GetStatValue("RawMeatFoodPoisoningChanceOffset", 0.0f),
-            FoodType.AnimalProduct => eater.GetStatValue("RawAnimalProductFoodPoisoningChanceOffset", 0.0f),
-            FoodType.NonMeat => eater.GetStatValue("RawNonMeatFoodPoisoningChanceOffset", 0.0f),
+            FoodType.Fungus => eater.GetStatValue("XylRawFungusFoodPoisoningChanceOffset", 0.0f) +
+                               eater.GetStatValue("XylRawNonMeatFoodPoisoningChanceOffset", 0.0f),
+            FoodType.Meat => eater.GetStatValue("XylRawMeatFoodPoisoningChanceOffset", 0.0f),
+            FoodType.AnimalProduct => eater.GetStatValue("XylRawAnimalProductFoodPoisoningChanceOffset", 0.0f),
+            FoodType.NonMeat => eater.GetStatValue("XylRawNonMeatFoodPoisoningChanceOffset", 0.0f),
             _ => 0.0f
         };
     }

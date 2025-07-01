@@ -2,7 +2,7 @@
 <Defs>
 
   <HediffDef ParentName="ChronicDiseaseBase">
-    <defName>GeneticBlindness</defName>
+    <defName>XylGeneticBlindness</defName>
     <label>congenital blindness</label>
     <description>Total inability to see.</description>
     <everCurableByItem>false</everCurableByItem>
@@ -15,7 +15,7 @@
 
   <HediffDef>
     <hediffClass>XylRacesCore.Hediff_SubstituteCapacity</hediffClass>
-    <defName>Echolocation</defName>
+    <defName>XylEcholocation</defName>
     <label>echolocation</label>
     <description>This character has echolocation.</description>
     <initialSeverity>1.0</initialSeverity>
@@ -40,7 +40,7 @@
   </HediffDef>
 
   <HediffDef>
-    <defName>Precognition</defName>
+    <defName>XylPrecognition</defName>
     <label>precognition</label>
     <description>This character has the ability to see a short distance into the future, giving bonuses to dodging and accuracy in combat. The effect scales with psychic sensitivity.</description>
     <initialSeverity>1.0</initialSeverity>

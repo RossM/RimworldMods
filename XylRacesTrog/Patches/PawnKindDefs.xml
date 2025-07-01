@@ -4,7 +4,7 @@
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Waster</xpath>
     <value>
-      <Trog>0.025</Trog>
+      <XylTrog>0.025</XylTrog>
     </value>
   </Operation>
 

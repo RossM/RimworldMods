@@ -2,7 +2,7 @@
 <Defs>
 
   <ThingDef ParentName="BuildingBase">
-    <defName>Shower</defName>
+    <defName>XylShower</defName>
     <label>shower</label>
     <description>A shower that can satisfy the wetness need of water-dependent pawns.</description>
     <graphicData>
@@ -42,7 +42,7 @@
     <modExtensions>
       <li Class="XylRacesCore.BuildableDefExtension">
         <genePrerequisites>
-          <li>Aquatic</li>
+          <li>XylAquatic</li>
         </genePrerequisites>
       </li>
     </modExtensions>

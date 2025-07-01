@@ -2,7 +2,7 @@
 <Defs>
 
   <GeneDef>
-    <defName>Giant</defName>
+    <defName>XylGiant</defName>
     <label>giant</label>
     <description>Carriers of this gene are exceptionally large. They can take more damage, carry more, and are more resistant to drugs and toxins, but are also easier to hit with ranged weapons.</description>
     <biostatCpx>1</biostatCpx>
@@ -25,7 +25,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>MineralizedSkin</defName>
+    <defName>XylMineralizedSkin</defName>
     <label>mineralized skin</label>
     <labelShortAdj>mineralized</labelShortAdj>
     <description>Carriers of this gene have tough, stone-like skin, which grants high protection against damage but slows their movement.</description>
@@ -65,7 +65,7 @@
   </GeneDef>
 
   <!--<GeneDef MayRequire="Ludeon.RimWorld.Odyssey">
-    <defName>Vacuum_Resistant</defName>
+    <defName>XylVacuum_Resistant</defName>
     <label>vacuum-resistant</label>
     <description>Carriers of this gene have extra hemoglobin, tough skin, and specialized mucus membranes that make them resistant to damage from vacuum.</description>
     <biostatCpx>1</biostatCpx>
@@ -80,7 +80,7 @@
   </GeneDef>-->
 
   <GeneDef>
-    <defName>Joyless</defName>
+    <defName>XylJoyless</defName>
     <label>joyless</label>
     <description>Carriers of this gene are genetically incapable of feeling joy. They have no need for recreation, and get no mood bonuses or penalties from it. </description>
     <biostatCpx>1</biostatCpx>
@@ -93,7 +93,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>EvenTemper</defName>
+    <defName>XylEvenTemper</defName>
     <label>even temper</label>
     <description>Carriers of this gene have very stable neurochemistry, with less variation between individuals.</description>
     <biostatCpx>1</biostatCpx>

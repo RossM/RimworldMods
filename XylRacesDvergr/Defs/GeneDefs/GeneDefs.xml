@@ -2,7 +2,7 @@
 <Defs>
 
   <GeneDef>
-    <defName>Industrious</defName>
+    <defName>XylIndustrious</defName>
     <label>industrious</label>
     <labelShortAdj>industrious</labelShortAdj>
     <description>Carriers of this gene are exceptionally fast workers.</description>
@@ -35,7 +35,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>Melancholy</defName>
+    <defName>XylMelancholy</defName>
     <label>melancholy</label>
     <labelShortAdj>melancholy</labelShortAdj>
     <description>Carriers of this gene always have the tortured artist trait, which gives them a permanent mood penalty but also grants a chance to gain creative inspiration after a mental break.</description>
@@ -65,7 +65,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>Stoic</defName>
+    <defName>XylStoic</defName>
     <label>stoic</label>
     <labelShortAdj>stoic</labelShortAdj>
     <description>Carriers of this gene are mentally tough and won't break down under stresses that would crack most people.</description>
@@ -119,7 +119,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>FungusEater</defName>
+    <defName>XylFungusEater</defName>
     <label>fungus eater</label>
     <labelShortAdj>fungus-eating</labelShortAdj>
     <description>Carriers of this gene have special digestive enzymes that extract more nutrition from raw fungus - but they don't do anything about the taste.</description>
@@ -132,7 +132,7 @@
       <li>Digestion</li>
     </exclusionTags>
     <statFactors>
-      <RawFungusNutritionFactor>1.8</RawFungusNutritionFactor>
+      <XylRawFungusNutritionFactor>1.8</XylRawFungusNutritionFactor>
     </statFactors>
     <customEffectDescriptions>
       <li>Enables building: Fungus still</li>
@@ -154,7 +154,7 @@
   </GeneDef>
 
   <GeneDef ParentName="GeneEarsBase">
-    <defName>Ears_SmallPointed</defName>
+    <defName>XylEars_SmallPointed</defName>
     <label>small pointed ears</label>
     <description>Carriers of this gene have smaller pointed ears.</description>
     <iconPath>UI/Icons/Genes/Gene_EarSmallPointed</iconPath>

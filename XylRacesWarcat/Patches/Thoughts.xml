@@ -6,7 +6,7 @@
     <xpath>Defs/ThoughtDef[starts-with(defName,"AteMeat_")]</xpath>
     <value>
       <nullifyingTraits>
-        <li>Carnivore</li>
+        <li>XylCarnivore</li>
       </nullifyingTraits>
     </value>
   </Operation>
@@ -14,7 +14,7 @@
     <xpath>Defs/ThoughtDef[starts-with(defName,"AteHumanMeat_")]</xpath>
     <value>
       <nullifyingTraits>
-        <li>Carnivore</li>
+        <li>XylCarnivore</li>
       </nullifyingTraits>
     </value>
   </Operation>
@@ -22,7 +22,7 @@
     <xpath>Defs/ThoughtDef[defName="AteCorpse"]</xpath>
     <value>
       <nullifyingTraits>
-        <li>Carnivore</li>
+        <li>XylCarnivore</li>
       </nullifyingTraits>
     </value>
   </Operation>
@@ -30,7 +30,7 @@
     <xpath>Defs/ThoughtDef[starts-with(defName,"AteNonMeat_")]</xpath>
     <value>
       <nullifyingTraits>
-        <li>Herbivore</li>
+        <li>XylHerbivore</li>
       </nullifyingTraits>
     </value>
   </Operation>

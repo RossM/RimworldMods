@@ -2,7 +2,7 @@
 <Defs>
 
   <IncidentDef>
-    <defName>WildBossapsHerd</defName>
+    <defName>XylWildBossapsHerd</defName>
     <label>wild bossaps herd</label>
     <category>Misc</category>
     <targetTags>
@@ -16,7 +16,7 @@
     <letterDef>NeutralEvent</letterDef>
     <modExtensions>
       <li Class="XylRacesCore.IncidentDefExtension_WildTribe">
-        <xenotype>Bossaps</xenotype>
+        <xenotype>XylBossaps</xenotype>
         <pawnsCount>2 ~ 4</pawnsCount>
         <exitMapTicks>180000 ~ 300000</exitMapTicks> <!-- 3 to 5 days -->
         <forcedTraits>

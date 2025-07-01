@@ -2,7 +2,7 @@
 <Defs>
 
   <GeneDef>
-    <defName>PsyBeckon</defName>
+    <defName>XylPsyBeckon</defName>
     <label>beckon</label>
     <description>Carriers automatically learn the Beckon psycast, which psychically commands the target to approach the caster.</description>
     <iconPath>UI/Abilities/Beckon</iconPath>
@@ -34,7 +34,7 @@
  </GeneDef>
 
   <GeneDef>
-    <defName>Scaleskin</defName>
+    <defName>XylScaleskin</defName>
     <label>scaleskin</label>
     <labelShortAdj>scaleskinned</labelShortAdj>
     <description>Carriers of this gene grow tough scales all over their body, which gives some protection against damage.</description>
@@ -67,7 +67,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>Aquatic</defName>
+    <defName>XylAquatic</defName>
     <label>aquatic</label>
     <labelShortAdj>aquatic</labelShortAdj>
     <description>Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long.</description>
@@ -78,7 +78,7 @@
     <iconPath>UI/Icons/Genes/Gene_Aquatic</iconPath>
     <iconColor>(0.4, 0.6, 0.9)</iconColor>
     <enablesNeeds>
-      <li>Wetness</li>
+      <li>XylWetness</li>
     </enablesNeeds>
     <customEffectDescriptions>
       <li>Enables building: Shower</li>
