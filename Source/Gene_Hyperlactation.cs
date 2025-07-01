@@ -38,7 +38,7 @@ namespace XylRacesCore
 
     public class Gene_Hyperlactation : Gene
     {
-        public bool allowMilking = false;
+        public bool allowMilking = true;
         public bool onlyMilkWhenFull = true;
 
         public int? fullSinceTick;

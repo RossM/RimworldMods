@@ -32,7 +32,7 @@ namespace XylRacesCore
 
     public class Gene_Flight : Gene
     {
-        public bool autoFly = false;
+        public bool autoFly = true;
 
         [Unsaved(false)] private bool wasFlying;
 
