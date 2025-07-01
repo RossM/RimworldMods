@@ -65,6 +65,7 @@ namespace XylRacesCore
                 Disabled = !pawn.flight.CanFlyNow,
                 cooldownPercentGetter = () => 1.0f - pawn.flight.Get<int>("flightCooldownTicks") / (pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
                 icon = DefExt.Icon,
+                defaultDescPostfix = "\n\nCooldown: " + pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall() + "s\nEffect duration: " + pawn.GetStatValue(StatDefOf.MaxFlightTime).ToStringDecimalIfSmall() + "s",
             };
 
             yield return new Command_Toggle
