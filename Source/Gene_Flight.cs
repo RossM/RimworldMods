@@ -32,8 +32,7 @@ namespace XylRacesCore
 
     public class Gene_Flight : Gene
     {
-        public bool allowFlight = false;
-        public bool flyOnlyWhenDrafted = false;
+        public bool autoFly = false;
 
         [Unsaved(false)] private bool wasFlying;
 
@@ -42,8 +41,7 @@ namespace XylRacesCore
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref allowFlight, "allowFlight", false);
-            Scribe_Values.Look(ref flyOnlyWhenDrafted, "flyOnlyWhenDrafted", false);
+            Scribe_Values.Look(ref autoFly, "autoFly", false);
         }
 
 
@@ -56,26 +54,27 @@ namespace XylRacesCore
             if (!pawn.IsColonistPlayerControlled)
                 yield break;
 
-            yield return new Command_Toggle
+            yield return new Command_ActionWithCooldown()
             {
-                defaultLabel = "Allow flight",
-                defaultDesc = "Allow this character to fly.",
-                isActive = () => allowFlight,
-                toggleAction = () => { allowFlight = !allowFlight; },
+                action = () =>
+                {
+                    pawn.flight.StartFlying();
+                },
+                defaultLabel = "Fly",
+                defaultDesc = "Start flying. Flying grants increased movement speed and allows travelling over some obstacles.",
+                Disabled = !pawn.flight.CanFlyNow,
+                cooldownPercentGetter = () => 1.0f - pawn.flight.Get<int>("flightCooldownTicks") / (pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
                 icon = DefExt.Icon,
             };
 
-            if (allowFlight)
+            yield return new Command_Toggle
             {
-                yield return new Command_Toggle
-                {
-                    defaultLabel = "Fly only when drafted",
-                    defaultDesc = "Restrict this character to only fly when drafted.",
-                    isActive = () => flyOnlyWhenDrafted,
-                    toggleAction = () => { flyOnlyWhenDrafted = !flyOnlyWhenDrafted; },
-                    icon = DefExt.Icon,
-                };
-            }
+                defaultLabel = "Auto-fly",
+                defaultDesc = "Automatically fly when moving.",
+                isActive = () => autoFly,
+                toggleAction = () => { autoFly = !autoFly; },
+                icon = DefExt.Icon,
+            };
         }
 
         public void Notify_JobStarted(Job job)
@@ -102,17 +101,8 @@ namespace XylRacesCore
             if (!flight.CanEverFly)
                 return;
 
-            bool tryFlying = allowFlight && (!flyOnlyWhenDrafted || pawn.Drafted);
-            if (flight.Flying)
-            {
-                if (!tryFlying)
-                    flight.ForceLand();;
-            }
-            else
-            {
-                if (tryFlying)
-                    flight.StartFlying();
-            }
+            if (!flight.Flying && autoFly && pawn.pather.Moving)
+                flight.StartFlying();
         }
 
         // If a downed flying pawn lands on a non-walkable tile, they are killed and their corpse destroyed.
