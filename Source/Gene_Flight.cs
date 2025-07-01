@@ -104,10 +104,6 @@ namespace XylRacesCore
 
             if (!flight.Flying && autoFly && pawn.pather.Moving && pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
                 flight.StartFlying();
-
-            // Workaround for bug in `Pawn_FlightTracker`
-            if (!flight.Flying)
-                pawn.flight.Set<int>("flyingTicks", 0);
         }
 
         // If a downed flying pawn lands on a non-walkable tile, they are killed and their corpse destroyed.
