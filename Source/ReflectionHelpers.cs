@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
+using Verse;
 
 namespace XylRacesCore
 {
@@ -49,7 +50,7 @@ namespace XylRacesCore
                     Expression.Assign(
                         Expression.MakeMemberAccess(Expression.Convert(objParameter, type), fieldDef), valueParameter),
                     objParameter, valueParameter).Compile();
-                getAccessors.Add((type, fieldName), setAccessors);
+                setAccessors.Add((type, fieldName), accessor);
             }
 
             return (Action<object, TResult>)accessor;
