@@ -40,7 +40,7 @@ namespace XylRacesCore
 
         public override string Summary(Scenario scen)
         {
-            return string.Format("{0} have a {1} chance to start with xenotype: {2}", context.ToStringHuman(), chance.ToStringPercent(), xenotype.LabelCap).CapitalizeFirst();
+            return "XylScenPartForcedXenotypeSummary".Translate(context.ToStringHuman(), chance.ToStringPercent(), xenotype.LabelCap).CapitalizeFirst();
         }
 
         public override void Randomize()

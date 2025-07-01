@@ -70,7 +70,7 @@ namespace XylRacesCore
                 pawn.mindState.exitMapAfterTick = Find.TickManager.TicksGame + exitMapTicks;
             }
 
-            string xenotypeDefLabel = DefExt.xenotype?.label ?? "wild people";
+            string xenotypeDefLabel = DefExt.xenotype?.label ?? "XylWildPeople".TranslateSimple();
             TaggedString baseLetterText = def.letterText.Formatted(xenotypeDefLabel).CapitalizeFirst();
             string text = string.Format(def.letterLabel, xenotypeDefLabel.CapitalizeFirst());
             SendStandardLetter(text, baseLetterText, def.letterDef, parms, pawns[0]);

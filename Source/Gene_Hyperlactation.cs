@@ -78,8 +78,8 @@ namespace XylRacesCore
 
             yield return new Command_Toggle
             {
-                defaultLabel = "Allow milking",
-                defaultDesc = "Allow other characters to milk this character.",
+                defaultLabel = "XylCommandMilkLabel".TranslateSimple(),
+                defaultDesc = "XylCommandMilkDesc".TranslateSimple(),
                 isActive = () => allowMilking,
                 toggleAction = () => { allowMilking = !allowMilking; },
                 icon = DefExt.Icon,
@@ -89,8 +89,8 @@ namespace XylRacesCore
             {
                 yield return new Command_Toggle
                 {
-                    defaultLabel = "Only milk when full",
-                    defaultDesc = "Only allow milking when this character's breast milk is full.",
+                    defaultLabel = "XylCommandMilkOnlyWhenFullLabel".TranslateSimple(),
+                    defaultDesc = "XylCommandMilkOnlyWhenFullDesc".TranslateSimple(),
                     isActive = () => onlyMilkWhenFull,
                     toggleAction = () => { onlyMilkWhenFull = !onlyMilkWhenFull; },
                     icon = DefExt.Icon,
@@ -177,8 +177,9 @@ namespace XylRacesCore
         {
             var props = Lactating.Props;
             float milkPerDay = props.fullChargeAmount * 60000f / (props.ticksToFullCharge * DefExt.chargePerItem);
-            yield return new StatDrawEntry(StatCategoryDefOf.PawnFood, "Milk production",
-                milkPerDay.ToStringByStyle(ToStringStyle.FloatOne) + " / day", "The number of milk items this character can produce in a day if well fed.", 1);
+            yield return new StatDrawEntry(StatCategoryDefOf.PawnFood, "XylMilkProductionLabel".TranslateSimple(),
+                "PerDay".Translate(milkPerDay.ToStringByStyle(ToStringStyle.FloatOne)),
+                "XylMilkProductionDesc".TranslateSimple(), 1);
         }
     }
 }

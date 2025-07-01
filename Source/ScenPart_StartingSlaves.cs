@@ -38,7 +38,7 @@ namespace XylRacesCore
         {
             if (tag == "PlayerStartsWith")
             {
-                yield return "slave".TranslateSimple().CapitalizeFirst() + " x" + count;
+                yield return PawnKindDefOf.Slave.LabelCap + " x" + count;
             }
         }
 

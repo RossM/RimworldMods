@@ -60,18 +60,20 @@ namespace XylRacesCore
                 {
                     pawn.flight.StartFlying();
                 },
-                defaultLabel = "Fly",
-                defaultDesc = "Start flying. Flying grants increased movement speed and allows travelling over some obstacles.",
+                defaultLabel = "XylCommandFlyLabel".TranslateSimple(),
+                defaultDesc = "XylCommandFlyDesc".TranslateSimple(),
                 Disabled = !pawn.flight.CanFlyNow,
                 cooldownPercentGetter = () => 1.0f - pawn.flight.Get<int>("flightCooldownTicks") / (pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
                 icon = DefExt.Icon,
-                defaultDescPostfix = "\n\nCooldown: " + pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall() + "s\nEffect duration: " + pawn.GetStatValue(StatDefOf.MaxFlightTime).ToStringDecimalIfSmall() + "s",
+                defaultDescPostfix = "\n\n" + 
+                                     "CooldownTime".TranslateSimple() + ": " + pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall() + "LetterSecond".TranslateSimple() + "\n" + 
+                                     "AbilityDuration".TranslateSimple() + ": " + pawn.GetStatValue(StatDefOf.MaxFlightTime).ToStringDecimalIfSmall() + "LetterSecond".TranslateSimple(),
             };
 
             yield return new Command_Toggle
             {
-                defaultLabel = "Auto-fly",
-                defaultDesc = "The character will automatically start flying if they are moving and the fly ability is off cooldown.",
+                defaultLabel = "XylCommandAutoFlyLabel".TranslateSimple(),
+                defaultDesc = "XylCommandAutoFlyDesc".TranslateSimple(),
                 isActive = () => autoFly,
                 toggleAction = () => { autoFly = !autoFly; },
                 icon = DefExt.Icon,

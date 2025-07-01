@@ -52,7 +52,7 @@ namespace XylRacesCore
 
         private string GetLabel(AbilityDef abilityDef)
         {
-            return string.Format("{0} (level {1})", abilityDef.label.CapitalizeFirst(), abilityDef.level);
+            return "XylScenPartPsycastLabel".Translate(abilityDef.label.CapitalizeFirst(), abilityDef.level);
         }
 
         IEnumerable<AbilityDef> PossiblePsycasts()
@@ -97,7 +97,7 @@ namespace XylRacesCore
         {
             if (tag == "PlayerStartsWith")
             {
-                yield return "psycast".CapitalizeFirst() + ": " + psycast.LabelCap + " x" + "1";
+                yield return "XylPsycast".TranslateSimple().CapitalizeFirst() + ": " + psycast.LabelCap + " x" + "1";
             }
         }
     }

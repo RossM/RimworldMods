@@ -89,7 +89,7 @@ namespace XylRacesCore
         {
             if (tag == "PlayerStartsWith")
             {
-                yield return "psylink level".CapitalizeFirst() + " x" + count;
+                yield return StatDefOf.Ability_RequiredPsylink.LabelCap + " x" + count;
             }
         }
     }

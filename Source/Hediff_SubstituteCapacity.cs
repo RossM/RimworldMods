@@ -1,10 +1,11 @@
 ﻿using Mono.Cecil;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using RimWorld;
 using UnityEngine;
 using Verse;
 using static UnityEngine.GraphicsBuffer;
@@ -47,13 +48,14 @@ namespace XylRacesCore
 
         private void ExtraDescription(StringBuilder sb)
         {
-            sb.Append(CompProperties.substituteCapacity.LabelCap + " is used instead of " + CompProperties.originalCapacity.LabelCap
-                      + " for stat calculations");
-            if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Maximum)
-                sb.Append(" if it is higher");
-            if (CompProperties.mode == HediffCompProperties_SubstituteCapacity.SubstitutionMode.Minimum)
-                sb.Append(" if it is lower");
-            sb.Append(".");
+            string desc = CompProperties.mode switch
+            {
+                HediffCompProperties_SubstituteCapacity.SubstitutionMode.Maximum => "XylSubstituteCapacityHigherDesc",
+                HediffCompProperties_SubstituteCapacity.SubstitutionMode.Minimum => "XylSubstituteCapacityLowerDesc",
+                _ => "XylSubstituteCapacityAlwaysDesc"
+            };
+            sb.Append(desc.Translate(CompProperties.substituteCapacity.label, CompProperties.originalCapacity.label)
+                .CapitalizeFirst());
         }
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
@@ -69,7 +71,8 @@ namespace XylRacesCore
             var sb = new StringBuilder();
             ExtraDescription(sb);
 
-            yield return new StatDrawEntry(StatCategoryDefOf.CapacityEffects, "Effective " + CompProperties.originalCapacity.label,
+            yield return new StatDrawEntry(StatCategoryDefOf.CapacityEffects,
+                "XylEffectiveCapacity".Translate(CompProperties.originalCapacity.label),
                 difference.ToStringPercentSigned(), sb.ToString(), 1);
         }
 

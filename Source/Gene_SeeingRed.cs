@@ -70,8 +70,8 @@ namespace XylRacesCore
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
-            yield return new StatDrawEntry(StatCategoryDefOf.PawnCombat, "Rage chance",
-                DefExt.chance.ToStringPercent(), "The chance of this character flying into a rage when damaged. While enraged, the character is uncontrollable and automatically charges at nearby enemies.", 1);
+            yield return new StatDrawEntry(StatCategoryDefOf.PawnCombat, "XylRageChanceLabel".TranslateSimple(),
+                DefExt.chance.ToStringPercent(), "XylRageChanceDesc".TranslateSimple(), 1);
         }
     }
 }

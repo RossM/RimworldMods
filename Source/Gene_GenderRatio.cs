@@ -19,10 +19,10 @@ namespace XylRacesCore
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
-            string text = string.Format("{0} female, {1} male", DefExt.femaleChance.ToStringPercent(),
+            string text = "XylGenderRatioValue".Translate(DefExt.femaleChance.ToStringPercent(),
                 (1 - DefExt.femaleChance).ToStringPercent());
-            yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "Xenotype gender ratio",
-                text, "The chance of characters of this xenotype being male or female.", 1);
+            yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
+                text, "XylGenderRatioDesc".TranslateSimple(), 1);
         }
     }
 

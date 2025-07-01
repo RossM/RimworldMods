@@ -92,13 +92,13 @@ namespace XylRacesCore
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
-            yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "Atavism extra gene chance",
-                DefExt.geneChance.ToStringPercent(), "The chance of the carrier having an extra gene due to the atavism gene.", 1002);
+            yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylAtavismChanceLabel".TranslateSimple(),
+                DefExt.geneChance.ToStringPercent(), "XylAtavismChanceDesc".TranslateSimple(), 1002);
             if (addedGenes == null) 
                 yield break;
             string text = string.Join(", ", addedGenes.Select(g => g.Label)).CapitalizeFirst();
-            yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "Atavism genes added", 
-                text, "The extra genes added to this character by the atavism gene.", 1001);
+            yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylAtavismGenesLabel".TranslateSimple(), 
+                text, "XylAtavismGenesDesc".TranslateSimple(), 1001);
         }
     }
 }
