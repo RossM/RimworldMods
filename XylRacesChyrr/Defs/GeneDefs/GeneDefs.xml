@@ -59,6 +59,35 @@
   </GeneDef>
 
   <GeneDef>
+    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <defName>Precognition</defName>
+    <label>precognition</label>
+    <description>Carriers of this gene can see a short distance into the future, giving bonuses to dodging and accuracy in combat. The effect scales with psychic sensitivity.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>400</displayOrderInCategory>
+    <modExtensions>
+      <li Class="XylRacesCore.GeneDefExtension_Hediff">
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>Precognition</hediff>
+            <partsToAffect>
+              <li>Head</li>
+            </partsToAffect>
+          </li>
+        </hediffGivers>
+        <applyImmediately>true</applyImmediately>
+      </li>
+    </modExtensions>
+    <customEffectDescriptions>
+      <li>Melee hit chance: +2</li>
+      <li>Melee dodge chance: +2</li>
+      <li>Shooting accuracy: +2</li>
+    </customEffectDescriptions>
+  </GeneDef>
+
+  <GeneDef>
     <defName>PsyFocus</defName>
     <label>focus</label>
     <description>Carriers automatically learn the Focus psycast, which boosts the target's sight, hearing and moving capacities.</description>
