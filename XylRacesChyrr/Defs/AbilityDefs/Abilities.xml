@@ -4,7 +4,7 @@
   <AbilityDef>
     <defName>SonicWave</defName>
     <label>sonic wave</label>
-    <description>Releases a wave of high-intensity ultrasonic noise at a target. The noise will stun any creature with hearing nearby.</description>
+    <description>Releases a wave of high-intensity ultrasonic noise at a target. The noise will stun any non-mechanoid creature with hearing nearby.</description>
     <cooldownTicksRange>300000</cooldownTicksRange>
     <aiCanUse>true</aiCanUse>
     <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
@@ -16,6 +16,7 @@
       <verbClass>Verb_CastAbility</verbClass>
       <range>7.9</range>
       <warmupTime>1</warmupTime>
+      <soundCast>PsychicShockLanceCast</soundCast>
       <targetParams>
       </targetParams>
     </verbProperties>
@@ -25,6 +26,10 @@
         <radius>2.5</radius>
         <canHitFilledCells>true</canHitFilledCells>
         <durationMultiplierCapacity>Hearing</durationMultiplierCapacity>
+        <affectMechanoids>false</affectMechanoids>
+      </li>
+      <li Class="CompProperties_AbilityFleckOnTarget">
+        <fleckDef>PsycastPsychicEffect</fleckDef>
       </li>
     </comps>
   </AbilityDef>

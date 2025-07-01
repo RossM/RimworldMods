@@ -159,7 +159,7 @@
   <GeneDef>
     <defName>SonicWave</defName>
     <label>sonic wave</label>
-    <description>Carriers are able to releases a wave of high-intensity ultrasonic noise in a targeted direction. The noise will stun any creature with hearing.</description>
+    <description>Carriers are able to releases a wave of high-intensity ultrasonic noise in a targeted direction. The noise will stun any non-mechanoid creature with hearing nearby.</description>
     <displayCategory>Ability</displayCategory>
     <abilities>
       <li>SonicWave</li>
