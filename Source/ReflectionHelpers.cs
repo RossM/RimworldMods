@@ -25,6 +25,8 @@ namespace XylRacesCore
             if (!getAccessors.TryGetValue((type, fieldName), out object accessor))
             {
                 FieldInfo fieldDef = AccessTools.Field(type, fieldName);
+                if (fieldDef.FieldType != typeof(TResult))
+                    throw new NotSupportedException();
                 ParameterExpression objParameter = Expression.Variable(typeof(object), "obj");
                 accessor = Expression.Lambda<Func<object, TResult>>(
                     Expression.MakeMemberAccess(Expression.Convert(objParameter, type), fieldDef), objParameter).Compile();
@@ -44,6 +46,8 @@ namespace XylRacesCore
             if (!setAccessors.TryGetValue((type, fieldName), out object accessor))
             {
                 FieldInfo fieldDef = AccessTools.Field(type, fieldName);
+                if (fieldDef.FieldType != typeof(TResult))
+                    throw new NotSupportedException();
                 ParameterExpression objParameter = Expression.Variable(typeof(object), "obj");
                 ParameterExpression valueParameter = Expression.Variable(typeof(TResult), "value");
                 accessor = Expression.Lambda<Action<object, TResult>>(
