@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <XenotypeDef>
+    <defName>Chyrr</defName>
+    <label>chyrr</label>
+    <description>TODO.</description>
+    <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
+    <inheritable>true</inheritable>
+    <genes>
+      <li>PsyFocus</li>
+      <li>SonicWave</li>
+      <li>BatWings</li>
+      <li>MinTemp_SmallIncrease</li>
+      <li>MaxTemp_SmallIncrease</li>
+      <li>Delicate</li>
+      <li>Skin_Orange</li>
+      <li>Blind</li>
+      <li>Echolocation</li>
+      <li>Precognition</li>
+      <li>KeenEars</li>
+      <li>Nocturnal</li>
+      <li>AptitudePoor_Shooting</li>
+      <li>AptitudePoor_Plants</li>
+    </genes>
+  </XenotypeDef>
+  
+</Defs>

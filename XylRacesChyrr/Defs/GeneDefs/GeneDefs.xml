@@ -64,7 +64,7 @@
     <label>precognition</label>
     <description>Carriers of this gene can see a short distance into the future, giving bonuses to dodging and accuracy in combat. The effect scales with psychic sensitivity.</description>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>-2</biostatMet>
+    <biostatMet>-1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
     <modExtensions>
@@ -188,7 +188,7 @@
   <GeneDef>
     <defName>SonicWave</defName>
     <label>sonic wave</label>
-    <description>Carriers are able to releases a wave of high-intensity ultrasonic noise in a targeted direction. The noise will stun any non-mechanoid creature with hearing nearby.</description>
+    <description>Carriers are able to release a wave of high-intensity ultrasonic noise in at a target. The noise will stun any non-mechanoid creature nearby.</description>
     <displayCategory>Ability</displayCategory>
     <abilities>
       <li>SonicWave</li>
