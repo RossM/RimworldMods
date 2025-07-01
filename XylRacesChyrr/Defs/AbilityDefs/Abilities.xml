@@ -5,6 +5,7 @@
     <defName>XylSonicWave</defName>
     <label>sonic wave</label>
     <description>Releases a wave of high-intensity ultrasonic noise at a target. The noise will stun any non-mechanoid creature nearby.</description>
+    <iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>
     <cooldownTicksRange>300000</cooldownTicksRange>
     <aiCanUse>true</aiCanUse>
     <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>

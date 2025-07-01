@@ -230,6 +230,7 @@
     <label>sonic wave</label>
     <description>Carriers are able to release a wave of high-intensity ultrasonic noise in at a target. The noise will stun any non-mechanoid creature nearby.</description>
     <displayCategory>Ability</displayCategory>
+    <iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>
     <abilities>
       <li>XylSonicWave</li>
     </abilities>
