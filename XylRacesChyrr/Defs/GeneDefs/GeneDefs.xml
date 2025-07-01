@@ -156,4 +156,18 @@
     </capMods>
   </GeneDef>
 
+  <GeneDef>
+    <defName>SonicWave</defName>
+    <label>sonic wave</label>
+    <description>Carriers are able to releases a wave of high-intensity ultrasonic noise in a targeted direction. The noise will stun any creature with hearing.</description>
+    <displayCategory>Ability</displayCategory>
+    <abilities>
+      <li>SonicWave</li>
+    </abilities>
+    <descriptionHyperlinks>
+      <AbilityDef>SonicWave</AbilityDef>
+    </descriptionHyperlinks>
+    <biostatMet>-2</biostatMet>
+  </GeneDef>
+  
 </Defs>
