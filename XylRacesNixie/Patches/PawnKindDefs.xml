@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationInsert">
+    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Genie</xpath>
+    <value>
+      <Nixie>0.025</Nixie>
+    </value>
+  </Operation>
+
+</Patch>

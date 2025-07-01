@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationInsert">
+    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Yttakin</xpath>
+    <value>
+      <Warcat>0.025</Warcat>
+    </value>
+  </Operation>
+
+</Patch>

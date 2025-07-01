@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationInsert">
+    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Dirtmole</xpath>
+    <value>
+      <Dvergr>0.05</Dvergr>
+    </value>
+  </Operation>
+
+</Patch>

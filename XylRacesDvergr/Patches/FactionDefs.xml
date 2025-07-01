@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <Dvergr>0.025</Dvergr>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/FactionDef[defName="Pirate"]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <Dvergr>0.05</Dvergr>
+    </value>
+  </Operation>
+
+</Patch>

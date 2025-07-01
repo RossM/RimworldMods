@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationInsert">
+    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Impid</xpath>
+    <value>
+      <Chyrr>0.025</Chyrr>
+    </value>
+  </Operation>
+
+</Patch>
