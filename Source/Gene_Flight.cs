@@ -70,7 +70,7 @@ namespace XylRacesCore
             yield return new Command_Toggle
             {
                 defaultLabel = "Auto-fly",
-                defaultDesc = "Automatically fly when moving.",
+                defaultDesc = "The character will automatically start flying if they are moving and the fly ability is off cooldown.",
                 isActive = () => autoFly,
                 toggleAction = () => { autoFly = !autoFly; },
                 icon = DefExt.Icon,
