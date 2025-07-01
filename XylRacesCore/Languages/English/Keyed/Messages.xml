@@ -1,31 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
 
-  <XylAtavismChanceLabel>Atavism extra gene chance</XylAtavismChanceLabel>
-  <XylAtavismChanceDesc>The chance of the carrier having an extra gene due to the atavism gene.</XylAtavismChanceDesc>
-  <XylAtavismGenesLabel>Atavism genes added</XylAtavismGenesLabel>
-  <XylAtavismGenesDesc>The extra genes added to this character by the atavism gene.</XylAtavismGenesDesc>
+  <!-- Commands -->
   <XylCommandFlyLabel>Fly</XylCommandFlyLabel>
   <XylCommandFlyDesc>Start flying. Flying grants increased movement speed and allows travelling over some obstacles.</XylCommandFlyDesc>
   <XylCommandAutoFlyLabel>Auto-fly</XylCommandAutoFlyLabel>
   <XylCommandAutoFlyDesc>The character will automatically start flying if they are moving and the fly ability is off cooldown.</XylCommandAutoFlyDesc>
-  <XylGenderRatioLabel>Xenotype gender ratio</XylGenderRatioLabel>
-  <XylGenderRatioDesc>The chance of characters of this xenotype being male or female.</XylGenderRatioDesc>
-  <XylGenderRatioValue>{0} female, {1} male</XylGenderRatioValue>
   <XylCommandMilkLabel>Allow milking</XylCommandMilkLabel>
   <XylCommandMilkDesc>Allow other characters to milk this character.</XylCommandMilkDesc>
   <XylCommandMilkOnlyWhenFullLabel>Only milk when full</XylCommandMilkOnlyWhenFullLabel>
   <XylCommandMilkOnlyWhenFullDesc>Only allow milking when this character's breast milk is full.</XylCommandMilkOnlyWhenFullDesc>
+
+  <!-- Stats -->
+  <XylAtavismChanceLabel>Atavism extra gene chance</XylAtavismChanceLabel>
+  <XylAtavismChanceDesc>The chance of the carrier having an extra gene due to the atavism gene.</XylAtavismChanceDesc>
+  <XylAtavismGenesLabel>Atavism genes added</XylAtavismGenesLabel>
+  <XylAtavismGenesDesc>The extra genes added to this character by the atavism gene.</XylAtavismGenesDesc>
+  <XylGenderRatioLabel>Xenotype gender ratio</XylGenderRatioLabel>
+  <XylGenderRatioDesc>The chance of characters of this xenotype being male or female.</XylGenderRatioDesc>
+  <XylGenderRatioValue>{0} female, {1} male</XylGenderRatioValue>
   <XylMilkProductionLabel>Milk production</XylMilkProductionLabel>
   <XylMilkProductionDesc>The number of milk items this character can produce in a day if well-fed.</XylMilkProductionDesc>
   <XylRageChanceLabel>Rage chance</XylRageChanceLabel>
   <XylRageChanceDesc>The chance of this character flying into a rage when damaged. While enraged, the character is uncontrollable and automatically charges at nearby enemies.</XylRageChanceDesc>
-  <XylSubstituteCapacityAlwaysDesc>{0}  is used instead of {1} for stat calculations.</XylSubstituteCapacityAlwaysDesc>
-  <XylSubstituteCapacityLowerDesc>{0}  is used instead of {1} for stat calculations if it is lower.</XylSubstituteCapacityLowerDesc>
-  <XylSubstituteCapacityHigherDesc>{0}  is used instead of {1} for stat calculations if it is higher.</XylSubstituteCapacityHigherDesc>
+  <XylSubstituteCapacityAlwaysDesc>{0} is used instead of {1} for stat calculations.</XylSubstituteCapacityAlwaysDesc>
+  <XylSubstituteCapacityLowerDesc>{0} is used instead of {1} for stat calculations if it is lower.</XylSubstituteCapacityLowerDesc>
+  <XylSubstituteCapacityHigherDesc>{0} is used instead of {1} for stat calculations if it is higher.</XylSubstituteCapacityHigherDesc>
   <XylEffectiveCapacity>Effective {0}</XylEffectiveCapacity>
+
+  <!-- Misc -->
   <XylWildPeople>wild people</XylWildPeople>
   <XylScenPartForcedXenotypeSummary>{0} have a {1} chance to start with xenotype: {2}</XylScenPartForcedXenotypeSummary>
   <XylScenPartPsycastLabel>{0} (level {1})</XylScenPartPsycastLabel>
   <XylPsycast>psycast</XylPsycast>
+
 </LanguageData>
