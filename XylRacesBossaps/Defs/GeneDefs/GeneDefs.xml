@@ -10,7 +10,7 @@
     <biostatMet>1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_HerbivoreStomach</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_HerbivoreStomach</iconPath>
     <exclusionTags>
       <li>Digestion</li>
     </exclusionTags>
@@ -37,7 +37,7 @@
     <biostatMet>-2</biostatMet>
     <displayCategory>Pain</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_PainReversal</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_PainReversal</iconPath>
     <forcedTraits>
       <li>
         <def>Masochist</def>
@@ -52,7 +52,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Docile</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Docile</iconPath>
     <socialFightChanceFactor>0</socialFightChanceFactor>
     <prisonBreakMTBFactor>4</prisonBreakMTBFactor><!-- Never prison breaks -->
     <statFactors>
@@ -69,7 +69,7 @@
     <biostatMet>1</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_HerdInstinct</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_HerdInstinct</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <suppressedTraits>
       <li>
@@ -87,7 +87,7 @@
     <biostatMet>3</biostatMet>
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_SeeingRed</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_SeeingRed">
         <chance>0.25</chance>
@@ -105,7 +105,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Hyperlactation</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Hyperlactation</iconPath>
     <minAgeActive>13</minAgeActive>
     <customEffectDescriptions>
       <li>Enables being milked</li>
@@ -143,7 +143,7 @@
     <label>always female</label>
     <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is heritable.</description>
     <displayOrderInCategory>601</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_AlwaysFemale</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysFemale</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>1.0</femaleChance>
@@ -159,7 +159,7 @@
     <label>usually female</label>
     <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is heritable.</description>
     <displayOrderInCategory>602</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_UsuallyFemale</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyFemale</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>0.75</femaleChance>
@@ -175,7 +175,7 @@
     <label>usually male</label>
     <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is heritable.</description>
     <displayOrderInCategory>603</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_UsuallyMale</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyMale</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>0.25</femaleChance>
@@ -191,7 +191,7 @@
     <label>always male</label>
     <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is heritable.</description>
     <displayOrderInCategory>604</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_AlwaysMale</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysMale</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_GenderRatio">
         <femaleChance>0.0</femaleChance>
@@ -211,13 +211,13 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_LargeHorns</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_LargeHorns</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
-        <texPath>Things/Pawn/Humanlike/HeadAttachments/LargeHorns/LargeHorns</texPath>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/LargeHorns/LargeHorns</texPath>
         <color>(255, 255, 255)</color>
         <parentTagDef>Head</parentTagDef>
         <drawData>
@@ -252,13 +252,13 @@
     <defName>XylEars_Cow</defName>
     <label>cow ears</label>
     <description>Carriers of this gene have cow-like ears.</description>
-    <iconPath>UI/Icons/Genes/Gene_CowEars</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_CowEars</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
-        <texPath>Things/Pawn/Humanlike/HeadAttachments/CowEars/CowEars</texPath>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/CowEars/CowEars</texPath>
         <colorType>Skin</colorType>
         <parentTagDef>Head</parentTagDef>
         <useSkinShader>true</useSkinShader>

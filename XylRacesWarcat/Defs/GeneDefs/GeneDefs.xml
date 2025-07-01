@@ -10,7 +10,7 @@
     <biostatMet>-2</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_FastReflexes</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_FastReflexes</iconPath>
     <forcedTraits>
       <li>
         <def>Nimble</def>
@@ -28,7 +28,7 @@
     <biostatMet>3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_MeatDependence</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_MeatDependence</iconPath>
     <forcedTraits>
       <li>
         <def>XylCarnivore</def>
@@ -57,7 +57,7 @@
     <biostatMet>1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>
     <exclusionTags>
       <li>Digestion</li>
     </exclusionTags>
@@ -81,12 +81,12 @@
     <label>yellow eyes</label>
     <labelShortAdj>yellow-eyed</labelShortAdj>
     <description>Carriers of this gene have yellow-pigmented eyes.</description>
-    <iconPath>UI/Icons/Genes/Gene_YellowEyes</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_YellowEyes</iconPath>
     <displayOrderInCategory>2</displayOrderInCategory>
     <renderNodeProperties>
       <li Class="PawnRenderNodeProperties_Eye">
-        <texPath>Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Male/YellowEyes_Male</texPath>
-        <texPathFemale>Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Female/YellowEyes_Female</texPathFemale>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Male/YellowEyes_Male</texPath>
+        <texPathFemale>Xyl/Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Female/YellowEyes_Female</texPathFemale>
         <anchorTag>RightEye</anchorTag>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <parentTagDef>Head</parentTagDef>
@@ -100,8 +100,8 @@
         </drawData>
       </li>
       <li Class="PawnRenderNodeProperties_Eye">
-        <texPath>Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Male/YellowEyes_Male</texPath>
-        <texPathFemale>Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Female/YellowEyes_Female</texPathFemale>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Male/YellowEyes_Male</texPath>
+        <texPathFemale>Xyl/Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Female/YellowEyes_Female</texPathFemale>
         <anchorTag>LeftEye</anchorTag>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <parentTagDef>Head</parentTagDef>
@@ -125,7 +125,7 @@
     <defName>XylFacialStripes</defName>
     <label>facial stripes</label>
     <description>Carriers of this gene have striped skin on their face.</description>
-    <iconPath>UI/Icons/Genes/Gene_FacialStripes</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_FacialStripes</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <displayCategory>Cosmetic</displayCategory>
     <displayOrderInCategory>501</displayOrderInCategory>
@@ -140,7 +140,7 @@
         <useSkinShader>true</useSkinShader>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <texPaths>
-          <li>Things/Pawn/Humanlike/HeadAttachments/FacialStripes/FacialStripesA</li>
+          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/FacialStripes/FacialStripesA</li>
         </texPaths>
         <visibleFacing>
           <li>East</li>
@@ -168,7 +168,7 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_RetractableClaws</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_RetractableClaws</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
@@ -196,7 +196,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Ability</displayCategory>
-    <iconPath>UI/Icons/Genes/Gene_FeralRage</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_FeralRage</iconPath>
     <abilities>
       <li>XylFeralRage</li>
     </abilities>
@@ -214,7 +214,7 @@
     <biostatMet>1</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>201</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Moody</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Moody</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>

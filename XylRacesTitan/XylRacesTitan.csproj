@@ -13,8 +13,7 @@
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Textures\Things\Pawn\Humanlike\HeadAttachments\Osteoliths\" />
-    <Folder Include="Textures\UI\Icons\Genes\" />
+    <Folder Include="Textures\Xyl\UI\Icons\Genes\" />
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">

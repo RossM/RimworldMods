@@ -12,9 +12,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Textures\UI\Icons\Genes\" />
-  </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
     <RemoveDir Directories="obj" />

@@ -42,7 +42,7 @@
     <biostatMet>-3</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Scaleskin</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Scaleskin</iconPath>
     <iconColor>(0.4, 0.65, 0.75)</iconColor>
     <exclusionTags>
       <li>Fur</li>
@@ -75,7 +75,7 @@
     <biostatMet>3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Aquatic</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Aquatic</iconPath>
     <iconColor>(0.4, 0.6, 0.9)</iconColor>
     <enablesNeeds>
       <li>XylWetness</li>

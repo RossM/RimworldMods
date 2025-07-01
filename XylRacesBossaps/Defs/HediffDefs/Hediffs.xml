@@ -34,7 +34,7 @@
       <li Class="XylRacesCore.HediffDefExtension_ForceBehavior">
         <thinkTree>XylSeeingRed</thinkTree>
         <mentalState>XylSeeingRed</mentalState>
-        <iconPath>UI/Icons/Genes/Gene_SeeingRed</iconPath>
+        <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
       </li>
     </modExtensions>
   </HediffDef>

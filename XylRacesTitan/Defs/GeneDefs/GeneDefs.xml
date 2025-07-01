@@ -41,7 +41,7 @@
         <colorType>Skin</colorType>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <texPaths>
-          <li>Things/Pawn/Humanlike/HeadAttachments/Osteoliths/Osteoliths</li>
+          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/Osteoliths/Osteoliths</li>
         </texPaths>
         <visibleFacing>
           <li>East</li>
@@ -72,7 +72,7 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Scaleskin</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Scaleskin</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <statOffsets>
       <VacuumResistance>0.9</VacuumResistance>

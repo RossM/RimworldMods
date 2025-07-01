@@ -10,7 +10,7 @@
     <biostatMet>5</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Blind</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Blind</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
@@ -30,7 +30,7 @@
     </customEffectDescriptions>
     <renderNodeProperties>
       <li Class="PawnRenderNodeProperties_Eye">
-        <texPath>Things/Pawn/Humanlike/HeadAttachments/NoEyes/NoEyes</texPath>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/NoEyes/NoEyes</texPath>
         <anchorTag>RightEye</anchorTag>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <colorType>Skin</colorType>
@@ -47,7 +47,7 @@
         </drawData>
       </li>
       <li Class="PawnRenderNodeProperties_Eye">
-        <texPath>Things/Pawn/Humanlike/HeadAttachments/NoEyes/NoEyes</texPath>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/NoEyes/NoEyes</texPath>
         <anchorTag>LeftEye</anchorTag>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <colorType>Skin</colorType>
@@ -79,7 +79,7 @@
     <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Echolocation</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Echolocation</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_Hediff">
         <hediffGivers>
@@ -153,14 +153,14 @@
     <biostatMet>-2</biostatMet>
     <displayCategory>Movement</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_BatWings</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_BatWings</iconPath>
     <renderNodeProperties>
       <li>
         <nodeClass>XylRacesCore.PawnRenderNode_Wings</nodeClass>
         <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
         <texPaths>
-          <li>Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWings</li>
-          <li>Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWingsExtended</li>
+          <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWings</li>
+          <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWingsExtended</li>
         </texPaths>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <color>(255, 255, 255)</color>
@@ -189,7 +189,7 @@
     </statOffsets>
     <modExtensions>
       <li Class="XylRacesCore.GeneDefExtension_Flight">
-        <iconPath>UI/Icons/Genes/Gene_BatWings</iconPath>
+        <iconPath>Xyl/UI/Icons/Genes/Gene_BatWings</iconPath>
       </li>
     </modExtensions>
   </GeneDef>

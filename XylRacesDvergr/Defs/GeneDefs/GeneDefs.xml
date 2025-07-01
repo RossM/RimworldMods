@@ -10,7 +10,7 @@
     <biostatMet>-3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Industrious</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Industrious</iconPath>
     <iconColor>(0.4, 0.75, 0.90)</iconColor>
     <statOffsets>
       <WorkSpeedGlobal>0.15</WorkSpeedGlobal>
@@ -43,7 +43,7 @@
     <biostatMet>3</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Melancholy</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Melancholy</iconPath>
     <exclusionTags>
       <li>Mood</li>
     </exclusionTags>
@@ -73,7 +73,7 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_Stoic</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Stoic</iconPath>
     <iconColor>(0.5, 0.5, 0.5)</iconColor>
     <statOffsets>
       <MentalBreakThreshold>-0.09</MentalBreakThreshold>
@@ -127,7 +127,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>10</displayOrderInCategory>
-    <iconPath>UI/Icons/Genes/Gene_MushroomEater</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_MushroomEater</iconPath>
     <exclusionTags>
       <li>Digestion</li>
     </exclusionTags>
@@ -157,12 +157,12 @@
     <defName>XylEars_SmallPointed</defName>
     <label>small pointed ears</label>
     <description>Carriers of this gene have smaller pointed ears.</description>
-    <iconPath>UI/Icons/Genes/Gene_EarSmallPointed</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_EarSmallPointed</iconPath>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
-        <texPath>Things/Pawn/Humanlike/HeadAttachments/SmallPointedEars/SmallPointedEars</texPath>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/SmallPointedEars/SmallPointedEars</texPath>
         <colorType>Skin</colorType>
         <parentTagDef>Head</parentTagDef>
         <useSkinShader>true</useSkinShader>
