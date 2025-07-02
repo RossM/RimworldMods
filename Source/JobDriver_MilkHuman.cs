@@ -12,7 +12,7 @@ using static UnityEngine.GraphicsBuffer;
 namespace XylRacesCore
 {
     // ReSharper disable once UnusedMember.Global
-    internal class JobDriver_MilkHuman : JobDriver
+    public class JobDriver_MilkHuman : JobDriver
     {
         private float gatherProgress;
 

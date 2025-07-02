@@ -7,7 +7,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    internal class Hediff_DietDependency : Hediff_Genetic
+    public class Hediff_DietDependency : Hediff_Genetic
     {
         public bool ShouldSatisfy => Severity >= def.stages[2].minSeverity - 0.5f;
 
