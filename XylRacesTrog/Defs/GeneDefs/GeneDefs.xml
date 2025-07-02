@@ -112,8 +112,10 @@
 
   <GeneDef ParentName="GeneJawBase">
     <defName>XylHead_Trog</defName>
-    <label>misshapen head</label>
+    <label>warped head</label>
     <description>Carriers of this gene have strange, misshapen faces and heads.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Head_Trog</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <forcedHeadTypes>
       <li>Male_XylTrog_A</li>
       <li>Male_XylTrog_B</li>
