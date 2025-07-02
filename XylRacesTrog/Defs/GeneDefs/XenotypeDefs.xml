@@ -4,7 +4,7 @@
   <XenotypeDef>
     <defName>XylTrog</defName>
     <label>trog</label>
-    <description>These brutes are the result generations of interbreeding between neanderthals, wasters, and dirtmoles on some of the harshest rimworlds known to humanity. They combine the worst features of all their ancestors, but have an innate affinity for insectoids.</description>
+    <description>Trogs are the lurching result of generations of interbreeding between neanderthals, wasters, and dirtmoles on the worst rimworlds humanity ever forgot. They're slow, ugly, and stink like a landfill, but thrive in toxic sludge and underground rot. Giant insects won’t touch them, and half of them come out with genes from who-knows-where. No one’s quite sure how they survive, but they do - much to everyone else's dismay.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>
