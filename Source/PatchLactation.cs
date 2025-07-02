@@ -56,9 +56,7 @@ namespace XylRacesCore
             }
         };
 
-        [UsedImplicitly, HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
-        [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")] public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
@@ -66,8 +64,7 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
-        [HarmonyTranspiler]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
         public static IEnumerable<CodeInstruction> CanBreastfeed_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -76,8 +73,7 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
-        [HarmonyTranspiler]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
         public static IEnumerable<CodeInstruction> CanBreastfeedNow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -86,8 +82,7 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
-        [HarmonyTranspiler]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
         public static IEnumerable<CodeInstruction> SuckleFromLactatingPawn_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -96,8 +91,7 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [UsedImplicitly, HarmonyPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
-        [HarmonyTranspiler]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
         public static IEnumerable<CodeInstruction> QuestPartTick_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -106,8 +100,7 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [UsedImplicitly, HarmonyPatch(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
-        [HarmonyTranspiler]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
         public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -116,8 +109,7 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [UsedImplicitly, HarmonyPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
-        [HarmonyTranspiler]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
         public static IEnumerable<CodeInstruction> DrawRow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -125,6 +117,5 @@ namespace XylRacesCore
                 Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
-
     }
 }
