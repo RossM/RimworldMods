@@ -44,7 +44,7 @@
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>110</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Scaleskin</iconPath>
-    <iconColor>(0.4, 0.65, 0.75)</iconColor>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <exclusionTags>
       <li>Fur</li>
     </exclusionTags>

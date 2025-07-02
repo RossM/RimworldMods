@@ -33,6 +33,8 @@
     <biostatMet>-3</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>111</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_MineralizedSkin</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>

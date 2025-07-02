@@ -11,7 +11,7 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>600</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Industrious</iconPath>
-    <iconColor>(0.4, 0.75, 0.90)</iconColor>
+    <iconColor>(0.35, 0.55, 0.35)</iconColor>
     <statOffsets>
       <WorkSpeedGlobal>0.15</WorkSpeedGlobal>
     </statOffsets>
