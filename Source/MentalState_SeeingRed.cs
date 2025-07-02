@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Verse;
 using Verse.AI;
+using XylRacesCore.Genes;
 
 namespace XylRacesCore
 {

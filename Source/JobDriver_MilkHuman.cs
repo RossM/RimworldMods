@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using XylRacesCore.Genes;
 using static UnityEngine.GraphicsBuffer;
 
 namespace XylRacesCore

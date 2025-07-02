@@ -2,7 +2,7 @@
 <Defs>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <geneClass>XylRacesCore.Genes.Gene_Hediff</geneClass>
     <defName>XylBlind</defName>
     <label>blind</label>
     <description>Carriers of this gene have non-functional eyes, making them totally blind.\n\nBlindness grants a +50% bonus to psychic sensitivity.</description>
@@ -12,7 +12,7 @@
     <displayOrderInCategory>400</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Blind</iconPath>
     <modExtensions>
-      <li Class="XylRacesCore.GeneDefExtension_Hediff">
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>XylGeneticBlindness</hediff>
@@ -71,7 +71,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <geneClass>XylRacesCore.Genes.Gene_Hediff</geneClass>
     <defName>XylEcholocation</defName>
     <label>echolocation</label>
     <description>Carriers of this gene can use high-frequency sound waves to gain many of the benefits of sight even if totally blind.</description>
@@ -81,7 +81,7 @@
     <displayOrderInCategory>400</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Echolocation</iconPath>
     <modExtensions>
-      <li Class="XylRacesCore.GeneDefExtension_Hediff">
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>XylEcholocation</hediff>
@@ -99,7 +99,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <geneClass>XylRacesCore.Genes.Gene_Hediff</geneClass>
     <defName>XylPrecognition</defName>
     <label>precognition</label>
     <description>Carriers of this gene can see a short distance into the future, giving bonuses to dodging and accuracy in combat. The effect scales with psychic sensitivity.</description>
@@ -108,7 +108,7 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
     <modExtensions>
-      <li Class="XylRacesCore.GeneDefExtension_Hediff">
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>XylPrecognition</hediff>
@@ -132,7 +132,7 @@
     <label>focus</label>
     <description>Carriers automatically learn the Focus psycast, which boosts the target's sight, hearing and moving capacities.</description>
     <iconPath>UI/Abilities/Focus</iconPath>
-    <geneClass>XylRacesCore.Gene_Psycast</geneClass>
+    <geneClass>XylRacesCore.Genes.Gene_Psycast</geneClass>
     <displayCategory>Ability</displayCategory>
     <abilities>
       <li>Focus</li>
@@ -145,7 +145,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Gene_Flight</geneClass>
+    <geneClass>XylRacesCore.Genes.Gene_Flight</geneClass>
     <defName>XylBatWings</defName>
     <label>bat wings</label>
     <description>Carriers of this gene have bat-like wings, allowing them to fly for short periods.</description>
@@ -188,7 +188,7 @@
       <FlightCooldown>30</FlightCooldown>
     </statOffsets>
     <modExtensions>
-      <li Class="XylRacesCore.GeneDefExtension_Flight">
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Flight">
         <iconPath>Xyl/UI/Icons/Genes/Gene_BatWings</iconPath>
       </li>
     </modExtensions>

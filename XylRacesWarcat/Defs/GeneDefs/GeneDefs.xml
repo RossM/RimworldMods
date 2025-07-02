@@ -19,7 +19,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Gene_DietDependency</geneClass>
+    <geneClass>XylRacesCore.Genes.Gene_DietDependency</geneClass>
     <defName>XylMeatDependence</defName>
     <label>meat dependence</label>
     <labelShortAdj>meat-dependent</labelShortAdj>
@@ -35,7 +35,7 @@
       </li>
     </forcedTraits>
     <modExtensions>
-      <li Class="XylRacesCore.GeneDefExtension_DietDependency">
+      <li Class="XylRacesCore.Genes.GeneDefExtension_DietDependency">
         <hediffDef>XylGeneticMeatNeed</hediffDef>
         <foodKind>Meat</foodKind>
         <rawOnly>true</rawOnly>
@@ -159,7 +159,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <geneClass>XylRacesCore.Genes.Gene_Hediff</geneClass>
     <defName>XylRetractableClaws</defName>
     <label>retractable claws</label>
     <labelShortAdj>claws</labelShortAdj>
@@ -171,7 +171,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_RetractableClaws</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <modExtensions>
-      <li Class="XylRacesCore.GeneDefExtension_Hediff">
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>XylRetractableClaws</hediff>
@@ -206,7 +206,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <geneClass>XylRacesCore.Genes.Gene_Hediff</geneClass>
     <defName>XylMoody</defName>
     <label>moody</label>
     <description>Carriers of this gene have a volatile emotional state. They randomly get good and bad moods.</description>
@@ -216,7 +216,7 @@
     <displayOrderInCategory>201</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Moody</iconPath>
     <modExtensions>
-      <li Class="XylRacesCore.GeneDefExtension_Hediff">
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>XylMoody</hediff>

@@ -2,7 +2,7 @@
 <Defs>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Gene_HostilityOverride</geneClass>
+    <geneClass>XylRacesCore.Genes.Gene_HostilityOverride</geneClass>
     <defName>XylInsectPheromones</defName>
     <label>insect pheromones</label>
     <description>Carriers of this gene produce special pheromones which make wild insects not attack them.</description>
@@ -12,7 +12,7 @@
     <displayOrderInCategory>500</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_InsectPheromones</iconPath>
     <modExtensions>
-      <li Class="XylRacesCore.GeneDefExtension_HostilityOverride">
+      <li Class="XylRacesCore.Genes.GeneDefExtension_HostilityOverride">
         <disableHostilityFromFaction>Insect</disableHostilityFromFaction>
         <violationDisableTicks>2500</violationDisableTicks>
       </li>
@@ -54,7 +54,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Gene_Hediff</geneClass>
+    <geneClass>XylRacesCore.Genes.Gene_Hediff</geneClass>
     <defName>XylBioRejection</defName>
     <label>bio-rejection</label>
     <description>Carriers of this gene have a severe allergic reaction to any sort of artificial implant or body part. They will suffer continual pain until the implant or part is removed.</description>
@@ -69,7 +69,7 @@
       </li>
     </suppressedTraits>
     <modExtensions>
-      <li Class="XylRacesCore.GeneDefExtension_Hediff">
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>XylBioRejection</hediff>
@@ -83,7 +83,7 @@
 
 
   <GeneDef>
-    <geneClass>XylRacesCore.Gene_Atavism</geneClass>
+    <geneClass>XylRacesCore.Genes.Gene_Atavism</geneClass>
     <defName>XylGeneticAtavism</defName>
     <label>genetic atavism</label>
     <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
@@ -96,7 +96,7 @@
       <li>Extra gene chance: 50%</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="XylRacesCore.GeneDefExtension_Atavism">
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Atavism">
         <biostatArc>0~0</biostatArc>
         <biostatCpx>1~99</biostatCpx>
         <biostatMet>-2~2</biostatMet>

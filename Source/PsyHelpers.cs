@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
+using XylRacesCore.Genes;
 
 namespace XylRacesCore
 {
