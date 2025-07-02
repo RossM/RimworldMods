@@ -116,7 +116,9 @@
     <description>Carriers of this gene have strange, misshapen faces and heads.</description>
     <forcedHeadTypes>
       <li>Male_XylTrog_A</li>
+      <li>Male_XylTrog_B</li>
       <li>Female_XylTrog_A</li>
+      <li>Female_XylTrog_B</li>
     </forcedHeadTypes>
     <displayOrderInCategory>98</displayOrderInCategory>
   </GeneDef>
