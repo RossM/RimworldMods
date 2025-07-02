@@ -55,11 +55,6 @@ namespace XylRacesCore
             if (!Find.IdeoManager.IdeosListForReading.TryRandomElementByWeight(IdeoWeight, out Ideo ideo))
                 ideo = null;
 
-            //Log.Message(string.Format("Ideo: {0}", ideo?.name ?? "(none)"));
-            //Log.Message("All ideos:");
-            //foreach (var i in Find.IdeoManager.IdeosListForReading)
-            //    Log.Message(string.Format("  {0} = {1}", i.name, IdeoWeight(i)));
-
             Rot4 rot = Rot4.FromAngleFlat((map.Center - start).AngleFlat);
             List<Pawn> pawns = GeneratePawns(ideo);
 
