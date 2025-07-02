@@ -30,7 +30,7 @@
     <labelShortAdj>mineralized</labelShortAdj>
     <description>Carriers of this gene have tough, stone-like skin, which grants high protection against damage but slows their movement.</description>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>-3</biostatMet>
+    <biostatMet>-4</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>111</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MineralizedSkin</iconPath>
