@@ -135,6 +135,11 @@
     <exclusionTags>
       <li>Gender</li>
     </exclusionTags>
+    <modExtensions>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_UIFilter">
+        <inheritable>true</inheritable>
+      </li>
+    </modExtensions>
   </GeneDef>
 
   <GeneDef ParentName="XylGenderRatioBase">
