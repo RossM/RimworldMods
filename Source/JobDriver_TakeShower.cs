@@ -27,24 +27,30 @@ namespace XylRacesCore
             //toil.WithProgressBar(TargetIndex.A, () => (float)(Find.TickManager.TicksGame - startTick) / job.def.joyDuration);
             toil.AddPreTickIntervalAction((int delta) =>
             {
-                if (need_wetness != null && need_wetness.CurLevel > 0.9999f)
+                if (need_wetness is { CurLevel: > 0.9999f })
                     pawn.jobs.curDriver.EndJobWith(JobCondition.Succeeded);
             });
-            var comp = new Comp_RenderProperties { hideClothes = true };
+            var comp = new Comp_RenderProperties { hideClothes = true, hideHeadgear = true };
             toil.initAction = () =>
             {
+                Pawn actor = toil.actor;
                 if (need_wetness != null)
                     need_wetness.IsShowering = true;
-                pawn.AllComps.Add(comp);
-                pawn.Drawer.renderer.SetAllGraphicsDirty();
-                pawn.Rotation = Rot4.South;
+                actor.AllComps.Add(comp);
+            };
+            toil.tickIntervalAction = delegate(int delta)
+            {
+                // Occasionally change facing randomly
+                Pawn actor = toil.actor;
+                if (actor.IsHashIntervalTick(200, delta) && Rand.Chance(0.5f))
+                    actor.Rotation = Rot4.Random;
             };
             toil.AddFinishAction(() =>
             {
+                Pawn actor = toil.actor;
                 if (need_wetness != null)
                     need_wetness.IsShowering = false;
-                pawn.AllComps.Remove(comp);
-                pawn.Drawer.renderer.SetAllGraphicsDirty();
+                actor.AllComps.Remove(comp);
             });
             EffecterDef effecterDef = DefDatabase<EffecterDef>.GetNamed("XylShowerSplash");
             toil.WithEffect(effecterDef, TargetIndex.A);

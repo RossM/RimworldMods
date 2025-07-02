@@ -81,7 +81,6 @@ namespace XylRacesCore
                 actor.pather.StopDead();
                 PawnUtility.ForceWait(Target, 15000, null, maintainPosture: true);
                 Target?.AllComps.Add(hideClothes);
-                Target?.Drawer.renderer.SetAllGraphicsDirty();
                 Target?.rotationTracker.FaceTarget(actor);
             };
             toil.tickIntervalAction = delegate (int delta)
@@ -102,7 +101,6 @@ namespace XylRacesCore
                     Target.jobs.EndCurrentJob(JobCondition.InterruptForced);
                 }
                 Target?.AllComps.Remove(hideClothes);
-                Target?.Drawer.renderer.SetAllGraphicsDirty();
             });
             toil.FailOnDespawnedOrNull(TargetIndex.A);
             toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
