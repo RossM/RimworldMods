@@ -12,7 +12,6 @@ namespace XylRacesCore
     {
         public float chance = 1.0f;
         public HediffDef hediffDef;
-        public float severity;
     }
 
     public class Gene_SeeingRed : Gene

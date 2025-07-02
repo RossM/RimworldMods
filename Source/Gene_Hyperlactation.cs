@@ -11,30 +11,13 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class GeneDefExtension_Hyperlactation : DefModExtension
+    public class GeneDefExtension_Hyperlactation : DefModExtension_WithIcon
     {
         public float chargePerItem = 0.1f;
         public HediffDef hediff;
         public List<ThoughtDef> milkedThoughts;
         public Gender? activeGender;
         public int ticksPerSorenessStage = 60000;
-
-        [NoTranslate]
-        public string iconPath = "Things/Item/Resource/Milk";
-
-        [Unsaved(false)] 
-        private Texture2D cachedIcon;
-
-        public Texture2D Icon
-        {
-            get
-            {
-                cachedIcon ??= iconPath.NullOrEmpty()
-                    ? BaseContent.BadTex
-                    : ContentFinder<Texture2D>.Get(iconPath) ?? BaseContent.BadTex;
-                return cachedIcon;
-            }
-        }
     }
 
     public class Gene_Hyperlactation : Gene
@@ -46,7 +29,7 @@ namespace XylRacesCore
 
         public GeneDefExtension_Hyperlactation DefExt => def.GetModExtension<GeneDefExtension_Hyperlactation>();
 
-        public HediffComp_Lactating Lactating => pawn.health.hediffSet.GetFirstHediffWithComp<HediffComp_Lactating>().TryGetComp<HediffComp_Lactating>();
+        public HediffComp_Lactating Lactating => pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
 
         public override bool Active
         {

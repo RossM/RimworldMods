@@ -10,24 +10,8 @@ using Verse.AI;
 
 namespace XylRacesCore
 {
-    public class GeneDefExtension_Flight : DefModExtension
+    public class GeneDefExtension_Flight : DefModExtension_WithIcon
     {
-        [NoTranslate]
-        public string iconPath;
-
-        [Unsaved(false)]
-        private Texture2D cachedIcon;
-
-        public Texture2D Icon
-        {
-            get
-            {
-                cachedIcon ??= iconPath.NullOrEmpty()
-                    ? BaseContent.BadTex
-                    : ContentFinder<Texture2D>.Get(iconPath) ?? BaseContent.BadTex;
-                return cachedIcon;
-            }
-        }
     }
 
     public class Gene_Flight : Gene

@@ -8,6 +8,11 @@ using Verse;
 
 namespace XylRacesCore
 {
+    public class GeneDefExtension_GenderRatio : DefModExtension
+    {
+        public float femaleChance = 0.5f;
+    }
+
     public class Gene_GenderRatio : Gene
     {
         public GeneDefExtension_GenderRatio DefExt => def.GetModExtension<GeneDefExtension_GenderRatio>();
@@ -24,10 +29,5 @@ namespace XylRacesCore
             yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
                 text, "XylGenderRatioDesc".TranslateSimple(), 1);
         }
-    }
-
-    public class GeneDefExtension_GenderRatio : DefModExtension
-    {
-        public float femaleChance = 0.5f;
     }
 }
