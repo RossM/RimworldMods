@@ -2,7 +2,7 @@
 <Patch>
 
   <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
-    <xpath>Defs/ThingDef[defName="Human"]</xpath>
+    <xpath>Defs/ThingDef[@Name="BasePawn"]</xpath>
     <value>
       <comps>
         <li Class="XylRacesCore.CompProperties_PawnRenderProperties">
