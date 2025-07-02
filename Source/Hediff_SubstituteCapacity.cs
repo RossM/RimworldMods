@@ -12,20 +12,35 @@ using static UnityEngine.GraphicsBuffer;
 
 namespace XylRacesCore
 {
+    public class HediffDefExtension_SubstituteCapacity : DefModExtension
+    {
+        public enum SubstitutionMode
+        {
+            Always,
+            Maximum,
+            Minimum,
+        }
+
+        public SubstitutionMode mode;
+        public PawnCapacityDef originalCapacity;
+        public PawnCapacityDef substituteCapacity;
+        public List<StatDef> excludeStats;
+    }
+
     public class Hediff_SubstituteCapacity : HediffWithComps
     {
-        public HediffCompProperties_SubstituteCapacity CompProperties => GetComp<HediffComp_SubstituteCapacity>().Properties;
+        public HediffDefExtension_SubstituteCapacity DefExt => def.GetModExtension<HediffDefExtension_SubstituteCapacity>();
 
         public bool Active
         {
             get
             {
-                float originalLevel = pawn.health.capacities.GetLevel(CompProperties.originalCapacity);
-                float substituteLevel = pawn.health.capacities.GetLevel(CompProperties.substituteCapacity);
-                return CompProperties.mode switch
+                float originalLevel = pawn.health.capacities.GetLevel(DefExt.originalCapacity);
+                float substituteLevel = pawn.health.capacities.GetLevel(DefExt.substituteCapacity);
+                return DefExt.mode switch
                 {
-                    HediffCompProperties_SubstituteCapacity.SubstitutionMode.Maximum => (substituteLevel > originalLevel),
-                    HediffCompProperties_SubstituteCapacity.SubstitutionMode.Minimum => (substituteLevel < originalLevel),
+                    HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => (substituteLevel > originalLevel),
+                    HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => (substituteLevel < originalLevel),
                     _ => true
                 };
             }
@@ -48,13 +63,13 @@ namespace XylRacesCore
 
         private void ExtraDescription(StringBuilder sb)
         {
-            string desc = CompProperties.mode switch
+            string desc = DefExt.mode switch
             {
-                HediffCompProperties_SubstituteCapacity.SubstitutionMode.Maximum => "XylSubstituteCapacityHigherDesc",
-                HediffCompProperties_SubstituteCapacity.SubstitutionMode.Minimum => "XylSubstituteCapacityLowerDesc",
+                HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => "XylSubstituteCapacityHigherDesc",
+                HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => "XylSubstituteCapacityLowerDesc",
                 _ => "XylSubstituteCapacityAlwaysDesc"
             };
-            sb.Append(desc.Translate(CompProperties.substituteCapacity.label, CompProperties.originalCapacity.label)
+            sb.Append(desc.Translate(DefExt.substituteCapacity.label, DefExt.originalCapacity.label)
                 .CapitalizeFirst());
         }
 
@@ -63,8 +78,8 @@ namespace XylRacesCore
             foreach (var statDrawEntry in base.SpecialDisplayStats(req))
                 yield return statDrawEntry;
 
-            float difference = pawn.health.capacities.GetLevel(CompProperties.substituteCapacity) -
-                               pawn.health.capacities.GetLevel(CompProperties.originalCapacity);
+            float difference = pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
+                               pawn.health.capacities.GetLevel(DefExt.originalCapacity);
             if (!Active)
                 difference = 0;
 
@@ -72,27 +87,32 @@ namespace XylRacesCore
             ExtraDescription(sb);
 
             yield return new StatDrawEntry(StatCategoryDefOf.CapacityEffects,
-                "XylEffectiveCapacity".Translate(CompProperties.originalCapacity.label),
+                "XylEffectiveCapacity".Translate(DefExt.originalCapacity.label),
                 difference.ToStringPercentSigned(), sb.ToString(), 1);
         }
 
         public bool Validate(StatDef statDef, PawnCapacityDef pawnCapacityDef)
         {
-            if (CompProperties.originalCapacity != pawnCapacityDef)
+            if (DefExt.originalCapacity != pawnCapacityDef)
                 return false;
             if (!Active)
                 return false;
-            if (CompProperties.excludeStats != null && CompProperties.excludeStats.Contains(statDef))
+            if (DefExt.excludeStats != null && DefExt.excludeStats.Contains(statDef))
                 return false;
             return true;
         }
 
         public TaggedString DescriptionFor(Pawn pawn)
         {
-            float modifier = (pawn.health.capacities.GetLevel(CompProperties.substituteCapacity) -
-                              pawn.health.capacities.GetLevel(CompProperties.originalCapacity));
-            return LabelCap + ": " + CompProperties.originalCapacity.LabelCap + " -> " + 
-                   CompProperties.substituteCapacity.LabelCap + " (" + modifier.ToStringPercentSigned() + ")";
+            float modifier = (pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
+                              pawn.health.capacities.GetLevel(DefExt.originalCapacity));
+            return LabelCap + ": " + DefExt.originalCapacity.LabelCap + " -> " +
+                   DefExt.substituteCapacity.LabelCap + " (" + modifier.ToStringPercentSigned() + ")";
+        }
+
+        public static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
+        {
+            return pawn.health.hediffSet.hediffs.OfType<Hediff_SubstituteCapacity>().FirstOrDefault(hediff => hediff.Validate(stat, capacity));
         }
     }
 }

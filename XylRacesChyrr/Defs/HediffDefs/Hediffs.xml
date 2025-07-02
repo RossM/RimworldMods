@@ -22,8 +22,8 @@
     <everCurableByItem>false</everCurableByItem>
     <keepOnBodyPartRestoration>true</keepOnBodyPartRestoration>
     <isBad>false</isBad>
-    <comps>
-      <li Class="XylRacesCore.HediffCompProperties_SubstituteCapacity">
+    <modExtensions>
+      <li Class="XylRacesCore.HediffDefExtension_SubstituteCapacity">
         <originalCapacity>Sight</originalCapacity>
         <substituteCapacity>Hearing</substituteCapacity>
         <mode>Maximum</mode>
@@ -31,7 +31,7 @@
           <li>ReadingSpeed</li>
         </excludeStats>
       </li>
-    </comps>
+    </modExtensions>
     <stages>
       <li>
         <becomeVisible>false</becomeVisible>
