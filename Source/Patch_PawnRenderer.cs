@@ -43,7 +43,7 @@ namespace XylRacesCore
                         // Load pawnRenderFlags
                         CodeInstruction.LoadLocal(0),
                         // Get modified flags
-                        CodeInstruction.Call(typeof(Comp_RenderProperties), nameof(Comp_RenderProperties.ModifyRenderFlags)),
+                        CodeInstruction.Call(typeof(CompPawn_RenderProperties), nameof(CompPawn_RenderProperties.ModifyRenderFlags)),
                         // Save pawnRenderFlags
                         CodeInstruction.StoreLocal(0),
                     ]

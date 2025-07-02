@@ -74,13 +74,14 @@ namespace XylRacesCore
             this.FailOnSomeonePhysicallyInteracting(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
             Toil toil = ToilMaker.MakeToil("MakeNewToils");
-            var hideClothes = new Comp_RenderProperties { hideClothes = true };
             toil.initAction = delegate
             {
                 Pawn actor = toil.actor;
                 actor.pather.StopDead();
                 PawnUtility.ForceWait(Target, 15000, null, maintainPosture: true);
-                Target?.AllComps.Add(hideClothes);
+                var comp = Target?.GetComp<CompPawn_RenderProperties>();
+                if (comp != null)
+                    comp.hideClothes = true;
                 Target?.rotationTracker.FaceTarget(actor);
             };
             toil.tickIntervalAction = delegate (int delta)
@@ -100,7 +101,9 @@ namespace XylRacesCore
                 {
                     Target.jobs.EndCurrentJob(JobCondition.InterruptForced);
                 }
-                Target?.AllComps.Remove(hideClothes);
+                var comp = Target?.GetComp<CompPawn_RenderProperties>();
+                if (comp != null)
+                    comp.hideClothes = false;
             });
             toil.FailOnDespawnedOrNull(TargetIndex.A);
             toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);

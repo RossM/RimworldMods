@@ -30,13 +30,14 @@ namespace XylRacesCore
                 if (need_wetness is { CurLevel: > 0.9999f })
                     pawn.jobs.curDriver.EndJobWith(JobCondition.Succeeded);
             });
-            var comp = new Comp_RenderProperties { hideClothes = true, hideHeadgear = true };
             toil.initAction = () =>
             {
                 Pawn actor = toil.actor;
                 if (need_wetness != null)
                     need_wetness.IsShowering = true;
-                actor.AllComps.Add(comp);
+                var comp = actor.GetComp<CompPawn_RenderProperties>();
+                if (comp != null)
+                    comp.hideClothes = comp.hideHeadgear = true;
             };
             toil.tickIntervalAction = delegate(int delta)
             {
@@ -50,7 +51,9 @@ namespace XylRacesCore
                 Pawn actor = toil.actor;
                 if (need_wetness != null)
                     need_wetness.IsShowering = false;
-                actor.AllComps.Remove(comp);
+                var comp = actor.GetComp<CompPawn_RenderProperties>();
+                if (comp != null)
+                    comp.hideClothes = comp.hideHeadgear = true;
             });
             EffecterDef effecterDef = DefDatabase<EffecterDef>.GetNamed("XylShowerSplash");
             toil.WithEffect(effecterDef, TargetIndex.A);

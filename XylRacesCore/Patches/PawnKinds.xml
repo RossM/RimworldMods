@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+    <xpath>Defs/ThingDef[defName="Human"]</xpath>
+    <value>
+      <comps>
+        <li Class="XylRacesCore.CompProperties_PawnRenderProperties">
+        </li>
+      </comps>
+    </value>
+  </Operation>
+
+</Patch>
