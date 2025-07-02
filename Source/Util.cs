@@ -31,12 +31,12 @@ namespace XylRacesCore
 
         public static bool HasGeneOfType<T>(this Pawn pawn) where T : class
         {
-            return pawn.genes?.GenesListForReading.OfType<T>().Any() == true;
+            return pawn.genes != null && pawn.genes.GenesListForReading.OfType<T>().Any();
         }
 
         public static bool HasGeneOfType<T>(this Pawn pawn, Func<T, bool> predicate) where T : class
         {
-            return pawn.genes?.GenesListForReading.OfType<T>().Any(predicate) == true;
+            return pawn.genes != null && pawn.genes.GenesListForReading.OfType<T>().Any(predicate);
         }
 
         public static Hediff GetFirstHediffWithComp<T>(this HediffSet hediffSet) where T : HediffComp
