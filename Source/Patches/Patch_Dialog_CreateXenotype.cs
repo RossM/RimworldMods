@@ -43,7 +43,16 @@ namespace XylRacesCore.Patches
 
         private static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable)
         {
-            return genes.Where(g => g.GetModExtension<GeneDefExtension_UIFilter>()?.ShouldBeVisible(inheritable) != false).ToList();
+            // Note that we re-sort the genes, as the existing sort doesn't have a tiebreaker between
+            // genes with the same category and displayOrderInCategory, leading to results that
+            // depend on load order.
+            return genes
+                .Where(g => g.GetModExtension<GeneDefExtension_UIFilter>()?.ShouldBeVisible(inheritable) != false)
+                .OrderByDescending(g => g.displayCategory.displayPriorityInXenotype)
+                .ThenBy(g => g.displayCategory.label)
+                .ThenBy(g => g.displayOrderInCategory)
+                .ThenBy(g => g.label)
+                .ToList();
         }
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DrawGenes")]
