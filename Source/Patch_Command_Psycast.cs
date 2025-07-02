@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Verse;
 
 
@@ -42,7 +43,7 @@ namespace XylRacesCore
             }
         };
         
-        [HarmonyTranspiler, HarmonyPatch("DisabledCheck")]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DisabledCheck")]
         static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);

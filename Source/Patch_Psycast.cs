@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
@@ -40,7 +41,7 @@ namespace XylRacesCore
             }
         };
         
-        [HarmonyTranspiler, HarmonyPatch("GizmoDisabled")]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("GizmoDisabled")]
         static IEnumerable<CodeInstruction> GizmoDisabled_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -49,7 +50,7 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [HarmonyTranspiler, HarmonyPatch("CanCast", MethodType.Getter)]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("CanCast", MethodType.Getter)]
         static IEnumerable<CodeInstruction> CanCast_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);

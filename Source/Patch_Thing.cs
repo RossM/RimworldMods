@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
@@ -18,7 +19,7 @@ namespace XylRacesCore
     [HarmonyPatch(typeof(Thing))]
     static class Patch_Thing
     {
-        [HarmonyPrefix, HarmonyPatch("IngestedCalculateAmounts")]
+        [HarmonyPrefix, UsedImplicitly, HarmonyPatch("IngestedCalculateAmounts")]
         public static void IngestedCalculateAmounts_Prefix(Thing __instance, Pawn ingester, ref float nutritionWanted)
         {
             foreach (var dietDependency in ingester.GenesOfType<Gene_DietDependency>())
@@ -32,7 +33,7 @@ namespace XylRacesCore
             }
         }
 
-        [HarmonyPrefix, HarmonyPatch("TakeDamage")]
+        [HarmonyPrefix, UsedImplicitly, HarmonyPatch("TakeDamage")]
         public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
         {
             List<Gene> instigatorGenes = (dinfo.Instigator as Pawn)?.genes?.GenesListForReading;
@@ -79,7 +80,7 @@ namespace XylRacesCore
             }
         };
 
-        [HarmonyTranspiler, HarmonyPatch("Ingested")]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("Ingested")]
         static IEnumerable<CodeInstruction> Ingested_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);

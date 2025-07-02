@@ -51,7 +51,7 @@ namespace XylRacesCore
             }
         };
 
-        [HarmonyTranspiler, HarmonyPatch("TryGenerateNewPawnInternal")]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("TryGenerateNewPawnInternal")]
         static IEnumerable<CodeInstruction> TryGenerateNewPawnInternal_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);

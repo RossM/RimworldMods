@@ -9,5 +9,17 @@
       </nullifyingGenes>
     </value>
   </Operation>
+  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+    <xpath>Defs/ThoughtDef[defName="SleptInBarracks"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="XylRacesCore.ThoughtDefExtension_Memory">
+          <extraThoughts>
+            <li>XylSleptInBarracks_HerdInstinct</li>
+          </extraThoughts>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
 
 </Patch>

@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Verse;
 
 
@@ -51,7 +52,7 @@ namespace XylRacesCore
             }
         };
 
-        [HarmonyTranspiler, HarmonyPatch("ParallelGetPreRenderResults")]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("ParallelGetPreRenderResults")]
         public static IEnumerable<CodeInstruction> ParallelGetPreRenderResults_Transpiler(
             IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
