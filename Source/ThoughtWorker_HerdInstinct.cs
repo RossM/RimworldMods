@@ -15,32 +15,19 @@ namespace XylRacesCore
         protected override ThoughtState CurrentStateInternal(Pawn p)
         {
             if (!p.Spawned)
-            {
                 return ThoughtState.Inactive;
-            }
             if (ThoughtUtility.ThoughtNullified(p, def))
-            {
                 return ThoughtState.Inactive;
-            }
 
             int colonistCount = p.Map.mapPawns.ColonistsSpawnedCount;
-            if (colonistCount <= Thought_Situational_HerdInstinct.NumPawns_Alone)
+            return colonistCount switch
             {
-                return ThoughtState.ActiveAtStage(0);
-            }
-            if (colonistCount <= Thought_Situational_HerdInstinct.NumPawns_SmallHerd)
-            {
-                return ThoughtState.ActiveAtStage(1);
-            }
-            if (colonistCount <= Thought_Situational_HerdInstinct.NumPawns_Inactive)
-            {
-                return ThoughtState.Inactive;
-            }
-            if (colonistCount <= Thought_Situational_HerdInstinct.NumPawns_LargeHerd)
-            {
-                return ThoughtState.ActiveAtStage(2);
-            }
-            return ThoughtState.ActiveAtStage(3);
+                <= Thought_Situational_HerdInstinct.NumPawns_Alone => ThoughtState.ActiveAtStage(0),
+                <= Thought_Situational_HerdInstinct.NumPawns_SmallHerd => ThoughtState.ActiveAtStage(1),
+                <= Thought_Situational_HerdInstinct.NumPawns_Inactive => ThoughtState.Inactive,
+                <= Thought_Situational_HerdInstinct.NumPawns_LargeHerd => ThoughtState.ActiveAtStage(2),
+                _ => ThoughtState.ActiveAtStage(3)
+            };
         }
     }
 }

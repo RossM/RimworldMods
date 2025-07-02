@@ -18,8 +18,6 @@ namespace XylRacesCore
 
         protected override ThoughtState CurrentStateInternal(Pawn p)
         {
-            if (!p.Spawned)
-                return ThoughtState.Inactive;
             if (ThoughtUtility.ThoughtNullified(p, def))
                 return ThoughtState.Inactive;
 
