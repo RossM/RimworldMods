@@ -27,15 +27,13 @@ namespace XylRacesCore
                     Mode = InstructionMatcher.OutputMode.Replace,
                     Pattern =
                     [
-                        CodeInstruction.LoadField(typeof(Pawn), "health"),
-                        CodeInstruction.LoadField(typeof(Pawn_HealthTracker), "hediffSet"),
                         new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(HediffDefOf), "Lactating")),
                         new CodeInstruction(OpCodes.Ldc_I4_0),
                         new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HediffSet), "GetFirstHediffOfDef")),
                     ],
                     Output =
                     [
-                        CodeInstruction.Call(() => Gene_Hyperlactation.GetPawnLactationHediff),
+                        CodeInstruction.Call(() => Util.GetFirstHediffWithComp<HediffComp_Lactating>),
                     ]
                 },
                 new()
@@ -44,15 +42,13 @@ namespace XylRacesCore
                     Mode = InstructionMatcher.OutputMode.Replace,
                     Pattern =
                     [
-                        CodeInstruction.LoadField(typeof(Pawn), "health"),
-                        CodeInstruction.LoadField(typeof(Pawn_HealthTracker), "hediffSet"),
                         new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(HediffDefOf), "Lactating")),
                         new CodeInstruction(OpCodes.Ldc_I4_0),
                         new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HediffSet), "HasHediff", [typeof(HediffDef), typeof(bool)])),
                     ],
                     Output =
                     [
-                        CodeInstruction.Call(() => Gene_Hyperlactation.HasPawnLactationHediff),
+                        CodeInstruction.Call(() => Util.HasHediffWithComp<HediffComp_Lactating>),
                     ]
                 },
             }
@@ -108,16 +104,6 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        //[HarmonyPatch(typeof(PregnancyUtility), "ApplyBirthOutcome")]
-        //[HarmonyTranspiler]
-        //static IEnumerable<CodeInstruction> ApplyBirthOutcome_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
-        //{
-        //    var instructionsList = new List<CodeInstruction>(instructions);
-        //    if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-        //        Log.Error(string.Format("XylRacesCore.PatchLactation.Transpiler: {0}", reason));
-        //    return instructionsList;
-        //}
-
         [HarmonyPatch(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
         [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
@@ -127,16 +113,6 @@ namespace XylRacesCore
                 Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
-
-        //[HarmonyPatch(typeof(ITab_Pawn_Feeding), "FillTab", [typeof(Pawn), typeof(Rect), typeof(Vector2), typeof(Vector2), typeof(List<Pawn>)])]
-        //[HarmonyTranspiler]
-        //static IEnumerable<CodeInstruction> FillTab_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
-        //{
-        //    var instructionsList = new List<CodeInstruction>(instructions);
-        //    if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-        //        Log.Error(string.Format("XylRacesCore.PatchLactation.Transpiler: {0}", reason));
-        //    return instructionsList;
-        //}
 
         [HarmonyPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
         [HarmonyTranspiler]

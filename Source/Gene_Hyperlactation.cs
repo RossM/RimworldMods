@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,7 +46,7 @@ namespace XylRacesCore
 
         public GeneDefExtension_Hyperlactation DefExt => def.GetModExtension<GeneDefExtension_Hyperlactation>();
 
-        public HediffComp_Lactating Lactating => GetPawnLactationHediff(pawn).TryGetComp<HediffComp_Lactating>();
+        public HediffComp_Lactating Lactating => pawn.health.hediffSet.GetFirstHediffWithComp<HediffComp_Lactating>().TryGetComp<HediffComp_Lactating>();
 
         public override bool Active
         {
@@ -138,16 +139,6 @@ namespace XylRacesCore
             Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff) ??
                             pawn.health.AddHediff(DefExt.hediff);
             hediff.Severity = 1.0f;
-        }
-
-        public static Hediff GetPawnLactationHediff(Pawn pawn)
-        {
-            return pawn.health.hediffSet.hediffs.FirstOrDefault(h => h.TryGetComp<HediffComp_Lactating>() != null);
-        }
-
-        public static bool HasPawnLactationHediff(Pawn pawn)
-        {
-            return GetPawnLactationHediff(pawn) != null;
         }
 
         public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / DefExt.chargePerItem);

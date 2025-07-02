@@ -38,5 +38,15 @@ namespace XylRacesCore
         {
             return pawn.FirstGeneOfType<T>(predicate) != null;
         }
+
+        public static Hediff GetFirstHediffWithComp<T>(this HediffSet hediffSet) where T : HediffComp
+        {
+            return hediffSet.hediffs.FirstOrDefault(h => h.TryGetComp<T>() != null);
+        }
+
+        public static bool HasHediffWithComp<T>(this HediffSet hediffSet) where T : HediffComp
+        {
+            return hediffSet.GetFirstHediffWithComp<T>() != null;
+        }
     }
 }
