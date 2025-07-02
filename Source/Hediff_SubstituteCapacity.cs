@@ -65,9 +65,10 @@ namespace XylRacesCore
         {
             string desc = DefExt.mode switch
             {
+                HediffDefExtension_SubstituteCapacity.SubstitutionMode.Always => "XylSubstituteCapacityAlwaysDesc",
                 HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => "XylSubstituteCapacityHigherDesc",
                 HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => "XylSubstituteCapacityLowerDesc",
-                _ => "XylSubstituteCapacityAlwaysDesc"
+                _ => throw new NotSupportedException()
             };
             sb.Append(desc.Translate(DefExt.substituteCapacity.label, DefExt.originalCapacity.label)
                 .CapitalizeFirst());
