@@ -7,6 +7,7 @@ namespace XylRacesCore.Genes
 {
     public class GeneDefExtension_Flight : DefModExtension_WithIcon
     {
+        public float autoFlyMinDistance = 25f;
     }
 
     public class Gene_Flight : Gene
@@ -83,8 +84,13 @@ namespace XylRacesCore.Genes
             if (!flight.CanEverFly)
                 return;
 
-            if (!flight.Flying && autoFly && pawn.pather.Moving && pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
+            if (!flight.Flying && autoFly && pawn.pather.Moving &&
+                (pawn.Position - pawn.pather.Destination.Cell).LengthHorizontal >= DefExt.autoFlyMinDistance &&
+                pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
+            {
+                //Log.Message(string.Format("Expected flight distance: {0}", (pawn.Position - pawn.pather.Destination.Cell).LengthHorizontal)); 
                 flight.StartFlying();
+            }
         }
 
         // If a downed flying pawn lands on a non-walkable tile, they are killed and their corpse destroyed.
