@@ -10,26 +10,28 @@ using Verse;
 namespace XylRacesCore
 {
     [UsedImplicitly]
-    public class Hediff_Weapon : HediffWithComps
+    public class Hediff_InnateWeapon : HediffWithComps
     {
         public float GetMeleeDPSValueUnfinalized(StatRequest req, bool applyPostProcess = true)
         {
-            var verbGiver = def.CompProps<HediffCompProperties_VerbGiver>();
-            var verbs = verbGiver.verbs;
-            var tools = verbGiver.tools;
-            ;
-            Pawn attacker = pawn;
-            float damage = (from x in VerbUtility.GetAllVerbProperties(verbs, tools)
-                         where x.verbProps.IsMeleeAttack
-                         select x).AverageWeighted((VerbUtility.VerbPropertiesWithSource x) => x.verbProps.AdjustedMeleeSelectionWeight(x.tool, attacker, req.Thing, null, comesFromPawnNativeVerbs: false), (VerbUtility.VerbPropertiesWithSource x) => x.verbProps.AdjustedMeleeDamageAmount(x.tool, attacker, req.Thing, null));
-            float cooldown = (from x in VerbUtility.GetAllVerbProperties(verbs, tools)
-                          where x.verbProps.IsMeleeAttack
-                          select x).AverageWeighted((VerbUtility.VerbPropertiesWithSource x) => x.verbProps.AdjustedMeleeSelectionWeight(x.tool, attacker, req.Thing, null, comesFromPawnNativeVerbs: false), (VerbUtility.VerbPropertiesWithSource x) => x.verbProps.AdjustedCooldown(x.tool, attacker, req.Thing));
+            var comp = GetComp<HediffComp_VerbGiver>();
+
+            var verbs = VerbUtility.GetAllVerbProperties(comp.VerbProperties, comp.Tools)
+                .Where(x => x.verbProps.IsMeleeAttack).ToList();
+
+            float damage = verbs.AverageWeighted(SelectionWeight, x => x.verbProps.AdjustedMeleeDamageAmount(x.tool, pawn, req.Thing, comp));
+            float cooldown = verbs.AverageWeighted(SelectionWeight, x => x.verbProps.AdjustedCooldown(x.tool, pawn, req.Thing));
             if (cooldown == 0f)
             {
                 return 0f;
             }
             return damage / cooldown;
+
+            float SelectionWeight(VerbUtility.VerbPropertiesWithSource x)
+            {
+                return x.verbProps.AdjustedMeleeSelectionWeight(x.tool, pawn, req.Thing, null,
+                    comesFromPawnNativeVerbs: false);
+            }
         }
 
         public string GetMeleeDPSExplanationUnfinalized(StatRequest req, ToStringNumberSense numberSense)

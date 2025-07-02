@@ -76,7 +76,7 @@
   </HediffDef>
 
   <HediffDef>
-    <hediffClass>XylRacesCore.Hediff_Weapon</hediffClass>
+    <hediffClass>XylRacesCore.Hediff_InnateWeapon</hediffClass>
     <defName>XylLargeHorns</defName>
     <label>large horns</label>
     <description>Large, dangerous horns that can be used as a weapon.</description>
