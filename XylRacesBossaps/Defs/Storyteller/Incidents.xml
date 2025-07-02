@@ -12,7 +12,7 @@
     <baseChance>0.5</baseChance>
     <populationEffect>IncreaseMedium</populationEffect>
     <letterLabel>{0} wander in</letterLabel>
-    <letterText>A herd of wild {0} have wandered into the area.\n\nYou may attempt to tame them, or capture and enslave them.\n\nThey will leave the area in a few days.</letterText>
+    <letterText>A herd of wild {0} have wandered into the area.\n\nYou may attempt to tame them.\n\nThey will leave the area in a few days.</letterText>
     <letterDef>NeutralEvent</letterDef>
     <modExtensions>
       <li Class="XylRacesCore.IncidentDefExtension_WildTribe">
