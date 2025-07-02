@@ -109,4 +109,15 @@
     </modExtensions>
   </GeneDef>
 
+  <GeneDef ParentName="GeneJawBase">
+    <defName>XylHead_Trog</defName>
+    <label>misshapen head</label>
+    <description>Carriers of this gene have strange, misshapen faces and heads.</description>
+    <forcedHeadTypes>
+      <li>Male_XylTrog_A</li>
+      <li>Female_XylTrog_A</li>
+    </forcedHeadTypes>
+    <displayOrderInCategory>97</displayOrderInCategory>
+  </GeneDef>
+
 </Defs>

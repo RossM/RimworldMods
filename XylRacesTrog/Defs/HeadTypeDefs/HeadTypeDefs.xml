@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <HeadTypeDef Name="XylTrogBase" ParentName="AverageBase" Abstract="True">
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylHead_Trog</li>
+    </requiredGenes>
+  </HeadTypeDef>
+
+  <HeadTypeDef ParentName="XylTrogBase">
+    <defName>Male_XylTrog_A</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Trog_A</graphicPath>
+    <gender>Male</gender>
+  </HeadTypeDef>
+
+  <HeadTypeDef ParentName="XylTrogBase">
+    <defName>Female_XylTrog_A</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Trog_A</graphicPath>
+    <gender>Female</gender>
+  </HeadTypeDef>  
+</Defs>
