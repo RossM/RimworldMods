@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,9 @@ using Verse;
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(PawnRenderer))]
-    public class Patch_PawnRenderer
+    public static class Patch_PawnRenderer
     {
-        private static readonly InstructionMatcher FixupParallelGetPreRenderResults = new()
+        private static readonly InstructionMatcher Fixup_ParallelGetPreRenderResults = new()
         {
             Rules =
             {
@@ -54,8 +55,8 @@ namespace XylRacesCore
             IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!FixupParallelGetPreRenderResults.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.Patch_StatWorker.GetOffsetsAndFactorsExplanation_Transpiler: {0}", reason));
+            if (!Fixup_ParallelGetPreRenderResults.MatchAndReplace(ref instructionsList, out string reason, generator))
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
     }

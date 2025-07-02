@@ -6,7 +6,7 @@ using Verse;
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(FoodUtility))]
-    public class Patch_FoodUtility_NutritionForEater
+    public static class Patch_FoodUtility_NutritionForEater
     {
         [HarmonyPostfix, HarmonyPatch(nameof(FoodUtility.NutritionForEater))]
         static void NutritionForEater_Postfix(Pawn eater, Thing food, ref float __result)

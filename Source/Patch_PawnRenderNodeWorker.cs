@@ -11,11 +11,11 @@ namespace XylRacesCore
 {
     // Not sure if this is a good thing to modify, seems performance-sensitive
 
-    [HarmonyPatch(typeof(PawnRenderNodeWorker), nameof(PawnRenderNodeWorker.ScaleFor))]
-    public class Patch_PawnRenderNodeWorker
+    [HarmonyPatch(typeof(PawnRenderNodeWorker))]
+    public static class Patch_PawnRenderNodeWorker
     {
-        [HarmonyPostfix]
-        static void Postfix(PawnRenderNode node, PawnDrawParms parms, ref UnityEngine.Vector3 __result)
+        [HarmonyPostfix, HarmonyPatch(nameof(PawnRenderNodeWorker.ScaleFor))]
+        static void ScaleFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref UnityEngine.Vector3 __result)
         {
             List<Gene> genes = parms.pawn?.genes?.GenesListForReading;
             if (genes == null)

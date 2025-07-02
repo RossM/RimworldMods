@@ -13,7 +13,7 @@ using Verse.AI;
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(Pawn_FlightTracker))]
-    public class Patch_Pawn_FlightTracker
+    public static class Patch_Pawn_FlightTracker
     {
         [HarmonyPrefix, HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
         public static bool Notify_JobStarted_Prefix(Pawn_FlightTracker __instance, Job job)
@@ -28,6 +28,7 @@ namespace XylRacesCore
             return true;
         }
 
+        [HarmonyPrefix, HarmonyPatch(nameof(Pawn_FlightTracker.FlightTick))]
         public static void FlightTick_Prefix(Pawn_FlightTracker __instance)
         {
             var pawn = __instance.Get<Pawn>("pawn");

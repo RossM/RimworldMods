@@ -10,11 +10,11 @@ using Verse.AI;
 
 namespace XylRacesCore
 {
-    [HarmonyPatch(typeof(JobGiver_ConfigurableHostilityResponse), "TryGiveJob")]
-    public class Patch_JobGiver_ConfigurableHostilityResponse
+    [HarmonyPatch(typeof(JobGiver_ConfigurableHostilityResponse))]
+    public static class Patch_JobGiver_ConfigurableHostilityResponse
     {
-        [HarmonyPrefix]
-        public static bool Prefix(Pawn pawn, ref Job __result)
+        [HarmonyPrefix, HarmonyPatch("TryGiveJob")]
+        public static bool TryGiveJob_Prefix(Pawn pawn, ref Job __result)
         {
             if (pawn.health.hediffSet.hediffs.OfType<Hediff_ForceBehavior>().Any())
             {

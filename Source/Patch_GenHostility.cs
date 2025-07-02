@@ -11,13 +11,13 @@ using Verse;
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(GenHostility))]
-    public class Patch_GenHostility
+    public static class Patch_GenHostility
     {
         private static readonly MethodInfo methodIsActivityDormant =
             AccessTools.Method(typeof(GenHostility), "IsActivityDormant");
 
         [HarmonyPrefix, HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
-        public static bool Prefix(Thing a, Thing b, ref bool __result)
+        public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
         {
             // These are cases where we should respect the regular logic
             if (a.Destroyed || b.Destroyed || a == b)

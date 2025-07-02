@@ -4,11 +4,11 @@ using Verse;
 
 namespace XylRacesCore
 {
-    [HarmonyPatch(typeof(Designator_Build), nameof(Designator_Build.Visible), MethodType.Getter)]
-    public class Patch_Designator_Build
+    [HarmonyPatch(typeof(Designator_Build))]
+    public static class Patch_Designator_Build
     {
-        [HarmonyPostfix]
-        static void Postfix(Designator_Build __instance, ref bool __result)
+        [HarmonyPostfix, HarmonyPatch(nameof(Designator_Build.Visible), MethodType.Getter)]
+        static void Visible_Postfix(Designator_Build __instance, ref bool __result)
         {
             if (DebugSettings.godMode)
                 return;

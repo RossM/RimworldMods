@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,9 @@ using Verse;
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(Psycast))]
-    public class Patch_Psycast
+    public static class Patch_Psycast
     {
-        private static readonly InstructionMatcher FixupGetPsycastLevel = new()
+        private static readonly InstructionMatcher Fixup_GetPsycastLevel = new()
         {
             Rules =
             {
@@ -42,8 +43,8 @@ namespace XylRacesCore
         static IEnumerable<CodeInstruction> GizmoDisabled_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!FixupGetPsycastLevel.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.Patch_StatWorker.GetOffsetsAndFactorsExplanation_Transpiler: {0}", reason));
+            if (!Fixup_GetPsycastLevel.MatchAndReplace(ref instructionsList, out string reason, generator))
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
 
@@ -51,8 +52,8 @@ namespace XylRacesCore
         static IEnumerable<CodeInstruction> CanCast_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!FixupGetPsycastLevel.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.Patch_StatWorker.GetOffsetsAndFactorsExplanation_Transpiler: {0}", reason));
+            if (!Fixup_GetPsycastLevel.MatchAndReplace(ref instructionsList, out string reason, generator))
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
     }

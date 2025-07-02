@@ -9,7 +9,7 @@ using RimWorld;
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(Pawn_PsychicEntropyTracker))]
-    public class Patch_Pawn_PsychicEntropyTracker
+    public static class Patch_Pawn_PsychicEntropyTracker
     {
         [HarmonyPrefix, HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedsPsyfocus), MethodType.Getter)]
         public static bool NeedsPsyfocus_Prefix(Pawn_PsychicEntropyTracker __instance, ref bool __result)

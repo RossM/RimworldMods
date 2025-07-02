@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +12,9 @@ using Verse;
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(PawnGenerator))]
-    public class Patch_PawnGenerator
+    public static class Patch_PawnGenerator
     {
-        private static readonly InstructionMatcher FixupTryGenerateNewPawnInternal = new()
+        private static readonly InstructionMatcher Fixup_TryGenerateNewPawnInternal = new()
         {
             Rules =
             {
@@ -52,8 +53,8 @@ namespace XylRacesCore
         static IEnumerable<CodeInstruction> TryGenerateNewPawnInternal_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!FixupTryGenerateNewPawnInternal.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.Patch_StatWorker.GetOffsetsAndFactorsExplanation_Transpiler: {0}", reason));
+            if (!Fixup_TryGenerateNewPawnInternal.MatchAndReplace(ref instructionsList, out string reason, generator))
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
 

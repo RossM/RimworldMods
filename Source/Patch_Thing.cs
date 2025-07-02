@@ -1,13 +1,14 @@
-﻿using System;
+﻿using HarmonyLib;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
-using HarmonyLib;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -82,7 +83,7 @@ namespace XylRacesCore
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!FixupIngested.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.Patch_Thing.Ingested_Transpiler: {0}", reason));
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
     }

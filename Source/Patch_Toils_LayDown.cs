@@ -9,10 +9,10 @@ using Verse;
 
 namespace XylRacesCore
 {
-    [HarmonyPatch(typeof(Toils_LayDown), "ApplyBedThoughts")]
-    public class Patch_Toils_LayDown
+    [HarmonyPatch(typeof(Toils_LayDown))]
+    public static class Patch_Toils_LayDown
     {
-        [HarmonyPostfix]
+        [HarmonyPostfix, HarmonyPatch("ApplyBedThoughts")]
         public static void ApplyBedThoughts_Postfix(Pawn actor, Building_Bed bed)
         {
             if (bed != null && bed == actor.ownership.OwnedBed && !bed.ForPrisoners && !actor.story.traits.HasTrait(TraitDefOf.Ascetic))

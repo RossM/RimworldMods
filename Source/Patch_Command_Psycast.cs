@@ -1,19 +1,20 @@
-﻿using System;
+﻿using HarmonyLib;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
-using HarmonyLib;
-using RimWorld;
 using Verse;
 
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(Command_Psycast))]
-    public class Patch_Command_Psycast
+    public static class Patch_Command_Psycast
     {
-        private static readonly InstructionMatcher FixupGetPsycastLevel = new()
+        private static readonly InstructionMatcher Fixup_GetPsycastLevel = new()
         {
             Rules =
             {
@@ -44,8 +45,8 @@ namespace XylRacesCore
         static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!FixupGetPsycastLevel.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.Patch_StatWorker.GetOffsetsAndFactorsExplanation_Transpiler: {0}", reason));
+            if (!Fixup_GetPsycastLevel.MatchAndReplace(ref instructionsList, out string reason, generator))
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
     }

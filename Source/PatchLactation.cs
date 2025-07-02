@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,7 +64,7 @@ namespace XylRacesCore
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.PatchLactation.NutritionEatenPerDayExplanation_Transpiler: {0}", reason));
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
 
@@ -73,7 +74,7 @@ namespace XylRacesCore
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.PatchLactation.CanBreastfeed_Transpiler: {0}", reason));
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
 
@@ -83,7 +84,7 @@ namespace XylRacesCore
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.PatchLactation.CanBreastfeedNow_Transpiler: {0}", reason));
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
 
@@ -93,7 +94,7 @@ namespace XylRacesCore
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.PatchLactation.SuckleFromLactatingPawn_Transpiler: {0}", reason));
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
 
@@ -103,7 +104,7 @@ namespace XylRacesCore
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.PatchLactation.QuestPartTick_Transpiler: {0}", reason));
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
 
@@ -123,7 +124,7 @@ namespace XylRacesCore
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.PatchLactation.FoodFallPerTickAssumingCategory: {0}", reason));
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
 
@@ -143,7 +144,7 @@ namespace XylRacesCore
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("XylRacesCore.PatchLactation.DrawRow_Transpiler: {0}", reason));
+                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
             return instructionsList;
         }
 

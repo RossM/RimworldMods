@@ -10,7 +10,7 @@ using Verse;
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(Pawn))]
-    public class Patch_Pawn
+    public static class Patch_Pawn
     {
         [HarmonyPostfix, HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
         static void BodySize_Postfix(Pawn __instance, ref float __result)
