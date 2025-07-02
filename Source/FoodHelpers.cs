@@ -14,7 +14,7 @@ public static class FoodHelpers
         AnimalProduct,
     }
 
-    public static FoodType GetBestFoodType(ThingDef foodDef)
+    public static FoodType GetFoodType(ThingDef foodDef)
     {
         FoodTypeFlags flags = foodDef.ingestible?.foodType ?? 0;
 
@@ -33,7 +33,7 @@ public static class FoodHelpers
     {
         if (!foodDef.IsProcessedFood)
         {
-            return GetBestFoodType(foodDef) switch
+            return GetFoodType(foodDef) switch
             {
                 FoodType.Fungus => eater.GetStatValue("XylRawFungusNutritionFactor", 1.0f) *
                                    eater.GetStatValue("XylRawNonMeatNutritionFactor", 1.0f),
@@ -55,7 +55,7 @@ public static class FoodHelpers
 
             foreach (var ingredient in compIngredients.ingredients)
             {
-                switch (GetBestFoodType(ingredient))
+                switch (GetFoodType(ingredient))
                 {
                     case FoodType.Meat:
                         hasMeat = true;
@@ -103,7 +103,7 @@ public static class FoodHelpers
         if (foodDef.IsProcessedFood) 
             return 0.0f;
 
-        return GetBestFoodType(foodSource.def) switch
+        return GetFoodType(foodSource.def) switch
         {
             FoodType.Fungus => eater.GetStatValue("XylRawFungusFoodPoisoningChanceOffset", 0.0f) +
                                eater.GetStatValue("XylRawNonMeatFoodPoisoningChanceOffset", 0.0f),
