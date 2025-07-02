@@ -8,6 +8,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using Verse;
+// ReSharper disable UnusedMember.Global
 
 namespace XylRacesCore
 {

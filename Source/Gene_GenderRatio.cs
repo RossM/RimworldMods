@@ -13,6 +13,7 @@ namespace XylRacesCore
         public float femaleChance = 0.5f;
     }
 
+    // ReSharper disable once UnusedMember.Global
     public class Gene_GenderRatio : Gene
     {
         public GeneDefExtension_GenderRatio DefExt => def.GetModExtension<GeneDefExtension_GenderRatio>();

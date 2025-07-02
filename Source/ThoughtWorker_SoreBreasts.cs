@@ -9,6 +9,7 @@ using Verse;
 
 namespace XylRacesCore
 {
+    // ReSharper disable once UnusedMember.Global
     public class ThoughtWorker_SoreBreasts : ThoughtWorker
     {
         private const int MaxSorenessLevel = 2;

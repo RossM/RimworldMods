@@ -10,6 +10,7 @@ using Verse;
 
 namespace XylRacesCore
 {
+    // ReSharper disable once UnusedMember.Global
     public class ScenPart_PsylinkLevels : ScenPart
     {
         public int count = 1;

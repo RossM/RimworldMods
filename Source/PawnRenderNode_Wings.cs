@@ -7,6 +7,7 @@ using Verse;
 
 namespace XylRacesCore
 {
+    // ReSharper disable once UnusedMember.Global
     public class PawnRenderNode_Wings : PawnRenderNode
     {
         public PawnRenderNode_Wings(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree) : base(pawn, props, tree)

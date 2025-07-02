@@ -10,6 +10,7 @@ using Verse;
 
 namespace XylRacesCore
 {
+    // ReSharper disable once UnusedMember.Global
     public class ScenPart_Psycast : ScenPart
     {
         public int count = 1;

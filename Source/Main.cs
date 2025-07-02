@@ -8,6 +8,7 @@ using Verse;
 
 namespace XylRacesCore
 {
+    // ReSharper disable once UnusedMember.Global
     [StaticConstructorOnStartup]
     public class Main(ModContentPack content) : Mod(content)
     {

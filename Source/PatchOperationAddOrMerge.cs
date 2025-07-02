@@ -32,6 +32,7 @@ namespace XylRacesCore
     //     <li>Bar</li>
     //   </list>
     // </def>
+    // ReSharper disable once UnusedMember.Global
     public class PatchOperationAddOrMerge : PatchOperationPathed
     {
         private enum Order

@@ -15,6 +15,7 @@ namespace XylRacesCore
         public float mtbDays = 0.0f;
     }
 
+    // ReSharper disable once UnusedMember.Global
     public class Gene_Hediff : Gene, IGene_HediffSource
     {
         public GeneDefExtension_Hediff DefExt => def.GetModExtension<GeneDefExtension_Hediff>();

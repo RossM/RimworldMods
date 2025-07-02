@@ -8,6 +8,7 @@ using Verse;
 
 namespace XylRacesCore
 {
+    // ReSharper disable once UnusedMember.Global
     public class ThoughtWorker_Enslaved : ThoughtWorker
     {
         protected override ThoughtState CurrentStateInternal(Pawn p)

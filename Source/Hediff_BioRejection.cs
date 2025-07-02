@@ -7,6 +7,7 @@ using Verse;
 
 namespace XylRacesCore
 {
+    // ReSharper disable once UnusedMember.Global
     public class Hediff_BioRejection : Hediff
     {
         public override float Severity

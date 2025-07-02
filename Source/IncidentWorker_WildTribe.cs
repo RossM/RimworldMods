@@ -26,6 +26,7 @@ namespace XylRacesCore
         public List<MemeDef> preferredMemes;
     }
 
+    // ReSharper disable once UnusedMember.Global
     public class IncidentWorker_WildTribe : IncidentWorker
     {
         public IncidentDefExtension_WildTribe DefExt => def.GetModExtension<IncidentDefExtension_WildTribe>();

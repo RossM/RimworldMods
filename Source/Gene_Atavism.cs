@@ -18,6 +18,7 @@ namespace XylRacesCore
         public List<GeneDef> extraGenes;
     }
 
+    // ReSharper disable once UnusedMember.Global
     public class Gene_Atavism : Gene
     {
         public List<Gene> addedGenes;

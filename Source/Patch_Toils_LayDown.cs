@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using RimWorld;
 using Verse;
+// ReSharper disable UnusedMember.Global
 
 namespace XylRacesCore
 {

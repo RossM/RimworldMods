@@ -9,6 +9,7 @@ using Verse.AI;
 
 namespace XylRacesCore
 {
+    // ReSharper disable once UnusedMember.Global
     public class WorkGiver_MilkHuman : WorkGiver_Scanner
     {
         private JobDef JobDef => DefDatabase<JobDef>.GetNamed("XylMilkHuman");

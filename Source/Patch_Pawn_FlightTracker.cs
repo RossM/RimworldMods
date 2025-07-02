@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Unity.Jobs;
 using Verse;
 using Verse.AI;
+// ReSharper disable UnusedMember.Global
 
 namespace XylRacesCore
 {
