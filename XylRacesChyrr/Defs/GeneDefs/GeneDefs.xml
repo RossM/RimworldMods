@@ -9,7 +9,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>5</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>400</displayOrderInCategory>
+    <displayOrderInCategory>55</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Blind</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
@@ -78,7 +78,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>400</displayOrderInCategory>
+    <displayOrderInCategory>73</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Echolocation</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
@@ -105,8 +105,8 @@
     <description>Carriers of this gene can see a short distance into the future, giving bonuses to dodging and accuracy in combat. The effect scales with psychic sensitivity.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>400</displayOrderInCategory>
+    <displayCategory>Violence</displayCategory>
+    <displayOrderInCategory>120</displayOrderInCategory>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
@@ -134,6 +134,7 @@
     <iconPath>UI/Abilities/Focus</iconPath>
     <geneClass>XylRacesCore.Genes.Gene_Psycast</geneClass>
     <displayCategory>Ability</displayCategory>
+    <displayOrderInCategory>301</displayOrderInCategory>
     <abilities>
       <li>Focus</li>
     </abilities>
@@ -152,7 +153,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Movement</displayCategory>
-    <displayOrderInCategory>400</displayOrderInCategory>
+    <displayOrderInCategory>510</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_BatWings</iconPath>
     <renderNodeProperties>
       <li>
@@ -201,7 +202,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>500</displayOrderInCategory>
+    <displayOrderInCategory>71</displayOrderInCategory>
     <forcedTraits>
       <li>
         <def>NightOwl</def>
@@ -216,7 +217,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>500</displayOrderInCategory>
+    <displayOrderInCategory>72</displayOrderInCategory>
     <capMods>
       <li>
         <capacity>Hearing</capacity>
@@ -230,6 +231,7 @@
     <label>sonic wave</label>
     <description>Carriers are able to release a wave of high-intensity ultrasonic noise in at a target. The noise will stun any non-mechanoid creature nearby.</description>
     <displayCategory>Ability</displayCategory>
+    <displayOrderInCategory>201</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>
     <abilities>
       <li>XylSonicWave</li>

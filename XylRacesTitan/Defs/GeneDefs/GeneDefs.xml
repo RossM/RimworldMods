@@ -8,7 +8,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>501</displayOrderInCategory>
+    <displayOrderInCategory>0</displayOrderInCategory>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Rendering">
         <scale>1.1</scale>
@@ -32,7 +32,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-3</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
-    <displayOrderInCategory>201</displayOrderInCategory>
+    <displayOrderInCategory>111</displayOrderInCategory>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
@@ -86,7 +86,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>501</displayOrderInCategory>
+    <displayOrderInCategory>601</displayOrderInCategory>
     <disablesNeeds>
       <li>Joy</li>
     </disablesNeeds>
@@ -99,7 +99,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>501</displayOrderInCategory>
+    <displayOrderInCategory>602</displayOrderInCategory>
     <suppressedTraits>
       <li>
         <def>NaturalMood</def>

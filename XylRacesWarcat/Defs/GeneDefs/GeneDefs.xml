@@ -27,7 +27,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>100</displayOrderInCategory>
+    <displayOrderInCategory>14</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MeatDependence</iconPath>
     <forcedTraits>
       <li>
@@ -56,7 +56,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>100</displayOrderInCategory>
+    <displayOrderInCategory>12</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>
     <exclusionTags>
       <li>Digestion</li>
@@ -82,7 +82,7 @@
     <labelShortAdj>yellow-eyed</labelShortAdj>
     <description>Carriers of this gene have yellow-pigmented eyes.</description>
     <iconPath>Xyl/UI/Icons/Genes/Gene_YellowEyes</iconPath>
-    <displayOrderInCategory>2</displayOrderInCategory>
+    <displayOrderInCategory>0.1</displayOrderInCategory>
     <renderNodeProperties>
       <li Class="PawnRenderNodeProperties_Eye">
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Male/YellowEyes_Male</texPath>
@@ -167,7 +167,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Violence</displayCategory>
-    <displayOrderInCategory>100</displayOrderInCategory>
+    <displayOrderInCategory>111</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_RetractableClaws</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <modExtensions>
@@ -196,6 +196,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Ability</displayCategory>
+    <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_FeralRage</iconPath>
     <abilities>
       <li>XylFeralRage</li>
@@ -213,7 +214,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>1</biostatMet>
     <displayCategory>Mood</displayCategory>
-    <displayOrderInCategory>201</displayOrderInCategory>
+    <displayOrderInCategory>101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Moody</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">

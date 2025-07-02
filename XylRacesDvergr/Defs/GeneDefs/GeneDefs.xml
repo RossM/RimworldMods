@@ -9,7 +9,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>400</displayOrderInCategory>
+    <displayOrderInCategory>600</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Industrious</iconPath>
     <iconColor>(0.4, 0.75, 0.90)</iconColor>
     <statOffsets>
@@ -42,7 +42,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
     <displayCategory>Mood</displayCategory>
-    <displayOrderInCategory>100</displayOrderInCategory>
+    <displayOrderInCategory>102</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Melancholy</iconPath>
     <exclusionTags>
       <li>Mood</li>
@@ -72,7 +72,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Mood</displayCategory>
-    <displayOrderInCategory>200</displayOrderInCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Stoic</iconPath>
     <iconColor>(0.5, 0.5, 0.5)</iconColor>
     <statOffsets>
@@ -126,7 +126,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>10</displayOrderInCategory>
+    <displayOrderInCategory>13</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MushroomEater</iconPath>
     <exclusionTags>
       <li>Digestion</li>
@@ -158,6 +158,7 @@
     <label>small pointed ears</label>
     <description>Carriers of this gene have smaller pointed ears.</description>
     <iconPath>Xyl/UI/Icons/Genes/Gene_EarSmallPointed</iconPath>
+    <displayOrderInCategory>71</displayOrderInCategory>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>

@@ -8,6 +8,7 @@
     <iconPath>UI/Abilities/Beckon</iconPath>
     <geneClass>XylRacesCore.Genes.Gene_Psycast</geneClass>
     <displayCategory>Ability</displayCategory>
+    <displayOrderInCategory>300</displayOrderInCategory>
     <abilities>
       <li>Beckon</li>
     </abilities>
@@ -41,7 +42,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-3</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
-    <displayOrderInCategory>200</displayOrderInCategory>
+    <displayOrderInCategory>110</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Scaleskin</iconPath>
     <iconColor>(0.4, 0.65, 0.75)</iconColor>
     <exclusionTags>
@@ -73,8 +74,8 @@
     <description>Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>500</displayOrderInCategory>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>120</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Aquatic</iconPath>
     <iconColor>(0.4, 0.6, 0.9)</iconColor>
     <enablesNeeds>

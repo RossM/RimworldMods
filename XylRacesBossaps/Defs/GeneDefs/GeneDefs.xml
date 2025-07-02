@@ -9,7 +9,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>100</displayOrderInCategory>
+    <displayOrderInCategory>11</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_HerbivoreStomach</iconPath>
     <exclusionTags>
       <li>Digestion</li>
@@ -51,7 +51,7 @@
     <description>Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They are also less likely to start prison breaks, and never start social fights.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
-    <displayOrderInCategory>100</displayOrderInCategory>
+    <displayOrderInCategory>5</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Docile</iconPath>
     <socialFightChanceFactor>0</socialFightChanceFactor>
     <prisonBreakMTBFactor>4</prisonBreakMTBFactor><!-- Never prison breaks -->
@@ -68,7 +68,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>1</biostatMet>
     <displayCategory>Mood</displayCategory>
-    <displayOrderInCategory>500</displayOrderInCategory>
+    <displayOrderInCategory>110</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_HerdInstinct</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <suppressedTraits>
@@ -86,7 +86,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
     <displayCategory>Violence</displayCategory>
-    <displayOrderInCategory>500</displayOrderInCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_SeeingRed">
@@ -104,7 +104,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
-    <displayOrderInCategory>500</displayOrderInCategory>
+    <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Hyperlactation</iconPath>
     <minAgeActive>13</minAgeActive>
     <customEffectDescriptions>
@@ -130,7 +130,6 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
-    <displayOrderInCategory>600</displayOrderInCategory>
     <selectionWeight>0</selectionWeight>
     <exclusionTags>
       <li>Gender</li>
@@ -147,7 +146,7 @@
     <defName>XylGender_AlwaysFemale</defName>
     <label>always female</label>
     <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is heritable.</description>
-    <displayOrderInCategory>601</displayOrderInCategory>
+    <displayOrderInCategory>300</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysFemale</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_GenderRatio">
@@ -163,7 +162,7 @@
     <defName>XylGender_UsuallyFemale</defName>
     <label>usually female</label>
     <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is heritable.</description>
-    <displayOrderInCategory>602</displayOrderInCategory>
+    <displayOrderInCategory>301</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyFemale</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_GenderRatio">
@@ -179,7 +178,7 @@
     <defName>XylGender_UsuallyMale</defName>
     <label>usually male</label>
     <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is heritable.</description>
-    <displayOrderInCategory>603</displayOrderInCategory>
+    <displayOrderInCategory>302</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyMale</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_GenderRatio">
@@ -195,7 +194,7 @@
     <defName>XylGender_AlwaysMale</defName>
     <label>always male</label>
     <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is heritable.</description>
-    <displayOrderInCategory>604</displayOrderInCategory>
+    <displayOrderInCategory>303</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysMale</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_GenderRatio">
@@ -215,7 +214,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Violence</displayCategory>
-    <displayOrderInCategory>100</displayOrderInCategory>
+    <displayOrderInCategory>110</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_LargeHorns</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <renderNodeProperties>
@@ -259,6 +258,7 @@
     <description>Carriers of this gene have cow-like ears.</description>
     <iconPath>Xyl/UI/Icons/Genes/Gene_CowEars</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <displayOrderInCategory>72</displayOrderInCategory>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>

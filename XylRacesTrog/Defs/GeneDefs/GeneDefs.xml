@@ -9,7 +9,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>500</displayOrderInCategory>
+    <displayOrderInCategory>501</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_InsectPheromones</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_HostilityOverride">
@@ -24,6 +24,7 @@
     <label>toxic burst</label>
     <description>Carriers have the ability to release a cloud of toxic gas around them from a special gland located near their anus. The gas affects the user normally.</description>
     <displayCategory>Ability</displayCategory>
+    <displayOrderInCategory>202</displayOrderInCategory>
     <iconPath>Xyl/UI/Abilities/ToxicBurst</iconPath>
     <abilities>
       <li>XylToxicBurst</li>
@@ -41,7 +42,7 @@
     <labelShortAdj>dark green</labelShortAdj>
     <description>Carriers of this gene produce a pigment that gives their skin a dark green color.</description>
     <skinColorOverride>(81,132,32)</skinColorOverride>
-    <displayOrderInCategory>0</displayOrderInCategory>
+    <displayOrderInCategory>1</displayOrderInCategory>
   </GeneDef>
 
   <GeneDef ParentName="GeneSkinColorOverride">
@@ -50,7 +51,7 @@
     <labelShortAdj>olive</labelShortAdj>
     <description>Carriers of this gene produce a pigment that gives their skin an olive color.</description>
     <skinColorOverride>(105,100,59)</skinColorOverride>
-    <displayOrderInCategory>0</displayOrderInCategory>
+    <displayOrderInCategory>2</displayOrderInCategory>
   </GeneDef>
 
   <GeneDef>
@@ -61,7 +62,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>500</displayOrderInCategory>
+    <displayOrderInCategory>1100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_BioRejection</iconPath>
     <suppressedTraits>
       <li>
@@ -90,7 +91,7 @@
     <biostatCpx>0</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>500</displayOrderInCategory>
+    <displayOrderInCategory>1101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_GeneticAtavism</iconPath>
     <customEffectDescriptions>
       <li>Extra gene chance: 50%</li>
@@ -117,7 +118,7 @@
       <li>Male_XylTrog_A</li>
       <li>Female_XylTrog_A</li>
     </forcedHeadTypes>
-    <displayOrderInCategory>97</displayOrderInCategory>
+    <displayOrderInCategory>98</displayOrderInCategory>
   </GeneDef>
 
 </Defs>
