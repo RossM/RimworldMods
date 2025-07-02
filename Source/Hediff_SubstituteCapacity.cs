@@ -103,7 +103,7 @@ namespace XylRacesCore
             return true;
         }
 
-        public TaggedString DescriptionFor(Pawn pawn)
+        public TaggedString GetDescription()
         {
             float modifier = (pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
                               pawn.health.capacities.GetLevel(DefExt.originalCapacity));

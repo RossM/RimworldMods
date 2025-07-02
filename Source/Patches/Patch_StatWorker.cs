@@ -77,15 +77,13 @@ namespace XylRacesCore.Patches
                     ],
                     Output =
                     [
-                        // AppendSubstitutionDescription(sb, whitespace, foundHediff, pawn);
+                        // AppendSubstitutionDescription(sb, whitespace, foundHediff);
                         // sb
                         CodeInstruction.LoadArgument(2),
                         // whitespace
                         CodeInstruction.LoadArgument(4),
                         // foundHediff
                         CodeInstruction.LoadLocal(2),
-                        // pawn
-                        CodeInstruction.LoadLocal(0),
                         // Call
                         CodeInstruction.Call(() => AppendSubstitutionDescription),
                     ],
@@ -131,15 +129,13 @@ namespace XylRacesCore.Patches
                     ],
                     Output =
                     [
-                        // AppendSubstitutionDescription(sb, whitespace, foundHediff, pawn);
+                        // AppendSubstitutionDescription(sb, whitespace, foundHediff);
                         // sb
                         CodeInstruction.LoadArgument(2),
                         // whitespace
                         CodeInstruction.LoadArgument(4),
                         // foundHediff
                         CodeInstruction.LoadLocal(2),
-                        // pawn
-                        CodeInstruction.LoadLocal(0),
                         // Call
                         CodeInstruction.Call(() => AppendSubstitutionDescription),
                     ],
@@ -235,10 +231,10 @@ namespace XylRacesCore.Patches
         }
 
         public static void AppendSubstitutionDescription(StringBuilder sb, string whitespace,
-            Hediff_SubstituteCapacity foundHediff, Pawn pawn)
+            Hediff_SubstituteCapacity foundHediff)
         {
             if (foundHediff != null) 
-                sb.AppendLine(whitespace + "        " + foundHediff.DescriptionFor(pawn));
+                sb.AppendLine(whitespace + "        " + foundHediff.GetDescription());
         }
 
         public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity foundHediff, PawnCapacityDef capacity)
