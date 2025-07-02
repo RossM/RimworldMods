@@ -7,9 +7,10 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
-// ReSharper disable UnusedMember.Global
+
 
 namespace XylRacesCore
 {
@@ -55,9 +56,9 @@ namespace XylRacesCore
             }
         };
 
-        [HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
+        [UsedImplicitly, HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
@@ -65,9 +66,9 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
+        [UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> CanBreastfeed_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> CanBreastfeed_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
@@ -75,9 +76,9 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
+        [UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> CanBreastfeedNow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> CanBreastfeedNow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
@@ -85,9 +86,9 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [HarmonyPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
+        [UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> SuckleFromLactatingPawn_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> SuckleFromLactatingPawn_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
@@ -95,9 +96,9 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [HarmonyPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
+        [UsedImplicitly, HarmonyPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> QuestPartTick_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> QuestPartTick_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
@@ -105,9 +106,9 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [HarmonyPatch(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
+        [UsedImplicitly, HarmonyPatch(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
@@ -115,9 +116,9 @@ namespace XylRacesCore
             return instructionsList;
         }
 
-        [HarmonyPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
+        [UsedImplicitly, HarmonyPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> DrawRow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> DrawRow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))

@@ -5,8 +5,9 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Verse;
-// ReSharper disable UnusedMember.Global
+
 
 namespace XylRacesCore
 {
@@ -15,7 +16,7 @@ namespace XylRacesCore
     [HarmonyPatch(typeof(PawnRenderNodeWorker))]
     public static class Patch_PawnRenderNodeWorker
     {
-        [HarmonyPostfix, HarmonyPatch(nameof(PawnRenderNodeWorker.ScaleFor))]
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnRenderNodeWorker.ScaleFor))]
         static void ScaleFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref UnityEngine.Vector3 __result)
         {
             List<Gene> genes = parms.pawn?.genes?.GenesListForReading;

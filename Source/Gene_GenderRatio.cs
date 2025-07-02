@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
@@ -13,7 +14,7 @@ namespace XylRacesCore
         public float femaleChance = 0.5f;
     }
 
-    // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class Gene_GenderRatio : Gene
     {
         public GeneDefExtension_GenderRatio DefExt => def.GetModExtension<GeneDefExtension_GenderRatio>();

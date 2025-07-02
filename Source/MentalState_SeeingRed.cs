@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Verse;
 using Verse.AI;
 
 namespace XylRacesCore
 {
-    // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class MentalState_SeeingRed : MentalState
     {
         public override bool ForceHostileTo(Thing t)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Verse;
 
 namespace XylRacesCore
@@ -15,7 +16,7 @@ namespace XylRacesCore
         public float mtbDays = 0.0f;
     }
 
-    // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class Gene_Hediff : Gene, IGene_HediffSource
     {
         public GeneDefExtension_Hediff DefExt => def.GetModExtension<GeneDefExtension_Hediff>();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
@@ -18,7 +19,7 @@ namespace XylRacesCore
         public List<GeneDef> extraGenes;
     }
 
-    // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class Gene_Atavism : Gene
     {
         public List<Gene> addedGenes;

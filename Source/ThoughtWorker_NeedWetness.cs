@@ -1,9 +1,10 @@
-﻿using RimWorld;
+﻿using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 
 namespace XylRacesCore
 {
-    // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class ThoughtWorker_NeedWetness : ThoughtWorker
     {
         protected override ThoughtState CurrentStateInternal(Pawn p)

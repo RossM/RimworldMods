@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
 namespace XylRacesCore
 {
-    // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class Hediff_Weapon : HediffWithComps
     {
         public float GetMeleeDPSValueUnfinalized(StatRequest req, bool applyPostProcess = true)

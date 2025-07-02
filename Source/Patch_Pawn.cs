@@ -5,15 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Verse;
-// ReSharper disable UnusedMember.Global
+
 
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(Pawn))]
     public static class Patch_Pawn
     {
-        [HarmonyPostfix, HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
         static void BodySize_Postfix(Pawn __instance, ref float __result)
         {
             List<Gene> genesGenesListForReading = __instance.genes?.GenesListForReading;
@@ -30,7 +31,7 @@ namespace XylRacesCore
             }
         }
 
-        [HarmonyPostfix, HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
         static void HealthScale_Postfix(Pawn __instance, ref float __result)
         {
             List<Gene> genesGenesListForReading = __instance.genes?.GenesListForReading;

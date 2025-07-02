@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 using Verse.AI;
 
 namespace XylRacesCore
 {
-    // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class JobGiver_SatisfyDietDependency : ThinkNode_JobGiver
     {
         private static readonly List<Hediff_DietDependency> tmpDietDependencies = new List<Hediff_DietDependency>();

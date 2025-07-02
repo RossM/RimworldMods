@@ -1,21 +1,22 @@
 ﻿using System.Linq;
 using HarmonyLib;
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
-// ReSharper disable UnusedMember.Global
+
 
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(FoodUtility))]
     public static class Patch_FoodUtility_NutritionForEater
     {
-        [HarmonyPostfix, HarmonyPatch(nameof(FoodUtility.NutritionForEater))]
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(FoodUtility.NutritionForEater))]
         static void NutritionForEater_Postfix(Pawn eater, Thing food, ref float __result)
         {
             __result *= FoodHelpers.GetExtraNutritionFactor(eater, food, food.def);
         }
 
-        [HarmonyPostfix, HarmonyPatch(nameof(FoodUtility.FoodOptimality))]
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(FoodUtility.FoodOptimality))]
         static void FoodOptimality_Postfix(Pawn eater, Thing foodSource, ThingDef foodDef, float dist,
             bool takingToInventory, ref float __result)
         {

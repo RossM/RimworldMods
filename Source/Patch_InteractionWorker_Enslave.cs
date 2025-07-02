@@ -7,8 +7,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Verse;
-// ReSharper disable UnusedMember.Global
+
 
 namespace XylRacesCore
 {
@@ -50,7 +51,7 @@ namespace XylRacesCore
             }
         };
 
-        [HarmonyTranspiler, HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
+        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
         static IEnumerable<CodeInstruction> Interacted_Transpiler(IEnumerable<CodeInstruction> instructions,
             ILGenerator generator)
         {

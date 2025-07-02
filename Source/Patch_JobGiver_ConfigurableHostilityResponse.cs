@@ -7,7 +7,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 using Verse.AI;
-// ReSharper disable UnusedMember.Global
+
 
 namespace XylRacesCore
 {

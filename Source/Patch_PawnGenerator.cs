@@ -7,8 +7,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Verse;
-// ReSharper disable UnusedMember.Global
+
 
 namespace XylRacesCore
 {
@@ -79,7 +80,7 @@ namespace XylRacesCore
             return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
         }
 
-        [HarmonyPostfix, HarmonyPatch(nameof(PawnGenerator.GetXenotypeForGeneratedPawn))]
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnGenerator.GetXenotypeForGeneratedPawn))]
         static void GetXenotypeForGeneratedPawn_Postfix(PawnGenerationRequest request, ref XenotypeDef __result)
         {
             if (Find.Scenario != null)

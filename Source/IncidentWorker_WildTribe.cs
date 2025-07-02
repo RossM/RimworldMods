@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using static System.Collections.Specialized.BitVector32;
@@ -26,7 +27,7 @@ namespace XylRacesCore
         public List<MemeDef> preferredMemes;
     }
 
-    // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class IncidentWorker_WildTribe : IncidentWorker
     {
         public IncidentDefExtension_WildTribe DefExt => def.GetModExtension<IncidentDefExtension_WildTribe>();

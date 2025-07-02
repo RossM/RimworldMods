@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
+using JetBrains.Annotations;
 using RimWorld.Planet;
 using RimWorld;
 using Verse;
-// ReSharper disable UnusedMember.Global
+
 
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(RimWorld.Planet.TileFinder))]
     public static class Patch_TileFinder
     {
-        [HarmonyPrefix, HarmonyPatch(nameof(RimWorld.Planet.TileFinder.RandomSettlementTileFor),
+        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(RimWorld.Planet.TileFinder.RandomSettlementTileFor),
              [typeof(PlanetLayer), typeof(Faction), typeof(bool), typeof(Predicate<PlanetTile>)])]
         static void RandomSettlementTileFor_Prefix(PlanetLayer layer, Faction faction, bool mustBeAutoChoosable,
             ref Predicate<PlanetTile> extraValidator)

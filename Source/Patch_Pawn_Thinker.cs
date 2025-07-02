@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
+using JetBrains.Annotations;
 using Verse;
 using Verse.AI;
-// ReSharper disable UnusedMember.Global
+
 
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(Pawn_Thinker))]
     public static class Patch_Pawn_Thinker
     {
-        [HarmonyPrefix, HarmonyPatch(nameof(Pawn_Thinker.MainThinkTree), MethodType.Getter)]
+        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_Thinker.MainThinkTree), MethodType.Getter)]
         static bool MainThinkTree_Prefix(Pawn_Thinker __instance, ref ThinkTreeDef __result)
         {
             var pawn = __instance.pawn;

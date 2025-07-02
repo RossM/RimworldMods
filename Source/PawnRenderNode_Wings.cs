@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Verse;
 
 namespace XylRacesCore
 {
-    // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class PawnRenderNode_Wings : PawnRenderNode
     {
         public PawnRenderNode_Wings(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree) : base(pawn, props, tree)

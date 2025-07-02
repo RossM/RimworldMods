@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -11,7 +12,7 @@ using static UnityEngine.GraphicsBuffer;
 
 namespace XylRacesCore
 {
-    // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public class JobDriver_MilkHuman : JobDriver
     {
         private float gatherProgress;

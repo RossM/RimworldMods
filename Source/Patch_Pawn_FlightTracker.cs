@@ -6,17 +6,18 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Unity.Jobs;
 using Verse;
 using Verse.AI;
-// ReSharper disable UnusedMember.Global
+
 
 namespace XylRacesCore
 {
     [HarmonyPatch(typeof(Pawn_FlightTracker))]
     public static class Patch_Pawn_FlightTracker
     {
-        [HarmonyPrefix, HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
+        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
         public static bool Notify_JobStarted_Prefix(Pawn_FlightTracker __instance, Job job)
         {
             var pawn = __instance.Get<Pawn>("pawn");
@@ -29,7 +30,7 @@ namespace XylRacesCore
             return true;
         }
 
-        [HarmonyPrefix, HarmonyPatch(nameof(Pawn_FlightTracker.FlightTick))]
+        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_FlightTracker.FlightTick))]
         public static void FlightTick_Prefix(Pawn_FlightTracker __instance)
         {
             var pawn = __instance.Get<Pawn>("pawn");
