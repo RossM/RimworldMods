@@ -117,8 +117,10 @@
     <forcedHeadTypes>
       <li>Male_XylTrog_A</li>
       <li>Male_XylTrog_B</li>
+      <li>Male_XylTrog_C</li>
       <li>Female_XylTrog_A</li>
       <li>Female_XylTrog_B</li>
+      <li>Female_XylTrog_C</li>
     </forcedHeadTypes>
     <displayOrderInCategory>98</displayOrderInCategory>
   </GeneDef>

@@ -13,10 +13,14 @@
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Trog_A</graphicPath>
     <gender>Male</gender>
   </HeadTypeDef>
-
   <HeadTypeDef ParentName="XylTrogBase">
     <defName>Male_XylTrog_B</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Trog_B</graphicPath>
+    <gender>Male</gender>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="XylTrogBase">
+    <defName>Male_XylTrog_C</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Trog_C</graphicPath>
     <gender>Male</gender>
   </HeadTypeDef>
 
@@ -25,10 +29,15 @@
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Trog_A</graphicPath>
     <gender>Female</gender>
   </HeadTypeDef>
-
   <HeadTypeDef ParentName="XylTrogBase">
     <defName>Female_XylTrog_B</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Trog_B</graphicPath>
     <gender>Female</gender>
   </HeadTypeDef>
+  <HeadTypeDef ParentName="XylTrogBase">
+    <defName>Female_XylTrog_C</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Trog_C</graphicPath>
+    <gender>Female</gender>
+  </HeadTypeDef>
+  
 </Defs>
