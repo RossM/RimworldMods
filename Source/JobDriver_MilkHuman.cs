@@ -33,7 +33,7 @@ namespace XylRacesCore
 
         private Pawn Target => (Pawn)job.GetTarget(TargetIndex.A).Thing;
 
-        void Gather(Pawn doer)
+        private void Gather(Pawn doer)
         {
             var gene = Target.FirstGeneOfType<Gene_Hyperlactation>();
             if (gene == null)

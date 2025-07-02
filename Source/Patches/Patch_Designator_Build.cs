@@ -9,7 +9,7 @@ namespace XylRacesCore.Patches
     public static class Patch_Designator_Build
     {
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Designator_Build.Visible), MethodType.Getter)]
-        static void Visible_Postfix(Designator_Build __instance, ref bool __result)
+        public static void Visible_Postfix(Designator_Build __instance, ref bool __result)
         {
             if (DebugSettings.godMode)
                 return;

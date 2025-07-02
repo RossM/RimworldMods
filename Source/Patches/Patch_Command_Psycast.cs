@@ -39,7 +39,7 @@ namespace XylRacesCore.Patches
         };
         
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DisabledCheck")]
-        static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup_GetPsycastLevel.MatchAndReplace(ref instructionsList, out string reason, generator))

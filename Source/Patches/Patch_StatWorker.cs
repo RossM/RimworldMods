@@ -226,7 +226,7 @@ namespace XylRacesCore.Patches
         };
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
-        static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup_GetOffsetsAndFactorsExplanation.MatchAndReplace(ref instructionsList, out string reason, generator))
@@ -234,14 +234,14 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        private static void AppendSubstitutionDescription(StringBuilder sb, string whitespace,
+        public static void AppendSubstitutionDescription(StringBuilder sb, string whitespace,
             Hediff_SubstituteCapacity foundHediff, Pawn pawn)
         {
             if (foundHediff != null) 
                 sb.AppendLine(whitespace + "        " + foundHediff.DescriptionFor(pawn));
         }
 
-        private static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity foundHediff, PawnCapacityDef capacity)
+        public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity foundHediff, PawnCapacityDef capacity)
         {
             if (foundHediff != null)
                 capacity = foundHediff.CompProperties.substituteCapacity;
@@ -249,7 +249,7 @@ namespace XylRacesCore.Patches
         }
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
-        static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup_GetValueUnfinalized.MatchAndReplace(ref instructionsList, out string reason, generator))
@@ -257,7 +257,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        private static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
+        public static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
         {
             return pawn.health.hediffSet.hediffs.OfType<Hediff_SubstituteCapacity>().FirstOrDefault(hediff => hediff.Validate(stat, capacity));
         }

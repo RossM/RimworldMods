@@ -11,7 +11,7 @@ namespace XylRacesCore.Patches
     {
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(RimWorld.Planet.TileFinder.RandomSettlementTileFor),
              [typeof(PlanetLayer), typeof(Faction), typeof(bool), typeof(Predicate<PlanetTile>)])]
-        static void RandomSettlementTileFor_Prefix(PlanetLayer layer, Faction faction, bool mustBeAutoChoosable,
+        public static void RandomSettlementTileFor_Prefix(PlanetLayer layer, Faction faction, bool mustBeAutoChoosable,
             ref Predicate<PlanetTile> extraValidator)
         {
             var extension = faction?.def?.GetModExtension<FactionDefExtension>();

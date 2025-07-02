@@ -52,7 +52,7 @@ namespace XylRacesCore.Genes
 
         private bool IsXenogene => pawn.genes.Xenogenes.Contains(this);
 
-        float GeneWeight(GeneDef def)
+        private float GeneWeight(GeneDef def)
         {
             if (def.biostatArc < DefExt.biostatArc.min || def.biostatArc > DefExt.biostatArc.max)
                 return 0.0f;

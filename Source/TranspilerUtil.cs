@@ -35,7 +35,7 @@ namespace XylRacesCore
         public List<Rule> Rules = new();
         public List<Type> LocalTypes = new();
 
-        class MatchData
+        private class MatchData
         {
             public Rule rule;
             public int start, end;

@@ -32,7 +32,7 @@ namespace XylRacesCore
     {
         public IncidentDefExtension_WildTribe DefExt => def.GetModExtension<IncidentDefExtension_WildTribe>();
 
-        float IdeoWeight(Ideo ideo)
+        private float IdeoWeight(Ideo ideo)
         {
             if (DefExt.forbiddenMemes != null && ideo.memes.Intersect(DefExt.forbiddenMemes).Any())
                 return 0.0f;
@@ -74,12 +74,12 @@ namespace XylRacesCore
             return true;
         }
 
-        bool TryFindEntryCell(Map map, out IntVec3 start)
+        private bool TryFindEntryCell(Map map, out IntVec3 start)
         {
             return RCellFinder.TryFindRandomPawnEntryCell(out start, map, CellFinder.EdgeRoadChance_Animal);
         }
 
-        List<Pawn> GeneratePawns(Ideo ideo)
+        private List<Pawn> GeneratePawns(Ideo ideo)
         {
             int count = DefExt.pawnsCount.RandomInRange;
             List<Pawn> pawns = new();

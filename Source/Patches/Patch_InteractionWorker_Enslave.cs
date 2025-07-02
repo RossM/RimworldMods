@@ -9,9 +9,9 @@ using Verse;
 namespace XylRacesCore.Patches
 {
     [HarmonyPatch(typeof(InteractionWorker_EnslaveAttempt))]
-    static class Patch_InteractionWorker_EnslaveAttempt
+    public static class Patch_InteractionWorker_EnslaveAttempt
     {
-        static StatDef StatDefOfWillFallRate()
+        public static StatDef StatDefOfWillFallRate()
         {
             return DefDatabase<StatDef>.GetNamed("XylWillFallRate");
         }
@@ -47,7 +47,7 @@ namespace XylRacesCore.Patches
         };
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
-        static IEnumerable<CodeInstruction> Interacted_Transpiler(IEnumerable<CodeInstruction> instructions,
+        public static IEnumerable<CodeInstruction> Interacted_Transpiler(IEnumerable<CodeInstruction> instructions,
             ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);

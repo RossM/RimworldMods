@@ -48,7 +48,7 @@ namespace XylRacesCore.Patches
         };
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("TryGenerateNewPawnInternal")]
-        static IEnumerable<CodeInstruction> TryGenerateNewPawnInternal_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> TryGenerateNewPawnInternal_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup_TryGenerateNewPawnInternal.MatchAndReplace(ref instructionsList, out string reason, generator))
@@ -56,7 +56,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        static void ModifyGenderByGenes(Pawn pawn, ref PawnGenerationRequest request, XenotypeDef xenotype)
+        public static void ModifyGenderByGenes(Pawn pawn, ref PawnGenerationRequest request, XenotypeDef xenotype)
         {
             //Log.Message(string.Format("ModifyGenderByGenes: pawn = {0}, request = ({1}), xenotype = {2}", pawn, request, xenotype));
             //Log.Message(string.Format("  ForcedCustomXenotype = {0}", request.ForcedCustomXenotype));
@@ -71,13 +71,13 @@ namespace XylRacesCore.Patches
             }
         }
 
-        static bool HasGenderRatio(GeneDef gene)
+        public static bool HasGenderRatio(GeneDef gene)
         {
             return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
         }
 
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnGenerator.GetXenotypeForGeneratedPawn))]
-        static void GetXenotypeForGeneratedPawn_Postfix(PawnGenerationRequest request, ref XenotypeDef __result)
+        public static void GetXenotypeForGeneratedPawn_Postfix(PawnGenerationRequest request, ref XenotypeDef __result)
         {
             if (Find.Scenario != null)
             {

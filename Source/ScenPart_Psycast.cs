@@ -57,7 +57,7 @@ namespace XylRacesCore
             return "XylScenPartPsycastLabel".Translate(abilityDef.label.CapitalizeFirst(), abilityDef.level);
         }
 
-        IEnumerable<AbilityDef> PossiblePsycasts()
+        private IEnumerable<AbilityDef> PossiblePsycasts()
         {
             return DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
                 abilityDef.verbProperties?.verbClass == typeof(Verb_CastPsycast)).OrderBy(abilityDef => abilityDef.level).ThenBy(AbilityDef => AbilityDef.label);

@@ -12,7 +12,7 @@ using XylRacesCore.Genes;
 namespace XylRacesCore.Patches
 {
     [HarmonyPatch(typeof(Thing))]
-    static class Patch_Thing
+    public static class Patch_Thing
     {
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch("IngestedCalculateAmounts")]
         public static void IngestedCalculateAmounts_Prefix(Thing __instance, Pawn ingester, ref float nutritionWanted)
@@ -76,7 +76,7 @@ namespace XylRacesCore.Patches
         };
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("Ingested")]
-        static IEnumerable<CodeInstruction> Ingested_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> Ingested_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!FixupIngested.MatchAndReplace(ref instructionsList, out string reason, generator))

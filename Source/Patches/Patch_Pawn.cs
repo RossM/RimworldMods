@@ -10,7 +10,7 @@ namespace XylRacesCore.Patches
     public static class Patch_Pawn
     {
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
-        static void BodySize_Postfix(Pawn __instance, ref float __result)
+        public static void BodySize_Postfix(Pawn __instance, ref float __result)
         {
             List<Gene> genesGenesListForReading = __instance.genes?.GenesListForReading;
             if (genesGenesListForReading == null)
@@ -27,7 +27,7 @@ namespace XylRacesCore.Patches
         }
 
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
-        static void HealthScale_Postfix(Pawn __instance, ref float __result)
+        public static void HealthScale_Postfix(Pawn __instance, ref float __result)
         {
             List<Gene> genesGenesListForReading = __instance.genes?.GenesListForReading;
             if (genesGenesListForReading == null)

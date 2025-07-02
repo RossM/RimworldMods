@@ -10,13 +10,13 @@ namespace XylRacesCore.Patches
     public static class Patch_FoodUtility_NutritionForEater
     {
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(FoodUtility.NutritionForEater))]
-        static void NutritionForEater_Postfix(Pawn eater, Thing food, ref float __result)
+        public static void NutritionForEater_Postfix(Pawn eater, Thing food, ref float __result)
         {
             __result *= FoodHelpers.GetExtraNutritionFactor(eater, food, food.def);
         }
 
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(FoodUtility.FoodOptimality))]
-        static void FoodOptimality_Postfix(Pawn eater, Thing foodSource, ThingDef foodDef, float dist,
+        public static void FoodOptimality_Postfix(Pawn eater, Thing foodSource, ThingDef foodDef, float dist,
             bool takingToInventory, ref float __result)
         {
             float nutritionFactor = FoodHelpers.GetExtraNutritionFactor(eater, foodSource, foodDef);
