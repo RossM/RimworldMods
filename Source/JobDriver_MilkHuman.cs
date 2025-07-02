@@ -58,7 +58,6 @@ namespace XylRacesCore
             while (qty > 0)
             {
                 int stackQty = Math.Min(qty, milkDef.stackLimit);
-                Log.Message(string.Format("MilkHuman: charge = {0}, qty = {1}, stackQty = {2}", lactationCharge.Charge, qty, stackQty));
                 Thing thing = ThingMaker.MakeThing(milkDef);
                 thing.stackCount = stackQty;
                 qty -= stackQty;
