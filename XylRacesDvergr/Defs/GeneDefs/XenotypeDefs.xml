@@ -4,7 +4,7 @@
   <XenotypeDef>
     <defName>XylDvergr</defName>
     <label>dvergr</label>
-    <description>TODO.</description>
+    <description>Evolved on mineral-rich mountainous worlds, these short, stocky xenohumans are hard-working, alcohol dependent, and frequently insane.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>

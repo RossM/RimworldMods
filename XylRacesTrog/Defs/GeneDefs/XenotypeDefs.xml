@@ -4,7 +4,7 @@
   <XenotypeDef>
     <defName>XylTrog</defName>
     <label>trog</label>
-    <description>TODO.</description>
+    <description>These brutes are the result generations of interbreeding between neanderthals, wasters, and dirtmoles on some of the harshest rimworlds known to humanity. They combine the worst features of all their ancestors, but have an innate affinity for insectoids.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>

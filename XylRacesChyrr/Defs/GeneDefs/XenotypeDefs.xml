@@ -4,7 +4,7 @@
   <XenotypeDef>
     <defName>XylChyrr</defName>
     <label>chyrr</label>
-    <description>TODO.</description>
+    <description>These blind mystics are noted for their wings and ability to "see" with sound, and their innate psychic abilities.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>

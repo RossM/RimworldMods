@@ -4,7 +4,7 @@
   <XenotypeDef>
     <defName>XylBossaps</defName>
     <label>bossaps</label>
-    <description>TODO.</description>
+    <description>Bossaps were engineered as sentient livestock on a fortunately long-forgotten glitterworld. They are generally docile, but can become very dangerous if angered.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <inheritable>true</inheritable>
     <genes>
