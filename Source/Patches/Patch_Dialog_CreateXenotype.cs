@@ -43,15 +43,7 @@ namespace XylRacesCore.Patches
 
         private static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable)
         {
-            return genes.Where(ShouldBeVisible).ToList();
-
-            bool ShouldBeVisible(GeneDef g)
-            {
-                var defExt = g.GetModExtension<GeneDefExtension_UIFilter>();
-                if (defExt?.inheritable == null)
-                    return true;
-                return defExt.inheritable.Value == inheritable;
-            }
+            return genes.Where(g => g.GetModExtension<GeneDefExtension_UIFilter>()?.ShouldBeVisible(inheritable) != false).ToList();
         }
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DrawGenes")]
