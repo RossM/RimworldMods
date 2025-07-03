@@ -5,7 +5,7 @@
     <defName>XylBossaps</defName>
     <label>bossaps</label>
     <description>Bossaps were engineered as sentient livestock by the gene-artisans of a glitterworld best left forgotten. They are calm, obedient, and tough — ideal subjects in peaceful times. But when they're hurt, instinct takes over, and they become a blur of unthinking violence.</description>
-    <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
+    <iconPath>Xyl/UI/Icons/Xenotypes/Bossaps</iconPath>
     <inheritable>true</inheritable>
     <genes>
       <li>XylHerdInstinct</li>
