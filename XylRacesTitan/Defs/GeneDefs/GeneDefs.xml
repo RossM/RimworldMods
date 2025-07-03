@@ -90,6 +90,7 @@
     <biostatMet>1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>601</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Joyless</iconPath>
     <disablesNeeds>
       <li>Joy</li>
     </disablesNeeds>
@@ -103,6 +104,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>602</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>
     <suppressedTraits>
       <li>
         <def>NaturalMood</def>
