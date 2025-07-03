@@ -176,6 +176,10 @@
             <layer>80</layer>
             <offset>(0,0,-0.1)</offset>
           </dataNorth>
+          <dataSouth>
+            <layer>-10</layer>
+            <offset>(0,0,-0.1)</offset>
+          </dataSouth>
         </drawData>
       </li>
     </renderNodeProperties>
@@ -243,5 +247,14 @@
     </descriptionHyperlinks>
     <biostatMet>-2</biostatMet>
   </GeneDef>
-  
+
+  <GeneDef ParentName="GeneSkinColorOverride">
+    <defName>XylSkin_DarkBlue</defName>
+    <label>dark blue skin</label>
+    <labelShortAdj>dark blue</labelShortAdj>
+    <description>Carriers of this gene produce a pigment that gives their skin a dark blue color.</description>
+    <skinColorOverride>(66,102,147)</skinColorOverride>
+    <displayOrderInCategory>86</displayOrderInCategory>
+  </GeneDef>
+
 </Defs>
