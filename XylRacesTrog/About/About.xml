@@ -5,6 +5,7 @@
   <name>Xyl's Races: Trog</name>
   <author>Xylthixlm</author>
   <description>TODO</description>
+  <modIconPath>Xyl/UI/Icons/Xenotypes/Trog</modIconPath>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
