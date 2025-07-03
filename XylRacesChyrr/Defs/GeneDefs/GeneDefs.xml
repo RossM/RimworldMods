@@ -203,6 +203,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>71</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Nocturnal</iconPath>
     <forcedTraits>
       <li>
         <def>NightOwl</def>
