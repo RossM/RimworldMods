@@ -25,9 +25,10 @@
       <li>XylGiant</li>
       <li>XylJoyless</li>
       <li>AptitudeRemarkable_Construction</li>
+      <li>AptitudePoor_Cooking</li>
       <li>AptitudePoor_Plants</li>
       <li>AptitudePoor_Social</li>
-      <li>AptitudeTerrible_Intellectual</li>
+      <li>AptitudePoor_Intellectual</li>
     </genes>
   </XenotypeDef>
   
