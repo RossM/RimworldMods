@@ -224,6 +224,7 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>72</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_KeenEars</iconPath>
     <capMods>
       <li>
         <capacity>Hearing</capacity>
