@@ -9,6 +9,7 @@
     <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>0</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Giant</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Rendering">
         <scale>1.1</scale>
