@@ -46,6 +46,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_Melancholy</iconPath>
     <exclusionTags>
       <li>Mood</li>
+      <li>MelancholyAndEvenTemper</li>
     </exclusionTags>
     <forcedTraits>
       <li>
@@ -81,27 +82,12 @@
     <statFactors>
       <CertaintyLossFactor MayRequire="Ludeon.RimWorld.Ideology">0.5</CertaintyLossFactor>
     </statFactors>
-    <suppressedTraits>
-      <li>
-        <def>Nerves</def>
-        <degree>2</degree>
-      </li>
+    <forcedTraits>
       <li>
         <def>Nerves</def>
         <degree>1</degree>
       </li>
-      <li>
-        <def>Nerves</def>
-        <degree>-1</degree>
-      </li>
-      <li>
-        <def>Nerves</def>
-        <degree>-2</degree>
-      </li>
-    </suppressedTraits>
-    <exclusionTags>
-      <li>MelancholyAndEvenTemper</li>
-    </exclusionTags>
+    </forcedTraits>
     <symbolPack>
       <prefixSymbols>
         <li><symbol>steel</symbol></li>
