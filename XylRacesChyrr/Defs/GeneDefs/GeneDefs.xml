@@ -107,6 +107,7 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>120</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Precognition</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
