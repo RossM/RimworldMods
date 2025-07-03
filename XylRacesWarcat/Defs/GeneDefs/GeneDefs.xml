@@ -141,6 +141,7 @@
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <texPaths>
           <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/FacialStripes/FacialStripesA</li>
+          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/FacialStripes/FacialStripesB</li>
         </texPaths>
         <visibleFacing>
           <li>East</li>
