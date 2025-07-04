@@ -32,12 +32,7 @@ namespace XylRacesCore.Patches
             if (pawn.kindDef.hostileToAll || pawn2.kindDef.hostileToAll)
                 return true;
 
-            if (pawn.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostility(pawn2)))
-            {
-                __result = false;
-                return false;
-            }
-            if (pawn2.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostility(pawn)))
+            if (DisableHostilityCheck(pawn, pawn2) || DisableHostilityCheck(pawn2, pawn))
             {
                 __result = false;
                 return false;
@@ -45,6 +40,26 @@ namespace XylRacesCore.Patches
 
             // Continue to regular logic
             return true;
+        }
+
+        private static bool DisableHostilityCheck(Pawn pawn, Pawn pawn2)
+        {
+            if (pawn.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostility(pawn2)))
+                return true;
+            
+            // This complicated check handles the case where a character with disabled hostility tames a wild insect.
+            // Normally the other insects would then attack the player-controlled insect. This check prevents that
+            // from happening. Note that there's no mechanism to allow the insects to become hostile if they are attacked;
+            // I'm hoping that case is rare enough to not worry about.
+            if (pawn.Faction == Faction.OfPlayerSilentFail &&
+                pawn.kindDef.defaultFactionDef != null &&
+                pawn.kindDef.defaultFactionDef == pawn2.Faction?.def && 
+                ModsConfig.IsActive("Xylthixlm.Races.Trog"))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
