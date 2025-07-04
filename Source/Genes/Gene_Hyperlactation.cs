@@ -24,7 +24,8 @@ namespace XylRacesCore.Genes
 
         public GeneDefExtension_Hyperlactation DefExt => def.GetModExtension<GeneDefExtension_Hyperlactation>();
 
-        public HediffComp_Lactating Lactating => pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
+        private HediffComp_Lactating lactatingInternal;
+        public HediffComp_Lactating Lactating => lactatingInternal ??= pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
 
         public override bool Active
         {
@@ -32,9 +33,7 @@ namespace XylRacesCore.Genes
             {
                 if (!base.Active)
                     return false;
-                if (DefExt.activeGender == null)
-                    return true;
-                return pawn?.gender == DefExt.activeGender;
+                return DefExt.activeGender == null || pawn?.gender == DefExt.activeGender;
             }
         }
 
@@ -123,6 +122,8 @@ namespace XylRacesCore.Genes
 
         public bool ReadyToMilk()
         {
+            if (!Active)
+                return false;
             if (!allowMilking)
                 return false;
 
@@ -144,8 +145,9 @@ namespace XylRacesCore.Genes
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
-            var props = Lactating.Props;
-            float milkPerDay = props.fullChargeAmount * 60000f / (props.ticksToFullCharge * DefExt.chargePerItem);
+            if (!Active)
+                yield break;
+            float milkPerDay = Lactating.Props.fullChargeAmount * 60000f / (Lactating.Props.ticksToFullCharge * DefExt.chargePerItem);
             yield return new StatDrawEntry(StatCategoryDefOf.PawnFood, "XylMilkProductionLabel".TranslateSimple(),
                 "PerDay".Translate(milkPerDay.ToStringByStyle(ToStringStyle.FloatOne)),
                 "XylMilkProductionDesc".TranslateSimple(), 1);
