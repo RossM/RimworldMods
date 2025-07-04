@@ -53,7 +53,7 @@ namespace XylRacesCore
         {
             for (var i = 0; i < count; i++)
             {
-                var request = new PawnGenerationRequest(PawnKindDefOf.Slave, null);
+                var request = new PawnGenerationRequest(PawnKindDefOf.Slave);
                 Pawn slave = PawnGenerator.GeneratePawn(request);
                 slave.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave);
                 yield return slave;

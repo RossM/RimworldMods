@@ -78,7 +78,7 @@ namespace XylRacesCore
             return true;
         }
 
-        [Unsaved(false)] 
+        [Unsaved()] 
         private readonly List<IntVec3> tmpCells = new();
 
         private List<IntVec3> AffectedCells(LocalTargetInfo target)

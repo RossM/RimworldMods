@@ -14,7 +14,7 @@ namespace XylRacesCore
 
     public class Hediff_Genetic : HediffWithComps
     {
-        [Unsaved(false)]
+        [Unsaved()]
         private Gene cachedGene;
 
         public override bool ShouldRemove => Gene is not { Active: true };

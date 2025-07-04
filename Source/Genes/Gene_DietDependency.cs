@@ -48,7 +48,7 @@ namespace XylRacesCore.Genes
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref lastIngestedTick, "lastIngestedTick", 0);
+            Scribe_Values.Look(ref lastIngestedTick, "lastIngestedTick");
         }
 
         public override void PostAdd()

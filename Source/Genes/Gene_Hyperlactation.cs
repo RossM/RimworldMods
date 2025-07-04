@@ -41,7 +41,7 @@ namespace XylRacesCore.Genes
         {
             base.ExposeData();
             Scribe_Values.Look(ref fullSinceTick, "fullSinceTick");
-            Scribe_Values.Look(ref allowMilking, "allowMilking", false);
+            Scribe_Values.Look(ref allowMilking, "allowMilking");
             Scribe_Values.Look(ref onlyMilkWhenFull, "onlyMilkWhenFull", true);
         }
 

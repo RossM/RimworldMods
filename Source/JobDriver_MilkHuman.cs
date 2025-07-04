@@ -30,7 +30,7 @@ namespace XylRacesCore
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref gatherProgress, "gatherProgress", 0f);
+            Scribe_Values.Look(ref gatherProgress, "gatherProgress");
         }
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -80,12 +80,12 @@ namespace XylRacesCore
             this.FailOnNotCasualInterruptible(TargetIndex.A);
             this.FailOnSomeonePhysicallyInteracting(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
-            Toil toil = ToilMaker.MakeToil("MakeNewToils");
+            Toil toil = ToilMaker.MakeToil();
             toil.initAction = delegate
             {
                 Pawn actor = toil.actor;
                 actor.pather.StopDead();
-                PawnUtility.ForceWait(Target, 15000, null, maintainPosture: true);
+                PawnUtility.ForceWait(Target, 15000, maintainPosture: true);
                 var comp = Target?.GetComp<CompPawn_RenderProperties>();
                 if (comp != null)
                     comp.hideClothes = true;

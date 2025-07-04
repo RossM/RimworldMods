@@ -78,7 +78,7 @@ namespace XylRacesCore
 
         private static bool CanInteractWith(Pawn pawn, Thing t)
         {
-            if (!pawn.CanReserve(t, 1))
+            if (!pawn.CanReserve(t))
             {
                 return false;
             }

@@ -30,7 +30,7 @@ namespace XylRacesCore
 
             //var startTick = Find.TickManager.TicksGame;
 
-            Toil toil = ToilMaker.MakeToil("MakeNewToils");
+            Toil toil = ToilMaker.MakeToil();
             toil.defaultCompleteMode = ToilCompleteMode.Delay;
             toil.defaultDuration = job.def.joyDuration;
             //toil.WithProgressBar(TargetIndex.A, () => (float)(Find.TickManager.TicksGame - startTick) / job.def.joyDuration);

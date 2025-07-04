@@ -14,14 +14,15 @@ namespace XylRacesCore.Genes
     {
         public bool autoFly = true;
 
-        [Unsaved(false)] private bool wasFlying;
+        [Unsaved()] 
+        private bool wasFlying;
 
         public GeneDefExtension_Flight DefExt => def.GetModExtension<GeneDefExtension_Flight>();
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref autoFly, "autoFly", false);
+            Scribe_Values.Look(ref autoFly, "autoFly");
         }
 
 
