@@ -6,6 +6,7 @@
     <label>chyrr</label>
     <description>Chyrr are blind, flying mystics native to steaming jungles and sun-blasted deserts. They perceive the world through sound and low-level psychic sensing, aided by a hazy thread of precognition that lets them act just before things happen. Though physically fragile, they defend themselves a keening cry that can leave foes reeling.</description>
     <iconPath>Xyl/UI/Icons/Xenotypes/Chyrr</iconPath>
+    <displayPriority>-102</displayPriority>
     <inheritable>true</inheritable>
     <genes>
       <li>XylPsyFocus</li>
