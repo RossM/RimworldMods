@@ -5,7 +5,7 @@
     <defName>XylWarcat</defName>
     <label>warcat</label>
     <description>These graceful predators originated as an attempt to create super soldiers by splicing large cat DNA into humans. They are genetically incapable of producing certain nutrients and require a continuous supply of raw meat to stay healthy.</description>
-    <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
+    <iconPath>Xyl/UI/Icons/Xenotypes/Warcat</iconPath>
     <inheritable>true</inheritable>
     <genes>
       <li>XylFeralRage</li>
