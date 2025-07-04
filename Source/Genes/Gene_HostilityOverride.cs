@@ -6,7 +6,6 @@ namespace XylRacesCore.Genes
     public class GeneDefExtension_HostilityOverride : DefModExtension
     {
         public FactionDef disableHostilityFromFaction;
-        public AnimalType? disableHostilityFromAnimalType;
         public int violationDisableTicks = 400;
     }
 
@@ -32,12 +31,7 @@ namespace XylRacesCore.Genes
 
         private bool DisableHostilityFrom(Thing thing)
         {
-            if (DefExt.disableHostilityFromFaction != null && DefExt.disableHostilityFromFaction == thing.Faction?.def)
-                return true;
-            if (DefExt.disableHostilityFromAnimalType != null && DefExt.disableHostilityFromAnimalType == (thing as Pawn)?.RaceProps.animalType)
-                return true;
-
-            return false;
+            return DefExt.disableHostilityFromFaction != null && DefExt.disableHostilityFromFaction == thing.Faction?.def;
         }
 
         public bool DisableHostility(Thing thing)
