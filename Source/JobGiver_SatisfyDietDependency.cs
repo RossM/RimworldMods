@@ -107,6 +107,8 @@ namespace XylRacesCore
                 return false;
             if (food.IsForbidden(pawn))
                 return false;
+            if (!pawn.CanReserve(food))
+                return false;
 
             Gene_DietDependency gene = dependency.Gene;
             if (gene == null)
