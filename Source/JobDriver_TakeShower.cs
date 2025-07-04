@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using JetBrains.Annotations;
+using RimWorld;
+using System.Collections.Generic;
 using Verse;
 using Verse.AI;
 using static UnityEngine.GraphicsBuffer;
@@ -7,6 +9,13 @@ namespace XylRacesCore
 {
     public class JobDriver_TakeShower : JobDriver
     {
+        [DefOf]
+        private static class Defs
+        {
+            [UsedImplicitly]
+            public static EffecterDef XylShowerSplash;
+        }
+
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
             return pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed);
@@ -55,7 +64,7 @@ namespace XylRacesCore
                 if (comp != null)
                     comp.hideClothes = comp.hideHeadgear = true;
             });
-            EffecterDef effecterDef = DefDatabase<EffecterDef>.GetNamed("XylShowerSplash");
+            EffecterDef effecterDef = Defs.XylShowerSplash;
             toil.WithEffect(effecterDef, TargetIndex.A);
             toil.handlingFacing = true;
             yield return toil;

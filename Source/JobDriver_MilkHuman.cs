@@ -16,6 +16,13 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class JobDriver_MilkHuman : JobDriver
     {
+        [DefOf]
+        private static class Defs
+        {
+            [UsedImplicitly]
+            public static ThingDef Milk;
+        }
+
         private float gatherProgress;
 
         private const float WorkTotal = 400f;
@@ -45,8 +52,6 @@ namespace XylRacesCore
             var lactationCharge = gene.Lactating;
             if (lactationCharge == null)
                 return;
-            
-            ThingDef milkDef = DefDatabase<ThingDef>.GetNamed("Milk");
 
             int qty = gene.MilkCount;
             lactationCharge.GreedyConsume(gene.DefExt.chargePerItem * qty);
@@ -59,8 +64,8 @@ namespace XylRacesCore
 
             while (qty > 0)
             {
-                int stackQty = Math.Min(qty, milkDef.stackLimit);
-                Thing thing = ThingMaker.MakeThing(milkDef);
+                int stackQty = Math.Min(qty, Defs.Milk.stackLimit);
+                Thing thing = ThingMaker.MakeThing(Defs.Milk);
                 thing.stackCount = stackQty;
                 qty -= stackQty;
                 if (!GenPlace.TryPlaceThing(thing, doer.Position, doer.Map, ThingPlaceMode.Near))

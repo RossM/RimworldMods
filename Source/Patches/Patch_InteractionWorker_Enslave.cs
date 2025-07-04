@@ -11,9 +11,16 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(InteractionWorker_EnslaveAttempt))]
     public static class Patch_InteractionWorker_EnslaveAttempt
     {
+        [DefOf]
+        private static class Defs
+        {
+            [UsedImplicitly]
+            public static StatDef XylWillFallRate;
+        }
+
         public static StatDef StatDefOfWillFallRate()
         {
-            return DefDatabase<StatDef>.GetNamed("XylWillFallRate");
+            return Defs.XylWillFallRate;
         }
 
         private static readonly InstructionMatcher Fixup_Interacted = new()

@@ -68,7 +68,7 @@ namespace XylRacesCore.Patches
                     [
                         CodeInstruction.LoadArgument(1),
                         CodeInstruction.LoadArgument(0),
-                        CodeInstruction.Call(typeof(FoodHelpers), nameof(FoodHelpers.GetFoodPoisoningChanceOffset)),
+                        CodeInstruction.Call(typeof(FoodHelpers), nameof(FoodHelpers.GetFoodPoisonChanceOffset)),
                         new CodeInstruction(OpCodes.Sub),
                     ]
                 }

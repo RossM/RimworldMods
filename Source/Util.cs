@@ -8,12 +8,6 @@ namespace XylRacesCore
 {
     public static class Util
     {
-        public static float GetStatValue(this Pawn pawn, string defName, float defaultValue)
-        {
-            StatDef statValue = DefDatabase<StatDef>.GetNamed(defName, errorOnFail: false);
-            return statValue != null ? pawn.GetStatValue(statValue) : defaultValue;
-        }
-
         public static IEnumerable<T> GenesOfType<T>(this Pawn pawn) where T : class
         {
             return pawn.genes?.GenesListForReading.OfType<T>() ?? Enumerable.Empty<T>();

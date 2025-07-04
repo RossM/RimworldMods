@@ -41,7 +41,7 @@ namespace XylRacesCore
                 return;
             }
             var list = new List<FloatMenuOption>();
-            foreach (AbilityDef item in PossiblePsycasts())
+            foreach (AbilityDef item in PossiblePsycasts)
             {
                 AbilityDef localDef = item;
                 list.Add(new FloatMenuOption(GetLabel(localDef), delegate
@@ -57,15 +57,16 @@ namespace XylRacesCore
             return "XylScenPartPsycastLabel".Translate(abilityDef.label.CapitalizeFirst(), abilityDef.level);
         }
 
-        private IEnumerable<AbilityDef> PossiblePsycasts()
-        {
-            return DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
-                abilityDef.verbProperties?.verbClass == typeof(Verb_CastPsycast)).OrderBy(abilityDef => abilityDef.level).ThenBy(AbilityDef => AbilityDef.label);
-        }
+        private List<AbilityDef> possiblePsycasts;
+        private IEnumerable<AbilityDef> PossiblePsycasts => possiblePsycasts ??=
+            DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
+                    abilityDef.verbProperties?.verbClass == typeof(Verb_CastPsycast))
+                .OrderBy(abilityDef => abilityDef.level)
+                .ThenBy(AbilityDef => AbilityDef.label).ToList();
 
         public override void Randomize()
         {
-            psycast = PossiblePsycasts().RandomElement();
+            psycast = PossiblePsycasts.RandomElement();
         }
 
         public override bool HasNullDefs()

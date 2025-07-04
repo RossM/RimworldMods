@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
@@ -5,6 +6,33 @@ namespace XylRacesCore;
 
 public static class FoodHelpers
 {
+    [DefOf]
+    private static class Defs
+    {
+        [UsedImplicitly]
+        public static StatDef XylRawFungusNutritionFactor;
+        [UsedImplicitly]
+        public static StatDef XylRawMeatNutritionFactor;
+        [UsedImplicitly]
+        public static StatDef XylRawAnimalProductNutritionFactor;
+        [UsedImplicitly]
+        public static StatDef XylRawNonMeatNutritionFactor;
+        [UsedImplicitly]
+        public static StatDef XylCookedMeatNutritionFactor;
+        [UsedImplicitly]
+        public static StatDef XylCookedAnimalProductNutritionFactor;
+        [UsedImplicitly]
+        public static StatDef XylCookedNonMeatNutritionFactor;
+        [UsedImplicitly]
+        public static StatDef XylRawFungusFoodPoisonChanceOffset;
+        [UsedImplicitly]
+        public static StatDef XylRawMeatFoodPoisonChanceOffset;
+        [UsedImplicitly]
+        public static StatDef XylRawAnimalProductFoodPoisonChanceOffset;
+        [UsedImplicitly]
+        public static StatDef XylRawNonMeatFoodPoisonChanceOffset;
+    }
+
     public enum FoodType
     {
         None,
@@ -35,11 +63,11 @@ public static class FoodHelpers
         {
             return GetFoodType(foodDef) switch
             {
-                FoodType.Fungus => eater.GetStatValue("XylRawFungusNutritionFactor", 1.0f) *
-                                   eater.GetStatValue("XylRawNonMeatNutritionFactor", 1.0f),
-                FoodType.Meat => eater.GetStatValue("XylRawMeatNutritionFactor", 1.0f),
-                FoodType.AnimalProduct => eater.GetStatValue("XylRawAnimalProductNutritionFactor", 1.0f),
-                FoodType.NonMeat => eater.GetStatValue("XylRawNonMeatNutritionFactor", 1.0f),
+                FoodType.Fungus => eater.GetStatValue(Defs.XylRawFungusNutritionFactor) *
+                                   eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
+                FoodType.Meat => eater.GetStatValue(Defs.XylRawMeatNutritionFactor),
+                FoodType.AnimalProduct => eater.GetStatValue(Defs.XylRawAnimalProductNutritionFactor),
+                FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
                 _ => 1.0f
             };
         }
@@ -75,19 +103,19 @@ public static class FoodHelpers
 
             if (hasMeat)
             {
-                multiplier += eater.GetStatValue("XylCookedMeatNutritionFactor", 1.0f);
+                multiplier += eater.GetStatValue(Defs.XylCookedMeatNutritionFactor);
                 divisor += 1.0f;
             }
 
             if (hasAnimalProduct)
             {
-                multiplier += eater.GetStatValue("XylCookedAnimalProductNutritionFactor", 1.0f);
+                multiplier += eater.GetStatValue(Defs.XylCookedAnimalProductNutritionFactor);
                 divisor += 1.0f;
             }
 
             if (hasNonMeat)
             {
-                multiplier += eater.GetStatValue("XylCookedNonMeatNutritionFactor", 1.0f);
+                multiplier += eater.GetStatValue(Defs.XylCookedNonMeatNutritionFactor);
                 divisor += 1.0f;
             }
 
@@ -96,7 +124,7 @@ public static class FoodHelpers
         }
     }
 
-    public static float GetFoodPoisoningChanceOffset(Pawn eater, Thing foodSource)
+    public static float GetFoodPoisonChanceOffset(Pawn eater, Thing foodSource)
     {
         var foodDef = foodSource.def;
 
@@ -105,11 +133,11 @@ public static class FoodHelpers
 
         return GetFoodType(foodSource.def) switch
         {
-            FoodType.Fungus => eater.GetStatValue("XylRawFungusFoodPoisoningChanceOffset", 0.0f) +
-                               eater.GetStatValue("XylRawNonMeatFoodPoisoningChanceOffset", 0.0f),
-            FoodType.Meat => eater.GetStatValue("XylRawMeatFoodPoisoningChanceOffset", 0.0f),
-            FoodType.AnimalProduct => eater.GetStatValue("XylRawAnimalProductFoodPoisoningChanceOffset", 0.0f),
-            FoodType.NonMeat => eater.GetStatValue("XylRawNonMeatFoodPoisoningChanceOffset", 0.0f),
+            FoodType.Fungus => eater.GetStatValue(Defs.XylRawFungusFoodPoisonChanceOffset) +
+                               eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
+            FoodType.Meat => eater.GetStatValue(Defs.XylRawMeatFoodPoisonChanceOffset),
+            FoodType.AnimalProduct => eater.GetStatValue(Defs.XylRawAnimalProductFoodPoisonChanceOffset),
+            FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
             _ => 0.0f
         };
     }

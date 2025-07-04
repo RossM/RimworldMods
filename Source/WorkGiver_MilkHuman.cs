@@ -14,7 +14,12 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class WorkGiver_MilkHuman : WorkGiver_Scanner
     {
-        private JobDef JobDef => DefDatabase<JobDef>.GetNamed("XylMilkHuman");
+        [DefOf]
+        private static class Defs
+        {
+            [UsedImplicitly]
+            public static JobDef XylMilkHuman;
+        }
 
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
@@ -49,7 +54,7 @@ namespace XylRacesCore
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
-            return JobMaker.MakeJob(JobDef, t);
+            return JobMaker.MakeJob(Defs.XylMilkHuman, t);
         }
     }
 }
