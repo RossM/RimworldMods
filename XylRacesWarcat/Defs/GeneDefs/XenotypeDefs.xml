@@ -4,7 +4,7 @@
   <XenotypeDef>
     <defName>XylWarcat</defName>
     <label>warcat</label>
-    <description>These graceful predators originated as an attempt to create super soldiers by splicing large cat DNA into humans. They are genetically incapable of producing certain nutrients and require a continuous supply of raw meat to stay healthy.</description>
+    <description>These graceful predators were forged in military gene-vats: part human, part great cat, built to end fights before they start. But something in the splice broke, leaving them dependent on raw meat to survive. Now they roam the rimworlds in tight-knit clans, hunting anything they can bring down - even other xenohumans.</description>
     <iconPath>Xyl/UI/Icons/Xenotypes/Warcat</iconPath>
     <inheritable>true</inheritable>
     <genes>
