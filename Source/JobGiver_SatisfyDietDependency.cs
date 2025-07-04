@@ -41,7 +41,7 @@ namespace XylRacesCore
             {
                 return null;
             }
-            tmpDietDependencies.SortBy((Hediff_DietDependency x) => 0f - x.Severity);
+            tmpDietDependencies.SortBy(x => 0f - x.Severity);
             try
             {
                 foreach (Hediff_DietDependency dietDependency in tmpDietDependencies)
@@ -81,7 +81,7 @@ namespace XylRacesCore
                 if (FoodValidator(pawn, dependency, item))
                     return item;
             }
-            Thing thing = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.FoodSource), PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, (Thing x) => FoodValidator(pawn, dependency, x));
+            Thing thing = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.FoodSource), PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, x => FoodValidator(pawn, dependency, x));
             if (thing != null)
                 return thing;
 

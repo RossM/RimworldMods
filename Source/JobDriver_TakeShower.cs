@@ -34,7 +34,7 @@ namespace XylRacesCore
             toil.defaultCompleteMode = ToilCompleteMode.Delay;
             toil.defaultDuration = job.def.joyDuration;
             //toil.WithProgressBar(TargetIndex.A, () => (float)(Find.TickManager.TicksGame - startTick) / job.def.joyDuration);
-            toil.AddPreTickIntervalAction((int delta) =>
+            toil.AddPreTickIntervalAction(delta =>
             {
                 if (need_wetness is { CurLevel: > 0.9999f })
                     pawn.jobs.curDriver.EndJobWith(JobCondition.Succeeded);

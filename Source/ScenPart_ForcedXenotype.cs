@@ -25,7 +25,7 @@ namespace XylRacesCore
             if (Widgets.ButtonText(scenPartRect.TopPart(0.333f), xenotype.LabelCap))
             {
                 var list = new List<FloatMenuOption>();
-                foreach (XenotypeDef item in DefDatabase<XenotypeDef>.AllDefs.OrderBy((XenotypeDef xd) => xd.label))
+                foreach (XenotypeDef item in XenotypeDefs)
                 {
                     XenotypeDef localDef = item;
                     list.Add(new FloatMenuOption(localDef.LabelCap, delegate
@@ -38,6 +38,12 @@ namespace XylRacesCore
             DoPawnModifierEditInterface(scenPartRect.BottomPart(0.666f));
         }
 
+        private static List<XenotypeDef> xenotypeDefsInternal;
+        private static IEnumerable<XenotypeDef> XenotypeDefs => xenotypeDefsInternal ??=
+            DefDatabase<XenotypeDef>.AllDefs
+                .OrderByDescending(xd => xd.displayPriority)
+                .ThenBy(xd => xd.label).ToList();
+
         public override string Summary(Scenario scen)
         {
             return "XylScenPartForcedXenotypeSummary".Translate(context.ToStringHuman(), chance.ToStringPercent(), xenotype.LabelCap).CapitalizeFirst();
@@ -46,7 +52,7 @@ namespace XylRacesCore
         public override void Randomize()
         {
             base.Randomize();
-            xenotype = DefDatabase<XenotypeDef>.GetRandom();
+            xenotype = XenotypeDefs.RandomElement();
         }
 
         public override bool CanCoexistWith(ScenPart other)
