@@ -85,8 +85,9 @@
     <displayOrderInCategory>0.1</displayOrderInCategory>
     <renderNodeProperties>
       <li Class="PawnRenderNodeProperties_Eye">
-        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Male/YellowEyes_Male</texPath>
-        <texPathFemale>Xyl/Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Female/YellowEyes_Female</texPathFemale>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Male/CatEyes_Male</texPath>
+        <texPathFemale>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Female/CatEyes_Female</texPathFemale>
+        <color>(240, 195, 47)</color>
         <anchorTag>RightEye</anchorTag>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <parentTagDef>Head</parentTagDef>
@@ -100,8 +101,9 @@
         </drawData>
       </li>
       <li Class="PawnRenderNodeProperties_Eye">
-        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Male/YellowEyes_Male</texPath>
-        <texPathFemale>Xyl/Things/Pawn/Humanlike/HeadAttachments/YellowEyes/Female/YellowEyes_Female</texPathFemale>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Male/CatEyes_Male</texPath>
+        <texPathFemale>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Female/CatEyes_Female</texPathFemale>
+        <color>(240, 195, 47)</color>
         <anchorTag>LeftEye</anchorTag>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <parentTagDef>Head</parentTagDef>
