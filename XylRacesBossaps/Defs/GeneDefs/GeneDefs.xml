@@ -145,7 +145,7 @@
     <geneClass>XylRacesCore.Genes.Gene_GenderRatio</geneClass>
     <defName>XylGender_AlwaysFemale</defName>
     <label>always female</label>
-    <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is heritable.</description>
+    <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is a germline gene.</description>
     <displayOrderInCategory>300</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysFemale</iconPath>
     <modExtensions>
@@ -161,7 +161,7 @@
     <geneClass>XylRacesCore.Genes.Gene_GenderRatio</geneClass>
     <defName>XylGender_UsuallyFemale</defName>
     <label>usually female</label>
-    <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is heritable.</description>
+    <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is a germline gene.</description>
     <displayOrderInCategory>301</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyFemale</iconPath>
     <modExtensions>
@@ -177,7 +177,7 @@
     <geneClass>XylRacesCore.Genes.Gene_GenderRatio</geneClass>
     <defName>XylGender_UsuallyMale</defName>
     <label>usually male</label>
-    <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is heritable.</description>
+    <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is a germline gene.</description>
     <displayOrderInCategory>302</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyMale</iconPath>
     <modExtensions>
@@ -193,7 +193,7 @@
     <geneClass>XylRacesCore.Genes.Gene_GenderRatio</geneClass>
     <defName>XylGender_AlwaysMale</defName>
     <label>always male</label>
-    <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is heritable.</description>
+    <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is a germline gene.</description>
     <displayOrderInCategory>303</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysMale</iconPath>
     <modExtensions>

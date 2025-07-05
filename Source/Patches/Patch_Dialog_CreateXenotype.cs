@@ -34,6 +34,10 @@ namespace XylRacesCore.Patches
                         CodeInstruction.LoadArgument(0),
                         // Load this.inheritable
                         CodeInstruction.LoadField(typeof(Dialog_CreateXenotype), "inheritable"),
+                        // Load this
+                        CodeInstruction.LoadArgument(0),
+                        // Load this.inheritable
+                        CodeInstruction.LoadField(typeof(Dialog_CreateXenotype), "ignoreRestrictions"),
                         // Call
                         CodeInstruction.Call(() => FilterGenes),
                     ]
@@ -41,8 +45,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        private static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable)
+        private static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
         {
+            if (ignoreRestrictions)
+                return genes;
             return genes.Where(g => g.GetModExtension<GeneDefExtension_UIFilter>()?.ShouldBeVisible(inheritable) != false).ToList();
         }
 
