@@ -137,5 +137,33 @@
     </symbolPack>
   </GeneDef>
 
+  <GeneDef ParentName="GeneEarsBase">
+    <defName>XylEars_Fin</defName>
+    <label>fin ears</label>
+    <description>Carriers of this gene have fin-like ears.</description>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_FinEars</iconPath>-->
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <displayOrderInCategory>73</displayOrderInCategory>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/FinEars/FinEars</texPath>
+        <colorType>Skin</colorType>
+        <parentTagDef>Head</parentTagDef>
+        <useSkinShader>true</useSkinShader>
+        <useRottenColor>true</useRottenColor>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <drawData>
+          <defaultData>
+            <layer>70</layer>
+          </defaultData>
+          <dataNorth>
+            <layer>11</layer>
+          </dataNorth>        
+        </drawData>
+      </li>
+    </renderNodeProperties>
+  </GeneDef>
 
 </Defs>
