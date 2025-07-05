@@ -45,6 +45,16 @@
     <displayOrderInCategory>110</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Scaleskin</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <forcedHeadTypes>
+      <li>Female_Scaleskin_Average_Normal</li>
+      <li>Female_Scaleskin_Average_Pointy</li>
+      <li>Female_Scaleskin_Narrow_Normal</li>
+      <li>Female_Scaleskin_Narrow_Pointy</li>
+      <li>Male_Scaleskin_Average_Normal</li>
+      <li>Male_Scaleskin_Average_Pointy</li>
+      <li>Male_Scaleskin_Narrow_Normal</li>
+      <li>Male_Scaleskin_Narrow_Pointy</li>
+    </forcedHeadTypes>
     <exclusionTags>
       <li>Fur</li>
     </exclusionTags>

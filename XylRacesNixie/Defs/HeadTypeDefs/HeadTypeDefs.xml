@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <HeadTypeDef ParentName="Male_AverageNormal">
+    <defName>Male_Scaleskin_Average_Normal</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Scaleskin_Average_Normal</graphicPath>
+    <gender>Male</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylScaleskin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="Male_AveragePointy">
+    <defName>Male_Scaleskin_Average_Pointy</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Scaleskin_Average_Pointy</graphicPath>
+    <gender>Male</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylScaleskin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="Male_NarrowNormal">
+    <defName>Male_Scaleskin_Narrow_Normal</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Scaleskin_Narrow_Normal</graphicPath>
+    <gender>Male</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylScaleskin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="Male_NarrowPointy">
+    <defName>Male_Scaleskin_Narrow_Pointy</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Scaleskin_Narrow_Pointy</graphicPath>
+    <gender>Male</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylScaleskin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+
+  <HeadTypeDef ParentName="Female_AverageNormal">
+    <defName>Female_Scaleskin_Average_Normal</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Scaleskin_Average_Normal</graphicPath>
+    <gender>Female</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylScaleskin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="Female_AveragePointy">
+    <defName>Female_Scaleskin_Average_Pointy</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Scaleskin_Average_Pointy</graphicPath>
+    <gender>Female</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylScaleskin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="Female_NarrowNormal">
+    <defName>Female_Scaleskin_Narrow_Normal</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Scaleskin_Narrow_Normal</graphicPath>
+    <gender>Female</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylScaleskin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="Female_NarrowPointy">
+    <defName>Female_Scaleskin_Narrow_Pointy</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Scaleskin_Narrow_Pointy</graphicPath>
+    <gender>Female</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylScaleskin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+
+</Defs>

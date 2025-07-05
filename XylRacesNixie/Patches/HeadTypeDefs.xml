@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+  
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/HeadTypeDef[defName="Female_AverageNormal"]</xpath>
+    <attribute>Name</attribute>
+    <value>Female_AverageNormal</value>
+  </Operation>
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/HeadTypeDef[defName="Female_AveragePointy"]</xpath>
+    <attribute>Name</attribute>
+    <value>Female_AveragePointy</value>
+  </Operation>
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/HeadTypeDef[defName="Female_NarrowNormal"]</xpath>
+    <attribute>Name</attribute>
+    <value>Female_NarrowNormal</value>
+  </Operation>
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/HeadTypeDef[defName="Female_NarrowPointy"]</xpath>
+    <attribute>Name</attribute>
+    <value>Female_NarrowPointy</value>
+  </Operation>
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/HeadTypeDef[defName="Male_AverageNormal"]</xpath>
+    <attribute>Name</attribute>
+    <value>Male_AverageNormal</value>
+  </Operation>
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/HeadTypeDef[defName="Male_AveragePointy"]</xpath>
+    <attribute>Name</attribute>
+    <value>Male_AveragePointy</value>
+  </Operation>
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/HeadTypeDef[defName="Male_NarrowNormal"]</xpath>
+    <attribute>Name</attribute>
+    <value>Male_NarrowNormal</value>
+  </Operation>
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/HeadTypeDef[defName="Male_NarrowPointy"]</xpath>
+    <attribute>Name</attribute>
+    <value>Male_NarrowPointy</value>
+  </Operation>
+
+</Patch>
