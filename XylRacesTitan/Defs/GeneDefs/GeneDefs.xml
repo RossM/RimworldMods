@@ -36,26 +36,6 @@
     <displayOrderInCategory>111</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MineralizedSkin</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
-    <renderNodeProperties>
-      <li>
-        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
-        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
-        <parentTagDef>Head</parentTagDef>
-        <colorType>Skin</colorType>
-        <rotDrawMode>Fresh, Rotting</rotDrawMode>
-        <texPaths>
-          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/Osteoliths/Osteoliths</li>
-        </texPaths>
-        <visibleFacing>
-          <li>East</li>
-          <li>South</li>
-          <li>West</li>
-        </visibleFacing>
-        <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
-        <baseLayer>51</baseLayer>
-      </li>
-    </renderNodeProperties>
-    <randomBrightnessFactor>0.18</randomBrightnessFactor>
     <exclusionTags>
       <li>Fur</li>
     </exclusionTags>
@@ -64,8 +44,35 @@
       <ArmorRating_Blunt>0.5</ArmorRating_Blunt>
       <MoveSpeed>-0.4</MoveSpeed>
     </statOffsets>
+    <fur>Osteoliths</fur>
+    <renderNodeProperties>
+      <li>
+        <debugLabel>Osteoliths</debugLabel>
+        <nodeClass>XylRacesCore.PawnRenderNode_NotFur</nodeClass>
+        <workerClass>PawnRenderNodeWorker_Fur</workerClass>
+        <baseLayer>5</baseLayer>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <colorType>Skin</colorType>
+        <parentTagDef>Body</parentTagDef>
+      </li>
+    </renderNodeProperties>
     <missingGeneRomanceChanceFactor>0.2</missingGeneRomanceChanceFactor>
   </GeneDef>
+  <FurDef>
+    <defName>Osteoliths</defName>
+    <noGraphic>true</noGraphic>
+    <bodyTypeGraphicPaths>
+      <Male>Xyl/Things/Pawn/Humanlike/Bodies/Naked_Osteoliths_Male</Male>
+      <Female>Xyl/Things/Pawn/Humanlike/Bodies/Naked_Osteoliths_Female</Female>
+      <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Naked_Osteoliths_Hulk</Hulk>
+      <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Naked_Osteoliths_Fat</Fat>
+      <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Naked_Osteoliths_Thin</Thin>
+      <!-- TODO -->
+      <Child>Things/Pawn/Humanlike/Bodies/Naked_Child</Child>
+      <Baby>Things/Pawn/Humanlike/Bodies/Naked_Child</Baby>
+      <!-- Always covered by swaddled graphic -->
+    </bodyTypeGraphicPaths>
+  </FurDef>
 
   <!--<GeneDef MayRequire="Ludeon.RimWorld.Odyssey">
     <defName>XylVacuum_Resistant</defName>

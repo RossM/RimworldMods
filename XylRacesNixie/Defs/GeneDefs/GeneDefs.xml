@@ -65,7 +65,7 @@
     <fur>Scaleskin</fur>
     <renderNodeProperties>
       <li>
-        <debugLabel>Fur</debugLabel>
+        <debugLabel>Scaleskin</debugLabel>
         <nodeClass>XylRacesCore.PawnRenderNode_NotFur</nodeClass>
         <workerClass>PawnRenderNodeWorker_Fur</workerClass>
         <baseLayer>5</baseLayer>
@@ -98,8 +98,8 @@
       <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Fat</Fat>
       <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Thin</Thin>
       <!-- TODO -->
-      <Child>Things/Pawn/Humanlike/Bodies/Naked_FurChild</Child>
-      <Baby>Things/Pawn/Humanlike/Bodies/Naked_FurChild</Baby>
+      <Child>Things/Pawn/Humanlike/Bodies/Naked_Child</Child>
+      <Baby>Things/Pawn/Humanlike/Bodies/Naked_Child</Baby>
       <!-- Always covered by swaddled graphic -->
     </bodyTypeGraphicPaths>
   </FurDef>
