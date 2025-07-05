@@ -156,6 +156,15 @@
     <customEffectDescriptions>
       <li>Gender: always female</li>
     </customEffectDescriptions>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>gyno</symbol></li>
+        <li><symbol>fem</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>woman</symbol></li>
+      </suffixSymbols>
+    </symbolPack>
   </GeneDef>
   <GeneDef ParentName="XylGenderRatioBase">
     <geneClass>XylRacesCore.Genes.Gene_GenderRatio</geneClass>
@@ -204,6 +213,15 @@
     <customEffectDescriptions>
       <li>Gender: always male</li>
     </customEffectDescriptions>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>andro</symbol></li>
+        <li><symbol>man</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>man</symbol></li>
+      </suffixSymbols>
+    </symbolPack>
   </GeneDef>
 
   <GeneDef>
