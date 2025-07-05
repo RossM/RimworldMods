@@ -52,6 +52,18 @@
       <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
       <ArmorRating_Blunt>0.15</ArmorRating_Blunt>
     </statOffsets>
+    <fur>Scaleskin</fur>
+    <renderNodeProperties>
+      <li>
+        <debugLabel>Fur</debugLabel>
+        <nodeClass>XylRacesCore.PawnRenderNode_NotFur</nodeClass>
+        <workerClass>PawnRenderNodeWorker_Fur</workerClass>
+        <baseLayer>5</baseLayer>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <colorType>Skin</colorType>
+        <parentTagDef>Body</parentTagDef>
+      </li>
+    </renderNodeProperties>
     <symbolPack>
       <prefixSymbols>
         <li><symbol>scale</symbol></li>
@@ -66,6 +78,21 @@
       </suffixSymbols>
     </symbolPack>
   </GeneDef>
+  <FurDef>
+    <defName>Scaleskin</defName>
+    <noGraphic>true</noGraphic>
+    <bodyTypeGraphicPaths>
+      <Male>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Male</Male>
+      <Female>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Female</Female>
+      <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Hulk</Hulk>
+      <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Fat</Fat>
+      <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Thin</Thin>
+      <!-- TODO -->
+      <Child>Things/Pawn/Humanlike/Bodies/Naked_FurChild</Child>
+      <Baby>Things/Pawn/Humanlike/Bodies/Naked_FurChild</Baby>
+      <!-- Always covered by swaddled graphic -->
+    </bodyTypeGraphicPaths>
+  </FurDef>
 
   <GeneDef>
     <defName>XylAquatic</defName>
