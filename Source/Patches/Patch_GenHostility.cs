@@ -52,8 +52,8 @@ namespace XylRacesCore.Patches
             // from happening. Note that there's no mechanism to allow the insects to become hostile if they are attacked;
             // I'm hoping that case is rare enough to not worry about.
             if (pawn.Faction == Faction.OfPlayerSilentFail &&
-                pawn.kindDef.defaultFactionDef != null &&
-                pawn.kindDef.defaultFactionDef == pawn2.Faction?.def && 
+                pawn.kindDef.defaultFactionDef == FactionDefOf.Insect &&
+                pawn2.Faction?.def == FactionDefOf.Insect && 
                 ModsConfig.IsActive("Xylthixlm.Races.Trog"))
             {
                 return true;
