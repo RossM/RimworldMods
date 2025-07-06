@@ -4,7 +4,7 @@
   <XenotypeDef>
     <defName>XylNixie</defName>
     <label>nixie</label>
-    <description>Nixies were made for ocean worlds, but they’re more than just fish people—they're beautiful in form, fluid in movement, and graceful in speech, with an innate psychic pull that draws others in whether they mean to or not. On the rim, they live in scattered river clans and coastal camps, half-wild and half-divine. They may be pretty, but their scales are tougher than they look—and they've lured more than one raider into a watery grave.</description>
+    <description>Nixies were made for ocean worlds, but they’re more than just fish people. They're beautiful in form, fluid in movement, and graceful in speech, with an innate psychic pull that draws others in whether they mean to or not. On the rim, they live in scattered river clans and coastal camps, half-wild and half-divine. They may be pretty, but their scales are tougher than they look—and they've lured more than one raider into a watery grave.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <displayPriority>-104</displayPriority>
     <inheritable>true</inheritable>

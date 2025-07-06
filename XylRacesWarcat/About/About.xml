@@ -4,7 +4,7 @@
   <packageId>Xylthixlm.Races.Warcat</packageId>
   <name>Posthuman Drift: Warcat Xenotype</name>
   <author>Xylthixlm</author>
-  <description>TODO</description>
+  <description>Adds the Warcat xenotype and associated genes.\n\nThese graceful predators were forged in military gene-vats: part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on raw meat to survive. Now they roam the rimworlds in tight-knit clans, hunting anything they can bring down—even other xenohumans.</description>
   <modIconPath>Xyl/UI/Icons/Xenotypes/Warcat</modIconPath>
   <supportedVersions>
     <li>1.6</li>
