@@ -39,7 +39,8 @@
         raw meat per day to keep the diet dependency under control.
         -->
         <severityReductionPerNutrition>0.5</severityReductionPerNutrition>
-        <startingItemRange>40 ~ 80</startingItemRange>
+        <startingFoodType>Meat</startingFoodType>
+        <startingFoodNutrition>2~4</startingFoodNutrition>
       </li>
       <li Class="XylRacesCore.Genes.GeneDefExtension_IngestionThoughtOverride">
         <thoughtOverrides>

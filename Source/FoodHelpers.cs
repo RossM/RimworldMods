@@ -60,7 +60,7 @@ public static class FoodHelpers
 
     public static float GetExtraNutritionFactor(Pawn eater, Thing foodSource, ThingDef foodDef)
     {
-        if (!foodDef.IsProcessedFood)
+        if (!foodDef.ingestible.foodType.HasFlag(FoodTypeFlags.Meal))
         {
             return GetFoodType(foodDef) switch
             {

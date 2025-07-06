@@ -8,14 +8,17 @@ namespace XylRacesCore.Genes
 {
     public class GeneDefExtension_Hyperlactation : DefModExtension_WithIcon
     {
+        public ThingDef item;
         public float chargePerItem = 0.1f;
         public HediffDef hediff;
         public List<ThoughtDef> milkedThoughts;
         public Gender? activeGender;
         public int ticksPerSorenessStage = 60000;
+        public float startingItemChance;
+        public IntRange startingItemCount;
     }
 
-    public class Gene_Hyperlactation : Gene
+    public class Gene_Hyperlactation : Gene, IStartingItemGenerator
     {
         public bool allowMilking = true;
         public bool onlyMilkWhenFull = true;
@@ -151,6 +154,14 @@ namespace XylRacesCore.Genes
             yield return new StatDrawEntry(StatCategoryDefOf.PawnFood, "XylMilkProductionLabel".TranslateSimple(),
                 "PerDay".Translate(milkPerDay.ToStringByStyle(ToStringStyle.FloatOne)),
                 "XylMilkProductionDesc".TranslateSimple(), 1);
+        }
+
+        public ThingDefCount? GetStartingItem()
+        {
+            if (Active && Rand.Chance(DefExt.startingItemChance))
+                return new(DefExt.item, Mathf.Clamp(DefExt.startingItemCount.RandomInRange, 1, DefExt.item.stackLimit));
+
+            return null;
         }
     }
 }

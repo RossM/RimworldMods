@@ -13,7 +13,8 @@ namespace XylRacesCore.Genes
         public FoodKind foodKind = FoodKind.Any;
         public bool rawOnly = false;
         public float severityReductionPerNutrition = 1f;
-        public IntRange? startingItemRange;
+        public FoodTypeFlags startingFoodType;
+        public FloatRange? startingFoodNutrition;
     }
 
     public class Gene_DietDependency : Gene, IGene_HediffSource, IStartingItemGenerator
@@ -142,7 +143,7 @@ namespace XylRacesCore.Genes
                 return false;
             }
 
-            if (food.def.IsProcessedFood && extension.rawOnly)
+            if (!food.def.IsRawHumanFood() && extension.rawOnly)
                 return false;
 
             if (extension.foodKind == FoodUtility.GetFoodKind(food))
@@ -162,6 +163,8 @@ namespace XylRacesCore.Genes
         {
             if (!food.IsIngestible)
                 return false;
+            if (GetBaseNutrition(food) <= 0)
+                return false;
 
             var extension = DefExt;
             if (extension == null)
@@ -170,7 +173,7 @@ namespace XylRacesCore.Genes
                 return false;
             }
 
-            if (food.IsProcessedFood && extension.rawOnly)
+            if (!food.IsRawHumanFood() && extension.rawOnly)
                 return false;
 
             if (extension.foodKind == FoodUtility.GetFoodKind(food))
@@ -186,14 +189,32 @@ namespace XylRacesCore.Genes
 
         public ThingDefCount? GetStartingItem()
         {
-            if (DefExt?.startingItemRange == null)
+            if (DefExt?.startingFoodNutrition == null)
                 return null;
 
-            var foodDef = DefDatabase<ThingDef>.AllDefsListForReading.Where(thingDef => !thingDef.IsCorpse && ValidateFood(thingDef)).RandomElement();
+            var foodDef = DefDatabase<ThingDef>.AllDefsListForReading.Where(GoodStartingFood).RandomElement();
             if (foodDef == null)
                 return null;
 
-            return new(foodDef, Mathf.Clamp(DefExt.startingItemRange.Value.RandomInRange, 1, foodDef.stackLimit));
+            float nutritionNeeded = DefExt.startingFoodNutrition.Value.RandomInRange;
+            int itemsNeeded = Mathf.CeilToInt(nutritionNeeded / GetBaseNutrition(foodDef));
+
+            return new(foodDef, Mathf.Clamp(itemsNeeded, 1, foodDef.stackLimit));
+
+            bool GoodStartingFood(ThingDef thingDef)
+            {
+                if (thingDef.ingestible?.foodType.HasFlag(DefExt.startingFoodType) != true)
+                    return false;
+                if (!ValidateFood(thingDef))
+                    return false;
+                return true;
+            }
+        }
+
+        private static float GetBaseNutrition(ThingDef foodDef)
+        {
+            StatModifier modifier = foodDef.statBases.FirstOrDefault(s => s.stat == StatDefOf.Nutrition);
+            return modifier?.value ?? 0;
         }
     }
 }

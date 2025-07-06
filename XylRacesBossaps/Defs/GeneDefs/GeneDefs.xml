@@ -121,6 +121,7 @@
     </customEffectDescriptions>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Hyperlactation">
+        <item>Milk</item>
         <chargePerItem>0.1</chargePerItem>
         <hediff>XylHyperlactating</hediff>
         <milkedThoughts>
@@ -131,6 +132,8 @@
         </milkedThoughts>
         <activeGender>Female</activeGender>
         <iconPath>Things/Item/Resource/Milk</iconPath>
+        <startingItemChance>0.2</startingItemChance>
+        <startingItemCount>5~10</startingItemCount>
       </li>
     </modExtensions>
   </GeneDef>

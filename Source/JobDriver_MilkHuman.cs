@@ -16,13 +16,6 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class JobDriver_MilkHuman : JobDriver
     {
-        [DefOf]
-        private static class Defs
-        {
-            [UsedImplicitly]
-            public static ThingDef Milk;
-        }
-
         private float gatherProgress;
 
         private const float WorkTotal = 400f;
@@ -64,8 +57,8 @@ namespace XylRacesCore
 
             while (qty > 0)
             {
-                int stackQty = Math.Min(qty, Defs.Milk.stackLimit);
-                Thing thing = ThingMaker.MakeThing(Defs.Milk);
+                int stackQty = Math.Min(qty, gene.DefExt.item.stackLimit);
+                Thing thing = ThingMaker.MakeThing(gene.DefExt.item);
                 thing.stackCount = stackQty;
                 qty -= stackQty;
                 if (!GenPlace.TryPlaceThing(thing, doer.Position, doer.Map, ThingPlaceMode.Near))
