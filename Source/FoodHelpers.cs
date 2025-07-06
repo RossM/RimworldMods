@@ -1,3 +1,4 @@
+using System.Linq;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
@@ -140,5 +141,36 @@ public static class FoodHelpers
             FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
             _ => 0.0f
         };
+    }
+
+    public static bool IsThoughtFromIngestionDisallowedByGenes(Pawn eater, ThoughtDef thought, ThingDef ingestible,
+        MeatSourceCategory meatSourceCategory)
+    {
+        if (thought == null || ingestible == null)
+        {
+            return false;
+        }
+
+        foreach (var ext in eater.GeneDefExtensionsOfType<Genes.GeneDefExtension_IngestionThoughtOverride>())
+        {
+            foreach (var thoughtOverride in ext.thoughtOverrides.EmptyIfNull())
+            {
+                if (thoughtOverride.thoughts.NullOrEmpty())
+                    continue;
+
+                if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
+                    continue;
+
+                if (!thoughtOverride.meatSources.NullOrEmpty() && !thoughtOverride.meatSources.Contains(meatSourceCategory))
+                    continue;
+
+                if (thoughtOverride.thoughts.Any(t => t == thought))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

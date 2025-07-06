@@ -22,11 +22,20 @@
     <statOffsets>
       <XylRawNonMeatFoodPoisonChanceOffset>-0.02</XylRawNonMeatFoodPoisonChanceOffset>
     </statOffsets>
-    <forcedTraits>
-      <li>
-        <def>XylHerbivore</def>
+    <modExtensions>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_IngestionThoughtOverride">
+        <thoughtOverrides>
+          <li>
+            <meatSources>
+              <li>NotMeat</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </thoughtOverrides>
       </li>
-    </forcedTraits>
+    </modExtensions>
   </GeneDef>
 
   <GeneDef>

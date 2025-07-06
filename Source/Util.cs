@@ -33,6 +33,15 @@ namespace XylRacesCore
             return pawn.genes != null && pawn.genes.GenesListForReading.OfType<T>().Any(predicate);
         }
 
+        public static IEnumerable<T> GeneDefExtensionsOfType<T>(this Pawn pawn) where T : DefModExtension
+        {
+            if (pawn.genes == null)
+                yield break;
+
+            foreach (T extension in pawn.genes.GenesListForReading.Select(gene => gene.def.GetModExtension<T>()).Where(extension => extension != null))
+                yield return extension;
+        }
+
         public static Hediff GetFirstHediffWithComp<T>(this HediffSet hediffSet) where T : HediffComp
         {
             return hediffSet.hediffs.FirstOrDefault(h => h.TryGetComp<T>() != null);
@@ -41,6 +50,11 @@ namespace XylRacesCore
         public static bool HasHediffWithComp<T>(this HediffSet hediffSet) where T : HediffComp
         {
             return hediffSet.hediffs.Any(h => h.TryGetComp<T>() != null);
+        }
+
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> enumerable)
+        {
+            return enumerable ?? Enumerable.Empty<T>();
         }
     }
 }

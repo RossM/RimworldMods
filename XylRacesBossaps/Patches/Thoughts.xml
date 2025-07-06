@@ -1,6 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?> 
 <Patch>
-  
+
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Ludeon.RimWorld.Ideology</li>
+    </mods>
+    <match Class="XylRacesCore.PatchOperationAddOrMerge">
+      <xpath>Defs/ThoughtDef[starts-with(defName,"AteNonMeat_")]</xpath>
+      <value>
+        <nullifyingGenes>
+          <li>XylHerbivoreStomach</li>
+        </nullifyingGenes>
+      </value>
+    </match>
+  </Operation>
+
   <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
     <xpath>Defs/ThoughtDef[defName="SleptInBarracks"]</xpath>
     <value>

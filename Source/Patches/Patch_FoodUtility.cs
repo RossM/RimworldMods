@@ -1,8 +1,10 @@
 ﻿using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
+using System.Collections.Generic;
 using Verse;
 using XylRacesCore.Genes;
+using static RimWorld.FoodUtility;
 
 namespace XylRacesCore.Patches
 {
@@ -30,6 +32,16 @@ namespace XylRacesCore.Patches
                 if (gene.ValidateFood(foodSource) && ((Hediff_DietDependency)gene.LinkedHediff).ShouldSatisfy)
                     __result += 100f;
             }
+        }
+
+        [HarmonyPrefix, UsedImplicitly, HarmonyPatch("TryAddIngestThought")]
+        public static bool TryAddIngestThought_Prefix(Pawn ingester, ThoughtDef def, Precept fromPrecept,
+            List<ThoughtFromIngesting> ingestThoughts, ThingDef foodDef, MeatSourceCategory meatSourceCategory)
+        {
+            Log.Message(string.Format("TryAddIngestThought_Prefix: {0}, {1}, {2}, {3}", ingester, def, foodDef, meatSourceCategory));
+            if (FoodHelpers.IsThoughtFromIngestionDisallowedByGenes(ingester, def, foodDef, meatSourceCategory))
+                return false;
+            return true;
         }
     }
 }

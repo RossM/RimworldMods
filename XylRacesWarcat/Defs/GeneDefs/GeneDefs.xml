@@ -29,11 +29,6 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>14</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MeatDependence</iconPath>
-    <forcedTraits>
-      <li>
-        <def>XylCarnivore</def>
-      </li>
-    </forcedTraits>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_DietDependency">
         <hediffDef>XylGeneticMeatNeed</hediffDef>
@@ -44,6 +39,18 @@
         raw meat per day to keep the diet dependency under control.
         -->
         <severityReductionPerNutrition>0.5</severityReductionPerNutrition>
+      </li>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_IngestionThoughtOverride">
+        <thoughtOverrides>
+          <li>
+            <meatSources>
+              <li>Undefined</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </thoughtOverrides>
       </li>
     </modExtensions>
   </GeneDef>
@@ -69,11 +76,22 @@
     <statOffsets>
       <XylRawMeatFoodPoisonChanceOffset>-0.02</XylRawMeatFoodPoisonChanceOffset>
     </statOffsets>
-    <forcedTraits>
-      <li>
-        <def>XylCarnivore</def>
+    <modExtensions>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_IngestionThoughtOverride">
+        <thoughtOverrides>
+          <li>
+            <meatSources>
+              <li>Undefined</li>
+              <li>Insect</li>
+              <li>Humanlike</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </thoughtOverrides>
       </li>
-    </forcedTraits>
+    </modExtensions>
   </GeneDef>
 
   <GeneDef ParentName="GeneEyeColor">

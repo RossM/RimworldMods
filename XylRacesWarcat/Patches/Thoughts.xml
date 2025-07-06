@@ -7,20 +7,39 @@
       <li>Ludeon.RimWorld.Ideology</li>
     </mods>
     <match Class="XylRacesCore.PatchOperationAddOrMerge">
-      <xpath>Defs/ThoughtDef[starts-with(defName,"AteMeat_") or starts-with(defName,"AteHumanMeat_") or starts-with(defName,"AteNonMeat_")]</xpath>
+      <xpath>Defs/ThoughtDef[starts-with(defName,"AteMeat_")]</xpath>
       <value>
-        <nullifyingTraits>
-          <li>XylCarnivore</li>
-        </nullifyingTraits>
+        <nullifyingGenes>
+          <li>XylMeatDependence</li>
+          <li>XylCarnivoreStomach</li>
+        </nullifyingGenes>
+      </value>
+    </match>
+  </Operation>
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Ludeon.RimWorld.Ideology</li>
+    </mods>
+    <match Class="XylRacesCore.PatchOperationAddOrMerge">
+      <xpath>starts-with(defName,"AteHumanMeat_")]</xpath>
+      <value>
+        <nullifyingGenes>
+          <li>XylCarnivoreStomach</li>
+        </nullifyingGenes>
       </value>
     </match>
   </Operation>
   <Operation Class="XylRacesCore.PatchOperationAddOrMerge" MayRequire="Ludeon.RimWorld.Ideology">
-    <xpath>Defs/ThoughtDef[defName="AteCorpse"]</xpath>
+    <xpath>Defs/ThoughtDef[
+      defName="AteCorpse" or 
+      defName="AteInsectMeatDirect" or 
+      defName="AteInsectMeatAsIngredient" or 
+      defName="AteHumanlikeMeatDirect" or 
+      defName="AteHumanlikeMeatAsIngredient"]</xpath>
     <value>
-      <nullifyingTraits>
-        <li>XylCarnivore</li>
-      </nullifyingTraits>
+      <nullifyingGenes>
+        <li>XylCarnivoreStomach</li>
+      </nullifyingGenes>
     </value>
   </Operation>
 
