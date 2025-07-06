@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using System;
+using RimWorld;
 using System.Collections.Generic;
 using Verse;
 using Verse.AI;
@@ -52,9 +53,9 @@ namespace XylRacesCore
         }
 
 
-        private bool TryFindWaterTile(Pawn pawn, out IntVec3 result)
+        private bool TryFindWaterTile(Pawn pawn, out IntVec3 result, int maxSearchRadius = int.MaxValue)
         {
-            return RCellFinder.TryFindRandomCellNearWith(pawn.Position, x => IsValidWaterTileFor(pawn, x), pawn.Map, out result);
+            return RCellFinder.TryFindRandomCellNearWith(pawn.Position, x => IsValidWaterTileFor(pawn, x), pawn.Map, out result, maxSearchRadius: maxSearchRadius);
 
         }
 
@@ -63,11 +64,6 @@ namespace XylRacesCore
             outCandidates.Clear();
             if (thingDefs == null)
             {
-                return;
-            }
-            if (thingDefs.Count == 1)
-            {
-                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(thingDefs[0]));
                 return;
             }
             foreach (ThingDef def in thingDefs)
@@ -105,21 +101,35 @@ namespace XylRacesCore
         {
             // TODO: Hook up GoSwimming when Odyssey comes out
 
+            IntVec3 foundTile;
             if (IsValidWaterTileFor(pawn, pawn.Position))
             {
-                var job = JobMaker.MakeJob(JobDefOf.Wait);
-                job.expiryInterval = 2000;
-                return job;
+                // Wander around a bit
+                if (Rand.Chance(0.2f) && TryFindWaterTile(pawn, out foundTile, 10))
+                {
+                    Job job = JobMaker.MakeJob(JobDefOf.Goto, foundTile);
+                    job.locomotionUrgency = LocomotionUrgency.Walk;
+                    return job;
+                }
+                else
+                {
+                    Job job = JobMaker.MakeJob(JobDefOf.Wait);
+                    job.expiryInterval = 300;
+                    return job;
+                }
             }
 
             Thing bestThing = FindBestShower(pawn);
             if (bestThing != null)
-                return JobMaker.MakeJob(showerJobDef, bestThing);
-
-            if (TryFindWaterTile(pawn, out var result))
             {
-                var job = JobMaker.MakeJob(JobDefOf.Goto, result);
+                Job job = JobMaker.MakeJob(showerJobDef, bestThing);
+                job.reportStringOverride = null;
                 return job;
+            }
+
+            if (TryFindWaterTile(pawn, out foundTile))
+            {
+                return JobMaker.MakeJob(JobDefOf.Goto, foundTile);
             }
 
             return null;
