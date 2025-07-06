@@ -71,6 +71,7 @@
         <baseLayer>5</baseLayer>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <colorType>Skin</colorType>
+        <useSkinShader>true</useSkinShader>
         <parentTagDef>Body</parentTagDef>
       </li>
     </renderNodeProperties>

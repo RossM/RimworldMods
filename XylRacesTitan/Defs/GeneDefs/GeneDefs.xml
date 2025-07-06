@@ -36,6 +36,14 @@
     <displayOrderInCategory>111</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MineralizedSkin</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <forcedHeadTypes>
+      <li>Female_Osteoliths_Average_Normal</li>
+      <li>Female_Osteoliths_Average_Wide</li>
+      <li>Female_Osteoliths_Narrow_Wide</li>
+      <li>Male_Osteoliths_Average_Normal</li>
+      <li>Male_Osteoliths_Average_Wide</li>
+      <li>Male_Osteoliths_Narrow_Wide</li>
+    </forcedHeadTypes>
     <exclusionTags>
       <li>Fur</li>
     </exclusionTags>
@@ -53,6 +61,7 @@
         <baseLayer>5</baseLayer>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <colorType>Skin</colorType>
+        <useSkinShader>true</useSkinShader>
         <parentTagDef>Body</parentTagDef>
       </li>
     </renderNodeProperties>
@@ -62,11 +71,11 @@
     <defName>Osteoliths</defName>
     <noGraphic>true</noGraphic>
     <bodyTypeGraphicPaths>
-      <Male>Xyl/Things/Pawn/Humanlike/Bodies/Naked_Osteoliths_Male</Male>
-      <Female>Xyl/Things/Pawn/Humanlike/Bodies/Naked_Osteoliths_Female</Female>
-      <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Naked_Osteoliths_Hulk</Hulk>
-      <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Naked_Osteoliths_Fat</Fat>
-      <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Naked_Osteoliths_Thin</Thin>
+      <Male>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Male</Male>
+      <Female>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Female</Female>
+      <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Hulk</Hulk>
+      <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Fat</Fat>
+      <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Thin</Thin>
       <!-- TODO -->
       <Child>Things/Pawn/Humanlike/Bodies/Naked_Child</Child>
       <Baby>Things/Pawn/Humanlike/Bodies/Naked_Child</Baby>

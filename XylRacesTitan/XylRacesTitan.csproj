@@ -13,6 +13,8 @@
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="Textures\Xyl\Things\Pawn\Humanlike\Heads\Female\" />
+    <Folder Include="Textures\Xyl\Things\Pawn\Humanlike\Heads\Male\" />
     <Folder Include="Textures\Xyl\UI\Icons\Genes\" />
   </ItemGroup>
 

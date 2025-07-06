@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <HeadTypeDef ParentName="Male_AverageNormal">
+    <defName>Male_Osteoliths_Average_Normal</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Osteoliths_Average_Normal</graphicPath>
+    <gender>Male</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylMineralizedSkin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="Male_AverageWide">
+    <defName>Male_Osteoliths_Average_Wide</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Osteoliths_Average_Wide</graphicPath>
+    <gender>Male</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylMineralizedSkin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="Male_NarrowWide">
+    <defName>Male_Osteoliths_Narrow_Wide</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Osteoliths_Narrow_Wide</graphicPath>
+    <gender>Male</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylMineralizedSkin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+
+  <HeadTypeDef ParentName="Female_AverageNormal">
+    <defName>Female_Osteoliths_Average_Normal</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Osteoliths_Average_Normal</graphicPath>
+    <gender>Female</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylMineralizedSkin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="Female_AverageWide">
+    <defName>Female_Osteoliths_Average_Wide</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Osteoliths_Average_Wide</graphicPath>
+    <gender>Female</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylMineralizedSkin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+  <HeadTypeDef ParentName="Female_NarrowWide">
+    <defName>Female_Osteoliths_Narrow_Wide</defName>
+    <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Osteoliths_Narrow_Wide</graphicPath>
+    <gender>Female</gender>
+    <randomChosen>false</randomChosen>
+    <requiredGenes>
+      <li>XylMineralizedSkin</li>
+    </requiredGenes>
+  </HeadTypeDef>
+
+</Defs>
