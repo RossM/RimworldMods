@@ -226,7 +226,7 @@ namespace XylRacesCore.Patches
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup_GetOffsetsAndFactorsExplanation.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
+                Log.Error(string.Format("{0}.{1}: {2}", MethodBase.GetCurrentMethod()?.DeclaringType?.Name, MethodBase.GetCurrentMethod()?.Name, reason));
             return instructionsList;
         }
 
@@ -249,7 +249,7 @@ namespace XylRacesCore.Patches
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             if (!Fixup_GetValueUnfinalized.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(string.Format("{0}: {1}", MethodBase.GetCurrentMethod().FullDescription(), reason));
+                Log.Error(string.Format("{0}.{1}: {2}", MethodBase.GetCurrentMethod()?.DeclaringType?.Name, MethodBase.GetCurrentMethod()?.Name, reason));
             return instructionsList;
         }
 
