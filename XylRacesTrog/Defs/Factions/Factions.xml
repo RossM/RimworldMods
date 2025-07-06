@@ -173,6 +173,11 @@
         </options>
       </li>
     </pawnGroupMakers>    
+    <modExtensions>
+      <li Class="XylRacesCore.FactionDefExtension">
+        <nearbyPollution>0.01 ~ 9999</nearbyPollution>
+      </li>
+    </modExtensions>
   </FactionDef>
 
 </Defs>
