@@ -5,15 +5,18 @@
     <defName>XylOutlanderRoughDvergr</defName>
     <label>rough dvergr union</label>
     <description>These people have lived here for decades or centuries, and have lost most of the technology that brought them to this world. They usually work with simple machinery and defend themselves with advanced gunpowder weapons.\n\nThey are concerned with the practical matters of trade, trust, and survival.\n\nThis particular group has a streak of barbarity in them.</description>
-    <factionIconPath>World/WorldObjects/Expanding/TownRough</factionIconPath>
+    <factionIconPath>Xyl/World/WorldObjects/Expanding/TownDvergr</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>
-        <XylDvergr>0.9</XylDvergr>
-        <Baseliner>0.05</Baseliner>
-        <Dirtmole>0.025</Dirtmole>
-        <XylTitan MayRequire="Xylthixlm.Races.Titan">0.025</XylTitan>
+        <XylDvergr>0.6</XylDvergr>
+        <Baseliner>0.3</Baseliner>
+        <Dirtmole>0.05</Dirtmole>
+        <XylTitan MayRequire="Xylthixlm.Races.Titan">0.05</XylTitan>
       </xenotypeChances>
     </xenotypeSet>
+    <colorSpectrum Inherit="false">
+      <li>(0.5, 0.3, 0.2)</li>
+    </colorSpectrum>
     <requiredMemes>
       <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
     </requiredMemes>

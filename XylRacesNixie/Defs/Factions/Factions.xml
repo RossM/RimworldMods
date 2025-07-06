@@ -11,9 +11,9 @@
       </xenotypeChances>
     </xenotypeSet>
     <colorSpectrum>
-      <li>(0.85, 0.75, 0.37)</li>
-      <li>(0.94, 0.61, 0.06)</li>
+      <li>(0.4, 0.65, 0.75)</li>
     </colorSpectrum>
+    <replacesFaction>TribeCivil</replacesFaction>
     <requiredMemes>
       <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>
     </requiredMemes>

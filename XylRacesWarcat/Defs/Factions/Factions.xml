@@ -1,24 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-  <FactionDef ParentName="TribeSavageBase">
+  <FactionDef ParentName="TribeRoughBase">
     <defName>XylTribeCannibalWarcat</defName>
     <label>cannibal warcat tribe</label>
-    <description>These people have been here a very long time. Maybe their ancestors crashed here a thousand years ago. Maybe they survived some cataclysm that destroyed a technological civilization here. In any case, the tribals are mostly nomadic people who live off the land using primitive tools and weapons.\n\nDespite their apparent technological weakness, the tribals can be dangerous enemies because of their skill with low-tech warfare, their numbers, and their hardiness.\n\nThis particular tribe is driven by a blood-and-honor culture; you will not be able to ally with them!</description>
-    <factionIconPath>World/WorldObjects/Expanding/VillageSavage</factionIconPath>
+    <description>These people have been here a very long time. Maybe their ancestors crashed here a thousand years ago. Maybe they survived some cataclysm that destroyed a technological civilization here. In any case, the tribals are mostly nomadic people who live off the land using primitive tools and weapons.\n\nDespite their apparent technological weakness, the tribals can be dangerous enemies because of their skill with low-tech warfare, their numbers, and their hardiness.\n\nThis particular tribe values warlike dominance; it may be difficult to turn them into an ally.</description>
+    <factionIconPath>World/WorldObjects/Expanding/VillageRough</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>
         <XylWarcat>999</XylWarcat>
       </xenotypeChances>
     </xenotypeSet>
-    <colorSpectrum>
-      <li>(0.65, 0.28, 0)</li>
-      <li>(0.61, 0.45, 0.32)</li>
+    <colorSpectrum Inherit="false">
+      <li>(0.85, 0.55, 0)</li>
     </colorSpectrum>
-    <maxConfigurableAtWorldCreation>9999</maxConfigurableAtWorldCreation>
-    <configurationListOrderPriority>50</configurationListOrderPriority>
     <replacesFaction MayRequire="Ludeon.Rimworld.Ideology">TribeCannibal</replacesFaction>
-    <permanentEnemy>true</permanentEnemy>
+    <naturalEnemy>true</naturalEnemy>
     <requiredMemes>
       <li MayRequire="Ludeon.RimWorld.Ideology">NaturePrimacy</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">Cannibal</li>

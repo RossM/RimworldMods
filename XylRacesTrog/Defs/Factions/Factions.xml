@@ -8,12 +8,19 @@
     <factionIconPath>World/WorldObjects/Expanding/VillageSavage</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>
-        <XylTrog>999</XylTrog>
+        <XylTrog>0.7</XylTrog>
+        <Neanderthal>0.05</Neanderthal>
+        <Waster>0.05</Waster>
+        <Dirtmole>0.05</Dirtmole>
+        <Baseliner>0.025</Baseliner>
+        <XylDvergr MayRequire="Xylthixlm.Races.Dvergr">0.05</XylDvergr>
+        <XylBossaps MayRequire="Xylthixlm.Races.Bossaps">0.025</XylBossaps>
+        <XylChyrr MayRequire="Xylthixlm.Races.Chyrr">0.025</XylChyrr>
+        <XylWarcat MayRequire="Xylthixlm.Races.Warcat">0.025</XylWarcat>
       </xenotypeChances>
     </xenotypeSet>
-    <colorSpectrum>
-      <li>(0.65, 0.28, 0)</li>
-      <li>(0.61, 0.45, 0.32)</li>
+    <colorSpectrum Inherit="false">
+      <li>(0.3, 0.5, 0.125)</li>
     </colorSpectrum>
     <maxConfigurableAtWorldCreation>9999</maxConfigurableAtWorldCreation>
     <configurationListOrderPriority>50</configurationListOrderPriority>

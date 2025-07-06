@@ -2,6 +2,11 @@
 <Patch>
 
   <Operation Class="PatchOperationAdd">
+    <xpath>Defs/FactionDef[@Name="OutlanderFactionBase"]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <XylDvergr>0.05</XylDvergr>
+    </value>
+  </Operation>  <Operation Class="PatchOperationAdd">
     <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet/xenotypeChances</xpath>
     <value>
       <XylDvergr>0.025</XylDvergr>
