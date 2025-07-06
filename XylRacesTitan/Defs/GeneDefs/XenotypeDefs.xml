@@ -4,7 +4,7 @@
   <XenotypeDef>
     <defName>XylTitan</defName>
     <label>titan</label>
-    <description>These stony giants are grown in vats for one purpose: to build things that will outlast them. Towering and near-impervious, they work without pause in places that would kill most people: burning deserts, frozen tundras, poisonous wastelands. They don’t talk much, don’t reflect much, and don’t seem to care. Walls go up, fire burns, storms howl — and the Titans keep working.</description>
+    <description>These stony giants are grown in vats for one purpose: to build things that will outlast them. Towering and near-impervious, they work without pause in places that would kill most people: burning deserts, frozen tundras, poisonous wastelands. They don’t talk much, don’t reflect much, and don’t seem to care. Walls go up, fire burns, storms howl—and the Titans keep working.</description>
     <iconPath>UI/Icons/Xenotypes/Baseliner</iconPath>
     <displayPriority>-105</displayPriority>
     <inheritable>false</inheritable>
