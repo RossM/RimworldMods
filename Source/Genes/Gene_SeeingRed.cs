@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using HarmonyLib;
 using Verse;
 
 namespace XylRacesCore.Genes
@@ -10,7 +14,7 @@ namespace XylRacesCore.Genes
         public HediffDef hediffDef;
     }
 
-    public class Gene_SeeingRed : Gene
+    public class Gene_SeeingRed : Gene, INotifyDamageTaken
     {
         public HashSet<Thing> extraEnemies;
 
@@ -22,7 +26,7 @@ namespace XylRacesCore.Genes
 
         public GeneDefExtension_SeeingRed DefExt => def.GetModExtension<GeneDefExtension_SeeingRed>();
 
-        public void Notify_DamageTaken(DamageInfo dinfo, DamageWorker.DamageResult damageResult)
+        public void Notify_DamageTaken(DamageInfo damageInfo, DamageWorker.DamageResult damageResult)
         {
             Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
 
@@ -36,7 +40,7 @@ namespace XylRacesCore.Genes
                 return;
 
             extraEnemies ??= new HashSet<Thing>();
-            extraEnemies.Add(dinfo.Instigator);
+            extraEnemies.Add(damageInfo.Instigator);
 
             var comp = hediff.TryGetComp<HediffComp_Disappears>();
             if (comp == null) 

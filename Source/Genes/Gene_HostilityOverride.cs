@@ -9,7 +9,7 @@ namespace XylRacesCore.Genes
         public int violationDisableTicks = 400;
     }
 
-    public class Gene_HostilityOverride : Gene
+    public class Gene_HostilityOverride : Gene, INotifyPawnDamagedThing
     {
         private GeneDefExtension_HostilityOverride DefExt => def.GetModExtension<GeneDefExtension_HostilityOverride>();
 
@@ -21,7 +21,7 @@ namespace XylRacesCore.Genes
             Scribe_Values.Look(ref lastHostileActionTick, "lastHostileActionTick", int.MinValue);
         }
 
-        public void Notify_PawnDamagedThing(Thing thing, DamageInfo dinfo, DamageWorker.DamageResult DamageResult)
+        public void Notify_PawnDamagedThing(Thing thing, DamageInfo damageInfo, DamageWorker.DamageResult DamageResult)
         {
             if (DisableHostilityFrom(thing))
             {

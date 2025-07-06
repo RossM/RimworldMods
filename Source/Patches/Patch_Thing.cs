@@ -31,21 +31,19 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch("TakeDamage")]
         public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
         {
-            List<Gene> instigatorGenes = (dinfo.Instigator as Pawn)?.genes?.GenesListForReading;
-            if (instigatorGenes != null)
+            if (dinfo.Instigator is Pawn instigator)
             {
-                foreach (var gene in instigatorGenes.OfType<Gene_HostilityOverride>())
+                foreach (var listener in instigator.AnythingOfType<INotifyPawnDamagedThing>())
                 {
-                    gene.Notify_PawnDamagedThing(__instance, dinfo, __result);
+                    listener.Notify_PawnDamagedThing(__instance, dinfo, __result);
                 }
             }
 
-            List<Gene> instanceGenes = (__instance as Pawn)?.genes?.GenesListForReading;
-            if (instanceGenes != null)
+            if (__instance is Pawn target)
             {
-                foreach (var gene in instanceGenes.OfType<Gene_SeeingRed>())
+                foreach (var listener in target.AnythingOfType<INotifyDamageTaken>())
                 {
-                    gene.Notify_DamageTaken(dinfo, __result);
+                    listener.Notify_DamageTaken(dinfo, __result);
                 }
             }
         }
