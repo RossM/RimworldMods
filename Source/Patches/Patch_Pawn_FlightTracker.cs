@@ -14,9 +14,8 @@ namespace XylRacesCore.Patches
         public static bool Notify_JobStarted_Prefix(Pawn_FlightTracker __instance, Job job)
         {
             var pawn = __instance.Get<Pawn>("pawn");
-            if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Gene_Flight>() is { } gene)
+            if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Gene_Flight>() is not null)
             {
-                gene.Notify_JobStarted(job);
                 return false;
             }
 

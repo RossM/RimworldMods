@@ -98,9 +98,8 @@
       <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Hulk</Hulk>
       <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Fat</Fat>
       <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Thin</Thin>
-      <!-- TODO -->
-      <Child>Things/Pawn/Humanlike/Bodies/Naked_Child</Child>
-      <Baby>Things/Pawn/Humanlike/Bodies/Naked_Child</Baby>
+      <Child>Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Child>
+      <Baby>Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Baby>
       <!-- Always covered by swaddled graphic -->
     </bodyTypeGraphicPaths>
   </FurDef>

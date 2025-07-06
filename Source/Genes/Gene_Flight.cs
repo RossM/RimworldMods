@@ -61,11 +61,6 @@ namespace XylRacesCore.Genes
             };
         }
 
-        public void Notify_JobStarted(Job job)
-        {
-
-        }
-
         public override void Tick()
         {
             base.Tick();
