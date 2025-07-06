@@ -142,7 +142,7 @@
     <defName>XylEars_Fin</defName>
     <label>fin ears</label>
     <description>Carriers of this gene have fin-like ears.</description>
-    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_FinEars</iconPath>-->
+    <iconPath>Xyl/UI/Icons/Genes/Gene_FinEars</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <displayOrderInCategory>73</displayOrderInCategory>
     <renderNodeProperties>
