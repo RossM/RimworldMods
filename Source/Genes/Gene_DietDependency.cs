@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace XylRacesCore.Genes
@@ -12,9 +13,10 @@ namespace XylRacesCore.Genes
         public FoodKind foodKind = FoodKind.Any;
         public bool rawOnly = false;
         public float severityReductionPerNutrition = 1f;
+        public IntRange? startingItemRange;
     }
 
-    public class Gene_DietDependency : Gene, IGene_HediffSource
+    public class Gene_DietDependency : Gene, IGene_HediffSource, IStartingItemGenerator
     {
         public int lastIngestedTick;
 
@@ -140,13 +142,11 @@ namespace XylRacesCore.Genes
                 return false;
             }
 
+            if (food.def.IsProcessedFood && extension.rawOnly)
+                return false;
+
             if (extension.foodKind == FoodUtility.GetFoodKind(food))
                 return true;
-
-            if (!food.def.IsProcessedFood)
-                return false;
-            if (extension.rawOnly)
-                return false;
 
             var compIngredients = food.TryGetComp<CompIngredients>();
             if (compIngredients == null)
@@ -158,9 +158,42 @@ namespace XylRacesCore.Genes
             return false;
         }
 
+        public bool ValidateFood(ThingDef food)
+        {
+            if (!food.IsIngestible)
+                return false;
+
+            var extension = DefExt;
+            if (extension == null)
+            {
+                Log.Warning("Gene_DietDependency.ValidateFood called without a GeneDefExtension_DietDependency");
+                return false;
+            }
+
+            if (food.IsProcessedFood && extension.rawOnly)
+                return false;
+
+            if (extension.foodKind == FoodUtility.GetFoodKind(food))
+                return true;
+
+            return false;
+        }
+
         public bool CausesHediff(HediffDef hediffDef)
         {
             return DefExt?.hediffDef == hediffDef;
+        }
+
+        public ThingDefCount? GetStartingItem()
+        {
+            if (DefExt?.startingItemRange == null)
+                return null;
+
+            var foodDef = DefDatabase<ThingDef>.AllDefsListForReading.Where(thingDef => !thingDef.IsCorpse && ValidateFood(thingDef)).RandomElement();
+            if (foodDef == null)
+                return null;
+
+            return new(foodDef, Mathf.Clamp(DefExt.startingItemRange.Value.RandomInRange, 1, foodDef.stackLimit));
         }
     }
 }
