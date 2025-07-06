@@ -88,7 +88,7 @@
     <defName>XylGeneticAtavism</defName>
     <label>genetic atavism</label>
     <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
-    <biostatCpx>0</biostatCpx>
+    <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>1101</displayOrderInCategory>

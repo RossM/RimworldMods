@@ -6,7 +6,7 @@
     <label>industrious</label>
     <labelShortAdj>industrious</labelShortAdj>
     <description>Carriers of this gene are exceptionally fast workers.</description>
-    <biostatCpx>1</biostatCpx>
+    <biostatCpx>2</biostatCpx>
     <biostatMet>-3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>600</displayOrderInCategory>

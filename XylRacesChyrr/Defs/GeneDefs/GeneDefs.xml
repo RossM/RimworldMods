@@ -75,7 +75,7 @@
     <defName>XylEcholocation</defName>
     <label>echolocation</label>
     <description>Carriers of this gene can use high-frequency sound waves to gain many of the benefits of sight even if totally blind.</description>
-    <biostatCpx>1</biostatCpx>
+    <biostatCpx>2</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>73</displayOrderInCategory>
@@ -103,7 +103,7 @@
     <defName>XylPrecognition</defName>
     <label>precognition</label>
     <description>Carriers of this gene can see a short distance into the future, giving bonuses to dodging and accuracy in combat. The effect scales with psychic sensitivity.</description>
-    <biostatCpx>1</biostatCpx>
+    <biostatCpx>2</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>120</displayOrderInCategory>
@@ -151,7 +151,7 @@
     <defName>XylBatWings</defName>
     <label>bat wings</label>
     <description>Carriers of this gene have bat-like wings, allowing them to fly for short periods.</description>
-    <biostatCpx>1</biostatCpx>
+    <biostatCpx>2</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Movement</displayCategory>
     <displayOrderInCategory>510</displayOrderInCategory>
