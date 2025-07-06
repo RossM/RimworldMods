@@ -38,7 +38,7 @@
     <defName>XylScaleskin</defName>
     <label>scaleskin</label>
     <labelShortAdj>scaleskinned</labelShortAdj>
-    <description>Carriers of this gene grow tough scales all over their body, which gives some protection against damage.</description>
+    <description>Carriers of this gene grow tough but flexible scales all over their body that can deflect or absorb attacks.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-3</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
