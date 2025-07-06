@@ -9,7 +9,7 @@
     <displayPriority>-104</displayPriority>
     <inheritable>true</inheritable>
     <genes>
-      <li>XylPsyBeckon</li>
+      <li MayRequire="Ludeon.RimWorld.Royalty">XylPsyBeckon</li>
       <li>PsychicAbility_Enhanced</li>
       <li>NakedSpeed</li>
       <li>WebbedPhalanges</li>

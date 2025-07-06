@@ -2,35 +2,24 @@
 
 <Patch>
 
-  <Operation Class="XylRacesCore.PatchOperationAddOrMerge" MayRequire="Ludeon.RimWorld.Ideology">
-    <xpath>Defs/ThoughtDef[starts-with(defName,"AteMeat_")]</xpath>
-    <value>
-      <nullifyingTraits>
-        <li>XylCarnivore</li>
-      </nullifyingTraits>
-    </value>
-  </Operation>
-  <Operation Class="XylRacesCore.PatchOperationAddOrMerge" MayRequire="Ludeon.RimWorld.Ideology">
-    <xpath>Defs/ThoughtDef[starts-with(defName,"AteHumanMeat_")]</xpath>
-    <value>
-      <nullifyingTraits>
-        <li>XylCarnivore</li>
-      </nullifyingTraits>
-    </value>
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Ludeon.RimWorld.Ideology</li>
+    </mods>
+    <match Class="XylRacesCore.PatchOperationAddOrMerge">
+      <xpath>Defs/ThoughtDef[starts-with(defName,"AteMeat_") or starts-with(defName,"AteHumanMeat_") or starts-with(defName,"AteNonMeat_")]</xpath>
+      <value>
+        <nullifyingTraits>
+          <li>XylCarnivore</li>
+        </nullifyingTraits>
+      </value>
+    </match>
   </Operation>
   <Operation Class="XylRacesCore.PatchOperationAddOrMerge" MayRequire="Ludeon.RimWorld.Ideology">
     <xpath>Defs/ThoughtDef[defName="AteCorpse"]</xpath>
     <value>
       <nullifyingTraits>
         <li>XylCarnivore</li>
-      </nullifyingTraits>
-    </value>
-  </Operation>
-  <Operation Class="XylRacesCore.PatchOperationAddOrMerge" MayRequire="Ludeon.RimWorld.Ideology">
-    <xpath>Defs/ThoughtDef[starts-with(defName,"AteNonMeat_")]</xpath>
-    <value>
-      <nullifyingTraits>
-        <li>XylHerbivore</li>
       </nullifyingTraits>
     </value>
   </Operation>

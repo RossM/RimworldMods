@@ -17,7 +17,7 @@
     </colorSpectrum>
     <maxConfigurableAtWorldCreation>9999</maxConfigurableAtWorldCreation>
     <configurationListOrderPriority>50</configurationListOrderPriority>
-    <replacesFaction>TribeCannibal</replacesFaction>
+    <replacesFaction MayRequire="Ludeon.Rimworld.Ideology">TribeCannibal</replacesFaction>
     <permanentEnemy>true</permanentEnemy>
     <requiredMemes>
       <li MayRequire="Ludeon.RimWorld.Ideology">NaturePrimacy</li>

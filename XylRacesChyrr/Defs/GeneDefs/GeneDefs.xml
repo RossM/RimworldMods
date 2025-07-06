@@ -128,7 +128,7 @@
     </customEffectDescriptions>
   </GeneDef>
 
-  <GeneDef>
+  <GeneDef MayRequire="Ludeon.RimWorld.Royalty">
     <defName>XylPsyFocus</defName>
     <label>focus</label>
     <description>Carriers automatically learn the Focus psycast, which boosts the target's sight, hearing and moving capacities.</description>

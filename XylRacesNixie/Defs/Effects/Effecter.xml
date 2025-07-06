@@ -4,7 +4,7 @@
   <EffecterDef>
     <defName>XylShowerSplash</defName>
     <children>
-      <li>
+      <li MayRequire="Ludeon.Rimworld.Royalty">
         <subEffecterClass>SubEffecter_SprayerChance</subEffecterClass>
         <positionRadius>0.15</positionRadius>
         <fleckDef>WaterskipSplashParticles</fleckDef>

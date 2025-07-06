@@ -1,13 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Patch>
 
-  <Operation Class="PatchOperationAdd">
-    <xpath>Defs/AbilityDef[defName="Waterskip"]/comps</xpath>
-    <value>
-      <li Class="XylRacesCore.CompProperties_AbilityWaterskipWetness">
-        <satisfaction>0.5</satisfaction>
-      </li>
-    </value>
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Ludeon.RimWorld.Royalty</li>
+    </mods>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/AbilityDef[defName="Waterskip"]/comps</xpath>
+      <value>
+        <li Class="XylRacesCore.CompProperties_AbilityWaterskipWetness">
+          <satisfaction>0.5</satisfaction>
+        </li>
+      </value>
+    </match>
   </Operation>
-  
+
 </Patch>

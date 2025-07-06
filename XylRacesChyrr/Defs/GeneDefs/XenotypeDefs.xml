@@ -9,7 +9,7 @@
     <displayPriority>-102</displayPriority>
     <inheritable>true</inheritable>
     <genes>
-      <li>XylPsyFocus</li>
+      <li MayRequire="Ludeon.RimWorld.Royalty">XylPsyFocus</li>
       <li>XylSonicWave</li>
       <li>XylBatWings</li>
       <li>MinTemp_SmallIncrease</li>

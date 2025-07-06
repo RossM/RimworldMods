@@ -1,11 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Patch>
 
-  <Operation Class="PatchOperationInsert">
-    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Impid</xpath>
-    <value>
-      <XylChyrr>0.025</XylChyrr>
-    </value>
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Ludeon.RimWorld.Royalty</li>
+      <li>Ludeon.RimWorld.Ideology</li>
+      <li>Ludeon.RimWorld.Anomaly</li>
+    </mods>
+    <match Class="PatchOperationInsert">
+      <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Impid</xpath>
+      <value>
+        <XylChyrr>0.025</XylChyrr>
+      </value>
+    </match>
   </Operation>
 
 </Patch>

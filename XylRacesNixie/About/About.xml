@@ -10,10 +10,6 @@
   </supportedVersions>
   <modDependencies>
     <li>
-      <packageId>Ludeon.RimWorld.Royalty</packageId>
-      <displayName>Royalty</displayName>
-    </li>
-    <li>
       <packageId>Ludeon.RimWorld.Biotech</packageId>
       <displayName>Biotech</displayName>
     </li>

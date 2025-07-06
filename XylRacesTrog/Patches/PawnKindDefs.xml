@@ -1,11 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Patch>
 
-  <Operation Class="PatchOperationInsert">
-    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Waster</xpath>
-    <value>
-      <XylTrog>0.025</XylTrog>
-    </value>
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Ludeon.RimWorld.Royalty</li>
+      <li>Ludeon.RimWorld.Ideology</li>
+      <li>Ludeon.RimWorld.Anomaly</li>
+    </mods>
+    <match Class="PatchOperationInsert">
+      <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Waster</xpath>
+      <value>
+        <XylTrog>0.025</XylTrog>
+      </value>
+    </match>
   </Operation>
 
 </Patch>

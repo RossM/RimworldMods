@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-  <GeneDef>
+  <GeneDef MayRequire="Ludeon.RimWorld.Royalty">
     <defName>XylPsyBeckon</defName>
     <label>beckon</label>
     <description>Carriers automatically learn the Beckon psycast, which psychically commands the target to approach the caster.</description>
