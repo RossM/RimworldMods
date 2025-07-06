@@ -37,6 +37,16 @@ namespace XylRacesCore.Patches
                 {
                     listener.Notify_PawnDamagedThing(__instance, dinfo, __result);
                 }
+
+                // Pets get protection from insect pheromones too, so break the protection if the pet
+                // damages an insect.
+                if (instigator.playerSettings?.Master != null)
+                {
+                    foreach (var listener in instigator.playerSettings.Master.AnythingOfType<INotifyPawnDamagedThing>())
+                    {
+                        listener.Notify_PawnDamagedThing(__instance, dinfo, __result);
+                    }
+                }
             }
 
             if (__instance is Pawn target)
