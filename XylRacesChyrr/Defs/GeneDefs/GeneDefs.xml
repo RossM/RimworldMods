@@ -11,6 +11,9 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>55</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Blind</iconPath>
+    <exclusionTags>
+      <li>DarkVisionAndBlindness</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
