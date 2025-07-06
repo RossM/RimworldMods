@@ -13,6 +13,42 @@ namespace XylRacesCore
             return pawn.genes?.GenesListForReading.OfType<T>() ?? Enumerable.Empty<T>();
         }
 
+        public static IEnumerable<T> AnythingOfType<T>(this Pawn pawn) where T : class
+        {
+            if (pawn.genes != null)
+            {
+                foreach (var gene in pawn.genes.GenesListForReading)
+                {
+                    if (!gene.Active)
+                        continue;
+                    if (gene is T outGene)
+                        yield return outGene;
+                    if (gene.def.modExtensions != null)
+                    {
+                        foreach (var ext in gene.def.modExtensions)
+                        {
+                            if (ext is T outExt)
+                                yield return outExt;
+                        }
+                    }
+                }
+            }
+
+            foreach (var hediff in pawn.health.hediffSet.hediffs)
+            {
+                if (hediff is T outHediff)
+                    yield return outHediff;
+                if (hediff.def.modExtensions != null)
+                {
+                    foreach (var ext in hediff.def.modExtensions)
+                    {
+                        if (ext is T outExt)
+                            yield return outExt;
+                    }
+                }
+            }
+        }
+
         public static T FirstGeneOfType<T>(this Pawn pawn) where T : class
         {
             return pawn.genes?.GenesListForReading.OfType<T>().FirstOrDefault();

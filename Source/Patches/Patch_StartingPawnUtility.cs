@@ -55,9 +55,9 @@ namespace XylRacesCore.Patches
 
         public static void GetExtraStartingItems(Pawn pawn, List<ThingDefCount> items)
         {
-            foreach (var gene in pawn.GenesOfType<IStartingItemGenerator>())
+            foreach (var startingItemSource in pawn.AnythingOfType<IStartingItemSource>())
             {
-                if (gene.GetStartingItem() is not { } item) 
+                if (startingItemSource.GetStartingItem() is not { } item) 
                     continue;
 
                 items.Add(item);

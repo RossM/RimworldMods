@@ -27,6 +27,10 @@
         </hediffGivers>
         <applyImmediately>true</applyImmediately>
       </li>
+      <li Class="XylRacesCore.DefModExtension_StartingItemSource">
+        <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
+        <chance>0.5</chance>
+      </li>
     </modExtensions>
     <customEffectDescriptions>
       <li>Sight: 0%</li>

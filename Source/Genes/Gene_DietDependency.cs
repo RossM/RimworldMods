@@ -17,7 +17,7 @@ namespace XylRacesCore.Genes
         public FloatRange? startingFoodNutrition;
     }
 
-    public class Gene_DietDependency : Gene, IGene_HediffSource, IStartingItemGenerator
+    public class Gene_DietDependency : Gene, IGene_HediffSource, IStartingItemSource
     {
         public int lastIngestedTick;
 

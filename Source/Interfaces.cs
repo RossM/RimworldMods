@@ -2,7 +2,7 @@
 
 namespace XylRacesCore;
 
-public interface IStartingItemGenerator
+public interface IStartingItemSource
 {
     public ThingDefCount? GetStartingItem();
 }

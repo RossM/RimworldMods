@@ -132,8 +132,11 @@
         </milkedThoughts>
         <activeGender>Female</activeGender>
         <iconPath>Things/Item/Resource/Milk</iconPath>
-        <startingItemChance>0.2</startingItemChance>
-        <startingItemCount>5~10</startingItemCount>
+      </li>
+      <li Class="XylRacesCore.DefModExtension_StartingItemSource">
+        <item>Milk</item>
+        <chance>0.2</chance>
+        <count>5~10</count>
       </li>
     </modExtensions>
   </GeneDef>
