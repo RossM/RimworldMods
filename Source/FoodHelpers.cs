@@ -64,7 +64,7 @@ public static class FoodHelpers
     {
         using (new ProfileBlock())
         {
-            if (foodDef.IsRawHumanFood())
+            if (IsRawFoodOrCorpse(foodDef))
             {
                 return GetFoodType(foodDef) switch
                 {
@@ -141,7 +141,7 @@ public static class FoodHelpers
         {
             var foodDef = foodSource.def;
 
-            if (!foodDef.IsRawHumanFood())
+            if (!IsRawFoodOrCorpse(foodDef))
                 return 0.0f;
 
             FoodType foodType = GetFoodType(foodSource.def);
@@ -154,9 +154,13 @@ public static class FoodHelpers
                 FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
                 _ => 0.0f
             };
-            //Log.Message(string.Format("GetFoodPoisonChanceOffset: eater: {0}, foodSource: {1}, foodType: {2}, value: {3}", eater, foodSource, foodType, value));
             return value;
         }
+    }
+
+    public static bool IsRawFoodOrCorpse(this ThingDef foodDef)
+    {
+        return (foodDef.IsRawHumanFood() || foodDef.IsCorpse);
     }
 
     public static bool IsThoughtFromIngestionDisallowedByGenes(Pawn eater, ThoughtDef thought, ThingDef ingestible,
