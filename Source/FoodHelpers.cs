@@ -144,7 +144,8 @@ public static class FoodHelpers
             if (!foodDef.IsRawHumanFood())
                 return 0.0f;
 
-            return GetFoodType(foodSource.def) switch
+            FoodType foodType = GetFoodType(foodSource.def);
+            var value = foodType switch
             {
                 FoodType.Fungus => eater.GetStatValue(Defs.XylRawFungusFoodPoisonChanceOffset) +
                                    eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
@@ -153,6 +154,8 @@ public static class FoodHelpers
                 FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
                 _ => 0.0f
             };
+            //Log.Message(string.Format("GetFoodPoisonChanceOffset: eater: {0}, foodSource: {1}, foodType: {2}, value: {3}", eater, foodSource, foodType, value));
+            return value;
         }
     }
 
