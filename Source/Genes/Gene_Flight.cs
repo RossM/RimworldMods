@@ -77,8 +77,6 @@ namespace XylRacesCore.Genes
                     wasFlying = flight.Flying;
                 }
 
-                if (!pawn.IsPlayerControlled)
-                    return;
                 if (!flight.CanEverFly)
                     return;
 
