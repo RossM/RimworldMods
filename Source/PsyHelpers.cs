@@ -14,15 +14,19 @@ namespace XylRacesCore
     {
         public static int GetPsylinkLevelFor(this Pawn pawn, AbilityDef def)
         {
-            if (pawn.genes != null)
+            using (new ProfileBlock())
             {
-                if (pawn.genes.GenesListForReading.Any(gene => gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
+                if (pawn.genes != null)
                 {
-                    return Math.Max(pawn.GetPsylinkLevel(), def.level);
+                    if (pawn.genes.GenesListForReading.Any(gene =>
+                            gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
+                    {
+                        return Math.Max(pawn.GetPsylinkLevel(), def.level);
+                    }
                 }
-            }
 
-            return pawn.GetPsylinkLevel();
+                return pawn.GetPsylinkLevel();
+            }
         }
 
         public static bool HasPsycastGene(this Pawn pawn)

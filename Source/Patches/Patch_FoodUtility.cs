@@ -12,7 +12,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(FoodUtility))]
     public static class Patch_FoodUtility_NutritionForEater
     {
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(FoodUtility.NutritionForEater))]
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(NutritionForEater))]
         public static void NutritionForEater_Postfix(Pawn eater, Thing food, ref float __result)
         {
             using (new ProfileBlock())
@@ -21,7 +21,7 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(FoodUtility.FoodOptimality))]
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(FoodOptimality))]
         public static void FoodOptimality_Postfix(Pawn eater, Thing foodSource, ThingDef foodDef, float dist,
             bool takingToInventory, ref float __result)
         {

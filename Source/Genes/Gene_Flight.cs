@@ -63,29 +63,32 @@ namespace XylRacesCore.Genes
 
         public override void Tick()
         {
-            base.Tick();
-
-            Pawn_FlightTracker flight = pawn.flight;
-            if (flight == null)
-                return;
-
-            if (flight.Flying != wasFlying)
+            using (new ProfileBlock())
             {
-                pawn.Drawer.renderer.SetAllGraphicsDirty();
-                wasFlying = flight.Flying;
-            }
+                base.Tick();
 
-            if (!pawn.IsPlayerControlled)
-                return;
-            if (!flight.CanEverFly)
-                return;
+                Pawn_FlightTracker flight = pawn.flight;
+                if (flight == null)
+                    return;
 
-            if (!flight.Flying && autoFly && pawn.pather.Moving &&
-                (pawn.Position - pawn.pather.Destination.Cell).LengthHorizontal >= DefExt.autoFlyMinDistance &&
-                pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
-            {
-                //Log.Message(string.Format("Expected flight distance: {0}", (pawn.Position - pawn.pather.Destination.Cell).LengthHorizontal)); 
-                flight.StartFlying();
+                if (flight.Flying != wasFlying)
+                {
+                    pawn.Drawer.renderer.SetAllGraphicsDirty();
+                    wasFlying = flight.Flying;
+                }
+
+                if (!pawn.IsPlayerControlled)
+                    return;
+                if (!flight.CanEverFly)
+                    return;
+
+                if (!flight.Flying && autoFly && pawn.pather.Moving &&
+                    (pawn.Position - pawn.pather.Destination.Cell).LengthHorizontal >= DefExt.autoFlyMinDistance &&
+                    pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
+                {
+                    //Log.Message(string.Format("Expected flight distance: {0}", (pawn.Position - pawn.pather.Destination.Cell).LengthHorizontal)); 
+                    flight.StartFlying();
+                }
             }
         }
 

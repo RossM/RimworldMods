@@ -80,10 +80,10 @@ namespace XylRacesCore
 
         public override void DoEditInterface(Listing_ScenEdit listing)
         {
-            Rect scenPartRect = listing.GetScenPartRect(this, ScenPart.RowHeight * 2f + 1f);
-            scenPartRect.height = ScenPart.RowHeight;
+            Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 2f + 1f);
+            scenPartRect.height = RowHeight;
             Widgets.TextFieldNumeric(scenPartRect, ref count, ref countBuf, 1, 10);
-            scenPartRect.y += ScenPart.RowHeight;
+            scenPartRect.y += RowHeight;
             Widgets.CheckboxLabeled(scenPartRect, "Give psycasts", ref givePsycasts);
         }
 

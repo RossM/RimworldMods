@@ -15,14 +15,14 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(TickManager.DoSingleTick))]
         public static void DoSingleTick_Prefix()
         {
-            if (ProfileBlock.GlobalEnabled)
+            if (ProfileBlock.InstrumentTickManager)
                 DeepProfiler.Start("DoSingleTick");
         }
 
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(TickManager.DoSingleTick))]
         public static void DoSingleTick_Postfix()
         {
-            if (ProfileBlock.GlobalEnabled)
+            if (ProfileBlock.InstrumentTickManager)
                 DeepProfiler.End();
         }
     }

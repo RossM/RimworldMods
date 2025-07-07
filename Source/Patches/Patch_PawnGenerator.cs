@@ -58,16 +58,18 @@ namespace XylRacesCore.Patches
 
         public static void ModifyGenderByGenes(Pawn pawn, ref PawnGenerationRequest request, XenotypeDef xenotype)
         {
-            //Log.Message(string.Format("ModifyGenderByGenes: pawn = {0}, request = ({1}), xenotype = {2}", pawn, request, xenotype));
-            //Log.Message(string.Format("  ForcedCustomXenotype = {0}", request.ForcedCustomXenotype));
-            var gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
-                       request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
-                       request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ?? 
-                       xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
-            if (gene != null)
+            using (new ProfileBlock())
             {
-                pawn.gender = Rand.Chance(gene.GetModExtension<GeneDefExtension_GenderRatio>().femaleChance)
-                    ? Gender.Female : Gender.Male;
+                var gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
+                           request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
+                           request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
+                           xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
+                if (gene != null)
+                {
+                    pawn.gender = Rand.Chance(gene.GetModExtension<GeneDefExtension_GenderRatio>().femaleChance)
+                        ? Gender.Female
+                        : Gender.Male;
+                }
             }
         }
 

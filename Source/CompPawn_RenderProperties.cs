@@ -24,16 +24,19 @@ namespace XylRacesCore
 
         public static PawnRenderFlags ModifyRenderFlags(Pawn pawn, PawnRenderFlags flags)
         {
-            var comp = pawn.GetComp<CompPawn_RenderProperties>();
-            if (comp != null)
+            using (new ProfileBlock())
             {
-                if (comp.hideClothes)
-                    flags &= ~PawnRenderFlags.Clothes;
-                if (comp.hideHeadgear)
-                    flags &= ~PawnRenderFlags.Headgear;
-            }
+                var comp = pawn.GetComp<CompPawn_RenderProperties>();
+                if (comp != null)
+                {
+                    if (comp.hideClothes)
+                        flags &= ~PawnRenderFlags.Clothes;
+                    if (comp.hideHeadgear)
+                        flags &= ~PawnRenderFlags.Headgear;
+                }
 
-            return flags;
+                return flags;
+            }
         }
     }
 }

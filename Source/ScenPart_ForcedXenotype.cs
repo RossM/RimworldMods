@@ -21,7 +21,7 @@ namespace XylRacesCore
 
         public override void DoEditInterface(Listing_ScenEdit listing)
         {
-            Rect scenPartRect = listing.GetScenPartRect(this, ScenPart.RowHeight * 3f);
+            Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 3f);
             if (Widgets.ButtonText(scenPartRect.TopPart(0.333f), xenotype.LabelCap))
             {
                 var list = new List<FloatMenuOption>();

@@ -13,24 +13,30 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
         public static bool Notify_JobStarted_Prefix(Pawn_FlightTracker __instance, Job job)
         {
-            var pawn = __instance.Get<Pawn>("pawn");
-            if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Gene_Flight>() is not null)
+            using (new ProfileBlock())
             {
-                return false;
-            }
+                var pawn = __instance.Get<Pawn>("pawn");
+                if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Gene_Flight>() is not null)
+                {
+                    return false;
+                }
 
-            return true;
+                return true;
+            }
         }
 
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_FlightTracker.FlightTick))]
         public static void FlightTick_Prefix(Pawn_FlightTracker __instance)
         {
-            var pawn = __instance.Get<Pawn>("pawn");
-            if (pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
+            using (new ProfileBlock())
             {
-                if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Gene_Flight>() is { } gene)
+                var pawn = __instance.Get<Pawn>("pawn");
+                if (pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
                 {
-                    gene.Notify_Downed();
+                    if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Gene_Flight>() is { } gene)
+                    {
+                        gene.Notify_Downed();
+                    }
                 }
             }
         }

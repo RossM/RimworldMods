@@ -28,7 +28,7 @@ namespace XylRacesCore
 
         public override void DoEditInterface(Listing_ScenEdit listing)
         {
-            Rect scenPartRect = listing.GetScenPartRect(this, ScenPart.RowHeight * 2f + 1f);
+            Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 2f + 1f);
 
             var listing_Standard = new Listing_Standard();
             listing_Standard.Begin(scenPartRect.TopHalf());

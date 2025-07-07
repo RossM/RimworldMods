@@ -26,8 +26,8 @@ namespace XylRacesCore
 
         public override void DoEditInterface(Listing_ScenEdit listing)
         {
-            Rect scenPartRect = listing.GetScenPartRect(this, ScenPart.RowHeight * 1f + 1f);
-            scenPartRect.height = ScenPart.RowHeight;
+            Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 1f + 1f);
+            scenPartRect.height = RowHeight;
             Widgets.TextFieldNumeric(scenPartRect, ref count, ref countBuf, 1);
         }
 

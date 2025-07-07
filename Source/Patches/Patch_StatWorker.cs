@@ -233,8 +233,11 @@ namespace XylRacesCore.Patches
         public static void AppendSubstitutionDescription(StringBuilder sb, string whitespace,
             Hediff_SubstituteCapacity foundHediff)
         {
-            if (foundHediff != null) 
-                sb.AppendLine(whitespace + "        " + foundHediff.GetDescription());
+            using (new ProfileBlock())
+            {
+                if (foundHediff != null)
+                    sb.AppendLine(whitespace + "        " + foundHediff.GetDescription());
+            }
         }
 
         public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity foundHediff, PawnCapacityDef capacity)
@@ -253,15 +256,18 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        [HarmonyPostfix, HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
         public static void ShouldShowFor_Postfix(StatWorker __instance, StatRequest req, ref bool __result)
         {
-            if (req.Thing is Pawn pawn && pawn.HasPsycastGene())
+            using (new ProfileBlock())
             {
-                if (statField.GetValue(__instance) == StatDefOf.PsychicEntropyRecoveryRate) 
-                    __result = true;
-                if (statField.GetValue(__instance) == StatDefOf.PsychicEntropyMax)
-                    __result = true;
+                if (req.Thing is Pawn pawn && pawn.HasPsycastGene())
+                {
+                    if (statField.GetValue(__instance) == StatDefOf.PsychicEntropyRecoveryRate)
+                        __result = true;
+                    if (statField.GetValue(__instance) == StatDefOf.PsychicEntropyMax)
+                        __result = true;
+                }
             }
         }
     }

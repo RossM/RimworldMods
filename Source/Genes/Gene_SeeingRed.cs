@@ -50,9 +50,11 @@ namespace XylRacesCore.Genes
 
         public override void TickInterval(int delta)
         {
-            base.TickInterval(delta);
-            if (pawn.IsHashIntervalTick(60, delta))
+            using (new ProfileBlock())
             {
+                base.TickInterval(delta);
+                if (!pawn.IsHashIntervalTick(60, delta)) 
+                    return;
                 if (extraEnemies != null)
                 {
                     Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);

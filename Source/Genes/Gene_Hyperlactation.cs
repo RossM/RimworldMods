@@ -86,20 +86,23 @@ namespace XylRacesCore.Genes
 
         public override void TickInterval(int delta)
         {
-            if (!Active)
-                return;
+            using (new ProfileBlock())
+            {
+                if (!Active)
+                    return;
 
-            base.TickInterval(delta);
+                base.TickInterval(delta);
 
-            if (!pawn.IsHashIntervalTick(60, delta)) 
-                return;
+                if (!pawn.IsHashIntervalTick(60, delta))
+                    return;
 
-            AddHediff();
+                AddHediff();
 
-            if (Lactating != null && Lactating.Charge >= Lactating.Props.fullChargeAmount)
-                fullSinceTick ??= Find.TickManager.TicksGame;
-            else
-                fullSinceTick = null;
+                if (Lactating != null && Lactating.Charge >= Lactating.Props.fullChargeAmount)
+                    fullSinceTick ??= Find.TickManager.TicksGame;
+                else
+                    fullSinceTick = null;
+            }
         }
 
         private void AddHediff()

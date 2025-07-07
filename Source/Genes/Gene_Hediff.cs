@@ -31,16 +31,19 @@ namespace XylRacesCore.Genes
 
         public override void TickInterval(int delta)
         {
-            base.TickInterval(delta);
-
-            var extension = DefExt;
-            if (Active && extension?.hediffGivers != null && extension.mtbDays > 0.0f &&
-                pawn.IsHashIntervalTick(60, delta))
+            using (new ProfileBlock())
             {
-                foreach (var hediffGiver in extension.hediffGivers)
+                base.TickInterval(delta);
+
+                var extension = DefExt;
+                if (Active && extension?.hediffGivers != null && extension.mtbDays > 0.0f &&
+                    pawn.IsHashIntervalTick(60, delta))
                 {
-                    if (Rand.MTBEventOccurs(extension.mtbDays, 60000f, 60f))
-                        hediffGiver.TryApply(pawn);
+                    foreach (var hediffGiver in extension.hediffGivers)
+                    {
+                        if (Rand.MTBEventOccurs(extension.mtbDays, 60000f, 60f))
+                            hediffGiver.TryApply(pawn);
+                    }
                 }
             }
         }

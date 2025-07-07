@@ -6,26 +6,29 @@ using RimWorld.Planet;
 
 namespace XylRacesCore.Patches
 {
-    [HarmonyPatch(typeof(RimWorld.Planet.TileFinder))]
+    [HarmonyPatch(typeof(TileFinder))]
     public static class Patch_TileFinder
     {
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(RimWorld.Planet.TileFinder.RandomSettlementTileFor),
+        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor),
              [typeof(PlanetLayer), typeof(Faction), typeof(bool), typeof(Predicate<PlanetTile>)])]
         public static void RandomSettlementTileFor_Prefix(PlanetLayer layer, Faction faction, bool mustBeAutoChoosable,
             ref Predicate<PlanetTile> extraValidator)
         {
-            var extension = faction?.def?.GetModExtension<FactionDefExtension>();
-            if (extension == null)
-                return;
-
-            var oldValidator = extraValidator;
-            extraValidator = planetTile =>
+            using (new ProfileBlock())
             {
-                if (oldValidator != null && !oldValidator(planetTile))
-                    return false;
+                var extension = faction?.def?.GetModExtension<FactionDefExtension>();
+                if (extension == null)
+                    return;
 
-                return extension.ValidatePlanetTile(planetTile);
-            };
+                var oldValidator = extraValidator;
+                extraValidator = planetTile =>
+                {
+                    if (oldValidator != null && !oldValidator(planetTile))
+                        return false;
+
+                    return extension.ValidatePlanetTile(planetTile);
+                };
+            }
         }
     }
 }

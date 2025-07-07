@@ -43,7 +43,7 @@ namespace XylRacesCore.Patches
                     [
                         // statValue2 *= recipient.GetStatValue(StatDefOfResistanceFallRate());
                         CodeInstruction.LoadArgument(2),
-                        CodeInstruction.Call(typeof(Patch_InteractionWorker_RecruitAttempt), nameof(Patch_InteractionWorker_RecruitAttempt.StatDefOfResistanceFallRate)),
+                        CodeInstruction.Call(typeof(Patch_InteractionWorker_RecruitAttempt), nameof(StatDefOfResistanceFallRate)),
                         new CodeInstruction(OpCodes.Ldc_I4_1),
                         new CodeInstruction(OpCodes.Ldc_I4_M1),
                         CodeInstruction.Call(typeof(StatExtension), nameof(StatExtension.GetStatValue)),

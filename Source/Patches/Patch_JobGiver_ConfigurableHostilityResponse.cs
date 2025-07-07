@@ -13,13 +13,16 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch("TryGiveJob")]
         public static bool TryGiveJob_Prefix(Pawn pawn, ref Job __result)
         {
-            if (pawn.health.hediffSet.hediffs.OfType<Hediff_ForceBehavior>().Any())
+            using (new ProfileBlock())
             {
-                __result = null;
-                return false;
-            }
+                if (pawn.health.hediffSet.hediffs.OfType<Hediff_ForceBehavior>().Any())
+                {
+                    __result = null;
+                    return false;
+                }
 
-            return true;
+                return true;
+            }
         }
     }
 }

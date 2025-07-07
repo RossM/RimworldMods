@@ -10,6 +10,7 @@ namespace XylRacesCore
     public readonly struct ProfileBlock : IDisposable
     {
         public const bool GlobalEnabled = true;
+        public const bool InstrumentTickManager = false;
         private readonly bool _enabled;
         private static readonly Dictionary<MethodBase, string> fastLabels = new();
 
