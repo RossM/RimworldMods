@@ -17,7 +17,7 @@
     <replacesFaction MayRequire="Ludeon.Rimworld.Ideology">TribeCannibal</replacesFaction>
     <naturalEnemy>true</naturalEnemy>
     <requiredMemes>
-      <li MayRequire="Ludeon.RimWorld.Ideology">NaturePrimacy</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">HumanPrimacy</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">Cannibal</li>
     </requiredMemes>
     <allowedMemes>
