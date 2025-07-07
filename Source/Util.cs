@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using RimWorld;
 using Verse;
 
@@ -12,32 +11,13 @@ namespace XylRacesCore
         public const bool GlobalEnabled = true;
         public const bool InstrumentTickManager = false;
         private readonly bool _enabled;
-        private static readonly Dictionary<MethodBase, string> fastLabels = new();
 
-        public ProfileBlock(string label, bool enabled = GlobalEnabled)
+        public ProfileBlock(bool enabled = GlobalEnabled, [System.Runtime.CompilerServices.CallerMemberName] string methodName = null)
         {
             _enabled = enabled;
             if (!_enabled) 
                 return;
-            DeepProfiler.Start(label);
-        }
-
-        public ProfileBlock(MethodBase method = null, [System.Runtime.CompilerServices.CallerMemberName] string methodName = null, bool enabled = GlobalEnabled)
-        {
-            _enabled = enabled;
-            if (!_enabled) 
-                return;
-            string label = methodName;
-            if (label == null && method == null)
-                label = "<Unknown>";
-            else if (label == null && !fastLabels.TryGetValue(method, out label))
-            {
-                label = method.DeclaringType == null
-                    ? "<Unknown>." + method.Name
-                    : method.DeclaringType.Assembly.GetName().Name + "." + method.DeclaringType.Name + "." +
-                      method.Name;
-                fastLabels.Add(method, label);
-            }
+            string label = methodName ?? "<Unknown>";
 
             DeepProfiler.Start(label);
         }

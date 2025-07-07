@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Verse;
@@ -15,7 +14,7 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnRenderNodeWorker.ScaleFor))]
         public static void ScaleFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref UnityEngine.Vector3 __result)
         {
-            using (new ProfileBlock(MethodBase.GetCurrentMethod(), enabled: false))
+            using (new ProfileBlock())
             {
                 List<Gene> genes = parms.pawn?.genes?.GenesListForReading;
                 if (genes == null)
