@@ -19,8 +19,6 @@ namespace XylRacesCore.Genes
 
     public class Gene_DietDependency : Gene, IGene_HediffSource, IStartingItemSource
     {
-        public int lastIngestedTick;
-
         public GeneDefExtension_DietDependency DefExt => def.GetModExtension<GeneDefExtension_DietDependency>();
 
         public override bool Active
@@ -48,17 +46,10 @@ namespace XylRacesCore.Genes
             }
         }
 
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Values.Look(ref lastIngestedTick, "lastIngestedTick");
-        }
-
         public override void PostAdd()
         {
             base.PostAdd();
             AddHediff();
-            lastIngestedTick = Find.TickManager.TicksGame;
         }
 
         private void AddHediff()
@@ -123,8 +114,6 @@ namespace XylRacesCore.Genes
             {
                 AddHediff();
             }
-
-            lastIngestedTick = Find.TickManager.TicksGame;
         }
 
         public bool ValidateFood(Thing food)
