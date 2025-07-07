@@ -163,7 +163,7 @@ namespace XylRacesCore.Genes
         {
             if (!food.IsIngestible)
                 return false;
-            if (GetBaseNutrition(food) <= 0)
+            if (food.GetStatBase(StatDefOf.Nutrition) <= 0)
                 return false;
 
             var extension = DefExt;
@@ -197,7 +197,7 @@ namespace XylRacesCore.Genes
                 return null;
 
             float nutritionNeeded = DefExt.startingFoodNutrition.Value.RandomInRange;
-            int itemsNeeded = Mathf.CeilToInt(nutritionNeeded / GetBaseNutrition(foodDef));
+            int itemsNeeded = Mathf.CeilToInt(nutritionNeeded / foodDef.GetStatBase(StatDefOf.Nutrition));
 
             return new(foodDef, Mathf.Clamp(itemsNeeded, 1, foodDef.stackLimit));
 
@@ -211,10 +211,5 @@ namespace XylRacesCore.Genes
             }
         }
 
-        private static float GetBaseNutrition(ThingDef foodDef)
-        {
-            StatModifier modifier = foodDef.statBases.FirstOrDefault(s => s.stat == StatDefOf.Nutrition);
-            return modifier?.value ?? 0;
-        }
     }
 }

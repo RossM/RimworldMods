@@ -116,5 +116,10 @@ namespace XylRacesCore
         {
             return enumerable ?? Enumerable.Empty<T>();
         }
+
+        public static float GetStatBase(this ThingDef thingDef, StatDef statDef)
+        {
+            return thingDef.statBases.FirstOrDefault(s => s.stat == statDef)?.value ?? 0;
+        }
     }
 }
