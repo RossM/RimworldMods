@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Reflection;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Verse;
@@ -12,14 +13,17 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_Thinker.MainThinkTree), MethodType.Getter)]
         public static bool MainThinkTree_Prefix(Pawn_Thinker __instance, ref ThinkTreeDef __result)
         {
-            var pawn = __instance.pawn;
-            foreach (var hediff in pawn.health.hediffSet.hediffs.OfType<Hediff_ForceBehavior>())
+            using (new ProfileBlock())
             {
-                __result = hediff.DefExt.thinkTree;
-                return false;
-            }
+                var pawn = __instance.pawn;
+                foreach (var hediff in pawn.health.hediffSet.hediffs.OfType<Hediff_ForceBehavior>())
+                {
+                    __result = hediff.DefExt.thinkTree;
+                    return false;
+                }
 
-            return true;
+                return true;
+            }
         }
     }
 }

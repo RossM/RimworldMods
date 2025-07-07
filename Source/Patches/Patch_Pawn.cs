@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Verse;
@@ -12,16 +13,19 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
         public static void BodySize_Postfix(Pawn __instance, ref float __result)
         {
-            List<Gene> genesGenesListForReading = __instance.genes?.GenesListForReading;
-            if (genesGenesListForReading == null)
-                return;
-
-            foreach (var gene in genesGenesListForReading)
+            using (new ProfileBlock(MethodBase.GetCurrentMethod(), enabled: false))
             {
-                var extension = gene.def.GetModExtension<GeneDefExtension_Pawn>();
-                if (extension != null)
+                List<Gene> genesGenesListForReading = __instance.genes?.GenesListForReading;
+                if (genesGenesListForReading == null)
+                    return;
+
+                foreach (var gene in genesGenesListForReading)
                 {
-                    __result *= extension.bodySizeFactor;
+                    var extension = gene.def.GetModExtension<GeneDefExtension_Pawn>();
+                    if (extension != null)
+                    {
+                        __result *= extension.bodySizeFactor;
+                    }
                 }
             }
         }
@@ -29,16 +33,19 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
         public static void HealthScale_Postfix(Pawn __instance, ref float __result)
         {
-            List<Gene> genesGenesListForReading = __instance.genes?.GenesListForReading;
-            if (genesGenesListForReading == null)
-                return;
-
-            foreach (var gene in genesGenesListForReading)
+            using (new ProfileBlock(MethodBase.GetCurrentMethod(), enabled: false))
             {
-                var extension = gene.def.GetModExtension<GeneDefExtension_Pawn>();
-                if (extension != null)
+                List<Gene> genesGenesListForReading = __instance.genes?.GenesListForReading;
+                if (genesGenesListForReading == null)
+                    return;
+
+                foreach (var gene in genesGenesListForReading)
                 {
-                    __result *= extension.healthScaleFactor;
+                    var extension = gene.def.GetModExtension<GeneDefExtension_Pawn>();
+                    if (extension != null)
+                    {
+                        __result *= extension.healthScaleFactor;
+                    }
                 }
             }
         }

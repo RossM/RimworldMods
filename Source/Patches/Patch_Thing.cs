@@ -17,43 +17,50 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch("IngestedCalculateAmounts")]
         public static void IngestedCalculateAmounts_Prefix(Thing __instance, Pawn ingester, ref float nutritionWanted)
         {
-            foreach (var dietDependency in ingester.GenesOfType<Gene_DietDependency>())
+            using (new ProfileBlock())
             {
-                if (!dietDependency.ValidateFood(__instance))
-                    continue;
+                foreach (var dietDependency in ingester.GenesOfType<Gene_DietDependency>())
+                {
+                    if (!dietDependency.ValidateFood(__instance))
+                        continue;
 
-                float severityReductionPerNutrition = dietDependency.DefExt.severityReductionPerNutrition;
-                float nutritionForNeed = dietDependency.LinkedHediff.Severity / severityReductionPerNutrition;
-                nutritionWanted = Math.Max(nutritionWanted, nutritionForNeed);
+                    float severityReductionPerNutrition = dietDependency.DefExt.severityReductionPerNutrition;
+                    float nutritionForNeed = dietDependency.LinkedHediff.Severity / severityReductionPerNutrition;
+                    nutritionWanted = Math.Max(nutritionWanted, nutritionForNeed);
+                }
             }
         }
 
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch("TakeDamage")]
         public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
         {
-            if (dinfo.Instigator is Pawn instigator)
+            using (new ProfileBlock())
             {
-                foreach (var listener in instigator.AnythingOfType<INotifyPawnDamagedThing>())
+                if (dinfo.Instigator is Pawn instigator)
                 {
-                    listener.Notify_PawnDamagedThing(__instance, dinfo, __result);
-                }
-
-                // Pets get protection from insect pheromones too, so break the protection if the pet
-                // damages an insect.
-                if (instigator.playerSettings?.Master != null)
-                {
-                    foreach (var listener in instigator.playerSettings.Master.AnythingOfType<INotifyPawnDamagedThing>())
+                    foreach (var listener in instigator.AnythingOfType<INotifyPawnDamagedThing>())
                     {
                         listener.Notify_PawnDamagedThing(__instance, dinfo, __result);
                     }
-                }
-            }
 
-            if (__instance is Pawn target)
-            {
-                foreach (var listener in target.AnythingOfType<INotifyDamageTaken>())
+                    // Pets get protection from insect pheromones too, so break the protection if the pet
+                    // damages an insect.
+                    if (instigator.playerSettings?.Master != null)
+                    {
+                        foreach (var listener in instigator.playerSettings.Master
+                                     .AnythingOfType<INotifyPawnDamagedThing>())
+                        {
+                            listener.Notify_PawnDamagedThing(__instance, dinfo, __result);
+                        }
+                    }
+                }
+
+                if (__instance is Pawn target)
                 {
-                    listener.Notify_DamageTaken(dinfo, __result);
+                    foreach (var listener in target.AnythingOfType<INotifyDamageTaken>())
+                    {
+                        listener.Notify_DamageTaken(dinfo, __result);
+                    }
                 }
             }
         }

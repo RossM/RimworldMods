@@ -1,7 +1,9 @@
-using System.Linq;
 using JetBrains.Annotations;
 using RimWorld;
+using System.Linq;
+using System.Reflection;
 using Verse;
+using static RimWorld.PsychicRitualRoleDef;
 
 namespace XylRacesCore;
 
@@ -60,117 +62,127 @@ public static class FoodHelpers
 
     public static float GetExtraNutritionFactor(Pawn eater, Thing foodSource, ThingDef foodDef)
     {
-        if (!foodDef.ingestible.foodType.HasFlag(FoodTypeFlags.Meal))
+        using (new ProfileBlock())
         {
-            return GetFoodType(foodDef) switch
+            if (!foodDef.ingestible.foodType.HasFlag(FoodTypeFlags.Meal))
             {
-                FoodType.Fungus => eater.GetStatValue(Defs.XylRawFungusNutritionFactor) *
-                                   eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
-                FoodType.Meat => eater.GetStatValue(Defs.XylRawMeatNutritionFactor),
-                FoodType.AnimalProduct => eater.GetStatValue(Defs.XylRawAnimalProductNutritionFactor),
-                FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
-                _ => 1.0f
-            };
-        }
-        else
-        {
-            var compIngredients = foodSource.TryGetComp<CompIngredients>();
-            if (compIngredients == null) 
-                return 1.0f;
-
-            var hasMeat = false;
-            var hasAnimalProduct = false;
-            var hasNonMeat = false;
-
-            foreach (var ingredient in compIngredients.ingredients)
-            {
-                switch (GetFoodType(ingredient))
+                return GetFoodType(foodDef) switch
                 {
-                    case FoodType.Meat:
-                        hasMeat = true;
-                        break;
-                    case FoodType.NonMeat:
-                    case FoodType.Fungus:
-                        hasNonMeat = true;
-                        break;
-                    case FoodType.AnimalProduct:
-                        hasAnimalProduct = true;
-                        break;
+                    FoodType.Fungus => eater.GetStatValue(Defs.XylRawFungusNutritionFactor) *
+                                       eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
+                    FoodType.Meat => eater.GetStatValue(Defs.XylRawMeatNutritionFactor),
+                    FoodType.AnimalProduct => eater.GetStatValue(Defs.XylRawAnimalProductNutritionFactor),
+                    FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
+                    _ => 1.0f
+                };
+            }
+            else
+            {
+                var compIngredients = foodSource.TryGetComp<CompIngredients>();
+                if (compIngredients == null)
+                    return 1.0f;
+
+                var hasMeat = false;
+                var hasAnimalProduct = false;
+                var hasNonMeat = false;
+
+                foreach (var ingredient in compIngredients.ingredients)
+                {
+                    switch (GetFoodType(ingredient))
+                    {
+                        case FoodType.Meat:
+                            hasMeat = true;
+                            break;
+                        case FoodType.NonMeat:
+                        case FoodType.Fungus:
+                            hasNonMeat = true;
+                            break;
+                        case FoodType.AnimalProduct:
+                            hasAnimalProduct = true;
+                            break;
+                    }
                 }
+
+                var multiplier = 0.0f;
+                var divisor = 0.0f;
+
+                if (hasMeat)
+                {
+                    multiplier += eater.GetStatValue(Defs.XylCookedMeatNutritionFactor);
+                    divisor += 1.0f;
+                }
+
+                if (hasAnimalProduct)
+                {
+                    multiplier += eater.GetStatValue(Defs.XylCookedAnimalProductNutritionFactor);
+                    divisor += 1.0f;
+                }
+
+                if (hasNonMeat)
+                {
+                    multiplier += eater.GetStatValue(Defs.XylCookedNonMeatNutritionFactor);
+                    divisor += 1.0f;
+                }
+
+                return divisor > 0 ? multiplier / divisor : 1.0f;
+
             }
-
-            var multiplier = 0.0f;
-            var divisor = 0.0f;
-
-            if (hasMeat)
-            {
-                multiplier += eater.GetStatValue(Defs.XylCookedMeatNutritionFactor);
-                divisor += 1.0f;
-            }
-
-            if (hasAnimalProduct)
-            {
-                multiplier += eater.GetStatValue(Defs.XylCookedAnimalProductNutritionFactor);
-                divisor += 1.0f;
-            }
-
-            if (hasNonMeat)
-            {
-                multiplier += eater.GetStatValue(Defs.XylCookedNonMeatNutritionFactor);
-                divisor += 1.0f;
-            }
-
-            return divisor > 0 ? multiplier / divisor : 1.0f;
-
         }
     }
 
     public static float GetFoodPoisonChanceOffset(Pawn eater, Thing foodSource)
     {
-        var foodDef = foodSource.def;
-
-        if (!foodDef.ingestible.foodType.HasFlag(FoodTypeFlags.Meal)) 
-            return 0.0f;
-
-        return GetFoodType(foodSource.def) switch
+        using (new ProfileBlock())
         {
-            FoodType.Fungus => eater.GetStatValue(Defs.XylRawFungusFoodPoisonChanceOffset) +
-                               eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
-            FoodType.Meat => eater.GetStatValue(Defs.XylRawMeatFoodPoisonChanceOffset),
-            FoodType.AnimalProduct => eater.GetStatValue(Defs.XylRawAnimalProductFoodPoisonChanceOffset),
-            FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
-            _ => 0.0f
-        };
+            var foodDef = foodSource.def;
+
+            if (!foodDef.ingestible.foodType.HasFlag(FoodTypeFlags.Meal))
+                return 0.0f;
+
+            return GetFoodType(foodSource.def) switch
+            {
+                FoodType.Fungus => eater.GetStatValue(Defs.XylRawFungusFoodPoisonChanceOffset) +
+                                   eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
+                FoodType.Meat => eater.GetStatValue(Defs.XylRawMeatFoodPoisonChanceOffset),
+                FoodType.AnimalProduct => eater.GetStatValue(Defs.XylRawAnimalProductFoodPoisonChanceOffset),
+                FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
+                _ => 0.0f
+            };
+        }
     }
 
     public static bool IsThoughtFromIngestionDisallowedByGenes(Pawn eater, ThoughtDef thought, ThingDef ingestible,
         MeatSourceCategory meatSourceCategory)
     {
-        if (thought == null || ingestible == null)
+        using (new ProfileBlock())
         {
-            return false;
-        }
-
-        foreach (var ext in eater.GeneDefExtensionsOfType<Genes.GeneDefExtension_IngestionThoughtOverride>())
-        {
-            foreach (var thoughtOverride in ext.thoughtOverrides.EmptyIfNull())
+            if (thought == null || ingestible == null)
             {
-                if (thoughtOverride.thoughts.NullOrEmpty())
-                    continue;
+                return false;
+            }
 
-                if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
-                    continue;
-
-                if (!thoughtOverride.meatSources.NullOrEmpty() && !thoughtOverride.meatSources.Contains(meatSourceCategory))
-                    continue;
-
-                if (thoughtOverride.thoughts.Any(t => t == thought))
+            foreach (var ext in eater.GeneDefExtensionsOfType<Genes.GeneDefExtension_IngestionThoughtOverride>())
+            {
+                foreach (var thoughtOverride in ext.thoughtOverrides.EmptyIfNull())
                 {
-                    return true;
+                    if (thoughtOverride.thoughts.NullOrEmpty())
+                        continue;
+
+                    if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
+                        continue;
+
+                    if (!thoughtOverride.meatSources.NullOrEmpty() &&
+                        !thoughtOverride.meatSources.Contains(meatSourceCategory))
+                        continue;
+
+                    if (thoughtOverride.thoughts.Any(t => t == thought))
+                    {
+                        return true;
+                    }
                 }
             }
-        }
 
-        return false;
+            return false;
+        }
     }
 }

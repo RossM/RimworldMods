@@ -44,15 +44,19 @@ namespace XylRacesCore.Patches
 
         private static bool DisableHostilityCheck(Pawn pawn, Pawn pawn2)
         {
-            if (pawn.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostility(pawn2)))
-                return true;
+            using (new ProfileBlock())
+            {
+                if (pawn.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostility(pawn2)))
+                    return true;
 
-            // When a character with a hostility-disabling gene tames a wild insect, the insect would immediately
-            // be attacked by its former allies. This prevents that.
-            if (pawn.playerSettings?.Master?.HasGeneOfType<Gene_HostilityOverride>(g => g.DisableHostility(pawn2)) == true)
-                return true;
+                // When a character with a hostility-disabling gene tames a wild insect, the insect would immediately
+                // be attacked by its former allies. This prevents that.
+                if (pawn.playerSettings?.Master?.HasGeneOfType<Gene_HostilityOverride>(g =>
+                        g.DisableHostility(pawn2)) == true)
+                    return true;
 
-            return false;
+                return false;
+            }
         }
     }
 }
