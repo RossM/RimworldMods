@@ -38,7 +38,6 @@ namespace XylRacesCore.Patches
         public static bool TryAddIngestThought_Prefix(Pawn ingester, ThoughtDef def, Precept fromPrecept,
             List<ThoughtFromIngesting> ingestThoughts, ThingDef foodDef, MeatSourceCategory meatSourceCategory)
         {
-            Log.Message(string.Format("TryAddIngestThought_Prefix: {0}, {1}, {2}, {3}", ingester, def, foodDef, meatSourceCategory));
             if (FoodHelpers.IsThoughtFromIngestionDisallowedByGenes(ingester, def, foodDef, meatSourceCategory))
                 return false;
             return true;
