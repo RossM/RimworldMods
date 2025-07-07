@@ -129,7 +129,7 @@ public static class FoodHelpers
     {
         var foodDef = foodSource.def;
 
-        if (foodDef.IsProcessedFood) 
+        if (!foodDef.ingestible.foodType.HasFlag(FoodTypeFlags.Meal)) 
             return 0.0f;
 
         return GetFoodType(foodSource.def) switch
