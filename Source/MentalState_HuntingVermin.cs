@@ -104,7 +104,7 @@ namespace XylRacesCore
             {
                 return null;
             }
-            Pawn result = tmpTargets.OrderBy(p => (pawn.Position - p.Position).LengthHorizontalSquared).ThenBy(p => Rand.Value).FirstOrDefault();
+            Pawn result = tmpTargets.OrderBy(p => pawn.Position.DistanceToSquared(-p.Position)).ThenBy(p => Rand.Value).FirstOrDefault();
             tmpTargets.Clear();
             return result;
         }

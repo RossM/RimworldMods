@@ -81,7 +81,7 @@ namespace XylRacesCore.Genes
                     return;
 
                 if (!flight.Flying && autoFly && pawn.pather.Moving &&
-                    (pawn.Position - pawn.pather.Destination.Cell).LengthHorizontal >= DefExt.autoFlyMinDistance &&
+                    pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= DefExt.autoFlyMinDistance &&
                     pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
                 {
                     flight.StartFlying();
