@@ -86,7 +86,6 @@ namespace XylRacesCore.Genes
                     (pawn.Position - pawn.pather.Destination.Cell).LengthHorizontal >= DefExt.autoFlyMinDistance &&
                     pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
                 {
-                    //Log.Message(string.Format("Expected flight distance: {0}", (pawn.Position - pawn.pather.Destination.Cell).LengthHorizontal)); 
                     flight.StartFlying();
                 }
             }
