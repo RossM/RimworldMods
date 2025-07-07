@@ -64,7 +64,7 @@ public static class FoodHelpers
     {
         using (new ProfileBlock())
         {
-            if (!foodDef.ingestible.foodType.HasFlag(FoodTypeFlags.Meal))
+            if (foodDef.IsRawHumanFood())
             {
                 return GetFoodType(foodDef) switch
                 {
@@ -76,57 +76,62 @@ public static class FoodHelpers
                     _ => 1.0f
                 };
             }
-            else
+
+            var compIngredients = foodSource.TryGetComp<CompIngredients>();
+            if (compIngredients == null)
             {
-                var compIngredients = foodSource.TryGetComp<CompIngredients>();
-                if (compIngredients == null)
-                    return 1.0f;
-
-                var hasMeat = false;
-                var hasAnimalProduct = false;
-                var hasNonMeat = false;
-
-                foreach (var ingredient in compIngredients.ingredients)
+                return GetFoodType(foodDef) switch
                 {
-                    switch (GetFoodType(ingredient))
-                    {
-                        case FoodType.Meat:
-                            hasMeat = true;
-                            break;
-                        case FoodType.NonMeat:
-                        case FoodType.Fungus:
-                            hasNonMeat = true;
-                            break;
-                        case FoodType.AnimalProduct:
-                            hasAnimalProduct = true;
-                            break;
-                    }
-                }
-
-                var multiplier = 0.0f;
-                var divisor = 0.0f;
-
-                if (hasMeat)
-                {
-                    multiplier += eater.GetStatValue(Defs.XylCookedMeatNutritionFactor);
-                    divisor += 1.0f;
-                }
-
-                if (hasAnimalProduct)
-                {
-                    multiplier += eater.GetStatValue(Defs.XylCookedAnimalProductNutritionFactor);
-                    divisor += 1.0f;
-                }
-
-                if (hasNonMeat)
-                {
-                    multiplier += eater.GetStatValue(Defs.XylCookedNonMeatNutritionFactor);
-                    divisor += 1.0f;
-                }
-
-                return divisor > 0 ? multiplier / divisor : 1.0f;
-
+                    FoodType.Meat => eater.GetStatValue(Defs.XylCookedMeatNutritionFactor),
+                    FoodType.AnimalProduct => eater.GetStatValue(Defs.XylCookedAnimalProductNutritionFactor),
+                    FoodType.Fungus or FoodType.NonMeat => eater.GetStatValue(Defs.XylCookedNonMeatNutritionFactor),
+                    _ => 1.0f
+                };
             }
+
+            var hasMeat = false;
+            var hasAnimalProduct = false;
+            var hasNonMeat = false;
+
+            foreach (var ingredient in compIngredients.ingredients)
+            {
+                switch (GetFoodType(ingredient))
+                {
+                    case FoodType.Meat:
+                        hasMeat = true;
+                        break;
+                    case FoodType.NonMeat:
+                    case FoodType.Fungus:
+                        hasNonMeat = true;
+                        break;
+                    case FoodType.AnimalProduct:
+                        hasAnimalProduct = true;
+                        break;
+                }
+            }
+
+            var multiplier = 0.0f;
+            var divisor = 0.0f;
+
+            if (hasMeat)
+            {
+                multiplier += eater.GetStatValue(Defs.XylCookedMeatNutritionFactor);
+                divisor += 1.0f;
+            }
+
+            if (hasAnimalProduct)
+            {
+                multiplier += eater.GetStatValue(Defs.XylCookedAnimalProductNutritionFactor);
+                divisor += 1.0f;
+            }
+
+            if (hasNonMeat)
+            {
+                multiplier += eater.GetStatValue(Defs.XylCookedNonMeatNutritionFactor);
+                divisor += 1.0f;
+            }
+
+            return divisor > 0 ? multiplier / divisor : 1.0f;
         }
     }
 
@@ -136,7 +141,7 @@ public static class FoodHelpers
         {
             var foodDef = foodSource.def;
 
-            if (!foodDef.ingestible.foodType.HasFlag(FoodTypeFlags.Meal))
+            if (!foodDef.IsRawHumanFood())
                 return 0.0f;
 
             return GetFoodType(foodSource.def) switch
