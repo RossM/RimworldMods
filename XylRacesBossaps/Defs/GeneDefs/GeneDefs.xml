@@ -68,6 +68,11 @@
       <SlaveSuppressionFallRate MayRequire="Ludeon.RimWorld.Ideology">0.25</SlaveSuppressionFallRate>
       <XylWillFallRate>4</XylWillFallRate>
     </statFactors>
+    <suppressedTraits>
+      <li>
+        <def>Bloodlust</def>
+      </li>
+    </suppressedTraits>
   </GeneDef>
 
   <GeneDef>
