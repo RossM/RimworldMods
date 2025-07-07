@@ -132,7 +132,7 @@ namespace XylRacesCore.Genes
                 return false;
             }
 
-            if (!food.def.IsRawHumanFood() && extension.rawOnly)
+            if (!(food.def.IsRawHumanFood() || food.def.IsCorpse) && extension.rawOnly)
                 return false;
 
             if (extension.foodKind == FoodUtility.GetFoodKind(food))
@@ -162,7 +162,7 @@ namespace XylRacesCore.Genes
                 return false;
             }
 
-            if (!food.IsRawHumanFood() && extension.rawOnly)
+            if (!(food.IsRawHumanFood() || food.IsCorpse) && extension.rawOnly)
                 return false;
 
             if (extension.foodKind == FoodUtility.GetFoodKind(food))

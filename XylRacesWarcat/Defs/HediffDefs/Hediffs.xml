@@ -145,6 +145,12 @@
         <label>mild deficiency</label>
         <minSeverity>1</minSeverity>
         <painOffset>0.1</painOffset>
+        <mentalStateGivers>
+          <li>
+            <mentalState>XylHuntingVermin</mentalState>
+            <mtbDays>0.5</mtbDays>
+          </li>
+        </mentalStateGivers>
       </li>
       <li>
         <label>severe deficiency</label>
@@ -158,6 +164,12 @@
             <setMax>0.5</setMax>
           </li>
         </capMods>
+        <mentalStateGivers>
+          <li>
+            <mentalState>XylHuntingVermin</mentalState>
+            <mtbDays>0.5</mtbDays>
+          </li>
+        </mentalStateGivers>
       </li>
       <li>
         <label>coma</label>

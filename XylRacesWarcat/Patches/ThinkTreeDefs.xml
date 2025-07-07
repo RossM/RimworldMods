@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationInsert">
+    <xpath>Defs/ThinkTreeDef//li[state="MurderousRage"]</xpath>
+    <value>
+      <!-- Hunt vermin -->
+      <li Class="ThinkNode_ConditionalMentalState">
+        <state>XylHuntingVermin</state>
+        <subNodes>
+          <li Class="XylRacesCore.JobGiver_HuntingVermin" />
+          <li Class="XylRacesCore.JobGiver_SatisfyDietDependency" />
+          <li Class="ThinkNode_PrioritySorter">
+            <subNodes>
+              <li Class="JobGiver_GetFood">
+                <maxLevelPercentage>0.05</maxLevelPercentage>
+              </li>
+              <li Class="JobGiver_GetRest">
+                <maxLevelPercentage>0.15</maxLevelPercentage>
+              </li>
+            </subNodes>
+          </li>
+          <li Class="JobGiver_WanderColony" />
+        </subNodes>
+      </li>
+    </value>
+  </Operation>
+  
+</Patch>

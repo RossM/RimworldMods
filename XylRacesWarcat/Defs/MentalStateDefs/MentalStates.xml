@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <MentalBreakDef>
+    <defName>XylHuntingVermin</defName>
+    <mentalState>XylHuntingVermin</mentalState>
+    <intensity>Minor</intensity>
+    <baseCommonality>1</baseCommonality>
+    <requiredGene>XylMeatDependence</requiredGene>
+  </MentalBreakDef>
+  <MentalStateDef ParentName="BaseMentalState">
+    <defName>XylHuntingVermin</defName>
+    <stateClass>XylRacesCore.MentalState_HuntingVermin</stateClass>
+    <workerClass>XylRacesCore.MentalStateWorker_HuntingVermin</workerClass>
+    <label>hunting vermin</label>
+    <category>Aggro</category>
+    <blockInteractionInitiationExcept>
+      <li>Insult</li>
+    </blockInteractionInitiationExcept>
+    <blockInteractionRecipientExcept>
+      <li>Insult</li>
+    </blockInteractionRecipientExcept>
+    <blockRandomInteraction>true</blockRandomInteraction>
+    <colonistsOnly>true</colonistsOnly>
+    <minTicksBeforeRecovery>15000</minTicksBeforeRecovery>
+    <maxTicksBeforeRecovery>15000</maxTicksBeforeRecovery>
+    <recoverFromSleep>true</recoverFromSleep>
+    <nameColor>(0.9,0.2,0.5)</nameColor>
+    <recoveryMessage>{0} is no longer hunting.</recoveryMessage>
+    <beginLetter>{0} has decided to hunt and kill {1}.</beginLetter>
+    <beginLetterDef>ThreatSmall</beginLetterDef>
+    <baseInspectLine>Mental state: Hunting vermin</baseInspectLine>
+    <allowBeatfire>true</allowBeatfire>
+  </MentalStateDef>
+
+</Defs>
