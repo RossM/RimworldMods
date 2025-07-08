@@ -5,7 +5,7 @@
   <name>Posthuman Drift: Titan Xenotype</name>
   <author>Xylthixlm</author>
   <description>Adds the Titan xenotype and associated genes.\n\nThese stony giants are grown in vats for one purpose: to build things that will outlast them. Towering and near-impervious, they work without pause in places that would kill most people: burning deserts, frozen tundras, poisonous wastelands. They don’t talk much, don’t reflect much, and don’t seem to care. Walls go up, fire burns, storms howl—and the Titans keep working.</description>
-  <modIconPath>Xyl/UI/Icons/Xenotypes/Titan</modIconPath>
+  <modIconPath>Xyl/UI/Icons/Xenotypes/Titan_small</modIconPath>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>

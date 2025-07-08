@@ -5,7 +5,7 @@
   <name>Posthuman Drift: Bossaps Xenotype</name>
   <author>Xylthixlm</author>
   <description>Adds the Bossaps xenotype and associated genes.\n\nBossaps were engineered as sentient livestock by the gene-artisans of a glitterworld best left forgotten. When things are peaceful they are calm and mild-mannered. But when they're hurt, instinct takes over, and they charge their enemies like a raging bull.</description>
-  <modIconPath>Xyl/UI/Icons/Xenotypes/Bossaps</modIconPath>
+  <modIconPath>Xyl/UI/Icons/Xenotypes/Bossaps_small</modIconPath>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>

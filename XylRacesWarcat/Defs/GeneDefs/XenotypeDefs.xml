@@ -5,7 +5,7 @@
     <defName>XylWarcat</defName>
     <label>warcat</label>
     <description>These graceful predators were forged in military gene-vats: part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on raw meat to survive. Now they roam the rimworlds in tight-knit clans, hunting anything they can bring down—even other xenohumans.</description>
-    <iconPath>Xyl/UI/Icons/Xenotypes/Warcat</iconPath>
+    <iconPath>Xyl/UI/Icons/Xenotypes/Warcat_small</iconPath>
     <displayPriority>-107</displayPriority>
     <inheritable>true</inheritable>
     <genes>

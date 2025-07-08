@@ -5,7 +5,7 @@
   <name>Posthuman Drift: Trog Xenotype</name>
   <author>Xylthixlm</author>
   <description>Adds the Trog xenotype and associated genes.\n\nTrogs are the lurching result of generations of interbreeding between neanderthals, wasters, and dirtmoles on the worst rimworlds humanity ever forgot. They're slow, ugly, and stink like a landfill, but thrive in toxic sludge and underground rot. Giant insects won’t touch them, and half of them come out with genes from who-knows-where. No one’s quite sure how they survive, but they do—much to everyone else's dismay.</description>
-  <modIconPath>Xyl/UI/Icons/Xenotypes/Trog</modIconPath>
+  <modIconPath>Xyl/UI/Icons/Xenotypes/Trog_small</modIconPath>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>

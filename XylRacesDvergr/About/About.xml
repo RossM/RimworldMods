@@ -5,7 +5,7 @@
   <name>Posthuman Drift: Dvergr Xenotype</name>
   <author>Xylthixlm</author>
   <description>Adds the Dvergr xenotype and associated genes.\n\nDvergr hail from craggy, mineral-rich worlds where most things worth doing happen underground. Short and stoic, they’re built for labor, not conversation—tireless workers who’d rather break rock than make small talk. Raw fungus keeps them alive, though they hate the taste, and they need alcohol to get them through the working day. Smiles are rare, rest rarer—and now and then, after a long silence, one of them will make something no one else could.</description>
-  <modIconPath>Xyl/UI/Icons/Xenotypes/Dvergr</modIconPath>
+  <modIconPath>Xyl/UI/Icons/Xenotypes/Dvergr_small</modIconPath>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
