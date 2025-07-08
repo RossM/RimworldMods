@@ -102,6 +102,10 @@ namespace XylRacesCore
                 yield return extension;
         }
 
+        public static IEnumerable<T> HediffsOfType<T>(this Pawn pawn)
+        {
+            return pawn.health.hediffSet.hediffs.OfType<T>();
+        }
         public static Hediff GetFirstHediffWithComp<T>(this HediffSet hediffSet) where T : HediffComp
         {
             return hediffSet.hediffs.FirstOrDefault(h => h.TryGetComp<T>() != null);

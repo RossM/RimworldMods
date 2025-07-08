@@ -200,5 +200,20 @@ namespace XylRacesCore.Genes
             }
         }
 
+        public float NutritionWantedToSatisfy()
+        {
+            float severityReductionPerNutrition = DefExt.severityReductionPerNutrition;
+            float nutritionForNeed = LinkedHediff.Severity / severityReductionPerNutrition;
+            return nutritionForNeed;
+        }
+
+        public int ItemsWantedToSatisfy(Thing foodSource, ThingDef foodDef)
+        {
+            var nutritionNeeded = NutritionWantedToSatisfy();
+            var nutritionPerItem = FoodUtility.GetNutrition(pawn, foodSource, foodDef);
+            if (nutritionPerItem == 0)
+                return 0;
+            return Mathf.CeilToInt(nutritionNeeded / nutritionPerItem);
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace XylRacesCore
             {
                 foreach (Hediff_DietDependency dietDependency in tmpDietDependencies)
                 {
-                    Thing food = FindFoodFor(pawn, dietDependency);
+                    Thing food = dietDependency.FindFoodFor(pawn);
                     if (food == null)
                         continue;
 
@@ -71,53 +71,6 @@ namespace XylRacesCore
             {
                 tmpDietDependencies.Clear();
             }
-        }
-
-        private Thing FindFoodFor(Pawn pawn, Hediff_DietDependency dependency)
-        {
-            ThingOwner<Thing> innerContainer = pawn.inventory.innerContainer;
-            foreach (Thing item in innerContainer)
-            {
-                if (FoodValidator(pawn, dependency, item))
-                    return item;
-            }
-            Thing thing = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.FoodSource), PathEndMode.ClosestTouch, TraverseParms.For(pawn), 9999f, x => FoodValidator(pawn, dependency, x));
-            if (thing != null)
-                return thing;
-
-            if (!pawn.IsColonist || pawn.Map == null) 
-                return null;
-            
-            foreach (Pawn spawnedColonyAnimal in pawn.Map.mapPawns.SpawnedColonyAnimals)
-            {
-                foreach (Thing item in spawnedColonyAnimal.inventory.innerContainer)
-                {
-                    if (FoodValidator(pawn, dependency, item) && !spawnedColonyAnimal.IsForbidden(pawn) && pawn.CanReach(spawnedColonyAnimal, PathEndMode.OnCell, Danger.Some))
-                    {
-                        return item;
-                    }
-                }
-            }
-            return null;
-        }
-
-        private static bool FoodValidator(Pawn pawn, Hediff_DietDependency dependency, Thing food)
-        {
-            if (!food.def.IsIngestible)
-                return false;
-            if (food.IsForbidden(pawn))
-                return false;
-            if (!pawn.CanReserve(food))
-                return false;
-
-            Gene_DietDependency gene = dependency.Gene;
-            if (gene == null)
-            {
-                Log.Warning(string.Format("FoodValidator: Couldn't find corresponding gene for {0}", dependency));
-                return false;
-            }
-
-            return gene.ValidateFood(food);
         }
     }
 }
