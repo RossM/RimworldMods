@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using RimWorld;
 using Verse;
 
@@ -12,7 +13,8 @@ namespace XylRacesCore
         public const bool InstrumentTickManager = false;
         private readonly bool _enabled;
 
-        public ProfileBlock(bool enabled = GlobalEnabled, [System.Runtime.CompilerServices.CallerMemberName] string methodName = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ProfileBlock(bool enabled = GlobalEnabled, [CallerMemberName] string methodName = null)
         {
             _enabled = enabled;
             if (!_enabled) 
@@ -22,6 +24,7 @@ namespace XylRacesCore
             DeepProfiler.Start(label);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
             if (!_enabled) 
