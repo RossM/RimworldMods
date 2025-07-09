@@ -18,8 +18,6 @@ namespace XylRacesCore
         private int lastInstantWetnessCheckTick;
         private float lastInstantWetness;
 
-        public bool IsShowering { get; set; }
-
         public override float CurInstantLevel
         {
             get
@@ -28,9 +26,6 @@ namespace XylRacesCore
                     return lastInstantWetness;
                 lastInstantWetnessCheckTick = Find.TickManager.TicksGame;
 
-                if (IsShowering && pawn.CurJob?.GetCachedDriver(pawn) is not JobDriver_TakeShower)
-                    IsShowering = false;
-
                 if (!pawn.Spawned)
                     lastInstantWetness = 0.0f;
                 else
@@ -38,7 +33,7 @@ namespace XylRacesCore
                     TerrainDef terrain = pawn.Position.GetTerrain(pawn.Map);
                     WeatherDef curWeatherLerped = pawn.Map.weatherManager.CurWeatherLerped;
 
-                    if (IsShowering)
+                    if (pawn.CurJob?.GetCachedDriver(pawn) is JobDriver_TakeShower { showering: true })
                         lastInstantWetness = 1.0f;
                     else if (terrain.IsWater)
                         lastInstantWetness = 1.0f;

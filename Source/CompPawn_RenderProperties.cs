@@ -30,6 +30,11 @@ namespace XylRacesCore
                         flags &= ~PawnRenderFlags.Headgear;
                 }
 
+                if (pawn.CurJob?.GetCachedDriver(pawn) is JobDriver_TakeShower { showering: true })
+                {
+                    flags &= ~(PawnRenderFlags.Clothes | PawnRenderFlags.Headgear);
+                }
+
                 return flags;
             }
         }

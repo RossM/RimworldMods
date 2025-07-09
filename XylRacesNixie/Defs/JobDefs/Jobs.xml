@@ -8,4 +8,11 @@
     <joyDuration>3000</joyDuration>
   </JobDef>
 
+  <JobDef>
+    <defName>XylSoak</defName>
+    <driverClass>XylRacesCore.JobDriver_Soak</driverClass>
+    <reportString>soaking.</reportString>
+    <joyDuration>3000</joyDuration>
+  </JobDef>
+
 </Defs>

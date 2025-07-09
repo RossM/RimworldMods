@@ -8,6 +8,14 @@ namespace XylRacesCore
 {
     public class JobDriver_TakeShower : JobDriver
     {
+        public bool showering;
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref showering, "showering");
+        }
+
         [DefOf]
         private static class Defs
         {
@@ -27,27 +35,26 @@ namespace XylRacesCore
 
             var need_wetness = pawn.needs?.TryGetNeed<Need_Wetness>();
 
-            //var startTick = Find.TickManager.TicksGame;
-
             Toil toil = ToilMaker.MakeToil();
             toil.defaultCompleteMode = ToilCompleteMode.Delay;
             toil.defaultDuration = job.def.joyDuration;
-            //toil.WithProgressBar(TargetIndex.A, () => (float)(Find.TickManager.TicksGame - startTick) / job.def.joyDuration);
             toil.AddPreTickIntervalAction(_ =>
             {
                 if (need_wetness is { CurLevel: > 0.9999f })
-                    pawn.jobs.curDriver.EndJobWith(JobCondition.Succeeded);
+                    EndJobWith(JobCondition.Succeeded);
+
             });
             toil.initAction = () =>
             {
-                Pawn actor = toil.actor;
-                if (need_wetness != null)
-                    need_wetness.IsShowering = true;
-                var comp = actor.GetComp<CompPawn_RenderProperties>();
+                showering = true;
+                var comp = toil.actor.GetComp<CompPawn_RenderProperties>();
                 if (comp != null)
                     comp.hideClothes = comp.hideHeadgear = true;
+
+                if (pawn.health?.hediffSet != null && pawn.health.hediffSet.TryGetHediff(HediffDefOf.Heatstroke, out var hediff))
+                    pawn.health.RemoveHediff(hediff);
             };
-            toil.tickIntervalAction = delegate(int delta)
+            toil.tickIntervalAction = delta =>
             {
                 // Occasionally change facing randomly
                 Pawn actor = toil.actor;
@@ -56,10 +63,7 @@ namespace XylRacesCore
             };
             toil.AddFinishAction(() =>
             {
-                Pawn actor = toil.actor;
-                if (need_wetness != null)
-                    need_wetness.IsShowering = false;
-                var comp = actor.GetComp<CompPawn_RenderProperties>();
+                var comp = toil.actor.GetComp<CompPawn_RenderProperties>();
                 if (comp != null)
                     comp.hideClothes = comp.hideHeadgear = true;
             });

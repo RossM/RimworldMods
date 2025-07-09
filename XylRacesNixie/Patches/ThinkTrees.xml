@@ -9,7 +9,7 @@
           <li>XylShower</li>
         </thingDefs>
         <showerJobDef>XylTakeShower</showerJobDef>
-        <reportStringOverride>Soaking.</reportStringOverride>
+        <soakJobDef>XylSoak</soakJobDef>
       </li>
     </value>
   </Operation>

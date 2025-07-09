@@ -90,12 +90,13 @@ namespace XylRacesCore
                     actor.jobs.EndCurrentJob(JobCondition.Succeeded);
                 }
             };
-            toil.AddFinishAction(delegate
+            toil.AddFinishAction(() =>
             {
                 if (Target != null && Target.CurJobDef == JobDefOf.Wait_MaintainPosture)
                 {
                     Target.jobs.EndCurrentJob(JobCondition.InterruptForced);
                 }
+
                 var comp = Target?.GetComp<CompPawn_RenderProperties>();
                 if (comp != null)
                     comp.hideClothes = false;
