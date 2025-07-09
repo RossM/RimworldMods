@@ -10,20 +10,26 @@
       <parts>
 
         <!-- Config pages -->
-        <li Class="ScenPart_ConfigPage_ConfigureStartingPawns">
-          <def>ConfigPage_ConfigureStartingPawns</def>
+        <li Class="ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes">
+          <def>ConfigurePawnsXenotypes</def>
           <pawnChoiceCount>8</pawnChoiceCount>
-          <pawnCount>1</pawnCount>
+          <overrideKinds>
+            <li>
+              <xenotype>XylNixie</xenotype>
+              <pawnKind>XylNixie_Siren</pawnKind>
+            </li>
+          </overrideKinds>
+          <xenotypeCounts>
+            <li>
+              <xenotype>XylNixie</xenotype>
+              <count>1</count>
+              <requiredAtStart>true</requiredAtStart>
+            </li>
+          </xenotypeCounts>
         </li>
         <li Class="ScenPart_PlayerPawnsArriveMethod">
           <def>PlayerPawnsArriveMethod</def>
           <method>DropPods</method>
-        </li>
-        <li Class="XylRacesCore.ScenPart_ForcedXenotype">
-          <def>XylForcedXenotype</def>
-          <chance>1</chance>
-          <context>PlayerStarter</context>
-          <xenotype>XylNixie</xenotype>
         </li>
 
         <!-- Starting psychics -->
@@ -78,7 +84,7 @@
           <def>StartingThing_Defined</def>
           <thingDef>Gun_AssaultRifle</thingDef>
         </li>
-        <li Class="ScenPart_StartingThing_Defined">
+        <!--<li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
           <thingDef>Apparel_Robe</thingDef>
           <stuff>Hyperweave</stuff>
@@ -87,7 +93,7 @@
           <def>StartingThing_Defined</def>
           <thingDef>Apparel_HatHood</thingDef>
           <stuff>Hyperweave</stuff>
-        </li>
+        </li>-->
         <li Class="ScenPart_StartingAnimal">
           <def>StartingAnimal</def>
           <count>1</count>

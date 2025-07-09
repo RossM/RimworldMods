@@ -10,17 +10,16 @@
       <parts>
 
         <!-- Config pages -->
-        <li Class="ScenPart_ConfigPage_ConfigureStartingPawns">
-          <def>ConfigPage_ConfigureStartingPawns</def>
-          <pawnCount>7</pawnCount>
+        <li Class="ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes">
+          <def>ConfigurePawnsXenotypes</def>
           <pawnChoiceCount>7</pawnChoiceCount>
-        </li>
-
-        <li Class="XylRacesCore.ScenPart_ForcedXenotype">
-          <def>XylForcedXenotype</def>
-          <chance>1</chance>
-          <context>PlayerStarter</context>
-          <xenotype>XylDvergr</xenotype>
+          <xenotypeCounts>
+            <li>
+              <xenotype>XylDvergr</xenotype>
+              <count>7</count>
+              <requiredAtStart>true</requiredAtStart>
+            </li>
+          </xenotypeCounts>
         </li>
 
         <!-- Starting techs -->

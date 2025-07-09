@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <PawnKindDef ParentName="BasePlayerPawnKind">
+    <defName>XylNixie_Siren</defName>
+    <label>colonist</label>
+    <defaultFactionDef>PlayerColony</defaultFactionDef>
+    <chemicalAddictionChance>0.06</chemicalAddictionChance>
+    <apparelTags>
+      <li>IndustrialBasic</li>
+      <li>IndustrialAdvanced</li>
+    </apparelTags>
+    <apparelRequired>
+      <li>Apparel_Robe</li>
+      <li>Apparel_HatHood</li>
+    </apparelRequired>
+    <specificApparelRequirements Inherit="False">
+      <li>
+        <colorGenerator Class="ColorGenerator_Options">
+          <options>
+            <li>
+              <only>(0.2, 0.4, 0.8)</only>
+            </li>
+            <li>
+              <only>(0.3, 0.6, 0.85)</only>
+            </li>
+            <li>
+              <only>(0.4, 0.8, 0.9)</only>
+            </li>
+            <li>
+              <only>(0.5, 0.6, 0.9)</only>
+            </li>
+            <li>
+              <only>(0.6, 0.4, 0.9)</only>
+            </li>
+            <li>
+              <only>(0.45, 0.2, 0.75)</only>
+            </li>
+            <li>
+              <only>(0.3, 0.0, 0.6)</only>
+            </li>
+          </options>
+        </colorGenerator>
+      </li>
+    </specificApparelRequirements>
+    <apparelAllowHeadgearChance>1</apparelAllowHeadgearChance>
+    <apparelMoney>1000 ~ 1400</apparelMoney>
+    <backstoryCryptosleepCommonality>1</backstoryCryptosleepCommonality>
+    <techHediffsChance>0.25</techHediffsChance>
+    <techHediffsMoney>50~800</techHediffsMoney>
+    <techHediffsTags>
+      <li>Simple</li>
+      <li>Advanced</li>
+      <li>ImplantEmpireCommon</li>
+    </techHediffsTags>
+    <techHediffsDisallowTags>
+      <li>PainCauser</li>
+    </techHediffsDisallowTags>
+    <initialResistanceRange>13~21</initialResistanceRange>
+  </PawnKindDef>
+
+</Defs>

@@ -12,7 +12,7 @@ using Verse;
 namespace XylRacesCore
 {
     [UsedImplicitly]
-    public class ScenPart_StartingSlaves : ScenPart
+    public class ScenPart_StartingSlaves : ScenPart_PawnModifier
     {
         public int count;
 
@@ -27,21 +27,15 @@ namespace XylRacesCore
         public override void DoEditInterface(Listing_ScenEdit listing)
         {
             Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 1f + 1f);
+
             scenPartRect.height = RowHeight;
             Widgets.TextFieldNumeric(scenPartRect, ref count, ref countBuf, 1);
+
         }
 
         public override string Summary(Scenario scen)
         {
-            return ScenSummaryList.SummaryWithList(scen, "PlayerStartsWith", ScenPart_StartingThing_Defined.PlayerStartWithIntro);
-        }
-
-        public override IEnumerable<string> GetSummaryListEntries(string tag)
-        {
-            if (tag == "PlayerStartsWith")
-            {
-                yield return PawnKindDefOf.Slave.LabelCap + " x" + count;
-            }
+            return "XylStartingSlaves".Translate(count);
         }
 
         public override void Randomize()
@@ -49,16 +43,14 @@ namespace XylRacesCore
             count = 1;
         }
 
-        public override IEnumerable<Thing> PlayerStartingThings()
+        public override void GenerateIntoMap(Map map)
         {
-            for (var i = 0; i < count; i++)
+            List<Pawn> pawns = map.mapPawns.FreeColonists;
+            for (int i = Math.Max(0, pawns.Count - count); i < pawns.Count; i++)
             {
-                var request = new PawnGenerationRequest(PawnKindDefOf.Slave);
-                Pawn slave = PawnGenerator.GeneratePawn(request);
-                slave.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave);
-                yield return slave;
+                var pawn = pawns[i];
+                pawn.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave);
             }
         }
-        // GenGuest.TryEnslavePrisoner
     }
 }

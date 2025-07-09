@@ -77,21 +77,5 @@ namespace XylRacesCore.Patches
         {
             return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
         }
-
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnGenerator.GetXenotypeForGeneratedPawn))]
-        public static void GetXenotypeForGeneratedPawn_Postfix(PawnGenerationRequest request, ref XenotypeDef __result)
-        {
-            if (Find.Scenario != null)
-            {
-                foreach (ScenPart allPart in Find.Scenario.AllParts)
-                {
-                    var part = allPart as ScenPart_ForcedXenotype;
-                    if (part == null)
-                        continue;
-
-                    part.ModifyXenotype(request.Faction, request.Context, ref __result);
-                }
-            }
-        }
     }
 }

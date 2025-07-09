@@ -2,15 +2,6 @@
 <Defs>
 
   <ScenPartDef>
-    <defName>XylForcedXenotype</defName>
-    <label>forced xenotype</label>
-    <scenPartClass>XylRacesCore.ScenPart_ForcedXenotype</scenPartClass>
-    <category>PlayerPawnModifier</category>
-    <selectionWeight>1.0</selectionWeight>
-    <summaryPriority>461</summaryPriority>
-  </ScenPartDef>
-
-  <ScenPartDef>
     <defName>XylStartingSlaves</defName>
     <label>start with slave(s)</label>
     <scenPartClass>XylRacesCore.ScenPart_StartingSlaves</scenPartClass>

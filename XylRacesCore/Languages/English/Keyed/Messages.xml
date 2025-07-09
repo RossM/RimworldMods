@@ -33,5 +33,6 @@
   <XylScenPartForcedXenotypeSummary>{0} have a {1} chance to start with xenotype: {2}</XylScenPartForcedXenotypeSummary>
   <XylScenPartPsycastLabel>{0} (level {1})</XylScenPartPsycastLabel>
   <XylPsycast>psycast</XylPsycast>
+  <XylStartingSlaves>{0} starting colonists are slaves.</XylStartingSlaves>
 
 </LanguageData>
