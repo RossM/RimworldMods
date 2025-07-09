@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-  <defName>XylNixieTips</defName>
-  <tips>
+  <TipSetDef>
+    <defName>XylNixieTips</defName>
+    <tips>
 
-    <li TKey="XylNixieWaterskip">In an emergency, Waterskip can create puddles to satisfy a nixie's need for wetness.</li>
+      <li TKey="XylNixieWaterskip">In an emergency, Waterskip can create puddles to satisfy a nixie's need for wetness.</li>
 
-  </tips>
+    </tips>
+  </TipSetDef>
 
 </Defs>

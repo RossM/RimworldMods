@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <TipSetDef>
+    <defName>XylTrogTips</defName>
+    <tips>
+
+      <li TKey="XylTrogPets">Animals assigned a trog as master share the benefits of the trog's insect pheromones gene.</li>
+
+    </tips>
+  </TipSetDef>
+
+</Defs>
