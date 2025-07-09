@@ -4,7 +4,7 @@
   <PawnKindDef ParentName="BasePlayerPawnKind">
     <defName>XylNixie_Siren</defName>
     <label>colonist</label>
-    <defaultFactionDef>PlayerColony</defaultFactionDef>
+    <defaultFactionDef>XylSirenPlayerColony</defaultFactionDef>
     <chemicalAddictionChance>0.06</chemicalAddictionChance>
     <apparelTags>
       <li>IndustrialBasic</li>
@@ -44,7 +44,7 @@
       </li>
     </specificApparelRequirements>
     <apparelAllowHeadgearChance>1</apparelAllowHeadgearChance>
-    <apparelMoney>1400~2400</apparelMoney>
+    <apparelMoney>1600~2400</apparelMoney>
     <backstoryCryptosleepCommonality>1</backstoryCryptosleepCommonality>
     <techHediffsChance>0.25</techHediffsChance>
     <techHediffsMoney>800~1200</techHediffsMoney>
