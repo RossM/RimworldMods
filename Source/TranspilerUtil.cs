@@ -1,14 +1,16 @@
-﻿using System;
+﻿using HarmonyLib;
+using Mono.Cecil.Cil;
+using RimWorld;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using HarmonyLib;
-using Mono.Cecil.Cil;
 using Verse;
-using System.Reflection.Emit;
-using RimWorld;
 using OpCodes = System.Reflection.Emit.OpCodes;
 
 namespace XylRacesCore
@@ -42,7 +44,7 @@ namespace XylRacesCore
             public Dictionary<int, int> privateMap;
         }
 
-        public bool MatchAndReplace(ref List<CodeInstruction> instructions, out string reason, ILGenerator generator = null, bool debug = false)
+        public bool TryMatchAndReplace(ref List<CodeInstruction> instructions, out string reason, ILGenerator generator = null, bool debug = false)
         {
             var localIndexMap = new Dictionary<int, int>();
             var matches = new List<MatchData>();
@@ -277,6 +279,12 @@ namespace XylRacesCore
             // Everything succeeded, now safe to change ref instructions
             instructions = outInstructions;
             return true;
+        }
+
+        public void MatchAndReplace(ref List<CodeInstruction> instructionsList, ILGenerator generator = null, [CallerMemberName] string methodName = null)
+        {
+            if (!TryMatchAndReplace(ref instructionsList, out string reason, generator))
+                Log.Error($"{methodName ?? "<Unknown>"}: {reason}");
         }
     }
 }

@@ -225,9 +225,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup_GetOffsetsAndFactorsExplanation.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup_GetOffsetsAndFactorsExplanation.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -252,9 +250,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup_GetValueUnfinalized.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup_GetValueUnfinalized.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 

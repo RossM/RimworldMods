@@ -51,9 +51,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> TryGenerateNewPawnInternal_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup_TryGenerateNewPawnInternal.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup_TryGenerateNewPawnInternal.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 

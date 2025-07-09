@@ -40,9 +40,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> GizmoDisabled_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup_GetPsycastLevel.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup_GetPsycastLevel.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -50,9 +48,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> CanCast_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup_GetPsycastLevel.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup_GetPsycastLevel.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
     }

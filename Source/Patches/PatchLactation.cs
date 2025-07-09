@@ -53,9 +53,7 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")] public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -63,9 +61,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> CanBreastfeed_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -73,9 +69,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> CanBreastfeedNow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -83,9 +77,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> SuckleFromLactatingPawn_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -93,9 +85,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> QuestPartTick_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -103,9 +93,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -113,9 +101,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> DrawRow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
     }

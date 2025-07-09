@@ -58,9 +58,7 @@ namespace XylRacesCore.Patches
             ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!Fixup_Interacted.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            Fixup_Interacted.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
     }

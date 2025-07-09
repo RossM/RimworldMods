@@ -93,9 +93,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> Ingested_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            if (!FixupIngested.MatchAndReplace(ref instructionsList, out string reason, generator))
-                Log.Error(
-                    $"{MethodBase.GetCurrentMethod()?.DeclaringType?.Name}.{MethodBase.GetCurrentMethod()?.Name}: {reason}");
+            FixupIngested.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
     }
