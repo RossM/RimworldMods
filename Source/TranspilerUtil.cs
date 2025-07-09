@@ -179,7 +179,8 @@ namespace XylRacesCore
             var outInstructions = new List<CodeInstruction>();
             for (var instructionIndex = 0; instructionIndex < instructions.Count; instructionIndex++)
             {
-                var match = sortedMatches.FirstOrDefault(r => r.start == instructionIndex);
+                int index = instructionIndex;
+                var match = sortedMatches.FirstOrDefault(r => r.start == index);
 
                 if (match?.rule.Output != null)
                 {

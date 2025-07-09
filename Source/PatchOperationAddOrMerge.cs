@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Xml;
 using JetBrains.Annotations;
 using Verse;
@@ -44,6 +45,9 @@ namespace XylRacesCore
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
+            if (xml == null)
+                throw new ArgumentNullException(nameof(xml));
+
             XmlNode node = value.node;
             var result = false;
 
