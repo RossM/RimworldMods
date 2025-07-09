@@ -154,9 +154,10 @@
         <useSkinShader>true</useSkinShader>
         <useRottenColor>true</useRottenColor>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <!--<skipFlag>Hair</skipFlag>-->
         <drawData>
           <defaultData>
-            <layer>70</layer>
+            <layer>63</layer>
           </defaultData>
           <dataNorth>
             <layer>11</layer>

@@ -309,7 +309,7 @@
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <drawData>
           <defaultData>
-            <layer>70</layer>
+            <layer>63</layer>
           </defaultData>
         </drawData>
       </li>
