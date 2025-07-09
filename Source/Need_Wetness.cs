@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Linq;
+using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -37,23 +38,27 @@ namespace XylRacesCore
 
                 if (!pawn.Spawned)
                     lastInstantWetness = 0.0f;
+                else if (pawn.CurJobDef == Defs.XylTakeShower && pawn.Position == pawn.CurJob.GetTarget(TargetIndex.A).Cell)
+                    lastInstantWetness = 1.0f;
                 else
-                {
-                    TerrainDef terrain = pawn.Position.GetTerrain(pawn.Map);
-                    WeatherDef curWeatherLerped = pawn.Map.weatherManager.CurWeatherLerped;
-
-                    if (pawn.CurJobDef == Defs.XylTakeShower && pawn.Position == pawn.CurJob.GetTarget(TargetIndex.A).Cell)
-                        lastInstantWetness = 1.0f;
-                    else if (terrain.IsWater)
-                        lastInstantWetness = 1.0f;
-                    else if (!pawn.Position.Roofed(pawn.Map))
-                        lastInstantWetness = Mathf.Clamp01(curWeatherLerped.rainRate / 0.25f);
-                    else
-                        lastInstantWetness = 0.0f;
-                }
+                    lastInstantWetness = GetWetness(pawn.Position, pawn.Map);
 
                 return lastInstantWetness;
             }
+        }
+
+        public static float GetWetness(IntVec3 position, Map map)
+        {
+            TerrainDef terrain = position.GetTerrain(map);
+            WeatherDef curWeatherLerped = map.weatherManager.CurWeatherLerped;
+
+            if (terrain.IsWater)
+                return 1.0f;
+            if (position.GetThingList(map).Any(t => t.def == ThingDefOf.Filth_Water))
+                return 1.0f;
+            if (!position.Roofed(map))
+                return Mathf.Clamp01(curWeatherLerped.rainRate / 0.25f);
+            return 0.0f;
         }
 
         public WetnessCategory CurCategory

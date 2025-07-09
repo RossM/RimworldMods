@@ -36,21 +36,19 @@ namespace XylRacesCore
         {
             if (PawnUtility.KnownDangerAt(x, pawn.Map, pawn)) 
                 return false;
-            if (x.GetTerrain(pawn.Map).toxicBuildupFactor != 0f) 
+            TerrainDef terrain = x.GetTerrain(pawn.Map);
+            if (terrain.toxicBuildupFactor != 0f) 
                 return false;
             if (x.Fogged(pawn.Map)) 
                 return false;
             if (!x.Standable(pawn.Map)) 
                 return false;
 
-            WeatherDef curWeatherLerped = pawn.Map.weatherManager.CurWeatherLerped;
-            if (curWeatherLerped.rainRate > 0.25f && !x.Roofed(pawn.Map))
-                return true;
+            // Bathing in marsh is icky, only do it if really necessary.
+            if (terrain.HasTag("WaterMarshy") && pawn.needs?.TryGetNeed<Need_Wetness>() is { CurCategory: >= WetnessCategory.Neutral })
+                return false;
 
-            if (x.GetTerrain(pawn.Map).IsWater) 
-                return true;
-
-            return false;
+            return Need_Wetness.GetWetness(pawn.Position, pawn.Map) >= 0.5f;
         }
 
 
