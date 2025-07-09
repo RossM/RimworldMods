@@ -39,12 +39,15 @@
             <li>
               <only>(0.3, 0.0, 0.6)</only>
             </li>
+            <li>
+              <only>(0.24, 0.2, 0.7)</only>
+            </li>
           </options>
         </colorGenerator>
       </li>
     </specificApparelRequirements>
     <apparelAllowHeadgearChance>1</apparelAllowHeadgearChance>
-    <apparelMoney>1600~2400</apparelMoney>
+    <apparelMoney>0</apparelMoney>
     <backstoryCryptosleepCommonality>1</backstoryCryptosleepCommonality>
     <techHediffsChance>0.25</techHediffsChance>
     <techHediffsMoney>800~1200</techHediffsMoney>
