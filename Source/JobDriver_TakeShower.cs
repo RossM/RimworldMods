@@ -11,7 +11,7 @@ namespace XylRacesCore
         [DefOf]
         private static class Defs
         {
-            [UsedImplicitly]
+            [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
             public static EffecterDef XylShowerSplash;
         }
 

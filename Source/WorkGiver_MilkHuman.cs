@@ -14,7 +14,7 @@ namespace XylRacesCore
         [DefOf]
         private static class Defs
         {
-            [UsedImplicitly]
+            [UsedImplicitly, MayRequire("Xylthixlm.Races.Bossaps")]
             public static JobDef XylMilkHuman;
         }
 
