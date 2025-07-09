@@ -41,9 +41,9 @@ namespace XylRacesCore.Genes
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref fullSinceTick, "fullSinceTick");
-            Scribe_Values.Look(ref allowMilking, "allowMilking");
-            Scribe_Values.Look(ref onlyMilkWhenFull, "onlyMilkWhenFull", true);
+            Scribe_Values.Look(ref fullSinceTick, nameof(fullSinceTick));
+            Scribe_Values.Look(ref allowMilking, nameof(allowMilking));
+            Scribe_Values.Look(ref onlyMilkWhenFull, nameof(onlyMilkWhenFull), true);
         }
 
         public override IEnumerable<Gizmo> GetGizmos()

@@ -13,7 +13,7 @@ namespace XylRacesCore
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref showering, "showering");
+            Scribe_Values.Look(ref showering, nameof(showering));
         }
 
         [DefOf]

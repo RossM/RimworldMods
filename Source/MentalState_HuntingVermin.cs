@@ -17,7 +17,7 @@ namespace XylRacesCore
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_References.Look(ref target, "target");
+            Scribe_References.Look(ref target, nameof(target));
         }
 
         public override RandomSocialMode SocialModeMax()

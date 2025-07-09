@@ -18,7 +18,7 @@ namespace XylRacesCore.Genes
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref lastHostileActionTick, "lastHostileActionTick", int.MinValue);
+            Scribe_Values.Look(ref lastHostileActionTick, nameof(lastHostileActionTick), int.MinValue);
         }
 
         public void Notify_PawnDamagedThing(Thing thing, DamageInfo damageInfo, DamageWorker.DamageResult DamageResult)

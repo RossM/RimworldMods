@@ -18,8 +18,8 @@ namespace XylRacesCore
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref count, "count");
-            Scribe_Defs.Look(ref psycast, "psycast");
+            Scribe_Values.Look(ref count, nameof(count));
+            Scribe_Defs.Look(ref psycast, nameof(psycast));
         }
 
         public override void DoEditInterface(Listing_ScenEdit listing)

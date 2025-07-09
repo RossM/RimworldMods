@@ -19,8 +19,8 @@ namespace XylRacesCore
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref count, "count");
-            Scribe_Values.Look(ref givePsycasts, "givePsycasts");
+            Scribe_Values.Look(ref count, nameof(count));
+            Scribe_Values.Look(ref givePsycasts, nameof(givePsycasts));
         }
 
         public override void GenerateIntoMap(Map map)

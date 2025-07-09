@@ -17,7 +17,7 @@ namespace XylRacesCore.Genes
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Collections.Look(ref extraEnemies, "extraEnemies", LookMode.Reference);
+            Scribe_Collections.Look(ref extraEnemies, nameof(extraEnemies), LookMode.Reference);
         }
 
         public GeneDefExtension_SeeingRed DefExt => def.GetModExtension<GeneDefExtension_SeeingRed>();

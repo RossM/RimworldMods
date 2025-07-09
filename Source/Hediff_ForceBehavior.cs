@@ -19,7 +19,7 @@ namespace XylRacesCore
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_References.Look(ref mote, "mote");
+            Scribe_References.Look(ref mote, nameof(mote));
         }
 
         public override void PostAdd(DamageInfo? dinfo)

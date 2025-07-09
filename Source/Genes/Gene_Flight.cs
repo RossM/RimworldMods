@@ -22,7 +22,7 @@ namespace XylRacesCore.Genes
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref autoFly, "autoFly");
+            Scribe_Values.Look(ref autoFly, nameof(autoFly));
         }
 
 

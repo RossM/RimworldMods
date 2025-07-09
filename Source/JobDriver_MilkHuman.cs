@@ -18,7 +18,7 @@ namespace XylRacesCore
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref gatherProgress, "gatherProgress");
+            Scribe_Values.Look(ref gatherProgress, nameof(gatherProgress));
         }
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
