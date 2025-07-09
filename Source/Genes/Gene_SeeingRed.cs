@@ -35,8 +35,7 @@ namespace XylRacesCore.Genes
             if (hediff == null) 
                 return;
 
-            extraEnemies ??= new HashSet<Thing>();
-            extraEnemies.Add(damageInfo.Instigator);
+            (extraEnemies ??= []).Add(damageInfo.Instigator);
 
             var comp = hediff.TryGetComp<HediffComp_Disappears>();
             if (comp == null) 

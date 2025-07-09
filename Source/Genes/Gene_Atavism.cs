@@ -45,9 +45,8 @@ namespace XylRacesCore.Genes
 
         private void AddGene(GeneDef geneDef)
         {
-            addedGenes ??= new List<Gene>();
             if (geneDef != null && !pawn.genes.HasActiveGene(geneDef))
-                addedGenes.Add(pawn.genes.AddGene(geneDef, IsXenogene));
+                (addedGenes ??= []).Add(pawn.genes.AddGene(geneDef, IsXenogene));
         }
 
         private bool IsXenogene => pawn.genes.Xenogenes.Contains(this);
