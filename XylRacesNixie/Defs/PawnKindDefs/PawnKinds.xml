@@ -44,10 +44,10 @@
       </li>
     </specificApparelRequirements>
     <apparelAllowHeadgearChance>1</apparelAllowHeadgearChance>
-    <apparelMoney>1000 ~ 1400</apparelMoney>
+    <apparelMoney>1400~2400</apparelMoney>
     <backstoryCryptosleepCommonality>1</backstoryCryptosleepCommonality>
     <techHediffsChance>0.25</techHediffsChance>
-    <techHediffsMoney>50~800</techHediffsMoney>
+    <techHediffsMoney>800~1200</techHediffsMoney>
     <techHediffsTags>
       <li>Simple</li>
       <li>Advanced</li>
