@@ -10,8 +10,10 @@
     <inheritable>true</inheritable>
     <genes>
       <li>PsychicAbility_Dull</li>
-      <li>XylMelancholy</li>
       <li>XylStoic</li>
+      <li>XylMelancholy</li>
+      <li>MaxTemp_SmallIncrease</li>
+      <li>Aggression_Aggressive</li>
       <li>Pain_Reduced</li>
       <li>Hair_BaldOnly</li>
       <li>Hair_ShortOnly</li>

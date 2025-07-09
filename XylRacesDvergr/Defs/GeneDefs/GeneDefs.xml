@@ -76,12 +76,6 @@
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Stoic</iconPath>
     <iconColor>(0.5, 0.5, 0.5)</iconColor>
-    <statOffsets>
-      <MentalBreakThreshold>-0.09</MentalBreakThreshold>
-    </statOffsets>
-    <statFactors>
-      <CertaintyLossFactor MayRequire="Ludeon.RimWorld.Ideology">0.5</CertaintyLossFactor>
-    </statFactors>
     <forcedTraits>
       <li>
         <def>Nerves</def>
