@@ -37,7 +37,6 @@ namespace XylRacesCore
             
             if (target is { Dead: true })
             {
-                Log.Message($"MentalStateTick: {target}, {pawn.CurJob.def}");
                 if (pawn.CurJob.def != JobDefOf.AttackMelee && pawn.CurJob.def != JobDefOf.Ingest)
                     RecoverFromState();
                 return;
