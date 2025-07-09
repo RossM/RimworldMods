@@ -49,7 +49,10 @@ namespace XylRacesCore
                 showering = true;
                 var comp = toil.actor.GetComp<CompPawn_RenderProperties>();
                 if (comp != null)
+                {
+                    comp.job = job;
                     comp.hideClothes = comp.hideHeadgear = true;
+                }
 
                 if (pawn.health?.hediffSet != null && pawn.health.hediffSet.TryGetHediff(HediffDefOf.Heatstroke, out var hediff))
                     pawn.health.RemoveHediff(hediff);
@@ -61,12 +64,6 @@ namespace XylRacesCore
                 if (actor.IsHashIntervalTick(200, delta) && Rand.Chance(0.5f))
                     actor.Rotation = Rot4.Random;
             };
-            toil.AddFinishAction(() =>
-            {
-                var comp = toil.actor.GetComp<CompPawn_RenderProperties>();
-                if (comp != null)
-                    comp.hideClothes = comp.hideHeadgear = false;
-            });
             EffecterDef effecterDef = Defs.XylShowerSplash;
             toil.WithEffect(effecterDef, TargetIndex.A);
             toil.handlingFacing = true;

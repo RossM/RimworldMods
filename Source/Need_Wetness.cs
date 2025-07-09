@@ -1,6 +1,8 @@
-﻿using RimWorld;
+﻿using JetBrains.Annotations;
+using RimWorld;
 using UnityEngine;
 using Verse;
+using Verse.AI;
 
 namespace XylRacesCore
 {
@@ -18,6 +20,13 @@ namespace XylRacesCore
         private int lastInstantWetnessCheckTick;
         private float lastInstantWetness;
 
+        [DefOf]
+        private static class Defs
+        {
+            [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
+            public static JobDef XylTakeShower;
+        }
+
         public override float CurInstantLevel
         {
             get
@@ -33,7 +42,7 @@ namespace XylRacesCore
                     TerrainDef terrain = pawn.Position.GetTerrain(pawn.Map);
                     WeatherDef curWeatherLerped = pawn.Map.weatherManager.CurWeatherLerped;
 
-                    if (pawn.CurJob?.GetCachedDriver(pawn) is JobDriver_TakeShower { showering: true })
+                    if (pawn.CurJobDef == Defs.XylTakeShower && pawn.Position == pawn.CurJob.GetTarget(TargetIndex.A).Cell)
                         lastInstantWetness = 1.0f;
                     else if (terrain.IsWater)
                         lastInstantWetness = 1.0f;

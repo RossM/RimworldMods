@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Verse;
+using Verse.AI;
 
 namespace XylRacesCore
 {
@@ -17,6 +18,8 @@ namespace XylRacesCore
         public bool hideClothes;
         public bool hideHeadgear;
 
+        public Job job;
+
         public static PawnRenderFlags ModifyRenderFlags(Pawn pawn, PawnRenderFlags flags)
         {
             using (new ProfileBlock())
@@ -24,6 +27,12 @@ namespace XylRacesCore
                 var comp = pawn.GetComp<CompPawn_RenderProperties>();
                 if (comp != null)
                 {
+                    if (comp.job != null && comp.job != pawn.CurJob)
+                    {
+                        comp.job = null;
+                        comp.hideClothes = comp.hideHeadgear = false;
+                    }
+                    
                     if (comp.hideClothes)
                         flags &= ~PawnRenderFlags.Clothes;
                     if (comp.hideHeadgear)

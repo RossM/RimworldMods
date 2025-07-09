@@ -76,7 +76,11 @@ namespace XylRacesCore
                 PawnUtility.ForceWait(Target, 15000, maintainPosture: true);
                 var comp = Target?.GetComp<CompPawn_RenderProperties>();
                 if (comp != null)
+                {
+                    comp.job = Target.CurJob;
                     comp.hideClothes = true;
+                }
+
                 Target?.rotationTracker.FaceTarget(actor);
             };
             toil.tickIntervalAction = delegate (int delta)
@@ -96,10 +100,6 @@ namespace XylRacesCore
                 {
                     Target.jobs.EndCurrentJob(JobCondition.InterruptForced);
                 }
-
-                var comp = Target?.GetComp<CompPawn_RenderProperties>();
-                if (comp != null)
-                    comp.hideClothes = false;
             });
             toil.FailOnDespawnedOrNull(TargetIndex.A);
             toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
