@@ -3,10 +3,10 @@
 
   <ScenarioDef ParentName="ScenarioBase" MayRequire="Ludeon.RimWorld.Royalty">
     <defName>XylDvergrFortress</defName>
-    <label>Dvergr fortress</label>
+    <label>Dvergr Fortress</label>
     <description>TODO.</description>
     <scenario>
-      <summary>TODO.</summary>
+      <summary>Seven dvergr with plenty of raw fungus and beer. Strike the earth!</summary>
       <parts>
 
         <!-- Config pages -->

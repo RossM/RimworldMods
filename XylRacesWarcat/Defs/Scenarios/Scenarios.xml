@@ -6,7 +6,7 @@
     <label>Warcat Tribe</label>
     <description>TODO.</description>
     <scenario>
-      <summary>TODO.</summary>
+      <summary>Three warcats and two slaves.</summary>
       <playerFaction>
         <factionDef>PlayerTribe</factionDef>
       </playerFaction>
