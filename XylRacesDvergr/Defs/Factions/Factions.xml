@@ -4,7 +4,7 @@
   <FactionDef ParentName="OutlanderRoughBase">
     <defName>XylOutlanderRoughDvergr</defName>
     <label>rough dvergr union</label>
-    <description>These people have lived here for decades or centuries, and have lost most of the technology that brought them to this world. They usually work with simple machinery and defend themselves with advanced gunpowder weapons.\n\nThey are concerned with the practical matters of trade, trust, and survival.\n\nThis particular group has a streak of barbarity in them.</description>
+    <description>A loose confederation of settlements primarily consisting of alcohol-loving dvergr. They're unruly and hard to please, but if you manage to win them over they can become powerful allies.\n\nDvergr originate from the mineral world Svartalfheim, where they have built vast underground cities powered by the planet's numerous magma upwellings.</description>
     <factionIconPath>Xyl/World/WorldObjects/Expanding/TownDvergr</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>

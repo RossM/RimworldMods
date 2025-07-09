@@ -4,7 +4,7 @@
   <FactionDef ParentName="TribeBase">
     <defName>XylTribeGentleNixie</defName>
     <label>gentle nixie tribe</label>
-    <description>These people have been here a very long time. Maybe their ancestors crashed here a thousand years ago. Maybe they survived some cataclysm that destroyed a technological civilization here. In any case, the tribals are mostly nomadic people who live off the land using primitive tools and weapons.\n\nDespite their apparent technological weakness, the tribals can be dangerous enemies and valuable friends because of their skill with low-tech warfare, their numbers, and their hardiness.\n\nThis particular tribe pursues a gentle way of life where they can. They are quite open to trade and alliances, even with strange peoples.</description>
+    <description>A peaceful tribe of beautiful aquatic nixies. This tribe is open to contact and trade with the dryskins. They prefer to make their homes near rivers and coastlines, but small bands sometimes travel far inlands.\n\nOriginally engineered for the world Atlantis, nixies are now found on many worlds. This planet has had them for thousands of years.</description>
     <xenotypeSet Inherit="False">
       <xenotypeChances>
         <XylNixie>999</XylNixie>

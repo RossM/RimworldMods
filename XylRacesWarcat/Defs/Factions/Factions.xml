@@ -4,7 +4,7 @@
   <FactionDef ParentName="TribeRoughBase">
     <defName>XylTribeCannibalWarcat</defName>
     <label>cannibal warcat tribe</label>
-    <description>These people have been here a very long time. Maybe their ancestors crashed here a thousand years ago. Maybe they survived some cataclysm that destroyed a technological civilization here. In any case, the tribals are mostly nomadic people who live off the land using primitive tools and weapons.\n\nDespite their apparent technological weakness, the tribals can be dangerous enemies because of their skill with low-tech warfare, their numbers, and their hardiness.\n\nThis particular tribe values warlike dominance; it may be difficult to turn them into an ally.</description>
+    <description>A loose confederation of roaming warcat hunting bands. Driven by their need for meat, they spread out across the planet and hunt whatever they can overpower, even other xenohumans. They are hard to handle but can potentially be reasoned with.\n\nWarcats are the result of military gene engineering gone wrong. It's unclear how they got to this planet, but they've been here for thousands of years, and are practically part of the ecosystem now.</description>
     <factionIconPath>World/WorldObjects/Expanding/VillageRough</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>
