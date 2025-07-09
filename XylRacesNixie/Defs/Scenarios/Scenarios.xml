@@ -4,9 +4,9 @@
   <ScenarioDef ParentName="ScenarioBase" MayRequire="Ludeon.RimWorld.Royalty">
     <defName>XylTheSiren</defName>
     <label>The Siren</label>
-    <description>TODO.</description>
+    <description>No one was ever quite sure what the cult believed. Their words were a little too smooth, their smiles a little too still. They spoke of voices from beyond the void, of unity, of dissolving into something greater. When the authorities came, they came hard: dropships, psychic dampeners, orbital jammers. In the aftermath, the cult was gone. Scattered. Burned. Forgotten. But you survived. You’ve come to this rimworld not to hide, exactly, but to begin again. To wait. To gather. The song is louder here, if you know how to listen.</description>
     <scenario>
-      <summary>One nixie with powerful non-combat psychic abilities.</summary>
+      <summary>One nixie with powerful non-combat psychic abilities. Very difficult.</summary>
       <parts>
 
         <!-- Config pages -->
@@ -24,12 +24,6 @@
           <chance>1</chance>
           <context>PlayerStarter</context>
           <xenotype>XylNixie</xenotype>
-        </li>
-
-        <!-- Starting techs -->
-        <li Class="ScenPart_StartingResearch">
-          <def>StartingResearch</def>
-          <project>GunTurrets</project>
         </li>
 
         <!-- Starting psychics -->
@@ -63,22 +57,17 @@
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
           <thingDef>Silver</thingDef>
-          <count>2000</count>
-        </li>
-        <li Class="ScenPart_StartingThing_Defined">
-          <def>StartingThing_Defined</def>
-          <thingDef>Gold</thingDef>
-          <count>30</count>
+          <count>1500</count>
         </li>
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
           <thingDef>MealSurvivalPack</thingDef>
-          <count>40</count>
+          <count>20</count>
         </li>
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
-          <thingDef>MedicineUltratech</thingDef>
-          <count>30</count>
+          <thingDef>MedicineIndustrial</thingDef>
+          <count>10</count>
         </li>
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
@@ -87,7 +76,12 @@
         </li>
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
-          <thingDef>Gun_ChargeRifle</thingDef>
+          <thingDef>Gun_AssaultRifle</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_Robe</thingDef>
+          <stuff>Hyperweave</stuff>
         </li>
         <li Class="ScenPart_StartingAnimal">
           <def>StartingAnimal</def>
@@ -112,7 +106,7 @@
         <!-- Game start dialog -->
         <li Class="ScenPart_GameStartDialog">
           <def>GameStartDialog</def>
-          <text>TODO.</text>
+          <text>You wake from cryptosleep as your pod rumbles through the atmosphere of the rimworld you've chosen for your exile. The restraints release. The hull groans. The air is thin and dry.\n\nThe song is loud here, louder than it has been in years. You can hear it even over the roar of re-entry. It welcomes you, or warns you. It's hard to tell.\n\nYou have work to do. Shelter. Supplies. Allies. You're alone for now. But you've done this before. You can do it again.</text>
           <closeSound>GameStartSting</closeSound>
         </li>
 
