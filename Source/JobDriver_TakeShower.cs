@@ -65,7 +65,7 @@ namespace XylRacesCore
             {
                 var comp = toil.actor.GetComp<CompPawn_RenderProperties>();
                 if (comp != null)
-                    comp.hideClothes = comp.hideHeadgear = true;
+                    comp.hideClothes = comp.hideHeadgear = false;
             });
             EffecterDef effecterDef = Defs.XylShowerSplash;
             toil.WithEffect(effecterDef, TargetIndex.A);
