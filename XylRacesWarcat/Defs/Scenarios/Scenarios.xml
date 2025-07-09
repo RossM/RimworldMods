@@ -16,6 +16,7 @@
         <li Class="ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes">
           <def>ConfigurePawnsXenotypes</def>
           <pawnChoiceCount>8</pawnChoiceCount>
+          <customSummary>Start with 3 warcats and 2 others.</customSummary>
           <xenotypeCounts>
             <li>
               <xenotype>XylWarcat</xenotype>

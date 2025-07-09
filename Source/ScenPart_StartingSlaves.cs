@@ -46,6 +46,20 @@ namespace XylRacesCore
         public override void GenerateIntoMap(Map map)
         {
             List<Pawn> pawns = map.mapPawns.FreeColonists;
+
+            // If the scenario is set up by xenotype, sort the pawn list so that they are ordered
+            // the way they were in the scenario. This is used by the Warcat Tribe scenario
+            // to ensure that the non-warcats are the slaves.
+            var xenotypeConfig = Find.Scenario.AllParts.OfType<ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes>().FirstOrDefault();
+            if (xenotypeConfig != null)
+            {
+                pawns = pawns.OrderBy(p =>
+                {
+                    int index = xenotypeConfig.xenotypeCounts.FindIndex(x => x.xenotype == p.genes?.Xenotype);
+                    return index == -1 ? xenotypeConfig.xenotypeCounts.Count : index;
+                }).ToList();
+            }
+
             for (int i = Math.Max(0, pawns.Count - count); i < pawns.Count; i++)
             {
                 var pawn = pawns[i];
