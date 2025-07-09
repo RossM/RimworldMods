@@ -24,7 +24,7 @@
               <requiredAtStart>true</requiredAtStart>
             </li>
             <li>
-              <xenotype>Baseliner</xenotype>
+              <xenotype MayRequire="Xylthixlm.Races.Bossaps">XylBossaps</xenotype>
               <count>2</count>
             </li>
           </xenotypeCounts>

@@ -14,19 +14,19 @@ namespace XylRacesCore
     {
         protected override void GenerateStartingPawns()
         {
+            foreach (var xenotypeCount in xenotypeCounts) 
+                xenotypeCount.xenotype ??= XenotypeDefOf.Baseliner;
+
             base.GenerateStartingPawns();
-
-            if (Find.GameInitData.startingAndOptionalPawns.Count >= pawnChoiceCount)
-                return;
-
-            // Make sure that the extra reserve pawns are an appropriate xenotype
-            int index = Find.GameInitData.startingAndOptionalPawns.Count;
-            var request = StartingPawnUtility.GetGenerationRequest(index);
-            request.ForcedXenotype = xenotypeCounts[xenotypeCounts.Count - 1].xenotype;
-            StartingPawnUtility.SetGenerationRequest(index, request);
 
             while (Find.GameInitData.startingAndOptionalPawns.Count < pawnChoiceCount)
             {
+                // Make sure that the extra reserve pawns are appropriate xenotypes
+                int index = Find.GameInitData.startingAndOptionalPawns.Count;
+                var request = StartingPawnUtility.GetGenerationRequest(index);
+                request.ForcedXenotype = xenotypeCounts.RandomElementByWeight(x => x.count).xenotype;
+                StartingPawnUtility.SetGenerationRequest(index, request);
+
                 StartingPawnUtility.AddNewPawn(index);
             }
         }
