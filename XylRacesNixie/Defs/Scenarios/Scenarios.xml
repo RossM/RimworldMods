@@ -4,7 +4,7 @@
   <ScenarioDef ParentName="ScenarioBase" MayRequire="Ludeon.RimWorld.Royalty">
     <defName>XylTheSiren</defName>
     <label>The Siren</label>
-    <description>No one was ever quite sure what the cult believed. Their words were a little too smooth, their smiles a little too still. They spoke of voices from beyond the void, of unity, of dissolving into something greater. When the authorities came, they came hard: dropships, psychic dampeners, orbital jammers. In the aftermath, the cult was gone. Scattered. Burned. Forgotten. But you survived. You’ve come to this rimworld not to hide, exactly, but to begin again. To wait. To gather. The song is louder here, if you know how to listen.</description>
+    <description>No one was ever quite sure what the cult believed. Their words were a little too smooth, their smiles a little too still. They spoke of voices from beyond the void, of unity, of dissolving into something greater. When the authorities came, they came hard: dropships, psychic dampeners, orbital jammers. In the aftermath, the cult was gone. Scattered. Burned. Forgotten. But you survived. You've come to this rimworld not to hide, exactly, but to begin again. To wait. To gather. The song is louder here, if you know how to listen.</description>
     <scenario>
       <summary>One nixie with powerful non-combat psychic abilities. Very difficult.</summary>
       <parts>
