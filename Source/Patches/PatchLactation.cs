@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -11,8 +10,6 @@ namespace XylRacesCore.Patches
     [HarmonyPatch]
     public static class PatchLactation
     {
-        public static HediffDef Hyperlactating = null;
-
         private static readonly InstructionMatcher Fixup = new()
         {
             Rules =

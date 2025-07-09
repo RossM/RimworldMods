@@ -1,15 +1,10 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
-using UnityEngine;
 using Verse;
 using Verse.AI;
 using XylRacesCore.Genes;
-using static UnityEngine.GraphicsBuffer;
 
 namespace XylRacesCore
 {
@@ -87,8 +82,8 @@ namespace XylRacesCore
             toil.tickIntervalAction = delegate (int delta)
             {
                 Pawn actor = toil.actor;
-                actor.skills.Learn(SkillDefOf.Animals, 0.13f * (float)delta);
-                gatherProgress += actor.GetStatValue(StatDefOf.AnimalGatherSpeed) * (float)delta;
+                actor.skills.Learn(SkillDefOf.Animals, 0.13f * delta);
+                gatherProgress += actor.GetStatValue(StatDefOf.AnimalGatherSpeed) * delta;
                 if (gatherProgress >= WorkTotal)
                 {
                     Gather(actor);

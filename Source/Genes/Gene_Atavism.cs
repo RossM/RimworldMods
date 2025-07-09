@@ -52,30 +52,30 @@ namespace XylRacesCore.Genes
 
         private bool IsXenogene => pawn.genes.Xenogenes.Contains(this);
 
-        private float GeneWeight(GeneDef def)
+        private float GeneWeight(GeneDef geneDef)
         {
-            if (def.biostatArc < DefExt.biostatArc.min || def.biostatArc > DefExt.biostatArc.max)
+            if (geneDef.biostatArc < DefExt.biostatArc.min || geneDef.biostatArc > DefExt.biostatArc.max)
                 return 0.0f;
-            if (def.biostatCpx < DefExt.biostatCpx.min || def.biostatCpx > DefExt.biostatCpx.max)
+            if (geneDef.biostatCpx < DefExt.biostatCpx.min || geneDef.biostatCpx > DefExt.biostatCpx.max)
                 return 0.0f;
-            if (def.biostatMet < DefExt.biostatMet.min || def.biostatMet > DefExt.biostatMet.max)
+            if (geneDef.biostatMet < DefExt.biostatMet.min || geneDef.biostatMet > DefExt.biostatMet.max)
                 return 0.0f;
 
             // No genes with requirements, unless they are met by the pawn's xenotype
-            if (def.prerequisite != null && !pawn.genes.Xenotype.AllGenes.Contains(def.prerequisite))
+            if (geneDef.prerequisite != null && !pawn.genes.Xenotype.AllGenes.Contains(geneDef.prerequisite))
                 return 0.0f;
 
             // No genes that conflict with genes in the pawn's xenotype
             foreach (var gene in pawn.genes.Xenotype.AllGenes)
             {
-                if (def == gene)
+                if (geneDef == gene)
                     return 0.0f;
-                if (def.exclusionTags != null && gene.exclusionTags != null &&
-                    def.exclusionTags.Union(gene.exclusionTags).Any())
+                if (geneDef.exclusionTags != null && gene.exclusionTags != null &&
+                    geneDef.exclusionTags.Union(gene.exclusionTags).Any())
                     return 0.0f;
             }
 
-            return def.selectionWeight;
+            return geneDef.selectionWeight;
         }
 
         public override void PostRemove()

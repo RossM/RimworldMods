@@ -1,9 +1,6 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
@@ -79,12 +76,11 @@ namespace XylRacesCore
         }
 
         [Unsaved()] 
-        private readonly List<IntVec3> tmpCells = new();
+        private readonly List<IntVec3> tmpCells = [];
 
         private List<IntVec3> AffectedCells(LocalTargetInfo target)
         {
             tmpCells.Clear();
-            Vector3 vector = Pawn.Position.ToVector3Shifted().Yto0();
             IntVec3 targetPosition = target.Cell.ClampInsideMap(Pawn.Map);
             if (Pawn.Position == targetPosition)
             {

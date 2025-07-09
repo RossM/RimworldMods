@@ -39,10 +39,7 @@ namespace XylRacesCore.Genes
             get
             {
                 List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
-                var extension = DefExt;
-                if (extension == null)
-                    return null;
-                return hediffs.FirstOrDefault(hediff => hediff.def == extension?.hediffDef);
+                return DefExt == null ? null : hediffs.FirstOrDefault(hediff => hediff.def == DefExt.hediffDef);
             }
         }
 

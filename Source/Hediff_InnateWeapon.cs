@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
@@ -39,7 +37,7 @@ namespace XylRacesCore
             var verbGiver = def.CompProps<HediffCompProperties_VerbGiver>();
             var verbs = verbGiver.verbs;
             var tools = verbGiver.tools;
-            ;
+            
             Pawn currentWeaponUser = pawn;
             IEnumerable<VerbUtility.VerbPropertiesWithSource> enumerable = from x in VerbUtility.GetAllVerbProperties(verbs, tools)
                 where x.verbProps.IsMeleeAttack
@@ -49,14 +47,9 @@ namespace XylRacesCore
             {
                 float damage = item.verbProps.AdjustedMeleeDamageAmount(item.tool, currentWeaponUser, req.Thing, null);
                 float cooldown = item.verbProps.AdjustedCooldown(item.tool, currentWeaponUser, req.Thing);
-                if (item.tool != null)
-                {
-                    stringBuilder.AppendLine($"  {item.tool.LabelCap} ({item.ToolCapacity.label})");
-                }
-                else
-                {
-                    stringBuilder.AppendLine($"  {"StatsReport_NonToolAttack".Translate()}:");
-                }
+                stringBuilder.AppendLine(item.tool != null
+                    ? $"  {item.tool.LabelCap} ({item.ToolCapacity.label})"
+                    : $"  {"StatsReport_NonToolAttack".Translate()}:");
                 stringBuilder.AppendLine($"    {damage:F1} {"DamageLower".Translate()}");
                 stringBuilder.AppendLine($"    {cooldown:F2} {"SecondsPerAttackLower".Translate()}");
             }

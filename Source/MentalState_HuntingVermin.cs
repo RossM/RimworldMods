@@ -1,13 +1,9 @@
 ﻿using JetBrains.Annotations;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 using Verse.AI;
-using XylRacesCore.Genes;
 
 namespace XylRacesCore
 {
@@ -16,9 +12,7 @@ namespace XylRacesCore
     {
         public Pawn target;
 
-        private const int NoLongerValidTargetCheckInterval = 120;
-
-        private static readonly List<Pawn> tmpTargets = new();
+        private static readonly List<Pawn> tmpTargets = [];
 
         public override void ExposeData()
         {
@@ -76,7 +70,7 @@ namespace XylRacesCore
 
         public bool IsTargetStillValidAndReachable()
         {
-            if (target != null && target.SpawnedParentOrMe != null && (!(target.SpawnedParentOrMe is Pawn) || target.SpawnedParentOrMe == target))
+            if (target is { SpawnedParentOrMe: not null } && (target.SpawnedParentOrMe is not Pawn || target.SpawnedParentOrMe == target))
             {
                 return pawn.CanReach(target.SpawnedParentOrMe, PathEndMode.Touch, Danger.Deadly, canBashDoors: true);
             }
@@ -104,7 +98,7 @@ namespace XylRacesCore
             {
                 return null;
             }
-            Pawn result = tmpTargets.OrderBy(p => pawn.Position.DistanceToSquared(-p.Position)).ThenBy(p => Rand.Value).FirstOrDefault();
+            Pawn result = tmpTargets.OrderBy(p => pawn.Position.DistanceToSquared(-p.Position)).ThenBy(_ => Rand.Value).FirstOrDefault();
             tmpTargets.Clear();
             return result;
         }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
@@ -15,7 +14,7 @@ namespace XylRacesCore.Patches
     {
         private static readonly FieldInfo statField = AccessTools.Field(typeof(StatWorker), "stat");
 
-        private static readonly InstructionMatcher Fixup_GetOffsetsAndFactorsExplanation = new InstructionMatcher()
+        private static readonly InstructionMatcher Fixup_GetOffsetsAndFactorsExplanation = new()
         {
             LocalTypes =
             {
@@ -143,7 +142,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        private static readonly InstructionMatcher Fixup_GetValueUnfinalized = new InstructionMatcher()
+        private static readonly InstructionMatcher Fixup_GetValueUnfinalized = new()
         {
             LocalTypes = 
             {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Xml;
 using JetBrains.Annotations;
 using Verse;
@@ -44,7 +40,7 @@ namespace XylRacesCore
 
         private XmlContainer value;
 
-        private Order order = Order.Prepend;
+        private readonly Order order = Order.Prepend;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {

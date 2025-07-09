@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
@@ -63,8 +60,8 @@ namespace XylRacesCore
             }
             if (levelOffset > 0)
             {
-                float num = Math.Min(levelOffset, mainPsylinkSource.def.maxSeverity - (float)mainPsylinkSource.level);
-                for (var i = 0; (float)i < num; i++)
+                float num = Math.Min(levelOffset, mainPsylinkSource.def.maxSeverity - mainPsylinkSource.level);
+                for (var i = 0; i < num; i++)
                 {
                     pawn.psychicEntropy?.Notify_GainedPsylink();
                 }

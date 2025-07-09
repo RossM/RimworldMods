@@ -1,21 +1,16 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 using Verse.AI;
-using XylRacesCore.Genes;
 
 namespace XylRacesCore
 {
     [UsedImplicitly]
     public class JobGiver_SatisfyDietDependency : ThinkNode_JobGiver
     {
-        private static readonly List<Hediff_DietDependency> tmpDietDependencies = new List<Hediff_DietDependency>();
+        private static readonly List<Hediff_DietDependency> tmpDietDependencies = [];
 
         public override float GetPriority(Pawn pawn)
         {

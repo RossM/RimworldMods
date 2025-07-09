@@ -8,6 +8,11 @@ namespace XylRacesCore.Genes
     public class GeneDefExtension_GenderRatio : DefModExtension
     {
         public float femaleChance = 0.5f;
+
+        public Gender GetGender()
+        {
+            return Rand.Chance(femaleChance) ? Gender.Female : Gender.Male;
+        }
     }
 
     [UsedImplicitly]
@@ -16,11 +21,6 @@ namespace XylRacesCore.Genes
         public GeneDefExtension_GenderRatio DefExt => def.GetModExtension<GeneDefExtension_GenderRatio>();
 
         public override bool Active => base.Active && pawn.genes.HasEndogene(def);
-
-        public Gender GetGender()
-        {
-            return Rand.Chance(DefExt.femaleChance) ? Gender.Female : Gender.Male;
-        }
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {

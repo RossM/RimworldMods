@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
-using static System.Collections.Specialized.BitVector32;
 
 namespace XylRacesCore
 {
@@ -82,7 +78,7 @@ namespace XylRacesCore
         private List<Pawn> GeneratePawns(Ideo ideo)
         {
             int count = DefExt.pawnsCount.RandomInRange;
-            List<Pawn> pawns = new();
+            List<Pawn> pawns = [];
 
             for (int i = 0; i < count; i++)
             {

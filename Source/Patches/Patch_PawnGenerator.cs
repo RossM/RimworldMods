@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -59,15 +58,13 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                var gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
-                           request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
-                           request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
-                           xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
+                GeneDef gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
+                               request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
+                               request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
+                               xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
                 if (gene != null)
                 {
-                    pawn.gender = Rand.Chance(gene.GetModExtension<GeneDefExtension_GenderRatio>().femaleChance)
-                        ? Gender.Female
-                        : Gender.Male;
+                    pawn.gender = gene.GetModExtension<GeneDefExtension_GenderRatio>().GetGender();
                 }
             }
         }

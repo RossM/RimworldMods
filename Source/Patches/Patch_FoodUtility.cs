@@ -2,7 +2,6 @@
 using JetBrains.Annotations;
 using RimWorld;
 using System.Collections.Generic;
-using System.Reflection;
 using Verse;
 using XylRacesCore.Genes;
 using static RimWorld.FoodUtility;

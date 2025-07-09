@@ -1,9 +1,6 @@
 using JetBrains.Annotations;
 using RimWorld;
-using System.Linq;
-using System.Reflection;
 using Verse;
-using static RimWorld.PsychicRitualRoleDef;
 
 namespace XylRacesCore;
 

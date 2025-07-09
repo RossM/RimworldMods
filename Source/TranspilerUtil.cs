@@ -1,15 +1,9 @@
 ﻿using HarmonyLib;
-using Mono.Cecil.Cil;
-using RimWorld;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 using OpCodes = System.Reflection.Emit.OpCodes;
 
@@ -34,8 +28,8 @@ namespace XylRacesCore
             public CodeInstruction[] Output;
         }
 
-        public List<Rule> Rules = new();
-        public List<Type> LocalTypes = new();
+        public List<Rule> Rules = [];
+        public List<Type> LocalTypes = [];
 
         private class MatchData
         {
@@ -180,8 +174,6 @@ namespace XylRacesCore
                 reason = "No matches";
                 return false;
             }
-
-            var declaredLocals = new List<LocalBuilder>(LocalTypes.Count);
 
             // Make the substitutions
             var outInstructions = new List<CodeInstruction>();
