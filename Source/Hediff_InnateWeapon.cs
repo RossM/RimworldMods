@@ -51,14 +51,14 @@ namespace XylRacesCore
                 float cooldown = item.verbProps.AdjustedCooldown(item.tool, currentWeaponUser, req.Thing);
                 if (item.tool != null)
                 {
-                    stringBuilder.AppendLine(string.Format("  {0} ({1})", item.tool.LabelCap, item.ToolCapacity.label));
+                    stringBuilder.AppendLine($"  {item.tool.LabelCap} ({item.ToolCapacity.label})");
                 }
                 else
                 {
-                    stringBuilder.AppendLine(string.Format("  {0}:", "StatsReport_NonToolAttack".Translate()));
+                    stringBuilder.AppendLine($"  {"StatsReport_NonToolAttack".Translate()}:");
                 }
-                stringBuilder.AppendLine(string.Format("    {0:F1} {1}", damage, "DamageLower".Translate()));
-                stringBuilder.AppendLine(string.Format("    {0:F2} {1}", cooldown, "SecondsPerAttackLower".Translate()));
+                stringBuilder.AppendLine($"    {damage:F1} {"DamageLower".Translate()}");
+                stringBuilder.AppendLine($"    {cooldown:F2} {"SecondsPerAttackLower".Translate()}");
             }
             return stringBuilder.ToString();
         }

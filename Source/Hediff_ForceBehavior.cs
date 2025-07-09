@@ -43,7 +43,7 @@ namespace XylRacesCore
             if (DefExt.iconPath != null)
             {
                 mote = MoteMaker.MakeThoughtBubble(pawn, DefExt.iconPath, maintain: true);
-                Log.Message(string.Format("Mote: {0}", mote));
+                Log.Message($"Mote: {mote}");
             }
         }
 

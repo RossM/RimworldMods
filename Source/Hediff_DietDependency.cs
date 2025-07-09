@@ -58,7 +58,7 @@ namespace XylRacesCore
             Gene_DietDependency gene = dependency.Gene;
             if (gene == null)
             {
-                Log.Warning(string.Format("FoodValidator: Couldn't find corresponding gene for {0}", dependency));
+                Log.Warning($"FoodValidator: Couldn't find corresponding gene for {dependency}");
                 return false;
             }
 

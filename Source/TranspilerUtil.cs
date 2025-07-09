@@ -67,7 +67,7 @@ namespace XylRacesCore
                         var patternInst = rule.Pattern[patternIndex];
 
                         if (debug)
-                            Log.Message(string.Format("COMPARE {0} : {1}", patternInst, inst));
+                            Log.Message($"COMPARE {patternInst} : {inst}");
 
                         // For a load or store, map the local indexes in the pattern to the actual local indexes used
                         // in the function
@@ -146,7 +146,7 @@ namespace XylRacesCore
                         privateMap = tempLocalIndexMap,
                     };
                     if (debug)
-                        Log.Message(string.Format("MATCH #{0} {1}-{2}", ruleIndex, matchData.start, matchData.end));
+                        Log.Message($"MATCH #{ruleIndex} {matchData.start}-{matchData.end}");
 
                     matches.Add(matchData);
                     if (rule.SaveLocals)
@@ -158,7 +158,7 @@ namespace XylRacesCore
 
                 if (matchCount < rule.Min)
                 {
-                    reason = string.Format("Not enough matches found for substitution #{0}", ruleIndex);
+                    reason = $"Not enough matches found for substitution #{ruleIndex}";
                     return false;
                 }
             }
@@ -195,7 +195,7 @@ namespace XylRacesCore
                         {
                             outInstructions.Add(instructions[i]);
                             if (debug)
-                                Log.Message(string.Format("COPYMATCH {0}", outInstructions[outInstructions.Count - 1]));
+                                Log.Message($"COPYMATCH {outInstructions[outInstructions.Count - 1]}");
                         }
                     }
 
@@ -219,7 +219,7 @@ namespace XylRacesCore
                             }
                             else
                             {
-                                reason = string.Format("Replacement pattern uses unknown local index #{0}", localIndex);
+                                reason = $"Replacement pattern uses unknown local index #{localIndex}";
                                 return false;
                             }
 
@@ -241,7 +241,7 @@ namespace XylRacesCore
                             }
                             else
                             {
-                                reason = string.Format("Replacement pattern uses unknown local index #{0}", localIndex);
+                                reason = $"Replacement pattern uses unknown local index #{localIndex}";
                                 return false;
                             }
 
@@ -251,7 +251,7 @@ namespace XylRacesCore
                             outInstructions.Add(replaceInst);
 
                         if (debug)
-                            Log.Message(string.Format("EMIT {0}", outInstructions[outInstructions.Count - 1]));
+                            Log.Message($"EMIT {outInstructions[outInstructions.Count - 1]}");
                     }
 
                     if (match.rule.Mode == OutputMode.InsertBefore)
@@ -260,7 +260,7 @@ namespace XylRacesCore
                         {
                             outInstructions.Add(instructions[i]);
                             if (debug)
-                                Log.Message(string.Format("COPYMATCH {0}", outInstructions[outInstructions.Count - 1]));
+                                Log.Message($"COPYMATCH {outInstructions[outInstructions.Count - 1]}");
                         }
                     }
 
@@ -269,7 +269,7 @@ namespace XylRacesCore
                 {
                     outInstructions.Add(instructions[instructionIndex]);
                     if (debug)
-                        Log.Message(string.Format("COPY {0}", outInstructions[outInstructions.Count - 1]));
+                        Log.Message($"COPY {outInstructions[outInstructions.Count - 1]}");
 
                 }
             }
