@@ -10,10 +10,6 @@ namespace XylRacesCore
     {
         public override Graphic GraphicFor(Pawn pawn)
         {
-            if (!ModLister.CheckBiotech("Fur"))
-            {
-                return null;
-            }
             if (pawn.story?.furDef == null)
             {
                 return null;
