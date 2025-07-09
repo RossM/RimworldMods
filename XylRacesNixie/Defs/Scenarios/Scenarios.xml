@@ -83,6 +83,11 @@
           <thingDef>Apparel_Robe</thingDef>
           <stuff>Hyperweave</stuff>
         </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_HatHood</thingDef>
+          <stuff>Hyperweave</stuff>
+        </li>
         <li Class="ScenPart_StartingAnimal">
           <def>StartingAnimal</def>
           <count>1</count>

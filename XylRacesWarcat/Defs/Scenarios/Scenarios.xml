@@ -4,7 +4,7 @@
   <ScenarioDef ParentName="ScenarioBase">
     <defName>XylWarcatTribe</defName>
     <label>Warcat Tribe</label>
-    <description>TODO.</description>
+    <description>You were cast out from the pride. No one said exactly why, not to your face. You left with two slaves and a few supplies, and set out to find a new home in land no one else wanted. The old tribe expects you to die quickly. Maybe they're right. But you're still warcat: strong, fast, proud. The hunt is in your blood. The hunger won't wait.</description>
     <scenario>
       <summary>Three warcats and two slaves.</summary>
       <playerFaction>
@@ -74,7 +74,7 @@
         <!-- Game start dialog -->
         <li Class="ScenPart_GameStartDialog">
           <def>GameStartDialog</def>
-          <text>TODO.</text>
+          <text>You were cast out. The pride didn't say much, and you didn't ask. No one tried to stop you. You took what you could carry and walked away, claws clean, heads high.\n\nThe land here is unfamiliar, but it will do. Shelter first. Then food. Meat. The hunger doesn't wait long. You'll survive together, or you won't. This is your territory now, if you can hold it.</text>
           <closeSound>GameStartSting</closeSound>
         </li>
 
