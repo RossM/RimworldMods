@@ -4,7 +4,7 @@
   <FactionDef ParentName="OutlanderRoughBase">
     <defName>XylOutlanderRoughDvergr</defName>
     <label>rough dvergr union</label>
-    <description>A loose confederation of settlements primarily consisting of alcohol-loving dvergr. They're unruly and hard to please, but if you manage to win them over they can become powerful allies.\n\nDvergr originate from the mineral world Svartalfheim, where they have built vast underground cities powered by the planet's numerous magma upwellings.</description>
+    <description>A loose confederation of settlements primarily consisting of alcohol-loving dvergr. They're unruly and hard to please, but if you manage to win them over they can become powerful allies.\n\nDvergr originate from the mineral world Svartalfheim, where they've built vast underground cities powered by the planet's many magma upwellings.</description>
     <factionIconPath>Xyl/World/WorldObjects/Expanding/TownDvergr</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>

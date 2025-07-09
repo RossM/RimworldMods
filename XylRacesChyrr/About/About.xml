@@ -4,7 +4,7 @@
   <packageId>Xylthixlm.Races.Chyrr</packageId>
   <name>Posthuman Drift: Chyrr Xenotype</name>
   <author>Xylthixlm</author>
-  <description>Adds the Chyrr xenotype and associated genes.\n\nChyrr are blind, flying mystics native to steaming jungles and sun-blasted deserts. They perceive the world through sound and low-level psychic sensing, aided by a hazy thread of precognition that lets them act just before things happen. Though physically fragile, they defend themselves with a keening cry that can leave foes reeling.</description>
+  <description>Adds the Chyrr xenotype and associated genes.\n\nChyrr are blind, flying mystics native to steaming jungles and sun-blasted deserts. They perceive the world through sound and low-level psychic sensing, aided by a hazy thread of precognition that lets them act just before things happen. Though physically fragile, they defend themselves with a keening cry that leaves foes reeling.</description>
   <modIconPath>Xyl/UI/Icons/Xenotypes/Chyrr_small</modIconPath>
   <supportedVersions>
     <li>1.6</li>

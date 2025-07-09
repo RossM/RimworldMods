@@ -74,7 +74,7 @@
         <!-- Game start dialog -->
         <li Class="ScenPart_GameStartDialog">
           <def>GameStartDialog</def>
-          <text>You were cast out. The pride didn't say much, and you didn't ask. No one tried to stop you. You took what you could carry and walked away, claws clean, heads high.\n\nThe land here is unfamiliar, but it will do. Shelter first. Then food. Meat. The hunger doesn't wait long. You'll survive together, or you won't. This is your territory now, if you can hold it.</text>
+          <text>You were cast out. The pride didn't say much, and you didn't ask. No one tried to stop you. You took what you could carry and walked away, claws clean, heads high.\n\nThe land here is unfamiliar, but it'll do. Shelter first. Then food. Meat. The hunger doesn't wait long. You'll survive together, or you won't. This is your territory now... if you can hold it.</text>
           <closeSound>GameStartSting</closeSound>
         </li>
 

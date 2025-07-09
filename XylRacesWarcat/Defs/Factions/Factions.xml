@@ -4,7 +4,7 @@
   <FactionDef ParentName="TribeRoughBase">
     <defName>XylTribeCannibalWarcat</defName>
     <label>cannibal warcat tribe</label>
-    <description>A loose confederation of roaming warcat hunting bands. Driven by their need for meat, they spread out across the planet and hunt whatever they can overpower, even other xenohumans. They are hard to handle but can potentially be reasoned with.\n\nWarcats are the result of military gene engineering gone wrong. It's unclear how they got to this planet, but they've been here for thousands of years, and are practically part of the ecosystem now.</description>
+    <description>A loose confederation of roaming warcat hunting bands. Driven by their need for meat, they range across the planet and hunt whatever they can overpower, even other xenohumans. They are difficult to handle but can potentially be reasoned with.\n\nWarcats are the result of military gene-engineering gone wrong. No one's sure how they reached this planet, but they've been here for thousands of years, and now they're part of the ecosystem.</description>
     <factionIconPath>World/WorldObjects/Expanding/VillageRough</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>

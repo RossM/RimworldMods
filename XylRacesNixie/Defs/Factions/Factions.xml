@@ -4,7 +4,7 @@
   <FactionDef ParentName="TribeBase">
     <defName>XylTribeGentleNixie</defName>
     <label>gentle nixie tribe</label>
-    <description>A peaceful tribe of beautiful aquatic nixies. This tribe is open to contact and trade with the dryskins. They prefer to make their homes near rivers and coastlines, but small bands sometimes travel far inlands.\n\nOriginally engineered for the world Atlantis, nixies are now found on many worlds. This planet has had them for thousands of years.</description>
+    <description>A peaceful tribe of beautiful aquatic nixies. This particular tribe is open to contact and trade with the dryskins. They prefer to make their homes near rivers and coastlines, but small bands sometimes travel far inlands.\n\nOriginally engineered for the world Atlantis, nixies are now found on many planets. This one has had them for thousands of years.</description>
     <xenotypeSet Inherit="False">
       <xenotypeChances>
         <XylNixie>999</XylNixie>

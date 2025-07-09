@@ -4,7 +4,7 @@
   <FactionDef ParentName="TribeSavageBase">
     <defName>XylTribeSavageTrog</defName>
     <label>savage trog tribe</label>
-    <description>A collection of warlike xenohuman tribes mainly consisting of hideous trogs. They are belligerent and refuse to deal with outsiders. They may be primitive, but their ability to tame and control giant insects makes them a serious threat.\n\nTrogs are found across the rimworlds, the mutated descendants of interbreeding between many different xenohuman races in barely survivable conditions. What they lack in intelligence they make up for in strength and tenacity.</description>
+    <description>A collection of warlike xenohuman tribes dominated by hideous trogs. Belligerent and insular, they refuse all dealings with outsiders. They may be primitive, but their ability to tame and control giant insects makes them a serious threat.\n\nTrogs are found across the rimworlds, the mutated descendants of interbreeding between countless xenohuman lineages in barely survivable conditions. What they lack in intelligence, they make up for in brute strength and sheer tenacity.</description>
     <factionIconPath>World/WorldObjects/Expanding/VillageSavage</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>

@@ -6,7 +6,7 @@
     <label>Dvergr Fortress</label>
     <description>Seven dvergr, a drop pod full of raw fungus and beer, and a rimworld laced with hidden veins of gold and plasteel. You’ve heard of worse starts. Not many, but some.\n\nYou didn't come here to explore or escape. You came to mine, to build, and maybe, if the alcohol holds out, to create something worth remembering. The fungus is barely edible. The days are long. The tantrums will come. But the stone is waiting.</description>
     <scenario>
-      <summary>Seven dvergr with plenty of raw fungus and beer. Strike the earth!</summary>
+      <summary>Seven dvergr, plenty of raw fungus and beer. Strike the earth!</summary>
       <parts>
 
         <!-- Config pages -->
@@ -130,7 +130,7 @@
         <!-- Game start dialog -->
         <li Class="ScenPart_GameStartDialog">
           <def>GameStartDialog</def>
-          <text>You have arrived. After the long journey across the stars from Svartalfheim, you've been dropped onto your target world. The seven of you have tools, fungus, and beer enough to get started.\n\nNow is the time to establish a stable food source and delve secure lodgings, ere the wargs get hungry. A new chapter of dvergr history begins here. Strike the earth!</text>
+          <text>You have arrived. After the long journey across the stars from Svartalfheim, you've been dropped onto your target world. The seven of you have tools, fungus, and beer enough to get started.\n\nNow is the time to secure a food source and carve out lodgings, ere the wargs get hungry. A new chapter of dvergr history begins here. Strike the earth!</text>
           <closeSound>GameStartSting</closeSound>
         </li>
 

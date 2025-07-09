@@ -111,7 +111,7 @@
         <!-- Game start dialog -->
         <li Class="ScenPart_GameStartDialog">
           <def>GameStartDialog</def>
-          <text>You wake from cryptosleep as your pod rumbles through the atmosphere of the rimworld you've chosen for your exile. The restraints release. The hull groans. The air is thin and dry.\n\nThe song is loud here, louder than it has been in years. You can hear it even over the roar of re-entry. It welcomes you, or warns you. It's hard to tell.\n\nYou have work to do. Shelter. Supplies. Allies. You're alone for now. But you've done this before. You can do it again.</text>
+          <text>You wake from cryptosleep as your pod tears through the rimworld's upper atmosphere. The restraints release. The hull groans. The air is thin and dry.\n\nThe song is loud here, louder than it has been in years. You can hear it even over the roar of re-entry. It welcomes you... or warns you. Hard to say.\n\nYou have work to do. Shelter. Supplies. Allies. You're alone for now. But you've done this before. You can do it again.</text>
           <closeSound>GameStartSting</closeSound>
         </li>
 
