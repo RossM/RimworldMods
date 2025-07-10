@@ -100,6 +100,13 @@ namespace XylRacesCore
                 {
                     Target.jobs.EndCurrentJob(JobCondition.InterruptForced);
                 }
+
+                var comp = Target?.GetComp<CompPawn_RenderProperties>();
+                if (comp != null)
+                {
+                    comp.job = null;
+                    comp.hideClothes = comp.hideHeadgear = false;
+                }
             });
             toil.FailOnDespawnedOrNull(TargetIndex.A);
             toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
