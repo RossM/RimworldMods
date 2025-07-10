@@ -61,6 +61,7 @@ namespace XylRacesCore
             stringBuilder.AppendLine(
                 $"   {"CurrentSuppression".Translate()} ({need.CurLevelPercentage.ToStringPercent()}): {CurrentFallRateBasedOnSuppression(need.CurLevelPercentage).ToStringPercent()}");
             GetOffsetsAndFactorsExplanation(req, stringBuilder, baseValueFor);
+            GetAdditionalOffsetsAndFactorsExplanation(req, ToStringNumberSense.Factor, stringBuilder);
             return stringBuilder.ToString();
         }
     }

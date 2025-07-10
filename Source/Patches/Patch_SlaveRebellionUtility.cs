@@ -63,7 +63,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_GetSlaveRebellionMtbCalculationExplanation.MatchAndReplace(ref instructionsList, generator, debug: true);
+            Fixup_GetSlaveRebellionMtbCalculationExplanation.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 
