@@ -35,7 +35,7 @@ namespace XylRacesCore.Patches
             {
                 if (dinfo.Instigator is Pawn instigator)
                 {
-                    foreach (var listener in instigator.AnythingOfType<INotifyPawnDamagedThing>())
+                    foreach (var listener in instigator.EverythingOfType<INotifyPawnDamagedThing>())
                     {
                         listener.Notify_PawnDamagedThing(__instance, dinfo, __result);
                     }
@@ -45,7 +45,7 @@ namespace XylRacesCore.Patches
                     if (instigator.playerSettings?.Master != null)
                     {
                         foreach (var listener in instigator.playerSettings.Master
-                                     .AnythingOfType<INotifyPawnDamagedThing>())
+                                     .EverythingOfType<INotifyPawnDamagedThing>())
                         {
                             listener.Notify_PawnDamagedThing(__instance, dinfo, __result);
                         }
@@ -54,7 +54,7 @@ namespace XylRacesCore.Patches
 
                 if (__instance is Pawn target)
                 {
-                    foreach (var listener in target.AnythingOfType<INotifyDamageTaken>())
+                    foreach (var listener in target.EverythingOfType<INotifyDamageTaken>())
                     {
                         listener.Notify_DamageTaken(dinfo, __result);
                     }

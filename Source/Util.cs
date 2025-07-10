@@ -40,7 +40,7 @@ namespace XylRacesCore
             return pawn.genes?.GenesListForReading.OfType<T>() ?? Enumerable.Empty<T>();
         }
 
-        public static IEnumerable<T> AnythingOfType<T>(this Pawn pawn) where T : class
+        public static IEnumerable<T> EverythingOfType<T>(this Pawn pawn) where T : class
         {
             if (pawn.genes != null)
             {

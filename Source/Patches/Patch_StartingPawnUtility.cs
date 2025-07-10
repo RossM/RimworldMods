@@ -50,7 +50,7 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                foreach (var startingItemSource in pawn.AnythingOfType<IStartingItemSource>())
+                foreach (var startingItemSource in pawn.EverythingOfType<IStartingItemSource>())
                 {
                     if (startingItemSource.GetStartingItem() is not { } item)
                         continue;
