@@ -2,7 +2,7 @@
 <ModMetaData>
 
   <packageId>Xylthixlm.Races.Core</packageId>
-  <name>Posthuman Drift: Core Mod</name>
+  <name>Posthuman Drift: Core Mod [beta v0.5.1]</name>
   <author>Xylthixlm</author>
   <description>Core mod for the Posthuman Drift series, which includes code and assets common to all the mods. This does nothing on its own; install the individual xenotype mods to use their content.</description>
   <supportedVersions>

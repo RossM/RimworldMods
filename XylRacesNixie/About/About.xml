@@ -2,9 +2,21 @@
 <ModMetaData>
 
   <packageId>Xylthixlm.Races.Nixie</packageId>
-  <name>Posthuman Drift: Nixie Xenotype</name>
+  <name>Posthuman Drift: Nixie Xenotype [beta v0.5]</name>
   <author>Xylthixlm</author>
-  <description>Adds the Nixie xenotype and associated genes.\n\nNixies were made for ocean worlds, but they're more than just fish people. They're beautiful in form, fluid in movement, and graceful in speech, with an innate psychic pull that draws others in whether they mean to or not. On the rim, they live in scattered river clans and coastal camps, half-wild and half-divine. They may be pretty, but their scales are tougher than they look—and they've lured more than one raider into a watery grave.</description>
+  <description>
+    Adds the Nixie xenotype and associated genes.
+
+    Nixies were made for ocean worlds, but they're more than just fish people. They're beautiful in form, fluid in movement, and graceful in speech, with an innate psychic pull that draws others in whether they mean to or not. On the rim, they live in scattered river clans and coastal camps, half-wild and half-divine. They may be pretty, but their scales are tougher than they look—and they've lured more than one raider into a watery grave.
+
+    This mod adds one new xenotype, 4 new genes (one cosmetic), a new faction, and a starting scenario.
+
+    [list]
+    [*] [b]Aquatic:[/b] With webbed hands and feet and tough scales, Nixies are at home in the water. But there's a downside: if they don't keep their skin wet, it becomes dry and itchy, severely impacting their mood. Set up near a pond for them to soak in, or build their unique shower building for a more convenient way to keep them happy.
+    [*] [b]Natural psycasters:[/b] Not only are Nixies innately psychically sensitive, they also get the Beckon psycast for free (Royalty DLC required). Lure your enemies into the water and swim circles around them.
+    [*] [b]The Siren:[/b] A difficult starting scenario. One Nixie who starts out with three psylink levels and four free psycasts - but none of them are useful in combat. Will you survive, or will your bones return to the deep?
+    [/list]
+  </description>
   <modIconPath>Xyl/UI/Icons/Xenotypes/Nixie_small</modIconPath>
   <supportedVersions>
     <li>1.6</li>

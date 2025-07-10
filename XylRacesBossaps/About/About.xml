@@ -2,9 +2,22 @@
 <ModMetaData>
 
   <packageId>Xylthixlm.Races.Bossaps</packageId>
-  <name>Posthuman Drift: Bossaps Xenotype</name>
+  <name>Posthuman Drift: Bossaps Xenotype [beta v0.5]</name>
   <author>Xylthixlm</author>
-  <description>Adds the Bossaps xenotype and associated genes.\n\nBossaps were engineered as sentient livestock by the gene-artisans of a glitterworld best left forgotten. When things are peaceful they are calm and mild-mannered. But when they're hurt, instinct takes over, and they charge their enemies like a raging bull.</description>
+  <description>
+    Adds the Bossaps xenotype and associated genes.
+
+    Bossaps were engineered as sentient livestock by the gene-artisans of a glitterworld best left forgotten. When things are peaceful they are calm and mild-mannered. But when they're hurt, instinct takes over, and they charge their enemies like a raging bull.
+
+    This mod includes one new xenotype and 12 new genes (1 cosmetic).
+
+    [list]
+    [*] [b]Herbivores:[/b] Bossaps's unique stomachs allow them to get full nutrition from raw plants, but at the price of getting less nutrition from meat - including cooked meals containing meat.
+    [*] [b]Docile...[/b] Engineered to be easy to control, Bossaps are inherently calm, and resist much less than other xenotypes as prisoners or slaves. They also have messed-up pain senses that give them a guaranteed Masochist trait.
+    [*] [b]... Until provoked:[/b] They're only docile on the surface, though. Their horns can deal serious damage in melee, and when injured they may enter a berserk state where they feel almost no pain and won't stop fighting until all their enemies are down - or they are.
+    [*] [b]Milk:[/b] Milk? Milk. Enough said.
+    [/list]
+  </description>
   <modIconPath>Xyl/UI/Icons/Xenotypes/Bossaps_small</modIconPath>
   <supportedVersions>
     <li>1.6</li>

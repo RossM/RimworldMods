@@ -2,9 +2,21 @@
 <ModMetaData>
 
   <packageId>Xylthixlm.Races.Warcat</packageId>
-  <name>Posthuman Drift: Warcat Xenotype</name>
+  <name>Posthuman Drift: Warcat Xenotype [beta v0.5]</name>
   <author>Xylthixlm</author>
-  <description>Adds the Warcat xenotype and associated genes.\n\nThese graceful predators were forged in military gene-vats: part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on raw meat to survive. Now they roam the rimworlds in tight-knit clans, hunting anything they can bring down—even other xenohumans.</description>
+  <description>
+    Adds the Warcat xenotype and associated genes.
+
+    These graceful predators were forged in military gene-vats: part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on raw meat to survive. Now they roam the rimworlds in tight-knit clans, hunting anything they can bring down—even other xenohumans.
+
+    This mod includes one new xenotype, 8 new genes (2 cosmetic), a new faction, and a starting scenario.
+
+    [list]
+    [*] [b]Melee specialists:[/b] Retractable claws, a guaranteed Nimble trait, and a speed-boosting Feral Rage ability make Warcats  great in melee.
+    [*] [b]Meat dependence:[/b] Warcats need to regularly eat raw meat, or they'll suffer increasingly severe penalties and eventually coma and death.
+    [*] [b]Feline traits:[/b] One minute they're happy and relaxed, and the next minute they're mad for no reason at all. But don't worry, they'll work off that anger by dropping whatever they're doing to hunt and kill small animals. Yes, they're cats.
+    [/list]
+  </description>
   <modIconPath>Xyl/UI/Icons/Xenotypes/Warcat_small</modIconPath>
   <supportedVersions>
     <li>1.6</li>

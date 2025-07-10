@@ -2,9 +2,21 @@
 <ModMetaData>
 
   <packageId>Xylthixlm.Races.Dvergr</packageId>
-  <name>Posthuman Drift: Dvergr Xenotype</name>
+  <name>Posthuman Drift: Dvergr Xenotype [beta v0.5]</name>
   <author>Xylthixlm</author>
-  <description>Adds the Dvergr xenotype and associated genes.\n\nDvergr hail from craggy, mineral-rich worlds where most things worth doing happen underground. Short and stoic, they're built for labor, not conversation—tireless workers who'd rather break rock than make small talk. Raw fungus keeps them alive, though they hate the taste, and they need alcohol to get them through the working day. Smiles are rare, rest rarer—and now and then, after a long silence, one of them makes something no one else could.</description>
+  <description>
+    Adds the Dvergr xenotype and associated genes.
+
+    Dvergr hail from craggy, mineral-rich worlds where most things worth doing happen underground. Short and stoic, they're built for labor, not conversation—tireless workers who'd rather break rock than make small talk. Raw fungus keeps them alive, though they hate the taste, and they need alcohol to get them through the working day. Smiles are rare, rest rarer—and now and then, after a long silence, one of them makes something no one else could.
+
+    This mod adds one new xenotype, 5 new genes (one cosmetic), a new faction, and a new starting scenario.
+
+    [list]
+    [*] [b]Industrious:[/b] Dvergr are not only skilled at construction, mining, and crafting, they also get a global work speed bonus for even better productivity.
+    [*] [b]Grumpy:[/b] All that work hasn't improved the Dvergr personality. They come with a guaranteed Tortured Artist trait. I hope you like tantrums.
+    [*] [b]Alcoholic:[/b] They need beer to get them through the working day. In fact, they literally die without it. But at least they have the unique mushroom still building that can produce beer from fungus, to make things a little easier. A little.
+    [*] [b]Dvergr Fortress:[/b] Can you survive starting with seven hard-to-please dwarves and a cartload of raw fungus and beer? Probably. Strike the earth!
+  </description>
   <modIconPath>Xyl/UI/Icons/Xenotypes/Dvergr_small</modIconPath>
   <supportedVersions>
     <li>1.6</li>
