@@ -48,7 +48,7 @@ namespace XylRacesCore
             if (terrain.HasTag("WaterMarshy") && pawn.needs?.TryGetNeed<Need_Wetness>() is { CurCategory: >= WetnessCategory.Neutral })
                 return false;
 
-            return Need_Wetness.GetWetness(pawn.Position, pawn.Map) >= 0.5f;
+            return Need_Wetness.GetWetness(x, pawn.Map) >= 0.5f;
         }
 
 
