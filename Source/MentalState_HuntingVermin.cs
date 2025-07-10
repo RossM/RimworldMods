@@ -37,8 +37,16 @@ namespace XylRacesCore
             
             if (target is { Dead: true })
             {
-                if (pawn.CurJob.def != JobDefOf.AttackMelee && pawn.CurJob.def != JobDefOf.Ingest)
+                if (pawn.CurJob.def == JobDefOf.AttackMelee || pawn.CurJob.def == JobDefOf.Ingest) 
+                    return;
+
+                if (!pawn.health.hediffSet.hediffs.Any(hediff => hediff is Hediff_DietDependency { ShouldSatisfy: true }))
                     RecoverFromState();
+                else if (Rand.Chance(0.2f))
+                    RecoverFromState();
+                else if (!TryFindNewTarget())
+                    RecoverFromState();
+
                 return;
             }
 
