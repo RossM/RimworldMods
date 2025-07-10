@@ -34,8 +34,8 @@ namespace XylRacesCore.Patches
                     [
                         // Duplicate 'pawn'
                         new CodeInstruction(OpCodes.Dup),
-                        // Load 'request'
-                        CodeInstruction.LoadArgument(0),
+                        // Load 'ref request'
+                        CodeInstruction.LoadArgument(0), 
                         // Load 'xenotype'
                         new CodeInstruction(OpCodes.Ldloc_S, 4),
                         // Call our fixup
@@ -58,14 +58,17 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
+                if (request.FixedGender != null)
+                    return;
+
                 GeneDef gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
                                request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
                                request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
                                xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
-                if (gene != null)
-                {
-                    pawn.gender = gene.GetModExtension<GeneDefExtension_GenderRatio>().GetGender();
-                }
+                if (gene == null) 
+                    return;
+
+                pawn.gender = gene.GetModExtension<GeneDefExtension_GenderRatio>().GetGender();
             }
         }
 
