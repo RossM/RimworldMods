@@ -274,9 +274,9 @@ namespace XylRacesCore
             return true;
         }
 
-        public void MatchAndReplace(ref List<CodeInstruction> instructionsList, ILGenerator generator = null, [CallerMemberName] string methodName = null)
+        public void MatchAndReplace(ref List<CodeInstruction> instructionsList, ILGenerator generator = null, [CallerMemberName] string methodName = null, bool debug = false)
         {
-            if (!TryMatchAndReplace(ref instructionsList, out string reason, generator))
+            if (!TryMatchAndReplace(ref instructionsList, out string reason, generator, debug))
                 Log.Error($"{methodName ?? "<Unknown>"}: {reason}");
         }
     }
