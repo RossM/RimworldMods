@@ -3,27 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesCore", "XylRacesCore.csproj", "{FD3DB066-0CAA-4B84-8EBF-CE6B68D1C5D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Source_XylRaces", "Source_XylRaces\Source_XylRaces.csproj", "{FD3DB066-0CAA-4B84-8EBF-CE6B68D1C5D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesDvergr", "..\XylRacesDvergr\XylRacesDvergr.csproj", "{FA7E2D32-353A-4A02-A50F-3F2171BF4DE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesDvergr", "XylRacesDvergr\XylRacesDvergr.csproj", "{FA7E2D32-353A-4A02-A50F-3F2171BF4DE6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesNixie", "..\XylRacesNixie\XylRacesNixie.csproj", "{99F09417-A33E-4A3C-B3AA-8CE79E2EEF65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesNixie", "XylRacesNixie\XylRacesNixie.csproj", "{99F09417-A33E-4A3C-B3AA-8CE79E2EEF65}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesWarcat", "..\XylRacesWarcat\XylRacesWarcat.csproj", "{2958E926-8897-46B8-BBDA-F7E9B81A2DEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesWarcat", "XylRacesWarcat\XylRacesWarcat.csproj", "{2958E926-8897-46B8-BBDA-F7E9B81A2DEB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesCoreDefs", "..\XylRacesCore\XylRacesCoreDefs.csproj", "{4ACCBE22-C875-4ED5-A6C1-7ECAF6B6CD7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesCore", "XylRacesCore\XylRacesCore.csproj", "{4ACCBE22-C875-4ED5-A6C1-7ECAF6B6CD7F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesBossaps", "..\XylRacesBossaps\XylRacesBossaps.csproj", "{BE742301-C1B5-49BF-A9D0-127A73EFFF56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesBossaps", "XylRacesBossaps\XylRacesBossaps.csproj", "{BE742301-C1B5-49BF-A9D0-127A73EFFF56}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesChyrr", "..\XylRacesChyrr\XylRacesChyrr.csproj", "{7F66FE6D-F33C-4CB5-978E-FE89026EC801}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesChyrr", "XylRacesChyrr\XylRacesChyrr.csproj", "{7F66FE6D-F33C-4CB5-978E-FE89026EC801}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesTitan", "..\XylRacesTitan\XylRacesTitan.csproj", "{23C7EC25-7BDE-497A-AAEE-706D3D8F1C24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesTitan", "XylRacesTitan\XylRacesTitan.csproj", "{23C7EC25-7BDE-497A-AAEE-706D3D8F1C24}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesTrog", "..\XylRacesTrog\XylRacesTrog.csproj", "{65032953-1148-4CB5-9EA3-7DCFB9A6F5B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylRacesTrog", "XylRacesTrog\XylRacesTrog.csproj", "{65032953-1148-4CB5-9EA3-7DCFB9A6F5B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XylRacesVereid", "..\XylRacesVereid\XylRacesVereid.csproj", "{B0309BB0-FF7F-07DB-9033-A64322779FCE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XylRacesVereid", "XylRacesVereid\XylRacesVereid.csproj", "{B0309BB0-FF7F-07DB-9033-A64322779FCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XylRacesZeegee", "..\XylRacesZeegee\XylRacesZeegee.csproj", "{8208D01C-B2CC-5306-7728-9FCD53A4764A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XylRacesZeegee", "XylRacesZeegee\XylRacesZeegee.csproj", "{8208D01C-B2CC-5306-7728-9FCD53A4764A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

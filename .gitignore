@@ -23,3 +23,8 @@ XylRacesCore/Assemblies/XylRacesCore.dll
 /XylRacesTrog/obj
 /XylRacesVereid/obj
 /XylRacesZeegee/obj
+/Build
+/.vs
+/Source_XylRaces/.vs
+/Source_XylRaces/bin
+/Source_XylRaces/obj

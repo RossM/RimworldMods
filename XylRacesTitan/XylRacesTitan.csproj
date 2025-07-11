@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net4.7.1</TargetFramework>
+    <TargetFramework>net4.7.2</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <BaseOutputPath>..\Source\bin</BaseOutputPath>
-    <IntermediateOutputPath>..\Source\obj</IntermediateOutputPath>
+    <BaseOutputPath>..\Build\bin</BaseOutputPath>
+    <IntermediateOutputPath>..\Build\obj</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
