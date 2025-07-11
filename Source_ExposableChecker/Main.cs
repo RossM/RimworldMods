@@ -5,8 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
-using System.Text.RegularExpressions;
-using Source_ExposableChecker;
 using Verse;
 
 namespace Source_ExposableChecker
