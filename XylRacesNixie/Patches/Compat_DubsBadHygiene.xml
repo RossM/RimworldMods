@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!--<Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Dubs Bad Hygiene</li>
+    </mods>
+    <match Class="PatchOperationRemove">
+      <xpath>Defs/ThingDef[defName="XylShower"]</xpath>
+    </match>
+  </Operation>-->
+
+</Patch>

@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Linq;
+using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -20,24 +21,19 @@ namespace XylRacesCore
         private int lastInstantWetnessCheckTick;
         private float lastInstantWetness;
 
-        [DefOf]
-        private static class Defs
-        {
-            [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
-            public static JobDef XylTakeShower;
-        }
-
         public override float CurInstantLevel
         {
             get
             {
+                var wetnessGivingJobs = DefDatabase<Config>.AllDefs.FirstOrDefault()?.wetnessGivingJobs ?? [];
+
                 if (lastInstantWetnessCheckTick == Find.TickManager.TicksGame)
                     return lastInstantWetness;
                 lastInstantWetnessCheckTick = Find.TickManager.TicksGame;
 
                 if (!pawn.Spawned)
                     lastInstantWetness = 0.0f;
-                else if (pawn.CurJobDef == Defs.XylTakeShower && pawn.Position == pawn.CurJob.GetTarget(TargetIndex.A).Cell)
+                else if (wetnessGivingJobs.Contains(pawn.CurJobDef) && !pawn.pather.Moving)
                     lastInstantWetness = 1.0f;
                 else
                     lastInstantWetness = GetWetness(pawn.Position, pawn.Map);

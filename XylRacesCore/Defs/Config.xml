@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <XylRacesCore.Config>
+    <defName>XylRacesCoreConfig</defName>
+    <wetnessGivingJobs>
+      <li MayRequire="Xylthixlm.Races.Nixie">XylTakeShower</li>
+      <li MayRequire="Dubwise.DubsBadHygiene">useWashBucket</li>
+      <li MayRequire="Dubwise.DubsBadHygiene">washAtCell</li>
+      <li MayRequire="Dubwise.DubsBadHygiene">takeShower</li>
+      <li MayRequire="Dubwise.DubsBadHygiene">takeBath</li>
+    </wetnessGivingJobs>
+  </XylRacesCore.Config>
+  
+</Defs>
