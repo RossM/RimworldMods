@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
+using LudeonTK;
 using RimWorld;
 using Verse;
 
@@ -10,7 +12,7 @@ namespace XylRacesCore
     public readonly struct ProfileBlock : IDisposable
     {
         public const bool GlobalEnabled = true;
-        public const bool InstrumentTickManager = false;
+        public static bool InstrumentTickManager = false;
         private readonly bool _enabled;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -30,6 +32,12 @@ namespace XylRacesCore
             if (!_enabled) 
                 return;
             DeepProfiler.End();
+        }
+
+        [DebugAction("Toggle tick profiling"), UsedImplicitly]
+        public static void ToggleTickProfiling()
+        {
+            InstrumentTickManager = !InstrumentTickManager;
         }
     }
 
