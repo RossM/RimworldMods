@@ -28,3 +28,6 @@ XylRacesCore/Assemblies/XylRacesCore.dll
 /Source_XylRaces/.vs
 /Source_XylRaces/bin
 /Source_XylRaces/obj
+/Source_ExposableChecker/obj
+/Source_ExposableChecker/bin
+XylExposableChecker/Assemblies/XylExposableChecker.dll

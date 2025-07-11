@@ -1,0 +1,250 @@
+﻿using JetBrains.Annotations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Text;
+using System.Text.RegularExpressions;
+using Source_ExposableChecker;
+using Verse;
+
+namespace Source_ExposableChecker
+{
+    public class Instruction
+    {
+        public int ByteIndex;
+        public int Length;
+        public OpCode OpCode;
+        public object Value;
+        public byte[] RawBytes;
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append($"{ByteIndex:X04}: (");
+            foreach (var b in RawBytes)
+                sb.Append($"{b:X02}");
+            sb.Append($") {OpCode.Name}");
+
+            switch (OpCode.OperandType)
+            {
+                case OperandType.InlineBrTarget:
+                case OperandType.ShortInlineBrTarget:
+                    {
+                        sb.Append($" <{Value:X04}>");
+                        break;
+                    }
+                case OperandType.InlineString:
+                    sb.Append($" \"{Value}\"");
+                    break;
+                default:
+                    {
+                        if (Value != null)
+                            sb.Append($" {Value}");
+                        break;
+                    }
+            }
+
+            return sb.ToString();
+        }
+    }
+
+    public class Method
+    {
+        public MethodInfo MethodInfo;
+        public List<Instruction> Instructions = [];
+    }
+
+    public class Processor
+    {
+        private static readonly Dictionary<int, OpCode> opCodeByValue = new();
+        private static readonly Dictionary<string, OpCode> opCodeByName = new();
+        private static readonly HashSet<int> twoBytePrefixes = [];
+        private static readonly Dictionary<int, MacroData> macros = new();
+
+        struct MacroData
+        {
+            public OpCode BaseOpCode;
+            public int Offset;
+        }
+
+        static Processor()
+        {
+            var type = typeof(OpCodes);
+            foreach (var field in type.GetFields())
+            {
+                var opCode = (OpCode)(field.GetValue(null) ?? throw new InvalidOperationException());
+                opCodeByValue.Add((UInt16)opCode.Value, opCode);
+                opCodeByName.Add(opCode.Name!, opCode);
+                if (opCode.Size == 2)
+                    twoBytePrefixes.Add((UInt16)opCode.Value >> 8);
+            }
+
+            foreach (var opCode in opCodeByValue.Values)
+            {
+                if (opCode.OpCodeType == OpCodeType.Macro)
+                {
+                    if (Regex.IsMatch(opCode.Name!, @"\.[0-9]$"))
+                    {
+                        macros[opCode.Value] = new MacroData()
+                        {
+                            BaseOpCode = opCodeByName[opCode.Name.Substring(0, opCode.Name.Length - 2)],
+                            Offset = opCode.Name[opCode.Name.Length - 1] - '0',
+                        };
+                    }
+                    else if (Regex.IsMatch(opCode.Name!, @"\.m[0-9]$"))
+                    {
+                        macros[opCode.Value] = new MacroData()
+                        {
+                            BaseOpCode = opCodeByName[opCode.Name.Substring(0, opCode.Name.Length - 3)],
+                            Offset = opCode.Name[opCode.Name.Length - 1] - '0',
+                        };
+                    }
+                    else if (Regex.IsMatch(opCode.Name!, ".s$"))
+                    {
+                        macros[opCode.Value] = new MacroData()
+                        {
+                            BaseOpCode = opCodeByName[opCode.Name.Substring(0, opCode.Name.Length - 2)],
+                            Offset = 0,
+                        };
+                    }
+                }
+            }
+        }
+
+        public Method Decode(MethodInfo methodInfo)
+        {
+            MethodBody methodBody = methodInfo.GetMethodBody();
+            if (methodBody == null)
+            {
+                Log.Message($"{methodInfo.DeclaringType?.Namespace ?? "<Unknown>"}.{methodInfo.DeclaringType?.Name ?? "<Unknown>"}.{methodInfo.Name}: No method body");
+                return new Method() { MethodInfo = methodInfo, Instructions = [] };
+            }
+
+            var il = methodBody.GetILAsByteArray();
+            var module = methodInfo.Module;
+
+            List<Instruction> instructions = [];
+
+            for (int curByte = 0; curByte < il.Length;)
+            {
+                int startByte = curByte;
+
+                int value = il[curByte++];
+                if (twoBytePrefixes.Contains(value))
+                    value = value << 8 | il[curByte++];
+
+                var opcode = opCodeByValue[value];
+
+                var operandLength = opcode.OperandType switch
+                {
+                    OperandType.InlineNone => 0,
+                    OperandType.ShortInlineBrTarget => 1,
+                    OperandType.ShortInlineI => 1,
+                    OperandType.ShortInlineVar => 1,
+                    OperandType.InlineVar => 2,
+                    OperandType.InlineI8 => 8,
+                    OperandType.InlineR => 8,
+                    _ => 4,
+                };
+
+                var operandBytes = il.Skip(curByte).Take(operandLength).ToArray();
+                curByte += operandLength;
+
+                var operandInt64 = operandLength switch
+                {
+                    0 => 0,
+                    1 => operandBytes[0],
+                    2 => BitConverter.ToInt16(operandBytes, 0),
+                    4 => BitConverter.ToInt32(operandBytes, 0),
+                    8 => BitConverter.ToInt64(operandBytes, 0),
+                    _ => throw new InvalidOperationException(),
+                };
+
+                object operandValue = opcode.OperandType switch
+                {
+                    OperandType.InlineType => module.ResolveType((int)operandInt64),
+                    OperandType.InlineField => module.ResolveField((int)operandInt64),
+                    OperandType.InlineMethod => module.ResolveMethod((int)operandInt64),
+                    OperandType.InlineString => module.ResolveString((int)operandInt64),
+                    OperandType.InlineR => BitConverter.ToDouble(operandBytes, 0),
+                    OperandType.ShortInlineR => BitConverter.ToSingle(operandBytes, 0),
+                    OperandType.InlineTok => module.ResolveType((int)operandInt64),
+                    OperandType.InlineBrTarget => curByte + (int)operandInt64,
+                    OperandType.ShortInlineBrTarget => curByte + (int)operandInt64,
+                    _ => (int)operandInt64
+                };
+
+                //if (opcode.OperandType == OperandType.InlineTok)
+                //    throw new NotImplementedException();
+
+                instructions.Add(new()
+                {
+                    OpCode = opcode,
+                    Value = operandValue,
+                    ByteIndex = startByte,
+                    Length = curByte - startByte,
+                    RawBytes = il.Skip(startByte).Take(opcode.Size).ToArray(),
+                });
+            }
+
+            return new Method()
+            {
+                MethodInfo = methodInfo,
+                Instructions = instructions,
+            };
+        }
+    }
+
+    [UsedImplicitly]
+    [StaticConstructorOnStartup]
+    public class Main(ModContentPack content) : Mod(content)
+    {
+        private static readonly Processor processor = new();
+
+        public static void Check(Type type)
+        {
+            Type curType = type;
+            var fields = type.GetFields().Where(
+                field => field.GetCustomAttribute<UnsavedAttribute>() == null &&
+                         !field.Attributes.HasFlag(FieldAttributes.InitOnly) &&
+                         !field.Attributes.HasFlag(FieldAttributes.Literal) &&
+                         !field.Attributes.HasFlag(FieldAttributes.Static) &&
+                         field.DeclaringType == type).ToList();
+
+            if (fields.Count == 0)
+                return;
+
+            HashSet<FieldInfo> usedFields = [];
+
+            MethodInfo curMethod = type.GetMethod("ExposeData");
+            if (curMethod != null)
+            {
+                var method = processor.Decode(curMethod);
+                usedFields.AddRange(method.Instructions.Select(i => i.Value).OfType<FieldInfo>());
+            }
+
+            foreach (var field in fields.Except(usedFields))
+            {
+                Log.Warning($"Possibly unsaved field ({type.Assembly.GetName().Name}) {type.Namespace ?? "<Unknown>"}.{type.Name}.{field.Name}");
+            }
+        }
+
+        [UsedImplicitly]
+        static Main()
+        {
+            foreach (Type type in GenTypes.AllTypes.Where(IsIExposable))
+            {
+                if (type.Assembly.GetName().Name == "Assembly-CSharp")
+                    continue;
+                Check(type);
+            }
+        }
+
+        private static bool IsIExposable(Type t)
+        {
+            return t.FindInterfaces((type, criteria) => type == (Type)criteria, typeof(IExposable)).Any();
+        }
+    }
+}
