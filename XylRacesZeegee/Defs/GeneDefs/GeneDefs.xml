@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <GeneDef ParentName="GeneSkinColorOverride">
+    <defName>XylSkin_DarkSilver</defName>
+    <label>dark silver skin</label>
+    <labelShortAdj>dark silver</labelShortAdj>
+    <description>Carriers of this gene produce a pigment that gives their skin a dark silver color.</description>
+    <skinColorOverride>(0.4,0.45,0.5)</skinColorOverride>
+    <displayOrderInCategory>90</displayOrderInCategory>
+  </GeneDef>
+  <GeneDef ParentName="GeneSkinColorOverride">
+    <defName>XylSkin_LightSilver</defName>
+    <label>light silver skin</label>
+    <labelShortAdj>light silver</labelShortAdj>
+    <description>Carriers of this gene produce a pigment that gives their skin a light silver color.</description>
+    <skinColorOverride>(0.5,0.6,0.8)</skinColorOverride>
+    <displayOrderInCategory>91</displayOrderInCategory>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylForeheadMark</defName>
+    <label>forehead mark</label>
+    <description>Carriers of this gene have a distinctive mark on their forehead.</description>
+    <displayCategory>Cosmetic</displayCategory>
+    <displayOrderInCategory>502</displayOrderInCategory>
+    <biostatCpx>0</biostatCpx>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <parentTagDef>Head</parentTagDef>
+        <useRottenColor>true</useRottenColor>
+        <rotDrawMode>Fresh</rotDrawMode>
+        <texPaths>
+          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/ForeheadMark/ForeheadMark_A</li>
+          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/ForeheadMark/ForeheadMark_B</li>
+          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/ForeheadMark/ForeheadMark_C</li>
+          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/ForeheadMark/ForeheadMark_D</li>
+        </texPaths>
+        <visibleFacing>
+          <!--<li>East</li>-->
+          <li>South</li>
+          <!--<li>West</li>-->
+        </visibleFacing>
+        <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
+        <baseLayer>63</baseLayer>
+      </li>
+    </renderNodeProperties>
+    <randomBrightnessFactor>0.18</randomBrightnessFactor>
+  </GeneDef>
+
+</Defs>
