@@ -117,7 +117,7 @@ namespace XylRacesCore.Genes
             if (lactatingHediff != null)
                 pawn.health.RemoveHediff(lactatingHediff);
 
-            Verse.Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff) ??
+            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff) ??
                             pawn.health.AddHediff(DefExt.hediff);
             hediff.Severity = 1.0f;
         }

@@ -24,7 +24,7 @@ namespace XylRacesCore.Genes
 
         public void Notify_DamageTaken(DamageInfo damageInfo, DamageWorker.DamageResult damageResult)
         {
-            Verse.Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
+            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
 
             if (hediff == null && !Rand.Chance(DefExt.chance))
                 return;
@@ -52,7 +52,7 @@ namespace XylRacesCore.Genes
                     return;
                 if (extraEnemies != null)
                 {
-                    Verse.Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
+                    Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
                     if (hediff == null)
                         extraEnemies.Clear();
                 }
