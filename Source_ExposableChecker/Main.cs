@@ -15,42 +15,10 @@ namespace Source_ExposableChecker
         public int Length;
         public OpCode OpCode;
         public object Value;
-        public byte[] RawBytes;
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.Append($"{ByteIndex:X04}: (");
-            foreach (var b in RawBytes)
-                sb.Append($"{b:X02}");
-            sb.Append($") {OpCode.Name}");
-
-            switch (OpCode.OperandType)
-            {
-                case OperandType.InlineBrTarget:
-                case OperandType.ShortInlineBrTarget:
-                    {
-                        sb.Append($" <{Value:X04}>");
-                        break;
-                    }
-                case OperandType.InlineString:
-                    sb.Append($" \"{Value}\"");
-                    break;
-                default:
-                    {
-                        if (Value != null)
-                            sb.Append($" {Value}");
-                        break;
-                    }
-            }
-
-            return sb.ToString();
-        }
     }
 
     public class Method
     {
-        public MethodInfo MethodInfo;
         public List<Instruction> Instructions = [];
     }
 
@@ -77,7 +45,7 @@ namespace Source_ExposableChecker
             if (methodBody == null)
             {
                 Log.Message($"{methodInfo.DeclaringType?.Namespace ?? "<Unknown>"}.{methodInfo.DeclaringType?.Name ?? "<Unknown>"}.{methodInfo.Name}: No method body");
-                return new Method() { MethodInfo = methodInfo, Instructions = [] };
+                return new Method() { Instructions = [] };
             }
 
             var il = methodBody.GetILAsByteArray();
@@ -140,15 +108,10 @@ namespace Source_ExposableChecker
                     Value = operandValue,
                     ByteIndex = startByte,
                     Length = curByte - startByte,
-                    RawBytes = il.Skip(startByte).Take(opcode.Size).ToArray(),
                 });
             }
 
-            return new Method()
-            {
-                MethodInfo = methodInfo,
-                Instructions = instructions,
-            };
+            return new Method() { Instructions = instructions };
         }
     }
 
