@@ -16,7 +16,7 @@ namespace XylRacesCore.Genes
         public int ticksPerSorenessStage = 60000;
     }
 
-    public class Gene_Hyperlactation : Gene
+    public class Hyperlactation : Gene
     {
         public bool allowMilking = true;
         public bool onlyMilkWhenFull = true;
@@ -117,7 +117,7 @@ namespace XylRacesCore.Genes
             if (lactatingHediff != null)
                 pawn.health.RemoveHediff(lactatingHediff);
 
-            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff) ??
+            Verse.Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff) ??
                             pawn.health.AddHediff(DefExt.hediff);
             hediff.Severity = 1.0f;
         }

@@ -30,7 +30,7 @@ namespace XylRacesCore
 
         private void Gather(Pawn doer)
         {
-            var gene = Target.FirstGeneOfType<Gene_Hyperlactation>();
+            var gene = Target.FirstGeneOfType<Hyperlactation>();
             if (gene == null)
                 return;
 
@@ -110,7 +110,7 @@ namespace XylRacesCore
             });
             toil.FailOnDespawnedOrNull(TargetIndex.A);
             toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
-            toil.AddEndCondition(() => Target.FirstGeneOfType<Gene_Hyperlactation>()?.MilkCount is > 0 ? JobCondition.Ongoing : JobCondition.Incompletable);
+            toil.AddEndCondition(() => Target.FirstGeneOfType<Hyperlactation>()?.MilkCount is > 0 ? JobCondition.Ongoing : JobCondition.Incompletable);
             toil.defaultCompleteMode = ToilCompleteMode.Never;
             toil.WithProgressBar(TargetIndex.A, () => gatherProgress / WorkTotal);
             toil.activeSkill = () => SkillDefOf.Animals;

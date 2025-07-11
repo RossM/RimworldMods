@@ -27,7 +27,7 @@ namespace XylRacesCore
 
         public static bool HasPsycastGene(this Pawn pawn)
         {
-            return pawn.HasGeneOfType<Gene_Psycast>();
+            return pawn.HasGeneOfType<Genes.Psycast>();
         }
 
         public static bool NeedsPsyfocus(this Pawn pawn)

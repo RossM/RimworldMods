@@ -9,7 +9,7 @@ namespace XylRacesCore
     {
         public bool ShouldSatisfy => Severity >= def.stages[2].minSeverity - 0.5f;
 
-        public new Gene_DietDependency Gene => (Gene_DietDependency)base.Gene;
+        public new DietDependency Gene => (DietDependency)base.Gene;
 
         public float SeverityReductionPerNutrition => Gene.DefExt.severityReductionPerNutrition;
 
@@ -50,7 +50,7 @@ namespace XylRacesCore
             if (!pawn.CanReserve(food))
                 return false;
 
-            Gene_DietDependency gene = dependency.Gene;
+            DietDependency gene = dependency.Gene;
             if (gene == null)
             {
                 Log.Warning($"FoodValidator: Couldn't find corresponding gene for {dependency}");

@@ -6,7 +6,7 @@
     <label>beckon</label>
     <description>Carriers automatically learn the Beckon psycast, which psychically commands the target to approach the caster.</description>
     <iconPath>UI/Abilities/Beckon</iconPath>
-    <geneClass>XylRacesCore.Genes.Gene_Psycast</geneClass>
+    <geneClass>XylRacesCore.Genes.Psycast</geneClass>
     <displayCategory>Ability</displayCategory>
     <displayOrderInCategory>300</displayOrderInCategory>
     <abilities>

@@ -13,7 +13,7 @@ namespace XylRacesCore.Genes
     }
 
     [UsedImplicitly]
-    public class Gene_Hediff : Gene, IGene_HediffSource
+    public class AddHediff : Gene, IGene_HediffSource
     {
         public GeneDefExtension_Hediff DefExt => def.GetModExtension<GeneDefExtension_Hediff>();
 

@@ -16,7 +16,7 @@ namespace XylRacesCore.Genes
     }
 
     [UsedImplicitly]
-    public class Gene_GenderRatio : Gene
+    public class GenderRatio : Gene
     {
         public GeneDefExtension_GenderRatio DefExt => def.GetModExtension<GeneDefExtension_GenderRatio>();
 

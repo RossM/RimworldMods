@@ -19,7 +19,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.Gene_DietDependency</geneClass>
+    <geneClass>XylRacesCore.Genes.DietDependency</geneClass>
     <defName>XylMeatDependence</defName>
     <label>meat dependence</label>
     <labelShortAdj>meat-dependent</labelShortAdj>
@@ -182,7 +182,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.Gene_Hediff</geneClass>
+    <geneClass>XylRacesCore.Genes.AddHediff</geneClass>
     <defName>XylRetractableClaws</defName>
     <label>retractable claws</label>
     <labelShortAdj>claws</labelShortAdj>
@@ -230,7 +230,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.Gene_Hediff</geneClass>
+    <geneClass>XylRacesCore.Genes.AddHediff</geneClass>
     <defName>XylMoody</defName>
     <label>moody</label>
     <description>Carriers of this gene have a volatile emotional state. They randomly get good and bad moods.</description>

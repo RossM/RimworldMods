@@ -17,7 +17,7 @@ namespace XylRacesCore.Genes
     }
 
     [UsedImplicitly]
-    public class Gene_Atavism : Gene
+    public class Atavism : Gene
     {
         public List<Gene> addedGenes;
         public GeneDefExtension_Atavism DefExt => def.GetModExtension<GeneDefExtension_Atavism>();

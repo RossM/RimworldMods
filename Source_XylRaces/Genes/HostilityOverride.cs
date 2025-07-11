@@ -9,7 +9,7 @@ namespace XylRacesCore.Genes
         public int violationDisableTicks = 400;
     }
 
-    public class Gene_HostilityOverride : Gene, INotifyPawnDamagedThing
+    public class HostilityOverride : Gene, INotifyPawnDamagedThing
     {
         private GeneDefExtension_HostilityOverride DefExt => def.GetModExtension<GeneDefExtension_HostilityOverride>();
 

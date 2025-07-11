@@ -2,7 +2,7 @@
 <Defs>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.Gene_HostilityOverride</geneClass>
+    <geneClass>XylRacesCore.Genes.HostilityOverride</geneClass>
     <defName>XylInsectPheromones</defName>
     <label>insect pheromones</label>
     <description>Carriers of this gene produce special pheromones which make wild insects not attack them.</description>
@@ -55,7 +55,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.Gene_Hediff</geneClass>
+    <geneClass>XylRacesCore.Genes.AddHediff</geneClass>
     <defName>XylBioRejection</defName>
     <label>bio-rejection</label>
     <description>Carriers of this gene have a severe allergic reaction to any sort of artificial implant or body part. They will suffer continual pain until the implant or part is removed.</description>
@@ -84,7 +84,7 @@
 
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.Gene_Atavism</geneClass>
+    <geneClass>XylRacesCore.Genes.Atavism</geneClass>
     <defName>XylGeneticAtavism</defName>
     <label>genetic atavism</label>
     <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>

@@ -10,7 +10,7 @@ namespace XylRacesCore.Genes
         public float autoFlyMinDistance = 25f;
     }
 
-    public class Gene_Flight : Gene
+    public class Flight : Gene
     {
         public bool autoFly = true;
 

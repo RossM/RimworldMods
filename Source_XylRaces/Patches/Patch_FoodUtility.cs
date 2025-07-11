@@ -33,7 +33,7 @@ namespace XylRacesCore.Patches
                             ((nutritionFactor - 1.0f) / 0.8f);
 
                 // Check if this food satisfies a diet dependency
-                foreach (var gene in eater.GenesOfType<Gene_DietDependency>())
+                foreach (var gene in eater.GenesOfType<DietDependency>())
                 {
                     if (gene.ValidateFood(foodSource) && ((Hediff_DietDependency)gene.LinkedHediff).ShouldSatisfy)
                         __result += 100f;

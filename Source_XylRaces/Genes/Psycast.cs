@@ -2,7 +2,7 @@
 
 namespace XylRacesCore.Genes
 {
-    public class Gene_Psycast : Gene
+    public class Psycast : Gene
     {
         public override void PostAdd()
         {

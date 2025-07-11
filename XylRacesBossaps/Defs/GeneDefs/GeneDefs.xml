@@ -93,7 +93,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.Gene_SeeingRed</geneClass>
+    <geneClass>XylRacesCore.Genes.SeeingRed</geneClass>
     <defName>XylSeeingRed</defName>
     <label>seeing red</label>
     <description>Carriers of this gene have a chance of going into a blind range when they are damaged in combat, charging the nearest enemy and fighting in melee until all enemies are dead. During this state they are faster, stronger, and nearly immune to pain. This ability can't be controlled.</description>
@@ -111,7 +111,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.Gene_Hyperlactation</geneClass>
+    <geneClass>XylRacesCore.Genes.Hyperlactation</geneClass>
     <defName>XylHyperlactation</defName>
     <label>hyperlactation</label>
     <description>Female carriers of this gene produce large amounts of breast milk, and lactate even when not pregnant or breastfeeding. This gene is inactive on males.</description>
@@ -162,7 +162,7 @@
   </GeneDef>
 
   <GeneDef ParentName="XylGenderRatioBase">
-    <geneClass>XylRacesCore.Genes.Gene_GenderRatio</geneClass>
+    <geneClass>XylRacesCore.Genes.GenderRatio</geneClass>
     <defName>XylGender_AlwaysFemale</defName>
     <label>always female</label>
     <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -187,7 +187,7 @@
     </symbolPack>
   </GeneDef>
   <GeneDef ParentName="XylGenderRatioBase">
-    <geneClass>XylRacesCore.Genes.Gene_GenderRatio</geneClass>
+    <geneClass>XylRacesCore.Genes.GenderRatio</geneClass>
     <defName>XylGender_UsuallyFemale</defName>
     <label>usually female</label>
     <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -203,7 +203,7 @@
     </customEffectDescriptions>
   </GeneDef>
   <GeneDef ParentName="XylGenderRatioBase">
-    <geneClass>XylRacesCore.Genes.Gene_GenderRatio</geneClass>
+    <geneClass>XylRacesCore.Genes.GenderRatio</geneClass>
     <defName>XylGender_UsuallyMale</defName>
     <label>usually male</label>
     <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -219,7 +219,7 @@
     </customEffectDescriptions>
   </GeneDef>
   <GeneDef ParentName="XylGenderRatioBase">
-    <geneClass>XylRacesCore.Genes.Gene_GenderRatio</geneClass>
+    <geneClass>XylRacesCore.Genes.GenderRatio</geneClass>
     <defName>XylGender_AlwaysMale</defName>
     <label>always male</label>
     <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -245,7 +245,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.Gene_Hediff</geneClass>
+    <geneClass>XylRacesCore.Genes.AddHediff</geneClass>
     <defName>XylLargeHorns</defName>
     <label>large horns</label>
     <description>Carriers of this gene have large horns that function as a weapon.</description>

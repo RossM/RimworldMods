@@ -4,7 +4,7 @@ using Verse;
 namespace XylRacesCore.Genes
 {
     [UsedImplicitly]
-    public class Gene_EmergencyReserves : Gene
+    public class GravitySickness : Gene
     {
     }
 }

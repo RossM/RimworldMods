@@ -17,7 +17,7 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                foreach (var dietDependency in ingester.GenesOfType<Gene_DietDependency>())
+                foreach (var dietDependency in ingester.GenesOfType<DietDependency>())
                 {
                     if (!dietDependency.ValidateFood(__instance))
                         continue;

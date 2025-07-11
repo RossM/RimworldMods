@@ -11,7 +11,7 @@ namespace XylRacesCore
     {
         public override bool ForceHostileTo(Thing t)
         {
-            return pawn.HasGeneOfType<Gene_SeeingRed>(g => g.ForceHostility(t));
+            return pawn.HasGeneOfType<SeeingRed>(g => g.ForceHostility(t));
         }
 
         public override RandomSocialMode SocialModeMax()

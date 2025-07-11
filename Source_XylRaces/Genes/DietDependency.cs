@@ -17,7 +17,7 @@ namespace XylRacesCore.Genes
         public FloatRange? startingFoodNutrition;
     }
 
-    public class Gene_DietDependency : Gene, IGene_HediffSource, IStartingItemSource
+    public class DietDependency : Gene, IGene_HediffSource, IStartingItemSource
     {
         public GeneDefExtension_DietDependency DefExt => def.GetModExtension<GeneDefExtension_DietDependency>();
 
@@ -34,11 +34,11 @@ namespace XylRacesCore.Genes
             }
         }
 
-        public Hediff LinkedHediff
+        public Verse.Hediff LinkedHediff
         {
             get
             {
-                List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
+                List<Verse.Hediff> hediffs = pawn.health.hediffSet.hediffs;
                 return DefExt == null ? null : hediffs.FirstOrDefault(hediff => hediff.def == DefExt.hediffDef);
             }
         }
