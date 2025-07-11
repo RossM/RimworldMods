@@ -7,18 +7,6 @@
     <mods>
       <li>Lactation Expansion</li>
     </mods>
-    <match Class="PatchOperationInsert">
-      <xpath>Defs/HediffDef[defName="XylHyperlactating"]/comps/li[@Class="HediffCompProperties_SeverityPerDay"]</xpath>
-      <value>
-        <li Class="EuterpeMilkyTitfuck.HediffCompProperties_SelfMilkingToggle"/>
-      </value>
-    </match>
-  </Operation>
-
-  <Operation Class="PatchOperationFindMod">
-    <mods>
-      <li>Lactation Expansion</li>
-    </mods>
     <match Class="PatchOperationReplace">
       <xpath>Defs/GeneDef[defName="XylHyperlactation"]//item</xpath>
       <value>
