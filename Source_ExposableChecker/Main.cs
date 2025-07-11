@@ -61,13 +61,6 @@ namespace Source_ExposableChecker
         private static readonly Dictionary<int, OpCode> opCodeByValue = new();
         private static readonly Dictionary<string, OpCode> opCodeByName = new();
         private static readonly HashSet<int> twoBytePrefixes = [];
-        private static readonly Dictionary<int, MacroData> macros = new();
-
-        struct MacroData
-        {
-            public OpCode BaseOpCode;
-            public int Offset;
-        }
 
         static Processor()
         {
@@ -79,37 +72,6 @@ namespace Source_ExposableChecker
                 opCodeByName.Add(opCode.Name!, opCode);
                 if (opCode.Size == 2)
                     twoBytePrefixes.Add((UInt16)opCode.Value >> 8);
-            }
-
-            foreach (var opCode in opCodeByValue.Values)
-            {
-                if (opCode.OpCodeType == OpCodeType.Macro)
-                {
-                    if (Regex.IsMatch(opCode.Name!, @"\.[0-9]$"))
-                    {
-                        macros[opCode.Value] = new MacroData()
-                        {
-                            BaseOpCode = opCodeByName[opCode.Name.Substring(0, opCode.Name.Length - 2)],
-                            Offset = opCode.Name[opCode.Name.Length - 1] - '0',
-                        };
-                    }
-                    else if (Regex.IsMatch(opCode.Name!, @"\.m[0-9]$"))
-                    {
-                        macros[opCode.Value] = new MacroData()
-                        {
-                            BaseOpCode = opCodeByName[opCode.Name.Substring(0, opCode.Name.Length - 3)],
-                            Offset = opCode.Name[opCode.Name.Length - 1] - '0',
-                        };
-                    }
-                    else if (Regex.IsMatch(opCode.Name!, ".s$"))
-                    {
-                        macros[opCode.Value] = new MacroData()
-                        {
-                            BaseOpCode = opCodeByName[opCode.Name.Substring(0, opCode.Name.Length - 2)],
-                            Offset = 0,
-                        };
-                    }
-                }
             }
         }
 
