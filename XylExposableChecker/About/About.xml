@@ -7,7 +7,7 @@
   <description>
     This is a tool for mod authors that checks loaded mods for any classes that implement IExposable but don't save a field in the corresponding ExposeData method (unless it's marked [Unsaved]), and emits a warning to the developer log if it detects any.
     
-    If you are not a developer, you do not need this mod.
+    If you are not a mod author, you do not need this mod.
   </description>
   <supportedVersions>
     <li>1.6</li>
