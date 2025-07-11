@@ -69,7 +69,7 @@ namespace Source_ExposableChecker
                     OperandType.InlineNone => 0,
 
                     // 1 byte
-                    OperandType.ShortInlineBrTarget => curByte + il[curByte],
+                    OperandType.ShortInlineBrTarget => curByte + 1 + il[curByte],
                     OperandType.ShortInlineI => (int)il[curByte],
                     OperandType.ShortInlineVar => (int)il[curByte],
 
@@ -82,7 +82,7 @@ namespace Source_ExposableChecker
                     OperandType.InlineMethod => module.ResolveMethod(BitConverter.ToInt32(il, curByte)),
                     OperandType.InlineString => module.ResolveString(BitConverter.ToInt32(il, curByte)),
                     OperandType.InlineTok => module.ResolveType(BitConverter.ToInt32(il, curByte)),
-                    OperandType.InlineBrTarget => curByte + BitConverter.ToInt32(il, curByte),
+                    OperandType.InlineBrTarget => curByte + 4 + BitConverter.ToInt32(il, curByte),
                     OperandType.ShortInlineR => BitConverter.ToSingle(il, curByte),
 
                     // 8 bytes
