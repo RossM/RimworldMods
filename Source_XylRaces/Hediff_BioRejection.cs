@@ -8,13 +8,7 @@ namespace XylRacesCore
     {
         public override float Severity
         {
-            get
-            {
-                using (new ProfileBlock())
-                {
-                    return pawn.health.hediffSet.CountAddedAndImplantedParts() * 1.0f;
-                }
-            }
+            get => pawn.health.hediffSet.CountAddedAndImplantedParts() * 1.0f;
             set { }
         }
     }
