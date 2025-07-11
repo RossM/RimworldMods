@@ -50,4 +50,26 @@
     <randomBrightnessFactor>0.18</randomBrightnessFactor>
   </GeneDef>
 
+  <GeneDef>
+    <geneClass>XylRacesCore.Genes.Gene_EmergencyReserves</geneClass>
+    <defName>XylEmergencyReserves</defName>
+    <label>emergency reserves</label>
+    <description>Carriers of this gene store extra oxygen and special proteins in their bone marrow. When the carrier is exposed to extreme heat, cold, toxins, or vacuum, these reserves temporarily flood the body, protecting tissues from damage.</description>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <displayOrderInCategory>90</displayOrderInCategory>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+   </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylRacesCore.Genes.Gene_GravitySickness</geneClass>
+    <defName>XylGravitySickness</defName>
+    <label>gravity sickness</label>
+    <description>Carriers of this gene are prone to debilitating bouts of gravity sickness while on a planet's surface. They periodically suffer pain, nausea, and reduced consciousness for a day or so, or until they return to orbit.</description>
+    <displayCategory>Healing</displayCategory>
+    <displayOrderInCategory>200</displayOrderInCategory>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>5</biostatMet>
+  </GeneDef>
+
 </Defs>
