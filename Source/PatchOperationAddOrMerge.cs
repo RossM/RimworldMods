@@ -45,25 +45,29 @@ namespace XylRacesCore
 
         protected override bool ApplyWorker(XmlDocument xml)
         {
-            if (xml == null)
-                throw new ArgumentNullException(nameof(xml));
-
             XmlNode node = value.node;
             var result = false;
 
-            foreach (XmlNode xmlNode in xml.SelectNodes(xpath))
+            if (xml == null)
+                throw new ArgumentNullException(nameof(xml));
+
+            foreach (XmlNode xmlNode in xml.SelectNodes(xpath)!)
             {
                 result = true;
                 XmlDocument xmlNodeOwnerDocument = xmlNode.OwnerDocument;
+                if (xmlNodeOwnerDocument == null) 
+                    continue;
                 if (order == Order.Append)
                 {
                     foreach (XmlNode childNode in node.ChildNodes)
                     {
-                        var existingNode = xmlNode.ChildNodes.OfType<XmlNode>().FirstOrDefault(xn => xn.Name == childNode.Name);
+                        var existingNode = xmlNode.ChildNodes.OfType<XmlNode>()
+                            .FirstOrDefault(xn => xn.Name == childNode.Name);
                         if (existingNode != null)
                         {
                             foreach (XmlNode grandchildNode in childNode.ChildNodes)
-                                existingNode.AppendChild(xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
+                                existingNode.AppendChild(
+                                    xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
                         }
                         else
                             xmlNode.AppendChild(xmlNodeOwnerDocument.ImportNode(childNode, deep: true));
@@ -74,17 +78,20 @@ namespace XylRacesCore
                     for (int num = node.ChildNodes.Count - 1; num >= 0; num--)
                     {
                         var childNode = node.ChildNodes[num];
-                        var existingNode = xmlNode.ChildNodes.OfType<XmlNode>().FirstOrDefault(xn => xn.Name == childNode.Name);
+                        var existingNode = xmlNode.ChildNodes.OfType<XmlNode>()
+                            .FirstOrDefault(xn => xn.Name == childNode.Name);
                         if (existingNode != null)
                         {
                             foreach (XmlNode grandchildNode in childNode.ChildNodes)
-                                existingNode.PrependChild(xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
+                                existingNode.PrependChild(
+                                    xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
                         }
                         else
                             xmlNode.PrependChild(xmlNodeOwnerDocument.ImportNode(childNode, deep: true));
                     }
                 }
             }
+
             return result;
         }
     }

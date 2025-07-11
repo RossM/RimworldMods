@@ -23,7 +23,6 @@
     </verbProperties>
     <comps>
       <li Class="XylRacesCore.CompProperties_AbilitySonicWave">
-        <range>7.9</range>
         <radius>2.5</radius>
         <canHitFilledCells>true</canHitFilledCells>
         <affectMechanoids>false</affectMechanoids>
