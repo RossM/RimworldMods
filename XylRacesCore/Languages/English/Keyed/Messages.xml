@@ -3,7 +3,7 @@
 
   <!-- Commands -->
   <XylCommandFlyLabel>Fly</XylCommandFlyLabel>
-  <XylCommandFlyDesc>Start flying. Flying grants increased movement speed and allows travelling over some obstacles.</XylCommandFlyDesc>
+  <XylCommandFlyDesc>Start flying. Flying grants increased movement speed and allows traveling over some obstacles.</XylCommandFlyDesc>
   <XylCommandAutoFlyLabel>Auto-fly</XylCommandAutoFlyLabel>
   <XylCommandAutoFlyDesc>The character will automatically start flying if they are moving and the fly ability is off cooldown.</XylCommandAutoFlyDesc>
   <XylCommandMilkLabel>Allow milking</XylCommandMilkLabel>
