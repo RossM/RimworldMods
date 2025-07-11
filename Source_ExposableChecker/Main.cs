@@ -227,18 +227,29 @@ namespace Source_ExposableChecker
 
             foreach (var field in fields.Except(usedFields))
             {
-                Log.Warning($"Possibly unsaved field ({type.Assembly.GetName().Name}) {type.Namespace ?? "<Unknown>"}.{type.Name}.{field.Name}");
+                Log.Warning($"Possibly unsaved field ({type.Assembly.GetName().Name}) {type.Namespace ?? "<Unknown>"}.{type.Name}.{field.Name}. Either save this field in ExposeData, mark it [Unsaved], or make it const or readonly or static.");
             }
         }
 
         [UsedImplicitly]
         static Main()
         {
+            HashSet<Assembly> checkedAssemblies = [];
+
             foreach (Type type in GenTypes.AllTypes.Where(IsIExposable))
             {
-                if (type.Assembly.GetName().Name == "Assembly-CSharp")
-                    continue;
-                Check(type);
+                string assemblyName = type.Assembly.GetName().Name;
+                bool skipAssembly = assemblyName == "Assembly-CSharp";
+                if (!checkedAssemblies.Contains(type.Assembly))
+                {
+                    Log.Message(skipAssembly
+                        ? $"IExposable checker: skipping {assemblyName}"
+                        : $"IExposable checker: checking {assemblyName}");
+                    checkedAssemblies.Add(type.Assembly);
+                }
+
+                if (!skipAssembly) 
+                    Check(type);
             }
         }
 

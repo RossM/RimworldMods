@@ -4,12 +4,13 @@
   <packageId>Xylthixlm.ExposableChecker</packageId>
   <name>IExposable checker</name>
   <author>Xylthixlm</author>
-  <description>Checks to see if any classes are forgetting to serialize their data.</description>
+  <description>
+    This is a tool for mod authors that checks loaded mods for any classes that implement IExposable but don't save a field in the corresponding ExposeData method (unless it's marked [Unsaved]), and emits a warning to the developer log if it detects any.
+    
+    If you are not a developer, you do not need this mod.
+  </description>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
-  <loadAfter>
-    <li>Xylthixlm.Races.Core</li>
-  </loadAfter>
 
 </ModMetaData>
