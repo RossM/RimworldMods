@@ -63,7 +63,36 @@ namespace Source_ExposableChecker
 
                 var opcode = opCodeByValue[value];
 
-                var operandLength = opcode.OperandType switch
+                object operandValue = opcode.OperandType switch
+                {
+                    // 0 bytes
+                    OperandType.InlineNone => 0,
+
+                    // 1 byte
+                    OperandType.ShortInlineBrTarget => curByte + il[curByte],
+                    OperandType.ShortInlineI => (int)il[curByte],
+                    OperandType.ShortInlineVar => (int)il[curByte],
+
+                    // 2 bytes
+                    OperandType.InlineVar => (int)BitConverter.ToInt16(il, curByte),
+                    
+                    // 4 bytes
+                    OperandType.InlineType => module.ResolveType(BitConverter.ToInt32(il, curByte)),
+                    OperandType.InlineField => module.ResolveField(BitConverter.ToInt32(il, curByte)),
+                    OperandType.InlineMethod => module.ResolveMethod(BitConverter.ToInt32(il, curByte)),
+                    OperandType.InlineString => module.ResolveString(BitConverter.ToInt32(il, curByte)),
+                    OperandType.InlineTok => module.ResolveType(BitConverter.ToInt32(il, curByte)),
+                    OperandType.InlineBrTarget => curByte + BitConverter.ToInt32(il, curByte),
+                    OperandType.ShortInlineR => BitConverter.ToSingle(il, curByte),
+
+                    // 8 bytes
+                    OperandType.InlineR => BitConverter.ToDouble(il, curByte),
+                    OperandType.InlineI8 => BitConverter.ToInt64(il, curByte),
+
+                    _ => BitConverter.ToInt32(il, curByte)
+                };
+
+                curByte += opcode.OperandType switch
                 {
                     OperandType.InlineNone => 0,
                     OperandType.ShortInlineBrTarget => 1,
@@ -73,33 +102,6 @@ namespace Source_ExposableChecker
                     OperandType.InlineI8 => 8,
                     OperandType.InlineR => 8,
                     _ => 4,
-                };
-
-                var operandBytes = il.Skip(curByte).Take(operandLength).ToArray();
-                curByte += operandLength;
-
-                var operandInt64 = operandLength switch
-                {
-                    0 => 0,
-                    1 => operandBytes[0],
-                    2 => BitConverter.ToInt16(operandBytes, 0),
-                    4 => BitConverter.ToInt32(operandBytes, 0),
-                    8 => BitConverter.ToInt64(operandBytes, 0),
-                    _ => throw new InvalidOperationException(),
-                };
-
-                object operandValue = opcode.OperandType switch
-                {
-                    OperandType.InlineType => module.ResolveType((int)operandInt64),
-                    OperandType.InlineField => module.ResolveField((int)operandInt64),
-                    OperandType.InlineMethod => module.ResolveMethod((int)operandInt64),
-                    OperandType.InlineString => module.ResolveString((int)operandInt64),
-                    OperandType.InlineR => BitConverter.ToDouble(operandBytes, 0),
-                    OperandType.ShortInlineR => BitConverter.ToSingle(operandBytes, 0),
-                    OperandType.InlineTok => module.ResolveType((int)operandInt64),
-                    OperandType.InlineBrTarget => curByte + (int)operandInt64,
-                    OperandType.ShortInlineBrTarget => curByte + (int)operandInt64,
-                    _ => (int)operandInt64
                 };
 
                 instructions.Add(new()
