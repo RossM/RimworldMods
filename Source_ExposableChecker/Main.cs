@@ -57,7 +57,6 @@ namespace Source_ExposableChecker
     public class Processor
     {
         private static readonly Dictionary<int, OpCode> opCodeByValue = new();
-        private static readonly Dictionary<string, OpCode> opCodeByName = new();
         private static readonly HashSet<int> twoBytePrefixes = [];
 
         static Processor()
@@ -67,7 +66,6 @@ namespace Source_ExposableChecker
             {
                 var opCode = (OpCode)(field.GetValue(null) ?? throw new InvalidOperationException());
                 opCodeByValue.Add((UInt16)opCode.Value, opCode);
-                opCodeByName.Add(opCode.Name!, opCode);
                 if (opCode.Size == 2)
                     twoBytePrefixes.Add((UInt16)opCode.Value >> 8);
             }
@@ -136,9 +134,6 @@ namespace Source_ExposableChecker
                     _ => (int)operandInt64
                 };
 
-                //if (opcode.OperandType == OperandType.InlineTok)
-                //    throw new NotImplementedException();
-
                 instructions.Add(new()
                 {
                     OpCode = opcode,
@@ -165,7 +160,6 @@ namespace Source_ExposableChecker
 
         public static void Check(Type type)
         {
-            Type curType = type;
             var fields = type.GetFields().Where(
                 field => field.GetCustomAttribute<UnsavedAttribute>() == null &&
                          !field.Attributes.HasFlag(FieldAttributes.InitOnly) &&
