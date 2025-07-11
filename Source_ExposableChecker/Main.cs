@@ -22,12 +22,12 @@ namespace Source_ExposableChecker
         public List<Instruction> Instructions = [];
     }
 
-    public class Processor
+    public class Disassembler
     {
         private static readonly Dictionary<int, OpCode> opCodeByValue = new();
         private static readonly HashSet<int> twoBytePrefixes = [];
 
-        static Processor()
+        static Disassembler()
         {
             var type = typeof(OpCodes);
             foreach (var field in type.GetFields())
@@ -119,7 +119,7 @@ namespace Source_ExposableChecker
     [StaticConstructorOnStartup]
     public class Main(ModContentPack content) : Mod(content)
     {
-        private static readonly Processor processor = new();
+        private static readonly Disassembler Disassembler = new();
 
         public static void Check(Type type)
         {
@@ -138,7 +138,7 @@ namespace Source_ExposableChecker
             MethodInfo curMethod = type.GetMethod("ExposeData");
             if (curMethod != null)
             {
-                var method = processor.Decode(curMethod);
+                var method = Disassembler.Decode(curMethod);
                 usedFields.AddRange(method.Instructions.Select(i => i.Value).OfType<FieldInfo>());
             }
 
