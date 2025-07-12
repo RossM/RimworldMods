@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Biotech</li>
+    </mods>
+    <match Class="PatchOperationReplace">
+      <xpath>Defs/ThingDef[defName="Apparel_Sash"]//canBeDesiredForIdeo</xpath>
+      <value>
+        <canBeDesiredForIdeo>true</canBeDesiredForIdeo>
+      </value>
+    </match>
+  </Operation>
+
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Ideology</li>
+    </mods>
+    <match Class="PatchOperationReplace">
+      <xpath>Defs/ThingDef[defName="Apparel_Collar" or defName="Apparel_BodyStrap"]//canBeDesiredForIdeo</xpath>
+      <value>
+        <canBeDesiredForIdeo>true</canBeDesiredForIdeo>
+      </value>
+    </match>
+  </Operation>
+
+
+</Patch>

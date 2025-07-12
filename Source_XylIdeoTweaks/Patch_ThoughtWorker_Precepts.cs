@@ -13,6 +13,9 @@ namespace Source_XylIdeoTweaks
     [HarmonyPatch]
     public class Patch_ThoughtWorker_Precepts
     {
+        private static readonly IReadOnlyCollection<BodyPartGroupDef> GroinBodyParts = [BodyPartGroupDefOf.Torso, BodyPartGroupDefOf.Legs];
+        private static readonly IReadOnlyCollection<BodyPartGroupDef> HairOrFaceBodyParts = [BodyPartGroupDefOf.Torso, BodyPartGroupDefOf.UpperHead, BodyPartGroupDefOf.FullHead];
+
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(typeof(ThoughtWorker_Precept_AnyBodyPartCovered), nameof(ThoughtWorker_Precept_AnyBodyPartCovered.HasUnnecessarilyCoveredBodyParts))]
         public static bool HasUnnecessarilyCoveredBodyParts_Prefix(Pawn p, ref bool __result)
         {
@@ -23,14 +26,14 @@ namespace Source_XylIdeoTweaks
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(typeof(ThoughtWorker_Precept_AnyBodyPartButGroinCovered), nameof(ThoughtWorker_Precept_AnyBodyPartButGroinCovered.HasCoveredBodyPartsButGroin))]
         public static bool HasCoveredBodyPartsButGroin_Prefix(Pawn p, ref bool __result)
         {
-            __result = HasUnnecessaryApparel(p, [BodyPartGroupDefOf.Torso, BodyPartGroupDefOf.Legs]);
+            __result = HasUnnecessaryApparel(p, GroinBodyParts);
             return false;
         }
 
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(typeof(ThoughtWorker_Precept_AnyBodyPartButHairOrFaceCovered), nameof(ThoughtWorker_Precept_AnyBodyPartButHairOrFaceCovered.HasCoveredBodyPartsButHairOrFace))]
         public static bool HasCoveredBodyPartsButHairOrFace_Prefix(Pawn p, ref bool __result)
         {
-            __result = HasUnnecessaryApparel(p, [BodyPartGroupDefOf.Torso, BodyPartGroupDefOf.UpperHead, BodyPartGroupDefOf.FullHead]);
+            __result = HasUnnecessaryApparel(p, HairOrFaceBodyParts);
             return false;
         }
 
