@@ -19,6 +19,10 @@ namespace XylRacesCore.Genes
 
         public override void PostAdd()
         {
+            // Statues don't have a kindDef set, which causes a crash. Check for that and abort.
+            if (pawn.kindDef == null)
+                return;
+
             var extension = DefExt;
             if (Active && extension is { hediffGivers: not null, applyImmediately: true })
             {
