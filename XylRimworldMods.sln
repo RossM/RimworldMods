@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_ExposableChecker", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_XylIdeoTweaks", "Source_XylIdeoTweaks\Source_XylIdeoTweaks.csproj", "{17C59BA0-3875-38FE-3411-A0644177718E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranspilerUtil", "TranspilerUtil\TranspilerUtil.csproj", "{C59418CE-8C09-429E-8D71-5A5C17622177}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{17C59BA0-3875-38FE-3411-A0644177718E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17C59BA0-3875-38FE-3411-A0644177718E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17C59BA0-3875-38FE-3411-A0644177718E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C59418CE-8C09-429E-8D71-5A5C17622177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C59418CE-8C09-429E-8D71-5A5C17622177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C59418CE-8C09-429E-8D71-5A5C17622177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C59418CE-8C09-429E-8D71-5A5C17622177}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -35,3 +35,7 @@ XylExposableChecker/Assemblies/XylExposableChecker.dll
 /Source_XylIdeoTweaks/obj
 XylIdeoTweaks/Assemblies/XylExposableChecker.dll
 XylIdeoTweaks/Assemblies/XylIdeoTweaks.dll
+/TranspilerUtil/bin
+/TranspilerUtil/obj
+XylIdeoTweaks/Assemblies/TranspilerUtil.dll
+XylRacesCore/Assemblies/TranspilerUtil.dll
