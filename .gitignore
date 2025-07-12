@@ -31,3 +31,7 @@ XylRacesCore/Assemblies/XylRacesCore.dll
 /Source_ExposableChecker/obj
 /Source_ExposableChecker/bin
 XylExposableChecker/Assemblies/XylExposableChecker.dll
+/Source_XylIdeoTweaks/bin
+/Source_XylIdeoTweaks/obj
+XylIdeoTweaks/Assemblies/XylExposableChecker.dll
+XylIdeoTweaks/Assemblies/XylIdeoTweaks.dll

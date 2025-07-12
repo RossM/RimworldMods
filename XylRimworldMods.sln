@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XylRacesZeegee", "XylRacesZ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_ExposableChecker", "Source_ExposableChecker\Source_ExposableChecker.csproj", "{72A7BBC7-AE68-408B-BFFF-281257C3C11D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_XylIdeoTweaks", "Source_XylIdeoTweaks\Source_XylIdeoTweaks.csproj", "{17C59BA0-3875-38FE-3411-A0644177718E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{72A7BBC7-AE68-408B-BFFF-281257C3C11D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72A7BBC7-AE68-408B-BFFF-281257C3C11D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72A7BBC7-AE68-408B-BFFF-281257C3C11D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17C59BA0-3875-38FE-3411-A0644177718E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17C59BA0-3875-38FE-3411-A0644177718E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17C59BA0-3875-38FE-3411-A0644177718E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17C59BA0-3875-38FE-3411-A0644177718E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
