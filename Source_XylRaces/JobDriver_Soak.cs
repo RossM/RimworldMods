@@ -36,7 +36,7 @@ namespace XylRacesCore
             goToil.tickIntervalAction = _ =>
             {
                 if (Find.TickManager.TicksGame > startTick + job.def.joyDuration ||
-                    need_wetness is { CurLevel: > 0.9999f })
+                    need_wetness is { CurLevel: > 0.999f })
                 {
                     EndJobWith(JobCondition.Succeeded);
                 }
