@@ -13,8 +13,8 @@ namespace Source_XylIdeoTweaks
     [HarmonyPatch]
     public class Patch_ThoughtWorker_Precepts
     {
-        private static readonly IReadOnlyCollection<BodyPartGroupDef> GroinBodyParts = [BodyPartGroupDefOf.Torso, BodyPartGroupDefOf.Legs];
-        private static readonly IReadOnlyCollection<BodyPartGroupDef> HairOrFaceBodyParts = [BodyPartGroupDefOf.Torso, BodyPartGroupDefOf.UpperHead, BodyPartGroupDefOf.FullHead];
+        private static readonly IReadOnlyCollection<BodyPartGroupDef> GroinBodyParts = [BodyPartGroupDefOf.Legs];
+        private static readonly IReadOnlyCollection<BodyPartGroupDef> HairOrFaceBodyParts = [BodyPartGroupDefOf.UpperHead, BodyPartGroupDefOf.FullHead];
 
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(typeof(ThoughtWorker_Precept_AnyBodyPartCovered), nameof(ThoughtWorker_Precept_AnyBodyPartCovered.HasUnnecessarilyCoveredBodyParts))]
         public static bool HasUnnecessarilyCoveredBodyParts_Prefix(Pawn p, ref bool __result)
@@ -37,7 +37,7 @@ namespace Source_XylIdeoTweaks
             return false;
         }
 
-        private static bool HasUnnecessaryApparel(Pawn p, IReadOnlyCollection<BodyPartGroupDef> excludedBodyPartGroupDefs = null)
+        private static bool HasUnnecessaryApparel(Pawn p, IReadOnlyCollection<BodyPartGroupDef> excludedParts = null)
         {
             // Change: Required apparel doesn't count as unnecessary
 
@@ -54,17 +54,22 @@ namespace Source_XylIdeoTweaks
                     continue;
                 if (p.kindDef.apparelRequired?.Contains(def) == true)
                     continue;
-                if (excludedBodyPartGroupDefs != null && def.apparel.bodyPartGroups.Union(excludedBodyPartGroupDefs).Any())
+                if (excludedParts != null && !def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.Torso) && def.apparel.bodyPartGroups.Intersect(excludedParts).Any())
                     continue;
                 if (p.apparel.ActiveRequirementsForReading.Any(requirement => requirement.ApparelMeetsRequirement(def)))
                     continue;
-                if (p.ideo.Ideo.GetAllPreceptsOfType<Precept_Apparel>().Any(preceptApparel => preceptApparel.apparelDef == def && (preceptApparel.TargetGender == Gender.None || preceptApparel.TargetGender == p.gender)))
+                if (p.ideo.Ideo.GetAllPreceptsOfType<Precept_Apparel>().Any(preceptApparel => ApparelRequiredBy(preceptApparel, def, p.gender)))
                     continue;
 
                 return true;
             }
 
             return false;
+        }
+
+        private static bool ApparelRequiredBy(Precept_Apparel preceptApparel, ThingDef def, Gender gender)
+        {
+            return preceptApparel.apparelDef == def && (preceptApparel.TargetGender == Gender.None || preceptApparel.TargetGender == gender);
         }
     }
 
