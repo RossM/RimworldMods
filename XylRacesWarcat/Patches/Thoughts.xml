@@ -4,7 +4,7 @@
 
   <Operation Class="PatchOperationFindMod">
     <mods>
-      <li>Ludeon.RimWorld.Ideology</li>
+      <li>Ideology</li>
     </mods>
     <match Class="XylRacesCore.PatchOperationAddOrMerge">
       <xpath>Defs/ThoughtDef[starts-with(defName,"AteMeat_")]</xpath>
@@ -18,10 +18,10 @@
   </Operation>
   <Operation Class="PatchOperationFindMod">
     <mods>
-      <li>Ludeon.RimWorld.Ideology</li>
+      <li>Ideology</li>
     </mods>
     <match Class="XylRacesCore.PatchOperationAddOrMerge">
-      <xpath>starts-with(defName,"AteHumanMeat_")]</xpath>
+      <xpath>Defs/ThoughtDef[starts-with(defName,"AteHumanMeat_")]</xpath>
       <value>
         <nullifyingGenes>
           <li>XylCarnivoreStomach</li>
@@ -29,7 +29,7 @@
       </value>
     </match>
   </Operation>
-  <Operation Class="XylRacesCore.PatchOperationAddOrMerge" MayRequire="Ludeon.RimWorld.Ideology">
+  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
     <xpath>Defs/ThoughtDef[
       defName="AteCorpse" or 
       defName="AteInsectMeatDirect" or 

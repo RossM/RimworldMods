@@ -3,9 +3,9 @@
 
   <Operation Class="PatchOperationFindMod">
     <mods>
-      <li>Ludeon.RimWorld.Royalty</li>
-      <li>Ludeon.RimWorld.Ideology</li>
-      <li>Ludeon.RimWorld.Anomaly</li>
+      <li>Royalty</li>
+      <li>Ideology</li>
+      <li>Anomaly</li>
     </mods>
     <match Class="PatchOperationInsert">
       <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Impid</xpath>

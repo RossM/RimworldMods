@@ -3,7 +3,7 @@
 
   <Operation Class="PatchOperationFindMod">
     <mods>
-      <li>Ludeon.RimWorld.Ideology</li>
+      <li>Ideology</li>
     </mods>
     <match Class="XylRacesCore.PatchOperationAddOrMerge">
       <xpath>Defs/ThoughtDef[starts-with(defName,"AteNonMeat_")]</xpath>
