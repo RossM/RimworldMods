@@ -9,10 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="PolySharp" Version="1.15.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.flightCooldownTicks" />
+    <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.pawn" />
   </ItemGroup>
 
   <ItemGroup>

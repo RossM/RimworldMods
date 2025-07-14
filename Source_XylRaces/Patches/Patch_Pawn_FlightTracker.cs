@@ -15,7 +15,7 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                var pawn = __instance.Get<Pawn>("pawn");
+                var pawn = __instance.pawn;
                 if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Flight>() is not null)
                 {
                     return false;
@@ -30,7 +30,7 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                var pawn = __instance.Get<Pawn>("pawn");
+                var pawn = __instance.pawn;
                 if (pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
                 {
                     if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Flight>() is { } gene)
