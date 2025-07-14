@@ -37,12 +37,12 @@ namespace XylRacesCore
             return 1.0f;
         }
 
-        protected override bool CanFireNowSub(IncidentParms parms)
+        public override bool CanFireNowSub(IncidentParms parms)
         {
             return TryFindEntryCell((Map)parms.target, out _);
         }
 
-        protected override bool TryExecuteWorker(IncidentParms parms)
+        public override bool TryExecuteWorker(IncidentParms parms)
         {
             var map = (Map)parms.target;
             if (!TryFindEntryCell(map, out IntVec3 start))

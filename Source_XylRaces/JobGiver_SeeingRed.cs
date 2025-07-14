@@ -12,7 +12,7 @@ namespace XylRacesCore
 
         private float maxAttackDistance = 40f;
 
-        protected override Job TryGiveJob(Pawn pawn)
+        public override Job TryGiveJob(Pawn pawn)
         {
             if (pawn.TryGetAttackVerb(null) == null)
             {

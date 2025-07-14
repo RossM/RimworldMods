@@ -8,7 +8,7 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class JobGiver_HuntingVermin : ThinkNode_JobGiver
     {
-        protected override Job TryGiveJob(Pawn pawn)
+        public override Job TryGiveJob(Pawn pawn)
         {
             Job job;
 

@@ -43,7 +43,7 @@ namespace XylRacesCore
 
         private readonly Order order = Order.Prepend;
 
-        protected override bool ApplyWorker(XmlDocument xml)
+        public override bool ApplyWorker(XmlDocument xml)
         {
             XmlNode node = value.node;
             var result = false;

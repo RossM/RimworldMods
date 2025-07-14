@@ -11,7 +11,7 @@ namespace XylRacesCore
     {
         private const int MaxSorenessLevel = 2;
 
-        protected override ThoughtState CurrentStateInternal(Pawn p)
+        public override ThoughtState CurrentStateInternal(Pawn p)
         {
             if (ThoughtUtility.ThoughtNullified(p, def))
                 return ThoughtState.Inactive;

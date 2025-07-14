@@ -7,7 +7,7 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class ThoughtWorker_Enslaved : ThoughtWorker
     {
-        protected override ThoughtState CurrentStateInternal(Pawn p)
+        public override ThoughtState CurrentStateInternal(Pawn p)
         {
             if (ThoughtUtility.ThoughtNullified(p, def))
                 return ThoughtState.Inactive;
