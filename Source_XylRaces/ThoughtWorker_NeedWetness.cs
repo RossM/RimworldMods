@@ -7,7 +7,7 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class ThoughtWorker_NeedWetness : ThoughtWorker
     {
-        public override ThoughtState CurrentStateInternal(Pawn p)
+        protected override ThoughtState CurrentStateInternal(Pawn p)
         {
             if (ThoughtUtility.ThoughtNullified(p, def))
                 return ThoughtState.Inactive;

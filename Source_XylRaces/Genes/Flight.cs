@@ -44,7 +44,7 @@ namespace XylRacesCore.Genes
                 defaultLabel = "XylCommandFlyLabel".TranslateSimple(),
                 defaultDesc = "XylCommandFlyDesc".TranslateSimple(),
                 Disabled = !pawn.flight.CanFlyNow,
-                cooldownPercentGetter = () => 1.0f - pawn.flight.flightCooldownTicks / (pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
+                cooldownPercentGetter = () => 1.0f - pawn.flight.Get<int>("flightCooldownTicks") / (pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
                 icon = DefExt.Icon,
                 defaultDescPostfix = "\n\n" + 
                                      "CooldownTime".TranslateSimple() + ": " + pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall() + "LetterSecond".TranslateSimple() + "\n" + 

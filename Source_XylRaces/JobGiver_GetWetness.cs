@@ -96,7 +96,7 @@ namespace XylRacesCore
             return true;
         }
 
-        public override Job TryGiveJob(Pawn pawn)
+        protected override Job TryGiveJob(Pawn pawn)
         {
             if (IsValidWaterTileFor(pawn, pawn.Position))
             {

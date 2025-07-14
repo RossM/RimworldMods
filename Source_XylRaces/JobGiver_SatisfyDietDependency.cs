@@ -21,7 +21,7 @@ namespace XylRacesCore
             return 0f;
         }
 
-        public override Job TryGiveJob(Pawn pawn)
+        protected override Job TryGiveJob(Pawn pawn)
         {
             tmpDietDependencies.Clear();
             List<Hediff> hediffs = pawn.health.hediffSet.hediffs;

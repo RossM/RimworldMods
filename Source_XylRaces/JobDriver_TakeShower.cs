@@ -28,7 +28,7 @@ namespace XylRacesCore
             return pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed);
         }
 
-        public override IEnumerable<Toil> MakeNewToils()
+        protected override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDespawnedOrNull(TargetIndex.A);
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.InteractionCell);

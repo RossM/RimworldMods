@@ -14,7 +14,7 @@ namespace XylRacesCore
             return true;
         }
 
-        public override IEnumerable<Toil> MakeNewToils()
+        protected override IEnumerable<Toil> MakeNewToils()
         {
             var need_wetness = pawn.needs?.TryGetNeed<Need_Wetness>();
 

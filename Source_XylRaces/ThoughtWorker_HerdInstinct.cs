@@ -7,7 +7,7 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class ThoughtWorker_HerdInstinct : ThoughtWorker
     {
-        public override ThoughtState CurrentStateInternal(Pawn p)
+        protected override ThoughtState CurrentStateInternal(Pawn p)
         {
             if (!p.Spawned)
                 return ThoughtState.Inactive;

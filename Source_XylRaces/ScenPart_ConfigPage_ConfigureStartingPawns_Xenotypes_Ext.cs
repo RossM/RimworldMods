@@ -7,7 +7,7 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext : ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes
     {
-        public override void GenerateStartingPawns()
+        protected override void GenerateStartingPawns()
         {
             foreach (var xenotypeCount in xenotypeCounts) 
                 xenotypeCount.xenotype ??= XenotypeDefOf.Baseliner;

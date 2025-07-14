@@ -7,7 +7,7 @@ namespace XylRacesCore
     public class PawnRenderNode_Wings(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree)
         : PawnRenderNode(pawn, props, tree)
     {
-        public override string TexPathFor(Pawn pawn)
+        protected override string TexPathFor(Pawn pawn)
         {
             if (!props.texPaths.NullOrEmpty())
             {

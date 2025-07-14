@@ -61,7 +61,7 @@ namespace XylRacesCore
             }
         }
 
-        public override IEnumerable<Toil> MakeNewToils()
+        protected override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             this.FailOnDowned(TargetIndex.A);
