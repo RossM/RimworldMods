@@ -10,9 +10,6 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(GenHostility))]
     public static class Patch_GenHostility
     {
-        private static readonly MethodInfo methodIsActivityDormant =
-            AccessTools.Method(typeof(GenHostility), "IsActivityDormant");
-
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
         public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
         {
@@ -30,8 +27,7 @@ namespace XylRacesCore.Patches
 
                 if (pawn == null || pawn2 == null)
                     return true;
-                if ((bool)methodIsActivityDormant.Invoke(null, [pawn]) ||
-                    (bool)methodIsActivityDormant.Invoke(null, [pawn2]))
+                if (pawn.IsActivityDormant() || pawn2.IsActivityDormant())
                     return true;
                 if (pawn.kindDef.hostileToAll || pawn2.kindDef.hostileToAll)
                     return true;

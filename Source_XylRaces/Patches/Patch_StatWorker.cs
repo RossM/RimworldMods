@@ -12,8 +12,6 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(StatWorker))]
     public static class Patch_StatWorker
     {
-        private static readonly FieldInfo statField = AccessTools.Field(typeof(StatWorker), "stat");
-
         private static readonly InstructionMatcher Fixup_GetOffsetsAndFactorsExplanation = new()
         {
             LocalTypes =
@@ -260,9 +258,9 @@ namespace XylRacesCore.Patches
             {
                 if (req.Thing is Pawn pawn && pawn.HasPsycastGene())
                 {
-                    if (statField.GetValue(__instance) == StatDefOf.PsychicEntropyRecoveryRate)
+                    if (__instance.stat == StatDefOf.PsychicEntropyRecoveryRate)
                         __result = true;
-                    if (statField.GetValue(__instance) == StatDefOf.PsychicEntropyMax)
+                    if (__instance.stat == StatDefOf.PsychicEntropyMax)
                         __result = true;
                 }
             }

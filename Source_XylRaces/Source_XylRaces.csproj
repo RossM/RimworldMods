@@ -6,6 +6,9 @@
     <Nullable>disable</Nullable>
     <LangVersion>latest</LangVersion>
     <AssemblyName>XylRacesCore</AssemblyName>
+
+    <PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
+    <PublicizerLogFilePath>../Build/Publicizer.log.txt</PublicizerLogFilePath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,8 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Publicize Include="Assembly-CSharp:RimWorld.GenHostility.IsActivityDormant" />
     <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.flightCooldownTicks" />
     <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.pawn" />
+    <Publicize Include="Assembly-CSharp:RimWorld.StatWorker.stat" />
+    <Publicize Include="Assembly-CSharp:RimWorld.WorkGiver_Warden.ShouldTakeCareOfPrisoner" />
   </ItemGroup>
 
   <ItemGroup>

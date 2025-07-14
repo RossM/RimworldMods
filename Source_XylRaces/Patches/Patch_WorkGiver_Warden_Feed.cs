@@ -11,17 +11,13 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(WorkGiver_Warden_Feed))]
     public static class Patch_WorkGiver_Warden_Feed
     {
-        public static Func<WorkGiver_Warden_Feed, Pawn, Thing, bool, bool> ShouldTakeCareOfPrisoner =
-            AccessTools.MethodDelegate<Func<WorkGiver_Warden_Feed, Pawn, Thing, bool, bool>>(
-                AccessTools.Method(typeof(WorkGiver_Warden_Feed), "ShouldTakeCareOfPrisoner"));
-
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(WorkGiver_Warden_Feed.JobOnThing))]
         public static void JobOnThing_Postfix(WorkGiver_Warden_Feed __instance, Pawn pawn, Thing t, bool forced, ref Job __result)
         {
             if (__result != null)
                 return;
 
-            if (!ShouldTakeCareOfPrisoner(__instance, pawn, t, forced))
+            if (!__instance.ShouldTakeCareOfPrisoner(pawn, t, forced))
             {
                 return;
             }
