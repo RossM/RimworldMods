@@ -2,7 +2,7 @@
 
 namespace XylRacesCore.Genes
 {
-    internal class GeneDefExtension_UIFilter : DefModExtension
+    public class GeneDefExtension_UIFilter : DefModExtension
     {
         public bool? inheritable;
 
