@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -50,12 +51,12 @@ namespace XylRacesCore.Patches
 
         static Hediff GetFirstLactationHediff(HediffSet hediffSet)
         {
-            return hediffSet.GetFirstHediffWithComp<HediffComp_Lactating>();
+            return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
         }
 
         static bool HasLactationHediff(HediffSet hediffSet)
         {
-            return hediffSet.HasHediffWithComp<HediffComp_Lactating>();
+            return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
         }
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")] public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

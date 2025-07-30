@@ -18,35 +18,10 @@ public static class HediffUtil
                pawn.health.hediffSet.hediffs.OfType<HediffWithComps>().Where(h => h.comps.OfType<T>().Any());
     }
 
-    public static HediffWithComps GetFirstHediffWithComp<T>(this Pawn pawn) where T : class
-    {
-        return pawn.HediffsWithComp<T>().FirstOrDefault();
-    }
-
-    public static HediffWithComps GetFirstHediffWithComp<T>(this HediffSet hediffSet) where T : class
-    {
-        return hediffSet.pawn.GetFirstHediffWithComp<T>();
-    }
-
-    public static IEnumerable<Hediff> GetHediffsWithDef(this Pawn pawn, HediffDef def)
+    public static IEnumerable<Hediff> HediffsWithDef(this Pawn pawn, HediffDef def)
     {
         return pawn.GetComp<CompPawn_GeneCache>()?.GetHediffsWithDef(def) ??
                pawn.health.hediffSet.hediffs.Where(h => h.def == def);
-    }
-
-    public static Hediff GetFirstHediffWithDef(this Pawn pawn, HediffDef def)
-    {
-        return pawn.GetHediffsWithDef(def).FirstOrDefault();
-    }
-
-    public static bool HasHediffWithComp<T>(this Pawn pawn) where T : class
-    {
-        return pawn.HediffsWithComp<T>().Any();
-    }
-
-    public static bool HasHediffWithComp<T>(this HediffSet hediffSet) where T : class
-    {
-        return hediffSet.pawn.HasHediffWithComp<T>();
     }
 
     public static IEnumerable<Hediff> HediffsWithModExtension<T>(this Pawn pawn) where T : class

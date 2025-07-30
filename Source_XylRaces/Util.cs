@@ -45,14 +45,10 @@ namespace XylRacesCore
     {
         public static IEnumerable<T> EverythingOfType<T>(this Pawn pawn) where T : class
         {
-            if (pawn.genes != null)
-            {
-                foreach (T gene in pawn.ActiveGenesOfType<T>())
-                    yield return gene;
-                foreach (T geneDefExt in pawn.ActiveGeneDefExtensionsOfType<T>())
-                    yield return geneDefExt;
-            }
-
+            foreach (T gene in pawn.ActiveGenesOfType<T>())
+                yield return gene;
+            foreach (T geneDefExt in pawn.ActiveGeneDefExtensionsOfType<T>())
+                yield return geneDefExt;
             foreach (T hediff in pawn.HediffsOfType<T>())
                 yield return hediff;
             foreach (T hediffDefExt in pawn.HediffsWithModExtension<T>().SelectMany(h => h.def.modExtensions.OfType<T>()))
