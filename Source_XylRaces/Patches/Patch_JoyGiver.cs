@@ -11,14 +11,14 @@ namespace XylRacesCore.Patches
         [DefOf]
         private static class Defs
         {
-            [UsedImplicitly] 
+            [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")] 
             public static GeneDef XylAquatic;
         }
 
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(JoyGiver.GetChance))]
         public static void GetChance(JoyGiver __instance, Pawn pawn, ref float __result)
         {
-            if (__instance is JoyGiver_GoSwimming && pawn.genes?.HasActiveGene(Defs.XylAquatic) == true)
+            if (Defs.XylAquatic != null && __instance is JoyGiver_GoSwimming && pawn.genes?.HasActiveGene(Defs.XylAquatic) == true)
                 __result *= 5;
         }
     }
