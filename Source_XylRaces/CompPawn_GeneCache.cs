@@ -43,12 +43,12 @@ namespace XylRacesCore
             return value;
         }
 
-        public IEnumerable<Gene> GetGenesWithModExtension<T>() where T : DefModExtension
+        public IEnumerable<Gene> GetGenesWithModExtension<T>() where T : class
         {
             if (modCache.TryGetValue(typeof(T), out List<Gene> value))
                 return value;
 
-            value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def.GetModExtension<T>() != null).ToList() ?? [];
+            value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def.modExtensions.OfType<T>().Any()).ToList() ?? [];
             modCache.Add(typeof(T), value);
             return value;
         }

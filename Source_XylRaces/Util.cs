@@ -47,21 +47,10 @@ namespace XylRacesCore
         {
             if (pawn.genes != null)
             {
-                foreach (var gene in pawn.genes.GenesListForReading)
-                {
-                    if (!gene.Active)
-                        continue;
-                    if (gene is T outGene)
-                        yield return outGene;
-                    if (gene.def.modExtensions != null)
-                    {
-                        foreach (var ext in gene.def.modExtensions)
-                        {
-                            if (ext is T outExt)
-                                yield return outExt;
-                        }
-                    }
-                }
+                foreach (T gene in pawn.ActiveGenesOfType<T>())
+                    yield return gene;
+                foreach (T geneDefExt in pawn.ActiveGeneDefExtensionsOfType<T>())
+                    yield return geneDefExt;
             }
 
             foreach (var hediff in pawn.health.hediffSet.hediffs)
@@ -70,11 +59,8 @@ namespace XylRacesCore
                     yield return outHediff;
                 if (hediff.def.modExtensions != null)
                 {
-                    foreach (var ext in hediff.def.modExtensions)
-                    {
-                        if (ext is T outExt)
-                            yield return outExt;
-                    }
+                    foreach (var ext in hediff.def.modExtensions.OfType<T>())
+                        yield return ext;
                 }
             }
         }
@@ -95,7 +81,7 @@ namespace XylRacesCore
             return pawn.genes != null && def != null && pawn.GenesOfDef(def).Any(g => g.Active);
         }
 
-        public static IEnumerable<T> GenesOfType<T>(this Pawn pawn) where T : Gene
+        public static IEnumerable<T> GenesOfType<T>(this Pawn pawn) where T : class
         {
             if (pawn.genes == null)
                 return Enumerable.Empty<T>();
@@ -104,41 +90,41 @@ namespace XylRacesCore
                    pawn.genes.GenesListForReading.OfType<T>();
         }
 
-        public static IEnumerable<T> ActiveGenesOfType<T>(this Pawn pawn) where T : Gene
+        public static IEnumerable<T> ActiveGenesOfType<T>(this Pawn pawn) where T : class
         {
-            return pawn.GenesOfType<T>().Where(g => g.Active);
+            return pawn.GenesOfType<T>().Where(g => ((Gene)(object)g).Active);
         }
 
-        public static T FirstActiveGeneOfType<T>(this Pawn pawn) where T : Gene
+        public static T FirstActiveGeneOfType<T>(this Pawn pawn) where T : class
         {
-            return pawn.GenesOfType<T>().FirstOrDefault(g => g.Active);
+            return pawn.GenesOfType<T>().FirstOrDefault(g => ((Gene)(object)g).Active);
         }
 
-        public static bool HasActiveGeneOfType<T>(this Pawn pawn) where T : Gene
+        public static bool HasActiveGeneOfType<T>(this Pawn pawn) where T : class
         {
-            return pawn.genes != null && pawn.GenesOfType<T>().Any(g => g.Active);
+            return pawn.genes != null && pawn.GenesOfType<T>().Any(g => ((Gene)(object)g).Active);
         }
 
-        public static bool HasActiveGeneOfType<T>(this Pawn pawn, Func<T, bool> predicate) where T : Gene
+        public static bool HasActiveGeneOfType<T>(this Pawn pawn, Func<T, bool> predicate) where T : class
         {
-            return pawn.genes != null && pawn.GenesOfType<T>().Any(g => g.Active && predicate(g));
+            return pawn.genes != null && pawn.GenesOfType<T>().Any(g => ((Gene)(object)g).Active && predicate(g));
         }
 
-        public static IEnumerable<Gene> GenesWithModExtension<T>(this Pawn pawn) where T : DefModExtension
+        public static IEnumerable<Gene> GenesWithModExtension<T>(this Pawn pawn) where T : class
         {
             if (pawn.genes == null)
                 return Enumerable.Empty<Gene>();
 
             return pawn.GetComp<CompPawn_GeneCache>()?.GetGenesWithModExtension<T>() ??
-                   pawn.genes.GenesListForReading.Where(g => g.def.GetModExtension<T>() != null);
+                   pawn.genes.GenesListForReading.Where(g => g.def.modExtensions.OfType<T>().Any());
         }
 
-        public static IEnumerable<T> ActiveGeneDefExtensionsOfType<T>(this Pawn pawn) where T : DefModExtension
+        public static IEnumerable<T> ActiveGeneDefExtensionsOfType<T>(this Pawn pawn) where T : class
         {
             if (pawn.genes == null)
                 return Enumerable.Empty<T>();
 
-            return pawn.GenesWithModExtension<T>().Where(g => g.Active).Select(g => g.def.GetModExtension<T>());
+            return pawn.GenesWithModExtension<T>().Where(g => g.Active).SelectMany(g => g.def.modExtensions.OfType<T>());
         }
 
         public static IEnumerable<T> HediffsOfType<T>(this Pawn pawn)
