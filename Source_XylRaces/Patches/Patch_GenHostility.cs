@@ -15,7 +15,7 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
         public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
         {
-            Gene_HostilityOverride_Enabled ??= Config.Instance.enabledFeatures.Contains(Config.Feature.Gene_HostilityOverride);
+            Gene_HostilityOverride_Enabled ??= Config.FeatureEnabled(Config.Feature.Gene_HostilityOverride);
             if (Gene_HostilityOverride_Enabled == false)
                 return true;
 
