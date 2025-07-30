@@ -20,7 +20,7 @@ namespace XylRacesCore
 
         public static bool FeatureEnabled(Feature feature)
         {
-            return Instance.enabledFeatures?.Contains(feature) ?? false;
+            return Instance.enabledFeatures.EmptyIfNull().Contains(feature);
         }
 
         public static bool GeneOfTypeExists<T>()
