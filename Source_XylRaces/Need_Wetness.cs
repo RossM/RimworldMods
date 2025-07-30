@@ -23,7 +23,7 @@ namespace XylRacesCore
         {
             get
             {
-                var wetnessGivingJobs = DefDatabase<Config>.AllDefs.FirstOrDefault()?.wetnessGivingJobs ?? [];
+                var wetnessGivingJobs = Config.Instance.wetnessGivingJobs;
 
                 if (lastInstantWetnessCheckTick == Find.TickManager.TicksGame)
                     return lastInstantWetness;

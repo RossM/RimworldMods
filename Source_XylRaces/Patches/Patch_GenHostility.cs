@@ -10,9 +10,16 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(GenHostility))]
     public static class Patch_GenHostility
     {
+        public static bool? Gene_HostilityOverride_Enabled;
+
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
         public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
         {
+            Gene_HostilityOverride_Enabled ??= Config.Instance.enabledFeatures.Contains(Config.Feature.Gene_HostilityOverride);
+            //Log.Message($"Gene_HostilityOverride_Enabled = {Gene_HostilityOverride_Enabled}");
+            if (Gene_HostilityOverride_Enabled == false)
+                return true;
+
             using (new ProfileBlock())
             {
                 // These are cases where we should respect the regular logic

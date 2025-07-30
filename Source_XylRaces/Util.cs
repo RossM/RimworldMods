@@ -86,22 +86,22 @@ namespace XylRacesCore
 
         public static T FirstGeneOfType<T>(this Pawn pawn) where T : class
         {
-            return pawn.genes?.GenesListForReading.OfType<T>().FirstOrDefault();
+            return pawn.GenesOfType<T>().FirstOrDefault();
         }
 
         public static T FirstGeneOfType<T>(this Pawn pawn, Func<T, bool> predicate) where T : class
         {
-            return pawn.genes?.GenesListForReading.OfType<T>().FirstOrDefault(predicate);
+            return pawn.GenesOfType<T>().FirstOrDefault(predicate);
         }
 
         public static bool HasGeneOfType<T>(this Pawn pawn) where T : class
         {
-            return pawn.genes != null && pawn.genes.GenesListForReading.OfType<T>().Any();
+            return pawn.genes != null && pawn.GenesOfType<T>().Any();
         }
 
         public static bool HasGeneOfType<T>(this Pawn pawn, Func<T, bool> predicate) where T : class
         {
-            return pawn.genes != null && pawn.genes.GenesListForReading.OfType<T>().Any(predicate);
+            return pawn.genes != null && pawn.GenesOfType<T>().Any(predicate);
         }
 
         public static IEnumerable<T> GeneDefExtensionsOfType<T>(this Pawn pawn) where T : DefModExtension
