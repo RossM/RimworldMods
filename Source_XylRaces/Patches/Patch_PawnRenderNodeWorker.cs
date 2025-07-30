@@ -16,18 +16,10 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                List<Gene> genes = parms.pawn?.genes?.GenesListForReading;
-                if (genes == null)
+                if (parms.pawn == null)
                     return;
-
-                foreach (var gene in genes)
-                {
-                    var extension = gene.def.GetModExtension<GeneDefExtension_Rendering>();
-                    if (extension != null)
-                    {
-                        __result *= extension.scale;
-                    }
-                }
+                foreach (var extension in parms.pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Rendering>())
+                    __result *= extension.scale;
             }
         }
     }
