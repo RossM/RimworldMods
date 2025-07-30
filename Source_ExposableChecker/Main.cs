@@ -143,10 +143,16 @@ namespace Source_ExposableChecker
                 var method = Disassembler.Decode(curMethod);
                 usedFields.AddRange(method.Instructions.Select(i => i.Value).OfType<FieldInfo>());
             }
+            curMethod = type.GetMethod("PostExposeData");
+            if (curMethod != null)
+            {
+                var method = Disassembler.Decode(curMethod);
+                usedFields.AddRange(method.Instructions.Select(i => i.Value).OfType<FieldInfo>());
+            }
 
             foreach (var field in fields.Except(usedFields))
             {
-                Log.Warning($"Possibly unsaved field ({type.Assembly.GetName().Name}) {type.Namespace ?? "<Unknown>"}.{type.Name}.{field.Name}. Either save this field in ExposeData, mark it [Unsaved], or make it const or readonly or static.");
+                Log.Warning($"Possibly unsaved field: {type.Namespace ?? "<Unknown>"}.{type.Name}.{field.Name}. Either save this field in {(typeof(IExposable).IsAssignableFrom(type) ? "ExposeData" : "PostExposeData")}, mark it [Unsaved], or make it const or readonly or static.");
             }
         }
 
@@ -174,7 +180,7 @@ namespace Source_ExposableChecker
 
         private static bool IsIExposable(Type t)
         {
-            return t.FindInterfaces((type, criteria) => type == (Type)criteria, typeof(IExposable)).Any();
+            return typeof(ThingComp).IsAssignableFrom(t) || typeof(IExposable).IsAssignableFrom(t);
         }
     }
 }
