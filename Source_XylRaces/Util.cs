@@ -124,13 +124,21 @@ namespace XylRacesCore
             return pawn.genes != null && pawn.GenesOfType<T>().Any(g => g.Active && predicate(g));
         }
 
-        public static IEnumerable<T> GeneDefExtensionsOfType<T>(this Pawn pawn) where T : DefModExtension
+        public static IEnumerable<Gene> GenesWithModExtension<T>(this Pawn pawn) where T : DefModExtension
         {
             if (pawn.genes == null)
-                yield break;
+                return Enumerable.Empty<Gene>();
 
-            foreach (T extension in pawn.genes.GenesListForReading.Select(gene => gene.def.GetModExtension<T>()).Where(extension => extension != null))
-                yield return extension;
+            return pawn.GetComp<CompPawn_GeneCache>()?.GetGenesWithModExtension<T>() ??
+                   pawn.genes.GenesListForReading.Where(g => g.def.GetModExtension<T>() != null);
+        }
+
+        public static IEnumerable<T> ActiveGeneDefExtensionsOfType<T>(this Pawn pawn) where T : DefModExtension
+        {
+            if (pawn.genes == null)
+                return Enumerable.Empty<T>();
+
+            return pawn.GenesWithModExtension<T>().Where(g => g.Active).Select(g => g.def.GetModExtension<T>());
         }
 
         public static IEnumerable<T> HediffsOfType<T>(this Pawn pawn)

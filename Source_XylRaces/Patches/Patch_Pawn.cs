@@ -14,18 +14,8 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                List<Gene> genesGenesListForReading = __instance.genes?.GenesListForReading;
-                if (genesGenesListForReading == null)
-                    return;
-
-                foreach (var gene in genesGenesListForReading)
-                {
-                    var extension = gene.def.GetModExtension<GeneDefExtension_Pawn>();
-                    if (extension != null)
-                    {
-                        __result *= extension.bodySizeFactor;
-                    }
-                }
+                foreach (var extension in __instance.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
+                   __result *= extension.bodySizeFactor;
             }
         }
 
@@ -34,18 +24,8 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                List<Gene> genesGenesListForReading = __instance.genes?.GenesListForReading;
-                if (genesGenesListForReading == null)
-                    return;
-
-                foreach (var gene in genesGenesListForReading)
-                {
-                    var extension = gene.def.GetModExtension<GeneDefExtension_Pawn>();
-                    if (extension != null)
-                    {
-                        __result *= extension.healthScaleFactor;
-                    }
-                }
+                foreach (var extension in __instance.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
+                   __result *= extension.healthScaleFactor;
             }
         }
     }

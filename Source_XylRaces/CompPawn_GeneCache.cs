@@ -21,6 +21,7 @@ namespace XylRacesCore
     {
         private readonly Dictionary<Type, object> typeCache = new();
         private readonly Dictionary<GeneDef, List<Gene>> defCache = new();
+        private readonly Dictionary<Type, List<Gene>> modCache = new();
 
         public IEnumerable<T> GetGenesOfType<T>()
         {
@@ -42,10 +43,21 @@ namespace XylRacesCore
             return value;
         }
 
+        public IEnumerable<Gene> GetGenesWithModExtension<T>() where T : DefModExtension
+        {
+            if (modCache.TryGetValue(typeof(T), out List<Gene> value))
+                return value;
+
+            value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def.GetModExtension<T>() != null).ToList() ?? [];
+            modCache.Add(typeof(T), value);
+            return value;
+        }
+
         public void Notify_GenesChanged()
         {
             typeCache.Clear();
             defCache.Clear();
+            modCache.Clear();
         }
     }
 }
