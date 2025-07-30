@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using System.Linq;
+using Verse;
 
 namespace XylRacesCore
 { 
@@ -14,9 +15,7 @@ namespace XylRacesCore
 
         public override bool ShouldRemove => Gene is not { Active: true };
 
-        public Gene Gene => cachedGene ??=
-            pawn.genes?.GenesListForReading.FirstOrDefault(gene =>
-                gene is IGene_HediffSource hediffSource && hediffSource.CausesHediff(def));
+        public Gene Gene => cachedGene ??= (Gene)pawn.GenesOfType<IGene_HediffSource>().FirstOrDefault(gene => gene.CausesHediff(def));
 
         public override float Severity
         {

@@ -32,7 +32,7 @@ namespace XylRacesCore.Patches
                         CodeInstruction.LoadField(typeof(Dialog_CreateXenotype), "inheritable"),
                         // Load this
                         CodeInstruction.LoadArgument(0),
-                        // Load this.inheritable
+                        // Load this.ignoreRestrictions
                         CodeInstruction.LoadField(typeof(Dialog_CreateXenotype), "ignoreRestrictions"),
                         // Call
                         CodeInstruction.Call(() => FilterGenes),
