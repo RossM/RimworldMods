@@ -60,7 +60,7 @@ namespace XylRacesCore
             if (genesByModExt.TryGetValue(typeof(T), out List<Gene> value))
                 return value;
 
-            value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def.modExtensions.OfType<T>().Any()).ToList() ?? [];
+            value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def.modExtensions?.OfType<T>().Any() == true).ToList() ?? [];
             genesByModExt.Add(typeof(T), value);
             return value;
         }
@@ -97,7 +97,7 @@ namespace XylRacesCore
             if (hediffsByModExt.TryGetValue(typeof(T), out List<Hediff> value))
                 return value;
 
-            value = ((Pawn)parent).health.hediffSet.hediffs.Where(g => g.def.modExtensions.OfType<T>().Any()).ToList();
+            value = ((Pawn)parent).health.hediffSet.hediffs.Where(g => g.def.modExtensions?.OfType<T>().Any() == true).ToList();
             hediffsByModExt.Add(typeof(T), value);
             return value;
         }
@@ -107,7 +107,7 @@ namespace XylRacesCore
             if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))
                 return value;
 
-            value = ((Pawn)parent).health.hediffSet.hediffs.OfType<HediffWithComps>().Where(g => g.comps.OfType<T>().Any()).ToList();
+            value = ((Pawn)parent).health.hediffSet.hediffs.OfType<HediffWithComps>().Where(g => g.comps?.OfType<T>().Any() == true).ToList();
             hediffsByComp.Add(typeof(T), value);
             return value;
         }
