@@ -15,6 +15,7 @@
       <li>MinTemp_SmallDecrease</li>
       <li>MaxTemp_SmallIncrease</li>
       <li>ToxResist_Partial</li>
+      <li MayRequire="Ludeon.RimWorld.Odyssey">VacuumResistance_Partial</li>
       <li>FireResistant</li>
       <li>XylMineralizedSkin</li>
       <li>Libido_Low</li>
@@ -22,14 +23,14 @@
       <li>Hair_BaldOnly</li>
       <li>Beard_NoBeardOnly</li>
       <li>Body_Hulk</li>
-      <li>XylEvenTemper</li>
       <li>XylGiant</li>
       <li>XylJoyless</li>
+      <li>XylEvenTemper</li>
       <li>AptitudeRemarkable_Construction</li>
       <li>AptitudePoor_Cooking</li>
-      <li>AptitudePoor_Plants</li>
-      <li>AptitudePoor_Social</li>
+      <li>AptitudeTerrible_Plants</li>
       <li>AptitudePoor_Artistic</li>
+      <li>AptitudePoor_Social</li>
     </genes>
   </XenotypeDef>
   
