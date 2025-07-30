@@ -20,47 +20,104 @@ namespace XylRacesCore
     public class CompPawn_GeneCache : ThingComp
     {
         [Unsaved]
-        private readonly Dictionary<Type, object> typeCache = new();
+        private readonly Dictionary<Type, object> genesByType = new();
         [Unsaved]
-        private readonly Dictionary<GeneDef, List<Gene>> defCache = new();
+        private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
         [Unsaved]
-        private readonly Dictionary<Type, List<Gene>> modCache = new();
+        private readonly Dictionary<Type, List<Gene>> genesByModExt = new();
+
+        [Unsaved] 
+        private readonly Dictionary<Type, object> hediffsByType = new();
+        [Unsaved] 
+        private readonly Dictionary<HediffDef, List<Hediff>> hediffsByDef = new();
+        [Unsaved]
+        private readonly Dictionary<Type, List<Hediff>> hediffsByModExt = new();
+        [Unsaved]
+        private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
 
         public IEnumerable<T> GetGenesOfType<T>()
         {
-            if (typeCache.TryGetValue(typeof(T), out object value)) 
+            if (genesByType.TryGetValue(typeof(T), out object value)) 
                 return (List<T>)value;
 
             value = ((Pawn)parent).genes?.GenesListForReading.OfType<T>().ToList() ?? [];
-            typeCache.Add(typeof(T), value);
+            genesByType.Add(typeof(T), value);
             return (List<T>)value;
         }
 
-        public List<Gene> GetGenes(GeneDef def)
+        public List<Gene> GetGenesWithDef(GeneDef def)
         {
-            if (defCache.TryGetValue(def, out List<Gene> value))
+            if (genesByDef.TryGetValue(def, out List<Gene> value))
                 return value;
 
             value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def == def).OrderByDescending(g => g.Active).ToList();
-            defCache.Add(def, value);
+            genesByDef.Add(def, value);
             return value;
         }
 
         public IEnumerable<Gene> GetGenesWithModExtension<T>() where T : class
         {
-            if (modCache.TryGetValue(typeof(T), out List<Gene> value))
+            if (genesByModExt.TryGetValue(typeof(T), out List<Gene> value))
                 return value;
 
             value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def.modExtensions.OfType<T>().Any()).ToList() ?? [];
-            modCache.Add(typeof(T), value);
+            genesByModExt.Add(typeof(T), value);
             return value;
         }
 
         public void Notify_GenesChanged()
         {
-            typeCache.Clear();
-            defCache.Clear();
-            modCache.Clear();
+            genesByDef.Clear();
+            genesByModExt.Clear();
+            genesByType.Clear();
+        }
+
+        public IEnumerable<T> GetHediffsOfType<T>()
+        {
+            if (hediffsByType.TryGetValue(typeof(T), out object value))
+                return (List<T>)value;
+
+            value = ((Pawn)parent).health.hediffSet.hediffs.OfType<T>().ToList() ?? [];
+            hediffsByType.Add(typeof(T), value);
+            return (List<T>)value;
+        }
+
+        public List<Hediff> GetHediffsWithDef(HediffDef def)
+        {
+            if (hediffsByDef.TryGetValue(def, out List<Hediff> value))
+                return value;
+
+            value = ((Pawn)parent).health.hediffSet.hediffs.Where(g => g.def == def).ToList();
+            hediffsByDef.Add(def, value);
+            return value;
+        }
+
+        public IEnumerable<Hediff> GetHediffsWithModExtension<T>() where T : class
+        {
+            if (hediffsByModExt.TryGetValue(typeof(T), out List<Hediff> value))
+                return value;
+
+            value = ((Pawn)parent).health.hediffSet.hediffs.Where(g => g.def.modExtensions.OfType<T>().Any()).ToList();
+            hediffsByModExt.Add(typeof(T), value);
+            return value;
+        }
+
+        public IEnumerable<HediffWithComps> GetHediffsWithComp<T>() where T : class
+        {
+            if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))
+                return value;
+
+            value = ((Pawn)parent).health.hediffSet.hediffs.OfType<HediffWithComps>().Where(g => g.comps.OfType<T>().Any()).ToList();
+            hediffsByComp.Add(typeof(T), value);
+            return value;
+        }
+
+        public void Notify_HediffsChanged()
+        {
+            hediffsByComp.Clear();
+            hediffsByDef.Clear();
+            hediffsByModExt.Clear();
+            hediffsByType.Clear();
         }
     }
 }

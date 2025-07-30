@@ -53,16 +53,12 @@ namespace XylRacesCore
                     yield return geneDefExt;
             }
 
-            foreach (var hediff in pawn.health.hediffSet.hediffs)
-            {
-                if (hediff is T outHediff)
-                    yield return outHediff;
-                if (hediff.def.modExtensions != null)
-                {
-                    foreach (var ext in hediff.def.modExtensions.OfType<T>())
-                        yield return ext;
-                }
-            }
+            foreach (T hediff in pawn.HediffsOfType<T>())
+                yield return hediff;
+            foreach (T hediffDefExt in pawn.HediffsWithModExtension<T>().SelectMany(h => h.def.modExtensions.OfType<T>()))
+                yield return hediffDefExt;
+            foreach (T hediffComp in pawn.HediffsWithComp<T>().SelectMany(h => h.comps.OfType<T>()))
+                yield return hediffComp;
         }
 
         public static IEnumerable<Gene> GenesOfDef(this Pawn pawn, GeneDef def)
@@ -70,7 +66,7 @@ namespace XylRacesCore
             if (pawn.genes == null)
                 return Enumerable.Empty<Gene>();
 
-            return pawn.GetComp<CompPawn_GeneCache>()?.GetGenes(def) ??
+            return pawn.GetComp<CompPawn_GeneCache>()?.GetGenesWithDef(def) ??
                    pawn.genes.GenesListForReading.Where(g => g.def == def);
         }
 
@@ -127,35 +123,55 @@ namespace XylRacesCore
             return pawn.GenesWithModExtension<T>().Where(g => g.Active).SelectMany(g => g.def.modExtensions.OfType<T>());
         }
 
-        public static IEnumerable<T> HediffsOfType<T>(this Pawn pawn)
+        public static IEnumerable<T> HediffsOfType<T>(this Pawn pawn) where T : class
         {
-            return pawn.health.hediffSet.hediffs.OfType<T>();
+            return pawn.GetComp<CompPawn_GeneCache>()?.GetHediffsOfType<T>() ??
+                   pawn.health.hediffSet.hediffs.OfType<T>();
         }
 
-        public static Hediff GetFirstHediffWithComp<T>(this Pawn pawn) where T : HediffComp
+        public static IEnumerable<HediffWithComps> HediffsWithComp<T>(this Pawn pawn) where T : class
         {
-            return pawn.health.hediffSet.hediffs.FirstOrDefault(h => h.TryGetComp<T>() != null);
+            return pawn.GetComp<CompPawn_GeneCache>()?.GetHediffsWithComp<T>() ??
+                   pawn.health.hediffSet.hediffs.OfType<HediffWithComps>().Where(h => h.comps.OfType<T>().Any());
         }
 
-        public static Hediff GetFirstHediffWithComp<T>(this HediffSet hediffSet) where T : HediffComp
+        public static HediffWithComps GetFirstHediffWithComp<T>(this Pawn pawn) where T : class
         {
-            return hediffSet.hediffs.FirstOrDefault(h => h.TryGetComp<T>() != null);
+            return pawn.HediffsWithComp<T>().FirstOrDefault();
+        }
+
+        public static HediffWithComps GetFirstHediffWithComp<T>(this HediffSet hediffSet) where T : class
+        {
+            return hediffSet.pawn.GetFirstHediffWithComp<T>();
+        }
+
+        public static IEnumerable<Hediff> GetHediffsWithDef(this Pawn pawn, HediffDef def)
+        {
+            return pawn.GetComp<CompPawn_GeneCache>()?.GetHediffsWithDef(def) ??
+                   pawn.health.hediffSet.hediffs.Where(h => h.def == def);
         }
 
         public static Hediff GetFirstHediffWithDef(this Pawn pawn, HediffDef def)
         {
-            return pawn.health.hediffSet.hediffs.FirstOrDefault(h => h.def == def);
+            return pawn.GetHediffsWithDef(def).FirstOrDefault();
         }
 
-        public static bool HasHediffWithComp<T>(this Pawn pawn) where T : HediffComp
+        public static bool HasHediffWithComp<T>(this Pawn pawn) where T : class
         {
-            return pawn.health.hediffSet.hediffs.Any(h => h.TryGetComp<T>() != null);
+            return pawn.HediffsWithComp<T>().Any();
         }
 
-        public static bool HasHediffWithComp<T>(this HediffSet hediffSet) where T : HediffComp
+        public static bool HasHediffWithComp<T>(this HediffSet hediffSet) where T : class
         {
-            return hediffSet.hediffs.Any(h => h.TryGetComp<T>() != null);
+            return hediffSet.pawn.HasHediffWithComp<T>();
         }
+
+        public static IEnumerable<Hediff> HediffsWithModExtension<T>(this Pawn pawn) where T : class
+        {
+            return pawn.GetComp<CompPawn_GeneCache>()?.GetHediffsWithModExtension<T>() ??
+                   pawn.health.hediffSet.hediffs.Where(h => h.def.modExtensions.OfType<T>().Any());
+        }
+
 
         public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> enumerable)
         {
