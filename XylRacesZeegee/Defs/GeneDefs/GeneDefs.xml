@@ -72,4 +72,19 @@
     <biostatMet>5</biostatMet>
   </GeneDef>
 
+
+  <GeneDef>
+    <geneClass>XylRacesCore.Genes.GravitySickness</geneClass>
+    <defName>XylMechAffinity</defName>
+    <label>mech affinity</label>
+    <description>Carriers of this gene are naturally adept at being mechanitors.</description>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>1102</displayOrderInCategory>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <statOffsets>
+      <MechBandwidth>3</MechBandwidth>
+    </statOffsets>
+  </GeneDef>
+
 </Defs>
