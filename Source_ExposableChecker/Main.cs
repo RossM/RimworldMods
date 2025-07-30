@@ -127,7 +127,6 @@ namespace Source_ExposableChecker
         {
             var fields = type.GetFields().Where(
                 field => field.GetCustomAttribute<UnsavedAttribute>() == null &&
-                         !field.Attributes.HasFlag(FieldAttributes.InitOnly) &&
                          !field.Attributes.HasFlag(FieldAttributes.Literal) &&
                          !field.Attributes.HasFlag(FieldAttributes.Static) &&
                          field.DeclaringType == type).ToList();
@@ -152,7 +151,7 @@ namespace Source_ExposableChecker
 
             foreach (var field in fields.Except(usedFields))
             {
-                Log.Warning($"Possibly unsaved field: {type.Namespace}.{type.Name}.{field.Name}. Either save this field in {(typeof(IExposable).IsAssignableFrom(type) ? "ExposeData" : "PostExposeData")}, mark it [Unsaved], or make it const or readonly or static.");
+                Log.Warning($"Possibly unsaved field: {type.Namespace}.{type.Name}.{field.Name}. Either save this field in {(typeof(IExposable).IsAssignableFrom(type) ? "ExposeData" : "PostExposeData")}, mark it [Unsaved], or make it const or readonly.");
             }
         }
 

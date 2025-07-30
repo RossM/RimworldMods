@@ -19,8 +19,11 @@ namespace XylRacesCore
 
     public class CompPawn_GeneCache : ThingComp
     {
+        [Unsaved]
         private readonly Dictionary<Type, object> typeCache = new();
+        [Unsaved]
         private readonly Dictionary<GeneDef, List<Gene>> defCache = new();
+        [Unsaved]
         private readonly Dictionary<Type, List<Gene>> modCache = new();
 
         public IEnumerable<T> GetGenesOfType<T>()
