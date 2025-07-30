@@ -134,15 +134,19 @@ namespace Source_ExposableChecker
             if (fields.Count == 0)
                 return;
 
+            string exposeDataFunc;
+            if (typeof(IExposable).IsAssignableFrom(type))
+                exposeDataFunc = "ExposeData";
+            else if (typeof(ThingComp).IsAssignableFrom(type))
+                exposeDataFunc = "PostExposeData";
+            else if (typeof(HediffComp).IsAssignableFrom(type))
+                exposeDataFunc = "CompExposeData";
+            else
+                throw new NotSupportedException();
+ 
             HashSet<FieldInfo> usedFields = [];
 
-            MethodInfo curMethod = type.GetMethod("ExposeData");
-            if (curMethod != null)
-            {
-                var method = Disassembler.Decode(curMethod);
-                usedFields.AddRange(method.Instructions.Select(i => i.Value).OfType<FieldInfo>());
-            }
-            curMethod = type.GetMethod("PostExposeData");
+            MethodInfo curMethod = type.GetMethod(exposeDataFunc);
             if (curMethod != null)
             {
                 var method = Disassembler.Decode(curMethod);
@@ -151,7 +155,7 @@ namespace Source_ExposableChecker
 
             foreach (var field in fields.Except(usedFields))
             {
-                Log.Warning($"Possibly unsaved field: {type.Namespace}.{type.Name}.{field.Name}. Either save this field in {(typeof(IExposable).IsAssignableFrom(type) ? "ExposeData" : "PostExposeData")}, mark it [Unsaved], or make it const or readonly.");
+                Log.Warning($"Possibly unsaved field: {type.Namespace}.{type.Name}.{field.Name}. Either save this field in {exposeDataFunc}, mark it [Unsaved], or make it const or readonly.");
             }
         }
 
@@ -160,7 +164,7 @@ namespace Source_ExposableChecker
         {
             HashSet<Assembly> checkedAssemblies = [];
 
-            foreach (Type type in GenTypes.AllTypes.Where(IsIExposable))
+            foreach (Type type in GenTypes.AllTypes.Where(ShouldCheck))
             {
                 string assemblyName = type.Assembly.GetName().Name;
                 bool skipAssembly = assemblyName == "Assembly-CSharp";
@@ -177,9 +181,9 @@ namespace Source_ExposableChecker
             }
         }
 
-        private static bool IsIExposable(Type t)
+        private static bool ShouldCheck(Type t)
         {
-            return typeof(ThingComp).IsAssignableFrom(t) || typeof(IExposable).IsAssignableFrom(t);
+            return typeof(ThingComp).IsAssignableFrom(t) || typeof(IExposable).IsAssignableFrom(t) || typeof(HediffComp).IsAssignableFrom(t);
         }
     }
 }
