@@ -12,6 +12,7 @@ namespace XylRacesCore.Patches
     public static class Patch_SlaveRebellionUtility
     {
         public const float DocileFactor = 4f;
+        public const float NeverRebelThresholdDays = 120f;
 
         [DefOf]
         public static class Defs
@@ -26,7 +27,11 @@ namespace XylRacesCore.Patches
             if (__result < 0)
                 return;
             if (pawn.HasActiveGene(Defs.XylDocile))
+            {
                 __result *= DocileFactor;
+                if (__result > NeverRebelThresholdDays)
+                    __result = -1;
+            }
         }
 
         private static readonly InstructionMatcher Fixup_GetSlaveRebellionMtbCalculationExplanation = new()
@@ -62,6 +67,18 @@ namespace XylRacesCore.Patches
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GetSlaveRebellionMtbCalculationExplanation.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
+        }
+
+        [HarmonyPrefix, UsedImplicitly, HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
+        public static bool GetSlaveRebellionMtbCalculationExplanation_Prefix(Pawn pawn, ref string __result)
+        {
+            if (SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn) < 0)
+            {
+                __result = "";
+                return false;
+            }
+
+            return true;
         }
 
         private static void AddAdditionalExplanation(StringBuilder stringBuilder, Pawn pawn)
