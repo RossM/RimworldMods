@@ -48,10 +48,8 @@ namespace XylRacesCore
             if (pawn.genes == null)
                 return Enumerable.Empty<T>();
 
-            var compPawnGeneCache = pawn.GetComp<CompPawn_GeneCache>();
-            if (compPawnGeneCache != null)
-                return compPawnGeneCache.GetGenesOfType<T>();
-            return pawn.genes?.GenesListForReading.OfType<T>() ?? Enumerable.Empty<T>();
+            return pawn.GetComp<CompPawn_GeneCache>()?.GetGenesOfType<T>() ??
+                   pawn.genes.GenesListForReading.OfType<T>();
         }
 
         public static IEnumerable<T> EverythingOfType<T>(this Pawn pawn) where T : class

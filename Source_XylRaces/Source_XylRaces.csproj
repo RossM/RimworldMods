@@ -6,6 +6,7 @@
     <Nullable>disable</Nullable>
     <LangVersion>latest</LangVersion>
     <AssemblyName>XylRacesCore</AssemblyName>
+    <RootNamespace>XylRacesCore</RootNamespace>
 
     <PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
     <PublicizerLogFilePath>../Build/Publicizer.log.txt</PublicizerLogFilePath>
@@ -53,7 +54,7 @@
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\XylRacesCore.dll&quot; &quot;..\XylRacesCore\Assemblies\XylRacesCore.dll&quot;" />
+    <Exec Command="copy &quot;bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).dll&quot; &quot;..\XylRacesCore\Assemblies\XylRacesCore.dll&quot;" />
   </Target>
 
 </Project>
