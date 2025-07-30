@@ -152,7 +152,7 @@ namespace Source_ExposableChecker
 
             foreach (var field in fields.Except(usedFields))
             {
-                Log.Warning($"Possibly unsaved field: {type.Namespace ?? "<Unknown>"}.{type.Name}.{field.Name}. Either save this field in {(typeof(IExposable).IsAssignableFrom(type) ? "ExposeData" : "PostExposeData")}, mark it [Unsaved], or make it const or readonly or static.");
+                Log.Warning($"Possibly unsaved field: {type.Namespace}.{type.Name}.{field.Name}. Either save this field in {(typeof(IExposable).IsAssignableFrom(type) ? "ExposeData" : "PostExposeData")}, mark it [Unsaved], or make it const or readonly or static.");
             }
         }
 
