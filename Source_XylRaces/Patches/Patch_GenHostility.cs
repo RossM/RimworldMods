@@ -16,7 +16,6 @@ namespace XylRacesCore.Patches
         public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
         {
             Gene_HostilityOverride_Enabled ??= Config.Instance.enabledFeatures.Contains(Config.Feature.Gene_HostilityOverride);
-            //Log.Message($"Gene_HostilityOverride_Enabled = {Gene_HostilityOverride_Enabled}");
             if (Gene_HostilityOverride_Enabled == false)
                 return true;
 
@@ -29,10 +28,7 @@ namespace XylRacesCore.Patches
                     (b.Faction == null && b.TryGetComp<CompCauseGameCondition>() != null))
                     return true;
 
-                var pawn = a as Pawn;
-                var pawn2 = b as Pawn;
-
-                if (pawn == null || pawn2 == null)
+                if (a is not Pawn pawn || b is not Pawn pawn2)
                     return true;
                 if (pawn.IsActivityDormant() || pawn2.IsActivityDormant())
                     return true;
