@@ -14,8 +14,7 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                var pawn = __instance.pawn;
-                foreach (var hediff in pawn.health.hediffSet.hediffs.OfType<Hediff_ForceBehavior>())
+                foreach (var hediff in __instance.pawn.HediffsOfType<Hediff_ForceBehavior>())
                 {
                     __result = hediff.DefExt.thinkTree;
                     return false;

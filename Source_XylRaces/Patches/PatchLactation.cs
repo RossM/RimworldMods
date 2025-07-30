@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -26,7 +27,7 @@ namespace XylRacesCore.Patches
                     ],
                     Output =
                     [
-                        CodeInstruction.Call(() => Util.GetFirstHediffWithComp<HediffComp_Lactating>),
+                        CodeInstruction.Call(() => GetFirstLactationHediff),
                     ]
                 },
                 new()
@@ -41,11 +42,21 @@ namespace XylRacesCore.Patches
                     ],
                     Output =
                     [
-                        CodeInstruction.Call(() => Util.HasHediffWithComp<HediffComp_Lactating>),
+                        CodeInstruction.Call(() => HasLactationHediff),
                     ]
                 },
             }
         };
+
+        static Hediff GetFirstLactationHediff(HediffSet hediffSet)
+        {
+            return hediffSet.GetFirstHediffWithComp<HediffComp_Lactating>();
+        }
+
+        static bool HasLactationHediff(HediffSet hediffSet)
+        {
+            return hediffSet.HasHediffWithComp<HediffComp_Lactating>();
+        }
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")] public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {

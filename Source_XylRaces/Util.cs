@@ -131,9 +131,25 @@ namespace XylRacesCore
         {
             return pawn.health.hediffSet.hediffs.OfType<T>();
         }
+
+        public static Hediff GetFirstHediffWithComp<T>(this Pawn pawn) where T : HediffComp
+        {
+            return pawn.health.hediffSet.hediffs.FirstOrDefault(h => h.TryGetComp<T>() != null);
+        }
+
         public static Hediff GetFirstHediffWithComp<T>(this HediffSet hediffSet) where T : HediffComp
         {
             return hediffSet.hediffs.FirstOrDefault(h => h.TryGetComp<T>() != null);
+        }
+
+        public static Hediff GetFirstHediffWithDef(this Pawn pawn, HediffDef def)
+        {
+            return pawn.health.hediffSet.hediffs.FirstOrDefault(h => h.def == def);
+        }
+
+        public static bool HasHediffWithComp<T>(this Pawn pawn) where T : HediffComp
+        {
+            return pawn.health.hediffSet.hediffs.Any(h => h.TryGetComp<T>() != null);
         }
 
         public static bool HasHediffWithComp<T>(this HediffSet hediffSet) where T : HediffComp

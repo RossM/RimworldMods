@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
@@ -14,7 +15,7 @@ namespace XylRacesCore
 
         public override float GetPriority(Pawn pawn)
         {
-            if (pawn.health.hediffSet.hediffs.Any(hediff => hediff is Hediff_DietDependency { ShouldSatisfy: true }))
+            if (pawn.HediffsOfType<Hediff_DietDependency>().Any(h => h.ShouldSatisfy))
             {
                 return ThinkNodePriority.Food + 0.01f;
             }
@@ -24,19 +25,11 @@ namespace XylRacesCore
         protected override Job TryGiveJob(Pawn pawn)
         {
             tmpDietDependencies.Clear();
-            List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
-            foreach (Hediff hediff in hediffs)
-            {
-                if (hediff is Hediff_DietDependency { ShouldSatisfy: true } dietDependency)
-                {
-                    tmpDietDependencies.Add(dietDependency);
-                }
-            }
+            tmpDietDependencies.AddRange(pawn.HediffsOfType<Hediff_DietDependency>().Where(h => h.ShouldSatisfy));
             if (!tmpDietDependencies.Any())
-            {
                 return null;
-            }
             tmpDietDependencies.SortBy(x => 0f - x.Severity);
+
             try
             {
                 foreach (Hediff_DietDependency dietDependency in tmpDietDependencies)

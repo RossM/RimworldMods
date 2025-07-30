@@ -34,14 +34,7 @@ namespace XylRacesCore.Genes
             }
         }
 
-        public Hediff LinkedHediff
-        {
-            get
-            {
-                List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
-                return DefExt == null ? null : hediffs.FirstOrDefault(hediff => hediff.def == DefExt.hediffDef);
-            }
-        }
+        public Hediff LinkedHediff => DefExt == null ? null : pawn.GetFirstHediffWithDef(DefExt.hediffDef);
 
         public override void PostAdd()
         {

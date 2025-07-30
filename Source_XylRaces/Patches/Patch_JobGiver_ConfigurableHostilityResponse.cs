@@ -15,7 +15,7 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                if (pawn.health.hediffSet.hediffs.OfType<Hediff_ForceBehavior>().Any())
+                if (pawn.HediffsOfType<Hediff_ForceBehavior>().Any())
                 {
                     __result = null;
                     return false;
