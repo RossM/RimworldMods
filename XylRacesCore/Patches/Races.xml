@@ -5,8 +5,8 @@
     <xpath>Defs/ThingDef[@Name="BasePawn"]</xpath>
     <value>
       <comps>
-        <li Class="XylRacesCore.CompProperties_PawnRenderProperties">
-        </li>
+        <li Class="XylRacesCore.CompProperties_PawnRenderProperties" />
+        <li Class="XylRacesCore.CompProperties_PawnGeneCache" />
       </comps>
     </value>
   </Operation>
