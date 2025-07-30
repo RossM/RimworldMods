@@ -10,7 +10,6 @@ namespace XylRacesCore
 
         public enum Feature
         {
-            Gene_HostilityOverride,
         }
 
         public List<Feature> enabledFeatures;
@@ -22,6 +21,20 @@ namespace XylRacesCore
         public static bool FeatureEnabled(Feature feature)
         {
             return Instance.enabledFeatures?.Contains(feature) ?? false;
+        }
+
+        public static bool GeneOfTypeExists<T>()
+        {
+            bool result = DefDatabase<GeneDef>.AllDefs.Any(gene => gene.geneClass.IsAssignableFrom(typeof(T)));
+            Log.Message($"XylRacesCore feature check: {typeof(T)} = {result}");
+            return result;
+        }
+
+        public static bool GeneWithModExtensionExists<T>()
+        {
+            bool result = DefDatabase<GeneDef>.AllDefs.Where(gene => gene.modExtensions != null).Any(gene => gene.modExtensions.OfType<T>().Any());
+            Log.Message($"XylRacesCore feature check: {typeof(T)} = {result}");
+            return result;
         }
     }
 }

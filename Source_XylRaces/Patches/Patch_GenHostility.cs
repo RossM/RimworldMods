@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
@@ -10,13 +11,12 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(GenHostility))]
     public static class Patch_GenHostility
     {
-        public static bool? Gene_HostilityOverride_Enabled;
+        public static Lazy<bool> Enabled = new(Config.GeneOfTypeExists<HostilityOverride>);
 
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
         public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
         {
-            Gene_HostilityOverride_Enabled ??= Config.FeatureEnabled(Config.Feature.Gene_HostilityOverride);
-            if (Gene_HostilityOverride_Enabled == false)
+            if (Enabled.Value == false)
                 return true;
 
             using (new ProfileBlock())

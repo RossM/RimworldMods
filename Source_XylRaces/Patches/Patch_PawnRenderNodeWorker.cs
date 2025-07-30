@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using HarmonyLib;
+﻿using HarmonyLib;
 using JetBrains.Annotations;
+using System;
+using System.Collections.Generic;
 using Verse;
 using XylRacesCore.Genes;
 
@@ -11,9 +12,14 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(PawnRenderNodeWorker))]
     public static class Patch_PawnRenderNodeWorker
     {
+        public static Lazy<bool> Enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Rendering>);
+
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnRenderNodeWorker.ScaleFor))]
         public static void ScaleFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref UnityEngine.Vector3 __result)
         {
+            if (Enabled.Value == false)
+                return;
+
             using (new ProfileBlock())
             {
                 if (parms.pawn == null)
