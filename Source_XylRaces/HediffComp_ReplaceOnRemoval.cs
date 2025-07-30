@@ -6,7 +6,7 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class HediffComp_ReplaceOnRemoval : HediffComp_ReplaceHediff
     {
-        [Unsaved()] 
+        [Unsaved] 
         private bool hasTriggered = false;
 
         public override void CompPostPostRemoved()

@@ -14,7 +14,7 @@ namespace XylRacesCore.Genes
     {
         public bool autoFly = true;
 
-        [Unsaved()] 
+        [Unsaved] 
         private bool wasFlying;
 
         public GeneDefExtension_Flight DefExt => def.GetModExtension<GeneDefExtension_Flight>();

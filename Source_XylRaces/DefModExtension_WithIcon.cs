@@ -6,9 +6,9 @@ namespace XylRacesCore;
 public class DefModExtension_WithIcon : DefModExtension
 {
     [NoTranslate]
-    public string iconPath = "Things/Item/Resource/Milk";
+    public string iconPath;
 
-    [Unsaved()] 
+    [Unsaved] 
     private Texture2D cachedIcon;
 
     public Texture2D Icon
