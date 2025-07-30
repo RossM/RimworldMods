@@ -15,8 +15,7 @@ namespace XylRacesCore
 
             foreach (var gene in genePrerequisites)
             {
-                if (!map.mapPawns.PawnsInFaction(Faction.OfPlayer)
-                        .Any(p => p.genes?.HasActiveGene(gene) ?? false))
+                if (!map.mapPawns.PawnsInFaction(Faction.OfPlayer).Any(p => p.HasActiveGene(gene)))
                 {
                     return false;
                 }

@@ -25,7 +25,7 @@ namespace XylRacesCore.Patches
         {
             if (__result < 0)
                 return;
-            if (Defs.XylDocile != null && pawn.genes.HasActiveGene(Defs.XylDocile))
+            if (pawn.HasActiveGene(Defs.XylDocile))
                 __result *= DocileFactor;
         }
 
@@ -66,7 +66,7 @@ namespace XylRacesCore.Patches
 
         private static void AddAdditionalExplanation(StringBuilder stringBuilder, Pawn pawn)
         {
-            if (Defs.XylDocile != null && pawn.genes.HasActiveGene(Defs.XylDocile))
+            if (pawn.HasActiveGene(Defs.XylDocile))
             {
                 stringBuilder.AppendLine($"{Defs.XylDocile.LabelCap}: x{DocileFactor.ToStringPercent()}");
             }

@@ -19,21 +19,33 @@ namespace XylRacesCore
 
     public class CompPawn_GeneCache : ThingComp
     {
-        private readonly Dictionary<Type, object> geneCache = new();
+        private readonly Dictionary<Type, object> typeCache = new();
+        private readonly Dictionary<GeneDef, List<Gene>> defCache = new();
 
         public IEnumerable<T> GetGenesOfType<T>()
         {
-            if (geneCache.TryGetValue(typeof(T), out object value)) 
+            if (typeCache.TryGetValue(typeof(T), out object value)) 
                 return (List<T>)value;
 
             value = ((Pawn)parent).genes?.GenesListForReading.OfType<T>().ToList() ?? [];
-            geneCache.Add(typeof(T), value);
+            typeCache.Add(typeof(T), value);
             return (List<T>)value;
+        }
+
+        public List<Gene> GetGenes(GeneDef def)
+        {
+            if (defCache.TryGetValue(def, out List<Gene> value))
+                return value;
+
+            value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def == def).OrderByDescending(g => g.Active).ToList();
+            defCache.Add(def, value);
+            return value;
         }
 
         public void Notify_GenesChanged()
         {
-            geneCache.Clear();
+            typeCache.Clear();
+            defCache.Clear();
         }
     }
 }

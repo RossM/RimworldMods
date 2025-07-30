@@ -43,15 +43,6 @@ namespace XylRacesCore
 
     public static class Util
     {
-        public static IEnumerable<T> GenesOfType<T>(this Pawn pawn) where T : Gene
-        {
-            if (pawn.genes == null)
-                return Enumerable.Empty<T>();
-
-            return pawn.GetComp<CompPawn_GeneCache>()?.GetGenesOfType<T>() ??
-                   pawn.genes.GenesListForReading.OfType<T>();
-        }
-
         public static IEnumerable<T> EverythingOfType<T>(this Pawn pawn) where T : class
         {
             if (pawn.genes != null)
@@ -86,6 +77,31 @@ namespace XylRacesCore
                     }
                 }
             }
+        }
+
+        public static IEnumerable<Gene> GenesOfDef(this Pawn pawn, GeneDef def)
+        {
+            if (pawn.genes == null)
+                return Enumerable.Empty<Gene>();
+
+            return pawn.GetComp<CompPawn_GeneCache>()?.GetGenes(def) ??
+                   pawn.genes.GenesListForReading.Where(g => g.def == def);
+        }
+
+        // This is faster than pawn.genes.HasActiveGene(def) because it caches
+        // the gene lookup.
+        public static bool HasActiveGene(this Pawn pawn, GeneDef def)
+        {
+            return pawn.genes != null && def != null && pawn.GenesOfDef(def).Any(g => g.Active);
+        }
+
+        public static IEnumerable<T> GenesOfType<T>(this Pawn pawn) where T : Gene
+        {
+            if (pawn.genes == null)
+                return Enumerable.Empty<T>();
+
+            return pawn.GetComp<CompPawn_GeneCache>()?.GetGenesOfType<T>() ??
+                   pawn.genes.GenesListForReading.OfType<T>();
         }
 
         public static IEnumerable<T> ActiveGenesOfType<T>(this Pawn pawn) where T : Gene
