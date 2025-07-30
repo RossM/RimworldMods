@@ -43,7 +43,7 @@ namespace XylRacesCore
 
     public static class Util
     {
-        public static IEnumerable<T> GenesOfType<T>(this Pawn pawn) where T : class
+        public static IEnumerable<T> GenesOfType<T>(this Pawn pawn) where T : Gene
         {
             if (pawn.genes == null)
                 return Enumerable.Empty<T>();
@@ -90,24 +90,24 @@ namespace XylRacesCore
             }
         }
 
-        public static T FirstGeneOfType<T>(this Pawn pawn) where T : class
+        public static IEnumerable<T> ActiveGenesOfType<T>(this Pawn pawn) where T : Gene
         {
-            return pawn.GenesOfType<T>().FirstOrDefault();
+            return pawn.GenesOfType<T>().Where(g => g.Active);
         }
 
-        public static T FirstGeneOfType<T>(this Pawn pawn, Func<T, bool> predicate) where T : class
+        public static T FirstActiveGeneOfType<T>(this Pawn pawn) where T : Gene
         {
-            return pawn.GenesOfType<T>().FirstOrDefault(predicate);
+            return pawn.GenesOfType<T>().FirstOrDefault(g => g.Active);
         }
 
-        public static bool HasGeneOfType<T>(this Pawn pawn) where T : class
+        public static bool HasActiveGeneOfType<T>(this Pawn pawn) where T : Gene
         {
-            return pawn.genes != null && pawn.GenesOfType<T>().Any();
+            return pawn.genes != null && pawn.GenesOfType<T>().Any(g => g.Active);
         }
 
-        public static bool HasGeneOfType<T>(this Pawn pawn, Func<T, bool> predicate) where T : class
+        public static bool HasActiveGeneOfType<T>(this Pawn pawn, Func<T, bool> predicate) where T : Gene
         {
-            return pawn.genes != null && pawn.GenesOfType<T>().Any(predicate);
+            return pawn.genes != null && pawn.GenesOfType<T>().Any(g => g.Active && predicate(g));
         }
 
         public static IEnumerable<T> GeneDefExtensionsOfType<T>(this Pawn pawn) where T : DefModExtension

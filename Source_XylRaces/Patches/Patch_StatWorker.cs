@@ -256,7 +256,7 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                if (req.Thing is Pawn pawn && pawn.HasPsycastGene())
+                if (req.Thing is Pawn pawn && pawn.HasActivePsycastGene())
                 {
                     if (__instance.stat == StatDefOf.PsychicEntropyRecoveryRate)
                         __result = true;

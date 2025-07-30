@@ -25,14 +25,14 @@ namespace XylRacesCore
             }
         }
 
-        public static bool HasPsycastGene(this Pawn pawn)
+        public static bool HasActivePsycastGene(this Pawn pawn)
         {
-            return pawn.HasGeneOfType<Genes.Psycast>();
+            return pawn.HasActiveGeneOfType<Genes.Psycast>();
         }
 
         public static bool NeedsPsyfocus(this Pawn pawn)
         {
-            if (pawn.psychicEntropy.Psylink == null && !pawn.HasPsycastGene())
+            if (pawn.psychicEntropy.Psylink == null && !pawn.HasActivePsycastGene())
                 return false;
             if (pawn.Suspended)
                 return false;

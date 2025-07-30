@@ -22,7 +22,7 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                if (__instance.Pawn.HasPsycastGene())
+                if (__instance.Pawn.HasActivePsycastGene())
                 {
                     __result = true;
                     return false;

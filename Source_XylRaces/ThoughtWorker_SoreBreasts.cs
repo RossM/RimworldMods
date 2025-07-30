@@ -16,7 +16,7 @@ namespace XylRacesCore
             if (ThoughtUtility.ThoughtNullified(p, def))
                 return ThoughtState.Inactive;
 
-            var gene = p.FirstGeneOfType<Hyperlactation>();
+            var gene = p.FirstActiveGeneOfType<Hyperlactation>();
             if (gene == null)
                 return ThoughtState.Inactive;
  
