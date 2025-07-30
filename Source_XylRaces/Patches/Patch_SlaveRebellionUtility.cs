@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using System.Collections.Generic;
@@ -41,12 +42,28 @@ namespace XylRacesCore.Patches
                 new()
                 {
                     Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.InsertAfter,
+                    Mode = InstructionMatcher.OutputMode.Replace,
                     Pattern =
                     [
                         CodeInstruction.LoadLocal(0), 
                         new CodeInstruction(OpCodes.Ldstr, "{0}: {1}"),
                         new CodeInstruction(OpCodes.Ldstr, "SuppressionFinalInterval"),
+                        CodeInstruction.Call(typeof(Translator), nameof(Translator.Translate), [typeof(string)]),
+                        new CodeInstruction(OpCodes.Box, typeof(TaggedString)),
+                        CodeInstruction.LoadArgument(0),
+                        CodeInstruction.Call(typeof(SlaveRebellionUtility), nameof(SlaveRebellionUtility.InitiateSlaveRebellionMtbDays)),
+                        new CodeInstruction(OpCodes.Ldc_R4, 60000),
+                        new CodeInstruction(OpCodes.Mul),
+                        new CodeInstruction(OpCodes.Conv_I4),
+                        new CodeInstruction(OpCodes.Ldc_I4_1),
+                        new CodeInstruction(OpCodes.Ldc_I4_0),
+                        new CodeInstruction(OpCodes.Ldc_I4_1),
+                        new CodeInstruction(OpCodes.Ldc_I4_1),
+                        new CodeInstruction(OpCodes.Ldc_I4_0),
+                        CodeInstruction.Call(typeof(GenDate), nameof(GenDate.ToStringTicksToPeriod)),
+                        CodeInstruction.Call(typeof(string), nameof(string.Format), [typeof(string), typeof(object), typeof(object)]), 
+                        CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.Append), [typeof(string)]),
+                        new CodeInstruction(OpCodes.Pop),
                     ],
                     Output =
                     [
@@ -54,8 +71,8 @@ namespace XylRacesCore.Patches
                         CodeInstruction.LoadLocal(0),
                         // Load pawn
                         CodeInstruction.LoadArgument(0), 
-                        // Call AddAdditionalExplanation
-                        CodeInstruction.Call(() => AddAdditionalExplanation), 
+                        // Call FinishExplanation
+                        CodeInstruction.Call(() => FinishExplanation), 
                     ]
                 }
             }
@@ -69,24 +86,22 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
-        public static bool GetSlaveRebellionMtbCalculationExplanation_Prefix(Pawn pawn, ref string __result)
+        private static void FinishExplanation(StringBuilder stringBuilder, Pawn pawn)
         {
-            if (SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn) < 0)
-            {
-                __result = "";
-                return false;
-            }
+            float initiateSlaveRebellionMtbDays = SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn);
 
-            return true;
-        }
-
-        private static void AddAdditionalExplanation(StringBuilder stringBuilder, Pawn pawn)
-        {
             if (pawn.HasActiveGene(Defs.XylDocile))
             {
                 stringBuilder.AppendLine($"{Defs.XylDocile.LabelCap}: x{DocileFactor.ToStringPercent()}");
+
+                if (initiateSlaveRebellionMtbDays < 0)
+                    stringBuilder.AppendLine($"{Defs.XylDocile.LabelCap}: " + "XylDocileThresholdReached".Translate(NeverRebelThresholdDays));
             }
+
+            string period = initiateSlaveRebellionMtbDays < 0 ? 
+                "Never".TranslateSimple() :
+                ((int)(initiateSlaveRebellionMtbDays * 60000f)).ToStringTicksToPeriod();
+            stringBuilder.Append($"{"SuppressionFinalInterval".Translate()}: {period}");
         }
     }
 }

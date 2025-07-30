@@ -196,8 +196,9 @@ namespace XylRacesCore
 
                     instructionIndex = match.end;
 
-                    foreach (CodeInstruction replaceInst in match.rule.Output)
+                    for (var i = 0; i < match.rule.Output.Length; i++)
                     {
+                        CodeInstruction replaceInst = match.rule.Output[i];
                         if (replaceInst.IsStloc())
                         {
                             int localIndex = replaceInst.LocalIndex();
@@ -244,6 +245,11 @@ namespace XylRacesCore
                         }
                         else
                             outInstructions.Add(replaceInst);
+
+                        if (i == 0 && match.rule.Mode == OutputMode.Replace)
+                        {
+                            outInstructions[outInstructions.Count - 1].labels = instructions[match.start].labels;
+                        }
 
                         if (debug)
                             Log.Message($"EMIT {outInstructions[outInstructions.Count - 1]}");
