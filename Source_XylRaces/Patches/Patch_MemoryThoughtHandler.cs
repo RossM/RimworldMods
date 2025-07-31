@@ -18,7 +18,7 @@ namespace XylRacesCore.Patches
                     return;
                 foreach (var thoughtDef in extension.extraThoughts)
                 {
-                    if (newThought.CurStage != null)
+                    if (thoughtDef.stages[newThought.CurStageIndex] != null)
                         __instance.TryGainMemory(ThoughtMaker.MakeThought(thoughtDef, newThought.CurStageIndex), otherPawn);
                 }
             }
