@@ -82,21 +82,6 @@
     </bodyTypeGraphicPaths>
   </FurDef>
 
-  <!--<GeneDef MayRequire="Ludeon.RimWorld.Odyssey">
-    <defName>XylVacuum_Resistant</defName>
-    <label>vacuum-resistant</label>
-    <description>Carriers of this gene have extra hemoglobin, tough skin, and specialized mucus membranes that make them resistant to damage from vacuum.</description>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>-1</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>400</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_Scaleskin</iconPath>
-    <iconColor>(0.75, 0.75, 0.75)</iconColor>
-    <statOffsets>
-      <VacuumResistance>0.9</VacuumResistance>
-    </statOffsets>
-  </GeneDef>-->
-
   <GeneDef>
     <defName>XylJoyless</defName>
     <label>joyless</label>
