@@ -15,6 +15,7 @@
       <li>MinTemp_SmallIncrease</li>
       <li>MaxTemp_SmallIncrease</li>
       <li>Delicate</li>
+      <li>Immunity_Weak</li>
       <li>Skin_Orange</li>
       <li>Skin_Purple</li>
       <li>XylSkin_DarkBlue</li>
@@ -23,7 +24,6 @@
       <li>XylPrecognition</li>
       <li>XylKeenEars</li>
       <li>XylNocturnal</li>
-      <li>AptitudePoor_Shooting</li>
       <li>AptitudePoor_Plants</li>
     </genes>
   </XenotypeDef>
