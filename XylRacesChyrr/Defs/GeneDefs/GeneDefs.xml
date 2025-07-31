@@ -243,7 +243,9 @@
   <GeneDef>
     <defName>XylSonicWave</defName>
     <label>sonic wave</label>
-    <description>Carriers are able to release a wave of high-intensity ultrasonic noise at a target. The noise will stun any non-mechanoid creature nearby.</description>
+    <description>Carriers of this gene are able to release a wave of high-intensity ultrasonic noise and psychic energy at a target. The noise will stun any non-mechanoid creature nearby.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-3</biostatMet>
     <displayCategory>Ability</displayCategory>
     <displayOrderInCategory>201</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>
@@ -253,7 +255,6 @@
     <descriptionHyperlinks>
       <AbilityDef>XylSonicWave</AbilityDef>
     </descriptionHyperlinks>
-    <biostatMet>-2</biostatMet>
   </GeneDef>
 
   <GeneDef ParentName="GeneSkinColorOverride">
