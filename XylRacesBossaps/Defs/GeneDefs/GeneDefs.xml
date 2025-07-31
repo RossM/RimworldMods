@@ -63,7 +63,7 @@
     <displayOrderInCategory>5</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Docile</iconPath>
     <socialFightChanceFactor>0</socialFightChanceFactor>
-    <prisonBreakMTBFactor>4</prisonBreakMTBFactor><!-- Never prison breaks -->
+    <prisonBreakMTBFactor>4</prisonBreakMTBFactor>
     <statFactors>
       <SlaveSuppressionFallRate MayRequire="Ludeon.RimWorld.Ideology">0.25</SlaveSuppressionFallRate>
       <XylWillFallRate>4</XylWillFallRate>
