@@ -40,3 +40,6 @@ XylIdeoTweaks/Assemblies/XylIdeoTweaks.dll
 XylIdeoTweaks/Assemblies/TranspilerUtil.dll
 XylRacesCore/Assemblies/TranspilerUtil.dll
 /XylIdeoTweaks/obj
+/Source_SavePatched/bin
+/Source_SavePatched/obj
+XylSavePatched/Assemblies/XylSavePatched.dll

@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranspilerUtil", "Transpile
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XylIdeoTweaks", "XylIdeoTweaks\XylIdeoTweaks.csproj", "{A866F0D8-C387-E006-5847-E398E59960F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_SavePatched", "Source_SavePatched\Source_SavePatched.csproj", "{8BA0EBE5-2DDE-482F-BFAC-A303F55B5C2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{A866F0D8-C387-E006-5847-E398E59960F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A866F0D8-C387-E006-5847-E398E59960F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A866F0D8-C387-E006-5847-E398E59960F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BA0EBE5-2DDE-482F-BFAC-A303F55B5C2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BA0EBE5-2DDE-482F-BFAC-A303F55B5C2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BA0EBE5-2DDE-482F-BFAC-A303F55B5C2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BA0EBE5-2DDE-482F-BFAC-A303F55B5C2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
