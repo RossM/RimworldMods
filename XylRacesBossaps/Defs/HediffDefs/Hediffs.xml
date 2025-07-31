@@ -73,6 +73,8 @@
         <onlyMessageForColonistsOrPrisoners>true</onlyMessageForColonistsOrPrisoners>
       </li>
     </comps>
+    <!-- Default Lactating has a fertilityFactor of 0.05. Remove that. -->
+    <stages IsNull="True" />
   </HediffDef>
 
   <HediffDef>
