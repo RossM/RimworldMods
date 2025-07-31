@@ -62,7 +62,7 @@
         <baseMoodEffect>-2</baseMoodEffect>
       </li>
       <li IsNull="True" />
-      <!-- dull -->
+      <!-- null -->
       <li>
         <label>mediocre barracks with herd instinct</label>
         <description>I had to sleep in a mediocre barracks.</description>
