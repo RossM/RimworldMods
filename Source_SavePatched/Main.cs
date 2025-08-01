@@ -28,6 +28,7 @@ namespace XylSavePatched
             Dictionary<Module, ModuleBuilder> moduleBuilders = new();
             Dictionary<Type, TypeBuilder> typeBuilders = new();
             Dictionary<MethodInfo, MethodBuilder> methodBuilders = new();
+            Dictionary<ConstructorInfo, ConstructorBuilder> constructorBuilders = new();
 
             foreach (var method in harmony.GetPatchedMethods())
             {
@@ -50,7 +51,13 @@ namespace XylSavePatched
                     //Log.Message($"typeBuilder = {typeBuilder}");
 
                     foreach (var typeMethod in GetAllMethods(type).Where(m => m.GetMethodBody() != null))
-                        methodBuilders.Add(typeMethod, MakeMethodBuilder(typeMethod, typeBuilder));
+                    {
+                            methodBuilders.Add(typeMethod, MakeMethodBuilder(typeMethod, typeBuilder));
+                    }
+                    foreach (var typeConstructor in GetAllConstructors(type).Where(m => m.GetMethodBody() != null))
+                    {
+                            constructorBuilders.Add(typeConstructor, MakeMethodBuilder(typeConstructor, typeBuilder));
+                    }
                 }
 
                 if (method is MethodInfo methodInfo)
@@ -64,7 +71,7 @@ namespace XylSavePatched
                     }
                     catch (Exception e)
                     {
-                        Log.Warning($"{methodInfo.Name}: Exception in CopyMethodBody (patched): {e}");
+                        Log.Warning($"{type.Name}.{methodInfo.Name}: Exception in CopyMethodBody (patched): {e}");
                     }
 
                     Log.Message($"methodBuilder = {methodBuilder}");
@@ -75,26 +82,22 @@ namespace XylSavePatched
                 }
             }
 
+            foreach (var methodBuilder in methodBuilders.Values)
+            {
+                ILGenerator ilGenerator = methodBuilder.GetILGenerator();
+                if (ilGenerator.ILOffset == 0)
+                    CreateDummyMethodBody(ilGenerator);
+            }
+
+            foreach (var constructorBuilder in constructorBuilders.Values)
+            {
+                ILGenerator ilGenerator = constructorBuilder.GetILGenerator();
+                if (ilGenerator.ILOffset == 0)
+                    CreateDummyMethodBody(ilGenerator);
+            }
+
             foreach ((Type type, TypeBuilder typeBuilder) in typeBuilders)
             {
-                foreach (var typeMethod in GetAllMethods(type))
-                {
-                    if (!methodBuilders.TryGetValue(typeMethod, out MethodBuilder methodBuilder)) 
-                        continue;
-
-                    if (methodBuilder.GetILGenerator().ILOffset == 0)
-                    {
-                        try
-                        {
-                            CopyMethodBody(typeMethod, methodBuilder.GetILGenerator());
-                        }
-                        catch (Exception e)
-                        {
-                            Log.Warning($"{typeMethod.Name}: Exception in CopyMethodBody (original): {e}");
-                        }
-                    }
-                }
-
                 try
                 {
                     typeBuilder.CreateType();
@@ -105,12 +108,29 @@ namespace XylSavePatched
                 }
             }
 
+            foreach (var module in moduleBuilders.Values)
+            {
+                module.CreateGlobalFunctions();
+            }
+
             assemblyBuilder.Save("Assembly-Output.dll");
+        }
+
+        private static void CreateDummyMethodBody(ILGenerator ilGenerator)
+        {
+            ilGenerator.ThrowException(typeof(NotImplementedException));
         }
 
         private static MethodInfo[] GetAllMethods(Type type)
         {
-            return type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            return type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | 
+                                   BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
+        }
+
+        private static ConstructorInfo[] GetAllConstructors(Type type)
+        {
+            return type.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | 
+                                        BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
         }
 
         private static MethodBuilder MakeMethodBuilder(MethodInfo methodInfo, TypeBuilder typeBuilder)
@@ -120,15 +140,23 @@ namespace XylSavePatched
             return methodBuilder;
         }
 
+        private static ConstructorBuilder MakeMethodBuilder(ConstructorInfo methodInfo, TypeBuilder typeBuilder)
+        {
+            var methodBuilder = typeBuilder.DefineConstructor(methodInfo.Attributes, methodInfo.CallingConvention,
+                methodInfo.GetParameters().Select(p => p.ParameterType).ToArray());
+            return methodBuilder;
+        }
+
         private static ModuleBuilder MakeModuleBuilder(Module module, AssemblyBuilder assemblyBuilder)
         {
             return assemblyBuilder.DefineDynamicModule(module.Name);
         }
 
-        private static void CopyMethodBody(MethodInfo methodInfo, ILGenerator ilGenerator)
+        private static void CopyMethodBody(MethodBase methodInfo, ILGenerator ilGenerator)
         {
-            var decodedMethod = Disassembler.Decode(methodInfo);
             var methodBody = methodInfo.GetMethodBody();
+            var module = methodInfo.Module;
+            var decodedMethod = Disassembler.Decode(methodBody, module);
 
             if (methodBody == null)
                 throw new NotSupportedException("Null MethodBody");
