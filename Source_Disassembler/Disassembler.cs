@@ -35,16 +35,22 @@ public class Disassembler
         }
     }
 
-    public Method Decode(MethodInfo methodInfo)
+    public static Method Decode(MethodInfo methodInfo)
     {
         MethodBody methodBody = methodInfo.GetMethodBody();
+        var module = methodInfo.Module;
+
+        return Decode(methodBody, module);
+    }
+
+    public static Method Decode(MethodBody methodBody, Module module)
+    {
         if (methodBody == null)
         {
             return default;
         }
 
         var il = methodBody.GetILAsByteArray();
-        var module = methodInfo.Module;
 
         List<Instruction> instructions = [];
 
@@ -56,7 +62,8 @@ public class Disassembler
             if (twoBytePrefixes.Contains(value))
                 value = value << 8 | il[curByte++];
 
-            var opcode = opCodeByValue[value];
+            if (!opCodeByValue.TryGetValue(value, out OpCode opcode))
+                throw new NotSupportedException($"Unrecognized opcode 0x{value:X02} at 0x{curByte:X04}");
 
             object operandValue = opcode.OperandType switch
             {
@@ -64,7 +71,7 @@ public class Disassembler
                 OperandType.InlineNone => 0,
 
                 // 1 byte
-                OperandType.ShortInlineBrTarget => curByte + 1 + il[curByte],
+                OperandType.ShortInlineBrTarget => curByte + 1 + (sbyte)il[curByte],
                 OperandType.ShortInlineI => (int)il[curByte],
                 OperandType.ShortInlineVar => (int)il[curByte],
 

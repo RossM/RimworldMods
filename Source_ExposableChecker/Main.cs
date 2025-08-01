@@ -12,8 +12,6 @@ namespace XylExposableChecker
     [StaticConstructorOnStartup]
     public class Main(ModContentPack content) : Mod(content)
     {
-        private static readonly Disassembler Disassembler = new();
-
         public static void Check(Type type)
         {
             var fields = type.GetFields().Where(
