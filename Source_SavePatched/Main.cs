@@ -146,12 +146,22 @@ namespace XylSavePatched
             // Create labels for all instructions which are branch targets
             foreach (var oldInstruction in decodedMethod.Instructions)
             {
-                if (!IsBranch(oldInstruction.OpCode)) 
-                    continue;
-                var target = (int)oldInstruction.Value;
-                if (labels.ContainsKey(target)) 
-                    continue;
-                labels.Add(target, ilGenerator.DefineLabel());
+                if (IsBranch(oldInstruction.OpCode))
+                {
+                    var target = (int)oldInstruction.Value;
+                    if (labels.ContainsKey(target))
+                        continue;
+                    labels.Add(target, ilGenerator.DefineLabel());
+                }
+                else if (oldInstruction.OpCode == OpCodes.Switch)
+                {
+                    foreach (int target in (int[])oldInstruction.Value)
+                    {
+                        if (labels.ContainsKey(target))
+                            continue;
+                        labels.Add(target, ilGenerator.DefineLabel());
+                    }
+                }
             }
 
             // Emit the instructions
@@ -168,21 +178,28 @@ namespace XylSavePatched
                 {
                     ilGenerator.Emit(oldInstruction.OpCode, labels[(int)oldInstruction.Value]);
                 }
-                else switch (oldInstruction.Value)
+                else if (oldInstruction.OpCode == OpCodes.Switch)
                 {
-                    case null: ilGenerator.Emit(oldInstruction.OpCode); break;
-                    case byte value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                    case short value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                    case int value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                    case long value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                    case float value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                    case double value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                    case string value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                    case Type value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                    case MethodInfo value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                    case ConstructorInfo value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                    case FieldInfo value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                    default: throw new NotSupportedException($"Unhandled value type {oldInstruction.Value.GetType()}");
+                    ilGenerator.Emit(oldInstruction.OpCode, ((int[])oldInstruction.Value).Select(i => labels[i]).ToArray());
+                }
+                else
+                {
+                    switch (oldInstruction.Value)
+                    {
+                        case null: ilGenerator.Emit(oldInstruction.OpCode); break;
+                        case byte value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        case short value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        case int value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        case long value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        case float value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        case double value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        case string value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        case Type value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        case MethodInfo value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        case ConstructorInfo value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        case FieldInfo value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        default: throw new NotSupportedException($"Unhandled value type {oldInstruction.Value.GetType()}");
+                    }
                 }
             }
 

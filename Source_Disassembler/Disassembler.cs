@@ -65,34 +65,48 @@ public class Disassembler
             if (!opCodeByValue.TryGetValue(value, out OpCode opcode))
                 throw new NotSupportedException($"Unrecognized opcode 0x{value:X02} at 0x{curByte:X04}");
 
-            object operandValue = opcode.OperandType switch
+            object operandValue;
+            int switchCount = 0;
+            if (opcode == OpCodes.Switch)
             {
-                // 0 bytes
-                OperandType.InlineNone => 0,
+                switchCount = BitConverter.ToInt32(il, curByte);
+                var nextByte = curByte + 4 + switchCount * 4;
+                var jumpTable = new int[switchCount];
+                for (int i = 0; i < switchCount; i++)
+                    jumpTable[i] = nextByte + BitConverter.ToInt32(il, curByte + 4 + i * 4);
+                operandValue = jumpTable;
+            }
+            else
+            {
+                operandValue = opcode.OperandType switch
+                {
+                    // 0 bytes
+                    OperandType.InlineNone => 0,
 
-                // 1 byte
-                OperandType.ShortInlineBrTarget => curByte + 1 + (sbyte)il[curByte],
-                OperandType.ShortInlineI => (int)il[curByte],
-                OperandType.ShortInlineVar => (int)il[curByte],
+                    // 1 byte
+                    OperandType.ShortInlineBrTarget => curByte + 1 + (sbyte)il[curByte],
+                    OperandType.ShortInlineI => (int)il[curByte],
+                    OperandType.ShortInlineVar => (int)il[curByte],
 
-                // 2 bytes
-                OperandType.InlineVar => (int)BitConverter.ToInt16(il, curByte),
+                    // 2 bytes
+                    OperandType.InlineVar => (int)BitConverter.ToInt16(il, curByte),
 
-                // 4 bytes
-                OperandType.InlineType => module.ResolveType(BitConverter.ToInt32(il, curByte)),
-                OperandType.InlineField => module.ResolveField(BitConverter.ToInt32(il, curByte)),
-                OperandType.InlineMethod => module.ResolveMethod(BitConverter.ToInt32(il, curByte)),
-                OperandType.InlineString => module.ResolveString(BitConverter.ToInt32(il, curByte)),
-                OperandType.InlineTok => module.ResolveType(BitConverter.ToInt32(il, curByte)),
-                OperandType.InlineBrTarget => curByte + 4 + BitConverter.ToInt32(il, curByte),
-                OperandType.ShortInlineR => BitConverter.ToSingle(il, curByte),
+                    // 4 bytes
+                    OperandType.InlineType => module.ResolveType(BitConverter.ToInt32(il, curByte)),
+                    OperandType.InlineField => module.ResolveField(BitConverter.ToInt32(il, curByte)),
+                    OperandType.InlineMethod => module.ResolveMethod(BitConverter.ToInt32(il, curByte)),
+                    OperandType.InlineString => module.ResolveString(BitConverter.ToInt32(il, curByte)),
+                    OperandType.InlineTok => module.ResolveType(BitConverter.ToInt32(il, curByte)),
+                    OperandType.InlineBrTarget => curByte + 4 + BitConverter.ToInt32(il, curByte),
+                    OperandType.ShortInlineR => BitConverter.ToSingle(il, curByte),
 
-                // 8 bytes
-                OperandType.InlineR => BitConverter.ToDouble(il, curByte),
-                OperandType.InlineI8 => BitConverter.ToInt64(il, curByte),
+                    // 8 bytes
+                    OperandType.InlineR => BitConverter.ToDouble(il, curByte),
+                    OperandType.InlineI8 => BitConverter.ToInt64(il, curByte),
 
-                _ => BitConverter.ToInt32(il, curByte)
-            };
+                    _ => BitConverter.ToInt32(il, curByte)
+                };
+            }
 
             curByte += opcode.OperandType switch
             {
@@ -105,6 +119,8 @@ public class Disassembler
                 OperandType.InlineR => 8,
                 _ => 4,
             };
+            if (opcode == OpCodes.Switch)
+                curByte += switchCount * 4;
 
             instructions.Add(new()
             {
