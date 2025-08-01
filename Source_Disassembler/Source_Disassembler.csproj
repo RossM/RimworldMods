@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net4.7.2</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>XylDisassembler</AssemblyName>
+    <RootNamespace>XylDisassembler</RootNamespace>
+  </PropertyGroup>
+
+</Project>

@@ -7,7 +7,7 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using Verse;
 
-namespace Source_SavePatched
+namespace XylSavePatched
 {
     [UsedImplicitly]
     [StaticConstructorOnStartup]

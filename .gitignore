@@ -43,3 +43,7 @@ XylRacesCore/Assemblies/TranspilerUtil.dll
 /Source_SavePatched/bin
 /Source_SavePatched/obj
 XylSavePatched/Assemblies/XylSavePatched.dll
+/Source_Disassembler/bin
+/Source_Disassembler/obj
+XylExposableChecker/Assemblies/XylDisassembler.dll
+XylSavePatched/Assemblies/XylDisassembler.dll

@@ -5,10 +5,13 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <LangVersion>latest</LangVersion>
+    <AssemblyName>XylSavePatched</AssemblyName>
+    <RootNamespace>XylSavePatched</RootNamespace>
   </PropertyGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy &quot;bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).dll&quot; &quot;..\XylSavePatched\Assemblies\XylSavePatched.dll&quot;" />
+    <Exec Command="copy &quot;bin\$(Configuration)\$(TargetFramework)\XylDisassembler.dll&quot; &quot;..\XylSavePatched\Assemblies\XylDisassembler.dll&quot;" />
   </Target>
 
   <ItemGroup>
@@ -16,6 +19,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Source_Disassembler\Source_Disassembler.csproj" />
   </ItemGroup>
 
   <ItemGroup>
