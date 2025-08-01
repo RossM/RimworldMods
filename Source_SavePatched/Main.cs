@@ -38,7 +38,7 @@ namespace XylSavePatched
                 var module = method.Module;
                 if (!moduleBuilders.TryGetValue(module, out ModuleBuilder moduleBuilder))
                 {
-                    moduleBuilder = MakeModuleBuilder(module, assemblyBuilder);
+                    moduleBuilder = assemblyBuilder.DefineDynamicModule("Assembly-Output.dll");
                     moduleBuilders.Add(module, moduleBuilder);
                     //Log.Message($"moduleBuilder = {moduleBuilder}");
                 }
@@ -74,7 +74,7 @@ namespace XylSavePatched
                         Log.Warning($"{type.Name}.{methodInfo.Name}: Exception in CopyMethodBody (patched): {e}");
                     }
 
-                    Log.Message($"methodBuilder = {methodBuilder}");
+                    //Log.Message($"methodBuilder = {methodBuilder}");
                 }
                 else
                 {
@@ -101,16 +101,12 @@ namespace XylSavePatched
                 try
                 {
                     typeBuilder.CreateType();
+                    //Log.Message($"{typeBuilder.FullName}: IsCreated = {typeBuilder.IsCreated()}");
                 }
                 catch (Exception e)
                 {
                     Log.Warning($"{type.Name}: Exception in CreateType: {e}");
                 }
-            }
-
-            foreach (var module in moduleBuilders.Values)
-            {
-                module.CreateGlobalFunctions();
             }
 
             assemblyBuilder.Save("Assembly-Output.dll");
@@ -145,11 +141,6 @@ namespace XylSavePatched
             var methodBuilder = typeBuilder.DefineConstructor(methodInfo.Attributes, methodInfo.CallingConvention,
                 methodInfo.GetParameters().Select(p => p.ParameterType).ToArray());
             return methodBuilder;
-        }
-
-        private static ModuleBuilder MakeModuleBuilder(Module module, AssemblyBuilder assemblyBuilder)
-        {
-            return assemblyBuilder.DefineDynamicModule(module.Name);
         }
 
         private static void CopyMethodBody(MethodBase methodInfo, ILGenerator ilGenerator)
