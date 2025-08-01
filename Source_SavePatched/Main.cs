@@ -19,8 +19,6 @@ namespace XylSavePatched
     {
         static Main()
         {
-            var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
-
             var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
                 new AssemblyName("Output.DynamicAssembly"), AssemblyBuilderAccess.Save,
                 GenFilePaths.DevOutputFolderPath);
@@ -30,8 +28,10 @@ namespace XylSavePatched
             Dictionary<MethodInfo, MethodBuilder> methodBuilders = new();
             Dictionary<ConstructorInfo, ConstructorBuilder> constructorBuilders = new();
 
-            foreach (var method in harmony.GetPatchedMethods())
+            foreach (var method in Harmony.GetAllPatchedMethods())
             {
+                Log.Message($"{method.Name}: {method.GetType()}");
+
                 if (method.Module.Assembly.GetName().Name != "Assembly-CSharp")
                     continue;
 
@@ -67,7 +67,7 @@ namespace XylSavePatched
 
                     try
                     {
-                        CopyMethodBody(methodInfo, methodBuilder.GetILGenerator());
+                        CopyMethodBody(methodInfo, methodBuilder, methodBuilder.GetILGenerator());
                     }
                     catch (Exception e)
                     {
@@ -143,7 +143,7 @@ namespace XylSavePatched
             return methodBuilder;
         }
 
-        private static void CopyMethodBody(MethodBase methodInfo, ILGenerator ilGenerator)
+        private static void CopyMethodBody(MethodBase methodInfo, MethodBuilder builder, ILGenerator ilGenerator)
         {
             var methodBody = methodInfo.GetMethodBody();
             var module = methodInfo.Module;
@@ -214,9 +214,39 @@ namespace XylSavePatched
                         case double value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
                         case string value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
                         case Type value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                        case MethodInfo value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                        case ConstructorInfo value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
-                        case FieldInfo value: ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        case MethodInfo value:
+                        {
+                            //if (value.DeclaringType == methodInfo.DeclaringType)
+                            //{
+                            //    value = builder.DeclaringType.GetMethod(value.Name,
+                            //        BindingFlags.Public | BindingFlags.NonPublic,
+                            //        null,
+                            //        value.GetParameters().Select(p => p.ParameterType).ToArray(),
+                            //        null);
+                            //}
+                            ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        }
+                        case ConstructorInfo value:
+                        {
+                            //if (value.DeclaringType == methodInfo.DeclaringType)
+                            //{
+                            //    value = builder.DeclaringType.GetConstructor(
+                            //        BindingFlags.Public | BindingFlags.NonPublic,
+                            //        null,
+                            //        value.GetParameters().Select(p => p.ParameterType).ToArray(),
+                            //        null);
+                            //}
+                            ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        }
+                        case FieldInfo value:
+                        {
+                            //if (value.DeclaringType == methodInfo.DeclaringType)
+                            //{
+                            //    value = builder.DeclaringType.GetField(value.Name,
+                            //        BindingFlags.Public | BindingFlags.NonPublic);
+                            //}
+                            ilGenerator.Emit(oldInstruction.OpCode, value); break;
+                        }
                         default: throw new NotSupportedException($"Unhandled value type {oldInstruction.Value.GetType()}");
                     }
                 }
