@@ -62,12 +62,13 @@ namespace XylSavePatched
 
                 if (method is MethodInfo methodInfo)
                 {
-                    var originalMethod = (MethodInfo)Harmony.GetOriginalMethod(methodInfo);
-                    MethodBuilder methodBuilder = methodBuilders[originalMethod];
+                    MethodBuilder methodBuilder = methodBuilders[(MethodInfo)Harmony.GetOriginalMethod(methodInfo)];
+
+                    MethodBase patchedMethod = GetPatchedMethod(method, methodBuilder.GetILGenerator());
 
                     try
                     {
-                        CopyMethodBody(methodInfo, methodBuilder, methodBuilder.GetILGenerator());
+                        CopyMethodBody(patchedMethod, methodBuilder, methodBuilder.GetILGenerator());
                     }
                     catch (Exception e)
                     {
@@ -110,6 +111,24 @@ namespace XylSavePatched
             }
 
             assemblyBuilder.Save("Assembly-Output.dll");
+        }
+
+        private static MethodBase GetPatchedMethod(MethodBase method, ILGenerator ilGenerator)
+        {
+            Patches patchInfo = Harmony.GetPatchInfo(method);
+
+            List<MethodInfo> prefixes = PatchFunctions.GetSortedPatchMethods(method, patchInfo.Prefixes.ToArray(), false);
+            List<MethodInfo> postfixes = PatchFunctions.GetSortedPatchMethods(method, patchInfo.Postfixes.ToArray(), false);
+            List<MethodInfo> transpilers = PatchFunctions.GetSortedPatchMethods(method, patchInfo.Transpilers.ToArray(), false);
+            List<MethodInfo> finalizers = PatchFunctions.GetSortedPatchMethods(method, patchInfo.Finalizers.ToArray(), false);
+
+            var patcher = new MethodPatcher(method, null, prefixes, postfixes, transpilers, finalizers, false);
+
+            MethodInfo patchedMethod = patcher.CreateReplacement(out Dictionary<int, CodeInstruction> instructions);
+
+            
+
+            return patchedMethod;
         }
 
         private static void CreateDummyMethodBody(ILGenerator ilGenerator)
