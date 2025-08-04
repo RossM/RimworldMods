@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
@@ -63,73 +65,47 @@ public static class FoodHelpers
         {
             if (IsRawFoodOrCorpse(foodDef))
             {
-                return GetFoodType(foodDef) switch
-                {
-                    FoodType.Fungus => eater.GetStatValue(Defs.XylRawFungusNutritionFactor) *
-                                       eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
-                    FoodType.Meat => eater.GetStatValue(Defs.XylRawMeatNutritionFactor),
-                    FoodType.AnimalProduct => eater.GetStatValue(Defs.XylRawAnimalProductNutritionFactor),
-                    FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
-                    _ => 1.0f
-                };
+                return GetRawNutritionFactor(eater, GetFoodType(foodDef));
             }
 
             var compIngredients = foodSource.TryGetComp<CompIngredients>();
             if (compIngredients == null)
             {
-                return GetFoodType(foodDef) switch
-                {
-                    FoodType.Meat => eater.GetStatValue(Defs.XylCookedMeatNutritionFactor),
-                    FoodType.AnimalProduct => eater.GetStatValue(Defs.XylCookedAnimalProductNutritionFactor),
-                    FoodType.Fungus or FoodType.NonMeat => eater.GetStatValue(Defs.XylCookedNonMeatNutritionFactor),
-                    _ => 1.0f
-                };
+                return GetCookedNutritionFactor(eater, GetFoodType(foodDef));
             }
 
-            var hasMeat = false;
-            var hasAnimalProduct = false;
-            var hasNonMeat = false;
-
+            HashSet<float> multipliers = new();
             foreach (var ingredient in compIngredients.ingredients)
             {
-                switch (GetFoodType(ingredient))
-                {
-                    case FoodType.Meat:
-                        hasMeat = true;
-                        break;
-                    case FoodType.NonMeat:
-                    case FoodType.Fungus:
-                        hasNonMeat = true;
-                        break;
-                    case FoodType.AnimalProduct:
-                        hasAnimalProduct = true;
-                        break;
-                }
+                multipliers.Add(GetCookedNutritionFactor(eater, GetFoodType(ingredient)));
             }
 
-            var multiplier = 0.0f;
-            var divisor = 0.0f;
-
-            if (hasMeat)
-            {
-                multiplier += eater.GetStatValue(Defs.XylCookedMeatNutritionFactor);
-                divisor += 1.0f;
-            }
-
-            if (hasAnimalProduct)
-            {
-                multiplier += eater.GetStatValue(Defs.XylCookedAnimalProductNutritionFactor);
-                divisor += 1.0f;
-            }
-
-            if (hasNonMeat)
-            {
-                multiplier += eater.GetStatValue(Defs.XylCookedNonMeatNutritionFactor);
-                divisor += 1.0f;
-            }
-
-            return divisor > 0 ? multiplier / divisor : 1.0f;
+            return multipliers.Count > 0 ? multipliers.Average() : 1.0f;
         }
+    }
+
+    private static float GetRawNutritionFactor(Pawn eater, FoodType foodType)
+    {
+        return foodType switch
+        {
+            FoodType.Fungus => eater.GetStatValue(Defs.XylRawFungusNutritionFactor) *
+                               eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
+            FoodType.Meat => eater.GetStatValue(Defs.XylRawMeatNutritionFactor),
+            FoodType.AnimalProduct => eater.GetStatValue(Defs.XylRawAnimalProductNutritionFactor),
+            FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
+            _ => 1.0f
+        };
+    }
+
+    private static float GetCookedNutritionFactor(Pawn eater, FoodType foodType)
+    {
+        return foodType switch
+        {
+            FoodType.Meat => eater.GetStatValue(Defs.XylCookedMeatNutritionFactor),
+            FoodType.AnimalProduct => eater.GetStatValue(Defs.XylCookedAnimalProductNutritionFactor),
+            FoodType.Fungus or FoodType.NonMeat => eater.GetStatValue(Defs.XylCookedNonMeatNutritionFactor),
+            _ => 1.0f
+        };
     }
 
     public static float GetFoodPoisonChanceOffset(Pawn eater, Thing foodSource)
