@@ -7,7 +7,7 @@
       <li>Ideology</li>
     </mods>
     <match Class="XylRacesCore.PatchOperationAddOrMerge">
-      <xpath>Defs/ThoughtDef[starts-with(defName,"AteMeat_")]</xpath>
+      <xpath>Defs/ThoughtDef[starts-with(defName,"AteMeat_") and stages/li/baseMoodEffect &lt; 0]</xpath>
       <value>
         <nullifyingGenes>
           <li>XylMeatDependence</li>
@@ -21,7 +21,7 @@
       <li>Ideology</li>
     </mods>
     <match Class="XylRacesCore.PatchOperationAddOrMerge">
-      <xpath>Defs/ThoughtDef[starts-with(defName,"AteHumanMeat_")]</xpath>
+      <xpath>Defs/ThoughtDef[starts-with(defName,"AteHumanMeat_") and stages/li/baseMoodEffect &lt; 0]</xpath>
       <value>
         <nullifyingGenes>
           <li>XylCarnivoreStomach</li>
