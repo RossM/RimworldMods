@@ -106,6 +106,12 @@ namespace XylRacesCore.Genes
             }
         }
 
+        public override void Reset()
+        {
+            //Log.Message($"DietDependency.Reset: {this}, {pawn}, {LinkedHediff?.Severity}");
+            ReduceSeverity(float.PositiveInfinity);
+        }
+
         public bool ValidateFood(Thing food)
         {
             if (food.Destroyed || !food.IngestibleNow)
