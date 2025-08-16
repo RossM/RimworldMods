@@ -122,13 +122,14 @@ namespace XylSavePatched
             List<MethodInfo> transpilers = PatchFunctions.GetSortedPatchMethods(method, patchInfo.Transpilers.ToArray(), false);
             List<MethodInfo> finalizers = PatchFunctions.GetSortedPatchMethods(method, patchInfo.Finalizers.ToArray(), false);
 
-            var patcher = new MethodPatcher(method, null, prefixes, postfixes, transpilers, finalizers, false);
+            //var patcher = new MethodPatcher(method, null, prefixes, postfixes, transpilers, finalizers, false);
 
-            MethodInfo patchedMethod = patcher.CreateReplacement(out Dictionary<int, CodeInstruction> instructions);
+            //MethodInfo patchedMethod = patcher.CreateReplacement(out Dictionary<int, CodeInstruction> instructions);
 
             
 
-            return patchedMethod;
+            //return patchedMethod;
+            return method;
         }
 
         private static void CreateDummyMethodBody(ILGenerator ilGenerator)
