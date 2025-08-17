@@ -4,27 +4,29 @@
   <XenotypeDef>
     <defName>XylChyrr</defName>
     <label>chyrr</label>
-    <description>Chyrr are blind, flying mystics native to steaming jungles and sun-blasted deserts. They perceive the world through sound and low-level psychic sensing, aided by a hazy thread of precognition that lets them act just before things happen. Though physically fragile, they defend themselves with a keening cry that leaves foes reeling.</description>
+    <description>Chyrr are nocturnal, flying mystics native to steaming jungles and sun-blasted deserts. They perceive the world through sound and low-level psychic sensing, aided by a hazy thread of precognition that lets them act just before things happen. Though physically fragile, they defend themselves with a keening cry that leaves foes reeling.</description>
     <iconPath>Xyl/UI/Icons/Xenotypes/Chyrr_small</iconPath>
     <displayPriority>-102</displayPriority>
     <inheritable>true</inheritable>
     <genes>
-      <li MayRequire="Ludeon.RimWorld.Royalty">XylPsyFocus</li>
       <li>XylSonicWave</li>
+      <li>Immunity_Weak</li>
       <li>XylBatWings</li>
       <li>MinTemp_SmallIncrease</li>
       <li>MaxTemp_SmallIncrease</li>
+      <li>UVSensitivity_Mild</li>
+      <li>XylPrecognition</li>
       <li>Delicate</li>
-      <li>Immunity_Weak</li>
       <li>Skin_Orange</li>
       <li>Skin_Purple</li>
       <li>XylSkin_DarkBlue</li>
-      <li>XylBlind</li>
-      <li>XylEcholocation</li>
-      <li>XylPrecognition</li>
-      <li>XylKeenEars</li>
+      <li>Nearsighted</li>
+      <li>DarkVision</li>
       <li>XylNocturnal</li>
+      <li>XylKeenEars</li>
+      <li>XylEcholocation</li>
       <li>AptitudePoor_Plants</li>
+      <li>AptitudeStrong_Medicine</li>
     </genes>
   </XenotypeDef>
   

@@ -3,87 +3,11 @@
 
   <GeneDef>
     <geneClass>XylRacesCore.Genes.AddHediff</geneClass>
-    <defName>XylBlind</defName>
-    <label>blind</label>
-    <description>Carriers of this gene have non-functional eyes, making them totally blind.\n\nBlindness grants a +50% bonus to psychic sensitivity.</description>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>5</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>55</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_Blind</iconPath>
-    <exclusionTags>
-      <li>DarkVisionAndBlindness</li>
-    </exclusionTags>
-    <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
-        <hediffGivers>
-          <li Class="HediffGiver_Event">
-            <hediff>XylGeneticBlindness</hediff>
-            <partsToAffect>
-              <li>Eye</li>
-            </partsToAffect>
-            <countToAffect>2</countToAffect>
-          </li>
-        </hediffGivers>
-        <applyImmediately>true</applyImmediately>
-      </li>
-      <li Class="XylRacesCore.DefModExtension_StartingItemSource">
-        <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
-        <chance>0.5</chance>
-      </li>
-    </modExtensions>
-    <customEffectDescriptions>
-      <li>Sight: 0%</li>
-    </customEffectDescriptions>
-    <renderNodeProperties>
-      <li Class="PawnRenderNodeProperties_Eye">
-        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/NoEyes/NoEyes</texPath>
-        <anchorTag>RightEye</anchorTag>
-        <rotDrawMode>Fresh, Rotting</rotDrawMode>
-        <colorType>Skin</colorType>
-        <parentTagDef>Head</parentTagDef>
-        <useSkinShader>true</useSkinShader>
-        <useRottenColor>true</useRottenColor>
-        <drawSize>0.2</drawSize>
-        <side>Right</side>
-        <drawData>
-          <defaultData>
-            <layer>54</layer>
-            <offset>(0, 0, -0.25)</offset>
-          </defaultData>
-        </drawData>
-      </li>
-      <li Class="PawnRenderNodeProperties_Eye">
-        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/NoEyes/NoEyes</texPath>
-        <anchorTag>LeftEye</anchorTag>
-        <rotDrawMode>Fresh, Rotting</rotDrawMode>
-        <colorType>Skin</colorType>
-        <parentTagDef>Head</parentTagDef>
-        <useSkinShader>true</useSkinShader>
-        <useRottenColor>true</useRottenColor>
-        <drawSize>0.2</drawSize>
-        <side>Left</side>
-        <drawData>
-          <defaultData>
-            <layer>54</layer>
-            <offset>(0, 0, -0.25)</offset>
-            <flip>true</flip>
-          </defaultData>
-          <dataWest>
-            <flip>false</flip>
-          </dataWest>
-        </drawData>
-      </li>
-    </renderNodeProperties>
-  </GeneDef>
-
-  <GeneDef>
-    <geneClass>XylRacesCore.Genes.AddHediff</geneClass>
     <defName>XylEcholocation</defName>
     <label>echolocation</label>
-    <description>Carriers of this gene can use high-frequency sound waves to gain many of the benefits of sight even if totally blind.</description>
+    <description>Carriers of this gene can use high-frequency sound waves to "see" with their ears instead of their eyes.</description>
     <biostatCpx>2</biostatCpx>
-    <biostatMet>-2</biostatMet>
+    <biostatMet>-1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>73</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Echolocation</iconPath>
@@ -98,6 +22,10 @@
           </li>
         </hediffGivers>
         <applyImmediately>true</applyImmediately>
+      </li>
+      <li Class="XylRacesCore.DefModExtension_StartingItemSource">
+        <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
+        <chance>0.5</chance>
       </li>
     </modExtensions>
     <customEffectDescriptions>
@@ -159,7 +87,7 @@
     <label>bat wings</label>
     <description>Carriers of this gene have bat-like wings, allowing them to fly for short periods.</description>
     <biostatCpx>2</biostatCpx>
-    <biostatMet>-2</biostatMet>
+    <biostatMet>-3</biostatMet>
     <displayCategory>Movement</displayCategory>
     <displayOrderInCategory>510</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_BatWings</iconPath>
@@ -193,7 +121,7 @@
     <capMods>
       <li>
         <capacity>Manipulation</capacity>
-        <offset>-0.2</offset>
+        <offset>-0.1</offset>
       </li>
     </capMods>
     <statOffsets>
