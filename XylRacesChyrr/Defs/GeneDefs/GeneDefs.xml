@@ -57,9 +57,9 @@
       </li>
     </modExtensions>
     <customEffectDescriptions>
-      <li>Melee hit chance: +2</li>
-      <li>Melee dodge chance: +2</li>
-      <li>Shooting accuracy: +2</li>
+      <li>Melee hit chance: +20%</li>
+      <li>Melee dodge chance: +20%</li>
+      <li>Shooting accuracy: +20%</li>
     </customEffectDescriptions>
   </GeneDef>
 

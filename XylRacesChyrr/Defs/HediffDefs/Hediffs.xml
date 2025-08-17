@@ -38,12 +38,12 @@
     <stages>
       <li>
         <becomeVisible>false</becomeVisible>
-        <statOffsets>
-          <MeleeHitChance>2</MeleeHitChance>
-          <MeleeDodgeChance>2</MeleeDodgeChance>
-          <ShootingAccuracyPawn>2</ShootingAccuracyPawn>
-        </statOffsets>
-        <statOffsetEffectMultiplier>PsychicSensitivity</statOffsetEffectMultiplier>
+        <statFactors>
+          <MeleeHitChance>1.2</MeleeHitChance>
+          <MeleeDodgeChance>1.2</MeleeDodgeChance>
+          <ShootingAccuracyPawn>1.2</ShootingAccuracyPawn>
+        </statFactors>
+        <statFactorEffectMultiplier>PsychicSensitivity</statFactorEffectMultiplier>
       </li>
     </stages>
   </HediffDef>
