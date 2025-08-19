@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Verse;
 
 namespace XylRacesCore
 {
-    public class BuildableDefExtension : DefModExtension
+    public class DefExt_GeneDependent : DefModExtension
     {
         public List<GeneDef> genePrerequisites;
 
-        public bool ValidateBuildable(Map map)
+        public bool Validate()
         {
             if (genePrerequisites == null) 
                 return true;
 
             foreach (var gene in genePrerequisites)
             {
-                if (!map.mapPawns.PawnsInFaction(Faction.OfPlayer).Any(p => p.HasActiveGene(gene)))
+                if (!Faction.OfPlayer.GetPawns().Any(p => p.HasActiveGene(gene)))
                 {
                     return false;
                 }

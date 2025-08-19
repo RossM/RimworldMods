@@ -66,5 +66,10 @@ namespace XylRacesCore
         {
             return thingDef.statBases.FirstOrDefault(s => s.stat == statDef)?.value ?? 0;
         }
+
+        public static IEnumerable<Pawn> GetPawns(this Faction faction)
+        {
+            return Find.Maps.SelectMany(map => map.mapPawns.PawnsInFaction(faction));
+        }
     }
 }

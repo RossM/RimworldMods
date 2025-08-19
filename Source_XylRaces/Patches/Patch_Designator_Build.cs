@@ -19,11 +19,11 @@ namespace XylRacesCore.Patches
                     return;
 
                 BuildableDef def = __instance.PlacingDef;
-                var extension = def.GetModExtension<BuildableDefExtension>();
+                var extension = def.GetModExtension<DefExt_GeneDependent>();
                 if (extension == null)
                     return;
 
-                __result = extension.ValidateBuildable(__instance.Map);
+                __result = extension.Validate();
             }
         }
     }

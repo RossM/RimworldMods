@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThingDef ParentName="HatMakeableBase">
+    <defName>Apparel_XylEyelessMask</defName>
+    <label>eyeless mask</label>
+    <description>A hard facial mask that covers the eyes and blocks vision.</description>
+    <techLevel>Neolithic</techLevel>
+    <graphicData>
+      <texPath>Things/Pawn/Humanlike/Apparel/VisageMask/VisageMask</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <stuffCategories>
+      <li>Metallic</li>
+      <li>Leathery</li>
+    </stuffCategories>
+    <costStuffCount>12</costStuffCount>
+    <statBases>
+      <WorkToMake>1600</WorkToMake>
+      <MaxHitPoints>90</MaxHitPoints>
+      <Mass>0.12</Mass>
+      <EquipDelay>1.5</EquipDelay>
+      <StuffEffectMultiplierArmor>0.3</StuffEffectMultiplierArmor>
+      <StuffEffectMultiplierInsulation_Cold>0.04</StuffEffectMultiplierInsulation_Cold>
+      <StuffEffectMultiplierInsulation_Heat>0.04</StuffEffectMultiplierInsulation_Heat>
+    </statBases>
+    <apparel>
+      <bodyPartGroups>
+        <li>UpperHead</li>
+        <li>Eyes</li>
+      </bodyPartGroups>
+      <wornGraphicPaths>
+        <li>Things/Pawn/Humanlike/Apparel/VisageMask/VisageMaskA</li>
+        <li>Things/Pawn/Humanlike/Apparel/VisageMask/VisageMaskB</li>
+        <li>Things/Pawn/Humanlike/Apparel/VisageMask/VisageMaskC</li>
+      </wornGraphicPaths>
+      <layers>
+        <li>Overhead</li>
+      </layers>
+      <renderSkipFlags>
+        <li>None</li>
+      </renderSkipFlags>
+      <drawData>
+        <dataNorth>
+          <layer>-3</layer>
+        </dataNorth>
+      </drawData>
+      <blocksVision>true</blocksVision>
+      <canBeDesiredForIdeo>false</canBeDesiredForIdeo>
+      <canBeGeneratedToSatisfyWarmth>false</canBeGeneratedToSatisfyWarmth>
+      <canBeGeneratedToSatisfyToxicEnvironmentResistance>false</canBeGeneratedToSatisfyToxicEnvironmentResistance>
+    </apparel>
+    <comps>
+      <li Class="CompProperties_CauseHediff_Apparel">
+        <hediff>XylEyelessMask</hediff>
+        <part>Head</part>
+      </li>
+    </comps>
+    <colorGenerator Class="ColorGenerator_StandardApparel" />
+    <tradeTags>
+      <li>Clothing</li>
+      <li>Armor</li>
+    </tradeTags>
+    <recipeMaker>
+      <displayPriority>156</displayPriority>
+    </recipeMaker>
+    <modExtensions>
+      <li Class="XylRacesCore.DefExt_GeneDependent">
+        <genePrerequisites>
+          <li>XylEcholocation</li>
+        </genePrerequisites>
+      </li>
+    </modExtensions>
+  </ThingDef>
+
+</Defs>
