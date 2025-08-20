@@ -23,21 +23,13 @@ namespace XylRacesCore.Patches
                 if (__result == false)
                     return;
 
-                foreach (ThingDef def in __instance.products.Select(t => t.thingDef))
-                {
-                    var extension = def.GetModExtension<DefExt_GeneDependent>();
-                    if (extension == null)
-                        continue;
+                DefExt_GeneDependent extension = __instance.products.Select(t => t.thingDef.GetModExtension<DefExt_GeneDependent>())
+                    .FirstOrDefault(e => e != null);
+                if (extension == null)
+                    return;
 
-                    if (!extension.Validate())
-                    {
-                        __result = false;
-                        return;
-                    }
-                }
+                __result = extension.Validate();
             }
-
-
         }
     }
 }
