@@ -23,8 +23,9 @@ namespace XylRacesCore.Patches
                 if (__result == false)
                     return;
 
-                DefExt_GeneDependent extension = __instance.products.Select(t => t.thingDef.GetModExtension<DefExt_GeneDependent>())
-                    .FirstOrDefault(e => e != null);
+                DefExt_GeneDependent extension = __instance.products
+                    .Select(t => t.thingDef.GetModExtension<DefExt_GeneDependent>()).FirstOrDefault(e => e != null);
+
                 if (extension == null)
                     return;
 
