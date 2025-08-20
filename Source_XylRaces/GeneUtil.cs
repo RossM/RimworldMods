@@ -12,7 +12,7 @@ public static class GeneUtil
         if (pawn.genes == null)
             return Enumerable.Empty<Gene>();
 
-        return pawn.GetComp<CompPawn_GeneCache>()?.GetGenesWithDef(def) ??
+        return pawn.GetComp<CompPawn_LookupCache>()?.GetGenesWithDef(def) ??
                pawn.genes.GenesListForReading.Where(g => g.def == def);
     }
 
@@ -28,7 +28,7 @@ public static class GeneUtil
         if (pawn.genes == null)
             return Enumerable.Empty<T>();
 
-        return pawn.GetComp<CompPawn_GeneCache>()?.GetGenesOfType<T>() ??
+        return pawn.GetComp<CompPawn_LookupCache>()?.GetGenesOfType<T>() ??
                pawn.genes.GenesListForReading.OfType<T>();
     }
 
@@ -57,7 +57,7 @@ public static class GeneUtil
         if (pawn.genes == null)
             return Enumerable.Empty<Gene>();
 
-        return pawn.GetComp<CompPawn_GeneCache>()?.GetGenesWithModExtension<T>() ??
+        return pawn.GetComp<CompPawn_LookupCache>()?.GetGenesWithModExtension<T>() ??
                pawn.genes.GenesListForReading.Where(g => g.def.modExtensions.OfType<T>().Any());
     }
 

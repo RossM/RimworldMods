@@ -6,7 +6,7 @@
     <value>
       <comps>
         <li Class="XylRacesCore.CompProperties_PawnRenderProperties" />
-        <li Class="XylRacesCore.CompProperties_PawnGeneCache" />
+        <li Class="XylRacesCore.CompProperties_PawnLookupCache" />
       </comps>
     </value>
   </Operation>

@@ -10,7 +10,7 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch("Notify_GenesChanged")]
         public static void Notify_GenesChanged_Postfix(Pawn_GeneTracker __instance)
         {
-            __instance.pawn.GetComp<CompPawn_GeneCache>()?.Notify_GenesChanged();
+            __instance.pawn.GetComp<CompPawn_LookupCache>()?.Notify_GenesChanged();
         }
     }
 }

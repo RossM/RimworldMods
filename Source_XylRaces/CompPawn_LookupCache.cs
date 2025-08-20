@@ -9,15 +9,15 @@ using Verse;
 namespace XylRacesCore
 {
     [UsedImplicitly]
-    public class CompProperties_PawnGeneCache : CompProperties
+    public class CompProperties_PawnLookupCache : CompProperties
     {
-        public CompProperties_PawnGeneCache()
+        public CompProperties_PawnLookupCache()
         {
-            compClass = typeof(CompPawn_GeneCache);
+            compClass = typeof(CompPawn_LookupCache);
         }
     }
 
-    public class CompPawn_GeneCache : ThingComp
+    public class CompPawn_LookupCache : ThingComp
     {
         [Unsaved]
         private readonly Dictionary<Type, object> genesByType = new();
