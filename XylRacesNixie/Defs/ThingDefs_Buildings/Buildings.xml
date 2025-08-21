@@ -41,9 +41,9 @@
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
     <modExtensions>
       <li Class="XylRacesCore.DefExt_GeneDependent">
-        <genePrerequisites>
+        <genePrerequisitesAny>
           <li>XylAquatic</li>
-        </genePrerequisites>
+        </genePrerequisitesAny>
       </li>
     </modExtensions>
   </ThingDef>

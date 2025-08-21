@@ -7,22 +7,35 @@ namespace XylRacesCore
 {
     public class DefExt_GeneDependent : DefModExtension
     {
-        public List<GeneDef> genePrerequisites;
+        public List<GeneDef> genePrerequisitesAny;
+        public List<MemeDef> memePrerequisitesAny;
 
         public bool Validate()
         {
-            if (genePrerequisites == null) 
+            if (genePrerequisitesAny.NullOrEmpty() && memePrerequisitesAny.NullOrEmpty())
                 return true;
 
-            foreach (var gene in genePrerequisites)
+            if (!memePrerequisitesAny.NullOrEmpty())
             {
-                if (!Faction.OfPlayer.GetPawns().Any(p => p.HasActiveGene(gene)))
+                foreach (MemeDef item in memePrerequisitesAny)
                 {
-                    return false;
+                    if (Faction.OfPlayer.ideos.HasAnyIdeoWithMeme(item))
+                        return true;
                 }
             }
 
-            return true;
+            if (!genePrerequisitesAny.NullOrEmpty())
+            {
+                foreach (var gene in genePrerequisitesAny)
+                {
+                    if (Faction.OfPlayer.GetPawns().Any(p => p.HasActiveGene(gene)))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

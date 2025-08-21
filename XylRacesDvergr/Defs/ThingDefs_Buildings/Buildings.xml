@@ -60,9 +60,9 @@
     </researchPrerequisites>
     <modExtensions>
       <li Class="XylRacesCore.DefExt_GeneDependent">
-        <genePrerequisites>
+        <genePrerequisitesAny>
           <li>XylFungusEater</li>
-        </genePrerequisites>
+        </genePrerequisitesAny>
       </li>
     </modExtensions>
   </ThingDef>

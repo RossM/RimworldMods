@@ -2,8 +2,8 @@
 <Defs>
 
   <ThingDef ParentName="HatMakeableBase">
-    <defName>Apparel_XylEyelessMask</defName>
-    <label>eyeless mask</label>
+    <defName>Apparel_XylBlindfoldMask</defName>
+    <label>blindfold mask</label>
     <description>A hard facial mask that covers the eyes and blocks vision.</description>
     <techLevel>Neolithic</techLevel>
     <graphicData>
@@ -36,6 +36,7 @@
       </wornGraphicPaths>
       <layers>
         <li>Overhead</li>
+        <li>EyeCover</li>
       </layers>
       <renderSkipFlags>
         <li>None</li>
@@ -66,9 +67,9 @@
     </recipeMaker>
     <modExtensions>
       <li Class="XylRacesCore.DefExt_GeneDependent">
-        <genePrerequisites>
+        <genePrerequisitesAny>
           <li>XylEcholocation</li>
-        </genePrerequisites>
+        </genePrerequisitesAny>
       </li>
     </modExtensions>
   </ThingDef>

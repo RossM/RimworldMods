@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!-- 
+  The blindfold is useful for Chyrr as it gives various effects (increased psychic sensitivity, no affect from ugly surroundings, etc).
+  -->
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Ideology</li>
+    </mods>
+    <match Class="PatchOperationSequence">
+      <operations>
+        <li Class="PatchOperationRemove">
+          <xpath>Defs/ThingDef[defName="Apparel_Blindfold"]/recipeMaker/memePrerequisitesAny</xpath>
+        </li>
+        <li Class="XylRacesCore.PatchOperationAddOrMerge">
+          <xpath>Defs/ThingDef[defName="Apparel_Blindfold"]</xpath>
+          <value>
+            <modExtensions>
+              <li Class="XylRacesCore.DefExt_GeneDependent">
+                <genePrerequisitesAny>
+                  <li>XylEcholocation</li>
+                </genePrerequisitesAny>
+                <memePrerequisitesAny>
+                  <li>Blindsight</li>
+                </memePrerequisitesAny>
+              </li>
+            </modExtensions>
+          </value>
+        </li>
+      </operations>
+    </match>
+  </Operation>
+
+</Patch>
