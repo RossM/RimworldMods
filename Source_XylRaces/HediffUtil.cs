@@ -27,6 +27,6 @@ public static class HediffUtil
     public static IEnumerable<Hediff> HediffsWithModExtension<T>(this Pawn pawn) where T : class
     {
         return pawn.GetComp<CompPawn_LookupCache>()?.GetHediffsWithModExtension<T>() ??
-               pawn.health.hediffSet.hediffs.Where(h => h.def.modExtensions.OfType<T>().Any());
+               pawn.health.hediffSet.hediffs.Where(h => h.def.modExtensions?.OfType<T>().Any() == true);
     }
 }
