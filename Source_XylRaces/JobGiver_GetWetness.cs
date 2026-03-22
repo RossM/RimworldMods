@@ -120,7 +120,7 @@ namespace XylRacesCore
         public override float GetPriority(Pawn pawn)
         {
             var need_wetness = pawn.needs?.TryGetNeed<Need_Wetness>();
-            if (need_wetness == null || need_wetness.CurCategory == WetnessCategory.Wet)
+            if (need_wetness is not { CurCategory: < WetnessCategory.Neutral })
                 return 0.0f;
 
             return pawn.timetable?.CurrentAssignment == TimeAssignmentDefOf.Anything ? ThinkNodePriority.MiscNeed : ThinkNodePriority.AnythingJoy;
