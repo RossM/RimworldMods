@@ -255,6 +255,9 @@
     <displayOrderInCategory>110</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_LargeHorns</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <exclusionTags>
+      <li>Headbone</li>
+    </exclusionTags>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
