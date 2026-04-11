@@ -37,8 +37,11 @@
     <defName>NamerSettlementTribalTrog</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name(p=3)->[SylN]-[SylN]</li>
+        <li>r_name(p=2)->[syl]-[syl]</li>
         <li>r_name->[badass] [thing]</li>
+
+        <li>syl->[SylN]</li>
+        <li>syl->[SylP]</li>
 
         <li>badass->[ColorBadass]</li>
         <li>badass->[AdjectiveBadass]</li>
