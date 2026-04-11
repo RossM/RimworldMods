@@ -64,4 +64,43 @@
     </rulePack>
   </RulePackDef>
 
+  <RulePackDef>
+    <defName>NamerSettlementTribalNixie</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_name->[name_core] [coast]</li>
+
+        <li>maybeHyphen(p=3)-></li>
+        <li>maybeHyphen->-</li>
+
+        <li>name_core->[SylG][maybeHyphen][SylG]</li>
+        <li>name_core->[SylG][maybeHyphen][SylG][maybeHyphen][SylG]</li>
+
+        <li>coast->coast</li>
+        <li>coast->bay</li>
+        <li>coast->spit</li>
+        <li>coast->island</li>
+        <li>coast->cliff</li>
+        <li>coast->canal</li>
+        <li>coast->river</li>
+        <li>coast->stream</li>
+        <li>coast->brook</li>
+        <li>coast->deep</li>
+        <li>coast->bar</li>
+        <li>coast->shallows</li>
+        <li>coast->rapids</li>
+        <li>coast->lake</li>
+        <li>coast->pond</li>
+        <li>coast->shore</li>
+        <li>coast->beach</li>
+        <li>coast->breakwater</li>
+        <li>coast->reef</li>
+        <li>coast->cut</li>
+        <li>coast->canyon</li>
+        <li>coast->marsh</li>
+        <li>coast->channel</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
 </Defs>
