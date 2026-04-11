@@ -17,6 +17,8 @@
     <colorSpectrum Inherit="false">
       <li>(0.5, 0.3, 0.2)</li>
     </colorSpectrum>
+    <factionNameMaker>NamerFactionOutlanderDvergr</factionNameMaker>
+    <settlementNameMaker>NamerSettlementOutlanderDvergr</settlementNameMaker>
     <requiredMemes>
       <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
     </requiredMemes>
