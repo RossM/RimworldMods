@@ -100,6 +100,8 @@
     <rulePack>
       <rulesStrings>
         <li>r_name->[name_core] [coast]</li>
+        <li>r_name(p=0.2)->[name_core]-by-the-[coast]</li>
+        <li>r_name->[coast] of [name_core]</li>
 
         <li>maybeHyphen(p=3)-></li>
         <li>maybeHyphen->-</li>
