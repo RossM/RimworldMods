@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <RulePackDef>
+    <defName>NamerFactionTribalTrog</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_name->[Animal] [killers]</li>
+        <li>r_name->[AdjectiveBadass] [killers]</li>
+        <li>r_name->[ColorBadass] [killers]</li>
+
+        <li>killers->bashers</li>
+        <li>killers->breakers</li>
+        <li>killers->bruisers</li>
+        <li>killers->butchers</li>
+        <li>killers->carvers</li>
+        <li>killers->crushers</li>
+        <li>killers->destroyers</li>
+        <li>killers->eradicators</li>
+        <li>killers->executioners</li>
+        <li>killers->exterminators</li>
+        <li>killers->killers</li>
+        <li>killers->manglers</li>
+        <li>killers->murderers</li>
+        <li>killers->poisoners</li>
+        <li>killers->slashers</li>
+        <li>killers->slaughterers</li>
+        <li>killers->slayers</li>
+        <li>killers->stranglers</li>
+        <li>killers->wreckers</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>NamerSettlementTribalTrog</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_name(p=3)->[SylN]-[SylN]</li>
+        <li>r_name->[badass] [thing]</li>
+
+        <li>badass->[ColorBadass]</li>
+        <li>badass->[AdjectiveBadass]</li>
+
+        <li>thing->[Animal]</li>
+        <li>thing->[NaturalObject]</li>
+        <li>thing->[Plant]</li>
+        <li>thing->[TerrainFeature]</li>
+        <li>thing->[Weapon]</li>
+      </rulesStrings>
+      <rulesFiles>
+        <li>SylN->WordParts/Syllables_Neanderthal</li>
+      </rulesFiles>
+    </rulePack>
+  </RulePackDef>
+
+</Defs>

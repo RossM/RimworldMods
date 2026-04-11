@@ -121,6 +121,7 @@
         <li>coast->coast</li>
         <li>coast->cut</li>
         <li>coast->deep</li>
+        <li>coast->inlet</li>
         <li>coast->island</li>
         <li>coast->lake</li>
         <li>coast->marsh</li>
