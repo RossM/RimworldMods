@@ -38,25 +38,6 @@
         <li>adjective->song</li>
         <li>adjective->wind</li>
 
-        <li>aquatic_animals->fish</li>
-        <li>aquatic_animals->sharks</li>
-        <li>aquatic_animals->squid</li>
-        <li>aquatic_animals->octopuses</li>
-        <li>aquatic_animals->eels</li>
-        <li>aquatic_animals->morays</li>
-        <li>aquatic_animals->mantas</li>
-        <li>aquatic_animals->whales</li>
-        <li>aquatic_animals->dolphins</li>
-        <li>aquatic_animals->turtles</li>
-        <li>aquatic_animals->crabs</li>
-        <li>aquatic_animals->lobsters</li>
-        <li>aquatic_animals->rays</li>
-        <li>aquatic_animals->shrimp</li>
-        <li>aquatic_animals->salmon</li>
-        <li>aquatic_animals->trout</li>
-        <li>aquatic_animals->tuna</li>
-        <li>aquatic_animals->bass</li>
-
         <li>aquatic_animal->fish</li>
         <li>aquatic_animal->shark</li>
         <li>aquatic_animal->squid</li>
