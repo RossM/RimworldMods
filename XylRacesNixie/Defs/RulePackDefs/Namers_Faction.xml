@@ -15,51 +15,51 @@
         <li>name_core->[SylG][maybeHyphen][SylG]</li>
         <li>name_core->[SylG][maybeHyphen][SylG][maybeHyphen][SylG]</li>
 
-        <li>adjective->water</li>
-        <li>adjective->deep</li>
-        <li>adjective->toothed</li>
-        <li>adjective->scarred</li>
-        <li>adjective->scaled</li>
-        <li>adjective->liquid</li>
-        <li>adjective->fluid</li>
-        <li>adjective->blue</li>
-        <li>adjective->grey</li>
-        <li>adjective->white</li>
-        <li>adjective->black</li>
         <li>adjective->aquamarine</li>
-        <li>adjective->coral</li>
-        <li>adjective->graceful</li>
         <li>adjective->beautiful</li>
-        <li>adjective->sky</li>
-        <li>adjective->river</li>
+        <li>adjective->black</li>
+        <li>adjective->blue</li>
+        <li>adjective->coral</li>
+        <li>adjective->deep</li>
+        <li>adjective->fluid</li>
+        <li>adjective->graceful</li>
+        <li>adjective->grey</li>
         <li>adjective->lake</li>
-        <li>adjective->sea</li>
+        <li>adjective->liquid</li>
         <li>adjective->marsh</li>
+        <li>adjective->river</li>
+        <li>adjective->scaled</li>
+        <li>adjective->scarred</li>
+        <li>adjective->sea</li>
+        <li>adjective->sky</li>
         <li>adjective->song</li>
+        <li>adjective->toothed</li>
+        <li>adjective->water</li>
+        <li>adjective->white</li>
         <li>adjective->wind</li>
 
-        <li>aquatic_animal->fish</li>
-        <li>aquatic_animal->shark</li>
-        <li>aquatic_animal->squid</li>
-        <li>aquatic_animal->octopus</li>
-        <li>aquatic_animal->eel</li>
-        <li>aquatic_animal->moray</li>
-        <li>aquatic_animal->manta</li>
-        <li>aquatic_animal->whale</li>
-        <li>aquatic_animal->dolphin</li>
-        <li>aquatic_animal->turtle</li>
+        <li>aquatic_animal->bass</li>
         <li>aquatic_animal->crab</li>
+        <li>aquatic_animal->dolphin</li>
+        <li>aquatic_animal->eel</li>
+        <li>aquatic_animal->fish</li>
         <li>aquatic_animal->lobster</li>
+        <li>aquatic_animal->manta</li>
+        <li>aquatic_animal->moray</li>
+        <li>aquatic_animal->octopus</li>
         <li>aquatic_animal->ray</li>
-        <li>aquatic_animal->shrimp</li>
         <li>aquatic_animal->salmon</li>
+        <li>aquatic_animal->shark</li>
+        <li>aquatic_animal->shrimp</li>
+        <li>aquatic_animal->squid</li>
         <li>aquatic_animal->trout</li>
         <li>aquatic_animal->tuna</li>
-        <li>aquatic_animal->bass</li>
+        <li>aquatic_animal->turtle</li>
+        <li>aquatic_animal->whale</li>
 
+        <li>people->folk</li>
         <li>people->people</li>
         <li>people->tribe</li>
-        <li>people->folk</li>
       </rulesStrings>
     </rulePack>
   </RulePackDef>
@@ -76,29 +76,29 @@
         <li>name_core->[SylG][maybeHyphen][SylG]</li>
         <li>name_core->[SylG][maybeHyphen][SylG][maybeHyphen][SylG]</li>
 
-        <li>coast->coast</li>
-        <li>coast->bay</li>
-        <li>coast->spit</li>
-        <li>coast->island</li>
-        <li>coast->cliff</li>
-        <li>coast->canal</li>
-        <li>coast->river</li>
-        <li>coast->stream</li>
-        <li>coast->brook</li>
-        <li>coast->deep</li>
         <li>coast->bar</li>
-        <li>coast->shallows</li>
-        <li>coast->rapids</li>
-        <li>coast->lake</li>
-        <li>coast->pond</li>
-        <li>coast->shore</li>
+        <li>coast->bay</li>
         <li>coast->beach</li>
         <li>coast->breakwater</li>
-        <li>coast->reef</li>
-        <li>coast->cut</li>
+        <li>coast->brook</li>
+        <li>coast->canal</li>
         <li>coast->canyon</li>
-        <li>coast->marsh</li>
         <li>coast->channel</li>
+        <li>coast->cliff</li>
+        <li>coast->coast</li>
+        <li>coast->cut</li>
+        <li>coast->deep</li>
+        <li>coast->island</li>
+        <li>coast->lake</li>
+        <li>coast->marsh</li>
+        <li>coast->pond</li>
+        <li>coast->rapids</li>
+        <li>coast->reef</li>
+        <li>coast->river</li>
+        <li>coast->shallows</li>
+        <li>coast->shore</li>
+        <li>coast->spit</li>
+        <li>coast->stream</li>
       </rulesStrings>
     </rulePack>
   </RulePackDef>
