@@ -12,12 +12,12 @@
 
         <li>lastName->[SylD][SylD][SylD]</li>
 
-        <li>nickName->[NameStartD][NameEndD]</li>
+        <li>nickName->[nickStart][nickEnd]</li>
       </rulesStrings>
       <rulesFiles>
         <li>SylD->Xyl/WordParts/Syllables_Dvergr</li>
-        <li>NameStartD->Xyl/WordParts/Name_Starts_Dvergr</li>
-        <li>NameEndD->Xyl/WordParts/Name_Ends_Dvergr</li>
+        <li>nickStart->Xyl/WordParts/Nickname_Starts_Dvergr</li>
+        <li>nickEnd->Xyl/WordParts/Nickname_Ends_Dvergr</li>
       </rulesFiles>
     </rulePack>
   </RulePackDef>

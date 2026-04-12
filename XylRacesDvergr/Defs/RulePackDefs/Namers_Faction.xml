@@ -44,9 +44,15 @@
     <defName>NamerSettlementOutlanderDvergr</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name->fort [SylB][SylB][nameEnd]</li>
-        <li>r_name->[SylB][SylB][nameEnd] [location]</li>
+        <li>r_name->fort [nameCore]</li>
+        <li>r_name->[nameCore] [location]</li>
 
+        <li>maybeHyphen(p=3)-></li>
+        <li>maybeHyphen->-</li>
+
+        <li>nameCore->[SylD][nameEnd]</li>
+        <li>nameCore->[SylD][SylD][maybeHyphen][nameEnd]</li>
+        
         <li>nameEnd->bar</li>
         <li>nameEnd->baz</li>
         <li>nameEnd->bor</li>
@@ -78,12 +84,14 @@
         <li>location->depths</li>
         <li>location->excavation</li>
         <li>location->gallery</li>
+        <li>location->gap</li>
         <li>location->grotto</li>
         <li>location->hall</li>
         <li>location->hill</li>
         <li>location->hollow</li>
         <li>location->mine</li>
         <li>location->mound</li>
+        <li>location->pass</li>
         <li>location->pit</li>
         <li>location->shaft</li>
         <li>location->tor</li>
@@ -91,6 +99,9 @@
         <li>location->underground</li>
         <li>location->valley</li>
       </rulesStrings>
+      <rulesFiles>
+        <li>SylD->Xyl/WordParts/Syllables_Dvergr</li>
+      </rulesFiles>
     </rulePack>
   </RulePackDef>
 
