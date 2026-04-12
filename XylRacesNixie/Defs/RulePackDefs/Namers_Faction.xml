@@ -6,8 +6,8 @@
     <defName>NamerFactionTribalNixie</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name->[adjective] [aquatic_animal] of [name_core]</li>
-        <li>r_name->[name_core] [aquatic_animal] [people]</li>
+        <li>r_name->[adjective] [aquaticAnimal] of [name_core]</li>
+        <li>r_name->[name_core] [aquaticAnimal] [people]</li>
 
         <li>maybeHyphen(p=3)-></li>
         <li>maybeHyphen->-</li>
@@ -43,56 +43,13 @@
         <li>adjective->wind</li>
         <li>adjective->yellow</li>
 
-        <li>aquatic_animal->anemone</li>
-        <li>aquatic_animal->anglerfish</li>
-        <li>aquatic_animal->barnacle</li>
-        <li>aquatic_animal->barracuda</li>
-        <li>aquatic_animal->bass</li>
-        <li>aquatic_animal->carp</li>
-        <li>aquatic_animal->catfish</li>
-        <li>aquatic_animal->clam</li>
-        <li>aquatic_animal->cod</li>
-        <li>aquatic_animal->crab</li>
-        <li>aquatic_animal->dolphin</li>
-        <li>aquatic_animal->eel</li>
-        <li>aquatic_animal->jellyfish</li>
-        <li>aquatic_animal->lobster</li>
-        <li>aquatic_animal->manta</li>
-        <li>aquatic_animal->marlin</li>
-        <li>aquatic_animal->moray</li>
-        <li>aquatic_animal->octopus</li>
-        <li>aquatic_animal->orca</li>
-        <li>aquatic_animal->oyster</li>
-        <li>aquatic_animal->penguin</li>
-        <li>aquatic_animal->perch</li>
-        <li>aquatic_animal->pike</li>
-        <li>aquatic_animal->piranha</li>
-        <li>aquatic_animal->puffin</li>
-        <li>aquatic_animal->ray</li>
-        <li>aquatic_animal->sailfish</li>
-        <li>aquatic_animal->salmon</li>
-        <li>aquatic_animal->sardine</li>
-        <li>aquatic_animal->sea lion</li>
-        <li>aquatic_animal->seahorse</li>
-        <li>aquatic_animal->seal</li>
-        <li>aquatic_animal->shark</li>
-        <li>aquatic_animal->shrimp</li>
-        <li>aquatic_animal->squid</li>
-        <li>aquatic_animal->star</li>
-        <li>aquatic_animal->stingray</li>
-        <li>aquatic_animal->sturgeon</li>
-        <li>aquatic_animal->sunfish</li>
-        <li>aquatic_animal->trout</li>
-        <li>aquatic_animal->tuna</li>
-        <li>aquatic_animal->turtle</li>
-        <li>aquatic_animal->urchin</li>
-        <li>aquatic_animal->walrus</li>
-        <li>aquatic_animal->whale</li>
-
         <li>people->folk</li>
         <li>people->people</li>
         <li>people->tribe</li>
       </rulesStrings>
+      <rulesFiles>
+        <li>aquaticAnimal->Xyl/Words/Nouns/AquaticAnimals</li>
+      </rulesFiles>
     </rulePack>
   </RulePackDef>
 

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+  <RulePackDef>
+    <defName>NamerPersonNixie</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_name->[firstName] [lastName]</li>
+        <li>r_name->[firstName] '[nickName]' [lastName]</li>
+
+        <li>firstName->[SylG]-[SylG]</li>
+        <li>firstName->[SylG][SylG]-[SylG]</li>
+
+        <li>lastName->[SylG][nameEnd]</li>
+        <li>lastName->[SylG][SylG][nameEnd]</li>
+
+        <li>nickName->[aquaticAnimal]</li>
+        
+        <li>nameEnd->ash</li>
+        <li>nameEnd->ásh</li>
+        <li>nameEnd->áss</li>
+        <li>nameEnd->áth</li>
+        <li>nameEnd->eth</li>
+        <li>nameEnd->iss</li>
+        <li>nameEnd->ith</li>
+        <li>nameEnd->oss</li>
+        <li>nameEnd->óss</li>
+        <li>nameEnd->óth</li>
+      </rulesStrings>
+      <rulesFiles>
+        <li>aquaticAnimal->Xyl/Words/Nouns/AquaticAnimals</li>
+      </rulesFiles>
+    </rulePack>
+  </RulePackDef>
+
+</Defs>
