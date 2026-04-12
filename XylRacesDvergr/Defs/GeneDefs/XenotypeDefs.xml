@@ -8,6 +8,8 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Dvergr_small</iconPath>
     <displayPriority>-103</displayPriority>
     <inheritable>true</inheritable>
+    <nameMaker>NamerPersonDvergr</nameMaker>
+    <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>
       <li>PsychicAbility_Dull</li>
       <li>XylStoic</li>
