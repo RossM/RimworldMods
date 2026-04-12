@@ -77,11 +77,15 @@
         <li>location->delve</li>
         <li>location->depths</li>
         <li>location->excavation</li>
+        <li>location->gallery</li>
+        <li>location->grotto</li>
+        <li>location->hall</li>
         <li>location->hill</li>
         <li>location->hollow</li>
         <li>location->mine</li>
         <li>location->mound</li>
         <li>location->pit</li>
+        <li>location->shaft</li>
         <li>location->tor</li>
         <li>location->tunnel</li>
         <li>location->underground</li>
