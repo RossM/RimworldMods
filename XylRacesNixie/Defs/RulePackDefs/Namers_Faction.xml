@@ -6,14 +6,14 @@
     <defName>NamerFactionTribalNixie</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name->[adjective] [aquaticAnimal] of [name_core]</li>
-        <li>r_name->[name_core] [aquaticAnimal] [people]</li>
+        <li>r_name->[adjective] [aquaticAnimal]s of [nameCore]</li>
+        <li>r_name->[nameCore] [aquaticAnimal] [people]</li>
 
         <li>maybeHyphen(p=3)-></li>
         <li>maybeHyphen->-</li>
 
-        <li>name_core->[SylG][maybeHyphen][SylG]</li>
-        <li>name_core->[SylG][maybeHyphen][SylG][maybeHyphen][SylG]</li>
+        <li>nameCore->[SylG][maybeHyphen][SylG]</li>
+        <li>nameCore->[SylG][maybeHyphen][SylG][maybeHyphen][SylG]</li>
 
         <li>adjective->aquamarine</li>
         <li>adjective->beautiful</li>
@@ -43,6 +43,9 @@
         <li>adjective->wind</li>
         <li>adjective->yellow</li>
 
+        <li>people->alliance</li>
+        <li>people->clan</li>
+        <li>people->community</li>
         <li>people->folk</li>
         <li>people->people</li>
         <li>people->tribe</li>
@@ -57,15 +60,15 @@
     <defName>NamerSettlementTribalNixie</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name->[name_core] [coast]</li>
-        <li>r_name(p=0.2)->[name_core]-by-the-[coast]</li>
-        <li>r_name->[coast] of [name_core]</li>
+        <li>r_name->[nameCore] [coast]</li>
+        <li>r_name->[coast] of [nameCore]</li>
+        <li>r_name(p=0.2)->[nameCore]-by-the-[coast]</li>
 
         <li>maybeHyphen(p=3)-></li>
         <li>maybeHyphen->-</li>
 
-        <li>name_core->[SylG][maybeHyphen][SylG]</li>
-        <li>name_core->[SylG][maybeHyphen][SylG][maybeHyphen][SylG]</li>
+        <li>nameCore->[SylG][maybeHyphen][SylG]</li>
+        <li>nameCore->[SylG][maybeHyphen][SylG][maybeHyphen][SylG]</li>
 
         <li>coast->bar</li>
         <li>coast->bay</li>
