@@ -8,7 +8,7 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Nixie_small</iconPath>
     <displayPriority>-104</displayPriority>
     <inheritable>true</inheritable>
-    <nameMaker>NamerPersonNixie</nameMaker>
+    <nameMaker>XylNamerPersonNixie</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>
       <li MayRequire="Ludeon.RimWorld.Royalty">XylPsyBeckon</li>

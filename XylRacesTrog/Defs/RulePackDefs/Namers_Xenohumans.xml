@@ -2,7 +2,7 @@
 
 <Defs>
   <RulePackDef>
-    <defName>NamerPersonTrog</defName>
+    <defName>XylNamerPersonTrog</defName>
     <rulePack>
       <rulesStrings>
         <li>r_name->[firstName] [lastName]</li>

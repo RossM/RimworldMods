@@ -8,8 +8,8 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Bossaps_small</iconPath>
     <displayPriority>-101</displayPriority>
     <inheritable>true</inheritable>
-    <nameMaker>NamerPersonBossapsMale</nameMaker>
-    <nameMakerFemale>NamerPersonBossapsFemale</nameMakerFemale>
+    <nameMaker>XylNamerPersonBossapsMale</nameMaker>
+    <nameMakerFemale>XylNamerPersonBossapsFemale</nameMakerFemale>
     <chanceToUseNameMaker>0.75</chanceToUseNameMaker>
     <genes>
       <li>XylHerdInstinct</li>

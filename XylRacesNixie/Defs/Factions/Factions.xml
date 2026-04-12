@@ -15,8 +15,8 @@
     <colorSpectrum>
       <li>(0.4, 0.65, 0.75)</li>
     </colorSpectrum>
-    <factionNameMaker>NamerFactionTribalNixie</factionNameMaker>
-    <settlementNameMaker>NamerSettlementTribalNixie</settlementNameMaker>
+    <factionNameMaker>XylNamerFactionTribalNixie</factionNameMaker>
+    <settlementNameMaker>XylNamerSettlementTribalNixie</settlementNameMaker>
     <replacesFaction>TribeCivil</replacesFaction>
     <requiredMemes>
       <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>

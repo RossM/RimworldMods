@@ -8,7 +8,7 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Trog_small</iconPath>
     <displayPriority>-106</displayPriority>
     <inheritable>true</inheritable>
-    <nameMaker>NamerPersonTrog</nameMaker>
+    <nameMaker>XylNamerPersonTrog</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>
       <li>XylToxicBurst</li>

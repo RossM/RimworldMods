@@ -3,7 +3,7 @@
 <Defs>
 
   <RulePackDef>
-    <defName>NamerFactionOutlanderDvergr</defName>
+    <defName>XylNamerFactionOutlanderDvergr</defName>
     <rulePack>
       <rulesStrings>
         <li>r_name->[AdjectiveBadass] [adjective] [group]</li>
@@ -41,7 +41,7 @@
   </RulePackDef>
 
   <RulePackDef>
-    <defName>NamerSettlementOutlanderDvergr</defName>
+    <defName>XylNamerSettlementOutlanderDvergr</defName>
     <rulePack>
       <rulesStrings>
         <li>r_name->fort [nameCore]</li>
