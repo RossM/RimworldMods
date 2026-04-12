@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+  <RulePackDef Name="NamerPersonBossapsBase" Abstract="True">
+    <include>
+      <li>NamerAnimalUtility</li>
+      <li>TribalWordUtility</li>
+    </include>
+    <rulePack>
+      <rulesStrings>
+        <li>r_name(p=2)->[firstName] [lastName]</li>
+        <li>r_name->[firstName] '[nickName]' [lastName]</li>
+
+        <li>firstName->[NameAnimalUnisex]</li>
+        <li>firstName->[WordTribal]</li>
+
+        <li>lastName->[WordTribal]</li>
+        <li>lastName->[SylE][SylE]</li>
+
+        <li>nickName->angus</li>
+        <li>nickName->aurochs</li>
+        <li>nickName->bison</li>
+        <li>nickName->black</li>
+        <li>nickName->blue</li>
+        <li>nickName->brown</li>
+        <li>nickName->devon</li>
+        <li>nickName->friesian</li>
+        <li>nickName->hereford</li>
+        <li>nickName->highland</li>
+        <li>nickName->holstein</li>
+        <li>nickName->jersey</li>
+        <li>nickName->longhorn</li>
+        <li>nickName->muffalo</li>
+        <li>nickName->red</li>
+        <li>nickName->shorthorn</li>
+        <li>nickName->zebu</li>
+
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef ParentName="NamerPersonBossapsBase">
+    <defName>NamerPersonBossapsMale</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>firstName->[NameAnimalMale]</li>
+        <li>firstName->[NameHumanMale]</li>
+
+        <li>nickName->apollo</li>
+        <li>nickName->clover</li>
+        <li>nickName->duke</li>
+        <li>nickName->herbie</li>
+        <li>nickName->maverick</li>
+        <li>nickName->orson</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef ParentName="NamerPersonBossapsBase">
+    <defName>NamerPersonBossapsFemale</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>firstName->[NameAnimalFemale]</li>
+        <li>firstName->[NameHumanFemale]</li>
+
+        <li>nickName->bessie</li>
+        <li>nickName->buttercup</li>
+        <li>nickName->clarabelle</li>
+        <li>nickName->daisy</li>
+        <li>nickName->henrietta</li>
+        <li>nickName->penelope</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+</Defs>
