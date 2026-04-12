@@ -14,7 +14,7 @@ bem
 bif
 bil
 blá
-bo
+bó
 bor
 bul
 bá
@@ -28,7 +28,7 @@ dum
 dval
 dá
 dúr
-ed
+éd
 eit
 el
 em
@@ -38,7 +38,7 @@ faf
 far
 fi
 find
-fun
+fún
 fár
 gal
 gar
@@ -55,7 +55,7 @@ ist
 kad
 ki
 kog
-kub
+kúb
 li
 lib
 lof
@@ -74,7 +74,7 @@ ol
 ost
 rad
 rak
-rek
+rék
 ri
 rig
 shor
@@ -96,4 +96,4 @@ uv
 uz
 vi
 vif
-zul
+zúl
