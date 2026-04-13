@@ -17,10 +17,9 @@ namespace XylRacesCore
 
         public override bool AICanTargetNow(LocalTargetInfo target)
         {
-            int num = GenRadial.NumCellsInRadius(Props.AIUseRadius);
+            int cellsInRadius = GenRadial.NumCellsInRadius(Props.AIUseRadius);
 
-            float num2 = 0f;
-            for (int i = 0; i < num; i++)
+            for (int i = 0; i < cellsInRadius; i++)
             {
                 IntVec3 c = Pawn.Position + GenRadial.RadialPattern[i];
                 if (!c.InBounds(Pawn.Map))
