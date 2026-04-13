@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <RulePackDef>
+    <defName>XylNamerFactionTribalWarcat</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_name->[BodyPart] [hunters]</li>
+        <li>r_name->[AdjectiveBadass] [catGroup]</li>
+        <li>r_name->[TerrainFeature] [catGroup]</li>
+
+        <li>hunters->ambushers</li>
+        <li>hunters->chasers</li>
+        <li>hunters->eaters</li>
+        <li>hunters->hunters</li>
+        <li>hunters->nomads</li>
+        <li>hunters->rippers</li>
+        <li>hunters->seekers</li>
+        <li>hunters->slayers</li>
+        <li>hunters->takers</li>
+        <li>hunters->warriors</li>
+
+        <li>catGroup->cheetahs</li>
+        <li>catGroup->leopards</li>
+        <li>catGroup->lions</li>
+        <li>catGroup->lynxes</li>
+        <li>catGroup->panthers</li>
+        <li>catGroup->pumas</li>
+        <li>catGroup->tigers</li>
+        <li>catGroup->wildcats</li>
+
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>XylNamerSettlementTribalWarcat</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_name->[Color] [TerrainFeature]</li>
+        <li>r_name->[Color] [NaturalObject]</li>
+        <li>r_name->[AdjectiveNatural] [TerrainFeature]</li>
+        <li>r_name->[AdjectiveNatural] [NaturalObject]</li>
+        <li>r_name->[NaturalObject] [TerrainFeature]</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+</Defs>
