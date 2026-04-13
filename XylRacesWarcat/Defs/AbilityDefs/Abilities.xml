@@ -4,7 +4,7 @@
   <AbilityDef>
     <defName>XylFeralRage</defName>
     <label>feral rage</label>
-    <description>Enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%).</description>
+    <description>Enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%) for a short time. After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%).</description>
     <iconPath>Xyl/UI/Icons/Genes/Gene_FeralRage</iconPath>
     <!-- 1 day -->
     <cooldownTicksRange>60000</cooldownTicksRange>
@@ -15,9 +15,6 @@
     <aiCanUse>true</aiCanUse>
     <ai_IsOffensive>true</ai_IsOffensive>
     <targetRequired>false</targetRequired>
-    <statBases>
-      <Ability_Duration>60</Ability_Duration>
-    </statBases>
     <verbProperties>
       <verbClass>Verb_CastAbility</verbClass>
       <drawAimPie>false</drawAimPie>
