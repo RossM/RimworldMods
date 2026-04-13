@@ -6,42 +6,15 @@
     <defName>XylNamerFactionTribalNixie</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name->[adjective] [aquaticAnimal]s of [nameCore]</li>
+        <li>r_name->[aquaticAdjective] [aquaticAnimal] of [nameCore]</li>
         <li>r_name->[nameCore] [aquaticAnimal] [people]</li>
+        <li>r_name->[nameCore] [coastalFeature] [people]</li>
 
         <li>maybeHyphen(p=3)-></li>
         <li>maybeHyphen->-</li>
 
         <li>nameCore->[SylG][maybeHyphen][SylG]</li>
         <li>nameCore->[SylG][maybeHyphen][SylG][maybeHyphen][SylG]</li>
-
-        <li>adjective->aquamarine</li>
-        <li>adjective->beautiful</li>
-        <li>adjective->black</li>
-        <li>adjective->blue</li>
-        <li>adjective->coral</li>
-        <li>adjective->deep</li>
-        <li>adjective->fluid</li>
-        <li>adjective->graceful</li>
-        <li>adjective->great</li>
-        <li>adjective->gray</li>
-        <li>adjective->lake</li>
-        <li>adjective->liquid</li>
-        <li>adjective->marsh</li>
-        <li>adjective->moon</li>
-        <li>adjective->river</li>
-        <li>adjective->scaled</li>
-        <li>adjective->scarred</li>
-        <li>adjective->sea</li>
-        <li>adjective->sky</li>
-        <li>adjective->song</li>
-        <li>adjective->spirit</li>
-        <li>adjective->tiger</li>
-        <li>adjective->toothed</li>
-        <li>adjective->water</li>
-        <li>adjective->white</li>
-        <li>adjective->wind</li>
-        <li>adjective->yellow</li>
 
         <li>people->alliance</li>
         <li>people->clan</li>
@@ -51,7 +24,9 @@
         <li>people->tribe</li>
       </rulesStrings>
       <rulesFiles>
+        <li>aquaticAdjective->Xyl/Words/Adjectives/AquaticAdjectives</li>
         <li>aquaticAnimal->Xyl/Words/Nouns/AquaticAnimals</li>
+        <li>coastalFeature->Xyl/Words/Nouns/CoastalFeatures</li>
       </rulesFiles>
     </rulePack>
   </RulePackDef>
@@ -60,43 +35,19 @@
     <defName>XylNamerSettlementTribalNixie</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name->[nameCore] [coast]</li>
-        <li>r_name->[coast] of [nameCore]</li>
-        <li>r_name(p=0.2)->[nameCore]-by-the-[coast]</li>
+        <li>r_name->[nameCore] [coastalFeature]</li>
+        <li>r_name->[coastalFeature] of [nameCore]</li>
+        <li>r_name(p=0.2)->[nameCore]-by-the-[coastalFeature]</li>
 
         <li>maybeHyphen(p=3)-></li>
         <li>maybeHyphen->-</li>
 
         <li>nameCore->[SylG][maybeHyphen][SylG]</li>
         <li>nameCore->[SylG][maybeHyphen][SylG][maybeHyphen][SylG]</li>
-
-        <li>coast->bar</li>
-        <li>coast->bay</li>
-        <li>coast->beach</li>
-        <li>coast->breakwater</li>
-        <li>coast->brook</li>
-        <li>coast->canal</li>
-        <li>coast->canyon</li>
-        <li>coast->channel</li>
-        <li>coast->cliff</li>
-        <li>coast->coast</li>
-        <li>coast->cut</li>
-        <li>coast->deep</li>
-        <li>coast->inlet</li>
-        <li>coast->island</li>
-        <li>coast->lake</li>
-        <li>coast->marsh</li>
-        <li>coast->pond</li>
-        <li>coast->rapids</li>
-        <li>coast->reef</li>
-        <li>coast->river</li>
-        <li>coast->shallows</li>
-        <li>coast->shore</li>
-        <li>coast->sound</li>
-        <li>coast->spit</li>
-        <li>coast->spring</li>
-        <li>coast->stream</li>
       </rulesStrings>
+      <rulesFiles>
+        <li>coastalFeature->Xyl/Words/Nouns/CoastalFeatures</li>
+      </rulesFiles>
     </rulePack>
   </RulePackDef>
 

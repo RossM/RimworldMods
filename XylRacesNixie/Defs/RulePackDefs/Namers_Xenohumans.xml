@@ -14,6 +14,7 @@
         <li>lastName->[SylG][nameEnd]</li>
         <li>lastName->[SylG][SylG][nameEnd]</li>
 
+        <li>nickName->[aquaticAdjective]</li>
         <li>nickName->[aquaticAnimal]</li>
         
         <li>nameEnd->ash</li>
@@ -28,6 +29,7 @@
         <li>nameEnd->óth</li>
       </rulesStrings>
       <rulesFiles>
+        <li>aquaticAdjective->Xyl/Words/Adjectives/AquaticAdjectives</li>
         <li>aquaticAnimal->Xyl/Words/Nouns/AquaticAnimals</li>
       </rulesFiles>
     </rulePack>

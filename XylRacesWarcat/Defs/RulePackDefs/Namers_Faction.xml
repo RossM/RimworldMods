@@ -6,20 +6,30 @@
     <defName>XylNamerFactionTribalWarcat</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name->[BodyPart] [hunters]</li>
+        <li>r_name->[BodyPart] [hunter]s</li>
+        <li>r_name->[BodyPart] [hunter] [clan]</li>
         <li>r_name->[AdjectiveBadass] [catGroup]</li>
+        <li>r_name->[AdjectiveBadass] [cat] [clan]</li>
         <li>r_name->[TerrainFeature] [catGroup]</li>
+        <li>r_name->[TerrainFeature] [cat] [clan]</li>
 
-        <li>hunters->ambushers</li>
-        <li>hunters->chasers</li>
-        <li>hunters->eaters</li>
-        <li>hunters->hunters</li>
-        <li>hunters->nomads</li>
-        <li>hunters->rippers</li>
-        <li>hunters->seekers</li>
-        <li>hunters->slayers</li>
-        <li>hunters->takers</li>
-        <li>hunters->warriors</li>
+        <li>hunter->ambusher</li>
+        <li>hunter->chaser</li>
+        <li>hunter->eater</li>
+        <li>hunter->hunter</li>
+        <li>hunter->ripper</li>
+        <li>hunter->seeker</li>
+        <li>hunter->slayer</li>
+        <li>hunter->taker</li>
+
+        <li>cat->cheetah</li>
+        <li>cat->leopard</li>
+        <li>cat->lion</li>
+        <li>cat->lynx</li>
+        <li>cat->panther</li>
+        <li>cat->puma</li>
+        <li>cat->tiger</li>
+        <li>cat->wildcat</li>
 
         <li>catGroup->cheetahs</li>
         <li>catGroup->leopards</li>
@@ -29,6 +39,13 @@
         <li>catGroup->pumas</li>
         <li>catGroup->tigers</li>
         <li>catGroup->wildcats</li>
+
+        <li>clan->alliance</li>
+        <li>clan->clan</li>
+        <li>clan->confederation</li>
+        <li>clan->kin</li>
+        <li>clan->league</li>
+        <li>clan->tribes</li>
 
       </rulesStrings>
     </rulePack>
