@@ -13,6 +13,15 @@
         <li>lastName->[SylD][SylD][SylD]</li>
 
         <li>nickName->[nickStart][nickEnd]</li>
+        <li>nickName(p=0.02)->[specialNickname]</li>
+
+        <li>specialNickname->bashful</li>
+        <li>specialNickname->doc</li>
+        <li>specialNickname->dopey</li>
+        <li>specialNickname->grumpy</li>
+        <li>specialNickname->happy</li>
+        <li>specialNickname->sleepy</li>
+        <li>specialNickname->sneezy</li>
       </rulesStrings>
       <rulesFiles>
         <li>SylD->Xyl/WordParts/Syllables_Dvergr</li>
