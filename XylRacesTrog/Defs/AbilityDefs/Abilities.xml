@@ -26,7 +26,7 @@
       <targetParams>
         <canTargetSelf>true</canTargetSelf>
       </targetParams>
-      <!--<soundCast>DeadlifeRelease</soundCast>-->
+      <soundCast>Explosion_FirefoamPopper</soundCast>
     </verbProperties>
     <comps>
       <li Class="XylRacesCore.CompProperties_AbilityToxicBurst">
