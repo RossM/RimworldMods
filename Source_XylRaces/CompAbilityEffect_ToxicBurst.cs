@@ -26,10 +26,10 @@ namespace XylRacesCore
                 {
                     continue;
                 }
-                List<Thing> thingList = c.GetThingList(Pawn.Map);
-                for (int j = 0; j < thingList.Count; j++)
+
+                foreach (Thing thing in c.GetThingList(Pawn.Map))
                 {
-                    if (thingList[j] is Pawn pawn && pawn != Pawn && pawn.HostileTo(Pawn) && GasUtility.IsAffectedByExposure(pawn) && !pawn.IsPsychologicallyInvisible())
+                    if (thing is Pawn pawn && pawn != Pawn && pawn.HostileTo(Pawn) && GasUtility.IsAffectedByExposure(pawn) && !pawn.IsPsychologicallyInvisible())
                     {
                         return true;
                     }
