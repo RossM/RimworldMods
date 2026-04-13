@@ -1,8 +1,13 @@
 beer
+bent
 black
 blood
 blue
+broken
+bronze
 cavern
+coal
+copper
 dark
 deep
 fire
@@ -14,7 +19,10 @@ gray
 green
 iron
 light
+long
 metal
+oil
+proud
 red
 short
 silver
@@ -27,4 +35,6 @@ tall
 tough
 whiskey
 white
+wire
+wood
 yellow
