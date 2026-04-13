@@ -7,6 +7,7 @@
     <rulePack>
       <rulesStrings>
         <li>r_name->[AdjectiveBadass] [adjective] [group]</li>
+        <li>r_name->[SylD][SylD] [adjective] [group]</li>
 
         <li>adjective->blasting</li>
         <li>adjective->cave</li>
@@ -26,8 +27,8 @@
         <li>adjective->tunneling</li>
 
         <li>group->acquisitions</li>
+        <li>group->allied clans</li>
         <li>group->association</li>
-        <li>group->clans</li>
         <li>group->collective</li>
         <li>group->confederation</li>
         <li>group->corporation</li>
@@ -37,6 +38,9 @@
         <li>group->partners</li>
         <li>group->team</li>
       </rulesStrings>
+      <rulesFiles>
+        <li>SylD->Xyl/WordParts/Syllables_Dvergr</li>
+      </rulesFiles>
     </rulePack>
   </RulePackDef>
 
