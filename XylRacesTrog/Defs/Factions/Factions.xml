@@ -37,6 +37,7 @@
       <li MayRequire="Ludeon.RimWorld.Ideology">Cannibal</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">Darkness</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">FleshPurity</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">HighLife</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">Loyalist</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">PainIsVirtue</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">Raider</li>
