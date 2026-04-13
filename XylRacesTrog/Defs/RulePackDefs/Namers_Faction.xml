@@ -37,7 +37,7 @@
     <defName>XylNamerSettlementTribalTrog</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name(p=2)->[syl]-[syl]</li>
+        <li>r_name(p=2)->[syl] [syl]</li>
         <li>r_name->[badass] [thing]</li>
 
         <li>syl->[SylN]</li>
