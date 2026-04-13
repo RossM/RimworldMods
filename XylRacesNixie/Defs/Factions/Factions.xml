@@ -7,6 +7,7 @@
     <pawnSingular>nixie</pawnSingular>
     <pawnsPlural>nixies</pawnsPlural>
     <description>A peaceful tribe of beautiful aquatic nixies. This particular tribe is open to contact and trade with the dryskins. They prefer to make their homes near rivers and coastlines, but small bands sometimes travel far inlands.\n\nOriginally engineered for the world Atlantis, nixies are now found on many planets. This one has had them for thousands of years.</description>
+    <factionIconPath>Xyl/World/WorldObjects/Expanding/VillageNixie</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>
         <XylNixie>999</XylNixie>
