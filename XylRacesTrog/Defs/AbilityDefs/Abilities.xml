@@ -31,7 +31,7 @@
     <comps>
       <li Class="XylRacesCore.CompProperties_AbilityToxicBurst">
         <gasType>ToxGas</gasType>
-        <cellsToFill>30</cellsToFill>
+        <cellsToFill>20</cellsToFill>
         <AIUseRadius>2.9</AIUseRadius>
       </li>
     </comps>
