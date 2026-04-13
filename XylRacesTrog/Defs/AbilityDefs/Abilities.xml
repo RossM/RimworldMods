@@ -7,6 +7,7 @@
     <description>Releases a cloud of toxic gas in an area around the user. The user is affected by the gas normally.</description>
     <iconPath>Xyl/UI/Abilities/ToxicBurst</iconPath>
     <cooldownTicksRange>300000</cooldownTicksRange> <!-- 5 days -->
+    <aiCanUse>true</aiCanUse>
     <showPsycastEffects>false</showPsycastEffects>
     <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
     <casterMustBeCapableOfViolence>false</casterMustBeCapableOfViolence>
@@ -28,9 +29,10 @@
       <!--<soundCast>DeadlifeRelease</soundCast>-->
     </verbProperties>
     <comps>
-      <li Class="CompProperties_AbilityReleaseGas">
+      <li Class="XylRacesCore.CompProperties_AbilityToxicBurst">
         <gasType>ToxGas</gasType>
         <cellsToFill>30</cellsToFill>
+        <AIUseRadius>2.9</AIUseRadius>
       </li>
     </comps>
   </AbilityDef>
