@@ -22,7 +22,7 @@
   <GeneDef>
     <defName>XylToxicBurst</defName>
     <label>toxic burst</label>
-    <description>Carriers have the ability to release a cloud of toxic gas around them from a special gland located near their anus. The gas affects the user normally.</description>
+    <description>Carriers have the ability to release a cloud of tox gas around them from a special gland located near their anus. The gas affects the user normally.</description>
     <displayCategory>Ability</displayCategory>
     <displayOrderInCategory>202</displayOrderInCategory>
     <iconPath>Xyl/UI/Abilities/ToxicBurst</iconPath>
