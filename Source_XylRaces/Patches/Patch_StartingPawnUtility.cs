@@ -9,7 +9,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(StartingPawnUtility))]
     public class Patch_StartingPawnUtility
     {
-        private static readonly InstructionMatcher Fixup_GetPsycastLevel = new()
+        private static readonly InstructionMatcher Fixup_GeneratePossessions = new()
         {
             Rules =
             {
@@ -42,7 +42,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> GeneratePossessions_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_GetPsycastLevel.MatchAndReplace(ref instructionsList, generator);
+            Fixup_GeneratePossessions.MatchAndReplace(ref instructionsList, generator);
             return instructionsList;
         }
 
