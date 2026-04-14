@@ -30,6 +30,7 @@
     <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.pawn" />
     <Publicize Include="Assembly-CSharp:RimWorld.StatWorker.stat" />
     <Publicize Include="Assembly-CSharp:RimWorld.WorkGiver_Warden.ShouldTakeCareOfPrisoner" />
+    <Publicize Include="Assembly-CSharp:Verse.ShotReport.target" />
   </ItemGroup>
 
   <ItemGroup>
