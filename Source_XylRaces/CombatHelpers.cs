@@ -20,6 +20,9 @@ namespace XylRacesCore
 
         public static float GetRangedDodgeChance(Pawn target)
         {
+            if (target.DeadOrDowned)
+                return 0;
+
             return target.GetStatValue(Defs.XylRangedDodgeChance);
         }
     }
