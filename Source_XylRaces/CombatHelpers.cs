@@ -22,6 +22,8 @@ namespace XylRacesCore
         {
             if (target.DeadOrDowned)
                 return 0;
+            if (target.GetPosture() != PawnPosture.Standing)
+                return 0;
 
             return target.GetStatValue(Defs.XylRangedDodgeChance);
         }
