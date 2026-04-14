@@ -125,7 +125,7 @@
     </capMods>
     <statOffsets>
       <MaxFlightTime>10</MaxFlightTime>
-      <FlightCooldown>30</FlightCooldown>
+      <FlightCooldown>45</FlightCooldown>
     </statOffsets>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Flight">
