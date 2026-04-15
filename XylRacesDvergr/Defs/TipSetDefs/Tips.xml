@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <TipSetDef>
+    <defName>XylDvergrTips</defName>
+    <tips>
+
+      <li TKey="XylDvergrFungusBrewing">No soil? No problem. Dvergr can build fungal gravel underground, and brew the raw fungus grown there into alcohol.</li>
+
+    </tips>
+  </TipSetDef>
+
+</Defs>
