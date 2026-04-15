@@ -35,5 +35,6 @@
   <XylPsycast>psycast</XylPsycast>
   <XylStartingSlaves>{0} starting colonists are slaves.</XylStartingSlaves>
   <XylDocileThresholdReached>No rebellion because interval is over {0} days</XylDocileThresholdReached>
+  <XylCharactersWithGene>{0} character</XylCharactersWithGene>
 
 </LanguageData>

@@ -19,6 +19,7 @@
     <rotatable>false</rotatable>
     <hasInteractionCell>True</hasInteractionCell>
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
     <statBases>
       <MaxHitPoints>100</MaxHitPoints>
       <WorkToBuild>1200</WorkToBuild>
@@ -39,12 +40,5 @@
     <pathCost>14</pathCost>
     <designationCategory>Misc</designationCategory>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
-    <modExtensions>
-      <li Class="XylRacesCore.DefModExtension_GeneDependent">
-        <genePrerequisitesAny>
-          <li>XylAquatic</li>
-        </genePrerequisitesAny>
-      </li>
-    </modExtensions>
   </ThingDef>
 </Defs>

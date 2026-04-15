@@ -135,6 +135,13 @@
         <li><symbol>fin</symbol></li>
       </suffixSymbols>
     </symbolPack>
+    <modExtensions>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Designator">
+        <addDesignators>
+          <li>XylShower</li>
+        </addDesignators>
+      </li>
+    </modExtensions>
   </GeneDef>
 
   <GeneDef ParentName="GeneEarsBase">
