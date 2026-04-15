@@ -11,10 +11,6 @@
       <drawSize>(1.5,1.5)</drawSize>
       <drawOffset>(0,0,0.25)</drawOffset>
     </graphicData>
-    <minifiedDef>MinifiedThing</minifiedDef>
-    <thingCategories>
-      <li>BuildingsMisc</li>
-    </thingCategories>
     <altitudeLayer>Building</altitudeLayer>
     <rotatable>false</rotatable>
     <hasInteractionCell>True</hasInteractionCell>
@@ -22,7 +18,7 @@
     <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
     <statBases>
       <MaxHitPoints>100</MaxHitPoints>
-      <WorkToBuild>1200</WorkToBuild>
+      <WorkToBuild>1500</WorkToBuild>
       <Mass>10</Mass>
       <Flammability>0.0</Flammability>
       <Beauty>-2</Beauty>
