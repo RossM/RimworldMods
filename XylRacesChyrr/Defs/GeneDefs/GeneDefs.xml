@@ -42,6 +42,7 @@
     </modExtensions>
     <customEffectDescriptions>
       <li>Sight: use hearing if higher</li>
+      <li>Enables apparel: Blindfold</li>
     </customEffectDescriptions>
   </GeneDef>
 

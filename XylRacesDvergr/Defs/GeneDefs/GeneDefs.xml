@@ -115,7 +115,8 @@
       <XylRawFungusNutritionFactor>1.8</XylRawFungusNutritionFactor>
     </statFactors>
     <customEffectDescriptions>
-      <li>Enables building: Fungus still</li>
+      <li>Enables building: Fungal Gravel</li>
+      <li>Enables recipe: Make Wort from Raw Fungus</li>
     </customEffectDescriptions>
     <symbolPack>
       <prefixSymbols>
@@ -131,6 +132,13 @@
         <li><symbol>bloom</symbol></li>
       </suffixSymbols>
     </symbolPack>
+    <modExtensions>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Designator">
+        <addDesignators>
+          <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
+        </addDesignators>
+      </li>
+    </modExtensions>
   </GeneDef>
 
   <GeneDef ParentName="GeneEarsBase">

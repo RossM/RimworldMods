@@ -32,6 +32,7 @@
     <Publicize Include="Assembly-CSharp:RimWorld.PawnGenerator.GenerateInitialHediffs" />
     <Publicize Include="Assembly-CSharp:RimWorld.StatWorker.stat" />
     <Publicize Include="Assembly-CSharp:RimWorld.WorkGiver_Warden.ShouldTakeCareOfPrisoner" />
+    <Publicize Include="Assembly-CSharp:Verse.DesignationCategoryDef.ideoBuildingDesignatorsCached" />
     <Publicize Include="Assembly-CSharp:Verse.ShotReport.factorFromCoveringGas" />
     <Publicize Include="Assembly-CSharp:Verse.ShotReport.target" />
   </ItemGroup>
