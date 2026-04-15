@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace XylRacesCore.Patches
@@ -12,6 +14,41 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(ShotReport))]
     public static class Patch_ShotReport
     {
+        [DefOf]
+        public static class Defs
+        {
+            [UsedImplicitly] public static GeneDef XylEcholocation;
+        }
+
+        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.HitFactorFromShooter))]
+        public static bool HitFactorFromShooter_Prefix(Thing caster, float distance, float? acc, ref float __result)
+        {
+            if (IsUsingEcholocation(caster))
+            {
+                float f = acc ?? ((caster is Pawn) ? caster.GetStatValue(StatDefOf.ShootingAccuracyPawn) : (caster?.GetStatValue(StatDefOf.ShootingAccuracyTurret) ?? 1f));
+                float num = Mathf.Pow(f, distance);
+                __result = Mathf.Max(num, 0.0201f);
+                return false;
+            }
+
+            return true;
+        }
+
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.HitReportFor))]
+        public static void HitReportFor_Postfix(Thing caster, Verb verb, LocalTargetInfo target, ref ShotReport __result)
+        {
+            if (IsUsingEcholocation(caster))
+            {
+                __result.factorFromCoveringGas = 1f;
+            }
+        }
+
+        private static bool IsUsingEcholocation(Thing caster)
+        {
+            return caster is Pawn pawn && pawn.HasActiveGene(Defs.XylEcholocation) && PawnUtility.IsBiologicallyOrArtificiallyBlind(pawn)
+                && pawn.health.capacities.GetLevel(PawnCapacityDefOf.Hearing) >= 0.2f;
+        }
+
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.GetTextReadout))]
         public static void GetTextReadout_Postfix(ShotReport __instance, ref string __result)
         {

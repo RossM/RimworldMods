@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <TipSetDef>
+    <defName>XylChyrrTips</defName>
+    <tips>
+
+      <li TKey="XylChyrrEcholocationSmoke">A blind, or blindfolded, character with echolocation isn't affected by smoke or nearsightedness when shooting.</li>
+
+    </tips>
+  </TipSetDef>
+
+</Defs>
