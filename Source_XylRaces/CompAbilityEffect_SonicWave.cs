@@ -10,8 +10,6 @@ namespace XylRacesCore
         public float range;
         public float radius;
         public bool canHitFilledCells;
-        public bool affectDrones;
-        public bool affectMechanoids;
 
         public PawnCapacityDef durationMultiplierCapacity;
 
@@ -34,8 +32,7 @@ namespace XylRacesCore
                 var thingList = item.GetThingList(map);
                 foreach (var targetPawn in thingList.OfType<Pawn>())
                 {
-                    if (!Props.affectMechanoids && targetPawn.RaceProps.IsMechanoid) continue;
-                    if (!Props.affectDrones && targetPawn.RaceProps.IsDrone) continue;
+                    if (!targetPawn.RaceProps.IsFlesh) continue;
                     targetPawn.stances.stunner.StunFor(GetDurationSeconds(targetPawn).SecondsToTicks(), Pawn, addBattleLog: false);
                 }
             }
@@ -66,7 +63,7 @@ namespace XylRacesCore
                     List<Thing> thingList = item.GetThingList(Pawn.Map);
                     foreach (var targetPawn in thingList.OfType<Pawn>())
                     {
-                        if (targetPawn.Faction == Pawn.Faction && (Props.affectMechanoids || !targetPawn.RaceProps.IsMechanoid))
+                        if (targetPawn.Faction == Pawn.Faction && targetPawn.RaceProps.IsFlesh)
                         {
                             return false;
                         }
