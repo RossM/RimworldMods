@@ -27,6 +27,18 @@
         <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
         <chance>0.5</chance>
       </li>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_CongenitalHediff">
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>Blindness</hediff>
+            <partsToAffect>
+              <li>Eye</li>
+            </partsToAffect>
+            <countToAffect>2</countToAffect>
+          </li>
+        </hediffGivers>
+        <chance>0.15</chance>
+      </li>
     </modExtensions>
     <customEffectDescriptions>
       <li>Sight: use hearing if higher</li>

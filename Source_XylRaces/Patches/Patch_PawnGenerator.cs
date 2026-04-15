@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -11,6 +12,12 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(PawnGenerator))]
     public static class Patch_PawnGenerator
     {
+        [DefOf]
+        public static class Defs
+        {
+            [UsedImplicitly] public static GeneDef XylEcholocation;
+        }
+
         private static readonly InstructionMatcher Fixup_TryGenerateNewPawnInternal = new()
         {
             Rules =
@@ -75,6 +82,19 @@ namespace XylRacesCore.Patches
         public static bool HasGenderRatio(GeneDef gene)
         {
             return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
+        }
+
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch("GenerateInitialHediffs")]
+        public static void GenerateInitialHediffs_Postfix(Pawn pawn, PawnGenerationRequest request)
+        {
+            foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_CongenitalHediff>())
+            {
+                if (!Rand.Chance(extension.chance))
+                    continue;
+
+                foreach (var hediffGiver in extension.hediffGivers)
+                    hediffGiver.TryApply(pawn);
+            }
         }
     }
 }
