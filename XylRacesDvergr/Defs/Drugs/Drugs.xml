@@ -31,6 +31,13 @@
     <products>
       <Wort>5</Wort>
     </products>
+    <modExtensions>
+      <li Class="XylRacesCore.DefModExtension_GeneDependent">
+        <genePrerequisitesAny>
+          <li>XylFungusEater</li>
+        </genePrerequisitesAny>
+      </li>
+    </modExtensions>
   </RecipeDef>
 
 </Defs>
