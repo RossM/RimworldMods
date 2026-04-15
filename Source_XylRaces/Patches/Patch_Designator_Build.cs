@@ -19,7 +19,7 @@ namespace XylRacesCore.Patches
                     return;
 
                 BuildableDef def = __instance.PlacingDef;
-                var extension = def.GetModExtension<DefExt_GeneDependent>();
+                var extension = def.GetModExtension<DefModExtension_GeneDependent>();
                 if (extension == null)
                     return;
 

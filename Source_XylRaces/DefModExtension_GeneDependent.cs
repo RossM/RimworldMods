@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class DefExt_GeneDependent : DefModExtension
+    public class DefModExtension_GeneDependent : DefModExtension
     {
         public List<GeneDef> genePrerequisitesAny;
         public List<MemeDef> memePrerequisitesAny;

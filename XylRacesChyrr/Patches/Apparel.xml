@@ -17,7 +17,7 @@
           <xpath>Defs/ThingDef[defName="Apparel_Blindfold"]</xpath>
           <value>
             <modExtensions>
-              <li Class="XylRacesCore.DefExt_GeneDependent">
+              <li Class="XylRacesCore.DefModExtension_GeneDependent">
                 <genePrerequisitesAny>
                   <li>XylEcholocation</li>
                 </genePrerequisitesAny>

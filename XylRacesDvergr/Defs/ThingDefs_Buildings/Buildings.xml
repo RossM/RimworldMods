@@ -59,7 +59,7 @@
       <li>Brewing</li>
     </researchPrerequisites>
     <modExtensions>
-      <li Class="XylRacesCore.DefExt_GeneDependent">
+      <li Class="XylRacesCore.DefModExtension_GeneDependent">
         <genePrerequisitesAny>
           <li>XylFungusEater</li>
         </genePrerequisitesAny>
