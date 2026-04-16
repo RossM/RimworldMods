@@ -1,29 +1,75 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <Defs>
-  <RulePackDef>
-    <defName>XylNamerPersonChyrr</defName>
+  <RulePackDef Name="XylNamerPersonChyrrBase" Abstract="True">
     <rulePack>
       <rulesStrings>
         <li>r_name->[firstName] [lastName]</li>
-        <li>r_name->[firstName] '[nickName]' [lastName]</li>
+        <li>r_name(p=3)->[firstName] '[nickName]' [lastName]</li>
 
-        <li>firstName->[NaturalObject]</li>
-        <li>firstName->[TreeType]</li>
-        <li>firstName->[Color]</li>
-        <li>firstName->[TerrainFeature]</li>
-        <li>firstName->[Vegetable]</li>
-        <li>firstName->[AdjectiveAny]</li>
-        <li>firstName->[ConceptAny]</li>
+        <li>firstName->[consonant]'[consonant][vowel]</li>
+        
+        <li>lastName(p=3)->[SylY][SylY][nameEnd]</li>
+        <li>lastName->[SylY][SylY][SylY][nameEnd]</li>
 
-        <li>lastName->[SylY][SylY]</li>
-        <li>lastName->[SylY][SylY][SylY]</li>
-        <li>lastName(p=0.2)->[SylY][SylY][SylY][SylY]</li>
+        <li>consonant->b</li>
+        <li>consonant->ch</li>
+        <li>consonant->d</li>
+        <li>consonant->g</li>
+        <li>consonant->k</li>
+        <li>consonant->n</li>
+        <li>consonant->q</li>
+        <li>consonant->sk</li>
+        <li>consonant->t</li>
+        <li>consonant->z</li>
+        <li>vowel->ah</li>
+        <li>vowel->ee</li>
+        <li>vowel->eh</li>
+        <li>vowel->oh</li>
+        <li>vowel->u</li>
+        <li>vowel->ua</li>
+
+        <li>nameEnd->a</li>
+        <li>nameEnd->es</li>
+        <li>nameEnd->i</li>
+        <li>nameEnd->ia</li>
+        <li>nameEnd->odes</li>
+        <li>nameEnd->ops</li>
+        <li>nameEnd->or</li>
+        <li>nameEnd->os</li>
+        <li>nameEnd->um</li>
+        <li>nameEnd->ur</li>
+        <li>nameEnd->us</li>
+        <li>nameEnd->yx</li>
 
       </rulesStrings>
       <rulesFiles>
         <li>SylY->Xyl/WordParts/Syllables_Chyrr</li>
       </rulesFiles>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef ParentName="XylNamerPersonChyrrBase">
+    <defName>XylNamerPersonChyrrMale</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>nickName->[PersonJob]</li>
+        <li>nickName->[Color]</li>
+        <li>nickName->[AdjectiveAny]</li>
+        <li>nickName->[ConceptAny]</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef ParentName="XylNamerPersonChyrrBase">
+    <defName>XylNamerPersonChyrrFemale</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>nickName->[NaturalObject]</li>
+        <li>nickName->[TreeType]</li>
+        <li>nickName->[TerrainFeature]</li>
+        <li>nickName->[Vegetable]</li>
+      </rulesStrings>
     </rulePack>
   </RulePackDef>
 
