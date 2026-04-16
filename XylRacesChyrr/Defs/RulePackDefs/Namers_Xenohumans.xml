@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+  <RulePackDef>
+    <defName>XylNamerPersonChyrr</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_name->[firstName] [lastName]</li>
+        <li>r_name->[firstName] '[nickName]' [lastName]</li>
+
+        <li>firstName->[NaturalObject]</li>
+        <li>firstName->[TreeType]</li>
+        <li>firstName->[Color]</li>
+        <li>firstName->[TerrainFeature]</li>
+        <li>firstName->[Vegetable]</li>
+        <li>firstName->[AdjectiveAny]</li>
+        <li>firstName->[ConceptAny]</li>
+
+        <li>lastName->[SylY][SylY]</li>
+        <li>lastName->[SylY][SylY][SylY]</li>
+        <li>lastName(p=0.2)->[SylY][SylY][SylY][SylY]</li>
+
+      </rulesStrings>
+      <rulesFiles>
+        <li>SylY->Xyl/WordParts/Syllables_Chyrr</li>
+      </rulesFiles>
+    </rulePack>
+  </RulePackDef>
+
+</Defs>
