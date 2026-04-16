@@ -7,5 +7,11 @@
       <XylWarcat>0.025</XylWarcat>
     </value>
   </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/FactionDef[defName="OutlanderRefugee"]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <XylWarcat>0.025</XylWarcat>
+    </value>
+  </Operation>
 
 </Patch>

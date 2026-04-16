@@ -19,5 +19,11 @@
       <XylTitan>0.025</XylTitan>
     </value>
   </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/FactionDef[defName="OutlanderRefugee"]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <XylTitan>0.025</XylTitan>
+    </value>
+  </Operation>
 
 </Patch>

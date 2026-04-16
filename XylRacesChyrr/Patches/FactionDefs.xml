@@ -7,5 +7,11 @@
       <XylChyrr>0.025</XylChyrr>
     </value>
   </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/FactionDef[defName="OutlanderRefugee"]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <XylChyrr>0.025</XylChyrr>
+    </value>
+  </Operation>
 
 </Patch>
