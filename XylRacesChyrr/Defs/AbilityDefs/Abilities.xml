@@ -17,7 +17,7 @@
     <cooldownPerCharge>true</cooldownPerCharge>
     <verbProperties>
       <verbClass>Verb_CastAbility</verbClass>
-      <range>8.9</range>
+      <range>10.9</range>
       <warmupTime>0.5</warmupTime>
       <soundCast>PsychicShockLanceCast</soundCast>
       <targetParams>
