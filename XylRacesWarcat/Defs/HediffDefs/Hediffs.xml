@@ -50,8 +50,8 @@
         </hediffs>
       </li>
       <li Class="HediffCompProperties_Disappears">
-        <!--4 hours-->
-        <disappearsAfterTicks>10000</disappearsAfterTicks>
+        <!--6 hours-->
+        <disappearsAfterTicks>15000</disappearsAfterTicks>
         <showRemainingTime>true</showRemainingTime>
       </li>
     </comps>
