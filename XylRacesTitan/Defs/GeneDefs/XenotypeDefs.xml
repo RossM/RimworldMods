@@ -8,6 +8,7 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Titan_small</iconPath>
     <displayPriority>-105</displayPriority>
     <inheritable>false</inheritable>
+    <combatPowerFactor>2.0</combatPowerFactor>
     <genes>
       <li>Immunity_SuperStrong</li>
       <li>WoundHealing_Slow</li>

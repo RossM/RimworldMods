@@ -8,6 +8,7 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Warcat_small</iconPath>
     <displayPriority>-107</displayPriority>
     <inheritable>true</inheritable>
+    <combatPowerFactor>1.8</combatPowerFactor>
     <nameMaker>XylNamerPersonWarcat</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>
