@@ -50,7 +50,7 @@
         </hediffs>
       </li>
       <li Class="HediffCompProperties_Disappears">
-        <!--6 hours-->
+        <!-- This value doesn't matter, the actual duration is set by the AbilityDef -->
         <disappearsAfterTicks>15000</disappearsAfterTicks>
         <showRemainingTime>true</showRemainingTime>
       </li>
