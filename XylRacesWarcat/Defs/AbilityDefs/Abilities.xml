@@ -16,7 +16,8 @@
     <ai_IsOffensive>true</ai_IsOffensive>
     <targetRequired>false</targetRequired>
     <statBases>
-      <Ability_Duration>250</Ability_Duration>
+      <!-- 3 hours -->
+      <Ability_Duration>125</Ability_Duration>
     </statBases>
     <verbProperties>
       <verbClass>Verb_CastAbility</verbClass>
