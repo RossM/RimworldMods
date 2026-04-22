@@ -7,7 +7,7 @@
     <label>insect pheromones</label>
     <description>Carriers of this gene produce special pheromones which make wild insects not attack them.</description>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>-2</biostatMet>
+    <biostatMet>-3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>501</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_InsectPheromones</iconPath>
@@ -102,10 +102,6 @@
         <biostatCpx>1~99</biostatCpx>
         <biostatMet>-2~2</biostatMet>
         <geneChance>0.5</geneChance>
-        <extraGeneChance>0.5</extraGeneChance>
-        <extraGenes>
-          <li>Instability_Mild</li>
-        </extraGenes>
       </li>
     </modExtensions>
   </GeneDef>
