@@ -14,7 +14,6 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Bullet))]
     public static class Patch_Bullet
     {
-        // It might look better to hook into Projectile instead so we can show a dodge message.
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Bullet.Impact))]
         public static void Impact_Prefix(Bullet __instance, ref Thing hitThing, bool blockedByShield)
         {
