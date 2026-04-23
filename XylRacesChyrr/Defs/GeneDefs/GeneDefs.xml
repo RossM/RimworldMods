@@ -112,7 +112,7 @@
           <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWingsExtended</li>
         </texPaths>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
-        <color>(255, 255, 255)</color>
+        <colorType>Hair</colorType>
         <parentTagDef>Body</parentTagDef>
         <drawData>
           <defaultData>
