@@ -23,9 +23,9 @@ namespace XylRacesCore.Patches
                     Mode = InstructionMatcher.OutputMode.Replace,
                     Pattern =
                     [
-                        new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(HediffDefOf), "Lactating")),
+                        new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(HediffDefOf), nameof(HediffDefOf.Lactating))),
                         new CodeInstruction(OpCodes.Ldc_I4_0),
-                        new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HediffSet), "GetFirstHediffOfDef")),
+                        new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))),
                     ],
                     Output =
                     [
@@ -38,9 +38,9 @@ namespace XylRacesCore.Patches
                     Mode = InstructionMatcher.OutputMode.Replace,
                     Pattern =
                     [
-                        new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(HediffDefOf), "Lactating")),
+                        new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(HediffDefOf), nameof(HediffDefOf.Lactating))),
                         new CodeInstruction(OpCodes.Ldc_I4_0),
-                        new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HediffSet), "HasHediff", [typeof(HediffDef), typeof(bool)])),
+                        new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)])),
                     ],
                     Output =
                     [

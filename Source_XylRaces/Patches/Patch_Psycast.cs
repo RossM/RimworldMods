@@ -26,7 +26,7 @@ namespace XylRacesCore.Patches
                         // Load this
                         CodeInstruction.LoadArgument(0),
                         // Load this.def
-                        CodeInstruction.LoadField(typeof(Ability), "def"),
+                        CodeInstruction.LoadField(typeof(Ability), nameof(Ability.def)),
                         // Call replacement function
                         CodeInstruction.Call(typeof(PsyHelpers), nameof(PsyHelpers.GetPsylinkLevelFor)),
                     ]

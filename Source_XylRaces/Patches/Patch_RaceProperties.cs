@@ -27,9 +27,9 @@ namespace XylRacesCore.Patches
                     [
                         new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Pawn), nameof(Pawn.health))),
                         new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.hediffSet))),
-                        new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(HediffDefOf), "Lactating")),
+                        new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(HediffDefOf), nameof(HediffDefOf.Lactating))),
                         new CodeInstruction(OpCodes.Ldc_I4_0),
-                        new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HediffSet), "GetFirstHediffOfDef")),
+                        new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))),
                     ],
                     Output =
                     [
