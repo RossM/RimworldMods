@@ -5,7 +5,7 @@
     <defName>XylTrogTips</defName>
     <tips>
 
-      <li TKey="XylTrogPets">Animals assigned a trog as master share the benefits of the trog's insect pheromones gene.</li>
+      <li TKey="XylTrogPets">The insect pheromones gene will also protect colony animals.</li>
 
     </tips>
   </TipSetDef>

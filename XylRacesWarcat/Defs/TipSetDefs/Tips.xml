@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <TipSetDef>
+    <defName>XylWarcatTips</defName>
+    <tips>
+
+      <li TKey="XylMeatDeficiency">Warcats' raw meat requirement is cumulative over time. Fixing a deficiency requires making up for all the raw meat that was missed.</li>
+
+    </tips>
+  </TipSetDef>
+
+</Defs>
