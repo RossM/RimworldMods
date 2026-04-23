@@ -136,7 +136,7 @@
           <li>XylMilkedMood_Masochist</li>
         </milkedThoughts>
         <activeGender>Female</activeGender>
-        <iconPath>TXyl/UI/Icons/Genes/Gene_Hyperlactation</iconPath>
+        <iconPath>Things/Item/Resource/Milk</iconPath>
       </li>
       <li Class="XylRacesCore.DefModExtension_StartingItemSource">
         <item>Milk</item>
