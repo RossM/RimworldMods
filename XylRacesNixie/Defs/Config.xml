@@ -2,9 +2,9 @@
 <Defs>
 
   <XylRacesCore.Config>
-    <defName>XylRacesCoreConfig</defName>
+    <defName>XylRacesCoreConfig_Nixie</defName>
     <wetnessGivingJobs>
-      <li MayRequire="Xylthixlm.Races.Nixie">XylTakeShower</li>
+      <li>XylTakeShower</li>
       <li MayRequire="Dubwise.DubsBadHygiene">useWashBucket</li>
       <li MayRequire="Dubwise.DubsBadHygiene">washAtCell</li>
       <li MayRequire="Dubwise.DubsBadHygiene">takeShower</li>
