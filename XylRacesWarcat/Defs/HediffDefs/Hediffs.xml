@@ -130,8 +130,8 @@
     <hediffClass>XylRacesCore.Hediff_DietDependency</hediffClass>
     <everCurableByItem>false</everCurableByItem>
     <initialSeverity>0</initialSeverity>
-    <maxSeverity>12</maxSeverity>
-    <lethalSeverity>12</lethalSeverity>
+    <maxSeverity>15</maxSeverity>
+    <lethalSeverity>15</lethalSeverity>
     <allowMothballIfLowPriorityWorldPawn>true</allowMothballIfLowPriorityWorldPawn>
     <stages>
       <li>
@@ -142,8 +142,12 @@
         <becomeVisible>true</becomeVisible>
       </li>
       <li>
-        <label>mild deficiency</label>
+        <label>craving</label>
         <minSeverity>1</minSeverity>
+      </li>
+      <li>
+        <label>mild deficiency</label>
+        <minSeverity>2.5</minSeverity>
         <painOffset>0.1</painOffset>
         <mentalStateGivers>
           <li>
@@ -154,7 +158,7 @@
       </li>
       <li>
         <label>severe deficiency</label>
-        <minSeverity>3</minSeverity>
+        <minSeverity>5</minSeverity>
         <painOffset>0.5</painOffset>
         <mentalBreakMtbDays>1.0</mentalBreakMtbDays>
         <capMods>
@@ -172,7 +176,7 @@
       </li>
       <li>
         <label>coma</label>
-        <minSeverity>6</minSeverity>
+        <minSeverity>7.5</minSeverity>
         <lifeThreatening>true</lifeThreatening>
         <painOffset>0.5</painOffset>
         <capMods>

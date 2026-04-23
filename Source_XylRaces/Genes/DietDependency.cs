@@ -15,6 +15,7 @@ namespace XylRacesCore.Genes
         public float severityReductionPerNutrition = 1f;
         public FoodTypeFlags startingFoodType;
         public FloatRange? startingFoodNutrition;
+        public string foodLabel;
     }
 
     public class DietDependency : Gene, IGene_HediffSource, IStartingItemSource

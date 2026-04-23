@@ -32,6 +32,7 @@
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_DietDependency">
         <hediffDef>XylGeneticMeatNeed</hediffDef>
+        <foodLabel>raw meat</foodLabel>
         <foodKind>Meat</foodKind>
         <rawOnly>true</rawOnly>
         <!-- 

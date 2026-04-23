@@ -7,7 +7,16 @@ namespace XylRacesCore
 {
     public class Hediff_DietDependency : Hediff_Genetic
     {
-        public bool ShouldSatisfy => Severity >= def.stages[2].minSeverity - 0.5f;
+        enum Stages : int
+        {
+            Satisfied = 1,
+            Craving = 2,
+            MildDeficiency = 3,
+            SevereDeficiency = 4,
+            Coma = 5,
+        }
+
+        public bool ShouldSatisfy => Severity >= def.stages[(int)Stages.Craving].minSeverity;
 
         public new DietDependency Gene => (DietDependency)base.Gene;
 
@@ -58,6 +67,40 @@ namespace XylRacesCore
             }
 
             return gene.ValidateFood(food);
+        }
+
+        public override string TipStringExtra
+        {
+            get
+            {
+                string text = base.TipStringExtra;
+
+                if (Gene != null)
+                {
+                    if (!text.NullOrEmpty())
+                        text += "\n\n";
+
+                    var severityPerDay =
+                        ((HediffCompProperties_SeverityPerDay)GetComp<HediffComp_SeverityPerDay>().props)
+                        .severityPerDay;
+                    var deficiencyDays = def.stages[(int)Stages.MildDeficiency].minSeverity / severityPerDay;
+                    var comaDays = def.stages[(int)Stages.Coma].minSeverity / severityPerDay;
+                    var deathDays = def.lethalSeverity / severityPerDay;
+                    text += "GeneDefChemicalNeedDurationDesc".Translate(Gene.DefExt.foodLabel,
+                        pawn.Named("PAWN"),
+                        "PeriodDays".Translate(deficiencyDays).Named("DEFICIENCYDURATION"),
+                        "PeriodDays".Translate(comaDays).Named("COMADURATION"),
+                        "PeriodDays".Translate(deathDays).Named("DEATHDURATION")).Resolve();
+                    float daysBehind = Severity / severityPerDay;
+                    float nutritionPerDay = severityPerDay * Gene.DefExt.severityReductionPerNutrition;
+                    text += "\n\n" + "XyInjestedBehind".Translate(Gene.DefExt.foodLabel,
+                        pawn.Named("PAWN"),
+                        nutritionPerDay.ToStringDecimalIfSmall().Named("NUTRITION"),
+                        "PeriodDays".Translate(daysBehind).Named("DURATION"));
+                }
+
+                return text;
+            }
         }
     }
 }

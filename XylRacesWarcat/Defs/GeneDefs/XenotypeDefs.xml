@@ -31,7 +31,7 @@
       <li>XylCarnivoreStomach</li>
       <li>XylMeatDependence</li>
       <li>AptitudeRemarkable_Melee</li>
-      <li>AptitudePoor_Shooting</li>
+      <li>AptitudePoor_Plants</li>
       <li>AptitudePoor_Crafting</li>
     </genes>
   </XenotypeDef>

@@ -15,7 +15,7 @@ namespace XylRacesCore
 
         public override float GetPriority(Pawn pawn)
         {
-            if (pawn.HediffsOfType<Hediff_DietDependency>().Any(h => h.ShouldSatisfy))
+            if (pawn.HediffsOfType<Hediff_DietDependency>().Any(h => h.CurStageIndex >= 2))
             {
                 return ThinkNodePriority.Food + 0.01f;
             }
