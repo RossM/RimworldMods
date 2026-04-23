@@ -33,7 +33,7 @@ namespace XylRacesCore.Patches
                     ],
                     Output =
                     [
-                        CodeInstruction.Call(() => PatchLactation.GetLactationHediffUnlessAddedByGene),
+                        CodeInstruction.Call(() => GetFirstLactationHediffOrNull),
                     ]
                 },
 
@@ -78,14 +78,29 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
+        public static Hediff GetFirstLactationHediffOrNull(Pawn pawn)
+        {
+            // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes
+            // lactating pawns to need too much food. This turns out to be a problem for bossaps balance-wise, so I'm
+            // fixing the bug.
+            if (Config.FeatureEnabled(Config.Feature.FixLactationBugs))
+                return null;
+
+            return PatchLactation.GetFirstLactationHediff(pawn.health.hediffSet);
+        }
+
         public static void NutritionEatenPerDayExplanationFinal(StringBuilder stringBuilder, Pawn pawn)
         {
-            Hediff firstLactationHediff = PatchLactation.GetFirstLactationHediff(pawn.health.hediffSet);
-            var hediffComp_Lactating = firstLactationHediff?.TryGetComp<HediffComp_Lactating>();
-            if (hediffComp_Lactating != null)
+            if (Config.FeatureEnabled(Config.Feature.FixLactationBugs))
             {
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine(firstLactationHediff.LabelBaseCap + ": " + hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign());
+                Hediff firstLactationHediff = PatchLactation.GetFirstLactationHediff(pawn.health.hediffSet);
+                var hediffComp_Lactating = firstLactationHediff?.TryGetComp<HediffComp_Lactating>();
+                if (hediffComp_Lactating != null)
+                {
+                    stringBuilder.AppendLine();
+                    stringBuilder.AppendLine(firstLactationHediff.LabelBaseCap + ": " +
+                                             hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign());
+                }
             }
 
             stringBuilder.AppendLine();

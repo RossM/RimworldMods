@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <XylRacesCore.Config>
+    <defName>XylRacesCoreConfig_Bossaps</defName>
+    <enabledFeatures>
+      <li>FixLactationBugs</li>
+    </enabledFeatures>
+  </XylRacesCore.Config>
+  
+</Defs>

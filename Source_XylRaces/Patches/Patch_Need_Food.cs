@@ -48,7 +48,10 @@ namespace XylRacesCore.Patches
 
         static float GetAddedNutritionPerDay(Pawn pawn)
         {
-            return PatchLactation.GetLactationHediffUnlessAddedByGene(pawn)?.TryGetComp<HediffComp_Lactating>()?.AddedNutritionPerDay() ?? 0;
+            if (Config.FeatureEnabled(Config.Feature.FixLactationBugs))
+                return 0;
+
+            return PatchLactation.GetFirstLactationHediff(pawn.health.hediffSet)?.TryGetComp<HediffComp_Lactating>()?.AddedNutritionPerDay() ?? 0;
         }
     }
 }

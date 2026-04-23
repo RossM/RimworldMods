@@ -10,13 +10,31 @@ namespace XylRacesCore
 
         public enum Feature
         {
+            FixLactationBugs,
         }
 
         public List<Feature> enabledFeatures;
 
         private static Config instance;
 
-        public static Config Instance => instance ??= DefDatabase<Config>.AllDefs.FirstOrDefault() ?? new Config();
+        public static Config Instance => instance ??= MakeConfig();
+
+        private static Config MakeConfig()
+        {
+            Config config = new Config
+            {
+                wetnessGivingJobs = [],
+                enabledFeatures = []
+            };
+
+            foreach (var subConfig in DefDatabase<Config>.AllDefs)
+            {
+                config.wetnessGivingJobs.AddRange(subConfig.wetnessGivingJobs.EmptyIfNull());
+                config.enabledFeatures.AddRange(subConfig.enabledFeatures.EmptyIfNull());
+            }
+
+            return config;
+        }
 
         public static bool FeatureEnabled(Feature feature)
         {

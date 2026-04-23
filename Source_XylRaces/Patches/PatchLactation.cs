@@ -60,15 +60,6 @@ namespace XylRacesCore.Patches
             return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
         }
 
-        public static Hediff GetLactationHediffUnlessAddedByGene(Pawn pawn)
-        {
-            // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes
-            // lactating pawns to need too much food. This turns out to be a problem for bossaps balance-wise, so I'm
-            // fixing the bug but only for pawns with the hyperlactation gene.
-
-            return pawn.HasActiveGeneOfType<Hyperlactation>() ? null : GetFirstLactationHediff(pawn.health.hediffSet);
-        }
-
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
         public static IEnumerable<CodeInstruction> CanBreastfeed_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
