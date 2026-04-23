@@ -1,11 +1,12 @@
-﻿using System;
+﻿using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
-using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
 using Verse;
+using XylRacesCore.Genes;
 
 namespace XylRacesCore.Patches
 {
@@ -49,21 +50,23 @@ namespace XylRacesCore.Patches
             }
         };
 
-        static Hediff GetFirstLactationHediff(HediffSet hediffSet)
+        public static Hediff GetFirstLactationHediff(HediffSet hediffSet)
         {
             return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
         }
 
-        static bool HasLactationHediff(HediffSet hediffSet)
+        public static bool HasLactationHediff(HediffSet hediffSet)
         {
             return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
         }
 
-        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")] public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static Hediff GetLactationHediffUnlessAddedByGene(Pawn pawn)
         {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup.MatchAndReplace(ref instructionsList, generator);
-            return instructionsList;
+            // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes
+            // lactating pawns to need too much food. This turns out to be a problem for bossaps balance-wise, so I'm
+            // fixing the bug but only for pawns with the hyperlactation gene.
+
+            return pawn.HasActiveGeneOfType<Hyperlactation>() ? null : GetFirstLactationHediff(pawn.health.hediffSet);
         }
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
