@@ -51,23 +51,27 @@ namespace XylRacesCore.Patches
 
         public static bool CanBuildHelper(Thing thing, Pawn pawn)
         {
-            if (pawn.Ideo.MembersCanBuild(thing))
-                return true;
-
-            BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
-
-            var result = pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>().Any(defExtension_designator => defExtension_designator.addDesignators.Contains(def));
-            if (!result)
+            using (new ProfileBlock())
             {
-                var geneNames = new List<string>();
-                foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)
-                {
-                    if (gene.GetModExtension<GeneDefExtension_Designator>()?.addDesignators.Contains(def) ?? false) 
-                        GenConstruct.tmpIdeoMemberNames.Add("XylCharactersWithGene".Translate(gene.LabelCap));
-                }
-            }
+                if (pawn.Ideo.MembersCanBuild(thing))
+                    return true;
 
-            return result;
+                BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
+
+                var result = pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>()
+                    .Any(defExtension_designator => defExtension_designator.addDesignators.Contains(def));
+                if (!result)
+                {
+                    var geneNames = new List<string>();
+                    foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)
+                    {
+                        if (gene.GetModExtension<GeneDefExtension_Designator>()?.addDesignators.Contains(def) ?? false)
+                            GenConstruct.tmpIdeoMemberNames.Add("XylCharactersWithGene".Translate(gene.LabelCap));
+                    }
+                }
+
+                return result;
+            }
         }
     }
 }

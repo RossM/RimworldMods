@@ -23,12 +23,17 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.HitFactorFromShooter))]
         public static bool HitFactorFromShooter_Prefix(Thing caster, float distance, float? acc, ref float __result)
         {
-            if (IsUsingEcholocation(caster))
+            using (new ProfileBlock())
             {
-                float f = acc ?? ((caster is Pawn) ? caster.GetStatValue(StatDefOf.ShootingAccuracyPawn) : (caster?.GetStatValue(StatDefOf.ShootingAccuracyTurret) ?? 1f));
-                float num = Mathf.Pow(f, distance);
-                __result = Mathf.Max(num, 0.0201f);
-                return false;
+                if (IsUsingEcholocation(caster))
+                {
+                    float f = acc ?? ((caster is Pawn)
+                        ? caster.GetStatValue(StatDefOf.ShootingAccuracyPawn)
+                        : (caster?.GetStatValue(StatDefOf.ShootingAccuracyTurret) ?? 1f));
+                    float num = Mathf.Pow(f, distance);
+                    __result = Mathf.Max(num, 0.0201f);
+                    return false;
+                }
             }
 
             return true;
@@ -37,9 +42,12 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.HitReportFor))]
         public static void HitReportFor_Postfix(Thing caster, Verb verb, LocalTargetInfo target, ref ShotReport __result)
         {
-            if (IsUsingEcholocation(caster))
+            using (new ProfileBlock())
             {
-                __result.factorFromCoveringGas = 1f;
+                if (IsUsingEcholocation(caster))
+                {
+                    __result.factorFromCoveringGas = 1f;
+                }
             }
         }
 
@@ -52,14 +60,18 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.GetTextReadout))]
         public static void GetTextReadout_Postfix(ShotReport __instance, ref string __result)
         {
-            if (__instance.target.Thing is Pawn targetPawn) 
+            using (new ProfileBlock())
             {
-                float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(targetPawn);
-                if (rangedDodgeChance > 0)
+                if (__instance.target.Thing is Pawn targetPawn)
                 {
-                    StringBuilder sb = new StringBuilder(__result);
-                    sb.AppendLine("   " + CombatHelpers.Defs.XylRangedDodgeChance.LabelCap + ": " + rangedDodgeChance.ToStringPercent());
-                    __result = sb.ToString();
+                    float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(targetPawn);
+                    if (rangedDodgeChance > 0)
+                    {
+                        StringBuilder sb = new StringBuilder(__result);
+                        sb.AppendLine("   " + CombatHelpers.Defs.XylRangedDodgeChance.LabelCap + ": " +
+                                      rangedDodgeChance.ToStringPercent());
+                        __result = sb.ToString();
+                    }
                 }
             }
         }

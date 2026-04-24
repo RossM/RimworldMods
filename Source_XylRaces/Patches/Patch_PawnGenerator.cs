@@ -87,13 +87,16 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch("GenerateInitialHediffs")]
         public static void GenerateInitialHediffs_Postfix(Pawn pawn, PawnGenerationRequest request)
         {
-            foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_CongenitalHediff>())
+            using (new ProfileBlock())
             {
-                if (!Rand.Chance(extension.chance))
-                    continue;
+                foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_CongenitalHediff>())
+                {
+                    if (!Rand.Chance(extension.chance))
+                        continue;
 
-                foreach (var hediffGiver in extension.hediffGivers)
-                    hediffGiver.TryApply(pawn);
+                    foreach (var hediffGiver in extension.hediffGivers)
+                        hediffGiver.TryApply(pawn);
+                }
             }
         }
     }

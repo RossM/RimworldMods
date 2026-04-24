@@ -25,13 +25,16 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
         public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)
         {
-            if (__result < 0)
-                return;
-            if (pawn.HasActiveGene(Defs.XylDocile))
+            using (new ProfileBlock())
             {
-                __result *= DocileFactor;
-                if (__result > NeverRebelThresholdDays)
-                    __result = -1;
+                if (__result < 0)
+                    return;
+                if (pawn.HasActiveGene(Defs.XylDocile))
+                {
+                    __result *= DocileFactor;
+                    if (__result > NeverRebelThresholdDays)
+                        __result = -1;
+                }
             }
         }
 
@@ -88,20 +91,24 @@ namespace XylRacesCore.Patches
 
         private static void FinishExplanation(StringBuilder stringBuilder, Pawn pawn)
         {
-            float initiateSlaveRebellionMtbDays = SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn);
-
-            if (pawn.HasActiveGene(Defs.XylDocile))
+            using (new ProfileBlock())
             {
-                stringBuilder.AppendLine($"{Defs.XylDocile.LabelCap}: x{DocileFactor.ToStringPercent()}");
+                float initiateSlaveRebellionMtbDays = SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn);
 
-                if (initiateSlaveRebellionMtbDays < 0)
-                    stringBuilder.AppendLine($"{Defs.XylDocile.LabelCap}: " + "XylDocileThresholdReached".Translate(NeverRebelThresholdDays));
+                if (pawn.HasActiveGene(Defs.XylDocile))
+                {
+                    stringBuilder.AppendLine($"{Defs.XylDocile.LabelCap}: x{DocileFactor.ToStringPercent()}");
+
+                    if (initiateSlaveRebellionMtbDays < 0)
+                        stringBuilder.AppendLine($"{Defs.XylDocile.LabelCap}: " +
+                                                 "XylDocileThresholdReached".Translate(NeverRebelThresholdDays));
+                }
+
+                string period = initiateSlaveRebellionMtbDays < 0
+                    ? "Never".TranslateSimple()
+                    : ((int)(initiateSlaveRebellionMtbDays * 60000f)).ToStringTicksToPeriod();
+                stringBuilder.Append($"{"SuppressionFinalInterval".Translate()}: {period}");
             }
-
-            string period = initiateSlaveRebellionMtbDays < 0 ? 
-                "Never".TranslateSimple() :
-                ((int)(initiateSlaveRebellionMtbDays * 60000f)).ToStringTicksToPeriod();
-            stringBuilder.Append($"{"SuppressionFinalInterval".Translate()}: {period}");
         }
     }
 }

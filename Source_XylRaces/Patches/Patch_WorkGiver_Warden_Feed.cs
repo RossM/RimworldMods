@@ -14,33 +14,37 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(WorkGiver_Warden_Feed.JobOnThing))]
         public static void JobOnThing_Postfix(WorkGiver_Warden_Feed __instance, Pawn pawn, Thing t, bool forced, ref Job __result)
         {
-            if (__result != null)
-                return;
-
-            if (!__instance.ShouldTakeCareOfPrisoner(pawn, t, forced))
+            using (new ProfileBlock())
             {
-                return;
-            }
+                if (__result != null)
+                    return;
 
-            Pawn pawn2 = (Pawn)t;
+                if (!__instance.ShouldTakeCareOfPrisoner(pawn, t, forced))
+                {
+                    return;
+                }
 
-            if (!WardenFeedUtility.ShouldBeFed(pawn2))
-            {
-                return;
-            }
+                Pawn prisoner = (Pawn)t;
 
-            foreach (var hediff in pawn2.HediffsOfType<Hediff_DietDependency>().Where(h => h.ShouldSatisfy).OrderByDescending(h => h.Severity))
-            {
-                //Log.Message(string.Format("JobOnThing_Postfix: pawn: {0}, pawn2: {1}, hediff: {2}, severity: {3}", pawn, pawn2, hediff, hediff.Severity));
-                Thing foodSource = hediff.FindFoodFor(pawn2);
-                if (foodSource == null)
-                    continue;
-                ThingDef foodDef = FoodUtility.GetFinalIngestibleDef(foodSource);
+                if (!WardenFeedUtility.ShouldBeFed(prisoner))
+                {
+                    return;
+                }
 
-                Job job = JobMaker.MakeJob(JobDefOf.FeedPatient, foodSource, pawn2);
-                job.count = hediff.Gene.ItemsWantedToSatisfy(foodSource, foodDef);
-                __result = job;
-                return;
+                foreach (var hediff in prisoner.HediffsOfType<Hediff_DietDependency>().Where(h => h.ShouldSatisfy)
+                             .OrderByDescending(h => h.Severity))
+                {
+                    //Log.Message(string.Format("JobOnThing_Postfix: pawn: {0}, pawn2: {1}, hediff: {2}, severity: {3}", pawn, prisoner, hediff, hediff.Severity));
+                    Thing foodSource = hediff.FindFoodFor(prisoner);
+                    if (foodSource == null)
+                        continue;
+                    ThingDef foodDef = FoodUtility.GetFinalIngestibleDef(foodSource);
+
+                    Job job = JobMaker.MakeJob(JobDefOf.FeedPatient, foodSource, prisoner);
+                    job.count = hediff.Gene.ItemsWantedToSatisfy(foodSource, foodDef);
+                    __result = job;
+                    return;
+                }
             }
         }
     }

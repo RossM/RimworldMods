@@ -17,13 +17,16 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Bullet.Impact))]
         public static void Impact_Prefix(Bullet __instance, ref Thing hitThing, bool blockedByShield)
         {
-            if (hitThing is Pawn pawn && !blockedByShield)
+            using (new ProfileBlock())
             {
-                float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(pawn);
-                if (Rand.Chance(rangedDodgeChance))
+                if (hitThing is Pawn pawn && !blockedByShield)
                 {
-                    MoteMaker.ThrowText(pawn.DrawPos, pawn.Map, "TextMote_Dodge".Translate(), 1.9f);
-                    hitThing = null;
+                    float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(pawn);
+                    if (Rand.Chance(rangedDodgeChance))
+                    {
+                        MoteMaker.ThrowText(pawn.DrawPos, pawn.Map, "TextMote_Dodge".Translate(), 1.9f);
+                        hitThing = null;
+                    }
                 }
             }
         }

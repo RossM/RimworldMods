@@ -18,8 +18,11 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(JoyGiver.GetChance))]
         public static void GetChance(JoyGiver __instance, Pawn pawn, ref float __result)
         {
-            if (__instance is JoyGiver_GoSwimming && pawn.HasActiveGene(Defs.XylAquatic))
-                __result *= 5;
+            using (new ProfileBlock())
+            {
+                if (__instance is JoyGiver_GoSwimming && pawn.HasActiveGene(Defs.XylAquatic))
+                    __result *= 5;
+            }
         }
     }
 }

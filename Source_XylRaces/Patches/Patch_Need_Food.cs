@@ -15,6 +15,8 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Need_Food))]
     public static class Patch_Need_Food
     {
+        public static Lazy<bool> Enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
+
         private static readonly InstructionMatcher Fixup_FoodFallPerTickAssumingCategory = new()
         {
             Rules =
@@ -48,10 +50,14 @@ namespace XylRacesCore.Patches
 
         static float GetAddedNutritionPerDay(Pawn pawn)
         {
-            if (Config.FeatureEnabled(Config.Feature.FixLactationBugs))
+            if (Enabled.Value)
                 return 0;
 
-            return PatchLactation.GetFirstLactationHediff(pawn.health.hediffSet)?.TryGetComp<HediffComp_Lactating>()?.AddedNutritionPerDay() ?? 0;
+            using (new ProfileBlock())
+            {
+                return PatchLactation.GetFirstLactationHediff(pawn.health.hediffSet)?.TryGetComp<HediffComp_Lactating>()
+                    ?.AddedNutritionPerDay() ?? 0;
+            }
         }
     }
 }

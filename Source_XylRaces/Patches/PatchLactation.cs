@@ -52,12 +52,18 @@ namespace XylRacesCore.Patches
 
         public static Hediff GetFirstLactationHediff(HediffSet hediffSet)
         {
-            return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
+            using (new ProfileBlock())
+            {
+                return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
+            }
         }
 
         public static bool HasLactationHediff(HediffSet hediffSet)
         {
-            return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
+            using (new ProfileBlock())
+            {
+                return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
+            }
         }
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
