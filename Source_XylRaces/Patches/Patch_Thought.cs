@@ -16,7 +16,7 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Thought.Description), MethodType.Getter)]
         public static void Description_Postfix(Thought __instance, ref string __result)
         {
-            GeneDef sourceGene = __instance.def.requiredGenes.EmptyIfNull().FirstOrDefault(geneDef => __instance.pawn.HasActiveGene(geneDef));
+            GeneDef sourceGene = __instance.def.requiredGenes?.FirstOrDefault(geneDef => __instance.pawn.HasActiveGene(geneDef));
             if (sourceGene == null) 
                 return;
 
