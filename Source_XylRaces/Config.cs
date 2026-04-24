@@ -38,7 +38,9 @@ namespace XylRacesCore
 
         public static bool FeatureEnabled(Feature feature)
         {
-            return Instance.enabledFeatures.EmptyIfNull().Contains(feature);
+            bool result = Instance.enabledFeatures.EmptyIfNull().Contains(feature);
+            Log.Message($"XylRacesCore feature check: {feature} = {result}");
+            return result;
         }
 
         public static bool GeneOfTypeExists<T>()
