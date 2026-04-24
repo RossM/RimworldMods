@@ -20,7 +20,7 @@
       <verbClass>Verb_CastAbility</verbClass>
       <label>toxic burst</label>
       <drawAimPie>false</drawAimPie>
-      <warmupTime>1</warmupTime>
+      <warmupTime>0.5</warmupTime>
       <violent>false</violent>
       <targetable>false</targetable>
       <targetParams>
