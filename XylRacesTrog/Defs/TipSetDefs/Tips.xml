@@ -6,6 +6,7 @@
     <tips>
 
       <li TKey="XylTrogPets">The insect pheromones gene will also protect colony animals.</li>
+      <li TKey="XylTrogPsylink">A psylink won't trigger bio-rejection in trogs.</li>
 
     </tips>
   </TipSetDef>

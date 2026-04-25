@@ -1,4 +1,6 @@
 ﻿using JetBrains.Annotations;
+using System;
+using System.Collections.Generic;
 using Verse;
 
 namespace XylRacesCore
@@ -13,5 +15,24 @@ namespace XylRacesCore
         }
 
         public override bool ShouldRemove => false;
+
+        public override string Description
+        {
+            get
+            {
+                List<string> causes = new();
+
+                List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
+                foreach (Hediff hediff in hediffs)
+                {
+                    if (hediff.def.countsAsAddedPartOrImplant)
+                    {
+                        causes.Add(hediff.Label);
+                    }
+                }
+
+                return base.Description + "\n\n" + "CausedBy".Translate() + ": " + causes.ToCommaList().CapitalizeFirst();
+            }
+        }
     }
 }
