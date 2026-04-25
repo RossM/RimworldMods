@@ -89,19 +89,19 @@ namespace XylRacesCore
 
         public override void NeedInterval()
         {
-            if (!IsFrozen)
+            if (IsFrozen) 
+                return;
+
+            float curInstantLevel = CurInstantLevel;
+            if (curInstantLevel > CurLevel)
             {
-                float curInstantLevel = CurInstantLevel;
-                if (curInstantLevel > CurLevel)
-                {
-                    CurLevel += def.seekerRisePerHour * 0.06f;
-                    CurLevel = Mathf.Min(CurLevel, curInstantLevel);
-                }
-                if (curInstantLevel < CurLevel)
-                {
-                    CurLevel -= def.seekerFallPerHour * TemperatureFactor * 0.06f;
-                    CurLevel = Mathf.Max(CurLevel, curInstantLevel);
-                }
+                CurLevel += def.seekerRisePerHour * 0.06f;
+                CurLevel = Mathf.Min(CurLevel, curInstantLevel);
+            }
+            else if (curInstantLevel < CurLevel)
+            {
+                CurLevel -= def.seekerFallPerHour * TemperatureFactor * 0.06f;
+                CurLevel = Mathf.Max(CurLevel, curInstantLevel);
             }
         }
 
@@ -110,7 +110,7 @@ namespace XylRacesCore
         public override string GetTipString()
         {
             float ambientTemperature = pawn.AmbientTemperature;
-            float temperatureFactor = TemperatureFactor;
+            float temperatureFactor = TemperatureWetnessFallFactorCurve.Evaluate(ambientTemperature);
             float modifiedFallRate = def.seekerFallPerHour * temperatureFactor;
             float hoursPerDay = modifiedFallRate * 24.0f / (modifiedFallRate + def.seekerRisePerHour);
             return base.GetTipString() + "\n\n" + "XylWetnessNeedModifiedByTemperature".Translate(
