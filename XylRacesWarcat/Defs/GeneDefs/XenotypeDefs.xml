@@ -34,6 +34,17 @@
       <li>AptitudePoor_Plants</li>
       <li>AptitudePoor_Crafting</li>
     </genes>
+    <modExtensions>
+      <li Class="XylRacesCore.XenotypeDefExtension">
+        <agreeingMemes>
+          <li>Cannibal</li>
+          <li>Raider</li>
+        </agreeingMemes>
+        <disagreeingMemes>
+          <li>AnimalPersonhood</li>
+        </disagreeingMemes>
+      </li>
+    </modExtensions>
   </XenotypeDef>
   
 </Defs>

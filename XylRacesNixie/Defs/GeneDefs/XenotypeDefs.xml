@@ -32,6 +32,13 @@
       <li>AptitudePoor_Construction</li>
       <li>AptitudeStrong_Social</li>
     </genes>
+    <modExtensions>
+      <li Class="XylRacesCore.XenotypeDefExtension">
+        <agreeingMemes>
+          <li>Nudism</li>
+        </agreeingMemes>
+      </li>
+    </modExtensions>
   </XenotypeDef>
   
 </Defs>

@@ -34,6 +34,17 @@
       <li>AptitudePoor_Cooking</li>
       <li>AptitudeStrong_Plants</li>
     </genes>
+    <modExtensions>
+      <li Class="XylRacesCore.XenotypeDefExtension">
+        <agreeingMemes>
+          <li>AnimalPersonhood</li>
+          <li>Nudism</li>
+        </agreeingMemes>
+        <disagreeingMemes>
+          <li>Rancher</li>
+        </disagreeingMemes>
+      </li>
+    </modExtensions>
   </XenotypeDef>
   
 </Defs>

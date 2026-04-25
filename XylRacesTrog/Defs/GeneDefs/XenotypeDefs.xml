@@ -40,6 +40,16 @@
       <li>AptitudeTerrible_Intellectual</li>
       <li>AddictionResistant_Psychite</li>
     </genes>
+    <modExtensions>
+      <li Class="XylRacesCore.XenotypeDefExtension">
+        <agreeingMemes>
+          <li>FleshPurity</li>
+        </agreeingMemes>
+        <disagreeingMemes>
+          <li>Transhumanist</li>
+        </disagreeingMemes>
+      </li>
+    </modExtensions>
   </XenotypeDef>
   
 </Defs>

@@ -38,6 +38,13 @@
       <li>AptitudePoor_Social</li>
       <li>ChemicalDependency_Alcohol</li>
     </genes>
+    <modExtensions>
+      <li Class="XylRacesCore.XenotypeDefExtension">
+        <agreeingMemes>
+          <li>Tunneler</li>
+        </agreeingMemes>
+      </li>
+    </modExtensions>
   </XenotypeDef>
 
 </Defs>

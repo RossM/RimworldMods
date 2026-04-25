@@ -37,5 +37,6 @@
   <XylDocileThresholdReached>No rebellion because interval is over {0} days</XylDocileThresholdReached>
   <XylCharactersWithGene>{0} character</XylCharactersWithGene>
   <XyInjestedBehind>{PAWN} needs to consume {NUTRITION} nutrition worth of {0} per day, and is currently {DURATION} behind.</XyInjestedBehind>
+  <XylAbilityIdeoConvertBreakdownMemeVsXenotype>{MEME} vs {XENOTYPE} xenotype</XylAbilityIdeoConvertBreakdownMemeVsXenotype>
 
 </LanguageData>
