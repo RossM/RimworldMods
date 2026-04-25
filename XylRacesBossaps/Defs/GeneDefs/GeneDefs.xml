@@ -80,7 +80,7 @@
     <label>herd instinct</label>
     <description>Carriers of this gene need the comfort of being in a large group. They get a mood penalty if there are too few members of the colony. They also don't mind sleeping in a barracks.</description>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>1</biostatMet>
+    <biostatMet>2</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>110</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_HerdInstinct</iconPath>
