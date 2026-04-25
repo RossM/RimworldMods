@@ -27,7 +27,7 @@ namespace XylRacesCore
 
         private static readonly SimpleCurve TemperatureWetnessFallFactorCurve =
         [
-            new CurvePoint(-4.0f, 1.0f),
+            new CurvePoint(-19.0f, 1.0f),
             new CurvePoint(6.0f, 0.5f),
             new CurvePoint(16.0f, 1.0f),
             new CurvePoint(21.0f, 1.0f),
