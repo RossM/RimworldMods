@@ -27,12 +27,12 @@ namespace XylRacesCore
 
         private static readonly SimpleCurve TemperatureWetnessFallFactorCurve =
         [
-            new CurvePoint(-5.0f, 1.0f),
-            new CurvePoint(5.0f, 0.5f),
-            new CurvePoint(15.0f, 1.0f),
-            new CurvePoint(20.0f, 1.0f),
-            new CurvePoint(30.0f, 2.0f),
-            new CurvePoint(40.0f, 5.0f)
+            new CurvePoint(-4.0f, 1.0f),
+            new CurvePoint(6.0f, 0.5f),
+            new CurvePoint(16.0f, 1.0f),
+            new CurvePoint(21.0f, 1.0f),
+            new CurvePoint(31.0f, 2.0f),
+            new CurvePoint(41.0f, 5.0f)
         ];
 
         public override float CurInstantLevel
