@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -18,6 +19,11 @@ namespace XylRacesCore
     {
         private int lastInstantWetnessCheckTick;
         private float lastInstantWetness;
+
+        private const float thresholdWet = 0.90f;
+        private const float thresholdNeutral = 0.50f;
+        private const float thresholdDry = 0.25f;
+        private const float thresholdVeryDry = 0.05f;
 
         public override float CurInstantLevel
         {
@@ -60,13 +66,22 @@ namespace XylRacesCore
             {
                 return CurLevel switch
                 {
-                    >= 0.90f => WetnessCategory.Wet,
-                    >= 0.67f => WetnessCategory.Neutral,
-                    >= 0.34f => WetnessCategory.Dry,
-                    >= 0.01f => WetnessCategory.VeryDry,
+                    >= thresholdWet => WetnessCategory.Wet,
+                    >= thresholdNeutral => WetnessCategory.Neutral,
+                    >= thresholdDry => WetnessCategory.Dry,
+                    >= thresholdVeryDry => WetnessCategory.VeryDry,
                     _ => WetnessCategory.Parched
                 };
             }
+        }
+
+        public bool ShouldFulfill => CurLevel <= 0.67f;
+
+        public override void DrawOnGUI(Rect rect, int maxThresholdMarkers = 2147483647, float customMargin = -1, bool drawArrows = true,
+            bool doTooltip = true, Rect? rectForTooltip = null, bool drawLabel = true)
+        {
+            threshPercents ??= [thresholdVeryDry, thresholdDry, thresholdNeutral, thresholdWet];
+            base.DrawOnGUI(rect, maxThresholdMarkers, customMargin, drawArrows, doTooltip, rectForTooltip, drawLabel);
         }
     }
 }
