@@ -25,7 +25,7 @@ namespace XylRacesCore
         private const float thresholdDry = 0.25f;
         private const float thresholdVeryDry = 0.05f;
 
-        private static SimpleCurve TemperatureWetnessFallFactorCurve =
+        private static readonly SimpleCurve TemperatureWetnessFallFactorCurve =
         [
             new CurvePoint(-5.0f, 1.0f),
             new CurvePoint(5.0f, 0.5f),
