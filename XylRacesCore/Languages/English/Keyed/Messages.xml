@@ -40,5 +40,6 @@
   <XylAbilityIdeoConvertBreakdownMemeVsXenotype>{MEME} vs {XENOTYPE} xenotype</XylAbilityIdeoConvertBreakdownMemeVsXenotype>
   <XylAgreeableXenotypes>Agreeing xenotypes</XylAgreeableXenotypes>
   <XylDisagreeableXenotypes>Conflicting xenotypes</XylDisagreeableXenotypes>
+  <XylWetnessNeedModifiedByTemperature>Wetness fall rate is {FACTOR} of normal due to the current temperature of {TEMPERATURE}. At this temperature {PAWN} will need to spend {HOURS} hours a day in water to stay wet.</XylWetnessNeedModifiedByTemperature>
 
 </LanguageData>

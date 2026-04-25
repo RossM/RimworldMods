@@ -25,6 +25,16 @@ namespace XylRacesCore
         private const float thresholdDry = 0.25f;
         private const float thresholdVeryDry = 0.05f;
 
+        private static SimpleCurve TemperatureWetnessFallFactorCurve =
+        [
+            new CurvePoint(-5.0f, 1.0f),
+            new CurvePoint(5.0f, 0.5f),
+            new CurvePoint(15.0f, 1.0f),
+            new CurvePoint(20.0f, 1.0f),
+            new CurvePoint(30.0f, 2.0f),
+            new CurvePoint(40.0f, 5.0f)
+        ];
+
         public override float CurInstantLevel
         {
             get
@@ -76,6 +86,40 @@ namespace XylRacesCore
         }
 
         public bool ShouldFulfill => CurLevel <= 0.67f;
+
+        public override void NeedInterval()
+        {
+            if (!IsFrozen)
+            {
+                float curInstantLevel = CurInstantLevel;
+                if (curInstantLevel > CurLevel)
+                {
+                    CurLevel += def.seekerRisePerHour * 0.06f;
+                    CurLevel = Mathf.Min(CurLevel, curInstantLevel);
+                }
+                if (curInstantLevel < CurLevel)
+                {
+                    CurLevel -= def.seekerFallPerHour * TemperatureFactor * 0.06f;
+                    CurLevel = Mathf.Max(CurLevel, curInstantLevel);
+                }
+            }
+        }
+
+        private float TemperatureFactor => TemperatureWetnessFallFactorCurve.Evaluate(pawn.AmbientTemperature);
+
+        public override string GetTipString()
+        {
+            float ambientTemperature = pawn.AmbientTemperature;
+            float temperatureFactor = TemperatureFactor;
+            float modifiedFallRate = def.seekerFallPerHour * temperatureFactor;
+            float hoursPerDay = modifiedFallRate * 24.0f / (modifiedFallRate + def.seekerRisePerHour);
+            return base.GetTipString() + "\n\n" + "XylWetnessNeedModifiedByTemperature".Translate(
+                    pawn.Named("PAWN"),
+                    ambientTemperature.ToStringTemperature().Named("TEMPERATURE"),
+                    temperatureFactor.ToStringPercent().Named("FACTOR"),
+                    hoursPerDay.ToStringDecimalIfSmall().Named("HOURS"))
+                ;
+        }
 
         public override void DrawOnGUI(Rect rect, int maxThresholdMarkers = 2147483647, float customMargin = -1, bool drawArrows = true,
             bool doTooltip = true, Rect? rectForTooltip = null, bool drawLabel = true)
