@@ -43,6 +43,9 @@
         <agreeingMemes>
           <li>Tunneler</li>
         </agreeingMemes>
+        <disagreeingMemes>
+          <li>NaturePrimacy</li>
+        </disagreeingMemes>
       </li>
     </modExtensions>
   </XenotypeDef>
