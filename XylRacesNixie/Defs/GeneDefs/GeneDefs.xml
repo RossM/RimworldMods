@@ -34,6 +34,24 @@
     </symbolPack>
  </GeneDef>
 
+  <GeneDef MayRequire="Ludeon.RimWorld.Royalty">
+    <defName>XylPsyFocus</defName>
+    <label>focus</label>
+    <description>Carriers automatically learn the Focus psycast, which boosts the target's sight, hearing and moving capacities.</description>
+    <iconPath>UI/Abilities/Focus</iconPath>
+    <geneClass>XylRacesCore.Genes.Psycast</geneClass>
+    <displayCategory>Ability</displayCategory>
+    <displayOrderInCategory>301</displayOrderInCategory>
+    <abilities>
+      <li>Focus</li>
+    </abilities>
+    <descriptionHyperlinks>
+      <AbilityDef>Focus</AbilityDef>
+    </descriptionHyperlinks>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+  </GeneDef>
+
   <GeneDef>
     <defName>XylScaleskin</defName>
     <label>scaleskin</label>
@@ -172,6 +190,27 @@
         </drawData>
       </li>
     </renderNodeProperties>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylDrugSensitive</defName>
+    <label>drug sensitive</label>
+    <labelShortAdj>drug sensitive</labelShortAdj>
+    <description>Carriers of this gene are easily affected by drugs. They get larger effects from a single dose, gain tolerance faster, and are more likely to become addicted.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <displayOrderInCategory>120</displayOrderInCategory>
+    <!-- 
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Aquatic</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    -->
+    <statOffsets>
+      <XylDrugEffectMultiplier>0.2</XylDrugEffectMultiplier>
+    </statOffsets>
+    <statFactors>
+      <XylGlobalAddictionChanceFactor>2.0</XylGlobalAddictionChanceFactor>
+    </statFactors>
   </GeneDef>
 
 </Defs>

@@ -75,24 +75,6 @@
     </customEffectDescriptions>
   </GeneDef>
 
-  <GeneDef MayRequire="Ludeon.RimWorld.Royalty">
-    <defName>XylPsyFocus</defName>
-    <label>focus</label>
-    <description>Carriers automatically learn the Focus psycast, which boosts the target's sight, hearing and moving capacities.</description>
-    <iconPath>UI/Abilities/Focus</iconPath>
-    <geneClass>XylRacesCore.Genes.Psycast</geneClass>
-    <displayCategory>Ability</displayCategory>
-    <displayOrderInCategory>301</displayOrderInCategory>
-    <abilities>
-      <li>Focus</li>
-    </abilities>
-    <descriptionHyperlinks>
-      <AbilityDef>Focus</AbilityDef>
-    </descriptionHyperlinks>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>-2</biostatMet>
-  </GeneDef>
-
   <GeneDef>
     <geneClass>XylRacesCore.Genes.Flight</geneClass>
     <defName>XylBatWings</defName>

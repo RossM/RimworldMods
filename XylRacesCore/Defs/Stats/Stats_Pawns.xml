@@ -191,4 +191,29 @@
     <showDevelopmentalStageFilter>Child, Adult</showDevelopmentalStageFilter>
   </StatDef>
 
+  <StatDef>
+    <defName>XylDrugEffectMultiplier</defName>
+    <label>drug sensitivity</label>
+    <description>How sensitive the character is to drug effects. Characters with high drug sensitivity are more affected by the same dose, and build up tolerance faster.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1910</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylGlobalAddictionChanceFactor</defName>
+    <label>addiction chance</label>
+    <description>Multiplies the character's chance becoming addicted to a drug.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1900</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+
 </Defs>
