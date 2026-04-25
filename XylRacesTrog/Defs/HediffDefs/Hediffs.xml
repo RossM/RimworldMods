@@ -17,7 +17,7 @@
       </li>
       <li>
         <minSeverity>1</minSeverity>
-        <painOffset>0.2</painOffset>
+        <painOffset>0.4</painOffset>
       </li>
     </stages>
   </HediffDef>
