@@ -37,12 +37,12 @@
     <modExtensions>
       <li Class="XylRacesCore.XenotypeDefExtension">
         <agreeingMemes>
-          <li>AnimalPersonhood</li>
-          <li>Nudism</li>
-          <li>PainIsVirtue</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">AnimalPersonhood</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">PainIsVirtue</li>
         </agreeingMemes>
         <disagreeingMemes>
-          <li>Rancher</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Rancher</li>
         </disagreeingMemes>
       </li>
     </modExtensions>

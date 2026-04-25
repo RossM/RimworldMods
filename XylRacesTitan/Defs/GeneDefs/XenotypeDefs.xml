@@ -35,6 +35,13 @@
       <li>AptitudeTerrible_Artistic</li>
       <li>AptitudeTerrible_Social</li>
     </genes>
+    <modExtensions>
+      <li Class="XylRacesCore.XenotypeDefExtension">
+        <agreeingMemes>
+          <li MayRequire="Ludeon.RimWorld.Odyssey">Shipborn</li>
+        </agreeingMemes>
+      </li>
+    </modExtensions>
   </XenotypeDef>
   
 </Defs>

@@ -41,10 +41,10 @@
     <modExtensions>
       <li Class="XylRacesCore.XenotypeDefExtension">
         <agreeingMemes>
-          <li>Tunneler</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
         </agreeingMemes>
         <disagreeingMemes>
-          <li>NaturePrimacy</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">NaturePrimacy</li>
         </disagreeingMemes>
       </li>
     </modExtensions>

@@ -43,10 +43,10 @@
     <modExtensions>
       <li Class="XylRacesCore.XenotypeDefExtension">
         <agreeingMemes>
-          <li>FleshPurity</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">FleshPurity</li>
         </agreeingMemes>
         <disagreeingMemes>
-          <li>Transhumanist</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Transhumanist</li>
         </disagreeingMemes>
       </li>
     </modExtensions>

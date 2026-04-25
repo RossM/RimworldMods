@@ -37,11 +37,11 @@
     <modExtensions>
       <li Class="XylRacesCore.XenotypeDefExtension">
         <agreeingMemes>
-          <li>Cannibal</li>
-          <li>Raider</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Cannibal</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Raider</li>
         </agreeingMemes>
         <disagreeingMemes>
-          <li>AnimalPersonhood</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">AnimalPersonhood</li>
         </disagreeingMemes>
       </li>
     </modExtensions>

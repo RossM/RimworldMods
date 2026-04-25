@@ -35,8 +35,13 @@
     <modExtensions>
       <li Class="XylRacesCore.XenotypeDefExtension">
         <agreeingMemes>
-          <li>Nudism</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">HighLife</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>
         </agreeingMemes>
+        <disagreeingMemes>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
+          <li MayRequire="Ludeon.RimWorld.Odyssey">Shipborn</li>
+        </disagreeingMemes>
       </li>
     </modExtensions>
   </XenotypeDef>
