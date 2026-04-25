@@ -11,5 +11,7 @@ namespace XylRacesCore
             get => pawn.health.hediffSet.CountAddedAndImplantedParts() * 1.0f;
             set { }
         }
+
+        public override bool ShouldRemove => false;
     }
 }
