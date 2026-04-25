@@ -106,61 +106,21 @@
     <displayOrderInCategory>602</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>
     <suppressedTraits>
-      <li>
-        <def>NaturalMood</def>
-        <degree>2</degree>
-      </li>
-      <li>
-        <def>NaturalMood</def>
-        <degree>1</degree>
-      </li>
-      <li>
-        <def>NaturalMood</def>
-        <degree>-1</degree>
-      </li>
-      <li>
-        <def>NaturalMood</def>
-        <degree>-2</degree>
-      </li>
-      <li>
-        <def>Nerves</def>
-        <degree>2</degree>
-      </li>
-      <li>
-        <def>Nerves</def>
-        <degree>1</degree>
-      </li>
-      <li>
-        <def>Nerves</def>
-        <degree>-1</degree>
-      </li>
-      <li>
-        <def>Nerves</def>
-        <degree>-2</degree>
-      </li>
-      <li>
-        <def>Neurotic</def>
-        <degree>2</degree>
-      </li>
-      <li>
-        <def>Neurotic</def>
-        <degree>1</degree>
-      </li>
-      <li>
-        <def>Bloodlust</def>
-      </li>
-      <li>
-        <def>TooSmart</def>
-      </li>
-      <li>
-        <def>Greedy</def>
-      </li>
-      <li>
-        <def>Jealous</def>
-      </li>
-      <li>
-        <def>TorturedArtist</def>
-      </li>
+      <li><def>NaturalMood</def><degree>2</degree></li>
+      <li><def>NaturalMood</def><degree>1</degree></li>
+      <li><def>NaturalMood</def><degree>-1</degree></li>
+      <li><def>NaturalMood</def><degree>-2</degree></li>
+      <li><def>Nerves</def><degree>2</degree></li>
+      <li><def>Nerves</def><degree>1</degree></li>
+      <li><def>Nerves</def><degree>-1</degree></li>
+      <li><def>Nerves</def><degree>-2</degree></li>
+      <li><def>Neurotic</def><degree>2</degree></li>
+      <li><def>Neurotic</def><degree>1</degree></li>
+      <li><def>Bloodlust</def></li>
+      <li><def>TooSmart</def></li>
+      <li><def>Greedy</def></li>
+      <li><def>Jealous</def></li>
+      <li><def>TorturedArtist</def></li>
     </suppressedTraits>
     <exclusionTags>
       <li>MelancholyAndEvenTemper</li>
