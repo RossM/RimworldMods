@@ -286,6 +286,7 @@
           </li>
         </hediffGivers>
         <applyImmediately>true</applyImmediately>
+        <reapplyOnPartRestored>true</reapplyOnPartRestored>
       </li>
     </modExtensions>
     <exclusionTags>

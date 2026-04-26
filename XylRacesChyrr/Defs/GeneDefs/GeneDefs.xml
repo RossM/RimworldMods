@@ -22,6 +22,7 @@
           </li>
         </hediffGivers>
         <applyImmediately>true</applyImmediately>
+        <reapplyOnPartRestored>true</reapplyOnPartRestored>
       </li>
       <li Class="XylRacesCore.DefModExtension_StartingItemSource">
         <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
@@ -67,6 +68,7 @@
           </li>
         </hediffGivers>
         <applyImmediately>true</applyImmediately>
+        <reapplyOnPartRestored>true</reapplyOnPartRestored>
       </li>
     </modExtensions>
     <customEffectDescriptions>
