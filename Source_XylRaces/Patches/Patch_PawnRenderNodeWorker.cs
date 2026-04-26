@@ -24,6 +24,8 @@ namespace XylRacesCore.Patches
             {
                 if (parms.pawn == null)
                     return;
+                if (node.parent != null)
+                    return;
                 foreach (var extension in parms.pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Rendering>())
                     __result *= extension.scale;
             }

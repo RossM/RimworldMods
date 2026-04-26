@@ -12,7 +12,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_Giant</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Rendering">
-        <scale>1.1</scale>
+        <scale>1.2</scale>
       </li>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Pawn">
         <bodySizeFactor>1.5</bodySizeFactor>
