@@ -8,14 +8,6 @@ namespace XylRacesCore
 {
     public class JobDriver_TakeShower : JobDriver
     {
-        public bool showering;
-
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Values.Look(ref showering, nameof(showering));
-        }
-
         [DefOf]
         private static class Defs
         {
@@ -46,14 +38,6 @@ namespace XylRacesCore
             });
             toil.initAction = () =>
             {
-                showering = true;
-                var comp = toil.actor.GetComp<CompPawn_RenderProperties>();
-                if (comp != null)
-                {
-                    comp.job = job;
-                    comp.hideClothes = comp.hideHeadgear = true;
-                }
-
                 if (pawn.health?.hediffSet != null && pawn.health.hediffSet.TryGetHediff(HediffDefOf.Heatstroke, out var hediff))
                     pawn.health.RemoveHediff(hediff);
             };
