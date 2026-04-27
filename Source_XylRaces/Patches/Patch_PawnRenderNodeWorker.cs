@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using JetBrains.Annotations;
 using System;
-using System.Collections.Generic;
 using Verse;
 using XylRacesCore.Genes;
 

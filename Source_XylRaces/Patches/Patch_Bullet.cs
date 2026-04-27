@@ -1,13 +1,7 @@
 ﻿using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
-using Verse.Noise;
 
 namespace XylRacesCore.Patches
 {

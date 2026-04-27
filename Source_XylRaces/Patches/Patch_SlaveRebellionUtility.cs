@@ -1,5 +1,4 @@
-﻿using System;
-using HarmonyLib;
+﻿using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using System.Collections.Generic;
