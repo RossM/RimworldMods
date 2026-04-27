@@ -51,7 +51,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
+        [Feature(nameof(Defs.XylWillFallRate)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
         public static IEnumerable<CodeInstruction> Interacted_Transpiler(IEnumerable<CodeInstruction> instructions,
             ILGenerator generator)
         {

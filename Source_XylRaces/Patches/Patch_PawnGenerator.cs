@@ -53,7 +53,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("TryGenerateNewPawnInternal")]
+        [Feature(nameof(GeneDefExtension_GenderRatio)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("TryGenerateNewPawnInternal")]
         public static IEnumerable<CodeInstruction> TryGenerateNewPawnInternal_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -84,7 +84,7 @@ namespace XylRacesCore.Patches
             return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch("GenerateInitialHediffs")]
+        [Feature(nameof(GeneDefExtension_CongenitalHediff)), HarmonyPostfix, UsedImplicitly, HarmonyPatch("GenerateInitialHediffs")]
         public static void GenerateInitialHediffs_Postfix(Pawn pawn, PawnGenerationRequest request)
         {
             using (new ProfileBlock())

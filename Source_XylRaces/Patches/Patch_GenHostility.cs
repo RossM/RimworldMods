@@ -13,7 +13,7 @@ namespace XylRacesCore.Patches
     {
         public static Lazy<bool> Enabled = new(Config.GeneOfTypeExists<HostilityOverride>);
 
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
+        [Feature(nameof(HostilityOverride)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
         public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
         {
             if (Enabled.Value == false)

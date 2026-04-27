@@ -25,7 +25,7 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [HarmonyPostfix, UsedImplicitly,
+        [Feature(nameof(GeneDefExtension_Designator)), HarmonyPostfix, UsedImplicitly,
          HarmonyPatch(nameof(DesignationCategoryDef.AllResolvedAndIdeoDesignators), MethodType.Getter)]
         public static void AllResolvedAndIdeoDesignators_Postfix(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
         {

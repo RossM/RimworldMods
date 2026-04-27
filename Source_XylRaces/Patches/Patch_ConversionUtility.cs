@@ -48,7 +48,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(ConversionUtility.ConversionPowerFactor_MemesVsTraits))]
+        [Feature(nameof(XenotypeDefExtension)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(ConversionUtility.ConversionPowerFactor_MemesVsTraits))]
         public static IEnumerable<CodeInstruction> ConversionPowerFactor_MemesVsTraits_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);

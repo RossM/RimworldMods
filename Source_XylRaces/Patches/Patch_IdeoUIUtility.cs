@@ -1,19 +1,20 @@
-﻿using System;
+﻿using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
 using Verse;
+using XylRacesCore.Genes;
 
 namespace XylRacesCore.Patches
 {
     [HarmonyPatch(typeof(IdeoUIUtility))]
     public static class Patch_IdeoUIUtility
     {
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch("GetMemeTip")]
+        [Feature(nameof(XenotypeDefExtension)), HarmonyPostfix, UsedImplicitly, HarmonyPatch("GetMemeTip")]
         public static void GetMemeTip_Postfix(MemeDef meme, ref string __result)
         {
             using (new ProfileBlock())

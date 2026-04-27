@@ -52,7 +52,7 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DrawGenes")]
+        [Feature(nameof(GeneDefExtension_UIFilter)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DrawGenes")]
         public static IEnumerable<CodeInstruction> DrawGenes_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);

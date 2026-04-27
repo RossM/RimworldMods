@@ -14,7 +14,7 @@ namespace XylRacesCore.Patches
     {
         public static Lazy<bool> Enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Rendering>);
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnRenderNodeWorker.ScaleFor))]
+        [Feature(nameof(GeneDefExtension_Rendering)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnRenderNodeWorker.ScaleFor))]
         public static void ScaleFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref UnityEngine.Vector3 __result)
         {
             if (Enabled.Value == false)
@@ -36,7 +36,7 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnRenderNodeWorker.OffsetFor))]
+        [Feature(nameof(GeneDefExtension_Rendering)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnRenderNodeWorker.OffsetFor))]
         public static void OffsetFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref UnityEngine.Vector3 __result)
         {
             if (Enabled.Value == false)

@@ -7,7 +7,7 @@ namespace XylRacesCore;
 public static class RenderHelpers
 {
     [DefOf]
-    private static class Defs
+    public static class Defs
     {
         [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
         public static JobDef XylTakeShower;

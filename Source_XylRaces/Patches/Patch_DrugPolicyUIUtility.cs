@@ -40,7 +40,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
+        [Feature(nameof(Defs.XylDrugSensitive)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
         public static IEnumerable<CodeInstruction> DoAssignDrugPolicyButtons_Transpiler(
             IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {

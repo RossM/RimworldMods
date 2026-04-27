@@ -45,7 +45,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("ParallelGetPreRenderResults")]
+        [Feature(nameof(RenderHelpers.Defs.XylTakeShower)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("ParallelGetPreRenderResults")]
         public static IEnumerable<CodeInstruction> ParallelGetPreRenderResults_Transpiler(
             IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {

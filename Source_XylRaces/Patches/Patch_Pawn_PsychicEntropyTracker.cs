@@ -7,7 +7,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Pawn_PsychicEntropyTracker))]
     public static class Patch_Pawn_PsychicEntropyTracker
     {
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedsPsyfocus), MethodType.Getter)]
+        [Feature(nameof(Psycast)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedsPsyfocus), MethodType.Getter)]
         public static bool NeedsPsyfocus_Prefix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
         {
             using (new ProfileBlock())
@@ -17,7 +17,7 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedToShowGizmo))]
+        [Feature(nameof(Psycast)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedToShowGizmo))]
         public static bool NeedToShowGizmo_Prefix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
         {
             using (new ProfileBlock())

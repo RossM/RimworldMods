@@ -11,7 +11,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(WorkGiver_Warden_Feed))]
     public static class Patch_WorkGiver_Warden_Feed
     {
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(WorkGiver_Warden_Feed.JobOnThing))]
+        [Feature(nameof(Hediff_DietDependency)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(WorkGiver_Warden_Feed.JobOnThing))]
         public static void JobOnThing_Postfix(WorkGiver_Warden_Feed __instance, Pawn pawn, Thing t, bool forced, ref Job __result)
         {
             using (new ProfileBlock())

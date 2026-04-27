@@ -13,13 +13,13 @@ namespace XylRacesCore.Patches
             [UsedImplicitly] public static StatDef XylGlobalAddictionChanceFactor;
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch("Notify_GenesChanged")]
+        [Feature(nameof(CompPawn_LookupCache)), HarmonyPostfix, UsedImplicitly, HarmonyPatch("Notify_GenesChanged")]
         public static void Notify_GenesChanged_Postfix(Pawn_GeneTracker __instance)
         {
             __instance.pawn.GetComp<CompPawn_LookupCache>()?.Notify_GenesChanged();
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
+        [Feature(nameof(Defs.XylGlobalAddictionChanceFactor)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
         public static void AddictionChanceFactor_Postfix(Pawn_GeneTracker __instance, ref float __result)
         {
             using (new ProfileBlock())

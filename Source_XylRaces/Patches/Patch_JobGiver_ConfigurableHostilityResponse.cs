@@ -7,7 +7,7 @@ using Verse.AI;
 
 namespace XylRacesCore.Patches
 {
-    [HarmonyPatch(typeof(JobGiver_ConfigurableHostilityResponse))]
+    [Feature(nameof(Hediff_ForceBehavior)), HarmonyPatch(typeof(JobGiver_ConfigurableHostilityResponse))]
     public static class Patch_JobGiver_ConfigurableHostilityResponse
     {
         [HarmonyPrefix, UsedImplicitly, HarmonyPatch("TryGiveJob")]

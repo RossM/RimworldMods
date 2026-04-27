@@ -15,7 +15,7 @@ namespace XylRacesCore.Patches
             public static GeneDef XylAquatic;
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(JoyGiver.GetChance))]
+        [Feature(nameof(Defs.XylAquatic)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(JoyGiver.GetChance))]
         public static void GetChance(JoyGiver __instance, Pawn pawn, ref float __result)
         {
             using (new ProfileBlock())

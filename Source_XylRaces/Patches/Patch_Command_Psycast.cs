@@ -36,7 +36,7 @@ namespace XylRacesCore.Patches
             }
         };
         
-        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DisabledCheck")]
+        [Feature(nameof(Genes.Psycast)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DisabledCheck")]
         public static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);

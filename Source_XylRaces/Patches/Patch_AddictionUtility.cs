@@ -19,7 +19,7 @@ namespace XylRacesCore.Patches
             [UsedImplicitly] public static StatDef XylDrugEffectMultiplier;
         }
 
-        [HarmonyPostfix, UsedImplicitly,
+        [Feature(nameof(Defs.XylDrugEffectMultiplier)), HarmonyPostfix, UsedImplicitly,
          HarmonyPatch(nameof(AddictionUtility.ModifyChemicalEffectForToleranceAndBodySize))]
         public static void ModifyChemicalEffectForToleranceAndBodySize_Postfix(Pawn pawn, ref float effect,
             bool applyGeneToleranceFactor, bool divideByBodySize)

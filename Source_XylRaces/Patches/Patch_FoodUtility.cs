@@ -11,7 +11,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(FoodUtility))]
     public static class Patch_FoodUtility_NutritionForEater
     {
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(NutritionForEater))]
+        [Feature(nameof(FoodHelpers.GetExtraNutritionFactor)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(NutritionForEater))]
         public static void NutritionForEater_Postfix(Pawn eater, Thing food, ref float __result)
         {
             using (new ProfileBlock())
@@ -20,7 +20,7 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(FoodOptimality))]
+        [Feature(nameof(FoodHelpers.GetExtraNutritionFactor)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(FoodOptimality))]
         public static void FoodOptimality_Postfix(Pawn eater, Thing foodSource, ThingDef foodDef, float dist,
             bool takingToInventory, ref float __result)
         {
@@ -41,7 +41,7 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch("TryAddIngestThought")]
+        [Feature(nameof(FoodHelpers.GetExtraNutritionFactor)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("TryAddIngestThought")]
         public static bool TryAddIngestThought_Prefix(Pawn ingester, ThoughtDef def, Precept fromPrecept,
             List<ThoughtFromIngesting> ingestThoughts, ThingDef foodDef, MeatSourceCategory meatSourceCategory)
         {

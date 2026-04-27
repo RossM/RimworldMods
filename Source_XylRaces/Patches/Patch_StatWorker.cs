@@ -218,7 +218,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
+        [Feature(nameof(Hediff_SubstituteCapacity)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
         public static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -243,7 +243,7 @@ namespace XylRacesCore.Patches
             return capacity;
         }
 
-        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
+        [Feature(nameof(Hediff_SubstituteCapacity)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
         public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -251,7 +251,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
+        [Feature(nameof(Psycast)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
         public static void ShouldShowFor_Postfix(StatWorker __instance, StatRequest req, ref bool __result)
         {
             using (new ProfileBlock())

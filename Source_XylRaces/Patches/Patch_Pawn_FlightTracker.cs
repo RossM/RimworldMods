@@ -10,7 +10,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Pawn_FlightTracker))]
     public static class Patch_Pawn_FlightTracker
     {
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
+        [Feature(nameof(Flight)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
         public static bool Notify_JobStarted_Prefix(Pawn_FlightTracker __instance, Job job)
         {
             using (new ProfileBlock())
@@ -25,7 +25,7 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_FlightTracker.FlightTick))]
+        [Feature(nameof(Flight)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_FlightTracker.FlightTick))]
         public static void FlightTick_Prefix(Pawn_FlightTracker __instance)
         {
             using (new ProfileBlock())

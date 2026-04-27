@@ -9,7 +9,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(GeneUtility))]
     public static class Patch_GeneUtility
     {
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(GeneUtility.SatisfyChemicalGenes))]
+        [Feature(nameof(DietDependency)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(GeneUtility.SatisfyChemicalGenes))]
         public static void SatisfyChemicalGenes_Postfix(Pawn pawn)
         {
             using (new ProfileBlock())

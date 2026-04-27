@@ -9,7 +9,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(TileFinder))]
     public static class Patch_TileFinder
     {
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor),
+        [Feature(nameof(FactionDefExtension)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor),
              [typeof(PlanetLayer), typeof(Faction), typeof(bool), typeof(Predicate<PlanetTile>)])]
         public static void RandomSettlementTileFor_Prefix(PlanetLayer layer, Faction faction, bool mustBeAutoChoosable,
             ref Predicate<PlanetTile> extraValidator)

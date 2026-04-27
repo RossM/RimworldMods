@@ -12,7 +12,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Thing))]
     public static class Patch_Thing
     {
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch("IngestedCalculateAmounts")]
+        [Feature(nameof(DietDependency)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("IngestedCalculateAmounts")]
         public static void IngestedCalculateAmounts_Prefix(Thing __instance, Pawn ingester, ref float nutritionWanted)
         {
             using (new ProfileBlock())
@@ -28,7 +28,7 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch("TakeDamage")]
+        [Feature(nameof(HostilityOverride), nameof(SeeingRed)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("TakeDamage")]
         public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
         {
             using (new ProfileBlock())
@@ -42,6 +42,7 @@ namespace XylRacesCore.Patches
 
                     // Pets get protection from insect pheromones too, so break the protection if the pet
                     // damages an insect.
+                    // TODO this needs updating
                     if (instigator.playerSettings?.Master != null)
                     {
                         foreach (var listener in instigator.playerSettings.Master
@@ -87,7 +88,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [HarmonyTranspiler, UsedImplicitly, HarmonyPatch("Ingested")]
+        [Feature(nameof(FoodHelpers.GetFoodPoisonChanceOffset)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("Ingested")]
         public static IEnumerable<CodeInstruction> Ingested_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);

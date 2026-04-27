@@ -20,7 +20,7 @@ namespace XylRacesCore.Patches
             [UsedImplicitly] public static GeneDef XylEcholocation;
         }
 
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.HitFactorFromShooter))]
+        [Feature(nameof(Defs.XylEcholocation)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.HitFactorFromShooter))]
         public static bool HitFactorFromShooter_Prefix(Thing caster, float distance, float? acc, ref float __result)
         {
             using (new ProfileBlock())
@@ -39,7 +39,7 @@ namespace XylRacesCore.Patches
             return true;
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.HitReportFor))]
+        [Feature(nameof(Defs.XylEcholocation)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.HitReportFor))]
         public static void HitReportFor_Postfix(Thing caster, Verb verb, LocalTargetInfo target, ref ShotReport __result)
         {
             using (new ProfileBlock())
@@ -57,7 +57,7 @@ namespace XylRacesCore.Patches
                 && pawn.health.capacities.GetLevel(PawnCapacityDefOf.Hearing) >= 0.2f;
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.GetTextReadout))]
+        [Feature(nameof(CombatHelpers.Defs.XylRangedDodgeChance)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.GetTextReadout))]
         public static void GetTextReadout_Postfix(ShotReport __instance, ref string __result)
         {
             using (new ProfileBlock())
