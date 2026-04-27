@@ -133,6 +133,9 @@
     <displayOrderInCategory>120</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Aquatic</iconPath>
     <iconColor>(0.4, 0.6, 0.9)</iconColor>
+    <statOffsets>
+      <ComfyTemperatureMin>-5</ComfyTemperatureMin>
+    </statOffsets>
     <enablesNeeds>
       <li>XylWetness</li>
     </enablesNeeds>
