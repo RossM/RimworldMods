@@ -177,4 +177,32 @@
     </symbolPack>
   </GeneDef>
 
+  <GeneDef>
+    <defName>XylDwarf</defName>
+    <label>dwarf</label>
+    <description>Carriers of this gene have smaller bodies with proportionately larger heads.</description>
+    <biostatCpx>0</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>0</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_Giant</iconPath>-->
+    <exclusionTags>
+      <li>BodySize</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Rendering">
+        <modifiers>
+          <li>
+            <onlyRoot>true</onlyRoot>
+            <scale>0.85</scale>
+          </li>
+          <li>
+            <renderNodeClass>PawnRenderNodeWorker_Head</renderNodeClass>
+            <scale>1.177</scale>
+          </li>
+        </modifiers>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
 </Defs>

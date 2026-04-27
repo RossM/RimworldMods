@@ -10,6 +10,9 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>0</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Giant</iconPath>
+    <exclusionTags>
+      <li>BodySize</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Rendering">
         <modifiers>
