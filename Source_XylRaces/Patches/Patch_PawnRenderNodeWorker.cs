@@ -24,10 +24,37 @@ namespace XylRacesCore.Patches
             {
                 if (parms.pawn == null)
                     return;
-                if (node.parent != null)
-                    return;
+
                 foreach (var extension in parms.pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Rendering>())
-                    __result *= extension.scale;
+                {
+                    foreach (var modifier in extension.modifiers)
+                    {
+                        if (modifier.Matches(node))
+                            __result *= modifier.scale;
+                    }
+                }
+            }
+        }
+
+        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnRenderNodeWorker.OffsetFor))]
+        public static void OffsetFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref UnityEngine.Vector3 __result)
+        {
+            if (Enabled.Value == false)
+                return;
+
+            using (new ProfileBlock())
+            {
+                if (parms.pawn == null)
+                    return;
+
+                foreach (var extension in parms.pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Rendering>())
+                {
+                    foreach (var modifier in extension.modifiers)
+                    {
+                        if (modifier.Matches(node))
+                            __result += modifier.offset;
+                    }
+                }
             }
         }
     }
