@@ -206,7 +206,7 @@
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     -->
     <statOffsets>
-      <XylDrugEffectMultiplier>0.2</XylDrugEffectMultiplier>
+      <XylDrugEffectMultiplier>0.4</XylDrugEffectMultiplier>
     </statOffsets>
     <statFactors>
       <XylGlobalAddictionChanceFactor>2.0</XylGlobalAddictionChanceFactor>
