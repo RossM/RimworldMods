@@ -7,7 +7,7 @@
     <labelShortAdj>industrious</labelShortAdj>
     <description>Carriers of this gene are exceptionally fast workers.</description>
     <biostatCpx>2</biostatCpx>
-    <biostatMet>-3</biostatMet>
+    <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>600</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Industrious</iconPath>
@@ -180,15 +180,18 @@
   <GeneDef>
     <defName>XylDwarf</defName>
     <label>dwarf</label>
-    <description>Carriers of this gene have smaller bodies with proportionately larger heads.</description>
-    <biostatCpx>0</biostatCpx>
-    <biostatMet>0</biostatMet>
+    <description>Carriers of this gene have smaller bodies with proportionately larger heads. Their short legs somewhat reduce their movement speed.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>0</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_Giant</iconPath>-->
     <exclusionTags>
       <li>BodySize</li>
     </exclusionTags>
+    <statOffsets>
+      <MoveSpeed>-0.1</MoveSpeed>
+    </statOffsets>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Rendering">
         <modifiers>

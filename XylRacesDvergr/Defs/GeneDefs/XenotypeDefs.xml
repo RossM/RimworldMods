@@ -12,7 +12,6 @@
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>
       <li>PsychicAbility_Dull</li>
-      <li>MoveSpeed_Slow</li>
       <li>XylStoic</li>
       <li>XylMelancholy</li>
       <li>MaxTemp_LargeIncrease</li>
