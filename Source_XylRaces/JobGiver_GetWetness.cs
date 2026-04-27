@@ -34,10 +34,12 @@ namespace XylRacesCore
 
         public static bool IsValidWaterTileFor(Pawn pawn, IntVec3 x)
         {
+            if (!x.InAllowedArea(pawn))
+                return false;
             if (PawnUtility.KnownDangerAt(x, pawn.Map, pawn)) 
                 return false;
             TerrainDef terrain = x.GetTerrain(pawn.Map);
-            if (terrain.toxicBuildupFactor != 0f) 
+            if (terrain.toxicBuildupFactor != 0f && pawn.GetStatValue(StatDefOf.ToxicResistance) < 1.0f && pawn.GetStatValue(StatDefOf.ToxicEnvironmentResistance) < 1.0f) 
                 return false;
             if (x.Fogged(pawn.Map)) 
                 return false;
