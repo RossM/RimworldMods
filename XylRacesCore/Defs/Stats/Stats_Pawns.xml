@@ -204,6 +204,30 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
+    <defName>XylHypothermiaProgressionFactor</defName>
+    <label>hypothermia progression</label>
+    <description>A multiplier on how quickly this character's hypothermia progresses.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1905</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylMalnutritionProgressionFactor</defName>
+    <label>malnutrition progression</label>
+    <description>A multiplier on how quickly this character's malnutrition progresses.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1904</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
     <defName>XylGlobalAddictionChanceFactor</defName>
     <label>addiction chance</label>
     <description>Multiplies the character's chance becoming addicted to a drug.</description>

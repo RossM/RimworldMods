@@ -7,7 +7,7 @@
     <label>echolocation</label>
     <description>Carriers of this gene can use high-frequency sound waves to "see" with their ears instead of their eyes.</description>
     <biostatCpx>2</biostatCpx>
-    <biostatMet>-1</biostatMet>
+    <biostatMet>-3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>73</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Echolocation</iconPath>
@@ -198,5 +198,25 @@
     <skinColorOverride>(247,107,162)</skinColorOverride>
     <displayOrderInCategory>82</displayOrderInCategory>
   </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylRacesCore.Genes.Torpor</geneClass>
+    <defName>XylTorpor</defName>
+    <label>torpor</label>
+    <description>The body of a carrier of this gene automatically goes into hibernation in cold temperatures. This slows movement, impairs manipulation, and eventually causes unconsciousness. It also reduces hunger and slows the progression of hypothermia and starvation.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>3</biostatMet>
+    <displayCategory>Temperature</displayCategory>
+    <displayOrderInCategory>0</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>-->
+    <modExtensions>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Torpor">
+        <hediff>XylTorpor</hediff>
+        <severityGainPerDay>0.5</severityGainPerDay>
+        <severityLossPerDay>2.0</severityLossPerDay>
+      </li>
+    </modExtensions>  
+  </GeneDef>
+
 
 </Defs>

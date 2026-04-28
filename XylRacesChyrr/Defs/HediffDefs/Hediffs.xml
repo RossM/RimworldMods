@@ -47,4 +47,74 @@
     </stages>
   </HediffDef>
 
+  <HediffDef>
+    <defName>XylTorpor</defName>
+    <label>torpor</label>
+    <description>This character's body is responding to low temperature by entering a state of hibernation. Their movement and manipulation abilities will decrease, and eventually they will become unconscious. The condition will quickly reverse itself if the character is warmed up. Bring them to a warm area or give them warm clothes.\n\nTorpor also reduces the amount of food the character needs and slows the progression of hypothermia and starvation.</description>
+    <initialSeverity>0.001</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
+      </li>
+      <li>
+        <label>initial</label>
+        <minSeverity>0.125</minSeverity>
+        <becomeVisible>true</becomeVisible>
+        <hungerRateFactor>0.8</hungerRateFactor>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <postFactor>0.8</postFactor>
+          </li>
+          <li>
+            <capacity>Manipulation</capacity>
+            <postFactor>0.8</postFactor>
+          </li>
+        </capMods>
+        <statFactors>
+          <XylHypothermiaProgressionFactor>0.8</XylHypothermiaProgressionFactor>
+          <XylMalnutritionProgressionFactor>0.8</XylMalnutritionProgressionFactor>
+        </statFactors>
+      </li>
+      <li>
+        <label>moderate</label>
+        <minSeverity>0.25</minSeverity>
+        <hungerRateFactor>0.5</hungerRateFactor>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <postFactor>0.5</postFactor>
+          </li>
+          <li>
+            <capacity>Manipulation</capacity>
+            <postFactor>0.5</postFactor>
+          </li>
+        </capMods>
+        <statFactors>
+          <XylHypothermiaProgressionFactor>0.5</XylHypothermiaProgressionFactor>
+          <XylMalnutritionProgressionFactor>0.5</XylMalnutritionProgressionFactor>
+        </statFactors>
+      </li>
+      <li>
+        <label>extreme</label>
+        <minSeverity>0.5</minSeverity>
+        <lifeThreatening>true</lifeThreatening>
+        <hungerRateFactor>0.1</hungerRateFactor>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <setMax>0.1</setMax>
+          </li>
+        </capMods>
+        <statFactors>
+          <XylHypothermiaProgressionFactor>0.1</XylHypothermiaProgressionFactor>
+          <XylMalnutritionProgressionFactor>0.1</XylMalnutritionProgressionFactor>
+        </statFactors>
+      </li>
+
+    </stages>
+  </HediffDef>
+
 </Defs>

@@ -13,6 +13,13 @@ namespace XylRacesCore.Patches
     {
         public static Lazy<bool> Enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
 
+        [DefOf]
+        public static class Defs
+        {
+            [UsedImplicitly]
+            public static StatDef XylMalnutritionProgressionFactor;
+        }
+
         private static readonly InstructionMatcher Fixup_FoodFallPerTickAssumingCategory = new()
         {
             Rules =
@@ -54,6 +61,13 @@ namespace XylRacesCore.Patches
                 return PatchLactation.GetFirstLactationHediff(pawn.health.hediffSet)?.TryGetComp<HediffComp_Lactating>()
                     ?.AddedNutritionPerDay() ?? 0;
             }
+        }
+
+        [Feature(nameof(Defs.XylMalnutritionProgressionFactor)), HarmonyPostfix,
+         HarmonyPatch("MalnutritionSeverityPerInterval", MethodType.Getter)]
+        public static void MalnutritionSeverityPerInterval_Postfix(Need_Food __instance, ref float __result)
+        {
+            __result *= __instance.pawn.GetStatValue(Defs.XylMalnutritionProgressionFactor);
         }
     }
 }

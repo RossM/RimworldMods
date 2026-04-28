@@ -28,6 +28,7 @@
     <Publicize Include="Assembly-CSharp:RimWorld.Bullet.Impact" />
     <Publicize Include="Assembly-CSharp:RimWorld.GenConstruct.tmpIdeoMemberNames" />
     <Publicize Include="Assembly-CSharp:RimWorld.GenHostility.IsActivityDormant" />
+    <Publicize Include="Assembly-CSharp:RimWorld.Need.pawn" />
     <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.flightCooldownTicks" />
     <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.pawn" />
     <Publicize Include="Assembly-CSharp:RimWorld.PawnGenerator.GenerateInitialHediffs" />
