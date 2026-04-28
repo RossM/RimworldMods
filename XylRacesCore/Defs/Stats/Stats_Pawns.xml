@@ -205,7 +205,7 @@
   </StatDef>
   <StatDef>
     <defName>XylHypothermiaProgressionFactor</defName>
-    <label>hypothermia progression</label>
+    <label>hypothermia progression rate</label>
     <description>A multiplier on how quickly this character's hypothermia progresses.</description>
     <category>PawnHealth</category>
     <toStringStyle>PercentZero</toStringStyle>
@@ -217,7 +217,7 @@
   </StatDef>
   <StatDef>
     <defName>XylMalnutritionProgressionFactor</defName>
-    <label>malnutrition progression</label>
+    <label>malnutrition progression rate</label>
     <description>A multiplier on how quickly this character's malnutrition progresses.</description>
     <category>PawnHealth</category>
     <toStringStyle>PercentZero</toStringStyle>

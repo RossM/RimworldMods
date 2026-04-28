@@ -59,7 +59,7 @@
         <becomeVisible>false</becomeVisible>
       </li>
       <li>
-        <label>initial</label>
+        <label>mild</label>
         <minSeverity>0.1</minSeverity>
         <becomeVisible>true</becomeVisible>
         <hungerRateFactor>0.8</hungerRateFactor>
