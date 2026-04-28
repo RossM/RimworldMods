@@ -10,6 +10,7 @@
       <li TKey="XylNixieSpeed">Nixies move faster than almost anything else in the water. You can use this to your advantage in combat.</li>
       <li TKey="XylNixieHot">Nixies' skin starts to dry out much faster when the temperature climbs above 30C/86F.</li>
       <li TKey="XylNixiePsyfocus">Nixies need at least 25 psyfocus to use their innate psycasts, which means time spent in meditation. If you're not using the psycasts you can set their desired psyfocus to 0%.</li>
+      <li TKey="XylNixiePsylink">Nixies don't need a psylink to use their innate psycasts.</li>
 
     </tips>
   </TipSetDef>
