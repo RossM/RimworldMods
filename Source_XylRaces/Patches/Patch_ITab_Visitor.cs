@@ -42,7 +42,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature("TODO"), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DoSlaveTab")]
+        [Feature(nameof(StatDefOf.SlaveSuppressionFallRate)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DoSlaveTab")]
         public static IEnumerable<CodeInstruction> DoSlaveTab_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
