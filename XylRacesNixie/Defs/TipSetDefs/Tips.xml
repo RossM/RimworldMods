@@ -8,7 +8,7 @@
       <li TKey="XylNixieWaterskip">In an emergency, Waterskip can create puddles to satisfy a nixie's need for wetness.</li>
       <li TKey="XylNixieShower">Characters with the Aquatic gene can build showers and use them to stay wet.</li>
       <li TKey="XylNixieSpeed">Nixies move faster than almost anything else in the water. You can use this to your advantage in combat.</li>
-      <li TKey="XylNixieHot">Nixies' skin dries out much faster if the temperature climbs above 30C/86F.</li>
+      <li TKey="XylNixieHot">Nixies' skin starts to dry out much faster when the temperature climbs above 30C/86F.</li>
 
     </tips>
   </TipSetDef>
