@@ -14,6 +14,8 @@ namespace XylRacesCore.Genes
     {
         public HashSet<Thing> extraEnemies;
 
+        const int checkInterval = 60;
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -48,7 +50,7 @@ namespace XylRacesCore.Genes
             using (new ProfileBlock())
             {
                 base.TickInterval(delta);
-                if (!pawn.IsHashIntervalTick(60, delta)) 
+                if (!pawn.IsHashIntervalTick(checkInterval, delta)) 
                     return;
                 if (extraEnemies != null)
                 {

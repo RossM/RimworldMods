@@ -14,6 +14,8 @@ namespace XylRacesCore
 
         private static readonly List<Pawn> tmpTargets = [];
 
+        const int checkInterval = 120;
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -50,7 +52,7 @@ namespace XylRacesCore
                 return;
             }
 
-            if (!pawn.IsHashIntervalTick(120, delta)) 
+            if (!pawn.IsHashIntervalTick(checkInterval, delta)) 
                 return;
             if (IsTargetStillValidAndReachable()) 
                 return;

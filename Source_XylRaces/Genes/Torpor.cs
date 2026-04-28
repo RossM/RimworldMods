@@ -18,7 +18,7 @@ namespace XylRacesCore.Genes
 
         public override void TickInterval(int delta)
         {
-            const int tickInterval = 60;
+            const int checkInterval = 60;
 
             using (new ProfileBlock())
             {
@@ -27,16 +27,16 @@ namespace XylRacesCore.Genes
                 if (!Active)
                     return;
 
-                if (!pawn.IsHashIntervalTick(tickInterval, delta))
+                if (!pawn.IsHashIntervalTick(checkInterval, delta))
                     return;
 
                 if (pawn.AmbientTemperature < pawn.GetStatValue(StatDefOf.ComfyTemperatureMin))
                 {
-                    HealthUtility.AdjustSeverity(pawn, DefExt.hediff, (tickInterval / 60000f) * DefExt.severityGainPerDay);
+                    HealthUtility.AdjustSeverity(pawn, DefExt.hediff, (checkInterval / 60000f) * DefExt.severityGainPerDay);
                 }
                 else
                 {
-                    HealthUtility.AdjustSeverity(pawn, DefExt.hediff, -(tickInterval / 60000f) * DefExt.severityLossPerDay);
+                    HealthUtility.AdjustSeverity(pawn, DefExt.hediff, -(checkInterval / 60000f) * DefExt.severityLossPerDay);
                 }
             }
         }

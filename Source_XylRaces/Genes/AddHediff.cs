@@ -19,6 +19,8 @@ namespace XylRacesCore.Genes
     {
         public GeneDefExtension_Hediff DefExt => def.GetModExtension<GeneDefExtension_Hediff>();
 
+        const int checkInterval = 60;
+
         public override void PostAdd()
         {
             // Statues don't have a kindDef set, which causes a crash. Check for that and abort.
@@ -43,11 +45,11 @@ namespace XylRacesCore.Genes
 
                 var extension = DefExt;
                 if (Active && extension is { hediffGivers: not null, mtbDays: > 0.0f } &&
-                    pawn.IsHashIntervalTick(60, delta))
+                    pawn.IsHashIntervalTick(checkInterval, delta))
                 {
                     foreach (var hediffGiver in extension.hediffGivers)
                     {
-                        if (Rand.MTBEventOccurs(extension.mtbDays, 60000f, 60f))
+                        if (Rand.MTBEventOccurs(extension.mtbDays, 60000f, checkInterval))
                             hediffGiver.TryApply(pawn);
                     }
                 }

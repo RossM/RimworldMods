@@ -28,6 +28,8 @@ namespace XylRacesCore.Genes
         private HediffComp_Lactating lactatingInternal;
         public HediffComp_Lactating Lactating => lactatingInternal ??= pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
 
+        const int checkInterval = 60;
+
         public override bool Active
         {
             get
@@ -93,7 +95,7 @@ namespace XylRacesCore.Genes
 
                 base.TickInterval(delta);
 
-                if (!pawn.IsHashIntervalTick(60, delta))
+                if (!pawn.IsHashIntervalTick(checkInterval, delta))
                     return;
 
                 AddHediff();
