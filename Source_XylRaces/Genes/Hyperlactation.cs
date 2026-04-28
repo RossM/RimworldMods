@@ -52,7 +52,7 @@ namespace XylRacesCore.Genes
                 yield break;
             if (!pawn.Spawned)
                 yield break;
-            if (!pawn.IsColonistPlayerControlled)
+            if (!pawn.IsColonistPlayerControlled && !pawn.IsPrisonerOfColony)
                 yield break;
 
             yield return new Command_Toggle
