@@ -36,4 +36,13 @@
     </value>
   </Operation>
 
+  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+    <xpath>Defs/ThoughtDef[defName="HoldingMePrisoner"]</xpath>
+    <value>
+      <nullifyingGenes>
+        <li>XylHerdInstinct</li>
+      </nullifyingGenes>
+    </value>
+  </Operation>
+  
 </Patch>

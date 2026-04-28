@@ -49,6 +49,22 @@
   </ThoughtDef>
 
   <ThoughtDef>
+    <defName>XylDocileImprisoned</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <workerClass>XylRacesCore.ThoughtWorker_Imprisoned</workerClass>
+    <requiredGenes>
+      <li>XylDocile</li>
+    </requiredGenes>
+    <stages>
+      <li>
+        <label>docile imprisoned</label>
+        <description>It's so comforting having someone else to tell me what to do.</description>
+        <baseMoodEffect>20</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
     <defName>XylSleptInBarracks_HerdInstinct</defName>
     <durationDays>1</durationDays>
     <stackLimit>1</stackLimit>
