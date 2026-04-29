@@ -27,7 +27,7 @@
     <recoverFromSleep>true</recoverFromSleep>
     <nameColor>(0.9,0.2,0.5)</nameColor>
     <recoveryMessage>{0} is no longer hunting.</recoveryMessage>
-    <beginLetter>{0} has decided to hunt and kill {1}.</beginLetter>
+    <beginLetter>{0} has decided to kill and eat {1}.</beginLetter>
     <beginLetterDef>ThreatSmall</beginLetterDef>
     <baseInspectLine>Mental state: Hunting vermin</baseInspectLine>
     <allowBeatfire>true</allowBeatfire>
