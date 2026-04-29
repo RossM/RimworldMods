@@ -25,22 +25,8 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern =
-                    [
-                        CodeInstruction.LoadLocal(0),
-                        CodeInstruction.Call(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay)),
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.LoadArgument(0),
-                        CodeInstruction.LoadField(typeof(Need), "pawn"),
-                        CodeInstruction.Call(() => GetAddedNutritionPerDay),
-                    ]
-                }
+                InstructionMatcher.RedirectMethodRule(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay),
+                    typeof(Patch_Need_Food), nameof(AddedNutritionPerDay))
             }
         };
 
@@ -52,23 +38,12 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        static float GetAddedNutritionPerDay(Pawn pawn)
+        static float AddedNutritionPerDay(HediffComp_Lactating hediffComp)
         {
             if (Enabled.Value)
                 return 0;
 
-            using (new ProfileBlock())
-            {
-                return PatchLactation.GetFirstLactationHediff(pawn.health.hediffSet)?.TryGetComp<HediffComp_Lactating>()
-                    ?.AddedNutritionPerDay() ?? 0;
-            }
-        }
-
-        [Feature(nameof(Defs.XylMalnutritionProgressionFactor)), HarmonyPostfix,
-         HarmonyPatch("MalnutritionSeverityPerInterval", MethodType.Getter)]
-        public static void MalnutritionSeverityPerInterval_Postfix(Need_Food __instance, ref float __result)
-        {
-            __result *= __instance.pawn.GetStatValue(Defs.XylMalnutritionProgressionFactor);
+            return hediffComp.AddedNutritionPerDay();
         }
     }
 }

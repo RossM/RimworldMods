@@ -14,19 +14,8 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern =
-                    [
-                        new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(StatWorker_SuppressionFallRate), nameof(StatWorker_SuppressionFallRate.GetExplanationForTooltip))),
-                    ],
-                    Output =
-                    [
-                        new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(StatWorker_SuppressionFallRate_Fixed), nameof(StatWorker_SuppressionFallRate_Fixed.GetExplanationForTooltip))),
-                    ]
-                },
+                InstructionMatcher.RedirectMethodRule(typeof(StatWorker_SuppressionFallRate), nameof(StatWorker_SuppressionFallRate.GetExplanationForTooltip),
+                    typeof(StatWorker_SuppressionFallRate_Fixed), nameof(StatWorker_SuppressionFallRate_Fixed.GetExplanationForTooltip)),
                 new()
                 {
                     Min = 1, Max = 0,

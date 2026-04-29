@@ -88,7 +88,7 @@ namespace XylRacesCore.Patches
 
             using (new ProfileBlock())
             {
-                return PatchLactation.GetFirstLactationHediff(pawn.health.hediffSet);
+                return PatchLactation.GetFirstHediffOfDef(pawn.health.hediffSet, HediffDefOf.Lactating, false);
             }
         }
 
@@ -98,7 +98,7 @@ namespace XylRacesCore.Patches
             {
                 if (Config.FeatureEnabled(Config.Feature.FixLactationBugs))
                 {
-                    Hediff firstLactationHediff = PatchLactation.GetFirstLactationHediff(pawn.health.hediffSet);
+                    Hediff firstLactationHediff = PatchLactation.GetFirstHediffOfDef(pawn.health.hediffSet, HediffDefOf.Lactating, false);
                     var hediffComp_Lactating = firstLactationHediff?.TryGetComp<HediffComp_Lactating>();
                     if (hediffComp_Lactating != null)
                     {
@@ -122,7 +122,7 @@ namespace XylRacesCore.Patches
                 // There is a bug in the base game that causes the nutrition from lactation to be counted twice, once as part of
                 // NutritionEatenPerDay which is used to calculate food fall per tick, and then the lactation hediff itself also
                 // directly consumes food per tick. This correctly displays that effect.
-                float lactationNutritionUsed = PatchLactation.GetFirstLactationHediff(p.health.hediffSet)
+                float lactationNutritionUsed = PatchLactation.GetFirstHediffOfDef(p.health.hediffSet, HediffDefOf.Lactating, false)
                     ?.TryGetComp<HediffComp_Lactating>()?.AddedNutritionPerDay() ?? 0;
 
                 __result = (p.needs.food.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * 60000f + lactationNutritionUsed).ToString("0.##");

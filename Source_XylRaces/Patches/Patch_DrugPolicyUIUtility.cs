@@ -21,19 +21,8 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern =
-                    [
-                        CodeInstruction.Call(() => PawnUtility.TryGetChemicalDependencyGene)
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.Call(() => TryGetChemicalAffectingGene),
-                    ]
-                },
+                InstructionMatcher.RedirectMethodRule(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene), 
+                    typeof(Patch_DrugPolicyUIUtility), nameof(TryGetChemicalDependencyGene))
             }
         };
 
@@ -46,7 +35,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static bool TryGetChemicalAffectingGene(Pawn pawn, out Gene gene)
+        public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene gene)
         {
             if (PawnUtility.TryGetChemicalDependencyGene(pawn, out var chemicalDependency))
             {

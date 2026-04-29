@@ -286,15 +286,16 @@ namespace TranspilerUtil
                 Log.Error($"{methodName ?? "<Unknown>"}: {reason}");
         }
 
-        public static Rule RedirectMethodRule(Type oldType, string oldMethod, Type newType, string newMethod)
+        public static Rule RedirectMethodRule(Type oldType, string oldMethod, Type newType, string newMethod, Type[] parameters = null, int minMatches = 1)
         {
             return new()
             {
-                Min = 1, Max = 0,
+                Min = minMatches,
+                Max = 0,
                 Mode = OutputMode.Replace,
                 Pattern =
                 [
-                    CodeInstruction.Call(oldType, oldMethod),
+                    CodeInstruction.Call(oldType, oldMethod, parameters),
                 ],
                 Output =
                 [

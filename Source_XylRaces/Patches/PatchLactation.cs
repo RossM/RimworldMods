@@ -17,52 +17,30 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                new()
-                {
-                    Min = 0, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern =
-                    [
-                        new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(HediffDefOf), nameof(HediffDefOf.Lactating))),
-                        new CodeInstruction(OpCodes.Ldc_I4_0),
-                        new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))),
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.Call(() => GetFirstLactationHediff),
-                    ]
-                },
-                new()
-                {
-                    Min = 0, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern =
-                    [
-                        new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(HediffDefOf), nameof(HediffDefOf.Lactating))),
-                        new CodeInstruction(OpCodes.Ldc_I4_0),
-                        new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)])),
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.Call(() => HasLactationHediff),
-                    ]
-                },
+                InstructionMatcher.RedirectMethodRule(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef),
+                    typeof(PatchLactation), nameof(GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)], minMatches: 0),
+                InstructionMatcher.RedirectMethodRule(typeof(HediffSet), nameof(HediffSet.HasHediff),
+                    typeof(PatchLactation), nameof(HasHediff), [typeof(HediffDef), typeof(bool)], minMatches: 0),
             }
         };
 
-        public static Hediff GetFirstLactationHediff(HediffSet hediffSet)
+        public static Hediff GetFirstHediffOfDef(HediffSet hediffSet, HediffDef def, bool mustBeVisible)
         {
             using (new ProfileBlock())
             {
-                return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
+                if (def == HediffDefOf.Lactating && mustBeVisible == false)
+                    return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
+                return hediffSet.GetFirstHediffOfDef(def, mustBeVisible);
             }
         }
 
-        public static bool HasLactationHediff(HediffSet hediffSet)
+        public static bool HasHediff(HediffSet hediffSet, HediffDef def, bool mustBeVisible)
         {
             using (new ProfileBlock())
             {
-                return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
+                if (def == HediffDefOf.Lactating && mustBeVisible == false)
+                    return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
+                return hediffSet.HasHediff(def, mustBeVisible);
             }
         }
 
