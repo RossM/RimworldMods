@@ -214,7 +214,7 @@
         <hediff>XylTorpor</hediff>
         <severityGainPerDay>0.5</severityGainPerDay>
         <severityLossPerDay>2.0</severityLossPerDay>
-        <warningMessage>{PAWN} is beginning to enter torpor. Get {PAWN_objective} some warmth.</warningMessage>
+        <warningMessage>{PAWN} is beginning to enter torpor.</warningMessage>
       </li>
     </modExtensions>  
   </GeneDef>
