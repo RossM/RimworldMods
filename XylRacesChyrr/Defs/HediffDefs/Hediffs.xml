@@ -65,12 +65,8 @@
         <hungerRateFactor>0.8</hungerRateFactor>
         <capMods>
           <li>
-            <capacity>Moving</capacity>
-            <postFactor>0.8</postFactor>
-          </li>
-          <li>
-            <capacity>Manipulation</capacity>
-            <postFactor>0.8</postFactor>
+            <capacity>Consciousness</capacity>
+            <setMax>0.8</setMax>
           </li>
         </capMods>
         <statFactors>
@@ -83,14 +79,12 @@
         <minSeverity>0.25</minSeverity>
         <hungerRateFactor>0.5</hungerRateFactor>
         <capMods>
-          <li>
-            <capacity>Moving</capacity>
-            <postFactor>0.5</postFactor>
-          </li>
-          <li>
-            <capacity>Manipulation</capacity>
-            <postFactor>0.5</postFactor>
-          </li>
+          <capMods>
+            <li>
+              <capacity>Consciousness</capacity>
+              <setMax>0.5</setMax>
+            </li>
+          </capMods>
         </capMods>
         <statFactors>
           <XylHypothermiaProgressionFactor>0.5</XylHypothermiaProgressionFactor>
