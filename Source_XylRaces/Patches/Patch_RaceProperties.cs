@@ -19,23 +19,8 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern =
-                    [
-                        new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Pawn), nameof(Pawn.health))),
-                        new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Pawn_HealthTracker), nameof(Pawn_HealthTracker.hediffSet))),
-                        new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(HediffDefOf), nameof(HediffDefOf.Lactating))),
-                        new CodeInstruction(OpCodes.Ldc_I4_0),
-                        new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))),
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.Call(() => GetFirstLactationHediffOrNull),
-                    ]
-                },
+                InstructionMatcher.RedirectMethodRule(AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)]),
+                    AccessTools.Method(typeof(Patch_RaceProperties), nameof(GetFirstHediffOfDefOrNull))),
 
                 new()
                 {
@@ -78,7 +63,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static Hediff GetFirstLactationHediffOrNull(Pawn pawn)
+        public static Hediff GetFirstHediffOfDefOrNull(HediffSet hediffSet, HediffDef def, bool mustBeVisible)
         {
             // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes
             // lactating pawns to need too much food. This turns out to be a problem for bossaps balance-wise, so I'm
@@ -86,10 +71,7 @@ namespace XylRacesCore.Patches
             if (Enabled.Value)
                 return null;
 
-            using (new ProfileBlock())
-            {
-                return PatchLactation.GetFirstHediffOfDef(pawn.health.hediffSet, HediffDefOf.Lactating, false);
-            }
+            return PatchLactation.GetFirstHediffOfDef(hediffSet, def, mustBeVisible);
         }
 
         public static void NutritionEatenPerDayExplanationFinal(StringBuilder stringBuilder, Pawn pawn)
