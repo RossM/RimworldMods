@@ -28,27 +28,23 @@ namespace XylRacesCore.Patches
                 new()
                 {
                     Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.InsertBefore,
+                    Mode = InstructionMatcher.OutputMode.Replace,
                     Pattern =
                     [
                         CodeInstruction.Call(typeof(HealthUtility), nameof(HealthUtility.AdjustSeverity)),
                     ],
                     Output =
                     [
-                        CodeInstruction.LoadArgument(0),
-                        CodeInstruction.Call(typeof(Patch_HediffGiver_Hypothermia), nameof(StatDefOfHypothermiaProgressionFactor)),
-                        new CodeInstruction(OpCodes.Ldc_I4_1),
-                        new CodeInstruction(OpCodes.Ldc_I4_M1),
-                        CodeInstruction.Call(typeof(StatExtension), nameof(StatExtension.GetStatValue)),
-                        new CodeInstruction(OpCodes.Mul),
+                        CodeInstruction.Call(typeof(Patch_HediffGiver_Hypothermia), nameof(AdjustSeverity_Hypothermia)),
                     ]
                 }
             }
         };
 
-        public static StatDef StatDefOfHypothermiaProgressionFactor()
+        public static void AdjustSeverity_Hypothermia(Pawn pawn, HediffDef hdDef, float sevOffset)
         {
-            return Defs.XylHypothermiaProgressionFactor;
+            sevOffset *= pawn.GetStatValue(Defs.XylHypothermiaProgressionFactor);
+            HealthUtility.AdjustSeverity(pawn, hdDef, sevOffset);
         }
 
         [Feature(nameof(Defs.XylHypothermiaProgressionFactor)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("OnIntervalPassed")]
