@@ -42,7 +42,7 @@ namespace XylRacesCore.Genes
 
                 if (pawn.AmbientTemperature < pawn.GetStatValue(StatDefOf.ComfyTemperatureMin))
                 {
-                    HealthUtility.AdjustSeverity(pawn, DefExt.hediff, (checkInterval / 60000f) * DefExt.severityGainPerDay);
+                    HealthUtility.AdjustSeverity(pawn, DefExt.hediff, (checkInterval / (float)GenDate.TicksPerDay) * DefExt.severityGainPerDay);
 
                     if (!sentWarning && !DefExt.warningMessage.NullOrEmpty() && pawn.IsPlayerControlled && 
                         pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff)?.Visible == true)
@@ -54,7 +54,7 @@ namespace XylRacesCore.Genes
                 }
                 else
                 {
-                    HealthUtility.AdjustSeverity(pawn, DefExt.hediff, -(checkInterval / 60000f) * DefExt.severityLossPerDay);
+                    HealthUtility.AdjustSeverity(pawn, DefExt.hediff, -(checkInterval / (float)GenDate.TicksPerDay) * DefExt.severityLossPerDay);
 
                     if (sentWarning && (pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff)?.Severity ?? 0) <= 0)
                         sentWarning = false;
