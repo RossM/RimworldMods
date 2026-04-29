@@ -25,31 +25,19 @@ namespace XylRacesCore.Patches
                 new()
                 {
                     Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.Replace,
+                    Mode = InstructionMatcher.OutputMode.InsertBefore,
                     Pattern =
                     [
-                        // stringBuilder.AppendLine();
-                        CodeInstruction.LoadLocal(0),
-                        CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), []),
-                        new CodeInstruction(OpCodes.Pop),
-                        // stringBuilder.AppendLine("StatsReport_FinalValue".Translate() + ": " + NutritionEatenPerDay(p));
+                        // stringBuilder.AppendLine("StatsReport_FinalValue" ...
                         CodeInstruction.LoadLocal(0),
                         new CodeInstruction(OpCodes.Ldstr, "StatsReport_FinalValue"),
-                        CodeInstruction.Call(typeof(Translator), nameof(Translator.Translate), [typeof(string)]),
-                        new CodeInstruction(OpCodes.Ldstr, ": "),
-                        CodeInstruction.Call(typeof(TaggedString), "op_Addition", [typeof(TaggedString), typeof(string)]),
-                        CodeInstruction.LoadArgument(0),
-                        CodeInstruction.Call(typeof(RaceProperties), nameof(RaceProperties.NutritionEatenPerDay), [typeof(Pawn)]),
-                        CodeInstruction.Call(typeof(TaggedString), "op_Addition", [typeof(TaggedString), typeof(string)]),
-                        CodeInstruction.Call(typeof(TaggedString), "op_Implicit", [typeof(TaggedString)]),
-                        CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]),
-                        new CodeInstruction(OpCodes.Pop),
                     ],
                     Output =
                     [
+                        // LactationExplanation(stringBuilder, pawn);
                         CodeInstruction.LoadLocal(0),
                         CodeInstruction.LoadArgument(0),
-                        CodeInstruction.Call(() => NutritionEatenPerDayExplanationFinal),
+                        CodeInstruction.Call(() => AddLactationExplanation),
                     ]
                 },
             }
@@ -74,25 +62,21 @@ namespace XylRacesCore.Patches
             return PatchLactation.GetFirstHediffOfDef(hediffSet, def, mustBeVisible);
         }
 
-        public static void NutritionEatenPerDayExplanationFinal(StringBuilder stringBuilder, Pawn pawn)
+        public static void AddLactationExplanation(StringBuilder stringBuilder, Pawn pawn)
         {
+            if (!Enabled.Value)
+                return;
+
             using (new ProfileBlock())
             {
-                if (Config.FeatureEnabled(Config.Feature.FixLactationBugs))
+                Hediff firstLactationHediff = PatchLactation.GetFirstHediffOfDef(pawn.health.hediffSet, HediffDefOf.Lactating, false);
+                var hediffComp_Lactating = firstLactationHediff?.TryGetComp<HediffComp_Lactating>();
+                if (hediffComp_Lactating != null)
                 {
-                    Hediff firstLactationHediff = PatchLactation.GetFirstHediffOfDef(pawn.health.hediffSet, HediffDefOf.Lactating, false);
-                    var hediffComp_Lactating = firstLactationHediff?.TryGetComp<HediffComp_Lactating>();
-                    if (hediffComp_Lactating != null)
-                    {
-                        stringBuilder.AppendLine();
-                        stringBuilder.AppendLine(firstLactationHediff.LabelBaseCap + ": " +
-                                                 hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign());
-                    }
+                    stringBuilder.AppendLine(firstLactationHediff.LabelBaseCap + ": " +
+                                             hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign());
+                    stringBuilder.AppendLine();
                 }
-
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine("StatsReport_FinalValue".Translate() + ": " +
-                                         RaceProperties.NutritionEatenPerDay(pawn));
             }
         }
 
