@@ -50,7 +50,7 @@
   <HediffDef>
     <defName>XylTorpor</defName>
     <label>torpor</label>
-    <description>This character's body is responding to low temperature by entering a state of hibernation. Their movement and manipulation abilities will decrease, and eventually they will become unconscious. The condition will quickly reverse itself if the character is warmed up. Bring them to a warm area or give them warm clothes.\n\nTorpor also reduces the amount of food the character needs and slows the progression of hypothermia and starvation.</description>
+    <description>This character's body is responding to low temperature by entering a state of hibernation. Their metabolism will slow, and they will eventually fall unconscious. The condition will quickly reverse itself if the character is warmed up. Bring them to a warm area or give them warm clothes.</description>
     <initialSeverity>0.001</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
     <everCurableByItem>false</everCurableByItem>
@@ -62,7 +62,7 @@
         <label>mild</label>
         <minSeverity>0.1</minSeverity>
         <becomeVisible>true</becomeVisible>
-        <hungerRateFactor>0.8</hungerRateFactor>
+        <hungerRateFactor>0.5</hungerRateFactor>
         <capMods>
           <li>
             <capacity>Consciousness</capacity>
@@ -70,25 +70,23 @@
           </li>
         </capMods>
         <statFactors>
-          <XylHypothermiaProgressionFactor>0.8</XylHypothermiaProgressionFactor>
-          <XylMalnutritionProgressionFactor>0.8</XylMalnutritionProgressionFactor>
+          <XylHypothermiaProgressionFactor>0.5</XylHypothermiaProgressionFactor>
+          <XylMalnutritionProgressionFactor>0.5</XylMalnutritionProgressionFactor>
         </statFactors>
       </li>
       <li>
         <label>moderate</label>
         <minSeverity>0.25</minSeverity>
-        <hungerRateFactor>0.5</hungerRateFactor>
+        <hungerRateFactor>0.25</hungerRateFactor>
         <capMods>
-          <capMods>
-            <li>
-              <capacity>Consciousness</capacity>
-              <setMax>0.5</setMax>
-            </li>
-          </capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <setMax>0.5</setMax>
+          </li>
         </capMods>
         <statFactors>
-          <XylHypothermiaProgressionFactor>0.5</XylHypothermiaProgressionFactor>
-          <XylMalnutritionProgressionFactor>0.5</XylMalnutritionProgressionFactor>
+          <XylHypothermiaProgressionFactor>0.25</XylHypothermiaProgressionFactor>
+          <XylMalnutritionProgressionFactor>0.25</XylMalnutritionProgressionFactor>
         </statFactors>
       </li>
       <li>
