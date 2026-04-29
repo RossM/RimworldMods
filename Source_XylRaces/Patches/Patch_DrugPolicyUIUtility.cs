@@ -23,8 +23,8 @@ namespace XylRacesCore.Patches
             {
                 // We can't just patch TryGetChemicalDependencyGene directly because it returns Gene_ChemicalDependency, and we
                 // need a function that returns just Gene.
-                InstructionMatcher.RedirectMethodRule(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene), 
-                    typeof(Patch_DrugPolicyUIUtility), nameof(TryGetChemicalDependencyGene))
+                InstructionMatcher.RedirectMethodRule(AccessTools.Method(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene)), 
+                    AccessTools.Method(typeof(Patch_DrugPolicyUIUtility), nameof(TryGetChemicalDependencyGene)))
             }
         };
 

@@ -17,10 +17,10 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.RedirectMethodRule(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef),
-                    typeof(PatchLactation), nameof(GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)], minMatches: 0),
-                InstructionMatcher.RedirectMethodRule(typeof(HediffSet), nameof(HediffSet.HasHediff),
-                    typeof(PatchLactation), nameof(HasHediff), [typeof(HediffDef), typeof(bool)], minMatches: 0),
+                InstructionMatcher.RedirectMethodRule(AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)]),
+                    AccessTools.Method(typeof(PatchLactation), nameof(GetFirstHediffOfDef)), minMatches: 0),
+                InstructionMatcher.RedirectMethodRule(AccessTools.Method(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)]),
+                    AccessTools.Method(typeof(PatchLactation), nameof(HasHediff)), minMatches: 0),
             }
         };
 

@@ -1,9 +1,12 @@
 ﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using Verse;
 using OpCodes = System.Reflection.Emit.OpCodes;
 
@@ -286,8 +289,10 @@ namespace TranspilerUtil
                 Log.Error($"{methodName ?? "<Unknown>"}: {reason}");
         }
 
-        public static Rule RedirectMethodRule(Type oldType, string oldMethod, Type newType, string newMethod, Type[] parameters = null, int minMatches = 1)
+        public static Rule RedirectMethodRule(MethodInfo oldMethod, MethodInfo newMethod, int minMatches = 1)
         {
+            var opcode = oldMethod.IsVirtual ? OpCodes.Callvirt : OpCodes.Call;
+
             return new()
             {
                 Min = minMatches,
@@ -295,11 +300,11 @@ namespace TranspilerUtil
                 Mode = OutputMode.Replace,
                 Pattern =
                 [
-                    CodeInstruction.Call(oldType, oldMethod, parameters),
+                    new CodeInstruction(opcode, oldMethod),
                 ],
                 Output =
                 [
-                    CodeInstruction.Call(newType, newMethod),
+                    new CodeInstruction(opcode, newMethod),
                 ]
             };
         }
