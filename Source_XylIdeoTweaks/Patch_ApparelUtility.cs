@@ -7,8 +7,8 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using TranspilerUtil;
 using Verse;
-using XylRacesCore;
 
 namespace Source_XylIdeoTweaks
 {

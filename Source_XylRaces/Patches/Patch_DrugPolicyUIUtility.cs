@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using TranspilerUtil;
 using Verse;
 
 namespace XylRacesCore.Patches

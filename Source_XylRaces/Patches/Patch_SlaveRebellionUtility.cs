@@ -4,6 +4,7 @@ using RimWorld;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Text;
+using TranspilerUtil;
 using Verse;
 
 namespace XylRacesCore.Patches

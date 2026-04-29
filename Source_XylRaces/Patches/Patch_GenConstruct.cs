@@ -4,6 +4,7 @@ using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
 

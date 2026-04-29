@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using TranspilerUtil;
 using Verse;
 
 namespace XylRacesCore.Patches
@@ -25,19 +26,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern =
-                    [
-                        CodeInstruction.Call(typeof(HealthUtility), nameof(HealthUtility.AdjustSeverity)),
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.Call(typeof(Patch_HediffGiver_Hypothermia), nameof(AdjustSeverity_Hypothermia)),
-                    ]
-                }
+                InstructionMatcher.RedirectMethodRule(typeof(HealthUtility), nameof(HealthUtility.AdjustSeverity), typeof(Patch_HediffGiver_Hypothermia), nameof(AdjustSeverity_Hypothermia))
             }
         };
 

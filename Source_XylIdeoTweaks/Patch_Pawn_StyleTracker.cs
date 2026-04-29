@@ -8,7 +8,6 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
-using XylRacesCore;
 
 namespace Source_XylIdeoTweaks
 {

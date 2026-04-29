@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using Verse;
 using OpCodes = System.Reflection.Emit.OpCodes;
 
-namespace XylRacesCore
+namespace TranspilerUtil
 {
     public class InstructionMatcher
     {
@@ -284,6 +284,23 @@ namespace XylRacesCore
         {
             if (!TryMatchAndReplace(ref instructionsList, out string reason, generator, debug))
                 Log.Error($"{methodName ?? "<Unknown>"}: {reason}");
+        }
+
+        public static Rule RedirectMethodRule(Type oldType, string oldMethod, Type newType, string newMethod)
+        {
+            return new()
+            {
+                Min = 1, Max = 0,
+                Mode = OutputMode.Replace,
+                Pattern =
+                [
+                    CodeInstruction.Call(oldType, oldMethod),
+                ],
+                Output =
+                [
+                    CodeInstruction.Call(newType, newMethod),
+                ]
+            };
         }
     }
 }
