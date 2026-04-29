@@ -56,6 +56,7 @@
     <everCurableByItem>false</everCurableByItem>
     <stages>
       <li>
+        <label>trivial</label>
         <becomeVisible>false</becomeVisible>
       </li>
       <li>
