@@ -26,4 +26,18 @@
     </match>
   </Operation>
 
+  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+    <xpath>
+      Defs/ThingDef[apparel/bodyPartGroups/li = "Torso" and
+      apparel/layers/li = "Shell" and
+      (statBases/Mass >= 2 or (statBases/Mass >= 1 and @ParentName = "ChildApparelMakeableBase"))]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="XylRacesCore.Genes.ThingDefExtension_Flight">
+          <allowsFlight>false</allowsFlight>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
 </Patch>

@@ -27,6 +27,8 @@
   <XylSubstituteCapacityLowerDesc>{0} is used instead of {1} for stat calculations if it is lower.</XylSubstituteCapacityLowerDesc>
   <XylSubstituteCapacityHigherDesc>{0} is used instead of {1} for stat calculations if it is higher.</XylSubstituteCapacityHigherDesc>
   <XylEffectiveCapacity>Effective {0}</XylEffectiveCapacity>
+  <XylAllowsFlightLabel>Allows flight</XylAllowsFlightLabel>
+  <XylAllowsFlightDesc>Whether winged characters can fly while wearing this item.</XylAllowsFlightDesc>
 
   <!-- Misc -->
   <XylWildPeople>wild people</XylWildPeople>

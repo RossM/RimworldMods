@@ -10,6 +10,11 @@ namespace XylRacesCore.Genes
         public float autoFlyMinDistance = 25f;
     }
 
+    public class ThingDefExtension_Flight : DefModExtension
+    {
+        public bool allowsFlight = true;
+    }
+
     public class Flight : Gene
     {
         public bool autoFly = true;
@@ -96,6 +101,11 @@ namespace XylRacesCore.Genes
             var newCell = CellFinder.StandableCellNear(pawn.Position, pawn.Map, 5f);
             if (newCell != IntVec3.Invalid)
                 pawn.Position = newCell;
+        }
+
+        public static bool ApparelAllowsFlight(ThingDef thingDef)
+        {
+            return thingDef.GetModExtension<Genes.ThingDefExtension_Flight>() is not { allowsFlight: false };
         }
     }
 }
