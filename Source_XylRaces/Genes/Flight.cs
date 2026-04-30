@@ -74,7 +74,7 @@ namespace XylRacesCore.Genes
                                      "AbilityDuration".TranslateSimple() + ": " + pawn.GetStatValue(StatDefOf.MaxFlightTime).ToStringDecimalIfSmall() + "LetterSecond".TranslateSimple(),
             };
 
-            if (!flightAllowedByApparel)
+            if (flightAllowedByApparel)
             {
                 yield return new Command_Toggle
                 {
