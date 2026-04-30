@@ -81,7 +81,7 @@
     <geneClass>XylRacesCore.Genes.Flight</geneClass>
     <defName>XylBatWings</defName>
     <label>bat wings</label>
-    <description>Carriers of this gene have bat-like wings, allowing them to fly for short periods.</description>
+    <description>Carriers of this gene have bat-like wings, allowing them to fly for short periods. Wearing some heavy torso-covering items will prevent flight.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>-3</biostatMet>
     <displayCategory>Movement</displayCategory>

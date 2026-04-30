@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Verse;
+using XylRacesCore.Genes;
 
 namespace XylRacesCore
 {
@@ -9,6 +10,13 @@ namespace XylRacesCore
     {
         protected override string TexPathFor(Pawn pawn)
         {
+            // Logically, when the apparel covers the wings and prevents flight, the wings shouldn't
+            // be visible. However, that makes the character look like they're not chyrr. Disabling
+            // this for now.
+
+            //if (pawn.FirstActiveGeneOfType<Flight>()?.flightAllowedByApparel == false)
+            //    return null;
+
             if (!props.texPaths.NullOrEmpty())
             {
                 return pawn.flight?.Flying == true ? props.texPaths[1] : props.texPaths[0];
