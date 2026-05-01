@@ -37,6 +37,142 @@
         <waterRequired>true</waterRequired>
       </li>
     </modExtensions>
+    <pawnGroupMakers Inherit="false">
+      <li>
+        <!-- Normal fights, ranged with melee mix-ins -->
+        <kindDef>Combat</kindDef>
+        <commonality>100</commonality>
+        <options>
+          <Tribal_Penitent>5</Tribal_Penitent>
+          <Tribal_Warrior>5</Tribal_Warrior>
+          <Tribal_Archer>10</Tribal_Archer>
+          <Tribal_Hunter>10</Tribal_Hunter>
+          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
+          <Tribal_Berserker>5</Tribal_Berserker>
+          <Tribal_ChiefRanged>3</Tribal_ChiefRanged>
+          <Tribal_ChiefMelee>1.5</Tribal_ChiefMelee>
+        </options>
+      </li>
+      <li>
+        <!-- Normal fights, ranged only -->
+        <kindDef>Combat</kindDef>
+        <commonality>60</commonality>
+        <options>
+          <Tribal_Archer>10</Tribal_Archer>
+          <Tribal_Hunter>10</Tribal_Hunter>
+          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
+          <Tribal_ChiefRanged>5</Tribal_ChiefRanged>
+        </options>
+      </li>
+      <li>
+        <!-- Normal fights, melee only -->
+        <kindDef>Combat</kindDef>
+        <commonality>60</commonality>
+        <options>
+          <Tribal_Penitent>10</Tribal_Penitent>
+          <Tribal_Warrior>10</Tribal_Warrior>
+          <Tribal_Berserker>10</Tribal_Berserker>
+          <Tribal_ChiefMelee>5</Tribal_ChiefMelee>
+        </options>
+      </li>
+      <li>
+        <!-- breach-capable fights, breachers plus ranged with melee mix-ins -->
+        <kindDef>Combat</kindDef>
+        <commonality>5</commonality>
+        <options>
+          <Tribal_Breacher>5</Tribal_Breacher>
+          <Tribal_Penitent>5</Tribal_Penitent>
+          <Tribal_Warrior>5</Tribal_Warrior>
+          <Tribal_Archer>10</Tribal_Archer>
+          <Tribal_Hunter>10</Tribal_Hunter>
+          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
+          <Tribal_Berserker>5</Tribal_Berserker>
+          <Tribal_ChiefRanged>3</Tribal_ChiefRanged>
+          <Tribal_ChiefMelee>1.5</Tribal_ChiefMelee>
+        </options>
+      </li>
+      <li>
+        <!-- Peaceful -->
+        <kindDef>Peaceful</kindDef>
+        <options>
+          <Tribal_Warrior>20</Tribal_Warrior>
+          <Tribal_Child MayRequire="Ludeon.RimWorld.Biotech">10</Tribal_Child>
+          <Tribal_Archer>10</Tribal_Archer>
+          <Tribal_Hunter>10</Tribal_Hunter>
+          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
+          <Tribal_Berserker>5</Tribal_Berserker>
+          <Tribal_ChiefRanged>3</Tribal_ChiefRanged>
+          <Tribal_ChiefMelee>1.5</Tribal_ChiefMelee>
+        </options>
+      </li>
+      <li>
+        <kindDef>Trader</kindDef>
+        <traders>
+          <Tribal_Trader>1</Tribal_Trader>
+        </traders>
+        <carriers>
+          <Yak>4</Yak>
+          <Bison>3</Bison>
+          <Alpaca>2</Alpaca>
+          <Mastodon MayRequire="Ludeon.RimWorld.Odyssey">1</Mastodon>
+        </carriers>
+        <guards>
+          <Tribal_Warrior>7</Tribal_Warrior>
+          <Tribal_Archer>10</Tribal_Archer>
+          <Tribal_Hunter>10</Tribal_Hunter>
+          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
+          <Tribal_Berserker>7</Tribal_Berserker>
+        </guards>
+      </li>
+      <li>
+        <kindDef>Settlement</kindDef>
+        <options>
+          <Tribal_Warrior>7</Tribal_Warrior>
+          <Tribal_Archer>10</Tribal_Archer>
+          <Tribal_Hunter>10</Tribal_Hunter>
+          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
+          <Tribal_Berserker>7</Tribal_Berserker>
+          <Tribal_ChiefRanged>10</Tribal_ChiefRanged>
+        </options>
+      </li>
+      <li>
+        <kindDef>Settlement_RangedOnly</kindDef>
+        <options>
+          <Tribal_Archer>10</Tribal_Archer>
+          <Tribal_Hunter>10</Tribal_Hunter>
+          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
+          <Tribal_ChiefRanged>10</Tribal_ChiefRanged>
+        </options>
+      </li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">
+        <kindDef>Miners</kindDef>
+        <commonality>1</commonality>
+        <options>
+          <Tribal_Miner>1</Tribal_Miner>
+        </options>
+      </li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">
+        <kindDef>Hunters</kindDef>
+        <commonality>1</commonality>
+        <options>
+          <Tribal_Hunter>1</Tribal_Hunter>
+        </options>
+      </li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">
+        <kindDef>Loggers</kindDef>
+        <commonality>1</commonality>
+        <options>
+          <Tribal_Logger>1</Tribal_Logger>
+        </options>
+      </li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">
+        <kindDef>Farmers</kindDef>
+        <commonality>1</commonality>
+        <options>
+          <Tribal_Farmer>1</Tribal_Farmer>
+        </options>
+      </li>
+    </pawnGroupMakers>
   </FactionDef>
 
   <FactionDef ParentName="PlayerFactionBase">

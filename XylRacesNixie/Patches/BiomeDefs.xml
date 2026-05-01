@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationInsert">
+    <xpath>Defs/BiomeDef/allowedPackAnimals/li[text()="Muffalo"]</xpath>
+    <value>
+      <li>Bison</li>
+      <li>Yak</li>
+      <li MayRequire="Ludeon.RimWorld.Odyssey">Mastodon</li>
+    </value>
+  </Operation>
+
+</Patch>
