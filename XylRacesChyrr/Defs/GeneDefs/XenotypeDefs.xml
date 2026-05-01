@@ -20,7 +20,7 @@
       <li>MaxTemp_SmallIncrease</li>
       <li>XylTorpor</li>
       <li>UVSensitivity_Mild</li>
-      <li>XylPrecognition</li>
+      <!--<li>XylPrecognition</li>-->
       <li>Delicate</li>
       <!--<li>Skin_Orange</li>
       <li>XylSkin_Pink</li>
@@ -28,7 +28,6 @@
       <li>XylSkin_DarkBlue</li>-->
       <li>Body_Standard</li>
       <li>Body_Thin</li>
-      <li>Nearsighted</li>
       <li>DarkVision</li>
       <li>XylNocturnal</li>
       <li>XylKeenEars</li>
