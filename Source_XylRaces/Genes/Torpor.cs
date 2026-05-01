@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using RimWorld;
+using UnityEngine;
 using Verse;
 using static UnityEngine.GraphicsBuffer;
 
@@ -43,22 +44,26 @@ namespace XylRacesCore.Genes
                 if (pawn.AmbientTemperature < pawn.GetStatValue(StatDefOf.ComfyTemperatureMin))
                 {
                     HealthUtility.AdjustSeverity(pawn, DefExt.hediff, (checkInterval / (float)GenDate.TicksPerDay) * DefExt.severityGainPerDay);
-
-                    if (!sentWarning && !DefExt.warningMessage.NullOrEmpty() && pawn.IsPlayerControlled && 
-                        pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff)?.Visible == true)
-                    {
-                        Messages.Message(DefExt.warningMessage.Formatted(pawn.Named("PAWN")), pawn,
-                            MessageTypeDefOf.NegativeHealthEvent);
-                        sentWarning = true;
-                    }
                 }
                 else
                 {
                     HealthUtility.AdjustSeverity(pawn, DefExt.hediff, -(checkInterval / (float)GenDate.TicksPerDay) * DefExt.severityLossPerDay);
-
-                    if (sentWarning && (pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff)?.Severity ?? 0) <= 0)
-                        sentWarning = false;
                 }
+
+                Hediff torpor = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff);
+
+                if (!sentWarning && !DefExt.warningMessage.NullOrEmpty() && pawn.IsPlayerControlled && torpor?.Visible == true)
+                {
+                    Messages.Message(DefExt.warningMessage.Formatted(pawn.Named("PAWN")), pawn,
+                        MessageTypeDefOf.NegativeHealthEvent);
+                    sentWarning = true;
+                }
+
+                if (sentWarning && (torpor?.Severity ?? 0) <= 0)
+                    sentWarning = false;
+
+                if ((torpor?.CurStageIndex ?? 0) >= 3)
+                    pawn.needs.rest.CurLevelPercentage = Mathf.Min(pawn.needs.rest.CurLevelPercentage, 0.1f);
             }
         }
     }

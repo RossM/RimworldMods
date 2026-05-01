@@ -57,11 +57,11 @@
     <everCurableByItem>false</everCurableByItem>
     <stages>
       <li>
-        <label>trivial</label>
+        <label>yawning</label>
         <becomeVisible>false</becomeVisible>
       </li>
       <li>
-        <label>mild</label>
+        <label>groggy</label>
         <minSeverity>0.1</minSeverity>
         <becomeVisible>true</becomeVisible>
         <hungerRateFactor>0.5</hungerRateFactor>
@@ -77,7 +77,7 @@
         </statFactors>
       </li>
       <li>
-        <label>moderate</label>
+        <label>half-asleep</label>
         <minSeverity>0.25</minSeverity>
         <hungerRateFactor>0.25</hungerRateFactor>
         <capMods>
@@ -92,7 +92,7 @@
         </statFactors>
       </li>
       <li>
-        <label>extreme</label>
+        <label>hibernating</label>
         <minSeverity>0.5</minSeverity>
         <lifeThreatening>true</lifeThreatening>
         <hungerRateFactor>0.1</hungerRateFactor>
