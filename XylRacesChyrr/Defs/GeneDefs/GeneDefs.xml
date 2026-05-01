@@ -212,7 +212,7 @@
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Torpor">
         <hediff>XylTorpor</hediff>
-        <severityGainPerDay>0.5</severityGainPerDay>
+        <severityGainPerDay>1.0</severityGainPerDay>
         <severityLossPerDay>2.0</severityLossPerDay>
         <warningMessage>{PAWN} is beginning to enter torpor.</warningMessage>
       </li>
