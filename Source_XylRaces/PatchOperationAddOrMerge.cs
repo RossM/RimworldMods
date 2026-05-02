@@ -43,6 +43,8 @@ namespace XylRacesCore
 
         private readonly Order order = Order.Prepend;
 
+        private bool debug = false;
+
         protected override bool ApplyWorker(XmlDocument xml)
         {
             XmlNode node = value.node;
@@ -53,6 +55,9 @@ namespace XylRacesCore
 
             foreach (XmlNode xmlNode in xml.SelectNodes(xpath)!)
             {
+                if (debug)
+                    Log.Message($"{xpath} -> {xmlNode.OuterXml}");
+
                 result = true;
                 XmlDocument xmlNodeOwnerDocument = xmlNode.OwnerDocument;
                 if (xmlNodeOwnerDocument == null) 

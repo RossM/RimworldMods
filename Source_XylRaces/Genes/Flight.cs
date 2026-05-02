@@ -145,7 +145,7 @@ namespace XylRacesCore.Genes
 
         public static bool ApparelAllowsFlight(ThingDef thingDef)
         {
-            return thingDef.GetModExtension<Genes.ThingDefExtension_Flight>() is not { allowsFlight: false };
+            return thingDef.GetModExtension<ThingDefExtension_Flight>() is not { allowsFlight: false };
         }
 
         private void CheckApparel()

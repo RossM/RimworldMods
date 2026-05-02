@@ -24,18 +24,18 @@
   </Operation>
 
   <!-- 
-  Outer-layer apparel that covers the torso disables flight unless it is sufficiently light.
-  The weight is chosen so that dusters and parkas stop flight, but jackets don't.
+  Most outer-layer apparel that covers the torso disables flight.
   -->
   <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
     <xpath>
       Defs/ThingDef[
-        (apparel/bodyPartGroups/li = "Torso" and
-          apparel/layers/li = "Shell" and
-          statBases/Mass >= 2) or
-        defName="Apparel_KidParka" or
-        defName="Apparel_Burka" or
-        defName="Apparel_Robe"
+        apparel/bodyPartGroups/li = "Torso" and
+        apparel/bodyPartGroups/li = "Arms" and
+        apparel/layers/li = "Shell" and
+        not(
+          defName="Apparel_Jacket" or
+          defName="Apparel_Cape"
+        )
       ]</xpath>
     <value>
       <modExtensions>
