@@ -2,13 +2,21 @@
 <Patch>
 
   <Operation Class="PatchOperationAdd">
-    <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet/xenotypeChances</xpath>
+    <xpath>
+      Defs/FactionDef[
+        defName="PirateWaster"
+      ]/xenotypeSet/xenotypeChances
+    </xpath>
     <value>
       <XylTrog>0.05</XylTrog>
     </value>
   </Operation>
   <Operation Class="PatchOperationAdd">
-    <xpath>Defs/FactionDef[defName="Pirate"]/xenotypeSet/xenotypeChances</xpath>
+    <xpath>
+      Defs/FactionDef[
+        defName="Pirate"
+      ]/xenotypeSet/xenotypeChances
+    </xpath>
     <value>
       <XylTrog>0.025</XylTrog>
     </value>

@@ -10,10 +10,18 @@
     <factionIconPath>Xyl/World/WorldObjects/Expanding/TownDvergr</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>
-        <XylDvergr>0.6</XylDvergr>
-        <Baseliner>0.3</Baseliner>
-        <Dirtmole>0.05</Dirtmole>
-        <XylTitan MayRequire="Xylthixlm.Races.Titan">0.05</XylTitan>
+        <XylDvergr>0.44</XylDvergr>
+        <Baseliner>0.1</Baseliner>
+        <Dirtmole>0.15</Dirtmole>
+        <Genie>0.01</Genie>
+        <Hussar>0.05</Hussar>
+        <Impid>0.025</Impid>
+        <Neanderthal>0.025</Neanderthal>
+        <Pigskin>0.025</Pigskin>
+        <Waster>0.025</Waster>
+        <Yttakin>0.025</Yttakin>
+        <XylTitan MayRequire="Xylthixlm.Races.Titan">0.1</XylTitan>
+        <XylTrog MayRequire="Xylthixlm.Races.Trog">0.025</XylTrog>
       </xenotypeChances>
     </xenotypeSet>
     <colorSpectrum Inherit="false">

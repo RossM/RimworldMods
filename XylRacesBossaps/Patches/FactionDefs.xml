@@ -2,15 +2,23 @@
 <Patch>
 
   <Operation Class="PatchOperationAdd">
-    <xpath>Defs/FactionDef[@Name="OutlanderFactionBase"]/xenotypeSet/xenotypeChances</xpath>
+    <xpath>
+      Defs/FactionDef[
+        @Name="OutlanderFactionBase" or
+        defName="Pirate" or
+        defName="PirateWaster"
+      ]/xenotypeSet/xenotypeChances</xpath>
     <value>
       <XylBossaps>0.025</XylBossaps>
     </value>
   </Operation>
   <Operation Class="PatchOperationAdd">
-    <xpath>Defs/FactionDef[defName="OutlanderRefugee"]/xenotypeSet/xenotypeChances</xpath>
+    <xpath>
+      Defs/FactionDef[
+        defName="OutlanderRefugee"
+      ]/xenotypeSet/xenotypeChances</xpath>
     <value>
-      <XylBossaps>0.025</XylBossaps>
+      <XylBossaps>0.05</XylBossaps>
     </value>
   </Operation>
 

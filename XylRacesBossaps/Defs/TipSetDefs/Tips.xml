@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <TipSetDef>
+    <defName>XylBossapsTips</defName>
+    <tips>
+
+      <li TKey="XylBossapsPrisoners">Bossaps prisoners can be milked. What you do with this information is up to you.</li>
+
+    </tips>
+  </TipSetDef>
+
+</Defs>

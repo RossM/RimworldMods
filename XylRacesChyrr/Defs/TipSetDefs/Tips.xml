@@ -5,7 +5,7 @@
     <defName>XylChyrrTips</defName>
     <tips>
 
-      <li TKey="XylChyrrEcholocationSmoke">A blind, or blindfolded, character with the echolocation gene isn't affected by smoke or nearsightedness when shooting.</li>
+      <li TKey="XylChyrrEcholocationSmoke">A blind, or blindfolded, character with the echolocation gene isn't affected by smoke when shooting.</li>
       <li TKey="XylChyrrEcholocationBlindness">Characters with the echolocation gene have a small chance to be born congenitally blind.</li>
 
     </tips>
