@@ -2,30 +2,32 @@
 <Patch>
 
   <!-- 
-  The blindfold is useful for Chyrr as it gives various effects (increased psychic sensitivity, no affect from ugly surroundings, etc).
+  The blindfold is useful for Chyrr as it gives various effects (increased psychic sensitivity, 
+  no effect from ugly surroundings, etc), so allow them to make it.
   -->
   <Operation Class="PatchOperationFindMod">
     <mods>
       <li>Ideology</li>
     </mods>
-    <match Class="PatchOperationSequence">
-      <operations>
-        <li Class="XylRacesCore.PatchOperationAddOrMerge">
-          <xpath>Defs/ThingDef[defName="Apparel_Blindfold"]</xpath>
-          <value>
-            <modExtensions>
-              <li Class="XylRacesCore.DefModExtension_GeneDependent">
-                <genePrerequisitesAny>
-                  <li>XylEcholocation</li>
-                </genePrerequisitesAny>
-              </li>
-            </modExtensions>
-          </value>
-        </li>
-      </operations>
+    <match Class="XylRacesCore.PatchOperationAddOrMerge">
+      <xpath>Defs/ThingDef[defName="Apparel_Blindfold"]</xpath>
+      <value>
+        <modExtensions>
+          <li Class="XylRacesCore.DefModExtension_GeneDependent">
+            <genePrerequisitesAny>
+              <li>XylEcholocation</li>
+            </genePrerequisitesAny>
+          </li>
+        </modExtensions>
+      </value>
     </match>
   </Operation>
 
+  <!-- 
+  Outer-layer apparel that covers the torso disables flight unless it is sufficiently light.
+  The weight is chosen so that dusters and parkas stop flight, but jackets don't. The
+  ChildApparelMakeableBase condition covers kid parkas.
+  -->
   <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
     <xpath>
       Defs/ThingDef[apparel/bodyPartGroups/li = "Torso" and
