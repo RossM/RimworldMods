@@ -3,7 +3,7 @@
 
   <Operation Class="PatchOperationInsert">
     <success>Always</success>
-    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Waster</xpath>
+    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Waster[text()>0]</xpath>
     <value>
       <XylTrog>0.025</XylTrog>
     </value>

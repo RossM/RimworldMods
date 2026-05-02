@@ -3,7 +3,7 @@
 
   <Operation Class="PatchOperationInsert">
     <success>Always</success>
-    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Hussar</xpath>
+    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Hussar[text()>0]</xpath>
     <value>
       <XylTitan>0.025</XylTitan>
     </value>

@@ -3,7 +3,7 @@
 
   <Operation Class="PatchOperationInsert">
     <success>Always</success>
-    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Impid</xpath>
+    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Impid[text()>0]</xpath>
     <value>
       <XylChyrr>0.025</XylChyrr>
     </value>

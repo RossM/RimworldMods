@@ -3,7 +3,7 @@
 
   <Operation Class="PatchOperationInsert">
     <success>Always</success>
-    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Dirtmole</xpath>
+    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Dirtmole[text()>0]</xpath>
     <value>
       <XylDvergr>0.05</XylDvergr>
     </value>
