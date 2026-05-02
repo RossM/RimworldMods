@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Odyssey</li>
+    </mods>
+    <match Class="PatchOperationSequence">
+      <operations>
+        <li Class="PatchOperationAttributeAdd">
+          <xpath>Defs/ThingDef[defName="Seal"]</xpath>
+          <attribute>Name</attribute>
+          <value>ThingDef_Seal</value>
+        </li>
+        <li Class="PatchOperationAttributeAdd">
+          <xpath>Defs/PawnKindDef[defName="Seal"]</xpath>
+          <attribute>Name</attribute>
+          <value>PawnKindDef_Seal</value>
+        </li>
+      </operations>
+    </match>
+    <nomatch Class="PatchOperationSequence">
+      <operations>
+        <li Class="PatchOperationRemove">
+          <xpath>Defs/ThingDef[defName="XylSelkie"]</xpath>
+        </li>
+        <li Class="PatchOperationRemove">
+          <xpath>Defs/PawnKindDef[defName="XylSelkie"]</xpath>
+        </li>
+      </operations>
+    </nomatch>
+  </Operation>
+
+</Patch>

@@ -112,6 +112,7 @@
         </traders>
         <carriers>
           <Yak>4</Yak>
+          <XylSelkie MayRequire="Ludeon.RimWorld.Odyssey">3</XylSelkie>
           <Bison>3</Bison>
           <Alpaca>2</Alpaca>
           <Mastodon MayRequire="Ludeon.RimWorld.Odyssey">1</Mastodon>

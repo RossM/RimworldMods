@@ -7,6 +7,7 @@
       <li>Bison</li>
       <li>Yak</li>
       <li MayRequire="Ludeon.RimWorld.Odyssey">Mastodon</li>
+      <li MayRequire="Ludeon.RimWorld.Odyssey">XylSelkie</li>
     </value>
   </Operation>
 
