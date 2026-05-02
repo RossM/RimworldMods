@@ -5,14 +5,42 @@
   <ThingDef ParentName="ThingDef_Seal">
     <defName>XylSelkie</defName>
     <label>selkie</label>
-    <description>A genetically engineered seal used by nixies as a pack animal. They are faster on land than regular seals.</description>
+    <description>A genetically engineered seal used by nixies as a pack animal. They are larger than regular seals, and move faster on land.</description>
     <statBases>
       <MoveSpeed>3.9</MoveSpeed>
+      <MarketValue>430</MarketValue>
       <ComfyTemperatureMin>-40</ComfyTemperatureMin>
+      <FilthRate>8</FilthRate>
       <Wildness>0.4</Wildness>
     </statBases>
+    <tools Inherit="false">
+      <li>
+        <capacities>
+          <li>Bite</li>
+        </capacities>
+        <power>9</power>
+        <cooldownTime>2</cooldownTime>
+        <linkedBodyPartsGroup>Teeth</linkedBodyPartsGroup>
+        <chanceFactor>0.6</chanceFactor>
+      </li>
+      <li>
+        <label>head</label>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>6</power>
+        <cooldownTime>2</cooldownTime>
+        <linkedBodyPartsGroup>HeadAttackTool</linkedBodyPartsGroup>
+        <ensureLinkedBodyPartsGroupAlwaysUsable>true</ensureLinkedBodyPartsGroupAlwaysUsable>
+        <chanceFactor>0.2</chanceFactor>
+      </li>
+    </tools>
     <race>
       <packAnimal>true</packAnimal>
+      <baseBodySize>1.2</baseBodySize>
+      <baseHealthScale>1.0</baseHealthScale>
+      <baseHungerRate>0.45</baseHungerRate>
+      <foodType>CarnivoreAnimal</foodType>
     </race>
   </ThingDef>
 
@@ -26,24 +54,24 @@
         <labelPlural>selkie pups</labelPlural>
         <bodyGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Seal</texPath>
-          <drawSize>0.9</drawSize>
+          <drawSize>1.0</drawSize>
           <color>(170,240,255)</color>
         </bodyGraphicData>
         <swimmingGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Swimming_Seal</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
-          <drawSize>0.9</drawSize>
+          <drawSize>1.0</drawSize>
           <color>(170,240,255)</color>
         </swimmingGraphicData>
         <dessicatedBodyGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Dessicated_Seal</texPath>
-          <drawSize>0.9</drawSize>
+          <drawSize>1.0</drawSize>
         </dessicatedBodyGraphicData>
       </li>
       <li>
         <bodyGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Seal</texPath>
-          <drawSize>1.2</drawSize>
+          <drawSize>1.4</drawSize>
           <color>(170,240,255)</color>
           <shadowData>
             <volume>(0.25, 0.3, 0.25)</volume>
@@ -53,18 +81,18 @@
         <swimmingGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Swimming_Seal</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
-          <drawSize>1.2</drawSize>
+          <drawSize>1.4</drawSize>
           <color>(170,240,255)</color>
         </swimmingGraphicData>
         <dessicatedBodyGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Dessicated_Seal</texPath>
-          <drawSize>1.2</drawSize>
+          <drawSize>1.4</drawSize>
         </dessicatedBodyGraphicData>
       </li>
       <li>
         <bodyGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Seal</texPath>
-          <drawSize>1.5</drawSize>
+          <drawSize>1.7</drawSize>
           <color>(170,240,255)</color>
           <shadowData>
             <volume>(0.3, 0.4, 0.3)</volume>
@@ -74,12 +102,12 @@
         <swimmingGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Swimming_Seal</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
-          <drawSize>1.5</drawSize>
+          <drawSize>1.7</drawSize>
           <color>(170,240,255)</color>
         </swimmingGraphicData>
         <dessicatedBodyGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Dessicated_Seal</texPath>
-          <drawSize>1.5</drawSize>
+          <drawSize>1.7</drawSize>
         </dessicatedBodyGraphicData>
       </li>
     </lifeStages>

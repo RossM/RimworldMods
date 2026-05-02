@@ -111,9 +111,8 @@
           <Tribal_Trader>1</Tribal_Trader>
         </traders>
         <carriers>
-          <Yak>4</Yak>
-          <XylSelkie MayRequire="Ludeon.RimWorld.Odyssey">3</XylSelkie>
-          <Bison>3</Bison>
+          <XylSelkie MayRequire="Ludeon.RimWorld.Odyssey">4</XylSelkie>
+          <Yak>3</Yak>
           <Alpaca>2</Alpaca>
           <Mastodon MayRequire="Ludeon.RimWorld.Odyssey">1</Mastodon>
         </carriers>
