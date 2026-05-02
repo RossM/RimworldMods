@@ -7,7 +7,7 @@
     <label>selkie</label>
     <description>A genetically engineered seal used by nixies as a pack animal. They are larger than regular seals, and move faster on land.</description>
     <statBases>
-      <MoveSpeed>3.9</MoveSpeed>
+      <MoveSpeed>3.4</MoveSpeed>
       <MarketValue>430</MarketValue>
       <ComfyTemperatureMin>-40</ComfyTemperatureMin>
       <FilthRate>8</FilthRate>
