@@ -25,14 +25,18 @@
 
   <!-- 
   Outer-layer apparel that covers the torso disables flight unless it is sufficiently light.
-  The weight is chosen so that dusters and parkas stop flight, but jackets don't. The
-  ChildApparelMakeableBase condition covers kid parkas.
+  The weight is chosen so that dusters and parkas stop flight, but jackets don't.
   -->
   <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
     <xpath>
-      Defs/ThingDef[apparel/bodyPartGroups/li = "Torso" and
-      apparel/layers/li = "Shell" and
-      (statBases/Mass >= 2 or (statBases/Mass >= 1 and @ParentName = "ChildApparelMakeableBase"))]</xpath>
+      Defs/ThingDef[
+        (apparel/bodyPartGroups/li = "Torso" and
+          apparel/layers/li = "Shell" and
+          statBases/Mass >= 2) or
+        defName="Apparel_KidParka" or
+        defName="Apparel_Burka" or
+        defName="Apparel_Robe"
+      ]</xpath>
     <value>
       <modExtensions>
         <li Class="XylRacesCore.Genes.ThingDefExtension_Flight">
