@@ -6,6 +6,8 @@
   <XylCommandFlyDesc>Start flying. Flying grants increased movement speed and allows traveling over some obstacles.</XylCommandFlyDesc>
   <XylCommandAutoFlyLabel>Auto-fly</XylCommandAutoFlyLabel>
   <XylCommandAutoFlyDesc>The character will automatically start flying if they are moving and the fly ability is off cooldown.</XylCommandAutoFlyDesc>
+  <XylCommandAutoFlyDraftedLabel>Auto-fly (drafted)</XylCommandAutoFlyDraftedLabel>
+  <XylCommandAutoFlyDraftedDesc>While drafted, the character will automatically start flying if they are moving and the fly ability is off cooldown.</XylCommandAutoFlyDraftedDesc>
   <XylCommandMilkLabel>Allow milking</XylCommandMilkLabel>
   <XylCommandMilkDesc>Allow other characters to milk this character.</XylCommandMilkDesc>
   <XylCommandMilkOnlyWhenFullLabel>Only milk when full</XylCommandMilkOnlyWhenFullLabel>

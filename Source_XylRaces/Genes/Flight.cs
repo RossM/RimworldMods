@@ -18,6 +18,7 @@ namespace XylRacesCore.Genes
     public class Flight : Gene, INotifyApparelChanged
     {
         public bool autoFly = true;
+        public bool autoFlyDrafted = true;
 
         [Unsaved] 
         private bool wasFlying;
@@ -30,6 +31,7 @@ namespace XylRacesCore.Genes
         {
             base.ExposeData();
             Scribe_Values.Look(ref autoFly, nameof(autoFly));
+            Scribe_Values.Look(ref autoFlyDrafted, nameof(autoFlyDrafted));
             Scribe_Values.Look(ref flightAllowedByApparel, nameof(flightAllowedByApparel));
         }
 
@@ -76,14 +78,28 @@ namespace XylRacesCore.Genes
 
             if (flightAllowedByApparel)
             {
-                yield return new Command_Toggle
+                if (pawn.Drafted)
                 {
-                    defaultLabel = "XylCommandAutoFlyLabel".TranslateSimple(),
-                    defaultDesc = "XylCommandAutoFlyDesc".TranslateSimple(),
-                    isActive = () => autoFly,
-                    toggleAction = () => { autoFly = !autoFly; },
-                    icon = DefExt.Icon,
-                };
+                    yield return new Command_Toggle
+                    {
+                        defaultLabel = "XylCommandAutoFlyDraftedLabel".TranslateSimple(),
+                        defaultDesc = "XylCommandAutoFlyDraftedDesc".TranslateSimple(),
+                        isActive = () => autoFlyDrafted,
+                        toggleAction = () => { autoFlyDrafted = !autoFlyDrafted; },
+                        icon = DefExt.Icon,
+                    };
+                }
+                else
+                {
+                    yield return new Command_Toggle
+                    {
+                        defaultLabel = "XylCommandAutoFlyLabel".TranslateSimple(),
+                        defaultDesc = "XylCommandAutoFlyDesc".TranslateSimple(),
+                        isActive = () => autoFly,
+                        toggleAction = () => { autoFly = !autoFly; },
+                        icon = DefExt.Icon,
+                    };
+                }
             }
         }
 
@@ -106,7 +122,10 @@ namespace XylRacesCore.Genes
                 if (!flight.CanEverFly)
                     return;
 
-                if (!flight.Flying && autoFly && flightAllowedByApparel && pawn.pather.Moving &&
+                if (!flight.Flying &&
+                    flightAllowedByApparel &&
+                    (pawn.Drafted ? autoFlyDrafted : autoFly) && 
+                    pawn.pather.Moving &&
                     pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= DefExt.autoFlyMinDistance &&
                     pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
                 {
