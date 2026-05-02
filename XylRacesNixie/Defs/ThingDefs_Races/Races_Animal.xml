@@ -53,24 +53,24 @@
         <label>selkie pup</label>
         <labelPlural>selkie pups</labelPlural>
         <bodyGraphicData>
-          <texPath>Things/Pawn/Animal/Seal/Seal</texPath>
+          <texPath>Xyl/Things/Pawn/Animal/Selkie/Selkie</texPath>
           <drawSize>1.0</drawSize>
           <color>(170,240,255)</color>
         </bodyGraphicData>
-        <swimmingGraphicData>
+        <!--<swimmingGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Swimming_Seal</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
           <drawSize>1.0</drawSize>
           <color>(170,240,255)</color>
-        </swimmingGraphicData>
+        </swimmingGraphicData>-->
         <dessicatedBodyGraphicData>
-          <texPath>Things/Pawn/Animal/Seal/Dessicated_Seal</texPath>
+          <texPath>Xyl/Things/Pawn/Animal/Selkie/Dessicated_Selkie</texPath>
           <drawSize>1.0</drawSize>
         </dessicatedBodyGraphicData>
       </li>
       <li>
         <bodyGraphicData>
-          <texPath>Things/Pawn/Animal/Seal/Seal</texPath>
+          <texPath>Xyl/Things/Pawn/Animal/Selkie/Selkie</texPath>
           <drawSize>1.4</drawSize>
           <color>(170,240,255)</color>
           <shadowData>
@@ -78,20 +78,20 @@
             <offset>(0,0,-0.15)</offset>
           </shadowData>
         </bodyGraphicData>
-        <swimmingGraphicData>
+        <!--<swimmingGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Swimming_Seal</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
           <drawSize>1.4</drawSize>
           <color>(170,240,255)</color>
-        </swimmingGraphicData>
+        </swimmingGraphicData>-->
         <dessicatedBodyGraphicData>
-          <texPath>Things/Pawn/Animal/Seal/Dessicated_Seal</texPath>
+          <texPath>Xyl/Things/Pawn/Animal/Selkie/Dessicated_Selkie</texPath>
           <drawSize>1.4</drawSize>
         </dessicatedBodyGraphicData>
       </li>
       <li>
         <bodyGraphicData>
-          <texPath>Things/Pawn/Animal/Seal/Seal</texPath>
+          <texPath>Xyl/Things/Pawn/Animal/Selkie/Selkie</texPath>
           <drawSize>1.7</drawSize>
           <color>(170,240,255)</color>
           <shadowData>
@@ -99,14 +99,14 @@
             <offset>(0,0,-0.15)</offset>
           </shadowData>
         </bodyGraphicData>
-        <swimmingGraphicData>
+        <!--<swimmingGraphicData>
           <texPath>Things/Pawn/Animal/Seal/Swimming_Seal</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
           <drawSize>1.7</drawSize>
           <color>(170,240,255)</color>
-        </swimmingGraphicData>
+        </swimmingGraphicData>-->
         <dessicatedBodyGraphicData>
-          <texPath>Things/Pawn/Animal/Seal/Dessicated_Seal</texPath>
+          <texPath>Xyl/Things/Pawn/Animal/Selkie/Dessicated_Selkie</texPath>
           <drawSize>1.7</drawSize>
         </dessicatedBodyGraphicData>
       </li>

@@ -12,6 +12,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Textures\Xyl\Things\Pawn\Animal\Selkie\" />
+  </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
     <RemoveDir Directories="obj" />
