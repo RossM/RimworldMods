@@ -6,8 +6,7 @@
       Defs/FactionDef[
         @Name="OutlanderFactionBase" or
         defName="OutlanderRefugee" or
-        defName="PirateWaster" or
-        defName="TradersGuild"
+        defName="PirateWaster"
       ]/xenotypeSet/xenotypeChances
     </xpath>
     <value>
