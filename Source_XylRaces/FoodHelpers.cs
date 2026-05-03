@@ -74,13 +74,13 @@ public static class FoodHelpers
                 return GetCookedNutritionFactor(eater, GetFoodType(foodDef));
             }
 
-            HashSet<float> multipliers = new();
+            List<float> multipliers = new();
             foreach (var ingredient in compIngredients.ingredients)
             {
                 multipliers.Add(GetCookedNutritionFactor(eater, GetFoodType(ingredient)));
             }
 
-            return multipliers.Count > 0 ? multipliers.Average() : 1.0f;
+            return multipliers.Count > 0 ? (multipliers.Min() + multipliers.Max()) / 2 : 1.0f;
         }
     }
 
