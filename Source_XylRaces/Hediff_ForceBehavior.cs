@@ -10,6 +10,8 @@ namespace XylRacesCore
         public string iconPath;
     }
 
+    // TODO this can probably be replaced with a HediffComp
+
     public class Hediff_ForceBehavior : HediffWithComps
     {
         private MoteBubble mote;

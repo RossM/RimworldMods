@@ -7,6 +7,8 @@ using Verse;
 
 namespace XylRacesCore
 {
+    // TODO this can probably be replaced with a HediffComp
+
     [UsedImplicitly]
     public class Hediff_InnateWeapon : HediffWithComps
     {
