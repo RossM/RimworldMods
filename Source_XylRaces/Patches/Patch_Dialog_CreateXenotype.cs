@@ -18,30 +18,18 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.InsertAfter,
-                    Pattern =
-                    [
-                        CodeInstruction.Call(typeof(GeneUtility), "get_" + nameof(GeneUtility.GenesInOrder)),
-                    ],
-                    Output =
-                    [
-                        // Load this
-                        CodeInstruction.LoadArgument(0),
-                        // Load this.inheritable
-                        CodeInstruction.LoadField(typeof(Dialog_CreateXenotype), "inheritable"),
-                        // Load this
-                        CodeInstruction.LoadArgument(0),
-                        // Load this.ignoreRestrictions
-                        CodeInstruction.LoadField(typeof(Dialog_CreateXenotype), "ignoreRestrictions"),
-                        // Call
-                        CodeInstruction.Call(() => FilterGenes),
-                    ]
-                }
+                InstructionMatcher.RedirectMethodRule(
+                    AccessTools.PropertyGetter(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder)),
+                    AccessTools.Method(typeof(Patch_Dialog_CreateXenotype), nameof(GenesInOrder))
+                    )
             }
         };
+
+        public static List<GeneDef> GenesInOrder(Dialog_CreateXenotype __instance)
+        {
+            var result = GeneUtility.GenesInOrder;
+            return FilterGenes(result, __instance.inheritable, __instance.ignoreRestrictions);
+        }
 
         private static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
         {

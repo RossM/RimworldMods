@@ -26,6 +26,8 @@
 
   <ItemGroup>
     <Publicize Include="Assembly-CSharp:RimWorld.Bullet.Impact" />
+    <Publicize Include="Assembly-CSharp:RimWorld.Dialog_CreateXenotype.inheritable" />
+    <Publicize Include="Assembly-CSharp:RimWorld.GeneCreationDialogBase.ignoreRestrictions" />
     <Publicize Include="Assembly-CSharp:RimWorld.GenConstruct.tmpIdeoMemberNames" />
     <Publicize Include="Assembly-CSharp:RimWorld.GenHostility.IsActivityDormant" />
     <Publicize Include="Assembly-CSharp:RimWorld.Need.pawn" />
