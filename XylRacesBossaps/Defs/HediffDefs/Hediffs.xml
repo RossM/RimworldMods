@@ -11,8 +11,8 @@
     <isBad>true</isBad>
     <comps>
       <li Class="HediffCompProperties_Disappears">
-        <!--30 seconds-->
-        <disappearsAfterTicks>1800</disappearsAfterTicks>
+        <!--15 seconds-->
+        <disappearsAfterTicks>900</disappearsAfterTicks>
         <showRemainingTime>true</showRemainingTime>
       </li>
     </comps>

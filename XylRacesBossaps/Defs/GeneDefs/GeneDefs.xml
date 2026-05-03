@@ -104,7 +104,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_SeeingRed">
-        <chance>0.25</chance>
+        <chance>0.15</chance>
         <hediffDef>XylSeeingRed</hediffDef>
       </li>
     </modExtensions>
