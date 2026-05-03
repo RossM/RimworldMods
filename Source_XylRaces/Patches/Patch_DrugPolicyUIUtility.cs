@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using RimWorld;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using TranspilerUtil;
 using Verse;
@@ -30,10 +31,10 @@ namespace XylRacesCore.Patches
 
         [Feature(nameof(Defs.XylDrugSensitive)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
         public static IEnumerable<CodeInstruction> DoAssignDrugPolicyButtons_Transpiler(
-            IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+            IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_DoAssignDrugPolicyButtons.MatchAndReplace(ref instructionsList, generator);
+            Fixup_DoAssignDrugPolicyButtons.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

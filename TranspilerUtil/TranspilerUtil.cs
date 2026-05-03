@@ -29,6 +29,7 @@ namespace TranspilerUtil
             public bool Chained = false;
             public CodeInstruction[] Pattern;
             public CodeInstruction[] Output;
+            public Func<MethodBase, Rule> LateGenerator;
         }
 
         public List<Rule> Rules = [];
@@ -41,7 +42,8 @@ namespace TranspilerUtil
             public Dictionary<int, int> privateMap;
         }
 
-        public bool TryMatchAndReplace(ref List<CodeInstruction> instructions, out string reason, ILGenerator generator = null, bool debug = false)
+        public bool TryMatchAndReplace(MethodBase method, ref List<CodeInstruction> instructions, out string reason,
+            ILGenerator generator = null, bool debug = false)
         {
             var localIndexMap = new Dictionary<int, int>();
             var matches = new List<MatchData>();
@@ -51,6 +53,8 @@ namespace TranspilerUtil
             for (var ruleIndex = 0; ruleIndex < Rules.Count; ruleIndex++)
             {
                 Rule rule = Rules[ruleIndex];
+                if (rule.LateGenerator != null)
+                    rule = rule.LateGenerator(method);
                 var matchCount = 0;
 
                 for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[matches.Count - 1].end + 1 : 0;
@@ -283,59 +287,81 @@ namespace TranspilerUtil
             return true;
         }
 
-        public void MatchAndReplace(ref List<CodeInstruction> instructionsList, ILGenerator generator = null, [CallerMemberName] string methodName = null, bool debug = false)
+        public void MatchAndReplace(MethodBase method, ref List<CodeInstruction> instructionsList,
+            ILGenerator generator = null, [CallerMemberName] string methodName = null, bool debug = false)
         {
-            if (!TryMatchAndReplace(ref instructionsList, out string reason, generator, debug))
+            if (!TryMatchAndReplace(method, ref instructionsList, out string reason, generator, debug))
                 Log.Error($"{methodName ?? "<Unknown>"}: {reason}");
         }
 
+        /// <summary>
+        /// This creates a rule that replaces all calls of a given method with calls of a given other method.
+        /// The new method's parameters must start with all parameters of the old method, in order. After that
+        /// a parameter called __instance will match against the instance of the function being transpiled, and
+        /// other parameters will match against parameters of the function being transpiled by name.
+        /// </summary>
+        /// <param name="oldMethod"></param>
+        /// <param name="newMethod"></param>
+        /// <param name="minMatches"></param>
+        /// <returns></returns>
         public static Rule RedirectMethodRule(MethodInfo oldMethod, MethodInfo newMethod, int minMatches = 1)
         {
-            var opcode = oldMethod.IsVirtual ? OpCodes.Callvirt : OpCodes.Call;
-
-            int oldParameterCount = oldMethod.GetParameters().Length + (oldMethod.IsStatic ? 0 : 1);
-            int newParameterCount = newMethod.GetParameters().Length + (newMethod.IsStatic ? 0 : 1);
-
-            if (newParameterCount == oldParameterCount)
+            return new Rule
             {
-                return new()
+                LateGenerator = method =>
                 {
-                    Min = minMatches,
-                    Max = 0,
-                    Mode = OutputMode.Replace,
-                    Pattern =
-                    [
-                        new CodeInstruction(opcode, oldMethod),
-                    ],
-                    Output =
-                    [
-                        new CodeInstruction(opcode, newMethod),
-                    ]
-                };
-            }
-            else if (newParameterCount == oldParameterCount + 1)
-            {
-                return new()
-                {
-                    Min = minMatches,
-                    Max = 0,
-                    Mode = OutputMode.Replace,
-                    Pattern =
-                    [
-                        new CodeInstruction(opcode, oldMethod),
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.LoadArgument(0),
-                        new CodeInstruction(opcode, newMethod),
-                    ]
-                };
-            }
-            else
-            {
-                Log.Error($"Error: {oldMethod.DeclaringType?.FullName}.{oldMethod.Name} takes {oldParameterCount} parameters{(oldMethod.IsStatic ? "" : " including 'this'")} but {newMethod.DeclaringType?.FullName}.{newMethod.Name} expects {newParameterCount}{(newMethod.IsStatic ? "" : " including 'this'")}");
-                return null;
-            }
+
+                    var opcode = oldMethod.IsVirtual ? OpCodes.Callvirt : OpCodes.Call;
+
+                    ParameterInfo[] oldParameters = oldMethod.GetParameters();
+                    int oldParameterCount = oldParameters.Length + (oldMethod.IsStatic ? 0 : 1);
+
+                    ParameterInfo[] newParameters = newMethod.GetParameters();
+                    int newParameterCount = newParameters.Length + (newMethod.IsStatic ? 0 : 1);
+
+                    List<CodeInstruction> pattern = new();
+                    List<CodeInstruction> output = new();
+
+                    pattern.Add(new CodeInstruction(opcode, oldMethod));
+
+                    if (newParameterCount > oldParameterCount)
+                    {
+                        for (int i = oldParameterCount; i < newParameterCount; i++)
+                        {
+                            string parameterName = newParameters[i].Name;
+
+                            if (!oldMethod.IsStatic && parameterName == "__instance")
+                                output.Add(CodeInstruction.LoadArgument(0));
+                            else
+                            {
+                                int index = method.GetParameters().FirstIndexOf(p => p.Name == parameterName) + (method.IsStatic ? 0 : 1);
+                                if (index < 0)
+                                    index = method.GetParameters().FirstIndexOf(p => p.ParameterType == newParameters[i].ParameterType) + (method.IsStatic ? 0 : 1);
+                                if (index < 0)
+                                {
+                                    throw new InvalidOperationException(
+                                        $"Couldn't find parameter named '{parameterName}' of type {newParameters[i].ParameterType.FullName}");
+                                }
+
+                                output.Add(CodeInstruction.LoadArgument(index));
+                            }
+                        }
+                    }
+
+                    output.Add(new CodeInstruction(opcode, newMethod));
+
+                    var rule = new Rule()
+                    {
+                        Min = minMatches,
+                        Max = 0,
+                        Mode = OutputMode.Replace,
+                        Pattern = pattern.ToArray(),
+                        Output = output.ToArray(),
+                    };
+
+                    return rule;
+                }
+            };
         }
     }
 }

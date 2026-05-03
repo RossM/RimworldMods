@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -90,10 +91,10 @@ namespace XylRacesCore.Patches
         };
 
         [Feature(nameof(FoodHelpers.GetFoodPoisonChanceOffset)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("Ingested")]
-        public static IEnumerable<CodeInstruction> Ingested_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> Ingested_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            FixupIngested.MatchAndReplace(ref instructionsList, generator);
+            FixupIngested.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
     }

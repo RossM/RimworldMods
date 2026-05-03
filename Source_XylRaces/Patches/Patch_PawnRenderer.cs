@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -48,10 +49,10 @@ namespace XylRacesCore.Patches
 
         [Feature(nameof(RenderHelpers.Defs.XylTakeShower)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("ParallelGetPreRenderResults")]
         public static IEnumerable<CodeInstruction> ParallelGetPreRenderResults_Transpiler(
-            IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+            IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_ParallelGetPreRenderResults.MatchAndReplace(ref instructionsList, generator);
+            Fixup_ParallelGetPreRenderResults.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
     }

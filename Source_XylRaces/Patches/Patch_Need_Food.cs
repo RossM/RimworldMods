@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using TranspilerUtil;
 using Verse;
@@ -31,10 +32,10 @@ namespace XylRacesCore.Patches
         };
 
         [Feature(nameof(Config.Feature.FixLactationBugs)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("FoodFallPerTickAssumingCategory")]
-        public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_FoodFallPerTickAssumingCategory.MatchAndReplace(ref instructionsList, generator);
+            Fixup_FoodFallPerTickAssumingCategory.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

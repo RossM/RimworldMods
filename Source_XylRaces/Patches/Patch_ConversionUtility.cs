@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using RimWorld;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using TranspilerUtil;
@@ -46,10 +47,10 @@ namespace XylRacesCore.Patches
         };
 
         [Feature(nameof(XenotypeDefExtension)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(ConversionUtility.ConversionPowerFactor_MemesVsTraits))]
-        public static IEnumerable<CodeInstruction> ConversionPowerFactor_MemesVsTraits_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> ConversionPowerFactor_MemesVsTraits_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_ConversionPowerFactor_MemesVsTraits.MatchAndReplace(ref instructionsList, generator);
+            Fixup_ConversionPowerFactor_MemesVsTraits.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

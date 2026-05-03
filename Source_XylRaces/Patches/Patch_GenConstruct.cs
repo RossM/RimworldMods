@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using TranspilerUtil;
 using Verse;
@@ -17,36 +18,22 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                new()
-                {
-                    Min = 1, Max = 1,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern =
-                    [
-                        CodeInstruction.LoadArgument(1),
-                        CodeInstruction.Call(typeof(Pawn), "get_" + nameof(Pawn.Ideo)),
-                        CodeInstruction.LoadArgument(0),
-                        CodeInstruction.Call(typeof(Ideo), nameof(Ideo.MembersCanBuild)),
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.LoadArgument(0),
-                        CodeInstruction.LoadArgument(1),
-                        CodeInstruction.Call(() => CanBuildHelper),
-                    ]
-                }
+                InstructionMatcher.RedirectMethodRule(
+                    AccessTools.Method(typeof(Ideo), nameof(Ideo.MembersCanBuild)),
+                    AccessTools.Method(typeof(Patch_GenConstruct), nameof(MembersCanBuild))
+                    )
             }
         };
 
         [Feature(nameof(GeneDefExtension_Designator)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
-        public static IEnumerable<CodeInstruction> CanConstruct_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> CanConstruct_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_CanConstruct.MatchAndReplace(ref instructionsList, generator);
+            Fixup_CanConstruct.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
-        public static bool CanBuildHelper(Thing thing, Pawn pawn)
+        public static bool MembersCanBuild(Ideo ideo, Thing thing, Pawn pawn)
         {
             using (new ProfileBlock())
             {
@@ -59,7 +46,6 @@ namespace XylRacesCore.Patches
                     .Any(defExtension_designator => defExtension_designator.addDesignators.Contains(def));
                 if (!result)
                 {
-                    var geneNames = new List<string>();
                     foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)
                     {
                         if (gene.GetModExtension<GeneDefExtension_Designator>()?.addDesignators.Contains(def) ?? false)

@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using TranspilerUtil;
@@ -44,10 +45,10 @@ namespace XylRacesCore.Patches
         };
 
         [Feature(nameof(Config.Feature.FixLactationBugs)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
-        public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_NutritionEatenPerDayExplanation.MatchAndReplace(ref instructionsList, generator);
+            Fixup_NutritionEatenPerDayExplanation.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

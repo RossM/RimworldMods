@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using TranspilerUtil;
 using Verse;
@@ -34,10 +35,10 @@ namespace XylRacesCore.Patches
         };
 
         [Feature(nameof(DefModExtension_GeneDependent)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
-        public static IEnumerable<CodeInstruction> AvailableNow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> AvailableNow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_AvailableNow.MatchAndReplace(ref instructionsList, generator);
+            Fixup_AvailableNow.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

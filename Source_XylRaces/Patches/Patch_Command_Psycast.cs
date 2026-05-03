@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -23,16 +24,16 @@ namespace XylRacesCore.Patches
         };
         
         [Feature(nameof(Genes.Psycast)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DisabledCheck")]
-        public static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_GetPsycastLevel.MatchAndReplace(ref instructionsList, generator);
+            Fixup_GetPsycastLevel.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
-        public static int GetPsylinkLevel(Pawn pawn, Command_Psycast instance)
+        public static int GetPsylinkLevel(Pawn pawn, Command_Psycast __instance)
         {
-            return pawn.GetPsylinkLevelFor(instance.Ability.def);
+            return pawn.GetPsylinkLevelFor(__instance.Ability.def);
         }
     }
 }

@@ -4,6 +4,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,10 +40,10 @@ namespace Source_XylIdeoTweaks
         };
 
         [HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(ApparelUtility.IsRequirementActive))]
-        public static IEnumerable<CodeInstruction> IsRequirementActive_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> IsRequirementActive_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup.MatchAndReplace(ref instructionsList, generator);
+            Fixup.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
     }

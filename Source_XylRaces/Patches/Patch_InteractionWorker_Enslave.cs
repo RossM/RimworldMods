@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -54,10 +55,10 @@ namespace XylRacesCore.Patches
 
         [Feature(nameof(Defs.XylWillFallRate)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
         public static IEnumerable<CodeInstruction> Interacted_Transpiler(IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator)
+            ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_Interacted.MatchAndReplace(ref instructionsList, generator);
+            Fixup_Interacted.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
     }

@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using RimWorld;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using TranspilerUtil;
@@ -82,10 +83,10 @@ namespace XylRacesCore.Patches
         };
 
         [Feature(nameof(Defs.XylDocile)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
-        public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_GetSlaveRebellionMtbCalculationExplanation.MatchAndReplace(ref instructionsList, generator);
+            Fixup_GetSlaveRebellionMtbCalculationExplanation.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using HarmonyLib;
@@ -219,10 +220,10 @@ namespace XylRacesCore.Patches
         };
 
         [Feature(nameof(Hediff_SubstituteCapacity)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
-        public static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_GetOffsetsAndFactorsExplanation.MatchAndReplace(ref instructionsList, generator);
+            Fixup_GetOffsetsAndFactorsExplanation.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -244,10 +245,10 @@ namespace XylRacesCore.Patches
         }
 
         [Feature(nameof(Hediff_SubstituteCapacity)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
-        public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_GetValueUnfinalized.MatchAndReplace(ref instructionsList, generator);
+            Fixup_GetValueUnfinalized.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
