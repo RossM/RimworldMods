@@ -293,20 +293,49 @@ namespace TranspilerUtil
         {
             var opcode = oldMethod.IsVirtual ? OpCodes.Callvirt : OpCodes.Call;
 
-            return new()
+            int oldParameterCount = oldMethod.GetParameters().Length + (oldMethod.IsStatic ? 0 : 1);
+            int newParameterCount = newMethod.GetParameters().Length + (newMethod.IsStatic ? 0 : 1);
+
+            if (newParameterCount == oldParameterCount)
             {
-                Min = minMatches,
-                Max = 0,
-                Mode = OutputMode.Replace,
-                Pattern =
-                [
-                    new CodeInstruction(opcode, oldMethod),
-                ],
-                Output =
-                [
-                    new CodeInstruction(opcode, newMethod),
-                ]
-            };
+                return new()
+                {
+                    Min = minMatches,
+                    Max = 0,
+                    Mode = OutputMode.Replace,
+                    Pattern =
+                    [
+                        new CodeInstruction(opcode, oldMethod),
+                    ],
+                    Output =
+                    [
+                        new CodeInstruction(opcode, newMethod),
+                    ]
+                };
+            }
+            else if (newParameterCount == oldParameterCount + 1)
+            {
+                return new()
+                {
+                    Min = minMatches,
+                    Max = 0,
+                    Mode = OutputMode.Replace,
+                    Pattern =
+                    [
+                        new CodeInstruction(opcode, oldMethod),
+                    ],
+                    Output =
+                    [
+                        CodeInstruction.LoadArgument(0),
+                        new CodeInstruction(opcode, newMethod),
+                    ]
+                };
+            }
+            else
+            {
+                Log.Error($"Error: {oldMethod.DeclaringType?.FullName}.{oldMethod.Name} takes {oldParameterCount} parameters{(oldMethod.IsStatic ? "" : " including 'this'")} but {newMethod.DeclaringType?.FullName}.{newMethod.Name} expects {newParameterCount}{(newMethod.IsStatic ? "" : " including 'this'")}");
+                return null;
+            }
         }
     }
 }
