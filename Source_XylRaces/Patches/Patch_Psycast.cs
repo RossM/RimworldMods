@@ -5,6 +5,7 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using TranspilerUtil;
+using Verse;
 
 namespace XylRacesCore.Patches
 {
@@ -15,24 +16,9 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern =
-                    [
-                        CodeInstruction.Call(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel)),
-                    ],
-                    Output =
-                    [
-                        // Load this
-                        CodeInstruction.LoadArgument(0),
-                        // Load this.def
-                        CodeInstruction.LoadField(typeof(Ability), nameof(Ability.def)),
-                        // Call replacement function
-                        CodeInstruction.Call(typeof(PsyHelpers), nameof(PsyHelpers.GetPsylinkLevelFor)),
-                    ]
-                }
+                InstructionMatcher.RedirectMethodRule(
+                    AccessTools.Method(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel)),
+                    AccessTools.Method(typeof(Patch_Psycast), nameof(GetPsylinkLevel_Wrapper)))
             }
         };
         
@@ -50,6 +36,11 @@ namespace XylRacesCore.Patches
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GetPsycastLevel.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
+        }
+
+        public static int GetPsylinkLevel_Wrapper(Pawn pawn, Psycast __instance)
+        {
+            return pawn.GetPsylinkLevelFor(__instance.def);
         }
     }
 }
