@@ -15,6 +15,7 @@
     <xpath>
       Defs/FactionDef[
         defName="OutlanderRefugee" or
+        defName="Beggars" or
         defName="Pirate"
       ]/xenotypeSet/xenotypeChances</xpath>
     <value>

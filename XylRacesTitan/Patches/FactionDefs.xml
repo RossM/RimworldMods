@@ -6,6 +6,7 @@
       Defs/FactionDef[
         @Name="OutlanderFactionBase" or
         defName="OutlanderRefugee" or
+        defName="Beggars" or
         defName="Pirate" or
         defName="PirateWaster" or
         defName="Empire"
