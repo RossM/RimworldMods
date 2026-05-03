@@ -122,6 +122,9 @@ namespace XylRacesCore.Genes
             Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff) ??
                             pawn.health.AddHediff(DefExt.hediff);
             hediff.Severity = 1.0f;
+
+            if (Lactating?.parent != hediff)
+                lactatingInternal = null;
         }
 
         public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / DefExt.chargePerItem);
