@@ -20,12 +20,12 @@ namespace XylRacesCore.Patches
             {
                 InstructionMatcher.RedirectMethodRule(
                     AccessTools.PropertyGetter(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder)),
-                    AccessTools.Method(typeof(Patch_Dialog_CreateXenotype), nameof(GenesInOrder))
+                    AccessTools.Method(typeof(Patch_Dialog_CreateXenotype), nameof(GenesInOrder_Wrapper))
                     )
             }
         };
 
-        public static List<GeneDef> GenesInOrder(Dialog_CreateXenotype __instance)
+        public static List<GeneDef> GenesInOrder_Wrapper(Dialog_CreateXenotype __instance)
         {
             var result = GeneUtility.GenesInOrder;
             return FilterGenes(result, __instance.inheritable, __instance.ignoreRestrictions);

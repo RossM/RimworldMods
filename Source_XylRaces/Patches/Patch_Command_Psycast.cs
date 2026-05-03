@@ -18,7 +18,7 @@ namespace XylRacesCore.Patches
             {
                 InstructionMatcher.RedirectMethodRule(
                     AccessTools.Method(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel)),
-                    AccessTools.Method(typeof(Patch_Command_Psycast), nameof(GetPsylinkLevel))
+                    AccessTools.Method(typeof(Patch_Command_Psycast), nameof(GetPsylinkLevel_Wrapper))
                     )
             }
         };
@@ -31,7 +31,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static int GetPsylinkLevel(Pawn pawn, Command_Psycast __instance)
+        public static int GetPsylinkLevel_Wrapper(Pawn pawn, Command_Psycast __instance)
         {
             return pawn.GetPsylinkLevelFor(__instance.Ability.def);
         }

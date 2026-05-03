@@ -19,13 +19,13 @@ namespace XylRacesCore.Patches
             Rules =
             {
                 InstructionMatcher.RedirectMethodRule(AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)]),
-                    AccessTools.Method(typeof(PatchLactation), nameof(GetFirstHediffOfDef)), minMatches: 0),
+                    AccessTools.Method(typeof(PatchLactation), nameof(GetFirstHediffOfDef_Wrapper)), minMatches: 0),
                 InstructionMatcher.RedirectMethodRule(AccessTools.Method(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)]),
-                    AccessTools.Method(typeof(PatchLactation), nameof(HasHediff)), minMatches: 0),
+                    AccessTools.Method(typeof(PatchLactation), nameof(HasHediff_Wrapper)), minMatches: 0),
             }
         };
 
-        public static Hediff GetFirstHediffOfDef(HediffSet hediffSet, HediffDef def, bool mustBeVisible)
+        public static Hediff GetFirstHediffOfDef_Wrapper(HediffSet hediffSet, HediffDef def, bool mustBeVisible)
         {
             using (new ProfileBlock())
             {
@@ -35,7 +35,7 @@ namespace XylRacesCore.Patches
             }
         }
 
-        public static bool HasHediff(HediffSet hediffSet, HediffDef def, bool mustBeVisible)
+        public static bool HasHediff_Wrapper(HediffSet hediffSet, HediffDef def, bool mustBeVisible)
         {
             using (new ProfileBlock())
             {

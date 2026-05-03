@@ -25,7 +25,7 @@ namespace XylRacesCore.Patches
             {
                 InstructionMatcher.RedirectMethodRule(
                     AccessTools.Method(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo)),
-                    AccessTools.Method(typeof(Patch_PawnGenerator), nameof(GiveAppropriateBioAndNameTo))
+                    AccessTools.Method(typeof(Patch_PawnGenerator), nameof(GiveAppropriateBioAndNameTo_Wrapper))
                     )
             }
         };
@@ -38,7 +38,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static void GiveAppropriateBioAndNameTo(Pawn pawn, FactionDef factionType, PawnGenerationRequest request,
+        public static void GiveAppropriateBioAndNameTo_Wrapper(Pawn pawn, FactionDef factionType, PawnGenerationRequest request,
             XenotypeDef xenotype)
         {
             ModifyGenderByGenes(pawn, request, xenotype);

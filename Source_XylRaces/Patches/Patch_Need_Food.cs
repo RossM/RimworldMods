@@ -27,7 +27,7 @@ namespace XylRacesCore.Patches
             Rules =
             {
                 InstructionMatcher.RedirectMethodRule(AccessTools.Method(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay)),
-                    AccessTools.Method(typeof(Patch_Need_Food), nameof(AddedNutritionPerDay)))
+                    AccessTools.Method(typeof(Patch_Need_Food), nameof(AddedNutritionPerDay_Wrapper)))
             }
         };
 
@@ -39,7 +39,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        static float AddedNutritionPerDay(HediffComp_Lactating hediffComp)
+        static float AddedNutritionPerDay_Wrapper(HediffComp_Lactating hediffComp)
         {
             if (Enabled.Value)
                 return 0;

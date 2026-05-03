@@ -21,7 +21,7 @@ namespace XylRacesCore.Patches
             Rules =
             {
                 InstructionMatcher.RedirectMethodRule(AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)]),
-                    AccessTools.Method(typeof(Patch_RaceProperties), nameof(GetFirstHediffOfDefOrNull))),
+                    AccessTools.Method(typeof(Patch_RaceProperties), nameof(GetFirstHediffOfDef_Wrapper))),
 
                 new()
                 {
@@ -52,7 +52,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static Hediff GetFirstHediffOfDefOrNull(HediffSet hediffSet, HediffDef def, bool mustBeVisible)
+        public static Hediff GetFirstHediffOfDef_Wrapper(HediffSet hediffSet, HediffDef def, bool mustBeVisible)
         {
             // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes
             // lactating pawns to need too much food. This turns out to be a problem for bossaps balance-wise, so I'm
@@ -60,7 +60,7 @@ namespace XylRacesCore.Patches
             if (Enabled.Value)
                 return null;
 
-            return PatchLactation.GetFirstHediffOfDef(hediffSet, def, mustBeVisible);
+            return PatchLactation.GetFirstHediffOfDef_Wrapper(hediffSet, def, mustBeVisible);
         }
 
         public static void AddLactationExplanation(StringBuilder stringBuilder, Pawn pawn)
@@ -70,7 +70,7 @@ namespace XylRacesCore.Patches
 
             using (new ProfileBlock())
             {
-                Hediff firstLactationHediff = PatchLactation.GetFirstHediffOfDef(pawn.health.hediffSet, HediffDefOf.Lactating, false);
+                Hediff firstLactationHediff = PatchLactation.GetFirstHediffOfDef_Wrapper(pawn.health.hediffSet, HediffDefOf.Lactating, false);
                 var hediffComp_Lactating = firstLactationHediff?.TryGetComp<HediffComp_Lactating>();
                 if (hediffComp_Lactating != null)
                 {
@@ -89,7 +89,7 @@ namespace XylRacesCore.Patches
                 // There is a bug in the base game that causes the nutrition from lactation to be counted twice, once as part of
                 // NutritionEatenPerDay which is used to calculate food fall per tick, and then the lactation hediff itself also
                 // directly consumes food per tick. This correctly displays that effect.
-                float lactationNutritionUsed = PatchLactation.GetFirstHediffOfDef(p.health.hediffSet, HediffDefOf.Lactating, false)
+                float lactationNutritionUsed = PatchLactation.GetFirstHediffOfDef_Wrapper(p.health.hediffSet, HediffDefOf.Lactating, false)
                     ?.TryGetComp<HediffComp_Lactating>()?.AddedNutritionPerDay() ?? 0;
 
                 __result = (p.needs.food.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * 60000f + lactationNutritionUsed).ToString("0.##");

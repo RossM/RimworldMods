@@ -20,7 +20,7 @@ namespace XylRacesCore.Patches
             {
                 InstructionMatcher.RedirectMethodRule(
                     AccessTools.Method(typeof(Ideo), nameof(Ideo.MembersCanBuild)),
-                    AccessTools.Method(typeof(Patch_GenConstruct), nameof(MembersCanBuild))
+                    AccessTools.Method(typeof(Patch_GenConstruct), nameof(MembersCanBuild_Wrapper))
                     )
             }
         };
@@ -33,7 +33,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static bool MembersCanBuild(Ideo ideo, Thing thing, Pawn pawn)
+        public static bool MembersCanBuild_Wrapper(Ideo ideo, Thing thing, Pawn pawn)
         {
             using (new ProfileBlock())
             {
