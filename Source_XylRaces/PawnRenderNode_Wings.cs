@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using Verse;
-using XylRacesCore.Genes;
 
 namespace XylRacesCore
 {

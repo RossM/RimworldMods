@@ -2,7 +2,6 @@ using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
 using Verse;
-using static UnityEngine.GraphicsBuffer;
 
 namespace XylRacesCore.Genes
 {
