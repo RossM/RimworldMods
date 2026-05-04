@@ -15,6 +15,7 @@ namespace TranspilerUtil
     {
         public enum OutputMode
         {
+            MatchOnly,
             Replace,
             InsertBefore,
             InsertAfter,
@@ -23,7 +24,7 @@ namespace TranspilerUtil
         public class Rule
         {
             public int Min = 1, Max = 1;
-            public OutputMode Mode = OutputMode.InsertAfter;
+            public OutputMode Mode = OutputMode.MatchOnly;
             public bool SaveLocals = false;
             public bool Chained = false;
             public CodeInstruction[] Pattern;
@@ -48,6 +49,14 @@ namespace TranspilerUtil
             var localIndexMap = new Dictionary<int, int>();
             var matches = new List<MatchData>();
             reason = "Success";
+
+            foreach (var rule in Rules)
+            {
+                if (rule.Mode == OutputMode.MatchOnly && rule.Output != null)
+                    throw new InvalidOperationException($"{rule.Mode} rule cannot have Output = null");
+                if (rule.Mode != OutputMode.MatchOnly && rule.Output == null)
+                    throw new InvalidOperationException($"{rule.Mode} rule must have Output = null");
+            }
 
             // Check and make sure that all the substitutions apply. Also work out the indexes of all locals.
             for (var ruleIndex = 0; ruleIndex < Rules.Count; ruleIndex++)

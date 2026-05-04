@@ -69,24 +69,9 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.InsertBefore,
-                    Pattern =
-                    [
-                        CodeInstruction.LoadArgument(1),
-                        CodeInstruction.Call(typeof(FoodUtility), nameof(FoodUtility.GetFoodPoisonChanceFactor)), 
-                        new CodeInstruction(OpCodes.Mul),
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.LoadArgument(1),
-                        CodeInstruction.LoadArgument(0),
-                        CodeInstruction.Call(typeof(FoodHelpers), nameof(FoodHelpers.GetFoodPoisonChanceOffset)),
-                        new CodeInstruction(OpCodes.Add),
-                    ]
-                }
+                InstructionMatcher.RedirectMethodRule(
+                    AccessTools.Method(typeof(StatExtension), nameof(StatExtension.GetStatValue)),
+                    AccessTools.Method(typeof(Patch_Thing), nameof(GetStatValue_Wrapper)))
             }
         };
 
@@ -96,6 +81,14 @@ namespace XylRacesCore.Patches
             var instructionsList = new List<CodeInstruction>(instructions);
             FixupIngested.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
+        }
+
+        public static float GetStatValue_Wrapper(Pawn ingester, Thing thing, StatDef stat, bool applyPostProcess, int cacheStaleAfterTicks)
+        {
+            float value = thing.GetStatValue(stat, applyPostProcess, cacheStaleAfterTicks);
+            if (stat == StatDefOf.FoodPoisonChanceFixedHuman)
+                value += FoodHelpers.GetFoodPoisonChanceOffset(ingester, thing);
+            return value;
         }
     }
 }

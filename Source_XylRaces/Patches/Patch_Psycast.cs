@@ -34,7 +34,7 @@ namespace XylRacesCore.Patches
         public static IEnumerable<CodeInstruction> CanCast_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_GetPsycastLevel.MatchAndReplace(method, ref instructionsList, generator, debug:true);
+            Fixup_GetPsycastLevel.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
