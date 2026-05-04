@@ -25,10 +25,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        public static List<GeneDef> GenesInOrder_Wrapper(Dialog_CreateXenotype __instance)
+        public static List<GeneDef> GenesInOrder_Wrapper(Dialog_CreateXenotype __caller)
         {
             var result = GeneUtility.GenesInOrder;
-            return FilterGenes(result, __instance.inheritable, __instance.ignoreRestrictions);
+            return FilterGenes(result, __caller.inheritable, __caller.ignoreRestrictions);
         }
 
         private static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)

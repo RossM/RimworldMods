@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using UnityEngine;
 using Verse;
 using OpCodes = System.Reflection.Emit.OpCodes;
 
@@ -30,6 +31,7 @@ namespace TranspilerUtil
             public CodeInstruction[] Pattern;
             public CodeInstruction[] Output;
             public Func<MethodBase, Rule> LateGenerator;
+            public Type[] LocalTypes;
         }
 
         public List<Rule> Rules = [];
@@ -70,7 +72,7 @@ namespace TranspilerUtil
                         var patternInst = rule.Pattern[patternIndex];
 
                         if (debug)
-                            Log.Message($"COMPARE {patternInst} : {inst}");
+                            Debug.Log($"COMPARE {patternInst} : {inst}");
 
                         // For a load or store, map the local indexes in the pattern to the actual local indexes used
                         // in the function
@@ -149,7 +151,7 @@ namespace TranspilerUtil
                         privateMap = tempLocalIndexMap,
                     };
                     if (debug)
-                        Log.Message($"MATCH #{ruleIndex} {matchData.start}-{matchData.end}");
+                        Debug.Log($"MATCH #{ruleIndex} {matchData.start}-{matchData.end}");
 
                     matches.Add(matchData);
                     if (rule.SaveLocals)
@@ -197,7 +199,7 @@ namespace TranspilerUtil
                         {
                             outInstructions.Add(instructions[i]);
                             if (debug)
-                                Log.Message($"COPYMATCH {outInstructions[outInstructions.Count - 1]}");
+                                Debug.Log($"COPYMATCH {outInstructions[outInstructions.Count - 1]}");
                         }
                     }
 
@@ -214,6 +216,11 @@ namespace TranspilerUtil
                             }
                             else if (match.privateMap.TryGetValue(localIndex, out substituteIndex))
                             {
+                            }
+                            else if (match.rule.LocalTypes != null && localIndex < match.rule.LocalTypes.Length && generator != null)
+                            {
+                                substituteIndex = generator.DeclareLocal(match.rule.LocalTypes[localIndex]).LocalIndex;
+                                match.privateMap.Add(localIndex, substituteIndex);
                             }
                             else if (LocalTypes != null && localIndex < LocalTypes.Count && generator != null)
                             {
@@ -237,6 +244,11 @@ namespace TranspilerUtil
                             else if (match.privateMap.TryGetValue(localIndex, out substituteIndex))
                             {
                             }
+                            else if (match.rule.LocalTypes != null && localIndex < match.rule.LocalTypes.Length && generator != null)
+                            {
+                                substituteIndex = generator.DeclareLocal(match.rule.LocalTypes[localIndex]).LocalIndex;
+                                match.privateMap.Add(localIndex, substituteIndex);
+                            }
                             else if (LocalTypes != null && localIndex < LocalTypes.Count && generator != null)
                             {
                                 substituteIndex = generator.DeclareLocal(LocalTypes[localIndex]).LocalIndex;
@@ -259,7 +271,7 @@ namespace TranspilerUtil
                         }
 
                         if (debug)
-                            Log.Message($"EMIT {outInstructions[outInstructions.Count - 1]}");
+                            Debug.Log($"EMIT {outInstructions[outInstructions.Count - 1]}");
                     }
 
                     if (match.rule.Mode == OutputMode.InsertBefore)
@@ -268,7 +280,7 @@ namespace TranspilerUtil
                         {
                             outInstructions.Add(instructions[i]);
                             if (debug)
-                                Log.Message($"COPYMATCH {outInstructions[outInstructions.Count - 1]}");
+                                Debug.Log($"COPYMATCH {outInstructions[outInstructions.Count - 1]}");
                         }
                     }
 
@@ -277,7 +289,7 @@ namespace TranspilerUtil
                 {
                     outInstructions.Add(instructions[instructionIndex]);
                     if (debug)
-                        Log.Message($"COPY {outInstructions[outInstructions.Count - 1]}");
+                        Debug.Log($"COPY {outInstructions[outInstructions.Count - 1]}");
 
                 }
             }
@@ -308,44 +320,78 @@ namespace TranspilerUtil
         {
             return new Rule
             {
-                LateGenerator = method =>
+                LateGenerator = callerMethod =>
                 {
 
                     var opcode = oldMethod.IsVirtual ? OpCodes.Callvirt : OpCodes.Call;
 
-                    ParameterInfo[] oldParameters = oldMethod.GetParameters();
-                    int oldParameterCount = oldParameters.Length + (oldMethod.IsStatic ? 0 : 1);
-
-                    ParameterInfo[] newParameters = newMethod.GetParameters();
-                    int newParameterCount = newParameters.Length + (newMethod.IsStatic ? 0 : 1);
+                    (Type[] callerParameterTypes, string[] callerParameterNames) = GetParameterTypesAndNames(callerMethod, "__caller");
+                    (Type[] calleeParameterTypes, string[] calleeParameterNames) = GetParameterTypesAndNames(oldMethod, "__instance");
+                    (Type[] replacementParameterTypes, string[] replacementParameterNames) = GetParameterTypesAndNames(newMethod, "__instance");
 
                     List<CodeInstruction> pattern = new();
                     List<CodeInstruction> output = new();
+                    List<Type> localTypes = new();
 
                     pattern.Add(new CodeInstruction(opcode, oldMethod));
 
-                    if (newParameterCount > oldParameterCount)
+                    // Instructions which are already on the stack in the right order don't need to be saved and restored
+                    int firstNonMatchingParameter = 0;
+                    while (firstNonMatchingParameter < replacementParameterNames.Length &&
+                           firstNonMatchingParameter < calleeParameterNames.Length &&
+                           replacementParameterNames[firstNonMatchingParameter] == calleeParameterNames[firstNonMatchingParameter])
                     {
-                        for (int i = oldParameterCount; i < newParameterCount; i++)
+                        firstNonMatchingParameter++;
+                    }
+
+                    // Save all remaining parameters to local. The matcher will handle renumbering the locals to new
+                    // unused local indexes.
+                    int[] parameterToLocalIndex = new int[calleeParameterTypes.Length];
+                    for (int i = calleeParameterTypes.Length - 1; i >= firstNonMatchingParameter; i--)
+                    {
+                        parameterToLocalIndex[i] = localTypes.Count;
+                        localTypes.Add(calleeParameterTypes[i]);
+                        output.Add(CodeInstruction.StoreLocal(parameterToLocalIndex[i]));
+                    }
+
+                    // Match each parameter of the replacement method
+                    for (int i = firstNonMatchingParameter; i < replacementParameterNames.Length; i++)
+                    {
+                        string replacementParameterName = replacementParameterNames[i];
+                        Type replacementParameterType = replacementParameterTypes[i];
+
+                        int calleeIndex = calleeParameterNames.FirstIndexOf(name => name == replacementParameterName);
+                        if (calleeIndex < 0)
                         {
-                            string parameterName = newParameters[i].Name;
-
-                            if (!oldMethod.IsStatic && parameterName == "__instance")
-                                output.Add(CodeInstruction.LoadArgument(0));
-                            else
-                            {
-                                int index = method.GetParameters().FirstIndexOf(p => p.Name == parameterName) + (method.IsStatic ? 0 : 1);
-                                if (index < 0)
-                                    index = method.GetParameters().FirstIndexOf(p => p.ParameterType == newParameters[i].ParameterType) + (method.IsStatic ? 0 : 1);
-                                if (index < 0)
-                                {
-                                    throw new InvalidOperationException(
-                                        $"Couldn't find parameter named '{parameterName}' of type {newParameters[i].ParameterType.FullName}");
-                                }
-
-                                output.Add(CodeInstruction.LoadArgument(index));
-                            }
+                            calleeIndex = calleeParameterTypes.FirstIndexOf(type => type == replacementParameterType);
+                            if (calleeIndex >= 0)
+                                Log.Warning($"RedirectMethodRule on {callerMethod.DeclaringType?.FullName}.{callerMethod.Name} ({oldMethod.Name} -> {newMethod.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {calleeParameterTypes[calleeIndex].Name} {calleeParameterNames[calleeIndex]}");
                         }
+
+                        if (calleeIndex >= 0)
+                        {
+                            if (calleeIndex < firstNonMatchingParameter)
+                                throw new InvalidOperationException($"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
+                            output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
+                            continue;
+                        }
+
+                        int callerIndex = callerParameterNames.FirstIndexOf(name => name == replacementParameterName);
+                        if (callerIndex < 0)
+                        {
+                            callerIndex = callerParameterTypes.FirstIndexOf(type => type == replacementParameterType);
+                            if (callerIndex >= 0)
+                                Log.Warning($"RedirectMethodRule on {callerMethod.DeclaringType?.FullName}.{callerMethod.Name} ({oldMethod.Name} -> {newMethod.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
+                        }
+
+                        if (callerIndex >= 0)
+                        {
+                            output.Add(CodeInstruction.LoadArgument(callerIndex));
+                            continue;
+                        }
+
+                        throw new InvalidOperationException(
+                            $"Couldn't find parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
                     }
 
                     output.Add(new CodeInstruction(opcode, newMethod));
@@ -357,11 +403,29 @@ namespace TranspilerUtil
                         Mode = OutputMode.Replace,
                         Pattern = pattern.ToArray(),
                         Output = output.ToArray(),
+                        LocalTypes = localTypes.ToArray(),
                     };
 
                     return rule;
                 }
             };
+
+            (Type[] types, string[] names) GetParameterTypesAndNames(MethodBase method, string instanceName)
+            {
+                ParameterInfo[] callerParameters = method.GetParameters();
+                if (method.IsStatic)
+                {
+                    Type[] types = [.. callerParameters.Select(p => p.ParameterType)];
+                    string[] names = [.. callerParameters.Select(p => p.Name)];
+                    return (types, names);
+                }
+                else
+                {
+                    Type[] types = [method.DeclaringType, .. callerParameters.Select(p => p.ParameterType)];
+                    string[] names = [instanceName, .. callerParameters.Select(p => p.Name)];
+                    return (types, names);
+                }
+            }
         }
     }
 }

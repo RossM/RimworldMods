@@ -39,12 +39,12 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        static float AddedNutritionPerDay_Wrapper(HediffComp_Lactating hediffComp)
+        static float AddedNutritionPerDay_Wrapper(HediffComp_Lactating __instance)
         {
             if (Enabled.Value)
                 return 0;
 
-            return hediffComp.AddedNutritionPerDay();
+            return __instance.AddedNutritionPerDay();
         }
     }
 }

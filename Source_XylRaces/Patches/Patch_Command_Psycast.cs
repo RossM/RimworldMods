@@ -31,9 +31,9 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static int GetPsylinkLevel_Wrapper(Pawn pawn, Command_Psycast __instance)
+        public static int GetPsylinkLevel_Wrapper(Command_Psycast __caller, Pawn pawn)
         {
-            return pawn.GetPsylinkLevelFor(__instance.Ability.def);
+            return pawn.GetPsylinkLevelFor(__caller.Ability.def);
         }
     }
 }

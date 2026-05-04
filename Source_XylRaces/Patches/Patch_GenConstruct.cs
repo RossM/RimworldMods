@@ -33,16 +33,16 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static bool MembersCanBuild_Wrapper(Ideo ideo, Thing thing, Pawn pawn)
+        public static bool MembersCanBuild_Wrapper(Ideo __instance, Thing thing, Pawn p)
         {
             using (new ProfileBlock())
             {
-                if (pawn.Ideo.MembersCanBuild(thing))
+                if (p.Ideo.MembersCanBuild(thing))
                     return true;
 
                 BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
 
-                var result = pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>()
+                var result = p.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>()
                     .Any(defExtension_designator => defExtension_designator.addDesignators.Contains(def));
                 if (!result)
                 {

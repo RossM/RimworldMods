@@ -25,23 +25,23 @@ namespace XylRacesCore.Patches
             }
         };
 
-        public static Hediff GetFirstHediffOfDef_Wrapper(HediffSet hediffSet, HediffDef def, bool mustBeVisible)
+        public static Hediff GetFirstHediffOfDef_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
         {
             using (new ProfileBlock())
             {
                 if (def == HediffDefOf.Lactating && mustBeVisible == false)
-                    return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
-                return hediffSet.GetFirstHediffOfDef(def, mustBeVisible);
+                    return __instance.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
+                return __instance.GetFirstHediffOfDef(def, mustBeVisible);
             }
         }
 
-        public static bool HasHediff_Wrapper(HediffSet hediffSet, HediffDef def, bool mustBeVisible)
+        public static bool HasHediff_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
         {
             using (new ProfileBlock())
             {
                 if (def == HediffDefOf.Lactating && mustBeVisible == false)
-                    return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
-                return hediffSet.HasHediff(def, mustBeVisible);
+                    return __instance.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
+                return __instance.HasHediff(def, mustBeVisible);
             }
         }
 
