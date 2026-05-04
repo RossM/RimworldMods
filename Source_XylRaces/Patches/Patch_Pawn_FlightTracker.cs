@@ -15,7 +15,7 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                var pawn = __instance.pawn;
+                var pawn = __instance?.pawn;
                 if (pawn is { IsPlayerControlled: true } && pawn.HasActiveGeneOfType<Flight>())
                 {
                     return false;
