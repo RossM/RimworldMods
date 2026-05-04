@@ -29,7 +29,7 @@ namespace TranspilerUtil
             public bool Chained = false;
             public CodeInstruction[] Pattern;
             public CodeInstruction[] Output;
-            public Func<MethodBase, Rule> LateGenerator;
+            public Func<MethodBase, List<CodeInstruction>, Rule> LateGenerator;
             public Type[] LocalTypes;
         }
 
@@ -63,7 +63,7 @@ namespace TranspilerUtil
             {
                 Rule rule = Rules[ruleIndex];
                 if (rule.LateGenerator != null)
-                    rule = rule.LateGenerator(method);
+                    rule = rule.LateGenerator(method, instructions);
                 var matchCount = 0;
 
                 for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[matches.Count - 1].end + 1 : 0;
@@ -333,99 +333,101 @@ namespace TranspilerUtil
         {
             return new Rule
             {
-                LateGenerator = callerMethod =>
-                {
-
-                    var opcode = oldMethod.IsVirtual ? OpCodes.Callvirt : OpCodes.Call;
-
-                    (Type[] callerParameterTypes, string[] callerParameterNames) = GetParameterTypesAndNames(callerMethod, "__caller");
-                    (Type[] calleeParameterTypes, string[] calleeParameterNames) = GetParameterTypesAndNames(oldMethod, "__instance");
-                    (Type[] replacementParameterTypes, string[] replacementParameterNames) = GetParameterTypesAndNames(newMethod, "__instance");
-
-                    List<CodeInstruction> pattern = new();
-                    List<CodeInstruction> output = new();
-                    List<Type> localTypes = new();
-
-                    pattern.Add(new CodeInstruction(opcode, oldMethod));
-
-                    // Instructions which are already on the stack in the right order don't need to be saved and restored
-                    int firstNonMatchingParameter = 0;
-                    while (firstNonMatchingParameter < replacementParameterNames.Length &&
-                           firstNonMatchingParameter < calleeParameterNames.Length &&
-                           replacementParameterNames[firstNonMatchingParameter] == calleeParameterNames[firstNonMatchingParameter])
-                    {
-                        firstNonMatchingParameter++;
-                    }
-
-                    // Save all remaining parameters to local. The matcher will handle renumbering the locals to new
-                    // unused local indexes.
-                    int[] parameterToLocalIndex = new int[calleeParameterTypes.Length];
-                    for (int i = calleeParameterTypes.Length - 1; i >= firstNonMatchingParameter; i--)
-                    {
-                        parameterToLocalIndex[i] = localTypes.Count;
-                        localTypes.Add(calleeParameterTypes[i]);
-                        output.Add(CodeInstruction.StoreLocal(parameterToLocalIndex[i]));
-                    }
-
-                    // Match each parameter of the replacement method
-                    for (int i = firstNonMatchingParameter; i < replacementParameterNames.Length; i++)
-                    {
-                        string replacementParameterName = replacementParameterNames[i];
-                        Type replacementParameterType = replacementParameterTypes[i];
-
-                        int calleeIndex = calleeParameterNames.FirstIndexOf(name => name == replacementParameterName);
-                        if (calleeIndex >= 0)
-                        {
-                            if (calleeIndex < firstNonMatchingParameter)
-                                throw new InvalidOperationException($"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
-                            output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
-                            continue;
-                        }
-
-                        int callerIndex = callerParameterNames.FirstIndexOf(name => name == replacementParameterName);
-                        if (callerIndex >= 0)
-                        {
-                            output.Add(CodeInstruction.LoadArgument(callerIndex));
-                            continue;
-                        }
-
-                        calleeIndex = calleeParameterTypes.FirstIndexOf(type => type == replacementParameterType);
-                        if (calleeIndex >= 0)
-                        {
-                            Log.Warning($"RedirectMethodRule on {callerMethod.DeclaringType?.FullName}.{callerMethod.Name} ({oldMethod.Name} -> {newMethod.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {calleeParameterTypes[calleeIndex].Name} {calleeParameterNames[calleeIndex]}");
-                            if (calleeIndex < firstNonMatchingParameter)
-                                throw new InvalidOperationException($"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
-                            output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
-                            continue;
-                        }
-
-                        callerIndex = callerParameterTypes.FirstIndexOf(type => type == replacementParameterType);
-                        if (callerIndex >= 0)
-                        {
-                            Log.Warning($"RedirectMethodRule on {callerMethod.DeclaringType?.FullName}.{callerMethod.Name} ({oldMethod.Name} -> {newMethod.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
-                            output.Add(CodeInstruction.LoadArgument(callerIndex));
-                            continue;
-                        }
-
-                        throw new InvalidOperationException(
-                            $"Couldn't find parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
-                    }
-
-                    output.Add(new CodeInstruction(opcode, newMethod));
-
-                    var rule = new Rule()
-                    {
-                        Min = minMatches,
-                        Max = 0,
-                        Mode = OutputMode.Replace,
-                        Pattern = pattern.ToArray(),
-                        Output = output.ToArray(),
-                        LocalTypes = localTypes.ToArray(),
-                    };
-
-                    return rule;
-                }
+                LateGenerator = (callerMethod, _) => RedirectMethodRule_Core(callerMethod, oldMethod, newMethod, minMatches)
             };
+        }
+
+        private static Rule RedirectMethodRule_Core(MethodBase callerMethod, MethodBase calleeMethod, MethodBase replacementMethod,
+            int minMatches)
+        {
+            var opcode = calleeMethod.IsVirtual ? OpCodes.Callvirt : OpCodes.Call;
+
+            (Type[] callerParameterTypes, string[] callerParameterNames) = GetParameterTypesAndNames(callerMethod, "__caller");
+            (Type[] calleeParameterTypes, string[] calleeParameterNames) = GetParameterTypesAndNames(calleeMethod, "__instance");
+            (Type[] replacementParameterTypes, string[] replacementParameterNames) = GetParameterTypesAndNames(replacementMethod, "__instance");
+
+            List<CodeInstruction> pattern = new();
+            List<CodeInstruction> output = new();
+            List<Type> localTypes = new();
+
+            pattern.Add(new CodeInstruction(opcode, calleeMethod));
+
+            // Instructions which are already on the stack in the right order don't need to be saved and restored
+            int firstNonMatchingParameter = 0;
+            while (firstNonMatchingParameter < replacementParameterNames.Length &&
+                   firstNonMatchingParameter < calleeParameterNames.Length &&
+                   replacementParameterNames[firstNonMatchingParameter] == calleeParameterNames[firstNonMatchingParameter])
+            {
+                firstNonMatchingParameter++;
+            }
+
+            // Save all remaining parameters to local. The matcher will handle renumbering the locals to new
+            // unused local indexes.
+            int[] parameterToLocalIndex = new int[calleeParameterTypes.Length];
+            for (int i = calleeParameterTypes.Length - 1; i >= firstNonMatchingParameter; i--)
+            {
+                parameterToLocalIndex[i] = localTypes.Count;
+                localTypes.Add(calleeParameterTypes[i]);
+                output.Add(CodeInstruction.StoreLocal(parameterToLocalIndex[i]));
+            }
+
+            // Match each parameter of the replacement method
+            for (int i = firstNonMatchingParameter; i < replacementParameterNames.Length; i++)
+            {
+                string replacementParameterName = replacementParameterNames[i];
+                Type replacementParameterType = replacementParameterTypes[i];
+
+                int calleeIndex = calleeParameterNames.FirstIndexOf(name => name == replacementParameterName);
+                if (calleeIndex >= 0)
+                {
+                    if (calleeIndex < firstNonMatchingParameter)
+                        throw new InvalidOperationException($"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
+                    output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
+                    continue;
+                }
+
+                int callerIndex = callerParameterNames.FirstIndexOf(name => name == replacementParameterName);
+                if (callerIndex >= 0)
+                {
+                    output.Add(CodeInstruction.LoadArgument(callerIndex));
+                    continue;
+                }
+
+                calleeIndex = calleeParameterTypes.FirstIndexOf(type => type == replacementParameterType);
+                if (calleeIndex >= 0)
+                {
+                    Log.Warning($"RedirectMethodRule on {callerMethod.DeclaringType?.FullName}.{callerMethod.Name} ({calleeMethod.Name} -> {replacementMethod.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {calleeParameterTypes[calleeIndex].Name} {calleeParameterNames[calleeIndex]}");
+                    if (calleeIndex < firstNonMatchingParameter)
+                        throw new InvalidOperationException($"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
+                    output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
+                    continue;
+                }
+
+                callerIndex = callerParameterTypes.FirstIndexOf(type => type == replacementParameterType);
+                if (callerIndex >= 0)
+                {
+                    Log.Warning($"RedirectMethodRule on {callerMethod.DeclaringType?.FullName}.{callerMethod.Name} ({calleeMethod.Name} -> {replacementMethod.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
+                    output.Add(CodeInstruction.LoadArgument(callerIndex));
+                    continue;
+                }
+
+                throw new InvalidOperationException(
+                    $"Couldn't find parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
+            }
+
+            output.Add(new CodeInstruction(opcode, replacementMethod));
+
+            var rule = new Rule()
+            {
+                Min = minMatches,
+                Max = 0,
+                Mode = OutputMode.Replace,
+                Pattern = pattern.ToArray(),
+                Output = output.ToArray(),
+                LocalTypes = localTypes.ToArray(),
+            };
+
+            return rule;
 
             (Type[] types, string[] names) GetParameterTypesAndNames(MethodBase method, string instanceName)
             {
