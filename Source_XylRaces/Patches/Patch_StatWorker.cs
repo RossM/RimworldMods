@@ -37,6 +37,7 @@ namespace XylRacesCore.Patches
                 new()
                 {
                     Min = 1, Max = 0,
+                    Mode = InstructionMatcher.OutputMode.InsertAfter,
                     Pattern =
                     [
                         CodeInstruction.LoadField(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
@@ -68,6 +69,7 @@ namespace XylRacesCore.Patches
                 {
                     Min = 1, Max = 1,
                     Chained = true,
+                    Mode = InstructionMatcher.OutputMode.InsertAfter,
                     Pattern =
                     [
                         // sb.AppendLine(whitespace + "    " + text + ": " + offset.ToStringSign() + text2 + " (" + text3 + ")");
@@ -89,6 +91,7 @@ namespace XylRacesCore.Patches
                 new()
                 {
                     Min = 1, Max = 0,
+                    Mode = InstructionMatcher.OutputMode.InsertAfter,
                     Pattern =
                     [
                         CodeInstruction.LoadField(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
@@ -120,6 +123,7 @@ namespace XylRacesCore.Patches
                 {
                     Min = 1, Max = 1,
                     Chained = true,
+                    Mode = InstructionMatcher.OutputMode.InsertAfter,
                     Pattern =
                     [
                         // sb.AppendLine(whitespace + "    " + text8 + ": x" + text9 + " (" + text10 + ")");
@@ -164,6 +168,7 @@ namespace XylRacesCore.Patches
                 new()
                 {
                     Min = 1, Max = 0,
+                    Mode = InstructionMatcher.OutputMode.InsertAfter,
                     Pattern =
                     [
                         CodeInstruction.LoadField(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
@@ -192,6 +197,7 @@ namespace XylRacesCore.Patches
                 new()
                 {
                     Min = 1, Max = 0,
+                    Mode = InstructionMatcher.OutputMode.InsertAfter,
                     Pattern =
                     [
                         CodeInstruction.LoadField(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),

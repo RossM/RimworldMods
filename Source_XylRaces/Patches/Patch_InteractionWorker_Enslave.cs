@@ -30,6 +30,7 @@ namespace XylRacesCore.Patches
                 new()
                 {
                     Min = 1, Max = 0,
+                    Mode = InstructionMatcher.OutputMode.InsertAfter,
                     Pattern =
                     [
                         // statValue2 = initiator.GetStatValue(StatDefOf.NegotiationAbility);
