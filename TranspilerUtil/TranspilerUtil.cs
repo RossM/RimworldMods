@@ -333,7 +333,7 @@ namespace TranspilerUtil
         {
             return new Rule
             {
-                LateGenerator = (caller, _) => RedirectMethodRule_Core(caller, oldMember, newMember, minMatches)
+                LateGenerator = (caller, _) => RedirectRule_Core(caller, oldMember, newMember, minMatches)
             };
         }
 
@@ -343,12 +343,18 @@ namespace TranspilerUtil
             {
                 LateGenerator = (caller, instructions) =>
                 {
-                    MemberInfo oldMember = (MemberInfo)instructions.First(NameMatches).operand;
-                    Debug.Log($"oldMemberName={oldMemberName} oldMember={oldMember}");
+                    MemberInfo oldMember = FindMemberInfo(oldMemberName, instructions);
 
-                    return RedirectMethodRule_Core(caller, oldMember, newMember, minMatches);
+                    return RedirectRule_Core(caller, oldMember, newMember, minMatches);
                 }
             };
+        }
+
+        private static MemberInfo FindMemberInfo(string oldMemberName, List<CodeInstruction> instructions)
+        {
+            MemberInfo oldMember = (MemberInfo)instructions.First(NameMatches).operand;
+            Debug.Log($"oldMemberName={oldMemberName} oldMember={oldMember}");
+            return oldMember;
 
             bool NameMatches(CodeInstruction instruction)
             {
@@ -360,7 +366,7 @@ namespace TranspilerUtil
             }
         }
 
-        private static Rule RedirectMethodRule_Core(MethodBase caller, MemberInfo callee, MemberInfo replacement,
+        private static Rule RedirectRule_Core(MethodBase caller, MemberInfo callee, MemberInfo replacement,
             int minMatches)
         {
             (Type[] callerParameterTypes, string[] callerParameterNames) = GetParameterTypesAndNames(caller, "__caller");
