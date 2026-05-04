@@ -9,7 +9,7 @@ using static Verse.DesignationCategoryDef;
 
 namespace XylRacesCore.Patches
 {
-    [HarmonyPatch(typeof(Verse.DesignationCategoryDef))]
+    [HarmonyPatch(typeof(DesignationCategoryDef))]
     public static class Patch_DesignationCategoryDef
     {
         [HarmonyPostfix, UsedImplicitly,
