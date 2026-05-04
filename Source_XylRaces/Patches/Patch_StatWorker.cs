@@ -154,74 +154,15 @@ namespace XylRacesCore.Patches
             },
             Rules =
             {
-                new()
-                {
-                    SaveLocals = true,
-                    Pattern =
-                    [
-                        // Match to find the local "pawn" is stored in
-                        new CodeInstruction(OpCodes.Isinst, typeof(Pawn)),
-                        CodeInstruction.StoreLocal(0), 
-                    ]
-                },
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Field(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
+                    AccessTools.Method(typeof(Patch_StatWorker), nameof(PawnCapacityOffset_capacity_Wrapper))
+                    ),
 
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.InsertAfter,
-                    Pattern =
-                    [
-                        CodeInstruction.LoadField(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.StoreLocal(1),
-                        // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
-                        // Load pawn
-                        CodeInstruction.LoadLocal(0),
-                        // Load capacity
-                        CodeInstruction.LoadLocal(1),
-                        // Load this.stat
-                        CodeInstruction.LoadArgument(0),
-                        CodeInstruction.LoadField(typeof(StatWorker), "stat"),
-                        // Call FindHediffFor
-                        CodeInstruction.Call(() => Hediff_SubstituteCapacity.FindHediffFor),
-                        // capacity = ConditionalSetCapacity(foundHediff, capacity);
-                        // Load the capacity
-                        CodeInstruction.LoadLocal(1),
-                        // Call ConditionalSetCapacity (because I don't want to emit an if)
-                        CodeInstruction.Call(() => ConditionalSetCapacity),
-                    ]
-                },
-
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.InsertAfter,
-                    Pattern =
-                    [
-                        CodeInstruction.LoadField(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.StoreLocal(1),
-                        // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
-                        // Load pawn
-                        CodeInstruction.LoadLocal(0),
-                        // Load capacity
-                        CodeInstruction.LoadLocal(1),
-                        // Load this.stat
-                        CodeInstruction.LoadArgument(0),
-                        CodeInstruction.LoadField(typeof(StatWorker), "stat"),
-                        // Call FindHediffFor
-                        CodeInstruction.Call(() => Hediff_SubstituteCapacity.FindHediffFor),
-                        // capacity = ConditionalSetCapacity(foundHediff, capacity);
-                        // Load the capacity
-                        CodeInstruction.LoadLocal(1),
-                        // Call ConditionalSetCapacity (because I don't want to emit an if)
-                        CodeInstruction.Call(() => ConditionalSetCapacity),
-                    ]
-                },
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Field(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
+                    AccessTools.Method(typeof(Patch_StatWorker), nameof(PawnCapacityFactor_capacity_Wrapper))
+                ),
             }
         };
 
@@ -256,6 +197,18 @@ namespace XylRacesCore.Patches
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GetValueUnfinalized.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
+        }
+
+        public static PawnCapacityDef PawnCapacityOffset_capacity_Wrapper(PawnCapacityOffset __instance, StatWorker __caller, StatRequest req)
+        {
+            Hediff_SubstituteCapacity foundHediff = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
+            return foundHediff != null ? foundHediff.DefExt.substituteCapacity : __instance.capacity;
+        }
+
+        public static PawnCapacityDef PawnCapacityFactor_capacity_Wrapper(PawnCapacityFactor __instance, StatWorker __caller, StatRequest req)
+        {
+            Hediff_SubstituteCapacity foundHediff = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
+            return foundHediff != null ? foundHediff.DefExt.substituteCapacity : __instance.capacity;
         }
 
         [Feature(nameof(Psycast)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
