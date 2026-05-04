@@ -337,6 +337,22 @@ namespace TranspilerUtil
             };
         }
 
+        public static Rule RedirectMethodRule(string methodName, MethodInfo newMethod, int minMatches = 1)
+        {
+            return new Rule
+            {
+                LateGenerator = (callerMethod, instructions) =>
+                {
+                    MethodBase oldMethod = (MethodBase)instructions.First(i =>
+                        (i.opcode == OpCodes.Call || i.opcode == OpCodes.Callvirt) &&
+                        ((MethodBase)i.operand).Name == methodName).operand;
+                    Debug.Log($"methodName={methodName} oldMethod={oldMethod}");
+
+                    return RedirectMethodRule_Core(callerMethod, oldMethod, newMethod, minMatches);
+                }
+            };
+        }
+
         private static Rule RedirectMethodRule_Core(MethodBase callerMethod, MethodBase calleeMethod, MethodBase replacementMethod,
             int minMatches)
         {

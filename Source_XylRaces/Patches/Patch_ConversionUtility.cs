@@ -31,14 +31,16 @@ namespace XylRacesCore.Patches
                     ],
                     Output =
                     [
-                        // + OffsetFromXenotype(initiator, false, sb)
+                        // + OffsetFromXenotype(initiator, recipient, false, sb)
+                        CodeInstruction.LoadArgument(0),
                         CodeInstruction.LoadArgument(0),
                         new CodeInstruction(OpCodes.Ldc_I4_0),
                         CodeInstruction.LoadArgument(2),
                         CodeInstruction.Call(() => OffsetFromXenotype),
                         new CodeInstruction(OpCodes.Add),
-                        // + OffsetFromXenotype(recipient, true, sb)
+                        // + OffsetFromXenotype(recipient, recipient, true, sb)
                         CodeInstruction.LoadArgument(1),
+                        CodeInstruction.LoadArgument(0),
                         new CodeInstruction(OpCodes.Ldc_I4_1),
                         CodeInstruction.LoadArgument(2),
                         CodeInstruction.Call(() => OffsetFromXenotype),
@@ -56,17 +58,17 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static float OffsetFromXenotype(Pawn pawn, bool invert, StringBuilder sb)
+        public static float OffsetFromXenotype(Pawn pawn, Pawn recipient, bool invert, StringBuilder sb)
         {
             using (new ProfileBlock())
             {
                 float result = 0;
                 string text = string.Empty;
-                XenotypeDef pawnXenotype = pawn.genes?.Xenotype;
-                if (pawnXenotype == null)
+                XenotypeDef recipientXenotype = recipient.genes?.Xenotype;
+                if (recipientXenotype == null)
                     return 0;
 
-                var agreeingMemes = pawnXenotype.GetModExtension<XenotypeDefExtension>()?.agreeingMemes;
+                var agreeingMemes = recipientXenotype.GetModExtension<XenotypeDefExtension>()?.agreeingMemes;
                 if (agreeingMemes != null)
                 {
                     foreach (MemeDef meme in pawn.Ideo.memes)
@@ -75,12 +77,12 @@ namespace XylRacesCore.Patches
                         {
                             float offset = invert ? -0.2f : 0.2f;
                             result += offset;
-                            text += MemeAndXenotypeDesc(meme, pawnXenotype, offset);
+                            text += MemeAndXenotypeDesc(meme, recipientXenotype, offset);
                         }
                     }
                 }
 
-                var disagreeingMemes = pawnXenotype.GetModExtension<XenotypeDefExtension>()?.disagreeingMemes;
+                var disagreeingMemes = recipientXenotype.GetModExtension<XenotypeDefExtension>()?.disagreeingMemes;
                 if (disagreeingMemes != null)
                 {
                     foreach (MemeDef meme in pawn.Ideo.memes)
@@ -89,7 +91,7 @@ namespace XylRacesCore.Patches
                         {
                             float offset = invert ? 0.2f : -0.2f;
                             result += offset;
-                            text += MemeAndXenotypeDesc(meme, pawnXenotype, offset);
+                            text += MemeAndXenotypeDesc(meme, recipientXenotype, offset);
                         }
                     }
                 }
