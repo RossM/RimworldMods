@@ -157,7 +157,7 @@ namespace XylRacesCore.Patches
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Field(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
                     AccessTools.Method(typeof(Patch_StatWorker), nameof(PawnCapacityFactor_capacity_Wrapper))
-                ),
+                    ),
             }
         };
 
