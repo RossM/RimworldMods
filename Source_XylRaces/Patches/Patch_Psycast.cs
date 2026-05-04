@@ -16,7 +16,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.RedirectMethodRule(
+                InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel)),
                     AccessTools.Method(typeof(Patch_Psycast), nameof(GetPsylinkLevel_Wrapper)))
             }

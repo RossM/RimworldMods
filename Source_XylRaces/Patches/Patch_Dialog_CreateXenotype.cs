@@ -18,7 +18,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.RedirectMethodRule(
+                InstructionMatcher.MakeRedirectRule(
                     AccessTools.PropertyGetter(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder)),
                     AccessTools.Method(typeof(Patch_Dialog_CreateXenotype), nameof(GenesInOrder_Wrapper))
                     )

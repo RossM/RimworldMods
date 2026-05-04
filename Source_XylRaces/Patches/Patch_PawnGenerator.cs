@@ -23,7 +23,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.RedirectMethodRule(
+                InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo)),
                     AccessTools.Method(typeof(Patch_PawnGenerator), nameof(GiveAppropriateBioAndNameTo_Wrapper))
                     )

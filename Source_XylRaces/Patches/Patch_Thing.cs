@@ -69,7 +69,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.RedirectMethodRule(
+                InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(StatExtension), nameof(StatExtension.GetStatValue)),
                     AccessTools.Method(typeof(Patch_Thing), nameof(GetStatValue_Wrapper)))
             }

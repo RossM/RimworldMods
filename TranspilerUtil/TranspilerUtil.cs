@@ -325,48 +325,53 @@ namespace TranspilerUtil
         /// If there isn't a parameter with a matching name, this will fall back to trying to match based
         /// on parameter type, but this may result in less optimal code generation, and will give a warning.
         /// </summary>
-        /// <param name="oldMethod"></param>
-        /// <param name="newMethod"></param>
+        /// <param name="oldMember"></param>
+        /// <param name="newMember"></param>
         /// <param name="minMatches"></param>
         /// <returns></returns>
-        public static Rule RedirectMethodRule(MethodInfo oldMethod, MethodInfo newMethod, int minMatches = 1)
+        public static Rule MakeRedirectRule(MemberInfo oldMember, MethodInfo newMember, int minMatches = 1)
         {
             return new Rule
             {
-                LateGenerator = (callerMethod, _) => RedirectMethodRule_Core(callerMethod, oldMethod, newMethod, minMatches)
+                LateGenerator = (caller, _) => RedirectMethodRule_Core(caller, oldMember, newMember, minMatches)
             };
         }
 
-        public static Rule RedirectMethodRule(string methodName, MethodInfo newMethod, int minMatches = 1)
+        public static Rule MakeRedirectRule(string oldMemberName, MethodInfo newMember, int minMatches = 1)
         {
             return new Rule
             {
-                LateGenerator = (callerMethod, instructions) =>
+                LateGenerator = (caller, instructions) =>
                 {
-                    MethodBase oldMethod = (MethodBase)instructions.First(i =>
-                        (i.opcode == OpCodes.Call || i.opcode == OpCodes.Callvirt) &&
-                        ((MethodBase)i.operand).Name == methodName).operand;
-                    Debug.Log($"methodName={methodName} oldMethod={oldMethod}");
+                    MemberInfo oldMember = (MemberInfo)instructions.First(NameMatches).operand;
+                    Debug.Log($"oldMemberName={oldMemberName} oldMember={oldMember}");
 
-                    return RedirectMethodRule_Core(callerMethod, oldMethod, newMethod, minMatches);
+                    return RedirectMethodRule_Core(caller, oldMember, newMember, minMatches);
                 }
             };
+
+            bool NameMatches(CodeInstruction instruction)
+            {
+                if (instruction.opcode.Value == OpCodes.Call.Value || instruction.opcode.Value == OpCodes.Callvirt.Value)
+                    return ((MethodBase)instruction.operand).Name == oldMemberName;
+                if (instruction.opcode.Value == OpCodes.Ldfld.Value)
+                    return ((FieldInfo)instruction.operand).Name == oldMemberName;
+                return false;
+            }
         }
 
-        private static Rule RedirectMethodRule_Core(MethodBase callerMethod, MethodBase calleeMethod, MethodBase replacementMethod,
+        private static Rule RedirectMethodRule_Core(MethodBase caller, MemberInfo callee, MemberInfo replacement,
             int minMatches)
         {
-            var opcode = calleeMethod.IsVirtual ? OpCodes.Callvirt : OpCodes.Call;
-
-            (Type[] callerParameterTypes, string[] callerParameterNames) = GetParameterTypesAndNames(callerMethod, "__caller");
-            (Type[] calleeParameterTypes, string[] calleeParameterNames) = GetParameterTypesAndNames(calleeMethod, "__instance");
-            (Type[] replacementParameterTypes, string[] replacementParameterNames) = GetParameterTypesAndNames(replacementMethod, "__instance");
+            (Type[] callerParameterTypes, string[] callerParameterNames) = GetParameterTypesAndNames(caller, "__caller");
+            (Type[] calleeParameterTypes, string[] calleeParameterNames) = GetParameterTypesAndNames(callee, "__instance");
+            (Type[] replacementParameterTypes, string[] replacementParameterNames) = GetParameterTypesAndNames(replacement, "__instance");
 
             List<CodeInstruction> pattern = new();
             List<CodeInstruction> output = new();
             List<Type> localTypes = new();
 
-            pattern.Add(new CodeInstruction(opcode, calleeMethod));
+            pattern.Add(new CodeInstruction(OpcodeFor(callee), callee));
 
             // Instructions which are already on the stack in the right order don't need to be saved and restored
             int firstNonMatchingParameter = 0;
@@ -412,7 +417,7 @@ namespace TranspilerUtil
                 calleeIndex = calleeParameterTypes.FirstIndexOf(type => type == replacementParameterType);
                 if (calleeIndex >= 0)
                 {
-                    Log.Warning($"RedirectMethodRule on {callerMethod.DeclaringType?.FullName}.{callerMethod.Name} ({calleeMethod.Name} -> {replacementMethod.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {calleeParameterTypes[calleeIndex].Name} {calleeParameterNames[calleeIndex]}");
+                    Log.Warning($"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({callee.Name} -> {replacement.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {calleeParameterTypes[calleeIndex].Name} {calleeParameterNames[calleeIndex]}");
                     if (calleeIndex < firstNonMatchingParameter)
                         throw new InvalidOperationException($"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
                     output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
@@ -422,7 +427,7 @@ namespace TranspilerUtil
                 callerIndex = callerParameterTypes.FirstIndexOf(type => type == replacementParameterType);
                 if (callerIndex >= 0)
                 {
-                    Log.Warning($"RedirectMethodRule on {callerMethod.DeclaringType?.FullName}.{callerMethod.Name} ({calleeMethod.Name} -> {replacementMethod.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
+                    Log.Warning($"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({callee.Name} -> {replacement.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
                     output.Add(CodeInstruction.LoadArgument(callerIndex));
                     continue;
                 }
@@ -431,7 +436,7 @@ namespace TranspilerUtil
                     $"Couldn't find parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
             }
 
-            output.Add(new CodeInstruction(opcode, replacementMethod));
+            output.Add(new CodeInstruction(OpcodeFor(replacement), replacement));
 
             var rule = new Rule()
             {
@@ -444,23 +449,42 @@ namespace TranspilerUtil
             };
 
             return rule;
+        }
 
-            (Type[] types, string[] names) GetParameterTypesAndNames(MethodBase method, string instanceName)
+        private static (Type[] types, string[] names) GetParameterTypesAndNames(MemberInfo member, string instanceName)
+        {
+            FieldInfo field = member as FieldInfo;
+            if (field != null)
             {
-                ParameterInfo[] callerParameters = method.GetParameters();
-                if (method.IsStatic)
-                {
-                    Type[] types = [.. callerParameters.Select(p => p.ParameterType)];
-                    string[] names = [.. callerParameters.Select(p => p.Name)];
-                    return (types, names);
-                }
-                else
-                {
-                    Type[] types = [method.DeclaringType, .. callerParameters.Select(p => p.ParameterType)];
-                    string[] names = [instanceName, .. callerParameters.Select(p => p.Name)];
-                    return (types, names);
-                }
+                Type[] types = [field.DeclaringType];
+                string[] names = [instanceName];
+                return (types, names);
             }
+
+            MethodBase method = (MethodBase)member;
+            ParameterInfo[] callerParameters = method.GetParameters();
+            if (method.IsStatic)
+            {
+                Type[] types = [.. callerParameters.Select(p => p.ParameterType)];
+                string[] names = [.. callerParameters.Select(p => p.Name)];
+                return (types, names);
+            }
+            else
+            {
+                Type[] types = [method.DeclaringType, .. callerParameters.Select(p => p.ParameterType)];
+                string[] names = [instanceName, .. callerParameters.Select(p => p.Name)];
+                return (types, names);
+            }
+        }
+
+        private static OpCode OpcodeFor(MemberInfo callee)
+        {
+            return callee switch
+            {
+                FieldInfo => OpCodes.Ldfld,
+                MethodBase { IsVirtual: true } => OpCodes.Callvirt,
+                _ => OpCodes.Call
+            };
         }
     }
 }

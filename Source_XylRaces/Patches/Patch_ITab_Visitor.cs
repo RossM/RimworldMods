@@ -15,7 +15,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.RedirectMethodRule(AccessTools.Method(typeof(StatWorker_SuppressionFallRate), nameof(StatWorker_SuppressionFallRate.GetExplanationForTooltip)),
+                InstructionMatcher.MakeRedirectRule(AccessTools.Method(typeof(StatWorker_SuppressionFallRate), nameof(StatWorker_SuppressionFallRate.GetExplanationForTooltip)),
                     AccessTools.Method(typeof(StatWorker_SuppressionFallRate_Fixed), nameof(StatWorker_SuppressionFallRate_Fixed.GetExplanationForTooltip))),
                 new()
                 {

@@ -53,8 +53,8 @@ There's a new system where certain memes agree or disagree with certain xenotype
 * Titans agree with Shipborn.
 * Trogs agree with Flesh Purity, and disagree with Transhumanist.
 * Warcats agree with Cannibal and Raider, and disagree with Animal Personhood.
-Characters whose xenotype agrees with their ideoligeon will be harder to convert to
-another ideoligeon, and will have an easier time converting others.
+Characters are easier to convert to ideoligeons that agree with their xenotype, and
+harder to convert away from one.
 
 There are four new factions:
 * Peaceful Nixie Tribe

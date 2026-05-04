@@ -18,7 +18,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.RedirectMethodRule(
+                InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(Ideo), nameof(Ideo.MembersCanBuild)),
                     AccessTools.Method(typeof(Patch_GenConstruct), nameof(MembersCanBuild_Wrapper))
                     )
