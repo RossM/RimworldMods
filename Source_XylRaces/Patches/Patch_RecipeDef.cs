@@ -17,20 +17,10 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                new()
-                {
-                    Min = 1, Max = 1,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern =
-                    [
-                        CodeInstruction.LoadArgument(0),
-                        CodeInstruction.LoadField(typeof(Verse.RecipeDef), "memePrerequisitesAny"),
-                    ],
-                    Output =
-                    [
-                        new CodeInstruction(OpCodes.Ldc_I4_0),
-                    ]
-                }
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Field(typeof(Verse.RecipeDef), "memePrerequisitesAny"),
+                    AccessTools.Method(typeof(Patch_RecipeDef), nameof(RecipeDef_memePrerequisitesAny_Wrapper))
+                    )
             }
         };
 
@@ -40,6 +30,11 @@ namespace XylRacesCore.Patches
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_AvailableNow.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
+        }
+
+        public static List<MemeDef> RecipeDef_memePrerequisitesAny_Wrapper()
+        {
+            return null;
         }
 
         [Feature(nameof(DefModExtension_GeneDependent)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
