@@ -13,7 +13,8 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Need_Food))]
     public static class Patch_Need_Food
     {
-        public static Lazy<bool> Enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
+        public static Lazy<bool> enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
+        public static bool Enabled => enabled.Value;
 
         [DefOf]
         public static class Defs
@@ -41,7 +42,7 @@ namespace XylRacesCore.Patches
 
         static float AddedNutritionPerDay_Wrapper(HediffComp_Lactating __instance)
         {
-            if (Enabled.Value)
+            if (Enabled)
                 return 0;
 
             return __instance.AddedNutritionPerDay();

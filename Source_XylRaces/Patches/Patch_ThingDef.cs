@@ -11,12 +11,13 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(ThingDef))]
     public static class Patch_ThingDef
     {
-        public static Lazy<bool> Enabled = new(Config.GeneOfTypeExists<Flight>);
+        public static Lazy<bool> enabled = new(Config.GeneOfTypeExists<Flight>);
+        public static bool Enabled => enabled.Value;
 
         [Feature(nameof(Flight)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(ThingDef.SpecialDisplayStats))]
         public static void SpecialDisplayStats_Postfix(ThingDef __instance, ref IEnumerable<StatDrawEntry> __result)
         {
-            if (!Enabled.Value)
+            if (!Enabled)
                 return;
 
             using (new ProfileBlock())

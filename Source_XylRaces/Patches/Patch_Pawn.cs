@@ -9,12 +9,13 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Pawn))]
     public static class Patch_Pawn
     {
-        public static Lazy<bool> Enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Pawn>);
+        public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Pawn>);
+        public static bool Enabled => enabled.Value;
 
         [Feature(nameof(GeneDefExtension_Pawn)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
         public static void BodySize_Postfix(Pawn __instance, ref float __result)
         {
-            if (Enabled.Value == false)
+            if (!Enabled)
                 return;
 
             using (new ProfileBlock())
@@ -27,7 +28,7 @@ namespace XylRacesCore.Patches
         [Feature(nameof(GeneDefExtension_Pawn)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
         public static void HealthScale_Postfix(Pawn __instance, ref float __result)
         {
-            if (Enabled.Value == false)
+            if (!Enabled)
                 return;
 
             using (new ProfileBlock())

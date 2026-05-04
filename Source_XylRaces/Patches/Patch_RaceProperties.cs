@@ -14,7 +14,8 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(RaceProperties))]
     public static class Patch_RaceProperties
     {
-        public static Lazy<bool> Enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
+        public static Lazy<bool> enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
+        public static bool Enabled => enabled.Value;
 
         private static readonly InstructionMatcher Fixup_NutritionEatenPerDayExplanation = new()
         {
@@ -57,7 +58,7 @@ namespace XylRacesCore.Patches
             // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes
             // lactating pawns to need too much food. This turns out to be a problem for bossaps balance-wise, so I'm
             // fixing the bug.
-            if (Enabled.Value)
+            if (Enabled)
                 return null;
 
             return PatchLactation.GetFirstHediffOfDef_Wrapper(__instance, def, mustBeVisible);
@@ -65,7 +66,7 @@ namespace XylRacesCore.Patches
 
         public static void AddLactationExplanation(StringBuilder stringBuilder, Pawn pawn)
         {
-            if (!Enabled.Value)
+            if (!Enabled)
                 return;
 
             using (new ProfileBlock())

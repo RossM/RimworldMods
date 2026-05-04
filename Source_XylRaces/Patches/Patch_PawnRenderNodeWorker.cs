@@ -11,12 +11,13 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(PawnRenderNodeWorker))]
     public static class Patch_PawnRenderNodeWorker
     {
-        public static Lazy<bool> Enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Rendering>);
+        public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Rendering>);
+        public static bool Enabled => enabled.Value;
 
         [Feature(nameof(GeneDefExtension_Rendering)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnRenderNodeWorker.ScaleFor))]
         public static void ScaleFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref UnityEngine.Vector3 __result)
         {
-            if (Enabled.Value == false)
+            if (!Enabled)
                 return;
 
             using (new ProfileBlock())
@@ -38,7 +39,7 @@ namespace XylRacesCore.Patches
         [Feature(nameof(GeneDefExtension_Rendering)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(PawnRenderNodeWorker.OffsetFor))]
         public static void OffsetFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref UnityEngine.Vector3 __result)
         {
-            if (Enabled.Value == false)
+            if (!Enabled)
                 return;
 
             using (new ProfileBlock())
