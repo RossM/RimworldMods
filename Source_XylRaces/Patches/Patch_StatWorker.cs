@@ -147,11 +147,6 @@ namespace XylRacesCore.Patches
 
         private static readonly InstructionMatcher Fixup_GetValueUnfinalized = new()
         {
-            LocalTypes = 
-            {
-                typeof(Pawn),
-                typeof(PawnCapacityDef),
-            },
             Rules =
             {
                 InstructionMatcher.MakeRedirectRule(
