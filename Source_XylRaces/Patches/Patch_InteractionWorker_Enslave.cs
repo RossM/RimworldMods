@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
-using HarmonyLib;
+﻿using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using TranspilerUtil;
+using Verse;
 
 namespace XylRacesCore.Patches
 {
@@ -18,39 +19,14 @@ namespace XylRacesCore.Patches
             public static StatDef XylWillFallRate;
         }
 
-        public static StatDef StatDefOfWillFallRate()
-        {
-            return Defs.XylWillFallRate;
-        }
-
         private static readonly InstructionMatcher Fixup_Interacted = new()
         {
             Rules =
             {
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.InsertAfter,
-                    Pattern =
-                    [
-                        // statValue2 = initiator.GetStatValue(StatDefOf.NegotiationAbility);
-                        CodeInstruction.LoadArgument(1),
-                        new CodeInstruction(OpCodes.Ldsfld, typeof(StatDefOf).GetField(nameof(StatDefOf.NegotiationAbility))),
-                        new CodeInstruction(OpCodes.Ldc_I4_1),
-                        new CodeInstruction(OpCodes.Ldc_I4_M1),
-                        CodeInstruction.Call(typeof(StatExtension), nameof(StatExtension.GetStatValue)), 
-                    ],
-                    Output =
-                    [
-                        // statValue2 *= recipient.GetStatValue(StatDefOfWillFallRate());
-                        CodeInstruction.LoadArgument(2),
-                        CodeInstruction.Call(typeof(Patch_InteractionWorker_EnslaveAttempt), nameof(StatDefOfWillFallRate)),
-                        new CodeInstruction(OpCodes.Ldc_I4_1),
-                        new CodeInstruction(OpCodes.Ldc_I4_M1),
-                        CodeInstruction.Call(typeof(StatExtension), nameof(StatExtension.GetStatValue)),
-                        new CodeInstruction(OpCodes.Mul),
-                    ]
-                }
+                InstructionMatcher.RedirectMethodRule(
+                    AccessTools.Method(typeof(StatExtension), nameof(StatExtension.GetStatValue)),
+                    AccessTools.Method(typeof(Patch_InteractionWorker_EnslaveAttempt), nameof(GetStatValue_Wrapper))
+                    )
             }
         };
 
@@ -61,6 +37,14 @@ namespace XylRacesCore.Patches
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_Interacted.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
+        }
+
+        public static float GetStatValue_Wrapper(Thing thing, StatDef stat, Pawn recipient, bool applyPostProcess, int cacheStaleAfterTicks)
+        {
+            float value = thing.GetStatValue(stat, applyPostProcess, cacheStaleAfterTicks);
+            if (stat == StatDefOf.NegotiationAbility)
+                value *= recipient.GetStatValue(Defs.XylWillFallRate);
+            return value;
         }
     }
 }
