@@ -17,21 +17,10 @@ namespace Source_XylIdeoTweaks
             Rules =
             {
                 // Change: Nudity requirements only disable noble/role apparel requirements for the gender they apply to
-                new()
-                {
-                    Min = 1, Max = 0,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern =
-                    [
-                        CodeInstruction.Call(typeof(IdeoUtility), nameof(IdeoUtility.IdeoPrefersNudity), [typeof(Ideo)]), 
-                    ],
-                    Output =
-                    [
-                        CodeInstruction.LoadArgument(2),
-                        CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.gender)), 
-                        CodeInstruction.Call(typeof(IdeoUtility), nameof(IdeoUtility.IdeoPrefersNudityForGender), [typeof(Ideo), typeof(Gender)]),
-                    ]
-                }
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Method(typeof(IdeoUtility), nameof(IdeoUtility.IdeoPrefersNudity), [typeof(Ideo)]),
+                    AccessTools.Method(typeof(Patch_ApparelUtility), nameof(IdeoPrefersNudity_Wrapper))
+                    )
             }
         };
 
@@ -41,6 +30,11 @@ namespace Source_XylIdeoTweaks
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
+        }
+
+        public static bool IdeoPrefersNudity_Wrapper(Ideo ideo, Pawn pawn)
+        {
+            return ideo.IdeoPrefersNudityForGender(pawn.gender);
         }
     }
 }
