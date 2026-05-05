@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 using Verse;
+using UnityEngine;
 using XylDisassembler;
 
 namespace XylExposableChecker
@@ -59,7 +60,7 @@ namespace XylExposableChecker
                 bool skipAssembly = assemblyName == "Assembly-CSharp";
                 if (!checkedAssemblies.Contains(type.Assembly))
                 {
-                    Log.Message(skipAssembly
+                    Debug.Log(skipAssembly
                         ? $"IExposable checker: skipping {assemblyName}"
                         : $"IExposable checker: checking {assemblyName}");
                     checkedAssemblies.Add(type.Assembly);
