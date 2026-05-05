@@ -36,7 +36,8 @@
           defName="Apparel_Jacket" or
           defName="Apparel_Cape"
         )
-      ]</xpath>
+      ]
+    </xpath>
     <value>
       <modExtensions>
         <li Class="XylRacesCore.Genes.ThingDefExtension_Flight">

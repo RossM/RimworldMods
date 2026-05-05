@@ -37,5 +37,13 @@ namespace XylRacesCore.Patches
                    __result *= extension.healthScaleFactor;
             }
         }
+
+        [Feature(nameof(Genes.Psycast)), HarmonyPrefix, UsedImplicitly,
+         HarmonyPatch(nameof(Pawn.HasPsylink), MethodType.Getter)]
+        public static bool HasPsylink_Prefix(Pawn __instance, ref bool __result)
+        {
+            __result = __instance.psychicEntropy?.Psylink != null || __instance.HasActivePsycastGene();
+            return false;
+        }
     }
 }
