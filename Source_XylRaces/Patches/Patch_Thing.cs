@@ -1,10 +1,11 @@
-﻿using System;
+﻿using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
+using System.Runtime.CompilerServices;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -68,6 +69,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetStatValue_Wrapper(Pawn ingester, Thing thing, StatDef stat, bool applyPostProcess, int cacheStaleAfterTicks)
         {
             float value = thing.GetStatValue(stat, applyPostProcess, cacheStaleAfterTicks);

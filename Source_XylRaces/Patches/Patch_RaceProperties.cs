@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Text;
 using TranspilerUtil;
 using Verse;
@@ -53,6 +54,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Hediff GetFirstHediffOfDef_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
         {
             // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes

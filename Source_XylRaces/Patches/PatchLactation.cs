@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -25,6 +26,7 @@ namespace XylRacesCore.Patches
             }
         };
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Hediff GetFirstHediffOfDef_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
         {
             using (new ProfileBlock())
@@ -35,6 +37,7 @@ namespace XylRacesCore.Patches
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool HasHediff_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
         {
             using (new ProfileBlock())

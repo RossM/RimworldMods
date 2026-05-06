@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using TranspilerUtil;
 using Verse;
 
@@ -32,6 +33,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static List<MemeDef> RecipeDef_memePrerequisitesAny_Wrapper()
         {
             return null;

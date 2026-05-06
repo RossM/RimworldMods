@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -25,6 +26,7 @@ namespace XylRacesCore.Patches
             }
         };
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static List<GeneDef> GenesInOrder_Wrapper(Dialog_CreateXenotype __caller)
         {
             var result = GeneUtility.GenesInOrder;

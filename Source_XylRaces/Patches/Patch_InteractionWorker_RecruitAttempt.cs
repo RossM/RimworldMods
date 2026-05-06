@@ -4,6 +4,7 @@ using RimWorld;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using TranspilerUtil;
 using Verse;
 
@@ -39,6 +40,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float GetStatValue_Wrapper(Thing thing, StatDef stat, Pawn recipient, bool applyPostProcess, int cacheStaleAfterTicks)
         {
             float value = thing.GetStatValue(stat, applyPostProcess, cacheStaleAfterTicks);

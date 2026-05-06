@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
-using HarmonyLib;
+﻿using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
+using System.Text;
 using TranspilerUtil;
 using Verse;
 
@@ -194,12 +195,14 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static PawnCapacityDef PawnCapacityOffset_capacity_Wrapper(PawnCapacityOffset __instance, StatWorker __caller, StatRequest req)
         {
             Hediff_SubstituteCapacity foundHediff = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
             return foundHediff != null ? foundHediff.DefExt.substituteCapacity : __instance.capacity;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static PawnCapacityDef PawnCapacityFactor_capacity_Wrapper(PawnCapacityFactor __instance, StatWorker __caller, StatRequest req)
         {
             Hediff_SubstituteCapacity foundHediff = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);

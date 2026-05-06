@@ -4,6 +4,7 @@ using RimWorld;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using TranspilerUtil;
 using Verse;
 
@@ -32,6 +33,7 @@ namespace Source_XylIdeoTweaks
             return instructionsList;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IdeoPrefersNudity_Wrapper(Ideo ideo, Pawn pawn)
         {
             return ideo.IdeoPrefersNudityForGender(pawn.gender);
