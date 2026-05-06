@@ -27,6 +27,8 @@ namespace XylRacesCore
 
         public static HostilityOverrideManager GetManager(Map map)
         {
+            if (map == null)
+                return null;
             if (map == lastMap)
                 return lastManager;
 
@@ -46,7 +48,13 @@ namespace XylRacesCore
             return hostileActionTick + HostilityOverride.violationDisableTicks < Find.TickManager.TicksGame;
         }
 
-        private void Update()
+        public void Notify_PawnDamagedThing(Pawn pawn, Thing thing)
+        {
+            if (activeOverrides.Contains((pawn.Faction, thing.Faction)))
+                lastHostileActionTick[pawn.Faction] = Find.TickManager.TicksGame;
+        }
+
+        public override void MapComponentTick()
         {
             activeOverrides.Clear();
             foreach (var pawn in map.mapPawns.AllPawns)
@@ -60,17 +68,6 @@ namespace XylRacesCore
                     }
                 }
             }
-        }
-
-        public void Notify_PawnDamagedThing(Pawn pawn, Thing thing)
-        {
-            if (HasAnyOverride(pawn.Faction, thing.Faction))
-                lastHostileActionTick[pawn.Faction] = Find.TickManager.TicksGame;
-        }
-
-        public override void MapComponentTick()
-        {
-            Update();
         }
     }
 }

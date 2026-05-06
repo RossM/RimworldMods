@@ -37,7 +37,7 @@ namespace XylRacesCore.Patches
             {
                 if (dinfo.Instigator is Pawn instigator)
                 {
-                    HostilityOverrideManager.GetManager(instigator.Map).Notify_PawnDamagedThing(instigator, __instance);
+                    HostilityOverrideManager.GetManager(instigator.Map)?.Notify_PawnDamagedThing(instigator, __instance);
                 }
 
                 if (__instance is Pawn target)

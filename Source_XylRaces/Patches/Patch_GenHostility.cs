@@ -52,6 +52,8 @@ namespace XylRacesCore.Patches
             using (new ProfileBlock())
             {
                 var manager = HostilityOverrideManager.GetManager(pawn.Map);
+                if (manager == null)
+                    return false;
                 if (!manager.HasAnyOverride(pawn.Faction, pawn2.Faction))
                     return false;
 
