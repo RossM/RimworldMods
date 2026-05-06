@@ -51,21 +51,12 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                if (DisableHostilityCheckBase(pawn, pawn2))
-                    return true;
+                var manager = HostilityOverrideManager.GetManager(pawn.Map);
+                if (!manager.HasAnyOverride(pawn.Faction, pawn2.Faction))
+                    return false;
 
-                // When a character with a hostility-disabling gene tames a wild insect, the insect would immediately
-                // be attacked by its former allies. This prevents that.
-                if (pawn.IsColonyAnimal && pawn.Map.mapPawns.FreeColonistsSpawned.Any(colonist => DisableHostilityCheckBase(colonist, pawn2)))
-                    return true;
-
-                return false;
+                return pawn.IsColonyAnimal || pawn.HasActiveGeneOfType<HostilityOverride>(gene => gene.DisableHostilityFrom(pawn2));
             }
-        }
-
-        private static bool DisableHostilityCheckBase(Pawn pawn, Pawn pawn2)
-        {
-            return pawn.HasActiveGeneOfType<HostilityOverride>(gene => gene.DisableHostility(pawn2));
         }
     }
 }

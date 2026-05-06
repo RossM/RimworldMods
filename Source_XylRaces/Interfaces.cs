@@ -12,11 +12,6 @@ public interface INotifyDamageTaken
     void Notify_DamageTaken(DamageInfo damageInfo, DamageWorker.DamageResult damageResult);
 }
 
-public interface INotifyPawnDamagedThing
-{
-    void Notify_PawnDamagedThing(Thing thing, DamageInfo damageInfo, DamageWorker.DamageResult DamageResult);
-}
-
 public interface INotifyApparelChanged
 {
     void Notify_ApparelChanged(Pawn pawn);

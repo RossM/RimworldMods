@@ -14,7 +14,6 @@
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_HostilityOverride">
         <disableHostilityFromFaction>Insect</disableHostilityFromFaction>
-        <violationDisableTicks>2500</violationDisableTicks>
       </li>
     </modExtensions>
   </GeneDef>
