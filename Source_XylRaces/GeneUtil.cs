@@ -20,7 +20,16 @@ public static class GeneUtil
     // the gene lookup.
     public static bool HasActiveGene(this Pawn pawn, GeneDef def)
     {
-        return pawn.genes != null && def != null && pawn.GenesOfDef(def).Any(g => g.Active);
+        if (pawn.genes == null || def == null) 
+            return false;
+
+        foreach (Gene g in pawn.GenesOfDef(def))
+        {
+            if (g.Active) 
+                return true;
+        }
+
+        return false;
     }
 
     public static IEnumerable<T> GenesOfType<T>(this Pawn pawn) where T : class
@@ -39,17 +48,41 @@ public static class GeneUtil
 
     public static T FirstActiveGeneOfType<T>(this Pawn pawn) where T : class
     {
-        return pawn.GenesOfType<T>().FirstOrDefault(g => ((Gene)(object)g).Active);
+        foreach (T g in pawn.GenesOfType<T>())
+        {
+            if (((Gene)(object)g).Active) 
+                return g;
+        }
+
+        return null;
     }
 
     public static bool HasActiveGeneOfType<T>(this Pawn pawn) where T : class
     {
-        return pawn.genes != null && pawn.GenesOfType<T>().Any(g => ((Gene)(object)g).Active);
+        if (pawn.genes == null) 
+            return false;
+
+        foreach (T g in pawn.GenesOfType<T>())
+        {
+            if (((Gene)(object)g).Active) 
+                return true;
+        }
+
+        return false;
     }
 
     public static bool HasActiveGeneOfType<T>(this Pawn pawn, Func<T, bool> predicate) where T : class
     {
-        return pawn.genes != null && pawn.GenesOfType<T>().Any(g => ((Gene)(object)g).Active && predicate(g));
+        if (pawn.genes == null) 
+            return false;
+
+        foreach (T g in pawn.GenesOfType<T>())
+        {
+            if (((Gene)(object)g).Active && predicate(g)) 
+                return true;
+        }
+
+        return false;
     }
 
     public static IEnumerable<Gene> GenesWithModExtension<T>(this Pawn pawn) where T : class
