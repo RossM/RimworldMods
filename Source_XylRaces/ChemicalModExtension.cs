@@ -9,7 +9,7 @@ namespace XylRacesCore
 {
     public class ChemicalModExtension : DefModExtension
     {
-        public List<GeneDef> requiredGenes;
+        public List<GeneDef> requiredGenesAny;
         public List<GeneDef> prohibitedGenes;
     }
 }
