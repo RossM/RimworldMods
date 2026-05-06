@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System.Linq;
+using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
@@ -35,6 +36,8 @@ namespace XylRacesCore.Patches
                 return true;
 
             if (!defExtension.prohibitedGenes.NullOrEmpty() && defExtension.prohibitedGenes.Any(pawn.HasActiveGene))
+                return false;
+            if (!defExtension.requiredGenesAll.NullOrEmpty() && !defExtension.requiredGenesAll.All(pawn.HasActiveGene))
                 return false;
             if (!defExtension.requiredGenesAny.NullOrEmpty() && !defExtension.requiredGenesAny.Any(pawn.HasActiveGene))
                 return false;
