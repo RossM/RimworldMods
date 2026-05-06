@@ -12,7 +12,6 @@ namespace XylRacesCore.Genes
         public IntRange biostatCpx;
         public IntRange biostatMet;
         public float geneChance = 1.0f;
-        public float extraGeneChance = 1.0f;
         public List<GeneDef> extraGenes;
     }
 
@@ -32,15 +31,13 @@ namespace XylRacesCore.Genes
         {
             base.PostAdd();
 
-            if (Rand.Chance(DefExt.geneChance))
-            {
-                AddGene(DefDatabase<GeneDef>.AllDefsListForReading.RandomElementByWeight(GeneWeight));
+            if (!Rand.Chance(DefExt.geneChance)) 
+                return;
 
-                if (DefExt.extraGenes != null && Rand.Chance(DefExt.extraGeneChance))
-                {
-                    AddGene(DefExt.extraGenes.RandomElement());
-                }
-            }
+            List<GeneDef> candidateGenes = !DefExt.extraGenes.NullOrEmpty()
+                ? DefExt.extraGenes
+                : DefDatabase<GeneDef>.AllDefsListForReading;
+            AddGene(candidateGenes.RandomElementByWeight(GeneWeight));
         }
 
         private void AddGene(GeneDef geneDef)
