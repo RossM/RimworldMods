@@ -108,7 +108,13 @@ namespace XylRacesCore
 
         public static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
         {
-            return pawn.HediffsOfType<Hediff_SubstituteCapacity>().FirstOrDefault(hediff => hediff.Validate(stat, capacity));
+            foreach (Hediff_SubstituteCapacity hediff in pawn.HediffsOfType<Hediff_SubstituteCapacity>())
+            {
+                if (hediff.Validate(stat, capacity)) 
+                    return hediff;
+            }
+
+            return null;
         }
     }
 }
