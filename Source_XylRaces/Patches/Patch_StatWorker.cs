@@ -195,6 +195,7 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
+        // Note: this patch is performance-sensitive
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static PawnCapacityDef PawnCapacityOffset_capacity_Wrapper(PawnCapacityOffset __instance, StatWorker __caller, StatRequest req)
         {
