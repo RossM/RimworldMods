@@ -46,7 +46,11 @@ public static class GeneUtil
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> ActiveGenesOfType<T>(this Pawn pawn) where T : class
     {
-        return pawn.GenesOfType<T>().Where(g => ((Gene)(object)g).Active);
+        foreach (T g in pawn.GenesOfType<T>())
+        {
+            if (((Gene)(object)g).Active)
+                yield return g;
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
