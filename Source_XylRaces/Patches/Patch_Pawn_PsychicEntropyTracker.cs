@@ -7,6 +7,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Pawn_PsychicEntropyTracker))]
     public static class Patch_Pawn_PsychicEntropyTracker
     {
+        // Note: This patch is performance-sensitive
         [Feature(nameof(Psycast)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedsPsyfocus), MethodType.Getter)]
         public static bool NeedsPsyfocus_Prefix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
         {

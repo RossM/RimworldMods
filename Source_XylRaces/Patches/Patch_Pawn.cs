@@ -12,6 +12,7 @@ namespace XylRacesCore.Patches
         public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Pawn>);
         public static bool Enabled => enabled.Value;
 
+        // Note: This patch is performance-sensitive
         [Feature(nameof(GeneDefExtension_Pawn)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
         public static void BodySize_Postfix(Pawn __instance, ref float __result)
         {
