@@ -7,7 +7,7 @@
     <label>echolocation</label>
     <description>Carriers of this gene can use high-frequency sound waves to "see" with their ears instead of their eyes.</description>
     <biostatCpx>2</biostatCpx>
-    <biostatMet>-3</biostatMet>
+    <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>73</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Echolocation</iconPath>
@@ -121,7 +121,7 @@
       </li>
     </capMods>
     <statOffsets>
-      <MaxFlightTime>10</MaxFlightTime>
+      <MaxFlightTime>8</MaxFlightTime>
       <FlightCooldown>45</FlightCooldown>
     </statOffsets>
     <modExtensions>
