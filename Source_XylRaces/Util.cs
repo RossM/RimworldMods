@@ -11,7 +11,11 @@ namespace XylRacesCore
 {
     public readonly struct ProfileBlock : IDisposable
     {
+#if DEBUG
         public const bool GlobalEnabled = true;
+#else
+        public const bool GlobalEnabled = false;
+#endif
         public static bool InstrumentTickManager = false;
         private readonly bool _enabled;
 
