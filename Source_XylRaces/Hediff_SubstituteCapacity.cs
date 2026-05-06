@@ -26,18 +26,29 @@ namespace XylRacesCore
     {
         public HediffDefExtension_SubstituteCapacity DefExt => def.GetModExtension<HediffDefExtension_SubstituteCapacity>();
 
+        [Unsaved]
+        private int lastActiveCheckTick = int.MinValue;
+        [Unsaved]
+        private bool active;
+
         public bool Active
         {
             get
             {
+                int curTick = Find.TickManager.TicksGame;
+                if (curTick < lastActiveCheckTick + 60)
+                    return active;
+
                 float originalLevel = pawn.health.capacities.GetLevel(DefExt.originalCapacity);
                 float substituteLevel = pawn.health.capacities.GetLevel(DefExt.substituteCapacity);
-                return DefExt.mode switch
+                active = DefExt.mode switch
                 {
                     HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => (substituteLevel > originalLevel),
                     HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => (substituteLevel < originalLevel),
                     _ => true
                 };
+                lastActiveCheckTick = curTick;
+                return active;
             }
         }
 
@@ -89,9 +100,9 @@ namespace XylRacesCore
 
         public bool Validate(StatDef statDef, PawnCapacityDef pawnCapacityDef)
         {
-            if (DefExt.originalCapacity != pawnCapacityDef)
-                return false;
             if (!Active)
+                return false;
+            if (DefExt.originalCapacity != pawnCapacityDef)
                 return false;
             if (DefExt.excludeStats != null && DefExt.excludeStats.Contains(statDef))
                 return false;
