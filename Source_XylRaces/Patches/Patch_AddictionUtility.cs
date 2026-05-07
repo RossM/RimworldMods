@@ -22,27 +22,11 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                if (!ChemicalIsAllowedByGenes(pawn, chemicalDef))
+                if (!pawn.ChemicalIsAllowedByGenes(chemicalDef))
                     effect = 0;
                 else
                     effect *= pawn.GetStatValue(Defs.XylDrugEffectMultiplier);
             }
-        }
-
-        public static bool ChemicalIsAllowedByGenes(Pawn pawn, ChemicalDef chemicalDef)
-        {
-            var defExtension = chemicalDef.GetModExtension<ChemicalModExtension>();
-            if (defExtension == null)
-                return true;
-
-            if (!defExtension.prohibitedGenes.NullOrEmpty() && defExtension.prohibitedGenes.Any(pawn.HasActiveGene))
-                return false;
-            if (!defExtension.requiredGenesAll.NullOrEmpty() && !defExtension.requiredGenesAll.All(pawn.HasActiveGene))
-                return false;
-            if (!defExtension.requiredGenesAny.NullOrEmpty() && !defExtension.requiredGenesAny.Any(pawn.HasActiveGene))
-                return false;
-
-            return true;
         }
     }
 }
