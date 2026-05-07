@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
 using Verse;
 
 namespace XylRacesCore
@@ -12,6 +13,13 @@ namespace XylRacesCore
         {
             public TraitDef trait;
             public float chance = 1.0f;
+
+            [UsedImplicitly]
+            public void LoadDataFromXmlCustom(XmlNode xmlRoot)
+            {
+                DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "trait", xmlRoot.Name);
+                chance = ParseHelper.FromString<float>(xmlRoot.FirstChild.Value);
+            }
         }
 
         public IntRange pawnsCount = new(2, 4);

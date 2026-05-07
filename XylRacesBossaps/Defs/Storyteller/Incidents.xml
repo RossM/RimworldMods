@@ -20,14 +20,8 @@
         <pawnsCount>2 ~ 4</pawnsCount>
         <exitMapTicks>180000 ~ 300000</exitMapTicks> <!-- 3 to 5 days -->
         <forcedTraits>
-          <li>
-            <trait>Nudist</trait>
-            <chance>0.3</chance>
-          </li>
-          <li>
-            <trait>Ascetic</trait>
-            <chance>0.3</chance>
-          </li>
+          <Nudist>0.3</Nudist>
+          <Ascetic>0.3</Ascetic>
         </forcedTraits>
         <forbiddenMemes>
           <li MayRequire="Ludeon.RimWorld.Ideology">Cannibal</li>
