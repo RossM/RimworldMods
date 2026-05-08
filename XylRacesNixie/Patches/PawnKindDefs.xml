@@ -3,7 +3,7 @@
 
   <Operation Class="PatchOperationInsert">
     <success>Always</success>
-    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Neanderthal[text()>0]</xpath>
+    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Pigskin[text()>0]</xpath>
     <value>
       <XylNixie>0.025</XylNixie>
     </value>

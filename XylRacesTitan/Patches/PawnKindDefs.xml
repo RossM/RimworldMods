@@ -3,9 +3,16 @@
 
   <Operation Class="PatchOperationInsert">
     <success>Always</success>
-    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Hussar[text()>0]</xpath>
+    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Hussar[text()>0 and text()&lt;0.1]</xpath>
     <value>
       <XylTitan>0.025</XylTitan>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationInsert">
+    <success>Always</success>
+    <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/Hussar[text()>=0.1]</xpath>
+    <value>
+      <XylTitan>0.05</XylTitan>
     </value>
   </Operation>
 

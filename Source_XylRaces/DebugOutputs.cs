@@ -36,11 +36,11 @@ namespace XylRacesCore
             ];
             foreach (var xenotypeDef in DefDatabase<XenotypeDef>.AllDefs)
             {
-                var xenotypeDefCaptured = xenotypeDef;
+                var defCaptured = xenotypeDef;
 
-                columns.Add(new(xenotypeDefCaptured.defName, factionDef =>
+                columns.Add(new(defCaptured.defName, factionDef =>
                 {
-                    float xenotypeChance = GetXenotypeChance(factionDef, xenotypeDefCaptured);
+                    float xenotypeChance = GetXenotypeChance(factionDef, defCaptured);
                     return xenotypeChance > 0 ? xenotypeChance.ToStringPercent() : "";
                 }));
             }
@@ -50,6 +50,37 @@ namespace XylRacesCore
             static float GetXenotypeChance(FactionDef factionDef, XenotypeDef xenotypeDef)
             {
                 var weights = PawnGenerator.XenotypesAvailableFor(PawnKindDefOf.Colonist, factionDef);
+                var totalWeight = weights.Sum(pair => pair.Value);
+                if (weights.TryGetValue(xenotypeDef, out var xenotypeWeight))
+                    return xenotypeWeight / totalWeight;
+                return 0f;
+            }
+        }
+
+        [DebugOutput, UsedImplicitly]
+        public static void PawnKindXenotypes()
+        {
+            List<TableDataGetter<PawnKindDef>> columns =
+            [
+                new("defName", geneDef => geneDef.defName),
+                new("label", geneDef => geneDef.LabelCap),
+            ];
+            foreach (var xenotypeDef in DefDatabase<XenotypeDef>.AllDefs)
+            {
+                var defCaptured = xenotypeDef;
+
+                columns.Add(new(defCaptured.defName, pawnKindDef =>
+                {
+                    float xenotypeChance = GetXenotypeChance(pawnKindDef, defCaptured);
+                    return xenotypeChance > 0 ? xenotypeChance.ToStringPercent() : "";
+                }));
+            }
+            DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(pawnKindDef => pawnKindDef.xenotypeSet != null), columns.ToArray());
+            return;
+
+            static float GetXenotypeChance(PawnKindDef pawnKindDef, XenotypeDef xenotypeDef)
+            {
+                var weights = PawnGenerator.XenotypesAvailableFor(pawnKindDef, pawnKindDef.defaultFactionDef);
                 var totalWeight = weights.Sum(pair => pair.Value);
                 if (weights.TryGetValue(xenotypeDef, out var xenotypeWeight))
                     return xenotypeWeight / totalWeight;
