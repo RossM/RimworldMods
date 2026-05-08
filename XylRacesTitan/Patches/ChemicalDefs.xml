@@ -3,7 +3,12 @@
 <Patch>
 
   <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
-    <xpath>Defs/ChemicalDef[not(modExtensions/li[@Class="XylRacesCore.ChemicalModExtension"])]</xpath>
+    <xpath>
+      Defs/ChemicalDef[not(
+        modExtensions/li[@Class="XylRacesCore.ChemicalModExtension"] or
+        defName="Luciferium"
+      )]
+    </xpath>
     <value>
       <modExtensions>
         <li Class="XylRacesCore.ChemicalModExtension">
