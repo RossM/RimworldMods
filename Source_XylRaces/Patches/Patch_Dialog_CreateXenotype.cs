@@ -15,7 +15,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Dialog_CreateXenotype))]
     public class Patch_Dialog_CreateXenotype
     {
-        private static readonly InstructionMatcher Fixup_DrawGenes = new()
+        private static readonly InstructionMatcher Fixup_GenesInOrder = new()
         {
             Rules =
             {
@@ -25,6 +25,14 @@ namespace XylRacesCore.Patches
                     )
             }
         };
+
+        [Feature(nameof(GeneDefExtension_UIFilter)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DrawGenes")]
+        public static IEnumerable<CodeInstruction> DrawGenes_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        {
+            var instructionsList = new List<CodeInstruction>(instructions);
+            Fixup_GenesInOrder.MatchAndReplace(method, ref instructionsList, generator);
+            return instructionsList;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static List<GeneDef> GenesInOrder_Wrapper(Dialog_CreateXenotype __caller)
@@ -44,13 +52,15 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [Feature(nameof(GeneDefExtension_UIFilter)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DrawGenes")]
-        public static IEnumerable<CodeInstruction> DrawGenes_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        private static readonly InstructionMatcher Fixup_BiostatMet = new()
         {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_DrawGenes.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
+            Rules =
+            {
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Field(typeof(GeneDef), nameof(GeneDef.biostatMet)),
+                    AccessTools.Method(typeof(GeneUtil), nameof(GeneUtil.BiostatMetForDisplay))
+                )
+            }
+        };
     }
 }

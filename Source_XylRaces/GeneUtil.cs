@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Verse;
+using XylRacesCore.Genes;
 
 namespace XylRacesCore;
 
@@ -111,5 +112,15 @@ public static class GeneUtil
             return Enumerable.Empty<T>();
 
         return pawn.GenesWithModExtension<T>().Where(g => g.Active).SelectMany(g => g.def.modExtensions.OfType<T>());
+    }
+
+    public static int BiostatMetForDisplay(this GeneDef geneDef)
+    {
+        var bonusGeneDefExt = geneDef.GetModExtension<GeneDefExtension_BonusGene>();
+        if (bonusGeneDefExt == null)
+            return geneDef.biostatMet;
+        if (!bonusGeneDefExt.extraGenes.NullOrEmpty())
+            return bonusGeneDefExt.extraGenes.Min(g => g.biostatMet);
+        return bonusGeneDefExt.biostatMet.min;
     }
 }
