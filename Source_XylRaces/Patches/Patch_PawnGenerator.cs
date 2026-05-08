@@ -13,12 +13,6 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(PawnGenerator))]
     public static class Patch_PawnGenerator
     {
-        [DefOf]
-        public static class Defs
-        {
-            [UsedImplicitly] public static GeneDef XylEcholocation;
-        }
-
         private static readonly InstructionMatcher Fixup_TryGenerateNewPawnInternal = new()
         {
             Rules =
@@ -90,7 +84,11 @@ namespace XylRacesCore.Patches
             {
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Field(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner)),
-                    AccessTools.Method(typeof(Patch_FactionDef), nameof(XenotypeDefOf_Baseliner_Wrapper))
+                    AccessTools.Method(typeof(Patch_PawnGenerator), nameof(XenotypeDefOf_Baseliner_Wrapper))
+                ),
+                InstructionMatcher.MakeRedirectRule(
+                    "<XenotypesAvailableFor>g__AddOrAdjust|49_0",
+                    AccessTools.Method(typeof(Patch_PawnGenerator), nameof(AddOrAdjust_Wrapper))
                 ),
             }
         };
@@ -107,6 +105,22 @@ namespace XylRacesCore.Patches
         {
             FactionDef factionDef2 = faction?.def ?? factionDef;
             return XenotypeSetWithDefault.GetDefaultXenotype(factionDef2?.xenotypeSet);
+        }
+
+        public static void AddOrAdjust_Wrapper(XenotypeChance xenotypeChance, FactionDef factionDef = null, Faction faction = null)
+        {
+            FactionDef factionDef2 = faction?.def ?? factionDef;
+            if (xenotypeChance.xenotype != XenotypeSetWithDefault.GetDefaultXenotype(factionDef2?.xenotypeSet))
+            {
+                if (PawnGenerator.tmpXenotypeChances.ContainsKey(xenotypeChance.xenotype))
+                {
+                    PawnGenerator.tmpXenotypeChances[xenotypeChance.xenotype] += xenotypeChance.chance;
+                }
+                else
+                {
+                    PawnGenerator.tmpXenotypeChances.Add(xenotypeChance.xenotype, xenotypeChance.chance);
+                }
+            }
         }
     }
 }
