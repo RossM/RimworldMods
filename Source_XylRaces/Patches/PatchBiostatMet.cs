@@ -27,7 +27,7 @@ namespace XylRacesCore.Patches
         };
 
         [UsedImplicitly]
-        static IEnumerable<MethodBase> TargetMethods()
+        public static IEnumerable<MethodBase> TargetMethods()
         {
             yield return AccessTools.Method(typeof(Dialog_CreateXenotype), "DrawGene");
             yield return AccessTools.Method(typeof(GeneCreationDialogBase), "OnGenesChanged");
