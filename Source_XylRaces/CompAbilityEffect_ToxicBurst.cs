@@ -1,8 +1,19 @@
-﻿using RimWorld;
+﻿using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 
 namespace XylRacesCore
 {
+    public class CompProperties_AbilityToxicBurst : CompProperties_AbilityReleaseGas
+    {
+        public float AIUseRadius;
+
+        public CompProperties_AbilityToxicBurst()
+        {
+            compClass = typeof(CompAbilityEffect_ToxicBurst);
+        }
+    }
+
     public class CompAbilityEffect_ToxicBurst : CompAbilityEffect_ReleaseGas
     {
         private new CompProperties_AbilityToxicBurst Props => (CompProperties_AbilityToxicBurst)props;
