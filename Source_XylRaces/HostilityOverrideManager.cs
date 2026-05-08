@@ -16,6 +16,8 @@ namespace XylRacesCore
         [Unsaved]
         private static HostilityOverrideManager lastManager;
 
+        public const int violationDisableTicks = 2500;
+
         public HashSet<(Faction, Faction)> activeOverrides = new();
         public Dictionary<Faction, int> lastHostileActionTick = new();
 
@@ -45,7 +47,7 @@ namespace XylRacesCore
             if (!lastHostileActionTick.TryGetValue(from, out int hostileActionTick)) 
                 return true;
 
-            return hostileActionTick + HostilityOverride.violationDisableTicks < Find.TickManager.TicksGame;
+            return hostileActionTick + violationDisableTicks < Find.TickManager.TicksGame;
         }
 
         public void Notify_PawnDamagedThing(Pawn pawn, Thing thing)
