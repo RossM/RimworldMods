@@ -360,7 +360,7 @@ namespace TranspilerUtil
             {
                 if (instruction.opcode.Value == OpCodes.Call.Value || instruction.opcode.Value == OpCodes.Callvirt.Value)
                     return ((MethodBase)instruction.operand).Name == oldMemberName;
-                if (instruction.opcode.Value == OpCodes.Ldfld.Value)
+                if (instruction.opcode.Value == OpCodes.Ldfld.Value || instruction.opcode.Value == OpCodes.Ldsfld.Value)
                     return ((FieldInfo)instruction.operand).Name == oldMemberName;
                 return false;
             }
@@ -459,37 +459,22 @@ namespace TranspilerUtil
 
         private static (Type[] types, string[] names) GetParameterTypesAndNames(MemberInfo member, string instanceName)
         {
-            FieldInfo field = member as FieldInfo;
-            if (field != null)
+            return member switch
             {
-                if (field.IsStatic)
-                {
-                    Type[] types = [];
-                    string[] names = [];
-                    return (types, names);
-                }
-                else
-                {
-                    Type[] types = [field.DeclaringType];
-                    string[] names = [instanceName];
-                    return (types, names);
-                }
-            }
-
-            MethodBase method = (MethodBase)member;
-            ParameterInfo[] callerParameters = method.GetParameters();
-            if (method.IsStatic)
-            {
-                Type[] types = [.. callerParameters.Select(p => p.ParameterType)];
-                string[] names = [.. callerParameters.Select(p => p.Name)];
-                return (types, names);
-            }
-            else
-            {
-                Type[] types = [method.DeclaringType, .. callerParameters.Select(p => p.ParameterType)];
-                string[] names = [instanceName, .. callerParameters.Select(p => p.Name)];
-                return (types, names);
-            }
+                FieldInfo { IsStatic: true } => (
+                    [], 
+                    []),
+                FieldInfo field => (
+                    [field.DeclaringType], 
+                    [instanceName]),
+                MethodInfo { IsStatic: true} method => (
+                    [.. (method?.GetParameters()).Select(p => p.ParameterType)],
+                    [.. (method?.GetParameters()).Select(p => p.Name)]),
+                MethodInfo method => (
+                    [method.DeclaringType, .. (method?.GetParameters()).Select(p => p.ParameterType)],
+                    [instanceName, .. (method?.GetParameters()).Select(p => p.Name)]),
+                _ => throw new InvalidOperationException()
+            };
         }
 
         private static OpCode OpcodeFor(MemberInfo callee)
@@ -499,7 +484,8 @@ namespace TranspilerUtil
                 FieldInfo { IsStatic: true } => OpCodes.Ldsfld,
                 FieldInfo => OpCodes.Ldfld,
                 MethodBase { IsVirtual: true } => OpCodes.Callvirt,
-                _ => OpCodes.Call
+                MethodBase => OpCodes.Call,
+                _ => throw new InvalidOperationException()
             };
         }
     }
