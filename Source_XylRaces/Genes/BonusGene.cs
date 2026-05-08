@@ -48,7 +48,7 @@ namespace XylRacesCore.Genes
                 return;
 
             if (!GeneTuning.BiostatRange.Includes(geneDef.biostatMet +
-                                                  pawn.genes.GenesListForReading.Sum(g => g.def.biostatMet)))
+                                                  pawn.genes.GenesListForReading.Sum(g => g.Active ? g.def.biostatMet : 0)))
                 return;
 
             (addedGenes ??= []).Add(pawn.genes.AddGene(geneDef, IsXenogene));
