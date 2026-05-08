@@ -152,7 +152,7 @@
     <defName>XylLithoid</defName>
     <geneClass>XylRacesCore.Genes.ChemicalImmunity</geneClass>
     <label>lithoid</label>
-    <description>TODO</description>
+    <description>Carriers of this gene have a unique biochemistry that incorporates carbon-silicates. They are completely unaffected by most drugs that work on normal humans, and instead must use specialized drugs designed for lithoids.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>1</biostatMet>
     <displayCategory>Lithoid</displayCategory>
@@ -164,7 +164,7 @@
     <defName>XylPetrification</defName>
     <geneClass>XylRacesCore.Genes.ChemicalImmunity</geneClass>
     <label>petrification</label>
-    <description>TODO</description>
+    <description>Carriers of this gene have a chance to develop a disease named petrification. Petrification slowly replaces tissues throughout the body with stone. The disease is incurable, but progress can be slowed with medical treatment, and the affected tissues can be removed surgically.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
     <displayCategory>Lithoid</displayCategory>
@@ -175,7 +175,7 @@
   <GeneDef>
     <defName>XylRockToss</defName>
     <label>rock toss</label>
-    <description>TODO</description>
+    <description>The carrier can pick up a rock chunk and throw it in combat, dealing damage in an area around where it lands.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Ability</displayCategory>
@@ -187,7 +187,7 @@
     <defName>XylSpecialist</defName>
     <geneClass>XylRacesCore.Genes.BonusGene</geneClass>
     <label>specialist</label>
-    <description>TODO</description>
+    <description>The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
@@ -220,7 +220,7 @@
     <defName>XylSuperSpecialist</defName>
     <geneClass>XylRacesCore.Genes.BonusGene</geneClass>
     <label>super-specialist</label>
-    <description>TODO</description>
+    <description>The carrier's aptitude in one random skill is increased by 8. Aptitude acts like an offset on skill level. Additionally, one level of passion is added to that skill.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
