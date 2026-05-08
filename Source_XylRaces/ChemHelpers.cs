@@ -21,4 +21,13 @@ public static class ChemHelpers
 
         return true;
     }
+
+    public static bool ChemicalIsAllowedByGenes(this Pawn pawn, ThingDef drug)
+    {
+        ChemicalDef chemical = DrugStatsUtility.GetChemical(drug);
+        if (chemical == null)
+            return true;
+
+        return pawn.ChemicalIsAllowedByGenes(chemical);
+    }
 }
