@@ -13,7 +13,7 @@ using XylRacesCore.Genes;
 namespace XylRacesCore.Patches
 {
     [HarmonyPatch]
-    public static class Patch_GeneCreationDialogBase
+    public static class PatchBiostatMet
     {
         private static readonly InstructionMatcher Fixup_BiostatMet = new()
         {
@@ -21,7 +21,7 @@ namespace XylRacesCore.Patches
             {
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Field(typeof(GeneDef), nameof(GeneDef.biostatMet)),
-                    AccessTools.Method(typeof(GeneUtil), nameof(GeneUtil.BiostatMetForDisplay))
+                    AccessTools.Method(typeof(PatchBiostatMet), nameof(GeneDef_biostatMet_Wrapper))
                 )
             }
         };
@@ -42,6 +42,11 @@ namespace XylRacesCore.Patches
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_BiostatMet.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
+        }
+
+        public static int GeneDef_biostatMet_Wrapper(GeneDef __instance)
+        {
+            return __instance.BiostatMetForDisplay();
         }
     }
 }

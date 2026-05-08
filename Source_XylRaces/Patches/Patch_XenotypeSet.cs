@@ -38,9 +38,9 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static XenotypeDef XenotypeDefOf_Baseliner_Wrapper(XenotypeSet __instance)
+        public static XenotypeDef XenotypeDefOf_Baseliner_Wrapper(XenotypeSet __caller)
         {
-            return XenotypeSetWithDefault.GetDefaultXenotype(__instance);
+            return XenotypeSetWithDefault.GetDefaultXenotype(__caller);
         }
     }
 }
