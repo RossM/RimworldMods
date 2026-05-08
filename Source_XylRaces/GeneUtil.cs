@@ -119,8 +119,10 @@ public static class GeneUtil
         var bonusGeneDefExt = geneDef.GetModExtension<GeneDefExtension_BonusGene>();
         if (bonusGeneDefExt == null)
             return geneDef.biostatMet;
+        if (bonusGeneDefExt.geneChance < 1.0f)
+            return geneDef.biostatMet;
         if (!bonusGeneDefExt.extraGenes.NullOrEmpty())
-            return bonusGeneDefExt.extraGenes.Min(g => g.biostatMet);
-        return bonusGeneDefExt.biostatMet.min;
+            return geneDef.biostatMet + bonusGeneDefExt.extraGenes.Min(g => g.biostatMet);
+        return geneDef.biostatMet + bonusGeneDefExt.biostatMet.min;
     }
 }
