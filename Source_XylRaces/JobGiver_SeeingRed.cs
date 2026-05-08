@@ -37,7 +37,8 @@ namespace XylRacesCore
 
         protected virtual bool IsGoodTarget(Thing thing)
         {
-            return thing is Pawn { Spawned: not false, Downed: false } pawn && !pawn.IsPsychologicallyInvisible();
+            return (thing is Pawn { Spawned: true, Downed: false } pawn && !pawn.IsPsychologicallyInvisible()) ||
+                   (thing is Building { Spawned: true } building && building.def.building.IsTurret);
         }
 
         public override ThinkNode DeepCopy(bool resolve = true)
