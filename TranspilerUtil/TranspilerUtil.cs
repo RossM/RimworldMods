@@ -462,9 +462,18 @@ namespace TranspilerUtil
             FieldInfo field = member as FieldInfo;
             if (field != null)
             {
-                Type[] types = [field.DeclaringType];
-                string[] names = [instanceName];
-                return (types, names);
+                if (field.IsStatic)
+                {
+                    Type[] types = [];
+                    string[] names = [];
+                    return (types, names);
+                }
+                else
+                {
+                    Type[] types = [field.DeclaringType];
+                    string[] names = [instanceName];
+                    return (types, names);
+                }
             }
 
             MethodBase method = (MethodBase)member;
@@ -487,6 +496,7 @@ namespace TranspilerUtil
         {
             return callee switch
             {
+                FieldInfo { IsStatic: true } => OpCodes.Ldsfld,
                 FieldInfo => OpCodes.Ldfld,
                 MethodBase { IsVirtual: true } => OpCodes.Callvirt,
                 _ => OpCodes.Call

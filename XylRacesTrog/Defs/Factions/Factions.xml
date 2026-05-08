@@ -8,9 +8,9 @@
     <pawnsPlural>trogs</pawnsPlural>
     <description>A collection of warlike xenohuman tribes dominated by hideous trogs. Belligerent and insular, they refuse all dealings with outsiders. They may be primitive, but their ability to tame and control giant insects makes them a serious threat.\n\nTrogs are found across the rimworlds, the mutated descendants of interbreeding between countless xenohuman lineages in barely survivable conditions. What they lack in intelligence, they make up for in brute strength and sheer tenacity.</description>
     <factionIconPath>Xyl/World/WorldObjects/Expanding/VillageTrog</factionIconPath>
-    <xenotypeSet Inherit="False">
+    <xenotypeSet Inherit="False" Class="XylRacesCore.XenotypeSetWithDefault">
+      <defaultXenotype>XylTrog</defaultXenotype>
       <xenotypeChances>
-        <XylTrog>0.49</XylTrog>
         <Baseliner>0.025</Baseliner>
         <Dirtmole>0.1</Dirtmole>
         <Impid>0.025</Impid>

@@ -1,0 +1,51 @@
+﻿using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Text;
+using System.Threading.Tasks;
+using TranspilerUtil;
+using XylRacesCore.Genes;
+
+namespace XylRacesCore.Patches
+{
+    [HarmonyPatch(typeof(XenotypeSet))]
+    public static class Patch_XenotypeSet
+    {
+        private static readonly InstructionMatcher Fixup_DefaultXenotype = new()
+        {
+            Rules =
+            {
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Field(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner)),
+                    AccessTools.Method(typeof(Patch_XenotypeSet), nameof(XenotypeDefOf_Baseliner_Wrapper))
+                ),
+            }
+        };
+
+        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(XenotypeSet.BaselinerChance), MethodType.Getter)]
+        public static IEnumerable<CodeInstruction> BaselinerChance_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        {
+            var instructionsList = new List<CodeInstruction>(instructions);
+            Fixup_DefaultXenotype.MatchAndReplace(method, ref instructionsList, generator);
+            return instructionsList;
+        }
+
+        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(XenotypeSet.Contains))]
+        public static IEnumerable<CodeInstruction> Contains_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        {
+            var instructionsList = new List<CodeInstruction>(instructions);
+            Fixup_DefaultXenotype.MatchAndReplace(method, ref instructionsList, generator);
+            return instructionsList;
+        }
+
+        public static XenotypeDef XenotypeDefOf_Baseliner_Wrapper(XenotypeSet __instance)
+        {
+            return XenotypeSetWithDefault.GetDefaultXenotype(__instance);
+        }
+    }
+}
