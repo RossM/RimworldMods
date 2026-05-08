@@ -6,9 +6,9 @@ using Verse;
 
 namespace XylRacesCore.Genes
 {
-    public class GeneDefExtension_Atavism : DefModExtension
+    public class GeneDefExtension_BonusGene : DefModExtension
     {
-        public IntRange biostatArc = new(int.MinValue, int.MaxValue);
+        public IntRange biostatArc = IntRange.Zero;
         public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
         public IntRange biostatMet = new(int.MinValue, int.MaxValue);
         public float geneChance = 1.0f;
@@ -16,10 +16,10 @@ namespace XylRacesCore.Genes
     }
 
     [UsedImplicitly]
-    public class Atavism : Gene
+    public class BonusGene : Gene
     {
         public List<Gene> addedGenes;
-        public GeneDefExtension_Atavism DefExt => def.GetModExtension<GeneDefExtension_Atavism>();
+        public GeneDefExtension_BonusGene DefExt => def.GetModExtension<GeneDefExtension_BonusGene>();
 
         public override void ExposeData()
         {
@@ -42,19 +42,27 @@ namespace XylRacesCore.Genes
 
         private void AddGene(GeneDef geneDef)
         {
-            if (geneDef != null && !pawn.HasActiveGene(geneDef))
-                (addedGenes ??= []).Add(pawn.genes.AddGene(geneDef, IsXenogene));
+            if (geneDef == null)
+                return;
+            if (pawn.genes.GenesListForReading.Any(g => g.def == geneDef))
+                return;
+
+            if (!GeneTuning.BiostatRange.Includes(geneDef.biostatMet +
+                                                  pawn.genes.GenesListForReading.Sum(g => g.def.biostatMet)))
+                return;
+
+            (addedGenes ??= []).Add(pawn.genes.AddGene(geneDef, IsXenogene));
         }
 
         private bool IsXenogene => pawn.genes.Xenogenes.Contains(this);
 
         private float GeneWeight(GeneDef geneDef)
         {
-            if (geneDef.biostatArc < DefExt.biostatArc.min || geneDef.biostatArc > DefExt.biostatArc.max)
+            if (!DefExt.biostatArc.Includes(geneDef.biostatArc))
                 return 0.0f;
-            if (geneDef.biostatCpx < DefExt.biostatCpx.min || geneDef.biostatCpx > DefExt.biostatCpx.max)
+            if (!DefExt.biostatCpx.Includes(geneDef.biostatCpx))
                 return 0.0f;
-            if (geneDef.biostatMet < DefExt.biostatMet.min || geneDef.biostatMet > DefExt.biostatMet.max)
+            if (!DefExt.biostatMet.Includes(geneDef.biostatMet))
                 return 0.0f;
 
             // No genes with requirements, unless they are met by the pawn's xenotype

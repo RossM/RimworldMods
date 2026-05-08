@@ -83,7 +83,7 @@
 
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.Atavism</geneClass>
+    <geneClass>XylRacesCore.Genes.BonusGene</geneClass>
     <defName>XylGeneticAtavism</defName>
     <label>genetic atavism</label>
     <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
@@ -96,7 +96,7 @@
       <li>Extra gene chance: 50%</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_Atavism">
+      <li Class="XylRacesCore.Genes.GeneDefExtension_BonusGene">
         <biostatArc>0~0</biostatArc>
         <biostatCpx>1~99</biostatCpx>
         <biostatMet>-2~2</biostatMet>
