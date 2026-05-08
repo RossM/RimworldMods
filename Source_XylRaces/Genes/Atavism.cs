@@ -8,9 +8,9 @@ namespace XylRacesCore.Genes
 {
     public class GeneDefExtension_Atavism : DefModExtension
     {
-        public IntRange biostatArc;
-        public IntRange biostatCpx;
-        public IntRange biostatMet;
+        public IntRange biostatArc = new(int.MinValue, int.MaxValue);
+        public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
+        public IntRange biostatMet = new(int.MinValue, int.MaxValue);
         public float geneChance = 1.0f;
         public List<GeneDef> extraGenes;
     }
@@ -34,10 +34,10 @@ namespace XylRacesCore.Genes
             if (!Rand.Chance(DefExt.geneChance)) 
                 return;
 
-            List<GeneDef> candidateGenes = !DefExt.extraGenes.NullOrEmpty()
-                ? DefExt.extraGenes
-                : DefDatabase<GeneDef>.AllDefsListForReading;
-            AddGene(candidateGenes.RandomElementByWeight(GeneWeight));
+            GeneDef gene = !DefExt.extraGenes.NullOrEmpty()
+                ? DefExt.extraGenes.RandomElement()
+                : DefDatabase<GeneDef>.AllDefsListForReading.RandomElementByWeight(GeneWeight);
+            AddGene(gene);
         }
 
         private void AddGene(GeneDef geneDef)

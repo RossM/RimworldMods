@@ -45,8 +45,8 @@
     <description>Carriers of this gene have extremely tough skin studded with rock-like plates that can deflect or absorb attacks.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-4</biostatMet>
-    <displayCategory>ResistanceAndWeakness</displayCategory>
-    <displayOrderInCategory>111</displayOrderInCategory>
+    <displayCategory>Lithoid</displayCategory>
+    <displayOrderInCategory>900</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MineralizedSkin</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <forcedHeadTypes>
@@ -57,12 +57,14 @@
       <li>Male_Osteoliths_Average_Wide</li>
       <li>Male_Osteoliths_Narrow_Wide</li>
     </forcedHeadTypes>
+    <prerequisite>XylLithoid</prerequisite>
     <exclusionTags>
       <li>Fur</li>
     </exclusionTags>
     <statOffsets>
       <ArmorRating_Sharp>0.7</ArmorRating_Sharp>
       <ArmorRating_Blunt>0.5</ArmorRating_Blunt>
+      <ArmorRating_Heat>0.5</ArmorRating_Heat>
       <MoveSpeed>-0.4</MoveSpeed>
     </statOffsets>
     <fur>Osteoliths</fur>
@@ -151,11 +153,100 @@
     <geneClass>XylRacesCore.Genes.ChemicalImmunity</geneClass>
     <label>lithoid</label>
     <description>TODO</description>
-    <biostatCpx>1</biostatCpx>
+    <biostatCpx>2</biostatCpx>
     <biostatMet>1</biostatMet>
     <displayCategory>Lithoid</displayCategory>
     <displayOrderInCategory>1000</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylPetrification</defName>
+    <geneClass>XylRacesCore.Genes.ChemicalImmunity</geneClass>
+    <label>petrification</label>
+    <description>TODO</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>Lithoid</displayCategory>
+    <displayOrderInCategory>800</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylRockToss</defName>
+    <label>rock toss</label>
+    <description>TODO</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <displayCategory>Ability</displayCategory>
+    <displayOrderInCategory>201</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylSpecialist</defName>
+    <geneClass>XylRacesCore.Genes.Atavism</geneClass>
+    <label>specialist</label>
+    <description>TODO</description>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>0</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <exclusionTags>
+      <li>XylSpecialist</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Atavism">
+        <extraGenes>
+          <!--<li>AptitudeStrong_Shooting</li>-->
+          <!--<li>AptitudeStrong_Melee</li>-->
+          <li>AptitudeStrong_Construction</li>
+          <li>AptitudeStrong_Mining</li>
+          <li>AptitudeStrong_Cooking</li>
+          <li>AptitudeStrong_Plants</li>
+          <li>AptitudeStrong_Animals</li>
+          <li>AptitudeStrong_Crafting</li>
+          <li>AptitudeStrong_Artistic</li>
+          <li>AptitudeStrong_Medicine</li>
+          <!--<li>AptitudeStrong_Social</li>-->
+          <!--<li>AptitudeStrong_Intellectual</li>-->
+        </extraGenes>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylSuperSpecialist</defName>
+    <geneClass>XylRacesCore.Genes.Atavism</geneClass>
+    <label>super-specialist</label>
+    <description>TODO</description>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>0</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <exclusionTags>
+      <li>XylSpecialist</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_Atavism">
+        <extraGenes>
+          <!--<li>AptitudeRemarkable_Shooting</li>-->
+          <!--<li>AptitudeRemarkable_Melee</li>-->
+          <li>AptitudeRemarkable_Construction</li>
+          <li>AptitudeRemarkable_Mining</li>
+          <li>AptitudeRemarkable_Cooking</li>
+          <li>AptitudeRemarkable_Plants</li>
+          <li>AptitudeRemarkable_Animals</li>
+          <li>AptitudeRemarkable_Crafting</li>
+          <li>AptitudeRemarkable_Artistic</li>
+          <li>AptitudeRemarkable_Medicine</li>
+          <!--<li>AptitudeRemarkable_Social</li>-->
+          <!--<li>AptitudeRemarkable_Intellectual</li>-->
+        </extraGenes>
+      </li>
+    </modExtensions>
   </GeneDef>
 
 </Defs>
