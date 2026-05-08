@@ -13,6 +13,7 @@ namespace XylRacesCore.Genes
         public IntRange biostatMet = new(int.MinValue, int.MaxValue);
         public float geneChance = 1.0f;
         public List<GeneDef> extraGenes;
+        public bool removeAfterAdding = false;
     }
 
     [UsedImplicitly]
@@ -38,6 +39,9 @@ namespace XylRacesCore.Genes
                 ? DefExt.extraGenes.RandomElement()
                 : DefDatabase<GeneDef>.AllDefsListForReading.RandomElementByWeight(GeneWeight);
             AddGene(gene);
+
+            if (DefExt.removeAfterAdding)
+                pawn.genes.RemoveGene(this);
         }
 
         private void AddGene(GeneDef geneDef)
@@ -86,6 +90,8 @@ namespace XylRacesCore.Genes
         {
             base.PostRemove();
 
+            if (DefExt.removeAfterAdding)
+                return;
             if (addedGenes == null)
                 return;
 

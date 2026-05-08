@@ -230,6 +230,7 @@
     </exclusionTags>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_BonusGene">
+        <removeAfterAdding>true</removeAfterAdding>
         <extraGenes>
           <!--<li>AptitudeStrong_Shooting</li>-->
           <!--<li>AptitudeStrong_Melee</li>-->
@@ -263,6 +264,7 @@
     </exclusionTags>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_BonusGene">
+        <removeAfterAdding>true</removeAfterAdding>
         <extraGenes>
           <!--<li>AptitudeRemarkable_Shooting</li>-->
           <!--<li>AptitudeRemarkable_Melee</li>-->
