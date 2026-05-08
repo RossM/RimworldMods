@@ -38,18 +38,18 @@ public static class ChemHelpers
     {
         TableDataGetter<ThingDef>[] columns =
         [
-            new("defName", x => x.defName),
-            new("label", x => x.LabelCap),
+            new("defName", thingDef => thingDef.defName),
+            new("label", thingDef => thingDef.LabelCap),
             new("prohibitedGenes",
-                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalDefExtension>()?.prohibitedGenes
-                    ?.Select(g => g.defName).ToCommaList() ?? ""),
+                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<ChemicalDefExtension>()?.prohibitedGenes
+                    ?.Select(geneDef => geneDef.defName).ToCommaList() ?? ""),
             new("requiredGenesAll",
-                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalDefExtension>()?.requiredGenesAll
-                    ?.Select(g => g.defName).ToCommaList() ?? ""),
+                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<ChemicalDefExtension>()?.requiredGenesAll
+                    ?.Select(geneDef => geneDef.defName).ToCommaList() ?? ""),
             new("requiredGenesAny",
-                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalDefExtension>()?.requiredGenesAny
-                    ?.Select(g => g.defName).ToCommaList() ?? ""),
+                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<ChemicalDefExtension>()?.requiredGenesAny
+                    ?.Select(geneDef => geneDef.defName).ToCommaList() ?? ""),
         ];
-        DebugTables.MakeTablesDialog(DefDatabase<ThingDef>.AllDefs.Where(x => x.IsDrug).OrderBy(x => x.BaseMarketValue), columns);
+        DebugTables.MakeTablesDialog(DefDatabase<ThingDef>.AllDefs.Where(thingDef => thingDef.IsDrug).OrderBy(thingDef => thingDef.BaseMarketValue), columns);
     }
 }

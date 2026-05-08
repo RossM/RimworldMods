@@ -16,12 +16,12 @@ namespace XylRacesCore
         {
             TableDataGetter<GeneDef>[] columns =
             [
-                new("defName", x => x.defName),
-                new("label", x => x.LabelCap),
-                new("displayCategory", x => x.displayCategory.defName),
-                new("displayOrderInCategory", x => x.displayOrderInCategory),
+                new("defName", geneDef => geneDef.defName),
+                new("label", geneDef => geneDef.LabelCap),
+                new("displayCategory", geneDef => geneDef.displayCategory.defName),
+                new("displayOrderInCategory", geneDef => geneDef.displayOrderInCategory),
             ];
-            DebugTables.MakeTablesDialog(DefDatabase<GeneDef>.AllDefs.OrderByDescending(x => x.displayCategory.displayPriorityInXenotype).ThenBy(x => x.displayOrderInCategory), columns);
+            DebugTables.MakeTablesDialog(DefDatabase<GeneDef>.AllDefs.OrderByDescending(geneDef => geneDef.displayCategory.displayPriorityInXenotype).ThenBy(geneDef => geneDef.displayOrderInCategory), columns);
         }
     }
 }

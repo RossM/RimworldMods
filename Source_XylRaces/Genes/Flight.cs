@@ -175,11 +175,11 @@ namespace XylRacesCore.Genes
         {
             TableDataGetter<ThingDef>[] columns =
             [
-                new("defName", x => x.defName),
-                new("label", x => x.LabelCap),
-                new("allowsFlight", x => ApparelAllowsFlight(x))
+                new("defName", thingDef => thingDef.defName),
+                new("label", thingDef => thingDef.LabelCap),
+                new("allowsFlight", thingDef => ApparelAllowsFlight(thingDef))
             ];
-            DebugTables.MakeTablesDialog(DefDatabase<ThingDef>.AllDefs.Where(x => x.IsApparel).OrderBy(x => x.BaseMarketValue), columns);
+            DebugTables.MakeTablesDialog(DefDatabase<ThingDef>.AllDefs.Where(thingDef => thingDef.IsApparel).OrderBy(thingDef => thingDef.BaseMarketValue), columns);
         }
     }
 }
