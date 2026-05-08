@@ -207,7 +207,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
     <displayCategory>Temperature</displayCategory>
-    <displayOrderInCategory>0</displayOrderInCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>-->
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_Torpor">

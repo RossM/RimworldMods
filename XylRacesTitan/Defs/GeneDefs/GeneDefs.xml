@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Defs>
 
   <GeneDef>
@@ -8,7 +9,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>0</displayOrderInCategory>
+    <displayOrderInCategory>150</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Giant</iconPath>
     <exclusionTags>
       <li>BodySize</li>
@@ -46,7 +47,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-4</biostatMet>
     <displayCategory>Lithoid</displayCategory>
-    <displayOrderInCategory>900</displayOrderInCategory>
+    <displayOrderInCategory>50</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MineralizedSkin</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <forcedHeadTypes>
@@ -121,21 +122,51 @@
     <displayOrderInCategory>602</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>
     <suppressedTraits>
-      <li><def>NaturalMood</def><degree>2</degree></li>
-      <li><def>NaturalMood</def><degree>1</degree></li>
-      <li><def>NaturalMood</def><degree>-1</degree></li>
-      <li><def>NaturalMood</def><degree>-2</degree></li>
-      <li><def>Nerves</def><degree>2</degree></li>
-      <li><def>Nerves</def><degree>1</degree></li>
-      <li><def>Nerves</def><degree>-1</degree></li>
-      <li><def>Nerves</def><degree>-2</degree></li>
-      <li><def>Neurotic</def><degree>2</degree></li>
-      <li><def>Neurotic</def><degree>1</degree></li>
-      <li><def>Bloodlust</def></li>
-      <li><def>TooSmart</def></li>
-      <li><def>Greedy</def></li>
-      <li><def>Jealous</def></li>
-      <li><def>TorturedArtist</def></li>
+      <li>
+        <def>NaturalMood</def><degree>2</degree>
+      </li>
+      <li>
+        <def>NaturalMood</def><degree>1</degree>
+      </li>
+      <li>
+        <def>NaturalMood</def><degree>-1</degree>
+      </li>
+      <li>
+        <def>NaturalMood</def><degree>-2</degree>
+      </li>
+      <li>
+        <def>Nerves</def><degree>2</degree>
+      </li>
+      <li>
+        <def>Nerves</def><degree>1</degree>
+      </li>
+      <li>
+        <def>Nerves</def><degree>-1</degree>
+      </li>
+      <li>
+        <def>Nerves</def><degree>-2</degree>
+      </li>
+      <li>
+        <def>Neurotic</def><degree>2</degree>
+      </li>
+      <li>
+        <def>Neurotic</def><degree>1</degree>
+      </li>
+      <li>
+        <def>Bloodlust</def>
+      </li>
+      <li>
+        <def>TooSmart</def>
+      </li>
+      <li>
+        <def>Greedy</def>
+      </li>
+      <li>
+        <def>Jealous</def>
+      </li>
+      <li>
+        <def>TorturedArtist</def>
+      </li>
     </suppressedTraits>
     <exclusionTags>
       <li>MelancholyAndEvenTemper</li>
@@ -156,7 +187,7 @@
     <biostatCpx>2</biostatCpx>
     <biostatMet>1</biostatMet>
     <displayCategory>Lithoid</displayCategory>
-    <displayOrderInCategory>1000</displayOrderInCategory>
+    <displayOrderInCategory>-1</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
   </GeneDef>
 
@@ -168,8 +199,9 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
     <displayCategory>Lithoid</displayCategory>
-    <displayOrderInCategory>800</displayOrderInCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <prerequisite>XylLithoid</prerequisite>
   </GeneDef>
 
   <GeneDef>
@@ -179,7 +211,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Ability</displayCategory>
-    <displayOrderInCategory>201</displayOrderInCategory>
+    <displayOrderInCategory>203</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
   </GeneDef>
 
@@ -191,7 +223,7 @@
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>0</displayOrderInCategory>
+    <displayOrderInCategory>1200</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <exclusionTags>
       <li>XylSpecialist</li>
@@ -224,7 +256,7 @@
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>0</displayOrderInCategory>
+    <displayOrderInCategory>1201</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <exclusionTags>
       <li>XylSpecialist</li>

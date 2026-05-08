@@ -9,7 +9,7 @@
     <biostatCpx>2</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>600</displayOrderInCategory>
+    <displayOrderInCategory>25</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Industrious</iconPath>
     <iconColor>(0.35, 0.55, 0.35)</iconColor>
     <statOffsets>
@@ -184,7 +184,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>0</displayOrderInCategory>
+    <displayOrderInCategory>151</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_Giant</iconPath>-->
     <exclusionTags>
       <li>BodySize</li>
