@@ -14,6 +14,7 @@ namespace XylRacesCore.Genes
         public float geneChance = 1.0f;
         public List<GeneDef> extraGenes;
         public bool removeAfterAdding = false;
+        public IntRange count = IntRange.One;
     }
 
     [UsedImplicitly]
@@ -35,10 +36,15 @@ namespace XylRacesCore.Genes
             if (!Rand.Chance(DefExt.geneChance)) 
                 return;
 
-            GeneDef gene = !DefExt.extraGenes.NullOrEmpty()
-                ? DefExt.extraGenes.RandomElement()
-                : DefDatabase<GeneDef>.AllDefsListForReading.RandomElementByWeight(GeneWeight);
-            AddGene(gene);
+            int count = DefExt.count.RandomInRange;
+
+            for (int i = 0; i < count; i++)
+            {
+                List<GeneDef> genes = !DefExt.extraGenes.NullOrEmpty()
+                    ? DefExt.extraGenes
+                    : DefDatabase<GeneDef>.AllDefsListForReading;
+                AddGene(genes.RandomElementByWeight(GeneWeight));
+            }
 
             if (DefExt.removeAfterAdding)
                 pawn.genes.RemoveGene(this);
@@ -69,17 +75,26 @@ namespace XylRacesCore.Genes
             if (!DefExt.biostatMet.Includes(geneDef.biostatMet))
                 return 0.0f;
 
-            // No genes with requirements, unless they are met by the pawn's xenotype
-            if (geneDef.prerequisite != null && !pawn.genes.Xenotype.AllGenes.Contains(geneDef.prerequisite))
+            // No genes with requirements, unless they are met by the pawn's xenotype or already added genes
+            if (geneDef.prerequisite != null && !pawn.genes.Xenotype.AllGenes.Contains(geneDef.prerequisite) &&
+                !(addedGenes ?? []).Any(g => g.def == geneDef.prerequisite))
                 return 0.0f;
-
-            // No genes that conflict with genes in the pawn's xenotype
+            
+            // No genes that conflict with genes in the pawn's xenotype or already added genes
             foreach (var gene in pawn.genes.Xenotype.AllGenes)
             {
                 if (geneDef == gene)
                     return 0.0f;
                 if (geneDef.exclusionTags != null && gene.exclusionTags != null &&
                     geneDef.exclusionTags.Union(gene.exclusionTags).Any())
+                    return 0.0f;
+            }
+            foreach (var gene in addedGenes ?? [])
+            {
+                if (geneDef == gene.def)
+                    return 0.0f;
+                if (geneDef.exclusionTags != null && gene.def.exclusionTags != null &&
+                    geneDef.exclusionTags.Union(gene.def.exclusionTags).Any())
                     return 0.0f;
             }
 

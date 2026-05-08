@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_SavePatched", "Sourc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_Disassembler", "Source_Disassembler\Source_Disassembler.csproj", "{2B3B6A3C-6DEF-4D39-B24D-DBC483DC690A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XylRacesSplicer", "XylRacesSplicer\XylRacesSplicer.csproj", "{9B8C3286-0DB0-1E5F-5F0B-D1457074431A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{2B3B6A3C-6DEF-4D39-B24D-DBC483DC690A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B3B6A3C-6DEF-4D39-B24D-DBC483DC690A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B3B6A3C-6DEF-4D39-B24D-DBC483DC690A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B8C3286-0DB0-1E5F-5F0B-D1457074431A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B8C3286-0DB0-1E5F-5F0B-D1457074431A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B8C3286-0DB0-1E5F-5F0B-D1457074431A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B8C3286-0DB0-1E5F-5F0B-D1457074431A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

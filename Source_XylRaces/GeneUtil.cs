@@ -123,6 +123,8 @@ public static class GeneUtil
             return geneDef.biostatMet;
         if (!bonusGeneDefExt.extraGenes.NullOrEmpty())
             return geneDef.biostatMet + bonusGeneDefExt.extraGenes.Min(g => g.biostatMet);
+        if (bonusGeneDefExt.biostatMet.Includes(0))
+            return geneDef.biostatMet;
         return geneDef.biostatMet + bonusGeneDefExt.biostatMet.min;
     }
 }
