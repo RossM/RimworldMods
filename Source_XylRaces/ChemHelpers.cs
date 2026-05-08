@@ -10,7 +10,7 @@ public static class ChemHelpers
 {
     public static bool ChemicalIsAllowedByGenes(this Pawn pawn, ChemicalDef chemicalDef)
     {
-        var defExtension = chemicalDef.GetModExtension<ChemicalModExtension>();
+        var defExtension = chemicalDef.GetModExtension<ChemicalDefExtension>();
         if (defExtension == null)
             return true;
 
@@ -41,13 +41,13 @@ public static class ChemHelpers
             new("defName", x => x.defName),
             new("label", x => x.LabelCap),
             new("prohibitedGenes",
-                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalModExtension>()?.prohibitedGenes
+                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalDefExtension>()?.prohibitedGenes
                     ?.Select(g => g.defName).ToCommaList() ?? ""),
             new("requiredGenesAll",
-                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalModExtension>()?.requiredGenesAll
+                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalDefExtension>()?.requiredGenesAll
                     ?.Select(g => g.defName).ToCommaList() ?? ""),
             new("requiredGenesAny",
-                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalModExtension>()?.requiredGenesAny
+                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalDefExtension>()?.requiredGenesAny
                     ?.Select(g => g.defName).ToCommaList() ?? ""),
         ];
         DebugTables.MakeTablesDialog(DefDatabase<ThingDef>.AllDefs.Where(x => x.IsDrug).OrderBy(x => x.BaseMarketValue), columns);

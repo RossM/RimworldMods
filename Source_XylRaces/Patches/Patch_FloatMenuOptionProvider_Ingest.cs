@@ -13,7 +13,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(FloatMenuOptionProvider_Ingest))]
     public static class Patch_FloatMenuOptionProvider_Ingest
     {
-        [Feature(nameof(ChemicalModExtension)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("GetSingleOptionFor")]
+        [Feature(nameof(ChemicalDefExtension)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("GetSingleOptionFor")]
         public static bool GetSingleOptionFor_Prefix(FloatMenuOptionProvider_Ingest __instance, Thing clickedThing, FloatMenuContext context, ref FloatMenuOption __result)
         {
             if (clickedThing.def.ingestible is not { showIngestFloatOption: true })
@@ -34,7 +34,7 @@ namespace XylRacesCore.Patches
                     text = "ConsumeThing".Translate(clickedThing.LabelShort, clickedThing);
 
                 ChemicalDef chemicalDef = DrugStatsUtility.GetChemical(clickedThing.def);
-                var defExtension = chemicalDef.GetModExtension<ChemicalModExtension>();
+                var defExtension = chemicalDef.GetModExtension<ChemicalDefExtension>();
 
                 if (!defExtension.prohibitedGenes.NullOrEmpty())
                 {

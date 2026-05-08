@@ -7,7 +7,7 @@ using Verse;
 
 namespace XylRacesCore
 {
-    public class ChemicalModExtension : DefModExtension
+    public class ChemicalDefExtension : DefModExtension
     {
         public List<GeneDef> requiredGenesAll;
         public List<GeneDef> requiredGenesAny;

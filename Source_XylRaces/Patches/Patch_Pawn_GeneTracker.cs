@@ -19,7 +19,7 @@ namespace XylRacesCore.Patches
             __instance.pawn.GetComp<CompPawn_LookupCache>()?.Notify_GenesChanged();
         }
 
-        [Feature(nameof(Defs.XylGlobalAddictionChanceFactor), nameof(ChemicalModExtension)), HarmonyPostfix,
+        [Feature(nameof(Defs.XylGlobalAddictionChanceFactor), nameof(ChemicalDefExtension)), HarmonyPostfix,
          UsedImplicitly, HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
         public static void AddictionChanceFactor_Postfix(Pawn_GeneTracker __instance, ChemicalDef chemical, ref float __result)
         {
