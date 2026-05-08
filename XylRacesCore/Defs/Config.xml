@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+  
+  <XylRacesCore.Config>
+    <defName>XylRacesCoreConfig_Core</defName>
+    <ignoreGenesFromMods>
+      <li>vanillaracesexpanded.android</li>
+      <li>vanillaracesexpanded.starjack</li>
+    </ignoreGenesFromMods>
+  </XylRacesCore.Config>
+
+</Defs>

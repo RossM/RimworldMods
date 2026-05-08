@@ -70,6 +70,11 @@ namespace XylRacesCore.Genes
 
         private float GeneWeight(GeneDef geneDef)
         {
+            if (geneDef.modContentPack != null && Config.Instance.ignoreGenesFromMods.Contains(geneDef.modContentPack.PackageId))
+            {
+                return 0.0f;
+            }
+
             if (!DefExt.biostatArc.Includes(geneDef.biostatArc))
             {
                 return 0.0f;

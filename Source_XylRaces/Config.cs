@@ -14,6 +14,8 @@ namespace XylRacesCore
         }
 
         public List<Feature> enabledFeatures;
+        public List<string> ignoreGenesFromMods;
+
 
         private static Config instance;
 
@@ -24,13 +26,15 @@ namespace XylRacesCore
             Config config = new Config
             {
                 wetnessGivingJobs = [],
-                enabledFeatures = []
+                enabledFeatures = [],
+                ignoreGenesFromMods = [],
             };
 
             foreach (var subConfig in DefDatabase<Config>.AllDefs)
             {
                 config.wetnessGivingJobs.AddRange(subConfig.wetnessGivingJobs.EmptyIfNull());
                 config.enabledFeatures.AddRange(subConfig.enabledFeatures.EmptyIfNull());
+                config.ignoreGenesFromMods.AddRange(subConfig.ignoreGenesFromMods.EmptyIfNull());
             }
 
             return config;
