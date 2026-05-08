@@ -140,4 +140,22 @@
     </exclusionTags>
   </GeneDef>
 
+  <GeneCategoryDef>
+    <defName>Lithoid</defName>
+    <label>lithoid</label>
+    <displayPriorityInXenotype>501</displayPriorityInXenotype>
+  </GeneCategoryDef>
+
+  <GeneDef>
+    <defName>XylLithoid</defName>
+    <geneClass>XylRacesCore.Genes.ChemicalImmunity</geneClass>
+    <label>lithoid</label>
+    <description>TODO</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>1</biostatMet>
+    <displayCategory>Lithoid</displayCategory>
+    <displayOrderInCategory>1000</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+  </GeneDef>
+
 </Defs>

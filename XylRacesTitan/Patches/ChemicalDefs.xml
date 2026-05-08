@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+
+  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+    <xpath>Defs/ChemicalDef[not(modExtensions/li[@Class="XylRacesCore.ChemicalModExtension"])]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="XylRacesCore.ChemicalModExtension">
+          <prohibitedGenes>
+            <li>XylLithoid</li>
+          </prohibitedGenes>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+</Patch>
