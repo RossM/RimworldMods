@@ -41,7 +41,6 @@ namespace XylRacesCore
                 columns.Add(new(xenotypeDefCaptured.defName, factionDef =>
                 {
                     float xenotypeChance = GetXenotypeChance(factionDef, xenotypeDefCaptured);
-                    xenotypeChance = Mathf.Min(xenotypeChance, 1.0f);
                     return xenotypeChance > 0 ? xenotypeChance.ToStringPercent() : "";
                 }));
             }
@@ -50,17 +49,10 @@ namespace XylRacesCore
 
             static float GetXenotypeChance(FactionDef factionDef, XenotypeDef xenotypeDef)
             {
-                XenotypeSet xenotypeSet = factionDef.xenotypeSet;
-                if (xenotypeDef == XenotypeSetWithDefault.GetDefaultXenotype(xenotypeSet))
-                    return factionDef.BaselinerChance;
-                if (xenotypeSet == null)
-                    return 0f;
-                for (int i = 0; i < xenotypeSet.Count; i++)
-                {
-                    if (xenotypeDef == xenotypeSet[i].xenotype)
-                        return xenotypeSet[i].chance;
-                }
-
+                var weights = PawnGenerator.XenotypesAvailableFor(PawnKindDefOf.Colonist, factionDef);
+                var totalWeight = weights.Sum(pair => pair.Value);
+                if (weights.TryGetValue(xenotypeDef, out var xenotypeWeight))
+                    return xenotypeWeight / totalWeight;
                 return 0f;
             }
         }

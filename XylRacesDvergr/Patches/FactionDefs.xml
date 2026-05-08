@@ -7,6 +7,7 @@
         @Name="OutlanderFactionBase" or
         defName="OutlanderRefugee" or
         defName="Beggars" or
+        defName="Pilgrims" or
         defName="PirateWaster"
       ]/xenotypeSet/xenotypeChances
     </xpath>
