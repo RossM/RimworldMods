@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
+using LudeonTK;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -165,6 +168,18 @@ namespace XylRacesCore.Genes
             base.PostAdd();
 
             CheckApparel();
+        }
+
+        [DebugOutput("Economy"), UsedImplicitly]
+        public static void ApparelAllowsFlight()
+        {
+            TableDataGetter<ThingDef>[] columns =
+            [
+                new("defName", x => x.defName),
+                new("label", x => x.LabelCap),
+                new("allowsFlight", x => ApparelAllowsFlight(x))
+            ];
+            DebugTables.MakeTablesDialog(DefDatabase<ThingDef>.AllDefs.Where(x => x.IsApparel).OrderBy(x => x.BaseMarketValue), columns);
         }
     }
 }

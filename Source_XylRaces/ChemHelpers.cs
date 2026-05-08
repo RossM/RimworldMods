@@ -1,4 +1,6 @@
 using System.Linq;
+using JetBrains.Annotations;
+using LudeonTK;
 using RimWorld;
 using Verse;
 
@@ -29,5 +31,25 @@ public static class ChemHelpers
             return true;
 
         return pawn.ChemicalIsAllowedByGenes(chemical);
+    }
+
+    [DebugOutput("Economy"), UsedImplicitly]
+    public static void DrugGeneRequirements()
+    {
+        TableDataGetter<ThingDef>[] columns =
+        [
+            new("defName", x => x.defName),
+            new("label", x => x.LabelCap),
+            new("prohibitedGenes",
+                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalModExtension>()?.prohibitedGenes
+                    ?.Select(g => g.defName).ToCommaList() ?? ""),
+            new("requiredGenesAll",
+                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalModExtension>()?.requiredGenesAll
+                    ?.Select(g => g.defName).ToCommaList() ?? ""),
+            new("requiredGenesAny",
+                x => DrugStatsUtility.GetChemical(x)?.GetModExtension<ChemicalModExtension>()?.requiredGenesAny
+                    ?.Select(g => g.defName).ToCommaList() ?? ""),
+        ];
+        DebugTables.MakeTablesDialog(DefDatabase<ThingDef>.AllDefs.Where(x => x.IsDrug).OrderBy(x => x.BaseMarketValue), columns);
     }
 }
