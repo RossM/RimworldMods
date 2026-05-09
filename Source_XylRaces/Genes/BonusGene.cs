@@ -71,6 +71,9 @@ namespace XylRacesCore.Genes
 
         private float GeneWeight(GeneDef geneDef)
         {
+            if (!geneDef.canGenerateInGeneSet)
+                return 0.0f;
+
             if (geneDef.modContentPack != null && Config.Instance.ignoreGenesFromMods.Contains(geneDef.modContentPack.PackageId))
                 return 0.0f;
 
@@ -83,6 +86,20 @@ namespace XylRacesCore.Genes
                 return 0.0f;
             if (!DefExt.biostatMet.Includes(geneDef.biostatMet))
                 return 0.0f;
+
+            // Aptitude-giving genes must not apply to a disabled skill
+            if (!geneDef.aptitudes.NullOrEmpty())
+            {
+                bool valid = false;
+                foreach (var aptitude in geneDef.aptitudes)
+                {
+                    if (!pawn.skills.GetSkill(aptitude.skill).TotallyDisabled)
+                        valid = true;
+                }
+
+                if (!valid)
+                    return 0.0f;
+            }
 
             // No genes with requirements, unless they are met by the pawn's xenotype or already added genes
             if (geneDef.prerequisite != null && !pawn.genes.Xenotype.AllGenes.Contains(geneDef.prerequisite) &&

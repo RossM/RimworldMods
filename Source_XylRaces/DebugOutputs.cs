@@ -18,6 +18,7 @@ namespace XylRacesCore
                 new("label", geneDef => geneDef.LabelCap),
                 new("displayCategory", geneDef => geneDef.displayCategory.defName),
                 new("displayOrderInCategory", geneDef => geneDef.displayOrderInCategory),
+                new("exclusionTags", geneDef => geneDef.exclusionTags?.ToCommaList() ?? "")
             ];
             DebugTables.MakeTablesDialog(DefDatabase<GeneDef>.AllDefs.OrderByDescending(geneDef => geneDef.displayCategory.displayPriorityInXenotype).ThenBy(geneDef => geneDef.displayOrderInCategory), columns);
         }
