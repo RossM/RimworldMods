@@ -44,9 +44,7 @@ namespace XylRacesCore
         private static readonly SimpleCurve RainfallToWetnessCurve =
         [
             new CurvePoint(500f, 0.0f),
-            new CurvePoint(1000f, 0.1f),
-            new CurvePoint(2000f, 0.75f),
-            new CurvePoint(3000f, 1.0f),
+            new CurvePoint(2500f, 1.0f),
         ];
 
         public override float CurInstantLevel
