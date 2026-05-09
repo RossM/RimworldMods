@@ -1,4 +1,6 @@
-﻿using RimWorld;
+﻿using JetBrains.Annotations;
+using RimWorld;
+using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
@@ -23,6 +25,12 @@ namespace XylRacesCore
         private const float thresholdDry = 0.25f;
         private const float thresholdVeryDry = 0.05f;
 
+        [DefOf]
+        public static class Defs
+        {
+            [UsedImplicitly] public static BiomeDef TemperateSwamp;
+        }
+
         private static readonly SimpleCurve TemperatureWetnessFallFactorCurve =
         [
             new CurvePoint(-19.0f, 1.0f),
@@ -31,6 +39,14 @@ namespace XylRacesCore
             new CurvePoint(21.0f, 1.0f),
             new CurvePoint(31.0f, 2.0f),
             new CurvePoint(41.0f, 5.0f)
+        ];
+
+        private static readonly SimpleCurve RainfallToWetnessCurve =
+        [
+            new CurvePoint(500f, 0.0f),
+            new CurvePoint(1000f, 0.1f),
+            new CurvePoint(2000f, 0.75f),
+            new CurvePoint(3000f, 1.0f),
         ];
 
         public override float CurInstantLevel
@@ -43,7 +59,18 @@ namespace XylRacesCore
                     return lastInstantWetness;
                 lastInstantWetnessCheckTick = Find.TickManager.TicksGame;
 
-                if (!pawn.Spawned)
+                if (pawn.IsInCaravan())
+                {
+                    var caravan = pawn.GetCaravan();
+                    var tile = Find.WorldGrid[caravan.Tile];
+                    if (tile.IsCoastal || tile is SurfaceTile { Rivers.Count: > 0 })
+                        lastInstantWetness = 1.0f;
+                    else if (tile.PrimaryBiome == BiomeDefOf.TropicalSwamp || tile.PrimaryBiome == Defs.TemperateSwamp)
+                        lastInstantWetness = 1.0f;
+                    else
+                        lastInstantWetness = RainfallToWetnessCurve.Evaluate(tile.rainfall);
+                }
+                else if (!pawn.Spawned)
                     lastInstantWetness = 0.0f;
                 else if (wetnessGivingJobs.Contains(pawn.CurJobDef) && !pawn.pather.Moving)
                     lastInstantWetness = 1.0f;
