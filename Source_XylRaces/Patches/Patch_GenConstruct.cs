@@ -37,14 +37,17 @@ namespace XylRacesCore.Patches
         {
             using (new ProfileBlock())
             {
-                if (p.Ideo.MembersCanBuild(thing))
+                if (__instance.MembersCanBuild(thing))
                     return true;
+
+                if (__instance != p.Ideo)
+                    return false;
 
                 BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
 
-                var result = p.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>()
+                bool hasGeneDesignator = p.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>()
                     .Any(defExtension_designator => defExtension_designator.addDesignators.Contains(def));
-                if (!result)
+                if (!hasGeneDesignator && GenConstruct.tmpIdeoMemberNames.Count == 0)
                 {
                     foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)
                     {
@@ -53,7 +56,7 @@ namespace XylRacesCore.Patches
                     }
                 }
 
-                return result;
+                return hasGeneDesignator;
             }
         }
     }

@@ -20,8 +20,8 @@ namespace XylRacesCore
 
         public override void ExposeData()
         {
-            Scribe_Collections.Look(ref activeOverrides, nameof(activeOverrides));
-            Scribe_Collections.Look(ref lastHostileActionTick, nameof(lastHostileActionTick));
+            Scribe_Collections.Look(ref activeOverrides, nameof(activeOverrides), LookMode.Reference);
+            Scribe_Collections.Look(ref lastHostileActionTick, nameof(lastHostileActionTick), keyLookMode: LookMode.Deep, valueLookMode: LookMode.Value);
         }
 
         public static HostilityOverrideManager GetManager(Map map)
