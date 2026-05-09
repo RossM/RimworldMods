@@ -22,7 +22,8 @@ namespace XylRacesCore.Genes
     [UsedImplicitly]
     public class BonusGene : Gene
     {
-        public List<Gene> addedGenes;
+        public List<Gene> addedGenes = [];
+
         public GeneDefExtension_BonusGene DefExt => def.GetModExtension<GeneDefExtension_BonusGene>();
 
         public override void ExposeData()
@@ -64,7 +65,7 @@ namespace XylRacesCore.Genes
                                                   pawn.genes.GenesListForReading.Sum(g => g.Active ? g.def.biostatMet : 0)))
                 return;
 
-            (addedGenes ??= []).Add(pawn.genes.AddGene(geneDef, IsXenogene));
+            addedGenes.Add(pawn.genes.AddGene(geneDef, IsXenogene));
         }
 
         private bool IsXenogene => pawn.genes.Xenogenes.Contains(this);
@@ -93,7 +94,7 @@ namespace XylRacesCore.Genes
 
             // No genes with requirements, unless they are met by the pawn's xenotype or already added genes
             if (geneDef.prerequisite != null && !pawn.genes.Xenotype.AllGenes.Contains(geneDef.prerequisite) &&
-                !(addedGenes ?? []).Any(g => g.def == geneDef.prerequisite))
+                !addedGenes.Any(g => g.def == geneDef.prerequisite))
             {
                 return 0.0f;
             }
@@ -110,7 +111,7 @@ namespace XylRacesCore.Genes
                     return 0.0f;
                 }
             }
-            foreach (var gene in addedGenes ?? [])
+            foreach (var gene in addedGenes)
             {
                 if (geneDef == gene.def)
                     return 0.0f;
