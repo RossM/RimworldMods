@@ -188,6 +188,13 @@
     <biostatMet>1</biostatMet>
     <displayCategory>Lithoid</displayCategory>
     <displayOrderInCategory>-1</displayOrderInCategory>
+    <exclusionTags>
+      <li>Addiction_Alcohol</li>
+      <li>Addiction_GoJuice</li>
+      <li>Addiction_Psychite</li>
+      <li>Addiction_Smokeleaf</li>
+      <li>Addiction_WakeUp</li>
+    </exclusionTags>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
   </GeneDef>
 
