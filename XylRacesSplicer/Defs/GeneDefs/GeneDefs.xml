@@ -17,6 +17,11 @@
       <li Class="XylRacesCore.Genes.GeneDefExtension_BonusGene">
         <removeAfterAdding>true</removeAfterAdding>
         <count>14 ~ 21</count>
+        <prohibitedGenes>
+          <li>ViolenceDisabled</li>
+          <li>Inbred</li>
+          <li MayRequire="Xylthixlm.Races.Trog">XylGeneticAtavism</li>
+        </prohibitedGenes>
       </li>
     </modExtensions>
   </GeneDef>

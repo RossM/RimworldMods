@@ -121,8 +121,8 @@ public static class GeneUtil
             return geneDef.biostatMet;
         if (bonusGeneDefExt.geneChance < 1.0f)
             return geneDef.biostatMet;
-        if (!bonusGeneDefExt.extraGenes.NullOrEmpty())
-            return geneDef.biostatMet + bonusGeneDefExt.extraGenes.Min(g => g.biostatMet);
+        if (!bonusGeneDefExt.allowedGenes.NullOrEmpty())
+            return geneDef.biostatMet + bonusGeneDefExt.allowedGenes.Min(g => g.biostatMet);
         if (bonusGeneDefExt.biostatMet.Includes(0))
             return geneDef.biostatMet;
         return geneDef.biostatMet + bonusGeneDefExt.biostatMet.min;

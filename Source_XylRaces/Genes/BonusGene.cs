@@ -12,7 +12,8 @@ namespace XylRacesCore.Genes
         public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
         public IntRange biostatMet = new(int.MinValue, int.MaxValue);
         public float geneChance = 1.0f;
-        public List<GeneDef> extraGenes;
+        public List<GeneDef> allowedGenes;
+        public List<GeneDef> prohibitedGenes;
         public bool removeAfterAdding = false;
         public bool ignoreSelectionWeight = false;
         public IntRange count = IntRange.One;
@@ -41,8 +42,8 @@ namespace XylRacesCore.Genes
 
             for (int i = 0; i < count; i++)
             {
-                List<GeneDef> genes = !DefExt.extraGenes.NullOrEmpty()
-                    ? DefExt.extraGenes
+                List<GeneDef> genes = !DefExt.allowedGenes.NullOrEmpty()
+                    ? DefExt.allowedGenes
                     : DefDatabase<GeneDef>.AllDefsListForReading;
                 if (genes.TryRandomElementByWeight(GeneWeight, out GeneDef geneDef))
                     AddGene(geneDef);
@@ -71,24 +72,17 @@ namespace XylRacesCore.Genes
         private float GeneWeight(GeneDef geneDef)
         {
             if (geneDef.modContentPack != null && Config.Instance.ignoreGenesFromMods.Contains(geneDef.modContentPack.PackageId))
-            {
                 return 0.0f;
-            }
+
+            if (!DefExt.prohibitedGenes.NullOrEmpty() && DefExt.prohibitedGenes.Contains(geneDef))
+                return 0.0f;
 
             if (!DefExt.biostatArc.Includes(geneDef.biostatArc))
-            {
                 return 0.0f;
-            }
-
             if (!DefExt.biostatCpx.Includes(geneDef.biostatCpx))
-            {
                 return 0.0f;
-            }
-
             if (!DefExt.biostatMet.Includes(geneDef.biostatMet))
-            {
                 return 0.0f;
-            }
 
             // No genes with requirements, unless they are met by the pawn's xenotype or already added genes
             if (geneDef.prerequisite != null && !pawn.genes.Xenotype.AllGenes.Contains(geneDef.prerequisite) &&
@@ -101,9 +95,7 @@ namespace XylRacesCore.Genes
             foreach (var gene in pawn.genes.Xenotype.AllGenes)
             {
                 if (geneDef == gene)
-                {
                     return 0.0f;
-                }
 
                 if (geneDef.exclusionTags != null && gene.exclusionTags != null &&
                     geneDef.exclusionTags.Intersect(gene.exclusionTags).Any())
@@ -114,9 +106,7 @@ namespace XylRacesCore.Genes
             foreach (var gene in addedGenes ?? [])
             {
                 if (geneDef == gene.def)
-                {
                     return 0.0f;
-                }
 
                 if (geneDef.exclusionTags != null && gene.def.exclusionTags != null &&
                     geneDef.exclusionTags.Intersect(gene.def.exclusionTags).Any())

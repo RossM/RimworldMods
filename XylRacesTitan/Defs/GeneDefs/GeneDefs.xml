@@ -239,7 +239,7 @@
       <li Class="XylRacesCore.Genes.GeneDefExtension_BonusGene">
         <removeAfterAdding>true</removeAfterAdding>
         <ignoreSelectionWeight>true</ignoreSelectionWeight>
-        <extraGenes>
+        <allowedGenes>
           <!--<li>AptitudeStrong_Shooting</li>-->
           <!--<li>AptitudeStrong_Melee</li>-->
           <li>AptitudeStrong_Construction</li>
@@ -252,7 +252,7 @@
           <li>AptitudeStrong_Medicine</li>
           <!--<li>AptitudeStrong_Social</li>-->
           <!--<li>AptitudeStrong_Intellectual</li>-->
-        </extraGenes>
+        </allowedGenes>
       </li>
     </modExtensions>
   </GeneDef>
@@ -274,7 +274,7 @@
       <li Class="XylRacesCore.Genes.GeneDefExtension_BonusGene">
         <removeAfterAdding>true</removeAfterAdding>
         <ignoreSelectionWeight>true</ignoreSelectionWeight>
-        <extraGenes>
+        <allowedGenes>
           <!--<li>AptitudeRemarkable_Shooting</li>-->
           <!--<li>AptitudeRemarkable_Melee</li>-->
           <li>AptitudeRemarkable_Construction</li>
@@ -287,7 +287,7 @@
           <li>AptitudeRemarkable_Medicine</li>
           <!--<li>AptitudeRemarkable_Social</li>-->
           <!--<li>AptitudeRemarkable_Intellectual</li>-->
-        </extraGenes>
+        </allowedGenes>
       </li>
     </modExtensions>
   </GeneDef>
