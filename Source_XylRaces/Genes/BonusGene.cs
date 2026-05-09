@@ -87,19 +87,9 @@ namespace XylRacesCore.Genes
             if (!DefExt.biostatMet.Includes(geneDef.biostatMet))
                 return 0.0f;
 
-            // Aptitude-giving genes must not apply to a disabled skill
-            if (!geneDef.aptitudes.NullOrEmpty())
-            {
-                bool valid = false;
-                foreach (var aptitude in geneDef.aptitudes)
-                {
-                    if (!pawn.skills.GetSkill(aptitude.skill).TotallyDisabled)
-                        valid = true;
-                }
-
-                if (!valid)
-                    return 0.0f;
-            }
+            // Aptitude-giving genes must not apply to only disabled skills
+            if (!geneDef.aptitudes.NullOrEmpty() && geneDef.aptitudes.All(aptitude => pawn.skills.GetSkill(aptitude.skill).TotallyDisabled)) 
+                return 0.0f;
 
             // No genes with requirements, unless they are met by the pawn's xenotype or already added genes
             if (geneDef.prerequisite != null && !pawn.genes.Xenotype.AllGenes.Contains(geneDef.prerequisite) &&
