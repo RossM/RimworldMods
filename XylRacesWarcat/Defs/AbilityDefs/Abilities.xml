@@ -36,6 +36,9 @@
         <hediffDef>XylFeralRage</hediffDef>
         <onlyApplyToSelf>true</onlyApplyToSelf>
       </li>
+      <li Class="CompProperties_AbilityEffecterOnCaster">
+        <effecterDef>XylFeralRage</effecterDef>
+      </li>
     </comps>
   </AbilityDef>
 
