@@ -73,6 +73,15 @@
         <def>Bloodlust</def>
       </li>
     </suppressedTraits>
+    <customEffectDescriptions>
+      <li>Slave rebellion interval: 400%</li>
+    </customEffectDescriptions>
+    <modExtensions>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_SlaveRebellion">
+        <slaveRebellionMtbFactor>4</slaveRebellionMtbFactor>
+        <neverRebelThresholdDays>120</neverRebelThresholdDays>
+      </li>
+    </modExtensions>
   </GeneDef>
 
   <GeneDef>

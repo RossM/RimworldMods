@@ -35,9 +35,6 @@ namespace XylRacesCore
         [MayRequire("Xylthixlm.Races.Nixie")]
         public static GeneDef XylAquatic;
 
-        [MayRequire("Xylthixlm.Races.Bossaps")]
-        public static GeneDef XylDocile;
-
         [MayRequire("Xylthixlm.Races.Nixie")] 
         public static GeneDef XylDrugSensitive;
         
