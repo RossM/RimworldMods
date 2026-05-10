@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
@@ -10,11 +11,11 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(GenHostility))]
     public static class Patch_GenHostility
     {
-        public static Lazy<bool> enabled = new(Config.GeneOfTypeExists<HostilityOverride>);
+        public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_HostilityOverride>);
         public static bool Enabled => enabled.Value;
 
         // Note: This patch is performance-sensitive
-        [Feature(nameof(HostilityOverride)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
+        [Feature(nameof(GeneDefExtension_HostilityOverride)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
         public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
         {
             if (!Enabled)
@@ -57,7 +58,8 @@ namespace XylRacesCore.Patches
                 if (!manager.HasAnyOverride(pawn.Faction, pawn2.Faction))
                     return false;
 
-                return pawn.IsColonyAnimal || pawn.HasActiveGeneOfType<HostilityOverride>(gene => gene.DisableHostilityFrom(pawn2));
+                return pawn.IsColonyAnimal || pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_HostilityOverride>()
+                    .Any(defExt => defExt.disableHostilityFromFaction == pawn2.Faction?.def);
             }
         }
     }

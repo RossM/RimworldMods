@@ -2,7 +2,6 @@
 <Defs>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.HostilityOverride</geneClass>
     <defName>XylInsectPheromones</defName>
     <label>insect pheromones</label>
     <description>Carriers of this gene produce special pheromones which make wild insects not attack them.</description>

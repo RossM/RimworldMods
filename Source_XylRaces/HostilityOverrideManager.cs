@@ -58,9 +58,9 @@ namespace XylRacesCore
             activeOverrides.Clear();
             foreach (var pawn in map.mapPawns.AllPawns)
             {
-                foreach (var gene in pawn.ActiveGenesOfType<HostilityOverride>())
+                foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_HostilityOverride>())
                 {
-                    FactionDef factionDef = gene.DefExt.disableHostilityFromFaction;
+                    FactionDef factionDef = defExt.disableHostilityFromFaction;
                     foreach (var targetFaction in Find.FactionManager.AllFactions.Where(faction => faction.def == factionDef))
                     {
                         activeOverrides.Add((pawn.Faction, targetFaction));

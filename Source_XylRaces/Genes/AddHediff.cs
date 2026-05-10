@@ -134,7 +134,7 @@ namespace XylRacesCore.Genes
             base.PostRemove();
         }
 
-        public bool CausesHediff(HediffDef hediffDef)
+        bool IGene_HediffSource.CausesHediff(HediffDef hediffDef)
         {
             return DefExt?.hediffGivers.Any(g => g.hediff == hediffDef) ?? false;
         }

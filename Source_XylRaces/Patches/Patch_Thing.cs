@@ -31,7 +31,7 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [Feature(nameof(HostilityOverride), nameof(SeeingRed)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("TakeDamage")]
+        [Feature(nameof(GeneDefExtension_HostilityOverride), nameof(SeeingRed)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("TakeDamage")]
         public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
         {
             using (new ProfileBlock())
