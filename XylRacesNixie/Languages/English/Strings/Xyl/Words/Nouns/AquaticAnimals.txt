@@ -15,6 +15,7 @@ lobster
 manta
 marlin
 moray
+mussel
 octopus
 orca
 oyster
@@ -22,6 +23,7 @@ penguin
 perch
 pike
 piranha
+porpoise
 puffin
 ray
 sailfish
