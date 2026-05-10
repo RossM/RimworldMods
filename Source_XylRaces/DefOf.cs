@@ -4,63 +4,63 @@ using Verse;
 
 namespace XylRacesCore
 {
-    [RimWorld.DefOf]
+    [RimWorld.DefOf, UsedImplicitly]
     public static class DefOf
     {
         #region StatDefs
 
-        [UsedImplicitly] public static StatDef XylCookedAnimalProductNutritionFactor;
-        [UsedImplicitly] public static StatDef XylCookedMeatNutritionFactor;
-        [UsedImplicitly] public static StatDef XylCookedNonMeatNutritionFactor;
-        [UsedImplicitly] public static StatDef XylDrugEffectMultiplier;
-        [UsedImplicitly] public static StatDef XylGlobalAddictionChanceFactor;
-        [UsedImplicitly] public static StatDef XylHypothermiaProgressionFactor;
-        [UsedImplicitly] public static StatDef XylMalnutritionProgressionFactor;
-        [UsedImplicitly] public static StatDef XylRangedDodgeChance;
-        [UsedImplicitly] public static StatDef XylRawAnimalProductFoodPoisonChanceOffset;
-        [UsedImplicitly] public static StatDef XylRawAnimalProductNutritionFactor;
-        [UsedImplicitly] public static StatDef XylRawFungusFoodPoisonChanceOffset;
-        [UsedImplicitly] public static StatDef XylRawFungusNutritionFactor;
-        [UsedImplicitly] public static StatDef XylRawMeatFoodPoisonChanceOffset;
-        [UsedImplicitly] public static StatDef XylRawMeatNutritionFactor;
-        [UsedImplicitly] public static StatDef XylRawNonMeatFoodPoisonChanceOffset;
-        [UsedImplicitly] public static StatDef XylRawNonMeatNutritionFactor;
-        [UsedImplicitly] public static StatDef XylResistanceFallRate;
-        [UsedImplicitly] public static StatDef XylWillFallRate;
+        public static StatDef XylCookedAnimalProductNutritionFactor;
+        public static StatDef XylCookedMeatNutritionFactor;
+        public static StatDef XylCookedNonMeatNutritionFactor;
+        public static StatDef XylDrugEffectMultiplier;
+        public static StatDef XylGlobalAddictionChanceFactor;
+        public static StatDef XylHypothermiaProgressionFactor;
+        public static StatDef XylMalnutritionProgressionFactor;
+        public static StatDef XylRangedDodgeChance;
+        public static StatDef XylRawAnimalProductFoodPoisonChanceOffset;
+        public static StatDef XylRawAnimalProductNutritionFactor;
+        public static StatDef XylRawFungusFoodPoisonChanceOffset;
+        public static StatDef XylRawFungusNutritionFactor;
+        public static StatDef XylRawMeatFoodPoisonChanceOffset;
+        public static StatDef XylRawMeatNutritionFactor;
+        public static StatDef XylRawNonMeatFoodPoisonChanceOffset;
+        public static StatDef XylRawNonMeatNutritionFactor;
+        public static StatDef XylResistanceFallRate;
+        public static StatDef XylWillFallRate;
 
         #endregion
 
         #region GeneDefs
 
-        [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
+        [MayRequire("Xylthixlm.Races.Nixie")]
         public static GeneDef XylAquatic;
 
-        [UsedImplicitly, MayRequire("Xylthixlm.Races.Bossaps")]
+        [MayRequire("Xylthixlm.Races.Bossaps")]
         public static GeneDef XylDocile;
 
-        [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")] 
+        [MayRequire("Xylthixlm.Races.Nixie")] 
         public static GeneDef XylDrugSensitive;
         
-        [UsedImplicitly, MayRequire("Xylthixlm.Races.Chyrr")] 
+        [MayRequire("Xylthixlm.Races.Chyrr")] 
         public static GeneDef XylEcholocation;
 
         #endregion
 
-        [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
+        [MayRequire("Xylthixlm.Races.Nixie")]
         public static EffecterDef XylShowerSplash;
 
-        [UsedImplicitly] public static BiomeDef TemperateSwamp;
+        public static BiomeDef TemperateSwamp;
 
-        [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
+        [MayRequire("Xylthixlm.Races.Nixie")]
         public static FactionDef XylTribeGentleNixie;
 
-        [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
+        [MayRequire("Xylthixlm.Races.Nixie")]
         public static PawnKindDef XylSelkie;
 
-        [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
+        [MayRequire("Xylthixlm.Races.Nixie")]
         public static JobDef XylTakeShower;
 
-        [UsedImplicitly, MayRequire("Xylthixlm.Races.Bossaps")]
+        [MayRequire("Xylthixlm.Races.Bossaps")]
         public static JobDef XylMilkHuman;
     }
 }
