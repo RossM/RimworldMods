@@ -11,13 +11,6 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class WorkGiver_MilkHuman : WorkGiver_Scanner
     {
-        [DefOf]
-        private static class Defs
-        {
-            [UsedImplicitly, MayRequire("Xylthixlm.Races.Bossaps")]
-            public static JobDef XylMilkHuman;
-        }
-
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
             return pawn.Map.mapPawns.AllPawns.Where(targetPawn => (targetPawn.IsPrisoner ? targetPawn.guest.HostFaction : targetPawn.Faction) == pawn.Faction).ToList();
@@ -51,7 +44,7 @@ namespace XylRacesCore
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
-            return JobMaker.MakeJob(Defs.XylMilkHuman, t);
+            return JobMaker.MakeJob(DefOf.XylMilkHuman, t);
         }
     }
 }

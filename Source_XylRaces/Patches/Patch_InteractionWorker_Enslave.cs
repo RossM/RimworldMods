@@ -13,13 +13,6 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(InteractionWorker_EnslaveAttempt))]
     public static class Patch_InteractionWorker_EnslaveAttempt
     {
-        [DefOf]
-        private static class Defs
-        {
-            [UsedImplicitly]
-            public static StatDef XylWillFallRate;
-        }
-
         private static readonly InstructionMatcher Fixup_Interacted = new()
         {
             Rules =
@@ -31,7 +24,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(Defs.XylWillFallRate)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
+        [Feature(nameof(DefOf.XylWillFallRate)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
         public static IEnumerable<CodeInstruction> Interacted_Transpiler(IEnumerable<CodeInstruction> instructions,
             ILGenerator generator, MethodBase method)
         {
@@ -45,7 +38,7 @@ namespace XylRacesCore.Patches
         {
             float value = thing.GetStatValue(stat, applyPostProcess, cacheStaleAfterTicks);
             if (stat == StatDefOf.NegotiationAbility)
-                value *= recipient.GetStatValue(Defs.XylWillFallRate);
+                value *= recipient.GetStatValue(DefOf.XylWillFallRate);
             return value;
         }
     }

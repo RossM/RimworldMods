@@ -8,33 +8,6 @@ namespace XylRacesCore;
 
 public static class FoodHelpers
 {
-    [DefOf]
-    private static class Defs
-    {
-        [UsedImplicitly]
-        public static StatDef XylRawFungusNutritionFactor;
-        [UsedImplicitly]
-        public static StatDef XylRawMeatNutritionFactor;
-        [UsedImplicitly]
-        public static StatDef XylRawAnimalProductNutritionFactor;
-        [UsedImplicitly]
-        public static StatDef XylRawNonMeatNutritionFactor;
-        [UsedImplicitly]
-        public static StatDef XylCookedMeatNutritionFactor;
-        [UsedImplicitly]
-        public static StatDef XylCookedAnimalProductNutritionFactor;
-        [UsedImplicitly]
-        public static StatDef XylCookedNonMeatNutritionFactor;
-        [UsedImplicitly]
-        public static StatDef XylRawFungusFoodPoisonChanceOffset;
-        [UsedImplicitly]
-        public static StatDef XylRawMeatFoodPoisonChanceOffset;
-        [UsedImplicitly]
-        public static StatDef XylRawAnimalProductFoodPoisonChanceOffset;
-        [UsedImplicitly]
-        public static StatDef XylRawNonMeatFoodPoisonChanceOffset;
-    }
-
     public enum FoodType
     {
         None,
@@ -88,11 +61,11 @@ public static class FoodHelpers
     {
         return foodType switch
         {
-            FoodType.Fungus => eater.GetStatValue(Defs.XylRawFungusNutritionFactor) *
-                               eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
-            FoodType.Meat => eater.GetStatValue(Defs.XylRawMeatNutritionFactor),
-            FoodType.AnimalProduct => eater.GetStatValue(Defs.XylRawAnimalProductNutritionFactor),
-            FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatNutritionFactor),
+            FoodType.Fungus => eater.GetStatValue(DefOf.XylRawFungusNutritionFactor) *
+                               eater.GetStatValue(DefOf.XylRawNonMeatNutritionFactor),
+            FoodType.Meat => eater.GetStatValue(DefOf.XylRawMeatNutritionFactor),
+            FoodType.AnimalProduct => eater.GetStatValue(DefOf.XylRawAnimalProductNutritionFactor),
+            FoodType.NonMeat => eater.GetStatValue(DefOf.XylRawNonMeatNutritionFactor),
             _ => 1.0f
         };
     }
@@ -101,9 +74,9 @@ public static class FoodHelpers
     {
         return foodType switch
         {
-            FoodType.Meat => eater.GetStatValue(Defs.XylCookedMeatNutritionFactor),
-            FoodType.AnimalProduct => eater.GetStatValue(Defs.XylCookedAnimalProductNutritionFactor),
-            FoodType.Fungus or FoodType.NonMeat => eater.GetStatValue(Defs.XylCookedNonMeatNutritionFactor),
+            FoodType.Meat => eater.GetStatValue(DefOf.XylCookedMeatNutritionFactor),
+            FoodType.AnimalProduct => eater.GetStatValue(DefOf.XylCookedAnimalProductNutritionFactor),
+            FoodType.Fungus or FoodType.NonMeat => eater.GetStatValue(DefOf.XylCookedNonMeatNutritionFactor),
             _ => 1.0f
         };
     }
@@ -120,11 +93,11 @@ public static class FoodHelpers
             FoodType foodType = GetFoodType(foodSource.def);
             var value = foodType switch
             {
-                FoodType.Fungus => eater.GetStatValue(Defs.XylRawFungusFoodPoisonChanceOffset) +
-                                   eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
-                FoodType.Meat => eater.GetStatValue(Defs.XylRawMeatFoodPoisonChanceOffset),
-                FoodType.AnimalProduct => eater.GetStatValue(Defs.XylRawAnimalProductFoodPoisonChanceOffset),
-                FoodType.NonMeat => eater.GetStatValue(Defs.XylRawNonMeatFoodPoisonChanceOffset),
+                FoodType.Fungus => eater.GetStatValue(DefOf.XylRawFungusFoodPoisonChanceOffset) +
+                                   eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceOffset),
+                FoodType.Meat => eater.GetStatValue(DefOf.XylRawMeatFoodPoisonChanceOffset),
+                FoodType.AnimalProduct => eater.GetStatValue(DefOf.XylRawAnimalProductFoodPoisonChanceOffset),
+                FoodType.NonMeat => eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceOffset),
                 _ => 0.0f
             };
             return value;

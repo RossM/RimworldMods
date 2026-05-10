@@ -17,13 +17,6 @@ namespace XylRacesCore.Patches
         public static Lazy<bool> enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
         public static bool Enabled => enabled.Value;
 
-        [DefOf]
-        public static class Defs
-        {
-            [UsedImplicitly]
-            public static StatDef XylMalnutritionProgressionFactor;
-        }
-
         private static readonly InstructionMatcher Fixup_FoodFallPerTickAssumingCategory = new()
         {
             Rules =

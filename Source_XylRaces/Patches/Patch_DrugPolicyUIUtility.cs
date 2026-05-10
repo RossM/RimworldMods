@@ -12,12 +12,6 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(DrugPolicyUIUtility))]
     public static class Patch_DrugPolicyUIUtility
     {
-        [DefOf]
-        public static class Defs
-        {
-            [UsedImplicitly] public static GeneDef XylDrugSensitive;
-        }
-
         private static readonly InstructionMatcher Fixup_DoAssignDrugPolicyButtons = new()
         {
             Rules =
@@ -29,7 +23,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(Defs.XylDrugSensitive)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
+        [Feature(nameof(DefOf.XylDrugSensitive)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
         public static IEnumerable<CodeInstruction> DoAssignDrugPolicyButtons_Transpiler(
             IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
@@ -46,7 +40,7 @@ namespace XylRacesCore.Patches
                 return true;
             }
 
-            var drugSensitive = pawn.genes?.GetGene(Defs.XylDrugSensitive);
+            var drugSensitive = pawn.genes?.GetGene(DefOf.XylDrugSensitive);
             gene = drugSensitive;
             return gene != null;
         }

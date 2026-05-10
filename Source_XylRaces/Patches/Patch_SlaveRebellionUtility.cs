@@ -16,21 +16,14 @@ namespace XylRacesCore.Patches
         public const float DocileFactor = 4f;
         public const float NeverRebelThresholdDays = 120f;
 
-        [DefOf]
-        public static class Defs
-        {
-            [UsedImplicitly, MayRequire("Xylthixlm.Races.Bossaps")]
-            public static GeneDef XylDocile;
-        }
-
-        [Feature(nameof(Defs.XylDocile)), HarmonyPostfix, UsedImplicitly, HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
+        [Feature(nameof(DefOf.XylDocile)), HarmonyPostfix, UsedImplicitly, HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
         public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)
         {
             using (new ProfileBlock())
             {
                 if (__result < 0)
                     return;
-                if (pawn.HasActiveGene(Defs.XylDocile))
+                if (pawn.HasActiveGene(DefOf.XylDocile))
                 {
                     __result *= DocileFactor;
                     if (__result > NeverRebelThresholdDays)
@@ -82,7 +75,7 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(Defs.XylDocile)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
+        [Feature(nameof(DefOf.XylDocile)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
         public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -96,12 +89,12 @@ namespace XylRacesCore.Patches
             {
                 float initiateSlaveRebellionMtbDays = SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn);
 
-                if (pawn.HasActiveGene(Defs.XylDocile))
+                if (pawn.HasActiveGene(DefOf.XylDocile))
                 {
-                    stringBuilder.AppendLine($"{Defs.XylDocile.LabelCap}: x{DocileFactor.ToStringPercent()}");
+                    stringBuilder.AppendLine($"{DefOf.XylDocile.LabelCap}: x{DocileFactor.ToStringPercent()}");
 
                     if (initiateSlaveRebellionMtbDays < 0)
-                        stringBuilder.AppendLine($"{Defs.XylDocile.LabelCap}: " +
+                        stringBuilder.AppendLine($"{DefOf.XylDocile.LabelCap}: " +
                                                  "XylDocileThresholdReached".Translate(NeverRebelThresholdDays));
                 }
 

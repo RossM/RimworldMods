@@ -8,7 +8,7 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Bullet))]
     public static class Patch_Bullet
     {
-        [Feature(nameof(CombatHelpers.Defs.XylRangedDodgeChance)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Bullet.Impact))]
+        [Feature(nameof(DefOf.XylRangedDodgeChance)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Bullet.Impact))]
         public static void Impact_Prefix(Bullet __instance, ref Thing hitThing, bool blockedByShield)
         {
             using (new ProfileBlock())

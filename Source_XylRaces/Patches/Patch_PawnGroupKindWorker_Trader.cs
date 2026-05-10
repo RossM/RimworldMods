@@ -12,21 +12,11 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(PawnGroupKindWorker_Trader))]
     public static class Patch_PawnGroupKindWorker_Trader
     {
-        [DefOf]
-        public static class Defs
-        {
-            [UsedImplicitly] 
-            public static FactionDef XylTribeGentleNixie;
-
-            [UsedImplicitly] 
-            public static PawnKindDef XylSelkie;
-        }
-
-        [Feature(nameof(Defs.XylTribeGentleNixie)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("GenerateCarriers")]
+        [Feature(nameof(DefOf.XylTribeGentleNixie)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("GenerateCarriers")]
         public static bool GenerateCarriers(PawnGroupMakerParms parms, PawnGroupMaker groupMaker, Pawn trader,
             List<Thing> wares, List<Pawn> outPawns)
         {
-            if (parms.faction.def != Defs.XylTribeGentleNixie)
+            if (parms.faction.def != DefOf.XylTribeGentleNixie)
                 return true;
 
             // This has two differences from the normal version:
@@ -40,7 +30,7 @@ namespace XylRacesCore.Patches
             {
                 Tile tile = Find.WorldGrid[parms.tile];
                 if (!tile.IsCoastal && tile is not SurfaceTile { Rivers.Count: > 0 })
-                    carrierOptions = carrierOptions.Where(genOption => genOption.kind != Defs.XylSelkie);
+                    carrierOptions = carrierOptions.Where(genOption => genOption.kind != DefOf.XylSelkie);
                 carrierOptions = carrierOptions.Where(genOption => tile.PrimaryBiome.IsPackAnimalAllowed(genOption.kind.race));
             }
 

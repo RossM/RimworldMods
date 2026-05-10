@@ -25,12 +25,6 @@ namespace XylRacesCore
         private const float thresholdDry = 0.25f;
         private const float thresholdVeryDry = 0.05f;
 
-        [DefOf]
-        public static class Defs
-        {
-            [UsedImplicitly] public static BiomeDef TemperateSwamp;
-        }
-
         private static readonly SimpleCurve TemperatureWetnessFallFactorCurve =
         [
             new CurvePoint(-19.0f, 1.0f),
@@ -64,7 +58,7 @@ namespace XylRacesCore
                     var tile = Find.WorldGrid[caravan.Tile];
                     if (tile.IsCoastal || tile is SurfaceTile { Rivers.Count: > 0 })
                         lastInstantWetness = 1.0f;
-                    else if (tile.PrimaryBiome == BiomeDefOf.TropicalSwamp || tile.PrimaryBiome == Defs.TemperateSwamp)
+                    else if (tile.PrimaryBiome == BiomeDefOf.TropicalSwamp || tile.PrimaryBiome == DefOf.TemperateSwamp)
                         lastInstantWetness = 1.0f;
                     else
                         lastInstantWetness = RainfallToWetnessCurve.Evaluate(tile.rainfall);

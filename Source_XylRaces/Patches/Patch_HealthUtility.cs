@@ -8,23 +8,14 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(HealthUtility))]
     public static class Patch_HealthUtility
     {
-        [DefOf]
-        public static class Defs
-        {
-            [UsedImplicitly]
-            public static StatDef XylHypothermiaProgressionFactor;
-            [UsedImplicitly]
-            public static StatDef XylMalnutritionProgressionFactor;
-        }
-
-        [Feature(nameof(Defs.XylHypothermiaProgressionFactor), nameof(Defs.XylMalnutritionProgressionFactor)),
+        [Feature(nameof(DefOf.XylHypothermiaProgressionFactor), nameof(DefOf.XylMalnutritionProgressionFactor)),
          HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(HealthUtility.AdjustSeverity))]
         public static void AdjustSeverity_Prefix(Pawn pawn, HediffDef hdDef, ref float sevOffset)
         {
             if (hdDef == HediffDefOf.Hypothermia)
-                sevOffset *= pawn.GetStatValue(Defs.XylHypothermiaProgressionFactor);
+                sevOffset *= pawn.GetStatValue(DefOf.XylHypothermiaProgressionFactor);
             if (hdDef == HediffDefOf.Malnutrition)
-                sevOffset *= pawn.GetStatValue(Defs.XylMalnutritionProgressionFactor);
+                sevOffset *= pawn.GetStatValue(DefOf.XylMalnutritionProgressionFactor);
         }
     }
 }

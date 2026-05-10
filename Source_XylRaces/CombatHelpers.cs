@@ -6,13 +6,6 @@ namespace XylRacesCore
 {
     public static class CombatHelpers
     {
-
-        [DefOf]
-        public static class Defs
-        {
-            [UsedImplicitly] public static StatDef XylRangedDodgeChance;
-        }
-
         public static float GetRangedDodgeChance(Pawn target)
         {
             if (target.DeadOrDowned)
@@ -20,7 +13,7 @@ namespace XylRacesCore
             if (target.GetPosture() != PawnPosture.Standing)
                 return 0;
 
-            return target.GetStatValue(Defs.XylRangedDodgeChance);
+            return target.GetStatValue(DefOf.XylRangedDodgeChance);
         }
     }
 }

@@ -6,15 +6,9 @@ using Verse.AI;
 
 namespace XylRacesCore
 {
+    [UsedImplicitly]
     public class JobDriver_TakeShower : JobDriver
     {
-        [DefOf]
-        private static class Defs
-        {
-            [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
-            public static EffecterDef XylShowerSplash;
-        }
-
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
             return pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed);
@@ -48,7 +42,7 @@ namespace XylRacesCore
                 if (actor.IsHashIntervalTick(200, delta) && Rand.Chance(0.5f))
                     actor.Rotation = Rot4.Random;
             };
-            EffecterDef effecterDef = Defs.XylShowerSplash;
+            EffecterDef effecterDef = DefOf.XylShowerSplash;
             toil.WithEffect(effecterDef, TargetIndex.A);
             toil.handlingFacing = true;
             yield return toil;
