@@ -51,9 +51,11 @@ namespace XylRacesCore
 
         [UsedImplicitly] public static BiomeDef TemperateSwamp;
 
-        [UsedImplicitly] public static FactionDef XylTribeGentleNixie;
+        [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
+        public static FactionDef XylTribeGentleNixie;
 
-        [UsedImplicitly] public static PawnKindDef XylSelkie;
+        [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
+        public static PawnKindDef XylSelkie;
 
         [UsedImplicitly, MayRequire("Xylthixlm.Races.Nixie")]
         public static JobDef XylTakeShower;
