@@ -1,20 +1,30 @@
-﻿using HarmonyLib;
+﻿using System.Linq;
+using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
+using XylRacesCore.Genes;
 
 namespace XylRacesCore.Patches
 {
     [HarmonyPatch(typeof(JoyGiver))]
     public class Patch_JoyGiver
     {
-        [Feature(nameof(DefOf.XylAquatic)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(JoyGiver.GetChance))]
+        [Feature(nameof(GeneDefExtension_JoyGivers)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(JoyGiver.GetChance))]
         public static void GetChance(JoyGiver __instance, Pawn pawn, ref float __result)
         {
             using (new ProfileBlock())
             {
-                if (__instance is JoyGiver_GoSwimming && pawn.HasActiveGene(DefOf.XylAquatic))
-                    __result *= 5;
+                foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_JoyGivers>())
+                {
+                    if (defExt.joyGiverFrequencies.NullOrEmpty())
+                        continue;
+                    foreach (var joyGiverFactor in defExt.joyGiverFrequencies)
+                    {
+                        if (joyGiverFactor.joyGiver == __instance.def) 
+                            __result *= joyGiverFactor.factor;
+                    }
+                }
             }
         }
     }

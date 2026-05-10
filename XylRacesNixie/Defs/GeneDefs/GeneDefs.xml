@@ -162,6 +162,11 @@
           <li>XylShower</li>
         </addDesignators>
       </li>
+      <li Class="XylRacesCore.Genes.GeneDefExtension_JoyGivers">
+        <joyGiverFrequencies>
+          <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
+        </joyGiverFrequencies>
+      </li>
     </modExtensions>
   </GeneDef>
 

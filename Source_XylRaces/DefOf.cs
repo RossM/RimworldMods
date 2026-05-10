@@ -32,9 +32,6 @@ namespace XylRacesCore
 
         #region GeneDefs
 
-        [MayRequire("Xylthixlm.Races.Nixie")]
-        public static GeneDef XylAquatic;
-
         [MayRequire("Xylthixlm.Races.Nixie")] 
         public static GeneDef XylDrugSensitive;
         
