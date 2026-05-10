@@ -17,9 +17,9 @@ namespace XylRacesCore.Patches
             {
                 foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_JoyGivers>())
                 {
-                    if (defExt.joyGiverFrequencies.NullOrEmpty())
+                    if (defExt.joyGiverChanceFactors.NullOrEmpty())
                         continue;
-                    foreach (var joyGiverFactor in defExt.joyGiverFrequencies)
+                    foreach (var joyGiverFactor in defExt.joyGiverChanceFactors)
                     {
                         if (joyGiverFactor.joyGiver == __instance.def) 
                             __result *= joyGiverFactor.factor;

@@ -26,6 +26,6 @@ namespace XylRacesCore.Genes
             }
         }
 
-        public List<JoyGiverFactor> joyGiverFrequencies;
+        public List<JoyGiverFactor> joyGiverChanceFactors;
     }
 }

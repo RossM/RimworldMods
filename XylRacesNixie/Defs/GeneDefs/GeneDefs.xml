@@ -163,9 +163,9 @@
         </addDesignators>
       </li>
       <li Class="XylRacesCore.Genes.GeneDefExtension_JoyGivers">
-        <joyGiverFrequencies>
+        <joyGiverChanceFactors>
           <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
-        </joyGiverFrequencies>
+        </joyGiverChanceFactors>
       </li>
     </modExtensions>
   </GeneDef>
