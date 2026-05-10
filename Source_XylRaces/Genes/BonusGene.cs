@@ -6,7 +6,7 @@ using Verse;
 
 namespace XylRacesCore.Genes
 {
-    public class GeneDefExtension_BonusGene : DefModExtension
+    public class GeneDefExtension_BonusGene : GeneDefExtension
     {
         public IntRange biostatArc = IntRange.Zero;
         public IntRange biostatCpx = new(int.MinValue, int.MaxValue);

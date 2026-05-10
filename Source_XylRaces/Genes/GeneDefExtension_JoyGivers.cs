@@ -11,7 +11,7 @@ using Verse;
 namespace XylRacesCore.Genes
 {
     [UsedImplicitly]
-    public class GeneDefExtension_JoyGivers : DefModExtension
+    public class GeneDefExtension_JoyGivers : GeneDefExtension
     {
         public class JoyGiverFactor
         {

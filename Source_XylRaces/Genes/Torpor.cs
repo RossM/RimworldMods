@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylRacesCore.Genes
 {
-    public class GeneDefExtension_Torpor : DefModExtension
+    public class GeneDefExtension_Torpor : GeneDefExtension
     {
         public HediffDef hediff;
         public float severityGainPerDay;

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace XylRacesCore;
+namespace XylRacesCore.Genes;
 
-public class DefModExtension_WithIcon : DefModExtension
+public class GeneDefExtension_WithIcon : GeneDefExtension
 {
     [NoTranslate]
     public string iconPath;

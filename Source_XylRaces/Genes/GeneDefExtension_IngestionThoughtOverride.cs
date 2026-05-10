@@ -11,7 +11,7 @@ namespace XylRacesCore.Genes
         public List<ThoughtDef> thoughts;
     }
 
-    public class GeneDefExtension_IngestionThoughtOverride : DefModExtension
+    public class GeneDefExtension_IngestionThoughtOverride : GeneDefExtension
     {
         public List<GeneIngestionThoughtsOverride> thoughtOverrides;
     }

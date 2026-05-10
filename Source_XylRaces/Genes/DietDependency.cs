@@ -6,7 +6,7 @@ using Verse;
 
 namespace XylRacesCore.Genes
 {
-    public class GeneDefExtension_DietDependency : DefModExtension
+    public class GeneDefExtension_DietDependency : GeneDefExtension
     {
         public HediffDef hediffDef;
         public FoodKind foodKind = FoodKind.Any;

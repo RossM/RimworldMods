@@ -22,7 +22,7 @@ namespace XylRacesCore.Genes
         }
     }
 
-    public class GeneDefExtension_Rendering : DefModExtension
+    public class GeneDefExtension_Rendering : GeneDefExtension
     {
         public List<RenderNodeModifier> modifiers;
     }

@@ -8,7 +8,7 @@ using Verse.AI;
 
 namespace XylRacesCore.Genes
 {
-    public class GeneDefExtension_Flight : DefModExtension_WithIcon
+    public class GeneDefExtension_Flight : GeneDefExtension_WithIcon
     {
         public float autoFlyMinDistance = 25f;
     }

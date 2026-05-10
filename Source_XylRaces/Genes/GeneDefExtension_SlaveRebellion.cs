@@ -9,7 +9,7 @@ using Verse;
 namespace XylRacesCore.Genes
 {
     [UsedImplicitly]
-    public class GeneDefExtension_SlaveRebellion : DefModExtension
+    public class GeneDefExtension_SlaveRebellion : GeneDefExtension
     {
         // I am using a gene def extension rather than a StatDef here because I don't want to have
         // to account for every way the stat might be modified in the rebellion interval tooltip

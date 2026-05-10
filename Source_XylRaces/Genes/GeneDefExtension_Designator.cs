@@ -5,7 +5,7 @@ using Verse;
 namespace XylRacesCore.Genes
 {
     [UsedImplicitly]
-    public class GeneDefExtension_Designator : DefModExtension
+    public class GeneDefExtension_Designator : GeneDefExtension
     {
         public List<BuildableDef> addDesignators;
     }

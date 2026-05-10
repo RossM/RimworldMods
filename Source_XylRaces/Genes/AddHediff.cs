@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylRacesCore.Genes
 {
-    public class GeneDefExtension_Hediff : DefModExtension
+    public class GeneDefExtension_Hediff : GeneDefExtension
     {
         public List<HediffGiver> hediffGivers;
         public bool applyImmediately = false;

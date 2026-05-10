@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylRacesCore.Genes
 {
-    public class GeneDefExtension_GenderRatio : DefModExtension
+    public class GeneDefExtension_GenderRatio : GeneDefExtension
     {
         public float femaleChance = 0.5f;
 

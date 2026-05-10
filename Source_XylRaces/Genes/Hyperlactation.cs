@@ -6,7 +6,7 @@ using Verse;
 
 namespace XylRacesCore.Genes
 {
-    public class GeneDefExtension_Hyperlactation : DefModExtension_WithIcon
+    public class GeneDefExtension_Hyperlactation : GeneDefExtension_WithIcon
     {
         public ThingDef item;
         public float chargePerItem = 0.1f;
