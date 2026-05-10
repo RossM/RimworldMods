@@ -17,11 +17,14 @@ namespace XylRacesCore.Patches
             {
                 if (IsUsingEcholocation(caster))
                 {
-                    float f = acc ?? ((caster is Pawn)
-                        ? caster.GetStatValue(StatDefOf.ShootingAccuracyPawn)
-                        : (caster?.GetStatValue(StatDefOf.ShootingAccuracyTurret) ?? 1f));
-                    float num = Mathf.Pow(f, distance);
-                    __result = Mathf.Max(num, 0.0201f);
+                    float shootingAccuracy = caster switch
+                    {
+                        Pawn => caster.GetStatValue(StatDefOf.ShootingAccuracyPawn),
+                        not null => caster.GetStatValue(StatDefOf.ShootingAccuracyTurret),
+                        _ => 1f
+                    };
+                    float hitFactor = Mathf.Pow(shootingAccuracy, distance);
+                    __result = Mathf.Max(hitFactor, 0.0201f);
                     return false;
                 }
             }
