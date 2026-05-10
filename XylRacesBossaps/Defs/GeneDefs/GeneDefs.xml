@@ -182,9 +182,6 @@
         <femaleChance>1.0</femaleChance>
       </li>
     </modExtensions>
-    <customEffectDescriptions>
-      <li>Gender: always female</li>
-    </customEffectDescriptions>
     <symbolPack>
       <prefixSymbols>
         <li><symbol>gyno</symbol></li>
@@ -207,9 +204,6 @@
         <femaleChance>0.75</femaleChance>
       </li>
     </modExtensions>
-    <customEffectDescriptions>
-      <li>Gender: 75% female, 25% male</li>
-    </customEffectDescriptions>
   </GeneDef>
   <GeneDef ParentName="XylGenderRatioBase">
     <geneClass>XylRacesCore.Genes.GenderRatio</geneClass>
@@ -223,9 +217,6 @@
         <femaleChance>0.25</femaleChance>
       </li>
     </modExtensions>
-    <customEffectDescriptions>
-      <li>Gender: 25% female, 75% male</li>
-    </customEffectDescriptions>
   </GeneDef>
   <GeneDef ParentName="XylGenderRatioBase">
     <geneClass>XylRacesCore.Genes.GenderRatio</geneClass>
@@ -239,9 +230,6 @@
         <femaleChance>0.0</femaleChance>
       </li>
     </modExtensions>
-    <customEffectDescriptions>
-      <li>Gender: always male</li>
-    </customEffectDescriptions>
     <symbolPack>
       <prefixSymbols>
         <li><symbol>andro</symbol></li>

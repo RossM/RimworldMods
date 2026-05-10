@@ -18,9 +18,11 @@
   <XylAtavismChanceDesc>The chance of the carrier having an extra gene due to the atavism gene.</XylAtavismChanceDesc>
   <XylAtavismGenesLabel>Atavism genes added</XylAtavismGenesLabel>
   <XylAtavismGenesDesc>The extra genes added to this character by the atavism gene.</XylAtavismGenesDesc>
-  <XylGenderRatioLabel>Xenotype gender ratio</XylGenderRatioLabel>
+  <XylGenderRatioLabel>Gender</XylGenderRatioLabel>
   <XylGenderRatioDesc>The chance of characters of this xenotype being male or female.</XylGenderRatioDesc>
   <XylGenderRatioValue>{0} female, {1} male</XylGenderRatioValue>
+  <XylGenderRatioAlwaysFemale>Always female</XylGenderRatioAlwaysFemale>
+  <XylGenderRatioAlwaysMale>Always male</XylGenderRatioAlwaysMale>
   <XylMilkProductionLabel>Milk production</XylMilkProductionLabel>
   <XylMilkProductionDesc>The number of milk items this character can produce in a day if well-fed.</XylMilkProductionDesc>
   <XylRageChanceLabel>Rage chance</XylRageChanceLabel>

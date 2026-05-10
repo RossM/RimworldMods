@@ -56,5 +56,10 @@ namespace XylRacesCore
 
         [MayRequire("Xylthixlm.Races.Bossaps")]
         public static JobDef XylMilkHuman;
+
+        static DefOf()
+        {
+            DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));
+        }
     }
 }

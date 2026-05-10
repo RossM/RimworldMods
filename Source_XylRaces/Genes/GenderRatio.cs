@@ -13,6 +13,23 @@ namespace XylRacesCore.Genes
         {
             return Rand.Chance(femaleChance) ? Gender.Female : Gender.Male;
         }
+
+        public string GetGenderRatioDescription()
+        {
+            return femaleChance switch
+            {
+                >= 1.0f => "XylGenderRatioAlwaysFemale".Translate(),
+                <= 0.0f => "XylGenderRatioAlwaysMale".Translate(),
+                _ => "XylGenderRatioValue".Translate(femaleChance.ToStringPercent(),
+                    (1 - femaleChance).ToStringPercent())
+            };
+        }
+
+        protected override IEnumerable<string> GetCustomEffectDescriptions()
+        {
+            yield return "XylGenderRatioLabel".TranslateSimple() + ": " + GetGenderRatioDescription();
+                         ;
+        }
     }
 
     [UsedImplicitly]
@@ -24,10 +41,8 @@ namespace XylRacesCore.Genes
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
-            string text = "XylGenderRatioValue".Translate(DefExt.femaleChance.ToStringPercent(),
-                (1 - DefExt.femaleChance).ToStringPercent());
             yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
-                text, "XylGenderRatioDesc".TranslateSimple(), 1);
+                DefExt.GetGenderRatioDescription(), "XylGenderRatioDesc".TranslateSimple(), 1);
         }
     }
 }
