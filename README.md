@@ -2,7 +2,7 @@ Various mods for RimWorld. Currently working on new xenotypes and the necessary 
 
 Current status:
 * Bossaps: Engineered, sentient livestock gone feral. They can live off raw plants, enjoy being slaves, and tend to go berserk if they take damage. Minor revision complete, playtesting.
-* Chyrr: A bat-based race that can fly and has echolocation, but goes into torpor in cold weather. Playtesting.
+* Chyrr: A bat-based race that can fly, stun enemies, and "see" with echolocation, but goes into torpor in cold weather. Playtesting.
 * Dvergr: Space dwarves. Good at what you'd expect, bad at what you'd expect. They need alcohol to get through the working day (and stay alive). Playtesting.
 * Nixie: A psychic aquatic race that prefers cold, wet environments. Playtesting.
 * Splicer: Mad cultists with random genes. Design in progress.
