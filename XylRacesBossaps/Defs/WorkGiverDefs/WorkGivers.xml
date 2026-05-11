@@ -4,7 +4,7 @@
   <WorkGiverDef>
     <defName>XylMilkHuman</defName>
     <label>milk humans</label>
-    <giverClass>XylRacesCore.WorkGiver_MilkHuman</giverClass>
+    <giverClass>XylRacesCore.WorkGiver_InteractWithPawn</giverClass>
     <workType>Handling</workType>
     <verb>milk</verb>
     <gerund>milking</gerund>
@@ -13,7 +13,7 @@
       <li>Manipulation</li>
     </requiredCapacities>
     <modExtensions>
-      <li Class="XylRacesCore.WorkGiverDefExtension_MilkHuman">
+      <li Class="XylRacesCore.WorkGiverDefExtension_InteractWithPawn">
         <job>XylMilkHuman</job>
       </li>
     </modExtensions>

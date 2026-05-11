@@ -9,7 +9,7 @@ using XylRacesCore.Genes;
 namespace XylRacesCore
 {
     [UsedImplicitly]
-    public class JobDriver_MilkHuman : JobDriver
+    public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
     {
         private float gatherProgress;
 
@@ -26,7 +26,11 @@ namespace XylRacesCore
             return pawn.Reserve(Target, job, 1, -1, null, errorOnFailed);
         }
 
-        private Pawn Target => (Pawn)job.GetTarget(TargetIndex.A).Thing;
+        public override bool ValidateTarget(Pawn target)
+        {
+            var gene = target.FirstActiveGeneOfType<Hyperlactation>();
+            return gene is { allowMilking: true } && gene.ReadyToMilk();
+        }
 
         private void Gather(Pawn doer)
         {

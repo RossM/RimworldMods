@@ -8,15 +8,15 @@ using XylRacesCore.Genes;
 
 namespace XylRacesCore
 {
-    public class WorkGiverDefExtension_MilkHuman : DefModExtension
+    public class WorkGiverDefExtension_InteractWithPawn : DefModExtension
     {
         public JobDef job;
     }
 
     [UsedImplicitly]
-    public class WorkGiver_MilkHuman : WorkGiver_Scanner
+    public class WorkGiver_InteractWithPawn : WorkGiver_Scanner
     {
-        public WorkGiverDefExtension_MilkHuman DefExt => def.GetModExtension<WorkGiverDefExtension_MilkHuman>();
+        public WorkGiverDefExtension_InteractWithPawn DefExt => def.GetModExtension<WorkGiverDefExtension_InteractWithPawn>();
 
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
@@ -35,18 +35,17 @@ namespace XylRacesCore
             if (pawn == target)
                 return false;
 
-            var gene = target.FirstActiveGeneOfType<Hyperlactation>();
-            if (gene == null)
+            var worker = GenWorker<JobDriver_InteractWithPawn>.Get(DefExt.job.driverClass);
+            worker.pawn = pawn;
+            if (!worker.ValidateTarget(target))
                 return false;
 
-            if (!gene.allowMilking)
-                return false;
             if (!target.CanCasuallyInteractNow())
                 return false;
             if (!pawn.CanReserve(target))
                 return false;
 
-            return gene.ReadyToMilk();
+            return true;
         }
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
