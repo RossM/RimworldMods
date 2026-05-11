@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylRacesCore;
 
-public static class HediffUtil
+public static class HediffHelpers
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> HediffsOfType<T>(this Pawn pawn) where T : class

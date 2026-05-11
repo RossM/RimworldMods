@@ -34,7 +34,7 @@ namespace XylRacesCore.Patches
 
         public static List<string> GeneDef_customEffectDescriptions_Wrapper(GeneDef __instance)
         {
-            return GeneUtil.GetGeneEffectDescriptions(__instance).ToList();
+            return GeneHelpers.GetGeneEffectDescriptions(__instance).ToList();
         }
     }
 }

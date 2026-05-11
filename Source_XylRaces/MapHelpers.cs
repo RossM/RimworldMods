@@ -2,7 +2,7 @@ using RimWorld.Planet;
 
 namespace XylRacesCore;
 
-public static class MapUtil
+public static class MapHelpers
 {
     public static bool IsCoastalOrRiverTile(this Tile tile)
     {

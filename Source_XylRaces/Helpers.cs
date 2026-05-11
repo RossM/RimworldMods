@@ -45,7 +45,7 @@ namespace XylRacesCore
         }
     }
 
-    public static class Util
+    public static class Helpers
     {
         public static IEnumerable<T> EverythingOfType<T>(this Pawn pawn) where T : class
         {

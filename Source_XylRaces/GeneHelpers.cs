@@ -8,7 +8,7 @@ using XylRacesCore.Genes;
 
 namespace XylRacesCore;
 
-public static class GeneUtil
+public static class GeneHelpers
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<Gene> GenesOfDef(this Pawn pawn, GeneDef def)
