@@ -35,7 +35,7 @@
   <ThoughtDef>
     <defName>XylDocileEnslaved</defName>
     <thoughtClass>Thought_Situational</thoughtClass>
-    <workerClass>XylRacesCore.ThoughtWorker_Enslaved</workerClass>
+    <workerClass>XylRacesCore.ThoughtWorker_PawnStatus</workerClass>
     <requiredGenes>
       <li>XylDocile</li>
     </requiredGenes>
@@ -46,12 +46,17 @@
         <baseMoodEffect>20</baseMoodEffect>
       </li>
     </stages>
+    <modExtensions>
+      <li Class="XylRacesCore.ThoughtDefExtension_PawnStatus">
+        <status>Slave</status>
+      </li>
+    </modExtensions>
   </ThoughtDef>
 
   <ThoughtDef>
     <defName>XylDocileImprisoned</defName>
     <thoughtClass>Thought_Situational</thoughtClass>
-    <workerClass>XylRacesCore.ThoughtWorker_Imprisoned</workerClass>
+    <workerClass>XylRacesCore.ThoughtWorker_PawnStatus</workerClass>
     <requiredGenes>
       <li>XylDocile</li>
     </requiredGenes>
@@ -62,6 +67,11 @@
         <baseMoodEffect>20</baseMoodEffect>
       </li>
     </stages>
+    <modExtensions>
+      <li Class="XylRacesCore.ThoughtDefExtension_PawnStatus">
+        <status>Prisoner</status>
+      </li>
+    </modExtensions>
   </ThoughtDef>
 
   <ThoughtDef>
