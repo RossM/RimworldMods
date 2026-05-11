@@ -9,7 +9,7 @@ namespace XylRacesCore.Genes
     {
         public HediffDef hediff;
         public float temperatureThreshold;
-        public float comfortableTemperatureFactor;
+        public float comfyTemperatureImportance;
         public float severityGainPerDayPerDegree;
         public float severityLossPerDayPerDegree;
         public string warningMessage;
@@ -43,7 +43,7 @@ namespace XylRacesCore.Genes
                     return;
 
                 float minimumTemperature = Mathf.Lerp(DefExt.temperatureThreshold,
-                    pawn.GetStatValue(StatDefOf.ComfyTemperatureMin), DefExt.comfortableTemperatureFactor);
+                    pawn.GetStatValue(StatDefOf.ComfyTemperatureMin), DefExt.comfyTemperatureImportance);
                 float temperatureDifference = minimumTemperature - pawn.AmbientTemperature;
                 float changePerDay = temperatureDifference * (temperatureDifference > 0
                     ? DefExt.severityGainPerDayPerDegree

@@ -212,7 +212,7 @@
       <li Class="XylRacesCore.Genes.GeneDefExtension_Torpor">
         <hediff>XylTorpor</hediff>
         <temperatureThreshold>11</temperatureThreshold>
-        <comfortableTemperatureFactor>0.3</comfortableTemperatureFactor>
+        <comfyTemperatureImportance>0.3</comfyTemperatureImportance>
         <severityGainPerDayPerDegree>0.02</severityGainPerDayPerDegree>
         <severityLossPerDayPerDegree>0.02</severityLossPerDayPerDegree>
         <warningMessage>{PAWN} is beginning to enter torpor.</warningMessage>
