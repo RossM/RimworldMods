@@ -8,8 +8,10 @@ namespace XylRacesCore.Genes
     public class GeneDefExtension_Torpor : GeneDefExtension
     {
         public HediffDef hediff;
-        public float severityGainPerDay;
-        public float severityLossPerDay;
+        public float temperatureThreshold;
+        public float comfortableTemperatureFactor;
+        public float severityGainPerDayPerDegree;
+        public float severityLossPerDayPerDegree;
         public string warningMessage;
     }
 
@@ -40,18 +42,17 @@ namespace XylRacesCore.Genes
                 if (!pawn.IsHashIntervalTick(checkInterval, delta))
                     return;
 
-                if (pawn.AmbientTemperature < pawn.GetStatValue(StatDefOf.ComfyTemperatureMin))
-                {
-                    HealthUtility.AdjustSeverity(pawn, DefExt.hediff, (checkInterval / (float)GenDate.TicksPerDay) * DefExt.severityGainPerDay);
-                }
-                else
-                {
-                    HealthUtility.AdjustSeverity(pawn, DefExt.hediff, -(checkInterval / (float)GenDate.TicksPerDay) * DefExt.severityLossPerDay);
-                }
+                float minimumTemperature = Mathf.Lerp(DefExt.temperatureThreshold,
+                    pawn.GetStatValue(StatDefOf.ComfyTemperatureMin), DefExt.comfortableTemperatureFactor);
+                float temperatureDifference = minimumTemperature - pawn.AmbientTemperature;
+                float changePerDay = temperatureDifference * (temperatureDifference > 0
+                    ? DefExt.severityGainPerDayPerDegree
+                    : DefExt.severityLossPerDayPerDegree);
+                HealthUtility.AdjustSeverity(pawn, DefExt.hediff, (checkInterval / (float)GenDate.TicksPerDay) * changePerDay);
 
                 Hediff torpor = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff);
 
-                if (!sentWarning && !DefExt.warningMessage.NullOrEmpty() && pawn.IsPlayerControlled && torpor?.Visible == true)
+                if (!sentWarning && !DefExt.warningMessage.NullOrEmpty() && pawn.IsColonist && torpor?.Visible == true)
                 {
                     Messages.Message(DefExt.warningMessage.Formatted(pawn.Named("PAWN")), pawn,
                         MessageTypeDefOf.NegativeHealthEvent);

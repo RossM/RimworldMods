@@ -50,8 +50,8 @@
   <HediffDef>
     <defName>XylTorpor</defName>
     <label>torpor</label>
-    <description>This character's body is responding to low temperature by entering a state of hibernation. Their metabolism will slow, and they will eventually fall unconscious. The condition will reverse itself if the character is warmed up. Bring them to a warm area or give them warm clothes.</description>
-    <overrideTooltip>{PAWN}'s body is responding to low temperature by entering a state of hibernation. {PAWN_possessive} metabolism will slow, and {PAWN_pronoun} will eventually fall unconscious. The condition will reverse itself if {PAWN_pronoun} is warmed up. Bring {PAWN_objective} to a warm area or give {PAWN_objective} warm clothes.</overrideTooltip>
+    <description>This character's body is responding to low temperature by entering a state of hibernation. Their metabolism will slow, and they will eventually fall unconscious. The condition will reverse itself if the character is kept warm.</description>
+    <overrideTooltip>{PAWN}'s body is responding to low temperature by entering a state of hibernation. {PAWN_possessive} metabolism will slow, and {PAWN_pronoun} will eventually fall unconscious. The condition will reverse itself if {PAWN_pronoun} is kept warm.</overrideTooltip>
     <initialSeverity>0.001</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
     <everCurableByItem>false</everCurableByItem>
