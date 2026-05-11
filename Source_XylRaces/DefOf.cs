@@ -54,9 +54,6 @@ namespace XylRacesCore
         [MayRequire("Xylthixlm.Races.Nixie")]
         public static JobDef XylTakeShower;
 
-        [MayRequire("Xylthixlm.Races.Bossaps")]
-        public static JobDef XylMilkHuman;
-
         static DefOf()
         {
             DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));

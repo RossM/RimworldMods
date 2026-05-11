@@ -8,9 +8,16 @@ using XylRacesCore.Genes;
 
 namespace XylRacesCore
 {
+    public class WorkGiverDefExtension_MilkHuman : DefModExtension
+    {
+        public JobDef job;
+    }
+
     [UsedImplicitly]
     public class WorkGiver_MilkHuman : WorkGiver_Scanner
     {
+        public WorkGiverDefExtension_MilkHuman DefExt => def.GetModExtension<WorkGiverDefExtension_MilkHuman>();
+
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
             return pawn.Map.mapPawns.AllPawns.Where(targetPawn => (targetPawn.IsPrisoner ? targetPawn.guest.HostFaction : targetPawn.Faction) == pawn.Faction).ToList();
@@ -44,7 +51,7 @@ namespace XylRacesCore
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
-            return JobMaker.MakeJob(DefOf.XylMilkHuman, t);
+            return JobMaker.MakeJob(DefExt.job, t);
         }
     }
 }

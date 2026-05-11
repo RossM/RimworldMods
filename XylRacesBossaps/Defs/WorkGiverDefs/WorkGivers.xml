@@ -12,6 +12,11 @@
     <requiredCapacities>
       <li>Manipulation</li>
     </requiredCapacities>
+    <modExtensions>
+      <li Class="XylRacesCore.WorkGiverDefExtension_MilkHuman">
+        <job>XylMilkHuman</job>
+      </li>
+    </modExtensions>
   </WorkGiverDef>
 
 </Defs>
