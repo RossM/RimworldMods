@@ -192,6 +192,10 @@
       <li>Addiction_WakeUp</li>
     </exclusionTags>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <suppressedTraits>
+      <li><def>DrugDesire</def><degree>2</degree></li>
+      <li><def>DrugDesire</def><degree>1</degree></li>
+    </suppressedTraits>
   </GeneDef>
 
   <GeneDef>
