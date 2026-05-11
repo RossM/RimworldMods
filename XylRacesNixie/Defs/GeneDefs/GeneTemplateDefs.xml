@@ -4,7 +4,7 @@
 
   <GeneCategoryDef>
     <defName>XylPsycast</defName>
-    <label>psycast</label>
+    <label>psycasts</label>
     <displayPriorityInXenotype>519</displayPriorityInXenotype>
   </GeneCategoryDef>
 
