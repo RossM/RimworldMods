@@ -56,7 +56,7 @@ namespace XylRacesCore
                 {
                     var caravan = pawn.GetCaravan();
                     var tile = Find.WorldGrid[caravan.Tile];
-                    if (tile.IsCoastal || tile is SurfaceTile { Rivers.Count: > 0 })
+                    if (tile.IsCoastalOrRiverTile())
                         lastInstantWetness = 1.0f;
                     else if (tile.PrimaryBiome == BiomeDefOf.TropicalSwamp || tile.PrimaryBiome == DefOf.TemperateSwamp)
                         lastInstantWetness = 1.0f;

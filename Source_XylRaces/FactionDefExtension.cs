@@ -18,7 +18,7 @@ namespace XylRacesCore
             if (planetTile.Tile is not SurfaceTile surfaceTile)
                 return false;
 
-            if (waterRequired && !surfaceTile.IsCoastal && surfaceTile.Rivers is not { Count: > 0 }) 
+            if (waterRequired && !surfaceTile.IsCoastalOrRiverTile()) 
                 return false;
 
             if (allowedBiomes != null && !surfaceTile.Biomes.Any(biomeDef => allowedBiomes.Contains(biomeDef))) 
