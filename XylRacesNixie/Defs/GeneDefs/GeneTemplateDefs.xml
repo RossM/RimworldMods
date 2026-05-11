@@ -3,8 +3,8 @@
 <Defs>
 
   <GeneCategoryDef>
-    <defName>XylPsycast</defName>
-    <label>psycast</label>
+    <defName>XylPsycasts</defName>
+    <label>psycasts</label>
     <displayPriorityInXenotype>519</displayPriorityInXenotype>
   </GeneCategoryDef>
 
@@ -15,7 +15,7 @@
     <label>{0}</label>
     <iconPath>{0}</iconPath>
     <description>The carrier automatically learns the {0} psycast, and can use it without a psylink.\n\n{DESCRIPTION}</description>
-    <displayCategory>XylPsycast</displayCategory>
+    <displayCategory>XylPsycasts</displayCategory>
     <geneClass>XylRacesCore.Genes.Psycast</geneClass>
     <levels>
       <li>
