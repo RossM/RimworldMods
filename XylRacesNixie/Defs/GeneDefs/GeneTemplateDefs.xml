@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <GeneCategoryDef>
+    <defName>XylPsycast</defName>
+    <label>psycast</label>
+    <displayPriorityInXenotype>519</displayPriorityInXenotype>
+  </GeneCategoryDef>
+
+  <XylRacesCore.GeneTemplateDef>
+    <defName>XylPsycast</defName>
+    <ignoreIllegalLabelCharacterConfigError>true</ignoreIllegalLabelCharacterConfigError>
+    <geneTemplateType>PsychicAbility</geneTemplateType>
+    <label>{0}</label>
+    <iconPath>{0}</iconPath>
+    <description>The carrier automatically learns the {0} psycast.\n\n{DESCRIPTION}</description>
+    <displayCategory>XylPsycast</displayCategory>
+    <geneClass>XylRacesCore.Genes.Psycast</geneClass>
+    <levels>
+      <li>
+        <valid>false</valid>
+      </li>
+      <li>
+        <biostatCpx>1</biostatCpx>
+        <biostatMet>-2</biostatMet>
+      </li>
+      <li>
+        <biostatCpx>1</biostatCpx>
+        <biostatMet>-2</biostatMet>
+      </li>
+      <li>
+        <biostatCpx>1</biostatCpx>
+        <biostatMet>-2</biostatMet>
+      </li>
+      <li>
+        <biostatCpx>1</biostatCpx>
+        <biostatMet>-2</biostatMet>
+      </li>
+      <li>
+        <biostatArc>1</biostatArc>
+        <biostatCpx>1</biostatCpx>
+      </li>
+      <li>
+        <biostatArc>2</biostatArc>
+        <biostatCpx>1</biostatCpx>
+      </li>
+    </levels>
+  </XylRacesCore.GeneTemplateDef>
+  
+</Defs>

@@ -1,57 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-  <GeneDef MayRequire="Ludeon.RimWorld.Royalty">
-    <defName>XylPsyBeckon</defName>
-    <label>beckon</label>
-    <description>Carriers automatically learn the Beckon psycast, which psychically commands the target to approach the caster.</description>
-    <iconPath>UI/Abilities/Beckon</iconPath>
-    <geneClass>XylRacesCore.Genes.Psycast</geneClass>
-    <displayCategory>Ability</displayCategory>
-    <displayOrderInCategory>300</displayOrderInCategory>
-    <abilities>
-      <li>Beckon</li>
-    </abilities>
-    <descriptionHyperlinks>
-      <AbilityDef>Beckon</AbilityDef>
-    </descriptionHyperlinks>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>-2</biostatMet>
-    <symbolPack>
-      <prefixSymbols>
-        <li><symbol>siren</symbol></li>
-        <li><symbol>song</symbol></li>
-        <li><symbol>dream</symbol></li>
-        <li><symbol>echo</symbol></li>
-        <li><symbol>mind</symbol></li>
-        <li><symbol>ego</symbol></li>
-      </prefixSymbols>
-      <suffixSymbols>
-        <li><symbol>caller</symbol></li>
-        <li><symbol>singer</symbol></li>
-        <li><symbol>muse</symbol></li>
-      </suffixSymbols>
-    </symbolPack>
- </GeneDef>
-
-  <GeneDef MayRequire="Ludeon.RimWorld.Royalty">
-    <defName>XylPsyFocus</defName>
-    <label>focus</label>
-    <description>Carriers automatically learn the Focus psycast, which boosts the target's sight, hearing and moving capacities.</description>
-    <iconPath>UI/Abilities/Focus</iconPath>
-    <geneClass>XylRacesCore.Genes.Psycast</geneClass>
-    <displayCategory>Ability</displayCategory>
-    <displayOrderInCategory>301</displayOrderInCategory>
-    <abilities>
-      <li>Focus</li>
-    </abilities>
-    <descriptionHyperlinks>
-      <AbilityDef>Focus</AbilityDef>
-    </descriptionHyperlinks>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>-2</biostatMet>
-  </GeneDef>
-
   <GeneDef>
     <defName>XylScaleskin</defName>
     <label>scaleskin</label>

@@ -11,8 +11,8 @@
     <nameMaker>XylNamerPersonNixie</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>
-      <li MayRequire="Ludeon.RimWorld.Royalty">XylPsyBeckon</li>
-      <li MayRequire="Ludeon.RimWorld.Royalty">XylPsyFocus</li>
+      <li MayRequire="Ludeon.RimWorld.Royalty">XylPsycast_Beckon</li>
+      <li MayRequire="Ludeon.RimWorld.Royalty">XylPsycast_Focus</li>
       <li>PsychicAbility_Enhanced</li>
       <li>NakedSpeed</li>
       <li>WebbedPhalanges</li>
