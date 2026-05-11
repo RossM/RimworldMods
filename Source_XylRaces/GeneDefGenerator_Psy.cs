@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RimWorld;
 using Verse;
 
@@ -12,21 +9,21 @@ namespace XylRacesCore
     {
         public static IEnumerable<GeneDef> ImpliedGeneDefs(bool hotReload = false)
         {
-            foreach (GeneTemplateDef g in DefDatabase<GeneTemplateDef>.AllDefs)
+            foreach (GeneTemplateDef template in DefDatabase<GeneTemplateDef>.AllDefs)
             {
-                if (g.geneTemplateType == GeneTemplateDef.GeneTemplateType.PsychicAbility)
+                if (template.geneTemplateType == GeneTemplateDef.GeneTemplateType.PsychicAbility)
                 {
                     int displayOrderBase = 0;
-                    foreach (AbilityDef a in DefDatabase<AbilityDef>.AllDefs.OrderBy(a => a.level).ThenBy(a => a.label))
+                    foreach (AbilityDef def in DefDatabase<AbilityDef>.AllDefs.OrderBy(def => def.level).ThenBy(def => def.label))
                     {
-                        if (!typeof(Psycast).IsAssignableFrom(a.abilityClass)) 
+                        if (!typeof(Psycast).IsAssignableFrom(def.abilityClass)) 
                             continue;
-                        if (a.level >= g.levels.Count)
+                        if (def.level >= template.levels.Count)
                             continue;
-                        if (!g.levels[a.level].valid)
+                        if (!template.levels[def.level].valid)
                             continue;
 
-                        yield return GetFromTemplate(g, a, displayOrderBase, hotReload);
+                        yield return GetFromTemplate(template, def, displayOrderBase, hotReload);
                         displayOrderBase += 1000;
                     }
                 }
@@ -36,7 +33,11 @@ namespace XylRacesCore
         private static GeneDef GetFromTemplate(GeneTemplateDef template, AbilityDef def, int displayOrderBase, bool hotReload)
         {
             string defName = template.defName + "_" + def.defName;
-            GeneDef geneDef = (hotReload ? (DefDatabase<GeneDef>.GetNamed(defName, errorOnFail: false) ?? new GeneDef()) : new GeneDef());
+            GeneDef geneDef;
+            if (hotReload)
+                geneDef = DefDatabase<GeneDef>.GetNamed(defName, errorOnFail: false) ?? new GeneDef();
+            else
+                geneDef = new GeneDef();
 
             geneDef.modContentPack = template.modContentPack;
 

@@ -1,6 +1,4 @@
-﻿using Verse;
-
-namespace XylRacesCore.Genes
+﻿namespace XylRacesCore.Genes
 {
     public class GeneDefExtension_UIFilter : GeneDefExtension
     {

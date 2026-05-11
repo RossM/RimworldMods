@@ -1,13 +1,9 @@
 ﻿using HarmonyLib;
 using JetBrains.Annotations;
-using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -45,16 +41,16 @@ namespace XylRacesCore.Patches
         {
             if (!__instance.customEffectDescriptions.NullOrEmpty())
             {
-                foreach (var s in __instance.customEffectDescriptions)
-                    yield return s;
+                foreach (var customEffectDescription in __instance.customEffectDescriptions)
+                    yield return customEffectDescription;
             }
 
             if (!__instance.modExtensions.NullOrEmpty())
             {
-                foreach (var ext in __instance.modExtensions.OfType<GeneDefExtension>())
+                foreach (var geneDefExtension in __instance.modExtensions.OfType<GeneDefExtension>())
                 {
-                    foreach (var s in ext.CustomEffectDescriptions)
-                        yield return s;
+                    foreach (var customEffectDescription in geneDefExtension.CustomEffectDescriptions)
+                        yield return customEffectDescription;
                 }
             }
         }

@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using RimWorld;
+﻿using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 using Verse;
