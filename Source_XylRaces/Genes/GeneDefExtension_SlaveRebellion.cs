@@ -15,5 +15,11 @@ namespace XylRacesCore.Genes
         // to account for every way the stat might be modified in the rebellion interval tooltip
         public float slaveRebellionMtbFactor = 1.0f;
         public float neverRebelThresholdDays = -1f;
+
+        protected override IEnumerable<string> GetCustomEffectDescriptions()
+        {
+            if (slaveRebellionMtbFactor != 1.0f)
+                yield return "SlaveRebellionMTBDays".Translate() + " x" + slaveRebellionMtbFactor.ToStringPercent();
+        }
     }
 }

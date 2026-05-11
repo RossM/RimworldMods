@@ -11,9 +11,9 @@ namespace XylRacesCore.Genes
         protected override IEnumerable<string> GetCustomEffectDescriptions()
         {
             if (bodySizeFactor != 1.0f)
-                yield return "BodySize".Translate() + ": " + (bodySizeFactor - 1f).ToStringPercentSigned();
+                yield return "BodySize".Translate() + " " + (bodySizeFactor - 1f).ToStringPercentSigned();
             if (healthScaleFactor != 1.0f)
-                yield return "StatsReport_Health".Translate() + ": " + (healthScaleFactor - 1f).ToStringPercentSigned();
+                yield return "StatsReport_Health".Translate() + " " + (healthScaleFactor - 1f).ToStringPercentSigned();
         }
     }
 }
