@@ -50,5 +50,6 @@
   <XylBlockedByGene>Blocked by {0} gene</XylBlockedByGene>
   <XylRequiresGene>Requires {0} gene</XylRequiresGene>
   <XylNewRecipes>New recipes</XylNewRecipes>
+  <XylNewBuildings>New buildables</XylNewBuildings>
 
 </LanguageData>

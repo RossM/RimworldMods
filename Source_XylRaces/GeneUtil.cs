@@ -155,5 +155,16 @@ public static class GeneUtil
         {
             yield return "XylNewRecipes".Translate() + ": " + recipeDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList();
         }
+        IEnumerable<ThingDef> thingDef = DefDatabase<RecipeDef>.AllDefsListForReading.SelectMany(def => def.products.EmptyIfNull(), (_, c) => c.thingDef)
+            .Where(def =>
+        {
+            var modExtension = def.GetModExtension<DefModExtension_GeneDependent>();
+            return modExtension != null && modExtension.genePrerequisitesAny.EmptyIfNull().Contains(gene);
+        }).ToList();
+        if (thingDef.Any())
+        {
+            yield return "XylNewRecipes".Translate() + ": " + thingDef.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList();
+        }
+
     }
 }

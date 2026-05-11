@@ -14,11 +14,9 @@ namespace XylRacesCore.Genes
         {
             if (addDesignators.NullOrEmpty())
                 yield break;
-            if (!ModsConfig.IdeologyActive)
-                yield break;
 
-            yield return "IdeoMakesBuildingBuildable".Translate() + ": " +
-                         addDesignators.Select(def => def.LabelCap.ToString()).ToCommaList();
+            yield return "XylNewBuildings".Translate() + ": " +
+                         addDesignators.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList();
         }
     }
 }
