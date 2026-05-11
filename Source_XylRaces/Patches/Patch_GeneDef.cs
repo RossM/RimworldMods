@@ -34,25 +34,7 @@ namespace XylRacesCore.Patches
 
         public static List<string> GeneDef_customEffectDescriptions_Wrapper(GeneDef __instance)
         {
-            return GeneDef_customEffectDescriptions_Wrapper_Inner(__instance).ToList();
-        }
-
-        public static IEnumerable<string> GeneDef_customEffectDescriptions_Wrapper_Inner(GeneDef __instance)
-        {
-            if (!__instance.customEffectDescriptions.NullOrEmpty())
-            {
-                foreach (var customEffectDescription in __instance.customEffectDescriptions)
-                    yield return customEffectDescription;
-            }
-
-            if (!__instance.modExtensions.NullOrEmpty())
-            {
-                foreach (var geneDefExtension in __instance.modExtensions.OfType<GeneDefExtension>())
-                {
-                    foreach (var customEffectDescription in geneDefExtension.CustomEffectDescriptions)
-                        yield return customEffectDescription;
-                }
-            }
+            return GeneUtil.GetGeneEffectDescriptions(__instance).ToList();
         }
     }
 }

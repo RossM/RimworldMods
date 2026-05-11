@@ -114,10 +114,6 @@
     <statFactors>
       <XylRawFungusNutritionFactor>1.8</XylRawFungusNutritionFactor>
     </statFactors>
-    <customEffectDescriptions>
-      <li>Enables building: Fungal Gravel</li>
-      <li>Enables recipe: Make Wort from Raw Fungus</li>
-    </customEffectDescriptions>
     <symbolPack>
       <prefixSymbols>
         <li><symbol>fungi</symbol></li>

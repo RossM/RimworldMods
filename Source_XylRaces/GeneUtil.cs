@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using Verse;
 using XylRacesCore.Genes;
 
@@ -126,5 +127,33 @@ public static class GeneUtil
         if (bonusGeneDefExt.biostatMet.Includes(0))
             return geneDef.biostatMet;
         return geneDef.biostatMet + bonusGeneDefExt.biostatMet.min;
+    }
+
+    public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef gene)
+    {
+        if (!gene.customEffectDescriptions.NullOrEmpty())
+        {
+            foreach (var customEffectDescription in gene.customEffectDescriptions)
+                yield return customEffectDescription;
+        }
+
+        if (!gene.modExtensions.NullOrEmpty())
+        {
+            foreach (var geneDefExtension in gene.modExtensions.OfType<GeneDefExtension>())
+            {
+                foreach (var customEffectDescription in geneDefExtension.CustomEffectDescriptions)
+                    yield return customEffectDescription;
+            }
+        }
+
+        IEnumerable<RecipeDef> recipeDefs = DefDatabase<RecipeDef>.AllDefsListForReading.Where(def =>
+        {
+            var modExtension = def.GetModExtension<DefModExtension_GeneDependent>();
+            return modExtension != null && modExtension.genePrerequisitesAny.EmptyIfNull().Contains(gene);
+        }).ToList();
+        if (recipeDefs.Any())
+        {
+            yield return "XylNewRecipes".Translate() + ": " + recipeDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList();
+        }
     }
 }

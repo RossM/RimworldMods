@@ -88,9 +88,6 @@
     <enablesNeeds>
       <li>XylWetness</li>
     </enablesNeeds>
-    <customEffectDescriptions>
-      <li>Enables building: Shower</li>
-    </customEffectDescriptions>
     <symbolPack>
       <prefixSymbols>
         <li><symbol>moist</symbol></li>
