@@ -51,6 +51,8 @@ namespace XylRacesCore
                 return false;
             if (target.Cell.DistanceTo(selectedTarget.Cell) < Props.minRange)
                 return false;
+            if (!GenSight.LineOfSight(selectedTarget.Cell, target.Cell, parent.pawn.Map))
+                return false;
 
             return base.CanHitTarget(target);
         }
@@ -59,7 +61,7 @@ namespace XylRacesCore
         {
             if (Props.range > 0f)
             {
-                GenDraw.DrawRadiusRing(selectedTarget.Cell, Props.range, Color.white, c => c.DistanceTo(selectedTarget.Cell) >= Props.minRange);
+                GenDraw.DrawRadiusRing(selectedTarget.Cell, Props.range, Color.white, c => c.DistanceTo(selectedTarget.Cell) >= Props.minRange && GenSight.LineOfSight(selectedTarget.Cell, c, parent.pawn.Map));
             }
             if (target.IsValid)
             {
