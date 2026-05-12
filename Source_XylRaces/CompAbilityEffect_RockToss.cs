@@ -9,6 +9,7 @@ namespace XylRacesCore
     public class CompProperties_AbilityRockToss : CompProperties_EffectWithDest
     {
         public float minRange;
+        public ThingDef projectileDef;
 
         public CompProperties_AbilityRockToss()
         {
@@ -22,7 +23,18 @@ namespace XylRacesCore
      
         public override void Apply(LocalTargetInfo target, LocalTargetInfo dest)
         {
-            // TODO
+            base.Apply(target, dest);
+            LaunchProjectile(dest);
+        }
+
+        private void LaunchProjectile(LocalTargetInfo target)
+        {
+            if (Props.projectileDef != null)
+            {
+                Pawn pawn = parent.pawn;
+                Projectile projectile = (Projectile)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map);
+                projectile.Launch(pawn, pawn.DrawPos, target, target, ProjectileHitFlags.IntendedTarget, parent.verb.preventFriendlyFire);
+            }
         }
 
         public override bool Valid(LocalTargetInfo target, bool showMessages = false)

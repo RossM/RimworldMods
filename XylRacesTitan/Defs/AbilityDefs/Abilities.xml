@@ -31,6 +31,7 @@
         <clamorRadius>10</clamorRadius>
         <destClamorType>Ability</destClamorType>
         <destClamorRadius>10</destClamorRadius>
+        <projectileDef>Proj_GrenadeFrag</projectileDef>
       </li>
     </comps>
   </AbilityDef>
