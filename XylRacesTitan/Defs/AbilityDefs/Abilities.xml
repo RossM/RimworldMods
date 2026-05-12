@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <AbilityDef>
+    <defName>XylRockToss</defName>
+    <label>rock toss</label>
+    <description>TODO</description>
+    <iconPath></iconPath>
+    <jobDef>XylCastAbilityOnThingStandingOn</jobDef>
+    <verbProperties>
+      <verbClass>Verb_CastAbilityTouch</verbClass>
+      <warmupTime>0.25</warmupTime>
+      <range>40.9</range>
+      <targetParams>
+        <canTargetPawns>false</canTargetPawns>
+        <canTargetBuildings>false</canTargetBuildings>
+        <canTargetItems>True</canTargetItems>
+        <thingCategory>Item</thingCategory>
+        <mapObjectTargetsMustBeAutoAttackable>False</mapObjectTargetsMustBeAutoAttackable>
+      </targetParams>
+    </verbProperties>
+    <comps>
+      <li Class = "XylRacesCore.CompProperties_AbilityRockToss">
+        <compClass>XylRacesCore.CompAbilityEffect_RockToss</compClass>
+        <destination>Selected</destination>
+        <requiresLineOfSight>False</requiresLineOfSight>
+        <range>40.9</range>
+        <minRange>7.9</minRange>
+        <clamorType>Ability</clamorType>
+        <clamorRadius>10</clamorRadius>
+        <destClamorType>Ability</destClamorType>
+        <destClamorRadius>10</destClamorRadius>
+      </li>
+    </comps>
+  </AbilityDef>
+  
+</Defs>
