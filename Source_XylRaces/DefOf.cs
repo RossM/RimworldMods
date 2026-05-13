@@ -40,9 +40,6 @@ namespace XylRacesCore
 
         #endregion
 
-        [MayRequire("Xylthixlm.Races.Nixie")]
-        public static EffecterDef XylShowerSplash;
-
         public static BiomeDef TemperateSwamp;
 
         [MayRequire("Xylthixlm.Races.Nixie")]

@@ -36,5 +36,10 @@
     <pathCost>14</pathCost>
     <designationCategory>Misc</designationCategory>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+    <modExtensions>
+      <li Class="XylRacesCore.ThingDefExtension_WetnessSource">
+        <effecter>XylShowerSplash</effecter>
+      </li>
+    </modExtensions>
   </ThingDef>
 </Defs>

@@ -7,14 +7,32 @@ namespace XylRacesCore
 {
     public class JobGiver_GetWetness : ThinkNode_JobGiver
     {
-        public List<ThingDef> thingDefs;
+        private static List<ThingDef> wetnessGivingThingsInternal;
+
         public JobDef showerJobDef;
         public JobDef soakJobDef;
+
+        public static List<ThingDef> WetnessGivingThings
+        {
+            get
+            {
+                if (wetnessGivingThingsInternal == null)
+                {
+                    wetnessGivingThingsInternal = new List<ThingDef>();
+                    foreach (var def in DefDatabase<ThingDef>.AllDefs)
+                    {
+                        if (def.GetModExtension<ThingDefExtension_WetnessSource>() != null)
+                            wetnessGivingThingsInternal.Add(def);
+                    }
+                }
+
+                return wetnessGivingThingsInternal;
+            }
+        }
 
         public override ThinkNode DeepCopy(bool resolve = true)
         {
             var obj = (JobGiver_GetWetness)base.DeepCopy(resolve);
-            obj.thingDefs = thingDefs;
             obj.showerJobDef = showerJobDef;
             obj.soakJobDef = soakJobDef;
             return obj;
@@ -63,11 +81,8 @@ namespace XylRacesCore
         private void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
-            if (thingDefs == null)
-            {
-                return;
-            }
-            foreach (ThingDef def in thingDefs)
+
+            foreach (ThingDef def in WetnessGivingThings)
             {
                 outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(def));
             }

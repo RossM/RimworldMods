@@ -42,8 +42,13 @@ namespace XylRacesCore
                 if (actor.IsHashIntervalTick(200, delta) && Rand.Chance(0.5f))
                     actor.Rotation = Rot4.Random;
             };
-            EffecterDef effecterDef = DefOf.XylShowerSplash;
-            toil.WithEffect(effecterDef, TargetIndex.A);
+
+            var wetnessSource = job.targetA.Thing?.def.GetModExtension<ThingDefExtension_WetnessSource>();
+            if (wetnessSource is { effecter: not null })
+            {
+                toil.WithEffect(wetnessSource.effecter, TargetIndex.A);
+            }
+
             toil.handlingFacing = true;
             yield return toil;
         }

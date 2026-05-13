@@ -63,11 +63,18 @@ namespace XylRacesCore
                         lastInstantWetness = RainfallToWetnessCurve.Evaluate(tile.rainfall);
                 }
                 else if (!pawn.Spawned)
+                {
                     lastInstantWetness = 0.0f;
+                }
                 else if (wetnessGivingJobs.Contains(pawn.CurJobDef) && !pawn.pather.Moving)
-                    lastInstantWetness = 1.0f;
+                {
+                    var wetnessSource = pawn.CurJob?.targetA.Thing?.def.GetModExtension<ThingDefExtension_WetnessSource>();
+                    lastInstantWetness = wetnessSource?.wetnessLevel ?? 1.0f;
+                }
                 else
+                {
                     lastInstantWetness = GetWetness(pawn.Position, pawn.Map);
+                }
 
                 return lastInstantWetness;
             }
