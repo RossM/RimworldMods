@@ -14,6 +14,7 @@
     <disableGizmoWhileUndrafted>false</disableGizmoWhileUndrafted>
     <aiCanUse>true</aiCanUse>
     <ai_IsOffensive>true</ai_IsOffensive>
+    <groupAbility>true</groupAbility>
     <targetRequired>false</targetRequired>
     <statBases>
       <!-- 3 hours -->
