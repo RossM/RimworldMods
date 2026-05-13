@@ -10,7 +10,9 @@ namespace XylRacesCore
     public class CompProperties_AbilityRockToss : CompProperties_EffectWithDest
     {
         public float minRange;
+        public float forcedMissRadius;
         public ThingDef projectileDef;
+        public bool applyMortarMissRadiusFactor;
 
         public CompProperties_AbilityRockToss()
         {
@@ -21,8 +23,6 @@ namespace XylRacesCore
     public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargetingSource
     {
         public new CompProperties_AbilityRockToss Props => (CompProperties_AbilityRockToss)props;
-
-        public LocalTargetInfo SelectedTarget => selectedTarget;
 
         public override void Apply(LocalTargetInfo target, LocalTargetInfo dest)
         {
@@ -48,7 +48,27 @@ namespace XylRacesCore
                     Log.Warning("Failed to add thing to projectile: projectile={projectile} thing={thing}");
                     return;
                 }
-                projectile.Launch(pawn, pawn.DrawPos, target, target, ProjectileHitFlags.IntendedTarget, parent.verb.preventFriendlyFire);
+
+                if (Props.forcedMissRadius > 0.5f)
+                {
+                    float forcedMissRadius = Props.forcedMissRadius;
+                    if (Props.applyMortarMissRadiusFactor)
+                        forcedMissRadius *= pawn.GetStatValue(StatDefOf.MortarMissRadiusFactor);
+                    forcedMissRadius = VerbUtility.CalculateAdjustedForcedMiss(forcedMissRadius, target.Cell - pawn.Position);
+                    if (forcedMissRadius > 0.5f)
+                    {
+                        int cellsInRadius = GenRadial.NumCellsInRadius(forcedMissRadius);
+                        int patternIndex = Rand.Range(0, cellsInRadius);
+                        IntVec3 forcedMissTarget = target.Cell + GenRadial.RadialPattern[patternIndex];
+                        if (forcedMissTarget != target.Cell)
+                        {
+                            projectile.Launch(pawn, pawn.DrawPos, forcedMissTarget, target, ProjectileHitFlags.NonTargetWorld, parent.verb.preventFriendlyFire);
+                            return;
+                        }
+                    }
+                }
+
+                projectile.Launch(pawn, pawn.DrawPos, target, target, ProjectileHitFlags.IntendedTarget | ProjectileHitFlags.NonTargetWorld, parent.verb.preventFriendlyFire);
             }
         }
 
@@ -62,7 +82,7 @@ namespace XylRacesCore
 
         public override bool CanHitTarget(LocalTargetInfo target)
         {
-            if (!CanPlaceSelectedTargetAt(target))
+            if (target.Cell.Impassable(parent.pawn.Map))
                 return false;
             if (target.Cell.DistanceTo(selectedTarget.Cell) < Props.minRange)
                 return false;
@@ -81,6 +101,18 @@ namespace XylRacesCore
             if (target.IsValid)
             {
                 GenDraw.DrawTargetHighlight(target);
+                if (Props.projectileDef.projectile.explosionRadius > 0f)
+                {
+                    GenDraw.DrawRadiusRing(target.Cell, Props.projectileDef.projectile.explosionRadius, Color.white);
+                }
+            }
+        }
+
+        public override void DrawEffectPreview(LocalTargetInfo target)
+        {
+            if (Props.range > 0f)
+            {
+                GenDraw.DrawRadiusRing(selectedTarget.Cell, Props.range, Color.white, c => c.DistanceTo(target.Cell) >= Props.minRange && GenSight.LineOfSight(target.Cell, c, parent.pawn.Map));
             }
         }
     }

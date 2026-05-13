@@ -11,22 +11,32 @@
     <verbProperties>
       <verbClass>Verb_CastAbilityTouch</verbClass>
       <warmupTime>0.25</warmupTime>
+      <!-- 
+      I'd like to set range to -1 so that there's no range indicator shown, but that causes the verb to check
+      that the target is in melee touch range when it fires (in TryFindShootLineFromTo). I considered patching
+      that but I think the logic is correct, so I'd have to make my own verb that copies all the logic but
+      changes it to ignore range, which is tricky because the range is used in several places and a whole lot
+      would have to be copied and pasted. I'm considering it.
+      -->
       <range>40.9</range>
+      <requireLineOfSight>false</requireLineOfSight>
       <targetParams>
         <canTargetPawns>false</canTargetPawns>
         <canTargetBuildings>false</canTargetBuildings>
         <canTargetItems>True</canTargetItems>
         <thingCategory>Item</thingCategory>
-        <mapObjectTargetsMustBeAutoAttackable>False</mapObjectTargetsMustBeAutoAttackable>
+        <mapObjectTargetsMustBeAutoAttackable>False</mapObjectTargetsMustBeAutoAttackable>       
       </targetParams>
     </verbProperties>
     <comps>
-      <li Class = "XylRacesCore.CompProperties_AbilityRockToss">
+      <li Class="XylRacesCore.CompProperties_AbilityRockToss">
         <compClass>XylRacesCore.CompAbilityEffect_RockToss</compClass>
         <destination>Selected</destination>
         <requiresLineOfSight>False</requiresLineOfSight>
+        <applyMortarMissRadiusFactor>false</applyMortarMissRadiusFactor>
         <range>40.9</range>
         <minRange>7.9</minRange>
+        <forcedMissRadius>4</forcedMissRadius>
         <clamorType>Ability</clamorType>
         <clamorRadius>10</clamorRadius>
         <destClamorType>Ability</destClamorType>
@@ -50,7 +60,6 @@
       <!-- damage amount is the damage def default -->
       <speed>41</speed>
       <explosionRadius>2.9</explosionRadius>
-      <flyOverhead>true</flyOverhead>
       <soundHitThickRoof>Artillery_HitThickRoof</soundHitThickRoof>
       <soundExplode>MortarBomb_Explode</soundExplode>
       <soundImpactAnticipate>MortarRound_PreImpact</soundImpactAnticipate>
