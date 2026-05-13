@@ -46,7 +46,7 @@
     </graphicData>
     <thingClass>XylRacesCore.Projectile_RockToss</thingClass>
     <projectile>
-      <damageDef>Bomb</damageDef>
+      <damageDef>XylThrownRock</damageDef>
       <!-- damage amount is the damage def default -->
       <speed>41</speed>
       <explosionRadius>2.9</explosionRadius>
@@ -68,5 +68,14 @@
       </li>
     </comps>
   </ThingDef>
+  
+  <DamageDef ParentName="Bomb">
+    <defName>XylThrownRock</defName>
+    <deathMessage>{0} has been killed by a falling rock.</deathMessage>
+    <armorCategory>Blunt</armorCategory>    
+    <defaultDamage>30</defaultDamage>
+    <plantDamageFactor>0.5</plantDamageFactor>
+    <explosionHeatEnergyPerCell>0</explosionHeatEnergyPerCell>
+  </DamageDef>
   
 </Defs>
