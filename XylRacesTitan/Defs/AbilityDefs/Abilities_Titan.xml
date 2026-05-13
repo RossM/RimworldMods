@@ -55,7 +55,6 @@
       <soundExplode>MortarBomb_Explode</soundExplode>
       <soundImpactAnticipate>MortarRound_PreImpact</soundImpactAnticipate>
       <soundAmbient>MortarRound_Ambient</soundAmbient>
-      <preExplosionSpawnSingleThingDef>Filth_BlastMark</preExplosionSpawnSingleThingDef>
       <useGraphicClass>true</useGraphicClass>
       <arcHeightFactor>2</arcHeightFactor>
       <shadowSize>0.4</shadowSize>
