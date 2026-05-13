@@ -256,8 +256,8 @@
           <li>AptitudeStrong_Crafting</li>
           <li>AptitudeStrong_Artistic</li>
           <li>AptitudeStrong_Medicine</li>
-          <!--<li>AptitudeStrong_Social</li>-->
-          <!--<li>AptitudeStrong_Intellectual</li>-->
+          <li>AptitudeStrong_Social</li>
+          <li>AptitudeStrong_Intellectual</li>
         </allowedGenes>
       </li>
     </modExtensions>
@@ -291,8 +291,8 @@
           <li>AptitudeRemarkable_Crafting</li>
           <li>AptitudeRemarkable_Artistic</li>
           <li>AptitudeRemarkable_Medicine</li>
-          <!--<li>AptitudeRemarkable_Social</li>-->
-          <!--<li>AptitudeRemarkable_Intellectual</li>-->
+          <li>AptitudeRemarkable_Social</li>
+          <li>AptitudeRemarkable_Intellectual</li>
         </allowedGenes>
       </li>
     </modExtensions>
