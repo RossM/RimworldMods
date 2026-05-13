@@ -214,7 +214,7 @@
   <GeneDef>
     <defName>XylRockToss</defName>
     <label>rock toss</label>
-    <description>The carrier can pick up a rock chunk and throw it in combat, dealing damage in an area around where it lands.</description>
+    <description>The carrier can pick up a rock chunk in combat and toss it. It will land near a targeted location, damaging everything in a radius around where it lands.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Ability</displayCategory>

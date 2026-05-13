@@ -5,12 +5,14 @@
   <AbilityDef>
     <defName>XylRockToss</defName>
     <label>rock toss</label>
-    <description>TODO</description>
+    <description>Pick up a rock chunk and toss it. It will land near the targeted location, damaging everything in a radius around where it lands.</description>
     <iconPath></iconPath>
+    <!-- 8 hours -->
+    <cooldownTicksRange>20000</cooldownTicksRange>
     <jobDef>XylCastAbilityWithHeldThing</jobDef>
     <verbProperties>
       <verbClass>Verb_CastAbilityTouch</verbClass>
-      <warmupTime>0.25</warmupTime>
+      <warmupTime>2</warmupTime>
       <!-- 
       I'd like to set range to -1 so that there's no range indicator shown, but that causes the verb to check
       that the target is in melee touch range when it fires (in TryFindShootLineFromTo). I considered patching
