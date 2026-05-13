@@ -38,14 +38,13 @@
 
   <ThingDef ParentName="BaseBullet">
     <defName>XylBullet_RockToss</defName>
-    <thingClass>XylRacesCore.Projectile_RockToss</thingClass>
     <label>thrown rock</label>
     <graphicData>
       <texPath>Things/Projectile/ShellHighExplosive</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <shaderType>TransparentPostLight</shaderType>
     </graphicData>
-    <thingClass>Projectile_Explosive</thingClass>
+    <thingClass>XylRacesCore.Projectile_RockToss</thingClass>
     <projectile>
       <damageDef>Bomb</damageDef>
       <!-- damage amount is the damage def default -->
@@ -57,7 +56,18 @@
       <soundImpactAnticipate>MortarRound_PreImpact</soundImpactAnticipate>
       <soundAmbient>MortarRound_Ambient</soundAmbient>
       <preExplosionSpawnSingleThingDef>Filth_BlastMark</preExplosionSpawnSingleThingDef>
+      <useGraphicClass>true</useGraphicClass>
+      <arcHeightFactor>2</arcHeightFactor>
+      <shadowSize>0.4</shadowSize>
+      <spinRate>1</spinRate>
     </projectile>
+    <comps>
+      <li Class="CompProperties_ThingContainer">
+        <compClass>CompThingContainer</compClass>
+        <stackLimit>1</stackLimit>
+        <drawContainedThing>false</drawContainedThing>
+      </li>
+    </comps>
   </ThingDef>
   
 </Defs>

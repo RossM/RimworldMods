@@ -31,7 +31,8 @@ namespace XylRacesCore
             // the targeter would abort because target A is in our inventory and no longer spawned.
             base.Apply(target, dest);
             Log.Message($"target={target}, dest={dest}, CarriedThing={parent.pawn.carryTracker.CarriedThing}");
-            LaunchProjectile(target);
+            if (parent.pawn.carryTracker.CarriedThing != null)
+                LaunchProjectile(target);
         }
 
         private void LaunchProjectile(LocalTargetInfo target)
@@ -40,6 +41,13 @@ namespace XylRacesCore
             {
                 Pawn pawn = parent.pawn;
                 Projectile projectile = (Projectile)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map);
+                Log.Message($"projectile={projectile} ({projectile.GetType()}");
+                Thing thing = pawn.carryTracker.CarriedThing;
+                if (projectile.GetComp<CompThingContainer>()?.innerContainer.TryAddOrTransfer(thing) != true)
+                {
+                    Log.Warning("Failed to add thing to projectile: projectile={projectile} thing={thing}");
+                    return;
+                }
                 projectile.Launch(pawn, pawn.DrawPos, target, target, ProjectileHitFlags.IntendedTarget, parent.verb.preventFriendlyFire);
             }
         }

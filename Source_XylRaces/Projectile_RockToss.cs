@@ -1,10 +1,13 @@
 ﻿using JetBrains.Annotations;
 using RimWorld;
+using UnityEngine;
+using Verse;
 
 namespace XylRacesCore
 {
     [UsedImplicitly]
-    public class Projectile_RockToss : Bullet
+    public class Projectile_RockToss : Projectile_Explosive
     {
+        public override Graphic Graphic => GetComp<CompThingContainer>()?.ContainedThing?.Graphic ?? base.Graphic;
     }
 }
