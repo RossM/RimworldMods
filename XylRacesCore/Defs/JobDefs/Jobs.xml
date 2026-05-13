@@ -3,8 +3,8 @@
 <Defs>
   
   <JobDef>
-    <defName>XylCastAbilityOnThingStandingOn</defName>
-    <driverClass>XylRacesCore.JobDriver_CastAbilityStandingOn</driverClass>
+    <defName>XylCastAbilityWithHeldThing</defName>
+    <driverClass>XylRacesCore.JobDriver_CastWithHeldThing</driverClass>
     <casualInterruptible>false</casualInterruptible>
     <collideWithPawns>true</collideWithPawns>
     <neverShowWeapon>true</neverShowWeapon>

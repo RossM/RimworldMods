@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -20,11 +21,17 @@ namespace XylRacesCore
     public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargetingSource
     {
         public new CompProperties_AbilityRockToss Props => (CompProperties_AbilityRockToss)props;
-     
+
+        public LocalTargetInfo SelectedTarget => selectedTarget;
+
         public override void Apply(LocalTargetInfo target, LocalTargetInfo dest)
         {
+            // During targeting, there are two targets. However, when we actually get activated by
+            // JobDriver_CastWithHeldThing, the destination (target B) becomes the primary target. Otherwise
+            // the targeter would abort because target A is in our inventory and no longer spawned.
             base.Apply(target, dest);
-            LaunchProjectile(dest);
+            Log.Message($"target={target}, dest={dest}, CarriedThing={parent.pawn.carryTracker.CarriedThing}");
+            LaunchProjectile(target);
         }
 
         private void LaunchProjectile(LocalTargetInfo target)

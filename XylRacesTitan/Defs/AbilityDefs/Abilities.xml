@@ -7,7 +7,7 @@
     <label>rock toss</label>
     <description>TODO</description>
     <iconPath></iconPath>
-    <jobDef>XylCastAbilityOnThingStandingOn</jobDef>
+    <jobDef>XylCastAbilityWithHeldThing</jobDef>
     <verbProperties>
       <verbClass>Verb_CastAbilityTouch</verbClass>
       <warmupTime>0.25</warmupTime>
@@ -31,9 +31,33 @@
         <clamorRadius>10</clamorRadius>
         <destClamorType>Ability</destClamorType>
         <destClamorRadius>10</destClamorRadius>
-        <projectileDef>Proj_GrenadeFrag</projectileDef>
+        <projectileDef>XylBullet_RockToss</projectileDef>
       </li>
     </comps>
   </AbilityDef>
+
+  <ThingDef ParentName="BaseBullet">
+    <defName>XylBullet_RockToss</defName>
+    <thingClass>XylRacesCore.Projectile_RockToss</thingClass>
+    <label>thrown rock</label>
+    <graphicData>
+      <texPath>Things/Projectile/ShellHighExplosive</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>TransparentPostLight</shaderType>
+    </graphicData>
+    <thingClass>Projectile_Explosive</thingClass>
+    <projectile>
+      <damageDef>Bomb</damageDef>
+      <!-- damage amount is the damage def default -->
+      <speed>41</speed>
+      <explosionRadius>2.9</explosionRadius>
+      <flyOverhead>true</flyOverhead>
+      <soundHitThickRoof>Artillery_HitThickRoof</soundHitThickRoof>
+      <soundExplode>MortarBomb_Explode</soundExplode>
+      <soundImpactAnticipate>MortarRound_PreImpact</soundImpactAnticipate>
+      <soundAmbient>MortarRound_Ambient</soundAmbient>
+      <preExplosionSpawnSingleThingDef>Filth_BlastMark</preExplosionSpawnSingleThingDef>
+    </projectile>
+  </ThingDef>
   
 </Defs>
