@@ -25,17 +25,6 @@ namespace XylRacesCore
             yield return Toils_Reserve.Reserve(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.OnCell).FailOn(() => !ability.CanApplyOn(job.targetA));
             yield return Toils_Haul.StartCarryThing(TargetIndex.A);
-            //yield return Toils_General.DoAtomic(() =>
-            //{
-            //    Log.Message("DEBUG 2");
-            //    Log.Message($"targetA={job.targetA} Spawned={job.targetA.Thing?.Spawned}");
-            //    foreach (var comp in job.ability.CompsOfType<CompAbilityEffect_WithDest>())
-            //    {
-            //        Log.Message($"comp:{comp.GetType()}");
-            //        if (comp is CompAbilityEffect_RockToss rockToss)
-            //            Log.Message($"SelectedTarget={rockToss.SelectedTarget} Spawned={rockToss.SelectedTarget.Thing?.Spawned}");
-            //    }
-            //});
             Toil castVerb = Toils_Combat.CastVerb(TargetIndex.B, canHitNonTargetPawns: false);
             yield return castVerb;
         }
