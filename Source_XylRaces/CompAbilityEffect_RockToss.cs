@@ -112,7 +112,7 @@ namespace XylRacesCore
         {
             if (Props.range > 0f)
             {
-                GenDraw.DrawRadiusRing(selectedTarget.Cell, Props.range, Color.white, c => c.DistanceTo(target.Cell) >= Props.minRange && GenSight.LineOfSight(target.Cell, c, parent.pawn.Map));
+                GenDraw.DrawRadiusRing(target.Cell, Props.range, Color.white, c => c.DistanceTo(target.Cell) >= Props.minRange && GenSight.LineOfSight(target.Cell, c, parent.pawn.Map));
             }
         }
     }

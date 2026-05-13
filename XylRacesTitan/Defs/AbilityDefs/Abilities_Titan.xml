@@ -13,14 +13,7 @@
     <verbProperties>
       <verbClass>Verb_CastAbilityTouch</verbClass>
       <warmupTime>2</warmupTime>
-      <!-- 
-      I'd like to set range to -1 so that there's no range indicator shown, but that causes the verb to check
-      that the target is in melee touch range when it fires (in TryFindShootLineFromTo). I considered patching
-      that but I think the logic is correct, so I'd have to make my own verb that copies all the logic but
-      changes it to ignore range, which is tricky because the range is used in several places and a whole lot
-      would have to be copied and pasted. I'm considering it.
-      -->
-      <range>40.9</range>
+      <range>10000</range>
       <requireLineOfSight>false</requireLineOfSight>
       <targetParams>
         <canTargetPawns>false</canTargetPawns>
