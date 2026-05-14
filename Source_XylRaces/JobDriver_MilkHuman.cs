@@ -28,6 +28,9 @@ namespace XylRacesCore
 
         public override bool ValidateTarget(Pawn target)
         {
+            if (target.Downed)
+                return false;
+
             var gene = target.FirstActiveGeneOfType<Hyperlactation>();
             return gene is { allowMilking: true } && gene.ReadyToMilk();
         }
