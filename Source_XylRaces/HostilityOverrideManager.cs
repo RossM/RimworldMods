@@ -67,10 +67,10 @@ namespace XylRacesCore
 
         public bool HasAnyOverride(Faction from, Faction to)
         {
-            if (!activeOverrides.Contains((from, to)))
+            if (activeOverrides == null || !activeOverrides.Contains((from, to)))
                 return false;
 
-            if (!lastHostileActionTick.TryGetValue(from, out int hostileActionTick)) 
+            if (lastHostileActionTick == null || !lastHostileActionTick.TryGetValue(from, out int hostileActionTick)) 
                 return true;
 
             return hostileActionTick + violationDisableTicks < Find.TickManager.TicksGame;
