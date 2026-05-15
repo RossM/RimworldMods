@@ -176,9 +176,10 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static void AppendSubstitutionDescription(StringBuilder sb,
-                                                         string whitespace,
-                                                         Hediff_SubstituteCapacity foundHediff)
+        public static void AppendSubstitutionDescription(
+            StringBuilder sb,
+            string whitespace,
+            Hediff_SubstituteCapacity foundHediff)
         {
             if (foundHediff != null)
                 sb.AppendLine($"{whitespace}        {foundHediff.GetDescription()}");
@@ -195,9 +196,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
-        public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                                  ILGenerator generator,
-                                                                                  MethodBase method)
+        public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GetValueUnfinalized.MatchAndReplace(method, ref instructionsList, generator);
@@ -206,9 +208,10 @@ namespace XylRacesCore.Patches
 
         // Note: this patch is performance-sensitive
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static PawnCapacityDef PawnCapacityOffset_capacity_Wrapper(PawnCapacityOffset __instance,
-                                                                          StatWorker __caller,
-                                                                          StatRequest req)
+        public static PawnCapacityDef PawnCapacityOffset_capacity_Wrapper(
+            PawnCapacityOffset __instance,
+            StatWorker __caller,
+            StatRequest req)
         {
             Hediff_SubstituteCapacity foundHediff
                 = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
@@ -216,9 +219,10 @@ namespace XylRacesCore.Patches
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static PawnCapacityDef PawnCapacityFactor_capacity_Wrapper(PawnCapacityFactor __instance,
-                                                                          StatWorker __caller,
-                                                                          StatRequest req)
+        public static PawnCapacityDef PawnCapacityFactor_capacity_Wrapper(
+            PawnCapacityFactor __instance,
+            StatWorker __caller,
+            StatRequest req)
         {
             Hediff_SubstituteCapacity foundHediff
                 = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);

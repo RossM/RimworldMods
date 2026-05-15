@@ -27,9 +27,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("GizmoDisabled")]
-        public static IEnumerable<CodeInstruction> GizmoDisabled_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                            ILGenerator generator,
-                                                                            MethodBase method)
+        public static IEnumerable<CodeInstruction> GizmoDisabled_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GetPsycastLevel.MatchAndReplace(method, ref instructionsList, generator);
@@ -40,9 +41,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("CanCast", MethodType.Getter)]
-        public static IEnumerable<CodeInstruction> CanCast_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                      ILGenerator generator,
-                                                                      MethodBase method)
+        public static IEnumerable<CodeInstruction> CanCast_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GetPsycastLevel.MatchAndReplace(method, ref instructionsList, generator);

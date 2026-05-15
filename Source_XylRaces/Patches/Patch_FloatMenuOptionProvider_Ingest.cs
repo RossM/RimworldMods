@@ -12,10 +12,11 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch("GetSingleOptionFor")]
-        public static bool GetSingleOptionFor_Prefix(FloatMenuOptionProvider_Ingest __instance,
-                                                     Thing clickedThing,
-                                                     FloatMenuContext context,
-                                                     ref FloatMenuOption __result)
+        public static bool GetSingleOptionFor_Prefix(
+            FloatMenuOptionProvider_Ingest __instance,
+            Thing clickedThing,
+            FloatMenuContext context,
+            ref FloatMenuOption __result)
         {
             if (clickedThing.def.ingestible is not { showIngestFloatOption: true })
             {

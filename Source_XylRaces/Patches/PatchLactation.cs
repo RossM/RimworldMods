@@ -48,9 +48,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
-        public static IEnumerable<CodeInstruction> CanBreastfeed_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                            ILGenerator generator,
-                                                                            MethodBase method)
+        public static IEnumerable<CodeInstruction> CanBreastfeed_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);
@@ -61,9 +62,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
-        public static IEnumerable<CodeInstruction> CanBreastfeedNow_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                               ILGenerator generator,
-                                                                               MethodBase method)
+        public static IEnumerable<CodeInstruction> CanBreastfeedNow_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);
@@ -88,9 +90,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
-        public static IEnumerable<CodeInstruction> QuestPartTick_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                            ILGenerator generator,
-                                                                            MethodBase method)
+        public static IEnumerable<CodeInstruction> QuestPartTick_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);
@@ -115,9 +118,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
-        public static IEnumerable<CodeInstruction> DrawRow_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                      ILGenerator generator,
-                                                                      MethodBase method)
+        public static IEnumerable<CodeInstruction> DrawRow_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);

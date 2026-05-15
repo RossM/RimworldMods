@@ -40,9 +40,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("DoSlaveTab")]
-        public static IEnumerable<CodeInstruction> DoSlaveTab_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                         ILGenerator generator,
-                                                                         MethodBase method)
+        public static IEnumerable<CodeInstruction> DoSlaveTab_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);

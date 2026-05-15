@@ -53,10 +53,11 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        public static void GiveAppropriateBioAndNameTo_Wrapper(Pawn pawn,
-                                                               FactionDef factionType,
-                                                               PawnGenerationRequest request,
-                                                               XenotypeDef xenotype)
+        public static void GiveAppropriateBioAndNameTo_Wrapper(
+            Pawn pawn,
+            FactionDef factionType,
+            PawnGenerationRequest request,
+            XenotypeDef xenotype)
         {
             ModifyGenderByGenes(pawn, request, xenotype);
             PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo(pawn, factionType, request, xenotype);
@@ -102,9 +103,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
-        public static IEnumerable<CodeInstruction> XenotypesAvailableFor_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                                    ILGenerator generator,
-                                                                                    MethodBase method)
+        public static IEnumerable<CodeInstruction> XenotypesAvailableFor_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_DefaultXenotype.MatchAndReplace(method, ref instructionsList, generator);

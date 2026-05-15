@@ -16,11 +16,12 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch("GenerateCarriers")]
-        public static bool GenerateCarriers(PawnGroupMakerParms parms,
-                                            PawnGroupMaker groupMaker,
-                                            Pawn trader,
-                                            List<Thing> wares,
-                                            List<Pawn> outPawns)
+        public static bool GenerateCarriers(
+            PawnGroupMakerParms parms,
+            PawnGroupMaker groupMaker,
+            Pawn trader,
+            List<Thing> wares,
+            List<Pawn> outPawns)
         {
             if (parms.faction.def != DefOf.XylTribeGentleNixie)
                 return true;

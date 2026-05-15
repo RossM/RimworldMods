@@ -41,9 +41,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("DrawGenes")]
-        public static IEnumerable<CodeInstruction> DrawGenes_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                        ILGenerator generator,
-                                                                        MethodBase method)
+        public static IEnumerable<CodeInstruction> DrawGenes_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GenesInOrder.MatchAndReplace(method, ref instructionsList, generator);

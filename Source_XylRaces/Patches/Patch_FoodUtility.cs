@@ -24,12 +24,13 @@ namespace XylRacesCore.Patches
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(FoodOptimality))]
-        public static void FoodOptimality_Postfix(Pawn eater,
-                                                  Thing foodSource,
-                                                  ThingDef foodDef,
-                                                  float dist,
-                                                  bool takingToInventory,
-                                                  ref float __result)
+        public static void FoodOptimality_Postfix(
+            Pawn eater,
+            Thing foodSource,
+            ThingDef foodDef,
+            float dist,
+            bool takingToInventory,
+            ref float __result)
         {
             float nutritionFactor = FoodHelpers.GetExtraNutritionFactor(eater, foodSource, foodDef);
 
@@ -49,12 +50,13 @@ namespace XylRacesCore.Patches
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch("TryAddIngestThought")]
-        public static bool TryAddIngestThought_Prefix(Pawn ingester,
-                                                      ThoughtDef def,
-                                                      Precept fromPrecept,
-                                                      List<ThoughtFromIngesting> ingestThoughts,
-                                                      ThingDef foodDef,
-                                                      MeatSourceCategory meatSourceCategory)
+        public static bool TryAddIngestThought_Prefix(
+            Pawn ingester,
+            ThoughtDef def,
+            Precept fromPrecept,
+            List<ThoughtFromIngesting> ingestThoughts,
+            ThingDef foodDef,
+            MeatSourceCategory meatSourceCategory)
         {
             if (FoodHelpers.IsThoughtFromIngestionDisallowedByGenes(ingester, def, foodDef, meatSourceCategory))
                 return false;

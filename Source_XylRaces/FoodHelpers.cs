@@ -103,10 +103,11 @@ public static class FoodHelpers
         return (foodDef.IsRawHumanFood() || foodDef.IsCorpse);
     }
 
-    public static bool IsThoughtFromIngestionDisallowedByGenes(Pawn eater,
-                                                               ThoughtDef thought,
-                                                               ThingDef ingestible,
-                                                               MeatSourceCategory meatSourceCategory)
+    public static bool IsThoughtFromIngestionDisallowedByGenes(
+        Pawn eater,
+        ThoughtDef thought,
+        ThingDef ingestible,
+        MeatSourceCategory meatSourceCategory)
     {
         if (thought == null || ingestible == null)
         {

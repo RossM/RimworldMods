@@ -29,9 +29,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
-        public static IEnumerable<CodeInstruction> AvailableNow_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                           ILGenerator generator,
-                                                                           MethodBase method)
+        public static IEnumerable<CodeInstruction> AvailableNow_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_AvailableNow.MatchAndReplace(method, ref instructionsList, generator);

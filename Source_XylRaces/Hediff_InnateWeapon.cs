@@ -44,8 +44,8 @@ namespace XylRacesCore
 
             Pawn currentWeaponUser = pawn;
             IEnumerable<VerbUtility.VerbPropertiesWithSource> enumerable = from x in VerbUtility.GetAllVerbProperties(verbs, tools)
-                                                                           where x.verbProps.IsMeleeAttack
-                                                                           select x;
+                where x.verbProps.IsMeleeAttack
+                select x;
             var stringBuilder = new StringBuilder();
             foreach (VerbUtility.VerbPropertiesWithSource item in enumerable)
             {

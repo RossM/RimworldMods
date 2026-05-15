@@ -65,9 +65,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("Ingested")]
-        public static IEnumerable<CodeInstruction> Ingested_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                       ILGenerator generator,
-                                                                       MethodBase method)
+        public static IEnumerable<CodeInstruction> Ingested_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             FixupIngested.MatchAndReplace(method, ref instructionsList, generator);

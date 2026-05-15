@@ -29,9 +29,10 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
-        public static IEnumerable<CodeInstruction> CanConstruct_Transpiler(IEnumerable<CodeInstruction> instructions,
-                                                                           ILGenerator generator,
-                                                                           MethodBase method)
+        public static IEnumerable<CodeInstruction> CanConstruct_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_CanConstruct.MatchAndReplace(method, ref instructionsList, generator);

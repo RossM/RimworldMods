@@ -12,6 +12,7 @@ public static class MapHelpers
 
     public static bool IsWetlandBiome(this Tile tile)
     {
-        return tile.PrimaryBiome == BiomeDefOf.TropicalSwamp || tile.PrimaryBiome == DefOf.TemperateSwamp || tile.PrimaryBiome == BiomeDefOf.ColdBog;
+        return tile.PrimaryBiome == BiomeDefOf.TropicalSwamp || tile.PrimaryBiome == DefOf.TemperateSwamp ||
+               tile.PrimaryBiome == BiomeDefOf.ColdBog;
     }
 }
