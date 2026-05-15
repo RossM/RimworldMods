@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+  
+  <!--<ThingDef ParentName="MakeableDrugBase">
+    <defName>XylAtlasite</defName>
+    <label>atlasite</label>
+    <description>A concoction of mechanites specifically designed for lithoids. A dose every three days will provide slight improvements in mood and performance. As long as the user continues taking atlasite regularly, the mechanites will gradually saturate their system, remaking it to be resistant to damage and hostile environments. However, even a single missed dose will disrupt the mechanites and reset the saturation process.</description>
+  </ThingDef>-->
+  
+</Defs>

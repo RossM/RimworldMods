@@ -219,7 +219,7 @@
     <biostatMet>-2</biostatMet>
     <displayCategory>Ability</displayCategory>
     <displayOrderInCategory>203</displayOrderInCategory>
-    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <iconPath>Xyl/UI/Icons/Genes/Gene_RockToss</iconPath>
     <abilities>
       <li>XylRockToss</li>
     </abilities>

@@ -6,7 +6,7 @@
     <defName>XylRockToss</defName>
     <label>rock toss</label>
     <description>Pick up a rock chunk and toss it. It will land near the targeted location, damaging everything in a radius around where it lands.</description>
-    <iconPath></iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_RockToss</iconPath>
     <!-- 8 hours -->
     <cooldownTicksRange>20000</cooldownTicksRange>
     <jobDef>XylCastAbilityWithHeldThing</jobDef>
