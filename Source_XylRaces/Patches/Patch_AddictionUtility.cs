@@ -21,5 +21,18 @@ namespace XylRacesCore.Patches
                     effect *= pawn.GetStatValue(DefOf.XylDrugEffectMultiplier);
             }
         }
+
+        [Feature(nameof(DefOf.XylDrugEffectMultiplier)), HarmonyPostfix, UsedImplicitly,
+         HarmonyPatch(nameof(AddictionUtility.CanBingeOnNow))]
+        public static bool CanBingeOnNow_Prefix(Pawn pawn, ChemicalDef chemical, DrugCategory drugCategory,
+            ref bool __result)
+        {
+            __result = false;
+
+            if (!pawn.ChemicalIsAllowedByGenes(chemical))
+                return false;
+
+            return true;
+        }
     }
 }
