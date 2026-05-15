@@ -33,7 +33,8 @@ namespace XylRacesCore
 
                 foreach (Thing thing in c.GetThingList(Pawn.Map))
                 {
-                    if (thing is Pawn pawn && pawn != Pawn && pawn.HostileTo(Pawn) && GasUtility.IsAffectedByExposure(pawn) && !pawn.IsPsychologicallyInvisible())
+                    if (thing is Pawn pawn && pawn != Pawn && pawn.HostileTo(Pawn) && GasUtility.IsAffectedByExposure(pawn)
+                        && !pawn.IsPsychologicallyInvisible())
                     {
                         return true;
                     }

@@ -40,6 +40,7 @@ namespace XylRacesCore
             {
                 yield return item;
             }
+
             if (!typeof(Gene).IsAssignableFrom(geneClass))
             {
                 yield return "geneClass is not Gene or child thereof.";

@@ -58,12 +58,12 @@ namespace XylRacesCore.Patches
                         CodeInstruction.Call(() => Hediff_SubstituteCapacity.FindHediffFor),
                         // Save a copy of the hediff
                         new CodeInstruction(OpCodes.Dup),
-                        CodeInstruction.StoreLocal(2), 
+                        CodeInstruction.StoreLocal(2),
                         // capacity = ConditionalSetCapacity(foundHediff, capacity);
                         // Load the capacity
                         CodeInstruction.LoadLocal(1),
                         // Call ConditionalSetCapacity (because I don't want to emit an if)
-                        CodeInstruction.Call(() => ConditionalSetCapacity), 
+                        CodeInstruction.Call(() => ConditionalSetCapacity),
                     ]
                 },
                 new()
@@ -112,7 +112,7 @@ namespace XylRacesCore.Patches
                         CodeInstruction.Call(() => Hediff_SubstituteCapacity.FindHediffFor),
                         // Save a copy of the hediff
                         new CodeInstruction(OpCodes.Dup),
-                        CodeInstruction.StoreLocal(2), 
+                        CodeInstruction.StoreLocal(2),
                         // capacity = ConditionalSetCapacity(foundHediff, capacity);
                         // Load the capacity
                         CodeInstruction.LoadLocal(1),
@@ -153,25 +153,30 @@ namespace XylRacesCore.Patches
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Field(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
                     AccessTools.Method(typeof(Patch_StatWorker), nameof(PawnCapacityOffset_capacity_Wrapper))
-                    ),
+                ),
 
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Field(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
                     AccessTools.Method(typeof(Patch_StatWorker), nameof(PawnCapacityFactor_capacity_Wrapper))
-                    ),
+                ),
             }
         };
 
-        [Feature(nameof(Hediff_SubstituteCapacity)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
-        public static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(Hediff_SubstituteCapacity)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
+        public static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GetOffsetsAndFactorsExplanation.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
-        public static void AppendSubstitutionDescription(StringBuilder sb, string whitespace,
-            Hediff_SubstituteCapacity foundHediff)
+        public static void AppendSubstitutionDescription(StringBuilder sb,
+                                                         string whitespace,
+                                                         Hediff_SubstituteCapacity foundHediff)
         {
             if (foundHediff != null)
                 sb.AppendLine(whitespace + "        " + foundHediff.GetDescription());
@@ -184,8 +189,11 @@ namespace XylRacesCore.Patches
             return capacity;
         }
 
-        [Feature(nameof(Hediff_SubstituteCapacity)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
-        public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(Hediff_SubstituteCapacity)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
+        public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                                  ILGenerator generator,
+                                                                                  MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GetValueUnfinalized.MatchAndReplace(method, ref instructionsList, generator);
@@ -194,16 +202,22 @@ namespace XylRacesCore.Patches
 
         // Note: this patch is performance-sensitive
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static PawnCapacityDef PawnCapacityOffset_capacity_Wrapper(PawnCapacityOffset __instance, StatWorker __caller, StatRequest req)
+        public static PawnCapacityDef PawnCapacityOffset_capacity_Wrapper(PawnCapacityOffset __instance,
+                                                                          StatWorker __caller,
+                                                                          StatRequest req)
         {
-            Hediff_SubstituteCapacity foundHediff = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
+            Hediff_SubstituteCapacity foundHediff
+                = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
             return foundHediff != null ? foundHediff.DefExt.substituteCapacity : __instance.capacity;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static PawnCapacityDef PawnCapacityFactor_capacity_Wrapper(PawnCapacityFactor __instance, StatWorker __caller, StatRequest req)
+        public static PawnCapacityDef PawnCapacityFactor_capacity_Wrapper(PawnCapacityFactor __instance,
+                                                                          StatWorker __caller,
+                                                                          StatRequest req)
         {
-            Hediff_SubstituteCapacity foundHediff = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
+            Hediff_SubstituteCapacity foundHediff
+                = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
             return foundHediff != null ? foundHediff.DefExt.substituteCapacity : __instance.capacity;
         }
 
@@ -219,5 +233,4 @@ namespace XylRacesCore.Patches
             }
         }
     }
-
 }

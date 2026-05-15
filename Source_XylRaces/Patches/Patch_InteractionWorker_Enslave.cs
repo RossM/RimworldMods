@@ -20,13 +20,15 @@ namespace XylRacesCore.Patches
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(StatExtension), nameof(StatExtension.GetStatValue)),
                     AccessTools.Method(typeof(Patch_InteractionWorker_EnslaveAttempt), nameof(GetStatValue_Wrapper))
-                    )
+                )
             }
         };
 
-        [Feature(nameof(DefOf.XylWillFallRate)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
+        [Feature(nameof(DefOf.XylWillFallRate)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
         public static IEnumerable<CodeInstruction> Interacted_Transpiler(IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator, MethodBase method)
+                                                                         ILGenerator generator,
+                                                                         MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_Interacted.MatchAndReplace(method, ref instructionsList, generator);

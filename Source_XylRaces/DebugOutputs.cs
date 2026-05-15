@@ -20,7 +20,9 @@ namespace XylRacesCore
                 new("displayOrderInCategory", geneDef => geneDef.displayOrderInCategory),
                 new("exclusionTags", geneDef => geneDef.exclusionTags?.ToCommaList() ?? "")
             ];
-            DebugTables.MakeTablesDialog(DefDatabase<GeneDef>.AllDefs.OrderByDescending(geneDef => geneDef.displayCategory.displayPriorityInXenotype).ThenBy(geneDef => geneDef.displayOrderInCategory), columns);
+            DebugTables.MakeTablesDialog(
+                DefDatabase<GeneDef>.AllDefs.OrderByDescending(geneDef => geneDef.displayCategory.displayPriorityInXenotype)
+                    .ThenBy(geneDef => geneDef.displayOrderInCategory), columns);
         }
 
         [DebugOutput, UsedImplicitly]
@@ -41,6 +43,7 @@ namespace XylRacesCore
                     return xenotypeChance > 0 ? xenotypeChance.ToStringPercent() : "";
                 }));
             }
+
             DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs, columns.ToArray());
             return;
 
@@ -72,7 +75,9 @@ namespace XylRacesCore
                     return xenotypeChance > 0 ? xenotypeChance.ToStringPercent() : "";
                 }));
             }
-            DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(pawnKindDef => pawnKindDef.xenotypeSet != null), columns.ToArray());
+
+            DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(pawnKindDef => pawnKindDef.xenotypeSet != null),
+                columns.ToArray());
             return;
 
             static float GetXenotypeChance(PawnKindDef pawnKindDef, XenotypeDef xenotypeDef)

@@ -13,8 +13,11 @@ namespace XylRacesCore.Patches
     public static class Patch_PawnGroupKindWorker_Trader
     {
         [Feature(nameof(DefOf.XylTribeGentleNixie)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("GenerateCarriers")]
-        public static bool GenerateCarriers(PawnGroupMakerParms parms, PawnGroupMaker groupMaker, Pawn trader,
-            List<Thing> wares, List<Pawn> outPawns)
+        public static bool GenerateCarriers(PawnGroupMakerParms parms,
+                                            PawnGroupMaker groupMaker,
+                                            Pawn trader,
+                                            List<Thing> wares,
+                                            List<Pawn> outPawns)
         {
             if (parms.faction.def != DefOf.XylTribeGentleNixie)
                 return true;
@@ -40,12 +43,16 @@ namespace XylRacesCore.Patches
             List<Pawn> carrierPawns = new List<Pawn>();
             for (int i = 0; i < numAnimals; i++)
             {
-                Pawn pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(kind, parms.faction, PawnGenerationContext.NonPlayer, parms.tile, forceGenerateNewPawn: false, allowDead: false, allowDowned: false, canGeneratePawnRelations: true, mustBeCapableOfViolence: false, 1f, forceAddFreeWarmLayerIfNeeded: false, allowGay: true, allowPregnant: false, allowFood: true, allowAddictions: true, fixedIdeo: parms.ideo, inhabitant: parms.inhabitants));
+                Pawn pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(kind, parms.faction, PawnGenerationContext.NonPlayer,
+                    parms.tile, forceGenerateNewPawn: false, allowDead: false, allowDowned: false, canGeneratePawnRelations: true,
+                    mustBeCapableOfViolence: false, 1f, forceAddFreeWarmLayerIfNeeded: false, allowGay: true, allowPregnant: false,
+                    allowFood: true, allowAddictions: true, fixedIdeo: parms.ideo, inhabitant: parms.inhabitants));
                 if (itemIndex < waresItems.Count)
                 {
                     pawn.inventory.innerContainer.TryAdd(waresItems[itemIndex]);
                     itemIndex++;
                 }
+
                 carrierPawns.Add(pawn);
                 outPawns.Add(pawn);
             }

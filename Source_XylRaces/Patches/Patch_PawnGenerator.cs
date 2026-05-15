@@ -20,20 +20,25 @@ namespace XylRacesCore.Patches
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo)),
                     AccessTools.Method(typeof(Patch_PawnGenerator), nameof(GiveAppropriateBioAndNameTo_Wrapper))
-                    )
+                )
             }
         };
 
         [Feature(nameof(GeneDefExtension_GenderRatio)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("TryGenerateNewPawnInternal")]
-        public static IEnumerable<CodeInstruction> TryGenerateNewPawnInternal_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        public static IEnumerable<CodeInstruction> TryGenerateNewPawnInternal_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_TryGenerateNewPawnInternal.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
-        public static void GiveAppropriateBioAndNameTo_Wrapper(Pawn pawn, FactionDef factionType, PawnGenerationRequest request,
-            XenotypeDef xenotype)
+        public static void GiveAppropriateBioAndNameTo_Wrapper(Pawn pawn,
+                                                               FactionDef factionType,
+                                                               PawnGenerationRequest request,
+                                                               XenotypeDef xenotype)
         {
             ModifyGenderByGenes(pawn, request, xenotype);
             PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo(pawn, factionType, request, xenotype);
@@ -48,7 +53,7 @@ namespace XylRacesCore.Patches
                            request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
                            request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
                            xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
-            if (gene == null) 
+            if (gene == null)
                 return;
 
             pawn.gender = gene.GetModExtension<GeneDefExtension_GenderRatio>().GetGender();
@@ -87,8 +92,11 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
-        public static IEnumerable<CodeInstruction> XenotypesAvailableFor_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
+        public static IEnumerable<CodeInstruction> XenotypesAvailableFor_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                                    ILGenerator generator,
+                                                                                    MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_DefaultXenotype.MatchAndReplace(method, ref instructionsList, generator);

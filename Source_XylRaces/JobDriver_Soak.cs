@@ -48,10 +48,7 @@ namespace XylRacesCore
             goToil.AddFinishAction(CheckForSwimmingPose);
             yield return goToil;
             Toil toil2 = Toils_General.Wait(240);
-            toil2.tickIntervalAction = _ =>
-            {
-                CheckForSwimmingPose(); 
-            };
+            toil2.tickIntervalAction = _ => { CheckForSwimmingPose(); };
             yield return toil2;
             Toil toil3 = ToilMaker.MakeToil();
             toil3.initAction = () =>
@@ -72,6 +69,5 @@ namespace XylRacesCore
         {
             job.swimming = pawn.Position.GetTerrain(pawn.Map).IsWater;
         }
-
     }
 }

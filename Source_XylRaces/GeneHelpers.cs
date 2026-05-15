@@ -24,12 +24,12 @@ public static class GeneHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool HasActiveGene(this Pawn pawn, GeneDef def)
     {
-        if (pawn.genes == null || def == null) 
+        if (pawn.genes == null || def == null)
             return false;
 
         foreach (Gene g in pawn.GenesOfDef(def))
         {
-            if (g.Active) 
+            if (g.Active)
                 return true;
         }
 
@@ -60,7 +60,7 @@ public static class GeneHelpers
     {
         foreach (T g in pawn.GenesOfType<T>())
         {
-            if (((Gene)(object)g).Active) 
+            if (((Gene)(object)g).Active)
                 return g;
         }
 
@@ -70,12 +70,12 @@ public static class GeneHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool HasActiveGeneOfType<T>(this Pawn pawn) where T : class
     {
-        if (pawn.genes == null) 
+        if (pawn.genes == null)
             return false;
 
         foreach (T g in pawn.GenesOfType<T>())
         {
-            if (((Gene)(object)g).Active) 
+            if (((Gene)(object)g).Active)
                 return true;
         }
 
@@ -85,12 +85,12 @@ public static class GeneHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool HasActiveGeneOfType<T>(this Pawn pawn, Func<T, bool> predicate) where T : class
     {
-        if (pawn.genes == null) 
+        if (pawn.genes == null)
             return false;
 
         foreach (T g in pawn.GenesOfType<T>())
         {
-            if (((Gene)(object)g).Active && predicate(g)) 
+            if (((Gene)(object)g).Active && predicate(g))
                 return true;
         }
 
@@ -153,18 +153,20 @@ public static class GeneHelpers
         }).ToList();
         if (recipeDefs.Any())
         {
-            yield return "XylNewRecipes".Translate() + ": " + recipeDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList();
+            yield return "XylNewRecipes".Translate() + ": "
+                                                     + recipeDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList();
         }
-        IEnumerable<ThingDef> thingDef = DefDatabase<RecipeDef>.AllDefsListForReading.SelectMany(def => def.products.EmptyIfNull(), (_, c) => c.thingDef)
+
+        IEnumerable<ThingDef> thingDef = DefDatabase<RecipeDef>.AllDefsListForReading
+            .SelectMany(def => def.products.EmptyIfNull(), (_, c) => c.thingDef)
             .Where(def =>
-        {
-            var modExtension = def.GetModExtension<DefModExtension_GeneDependent>();
-            return modExtension != null && modExtension.genePrerequisitesAny.EmptyIfNull().Contains(gene);
-        }).ToList();
+            {
+                var modExtension = def.GetModExtension<DefModExtension_GeneDependent>();
+                return modExtension != null && modExtension.genePrerequisitesAny.EmptyIfNull().Contains(gene);
+            }).ToList();
         if (thingDef.Any())
         {
             yield return "XylNewRecipes".Translate() + ": " + thingDef.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList();
         }
-
     }
 }

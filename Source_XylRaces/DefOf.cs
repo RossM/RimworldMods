@@ -32,24 +32,19 @@ namespace XylRacesCore
 
         #region GeneDefs
 
-        [MayRequire("Xylthixlm.Races.Nixie")] 
-        public static GeneDef XylDrugSensitive;
-        
-        [MayRequire("Xylthixlm.Races.Chyrr")] 
-        public static GeneDef XylEcholocation;
+        [MayRequire("Xylthixlm.Races.Nixie")] public static GeneDef XylDrugSensitive;
+
+        [MayRequire("Xylthixlm.Races.Chyrr")] public static GeneDef XylEcholocation;
 
         #endregion
 
         public static BiomeDef TemperateSwamp;
 
-        [MayRequire("Xylthixlm.Races.Nixie")]
-        public static FactionDef XylTribeGentleNixie;
+        [MayRequire("Xylthixlm.Races.Nixie")] public static FactionDef XylTribeGentleNixie;
 
-        [MayRequire("Xylthixlm.Races.Nixie")]
-        public static PawnKindDef XylSelkie;
+        [MayRequire("Xylthixlm.Races.Nixie")] public static PawnKindDef XylSelkie;
 
-        [MayRequire("Xylthixlm.Races.Nixie")]
-        public static JobDef XylTakeShower;
+        [MayRequire("Xylthixlm.Races.Nixie")] public static JobDef XylTakeShower;
 
         static DefOf()
         {

@@ -19,7 +19,7 @@ namespace XylRacesCore.Patches
             Rules =
             {
                 // I would love to use a match against OffsetAgainstIdeo but that's a local function
-        
+
                 new()
                 {
                     Min = 1, Max = 0,
@@ -50,8 +50,12 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(XenotypeDefExtension)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(ConversionUtility.ConversionPowerFactor_MemesVsTraits))]
-        public static IEnumerable<CodeInstruction> ConversionPowerFactor_MemesVsTraits_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(XenotypeDefExtension)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(nameof(ConversionUtility.ConversionPowerFactor_MemesVsTraits))]
+        public static IEnumerable<CodeInstruction> ConversionPowerFactor_MemesVsTraits_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_ConversionPowerFactor_MemesVsTraits.MatchAndReplace(method, ref instructionsList, generator);
@@ -108,10 +112,14 @@ namespace XylRacesCore.Patches
                 {
                     return string.Empty;
                 }
+
                 // Adding 1 to the offset and reporting it as a percentage is complete nonsense and gives the impression
                 // that these are factors being multiplied together rather than added. However, it's complete nonsense
                 // that matches what the base game does for traits, so I am holding my nose and matching it.
-                return "\n   -  " + "XylAbilityIdeoConvertBreakdownMemeVsXenotype".Translate(meme.label.Named("MEME"), xenotype.label.Named("XENOTYPE")).CapitalizeFirst() + ": " + (1f + offset).ToStringPercent();
+                return "\n   -  "
+                       + "XylAbilityIdeoConvertBreakdownMemeVsXenotype"
+                           .Translate(meme.label.Named("MEME"), xenotype.label.Named("XENOTYPE")).CapitalizeFirst() + ": "
+                       + (1f + offset).ToStringPercent();
             }
         }
     }

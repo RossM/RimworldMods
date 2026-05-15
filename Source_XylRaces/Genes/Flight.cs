@@ -23,8 +23,7 @@ namespace XylRacesCore.Genes
         public bool autoFly = true;
         public bool autoFlyDrafted = true;
 
-        [Unsaved] 
-        private bool wasFlying;
+        [Unsaved] private bool wasFlying;
 
         public bool flightAllowedByApparel = true;
 
@@ -64,19 +63,20 @@ namespace XylRacesCore.Genes
 
             yield return new Command_ActionWithCooldown()
             {
-                action = () =>
-                {
-                    pawn.flight.StartFlying();
-                },
+                action = () => { pawn.flight.StartFlying(); },
                 defaultLabel = "XylCommandFlyLabel".TranslateSimple(),
                 defaultDesc = "XylCommandFlyDesc".TranslateSimple(),
                 Disabled = !pawn.flight.CanFlyNow || !flightAllowedByApparel,
                 cooldownPercentGetter = () => 1.0f - pawn.flight.flightCooldownTicks / (pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
                 icon = DefExt.Icon,
-                defaultDescPostfix = "\n\n" + 
+                defaultDescPostfix = "\n\n" +
                                      flyingDisabledBy +
-                                     "CooldownTime".TranslateSimple() + ": " + pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall() + "LetterSecond".TranslateSimple() + "\n" + 
-                                     "AbilityDuration".TranslateSimple() + ": " + pawn.GetStatValue(StatDefOf.MaxFlightTime).ToStringDecimalIfSmall() + "LetterSecond".TranslateSimple(),
+                                     "CooldownTime".TranslateSimple() + ": "
+                                     + pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall()
+                                     + "LetterSecond".TranslateSimple() + "\n" +
+                                     "AbilityDuration".TranslateSimple() + ": "
+                                     + pawn.GetStatValue(StatDefOf.MaxFlightTime).ToStringDecimalIfSmall()
+                                     + "LetterSecond".TranslateSimple(),
             };
 
             if (flightAllowedByApparel)
@@ -125,13 +125,13 @@ namespace XylRacesCore.Genes
 
             if (!flight.Flying &&
                 flightAllowedByApparel &&
-                (pawn.Drafted ? autoFlyDrafted : autoFly) && 
+                (pawn.Drafted ? autoFlyDrafted : autoFly) &&
                 pawn.pather.Moving &&
                 pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= DefExt.autoFlyMinDistance &&
                 pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
-                {
-                    flight.StartFlying();
-                }
+            {
+                flight.StartFlying();
+            }
         }
 
         // If a downed flying pawn lands on a non-walkable tile, they are killed and their corpse destroyed.
@@ -176,7 +176,8 @@ namespace XylRacesCore.Genes
                 new("label", thingDef => thingDef.LabelCap),
                 new("allowsFlight", thingDef => ApparelAllowsFlight(thingDef))
             ];
-            DebugTables.MakeTablesDialog(DefDatabase<ThingDef>.AllDefs.Where(thingDef => thingDef.IsApparel).OrderBy(thingDef => thingDef.BaseMarketValue), columns);
+            DebugTables.MakeTablesDialog(
+                DefDatabase<ThingDef>.AllDefs.Where(thingDef => thingDef.IsApparel).OrderBy(thingDef => thingDef.BaseMarketValue), columns);
         }
     }
 }

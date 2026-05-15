@@ -2,7 +2,7 @@
 using Verse;
 
 namespace XylRacesCore
-{ 
+{
     public interface IGene_HediffSource
     {
         bool CausesHediff(HediffDef hediffDef);
@@ -10,8 +10,7 @@ namespace XylRacesCore
 
     public class Hediff_Genetic : HediffWithComps
     {
-        [Unsaved]
-        private Gene cachedGene;
+        [Unsaved] private Gene cachedGene;
 
         public override bool ShouldRemove => Gene is not { Active: true };
 

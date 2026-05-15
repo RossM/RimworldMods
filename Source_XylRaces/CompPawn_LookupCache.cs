@@ -18,25 +18,18 @@ namespace XylRacesCore
 
     public class CompPawn_LookupCache : ThingComp
     {
-        [Unsaved]
-        private readonly Dictionary<Type, IList> genesByType = new();
-        [Unsaved]
-        private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
-        [Unsaved]
-        private readonly Dictionary<Type, List<Gene>> genesByModExt = new();
+        [Unsaved] private readonly Dictionary<Type, IList> genesByType = new();
+        [Unsaved] private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
+        [Unsaved] private readonly Dictionary<Type, List<Gene>> genesByModExt = new();
 
-        [Unsaved] 
-        private readonly Dictionary<Type, IList> hediffsByType = new();
-        [Unsaved] 
-        private readonly Dictionary<HediffDef, List<Hediff>> hediffsByDef = new();
-        [Unsaved]
-        private readonly Dictionary<Type, List<Hediff>> hediffsByModExt = new();
-        [Unsaved]
-        private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
+        [Unsaved] private readonly Dictionary<Type, IList> hediffsByType = new();
+        [Unsaved] private readonly Dictionary<HediffDef, List<Hediff>> hediffsByDef = new();
+        [Unsaved] private readonly Dictionary<Type, List<Hediff>> hediffsByModExt = new();
+        [Unsaved] private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
 
         public IEnumerable<T> GetGenesOfType<T>()
         {
-            if (genesByType.TryGetValue(typeof(T), out IList value)) 
+            if (genesByType.TryGetValue(typeof(T), out IList value))
                 return (List<T>)value;
 
             value = ((Pawn)parent).genes?.GenesListForReading.OfType<T>().ToList() ?? [];
@@ -106,7 +99,8 @@ namespace XylRacesCore
             if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))
                 return value;
 
-            value = ((Pawn)parent).health.hediffSet.hediffs.OfType<HediffWithComps>().Where(g => g.comps?.OfType<T>().Any() == true).ToList();
+            value = ((Pawn)parent).health.hediffSet.hediffs.OfType<HediffWithComps>().Where(g => g.comps?.OfType<T>().Any() == true)
+                .ToList();
             hediffsByComp.Add(typeof(T), value);
             return value;
         }

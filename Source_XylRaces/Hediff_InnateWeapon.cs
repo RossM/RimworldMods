@@ -19,12 +19,14 @@ namespace XylRacesCore
             var verbs = VerbUtility.GetAllVerbProperties(comp.VerbProperties, comp.Tools)
                 .Where(x => x.verbProps.IsMeleeAttack).ToList();
 
-            float damage = verbs.AverageWeighted(SelectionWeight, x => x.verbProps.AdjustedMeleeDamageAmount(x.tool, pawn, req.Thing, comp));
+            float damage = verbs.AverageWeighted(SelectionWeight,
+                x => x.verbProps.AdjustedMeleeDamageAmount(x.tool, pawn, req.Thing, comp));
             float cooldown = verbs.AverageWeighted(SelectionWeight, x => x.verbProps.AdjustedCooldown(x.tool, pawn, req.Thing));
             if (cooldown == 0f)
             {
                 return 0f;
             }
+
             return damage / cooldown;
 
             float SelectionWeight(VerbUtility.VerbPropertiesWithSource x)
@@ -39,11 +41,11 @@ namespace XylRacesCore
             var verbGiver = def.CompProps<HediffCompProperties_VerbGiver>();
             var verbs = verbGiver.verbs;
             var tools = verbGiver.tools;
-            
+
             Pawn currentWeaponUser = pawn;
             IEnumerable<VerbUtility.VerbPropertiesWithSource> enumerable = from x in VerbUtility.GetAllVerbProperties(verbs, tools)
-                where x.verbProps.IsMeleeAttack
-                select x;
+                                                                           where x.verbProps.IsMeleeAttack
+                                                                           select x;
             var stringBuilder = new StringBuilder();
             foreach (VerbUtility.VerbPropertiesWithSource item in enumerable)
             {
@@ -55,6 +57,7 @@ namespace XylRacesCore
                 stringBuilder.AppendLine($"    {damage:F1} {"DamageLower".Translate()}");
                 stringBuilder.AppendLine($"    {cooldown:F2} {"SecondsPerAttackLower".Translate()}");
             }
+
             return stringBuilder.ToString();
         }
 
@@ -80,8 +83,10 @@ namespace XylRacesCore
                     float meleeDPS = GetMeleeDPSValueUnfinalized(req);
                     string meleeDPSExplanation = GetMeleeDPSExplanationUnfinalized(req, ToStringNumberSense.Absolute);
                     yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee,
-                        StatDefOf.MeleeDPS.LabelForFullStatList, meleeDPS.ToStringByStyle(ToStringStyle.FloatTwo), meleeDPSExplanation, 5100);
-                    yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "ArmorPenetration".Translate() + extraLabelPart, armorPenetration.ToStringPercent(), "ArmorPenetrationExplanation".Translate(), 4100);
+                        StatDefOf.MeleeDPS.LabelForFullStatList, meleeDPS.ToStringByStyle(ToStringStyle.FloatTwo), meleeDPSExplanation,
+                        5100);
+                    yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "ArmorPenetration".Translate() + extraLabelPart,
+                        armorPenetration.ToStringPercent(), "ArmorPenetrationExplanation".Translate(), 4100);
                 }
             }
         }

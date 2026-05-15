@@ -12,12 +12,11 @@ namespace XylRacesCore.Patches
          HarmonyPatch(nameof(PawnUtility.CanTakeDrug))]
         public static bool CanTakeDrug_Prefix(Pawn pawn, ThingDef drug, ref bool __result)
         {
-            if (pawn.ChemicalIsAllowedByGenes(drug)) 
+            if (pawn.ChemicalIsAllowedByGenes(drug))
                 return true;
 
             __result = false;
             return false;
-
         }
     }
 }

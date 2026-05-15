@@ -50,6 +50,7 @@ public static class ChemHelpers
                 thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<ChemicalDefExtension>()?.requiredGenesAny
                     ?.Select(geneDef => geneDef.defName).ToCommaList() ?? ""),
         ];
-        DebugTables.MakeTablesDialog(DefDatabase<ThingDef>.AllDefs.Where(thingDef => thingDef.IsDrug).OrderBy(thingDef => thingDef.BaseMarketValue), columns);
+        DebugTables.MakeTablesDialog(
+            DefDatabase<ThingDef>.AllDefs.Where(thingDef => thingDef.IsDrug).OrderBy(thingDef => thingDef.BaseMarketValue), columns);
     }
 }

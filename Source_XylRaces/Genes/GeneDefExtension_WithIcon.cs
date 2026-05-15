@@ -5,11 +5,9 @@ namespace XylRacesCore.Genes;
 
 public class GeneDefExtension_WithIcon : GeneDefExtension
 {
-    [NoTranslate]
-    public string iconPath;
+    [NoTranslate] public string iconPath;
 
-    [Unsaved] 
-    private Texture2D cachedIcon;
+    [Unsaved] private Texture2D cachedIcon;
 
     public Texture2D Icon
     {

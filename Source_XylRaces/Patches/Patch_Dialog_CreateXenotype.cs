@@ -22,12 +22,14 @@ namespace XylRacesCore.Patches
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.PropertyGetter(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder)),
                     AccessTools.Method(typeof(Patch_Dialog_CreateXenotype), nameof(GenesInOrder_Wrapper))
-                    )
+                )
             }
         };
 
         [Feature(nameof(GeneDefExtension_UIFilter)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DrawGenes")]
-        public static IEnumerable<CodeInstruction> DrawGenes_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        public static IEnumerable<CodeInstruction> DrawGenes_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                        ILGenerator generator,
+                                                                        MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GenesInOrder.MatchAndReplace(method, ref instructionsList, generator);

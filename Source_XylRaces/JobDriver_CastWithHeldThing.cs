@@ -35,5 +35,4 @@ namespace XylRacesCore
             job.ability?.Notify_StartedCasting();
         }
     }
-
 }

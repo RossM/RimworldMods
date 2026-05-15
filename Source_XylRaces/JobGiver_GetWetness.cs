@@ -54,14 +54,15 @@ namespace XylRacesCore
         {
             if (!x.InAllowedArea(pawn))
                 return false;
-            if (PawnUtility.KnownDangerAt(x, pawn.Map, pawn)) 
+            if (PawnUtility.KnownDangerAt(x, pawn.Map, pawn))
                 return false;
             TerrainDef terrain = x.GetTerrain(pawn.Map);
-            if (terrain.toxicBuildupFactor != 0f && pawn.GetStatValue(StatDefOf.ToxicResistance) < 1.0f && pawn.GetStatValue(StatDefOf.ToxicEnvironmentResistance) < 1.0f) 
+            if (terrain.toxicBuildupFactor != 0f && pawn.GetStatValue(StatDefOf.ToxicResistance) < 1.0f
+                                                 && pawn.GetStatValue(StatDefOf.ToxicEnvironmentResistance) < 1.0f)
                 return false;
-            if (x.Fogged(pawn.Map)) 
+            if (x.Fogged(pawn.Map))
                 return false;
-            if (!x.Standable(pawn.Map)) 
+            if (!x.Standable(pawn.Map))
                 return false;
 
             // Bathing in marsh is icky, only do it if really necessary.
@@ -74,8 +75,8 @@ namespace XylRacesCore
 
         public static bool TryFindWaterTile(Pawn pawn, out IntVec3 result, int maxSearchRadius = int.MaxValue)
         {
-            return RCellFinder.TryFindRandomCellNearWith(pawn.Position, x => IsValidWaterTileFor(pawn, x), pawn.Map, out result, maxSearchRadius: maxSearchRadius);
-
+            return RCellFinder.TryFindRandomCellNearWith(pawn.Position, x => IsValidWaterTileFor(pawn, x), pawn.Map, out result,
+                maxSearchRadius: maxSearchRadius);
         }
 
         private void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
@@ -94,22 +95,27 @@ namespace XylRacesCore
             {
                 return false;
             }
+
             if (t.IsForbidden(pawn))
             {
                 return false;
             }
+
             if (t.Fogged())
             {
                 return false;
             }
+
             if (!t.IsSociallyProper(pawn))
             {
                 return false;
             }
+
             if (!t.IsPoliticallyProper(pawn))
             {
                 return false;
             }
+
             return true;
         }
 
@@ -140,7 +146,9 @@ namespace XylRacesCore
             if (need_wetness is not { ShouldFulfill: true })
                 return 0.0f;
 
-            return pawn.timetable?.CurrentAssignment == TimeAssignmentDefOf.Anything ? ThinkNodePriority.MiscNeed : ThinkNodePriority.AnythingJoy;
+            return pawn.timetable?.CurrentAssignment == TimeAssignmentDefOf.Anything
+                ? ThinkNodePriority.MiscNeed
+                : ThinkNodePriority.AnythingJoy;
         }
     }
 }

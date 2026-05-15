@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml;
 using JetBrains.Annotations;
 using Verse;
+
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
 
 namespace XylRacesCore
@@ -35,7 +36,7 @@ namespace XylRacesCore
     {
         private enum Order
         {
-            Append, 
+            Append,
             Prepend
         }
 
@@ -60,7 +61,7 @@ namespace XylRacesCore
 
                 result = true;
                 XmlDocument xmlNodeOwnerDocument = xmlNode.OwnerDocument;
-                if (xmlNodeOwnerDocument == null) 
+                if (xmlNodeOwnerDocument == null)
                     continue;
                 if (order == Order.Append)
                 {

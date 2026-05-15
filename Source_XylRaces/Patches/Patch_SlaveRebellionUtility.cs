@@ -18,7 +18,8 @@ namespace XylRacesCore.Patches
         public const float DocileFactor = 4f;
         public const float NeverRebelThresholdDays = 120f;
 
-        [Feature(nameof(GeneDefExtension_SlaveRebellion)), HarmonyPostfix, UsedImplicitly, HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
+        [Feature(nameof(GeneDefExtension_SlaveRebellion)), HarmonyPostfix, UsedImplicitly,
+         HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
         public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)
         {
             if (__result < 0)
@@ -53,7 +54,7 @@ namespace XylRacesCore.Patches
                     Mode = InstructionMatcher.OutputMode.Replace,
                     Pattern =
                     [
-                        CodeInstruction.LoadLocal(0), 
+                        CodeInstruction.LoadLocal(0),
                         new CodeInstruction(OpCodes.Ldstr, "{0}: {1}"),
                         new CodeInstruction(OpCodes.Ldstr, "SuppressionFinalInterval"),
                         CodeInstruction.Call(typeof(Translator), nameof(Translator.Translate), [typeof(string)]),
@@ -69,7 +70,7 @@ namespace XylRacesCore.Patches
                         new CodeInstruction(OpCodes.Ldc_I4_1),
                         new CodeInstruction(OpCodes.Ldc_I4_0),
                         CodeInstruction.Call(typeof(GenDate), nameof(GenDate.ToStringTicksToPeriod)),
-                        CodeInstruction.Call(typeof(string), nameof(string.Format), [typeof(string), typeof(object), typeof(object)]), 
+                        CodeInstruction.Call(typeof(string), nameof(string.Format), [typeof(string), typeof(object), typeof(object)]),
                         CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.Append), [typeof(string)]),
                         new CodeInstruction(OpCodes.Pop),
                     ],
@@ -78,16 +79,20 @@ namespace XylRacesCore.Patches
                         // Load stringBuilder
                         CodeInstruction.LoadLocal(0),
                         // Load pawn
-                        CodeInstruction.LoadArgument(0), 
+                        CodeInstruction.LoadArgument(0),
                         // Call FinishExplanation
-                        CodeInstruction.Call(() => FinishExplanation), 
+                        CodeInstruction.Call(() => FinishExplanation),
                     ]
                 }
             }
         };
 
-        [Feature(nameof(GeneDefExtension_SlaveRebellion)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
-        public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(GeneDefExtension_SlaveRebellion)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
+        public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GetSlaveRebellionMtbCalculationExplanation.MatchAndReplace(method, ref instructionsList, generator);

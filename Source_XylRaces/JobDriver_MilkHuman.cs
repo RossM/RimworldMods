@@ -84,7 +84,7 @@ namespace XylRacesCore
 
                 Target?.rotationTracker.FaceTarget(actor);
             };
-            toil.tickIntervalAction = delegate (int delta)
+            toil.tickIntervalAction = delegate(int delta)
             {
                 Pawn actor = toil.actor;
                 actor.skills.Learn(SkillDefOf.Animals, 0.13f * delta);
@@ -104,7 +104,8 @@ namespace XylRacesCore
             });
             toil.FailOnDespawnedOrNull(TargetIndex.A);
             toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
-            toil.AddEndCondition(() => Target.FirstActiveGeneOfType<Hyperlactation>()?.MilkCount is > 0 ? JobCondition.Ongoing : JobCondition.Incompletable);
+            toil.AddEndCondition(() =>
+                Target.FirstActiveGeneOfType<Hyperlactation>()?.MilkCount is > 0 ? JobCondition.Ongoing : JobCondition.Incompletable);
             toil.defaultCompleteMode = ToilCompleteMode.Never;
             toil.WithProgressBar(TargetIndex.A, () => gatherProgress / WorkTotal);
             toil.activeSkill = () => SkillDefOf.Animals;

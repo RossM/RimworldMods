@@ -10,8 +10,11 @@ namespace XylRacesCore.Patches
     {
         [Feature(nameof(DefOf.XylDrugEffectMultiplier)), HarmonyPostfix, UsedImplicitly,
          HarmonyPatch(nameof(AddictionUtility.ModifyChemicalEffectForToleranceAndBodySize))]
-        public static void ModifyChemicalEffectForToleranceAndBodySize_Postfix(Pawn pawn, ChemicalDef chemicalDef, ref float effect,
-            bool applyGeneToleranceFactor, bool divideByBodySize)
+        public static void ModifyChemicalEffectForToleranceAndBodySize_Postfix(Pawn pawn,
+                                                                               ChemicalDef chemicalDef,
+                                                                               ref float effect,
+                                                                               bool applyGeneToleranceFactor,
+                                                                               bool divideByBodySize)
         {
             if (!pawn.ChemicalIsAllowedByGenes(chemicalDef))
                 effect = 0;
@@ -21,8 +24,10 @@ namespace XylRacesCore.Patches
 
         [Feature(nameof(DefOf.XylDrugEffectMultiplier)), HarmonyPrefix, UsedImplicitly,
          HarmonyPatch(nameof(AddictionUtility.CanBingeOnNow))]
-        public static bool CanBingeOnNow_Prefix(Pawn pawn, ChemicalDef chemical, DrugCategory drugCategory,
-            ref bool __result)
+        public static bool CanBingeOnNow_Prefix(Pawn pawn,
+                                                ChemicalDef chemical,
+                                                DrugCategory drugCategory,
+                                                ref bool __result)
         {
             __result = false;
 

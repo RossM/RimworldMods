@@ -48,11 +48,11 @@ namespace XylRacesCore.Genes
         {
             base.TickInterval(delta);
 
-            if (!Active) 
+            if (!Active)
                 return;
-            if (DefExt is not { hediffGivers: not null, mtbDays: > 0.0f }) 
+            if (DefExt is not { hediffGivers: not null, mtbDays: > 0.0f })
                 return;
-            if (!pawn.IsHashIntervalTick(checkInterval, delta)) 
+            if (!pawn.IsHashIntervalTick(checkInterval, delta))
                 return;
 
             foreach (var hediffGiver in DefExt.hediffGivers)
@@ -65,8 +65,8 @@ namespace XylRacesCore.Genes
         private void Apply(HediffGiver hediffGiver)
         {
             HashSet<Hediff> oldHediffs = [..pawn.health.hediffSet.hediffs];
-            
-            if (!hediffGiver.TryApply(pawn)) 
+
+            if (!hediffGiver.TryApply(pawn))
                 return;
 
             affectedParts ??= [];
@@ -79,9 +79,9 @@ namespace XylRacesCore.Genes
             if (!DefExt.reapplyOnPartRestored)
                 return;
 
-            if (!Active) 
+            if (!Active)
                 return;
-            if (DefExt is not { hediffGivers: not null, reapplyOnPartRestored: true }) 
+            if (DefExt is not { hediffGivers: not null, reapplyOnPartRestored: true })
                 return;
             if (affectedParts.NullOrEmpty())
                 return;

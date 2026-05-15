@@ -18,6 +18,7 @@ namespace XylRacesCore
             {
                 return null;
             }
+
             Thing thing = FindAttackTarget(pawn);
             if (thing != null)
             {
@@ -27,12 +28,14 @@ namespace XylRacesCore
                 job.canBashDoors = true;
                 return job;
             }
+
             return null;
         }
 
         private Thing FindAttackTarget(Pawn pawn)
         {
-            return (Thing)AttackTargetFinder.BestAttackTarget(pawn, TargetScanFlags.NeedReachable, IsGoodTarget, 0f, maxAttackDistance, canBashDoors: true);
+            return (Thing)AttackTargetFinder.BestAttackTarget(pawn, TargetScanFlags.NeedReachable, IsGoodTarget, 0f, maxAttackDistance,
+                canBashDoors: true);
         }
 
         protected virtual bool IsGoodTarget(Thing thing)

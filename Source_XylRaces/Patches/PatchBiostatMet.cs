@@ -37,7 +37,9 @@ namespace XylRacesCore.Patches
         }
 
         [Feature(nameof(BonusGene)), HarmonyTranspiler, UsedImplicitly]
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                              ILGenerator generator,
+                                                              MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_BiostatMet.MatchAndReplace(method, ref instructionsList, generator);

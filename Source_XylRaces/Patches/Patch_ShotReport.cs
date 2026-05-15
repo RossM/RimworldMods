@@ -41,7 +41,7 @@ namespace XylRacesCore.Patches
         private static bool IsUsingEcholocation(Thing caster)
         {
             return caster is Pawn pawn && pawn.HasActiveGene(DefOf.XylEcholocation) && PawnUtility.IsBiologicallyOrArtificiallyBlind(pawn)
-                && pawn.health.capacities.GetLevel(PawnCapacityDefOf.Hearing) >= 0.2f;
+                   && pawn.health.capacities.GetLevel(PawnCapacityDefOf.Hearing) >= 0.2f;
         }
 
         [Feature(nameof(DefOf.XylRangedDodgeChance)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(ShotReport.GetTextReadout))]

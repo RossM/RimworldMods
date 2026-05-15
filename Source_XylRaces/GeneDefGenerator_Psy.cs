@@ -16,7 +16,7 @@ namespace XylRacesCore
                     int displayOrderBase = 0;
                     foreach (AbilityDef def in DefDatabase<AbilityDef>.AllDefs.OrderBy(def => def.level).ThenBy(def => def.label))
                     {
-                        if (!typeof(Psycast).IsAssignableFrom(def.abilityClass)) 
+                        if (!typeof(Psycast).IsAssignableFrom(def.abilityClass))
                             continue;
                         if (def.level >= template.levels.Count)
                             continue;

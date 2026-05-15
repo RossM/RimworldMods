@@ -15,8 +15,11 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(AccessTools.Method(typeof(StatWorker_SuppressionFallRate), nameof(StatWorker_SuppressionFallRate.GetExplanationForTooltip)),
-                    AccessTools.Method(typeof(StatWorker_SuppressionFallRate_Fixed), nameof(StatWorker_SuppressionFallRate_Fixed.GetExplanationForTooltip))),
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Method(typeof(StatWorker_SuppressionFallRate),
+                        nameof(StatWorker_SuppressionFallRate.GetExplanationForTooltip)),
+                    AccessTools.Method(typeof(StatWorker_SuppressionFallRate_Fixed),
+                        nameof(StatWorker_SuppressionFallRate_Fixed.GetExplanationForTooltip))),
                 new()
                 {
                     Min = 1, Max = 0,
@@ -34,7 +37,9 @@ namespace XylRacesCore.Patches
         };
 
         [Feature(nameof(StatDefOf.SlaveSuppressionFallRate)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DoSlaveTab")]
-        public static IEnumerable<CodeInstruction> DoSlaveTab_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        public static IEnumerable<CodeInstruction> DoSlaveTab_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                         ILGenerator generator,
+                                                                         MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);

@@ -19,6 +19,7 @@ namespace XylRacesCore
             {
                 return ThinkNodePriority.Food + 0.01f;
             }
+
             return 0f;
         }
 

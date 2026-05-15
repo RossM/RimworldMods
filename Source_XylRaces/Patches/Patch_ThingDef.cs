@@ -26,10 +26,10 @@ namespace XylRacesCore.Patches
 
                 __result = __result.AddItem(
                     new StatDrawEntry(StatCategoryDefOf.Apparel,
-                    "XylAllowsFlightLabel".Translate(), 
-                    allowsFlight ? "Yes".Translate() : "No".Translate(),
-                    "XylAllowsFlightDesc".Translate(), 
-                    2752)
+                        "XylAllowsFlightLabel".Translate(),
+                        allowsFlight ? "Yes".Translate() : "No".Translate(),
+                        "XylAllowsFlightDesc".Translate(),
+                        2752)
                 );
             }
         }

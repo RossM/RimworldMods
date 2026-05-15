@@ -30,9 +30,11 @@ namespace XylRacesCore.Patches
         {
             HashSet<Designator> geneDesignators = new();
 
-            foreach (var defExtension_designator in Faction.OfPlayer.GetPawns().SelectMany(pawn => pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>()))
+            foreach (var defExtension_designator in Faction.OfPlayer.GetPawns()
+                         .SelectMany(pawn => pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>()))
             {
-                geneDesignators.AddRange(defExtension_designator.addDesignators.Where(def => def.designationCategory == __instance).Select(GetCachedDesignator));
+                geneDesignators.AddRange(defExtension_designator.addDesignators.Where(def => def.designationCategory == __instance)
+                    .Select(GetCachedDesignator));
             }
 
             if (geneDesignators.Any())
@@ -46,6 +48,7 @@ namespace XylRacesCore.Patches
                     value = new Designator_Build(def);
                     __instance.ideoBuildingDesignatorsCached[key] = value;
                 }
+
                 return value;
             }
         }

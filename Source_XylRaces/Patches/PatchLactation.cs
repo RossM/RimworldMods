@@ -19,9 +19,11 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)]),
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)]),
                     AccessTools.Method(typeof(PatchLactation), nameof(GetFirstHediffOfDef_Wrapper)), minMatches: 0),
-                InstructionMatcher.MakeRedirectRule(AccessTools.Method(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)]),
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Method(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)]),
                     AccessTools.Method(typeof(PatchLactation), nameof(HasHediff_Wrapper)), minMatches: 0),
             }
         };
@@ -43,7 +45,9 @@ namespace XylRacesCore.Patches
         }
 
         [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
-        public static IEnumerable<CodeInstruction> CanBreastfeed_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        public static IEnumerable<CodeInstruction> CanBreastfeed_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                            ILGenerator generator,
+                                                                            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);
@@ -51,31 +55,44 @@ namespace XylRacesCore.Patches
         }
 
         [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
-        public static IEnumerable<CodeInstruction> CanBreastfeedNow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        public static IEnumerable<CodeInstruction> CanBreastfeedNow_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                               ILGenerator generator,
+                                                                               MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
-        public static IEnumerable<CodeInstruction> SuckleFromLactatingPawn_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
+        public static IEnumerable<CodeInstruction> SuckleFromLactatingPawn_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
-        public static IEnumerable<CodeInstruction> QuestPartTick_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
+        public static IEnumerable<CodeInstruction> QuestPartTick_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                            ILGenerator generator,
+                                                                            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
-        public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
+        public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);
@@ -83,7 +100,9 @@ namespace XylRacesCore.Patches
         }
 
         [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
-        public static IEnumerable<CodeInstruction> DrawRow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        public static IEnumerable<CodeInstruction> DrawRow_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                      ILGenerator generator,
+                                                                      MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup.MatchAndReplace(method, ref instructionsList, generator);

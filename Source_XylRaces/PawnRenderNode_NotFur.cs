@@ -14,7 +14,9 @@ namespace XylRacesCore
             {
                 return null;
             }
-            return GraphicDatabase.Get<Graphic_Multi>(pawn.story?.furDef.GetFurBodyGraphicPath(pawn), ShaderFor(pawn), Vector2.one, ColorFor(pawn));
+
+            return GraphicDatabase.Get<Graphic_Multi>(pawn.story?.furDef.GetFurBodyGraphicPath(pawn), ShaderFor(pawn), Vector2.one,
+                ColorFor(pawn));
         }
     }
 }

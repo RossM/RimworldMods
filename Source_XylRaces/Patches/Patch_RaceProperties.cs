@@ -22,7 +22,8 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)]),
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)]),
                     AccessTools.Method(typeof(Patch_RaceProperties), nameof(GetFirstHediffOfDef_Wrapper))),
 
                 new()
@@ -46,8 +47,12 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(Config.Feature.FixLactationBugs)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
-        public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(Config.Feature.FixLactationBugs)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
+        public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_NutritionEatenPerDayExplanation.MatchAndReplace(method, ref instructionsList, generator);
@@ -81,7 +86,8 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [Feature(nameof(Config.Feature.FixLactationBugs)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]
+        [Feature(nameof(Config.Feature.FixLactationBugs)), HarmonyPrefix, UsedImplicitly,
+         HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]
         static bool GetTotalNutritionNeededPerDay(Pawn p, ref string __result)
         {
             // There is a bug in the base game that causes the nutrition from lactation to be counted twice, once as part of
@@ -90,7 +96,8 @@ namespace XylRacesCore.Patches
             float lactationNutritionUsed = PatchLactation.GetFirstHediffOfDef_Wrapper(p.health.hediffSet, HediffDefOf.Lactating, false)
                 ?.TryGetComp<HediffComp_Lactating>()?.AddedNutritionPerDay() ?? 0;
 
-            __result = (p.needs.food.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * 60000f + lactationNutritionUsed).ToString("0.##");
+            __result = (p.needs.food.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * 60000f + lactationNutritionUsed)
+                .ToString("0.##");
 
             return false;
         }

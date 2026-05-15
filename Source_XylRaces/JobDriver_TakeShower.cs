@@ -28,7 +28,6 @@ namespace XylRacesCore
             {
                 if (need_wetness is { CurLevel: > 0.9999f })
                     EndJobWith(JobCondition.Succeeded);
-
             });
             toil.initAction = () =>
             {

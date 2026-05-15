@@ -8,7 +8,8 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(MemoryThoughtHandler))]
     public static class Patch_MemoryThoughtHandler
     {
-        [Feature(nameof(ThoughtDefExtension_Memory)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(MemoryThoughtHandler.TryGainMemory), [typeof(Thought_Memory), typeof(Pawn)])]
+        [Feature(nameof(ThoughtDefExtension_Memory)), HarmonyPostfix, UsedImplicitly,
+         HarmonyPatch(nameof(MemoryThoughtHandler.TryGainMemory), [typeof(Thought_Memory), typeof(Pawn)])]
         public static void TryGainMemory_Postfix(MemoryThoughtHandler __instance, Thought_Memory newThought, Pawn otherPawn)
         {
             var extension = newThought.def.GetModExtension<ThoughtDefExtension_Memory>();

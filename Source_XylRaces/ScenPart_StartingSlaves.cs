@@ -27,7 +27,6 @@ namespace XylRacesCore
 
             scenPartRect.height = RowHeight;
             Widgets.TextFieldNumeric(scenPartRect, ref count, ref countBuf, 1);
-
         }
 
         public override string Summary(Scenario scen)

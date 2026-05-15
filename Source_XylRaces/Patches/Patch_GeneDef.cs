@@ -25,7 +25,9 @@ namespace XylRacesCore.Patches
         };
 
         [Feature(nameof(Genes.GeneDefExtension)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("GetDescriptionFull")]
-        public static IEnumerable<CodeInstruction> GetDescriptionFull_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        public static IEnumerable<CodeInstruction> GetDescriptionFull_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                                 ILGenerator generator,
+                                                                                 MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GetDescriptionFull.MatchAndReplace(method, ref instructionsList, generator);

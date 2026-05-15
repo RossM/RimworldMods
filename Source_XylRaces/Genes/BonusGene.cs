@@ -36,7 +36,7 @@ namespace XylRacesCore.Genes
         {
             base.PostAdd();
 
-            if (!Rand.Chance(DefExt.geneChance)) 
+            if (!Rand.Chance(DefExt.geneChance))
                 return;
 
             int count = DefExt.count.RandomInRange;
@@ -89,7 +89,7 @@ namespace XylRacesCore.Genes
                 return 0.0f;
 
             // Aptitude-giving genes must not apply to only disabled skills
-            if (!geneDef.aptitudes.NullOrEmpty() && geneDef.aptitudes.All(aptitude => pawn.skills.GetSkill(aptitude.skill).TotallyDisabled)) 
+            if (!geneDef.aptitudes.NullOrEmpty() && geneDef.aptitudes.All(aptitude => pawn.skills.GetSkill(aptitude.skill).TotallyDisabled))
                 return 0.0f;
 
             // No genes with requirements, unless they are met by the pawn's xenotype or already added genes
@@ -111,6 +111,7 @@ namespace XylRacesCore.Genes
                     return 0.0f;
                 }
             }
+
             foreach (var gene in addedGenes)
             {
                 if (geneDef == gene.def)
@@ -143,10 +144,10 @@ namespace XylRacesCore.Genes
         {
             yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylAtavismChanceLabel".TranslateSimple(),
                 DefExt.geneChance.ToStringPercent(), "XylAtavismChanceDesc".TranslateSimple(), 1002);
-            if (addedGenes == null) 
+            if (addedGenes == null)
                 yield break;
             string text = string.Join(", ", addedGenes.Select(g => g.Label)).CapitalizeFirst();
-            yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylAtavismGenesLabel".TranslateSimple(), 
+            yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylAtavismGenesLabel".TranslateSimple(),
                 text, "XylAtavismGenesDesc".TranslateSimple(), 1001);
         }
     }

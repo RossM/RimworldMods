@@ -58,6 +58,7 @@ namespace XylRacesCore
                     mainPsylinkSource.suppressPostAddLetter = false;
                 }
             }
+
             if (levelOffset > 0)
             {
                 float num = Math.Min(levelOffset, mainPsylinkSource.def.maxSeverity - mainPsylinkSource.level);
@@ -67,7 +68,8 @@ namespace XylRacesCore
                 }
             }
 
-            mainPsylinkSource.level = (int)Mathf.Clamp(mainPsylinkSource.level + levelOffset, mainPsylinkSource.def.minSeverity, mainPsylinkSource.def.maxSeverity);
+            mainPsylinkSource.level = (int)Mathf.Clamp(mainPsylinkSource.level + levelOffset, mainPsylinkSource.def.minSeverity,
+                mainPsylinkSource.def.maxSeverity);
         }
 
         private static float PawnWeight(Pawn Pawn)

@@ -21,12 +21,15 @@ namespace XylRacesCore.Patches
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Field(typeof(RecipeDef), "memePrerequisitesAny"),
                     AccessTools.Method(typeof(Patch_RecipeDef), nameof(RecipeDef_memePrerequisitesAny_Wrapper))
-                    )
+                )
             }
         };
 
-        [Feature(nameof(DefModExtension_GeneDependent)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
-        public static IEnumerable<CodeInstruction> AvailableNow_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(DefModExtension_GeneDependent)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
+        public static IEnumerable<CodeInstruction> AvailableNow_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                           ILGenerator generator,
+                                                                           MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_AvailableNow.MatchAndReplace(method, ref instructionsList, generator);
@@ -39,7 +42,8 @@ namespace XylRacesCore.Patches
             return null;
         }
 
-        [Feature(nameof(DefModExtension_GeneDependent)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
+        [Feature(nameof(DefModExtension_GeneDependent)), HarmonyPostfix, UsedImplicitly,
+         HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
         public static void AvailableNow_Postfix(RecipeDef __instance, ref bool __result)
         {
             if (DebugSettings.godMode)
@@ -57,7 +61,8 @@ namespace XylRacesCore.Patches
             if (extension != null && extension.Validate())
                 return;
 
-            if (__instance.memePrerequisitesAny != null && __instance.memePrerequisitesAny.Any(memeDef => Faction.OfPlayer.ideos.HasAnyIdeoWithMeme(memeDef)))
+            if (__instance.memePrerequisitesAny != null
+                && __instance.memePrerequisitesAny.Any(memeDef => Faction.OfPlayer.ideos.HasAnyIdeoWithMeme(memeDef)))
                 return;
 
             __result = false;

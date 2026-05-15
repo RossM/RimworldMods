@@ -21,13 +21,18 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(AccessTools.Method(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay)),
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Method(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay)),
                     AccessTools.Method(typeof(Patch_Need_Food), nameof(AddedNutritionPerDay_Wrapper)))
             }
         };
 
-        [Feature(nameof(Config.Feature.FixLactationBugs)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("FoodFallPerTickAssumingCategory")]
-        public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(Config.Feature.FixLactationBugs)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch("FoodFallPerTickAssumingCategory")]
+        public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_FoodFallPerTickAssumingCategory.MatchAndReplace(method, ref instructionsList, generator);

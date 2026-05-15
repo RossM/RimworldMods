@@ -22,8 +22,11 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(XenotypeSet.BaselinerChance), MethodType.Getter)]
-        public static IEnumerable<CodeInstruction> BaselinerChance_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(nameof(XenotypeSet.BaselinerChance), MethodType.Getter)]
+        public static IEnumerable<CodeInstruction> BaselinerChance_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                              ILGenerator generator,
+                                                                              MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_DefaultXenotype.MatchAndReplace(method, ref instructionsList, generator);
@@ -31,7 +34,9 @@ namespace XylRacesCore.Patches
         }
 
         [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(XenotypeSet.Contains))]
-        public static IEnumerable<CodeInstruction> Contains_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        public static IEnumerable<CodeInstruction> Contains_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                       ILGenerator generator,
+                                                                       MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_DefaultXenotype.MatchAndReplace(method, ref instructionsList, generator);

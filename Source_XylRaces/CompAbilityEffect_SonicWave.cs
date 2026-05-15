@@ -32,7 +32,8 @@ namespace XylRacesCore
                 var thingList = item.GetThingList(map);
                 foreach (var targetPawn in thingList.OfType<Pawn>())
                 {
-                    if (!targetPawn.RaceProps.IsFlesh) continue;
+                    if (!targetPawn.RaceProps.IsFlesh)
+                        continue;
                     targetPawn.stances.stunner.StunFor(GetDurationSeconds(targetPawn).SecondsToTicks(), Pawn, addBattleLog: false);
                 }
             }
@@ -47,7 +48,7 @@ namespace XylRacesCore
 
             return value;
         }
-        
+
 
         public override void DrawEffectPreview(LocalTargetInfo target)
         {
@@ -70,11 +71,11 @@ namespace XylRacesCore
                     }
                 }
             }
+
             return true;
         }
 
-        [Unsaved] 
-        private readonly List<IntVec3> tmpCells = [];
+        [Unsaved] private readonly List<IntVec3> tmpCells = [];
 
         private List<IntVec3> AffectedCells(LocalTargetInfo target)
         {
@@ -94,7 +95,7 @@ namespace XylRacesCore
                     tmpCells.Add(intVec2);
                 }
             }
-            
+
             return tmpCells;
 
             bool CanUseCell(IntVec3 c)
@@ -103,14 +104,17 @@ namespace XylRacesCore
                 {
                     return false;
                 }
+
                 if (c == Pawn.Position)
                 {
                     return false;
                 }
+
                 if (!Props.canHitFilledCells && c.Filled(Pawn.Map))
                 {
                     return false;
                 }
+
                 if (!c.InHorDistOf(targetPosition, Props.radius))
                 {
                     return false;

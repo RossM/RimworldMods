@@ -16,4 +16,3 @@ public interface INotifyApparelChanged
 {
     void Notify_ApparelChanged(Pawn pawn);
 }
-

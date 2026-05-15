@@ -23,7 +23,7 @@ namespace XylRacesCore
         public ProfileBlock(bool enabled = GlobalEnabled, [CallerMemberName] string methodName = null)
         {
             _enabled = enabled;
-            if (!_enabled) 
+            if (!_enabled)
                 return;
             string label = methodName ?? "<Unknown>";
 
@@ -33,7 +33,7 @@ namespace XylRacesCore
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
-            if (!_enabled) 
+            if (!_enabled)
                 return;
             DeepProfiler.End();
         }

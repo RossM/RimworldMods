@@ -8,10 +8,8 @@ namespace XylRacesCore
 {
     public class HostilityOverrideManager(Map map) : MapComponent(map)
     {
-        [Unsaved]
-        private static Map lastMap;
-        [Unsaved]
-        private static HostilityOverrideManager lastManager;
+        [Unsaved] private static Map lastMap;
+        [Unsaved] private static HostilityOverrideManager lastManager;
 
         public const int violationDisableTicks = 2500;
 
@@ -22,7 +20,8 @@ namespace XylRacesCore
         {
             Scribe_Ext.Look(ref activeOverrides, nameof(activeOverrides), LookMode.Reference);
 
-            Scribe_Collections.Look(ref lastHostileActionTick, nameof(lastHostileActionTick), keyLookMode: LookMode.Deep, valueLookMode: LookMode.Value);
+            Scribe_Collections.Look(ref lastHostileActionTick, nameof(lastHostileActionTick), keyLookMode: LookMode.Deep,
+                valueLookMode: LookMode.Value);
         }
 
         public static HostilityOverrideManager GetManager(Map map)
@@ -42,7 +41,7 @@ namespace XylRacesCore
             if (activeOverrides == null || !activeOverrides.Contains((from, to)))
                 return false;
 
-            if (lastHostileActionTick == null || !lastHostileActionTick.TryGetValue(from, out int hostileActionTick)) 
+            if (lastHostileActionTick == null || !lastHostileActionTick.TryGetValue(from, out int hostileActionTick))
                 return true;
 
             return hostileActionTick + violationDisableTicks < Find.TickManager.TicksGame;

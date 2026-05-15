@@ -32,7 +32,7 @@ namespace XylRacesCore
             Thing targetThing = mentalState_huntingVermin.target.SpawnedParentOrMe;
             job = JobMaker.MakeJob(JobDefOf.AttackMelee, targetThing);
             job.killIncappedTarget = true;
-            if (targetThing != mentalState_huntingVermin.target) 
+            if (targetThing != mentalState_huntingVermin.target)
                 job.maxNumMeleeAttacks = 2;
             return job;
         }

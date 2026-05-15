@@ -13,10 +13,12 @@ namespace XylRacesCore
             {
                 return false;
             }
+
             if (req.Thing is not Pawn pawn)
             {
                 return false;
             }
+
             return pawn.IsSlave;
         }
 

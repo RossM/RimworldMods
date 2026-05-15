@@ -21,12 +21,15 @@ namespace XylRacesCore.Patches
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(Ideo), nameof(Ideo.MembersCanBuild)),
                     AccessTools.Method(typeof(Patch_GenConstruct), nameof(MembersCanBuild_Wrapper))
-                    )
+                )
             }
         };
 
-        [Feature(nameof(GeneDefExtension_Designator)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
-        public static IEnumerable<CodeInstruction> CanConstruct_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(GeneDefExtension_Designator)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
+        public static IEnumerable<CodeInstruction> CanConstruct_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                           ILGenerator generator,
+                                                                           MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_CanConstruct.MatchAndReplace(method, ref instructionsList, generator);

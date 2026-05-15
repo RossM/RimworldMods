@@ -19,7 +19,7 @@ namespace XylRacesCore
             var gene = p.FirstActiveGeneOfType<Hyperlactation>();
             if (gene == null)
                 return ThoughtState.Inactive;
- 
+
             if (!gene.TryGetSoreness(out int soreness))
                 return ThoughtState.Inactive;
             return ThoughtState.ActiveAtStage(Math.Min(soreness, MaxSorenessLevel));

@@ -14,7 +14,8 @@ namespace XylRacesCore.Patches
                 DeepProfiler.Start("DoSingleTick");
         }
 
-        [Feature(nameof(ProfileBlock.InstrumentTickManager)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(TickManager.DoSingleTick))]
+        [Feature(nameof(ProfileBlock.InstrumentTickManager)), HarmonyPostfix, UsedImplicitly,
+         HarmonyPatch(nameof(TickManager.DoSingleTick))]
         public static void DoSingleTick_Postfix()
         {
             if (ProfileBlock.InstrumentTickManager)

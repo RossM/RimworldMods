@@ -20,12 +20,14 @@ namespace XylRacesCore.Patches
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel)),
                     AccessTools.Method(typeof(Patch_Command_Psycast), nameof(GetPsylinkLevel_Wrapper))
-                    )
+                )
             }
         };
-        
+
         [Feature(nameof(Genes.Psycast)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DisabledCheck")]
-        public static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        public static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                            ILGenerator generator,
+                                                                            MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GetPsycastLevel.MatchAndReplace(method, ref instructionsList, generator);

@@ -36,15 +36,14 @@ namespace XylRacesCore
             {
                 return;
             }
+
             var list = new List<FloatMenuOption>();
             foreach (AbilityDef item in PossiblePsycasts)
             {
                 AbilityDef localDef = item;
-                list.Add(new FloatMenuOption(GetLabel(localDef), delegate
-                {
-                    psycast = localDef;
-                }));
+                list.Add(new FloatMenuOption(GetLabel(localDef), delegate { psycast = localDef; }));
             }
+
             Find.WindowStack.Add(new FloatMenu(list));
         }
 
@@ -54,6 +53,7 @@ namespace XylRacesCore
         }
 
         private List<AbilityDef> possiblePsycastsInternal;
+
         private IEnumerable<AbilityDef> PossiblePsycasts => possiblePsycastsInternal ??=
             DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
                     abilityDef.verbProperties?.verbClass == typeof(Verb_CastPsycast))
@@ -77,7 +77,7 @@ namespace XylRacesCore
             for (var i = 0; i < count; i++)
             {
                 if (!map.mapPawns.FreeColonists.Where(CanLearnPsycast).TryRandomElement(out Pawn pawn))
-                    return; 
+                    return;
                 pawn.abilities.GainAbility(psycast);
             }
         }

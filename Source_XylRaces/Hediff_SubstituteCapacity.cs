@@ -25,10 +25,8 @@ namespace XylRacesCore
     {
         public HediffDefExtension_SubstituteCapacity DefExt => def.GetModExtension<HediffDefExtension_SubstituteCapacity>();
 
-        [Unsaved]
-        private int lastActiveCheckTick = int.MinValue;
-        [Unsaved]
-        private bool active;
+        [Unsaved] private int lastActiveCheckTick = int.MinValue;
+        [Unsaved] private bool active;
 
         public bool Active
         {
@@ -120,7 +118,7 @@ namespace XylRacesCore
         {
             foreach (Hediff_SubstituteCapacity hediff in pawn.HediffsOfType<Hediff_SubstituteCapacity>())
             {
-                if (hediff.Validate(stat, capacity)) 
+                if (hediff.Validate(stat, capacity))
                     return hediff;
             }
 

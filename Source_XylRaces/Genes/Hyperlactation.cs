@@ -26,7 +26,9 @@ namespace XylRacesCore.Genes
         public GeneDefExtension_Hyperlactation DefExt => def.GetModExtension<GeneDefExtension_Hyperlactation>();
 
         private HediffComp_Lactating lactatingInternal;
-        public HediffComp_Lactating Lactating => lactatingInternal ??= pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
+
+        public HediffComp_Lactating Lactating =>
+            lactatingInternal ??= pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
 
         const int checkInterval = 60;
 

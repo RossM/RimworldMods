@@ -24,9 +24,11 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(DefOf.XylResistanceFallRate)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(InteractionWorker_RecruitAttempt.Interacted))]
+        [Feature(nameof(DefOf.XylResistanceFallRate)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(nameof(InteractionWorker_RecruitAttempt.Interacted))]
         public static IEnumerable<CodeInstruction> Interacted_Transpiler(IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator, MethodBase method)
+                                                                         ILGenerator generator,
+                                                                         MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_Interacted.MatchAndReplace(method, ref instructionsList, generator);

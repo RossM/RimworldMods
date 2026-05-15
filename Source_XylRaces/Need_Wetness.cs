@@ -113,7 +113,7 @@ namespace XylRacesCore
 
         public override void NeedInterval()
         {
-            if (IsFrozen) 
+            if (IsFrozen)
                 return;
 
             float curInstantLevel = CurInstantLevel;
@@ -145,8 +145,13 @@ namespace XylRacesCore
                 ;
         }
 
-        public override void DrawOnGUI(Rect rect, int maxThresholdMarkers = 2147483647, float customMargin = -1, bool drawArrows = true,
-            bool doTooltip = true, Rect? rectForTooltip = null, bool drawLabel = true)
+        public override void DrawOnGUI(Rect rect,
+                                       int maxThresholdMarkers = 2147483647,
+                                       float customMargin = -1,
+                                       bool drawArrows = true,
+                                       bool doTooltip = true,
+                                       Rect? rectForTooltip = null,
+                                       bool drawLabel = true)
         {
             threshPercents ??= [thresholdVeryDry, thresholdDry, thresholdNeutral, thresholdWet];
             base.DrawOnGUI(rect, maxThresholdMarkers, customMargin, drawArrows, doTooltip, rectForTooltip, drawLabel);

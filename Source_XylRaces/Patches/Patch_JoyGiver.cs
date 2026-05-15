@@ -18,7 +18,7 @@ namespace XylRacesCore.Patches
                     continue;
                 foreach (var joyGiverFactor in defExt.joyGiverChanceFactors)
                 {
-                    if (joyGiverFactor.joyGiver == __instance.def) 
+                    if (joyGiverFactor.joyGiver == __instance.def)
                         __result *= joyGiverFactor.factor;
                 }
             }

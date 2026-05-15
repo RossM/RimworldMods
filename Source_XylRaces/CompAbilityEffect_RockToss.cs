@@ -62,13 +62,15 @@ namespace XylRacesCore
                         IntVec3 forcedMissTarget = target.Cell + GenRadial.RadialPattern[patternIndex];
                         if (forcedMissTarget != target.Cell)
                         {
-                            projectile.Launch(pawn, pawn.DrawPos, forcedMissTarget, target, ProjectileHitFlags.NonTargetWorld, parent.verb.preventFriendlyFire);
+                            projectile.Launch(pawn, pawn.DrawPos, forcedMissTarget, target, ProjectileHitFlags.NonTargetWorld,
+                                parent.verb.preventFriendlyFire);
                             return;
                         }
                     }
                 }
 
-                projectile.Launch(pawn, pawn.DrawPos, target, target, ProjectileHitFlags.IntendedTarget | ProjectileHitFlags.NonTargetWorld, parent.verb.preventFriendlyFire);
+                projectile.Launch(pawn, pawn.DrawPos, target, target, ProjectileHitFlags.IntendedTarget | ProjectileHitFlags.NonTargetWorld,
+                    parent.verb.preventFriendlyFire);
             }
         }
 
@@ -96,8 +98,11 @@ namespace XylRacesCore
         {
             if (Props.range > 0f)
             {
-                GenDraw.DrawRadiusRing(selectedTarget.Cell, Props.range, Color.white, c => c.DistanceTo(selectedTarget.Cell) >= Props.minRange && GenSight.LineOfSight(selectedTarget.Cell, c, parent.pawn.Map));
+                GenDraw.DrawRadiusRing(selectedTarget.Cell, Props.range, Color.white,
+                    c => c.DistanceTo(selectedTarget.Cell) >= Props.minRange
+                         && GenSight.LineOfSight(selectedTarget.Cell, c, parent.pawn.Map));
             }
+
             if (target.IsValid)
             {
                 GenDraw.DrawTargetHighlight(target);
@@ -112,7 +117,8 @@ namespace XylRacesCore
         {
             if (Props.range > 0f)
             {
-                GenDraw.DrawRadiusRing(target.Cell, Props.range, Color.white, c => c.DistanceTo(target.Cell) >= Props.minRange && GenSight.LineOfSight(target.Cell, c, parent.pawn.Map));
+                GenDraw.DrawRadiusRing(target.Cell, Props.range, Color.white,
+                    c => c.DistanceTo(target.Cell) >= Props.minRange && GenSight.LineOfSight(target.Cell, c, parent.pawn.Map));
             }
         }
     }

@@ -22,8 +22,11 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(FactionDef.Description), MethodType.Getter)]
-        public static IEnumerable<CodeInstruction> Description_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly,
+         HarmonyPatch(nameof(FactionDef.Description), MethodType.Getter)]
+        public static IEnumerable<CodeInstruction> Description_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                          ILGenerator generator,
+                                                                          MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_DefaultXenotype.MatchAndReplace(method, ref instructionsList, generator);

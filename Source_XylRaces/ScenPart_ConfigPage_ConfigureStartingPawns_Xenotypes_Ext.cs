@@ -9,7 +9,7 @@ namespace XylRacesCore
     {
         protected override void GenerateStartingPawns()
         {
-            foreach (var xenotypeCount in xenotypeCounts) 
+            foreach (var xenotypeCount in xenotypeCounts)
                 xenotypeCount.xenotype ??= XenotypeDefOf.Baseliner;
 
             base.GenerateStartingPawns();

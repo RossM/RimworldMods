@@ -34,13 +34,13 @@ namespace XylRacesCore.Genes
                 return;
 
             hediff ??= pawn.health.AddHediff(DefExt.hediffDef);
-            if (hediff == null) 
+            if (hediff == null)
                 return;
 
             (extraEnemies ??= []).Add(damageInfo.Instigator);
 
             var comp = hediff.TryGetComp<HediffComp_Disappears>();
-            if (comp == null) 
+            if (comp == null)
                 return;
             comp.ticksToDisappear = comp.disappearsAfterTicks;
         }
@@ -48,7 +48,7 @@ namespace XylRacesCore.Genes
         public override void TickInterval(int delta)
         {
             base.TickInterval(delta);
-            if (!pawn.IsHashIntervalTick(checkInterval, delta)) 
+            if (!pawn.IsHashIntervalTick(checkInterval, delta))
                 return;
             if (extraEnemies != null)
             {

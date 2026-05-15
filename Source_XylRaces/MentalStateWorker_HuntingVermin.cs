@@ -13,8 +13,8 @@ namespace XylRacesCore
             {
                 return false;
             }
+
             return MentalState_HuntingVermin.FindPawnToKill(pawn) != null;
         }
     }
-
 }

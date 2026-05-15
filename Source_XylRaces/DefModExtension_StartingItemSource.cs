@@ -15,7 +15,7 @@ namespace XylRacesCore
         {
             if (item == null)
                 return null;
-            if (!Rand.Chance(chance)) 
+            if (!Rand.Chance(chance))
                 return null;
             return new(item, Mathf.Clamp(count.RandomInRange, 1, item.stackLimit));
         }

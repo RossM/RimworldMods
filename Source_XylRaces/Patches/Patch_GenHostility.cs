@@ -15,7 +15,8 @@ namespace XylRacesCore.Patches
         public static bool Enabled => enabled.Value;
 
         // Note: This patch is performance-sensitive
-        [Feature(nameof(GeneDefExtension_HostilityOverride)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
+        [Feature(nameof(GeneDefExtension_HostilityOverride)), HarmonyPrefix, UsedImplicitly,
+         HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
         public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
         {
             if (!Enabled)

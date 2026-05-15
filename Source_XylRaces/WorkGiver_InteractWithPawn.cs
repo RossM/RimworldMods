@@ -20,7 +20,8 @@ namespace XylRacesCore
 
         public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
         {
-            return pawn.Map.mapPawns.AllPawns.Where(targetPawn => (targetPawn.IsPrisoner ? targetPawn.guest.HostFaction : targetPawn.Faction) == pawn.Faction).ToList();
+            return pawn.Map.mapPawns.AllPawns.Where(targetPawn =>
+                (targetPawn.IsPrisoner ? targetPawn.guest.HostFaction : targetPawn.Faction) == pawn.Faction).ToList();
         }
 
         public override bool ShouldSkip(Pawn pawn, bool forced = false)

@@ -90,10 +90,13 @@ namespace XylRacesCore
 
             for (int i = 0; i < count; i++)
             {
-                DevelopmentalStage stage = (Find.Storyteller.difficulty.ChildrenAllowed ? (DevelopmentalStage.Child | DevelopmentalStage.Adult) : DevelopmentalStage.Adult);
+                DevelopmentalStage stage = (Find.Storyteller.difficulty.ChildrenAllowed
+                    ? (DevelopmentalStage.Child | DevelopmentalStage.Adult)
+                    : DevelopmentalStage.Adult);
                 PawnKindDef wildMan = PawnKindDefOf.WildMan;
                 List<TraitDef> traits = DefExt.forcedTraits.Where(t => Rand.Chance(t.chance)).Select(t => t.trait).ToList();
-                Pawn pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(kind: wildMan, context: PawnGenerationContext.NonPlayer, forcedTraits: traits, forcedXenotype: DefExt.xenotype, fixedIdeo: ideo, developmentalStages: stage));
+                Pawn pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(kind: wildMan, context: PawnGenerationContext.NonPlayer,
+                    forcedTraits: traits, forcedXenotype: DefExt.xenotype, fixedIdeo: ideo, developmentalStages: stage));
                 pawns.Add(pawn);
             }
 

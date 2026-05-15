@@ -36,12 +36,12 @@ namespace XylRacesCore
         public override void MentalStateTick(int delta)
         {
             base.MentalStateTick(delta);
-            
+
             if (target is { Dead: true })
             {
-                if (pawn.CurJob.def == JobDefOf.AttackMelee || pawn.CurJob.def == JobDefOf.Ingest) 
+                if (pawn.CurJob.def == JobDefOf.AttackMelee || pawn.CurJob.def == JobDefOf.Ingest)
                     return;
-                
+
                 if (!pawn.HediffsOfType<Hediff_DietDependency>().Any(hediff => hediff.ShouldSatisfy))
                     RecoverFromState();
                 else if (Rand.Chance(0.2f))
@@ -52,11 +52,11 @@ namespace XylRacesCore
                 return;
             }
 
-            if (!pawn.IsHashIntervalTick(checkInterval, delta)) 
+            if (!pawn.IsHashIntervalTick(checkInterval, delta))
                 return;
-            if (IsTargetStillValidAndReachable()) 
+            if (IsTargetStillValidAndReachable())
                 return;
-            if (!TryFindNewTarget()) 
+            if (!TryFindNewTarget())
                 RecoverFromState();
         }
 
@@ -67,7 +67,9 @@ namespace XylRacesCore
                 Log.Error("No target. This should have been checked in this mental state's worker.");
                 return "";
             }
-            return def.beginLetter.Formatted(pawn.NameShortColored, target.NameShortColored, pawn.Named("PAWN"), target.Named("TARGET")).AdjustedFor(pawn).Resolve()
+
+            return def.beginLetter.Formatted(pawn.NameShortColored, target.NameShortColored, pawn.Named("PAWN"), target.Named("TARGET"))
+                .AdjustedFor(pawn).Resolve()
                 .CapitalizeFirst();
         }
 
@@ -83,6 +85,7 @@ namespace XylRacesCore
             {
                 return pawn.CanReach(target.SpawnedParentOrMe, PathEndMode.Touch, Danger.Deadly, canBashDoors: true);
             }
+
             return false;
         }
 
@@ -92,6 +95,7 @@ namespace XylRacesCore
             {
                 return null;
             }
+
             tmpTargets.Clear();
             IReadOnlyList<Pawn> allPawnsSpawned = pawn.Map.mapPawns.AllPawnsSpawned;
             foreach (Pawn pawn2 in allPawnsSpawned)
@@ -103,10 +107,12 @@ namespace XylRacesCore
                     tmpTargets.Add(pawn2);
                 }
             }
+
             if (!tmpTargets.Any())
             {
                 return null;
             }
+
             Pawn result = tmpTargets.OrderBy(p => pawn.Position.DistanceToSquared(p.Position)).ThenBy(_ => Rand.Value).FirstOrDefault();
             tmpTargets.Clear();
             return result;

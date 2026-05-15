@@ -18,13 +18,13 @@ namespace XylRacesCore
             if (planetTile.Tile is not SurfaceTile surfaceTile)
                 return false;
 
-            if (waterRequired && !surfaceTile.IsCoastalOrRiverTile()) 
+            if (waterRequired && !surfaceTile.IsCoastalOrRiverTile())
                 return false;
 
-            if (allowedBiomes != null && !surfaceTile.Biomes.Any(biomeDef => allowedBiomes.Contains(biomeDef))) 
+            if (allowedBiomes != null && !surfaceTile.Biomes.Any(biomeDef => allowedBiomes.Contains(biomeDef)))
                 return false;
 
-            if (allowedHilliness != null && !allowedHilliness.Contains(surfaceTile.hilliness)) 
+            if (allowedHilliness != null && !allowedHilliness.Contains(surfaceTile.hilliness))
                 return false;
 
             if (nearbyPollution != null &&

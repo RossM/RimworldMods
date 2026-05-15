@@ -41,7 +41,9 @@ namespace XylRacesCore.Patches
         };
 
         [Feature(nameof(IStartingItemSource)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("GeneratePossessions")]
-        public static IEnumerable<CodeInstruction> GeneratePossessions_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator, MethodBase method)
+        public static IEnumerable<CodeInstruction> GeneratePossessions_Transpiler(IEnumerable<CodeInstruction> instructions,
+                                                                                  ILGenerator generator,
+                                                                                  MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
             Fixup_GeneratePossessions.MatchAndReplace(method, ref instructionsList, generator);

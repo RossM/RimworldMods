@@ -9,12 +9,16 @@ namespace XylRacesCore.Patches
     public static class Patch_FloatMenuOptionProvider_Ingest
     {
         [Feature(nameof(ChemicalDefExtension)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("GetSingleOptionFor")]
-        public static bool GetSingleOptionFor_Prefix(FloatMenuOptionProvider_Ingest __instance, Thing clickedThing, FloatMenuContext context, ref FloatMenuOption __result)
+        public static bool GetSingleOptionFor_Prefix(FloatMenuOptionProvider_Ingest __instance,
+                                                     Thing clickedThing,
+                                                     FloatMenuContext context,
+                                                     ref FloatMenuOption __result)
         {
             if (clickedThing.def.ingestible is not { showIngestFloatOption: true })
             {
                 return true;
             }
+
             if (!clickedThing.IngestibleNow || !context.FirstSelectedPawn.RaceProps.CanEverEat(clickedThing.def))
             {
                 return true;
