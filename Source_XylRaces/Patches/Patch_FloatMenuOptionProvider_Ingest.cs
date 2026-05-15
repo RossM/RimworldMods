@@ -43,7 +43,7 @@ namespace XylRacesCore.Patches
                     GeneDef gene = defExtension.prohibitedGenes.FirstOrDefault(gene => context.FirstSelectedPawn.HasActiveGene(gene));
                     if (gene != null)
                     {
-                        __result = new FloatMenuOption(text + ": " + "XylBlockedByGene".Translate(gene.label), null);
+                        __result = new FloatMenuOption($"{text}: {"XylBlockedByGene".Translate(gene.label)}", null);
                         return false;
                     }
                 }
@@ -53,14 +53,14 @@ namespace XylRacesCore.Patches
                     GeneDef gene = defExtension.requiredGenesAll.FirstOrDefault(gene => !context.FirstSelectedPawn.HasActiveGene(gene));
                     if (gene != null)
                     {
-                        __result = new FloatMenuOption(text + ": " + "XylRequiresGene".Translate(gene.label), null);
+                        __result = new FloatMenuOption($"{text}: {"XylRequiresGene".Translate(gene.label)}", null);
                         return false;
                     }
                 }
 
                 if (!defExtension.requiredGenesAny.NullOrEmpty())
                 {
-                    __result = new FloatMenuOption(text + ": " + "XylRequiresGene".Translate(defExtension.requiredGenesAny[0].label), null);
+                    __result = new FloatMenuOption($"{text}: {"XylRequiresGene".Translate(defExtension.requiredGenesAny[0].label)}", null);
                     return false;
                 }
 

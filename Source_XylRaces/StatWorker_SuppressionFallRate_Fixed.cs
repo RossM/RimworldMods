@@ -54,7 +54,7 @@ namespace XylRacesCore
         {
             StringBuilder stringBuilder = new StringBuilder();
             float baseValueFor = GetBaseValueFor(req);
-            stringBuilder.AppendLine("SuppressionFallRate".Translate() + ": " + GetValue(req.Thing).ToStringPercent());
+            stringBuilder.AppendLine($"{"SuppressionFallRate".Translate()}: {GetValue(req.Thing).ToStringPercent()}");
             ((Pawn)req.Thing).needs.TryGetNeed(out Need_Suppression need);
             stringBuilder.AppendLine(
                 $"   {"CurrentSuppression".Translate()} ({need.CurLevelPercentage.ToStringPercent()}): {CurrentFallRateBasedOnSuppression(need.CurLevelPercentage).ToStringPercent()}");

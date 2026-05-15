@@ -102,8 +102,7 @@ namespace XylRacesCore.Patches
 
             if (sb != null && !text.NullOrEmpty())
             {
-                sb.AppendInNewLine(" -  " + "AbilityIdeoConvertBreakdownPawnIdeo".Translate(pawn.Named("PAWN")) +
-                                   ": " + text);
+                sb.AppendInNewLine($" -  {"AbilityIdeoConvertBreakdownPawnIdeo".Translate(pawn.Named("PAWN"))}: {text}");
             }
 
             return result;
@@ -118,10 +117,7 @@ namespace XylRacesCore.Patches
                 // Adding 1 to the offset and reporting it as a percentage is complete nonsense and gives the impression
                 // that these are factors being multiplied together rather than added. However, it's complete nonsense
                 // that matches what the base game does for traits, so I am holding my nose and matching it.
-                return "\n   -  "
-                       + "XylAbilityIdeoConvertBreakdownMemeVsXenotype"
-                           .Translate(meme.label.Named("MEME"), xenotype.label.Named("XENOTYPE")).CapitalizeFirst() + ": "
-                       + (1f + offset).ToStringPercent();
+                return $"\n   -  {"XylAbilityIdeoConvertBreakdownMemeVsXenotype".Translate(meme.label.Named("MEME"), xenotype.label.Named("XENOTYPE")).CapitalizeFirst()}: {(1f + offset).ToStringPercent()}";
             }
         }
     }

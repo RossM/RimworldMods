@@ -30,7 +30,11 @@ namespace XylRacesCore
                     }
                 }
 
-                return base.Description + "\n\n" + "CausedBy".Translate() + ": " + causes.ToCommaList().CapitalizeFirst();
+                return $"""
+                    {base.Description}
+                    
+                    {"CausedBy".Translate()}: {causes.ToCommaList().CapitalizeFirst()}
+                    """;
             }
         }
     }

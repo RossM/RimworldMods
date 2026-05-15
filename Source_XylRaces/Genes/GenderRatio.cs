@@ -27,7 +27,7 @@ namespace XylRacesCore.Genes
 
         protected override IEnumerable<string> GetCustomEffectDescriptions()
         {
-            yield return "XylGenderRatioLabel".TranslateSimple() + ": " + GetGenderRatioDescription();
+            yield return $"{"XylGenderRatioLabel".TranslateSimple()}: {GetGenderRatioDescription()}";
             ;
         }
     }

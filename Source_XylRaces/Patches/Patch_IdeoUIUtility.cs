@@ -37,14 +37,14 @@ namespace XylRacesCore.Patches
             if (!agreeingXenotypes.NullOrEmpty())
             {
                 sb.AppendLine();
-                sb.AppendInNewLine(("XylAgreeableXenotypes".Translate() + ":").Colorize(ColoredText.TipSectionTitleColor));
+                sb.AppendInNewLine($"{"XylAgreeableXenotypes".Translate()}:".Colorize(ColoredText.TipSectionTitleColor));
                 sb.AppendInNewLine(agreeingXenotypes.Select(def => def.label).ToLineList("  - ", capitalizeItems: true));
             }
 
             if (!disagreeingXenotypes.NullOrEmpty())
             {
                 sb.AppendLine();
-                sb.AppendInNewLine(("XylDisagreeableXenotypes".Translate() + ":").Colorize(ColoredText.TipSectionTitleColor));
+                sb.AppendInNewLine($"{"XylDisagreeableXenotypes".Translate()}:".Colorize(ColoredText.TipSectionTitleColor));
                 sb.AppendInNewLine(disagreeingXenotypes.Select(def => def.label).ToLineList("  - ", capitalizeItems: true));
             }
 

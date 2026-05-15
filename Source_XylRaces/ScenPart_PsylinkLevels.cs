@@ -90,7 +90,7 @@ namespace XylRacesCore
         {
             if (tag == "PlayerStartsWith")
             {
-                yield return StatDefOf.Ability_RequiredPsylink.LabelCap + " x" + count;
+                yield return $"{StatDefOf.Ability_RequiredPsylink.LabelCap} x{count}";
             }
         }
     }

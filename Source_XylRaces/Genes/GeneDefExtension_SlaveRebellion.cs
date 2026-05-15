@@ -15,7 +15,7 @@ namespace XylRacesCore.Genes
         protected override IEnumerable<string> GetCustomEffectDescriptions()
         {
             if (slaveRebellionMtbFactor != 1.0f)
-                yield return "SlaveRebellionMTBDays".Translate() + " x" + slaveRebellionMtbFactor.ToStringPercent();
+                yield return $"{"SlaveRebellionMTBDays".Translate()} x{slaveRebellionMtbFactor.ToStringPercent()}";
         }
     }
 }

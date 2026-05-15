@@ -32,7 +32,7 @@ namespace XylRacesCore
 
         private static GeneDef GetFromTemplate(GeneTemplateDef template, AbilityDef def, int displayOrderBase, bool hotReload)
         {
-            string defName = template.defName + "_" + def.defName;
+            string defName = $"{template.defName}_{def.defName}";
             GeneDef geneDef;
             if (hotReload)
                 geneDef = DefDatabase<GeneDef>.GetNamed(defName, errorOnFail: false) ?? new GeneDef();

@@ -56,8 +56,7 @@ namespace XylRacesCore.Genes
                         items.Add(item.Label);
                 }
 
-                flyingDisabledBy = "ApparelRequirementDisabledLabel".Translate() + ": " +
-                                   items.ToCommaList(useAnd: true).CapitalizeFirst() + "\n\n";
+                flyingDisabledBy = $"{"ApparelRequirementDisabledLabel".Translate()}: {items.ToCommaList(useAnd: true).CapitalizeFirst()}\n\n";
             }
 
             yield return new Command_ActionWithCooldown()
@@ -68,14 +67,10 @@ namespace XylRacesCore.Genes
                 Disabled = !pawn.flight.CanFlyNow || !flightAllowedByApparel,
                 cooldownPercentGetter = () => 1.0f - pawn.flight.flightCooldownTicks / (pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
                 icon = DefExt.Icon,
-                defaultDescPostfix = "\n\n" +
-                                     flyingDisabledBy +
-                                     "CooldownTime".TranslateSimple() + ": "
-                                     + pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall()
-                                     + "LetterSecond".TranslateSimple() + "\n" +
-                                     "AbilityDuration".TranslateSimple() + ": "
-                                     + pawn.GetStatValue(StatDefOf.MaxFlightTime).ToStringDecimalIfSmall()
-                                     + "LetterSecond".TranslateSimple(),
+                defaultDescPostfix = "\n\n" + $"""
+                    {flyingDisabledBy}{"CooldownTime".TranslateSimple()}: {pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall()}{"LetterSecond".TranslateSimple()}
+                    {"AbilityDuration".TranslateSimple()}: {pawn.GetStatValue(StatDefOf.MaxFlightTime).ToStringDecimalIfSmall()}{"LetterSecond".TranslateSimple()}
+                    """,
             };
 
             if (flightAllowedByApparel)

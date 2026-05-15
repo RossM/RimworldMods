@@ -62,8 +62,7 @@ namespace XylRacesCore.Patches
                 if (rangedDodgeChance > 0)
                 {
                     StringBuilder sb = new StringBuilder(__result);
-                    sb.AppendLine("   " + DefOf.XylRangedDodgeChance.LabelCap + ": " +
-                                  rangedDodgeChance.ToStringPercent());
+                    sb.AppendLine($"   {DefOf.XylRangedDodgeChance.LabelCap}: {rangedDodgeChance.ToStringPercent()}");
                     __result = sb.ToString();
                 }
             }

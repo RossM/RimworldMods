@@ -21,7 +21,7 @@ namespace XylRacesCore.Patches
                     Mode = InstructionMatcher.OutputMode.InsertAfter,
                     Pattern =
                     [
-                        CodeInstruction.Call(typeof(Rand), "get_" + nameof(Rand.Value)),
+                        CodeInstruction.Call(typeof(Rand), $"get_{nameof(Rand.Value)}"),
                     ],
                     Output =
                     [

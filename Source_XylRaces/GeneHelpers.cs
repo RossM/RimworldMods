@@ -152,8 +152,7 @@ public static class GeneHelpers
         }).ToList();
         if (recipeDefs.Any())
         {
-            yield return "XylNewRecipes".Translate() + ": "
-                                                     + recipeDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList();
+            yield return $"{"XylNewRecipes".Translate()}: {recipeDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
         }
 
         IEnumerable<ThingDef> thingDef = DefDatabase<RecipeDef>.AllDefsListForReading
@@ -165,7 +164,7 @@ public static class GeneHelpers
             }).ToList();
         if (thingDef.Any())
         {
-            yield return "XylNewRecipes".Translate() + ": " + thingDef.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList();
+            yield return $"{"XylNewRecipes".Translate()}: {thingDef.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
         }
     }
 }

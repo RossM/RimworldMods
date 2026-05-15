@@ -96,7 +96,7 @@ namespace XylRacesCore
         {
             if (tag == "PlayerStartsWith")
             {
-                yield return "XylPsycast".TranslateSimple().CapitalizeFirst() + ": " + psycast.LabelCap + " x" + "1";
+                yield return $"{"XylPsycast".TranslateSimple().CapitalizeFirst()}: {psycast.LabelCap} x1";
             }
         }
     }

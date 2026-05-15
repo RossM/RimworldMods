@@ -181,7 +181,7 @@ namespace XylRacesCore.Patches
                                                          Hediff_SubstituteCapacity foundHediff)
         {
             if (foundHediff != null)
-                sb.AppendLine(whitespace + "        " + foundHediff.GetDescription());
+                sb.AppendLine($"{whitespace}        {foundHediff.GetDescription()}");
         }
 
         public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity foundHediff, PawnCapacityDef capacity)
