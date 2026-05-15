@@ -16,20 +16,14 @@ namespace XylRacesCore.Patches
          HarmonyPatch(nameof(DesignationCategoryDef.ResolvedAllowedDesignators), MethodType.Getter)]
         public static void ResolvedAllowedDesignators_Postfix(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
         {
-            using (new ProfileBlock())
-            {
-                AddDesignators(__instance, ref __result);
-            }
+            AddDesignators(__instance, ref __result);
         }
 
         [Feature(nameof(GeneDefExtension_Designator)), HarmonyPostfix, UsedImplicitly,
          HarmonyPatch(nameof(DesignationCategoryDef.AllResolvedAndIdeoDesignators), MethodType.Getter)]
         public static void AllResolvedAndIdeoDesignators_Postfix(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
         {
-            using (new ProfileBlock())
-            {
-                AddDesignators(__instance, ref __result);
-            }
+            AddDesignators(__instance, ref __result);
         }
 
         private static void AddDesignators(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)

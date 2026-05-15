@@ -20,18 +20,15 @@ namespace XylRacesCore.Patches
             if (!Enabled)
                 return;
 
-            using (new ProfileBlock())
-            {
-                if (parms.pawn == null)
-                    return;
+            if (parms.pawn == null)
+                return;
 
-                foreach (var extension in parms.pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Rendering>())
+            foreach (var extension in parms.pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Rendering>())
+            {
+                foreach (var modifier in extension.modifiers)
                 {
-                    foreach (var modifier in extension.modifiers)
-                    {
-                        if (modifier.Matches(node))
-                            __result *= modifier.scale;
-                    }
+                    if (modifier.Matches(node))
+                        __result *= modifier.scale;
                 }
             }
         }
@@ -42,18 +39,15 @@ namespace XylRacesCore.Patches
             if (!Enabled)
                 return;
 
-            using (new ProfileBlock())
-            {
-                if (parms.pawn == null)
-                    return;
+            if (parms.pawn == null)
+                return;
 
-                foreach (var extension in parms.pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Rendering>())
+            foreach (var extension in parms.pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Rendering>())
+            {
+                foreach (var modifier in extension.modifiers)
                 {
-                    foreach (var modifier in extension.modifiers)
-                    {
-                        if (modifier.Matches(node))
-                            __result += modifier.offset;
-                    }
+                    if (modifier.Matches(node))
+                        __result += modifier.offset;
                 }
             }
         }

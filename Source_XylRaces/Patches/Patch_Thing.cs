@@ -18,35 +18,29 @@ namespace XylRacesCore.Patches
         [Feature(nameof(DietDependency)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("IngestedCalculateAmounts")]
         public static void IngestedCalculateAmounts_Prefix(Thing __instance, Pawn ingester, ref float nutritionWanted)
         {
-            using (new ProfileBlock())
+            foreach (var dietDependency in ingester.ActiveGenesOfType<DietDependency>())
             {
-                foreach (var dietDependency in ingester.ActiveGenesOfType<DietDependency>())
-                {
-                    if (!dietDependency.ValidateFood(__instance))
-                        continue;
+                if (!dietDependency.ValidateFood(__instance))
+                    continue;
 
-                    float nutritionForNeed = dietDependency.NutritionWantedToSatisfy();
-                    nutritionWanted = Math.Max(nutritionWanted, nutritionForNeed);
-                }
+                float nutritionForNeed = dietDependency.NutritionWantedToSatisfy();
+                nutritionWanted = Math.Max(nutritionWanted, nutritionForNeed);
             }
         }
 
         [Feature(nameof(GeneDefExtension_HostilityOverride), nameof(SeeingRed)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("TakeDamage")]
         public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
         {
-            using (new ProfileBlock())
+            if (dinfo.Instigator is Pawn instigator)
             {
-                if (dinfo.Instigator is Pawn instigator)
-                {
-                    HostilityOverrideManager.GetManager(instigator.Map)?.Notify_PawnDamagedThing(instigator, __instance);
-                }
+                HostilityOverrideManager.GetManager(instigator.Map)?.Notify_PawnDamagedThing(instigator, __instance);
+            }
 
-                if (__instance is Pawn target)
+            if (__instance is Pawn target)
+            {
+                foreach (var listener in target.EverythingOfType<INotifyDamageTaken>())
                 {
-                    foreach (var listener in target.EverythingOfType<INotifyDamageTaken>())
-                    {
-                        listener.Notify_DamageTaken(dinfo, __result);
-                    }
+                    listener.Notify_DamageTaken(dinfo, __result);
                 }
             }
         }

@@ -38,19 +38,16 @@ namespace XylRacesCore.Genes
 
         public override void TickInterval(int delta)
         {
-            using (new ProfileBlock())
-            {
-                base.TickInterval(delta);
+            base.TickInterval(delta);
 
-                var extension = DefExt;
-                if (Active && extension is { hediffGivers: not null, mtbDays: > 0.0f } &&
-                    pawn.IsHashIntervalTick(checkInterval, delta))
+            var extension = DefExt;
+            if (Active && extension is { hediffGivers: not null, mtbDays: > 0.0f } &&
+                pawn.IsHashIntervalTick(checkInterval, delta))
+            {
+                foreach (var hediffGiver in extension.hediffGivers)
                 {
-                    foreach (var hediffGiver in extension.hediffGivers)
-                    {
-                        if (Rand.MTBEventOccurs(extension.mtbDays, 60000f, checkInterval))
-                            hediffGiver.TryApply(pawn);
-                    }
+                    if (Rand.MTBEventOccurs(extension.mtbDays, 60000f, checkInterval))
+                        hediffGiver.TryApply(pawn);
                 }
             }
         }
@@ -60,60 +57,57 @@ namespace XylRacesCore.Genes
             if (!DefExt.reapplyOnPartRestored)
                 return;
 
-            using (new ProfileBlock())
+            var extension = DefExt;
+            if (Active && extension is { hediffGivers: not null, reapplyOnPartRestored: true })
             {
-                var extension = DefExt;
-                if (Active && extension is { hediffGivers: not null, reapplyOnPartRestored: true })
+                foreach (var hediffGiver in extension.hediffGivers)
                 {
-                    foreach (var hediffGiver in extension.hediffGivers)
+                    if (hediffGiver.partsToAffect.NullOrEmpty())
+                        continue;
+
+                    List<BodyPartRecord> partsToAdd = new();
+                    List<BodyPartRecord> partsToRemove = new();
+                    HediffDef hediffDef = hediffGiver.hediff;
+
+                    foreach (BodyPartRecord part in pawn.def.race.body.AllParts)
                     {
-                        if (hediffGiver.partsToAffect.NullOrEmpty())
+                        if (!hediffGiver.partsToAffect.Contains(part.def))
                             continue;
 
-                        List<BodyPartRecord> partsToAdd = new();
-                        List<BodyPartRecord> partsToRemove = new();
-                        HediffDef hediffDef = hediffGiver.hediff;
-
-                        foreach (BodyPartRecord part in pawn.def.race.body.AllParts)
+                        bool alreadyHasHediff = false;
+                        bool missingPart = false;
+                        foreach (Hediff hediff in pawn.health.hediffSet.hediffs)
                         {
-                            if (!hediffGiver.partsToAffect.Contains(part.def))
+                            if (hediff.Part != part)
                                 continue;
 
-                            bool alreadyHasHediff = false;
-                            bool missingPart = false;
-                            foreach (Hediff hediff in pawn.health.hediffSet.hediffs)
-                            {
-                                if (hediff.Part != part)
-                                    continue;
-
-                                if (hediff.def == hediffDef)
-                                    alreadyHasHediff = true;
-                                else if (hediff.def.hediffClass == typeof(Hediff_AddedPart))
-                                    missingPart = true;
-                                else if (hediff.def.hediffClass == typeof(Hediff_MissingPart))
-                                    missingPart = true;
-                            }
-
-                            //Log.Message($"Genes.AddHediff.NotifyStateChange: hediffDef={hediffDef} part={part} alreadyHasHediff={alreadyHasHediff} missingPart={missingPart}");
-                            if (missingPart && alreadyHasHediff)
-                                partsToRemove.Add(part);
-                            else if (!missingPart && !alreadyHasHediff)
-                                partsToAdd.Add(part);
+                            if (hediff.def == hediffDef)
+                                alreadyHasHediff = true;
+                            else if (hediff.def.hediffClass == typeof(Hediff_AddedPart))
+                                missingPart = true;
+                            else if (hediff.def.hediffClass == typeof(Hediff_MissingPart))
+                                missingPart = true;
                         }
 
-                        foreach (BodyPartRecord part in partsToAdd)
-                        {
-                            Hediff hediff = HediffMaker.MakeHediff(hediffDef, pawn, part);
-                            //Log.Message($"Genes.AddHediff.NotifyStateChange: Adding hediff: {hediff}");
-                            pawn.health.AddHediff(hediff);
-                        }
+                        //Log.Message($"Genes.AddHediff.NotifyStateChange: hediffDef={hediffDef} part={part} alreadyHasHediff={alreadyHasHediff} missingPart={missingPart}");
+                        if (missingPart && alreadyHasHediff)
+                            partsToRemove.Add(part);
+                        else if (!missingPart && !alreadyHasHediff)
+                            partsToAdd.Add(part);
+                    }
 
-                        foreach (BodyPartRecord part in partsToRemove)
-                        {
-                            Hediff hediff = pawn.health.hediffSet.hediffs.First(h => h.def == hediffDef && h.Part == part);
-                            //Log.Message($"Genes.AddHediff.NotifyStateChange: Removing hediff: {hediff}");
-                            pawn.health.RemoveHediff(hediff);
-                        }
+                    foreach (BodyPartRecord part in partsToAdd)
+                    {
+                        Hediff hediff = HediffMaker.MakeHediff(hediffDef, pawn, part);
+                        //Log.Message($"Genes.AddHediff.NotifyStateChange: Adding hediff: {hediff}");
+                        pawn.health.AddHediff(hediff);
+                    }
+
+                    foreach (BodyPartRecord part in partsToRemove)
+                    {
+                        Hediff hediff = pawn.health.hediffSet.hediffs.First(h => h.def == hediffDef && h.Part == part);
+                        //Log.Message($"Genes.AddHediff.NotifyStateChange: Removing hediff: {hediff}");
+                        pawn.health.RemoveHediff(hediff);
                     }
                 }
             }

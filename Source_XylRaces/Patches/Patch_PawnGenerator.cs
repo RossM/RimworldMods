@@ -41,20 +41,17 @@ namespace XylRacesCore.Patches
 
         public static void ModifyGenderByGenes(Pawn pawn, PawnGenerationRequest request, XenotypeDef xenotype)
         {
-            using (new ProfileBlock())
-            {
-                if (request.FixedGender != null)
-                    return;
+            if (request.FixedGender != null)
+                return;
 
-                GeneDef gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
-                               request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
-                               request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
-                               xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
-                if (gene == null) 
-                    return;
+            GeneDef gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
+                           request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
+                           request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
+                           xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
+            if (gene == null) 
+                return;
 
-                pawn.gender = gene.GetModExtension<GeneDefExtension_GenderRatio>().GetGender();
-            }
+            pawn.gender = gene.GetModExtension<GeneDefExtension_GenderRatio>().GetGender();
         }
 
         public static bool HasGenderRatio(GeneDef gene)
@@ -65,16 +62,13 @@ namespace XylRacesCore.Patches
         [Feature(nameof(GeneDefExtension_CongenitalHediff)), HarmonyPostfix, UsedImplicitly, HarmonyPatch("GenerateInitialHediffs")]
         public static void GenerateInitialHediffs_Postfix(Pawn pawn, PawnGenerationRequest request)
         {
-            using (new ProfileBlock())
+            foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_CongenitalHediff>())
             {
-                foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_CongenitalHediff>())
-                {
-                    if (!Rand.Chance(extension.chance))
-                        continue;
+                if (!Rand.Chance(extension.chance))
+                    continue;
 
-                    foreach (var hediffGiver in extension.hediffGivers)
-                        hediffGiver.TryApply(pawn);
-                }
+                foreach (var hediffGiver in extension.hediffGivers)
+                    hediffGiver.TryApply(pawn);
             }
         }
 

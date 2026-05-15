@@ -32,39 +32,36 @@ namespace XylRacesCore.Genes
         {
             const int checkInterval = 60;
 
-            using (new ProfileBlock())
+            base.TickInterval(delta);
+
+            if (!Active)
+                return;
+
+            if (!pawn.IsHashIntervalTick(checkInterval, delta))
+                return;
+
+            float minimumTemperature = Mathf.Lerp(DefExt.temperatureThreshold,
+                pawn.GetStatValue(StatDefOf.ComfyTemperatureMin), DefExt.comfyTemperatureImportance);
+            float temperatureDifference = minimumTemperature - pawn.AmbientTemperature;
+            float changePerDay = temperatureDifference * (temperatureDifference > 0
+                ? DefExt.severityGainPerDayPerDegree
+                : DefExt.severityLossPerDayPerDegree);
+            HealthUtility.AdjustSeverity(pawn, DefExt.hediff, (checkInterval / (float)GenDate.TicksPerDay) * changePerDay);
+
+            Hediff torpor = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff);
+
+            if (!sentWarning && !DefExt.warningMessage.NullOrEmpty() && pawn.IsColonist && torpor?.Visible == true)
             {
-                base.TickInterval(delta);
-
-                if (!Active)
-                    return;
-
-                if (!pawn.IsHashIntervalTick(checkInterval, delta))
-                    return;
-
-                float minimumTemperature = Mathf.Lerp(DefExt.temperatureThreshold,
-                    pawn.GetStatValue(StatDefOf.ComfyTemperatureMin), DefExt.comfyTemperatureImportance);
-                float temperatureDifference = minimumTemperature - pawn.AmbientTemperature;
-                float changePerDay = temperatureDifference * (temperatureDifference > 0
-                    ? DefExt.severityGainPerDayPerDegree
-                    : DefExt.severityLossPerDayPerDegree);
-                HealthUtility.AdjustSeverity(pawn, DefExt.hediff, (checkInterval / (float)GenDate.TicksPerDay) * changePerDay);
-
-                Hediff torpor = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff);
-
-                if (!sentWarning && !DefExt.warningMessage.NullOrEmpty() && pawn.IsColonist && torpor?.Visible == true)
-                {
-                    Messages.Message(DefExt.warningMessage.Formatted(pawn.Named("PAWN")), pawn,
-                        MessageTypeDefOf.NegativeHealthEvent);
-                    sentWarning = true;
-                }
-
-                if (sentWarning && (torpor?.Severity ?? 0) <= 0)
-                    sentWarning = false;
-
-                if ((torpor?.CurStageIndex ?? 0) >= 3)
-                    pawn.needs.rest.CurLevelPercentage = Mathf.Min(pawn.needs.rest.CurLevelPercentage, 0.1f);
+                Messages.Message(DefExt.warningMessage.Formatted(pawn.Named("PAWN")), pawn,
+                    MessageTypeDefOf.NegativeHealthEvent);
+                sentWarning = true;
             }
+
+            if (sentWarning && (torpor?.Severity ?? 0) <= 0)
+                sentWarning = false;
+
+            if ((torpor?.CurStageIndex ?? 0) >= 3)
+                pawn.needs.rest.CurLevelPercentage = Mathf.Min(pawn.needs.rest.CurLevelPercentage, 0.1f);
         }
     }
 }

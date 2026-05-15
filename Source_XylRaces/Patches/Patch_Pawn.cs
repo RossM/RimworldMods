@@ -19,11 +19,8 @@ namespace XylRacesCore.Patches
             if (!Enabled)
                 return;
 
-            using (new ProfileBlock())
-            {
-                foreach (var extension in __instance.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
-                   __result *= extension.bodySizeFactor;
-            }
+            foreach (var extension in __instance.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
+               __result *= extension.bodySizeFactor;
         }
 
         [Feature(nameof(GeneDefExtension_Pawn)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
@@ -32,11 +29,8 @@ namespace XylRacesCore.Patches
             if (!Enabled)
                 return;
 
-            using (new ProfileBlock())
-            {
-                foreach (var extension in __instance.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
-                   __result *= extension.healthScaleFactor;
-            }
+            foreach (var extension in __instance.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
+               __result *= extension.healthScaleFactor;
         }
 
         [Feature(nameof(Genes.Psycast)), HarmonyPrefix, UsedImplicitly,

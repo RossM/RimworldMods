@@ -11,18 +11,15 @@ namespace XylRacesCore.Patches
         [Feature("TODO"), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Thought.Description), MethodType.Getter)]
         public static void Description_Postfix(Thought __instance, ref string __result)
         {
-            using (new ProfileBlock())
-            {
-                GeneDef sourceGene =
-                    __instance.def.requiredGenes?.FirstOrDefault(geneDef => __instance.pawn.HasActiveGene(geneDef));
-                if (sourceGene == null)
-                    return;
+            GeneDef sourceGene =
+                __instance.def.requiredGenes?.FirstOrDefault(geneDef => __instance.pawn.HasActiveGene(geneDef));
+            if (sourceGene == null)
+                return;
 
-                // This is a minor UI improvement to show which gene caused a thought
-                __result += "\n\n" +
-                            ("IncapableOfTooltipGene".Translate() + ": " + sourceGene.LabelCap).Colorize(ColoredText
-                                .GeneColor);
-            }
+            // This is a minor UI improvement to show which gene caused a thought
+            __result += "\n\n" +
+                        ("IncapableOfTooltipGene".Translate() + ": " + sourceGene.LabelCap).Colorize(ColoredText
+                            .GeneColor);
         }
     }
 }

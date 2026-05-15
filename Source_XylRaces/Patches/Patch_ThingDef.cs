@@ -20,20 +20,17 @@ namespace XylRacesCore.Patches
             if (!Enabled)
                 return;
 
-            using (new ProfileBlock())
+            if (__instance.apparel != null)
             {
-                if (__instance.apparel != null)
-                {
-                    bool allowsFlight = Flight.ApparelAllowsFlight(__instance);
+                bool allowsFlight = Flight.ApparelAllowsFlight(__instance);
 
-                    __result = __result.AddItem(
-                        new StatDrawEntry(StatCategoryDefOf.Apparel,
-                        "XylAllowsFlightLabel".Translate(), 
-                        allowsFlight ? "Yes".Translate() : "No".Translate(),
-                        "XylAllowsFlightDesc".Translate(), 
-                        2752)
-                    );
-                }
+                __result = __result.AddItem(
+                    new StatDrawEntry(StatCategoryDefOf.Apparel,
+                    "XylAllowsFlightLabel".Translate(), 
+                    allowsFlight ? "Yes".Translate() : "No".Translate(),
+                    "XylAllowsFlightDesc".Translate(), 
+                    2752)
+                );
             }
         }
     }

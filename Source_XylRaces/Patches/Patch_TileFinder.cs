@@ -14,21 +14,18 @@ namespace XylRacesCore.Patches
         public static void RandomSettlementTileFor_Prefix(PlanetLayer layer, Faction faction, bool mustBeAutoChoosable,
             ref Predicate<PlanetTile> extraValidator)
         {
-            using (new ProfileBlock())
+            var extension = faction?.def?.GetModExtension<FactionDefExtension>();
+            if (extension == null)
+                return;
+
+            var oldValidator = extraValidator;
+            extraValidator = planetTile =>
             {
-                var extension = faction?.def?.GetModExtension<FactionDefExtension>();
-                if (extension == null)
-                    return;
+                if (oldValidator != null && !oldValidator(planetTile))
+                    return false;
 
-                var oldValidator = extraValidator;
-                extraValidator = planetTile =>
-                {
-                    if (oldValidator != null && !oldValidator(planetTile))
-                        return false;
-
-                    return extension.ValidatePlanetTile(planetTile);
-                };
-            }
+                return extension.ValidatePlanetTile(planetTile);
+            };
         }
     }
 }

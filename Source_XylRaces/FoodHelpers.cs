@@ -33,27 +33,24 @@ public static class FoodHelpers
 
     public static float GetExtraNutritionFactor(Pawn eater, Thing foodSource, ThingDef foodDef)
     {
-        using (new ProfileBlock())
+        if (IsRawFoodOrCorpse(foodDef))
         {
-            if (IsRawFoodOrCorpse(foodDef))
-            {
-                return GetRawNutritionFactor(eater, GetFoodType(foodDef));
-            }
-
-            var compIngredients = foodSource.TryGetComp<CompIngredients>();
-            if (compIngredients == null)
-            {
-                return GetCookedNutritionFactor(eater, GetFoodType(foodDef));
-            }
-
-            List<float> multipliers = new();
-            foreach (var ingredient in compIngredients.ingredients)
-            {
-                multipliers.Add(GetCookedNutritionFactor(eater, GetFoodType(ingredient)));
-            }
-
-            return multipliers.Count > 0 ? (multipliers.Min() + multipliers.Max()) / 2 : 1.0f;
+            return GetRawNutritionFactor(eater, GetFoodType(foodDef));
         }
+
+        var compIngredients = foodSource.TryGetComp<CompIngredients>();
+        if (compIngredients == null)
+        {
+            return GetCookedNutritionFactor(eater, GetFoodType(foodDef));
+        }
+
+        List<float> multipliers = new();
+        foreach (var ingredient in compIngredients.ingredients)
+        {
+            multipliers.Add(GetCookedNutritionFactor(eater, GetFoodType(ingredient)));
+        }
+
+        return multipliers.Count > 0 ? (multipliers.Min() + multipliers.Max()) / 2 : 1.0f;
     }
 
     private static float GetRawNutritionFactor(Pawn eater, FoodType foodType)
@@ -82,25 +79,22 @@ public static class FoodHelpers
 
     public static float GetFoodPoisonChanceOffset(Pawn eater, Thing foodSource)
     {
-        using (new ProfileBlock())
+        var foodDef = foodSource.def;
+
+        if (!IsRawFoodOrCorpse(foodDef))
+            return 0.0f;
+
+        FoodType foodType = GetFoodType(foodSource.def);
+        var value = foodType switch
         {
-            var foodDef = foodSource.def;
-
-            if (!IsRawFoodOrCorpse(foodDef))
-                return 0.0f;
-
-            FoodType foodType = GetFoodType(foodSource.def);
-            var value = foodType switch
-            {
-                FoodType.Fungus => eater.GetStatValue(DefOf.XylRawFungusFoodPoisonChanceOffset) +
-                                   eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceOffset),
-                FoodType.Meat => eater.GetStatValue(DefOf.XylRawMeatFoodPoisonChanceOffset),
-                FoodType.AnimalProduct => eater.GetStatValue(DefOf.XylRawAnimalProductFoodPoisonChanceOffset),
-                FoodType.NonMeat => eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceOffset),
-                _ => 0.0f
-            };
-            return value;
-        }
+            FoodType.Fungus => eater.GetStatValue(DefOf.XylRawFungusFoodPoisonChanceOffset) +
+                               eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceOffset),
+            FoodType.Meat => eater.GetStatValue(DefOf.XylRawMeatFoodPoisonChanceOffset),
+            FoodType.AnimalProduct => eater.GetStatValue(DefOf.XylRawAnimalProductFoodPoisonChanceOffset),
+            FoodType.NonMeat => eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceOffset),
+            _ => 0.0f
+        };
+        return value;
     }
 
     public static bool IsRawFoodOrCorpse(this ThingDef foodDef)
@@ -111,35 +105,32 @@ public static class FoodHelpers
     public static bool IsThoughtFromIngestionDisallowedByGenes(Pawn eater, ThoughtDef thought, ThingDef ingestible,
         MeatSourceCategory meatSourceCategory)
     {
-        using (new ProfileBlock())
+        if (thought == null || ingestible == null)
         {
-            if (thought == null || ingestible == null)
-            {
-                return false;
-            }
-
-            foreach (var ext in eater.ActiveGeneDefExtensionsOfType<Genes.GeneDefExtension_IngestionThoughtOverride>())
-            {
-                foreach (var thoughtOverride in ext.thoughtOverrides.EmptyIfNull())
-                {
-                    if (thoughtOverride.thoughts.NullOrEmpty())
-                        continue;
-
-                    if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
-                        continue;
-
-                    if (!thoughtOverride.meatSources.NullOrEmpty() &&
-                        !thoughtOverride.meatSources.Contains(meatSourceCategory))
-                        continue;
-
-                    if (thoughtOverride.thoughts.Any(t => t == thought))
-                    {
-                        return true;
-                    }
-                }
-            }
-
             return false;
         }
+
+        foreach (var ext in eater.ActiveGeneDefExtensionsOfType<Genes.GeneDefExtension_IngestionThoughtOverride>())
+        {
+            foreach (var thoughtOverride in ext.thoughtOverrides.EmptyIfNull())
+            {
+                if (thoughtOverride.thoughts.NullOrEmpty())
+                    continue;
+
+                if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
+                    continue;
+
+                if (!thoughtOverride.meatSources.NullOrEmpty() &&
+                    !thoughtOverride.meatSources.Contains(meatSourceCategory))
+                    continue;
+
+                if (thoughtOverride.thoughts.Any(t => t == thought))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

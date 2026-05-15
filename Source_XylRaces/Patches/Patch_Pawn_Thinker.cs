@@ -11,16 +11,13 @@ namespace XylRacesCore.Patches
         [Feature(nameof(Hediff_ForceBehavior)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_Thinker.MainThinkTree), MethodType.Getter)]
         public static bool MainThinkTree_Prefix(Pawn_Thinker __instance, ref ThinkTreeDef __result)
         {
-            using (new ProfileBlock())
+            foreach (var hediff in __instance.pawn.HediffsOfType<Hediff_ForceBehavior>())
             {
-                foreach (var hediff in __instance.pawn.HediffsOfType<Hediff_ForceBehavior>())
-                {
-                    __result = hediff.DefExt.thinkTree;
-                    return false;
-                }
-
-                return true;
+                __result = hediff.DefExt.thinkTree;
+                return false;
             }
+
+            return true;
         }
     }
 }

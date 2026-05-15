@@ -45,15 +45,12 @@ namespace XylRacesCore
 
         public override void Tick()
         {
-            using (new ProfileBlock())
-            {
-                base.Tick();
+            base.Tick();
 
-                mote?.Maintain();
+            mote?.Maintain();
 
-                if (pawn.Downed)
-                    pawn.health.RemoveHediff(this);
-            }
+            if (pawn.Downed)
+                pawn.health.RemoveHediff(this);
         }
 
         public override void PostRemoved()

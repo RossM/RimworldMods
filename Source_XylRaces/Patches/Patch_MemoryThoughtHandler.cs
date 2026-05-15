@@ -11,16 +11,13 @@ namespace XylRacesCore.Patches
         [Feature(nameof(ThoughtDefExtension_Memory)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(MemoryThoughtHandler.TryGainMemory), [typeof(Thought_Memory), typeof(Pawn)])]
         public static void TryGainMemory_Postfix(MemoryThoughtHandler __instance, Thought_Memory newThought, Pawn otherPawn)
         {
-            using (new ProfileBlock())
+            var extension = newThought.def.GetModExtension<ThoughtDefExtension_Memory>();
+            if (extension?.extraThoughts == null)
+                return;
+            foreach (var thoughtDef in extension.extraThoughts)
             {
-                var extension = newThought.def.GetModExtension<ThoughtDefExtension_Memory>();
-                if (extension?.extraThoughts == null)
-                    return;
-                foreach (var thoughtDef in extension.extraThoughts)
-                {
-                    if (thoughtDef.stages[newThought.CurStageIndex] != null)
-                        __instance.TryGainMemory(ThoughtMaker.MakeThought(thoughtDef, newThought.CurStageIndex), otherPawn);
-                }
+                if (thoughtDef.stages[newThought.CurStageIndex] != null)
+                    __instance.TryGainMemory(ThoughtMaker.MakeThought(thoughtDef, newThought.CurStageIndex), otherPawn);
             }
         }
     }

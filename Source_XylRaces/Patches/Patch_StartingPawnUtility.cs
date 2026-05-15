@@ -50,18 +50,15 @@ namespace XylRacesCore.Patches
 
         public static void GetExtraStartingItems(Pawn pawn, List<ThingDefCount> items)
         {
-            using (new ProfileBlock())
+            foreach (var startingItemSource in pawn.EverythingOfType<IStartingItemSource>())
             {
-                foreach (var startingItemSource in pawn.EverythingOfType<IStartingItemSource>())
-                {
-                    if (startingItemSource.GetStartingItem() is not { } item)
-                        continue;
+                if (startingItemSource.GetStartingItem() is not { } item)
+                    continue;
 
-                    items.Add(item);
+                items.Add(item);
 
-                    if (items.Count >= 2)
-                        return;
-                }
+                if (items.Count >= 2)
+                    return;
             }
         }
     }

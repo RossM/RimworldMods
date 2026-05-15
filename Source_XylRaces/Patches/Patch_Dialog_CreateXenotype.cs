@@ -43,13 +43,10 @@ namespace XylRacesCore.Patches
 
         private static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
         {
-            using (new ProfileBlock())
-            {
-                if (ignoreRestrictions)
-                    return genes;
-                return genes.Where(g =>
-                    g.GetModExtension<GeneDefExtension_UIFilter>()?.ShouldBeVisible(inheritable) != false).ToList();
-            }
+            if (ignoreRestrictions)
+                return genes;
+            return genes.Where(g =>
+                g.GetModExtension<GeneDefExtension_UIFilter>()?.ShouldBeVisible(inheritable) != false).ToList();
         }
 
         private static readonly InstructionMatcher Fixup_BiostatMet = new()

@@ -12,12 +12,9 @@ namespace XylRacesCore.Patches
         [Feature(nameof(DietDependency)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(GeneUtility.SatisfyChemicalGenes))]
         public static void SatisfyChemicalGenes_Postfix(Pawn pawn)
         {
-            using (new ProfileBlock())
+            foreach (var gene in pawn.ActiveGenesOfType<DietDependency>())
             {
-                foreach (var gene in pawn.ActiveGenesOfType<DietDependency>())
-                {
-                    gene.Reset();
-                }
+                gene.Reset();
             }
         }
     }

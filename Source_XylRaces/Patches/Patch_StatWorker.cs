@@ -173,11 +173,8 @@ namespace XylRacesCore.Patches
         public static void AppendSubstitutionDescription(StringBuilder sb, string whitespace,
             Hediff_SubstituteCapacity foundHediff)
         {
-            using (new ProfileBlock())
-            {
-                if (foundHediff != null)
-                    sb.AppendLine(whitespace + "        " + foundHediff.GetDescription());
-            }
+            if (foundHediff != null)
+                sb.AppendLine(whitespace + "        " + foundHediff.GetDescription());
         }
 
         public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity foundHediff, PawnCapacityDef capacity)
@@ -213,15 +210,12 @@ namespace XylRacesCore.Patches
         [Feature(nameof(Psycast)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
         public static void ShouldShowFor_Postfix(StatWorker __instance, StatRequest req, ref bool __result)
         {
-            using (new ProfileBlock())
+            if (req.Thing is Pawn pawn && pawn.HasActivePsycastGene())
             {
-                if (req.Thing is Pawn pawn && pawn.HasActivePsycastGene())
-                {
-                    if (__instance.stat == StatDefOf.PsychicEntropyRecoveryRate)
-                        __result = true;
-                    if (__instance.stat == StatDefOf.PsychicEntropyMax)
-                        __result = true;
-                }
+                if (__instance.stat == StatDefOf.PsychicEntropyRecoveryRate)
+                    __result = true;
+                if (__instance.stat == StatDefOf.PsychicEntropyMax)
+                    __result = true;
             }
         }
     }

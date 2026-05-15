@@ -29,23 +29,17 @@ namespace XylRacesCore.Patches
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Hediff GetFirstHediffOfDef_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
         {
-            using (new ProfileBlock())
-            {
-                if (def == HediffDefOf.Lactating && mustBeVisible == false)
-                    return __instance.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
-                return __instance.GetFirstHediffOfDef(def, mustBeVisible);
-            }
+            if (def == HediffDefOf.Lactating && mustBeVisible == false)
+                return __instance.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
+            return __instance.GetFirstHediffOfDef(def, mustBeVisible);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool HasHediff_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
         {
-            using (new ProfileBlock())
-            {
-                if (def == HediffDefOf.Lactating && mustBeVisible == false)
-                    return __instance.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
-                return __instance.HasHediff(def, mustBeVisible);
-            }
+            if (def == HediffDefOf.Lactating && mustBeVisible == false)
+                return __instance.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
+            return __instance.HasHediff(def, mustBeVisible);
         }
 
         [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]

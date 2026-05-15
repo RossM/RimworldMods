@@ -108,33 +108,30 @@ namespace XylRacesCore.Genes
 
         public override void Tick()
         {
-            using (new ProfileBlock())
+            base.Tick();
+
+            Pawn_FlightTracker flight = pawn.flight;
+            if (flight == null)
+                return;
+
+            if (flight.Flying != wasFlying)
             {
-                base.Tick();
+                pawn.Drawer.renderer.SetAllGraphicsDirty();
+                wasFlying = flight.Flying;
+            }
 
-                Pawn_FlightTracker flight = pawn.flight;
-                if (flight == null)
-                    return;
+            if (!flight.CanEverFly)
+                return;
 
-                if (flight.Flying != wasFlying)
-                {
-                    pawn.Drawer.renderer.SetAllGraphicsDirty();
-                    wasFlying = flight.Flying;
-                }
-
-                if (!flight.CanEverFly)
-                    return;
-
-                if (!flight.Flying &&
-                    flightAllowedByApparel &&
-                    (pawn.Drafted ? autoFlyDrafted : autoFly) && 
-                    pawn.pather.Moving &&
-                    pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= DefExt.autoFlyMinDistance &&
-                    pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
+            if (!flight.Flying &&
+                flightAllowedByApparel &&
+                (pawn.Drafted ? autoFlyDrafted : autoFly) && 
+                pawn.pather.Moving &&
+                pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= DefExt.autoFlyMinDistance &&
+                pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
                 {
                     flight.StartFlying();
                 }
-            }
         }
 
         // If a downed flying pawn lands on a non-walkable tile, they are killed and their corpse destroyed.

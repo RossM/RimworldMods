@@ -11,16 +11,13 @@ namespace XylRacesCore.Patches
         [Feature(nameof(DefOf.XylRangedDodgeChance)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Bullet.Impact))]
         public static void Impact_Prefix(Bullet __instance, ref Thing hitThing, bool blockedByShield)
         {
-            using (new ProfileBlock())
+            if (hitThing is Pawn pawn && !blockedByShield)
             {
-                if (hitThing is Pawn pawn && !blockedByShield)
+                float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(pawn);
+                if (Rand.Chance(rangedDodgeChance))
                 {
-                    float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(pawn);
-                    if (Rand.Chance(rangedDodgeChance))
-                    {
-                        MoteMaker.ThrowText(pawn.DrawPos, pawn.Map, "TextMote_Dodge".Translate(), 1.9f);
-                        hitThing = null;
-                    }
+                    MoteMaker.ThrowText(pawn.DrawPos, pawn.Map, "TextMote_Dodge".Translate(), 1.9f);
+                    hitThing = null;
                 }
             }
         }

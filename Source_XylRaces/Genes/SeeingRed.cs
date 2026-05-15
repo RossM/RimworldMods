@@ -47,17 +47,14 @@ namespace XylRacesCore.Genes
 
         public override void TickInterval(int delta)
         {
-            using (new ProfileBlock())
+            base.TickInterval(delta);
+            if (!pawn.IsHashIntervalTick(checkInterval, delta)) 
+                return;
+            if (extraEnemies != null)
             {
-                base.TickInterval(delta);
-                if (!pawn.IsHashIntervalTick(checkInterval, delta)) 
-                    return;
-                if (extraEnemies != null)
-                {
-                    Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
-                    if (hediff == null)
-                        extraEnemies.Clear();
-                }
+                Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
+                if (hediff == null)
+                    extraEnemies.Clear();
             }
         }
 

@@ -21,21 +21,18 @@ namespace XylRacesCore.Patches
         [Feature(nameof(GeneDefExtension_SlaveRebellion)), HarmonyPostfix, UsedImplicitly, HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
         public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)
         {
-            using (new ProfileBlock())
+            if (__result < 0)
+                return;
+
+            foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_SlaveRebellion>())
+                __result *= defExt.slaveRebellionMtbFactor;
+
+            if (TryGetPawnRebellionThresholdDays(pawn, out float neverRebelThresholdDays))
             {
-                if (__result < 0)
-                    return;
-
-                foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_SlaveRebellion>())
-                    __result *= defExt.slaveRebellionMtbFactor;
-
-                if (TryGetPawnRebellionThresholdDays(pawn, out float neverRebelThresholdDays))
+                if (__result >= neverRebelThresholdDays)
                 {
-                    if (__result >= neverRebelThresholdDays)
-                    {
-                        __result = -1;
-                        return;
-                    }
+                    __result = -1;
+                    return;
                 }
             }
         }
@@ -102,35 +99,32 @@ namespace XylRacesCore.Patches
             if (pawn == null)
                 return;
 
-            using (new ProfileBlock())
+            float initiateSlaveRebellionMtbDays = SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn);
+
+            foreach (var gene in pawn.GenesWithModExtension<GeneDefExtension_SlaveRebellion>()
+                         .Where(gene => gene.Active))
             {
-                float initiateSlaveRebellionMtbDays = SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn);
+                var defExt = gene.def.GetModExtension<GeneDefExtension_SlaveRebellion>();
 
-                foreach (var gene in pawn.GenesWithModExtension<GeneDefExtension_SlaveRebellion>()
-                             .Where(gene => gene.Active))
-                {
-                    var defExt = gene.def.GetModExtension<GeneDefExtension_SlaveRebellion>();
-
-                    if (defExt.slaveRebellionMtbFactor != 1)
-                        stringBuilder.AppendLine(
-                            $"{gene.def.LabelCap}: x{defExt.slaveRebellionMtbFactor.ToStringPercent()}");
-                }
-
-                if (initiateSlaveRebellionMtbDays < 0 && TryGetPawnRebellionThresholdDays(pawn, out float neverRebelThresholdDays))
-                {
-                    var gene = pawn.GenesWithModExtension<GeneDefExtension_SlaveRebellion>().First(gene =>
-                        gene.Active &&
-                        gene.def.GetModExtension<GeneDefExtension_SlaveRebellion>().neverRebelThresholdDays ==
-                        neverRebelThresholdDays);
-                    stringBuilder.AppendLine($"{gene.def.LabelCap}: " +
-                                             "XylDocileThresholdReached".Translate(neverRebelThresholdDays));
-                }
-
-                string period = initiateSlaveRebellionMtbDays < 0
-                    ? "Never".TranslateSimple()
-                    : ((int)(initiateSlaveRebellionMtbDays * 60000f)).ToStringTicksToPeriod();
-                stringBuilder.Append($"{"SuppressionFinalInterval".Translate()}: {period}");
+                if (defExt.slaveRebellionMtbFactor != 1)
+                    stringBuilder.AppendLine(
+                        $"{gene.def.LabelCap}: x{defExt.slaveRebellionMtbFactor.ToStringPercent()}");
             }
+
+            if (initiateSlaveRebellionMtbDays < 0 && TryGetPawnRebellionThresholdDays(pawn, out float neverRebelThresholdDays))
+            {
+                var gene = pawn.GenesWithModExtension<GeneDefExtension_SlaveRebellion>().First(gene =>
+                    gene.Active &&
+                    gene.def.GetModExtension<GeneDefExtension_SlaveRebellion>().neverRebelThresholdDays ==
+                    neverRebelThresholdDays);
+                stringBuilder.AppendLine($"{gene.def.LabelCap}: " +
+                                         "XylDocileThresholdReached".Translate(neverRebelThresholdDays));
+            }
+
+            string period = initiateSlaveRebellionMtbDays < 0
+                ? "Never".TranslateSimple()
+                : ((int)(initiateSlaveRebellionMtbDays * 60000f)).ToStringTicksToPeriod();
+            stringBuilder.Append($"{"SuppressionFinalInterval".Translate()}: {period}");
         }
     }
 }

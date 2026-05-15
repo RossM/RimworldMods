@@ -13,31 +13,25 @@ namespace XylRacesCore.Patches
         [Feature(nameof(Flight)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
         public static bool Notify_JobStarted_Prefix(Pawn_FlightTracker __instance, Job job)
         {
-            using (new ProfileBlock())
+            var pawn = __instance?.pawn;
+            if (pawn is { IsPlayerControlled: true } && pawn.HasActiveGeneOfType<Flight>())
             {
-                var pawn = __instance?.pawn;
-                if (pawn is { IsPlayerControlled: true } && pawn.HasActiveGeneOfType<Flight>())
-                {
-                    return false;
-                }
-
-                return true;
+                return false;
             }
+
+            return true;
         }
 
         // Note: This patch is performance-sensitive
         [Feature(nameof(Flight)), HarmonyPrefix, UsedImplicitly, HarmonyPatch(nameof(Pawn_FlightTracker.FlightTick))]
         public static void FlightTick_Prefix(Pawn_FlightTracker __instance)
         {
-            using (new ProfileBlock())
+            var pawn = __instance.pawn;
+            if (pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
             {
-                var pawn = __instance.pawn;
-                if (pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
+                if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Flight>() is { } gene)
                 {
-                    if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Flight>() is { } gene)
-                    {
-                        gene.Notify_Downed();
-                    }
+                    gene.Notify_Downed();
                 }
             }
         }
