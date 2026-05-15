@@ -48,6 +48,7 @@
     <defName>XylSelkie</defName>
     <label>selkie</label>
     <race>XylSelkie</race>
+    <combatPower>65</combatPower>
     <lifeStages Inherit="false">
       <li>
         <label>selkie pup</label>
