@@ -101,24 +101,13 @@ namespace XylRacesCore
             bool CanUseCell(IntVec3 c)
             {
                 if (!c.InBounds(Pawn.Map))
-                {
                     return false;
-                }
-
                 if (c == Pawn.Position)
-                {
                     return false;
-                }
-
                 if (!Props.canHitFilledCells && c.Filled(Pawn.Map))
-                {
                     return false;
-                }
-
                 if (!c.InHorDistOf(targetPosition, Props.radius))
-                {
                     return false;
-                }
 
                 return true;
             }
