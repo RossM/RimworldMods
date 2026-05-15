@@ -15,7 +15,8 @@ namespace XylRacesCore.Genes
             if (addDesignators.NullOrEmpty())
                 yield break;
 
-            yield return $"{"XylNewBuildings".Translate()}: {addDesignators.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
+            yield return
+                $"{"XylNewBuildings".Translate()}: {addDesignators.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
         }
     }
 }

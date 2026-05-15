@@ -126,7 +126,8 @@ namespace XylRacesCore.Patches
                     gene.Active &&
                     gene.def.GetModExtension<GeneDefExtension_SlaveRebellion>().neverRebelThresholdDays ==
                     neverRebelThresholdDays);
-                stringBuilder.AppendLine($"{gene.def.LabelCap}: {"XylDocileThresholdReached".Translate(neverRebelThresholdDays)}");
+                stringBuilder.AppendLine($"{gene.def.LabelCap}: " +
+                                         "XylDocileThresholdReached".Translate(neverRebelThresholdDays));
             }
 
             string period = initiateSlaveRebellionMtbDays < 0

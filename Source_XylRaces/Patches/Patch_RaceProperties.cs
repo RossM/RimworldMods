@@ -82,7 +82,8 @@ namespace XylRacesCore.Patches
             var hediffComp_Lactating = firstLactationHediff?.TryGetComp<HediffComp_Lactating>();
             if (hediffComp_Lactating != null)
             {
-                stringBuilder.AppendLine($"{firstLactationHediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
+                stringBuilder.AppendLine(
+                    $"{firstLactationHediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
                 stringBuilder.AppendLine();
             }
         }

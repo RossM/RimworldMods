@@ -110,7 +110,8 @@ namespace XylRacesCore
         {
             float modifier = (pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
                               pawn.health.capacities.GetLevel(DefExt.originalCapacity));
-            return $"{LabelCap}: {DefExt.originalCapacity.LabelCap} -> {DefExt.substituteCapacity.LabelCap} ({modifier.ToStringPercentSigned()})";
+            return
+                $"{LabelCap}: {DefExt.originalCapacity.LabelCap} -> {DefExt.substituteCapacity.LabelCap} ({modifier.ToStringPercentSigned()})";
         }
 
         public static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)

@@ -56,7 +56,8 @@ namespace XylRacesCore.Genes
                         items.Add(item.Label);
                 }
 
-                flyingDisabledBy = $"{"ApparelRequirementDisabledLabel".Translate()}: {items.ToCommaList(useAnd: true).CapitalizeFirst()}\n\n";
+                flyingDisabledBy
+                    = $"{"ApparelRequirementDisabledLabel".Translate()}: {items.ToCommaList(useAnd: true).CapitalizeFirst()}\n\n";
             }
 
             yield return new Command_ActionWithCooldown()
