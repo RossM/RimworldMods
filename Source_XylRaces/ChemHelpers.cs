@@ -10,7 +10,7 @@ public static class ChemHelpers
 {
     public static bool ChemicalIsAllowedByGenes(this Pawn pawn, ChemicalDef chemicalDef)
     {
-        var defExtension = chemicalDef.GetModExtension<ChemicalDefExtension>();
+        var defExtension = chemicalDef?.GetModExtension<ChemicalDefExtension>();
         if (defExtension == null)
             return true;
 
