@@ -10,18 +10,18 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class ScenPart_Psycast : ScenPart
     {
-        private IEnumerable<AbilityDef> PossiblePsycasts => possiblePsycastsInternal ??=
+        private static IEnumerable<AbilityDef> PossiblePsycasts => possiblePsycastsInternal ??=
             DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
                     abilityDef.verbProperties?.verbClass == typeof(Verb_CastPsycast))
                 .OrderBy(abilityDef => abilityDef.level)
                 .ThenBy(AbilityDef => AbilityDef.label).ToList();
 
+        private static List<AbilityDef> possiblePsycastsInternal;
+
         public int count = 1;
         public AbilityDef psycast;
 
         private string countBuf;
-
-        private List<AbilityDef> possiblePsycastsInternal;
 
         public override void ExposeData()
         {
