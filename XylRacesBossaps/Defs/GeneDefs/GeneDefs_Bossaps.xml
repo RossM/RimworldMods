@@ -20,7 +20,7 @@
       <XylCookedMeatNutritionFactor>0.8</XylCookedMeatNutritionFactor>
     </statFactors>
     <statOffsets>
-      <XylRawNonMeatFoodPoisonChanceOffset>-0.02</XylRawNonMeatFoodPoisonChanceOffset>
+      <XylRawNonMeatFoodPoisonChanceOffset>-0.05</XylRawNonMeatFoodPoisonChanceOffset>
     </statOffsets>
     <modExtensions>
       <li Class="XylRacesCore.Genes.GeneDefExtension_IngestionThoughtOverride">
