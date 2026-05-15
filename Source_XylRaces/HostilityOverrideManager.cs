@@ -9,6 +9,8 @@ namespace XylRacesCore
     public class HostilityOverrideManager(Map map) : MapComponent(map)
     {
         public const int violationDisableTicks = 2500;
+        public const int updateFrequency = 60;
+
         [Unsaved] private static Map lastMap;
         [Unsaved] private static HostilityOverrideManager lastManager;
 
@@ -54,6 +56,9 @@ namespace XylRacesCore
 
         public override void MapComponentTick()
         {
+            if (Find.TickManager.TicksGame % updateFrequency != 0)
+                return;
+
             activeOverrides.Clear();
             foreach (var pawn in map.mapPawns.AllPawns)
             {
