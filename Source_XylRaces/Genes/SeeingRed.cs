@@ -24,7 +24,7 @@ namespace XylRacesCore.Genes
 
         public GeneDefExtension_SeeingRed DefExt => def.GetModExtension<GeneDefExtension_SeeingRed>();
 
-        public void Notify_DamageTaken(DamageInfo damageInfo, DamageWorker.DamageResult damageResult)
+        public void Notify_DamageTaken(DamageInfo damageInfo)
         {
             Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
 

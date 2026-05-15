@@ -9,7 +9,7 @@ public interface IStartingItemSource
 
 public interface INotifyDamageTaken
 {
-    void Notify_DamageTaken(DamageInfo damageInfo, DamageWorker.DamageResult damageResult);
+    void Notify_DamageTaken(DamageInfo damageInfo);
 }
 
 public interface INotifyApparelChanged

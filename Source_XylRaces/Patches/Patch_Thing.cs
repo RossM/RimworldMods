@@ -40,7 +40,7 @@ namespace XylRacesCore.Patches
             {
                 foreach (var listener in target.EverythingOfType<INotifyDamageTaken>())
                 {
-                    listener.Notify_DamageTaken(dinfo, __result);
+                    listener.Notify_DamageTaken(dinfo);
                 }
             }
         }
