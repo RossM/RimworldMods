@@ -19,7 +19,7 @@ namespace XylRacesCore.Patches
                 effect *= pawn.GetStatValue(DefOf.XylDrugEffectMultiplier);
         }
 
-        [Feature(nameof(DefOf.XylDrugEffectMultiplier)), HarmonyPostfix, UsedImplicitly,
+        [Feature(nameof(DefOf.XylDrugEffectMultiplier)), HarmonyPrefix, UsedImplicitly,
          HarmonyPatch(nameof(AddictionUtility.CanBingeOnNow))]
         public static bool CanBingeOnNow_Prefix(Pawn pawn, ChemicalDef chemical, DrugCategory drugCategory,
             ref bool __result)
