@@ -61,7 +61,7 @@ namespace XylRacesCore
                     var tile = Find.WorldGrid[caravan.Tile];
                     if (tile.IsCoastalOrRiverTile())
                         lastInstantWetness = 1.0f;
-                    else if (tile.PrimaryBiome == BiomeDefOf.TropicalSwamp || tile.PrimaryBiome == DefOf.TemperateSwamp)
+                    else if (tile.IsWetlandBiome())
                         lastInstantWetness = 1.0f;
                     else
                         lastInstantWetness = RainfallToWetnessCurve.Evaluate(tile.rainfall);
