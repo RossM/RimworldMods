@@ -20,14 +20,13 @@ namespace XylRacesCore.Genes
 
     public class Flight : Gene, INotifyApparelChanged
     {
+        public GeneDefExtension_Flight DefExt => def.GetModExtension<GeneDefExtension_Flight>();
         public bool autoFly = true;
         public bool autoFlyDrafted = true;
 
         [Unsaved] private bool wasFlying;
 
         public bool flightAllowedByApparel = true;
-
-        public GeneDefExtension_Flight DefExt => def.GetModExtension<GeneDefExtension_Flight>();
 
         public override void ExposeData()
         {
@@ -155,11 +154,6 @@ namespace XylRacesCore.Genes
                 flightAllowedByApparel &= ApparelAllowsFlight(item.def);
         }
 
-        public void Notify_ApparelChanged(Pawn target)
-        {
-            CheckApparel();
-        }
-
         public override void PostAdd()
         {
             base.PostAdd();
@@ -167,7 +161,8 @@ namespace XylRacesCore.Genes
             CheckApparel();
         }
 
-        [DebugOutput("Economy"), UsedImplicitly]
+        [DebugOutput("Economy")]
+        [UsedImplicitly]
         public static void ApparelAllowsFlight()
         {
             TableDataGetter<ThingDef>[] columns =
@@ -178,6 +173,11 @@ namespace XylRacesCore.Genes
             ];
             DebugTables.MakeTablesDialog(
                 DefDatabase<ThingDef>.AllDefs.Where(thingDef => thingDef.IsApparel).OrderBy(thingDef => thingDef.BaseMarketValue), columns);
+        }
+
+        public void Notify_ApparelChanged(Pawn target)
+        {
+            CheckApparel();
         }
     }
 }

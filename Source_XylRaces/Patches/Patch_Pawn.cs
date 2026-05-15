@@ -1,6 +1,6 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using JetBrains.Annotations;
-using System;
 using Verse;
 using XylRacesCore.Genes;
 
@@ -9,11 +9,14 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Pawn))]
     public static class Patch_Pawn
     {
-        public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Pawn>);
         public static bool Enabled => enabled.Value;
+        public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Pawn>);
 
         // Note: This patch is performance-sensitive
-        [Feature(nameof(GeneDefExtension_Pawn)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
+        [Feature(nameof(GeneDefExtension_Pawn))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
         public static void BodySize_Postfix(Pawn __instance, ref float __result)
         {
             if (!Enabled)
@@ -23,7 +26,10 @@ namespace XylRacesCore.Patches
                 __result *= extension.bodySizeFactor;
         }
 
-        [Feature(nameof(GeneDefExtension_Pawn)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
+        [Feature(nameof(GeneDefExtension_Pawn))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
         public static void HealthScale_Postfix(Pawn __instance, ref float __result)
         {
             if (!Enabled)
@@ -33,8 +39,10 @@ namespace XylRacesCore.Patches
                 __result *= extension.healthScaleFactor;
         }
 
-        [Feature(nameof(Genes.Psycast)), HarmonyPrefix, UsedImplicitly,
-         HarmonyPatch(nameof(Pawn.HasPsylink), MethodType.Getter)]
+        [Feature(nameof(Psycast))]
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(Pawn.HasPsylink), MethodType.Getter)]
         public static bool HasPsylink_Prefix(Pawn __instance, ref bool __result)
         {
             __result = __instance.psychicEntropy?.Psylink != null || __instance.HasActivePsycastGene();

@@ -1,6 +1,6 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using RimWorld;
 using Verse;
 using XylRacesCore.Genes;
 
@@ -8,10 +8,9 @@ namespace XylRacesCore
 {
     public class HostilityOverrideManager(Map map) : MapComponent(map)
     {
+        public const int violationDisableTicks = 2500;
         [Unsaved] private static Map lastMap;
         [Unsaved] private static HostilityOverrideManager lastManager;
-
-        public const int violationDisableTicks = 2500;
 
         public HashSet<(Faction, Faction)> activeOverrides = new();
         public Dictionary<Faction, int> lastHostileActionTick = new();

@@ -1,7 +1,7 @@
-﻿using HarmonyLib;
+﻿using System.Linq;
+using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
-using System.Linq;
 using Verse;
 using Verse.AI;
 
@@ -10,7 +10,10 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(WorkGiver_Warden_Feed))]
     public static class Patch_WorkGiver_Warden_Feed
     {
-        [Feature(nameof(Hediff_DietDependency)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(WorkGiver_Warden_Feed.JobOnThing))]
+        [Feature(nameof(Hediff_DietDependency))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(WorkGiver_Warden_Feed.JobOnThing))]
         public static void JobOnThing_Postfix(WorkGiver_Warden_Feed __instance, Pawn pawn, Thing t, bool forced, ref Job __result)
         {
             if (__result != null)

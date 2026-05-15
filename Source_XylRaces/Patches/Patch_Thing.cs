@@ -1,11 +1,11 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -15,7 +15,20 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(Thing))]
     public static class Patch_Thing
     {
-        [Feature(nameof(DietDependency)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("IngestedCalculateAmounts")]
+        private static readonly InstructionMatcher FixupIngested = new()
+        {
+            Rules =
+            {
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Method(typeof(StatExtension), nameof(StatExtension.GetStatValue)),
+                    AccessTools.Method(typeof(Patch_Thing), nameof(GetStatValue_Wrapper)))
+            }
+        };
+
+        [Feature(nameof(DietDependency))]
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        [HarmonyPatch("IngestedCalculateAmounts")]
         public static void IngestedCalculateAmounts_Prefix(Thing __instance, Pawn ingester, ref float nutritionWanted)
         {
             foreach (var dietDependency in ingester.ActiveGenesOfType<DietDependency>())
@@ -28,7 +41,10 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [Feature(nameof(GeneDefExtension_HostilityOverride), nameof(SeeingRed)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("TakeDamage")]
+        [Feature(nameof(GeneDefExtension_HostilityOverride), nameof(SeeingRed))]
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        [HarmonyPatch("TakeDamage")]
         public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
         {
             if (dinfo.Instigator is Pawn instigator)
@@ -45,17 +61,10 @@ namespace XylRacesCore.Patches
             }
         }
 
-        private static readonly InstructionMatcher FixupIngested = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Method(typeof(StatExtension), nameof(StatExtension.GetStatValue)),
-                    AccessTools.Method(typeof(Patch_Thing), nameof(GetStatValue_Wrapper)))
-            }
-        };
-
-        [Feature(nameof(FoodHelpers.GetFoodPoisonChanceOffset)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("Ingested")]
+        [Feature(nameof(FoodHelpers.GetFoodPoisonChanceOffset))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch("Ingested")]
         public static IEnumerable<CodeInstruction> Ingested_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                        ILGenerator generator,
                                                                        MethodBase method)

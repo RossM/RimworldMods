@@ -1,7 +1,7 @@
-﻿using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 using Verse.AI;
 
@@ -10,11 +10,10 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class MentalState_HuntingVermin : MentalState
     {
-        public Pawn target;
+        const int checkInterval = 120;
 
         private static readonly List<Pawn> tmpTargets = [];
-
-        const int checkInterval = 120;
+        public Pawn target;
 
         public override void ExposeData()
         {

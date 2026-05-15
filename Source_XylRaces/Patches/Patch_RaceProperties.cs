@@ -1,12 +1,12 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 
@@ -15,8 +15,8 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(RaceProperties))]
     public static class Patch_RaceProperties
     {
-        public static Lazy<bool> enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
         public static bool Enabled => enabled.Value;
+        public static Lazy<bool> enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
 
         private static readonly InstructionMatcher Fixup_NutritionEatenPerDayExplanation = new()
         {
@@ -47,8 +47,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(Config.Feature.FixLactationBugs)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
+        [Feature(nameof(Config.Feature.FixLactationBugs))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
         public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(
             IEnumerable<CodeInstruction> instructions,
             ILGenerator generator,
@@ -86,8 +88,10 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [Feature(nameof(Config.Feature.FixLactationBugs)), HarmonyPrefix, UsedImplicitly,
-         HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]
+        [Feature(nameof(Config.Feature.FixLactationBugs))]
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]
         static bool GetTotalNutritionNeededPerDay(Pawn p, ref string __result)
         {
             // There is a bug in the base game that causes the nutrition from lactation to be counted twice, once as part of

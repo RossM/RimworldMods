@@ -6,10 +6,10 @@ namespace XylRacesCore.Genes
 {
     public class GeneDefExtension : DefModExtension
     {
-        [Unsaved] private List<string> customEffectDescriptions;
-
         public IEnumerable<string> CustomEffectDescriptions =>
             customEffectDescriptions ??= GetCustomEffectDescriptions().ToList();
+
+        [Unsaved] private List<string> customEffectDescriptions;
 
         protected virtual IEnumerable<string> GetCustomEffectDescriptions()
         {

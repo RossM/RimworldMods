@@ -21,6 +21,8 @@ namespace XylRacesCore.Genes
     {
         public GeneDefExtension_DietDependency DefExt => def.GetModExtension<GeneDefExtension_DietDependency>();
 
+        public Hediff LinkedHediff => DefExt == null ? null : pawn.HediffsWithDef(DefExt.hediffDef).FirstOrDefault();
+
         public override bool Active
         {
             get
@@ -33,8 +35,6 @@ namespace XylRacesCore.Genes
                 return false;
             }
         }
-
-        public Hediff LinkedHediff => DefExt == null ? null : pawn.HediffsWithDef(DefExt.hediffDef).FirstOrDefault();
 
         public override void PostAdd()
         {
@@ -167,6 +167,22 @@ namespace XylRacesCore.Genes
             return false;
         }
 
+        public float NutritionWantedToSatisfy()
+        {
+            float severityReductionPerNutrition = DefExt.severityReductionPerNutrition;
+            float nutritionForNeed = LinkedHediff.Severity / severityReductionPerNutrition;
+            return nutritionForNeed;
+        }
+
+        public int ItemsWantedToSatisfy(Thing foodSource, ThingDef foodDef)
+        {
+            var nutritionNeeded = NutritionWantedToSatisfy();
+            var nutritionPerItem = FoodUtility.GetNutrition(pawn, foodSource, foodDef);
+            if (nutritionPerItem == 0)
+                return 0;
+            return Mathf.CeilToInt(nutritionNeeded / nutritionPerItem);
+        }
+
         public bool CausesHediff(HediffDef hediffDef)
         {
             return DefExt?.hediffDef == hediffDef;
@@ -194,22 +210,6 @@ namespace XylRacesCore.Genes
                     return false;
                 return true;
             }
-        }
-
-        public float NutritionWantedToSatisfy()
-        {
-            float severityReductionPerNutrition = DefExt.severityReductionPerNutrition;
-            float nutritionForNeed = LinkedHediff.Severity / severityReductionPerNutrition;
-            return nutritionForNeed;
-        }
-
-        public int ItemsWantedToSatisfy(Thing foodSource, ThingDef foodDef)
-        {
-            var nutritionNeeded = NutritionWantedToSatisfy();
-            var nutritionPerItem = FoodUtility.GetNutrition(pawn, foodSource, foodDef);
-            if (nutritionPerItem == 0)
-                return 0;
-            return Mathf.CeilToInt(nutritionNeeded / nutritionPerItem);
         }
     }
 }

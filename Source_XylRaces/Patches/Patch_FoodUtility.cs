@@ -1,7 +1,7 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
-using System.Collections.Generic;
 using Verse;
 using XylRacesCore.Genes;
 using static RimWorld.FoodUtility;
@@ -11,13 +11,19 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(FoodUtility))]
     public static class Patch_FoodUtility_NutritionForEater
     {
-        [Feature(nameof(FoodHelpers.GetExtraNutritionFactor)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(NutritionForEater))]
+        [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(NutritionForEater))]
         public static void NutritionForEater_Postfix(Pawn eater, Thing food, ref float __result)
         {
             __result *= FoodHelpers.GetExtraNutritionFactor(eater, food, food.def);
         }
 
-        [Feature(nameof(FoodHelpers.GetExtraNutritionFactor)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(FoodOptimality))]
+        [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(FoodOptimality))]
         public static void FoodOptimality_Postfix(Pawn eater,
                                                   Thing foodSource,
                                                   ThingDef foodDef,
@@ -39,7 +45,10 @@ namespace XylRacesCore.Patches
             }
         }
 
-        [Feature(nameof(FoodHelpers.GetExtraNutritionFactor)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("TryAddIngestThought")]
+        [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        [HarmonyPatch("TryAddIngestThought")]
         public static bool TryAddIngestThought_Prefix(Pawn ingester,
                                                       ThoughtDef def,
                                                       Precept fromPrecept,

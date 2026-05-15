@@ -1,8 +1,8 @@
-﻿using HarmonyLib;
+﻿using System;
+using System.Collections.Generic;
+using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
-using System;
-using System.Collections.Generic;
 using Verse;
 using XylRacesCore.Genes;
 
@@ -11,10 +11,13 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(ThingDef))]
     public static class Patch_ThingDef
     {
-        public static Lazy<bool> enabled = new(Config.GeneOfTypeExists<Flight>);
         public static bool Enabled => enabled.Value;
+        public static Lazy<bool> enabled = new(Config.GeneOfTypeExists<Flight>);
 
-        [Feature(nameof(Flight)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(ThingDef.SpecialDisplayStats))]
+        [Feature(nameof(Flight))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(ThingDef.SpecialDisplayStats))]
         public static void SpecialDisplayStats_Postfix(ThingDef __instance, ref IEnumerable<StatDrawEntry> __result)
         {
             if (!Enabled)

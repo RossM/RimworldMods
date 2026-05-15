@@ -1,10 +1,10 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using UnityEngine;
 using Verse;
@@ -50,8 +50,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(XenotypeDefExtension)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(nameof(ConversionUtility.ConversionPowerFactor_MemesVsTraits))]
+        [Feature(nameof(XenotypeDefExtension))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(ConversionUtility.ConversionPowerFactor_MemesVsTraits))]
         public static IEnumerable<CodeInstruction> ConversionPowerFactor_MemesVsTraits_Transpiler(
             IEnumerable<CodeInstruction> instructions,
             ILGenerator generator,

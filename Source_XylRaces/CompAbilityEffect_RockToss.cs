@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -82,6 +81,15 @@ namespace XylRacesCore
             return base.Valid(target, showMessages);
         }
 
+        public override void DrawEffectPreview(LocalTargetInfo target)
+        {
+            if (Props.range > 0f)
+            {
+                GenDraw.DrawRadiusRing(target.Cell, Props.range, Color.white,
+                    c => c.DistanceTo(target.Cell) >= Props.minRange && GenSight.LineOfSight(target.Cell, c, parent.pawn.Map));
+            }
+        }
+
         public override bool CanHitTarget(LocalTargetInfo target)
         {
             if (target.Cell.Impassable(parent.pawn.Map))
@@ -110,15 +118,6 @@ namespace XylRacesCore
                 {
                     GenDraw.DrawRadiusRing(target.Cell, Props.projectileDef.projectile.explosionRadius, Color.white);
                 }
-            }
-        }
-
-        public override void DrawEffectPreview(LocalTargetInfo target)
-        {
-            if (Props.range > 0f)
-            {
-                GenDraw.DrawRadiusRing(target.Cell, Props.range, Color.white,
-                    c => c.DistanceTo(target.Cell) >= Props.minRange && GenSight.LineOfSight(target.Cell, c, parent.pawn.Map));
             }
         }
     }

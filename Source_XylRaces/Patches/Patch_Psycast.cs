@@ -23,7 +23,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(Psycast)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("GizmoDisabled")]
+        [Feature(nameof(Psycast))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch("GizmoDisabled")]
         public static IEnumerable<CodeInstruction> GizmoDisabled_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                             ILGenerator generator,
                                                                             MethodBase method)
@@ -33,7 +36,10 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Psycast)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("CanCast", MethodType.Getter)]
+        [Feature(nameof(Psycast))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch("CanCast", MethodType.Getter)]
         public static IEnumerable<CodeInstruction> CanCast_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                       ILGenerator generator,
                                                                       MethodBase method)

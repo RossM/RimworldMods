@@ -1,9 +1,9 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using HarmonyLib;
+using JetBrains.Annotations;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -24,7 +24,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(Genes.GeneDefExtension)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("GetDescriptionFull")]
+        [Feature(nameof(GeneDefExtension))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch("GetDescriptionFull")]
         public static IEnumerable<CodeInstruction> GetDescriptionFull_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                                  ILGenerator generator,
                                                                                  MethodBase method)

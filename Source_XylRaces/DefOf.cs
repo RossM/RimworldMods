@@ -4,9 +4,23 @@ using Verse;
 
 namespace XylRacesCore
 {
-    [RimWorld.DefOf, UsedImplicitly]
+    [RimWorld.DefOf]
+    [UsedImplicitly]
     public static class DefOf
     {
+        public static BiomeDef TemperateSwamp;
+
+        [MayRequire("Xylthixlm.Races.Nixie")] public static FactionDef XylTribeGentleNixie;
+
+        [MayRequire("Xylthixlm.Races.Nixie")] public static PawnKindDef XylSelkie;
+
+        [MayRequire("Xylthixlm.Races.Nixie")] public static JobDef XylTakeShower;
+
+        static DefOf()
+        {
+            DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));
+        }
+
         #region StatDefs
 
         public static StatDef XylCookedAnimalProductNutritionFactor;
@@ -37,18 +51,5 @@ namespace XylRacesCore
         [MayRequire("Xylthixlm.Races.Chyrr")] public static GeneDef XylEcholocation;
 
         #endregion
-
-        public static BiomeDef TemperateSwamp;
-
-        [MayRequire("Xylthixlm.Races.Nixie")] public static FactionDef XylTribeGentleNixie;
-
-        [MayRequire("Xylthixlm.Races.Nixie")] public static PawnKindDef XylSelkie;
-
-        [MayRequire("Xylthixlm.Races.Nixie")] public static JobDef XylTakeShower;
-
-        static DefOf()
-        {
-            DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));
-        }
     }
 }

@@ -1,6 +1,6 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using RimWorld;
 using Verse;
 
 namespace XylRacesCore
@@ -23,6 +23,8 @@ namespace XylRacesCore
     {
         public new CompProperties_AbilitySonicWave Props => (CompProperties_AbilitySonicWave)props;
         private Pawn Pawn => parent.pawn;
+
+        [Unsaved] private readonly List<IntVec3> tmpCells = [];
 
         public override void Apply(LocalTargetInfo target, LocalTargetInfo dest)
         {
@@ -74,8 +76,6 @@ namespace XylRacesCore
 
             return true;
         }
-
-        [Unsaved] private readonly List<IntVec3> tmpCells = [];
 
         private List<IntVec3> AffectedCells(LocalTargetInfo target)
         {

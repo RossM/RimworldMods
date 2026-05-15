@@ -6,20 +6,19 @@ namespace XylRacesCore
 {
     public class Config : Def
     {
-        public List<JobDef> wetnessGivingJobs;
-
         public enum Feature
         {
             FixLactationBugs,
         }
 
-        public List<Feature> enabledFeatures;
-        public List<string> ignoreGenesFromMods;
+        public static Config Instance => instance ??= MakeConfig();
 
 
         private static Config instance;
+        public List<JobDef> wetnessGivingJobs;
 
-        public static Config Instance => instance ??= MakeConfig();
+        public List<Feature> enabledFeatures;
+        public List<string> ignoreGenesFromMods;
 
         private static Config MakeConfig()
         {

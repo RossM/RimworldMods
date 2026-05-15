@@ -1,8 +1,8 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using System.Linq;
+using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
 using RimWorld.Planet;
 using UnityEngine;
 using Verse;
@@ -12,7 +12,10 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(PawnGroupKindWorker_Trader))]
     public static class Patch_PawnGroupKindWorker_Trader
     {
-        [Feature(nameof(DefOf.XylTribeGentleNixie)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("GenerateCarriers")]
+        [Feature(nameof(DefOf.XylTribeGentleNixie))]
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        [HarmonyPatch("GenerateCarriers")]
         public static bool GenerateCarriers(PawnGroupMakerParms parms,
                                             PawnGroupMaker groupMaker,
                                             Pawn trader,

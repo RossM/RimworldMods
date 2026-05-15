@@ -14,9 +14,8 @@ namespace XylRacesCore
 
     public class Hediff_ForceBehavior : HediffWithComps
     {
-        private MoteBubble mote;
-
         public HediffDefExtension_ForceBehavior DefExt => def.GetModExtension<HediffDefExtension_ForceBehavior>();
+        private MoteBubble mote;
 
         public override void ExposeData()
         {

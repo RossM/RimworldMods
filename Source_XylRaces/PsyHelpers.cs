@@ -2,6 +2,7 @@
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
+using Psycast = XylRacesCore.Genes.Psycast;
 
 namespace XylRacesCore
 {
@@ -23,7 +24,7 @@ namespace XylRacesCore
 
         public static bool HasActivePsycastGene(this Pawn pawn)
         {
-            return pawn.HasActiveGeneOfType<Genes.Psycast>();
+            return pawn.HasActiveGeneOfType<Psycast>();
         }
 
         public static bool NeedsPsyfocus(this Pawn pawn)

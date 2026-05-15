@@ -1,11 +1,11 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -36,7 +36,9 @@ namespace XylRacesCore.Patches
             yield return AccessTools.Method(iteratorType, "MoveNext");
         }
 
-        [Feature(nameof(BonusGene)), HarmonyTranspiler, UsedImplicitly]
+        [Feature(nameof(BonusGene))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions,
                                                               ILGenerator generator,
                                                               MethodBase method)

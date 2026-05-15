@@ -1,8 +1,8 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using System.Linq;
+using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
 using Verse;
 using XylRacesCore.Genes;
 using static Verse.DesignationCategoryDef;
@@ -12,15 +12,18 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(DesignationCategoryDef))]
     public static class Patch_DesignationCategoryDef
     {
-        [HarmonyPostfix, UsedImplicitly,
-         HarmonyPatch(nameof(DesignationCategoryDef.ResolvedAllowedDesignators), MethodType.Getter)]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(DesignationCategoryDef.ResolvedAllowedDesignators), MethodType.Getter)]
         public static void ResolvedAllowedDesignators_Postfix(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
         {
             AddDesignators(__instance, ref __result);
         }
 
-        [Feature(nameof(GeneDefExtension_Designator)), HarmonyPostfix, UsedImplicitly,
-         HarmonyPatch(nameof(DesignationCategoryDef.AllResolvedAndIdeoDesignators), MethodType.Getter)]
+        [Feature(nameof(GeneDefExtension_Designator))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(DesignationCategoryDef.AllResolvedAndIdeoDesignators), MethodType.Getter)]
         public static void AllResolvedAndIdeoDesignators_Postfix(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
         {
             AddDesignators(__instance, ref __result);

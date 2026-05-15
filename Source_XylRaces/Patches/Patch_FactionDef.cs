@@ -22,8 +22,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(nameof(FactionDef.Description), MethodType.Getter)]
+        [Feature(nameof(XenotypeSetWithDefault))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(FactionDef.Description), MethodType.Getter)]
         public static IEnumerable<CodeInstruction> Description_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                           ILGenerator generator,
                                                                           MethodBase method)

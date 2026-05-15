@@ -8,8 +8,10 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(AddictionUtility))]
     public static class Patch_AddictionUtility
     {
-        [Feature(nameof(DefOf.XylDrugEffectMultiplier)), HarmonyPostfix, UsedImplicitly,
-         HarmonyPatch(nameof(AddictionUtility.ModifyChemicalEffectForToleranceAndBodySize))]
+        [Feature(nameof(DefOf.XylDrugEffectMultiplier))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(AddictionUtility.ModifyChemicalEffectForToleranceAndBodySize))]
         public static void ModifyChemicalEffectForToleranceAndBodySize_Postfix(Pawn pawn,
                                                                                ChemicalDef chemicalDef,
                                                                                ref float effect,
@@ -22,8 +24,10 @@ namespace XylRacesCore.Patches
                 effect *= pawn.GetStatValue(DefOf.XylDrugEffectMultiplier);
         }
 
-        [Feature(nameof(DefOf.XylDrugEffectMultiplier)), HarmonyPrefix, UsedImplicitly,
-         HarmonyPatch(nameof(AddictionUtility.CanBingeOnNow))]
+        [Feature(nameof(DefOf.XylDrugEffectMultiplier))]
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(AddictionUtility.CanBingeOnNow))]
         public static bool CanBingeOnNow_Prefix(Pawn pawn,
                                                 ChemicalDef chemical,
                                                 DrugCategory drugCategory,

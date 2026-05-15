@@ -18,19 +18,20 @@ namespace XylRacesCore.Genes
 
     public class Hyperlactation : Gene
     {
+        public GeneDefExtension_Hyperlactation DefExt => def.GetModExtension<GeneDefExtension_Hyperlactation>();
+
+        public HediffComp_Lactating Lactating =>
+            lactatingInternal ??= pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
+
+        public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / DefExt.chargePerItem);
+
+        const int checkInterval = 60;
         public bool allowMilking = true;
         public bool onlyMilkWhenFull = true;
 
         public int? fullSinceTick;
 
-        public GeneDefExtension_Hyperlactation DefExt => def.GetModExtension<GeneDefExtension_Hyperlactation>();
-
         private HediffComp_Lactating lactatingInternal;
-
-        public HediffComp_Lactating Lactating =>
-            lactatingInternal ??= pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
-
-        const int checkInterval = 60;
 
         public override bool Active
         {
@@ -125,8 +126,6 @@ namespace XylRacesCore.Genes
             if (Lactating?.parent != hediff)
                 lactatingInternal = null;
         }
-
-        public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / DefExt.chargePerItem);
 
         public bool ReadyToMilk()
         {

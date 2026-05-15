@@ -1,9 +1,9 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 
@@ -24,8 +24,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(DefOf.XylDrugSensitive)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
+        [Feature(nameof(DefOf.XylDrugSensitive))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
         public static IEnumerable<CodeInstruction> DoAssignDrugPolicyButtons_Transpiler(
             IEnumerable<CodeInstruction> instructions,
             ILGenerator generator,

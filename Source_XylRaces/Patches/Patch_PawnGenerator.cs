@@ -24,7 +24,25 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(GeneDefExtension_GenderRatio)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("TryGenerateNewPawnInternal")]
+        private static readonly InstructionMatcher Fixup_DefaultXenotype = new()
+        {
+            Rules =
+            {
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Field(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner)),
+                    AccessTools.Method(typeof(Patch_PawnGenerator), nameof(XenotypeDefOf_Baseliner_Wrapper))
+                ),
+                InstructionMatcher.MakeRedirectRule(
+                    "<XenotypesAvailableFor>g__AddOrAdjust|49_0",
+                    AccessTools.Method(typeof(Patch_PawnGenerator), nameof(AddOrAdjust_Wrapper))
+                ),
+            }
+        };
+
+        [Feature(nameof(GeneDefExtension_GenderRatio))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch("TryGenerateNewPawnInternal")]
         public static IEnumerable<CodeInstruction> TryGenerateNewPawnInternal_Transpiler(
             IEnumerable<CodeInstruction> instructions,
             ILGenerator generator,
@@ -64,7 +82,10 @@ namespace XylRacesCore.Patches
             return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
         }
 
-        [Feature(nameof(GeneDefExtension_CongenitalHediff)), HarmonyPostfix, UsedImplicitly, HarmonyPatch("GenerateInitialHediffs")]
+        [Feature(nameof(GeneDefExtension_CongenitalHediff))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch("GenerateInitialHediffs")]
         public static void GenerateInitialHediffs_Postfix(Pawn pawn, PawnGenerationRequest request)
         {
             foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_CongenitalHediff>())
@@ -77,23 +98,10 @@ namespace XylRacesCore.Patches
             }
         }
 
-        private static readonly InstructionMatcher Fixup_DefaultXenotype = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Field(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner)),
-                    AccessTools.Method(typeof(Patch_PawnGenerator), nameof(XenotypeDefOf_Baseliner_Wrapper))
-                ),
-                InstructionMatcher.MakeRedirectRule(
-                    "<XenotypesAvailableFor>g__AddOrAdjust|49_0",
-                    AccessTools.Method(typeof(Patch_PawnGenerator), nameof(AddOrAdjust_Wrapper))
-                ),
-            }
-        };
-
-        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
+        [Feature(nameof(XenotypeSetWithDefault))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
         public static IEnumerable<CodeInstruction> XenotypesAvailableFor_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                                     ILGenerator generator,
                                                                                     MethodBase method)

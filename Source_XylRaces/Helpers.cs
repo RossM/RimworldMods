@@ -38,7 +38,8 @@ namespace XylRacesCore
             DeepProfiler.End();
         }
 
-        [DebugAction("Toggle tick profiling"), UsedImplicitly]
+        [DebugAction("Toggle tick profiling")]
+        [UsedImplicitly]
         public static void ToggleTickProfiling()
         {
             InstrumentTickManager = !InstrumentTickManager;

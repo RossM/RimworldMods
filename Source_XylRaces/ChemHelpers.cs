@@ -33,7 +33,8 @@ public static class ChemHelpers
         return pawn.ChemicalIsAllowedByGenes(chemical);
     }
 
-    [DebugOutput("Economy"), UsedImplicitly]
+    [DebugOutput("Economy")]
+    [UsedImplicitly]
     public static void DrugGeneRequirements()
     {
         TableDataGetter<ThingDef>[] columns =

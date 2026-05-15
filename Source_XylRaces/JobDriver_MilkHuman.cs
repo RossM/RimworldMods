@@ -1,7 +1,7 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 using Verse.AI;
 using XylRacesCore.Genes;
@@ -11,9 +11,8 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
     {
-        private float gatherProgress;
-
         private const float WorkTotal = 400f;
+        private float gatherProgress;
 
         public override void ExposeData()
         {

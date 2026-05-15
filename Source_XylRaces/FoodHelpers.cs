@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
+using XylRacesCore.Genes;
 
 namespace XylRacesCore;
 
@@ -112,7 +113,7 @@ public static class FoodHelpers
             return false;
         }
 
-        foreach (var ext in eater.ActiveGeneDefExtensionsOfType<Genes.GeneDefExtension_IngestionThoughtOverride>())
+        foreach (var ext in eater.ActiveGeneDefExtensionsOfType<GeneDefExtension_IngestionThoughtOverride>())
         {
             foreach (var thoughtOverride in ext.thoughtOverrides.EmptyIfNull())
             {

@@ -22,9 +22,10 @@ namespace XylRacesCore.Genes
     [UsedImplicitly]
     public class BonusGene : Gene
     {
-        public List<Gene> addedGenes = [];
-
         public GeneDefExtension_BonusGene DefExt => def.GetModExtension<GeneDefExtension_BonusGene>();
+
+        private bool IsXenogene => pawn.genes.Xenogenes.Contains(this);
+        public List<Gene> addedGenes = [];
 
         public override void ExposeData()
         {
@@ -67,8 +68,6 @@ namespace XylRacesCore.Genes
 
             addedGenes.Add(pawn.genes.AddGene(geneDef, IsXenogene));
         }
-
-        private bool IsXenogene => pawn.genes.Xenogenes.Contains(this);
 
         private float GeneWeight(GeneDef geneDef)
         {

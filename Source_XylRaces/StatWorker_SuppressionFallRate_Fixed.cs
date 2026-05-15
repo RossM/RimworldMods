@@ -1,6 +1,6 @@
-﻿using RimWorld;
-using System.Text;
+﻿using System.Text;
 using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 
 namespace XylRacesCore

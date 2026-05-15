@@ -1,10 +1,10 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 
@@ -24,8 +24,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(DefOf.XylResistanceFallRate)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(nameof(InteractionWorker_RecruitAttempt.Interacted))]
+        [Feature(nameof(DefOf.XylResistanceFallRate))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(InteractionWorker_RecruitAttempt.Interacted))]
         public static IEnumerable<CodeInstruction> Interacted_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                          ILGenerator generator,
                                                                          MethodBase method)

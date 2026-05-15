@@ -1,11 +1,11 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -17,32 +17,6 @@ namespace XylRacesCore.Patches
     {
         public const float DocileFactor = 4f;
         public const float NeverRebelThresholdDays = 120f;
-
-        [Feature(nameof(GeneDefExtension_SlaveRebellion)), HarmonyPostfix, UsedImplicitly,
-         HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
-        public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)
-        {
-            if (__result < 0)
-                return;
-
-            foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_SlaveRebellion>())
-                __result *= defExt.slaveRebellionMtbFactor;
-
-            if (TryGetPawnRebellionThresholdDays(pawn, out float neverRebelThresholdDays))
-            {
-                if (__result >= neverRebelThresholdDays)
-                {
-                    __result = -1;
-                    return;
-                }
-            }
-        }
-
-        private static bool TryGetPawnRebellionThresholdDays(Pawn pawn, out float neverRebelThresholdDays)
-        {
-            return pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_SlaveRebellion>()
-                .Select(defExt => defExt.neverRebelThresholdDays).Where(x => x >= 0).TryMinBy(x => x, out neverRebelThresholdDays);
-        }
 
         private static readonly InstructionMatcher Fixup_GetSlaveRebellionMtbCalculationExplanation = new()
         {
@@ -87,8 +61,38 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(GeneDefExtension_SlaveRebellion)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
+        [Feature(nameof(GeneDefExtension_SlaveRebellion))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
+        public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)
+        {
+            if (__result < 0)
+                return;
+
+            foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_SlaveRebellion>())
+                __result *= defExt.slaveRebellionMtbFactor;
+
+            if (TryGetPawnRebellionThresholdDays(pawn, out float neverRebelThresholdDays))
+            {
+                if (__result >= neverRebelThresholdDays)
+                {
+                    __result = -1;
+                    return;
+                }
+            }
+        }
+
+        private static bool TryGetPawnRebellionThresholdDays(Pawn pawn, out float neverRebelThresholdDays)
+        {
+            return pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_SlaveRebellion>()
+                .Select(defExt => defExt.neverRebelThresholdDays).Where(x => x >= 0).TryMinBy(x => x, out neverRebelThresholdDays);
+        }
+
+        [Feature(nameof(GeneDefExtension_SlaveRebellion))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
         public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(
             IEnumerable<CodeInstruction> instructions,
             ILGenerator generator,

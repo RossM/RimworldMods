@@ -9,7 +9,8 @@ namespace XylRacesCore
 {
     public static class DebugOutputs
     {
-        [DebugOutput, UsedImplicitly]
+        [DebugOutput]
+        [UsedImplicitly]
         public static void GeneDisplayOrder()
         {
             TableDataGetter<GeneDef>[] columns =
@@ -25,7 +26,8 @@ namespace XylRacesCore
                     .ThenBy(geneDef => geneDef.displayOrderInCategory), columns);
         }
 
-        [DebugOutput, UsedImplicitly]
+        [DebugOutput]
+        [UsedImplicitly]
         public static void FactionXenotypes()
         {
             List<TableDataGetter<FactionDef>> columns =
@@ -57,7 +59,8 @@ namespace XylRacesCore
             }
         }
 
-        [DebugOutput, UsedImplicitly]
+        [DebugOutput]
+        [UsedImplicitly]
         public static void PawnKindXenotypes()
         {
             List<TableDataGetter<PawnKindDef>> columns =

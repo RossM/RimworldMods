@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using TranspilerUtil;
 using Verse;
+using Psycast = XylRacesCore.Genes.Psycast;
 
 namespace XylRacesCore.Patches
 {
@@ -24,7 +25,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(Genes.Psycast)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DisabledCheck")]
+        [Feature(nameof(Psycast))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch("DisabledCheck")]
         public static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                             ILGenerator generator,
                                                                             MethodBase method)

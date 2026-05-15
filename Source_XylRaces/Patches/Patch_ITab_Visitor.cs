@@ -1,9 +1,9 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 
 namespace XylRacesCore.Patches
@@ -36,7 +36,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(StatDefOf.SlaveSuppressionFallRate)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DoSlaveTab")]
+        [Feature(nameof(StatDefOf.SlaveSuppressionFallRate))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch("DoSlaveTab")]
         public static IEnumerable<CodeInstruction> DoSlaveTab_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                          ILGenerator generator,
                                                                          MethodBase method)

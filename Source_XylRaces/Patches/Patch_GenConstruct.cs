@@ -1,10 +1,10 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -25,8 +25,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(GeneDefExtension_Designator)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
+        [Feature(nameof(GeneDefExtension_Designator))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
         public static IEnumerable<CodeInstruction> CanConstruct_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                            ILGenerator generator,
                                                                            MethodBase method)

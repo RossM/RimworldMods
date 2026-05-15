@@ -1,8 +1,8 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using HarmonyLib;
+using JetBrains.Annotations;
 using TranspilerUtil;
 using Verse;
 
@@ -40,7 +40,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(IStartingItemSource)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("GeneratePossessions")]
+        [Feature(nameof(IStartingItemSource))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch("GeneratePossessions")]
         public static IEnumerable<CodeInstruction> GeneratePossessions_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                                   ILGenerator generator,
                                                                                   MethodBase method)

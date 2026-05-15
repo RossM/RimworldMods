@@ -1,11 +1,11 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 
@@ -162,8 +162,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(Hediff_SubstituteCapacity)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
+        [Feature(nameof(Hediff_SubstituteCapacity))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
         public static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(
             IEnumerable<CodeInstruction> instructions,
             ILGenerator generator,
@@ -189,8 +191,10 @@ namespace XylRacesCore.Patches
             return capacity;
         }
 
-        [Feature(nameof(Hediff_SubstituteCapacity)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
+        [Feature(nameof(Hediff_SubstituteCapacity))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
         public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                                   ILGenerator generator,
                                                                                   MethodBase method)
@@ -221,7 +225,10 @@ namespace XylRacesCore.Patches
             return foundHediff != null ? foundHediff.DefExt.substituteCapacity : __instance.capacity;
         }
 
-        [Feature(nameof(Psycast)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
+        [Feature(nameof(Psycast))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
         public static void ShouldShowFor_Postfix(StatWorker __instance, StatRequest req, ref bool __result)
         {
             if (req.Thing is Pawn pawn && pawn.HasActivePsycastGene())

@@ -9,7 +9,10 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(JoyGiver))]
     public class Patch_JoyGiver
     {
-        [Feature(nameof(GeneDefExtension_JoyGivers)), HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(JoyGiver.GetChance))]
+        [Feature(nameof(GeneDefExtension_JoyGivers))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(JoyGiver.GetChance))]
         public static void GetChance(JoyGiver __instance, Pawn pawn, ref float __result)
         {
             foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_JoyGivers>())

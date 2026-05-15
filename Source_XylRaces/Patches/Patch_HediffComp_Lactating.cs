@@ -1,6 +1,6 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using JetBrains.Annotations;
-using System;
 using UnityEngine;
 using Verse;
 
@@ -9,11 +9,13 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(HediffComp_Lactating))]
     public static class Patch_HediffComp_Lactating
     {
-        public static Lazy<bool> enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
         public static bool Enabled => enabled.Value;
+        public static Lazy<bool> enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
 
-        [Feature(nameof(Config.Feature.FixLactationBugs)), HarmonyPrefix, UsedImplicitly,
-         HarmonyPatch(nameof(HediffComp_Lactating.TryCharge))]
+        [Feature(nameof(Config.Feature.FixLactationBugs))]
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(HediffComp_Lactating.TryCharge))]
         public static void Patch_TryCharge(HediffComp_Lactating __instance, ref float desiredChargeAmount)
         {
             if (!Enabled)

@@ -22,6 +22,40 @@ namespace XylRacesCore
 
         public float SeverityReductionPerNutrition => Gene.DefExt.severityReductionPerNutrition;
 
+        public override string TipStringExtra
+        {
+            get
+            {
+                string text = base.TipStringExtra;
+
+                if (Gene != null)
+                {
+                    if (!text.NullOrEmpty())
+                        text += "\n\n";
+
+                    var severityPerDay =
+                        ((HediffCompProperties_SeverityPerDay)GetComp<HediffComp_SeverityPerDay>().props)
+                        .severityPerDay;
+                    var deficiencyDays = def.stages[(int)Stages.MildDeficiency].minSeverity / severityPerDay;
+                    var comaDays = def.stages[(int)Stages.Coma].minSeverity / severityPerDay;
+                    var deathDays = def.lethalSeverity / severityPerDay;
+                    text += "GeneDefChemicalNeedDurationDesc".Translate(Gene.DefExt.foodLabel,
+                        pawn.Named("PAWN"),
+                        "PeriodDays".Translate(deficiencyDays).Named("DEFICIENCYDURATION"),
+                        "PeriodDays".Translate(comaDays).Named("COMADURATION"),
+                        "PeriodDays".Translate(deathDays).Named("DEATHDURATION")).Resolve();
+                    float daysBehind = Severity / severityPerDay;
+                    float nutritionPerDay = severityPerDay * Gene.DefExt.severityReductionPerNutrition;
+                    text += "\n\n" + "XyInjestedBehind".Translate(Gene.DefExt.foodLabel,
+                        pawn.Named("PAWN"),
+                        nutritionPerDay.ToStringDecimalIfSmall().Named("NUTRITION"),
+                        "PeriodDays".Translate(daysBehind).Named("DURATION"));
+                }
+
+                return text;
+            }
+        }
+
         public Thing FindFoodFor(Pawn pawn2)
         {
             ThingOwner<Thing> innerContainer = pawn2.inventory.innerContainer;
@@ -71,40 +105,6 @@ namespace XylRacesCore
             }
 
             return gene.ValidateFood(food);
-        }
-
-        public override string TipStringExtra
-        {
-            get
-            {
-                string text = base.TipStringExtra;
-
-                if (Gene != null)
-                {
-                    if (!text.NullOrEmpty())
-                        text += "\n\n";
-
-                    var severityPerDay =
-                        ((HediffCompProperties_SeverityPerDay)GetComp<HediffComp_SeverityPerDay>().props)
-                        .severityPerDay;
-                    var deficiencyDays = def.stages[(int)Stages.MildDeficiency].minSeverity / severityPerDay;
-                    var comaDays = def.stages[(int)Stages.Coma].minSeverity / severityPerDay;
-                    var deathDays = def.lethalSeverity / severityPerDay;
-                    text += "GeneDefChemicalNeedDurationDesc".Translate(Gene.DefExt.foodLabel,
-                        pawn.Named("PAWN"),
-                        "PeriodDays".Translate(deficiencyDays).Named("DEFICIENCYDURATION"),
-                        "PeriodDays".Translate(comaDays).Named("COMADURATION"),
-                        "PeriodDays".Translate(deathDays).Named("DEATHDURATION")).Resolve();
-                    float daysBehind = Severity / severityPerDay;
-                    float nutritionPerDay = severityPerDay * Gene.DefExt.severityReductionPerNutrition;
-                    text += "\n\n" + "XyInjestedBehind".Translate(Gene.DefExt.foodLabel,
-                        pawn.Named("PAWN"),
-                        nutritionPerDay.ToStringDecimalIfSmall().Named("NUTRITION"),
-                        "PeriodDays".Translate(daysBehind).Named("DURATION"));
-                }
-
-                return text;
-            }
         }
     }
 }

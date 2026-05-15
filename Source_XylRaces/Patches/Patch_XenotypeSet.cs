@@ -1,9 +1,9 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 
 namespace XylRacesCore.Patches
@@ -22,8 +22,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(nameof(XenotypeSet.BaselinerChance), MethodType.Getter)]
+        [Feature(nameof(XenotypeSetWithDefault))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(XenotypeSet.BaselinerChance), MethodType.Getter)]
         public static IEnumerable<CodeInstruction> BaselinerChance_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                               ILGenerator generator,
                                                                               MethodBase method)
@@ -33,7 +35,10 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(XenotypeSetWithDefault)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(nameof(XenotypeSet.Contains))]
+        [Feature(nameof(XenotypeSetWithDefault))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(XenotypeSet.Contains))]
         public static IEnumerable<CodeInstruction> Contains_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                        ILGenerator generator,
                                                                        MethodBase method)

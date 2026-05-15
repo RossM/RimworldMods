@@ -1,11 +1,11 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -26,7 +26,21 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(GeneDefExtension_UIFilter)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch("DrawGenes")]
+        private static readonly InstructionMatcher Fixup_BiostatMet = new()
+        {
+            Rules =
+            {
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Field(typeof(GeneDef), nameof(GeneDef.biostatMet)),
+                    AccessTools.Method(typeof(GeneHelpers), nameof(GeneHelpers.BiostatMetForDisplay))
+                )
+            }
+        };
+
+        [Feature(nameof(GeneDefExtension_UIFilter))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch("DrawGenes")]
         public static IEnumerable<CodeInstruction> DrawGenes_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                         ILGenerator generator,
                                                                         MethodBase method)
@@ -50,16 +64,5 @@ namespace XylRacesCore.Patches
             return genes.Where(g =>
                 g.GetModExtension<GeneDefExtension_UIFilter>()?.ShouldBeVisible(inheritable) != false).ToList();
         }
-
-        private static readonly InstructionMatcher Fixup_BiostatMet = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Field(typeof(GeneDef), nameof(GeneDef.biostatMet)),
-                    AccessTools.Method(typeof(GeneHelpers), nameof(GeneHelpers.BiostatMetForDisplay))
-                )
-            }
-        };
     }
 }

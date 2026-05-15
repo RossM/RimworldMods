@@ -1,5 +1,5 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using Verse;
 
 namespace XylRacesCore
@@ -7,13 +7,13 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class Hediff_BioRejection : Hediff
     {
+        public override bool ShouldRemove => false;
+
         public override float Severity
         {
             get => pawn.health.hediffSet.CountAddedAndImplantedParts() * 1.0f;
             set { }
         }
-
-        public override bool ShouldRemove => false;
 
         public override string Description
         {

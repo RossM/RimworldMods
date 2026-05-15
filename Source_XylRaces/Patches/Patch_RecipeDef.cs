@@ -1,11 +1,11 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 
@@ -25,8 +25,10 @@ namespace XylRacesCore.Patches
             }
         };
 
-        [Feature(nameof(DefModExtension_GeneDependent)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
+        [Feature(nameof(DefModExtension_GeneDependent))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
         public static IEnumerable<CodeInstruction> AvailableNow_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                            ILGenerator generator,
                                                                            MethodBase method)
@@ -42,8 +44,10 @@ namespace XylRacesCore.Patches
             return null;
         }
 
-        [Feature(nameof(DefModExtension_GeneDependent)), HarmonyPostfix, UsedImplicitly,
-         HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
+        [Feature(nameof(DefModExtension_GeneDependent))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
         public static void AvailableNow_Postfix(RecipeDef __instance, ref bool __result)
         {
             if (DebugSettings.godMode)

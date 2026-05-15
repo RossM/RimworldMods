@@ -8,7 +8,10 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(FloatMenuOptionProvider_Ingest))]
     public static class Patch_FloatMenuOptionProvider_Ingest
     {
-        [Feature(nameof(ChemicalDefExtension)), HarmonyPrefix, UsedImplicitly, HarmonyPatch("GetSingleOptionFor")]
+        [Feature(nameof(ChemicalDefExtension))]
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        [HarmonyPatch("GetSingleOptionFor")]
         public static bool GetSingleOptionFor_Prefix(FloatMenuOptionProvider_Ingest __instance,
                                                      Thing clickedThing,
                                                      FloatMenuContext context,

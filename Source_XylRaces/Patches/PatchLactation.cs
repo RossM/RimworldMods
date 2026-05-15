@@ -1,11 +1,11 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -44,7 +44,10 @@ namespace XylRacesCore.Patches
             return __instance.HasHediff(def, mustBeVisible);
         }
 
-        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
+        [Feature(nameof(Hyperlactation))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
         public static IEnumerable<CodeInstruction> CanBreastfeed_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                             ILGenerator generator,
                                                                             MethodBase method)
@@ -54,7 +57,10 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
+        [Feature(nameof(Hyperlactation))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
         public static IEnumerable<CodeInstruction> CanBreastfeedNow_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                                ILGenerator generator,
                                                                                MethodBase method)
@@ -64,8 +70,10 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
+        [Feature(nameof(Hyperlactation))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
         public static IEnumerable<CodeInstruction> SuckleFromLactatingPawn_Transpiler(
             IEnumerable<CodeInstruction> instructions,
             ILGenerator generator,
@@ -76,8 +84,10 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
+        [Feature(nameof(Hyperlactation))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
         public static IEnumerable<CodeInstruction> QuestPartTick_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                             ILGenerator generator,
                                                                             MethodBase method)
@@ -87,8 +97,10 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly,
-         HarmonyPatch(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
+        [Feature(nameof(Hyperlactation))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
         public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(
             IEnumerable<CodeInstruction> instructions,
             ILGenerator generator,
@@ -99,7 +111,10 @@ namespace XylRacesCore.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation)), HarmonyTranspiler, UsedImplicitly, HarmonyPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
+        [Feature(nameof(Hyperlactation))]
+        [HarmonyTranspiler]
+        [UsedImplicitly]
+        [HarmonyPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
         public static IEnumerable<CodeInstruction> DrawRow_Transpiler(IEnumerable<CodeInstruction> instructions,
                                                                       ILGenerator generator,
                                                                       MethodBase method)

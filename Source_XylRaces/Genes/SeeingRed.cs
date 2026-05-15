@@ -1,5 +1,5 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using RimWorld;
 using Verse;
 
 namespace XylRacesCore.Genes
@@ -12,37 +12,15 @@ namespace XylRacesCore.Genes
 
     public class SeeingRed : Gene, INotifyDamageTaken
     {
-        public HashSet<Thing> extraEnemies;
+        public GeneDefExtension_SeeingRed DefExt => def.GetModExtension<GeneDefExtension_SeeingRed>();
 
         const int checkInterval = 60;
+        public HashSet<Thing> extraEnemies;
 
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Collections.Look(ref extraEnemies, nameof(extraEnemies), LookMode.Reference);
-        }
-
-        public GeneDefExtension_SeeingRed DefExt => def.GetModExtension<GeneDefExtension_SeeingRed>();
-
-        public void Notify_DamageTaken(DamageInfo damageInfo)
-        {
-            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
-
-            if (hediff == null && !Rand.Chance(DefExt.chance))
-                return;
-            if (pawn.Downed)
-                return;
-
-            hediff ??= pawn.health.AddHediff(DefExt.hediffDef);
-            if (hediff == null)
-                return;
-
-            (extraEnemies ??= []).Add(damageInfo.Instigator);
-
-            var comp = hediff.TryGetComp<HediffComp_Disappears>();
-            if (comp == null)
-                return;
-            comp.ticksToDisappear = comp.disappearsAfterTicks;
         }
 
         public override void TickInterval(int delta)
@@ -67,6 +45,27 @@ namespace XylRacesCore.Genes
         {
             yield return new StatDrawEntry(StatCategoryDefOf.PawnCombat, "XylRageChanceLabel".TranslateSimple(),
                 DefExt.chance.ToStringPercent(), "XylRageChanceDesc".TranslateSimple(), 1);
+        }
+
+        public void Notify_DamageTaken(DamageInfo damageInfo)
+        {
+            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
+
+            if (hediff == null && !Rand.Chance(DefExt.chance))
+                return;
+            if (pawn.Downed)
+                return;
+
+            hediff ??= pawn.health.AddHediff(DefExt.hediffDef);
+            if (hediff == null)
+                return;
+
+            (extraEnemies ??= []).Add(damageInfo.Instigator);
+
+            var comp = hediff.TryGetComp<HediffComp_Disappears>();
+            if (comp == null)
+                return;
+            comp.ticksToDisappear = comp.disappearsAfterTicks;
         }
     }
 }

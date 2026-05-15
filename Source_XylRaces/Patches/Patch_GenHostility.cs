@@ -11,12 +11,14 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(GenHostility))]
     public static class Patch_GenHostility
     {
-        public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_HostilityOverride>);
         public static bool Enabled => enabled.Value;
+        public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_HostilityOverride>);
 
         // Note: This patch is performance-sensitive
-        [Feature(nameof(GeneDefExtension_HostilityOverride)), HarmonyPrefix, UsedImplicitly,
-         HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
+        [Feature(nameof(GeneDefExtension_HostilityOverride))]
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
         public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
         {
             if (!Enabled)

@@ -16,8 +16,9 @@ namespace XylRacesCore
 
     public class Need_Wetness(Pawn pawn) : Need_Seeker(pawn)
     {
-        private int lastInstantWetnessCheckTick;
-        private float lastInstantWetness;
+        public bool ShouldFulfill => CurLevel <= 0.67f;
+
+        private float TemperatureFactor => TemperatureWetnessFallFactorCurve.Evaluate(pawn.AmbientTemperature);
 
         private const float thresholdWet = 0.90f;
         private const float thresholdNeutral = 0.50f;
@@ -40,6 +41,9 @@ namespace XylRacesCore
             new CurvePoint(1500f, 0.3f),
             new CurvePoint(2500f, 1.0f),
         ];
+
+        private int lastInstantWetnessCheckTick;
+        private float lastInstantWetness;
 
         public override float CurInstantLevel
         {
@@ -80,20 +84,6 @@ namespace XylRacesCore
             }
         }
 
-        public static float GetWetness(IntVec3 position, Map map)
-        {
-            TerrainDef terrain = position.GetTerrain(map);
-            WeatherDef curWeatherLerped = map.weatherManager.CurWeatherLerped;
-
-            if (terrain.IsWater)
-                return 1.0f;
-            if (position.GetThingList(map).Any(t => t.def == ThingDefOf.Filth_Water))
-                return 1.0f;
-            if (!position.Roofed(map))
-                return Mathf.Clamp01(curWeatherLerped.rainRate / 0.25f);
-            return 0.0f;
-        }
-
         public WetnessCategory CurCategory
         {
             get
@@ -109,7 +99,19 @@ namespace XylRacesCore
             }
         }
 
-        public bool ShouldFulfill => CurLevel <= 0.67f;
+        public static float GetWetness(IntVec3 position, Map map)
+        {
+            TerrainDef terrain = position.GetTerrain(map);
+            WeatherDef curWeatherLerped = map.weatherManager.CurWeatherLerped;
+
+            if (terrain.IsWater)
+                return 1.0f;
+            if (position.GetThingList(map).Any(t => t.def == ThingDefOf.Filth_Water))
+                return 1.0f;
+            if (!position.Roofed(map))
+                return Mathf.Clamp01(curWeatherLerped.rainRate / 0.25f);
+            return 0.0f;
+        }
 
         public override void NeedInterval()
         {
@@ -128,8 +130,6 @@ namespace XylRacesCore
                 CurLevel = Mathf.Max(CurLevel, curInstantLevel);
             }
         }
-
-        private float TemperatureFactor => TemperatureWetnessFallFactorCurve.Evaluate(pawn.AmbientTemperature);
 
         public override string GetTipString()
         {

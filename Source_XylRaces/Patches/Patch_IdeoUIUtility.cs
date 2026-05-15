@@ -1,9 +1,9 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 
 namespace XylRacesCore.Patches
@@ -11,7 +11,10 @@ namespace XylRacesCore.Patches
     [HarmonyPatch(typeof(IdeoUIUtility))]
     public static class Patch_IdeoUIUtility
     {
-        [Feature(nameof(XenotypeDefExtension)), HarmonyPostfix, UsedImplicitly, HarmonyPatch("GetMemeTip")]
+        [Feature(nameof(XenotypeDefExtension))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch("GetMemeTip")]
         public static void GetMemeTip_Postfix(MemeDef meme, ref string __result)
         {
             StringBuilder sb = new StringBuilder(__result);

@@ -10,11 +10,10 @@ namespace XylRacesCore
 
     public class Hediff_Genetic : HediffWithComps
     {
-        [Unsaved] private Gene cachedGene;
-
         public override bool ShouldRemove => Gene is not { Active: true };
 
         public Gene Gene => cachedGene ??= (Gene)pawn.GenesOfType<IGene_HediffSource>().FirstOrDefault(gene => gene.CausesHediff(def));
+        [Unsaved] private Gene cachedGene;
 
         public override float Severity
         {
