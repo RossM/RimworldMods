@@ -155,10 +155,7 @@
     <biostatMet>2</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>120</displayOrderInCategory>
-    <!-- 
-    <iconPath>Xyl/UI/Icons/Genes/Gene_Aquatic</iconPath>
-    <iconColor>(0.75, 0.75, 0.75)</iconColor>
-    -->
+    <iconPath>Xyl/UI/Icons/Genes/Gene_DrugSensitive</iconPath>
     <statOffsets>
       <XylDrugEffectMultiplier>0.4</XylDrugEffectMultiplier>
     </statOffsets>
