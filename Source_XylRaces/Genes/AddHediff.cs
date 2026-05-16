@@ -26,7 +26,7 @@ namespace XylRacesCore.Genes
         {
             base.ExposeData();
 
-            Scribe_Collections.Look(ref affectedParts, nameof(affectedParts), LookMode.Reference);
+            Scribe_Collections.Look(ref affectedParts, nameof(affectedParts));
         }
 
         public override void PostAdd()
