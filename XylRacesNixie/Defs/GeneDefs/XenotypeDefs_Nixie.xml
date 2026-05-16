@@ -35,6 +35,7 @@
     </genes>
     <modExtensions>
       <li Class="XylRacesCore.XenotypeDefExtension">
+        <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
           <li MayRequire="Ludeon.RimWorld.Ideology">HighLife</li>
           <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>

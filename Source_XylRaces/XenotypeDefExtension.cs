@@ -8,6 +8,7 @@ namespace XylRacesCore
     [UsedImplicitly]
     public class XenotypeDefExtension : DefModExtension
     {
+        public bool allowSolidBackstories = true;
         public List<MemeDef> agreeingMemes;
         public List<MemeDef> disagreeingMemes;
     }

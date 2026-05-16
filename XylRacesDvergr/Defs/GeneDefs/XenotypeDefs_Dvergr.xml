@@ -39,6 +39,7 @@
     </genes>
     <modExtensions>
       <li Class="XylRacesCore.XenotypeDefExtension">
+        <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
           <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
         </agreeingMemes>

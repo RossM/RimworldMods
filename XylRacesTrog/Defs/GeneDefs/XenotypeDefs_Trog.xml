@@ -42,6 +42,7 @@
     </genes>
     <modExtensions>
       <li Class="XylRacesCore.XenotypeDefExtension">
+        <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
           <li MayRequire="Ludeon.RimWorld.Ideology">FleshPurity</li>
         </agreeingMemes>

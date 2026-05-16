@@ -36,6 +36,7 @@
     </genes>
     <modExtensions>
       <li Class="XylRacesCore.XenotypeDefExtension">
+        <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
           <li MayRequire="Ludeon.RimWorld.Ideology">Cannibal</li>
           <li MayRequire="Ludeon.RimWorld.Ideology">Raider</li>
