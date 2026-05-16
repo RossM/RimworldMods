@@ -19,7 +19,7 @@ namespace XylRacesCore.Patches
     {
         private delegate bool TryGiveSolidBioTo_Fn(Pawn pawn, string requiredLastName, List<BackstoryCategoryFilter> backstoryCategories);
 
-        private static TryGiveSolidBioTo_Fn TryGiveSolidBioTo_Original = AccessTools.MethodDelegate<TryGiveSolidBioTo_Fn>(
+        private static readonly TryGiveSolidBioTo_Fn TryGiveSolidBioTo_Original = AccessTools.MethodDelegate<TryGiveSolidBioTo_Fn>(
             AccessTools.Method(typeof(PawnBioAndNameGenerator), "TryGiveSolidBioTo"));
 
         private static readonly InstructionMatcher Fixup_TryGiveSolidBioTo = new()
