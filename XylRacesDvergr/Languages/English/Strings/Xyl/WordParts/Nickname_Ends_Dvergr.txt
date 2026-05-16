@@ -14,6 +14,7 @@ dagger
 delver
 ears
 eye
+fist
 flame
 foot
 forge
@@ -22,6 +23,7 @@ gate
 hall
 hammer
 hand
+hold
 house
 knee
 leg
@@ -33,6 +35,7 @@ seeker
 shaft
 ship
 shirt
+skull
 smith
 tooth
 tower

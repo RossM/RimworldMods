@@ -16,9 +16,11 @@ forge
 gem
 gold
 gray
+great
 green
 iron
 light
+little
 long
 metal
 oil
@@ -30,6 +32,7 @@ spark
 star
 steel
 stone
+storm
 strong
 tall
 tough
