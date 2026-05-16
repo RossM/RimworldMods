@@ -23,7 +23,8 @@ namespace XylRacesCore.Patches
             {
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay)),
-                    AccessTools.Method(typeof(Patch_Need_Food), nameof(AddedNutritionPerDay_Wrapper)))
+                    AddedNutritionPerDay_Wrapper
+                )
             }
         };
 

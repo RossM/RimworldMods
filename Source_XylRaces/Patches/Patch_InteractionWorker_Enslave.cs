@@ -18,8 +18,8 @@ namespace XylRacesCore.Patches
             Rules =
             {
                 InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Method(typeof(StatExtension), nameof(StatExtension.GetStatValue)),
-                    AccessTools.Method(typeof(Patch_InteractionWorker_EnslaveAttempt), nameof(GetStatValue_Wrapper))
+                    StatExtension.GetStatValue,
+                    GetStatValue_Wrapper
                 )
             }
         };

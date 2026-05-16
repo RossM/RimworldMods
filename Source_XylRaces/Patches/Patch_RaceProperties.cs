@@ -24,7 +24,8 @@ namespace XylRacesCore.Patches
             {
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)]),
-                    AccessTools.Method(typeof(Patch_RaceProperties), nameof(GetFirstHediffOfDef_Wrapper))),
+                    GetFirstHediffOfDef_Wrapper
+                ),
 
                 new()
                 {

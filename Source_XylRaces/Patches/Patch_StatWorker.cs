@@ -152,12 +152,12 @@ namespace XylRacesCore.Patches
             {
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Field(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
-                    AccessTools.Method(typeof(Patch_StatWorker), nameof(PawnCapacityOffset_capacity_Wrapper))
+                    PawnCapacityOffset_capacity_Wrapper
                 ),
 
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Field(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
-                    AccessTools.Method(typeof(Patch_StatWorker), nameof(PawnCapacityFactor_capacity_Wrapper))
+                    PawnCapacityFactor_capacity_Wrapper
                 ),
             }
         };

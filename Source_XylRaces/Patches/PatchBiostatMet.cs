@@ -21,7 +21,7 @@ namespace XylRacesCore.Patches
             {
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Field(typeof(GeneDef), nameof(GeneDef.biostatMet)),
-                    AccessTools.Method(typeof(PatchBiostatMet), nameof(GeneDef_biostatMet_Wrapper))
+                    GeneDef_biostatMet_Wrapper
                 )
             }
         };

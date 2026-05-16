@@ -24,7 +24,7 @@ namespace XylRacesCore.Patches
             {
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(PawnBioAndNameGenerator), "TryGiveSolidBioTo"),
-                    AccessTools.Method(typeof(Patch_PawnBioAndNameGenerator), nameof(TryGiveSolidBioTo_Wrapper))
+                    TryGiveSolidBioTo_Wrapper
                 )
             }
         };

@@ -337,6 +337,16 @@ namespace TranspilerUtil
             };
         }
 
+        public static Rule MakeRedirectRule(MemberInfo oldMember, Delegate newMember, int minMatches = 1)
+        {
+            return MakeRedirectRule(oldMember, newMember.Method, minMatches);
+        }
+
+        public static Rule MakeRedirectRule(Delegate oldMember, Delegate newMember, int minMatches = 1)
+        {
+            return MakeRedirectRule(oldMember.Method, newMember.Method, minMatches);
+        }
+
         public static Rule MakeRedirectRule(string oldMemberName, MethodInfo newMember, int minMatches = 1)
         {
             return new Rule
