@@ -13,18 +13,18 @@ namespace XylRacesCore
             PsychicAbility,
         }
 
-        public class AbilityLevelInfo
+        public class AbilityBiostatInfo
         {
+            public IntRange levels = new(0, Int32.MaxValue);
             public int biostatArc = 0;
             public int biostatCpx = 0;
             public int biostatMet = 0;
-            public bool valid = true;
         }
 
         public string iconPath;
         public Type geneClass = typeof(Gene);
 
-        public List<AbilityLevelInfo> levels;
+        public List<AbilityBiostatInfo> biostats;
 
         public GeneTemplateType geneTemplateType;
 

@@ -18,9 +18,7 @@ namespace XylRacesCore
                     {
                         if (!typeof(Psycast).IsAssignableFrom(def.abilityClass))
                             continue;
-                        if (def.level >= template.levels.Count)
-                            continue;
-                        if (!template.levels[def.level].valid)
+                        if (!template.biostats.Any(biostatInfo => biostatInfo.levels.Includes(def.level)))
                             continue;
 
                         yield return GetFromTemplate(template, def, displayOrderBase, hotReload);
@@ -53,9 +51,10 @@ namespace XylRacesCore
             geneDef.displayCategory = template.displayCategory;
             geneDef.displayOrderInCategory = displayOrderBase + template.displayOrderOffset;
 
-            geneDef.biostatArc = template.levels[def.level].biostatArc;
-            geneDef.biostatCpx = template.levels[def.level].biostatCpx;
-            geneDef.biostatMet = template.levels[def.level].biostatMet;
+            var biostatInfo = template.biostats.First(levelInfo => levelInfo.levels.Includes(def.level));
+            geneDef.biostatArc = biostatInfo.biostatArc;
+            geneDef.biostatCpx = biostatInfo.biostatCpx;
+            geneDef.biostatMet = biostatInfo.biostatMet;
 
             geneDef.abilities = [def];
 

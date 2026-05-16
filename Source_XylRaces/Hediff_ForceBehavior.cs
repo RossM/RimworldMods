@@ -11,6 +11,7 @@ namespace XylRacesCore
     }
 
     // TODO this can probably be replaced with a HediffComp
+    // TODO or even better, get rid of this and just add a MentalState directly
 
     public class Hediff_ForceBehavior : HediffWithComps
     {
