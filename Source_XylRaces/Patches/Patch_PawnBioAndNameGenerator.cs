@@ -1,14 +1,10 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 
