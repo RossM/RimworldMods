@@ -56,29 +56,29 @@ namespace XylRacesCore
             }
         }
 
-        public Thing FindFoodFor(Pawn pawn2)
+        public Thing FindFoodFor(Pawn pawnGettingFood)
         {
-            ThingOwner<Thing> innerContainer = pawn2.inventory.innerContainer;
+            ThingOwner<Thing> innerContainer = pawnGettingFood.inventory.innerContainer;
             foreach (Thing item in innerContainer)
             {
-                if (FoodValidator(pawn2, this, item))
+                if (FoodValidator(pawnGettingFood, this, item))
                     return item;
             }
 
-            Thing thing = GenClosest.ClosestThingReachable(pawn2.Position, pawn2.Map, ThingRequest.ForGroup(ThingRequestGroup.FoodSource),
-                PathEndMode.ClosestTouch, TraverseParms.For(pawn2), 9999f, x => FoodValidator(pawn2, this, x));
+            Thing thing = GenClosest.ClosestThingReachable(pawnGettingFood.Position, pawnGettingFood.Map, ThingRequest.ForGroup(ThingRequestGroup.FoodSource),
+                PathEndMode.ClosestTouch, TraverseParms.For(pawnGettingFood), 9999f, x => FoodValidator(pawnGettingFood, this, x));
             if (thing != null)
                 return thing;
 
-            if (!pawn2.IsColonist || pawn2.Map == null)
+            if (!pawnGettingFood.IsColonist || pawnGettingFood.Map == null)
                 return null;
 
-            foreach (Pawn spawnedColonyAnimal in pawn2.Map.mapPawns.SpawnedColonyAnimals)
+            foreach (Pawn spawnedColonyAnimal in pawnGettingFood.Map.mapPawns.SpawnedColonyAnimals)
             {
                 foreach (Thing item in spawnedColonyAnimal.inventory.innerContainer)
                 {
-                    if (FoodValidator(pawn2, this, item) && !spawnedColonyAnimal.IsForbidden(pawn2)
-                                                         && pawn2.CanReach(spawnedColonyAnimal, PathEndMode.OnCell, Danger.Some))
+                    if (FoodValidator(pawnGettingFood, this, item) && !spawnedColonyAnimal.IsForbidden(pawnGettingFood)
+                                                         && pawnGettingFood.CanReach(spawnedColonyAnimal, PathEndMode.OnCell, Danger.Some))
                     {
                         return item;
                     }

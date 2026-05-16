@@ -34,8 +34,8 @@ namespace XylRacesCore.Patches
             foreach (var hediff in prisoner.HediffsOfType<Hediff_DietDependency>().Where(h => h.ShouldSatisfy)
                          .OrderByDescending(h => h.Severity))
             {
-                //Log.Message(string.Format("JobOnThing_Postfix: pawn: {0}, pawn2: {1}, hediff: {2}, severity: {3}", pawn, prisoner, hediff, hediff.Severity));
-                Thing foodSource = hediff.FindFoodFor(prisoner);
+                //Log.Message($"JobOnThing_Postfix: pawn: {pawn}, prisoner: {prisoner}, hediff: {hediff}, severity: {hediff.Severity}");
+                Thing foodSource = hediff.FindFoodFor(pawn);
                 if (foodSource == null)
                     continue;
                 ThingDef foodDef = FoodUtility.GetFinalIngestibleDef(foodSource);
