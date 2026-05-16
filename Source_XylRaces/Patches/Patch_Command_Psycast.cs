@@ -18,10 +18,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(
-                    PawnUtility.GetPsylinkLevel,
-                    GetPsylinkLevel_Wrapper
-                )
+                InstructionMatcher.MakeRedirectRule(PawnUtility.GetPsylinkLevel, GetPsylinkLevel_Wrapper)
             }
         };
 

@@ -18,10 +18,7 @@ namespace XylRacesCore.Patches
             {
                 // We can't just patch TryGetChemicalDependencyGene directly because it returns Gene_ChemicalDependency, and we
                 // need a function that returns just Gene.
-                InstructionMatcher.MakeRedirectRule(
-                    PawnUtility.TryGetChemicalDependencyGene,
-                    TryGetChemicalDependencyGene_Wrapper
-                )
+                InstructionMatcher.MakeRedirectRule(PawnUtility.TryGetChemicalDependencyGene, TryGetChemicalDependencyGene_Wrapper)
             }
         };
 

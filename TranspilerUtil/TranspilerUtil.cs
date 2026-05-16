@@ -360,6 +360,11 @@ namespace TranspilerUtil
             };
         }
 
+        public static Rule MakeRedirectRule(string oldMemberName, Delegate newMember, int minMatches = 1)
+        {
+            return MakeRedirectRule(oldMemberName, newMember.Method, minMatches);
+        }
+
         private static MemberInfo FindMemberInfo(string oldMemberName, List<CodeInstruction> instructions)
         {
             MemberInfo oldMember = (MemberInfo)instructions.First(NameMatches).operand;

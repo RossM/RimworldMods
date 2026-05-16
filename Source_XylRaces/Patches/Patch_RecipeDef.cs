@@ -18,10 +18,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Field(typeof(RecipeDef), "memePrerequisitesAny"),
-                    RecipeDef_memePrerequisitesAny_Wrapper
-                )
+                InstructionMatcher.MakeRedirectRule("memePrerequisitesAny", RecipeDef_memePrerequisitesAny_Wrapper)
             }
         };
 

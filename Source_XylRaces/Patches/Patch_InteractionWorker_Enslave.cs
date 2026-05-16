@@ -17,10 +17,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(
-                    StatExtension.GetStatValue,
-                    GetStatValue_Wrapper
-                )
+                InstructionMatcher.MakeRedirectRule(StatExtension.GetStatValue, GetStatValue_Wrapper)
             }
         };
 

@@ -17,10 +17,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(
-                    PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo,
-                    GiveAppropriateBioAndNameTo_Wrapper
-                )
+                InstructionMatcher.MakeRedirectRule(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo, GiveAppropriateBioAndNameTo_Wrapper)
             }
         };
 
@@ -28,10 +25,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Field(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner)),
-                    XenotypeDefOf_Baseliner_Wrapper
-                ),
+                InstructionMatcher.MakeRedirectRule(nameof(XenotypeDefOf.Baseliner), XenotypeDefOf_Baseliner_Wrapper),
                 InstructionMatcher.MakeRedirectRule(
                     "<XenotypesAvailableFor>g__AddOrAdjust|49_0",
                     AccessTools.Method(typeof(Patch_PawnGenerator), nameof(AddOrAdjust_Wrapper))

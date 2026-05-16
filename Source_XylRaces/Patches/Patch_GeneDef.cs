@@ -17,10 +17,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Field(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions)),
-                    GeneDef_customEffectDescriptions_Wrapper
-                )
+                InstructionMatcher.MakeRedirectRule(nameof(GeneDef.customEffectDescriptions), GeneDef_customEffectDescriptions_Wrapper)
             }
         };
 

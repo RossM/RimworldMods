@@ -15,10 +15,7 @@ namespace XylRacesCore.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Field(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner)),
-                    XenotypeDefOf_Baseliner_Wrapper
-                ),
+                InstructionMatcher.MakeRedirectRule(nameof(XenotypeDefOf.Baseliner), XenotypeDefOf_Baseliner_Wrapper),
             }
         };
 
