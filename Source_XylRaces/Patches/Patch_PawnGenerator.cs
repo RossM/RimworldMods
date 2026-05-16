@@ -26,10 +26,7 @@ namespace XylRacesCore.Patches
             Rules =
             {
                 InstructionMatcher.MakeRedirectRule(nameof(XenotypeDefOf.Baseliner), XenotypeDefOf_Baseliner_Wrapper),
-                InstructionMatcher.MakeRedirectRule(
-                    "<XenotypesAvailableFor>g__AddOrAdjust|49_0",
-                    AccessTools.Method(typeof(Patch_PawnGenerator), nameof(AddOrAdjust_Wrapper))
-                ),
+                InstructionMatcher.MakeRedirectRule("<XenotypesAvailableFor>g__AddOrAdjust|49_0", AddOrAdjust_Wrapper),
             }
         };
 
