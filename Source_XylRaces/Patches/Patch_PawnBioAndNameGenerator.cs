@@ -33,7 +33,7 @@ namespace XylRacesCore.Patches
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
-        public static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(
+        public static IEnumerable<CodeInstruction> GiveAppropriateBioAndNameTo_Transpiler(
             IEnumerable<CodeInstruction> instructions,
             ILGenerator generator,
             MethodBase method)
