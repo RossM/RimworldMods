@@ -26,4 +26,19 @@
     </modExtensions>
   </GeneDef>
 
+  <GeneDef>
+    <defName>XylVoracious</defName>
+    <label>voracious</label>
+    <description>TODO</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>0</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <forcedTraits>
+      <li><def>Cannibal</def></li>
+      <li><def>Gourmand</def></li>
+    </forcedTraits>
+  </GeneDef>
+
 </Defs>
