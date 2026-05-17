@@ -27,19 +27,19 @@ namespace XylRacesCore
 
         private static readonly SimpleCurve TemperatureWetnessFallFactorCurve =
         [
-            new CurvePoint(-19.0f, 1.0f),
-            new CurvePoint(6.0f, 0.5f),
-            new CurvePoint(16.0f, 1.0f),
-            new CurvePoint(21.0f, 1.0f),
-            new CurvePoint(31.0f, 2.0f),
-            new CurvePoint(41.0f, 5.0f)
+            new(-19.0f, 1.0f),
+            new(6.0f, 0.5f),
+            new(16.0f, 1.0f),
+            new(21.0f, 1.0f),
+            new(31.0f, 2.0f),
+            new(41.0f, 5.0f)
         ];
 
         private static readonly SimpleCurve RainfallToWetnessCurve =
         [
-            new CurvePoint(500f, 0.0f),
-            new CurvePoint(1500f, 0.3f),
-            new CurvePoint(2500f, 1.0f),
+            new(500f, 0.0f),
+            new(1500f, 0.3f),
+            new(2500f, 1.0f),
         ];
 
         private int lastInstantWetnessCheckTick;
