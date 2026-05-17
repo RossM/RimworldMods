@@ -49,36 +49,11 @@ namespace XylRacesCore
         {
             get
             {
-                var wetnessGivingJobs = Config.Instance.wetnessGivingJobs;
-
                 if (lastInstantWetnessCheckTick == Find.TickManager.TicksGame)
                     return lastInstantWetness;
-                lastInstantWetnessCheckTick = Find.TickManager.TicksGame;
 
-                if (pawn.IsInCaravan())
-                {
-                    var caravan = pawn.GetCaravan();
-                    var tile = Find.WorldGrid[caravan.Tile];
-                    if (tile.IsCoastalOrRiverTile())
-                        lastInstantWetness = 1.0f;
-                    else if (tile.IsWetlandBiome())
-                        lastInstantWetness = 1.0f;
-                    else
-                        lastInstantWetness = RainfallToWetnessCurve.Evaluate(tile.rainfall);
-                }
-                else if (!pawn.Spawned)
-                {
-                    lastInstantWetness = 0.0f;
-                }
-                else if (wetnessGivingJobs.Contains(pawn.CurJobDef) && !pawn.pather.Moving)
-                {
-                    var wetnessSource = pawn.CurJob?.targetA.Thing?.def.GetModExtension<ThingDefExtension_WetnessSource>();
-                    lastInstantWetness = wetnessSource?.wetnessLevel ?? 1.0f;
-                }
-                else
-                {
-                    lastInstantWetness = GetWetness(pawn.Position, pawn.Map);
-                }
+                lastInstantWetnessCheckTick = Find.TickManager.TicksGame;
+                lastInstantWetness = CalculateInstantWetness();
 
                 return lastInstantWetness;
             }
@@ -97,6 +72,33 @@ namespace XylRacesCore
                     _ => WetnessCategory.Parched
                 };
             }
+        }
+
+        private float CalculateInstantWetness()
+        {
+            if (pawn.IsInCaravan())
+            {
+                var caravan = pawn.GetCaravan();
+                var tile = Find.WorldGrid[caravan.Tile];
+                if (tile.IsCoastalOrRiverTile())
+                    return 1.0f;
+                if (tile.IsWetlandBiome())
+                    return 1.0f;
+                return RainfallToWetnessCurve.Evaluate(tile.rainfall);
+            }
+
+            if (!pawn.Spawned)
+            {
+                return 0.0f;
+            }
+
+            if (Config.Instance.wetnessGivingJobs.Contains(pawn.CurJobDef) && !pawn.pather.Moving)
+            {
+                var wetnessSource = pawn.CurJob?.targetA.Thing?.def.GetModExtension<ThingDefExtension_WetnessSource>();
+                return wetnessSource?.wetnessLevel ?? 1.0f;
+            }
+
+            return GetWetness(pawn.Position, pawn.Map);
         }
 
         public static float GetWetness(IntVec3 position, Map map)
