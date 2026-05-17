@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using JetBrains.Annotations;
+using RimWorld;
+using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
+using System.Text;
 using Verse;
 
 namespace XylRacesCore.Genes
@@ -11,6 +13,43 @@ namespace XylRacesCore.Genes
         public bool applyImmediately = false;
         public bool reapplyOnPartRestored = false;
         public float mtbDays = 0.0f;
+
+        protected override IEnumerable<string> GetCustomEffectDescriptions()
+        {
+            foreach (Tool tool in hediffGivers.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
+                         .Where(verbGiver => verbGiver != null).SelectMany(verbGiver => verbGiver.tools))
+            {
+                float armorPenetration = tool.armorPenetration;
+                if (armorPenetration < 0f)
+                {
+                    armorPenetration = tool.power * 0.015f;
+                }
+
+                yield return $"{"StatsReport_MeleeDamage".Translate()}: {tool.power.ToStringByStyle(ToStringStyle.FloatTwo)}";
+                yield return $"{"ArmorPenetration".Translate()}: {armorPenetration.ToStringPercent()}";
+                yield return $"{"StatsReport_Cooldown".Translate()}: {"StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall())}";
+            }
+        }
+
+        protected override IEnumerable<StatDrawEntry> GetSpecialDisplayStats()
+        {
+            foreach (Tool tool in hediffGivers.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
+                         .Where(verbGiver => verbGiver != null).SelectMany(verbGiver => verbGiver.tools))
+            {
+                float armorPenetration = tool.armorPenetration;
+                if (armorPenetration < 0f)
+                {
+                    armorPenetration = tool.power * 0.015f;
+                }
+
+                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_MeleeDamage".Translate(),
+                    tool.power.ToStringByStyle(ToStringStyle.FloatTwo), "", 4102);
+                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "ArmorPenetration".Translate(),
+                    armorPenetration.ToStringPercent(), "ArmorPenetrationExplanation".Translate(), 4101);
+                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_Cooldown".Translate(),
+                    "StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall()), "", 4100);
+            }
+        }
     }
 
     [UsedImplicitly]

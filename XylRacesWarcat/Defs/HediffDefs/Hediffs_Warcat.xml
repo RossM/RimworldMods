@@ -2,10 +2,13 @@
 <Defs>
 
   <HediffDef>
-    <hediffClass>XylRacesCore.Hediff_InnateWeapon</hediffClass>
     <defName>XylRetractableClaws</defName>
+    <hediffClass>HediffWithComps</hediffClass>
     <label>retractable claws</label>
     <description>Retractable claws. They can perform rapid slashing attacks, but are poor at penetrating armor.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylRetractableClaws</GeneDef>
+    </descriptionHyperlinks>
     <initialSeverity>1.0</initialSeverity>
     <addedPartProps>
       <solid>true</solid>

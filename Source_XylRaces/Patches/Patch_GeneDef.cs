@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using JetBrains.Annotations;
+using RimWorld;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
-using JetBrains.Annotations;
 using TranspilerUtil;
 using Verse;
 using XylRacesCore.Genes;
@@ -37,7 +38,18 @@ namespace XylRacesCore.Patches
 
         public static List<string> GeneDef_customEffectDescriptions_Wrapper(GeneDef __instance)
         {
-            return GeneHelpers.GetGeneEffectDescriptions(__instance).ToList();
+            return __instance.GetGeneEffectDescriptions().ToList();
+        }
+
+        [Feature(nameof(GeneDefExtension))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch("SpecialDisplayStats")]
+        public static void SpecialDisplayStats_Postfix(GeneDef __instance, StatRequest req, ref IEnumerable<StatDrawEntry> __result)
+        {
+            var extraStats = __instance.GetGeneSpecialDisplayStats().ToList();
+            if (extraStats.Count > 0)
+                __result = __result.Concat(extraStats);
         }
     }
 }

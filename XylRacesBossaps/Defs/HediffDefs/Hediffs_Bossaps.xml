@@ -5,6 +5,9 @@
     <defName>XylSeeingRed</defName>
     <label>seeing red</label>
     <description>A temporary frenzy state. The character can't be controlled until the frenzy ends.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylSeeingRed</GeneDef>
+    </descriptionHyperlinks>
     <hediffClass>XylRacesCore.Hediff_ForceBehavior</hediffClass>
     <initialSeverity>1.0</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
@@ -42,7 +45,10 @@
   <HediffDef ParentName="Lactating">
     <defName>XylHyperlactating</defName>
     <label>hyperlactating</label>
-    <description>The condition of being able to breastfeed a baby. The breasts are actively producing and storing milk. This character produces milk continually as long as they get adequate food.\n\nPeople who are lactating will have a harder time becoming pregnant.</description>
+    <description>The condition of being able to breastfeed a baby. The breasts are actively producing and storing milk. This character produces milk continually as long as they get adequate food.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylHyperlactation</GeneDef>
+    </descriptionHyperlinks>
     <comps Inherit="False">
       <li Class="HediffCompProperties_SeverityPerDay">
         <severityPerDay>0</severityPerDay>
@@ -78,10 +84,13 @@
   </HediffDef>
 
   <HediffDef>
-    <hediffClass>XylRacesCore.Hediff_InnateWeapon</hediffClass>
     <defName>XylLargeHorns</defName>
+    <hediffClass>HediffWithComps</hediffClass>
     <label>large horns</label>
     <description>Large, dangerous horns that can be used as a weapon.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylLargeHorns</GeneDef>
+    </descriptionHyperlinks>
     <initialSeverity>1.0</initialSeverity>
     <addedPartProps>
       <solid>true</solid>

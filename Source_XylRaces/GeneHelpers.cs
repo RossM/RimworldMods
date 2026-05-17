@@ -1,3 +1,4 @@
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -166,6 +167,18 @@ public static class GeneHelpers
         if (thingDef.Any())
         {
             yield return $"{"XylNewRecipes".Translate()}: {thingDef.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
+        }
+    }
+
+    public static IEnumerable<StatDrawEntry> GetGeneSpecialDisplayStats(this GeneDef gene)
+    {
+        if (!gene.modExtensions.NullOrEmpty())
+        {
+            foreach (var geneDefExtension in gene.modExtensions.OfType<GeneDefExtension>())
+            {
+                foreach (var specialDisplayStatEntry in geneDefExtension.SpecialDisplayStats)
+                    yield return specialDisplayStatEntry;
+            }
         }
     }
 }
