@@ -149,7 +149,7 @@ namespace XylRacesCore
 
         public override void DrawOnGUI(
             Rect rect,
-            int maxThresholdMarkers = 2147483647,
+            int maxThresholdMarkers = int.MaxValue,
             float customMargin = -1,
             bool drawArrows = true,
             bool doTooltip = true,
