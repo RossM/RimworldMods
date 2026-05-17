@@ -215,7 +215,6 @@
         <comfyTemperatureImportance>0.3</comfyTemperatureImportance>
         <severityGainPerDayPerDegree>0.02</severityGainPerDayPerDegree>
         <severityLossPerDayPerDegree>0.02</severityLossPerDayPerDegree>
-        <warningMessage>{PAWN} is beginning to enter torpor.</warningMessage>
       </li>
     </modExtensions>  
   </GeneDef>

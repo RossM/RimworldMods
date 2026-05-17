@@ -49,12 +49,20 @@
 
   <HediffDef>
     <defName>XylTorpor</defName>
+    <hediffClass>HediffWithComps</hediffClass>
     <label>torpor</label>
     <description>This character's body is responding to low temperature by entering a state of hibernation. Their metabolism will slow, and they will eventually fall unconscious. The condition will reverse itself if the character is kept warm.</description>
     <overrideTooltip>{PAWN}'s body is responding to low temperature by entering a state of hibernation. {PAWN_possessive} metabolism will slow, and {PAWN_pronoun} will eventually fall unconscious. The condition will reverse itself if {PAWN_pronoun} is kept warm.</overrideTooltip>
     <initialSeverity>0.001</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
     <everCurableByItem>false</everCurableByItem>
+    <comps>
+      <li Class="HediffCompProperties_MessageAboveSeverity">
+        <severity>0.1</severity>
+        <message>{PAWN} is beginning to enter torpor.</message>
+        <messageType>NegativeHealthEvent</messageType>
+      </li>
+    </comps>
     <stages>
       <li>
         <label>yawning</label>

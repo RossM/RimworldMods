@@ -12,21 +12,12 @@ namespace XylRacesCore.Genes
         public float comfyTemperatureImportance;
         public float severityGainPerDayPerDegree;
         public float severityLossPerDayPerDegree;
-        public string warningMessage;
     }
 
     [UsedImplicitly]
     public class Torpor : Gene
     {
         public GeneDefExtension_Torpor DefExt => def.GetModExtension<GeneDefExtension_Torpor>();
-
-        private bool sentWarning = false;
-
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Values.Look(ref sentWarning, nameof(sentWarning));
-        }
 
         public override void TickInterval(int delta)
         {
@@ -49,16 +40,6 @@ namespace XylRacesCore.Genes
             HealthUtility.AdjustSeverity(pawn, DefExt.hediff, (checkInterval / (float)GenDate.TicksPerDay) * changePerDay);
 
             Hediff torpor = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff);
-
-            if (!sentWarning && !DefExt.warningMessage.NullOrEmpty() && pawn.IsColonist && torpor?.Visible == true)
-            {
-                Messages.Message(DefExt.warningMessage.Formatted(pawn.Named("PAWN")), pawn,
-                    MessageTypeDefOf.NegativeHealthEvent);
-                sentWarning = true;
-            }
-
-            if (sentWarning && (torpor?.Severity ?? 0) <= 0)
-                sentWarning = false;
 
             if ((torpor?.CurStageIndex ?? 0) >= 3)
                 pawn.needs.rest.CurLevelPercentage = Mathf.Min(pawn.needs.rest.CurLevelPercentage, 0.1f);
