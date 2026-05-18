@@ -34,6 +34,10 @@
   <XylAllowsFlightLabel>Allows flight</XylAllowsFlightLabel>
   <XylAllowsFlightDesc>Whether winged characters can fly while wearing this item.</XylAllowsFlightDesc>
 
+  <!-- Settings -->
+  <XylSettingDescription_allowBackerBackstoriesForAllXenotypes>Allow backer backstories for all xenotypes</XylSettingDescription_allowBackerBackstoriesForAllXenotypes>
+  <XylSettingTooltip_allowBackerBackstoriesForAllXenotypes>By default, some xenotypes added by this mod will never generate with backer backstories. This setting overrides that behavior and allows all xenotypes to get backer backstories.</XylSettingTooltip_allowBackerBackstoriesForAllXenotypes>
+  
   <!-- Misc -->
   <XylWildPeople>wild people</XylWildPeople>
   <XylScenPartForcedXenotypeSummary>{0} have a {1} chance to start with xenotype: {2}</XylScenPartForcedXenotypeSummary>

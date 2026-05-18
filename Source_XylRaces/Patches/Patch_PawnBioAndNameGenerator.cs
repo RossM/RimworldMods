@@ -47,7 +47,7 @@ namespace XylRacesCore.Patches
             List<BackstoryCategoryFilter> backstoryCategories,
             XenotypeDef xenotype)
         {
-            if (xenotype?.GetModExtension<XenotypeDefExtension>()?.allowSolidBackstories == false)
+            if (!Settings.instance.allowBackerBackstoriesForAllXenotypes && xenotype?.GetModExtension<XenotypeDefExtension>()?.allowSolidBackstories == false)
                 return false;
             return TryGiveSolidBioTo_Original(pawn, requiredLastName, backstoryCategories);
         }
