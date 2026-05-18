@@ -26,7 +26,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(XenotypeDefExtension.allowSolidBackstories))]
+        [Feature(typeof(XenotypeDefExtension))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]

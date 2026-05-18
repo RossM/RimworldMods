@@ -40,7 +40,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(IStartingItemSource))]
+        [Feature(typeof(IStartingItemSource))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("GeneratePossessions")]

@@ -33,7 +33,7 @@ namespace XylXenos.Patches
             yield return AccessTools.Method(iteratorType, "MoveNext");
         }
 
-        [Feature(nameof(BonusGene))]
+        [Feature(typeof(BonusGene))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         public static IEnumerable<CodeInstruction> Transpiler(

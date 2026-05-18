@@ -9,7 +9,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(HediffComp_Lactating))]
     public static class Patch_HediffComp_Lactating
     {
-        [Feature(nameof(Config.Feature.FixLactationBugs))]
+        [Feature(Config.Feature.FixLactationBugs)]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(HediffComp_Lactating.TryCharge))]

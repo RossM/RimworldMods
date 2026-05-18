@@ -13,7 +13,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(GatheringsUtility))]
     public static class Patch_GatheringsUtility
     {
-        [Feature("Joyless")]
+        [Feature(Config.Feature.Joyless)]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(GatheringsUtility.ShouldPawnKeepGathering))]

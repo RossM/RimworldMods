@@ -22,7 +22,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(Psycast))]
+        [Feature(typeof(Psycast))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("DisabledCheck")]

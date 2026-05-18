@@ -7,7 +7,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Pawn_GeneTracker))]
     public static class Patch_Pawn_GeneTracker
     {
-        [Feature(nameof(CompPawn_LookupCache))]
+        [Feature(typeof(CompPawn_LookupCache))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch("Notify_GenesChanged")]

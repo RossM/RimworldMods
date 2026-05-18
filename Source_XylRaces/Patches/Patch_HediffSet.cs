@@ -7,7 +7,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(HediffSet))]
     public class Patch_HediffSet
     {
-        [Feature(nameof(CompPawn_LookupCache))]
+        [Feature(typeof(CompPawn_LookupCache))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(HediffSet.DirtyCache))]

@@ -19,7 +19,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(XenotypeSetWithDefault))]
+        [Feature(typeof(XenotypeSetWithDefault))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(FactionDef.Description), MethodType.Getter)]

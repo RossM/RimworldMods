@@ -10,7 +10,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(WorkGiver_Warden_Feed))]
     public static class Patch_WorkGiver_Warden_Feed
     {
-        [Feature(nameof(Hediff_DietDependency))]
+        [Feature(typeof(Hediff_DietDependency))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(WorkGiver_Warden_Feed.JobOnThing))]

@@ -42,7 +42,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(Config.Feature.FixLactationBugs))]
+        [Feature(Config.Feature.FixLactationBugs)]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
@@ -83,7 +83,7 @@ namespace XylXenos.Patches
             }
         }
 
-        [Feature(nameof(Config.Feature.FixLactationBugs))]
+        [Feature(Config.Feature.FixLactationBugs)]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]

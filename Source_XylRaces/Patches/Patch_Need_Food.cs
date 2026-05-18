@@ -22,7 +22,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(Config.Feature.FixLactationBugs))]
+        [Feature(Config.Feature.FixLactationBugs)]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("FoodFallPerTickAssumingCategory")]

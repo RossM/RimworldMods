@@ -21,7 +21,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(Psycast))]
+        [Feature(typeof(Psycast))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("GizmoDisabled")]
@@ -35,7 +35,7 @@ namespace XylXenos.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Psycast))]
+        [Feature(typeof(Psycast))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("CanCast", MethodType.Getter)]

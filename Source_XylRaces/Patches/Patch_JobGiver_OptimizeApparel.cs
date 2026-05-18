@@ -9,7 +9,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(JobGiver_OptimizeApparel))]
     public static class Patch_JobGiver_OptimizeApparel
     {
-        [Feature(nameof(Flight))]
+        [Feature(typeof(Flight))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(JobGiver_OptimizeApparel.ApparelScoreRaw))]

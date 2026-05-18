@@ -14,7 +14,7 @@ namespace XylXenos.Patches
         public static bool Enabled => enabled.Value;
         public static Lazy<bool> enabled = new(Config.GeneOfTypeExists<Flight>);
 
-        [Feature(nameof(Flight))]
+        [Feature(typeof(Flight))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(ThingDef.SpecialDisplayStats))]

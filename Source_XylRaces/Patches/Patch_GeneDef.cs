@@ -22,7 +22,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(GeneDefExtension))]
+        [Feature(typeof(GeneDefExtension))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("GetDescriptionFull")]
@@ -41,7 +41,7 @@ namespace XylXenos.Patches
             return __instance.GetGeneEffectDescriptions().ToList();
         }
 
-        [Feature(nameof(GeneDefExtension))]
+        [Feature(typeof(GeneDefExtension))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch("SpecialDisplayStats")]

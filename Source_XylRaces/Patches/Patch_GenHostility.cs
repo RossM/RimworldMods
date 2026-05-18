@@ -15,7 +15,7 @@ namespace XylXenos.Patches
         public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_HostilityOverride>);
 
         // Note: This patch is performance-sensitive
-        [Feature(nameof(GeneDefExtension_HostilityOverride))]
+        [Feature(typeof(GeneDefExtension_HostilityOverride))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]

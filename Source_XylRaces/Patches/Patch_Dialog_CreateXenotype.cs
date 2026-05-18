@@ -26,7 +26,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(GeneDefExtension_UIFilter))]
+        [Feature(typeof(GeneDefExtension_UIFilter))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("DrawGenes")]

@@ -44,7 +44,7 @@ namespace XylXenos.Patches
             return __instance.HasHediff(def, mustBeVisible);
         }
 
-        [Feature(nameof(Hyperlactation))]
+        [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
@@ -58,7 +58,7 @@ namespace XylXenos.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation))]
+        [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
@@ -72,7 +72,7 @@ namespace XylXenos.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation))]
+        [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
@@ -86,7 +86,7 @@ namespace XylXenos.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation))]
+        [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
@@ -100,7 +100,7 @@ namespace XylXenos.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation))]
+        [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
@@ -114,7 +114,7 @@ namespace XylXenos.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(Hyperlactation))]
+        [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]

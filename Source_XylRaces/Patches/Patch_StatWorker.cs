@@ -162,7 +162,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(Hediff_SubstituteCapacity))]
+        [Feature(typeof(Hediff_SubstituteCapacity))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
@@ -192,7 +192,7 @@ namespace XylXenos.Patches
             return capacity;
         }
 
-        [Feature(nameof(Hediff_SubstituteCapacity))]
+        [Feature(typeof(Hediff_SubstituteCapacity))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
@@ -229,7 +229,7 @@ namespace XylXenos.Patches
             return foundHediff != null ? foundHediff.DefExt.substituteCapacity : __instance.capacity;
         }
 
-        [Feature(nameof(Psycast))]
+        [Feature(typeof(Psycast))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]

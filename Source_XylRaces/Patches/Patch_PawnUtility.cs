@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(PawnUtility))]
     public static class Patch_PawnUtility
     {
-        [Feature(nameof(ChemicalDefExtension))]
+        [Feature(typeof(ChemicalDefExtension))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(PawnUtility.CanTakeDrug))]

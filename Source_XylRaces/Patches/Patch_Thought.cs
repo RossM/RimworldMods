@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Thought))]
     public static class Patch_Thought
     {
-        [Feature("TODO")]
+        [Feature(Config.Feature.UIChange)]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Thought.Description), MethodType.Getter)]

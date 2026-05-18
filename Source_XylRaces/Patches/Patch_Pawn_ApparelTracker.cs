@@ -9,7 +9,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Pawn_ApparelTracker))]
     public static class Patch_Pawn_ApparelTracker
     {
-        [Feature(nameof(Flight))]
+        [Feature(typeof(Flight))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_ApparelTracker.Notify_ApparelChanged))]

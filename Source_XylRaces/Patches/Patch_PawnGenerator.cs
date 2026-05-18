@@ -30,7 +30,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(GeneDefExtension_GenderRatio))]
+        [Feature(typeof(GeneDefExtension_GenderRatio))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("TryGenerateNewPawnInternal")]
@@ -74,7 +74,7 @@ namespace XylXenos.Patches
             return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
         }
 
-        [Feature(nameof(GeneDefExtension_CongenitalHediff))]
+        [Feature(typeof(GeneDefExtension_CongenitalHediff))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch("GenerateInitialHediffs")]
@@ -90,7 +90,7 @@ namespace XylXenos.Patches
             }
         }
 
-        [Feature(nameof(XenotypeSetWithDefault))]
+        [Feature(typeof(XenotypeSetWithDefault))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(PawnGenerator.XenotypesAvailableFor))]

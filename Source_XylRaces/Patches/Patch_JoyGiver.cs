@@ -9,7 +9,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(JoyGiver))]
     public class Patch_JoyGiver
     {
-        [Feature(nameof(GeneDefExtension_JoyGivers))]
+        [Feature(typeof(GeneDefExtension_JoyGivers))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(JoyGiver.GetChance))]

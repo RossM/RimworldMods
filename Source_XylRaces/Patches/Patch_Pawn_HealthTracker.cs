@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Pawn_HealthTracker))]
     public static class Patch_Pawn_HealthTracker
     {
-        [Feature(nameof(AddHediff))]
+        [Feature(typeof(AddHediff))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_HealthTracker.CheckForStateChange))]

@@ -10,7 +10,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Pawn_FlightTracker))]
     public static class Patch_Pawn_FlightTracker
     {
-        [Feature(nameof(Flight))]
+        [Feature(typeof(Flight))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
@@ -26,7 +26,7 @@ namespace XylXenos.Patches
         }
 
         // Note: This patch is performance-sensitive
-        [Feature(nameof(Flight))]
+        [Feature(typeof(Flight))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_FlightTracker.FlightTick))]

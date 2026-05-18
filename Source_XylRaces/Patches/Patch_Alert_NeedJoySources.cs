@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Alert_NeedJoySources))]
     public static class Patch_Alert_NeedJoySources
     {
-        [Feature("Joyless")]
+        [Feature(Config.Feature.Joyless)]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch("NeedJoySource")]

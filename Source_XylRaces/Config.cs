@@ -9,6 +9,8 @@ namespace XylXenos
         public enum Feature
         {
             FixLactationBugs,
+            Joyless,
+            UIChange,
         }
 
         public static Config Instance => instance ??= DefDatabase<Config>.AllDefs.Single();

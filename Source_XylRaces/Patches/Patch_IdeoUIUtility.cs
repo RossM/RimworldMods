@@ -11,7 +11,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(IdeoUIUtility))]
     public static class Patch_IdeoUIUtility
     {
-        [Feature(nameof(XenotypeDefExtension))]
+        [Feature(typeof(XenotypeDefExtension))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch("GetMemeTip")]

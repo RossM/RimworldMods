@@ -15,7 +15,7 @@ namespace XylXenos.Patches
         public static bool Enabled => enabled.Value;
         public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Rendering>);
 
-        [Feature(nameof(GeneDefExtension_Rendering))]
+        [Feature(typeof(GeneDefExtension_Rendering))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(PawnRenderNodeWorker.ScaleFor))]
@@ -37,7 +37,7 @@ namespace XylXenos.Patches
             }
         }
 
-        [Feature(nameof(GeneDefExtension_Rendering))]
+        [Feature(typeof(GeneDefExtension_Rendering))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(PawnRenderNodeWorker.OffsetFor))]

@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(DefGenerator))]
     public static class Patch_DefGenerator
     {
-        [Feature(nameof(GeneDefGenerator_Psy))]
+        [Feature(typeof(GeneDefGenerator_Psy))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(DefGenerator.GenerateImpliedDefs_PreResolve))]

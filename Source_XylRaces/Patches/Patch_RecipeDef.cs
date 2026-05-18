@@ -22,7 +22,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(DefModExtension_GeneDependent))]
+        [Feature(typeof(DefModExtension_GeneDependent))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
@@ -42,7 +42,7 @@ namespace XylXenos.Patches
             return null;
         }
 
-        [Feature(nameof(DefModExtension_GeneDependent))]
+        [Feature(typeof(DefModExtension_GeneDependent))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]

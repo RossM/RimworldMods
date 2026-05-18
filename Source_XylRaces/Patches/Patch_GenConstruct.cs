@@ -22,7 +22,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(GeneDefExtension_Designator))]
+        [Feature(typeof(GeneDefExtension_Designator))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]

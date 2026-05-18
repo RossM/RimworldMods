@@ -50,7 +50,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(XenotypeDefExtension))]
+        [Feature(typeof(XenotypeDefExtension))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(ConversionUtility.ConversionPowerFactor_MemesVsTraits))]

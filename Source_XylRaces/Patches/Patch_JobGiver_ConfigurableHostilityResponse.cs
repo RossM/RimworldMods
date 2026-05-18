@@ -7,7 +7,7 @@ using Verse.AI;
 
 namespace XylXenos.Patches
 {
-    [Feature(nameof(Hediff_ForceBehavior))]
+    [Feature(typeof(Hediff_ForceBehavior))]
     [HarmonyPatch(typeof(JobGiver_ConfigurableHostilityResponse))]
     public static class Patch_JobGiver_ConfigurableHostilityResponse
     {

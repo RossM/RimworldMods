@@ -23,7 +23,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(DietDependency))]
+        [Feature(typeof(DietDependency))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch("IngestedCalculateAmounts")]

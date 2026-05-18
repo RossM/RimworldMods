@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(FloatMenuOptionProvider_Ingest))]
     public static class Patch_FloatMenuOptionProvider_Ingest
     {
-        [Feature(nameof(ChemicalDefExtension))]
+        [Feature(typeof(ChemicalDefExtension))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch("GetSingleOptionFor")]

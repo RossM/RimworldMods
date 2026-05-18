@@ -9,7 +9,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(TileFinder))]
     public static class Patch_TileFinder
     {
-        [Feature(nameof(FactionDefExtension))]
+        [Feature(typeof(FactionDefExtension))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor),

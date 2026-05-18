@@ -13,7 +13,7 @@ namespace XylXenos.Patches
         public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Pawn>);
 
         // Note: This patch is performance-sensitive
-        [Feature(nameof(GeneDefExtension_Pawn))]
+        [Feature(typeof(GeneDefExtension_Pawn))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
@@ -26,7 +26,7 @@ namespace XylXenos.Patches
                 __result *= extension.bodySizeFactor;
         }
 
-        [Feature(nameof(GeneDefExtension_Pawn))]
+        [Feature(typeof(GeneDefExtension_Pawn))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
@@ -39,7 +39,7 @@ namespace XylXenos.Patches
                 __result *= extension.healthScaleFactor;
         }
 
-        [Feature(nameof(Psycast))]
+        [Feature(typeof(Psycast))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn.HasPsylink), MethodType.Getter)]

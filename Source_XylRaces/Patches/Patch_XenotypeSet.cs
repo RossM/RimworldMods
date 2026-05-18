@@ -19,7 +19,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(XenotypeSetWithDefault))]
+        [Feature(typeof(XenotypeSetWithDefault))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(XenotypeSet.BaselinerChance), MethodType.Getter)]
@@ -33,7 +33,7 @@ namespace XylXenos.Patches
             return instructionsList;
         }
 
-        [Feature(nameof(XenotypeSetWithDefault))]
+        [Feature(typeof(XenotypeSetWithDefault))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(XenotypeSet.Contains))]

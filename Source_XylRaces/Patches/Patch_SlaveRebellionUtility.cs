@@ -61,7 +61,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(GeneDefExtension_SlaveRebellion))]
+        [Feature(typeof(GeneDefExtension_SlaveRebellion))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
@@ -89,7 +89,7 @@ namespace XylXenos.Patches
                 .Select(defExt => defExt.neverRebelThresholdDays).Where(x => x >= 0).TryMinBy(x => x, out neverRebelThresholdDays);
         }
 
-        [Feature(nameof(GeneDefExtension_SlaveRebellion))]
+        [Feature(typeof(GeneDefExtension_SlaveRebellion))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]

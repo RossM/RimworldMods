@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(MemoryThoughtHandler))]
     public static class Patch_MemoryThoughtHandler
     {
-        [Feature(nameof(ThoughtDefExtension_Memory))]
+        [Feature(typeof(ThoughtDefExtension_Memory))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(MemoryThoughtHandler.TryGainMemory), [typeof(Thought_Memory), typeof(Pawn)])]

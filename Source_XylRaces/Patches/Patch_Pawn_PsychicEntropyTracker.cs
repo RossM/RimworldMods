@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     public static class Patch_Pawn_PsychicEntropyTracker
     {
         // Note: This patch is performance-sensitive
-        [Feature(nameof(Psycast))]
+        [Feature(typeof(Psycast))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedsPsyfocus), MethodType.Getter)]
@@ -18,7 +18,7 @@ namespace XylXenos.Patches
             return false;
         }
 
-        [Feature(nameof(Psycast))]
+        [Feature(typeof(Psycast))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedToShowGizmo))]
