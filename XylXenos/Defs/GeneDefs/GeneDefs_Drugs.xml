@@ -44,4 +44,33 @@
     </statFactors>
   </GeneDef>
 
+  <GeneDef>
+    <defName>XylLithoid</defName>
+    <geneClass>XylXenos.Genes.ChemicalImmunity</geneClass>
+    <label>lithoid</label>
+    <description>Carriers of this gene have a unique biochemistry that incorporates carbon-silicates. They are completely unaffected by most drugs that work on normal humans, and instead must use specialized drugs designed for lithoids.</description>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>1</biostatMet>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <displayOrderInCategory>250</displayOrderInCategory>
+    <exclusionTags>
+      <li>Addiction_Alcohol</li>
+      <li>Addiction_GoJuice</li>
+      <li>Addiction_Psychite</li>
+      <li>Addiction_Smokeleaf</li>
+      <li>Addiction_WakeUp</li>
+    </exclusionTags>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <suppressedTraits>
+      <li>
+        <def>DrugDesire</def>
+        <degree>2</degree>
+      </li>
+      <li>
+        <def>DrugDesire</def>
+        <degree>1</degree>
+      </li>
+    </suppressedTraits>
+  </GeneDef>
+
 </Defs>

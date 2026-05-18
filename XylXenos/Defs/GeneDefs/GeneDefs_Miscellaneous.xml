@@ -91,7 +91,7 @@
     <biostatCpx>2</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Violence</displayCategory>
-    <displayOrderInCategory>120</displayOrderInCategory>
+    <displayOrderInCategory>130</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Precognition</iconPath>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
@@ -222,76 +222,6 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>XylScaleskin</defName>
-    <label>scaleskin</label>
-    <labelShortAdj>scaleskinned</labelShortAdj>
-    <description>Carriers of this gene grow tough but flexible scales all over their body that can deflect or absorb attacks.</description>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>-3</biostatMet>
-    <displayCategory>XylBody</displayCategory>
-    <displayOrderInCategory>450</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_Scaleskin</iconPath>
-    <iconColor>(0.75, 0.75, 0.75)</iconColor>
-    <forcedHeadTypes>
-      <li>Female_Scaleskin_Average_Normal</li>
-      <li>Female_Scaleskin_Average_Pointy</li>
-      <li>Female_Scaleskin_Narrow_Normal</li>
-      <li>Female_Scaleskin_Narrow_Pointy</li>
-      <li>Male_Scaleskin_Average_Normal</li>
-      <li>Male_Scaleskin_Average_Pointy</li>
-      <li>Male_Scaleskin_Narrow_Normal</li>
-      <li>Male_Scaleskin_Narrow_Pointy</li>
-    </forcedHeadTypes>
-    <exclusionTags>
-      <li>Fur</li>
-    </exclusionTags>
-    <statOffsets>
-      <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
-      <ArmorRating_Blunt>0.15</ArmorRating_Blunt>
-    </statOffsets>
-    <fur>Scaleskin</fur>
-    <renderNodeProperties>
-      <li>
-        <debugLabel>Scaleskin</debugLabel>
-        <nodeClass>XylXenos.PawnRenderNode_NotFur</nodeClass>
-        <workerClass>PawnRenderNodeWorker_Fur</workerClass>
-        <baseLayer>5</baseLayer>
-        <rotDrawMode>Fresh, Rotting</rotDrawMode>
-        <colorType>Skin</colorType>
-        <useSkinShader>true</useSkinShader>
-        <parentTagDef>Body</parentTagDef>
-      </li>
-    </renderNodeProperties>
-    <symbolPack>
-      <prefixSymbols>
-        <li><symbol>scale</symbol></li>
-        <li><symbol>armor</symbol></li>
-        <li><symbol>hide</symbol></li>
-        <li><symbol>croc</symbol></li>
-      </prefixSymbols>
-      <suffixSymbols>
-        <li><symbol>hide</symbol></li>
-        <li><symbol>back</symbol></li>
-        <li><symbol>scale</symbol></li>
-      </suffixSymbols>
-    </symbolPack>
-  </GeneDef>
-  <FurDef>
-    <defName>Scaleskin</defName>
-    <noGraphic>true</noGraphic>
-    <bodyTypeGraphicPaths>
-      <Male>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Male</Male>
-      <Female>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Female</Female>
-      <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Hulk</Hulk>
-      <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Fat</Fat>
-      <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Thin</Thin>
-      <Child>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Child>
-      <Baby>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Baby>
-      <!-- Always covered by swaddled graphic -->
-    </bodyTypeGraphicPaths>
-  </FurDef>
-
-  <GeneDef>
     <defName>XylInsectPheromones</defName>
     <label>insect pheromones</label>
     <description>Carriers of this gene produce special pheromones which make wild insects not attack them.</description>
@@ -368,6 +298,19 @@
     <statOffsets>
       <MechBandwidth>3</MechBandwidth>
     </statOffsets>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylPetrification</defName>
+    <geneClass>XylXenos.Genes.ChemicalImmunity</geneClass>
+    <label>petrification</label>
+    <description>Carriers of this gene have a chance to develop a disease named petrification. Petrification slowly replaces tissues throughout the body with stone. The disease is incurable, but progress can be slowed with medical treatment, and the affected tissues can be removed surgically.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>Healing</displayCategory>
+    <displayOrderInCategory>210</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <prerequisite>XylLithoid</prerequisite>
   </GeneDef>
 
 </Defs>
