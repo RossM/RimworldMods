@@ -1,10 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Patch>
 
+  <!-- Needs -->
+  
   <Operation Class="PatchOperationInsert">
+    <xpath>Defs/ThinkTreeDef//li[@Class="JobGiver_SatisfyChemicalNeed"]</xpath>
+    <value>
+      <li Class="XylXenos.JobGiver_SatisfyDietDependency" />
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationInsert">
+    <xpath>Defs/ThinkTreeDef//li[@Class="JobGiver_Meditate"]</xpath>
+    <value>
+      <li Class="XylXenos.JobGiver_GetWetness">
+        <showerJobDef>XylTakeShower</showerJobDef>
+        <soakJobDef>XylSoak</soakJobDef>
+      </li>
+    </value>
+  </Operation>
+
+  <!-- Mental states -->
+  
+    <Operation Class="PatchOperationInsert">
     <xpath>Defs/ThinkTreeDef//li[state="MurderousRage"]</xpath>
     <value>
-      <!-- Hunt vermin -->
+
       <li Class="ThinkNode_ConditionalMentalState">
         <state>XylHuntingVermin</state>
         <subNodes>
@@ -23,6 +44,7 @@
           <li Class="JobGiver_WanderColony" />
         </subNodes>
       </li>
+
       <li Class="ThinkNode_ConditionalMentalState">
         <state>XylSeeingRed</state>
         <subNodes>
@@ -32,7 +54,9 @@
           </li>
         </subNodes>
       </li>
+
     </value>
   </Operation>
-  
+
+
 </Patch>
