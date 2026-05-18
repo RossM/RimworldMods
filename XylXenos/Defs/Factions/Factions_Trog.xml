@@ -18,11 +18,11 @@
         <Pigskin>0.025</Pigskin>
         <Waster>0.1</Waster>
         <Yttakin>0.025</Yttakin>
-        <XylBossaps MayRequire="Xylthixlm.Races.Bossaps">0.025</XylBossaps>
-        <XylChyrr MayRequire="Xylthixlm.Races.Chyrr">0.01</XylChyrr>
-        <XylDvergr MayRequire="Xylthixlm.Races.Dvergr">0.025</XylDvergr>
-        <XylNixie MayRequire="Xylthixlm.Races.Nixie">0.025</XylNixie>
-        <XylWarcat MayRequire="Xylthixlm.Races.Warcat">0.025</XylWarcat>
+        <XylBossaps >0.025</XylBossaps>
+        <XylChyrr>0.01</XylChyrr>
+        <XylDvergr>0.025</XylDvergr>
+        <XylNixie>0.025</XylNixie>
+        <XylWarcat>0.025</XylWarcat>
       </xenotypeChances>
     </xenotypeSet>
     <colorSpectrum Inherit="false">

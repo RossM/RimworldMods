@@ -123,7 +123,7 @@
         <prohibitedGenes>
           <li>ViolenceDisabled</li>
           <li>Inbred</li>
-          <li MayRequire="Xylthixlm.Races.Trog">XylGeneticAtavism</li>
+          <li>XylGeneticAtavism</li>
         </prohibitedGenes>
       </li>
       <li Class="XylXenos.Genes.GeneDefExtension_UIFilter">
