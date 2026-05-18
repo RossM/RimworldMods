@@ -70,7 +70,7 @@ namespace XylXenos
 
         public static float GetStatBase(this ThingDef thingDef, StatDef statDef)
         {
-            return thingDef.statBases.FirstOrDefault(s => s.stat == statDef)?.value ?? 0;
+            return thingDef.statBases.FirstOrDefault(s => s.stat == statDef)?.value ?? statDef.defaultBaseValue;
         }
 
         public static IEnumerable<Pawn> GetPawns(this Faction faction)
