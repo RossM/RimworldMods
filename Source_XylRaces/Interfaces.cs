@@ -1,18 +1,9 @@
 ﻿using Verse;
 
-namespace XylXenos;
-
-public interface IStartingItemSource
+namespace XylXenos
 {
-    public ThingDefCount? GetStartingItem();
-}
-
-public interface INotifyDamageTaken
-{
-    void Notify_DamageTaken(DamageInfo damageInfo);
-}
-
-public interface INotifyApparelChanged
-{
-    void Notify_ApparelChanged(Pawn pawn);
+    public interface IStartingItemSource
+    {
+        public ThingDefCount? GetStartingItem();
+    }
 }

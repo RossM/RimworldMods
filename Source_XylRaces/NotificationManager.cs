@@ -1,0 +1,207 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
+using LudeonTK;
+using RimWorld.Planet;
+using UnityEngine;
+using Verse;
+
+namespace XylXenos
+{
+    public interface INotificationTarget
+    {
+        public void RegisterWith(NotificationManager manager);
+    }
+
+    [UsedImplicitly]
+    public class NotificationManager(Game _) : GameComponent
+    {
+        public enum NotificationCategory
+        {
+            DamageDealt,
+            DamageTaken,
+            GenesChanged,
+            HediffsChanged,
+            ApparelChanged,
+        }
+
+        class NotificationInfo(NotificationCategory category)
+        {
+            public readonly NotificationCategory category = category;
+            public readonly List<CallbackInfo> globalCallbacks = new();
+            public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
+        }
+
+        public struct CallbackInfo
+        {
+            public Delegate wrappedCallback;
+            public object target;
+            public string name;
+        }
+
+        public static NotificationManager Instance => Current.Game.GetComponent<NotificationManager>();
+        private static bool doDebug = false;
+
+        readonly List<NotificationInfo> infos =
+        [
+            new(NotificationCategory.DamageDealt),
+            new(NotificationCategory.DamageTaken),
+            new(NotificationCategory.GenesChanged),
+            new(NotificationCategory.HediffsChanged),
+            new(NotificationCategory.ApparelChanged),
+        ];
+
+        [DebugAction(allowedGameStates = 0)]
+        [UsedImplicitly]
+        public static void ToggleNotificationManagerLogging()
+        {
+            doDebug = !doDebug;
+        }
+
+        private void RegisterInternal<T>(NotificationCategory category, Thing target, Action<Thing, T> callback, object callbackTarget, string name)
+        {
+            NotificationInfo info = infos.Single(info => info.category == category);
+            if (target == null)
+            {
+                info.globalCallbacks.Add(new() { wrappedCallback = callback, target = callbackTarget, name = name });
+            }
+            else
+            {
+                List<CallbackInfo> localCallbacks = info.localCallbacks.GetOrCreateValue(target);
+                localCallbacks.Add(new() { wrappedCallback = callback, target = callbackTarget, name = name });
+            }
+        }
+
+        public void Register<T>(NotificationCategory category, Thing target, Action<Thing, T> callback)
+        {
+            if (callback.Target is not INotificationTarget)
+                throw new InvalidOperationException("Only INotificationTargets can register for notifications");
+
+            RegisterInternal(category, target, callback, callback.Target, callback.Method.Name);
+        }
+
+        public void Register<T>(NotificationCategory category, Thing target, Action<T> callback)
+        {
+            if (callback.Target is not INotificationTarget)
+                throw new InvalidOperationException("Only INotificationTargets can register for notifications");
+
+            RegisterInternal<T>(category, target, (_, data) => callback(data), callback.Target, callback.Method.Name);
+        }
+
+        public void Register(NotificationCategory category, Thing target, Action<Thing> callback)
+        {
+            if (callback.Target is not INotificationTarget)
+                throw new InvalidOperationException("Only INotificationTargets can register for notifications");
+
+            RegisterInternal<object>(category, target, (t, _) => callback(t), callback.Target, callback.Method.Name);
+        }
+
+        public void Register(NotificationCategory category, Thing target, Action callback)
+        {
+            if (callback.Target is not INotificationTarget)
+                throw new InvalidOperationException("Only INotificationTargets can register for notifications");
+
+            RegisterInternal<object>(category, target, (_, _) => callback(), callback.Target, callback.Method.Name);
+        }
+
+        public void Notify(NotificationCategory category, Thing target, object data = null)
+        {
+            if (target == null)
+                return;
+
+            if (doDebug)
+                Debug.Log($"Notify category={category} target={target} data={data}");
+
+            NotificationInfo info = infos.Single(info => info.category == category);
+            foreach (CallbackInfo callbackInfo in info.globalCallbacks)
+            {
+                DoNotify(callbackInfo, target, data);
+            }
+
+            if (info.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbackInfos))
+            {
+                foreach (CallbackInfo callbackInfo in callbackInfos)
+                {
+                    DoNotify(callbackInfo, target, data);
+                }
+            }
+        }
+
+        private static void DoNotify(CallbackInfo callbackInfo, Thing target, object data)
+        {
+            if (doDebug)
+                Debug.Log($"  {callbackInfo.target} : {callbackInfo.name}");
+
+            callbackInfo.wrappedCallback.DynamicInvoke(target, data);
+        }
+
+        private void CallRegistrationHandlers(object thing)
+        {
+            if (thing is INotificationTarget target)
+                target.RegisterWith(this);
+
+            if (thing is ThingWithComps thingWithComps)
+                DoRegister(thingWithComps);
+
+            switch (thing)
+            {
+                case HediffWithComps hediffWithComps:
+                    DoRegister(hediffWithComps);
+                    break;
+                case Pawn pawn:
+                    DoRegister(pawn);
+                    break;
+                case Map map:
+                    DoRegister(map);
+                    break;
+                case Caravan caravan:
+                    DoRegister(caravan);
+                    break;
+            }
+        }
+
+        private void DoRegister(Caravan caravan)
+        {
+            foreach (Pawn pawn in caravan.PawnsListForReading)
+                CallRegistrationHandlers(pawn);
+        }
+
+        private void DoRegister(Map map)
+        {
+            foreach (Pawn pawn in map.mapPawns.AllPawns)
+                CallRegistrationHandlers(pawn);
+        }
+
+        private void DoRegister(Pawn pawn)
+        {
+            foreach (Gene gene in pawn.genes?.GenesListForReading ?? [])
+                CallRegistrationHandlers(gene);
+            foreach (Hediff hediff in pawn.health.hediffSet.hediffs ?? [])
+                CallRegistrationHandlers(hediff);
+        }
+
+        private void DoRegister(HediffWithComps hediffWithComps)
+        {
+            foreach (HediffComp comp in hediffWithComps.comps)
+                CallRegistrationHandlers(comp);
+        }
+
+        private void DoRegister(ThingWithComps thingWithComps)
+        {
+            foreach (ThingComp comp in thingWithComps.AllComps)
+                CallRegistrationHandlers(comp);
+        }
+
+        public override void LoadedGame()
+        {
+            foreach (Map map in Current.Game.Maps)
+                CallRegistrationHandlers(map);
+            foreach (Pawn pawn in Current.Game.World.worldPawns.AllPawnsAliveOrDead)
+                CallRegistrationHandlers(pawn);
+            foreach (Caravan caravan in Current.Game.World.worldObjects.Caravans)
+                CallRegistrationHandlers(caravan);
+        }
+    }
+}

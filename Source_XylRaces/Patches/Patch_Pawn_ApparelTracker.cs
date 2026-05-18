@@ -9,16 +9,13 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Pawn_ApparelTracker))]
     public static class Patch_Pawn_ApparelTracker
     {
-        [Feature(typeof(Flight))]
+        [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_ApparelTracker.Notify_ApparelChanged))]
         public static void Notify_ApparelChanged_Postfix(Pawn_ApparelTracker __instance)
         {
-            Pawn pawn = __instance.pawn;
-
-            foreach (var toNotify in pawn.EverythingOfType<INotifyApparelChanged>())
-                toNotify.Notify_ApparelChanged(pawn);
+            NotificationManager.Instance.Notify(NotificationManager.NotificationCategory.ApparelChanged, __instance.pawn);
         }
     }
 }

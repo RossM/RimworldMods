@@ -7,13 +7,13 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Pawn_GeneTracker))]
     public static class Patch_Pawn_GeneTracker
     {
-        [Feature(typeof(CompPawn_LookupCache))]
+        [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch("Notify_GenesChanged")]
         public static void Notify_GenesChanged_Postfix(Pawn_GeneTracker __instance)
         {
-            __instance.pawn.GetComp<CompPawn_LookupCache>()?.Notify_GenesChanged();
+            NotificationManager.Instance.Notify(NotificationManager.NotificationCategory.GenesChanged, __instance.pawn);
         }
 
         [Feature(nameof(DefOf.XylGlobalAddictionChanceFactor), nameof(ChemicalDefExtension))]

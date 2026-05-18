@@ -7,13 +7,13 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(HediffSet))]
     public class Patch_HediffSet
     {
-        [Feature(typeof(CompPawn_LookupCache))]
+        [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(HediffSet.DirtyCache))]
         public static void DirtyCache_Postfix(HediffSet __instance)
         {
-            __instance.pawn.GetComp<CompPawn_LookupCache>()?.Notify_HediffsChanged();
+            NotificationManager.Instance.Notify(NotificationManager.NotificationCategory.HediffsChanged, __instance.pawn);
         }
     }
 }

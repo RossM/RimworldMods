@@ -6,7 +6,7 @@ using XylXenos.Genes;
 
 namespace XylXenos
 {
-    public class HostilityOverrideManager(Map map) : MapComponent(map)
+    public class HostilityOverrideManager(Map map) : MapComponent(map), INotificationTarget
     {
         public const int violationDisableTicks = 2500;
         public const int updateFrequency = 60;
@@ -48,10 +48,12 @@ namespace XylXenos
             return hostileActionTick + violationDisableTicks < Find.TickManager.TicksGame;
         }
 
-        public void Notify_PawnDamagedThing(Pawn pawn, Thing thing)
+        public void Notify_PawnDamagedThing(Thing source, Thing target)
         {
-            if (activeOverrides.Contains((pawn.Faction, thing.Faction)))
-                lastHostileActionTick[pawn.Faction] = Find.TickManager.TicksGame;
+            if (source.Map != map)
+                return;
+            if (activeOverrides.Contains((source.Faction, target.Faction)))
+                lastHostileActionTick[source.Faction] = Find.TickManager.TicksGame;
         }
 
         public override void MapComponentTick()
@@ -71,6 +73,11 @@ namespace XylXenos
                     }
                 }
             }
+        }
+
+        public void RegisterWith(NotificationManager manager)
+        {
+            manager.Register<Thing>(NotificationManager.NotificationCategory.DamageDealt, null, Notify_PawnDamagedThing);
         }
     }
 }

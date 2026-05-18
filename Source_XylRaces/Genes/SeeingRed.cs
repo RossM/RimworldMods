@@ -10,7 +10,7 @@ namespace XylXenos.Genes
         public HediffDef hediffDef;
     }
 
-    public class SeeingRed : Gene, INotifyDamageTaken
+    public class SeeingRed : Gene, INotificationTarget
     {
         public GeneDefExtension_SeeingRed DefExt => def.GetModExtension<GeneDefExtension_SeeingRed>();
 
@@ -66,6 +66,11 @@ namespace XylXenos.Genes
             if (comp == null)
                 return;
             comp.ticksToDisappear = comp.disappearsAfterTicks;
+        }
+
+        public void RegisterWith(NotificationManager manager)
+        {
+            manager.Register<DamageInfo>(NotificationManager.NotificationCategory.DamageTaken, pawn, Notify_DamageTaken);
         }
     }
 }

@@ -45,18 +45,8 @@ namespace XylXenos.Patches
         [HarmonyPatch("TakeDamage")]
         public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
         {
-            if (dinfo.Instigator is Pawn instigator)
-            {
-                HostilityOverrideManager.GetManager(instigator.Map)?.Notify_PawnDamagedThing(instigator, __instance);
-            }
-
-            if (__instance is Pawn target)
-            {
-                foreach (var listener in target.EverythingOfType<INotifyDamageTaken>())
-                {
-                    listener.Notify_DamageTaken(dinfo);
-                }
-            }
+            NotificationManager.Instance.Notify(NotificationManager.NotificationCategory.DamageDealt, dinfo.Instigator, __instance);
+            NotificationManager.Instance.Notify(NotificationManager.NotificationCategory.DamageTaken,  __instance, dinfo.Instigator);
         }
 
         [Feature(nameof(FoodHelpers.GetFoodPoisonChanceOffset))]
@@ -80,6 +70,16 @@ namespace XylXenos.Patches
             if (stat == StatDefOf.FoodPoisonChanceFixedHuman)
                 value += FoodHelpers.GetFoodPoisonChanceOffset(ingester, thing);
             return value;
+        }
+
+        [Feature(typeof(NotificationManager))]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(Thing.PostMake))]
+        public static void PostMake(Thing __instance)
+        {
+            if (__instance is INotificationTarget target)
+                target.RegisterWith(NotificationManager.Instance);
         }
     }
 }

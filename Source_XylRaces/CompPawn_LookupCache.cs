@@ -16,7 +16,7 @@ namespace XylXenos
         }
     }
 
-    public class CompPawn_LookupCache : ThingComp
+    public class CompPawn_LookupCache : ThingComp, INotificationTarget
     {
         [Unsaved] private readonly Dictionary<Type, IList> genesByType = new();
         [Unsaved] private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
@@ -111,6 +111,12 @@ namespace XylXenos
             hediffsByDef.Clear();
             hediffsByModExt.Clear();
             hediffsByType.Clear();
+        }
+        
+        public void RegisterWith(NotificationManager manager)
+        {
+            manager.Register(NotificationManager.NotificationCategory.GenesChanged, parent, Notify_GenesChanged);
+            manager.Register(NotificationManager.NotificationCategory.HediffsChanged, parent, Notify_HediffsChanged);
         }
     }
 }

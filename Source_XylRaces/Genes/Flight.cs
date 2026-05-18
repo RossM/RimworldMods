@@ -18,7 +18,7 @@ namespace XylXenos.Genes
         public bool allowsFlight = true;
     }
 
-    public class Flight : Gene, INotifyApparelChanged
+    public class Flight : Gene, INotificationTarget
     {
         public GeneDefExtension_Flight DefExt => def.GetModExtension<GeneDefExtension_Flight>();
         public bool autoFly = true;
@@ -171,9 +171,14 @@ namespace XylXenos.Genes
                 DefDatabase<ThingDef>.AllDefs.Where(thingDef => thingDef.IsApparel).OrderBy(thingDef => thingDef.BaseMarketValue), columns);
         }
 
-        public void Notify_ApparelChanged(Pawn target)
+        public void Notify_ApparelChanged()
         {
             CheckApparel();
+        }
+
+        public void RegisterWith(NotificationManager manager)
+        {
+            manager.Register(NotificationManager.NotificationCategory.ApparelChanged, pawn, Notify_ApparelChanged);
         }
     }
 }
