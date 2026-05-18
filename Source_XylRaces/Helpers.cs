@@ -11,12 +11,7 @@ namespace XylXenos
 {
     public readonly struct ProfileBlock : IDisposable
     {
-#if DEBUG
         public const bool GlobalEnabled = true;
-#else
-        public const bool GlobalEnabled = false;
-#endif
-        public static bool InstrumentTickManager = false;
         private readonly bool _enabled;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -36,13 +31,6 @@ namespace XylXenos
             if (!_enabled)
                 return;
             DeepProfiler.End();
-        }
-
-        [DebugAction("Toggle tick profiling")]
-        [UsedImplicitly]
-        public static void ToggleTickProfiling()
-        {
-            InstrumentTickManager = !InstrumentTickManager;
         }
     }
 

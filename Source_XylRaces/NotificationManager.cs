@@ -149,9 +149,6 @@ namespace XylXenos
             if (thing is INotificationTarget target)
                 target.RegisterWith(this);
 
-            if (thing is ThingWithComps thingWithComps)
-                DoRegister(thingWithComps);
-
             switch (thing)
             {
                 case HediffWithComps hediffWithComps:
@@ -195,14 +192,10 @@ namespace XylXenos
                 CallRegistrationHandlers(comp);
         }
 
-        private void DoRegister(ThingWithComps thingWithComps)
-        {
-            foreach (ThingComp comp in thingWithComps.AllComps)
-                CallRegistrationHandlers(comp);
-        }
-
         public override void LoadedGame()
         {
+            using var _ = new ProfileBlock();
+
             foreach (Map map in Current.Game.Maps)
                 CallRegistrationHandlers(map);
             foreach (Pawn pawn in Current.Game.World.worldPawns.AllPawnsAliveOrDead)
