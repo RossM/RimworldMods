@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using LudeonTK;
@@ -52,7 +51,12 @@ namespace XylXenos
             doDebug = !doDebug;
         }
 
-        private void RegisterInternal<T>(NotificationCategory category, Thing target, Action<Thing, T> callback, object callbackTarget, string name)
+        private void RegisterInternal<T>(
+            NotificationCategory category,
+            Thing target,
+            Action<Thing, T> callback,
+            object callbackTarget,
+            string name)
         {
             CategoryInfo categoryInfo = categoryInfos[(int)category] ??= new();
 
@@ -60,11 +64,25 @@ namespace XylXenos
 
             if (target == null)
             {
+                if (categoryInfo.globalCallbacks.Any(c => c.target == callbackTarget && c.name == name))
+                {
+                    Log.Warning(
+                        $"Adding a duplicate callback: category={category} target={target} callbackTarget={callbackTarget} name={name}");
+                    return;
+                }
+
                 categoryInfo.globalCallbacks.Add(callbackInfo);
             }
             else
             {
                 List<CallbackInfo> localCallbacks = categoryInfo.localCallbacks.GetOrCreateValue(target);
+                if (localCallbacks.Any(c => c.target == callbackTarget && c.name == name))
+                {
+                    Log.Warning(
+                        $"Adding a duplicate callback: category={category} target={target} callbackTarget={callbackTarget} name={name}");
+                    return;
+                }
+
                 localCallbacks.Add(callbackInfo);
             }
         }
