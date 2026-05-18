@@ -4,7 +4,6 @@
   <PawnKindDef ParentName="BasePlayerPawnKind">
     <defName>XylNixie_Siren</defName>
     <label>colonist</label>
-    <defaultFactionDef>XylSirenPlayerColony</defaultFactionDef>
     <chemicalAddictionChance>0.06</chemicalAddictionChance>
     <apparelTags>
       <li>IndustrialBasic</li>
@@ -14,8 +13,10 @@
       <li>Apparel_Robe</li>
       <li>Apparel_HatHood</li>
     </apparelRequired>
+    <ignoreFactionApparelStuffRequirements>true</ignoreFactionApparelStuffRequirements>
     <specificApparelRequirements Inherit="False">
       <li>
+        <stuff>Hyperweave</stuff>
         <colorGenerator Class="ColorGenerator_Options">
           <options>
             <li>
