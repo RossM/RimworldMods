@@ -16,26 +16,13 @@
     <letterDef>NeutralEvent</letterDef>
     <modExtensions>
       <li Class="XylXenos.IncidentDefExtension_WildTribe">
-        <xenotype>XylBossaps</xenotype>
+        <faction>TribalBossaps</faction>
         <pawnsCount>2 ~ 4</pawnsCount>
         <exitMapTicks>180000 ~ 300000</exitMapTicks> <!-- 3 to 5 days -->
         <forcedTraits>
           <Nudist>0.3</Nudist>
           <Ascetic>0.3</Ascetic>
         </forcedTraits>
-        <forbiddenMemes>
-          <li MayRequire="Ludeon.RimWorld.Ideology">Cannibal</li>
-          <li MayRequire="Ludeon.RimWorld.Ideology">Darkness</li>
-          <li MayRequire="Ludeon.RimWorld.Ideology">Raider</li>
-          <li MayRequire="Ludeon.RimWorld.Ideology">Transhumanist</li>
-          <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
-          <li MayRequire="Ludeon.RimWorld.Anomaly">Inhuman</li>
-        </forbiddenMemes>
-        <preferredMemes>
-          <li MayRequire="Ludeon.RimWorld.Ideology">AnimalPersonhood</li>
-          <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>
-          <li MayRequire="Ludeon.RimWorld.Ideology">NaturePrimacy</li>
-        </preferredMemes>
       </li>
     </modExtensions>
   </IncidentDef>

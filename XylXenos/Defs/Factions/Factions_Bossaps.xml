@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <FactionDef ParentName="TribeBase">
+    <defName>TribalBossaps</defName>
+    <label>wild bossaps tribe</label>
+    <pawnSingular>bossaps</pawnSingular>
+    <pawnsPlural>bossaps</pawnsPlural>
+    <categoryTag>WildTribe</categoryTag>
+    <canSiege>false</canSiege>
+    <canStageAttacks>false</canStageAttacks>
+    <hidden>true</hidden>
+    <description>A group of wild bossaps.</description>
+    <factionIconPath>World/WorldObjects/Expanding/SettlementTemporary</factionIconPath>
+    <requiredMemes>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>
+    </requiredMemes>
+    <disallowedMemes>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Blindsight</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Cannibal</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Darkness</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">HumanPrimacy</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Raider</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Rancher</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Transhumanist</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
+      <li MayRequire="Ludeon.RimWorld.Biotech">Bloodfeeding</li>
+      <li MayRequire="Ludeon.RimWorld.Anomaly">Ritualist</li>
+      <li MayRequire="Ludeon.RimWorld.Anomaly">Inhuman</li>
+    </disallowedMemes>
+    <xenotypeSet>
+      <xenotypeChances>
+        <XylBossaps>999</XylBossaps>
+      </xenotypeChances>
+    </xenotypeSet>
+    <colorSpectrum>
+      <li>(0.93, 0.39, 0.32)</li>
+      <li>(0.35, 0.90, 0.57)</li>
+      <li>(0.25, 0.66, 0.94)</li>
+      <li>(0.98, 0.75, 0.37)</li>
+      <li>(0.97, 0.62, 0.52)</li>
+    </colorSpectrum>
+    <generateNewLeaderFromMapMembersOnly>true</generateNewLeaderFromMapMembersOnly>
+    <requiredCountAtGameStart>0</requiredCountAtGameStart>
+    <mustStartOneEnemy>false</mustStartOneEnemy>
+  </FactionDef>
+
+
+</Defs>

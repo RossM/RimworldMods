@@ -25,25 +25,14 @@ namespace XylXenos
         public IntRange pawnsCount = new(2, 4);
         public IntRange exitMapTicks = new(180000, 300000);
 
-        public XenotypeDef xenotype;
+        public FactionDef faction;
         public List<TraitChance> forcedTraits;
-        public List<MemeDef> forbiddenMemes;
-        public List<MemeDef> preferredMemes;
     }
 
     [UsedImplicitly]
     public class IncidentWorker_WildTribe : IncidentWorker
     {
         public IncidentDefExtension_WildTribe DefExt => def.GetModExtension<IncidentDefExtension_WildTribe>();
-
-        private float IdeoWeight(Ideo ideo)
-        {
-            if (DefExt.forbiddenMemes != null && ideo.memes.Intersect(DefExt.forbiddenMemes).Any())
-                return 0.0f;
-            if (DefExt.preferredMemes != null && ideo.memes.Intersect(DefExt.preferredMemes).Any())
-                return 10.0f;
-            return 1.0f;
-        }
 
         protected override bool CanFireNowSub(IncidentParms parms)
         {
@@ -56,11 +45,10 @@ namespace XylXenos
             if (!TryFindEntryCell(map, out IntVec3 start))
                 return false;
 
-            if (!Find.IdeoManager.IdeosListForReading.TryRandomElementByWeight(IdeoWeight, out Ideo ideo))
-                ideo = null;
+            Faction faction = GenerateFaction();
 
             Rot4 rot = Rot4.FromAngleFlat((map.Center - start).AngleFlat);
-            List<Pawn> pawns = GeneratePawns(ideo);
+            List<Pawn> pawns = GeneratePawns(faction);
 
             int exitMapTicks = DefExt.exitMapTicks.RandomInRange;
 
@@ -71,11 +59,23 @@ namespace XylXenos
                 pawn.mindState.exitMapAfterTick = Find.TickManager.TicksGame + exitMapTicks;
             }
 
-            string xenotypeDefLabel = DefExt.xenotype?.label ?? "XylWildPeople".TranslateSimple();
-            TaggedString baseLetterText = def.letterText.Formatted(xenotypeDefLabel).CapitalizeFirst();
-            string text = string.Format(def.letterLabel, xenotypeDefLabel.CapitalizeFirst());
+            string pawnsPlural = DefExt.faction.pawnsPlural ?? "XylWildPeople".TranslateSimple();
+            TaggedString baseLetterText = def.letterText.Formatted(pawnsPlural).CapitalizeFirst();
+            string text = string.Format(def.letterLabel, pawnsPlural.CapitalizeFirst());
             SendStandardLetter(text, baseLetterText, def.letterDef, parms, pawns[0]);
             return true;
+        }
+
+        private Faction GenerateFaction()
+        {
+            List<FactionRelation> factionRelations = Find.FactionManager.AllFactionsListForReading
+                .Where(item => !item.def.PermanentlyHostileTo(DefExt.faction))
+                .Select(item => new FactionRelation() { other = item, kind = FactionRelationKind.Neutral })
+                .ToList();
+            Faction faction = FactionGenerator.NewGeneratedFactionWithRelations(DefExt.faction, factionRelations, hidden: true);
+            faction.temporary = true;
+            Find.FactionManager.Add(faction);
+            return faction;
         }
 
         private bool TryFindEntryCell(Map map, out IntVec3 start)
@@ -83,7 +83,7 @@ namespace XylXenos
             return RCellFinder.TryFindRandomPawnEntryCell(out start, map, CellFinder.EdgeRoadChance_Animal);
         }
 
-        private List<Pawn> GeneratePawns(Ideo ideo)
+        private List<Pawn> GeneratePawns(Faction faction)
         {
             int count = DefExt.pawnsCount.RandomInRange;
             List<Pawn> pawns = [];
@@ -93,10 +93,13 @@ namespace XylXenos
                 DevelopmentalStage stage = (Find.Storyteller.difficulty.ChildrenAllowed
                     ? (DevelopmentalStage.Child | DevelopmentalStage.Adult)
                     : DevelopmentalStage.Adult);
-                PawnKindDef wildMan = PawnKindDefOf.WildMan;
                 List<TraitDef> traits = DefExt.forcedTraits.Where(t => Rand.Chance(t.chance)).Select(t => t.trait).ToList();
-                Pawn pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(kind: wildMan, context: PawnGenerationContext.NonPlayer,
-                    forcedTraits: traits, forcedXenotype: DefExt.xenotype, fixedIdeo: ideo, developmentalStages: stage));
+                Pawn pawn = PawnGenerator.GeneratePawn(new(
+                    kind: PawnKindDefOf.WildMan,
+                    faction: faction,
+                    context: PawnGenerationContext.NonPlayer,
+                    forcedTraits: traits, 
+                    developmentalStages: stage));
                 pawns.Add(pawn);
             }
 
