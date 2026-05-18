@@ -73,4 +73,20 @@
     </value>
   </Operation>
   
+  <!-- Change Waster faction to use XenotypeSetWithDefault so chances add to 100% -->
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet</xpath>
+    <attribute>Class</attribute>
+    <value>XylXenos.XenotypeSetWithDefault</value>
+  </Operation>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet</xpath>
+    <value>
+      <defaultXenotype>Waster</defaultXenotype>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationRemove">
+    <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet/xenotypeChances/Waster</xpath>
+  </Operation>
+
 </Patch>
