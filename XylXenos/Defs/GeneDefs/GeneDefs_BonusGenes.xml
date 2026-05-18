@@ -31,19 +31,27 @@
     </modExtensions>
   </GeneDef>
 
-  <GeneDef>
-    <defName>XylSpecialist</defName>
+  <GeneDef Name="XylSpecialistBase" Abstract="true">
     <geneClass>XylXenos.Genes.BonusGene</geneClass>
+    <displayCategory>XylRandom</displayCategory>
+    <exclusionTags>
+      <li>XylSpecialist</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_UIFilter">
+        <inheritable>false</inheritable>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylSpecialistBase">
+    <defName>XylSpecialist</defName>
     <label>specialist</label>
     <description>The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>XylRandom</displayCategory>
     <displayOrderInCategory>201</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
-    <exclusionTags>
-      <li>XylSpecialist</li>
-    </exclusionTags>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_BonusGene">
         <removeAfterAdding>true</removeAfterAdding>
@@ -66,19 +74,14 @@
     </modExtensions>
   </GeneDef>
 
-  <GeneDef>
+  <GeneDef ParentName="XylSpecialistBase">
     <defName>XylSuperSpecialist</defName>
-    <geneClass>XylXenos.Genes.BonusGene</geneClass>
     <label>super-specialist</label>
     <description>The carrier's aptitude in one random skill is increased by 8. Aptitude acts like an offset on skill level. Additionally, one level of passion is added to that skill.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>XylRandom</displayCategory>
     <displayOrderInCategory>202</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
-    <exclusionTags>
-      <li>XylSpecialist</li>
-    </exclusionTags>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_BonusGene">
         <removeAfterAdding>true</removeAfterAdding>
@@ -122,6 +125,9 @@
           <li>Inbred</li>
           <li MayRequire="Xylthixlm.Races.Trog">XylGeneticAtavism</li>
         </prohibitedGenes>
+      </li>
+      <li Class="XylXenos.Genes.GeneDefExtension_UIFilter">
+        <alwaysHide>true</alwaysHide>
       </li>
     </modExtensions>
   </GeneDef>
