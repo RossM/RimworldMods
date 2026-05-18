@@ -32,8 +32,8 @@ namespace XylRacesCore
         {
             List<TableDataGetter<FactionDef>> columns =
             [
-                new("defName", geneDef => geneDef.defName),
-                new("label", geneDef => geneDef.LabelCap),
+                new("defName", factionDef => factionDef.defName),
+                new("label", factionDef => factionDef.LabelCap),
             ];
             foreach (var xenotypeDef in DefDatabase<XenotypeDef>.AllDefs)
             {
@@ -65,8 +65,8 @@ namespace XylRacesCore
         {
             List<TableDataGetter<PawnKindDef>> columns =
             [
-                new("defName", geneDef => geneDef.defName),
-                new("label", geneDef => geneDef.LabelCap),
+                new("defName", pawnKindDef => pawnKindDef.defName),
+                new("label", pawnKindDef => pawnKindDef.LabelCap),
             ];
             foreach (var xenotypeDef in DefDatabase<XenotypeDef>.AllDefs)
             {
@@ -90,6 +90,40 @@ namespace XylRacesCore
                 if (weights.TryGetValue(xenotypeDef, out var xenotypeWeight))
                     return xenotypeWeight / totalWeight;
                 return 0f;
+            }
+        }
+
+        [DebugOutput]
+        [UsedImplicitly]
+        public static void XenotypeSkillAptitudes()
+        {
+            List<TableDataGetter<XenotypeDef>> columns =
+            [
+                new("defName", xenotypeDef => xenotypeDef.defName),
+                new("label", xenotypeDef => xenotypeDef.LabelCap),
+            ];
+            foreach (var skillDef in DefDatabase<SkillDef>.AllDefs)
+            {
+                var defCaptured = skillDef;
+
+                columns.Add(new(defCaptured.LabelCap, xenotypeDef =>
+                {
+                    int skillModifier = GetSkillModifier(xenotypeDef, defCaptured);
+
+                    return skillModifier != 0 ? skillModifier.ToStringWithSign() : "";
+                }));
+            }
+
+            DebugTables.MakeTablesDialog(DefDatabase<XenotypeDef>.AllDefs, columns.ToArray());
+            return;
+
+            int GetSkillModifier(XenotypeDef xenotypeDef, SkillDef skillDef)
+            {
+                return (from gene in xenotypeDef.genes
+                    where gene.aptitudes != null
+                    from aptitude in gene.aptitudes
+                    where aptitude.skill == skillDef
+                    select aptitude.level).Sum();
             }
         }
     }
