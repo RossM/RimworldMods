@@ -19,36 +19,6 @@
     <enablesNeeds>
       <li>XylWetness</li>
     </enablesNeeds>
-    <symbolPack>
-      <prefixSymbols>
-        <li>
-          <symbol>moist</symbol>
-        </li>
-        <li>
-          <symbol>damp</symbol>
-        </li>
-        <li>
-          <symbol>wet</symbol>
-        </li>
-        <li>
-          <symbol>slick</symbol>
-        </li>
-        <li>
-          <symbol>gill</symbol>
-        </li>
-        <li>
-          <symbol>fish</symbol>
-        </li>
-      </prefixSymbols>
-      <suffixSymbols>
-        <li>
-          <symbol>skin</symbol>
-        </li>
-        <li>
-          <symbol>fin</symbol>
-        </li>
-      </suffixSymbols>
-    </symbolPack>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_Designator">
         <addDesignators>

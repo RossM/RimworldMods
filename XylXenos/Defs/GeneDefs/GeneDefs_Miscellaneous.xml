@@ -191,7 +191,6 @@
   <GeneDef>
     <defName>XylIndustrious</defName>
     <label>industrious</label>
-    <labelShortAdj>industrious</labelShortAdj>
     <description>Carriers of this gene are exceptionally fast workers.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>-2</biostatMet>
@@ -202,23 +201,6 @@
     <statOffsets>
       <WorkSpeedGlobal>0.15</WorkSpeedGlobal>
     </statOffsets>
-    <symbolPack>
-      <prefixSymbols>
-        <li><symbol>work</symbol></li>
-        <li><symbol>task</symbol></li>
-        <li><symbol>drive</symbol></li>
-        <li><symbol>press</symbol></li>
-        <li><symbol>forge</symbol></li>
-        <li><symbol>labor</symbol></li>
-        <li><symbol>hearth</symbol></li>
-      </prefixSymbols>
-      <suffixSymbols>
-        <li><symbol>grinder</symbol></li>
-        <li><symbol>maker</symbol></li>
-        <li><symbol>smith</symbol></li>
-        <li><symbol>delver</symbol></li>
-      </suffixSymbols>
-    </symbolPack>    
   </GeneDef>
 
   <GeneDef>

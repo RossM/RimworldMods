@@ -81,33 +81,11 @@
         </drawData>
       </li>
     </renderNodeProperties>
-    <symbolPack>
-      <prefixSymbols>
-        <li>
-          <symbol>fox</symbol>
-        </li>
-        <li>
-          <symbol>fey</symbol>
-        </li>
-        <li>
-          <symbol>point</symbol>
-        </li>
-      </prefixSymbols>
-      <suffixSymbols>
-        <li>
-          <symbol>ear</symbol>
-        </li>
-        <li>
-          <symbol>tips</symbol>
-        </li>
-      </suffixSymbols>
-    </symbolPack>
   </GeneDef>
 
   <GeneDef ParentName="GeneEyeColor">
     <defName>XylEyes_Yellow</defName>
     <label>yellow eyes</label>
-    <labelShortAdj>yellow-eyed</labelShortAdj>
     <description>Carriers of this gene have yellow-pigmented eyes.</description>
     <iconPath>Xyl/UI/Icons/Genes/Gene_YellowEyes</iconPath>
     <displayOrderInCategory>0.1</displayOrderInCategory>

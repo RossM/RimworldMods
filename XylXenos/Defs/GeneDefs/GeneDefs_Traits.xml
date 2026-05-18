@@ -5,7 +5,7 @@
   <GeneDef>
     <defName>XylFastReflexes</defName>
     <label>fast reflexes</label>
-    <labelShortAdj>fast</labelShortAdj>
+    <labelShortAdj>nimble</labelShortAdj>
     <description>Carriers of this gene have excellent reflexes that allow them to dodge melee attacks and evade traps.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
@@ -22,7 +22,6 @@
   <GeneDef>
     <defName>XylMelancholy</defName>
     <label>melancholy</label>
-    <labelShortAdj>melancholy</labelShortAdj>
     <description>Carriers of this gene always have the tortured artist trait, which gives them a permanent mood penalty but also grants a chance to gain creative inspiration after a mental break.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
@@ -38,24 +37,6 @@
         <def>TorturedArtist</def>
       </li>
     </forcedTraits>
-    <symbolPack>
-      <prefixSymbols>
-        <li>
-          <symbol>gloom</symbol>
-        </li>
-        <li>
-          <symbol>moan</symbol>
-        </li>
-      </prefixSymbols>
-      <suffixSymbols>
-        <li>
-          <symbol>spark</symbol>
-        </li>
-        <li>
-          <symbol>wrought</symbol>
-        </li>
-      </suffixSymbols>
-    </symbolPack>
   </GeneDef>
 
   <GeneDef>
@@ -93,7 +74,6 @@
   <GeneDef>
     <defName>XylStoic</defName>
     <label>stoic</label>
-    <labelShortAdj>stoic</labelShortAdj>
     <description>Carriers of this gene are mentally tough and won't break down under stresses that would crack most people.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
@@ -107,36 +87,6 @@
         <degree>1</degree>
       </li>
     </forcedTraits>
-    <symbolPack>
-      <prefixSymbols>
-        <li>
-          <symbol>steel</symbol>
-        </li>
-        <li>
-          <symbol>stone</symbol>
-        </li>
-        <li>
-          <symbol>iron</symbol>
-        </li>
-        <li>
-          <symbol>firm</symbol>
-        </li>
-      </prefixSymbols>
-      <suffixSymbols>
-        <li>
-          <symbol>mind</symbol>
-        </li>
-        <li>
-          <symbol>heart</symbol>
-        </li>
-        <li>
-          <symbol>core</symbol>
-        </li>
-        <li>
-          <symbol>will</symbol>
-        </li>
-      </suffixSymbols>
-    </symbolPack>
   </GeneDef>
 
   <GeneDef>

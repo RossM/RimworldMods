@@ -75,7 +75,7 @@
   <GeneDef>
     <defName>XylScaleskin</defName>
     <label>scaleskin</label>
-    <labelShortAdj>scaleskinned</labelShortAdj>
+    <labelShortAdj>scaly</labelShortAdj>
     <description>Carriers of this gene grow tough but flexible scales all over their body that can deflect or absorb attacks.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-3</biostatMet>
@@ -113,33 +113,6 @@
         <parentTagDef>Body</parentTagDef>
       </li>
     </renderNodeProperties>
-    <symbolPack>
-      <prefixSymbols>
-        <li>
-          <symbol>scale</symbol>
-        </li>
-        <li>
-          <symbol>armor</symbol>
-        </li>
-        <li>
-          <symbol>hide</symbol>
-        </li>
-        <li>
-          <symbol>croc</symbol>
-        </li>
-      </prefixSymbols>
-      <suffixSymbols>
-        <li>
-          <symbol>hide</symbol>
-        </li>
-        <li>
-          <symbol>back</symbol>
-        </li>
-        <li>
-          <symbol>scale</symbol>
-        </li>
-      </suffixSymbols>
-    </symbolPack>
   </GeneDef>
   <FurDef>
     <defName>Scaleskin</defName>

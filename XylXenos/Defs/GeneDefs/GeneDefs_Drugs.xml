@@ -5,7 +5,6 @@
   <GeneDef>
     <defName>XylDrugSensitive</defName>
     <label>drug sensitive</label>
-    <labelShortAdj>drug sensitive</labelShortAdj>
     <description>Carriers of this gene are easily affected by drugs. Effects from a single dose last longer, they gain tolerance faster, and they are more likely to become addicted.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
@@ -26,7 +25,6 @@
   <GeneDef>
     <defName>XylDrugResistant</defName>
     <label>drug resistant</label>
-    <labelShortAdj>drug resistant</labelShortAdj>
     <description>Carriers of this gene are less affected by drugs. Effects from a single dose wear off faster, they gain tolerance slower, and they are less likely to become addicted.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>

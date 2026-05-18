@@ -100,36 +100,6 @@
     <statFactors>
       <XylRawFungusNutritionFactor>1.8</XylRawFungusNutritionFactor>
     </statFactors>
-    <symbolPack>
-      <prefixSymbols>
-        <li>
-          <symbol>fungi</symbol>
-        </li>
-        <li>
-          <symbol>shroom</symbol>
-        </li>
-        <li>
-          <symbol>myco</symbol>
-        </li>
-        <li>
-          <symbol>spore</symbol>
-        </li>
-      </prefixSymbols>
-      <suffixSymbols>
-        <li>
-          <symbol>gut</symbol>
-        </li>
-        <li>
-          <symbol>eater</symbol>
-        </li>
-        <li>
-          <symbol>muncher</symbol>
-        </li>
-        <li>
-          <symbol>bloom</symbol>
-        </li>
-      </suffixSymbols>
-    </symbolPack>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_Designator">
         <addDesignators>
