@@ -14,9 +14,6 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Need_Food))]
     public static class Patch_Need_Food
     {
-        public static bool Enabled => enabled.Value;
-        public static Lazy<bool> enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
-
         private static readonly InstructionMatcher Fixup_FoodFallPerTickAssumingCategory = new()
         {
             Rules =
@@ -42,7 +39,7 @@ namespace XylXenos.Patches
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static float AddedNutritionPerDay_Wrapper(HediffComp_Lactating __instance)
         {
-            if (Enabled)
+            if (Settings.instance.ShouldFixLactationBugsFor(__instance.Pawn))
                 return 0;
 
             return __instance.AddedNutritionPerDay();

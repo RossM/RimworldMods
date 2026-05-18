@@ -11,40 +11,12 @@ namespace XylXenos
             FixLactationBugs,
         }
 
-        public static Config Instance => instance ??= MakeConfig();
-
+        public static Config Instance => instance ??= DefDatabase<Config>.AllDefs.Single();
 
         private static Config instance;
         public List<JobDef> wetnessGivingJobs;
 
-        public List<Feature> enabledFeatures;
         public List<string> ignoreGenesFromMods;
-
-        private static Config MakeConfig()
-        {
-            Config config = new Config
-            {
-                wetnessGivingJobs = [],
-                enabledFeatures = [],
-                ignoreGenesFromMods = [],
-            };
-
-            foreach (var subConfig in DefDatabase<Config>.AllDefs)
-            {
-                config.wetnessGivingJobs.AddRange(subConfig.wetnessGivingJobs.EmptyIfNull());
-                config.enabledFeatures.AddRange(subConfig.enabledFeatures.EmptyIfNull());
-                config.ignoreGenesFromMods.AddRange(subConfig.ignoreGenesFromMods.EmptyIfNull());
-            }
-
-            return config;
-        }
-
-        public static bool FeatureEnabled(Feature feature)
-        {
-            bool result = Instance.enabledFeatures.EmptyIfNull().Contains(feature);
-            Log.Message($"XylXenos feature check: {feature} = {result}");
-            return result;
-        }
 
         public static bool GeneOfTypeExists<T>()
         {

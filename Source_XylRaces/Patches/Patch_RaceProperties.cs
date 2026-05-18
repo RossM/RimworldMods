@@ -15,9 +15,6 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(RaceProperties))]
     public static class Patch_RaceProperties
     {
-        public static bool Enabled => enabled.Value;
-        public static Lazy<bool> enabled = new(() => Config.FeatureEnabled(Config.Feature.FixLactationBugs));
-
         private static readonly InstructionMatcher Fixup_NutritionEatenPerDayExplanation = new()
         {
             Rules =
@@ -65,7 +62,7 @@ namespace XylXenos.Patches
             // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes
             // lactating pawns to need too much food. This turns out to be a problem for bossaps balance-wise, so I'm
             // fixing the bug.
-            if (Enabled)
+            if (Settings.instance.ShouldFixLactationBugsFor(__instance.pawn))
                 return null;
 
             return PatchLactation.GetFirstHediffOfDef_Wrapper(__instance, def, mustBeVisible);
@@ -73,7 +70,7 @@ namespace XylXenos.Patches
 
         public static void AddLactationExplanation(StringBuilder stringBuilder, Pawn pawn)
         {
-            if (!Enabled)
+            if (!Settings.instance.ShouldFixLactationBugsFor(pawn))
                 return;
 
             Hediff firstLactationHediff = PatchLactation.GetFirstHediffOfDef_Wrapper(pawn.health.hediffSet, HediffDefOf.Lactating, false);
@@ -90,8 +87,11 @@ namespace XylXenos.Patches
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]
-        static bool GetTotalNutritionNeededPerDay(Pawn p, ref string __result)
+        static bool GetTotalNutritionNeededPerDay_Prefix(Pawn p, ref string __result)
         {
+            if (!Settings.instance.ShouldFixLactationBugsFor(p))
+                return true;
+
             // There is a bug in the base game that causes the nutrition from lactation to be counted twice, once as part of
             // NutritionEatenPerDay which is used to calculate food fall per tick, and then the lactation hediff itself also
             // directly consumes food per tick. This correctly displays that effect.

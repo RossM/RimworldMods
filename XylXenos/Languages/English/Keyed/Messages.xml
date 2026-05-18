@@ -35,8 +35,16 @@
   <XylAllowsFlightDesc>Whether winged characters can fly while wearing this item.</XylAllowsFlightDesc>
 
   <!-- Settings -->
-  <XylSettingDescription_allowBackerBackstoriesForAllXenotypes>Allow backer backstories for all xenotypes</XylSettingDescription_allowBackerBackstoriesForAllXenotypes>
-  <XylSettingTooltip_allowBackerBackstoriesForAllXenotypes>By default, some xenotypes added by this mod will never generate with backer backstories. This setting overrides that behavior and allows all xenotypes to get backer backstories.</XylSettingTooltip_allowBackerBackstoriesForAllXenotypes>
+  <XylSettingDescription_allowBackerBackstories>Allow backer backstories</XylSettingDescription_allowBackerBackstories>
+  <XylSettingTooltip_allowBackerBackstories>Backer backstories can have fixed names that clash with the naming schemes of some of the new xenotypes added by this mod. This setting controls which xenotypes can get randomly assigned backer backstories.</XylSettingTooltip_allowBackerBackstories>
+  <XylSettingOption_allowBackerBackstories_Always>All xenotypes</XylSettingOption_allowBackerBackstories_Always>
+  <XylSettingOption_allowBackerBackstories_Sometimes>Selected xenotypes</XylSettingOption_allowBackerBackstories_Sometimes>
+  <XylSettingOption_allowBackerBackstories_Never>Never</XylSettingOption_allowBackerBackstories_Never>
+  <XylSettingDescription_fixLactationBugs>Fix lactation bugs</XylSettingDescription_fixLactationBugs>
+  <XylSettingTooltip_fixLactationBugs>There are multiple bugs in the base game that make lactating characters eat more than expected, which can be a balance problem for Bossaps. This setting controls fixing those bugs to reduce the nutrition consumption for lactating characters.</XylSettingTooltip_fixLactationBugs>
+  <XylSettingOption_fixLactationBugs_Always>All characters</XylSettingOption_fixLactationBugs_Always>
+  <XylSettingOption_fixLactationBugs_Sometimes>Hyperlactating characters only</XylSettingOption_fixLactationBugs_Sometimes>
+  <XylSettingOption_fixLactationBugs_Never>Never</XylSettingOption_fixLactationBugs_Never>
   
   <!-- Misc -->
   <XylWildPeople>wild people</XylWildPeople>
