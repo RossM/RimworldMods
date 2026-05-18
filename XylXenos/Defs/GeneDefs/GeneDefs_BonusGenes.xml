@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <GeneDef>
+    <geneClass>XylXenos.Genes.BonusGene</geneClass>
+    <defName>XylGeneticAtavism</defName>
+    <label>genetic atavism</label>
+    <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>1101</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_GeneticAtavism</iconPath>
+    <customEffectDescriptions>
+      <li>Extra gene chance: 50%</li>
+    </customEffectDescriptions>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_BonusGene">
+        <biostatArc>0~0</biostatArc>
+        <biostatCpx>1~99</biostatCpx>
+        <biostatMet>-2~2</biostatMet>
+        <geneChance>0.5</geneChance>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylSpecialist</defName>
+    <geneClass>XylXenos.Genes.BonusGene</geneClass>
+    <label>specialist</label>
+    <description>The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level.</description>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>1200</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <exclusionTags>
+      <li>XylSpecialist</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_BonusGene">
+        <removeAfterAdding>true</removeAfterAdding>
+        <ignoreSelectionWeight>true</ignoreSelectionWeight>
+        <allowedGenes>
+          <!--<li>AptitudeStrong_Shooting</li>-->
+          <!--<li>AptitudeStrong_Melee</li>-->
+          <li>AptitudeStrong_Construction</li>
+          <li>AptitudeStrong_Mining</li>
+          <li>AptitudeStrong_Cooking</li>
+          <li>AptitudeStrong_Plants</li>
+          <li>AptitudeStrong_Animals</li>
+          <li>AptitudeStrong_Crafting</li>
+          <li>AptitudeStrong_Artistic</li>
+          <li>AptitudeStrong_Medicine</li>
+          <li>AptitudeStrong_Social</li>
+          <li>AptitudeStrong_Intellectual</li>
+        </allowedGenes>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylSuperSpecialist</defName>
+    <geneClass>XylXenos.Genes.BonusGene</geneClass>
+    <label>super-specialist</label>
+    <description>The carrier's aptitude in one random skill is increased by 8. Aptitude acts like an offset on skill level. Additionally, one level of passion is added to that skill.</description>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>1201</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <exclusionTags>
+      <li>XylSpecialist</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_BonusGene">
+        <removeAfterAdding>true</removeAfterAdding>
+        <ignoreSelectionWeight>true</ignoreSelectionWeight>
+        <allowedGenes>
+          <!--<li>AptitudeRemarkable_Shooting</li>-->
+          <!--<li>AptitudeRemarkable_Melee</li>-->
+          <li>AptitudeRemarkable_Construction</li>
+          <li>AptitudeRemarkable_Mining</li>
+          <li>AptitudeRemarkable_Cooking</li>
+          <li>AptitudeRemarkable_Plants</li>
+          <li>AptitudeRemarkable_Animals</li>
+          <li>AptitudeRemarkable_Crafting</li>
+          <li>AptitudeRemarkable_Artistic</li>
+          <li>AptitudeRemarkable_Medicine</li>
+          <li>AptitudeRemarkable_Social</li>
+          <li>AptitudeRemarkable_Intellectual</li>
+        </allowedGenes>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylSplicer</defName>
+    <geneClass>XylXenos.Genes.BonusGene</geneClass>
+    <label>splicer</label>
+    <description>TODO</description>
+    <biostatArc>1</biostatArc>
+    <biostatCpx>14</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Archite</displayCategory>
+    <displayOrderInCategory>0</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_BonusGene">
+        <removeAfterAdding>true</removeAfterAdding>
+        <count>14 ~ 21</count>
+        <prohibitedGenes>
+          <li>ViolenceDisabled</li>
+          <li>Inbred</li>
+          <li MayRequire="Xylthixlm.Races.Trog">XylGeneticAtavism</li>
+        </prohibitedGenes>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+</Defs>

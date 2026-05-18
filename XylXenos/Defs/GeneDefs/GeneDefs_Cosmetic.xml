@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <GeneDef ParentName="GeneEarsBase">
+    <defName>XylEars_Cow</defName>
+    <label>cow ears</label>
+    <description>Carriers of this gene have cow-like ears.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_CowEars</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <displayOrderInCategory>72</displayOrderInCategory>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/CowEars/CowEars</texPath>
+        <colorType>Skin</colorType>
+        <parentTagDef>Head</parentTagDef>
+        <useSkinShader>true</useSkinShader>
+        <useRottenColor>true</useRottenColor>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <drawData>
+          <defaultData>
+            <layer>63</layer>
+          </defaultData>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+  </GeneDef>
+
+  <GeneDef ParentName="GeneEarsBase">
+    <defName>XylEars_Fin</defName>
+    <label>fin ears</label>
+    <description>Carriers of this gene have fin-like ears.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_FinEars</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <displayOrderInCategory>73</displayOrderInCategory>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/FinEars/FinEars</texPath>
+        <colorType>Skin</colorType>
+        <parentTagDef>Head</parentTagDef>
+        <useSkinShader>true</useSkinShader>
+        <useRottenColor>true</useRottenColor>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <!--<skipFlag>Hair</skipFlag>-->
+        <drawData>
+          <defaultData>
+            <layer>63</layer>
+          </defaultData>
+          <dataNorth>
+            <layer>11</layer>
+          </dataNorth>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+  </GeneDef>
+
+  <GeneDef ParentName="GeneEarsBase">
+    <defName>XylEars_SmallPointed</defName>
+    <label>small pointed ears</label>
+    <description>Carriers of this gene have smaller pointed ears.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_EarSmallPointed</iconPath>
+    <displayOrderInCategory>71</displayOrderInCategory>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/SmallPointedEars/SmallPointedEars</texPath>
+        <colorType>Skin</colorType>
+        <parentTagDef>Head</parentTagDef>
+        <useSkinShader>true</useSkinShader>
+        <useRottenColor>true</useRottenColor>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <drawData>
+          <defaultData>
+            <layer>61</layer>
+          </defaultData>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+    <symbolPack>
+      <prefixSymbols>
+        <li>
+          <symbol>fox</symbol>
+        </li>
+        <li>
+          <symbol>fey</symbol>
+        </li>
+        <li>
+          <symbol>point</symbol>
+        </li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li>
+          <symbol>ear</symbol>
+        </li>
+        <li>
+          <symbol>tips</symbol>
+        </li>
+      </suffixSymbols>
+    </symbolPack>
+  </GeneDef>
+
+  <GeneDef ParentName="GeneEyeColor">
+    <defName>XylEyes_Yellow</defName>
+    <label>yellow eyes</label>
+    <labelShortAdj>yellow-eyed</labelShortAdj>
+    <description>Carriers of this gene have yellow-pigmented eyes.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_YellowEyes</iconPath>
+    <displayOrderInCategory>0.1</displayOrderInCategory>
+    <renderNodeProperties>
+      <li Class="PawnRenderNodeProperties_Eye">
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Male/CatEyes_Male</texPath>
+        <texPathFemale>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Female/CatEyes_Female</texPathFemale>
+        <color>(240, 195, 47)</color>
+        <anchorTag>RightEye</anchorTag>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <parentTagDef>Head</parentTagDef>
+        <drawSize>0.2</drawSize>
+        <side>Right</side>
+        <drawData>
+          <defaultData>
+            <layer>54</layer>
+            <offset>(0, 0, -0.25)</offset>
+          </defaultData>
+        </drawData>
+      </li>
+      <li Class="PawnRenderNodeProperties_Eye">
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Male/CatEyes_Male</texPath>
+        <texPathFemale>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Female/CatEyes_Female</texPathFemale>
+        <color>(240, 195, 47)</color>
+        <anchorTag>LeftEye</anchorTag>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <parentTagDef>Head</parentTagDef>
+        <drawSize>0.2</drawSize>
+        <side>Left</side>
+        <drawData>
+          <defaultData>
+            <layer>54</layer>
+            <offset>(0, 0, -0.25)</offset>
+            <flip>true</flip>
+          </defaultData>
+          <dataWest>
+            <flip>false</flip>
+          </dataWest>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+  </GeneDef>
+
+  <GeneDef ParentName="GeneJawBase">
+    <defName>XylHead_Trog</defName>
+    <label>warped head</label>
+    <description>Carriers of this gene have strange, misshapen faces and heads.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Head_Trog</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <forcedHeadTypes>
+      <li>Male_XylTrog_A</li>
+      <li>Male_XylTrog_B</li>
+      <li>Male_XylTrog_C</li>
+      <li>Female_XylTrog_A</li>
+      <li>Female_XylTrog_B</li>
+      <li>Female_XylTrog_C</li>
+    </forcedHeadTypes>
+    <displayOrderInCategory>98</displayOrderInCategory>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylFacialStripes</defName>
+    <label>facial stripes</label>
+    <description>Carriers of this gene have striped skin on their face.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_FacialStripes</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <displayCategory>Cosmetic</displayCategory>
+    <displayOrderInCategory>501</displayOrderInCategory>
+    <biostatCpx>0</biostatCpx>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <parentTagDef>Head</parentTagDef>
+        <colorType>Skin</colorType>
+        <useRottenColor>true</useRottenColor>
+        <useSkinShader>true</useSkinShader>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <texPaths>
+          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/FacialStripes/FacialStripesA</li>
+          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/FacialStripes/FacialStripesB</li>
+        </texPaths>
+        <visibleFacing>
+          <li>East</li>
+          <li>South</li>
+          <li>West</li>
+        </visibleFacing>
+        <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
+        <baseLayer>51</baseLayer>
+      </li>
+    </renderNodeProperties>
+    <randomBrightnessFactor>0.18</randomBrightnessFactor>
+    <exclusionTags>
+      <li>Face</li>
+      <li>Brow</li>
+    </exclusionTags>
+  </GeneDef>
+
+</Defs>

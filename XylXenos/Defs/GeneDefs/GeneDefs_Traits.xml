@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <GeneDef>
+    <defName>XylFastReflexes</defName>
+    <label>fast reflexes</label>
+    <labelShortAdj>fast</labelShortAdj>
+    <description>Carriers of this gene have excellent reflexes that allow them to dodge melee attacks and evade traps.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_FastReflexes</iconPath>
+    <forcedTraits>
+      <li>
+        <def>Nimble</def>
+      </li>
+    </forcedTraits>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylMelancholy</defName>
+    <label>melancholy</label>
+    <labelShortAdj>melancholy</labelShortAdj>
+    <description>Carriers of this gene always have the tortured artist trait, which gives them a permanent mood penalty but also grants a chance to gain creative inspiration after a mental break.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>3</biostatMet>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>102</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Melancholy</iconPath>
+    <exclusionTags>
+      <li>Mood</li>
+      <li>MelancholyAndEvenTemper</li>
+    </exclusionTags>
+    <forcedTraits>
+      <li>
+        <def>TorturedArtist</def>
+      </li>
+    </forcedTraits>
+    <symbolPack>
+      <prefixSymbols>
+        <li>
+          <symbol>gloom</symbol>
+        </li>
+        <li>
+          <symbol>moan</symbol>
+        </li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li>
+          <symbol>spark</symbol>
+        </li>
+        <li>
+          <symbol>wrought</symbol>
+        </li>
+      </suffixSymbols>
+    </symbolPack>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylNocturnal</defName>
+    <label>nocturnal</label>
+    <description>Carriers of this gene are naturally active at night.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>71</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Nocturnal</iconPath>
+    <forcedTraits>
+      <li>
+        <def>NightOwl</def>
+      </li>
+    </forcedTraits>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylPainReversal</defName>
+    <label>pain reversal</label>
+    <description>Carriers of this gene have scrambled senses that make them feel pain as pleasurable.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <displayCategory>Pain</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_PainReversal</iconPath>
+    <forcedTraits>
+      <li>
+        <def>Masochist</def>
+      </li>
+    </forcedTraits>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylStoic</defName>
+    <label>stoic</label>
+    <labelShortAdj>stoic</labelShortAdj>
+    <description>Carriers of this gene are mentally tough and won't break down under stresses that would crack most people.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Stoic</iconPath>
+    <iconColor>(0.5, 0.5, 0.5)</iconColor>
+    <forcedTraits>
+      <li>
+        <def>Nerves</def>
+        <degree>1</degree>
+      </li>
+    </forcedTraits>
+    <symbolPack>
+      <prefixSymbols>
+        <li>
+          <symbol>steel</symbol>
+        </li>
+        <li>
+          <symbol>stone</symbol>
+        </li>
+        <li>
+          <symbol>iron</symbol>
+        </li>
+        <li>
+          <symbol>firm</symbol>
+        </li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li>
+          <symbol>mind</symbol>
+        </li>
+        <li>
+          <symbol>heart</symbol>
+        </li>
+        <li>
+          <symbol>core</symbol>
+        </li>
+        <li>
+          <symbol>will</symbol>
+        </li>
+      </suffixSymbols>
+    </symbolPack>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylVoracious</defName>
+    <label>voracious</label>
+    <description>TODO</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>0</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <forcedTraits>
+      <li>
+        <def>Cannibal</def>
+      </li>
+      <li>
+        <def>Gourmand</def>
+      </li>
+    </forcedTraits>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylEvenTemper</defName>
+    <label>even temper</label>
+    <description>Carriers of this gene have very stable neurochemistry, with less variation between individuals.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>602</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>
+    <suppressedTraits>
+      <li>
+        <def>NaturalMood</def>
+        <degree>2</degree>
+      </li>
+      <li>
+        <def>NaturalMood</def>
+        <degree>1</degree>
+      </li>
+      <li>
+        <def>NaturalMood</def>
+        <degree>-1</degree>
+      </li>
+      <li>
+        <def>NaturalMood</def>
+        <degree>-2</degree>
+      </li>
+      <li>
+        <def>Nerves</def>
+        <degree>2</degree>
+      </li>
+      <li>
+        <def>Nerves</def>
+        <degree>1</degree>
+      </li>
+      <li>
+        <def>Nerves</def>
+        <degree>-1</degree>
+      </li>
+      <li>
+        <def>Nerves</def>
+        <degree>-2</degree>
+      </li>
+      <li>
+        <def>Neurotic</def>
+        <degree>2</degree>
+      </li>
+      <li>
+        <def>Neurotic</def>
+        <degree>1</degree>
+      </li>
+      <li>
+        <def>Bloodlust</def>
+      </li>
+      <li>
+        <def>TooSmart</def>
+      </li>
+      <li>
+        <def>Greedy</def>
+      </li>
+      <li>
+        <def>Jealous</def>
+      </li>
+      <li>
+        <def>TorturedArtist</def>
+      </li>
+    </suppressedTraits>
+    <exclusionTags>
+      <li>MelancholyAndEvenTemper</li>
+    </exclusionTags>
+  </GeneDef>
+
+</Defs>

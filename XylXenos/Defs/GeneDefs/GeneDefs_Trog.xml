@@ -18,41 +18,6 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>XylToxicBurst</defName>
-    <label>toxic burst</label>
-    <description>Carriers have the ability to release a cloud of tox gas around them from a special gland located near their anus. The gas affects the user normally.</description>
-    <displayCategory>Ability</displayCategory>
-    <displayOrderInCategory>202</displayOrderInCategory>
-    <iconPath>Xyl/UI/Abilities/ToxicBurst</iconPath>
-    <abilities>
-      <li>XylToxicBurst</li>
-    </abilities>
-    <descriptionHyperlinks>
-      <AbilityDef>XylToxicBurst</AbilityDef>
-    </descriptionHyperlinks>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>-2</biostatMet>
-  </GeneDef>
-
-  <GeneDef ParentName="GeneSkinColorOverride">
-    <defName>XylSkin_DarkGreen</defName>
-    <label>dark green skin</label>
-    <labelShortAdj>dark green</labelShortAdj>
-    <description>Carriers of this gene produce a pigment that gives their skin a dark green color.</description>
-    <skinColorOverride>(81,132,32)</skinColorOverride>
-    <displayOrderInCategory>1</displayOrderInCategory>
-  </GeneDef>
-
-  <GeneDef ParentName="GeneSkinColorOverride">
-    <defName>XylSkin_Olive</defName>
-    <label>olive skin</label>
-    <labelShortAdj>olive</labelShortAdj>
-    <description>Carriers of this gene produce a pigment that gives their skin an olive color.</description>
-    <skinColorOverride>(105,100,59)</skinColorOverride>
-    <displayOrderInCategory>2</displayOrderInCategory>
-  </GeneDef>
-
-  <GeneDef>
     <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylBioRejection</defName>
     <label>bio-rejection</label>
@@ -78,47 +43,6 @@
         <applyImmediately>true</applyImmediately>
       </li>
     </modExtensions>
-  </GeneDef>
-
-
-  <GeneDef>
-    <geneClass>XylXenos.Genes.BonusGene</geneClass>
-    <defName>XylGeneticAtavism</defName>
-    <label>genetic atavism</label>
-    <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>0</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>1101</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_GeneticAtavism</iconPath>
-    <customEffectDescriptions>
-      <li>Extra gene chance: 50%</li>
-    </customEffectDescriptions>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_BonusGene">
-        <biostatArc>0~0</biostatArc>
-        <biostatCpx>1~99</biostatCpx>
-        <biostatMet>-2~2</biostatMet>
-        <geneChance>0.5</geneChance>
-      </li>
-    </modExtensions>
-  </GeneDef>
-
-  <GeneDef ParentName="GeneJawBase">
-    <defName>XylHead_Trog</defName>
-    <label>warped head</label>
-    <description>Carriers of this gene have strange, misshapen faces and heads.</description>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_Head_Trog</iconPath>
-    <iconColor>(0.75, 0.75, 0.75)</iconColor>
-    <forcedHeadTypes>
-      <li>Male_XylTrog_A</li>
-      <li>Male_XylTrog_B</li>
-      <li>Male_XylTrog_C</li>
-      <li>Female_XylTrog_A</li>
-      <li>Female_XylTrog_B</li>
-      <li>Female_XylTrog_C</li>
-    </forcedHeadTypes>
-    <displayOrderInCategory>98</displayOrderInCategory>
   </GeneDef>
 
 </Defs>

@@ -1,23 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-  <GeneDef ParentName="GeneSkinColorOverride">
-    <defName>XylSkin_DarkSilver</defName>
-    <label>dark silver skin</label>
-    <labelShortAdj>dark silver</labelShortAdj>
-    <description>Carriers of this gene produce a pigment that gives their skin a dark silver color.</description>
-    <skinColorOverride>(0.4,0.45,0.5)</skinColorOverride>
-    <displayOrderInCategory>90</displayOrderInCategory>
-  </GeneDef>
-  <GeneDef ParentName="GeneSkinColorOverride">
-    <defName>XylSkin_LightSilver</defName>
-    <label>light silver skin</label>
-    <labelShortAdj>light silver</labelShortAdj>
-    <description>Carriers of this gene produce a pigment that gives their skin a light silver color.</description>
-    <skinColorOverride>(0.5,0.6,0.8)</skinColorOverride>
-    <displayOrderInCategory>91</displayOrderInCategory>
-  </GeneDef>
-
   <GeneDef>
     <defName>XylForeheadMark</defName>
     <label>forehead mark</label>

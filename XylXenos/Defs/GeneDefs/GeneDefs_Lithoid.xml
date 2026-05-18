@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <GeneCategoryDef>
+    <defName>Lithoid</defName>
+    <label>lithoid</label>
+    <displayPriorityInXenotype>501</displayPriorityInXenotype>
+  </GeneCategoryDef>
+
+  <GeneDef>
+    <defName>XylLithoid</defName>
+    <geneClass>XylXenos.Genes.ChemicalImmunity</geneClass>
+    <label>lithoid</label>
+    <description>Carriers of this gene have a unique biochemistry that incorporates carbon-silicates. They are completely unaffected by most drugs that work on normal humans, and instead must use specialized drugs designed for lithoids.</description>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>1</biostatMet>
+    <displayCategory>Lithoid</displayCategory>
+    <displayOrderInCategory>-1</displayOrderInCategory>
+    <exclusionTags>
+      <li>Addiction_Alcohol</li>
+      <li>Addiction_GoJuice</li>
+      <li>Addiction_Psychite</li>
+      <li>Addiction_Smokeleaf</li>
+      <li>Addiction_WakeUp</li>
+    </exclusionTags>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <suppressedTraits>
+      <li>
+        <def>DrugDesire</def>
+        <degree>2</degree>
+      </li>
+      <li>
+        <def>DrugDesire</def>
+        <degree>1</degree>
+      </li>
+    </suppressedTraits>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylMineralizedSkin</defName>
+    <label>mineralized skin</label>
+    <labelShortAdj>mineralized</labelShortAdj>
+    <description>Carriers of this gene have extremely tough skin studded with rock-like plates that can deflect or absorb attacks.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-4</biostatMet>
+    <displayCategory>Lithoid</displayCategory>
+    <displayOrderInCategory>50</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_MineralizedSkin</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <forcedHeadTypes>
+      <li>Female_Osteoliths_Average_Normal</li>
+      <li>Female_Osteoliths_Average_Wide</li>
+      <li>Female_Osteoliths_Narrow_Wide</li>
+      <li>Male_Osteoliths_Average_Normal</li>
+      <li>Male_Osteoliths_Average_Wide</li>
+      <li>Male_Osteoliths_Narrow_Wide</li>
+    </forcedHeadTypes>
+    <prerequisite>XylLithoid</prerequisite>
+    <exclusionTags>
+      <li>Fur</li>
+    </exclusionTags>
+    <statOffsets>
+      <ArmorRating_Sharp>0.8</ArmorRating_Sharp>
+      <ArmorRating_Blunt>0.6</ArmorRating_Blunt>
+      <ArmorRating_Heat>0.5</ArmorRating_Heat>
+      <MoveSpeed>-0.4</MoveSpeed>
+    </statOffsets>
+    <fur>Osteoliths</fur>
+    <renderNodeProperties>
+      <li>
+        <debugLabel>Osteoliths</debugLabel>
+        <nodeClass>XylXenos.PawnRenderNode_NotFur</nodeClass>
+        <workerClass>PawnRenderNodeWorker_Fur</workerClass>
+        <baseLayer>5</baseLayer>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <colorType>Skin</colorType>
+        <useSkinShader>true</useSkinShader>
+        <parentTagDef>Body</parentTagDef>
+      </li>
+    </renderNodeProperties>
+    <missingGeneRomanceChanceFactor>0.2</missingGeneRomanceChanceFactor>
+  </GeneDef>
+  <FurDef>
+    <defName>Osteoliths</defName>
+    <noGraphic>true</noGraphic>
+    <bodyTypeGraphicPaths>
+      <Male>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Male</Male>
+      <Female>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Female</Female>
+      <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Hulk</Hulk>
+      <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Fat</Fat>
+      <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Thin</Thin>
+      <Child>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Child</Child>
+      <Baby>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Child</Baby>
+      <!-- Always covered by swaddled graphic -->
+    </bodyTypeGraphicPaths>
+  </FurDef>
+
+  <GeneDef>
+    <defName>XylPetrification</defName>
+    <geneClass>XylXenos.Genes.ChemicalImmunity</geneClass>
+    <label>petrification</label>
+    <description>Carriers of this gene have a chance to develop a disease named petrification. Petrification slowly replaces tissues throughout the body with stone. The disease is incurable, but progress can be slowed with medical treatment, and the affected tissues can be removed surgically.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>Lithoid</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <prerequisite>XylLithoid</prerequisite>
+  </GeneDef>
+
+</Defs>

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <GeneDef>
+    <defName>XylHerdInstinct</defName>
+    <label>herd instinct</label>
+    <description>Carriers of this gene need the comfort of being in a large group. They get a mood penalty if there are too few members of the colony. They also don't mind sleeping in a barracks.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>110</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_HerdInstinct</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <suppressedTraits>
+      <li>
+        <def>Recluse</def>
+      </li>
+    </suppressedTraits>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylXenos.Genes.AddHediff</geneClass>
+    <defName>XylMoody</defName>
+    <label>moody</label>
+    <description>Carriers of this gene have a volatile emotional state. They randomly get good and bad moods.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>1</biostatMet>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>101</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Moody</iconPath>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>XylMoody</hediff>
+          </li>
+        </hediffGivers>
+        <mtbDays>2</mtbDays>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+</Defs>

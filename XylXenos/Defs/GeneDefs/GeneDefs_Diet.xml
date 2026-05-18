@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <GeneDef>
+    <defName>XylCarnivoreStomach</defName>
+    <label>carnivore stomach</label>
+    <labelShortAdj>carnivorous</labelShortAdj>
+    <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw meat, but are poor at digesting plant-based foods. They never get negative thoughts from eating meat.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>1</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>12</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>
+    <exclusionTags>
+      <li>Digestion</li>
+    </exclusionTags>
+    <statFactors>
+      <XylRawMeatNutritionFactor>1.8</XylRawMeatNutritionFactor>
+      <XylRawNonMeatNutritionFactor>0.5</XylRawNonMeatNutritionFactor>
+      <XylCookedNonMeatNutritionFactor>0.8</XylCookedNonMeatNutritionFactor>
+    </statFactors>
+    <statOffsets>
+      <XylRawMeatFoodPoisonChanceOffset>-0.05</XylRawMeatFoodPoisonChanceOffset>
+    </statOffsets>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_IngestionThoughtOverride">
+        <thoughtOverrides>
+          <li>
+            <meatSources>
+              <li>Undefined</li>
+              <li>Insect</li>
+              <li>Humanlike</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </thoughtOverrides>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylHerbivoreStomach</defName>
+    <label>herbivore stomach</label>
+    <labelShortAdj>herbivorous</labelShortAdj>
+    <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw plant-based foods, but are poor at digesting meat. They never get negative thoughts from eating plant-based foods.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>1</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>11</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_HerbivoreStomach</iconPath>
+    <exclusionTags>
+      <li>Digestion</li>
+    </exclusionTags>
+    <statFactors>
+      <XylRawNonMeatNutritionFactor>1.8</XylRawNonMeatNutritionFactor>
+      <XylRawMeatNutritionFactor>0.5</XylRawMeatNutritionFactor>
+      <XylCookedMeatNutritionFactor>0.8</XylCookedMeatNutritionFactor>
+    </statFactors>
+    <statOffsets>
+      <XylRawNonMeatFoodPoisonChanceOffset>-0.05</XylRawNonMeatFoodPoisonChanceOffset>
+    </statOffsets>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_IngestionThoughtOverride">
+        <thoughtOverrides>
+          <li>
+            <meatSources>
+              <li>NotMeat</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </thoughtOverrides>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylFungusEater</defName>
+    <label>fungus eater</label>
+    <labelShortAdj>fungus-eating</labelShortAdj>
+    <description>Carriers of this gene have special digestive enzymes that extract more nutrition from raw fungus - but they don't do anything about the taste.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>13</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_MushroomEater</iconPath>
+    <exclusionTags>
+      <li>Digestion</li>
+    </exclusionTags>
+    <statFactors>
+      <XylRawFungusNutritionFactor>1.8</XylRawFungusNutritionFactor>
+    </statFactors>
+    <symbolPack>
+      <prefixSymbols>
+        <li>
+          <symbol>fungi</symbol>
+        </li>
+        <li>
+          <symbol>shroom</symbol>
+        </li>
+        <li>
+          <symbol>myco</symbol>
+        </li>
+        <li>
+          <symbol>spore</symbol>
+        </li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li>
+          <symbol>gut</symbol>
+        </li>
+        <li>
+          <symbol>eater</symbol>
+        </li>
+        <li>
+          <symbol>muncher</symbol>
+        </li>
+        <li>
+          <symbol>bloom</symbol>
+        </li>
+      </suffixSymbols>
+    </symbolPack>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_Designator">
+        <addDesignators>
+          <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
+        </addDesignators>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+</Defs>

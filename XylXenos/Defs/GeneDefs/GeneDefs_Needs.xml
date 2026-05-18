@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <GeneDef>
+    <defName>XylAquatic</defName>
+    <label>aquatic</label>
+    <labelShortAdj>aquatic</labelShortAdj>
+    <description>Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>3</biostatMet>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>120</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Aquatic</iconPath>
+    <iconColor>(0.4, 0.6, 0.9)</iconColor>
+    <statOffsets>
+      <ComfyTemperatureMin>-5</ComfyTemperatureMin>
+    </statOffsets>
+    <enablesNeeds>
+      <li>XylWetness</li>
+    </enablesNeeds>
+    <symbolPack>
+      <prefixSymbols>
+        <li>
+          <symbol>moist</symbol>
+        </li>
+        <li>
+          <symbol>damp</symbol>
+        </li>
+        <li>
+          <symbol>wet</symbol>
+        </li>
+        <li>
+          <symbol>slick</symbol>
+        </li>
+        <li>
+          <symbol>gill</symbol>
+        </li>
+        <li>
+          <symbol>fish</symbol>
+        </li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li>
+          <symbol>skin</symbol>
+        </li>
+        <li>
+          <symbol>fin</symbol>
+        </li>
+      </suffixSymbols>
+    </symbolPack>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_Designator">
+        <addDesignators>
+          <li>XylShower</li>
+        </addDesignators>
+      </li>
+      <li Class="XylXenos.Genes.GeneDefExtension_JoyGivers">
+        <joyGiverChanceFactors>
+          <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
+        </joyGiverChanceFactors>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylJoyless</defName>
+    <label>joyless</label>
+    <description>Carriers of this gene are genetically incapable of feeling joy. They have no need for recreation, and get no mood bonuses or penalties from it. </description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>1</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>601</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Joyless</iconPath>
+    <disablesNeeds>
+      <li>Joy</li>
+    </disablesNeeds>
+  </GeneDef>
+
+</Defs>

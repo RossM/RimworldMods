@@ -3,51 +3,6 @@
 
   <GeneDef>
     <geneClass>XylXenos.Genes.AddHediff</geneClass>
-    <defName>XylEcholocation</defName>
-    <label>echolocation</label>
-    <description>Carriers of this gene can use high-frequency sound waves to "see" with their ears instead of their eyes.</description>
-    <biostatCpx>2</biostatCpx>
-    <biostatMet>-2</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>73</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_Echolocation</iconPath>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
-        <hediffGivers>
-          <li Class="HediffGiver_Event">
-            <hediff>XylEcholocation</hediff>
-            <partsToAffect>
-              <li>Head</li>
-            </partsToAffect>
-          </li>
-        </hediffGivers>
-        <applyImmediately>true</applyImmediately>
-        <reapplyOnPartRestored>true</reapplyOnPartRestored>
-      </li>
-      <li Class="XylXenos.DefModExtension_StartingItemSource">
-        <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
-        <chance>0.5</chance>
-      </li>
-      <li Class="XylXenos.Genes.GeneDefExtension_CongenitalHediff">
-        <hediffGivers>
-          <li Class="HediffGiver_Event">
-            <hediff>Blindness</hediff>
-            <partsToAffect>
-              <li>Eye</li>
-            </partsToAffect>
-            <countToAffect>2</countToAffect>
-          </li>
-        </hediffGivers>
-        <chance>0.15</chance>
-      </li>
-    </modExtensions>
-    <customEffectDescriptions>
-      <li>Sight: use hearing if higher</li>
-    </customEffectDescriptions>
-  </GeneDef>
-
-  <GeneDef>
-    <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylPrecognition</defName>
     <label>precognition</label>
     <description>Carriers of this gene can see a short distance into the future, giving the ability to dodge both melee and ranged attacks. The effect scales with psychic sensitivity.</description>
@@ -131,74 +86,6 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>XylNocturnal</defName>
-    <label>nocturnal</label>
-    <description>Carriers of this gene are naturally active at night.</description>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>0</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>71</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_Nocturnal</iconPath>
-    <forcedTraits>
-      <li>
-        <def>NightOwl</def>
-      </li>
-    </forcedTraits>
-  </GeneDef>
-
-  <GeneDef>
-    <defName>XylKeenEars</defName>
-    <label>keen ears</label>
-    <description>Carriers of this gene have improved hearing.</description>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>-1</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>72</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_KeenEars</iconPath>
-    <capMods>
-      <li>
-        <capacity>Hearing</capacity>
-        <offset>0.2</offset>
-      </li>
-    </capMods>
-  </GeneDef>
-
-  <GeneDef>
-    <defName>XylSonicWave</defName>
-    <label>sonic wave</label>
-    <description>Carriers of this gene are able to release a wave of high-intensity ultrasonic noise and psychic energy at a target. The noise will stun any non-mechanoid creature nearby.</description>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>-3</biostatMet>
-    <displayCategory>Ability</displayCategory>
-    <displayOrderInCategory>201</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>
-    <abilities>
-      <li>XylSonicWave</li>
-    </abilities>
-    <descriptionHyperlinks>
-      <AbilityDef>XylSonicWave</AbilityDef>
-    </descriptionHyperlinks>
-  </GeneDef>
-
-  <GeneDef ParentName="GeneSkinColorOverride">
-    <defName>XylSkin_DarkBlue</defName>
-    <label>dark blue skin</label>
-    <labelShortAdj>dark blue</labelShortAdj>
-    <description>Carriers of this gene produce a pigment that gives their skin a dark blue color.</description>
-    <skinColorOverride>(66,102,147)</skinColorOverride>
-    <displayOrderInCategory>86</displayOrderInCategory>
-  </GeneDef>
-
-  <GeneDef ParentName="GeneSkinColorOverride">
-    <defName>XylSkin_Pink</defName>
-    <label>pink skin</label>
-    <labelShortAdj>pink</labelShortAdj>
-    <description>Carriers of this gene produce a pigment that gives their skin a pink color.</description>
-    <skinColorOverride>(247,107,162)</skinColorOverride>
-    <displayOrderInCategory>82</displayOrderInCategory>
-  </GeneDef>
-
-  <GeneDef>
     <geneClass>XylXenos.Genes.Torpor</geneClass>
     <defName>XylTorpor</defName>
     <label>torpor</label>
@@ -218,6 +105,5 @@
       </li>
     </modExtensions>  
   </GeneDef>
-
 
 </Defs>
