@@ -2,6 +2,8 @@
 
 <Patch>
   
+  <!-- Display categories -->
+    
   <Operation Class="PatchOperationReplace">
     <xpath>
       Defs/GeneDef[
@@ -21,6 +23,35 @@
       ]/displayCategory</xpath>
     <value>
       <displayCategory>XylBody</displayCategory>
+    </value>
+  </Operation>
+  
+  <!-- Exclusion tags -->
+
+  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+    <xpath>Defs/GeneDef[defName="RobustDigestion"]</xpath>
+    <value>
+      <exclusionTags>
+        <li>Digestion</li>
+      </exclusionTags>
+    </value>
+  </Operation>
+  
+  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+    <xpath>Defs/GeneDef[defName="FacialRidges"]</xpath>
+    <value>
+      <exclusionTags>
+        <li>Face</li>
+      </exclusionTags>
+    </value>
+  </Operation>
+
+  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+    <xpath>Defs/GeneDef[defName="Brow_Heavy"]</xpath>
+    <value>
+      <exclusionTags>
+        <li>Brow</li>
+      </exclusionTags>
     </value>
   </Operation>
 
