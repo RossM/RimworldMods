@@ -1,11 +1,5 @@
 ﻿using JetBrains.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
-using static HarmonyLib.Code;
 
 namespace XylXenos
 {
@@ -32,7 +26,8 @@ namespace XylXenos
 
         public override void CompPostPostRemoved()
         {
-            if (Props.endMentalStateOnCure && Pawn.mindState.mentalStateHandler.CurStateDef == Props.mentalState && !Pawn.mindState.mentalStateHandler.CurState.causedByMood)
+            if (Props.endMentalStateOnCure && Pawn.mindState.mentalStateHandler.CurStateDef == Props.mentalState &&
+                !Pawn.mindState.mentalStateHandler.CurState.causedByMood)
             {
                 Pawn.mindState.mentalStateHandler.CurState.RecoverFromState();
             }

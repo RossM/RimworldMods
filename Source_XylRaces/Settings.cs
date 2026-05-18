@@ -1,7 +1,6 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using RimWorld;
-using System;
-using System.Drawing.Drawing2D;
 using UnityEngine;
 using Verse;
 using XylXenos.Genes;

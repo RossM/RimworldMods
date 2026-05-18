@@ -16,6 +16,5 @@ namespace XylXenos.Patches
             if (__instance is INotificationTarget target)
                 target.RegisterWith(NotificationManager.Instance);
         }
-
     }
 }

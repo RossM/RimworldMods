@@ -112,7 +112,7 @@ namespace XylXenos
             hediffsByModExt.Clear();
             hediffsByType.Clear();
         }
-        
+
         public void RegisterWith(NotificationManager manager)
         {
             manager.Register(NotificationEvent.GenesChanged, parent, Notify_GenesChanged);

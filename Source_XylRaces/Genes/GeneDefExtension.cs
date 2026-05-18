@@ -9,6 +9,7 @@ namespace XylXenos.Genes
     {
         public IEnumerable<string> CustomEffectDescriptions =>
             customEffectDescriptions ??= GetCustomEffectDescriptions().ToList();
+
         public IEnumerable<StatDrawEntry> SpecialDisplayStats =>
             specialDisplayStats ??= GetSpecialDisplayStats().ToList();
 

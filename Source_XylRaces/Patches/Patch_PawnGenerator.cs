@@ -17,7 +17,8 @@ namespace XylXenos.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo, GiveAppropriateBioAndNameTo_Wrapper)
+                InstructionMatcher.MakeRedirectRule(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo,
+                    GiveAppropriateBioAndNameTo_Wrapper)
             }
         };
 

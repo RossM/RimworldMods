@@ -1,8 +1,7 @@
-﻿using JetBrains.Annotations;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 
 namespace XylXenos.Genes
@@ -27,7 +26,8 @@ namespace XylXenos.Genes
 
                 yield return $"{"StatsReport_MeleeDamage".Translate()}: {tool.power.ToStringByStyle(ToStringStyle.FloatTwo)}";
                 yield return $"{"ArmorPenetration".Translate()}: {armorPenetration.ToStringPercent()}";
-                yield return $"{"StatsReport_Cooldown".Translate()}: {"StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall())}";
+                yield return
+                    $"{"StatsReport_Cooldown".Translate()}: {"StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall())}";
             }
         }
 

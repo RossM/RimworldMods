@@ -52,9 +52,9 @@ namespace XylXenos
         {
             if (target?.Map != map)
                 return;
-            
+
             Thing source = info.Instigator;
-            
+
             if (source?.Faction == null || target?.Faction == null)
                 return;
 

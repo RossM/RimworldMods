@@ -65,7 +65,8 @@ namespace XylXenos
                     return item;
             }
 
-            Thing thing = GenClosest.ClosestThingReachable(pawnGettingFood.Position, pawnGettingFood.Map, ThingRequest.ForGroup(ThingRequestGroup.FoodSource),
+            Thing thing = GenClosest.ClosestThingReachable(pawnGettingFood.Position, pawnGettingFood.Map,
+                ThingRequest.ForGroup(ThingRequestGroup.FoodSource),
                 PathEndMode.ClosestTouch, TraverseParms.For(pawnGettingFood), 9999f, x => FoodValidator(pawnGettingFood, this, x));
             if (thing != null)
                 return thing;
@@ -78,7 +79,8 @@ namespace XylXenos
                 foreach (Thing item in spawnedColonyAnimal.inventory.innerContainer)
                 {
                     if (FoodValidator(pawnGettingFood, this, item) && !spawnedColonyAnimal.IsForbidden(pawnGettingFood)
-                                                         && pawnGettingFood.CanReach(spawnedColonyAnimal, PathEndMode.OnCell, Danger.Some))
+                                                                   && pawnGettingFood.CanReach(spawnedColonyAnimal, PathEndMode.OnCell,
+                                                                       Danger.Some))
                     {
                         return item;
                     }

@@ -1,8 +1,8 @@
-using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using RimWorld;
 using Verse;
 using XylXenos.Genes;
 
@@ -169,7 +169,8 @@ public static class GeneHelpers
             yield return $"{"XylNewRecipes".Translate()}: {thingDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
         }
 
-        IEnumerable<MentalBreakDef> mentalBreakDefs = DefDatabase<MentalBreakDef>.AllDefsListForReading.Where(def => def.requiredGene == gene).ToList();
+        IEnumerable<MentalBreakDef> mentalBreakDefs
+            = DefDatabase<MentalBreakDef>.AllDefsListForReading.Where(def => def.requiredGene == gene).ToList();
         foreach (var mentalBreakDef in mentalBreakDefs)
         {
             yield return $"{"XylPossibleMentalBreak".Translate()}: {mentalBreakDef.mentalState.LabelCap}";
