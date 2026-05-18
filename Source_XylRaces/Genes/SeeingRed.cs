@@ -70,7 +70,7 @@ namespace XylXenos.Genes
 
         public void RegisterWith(NotificationManager manager)
         {
-            manager.Register<DamageInfo>(NotificationManager.NotificationCategory.DamageTaken, pawn, Notify_DamageTaken);
+            manager.Register<DamageInfo>(NotificationCategory.DamageTaken, pawn, Notify_DamageTaken);
         }
     }
 }

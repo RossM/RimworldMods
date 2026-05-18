@@ -14,18 +14,18 @@ namespace XylXenos
         public void RegisterWith(NotificationManager manager);
     }
 
+    public enum NotificationCategory
+    {
+        DamageDealt,
+        DamageTaken,
+        GenesChanged,
+        HediffsChanged,
+        ApparelChanged,
+    }
+
     [UsedImplicitly]
     public class NotificationManager(Game _) : GameComponent
     {
-        public enum NotificationCategory
-        {
-            DamageDealt,
-            DamageTaken,
-            GenesChanged,
-            HediffsChanged,
-            ApparelChanged,
-        }
-
         private class CategoryInfo
         {
             public readonly List<CallbackInfo> globalCallbacks = new();

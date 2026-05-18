@@ -45,8 +45,8 @@ namespace XylXenos.Patches
         [HarmonyPatch("TakeDamage")]
         public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
         {
-            NotificationManager.Instance.Notify(NotificationManager.NotificationCategory.DamageDealt, dinfo.Instigator, __instance);
-            NotificationManager.Instance.Notify(NotificationManager.NotificationCategory.DamageTaken,  __instance, dinfo.Instigator);
+            NotificationManager.Instance.Notify(NotificationCategory.DamageDealt, dinfo.Instigator, __instance);
+            NotificationManager.Instance.Notify(NotificationCategory.DamageTaken,  __instance, dinfo.Instigator);
         }
 
         [Feature(nameof(FoodHelpers.GetFoodPoisonChanceOffset))]

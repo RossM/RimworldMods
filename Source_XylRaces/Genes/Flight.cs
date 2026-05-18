@@ -178,7 +178,7 @@ namespace XylXenos.Genes
 
         public void RegisterWith(NotificationManager manager)
         {
-            manager.Register(NotificationManager.NotificationCategory.ApparelChanged, pawn, Notify_ApparelChanged);
+            manager.Register(NotificationCategory.ApparelChanged, pawn, Notify_ApparelChanged);
         }
     }
 }
