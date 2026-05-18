@@ -48,9 +48,12 @@ namespace XylXenos
             return hostileActionTick + violationDisableTicks < Find.TickManager.TicksGame;
         }
 
-        public void Notify_PawnDamagedThing(Thing source, Thing target)
+        public void Notify_DamageTaken(Thing target, DamageInfo info)
         {
-            if (source.Map != map)
+            if (target.Map != map)
+                return;
+            Thing source = info.Instigator;
+            if (source == null)
                 return;
             if (activeOverrides.Contains((source.Faction, target.Faction)))
                 lastHostileActionTick[source.Faction] = Find.TickManager.TicksGame;
@@ -77,7 +80,7 @@ namespace XylXenos
 
         public void RegisterWith(NotificationManager manager)
         {
-            manager.Register<Thing>(NotificationEvent.DamageDealt, null, Notify_PawnDamagedThing);
+            manager.Register<DamageInfo>(NotificationEvent.DamageTaken, null, Notify_DamageTaken);
         }
     }
 }

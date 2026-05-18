@@ -23,6 +23,15 @@
           <li Class="JobGiver_WanderColony" />
         </subNodes>
       </li>
+      <li Class="ThinkNode_ConditionalMentalState">
+        <state>XylSeeingRed</state>
+        <subNodes>
+          <li Class="XylXenos.JobGiver_SeeingRed" />
+          <li Class="JobGiver_RunRandom">
+            <maxDanger>Deadly</maxDanger>
+          </li>
+        </subNodes>
+      </li>
     </value>
   </Operation>
   

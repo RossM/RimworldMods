@@ -16,7 +16,6 @@ namespace XylXenos
 
     public enum NotificationEvent
     {
-        DamageDealt,
         DamageTaken,
         GenesChanged,
         HediffsChanged,

@@ -8,7 +8,7 @@
     <descriptionHyperlinks>
       <GeneDef>XylSeeingRed</GeneDef>
     </descriptionHyperlinks>
-    <hediffClass>XylXenos.Hediff_ForceBehavior</hediffClass>
+    <hediffClass>HediffWithComps</hediffClass>
     <initialSeverity>1.0</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
     <isBad>true</isBad>
@@ -17,6 +17,9 @@
         <!--15 seconds-->
         <disappearsAfterTicks>900</disappearsAfterTicks>
         <showRemainingTime>true</showRemainingTime>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_ForceMentalState">
+        <mentalState>XylSeeingRed</mentalState>
       </li>
     </comps>
     <stages>
@@ -33,13 +36,6 @@
         <painFactor>0.1</painFactor>
       </li>
     </stages>
-    <modExtensions>
-      <li Class="XylXenos.HediffDefExtension_ForceBehavior">
-        <thinkTree>XylSeeingRed</thinkTree>
-        <mentalState>XylSeeingRed</mentalState>
-        <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
-      </li>
-    </modExtensions>
   </HediffDef>
 
   <HediffDef ParentName="Lactating">
