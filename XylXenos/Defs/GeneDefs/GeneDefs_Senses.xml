@@ -2,6 +2,12 @@
 
 <Defs>
 
+  <GeneCategoryDef>
+    <defName>XylSenses</defName>
+    <label>senses</label>
+    <displayPriorityInXenotype>380</displayPriorityInXenotype>
+  </GeneCategoryDef>
+
   <GeneDef>
     <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylEcholocation</defName>
@@ -9,8 +15,8 @@
     <description>Carriers of this gene can use high-frequency sound waves to "see" with their ears instead of their eyes.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>-2</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>73</displayOrderInCategory>
+    <displayCategory>XylSenses</displayCategory>
+    <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Echolocation</iconPath>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
@@ -53,8 +59,8 @@
     <description>Carriers of this gene have improved hearing.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>72</displayOrderInCategory>
+    <displayCategory>XylSenses</displayCategory>
+    <displayOrderInCategory>210</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_KeenEars</iconPath>
     <capMods>
       <li>

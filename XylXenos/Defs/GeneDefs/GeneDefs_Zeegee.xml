@@ -62,7 +62,7 @@
     <label>mech affinity</label>
     <description>Carriers of this gene are naturally adept at being mechanitors.</description>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>1102</displayOrderInCategory>
+    <displayOrderInCategory>1100</displayOrderInCategory>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <statOffsets>

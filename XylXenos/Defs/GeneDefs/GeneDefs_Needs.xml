@@ -9,8 +9,8 @@
     <description>Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
-    <displayCategory>Mood</displayCategory>
-    <displayOrderInCategory>120</displayOrderInCategory>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>10</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Aquatic</iconPath>
     <iconColor>(0.4, 0.6, 0.9)</iconColor>
     <statOffsets>
@@ -69,8 +69,8 @@
     <description>Carriers of this gene are genetically incapable of feeling joy. They have no need for recreation, and get no mood bonuses or penalties from it. </description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>1</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>601</displayOrderInCategory>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>1100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Joyless</iconPath>
     <disablesNeeds>
       <li>Joy</li>

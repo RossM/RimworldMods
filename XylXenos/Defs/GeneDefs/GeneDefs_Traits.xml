@@ -145,8 +145,8 @@
     <description>TODO</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>0</displayOrderInCategory>
+    <displayCategory>XylDiet</displayCategory>
+    <displayOrderInCategory>300</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <forcedTraits>
       <li>

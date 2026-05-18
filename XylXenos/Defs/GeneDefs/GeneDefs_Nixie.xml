@@ -8,8 +8,8 @@
     <description>Carriers of this gene grow tough but flexible scales all over their body that can deflect or absorb attacks.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-3</biostatMet>
-    <displayCategory>ResistanceAndWeakness</displayCategory>
-    <displayOrderInCategory>110</displayOrderInCategory>
+    <displayCategory>XylBody</displayCategory>
+    <displayOrderInCategory>450</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Scaleskin</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <forcedHeadTypes>

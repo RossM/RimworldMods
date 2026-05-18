@@ -18,6 +18,8 @@ namespace XylXenos
                 new("defName", geneDef => geneDef.defName),
                 new("label", geneDef => geneDef.LabelCap),
                 new("displayCategory", geneDef => geneDef.displayCategory.defName),
+                new("displayPriorityInXenotype", geneDef => geneDef.displayCategory.displayPriorityInXenotype),
+                new("displayPriorityInGenepack", geneDef => geneDef.displayCategory.displayPriorityInGenepack),
                 new("displayOrderInCategory", geneDef => geneDef.displayOrderInCategory),
                 new("exclusionTags", geneDef => geneDef.exclusionTags?.ToCommaList() ?? "")
             ];

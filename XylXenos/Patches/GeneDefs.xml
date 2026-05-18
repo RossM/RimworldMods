@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+  
+  <Operation Class="PatchOperationReplace">
+    <xpath>
+      Defs/GeneDef[
+        defName="StrongStomach" or 
+        defName="RobustDigestion"
+      ]/displayCategory</xpath>
+    <value>
+      <displayCategory>XylDiet</displayCategory>
+    </value>
+  </Operation>
+  
+  <Operation Class="PatchOperationReplace">
+    <xpath>
+      Defs/GeneDef[
+        @Name="GeneTailBase" or
+        defName="Furskin"
+      ]/displayCategory</xpath>
+    <value>
+      <displayCategory>XylBody</displayCategory>
+    </value>
+  </Operation>
+
+</Patch>

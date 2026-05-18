@@ -2,6 +2,12 @@
 
 <Defs>
 
+  <GeneCategoryDef>
+    <defName>XylDiet</defName>
+    <label>diet</label>
+    <displayPriorityInXenotype>275</displayPriorityInXenotype>
+  </GeneCategoryDef>
+
   <GeneDef>
     <defName>XylCarnivoreStomach</defName>
     <label>carnivore stomach</label>
@@ -9,8 +15,8 @@
     <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw meat, but are poor at digesting plant-based foods. They never get negative thoughts from eating meat.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>1</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>12</displayOrderInCategory>
+    <displayCategory>XylDiet</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>
     <exclusionTags>
       <li>Digestion</li>
@@ -48,8 +54,8 @@
     <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw plant-based foods, but are poor at digesting meat. They never get negative thoughts from eating plant-based foods.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>1</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>11</displayOrderInCategory>
+    <displayCategory>XylDiet</displayCategory>
+    <displayOrderInCategory>101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_HerbivoreStomach</iconPath>
     <exclusionTags>
       <li>Digestion</li>
@@ -85,8 +91,8 @@
     <description>Carriers of this gene have special digestive enzymes that extract more nutrition from raw fungus - but they don't do anything about the taste.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>13</displayOrderInCategory>
+    <displayCategory>XylDiet</displayCategory>
+    <displayOrderInCategory>102</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MushroomEater</iconPath>
     <exclusionTags>
       <li>Digestion</li>
@@ -129,6 +135,46 @@
         <addDesignators>
           <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
         </addDesignators>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylXenos.Genes.DietDependency</geneClass>
+    <defName>XylMeatDependence</defName>
+    <label>meat dependence</label>
+    <labelShortAdj>meat-dependent</labelShortAdj>
+    <description>Carriers of this gene are unable to synthesize certain essential nutrients and must obtain them by eating raw meat. After age 13, they become dependent on raw meat to survive. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>3</biostatMet>
+    <displayCategory>XylDiet</displayCategory>
+    <displayOrderInCategory>200</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_MeatDependence</iconPath>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_DietDependency">
+        <hediffDef>XylGeneticMeatNeed</hediffDef>
+        <foodLabel>raw meat</foodLabel>
+        <foodKind>Meat</foodKind>
+        <rawOnly>true</rawOnly>
+        <!-- 
+        This requires that the warcat eat 0.5 nutrition per day in raw meat out of a total
+        nutrition requirement of 1.44, or 35% of their diet.
+        -->
+        <severityReductionPerNutrition>1.0</severityReductionPerNutrition>
+        <startingFoodType>Meat</startingFoodType>
+        <startingFoodNutrition>2~4</startingFoodNutrition>
+      </li>
+      <li Class="XylXenos.Genes.GeneDefExtension_IngestionThoughtOverride">
+        <thoughtOverrides>
+          <li>
+            <meatSources>
+              <li>Undefined</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </thoughtOverrides>
       </li>
     </modExtensions>
   </GeneDef>

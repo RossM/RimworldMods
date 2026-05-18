@@ -2,6 +2,12 @@
 
 <Defs>
 
+  <GeneCategoryDef>
+    <defName>XylRandom</defName>
+    <label>random</label>
+    <displayPriorityInXenotype>210</displayPriorityInXenotype>
+  </GeneCategoryDef>
+
   <GeneDef>
     <geneClass>XylXenos.Genes.BonusGene</geneClass>
     <defName>XylGeneticAtavism</defName>
@@ -9,8 +15,8 @@
     <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>1101</displayOrderInCategory>
+    <displayCategory>XylRandom</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_GeneticAtavism</iconPath>
     <customEffectDescriptions>
       <li>Extra gene chance: 50%</li>
@@ -32,8 +38,8 @@
     <description>The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>1200</displayOrderInCategory>
+    <displayCategory>XylRandom</displayCategory>
+    <displayOrderInCategory>201</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <exclusionTags>
       <li>XylSpecialist</li>
@@ -67,8 +73,8 @@
     <description>The carrier's aptitude in one random skill is increased by 8. Aptitude acts like an offset on skill level. Additionally, one level of passion is added to that skill.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>1201</displayOrderInCategory>
+    <displayCategory>XylRandom</displayCategory>
+    <displayOrderInCategory>202</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <exclusionTags>
       <li>XylSpecialist</li>
@@ -105,6 +111,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Archite</displayCategory>
     <displayOrderInCategory>0</displayOrderInCategory>
+    <canGenerateInGeneSet>false</canGenerateInGeneSet>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_BonusGene">

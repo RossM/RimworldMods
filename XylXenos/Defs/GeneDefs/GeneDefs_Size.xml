@@ -2,14 +2,20 @@
 
 <Defs>
   
+  <GeneCategoryDef>
+    <defName>XylBody</defName>
+    <label>body size and shape</label>
+    <displayPriorityInXenotype>271</displayPriorityInXenotype>
+  </GeneCategoryDef>
+
   <GeneDef>
     <defName>XylDwarf</defName>
     <label>dwarf</label>
     <description>Carriers of this gene have smaller bodies with proportionately larger heads. Their short legs somewhat reduce their movement speed.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>151</displayOrderInCategory>
+    <displayCategory>XylBody</displayCategory>
+    <displayOrderInCategory>0</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_Giant</iconPath>-->
     <exclusionTags>
       <li>BodySize</li>
@@ -39,8 +45,8 @@
     <description>Carriers of this gene are exceptionally large. They can take more damage, carry more, and are more resistant to drugs and toxins, but are also easier to hit with ranged weapons.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>150</displayOrderInCategory>
+    <displayCategory>XylBody</displayCategory>
+    <displayOrderInCategory>1</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Giant</iconPath>
     <exclusionTags>
       <li>BodySize</li>

@@ -24,8 +24,8 @@
     <description>Carriers of this gene have a severe allergic reaction to any sort of artificial implant or body part. They will suffer continual pain until the implant or part is removed.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>1100</displayOrderInCategory>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <displayOrderInCategory>300</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_BioRejection</iconPath>
     <suppressedTraits>
       <li>

@@ -3,7 +3,7 @@
 <Defs>
 
   <GeneCategoryDef>
-    <defName>Lithoid</defName>
+    <defName>XylLithoid</defName>
     <label>lithoid</label>
     <displayPriorityInXenotype>501</displayPriorityInXenotype>
   </GeneCategoryDef>
@@ -15,7 +15,7 @@
     <description>Carriers of this gene have a unique biochemistry that incorporates carbon-silicates. They are completely unaffected by most drugs that work on normal humans, and instead must use specialized drugs designed for lithoids.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>1</biostatMet>
-    <displayCategory>Lithoid</displayCategory>
+    <displayCategory>XylLithoid</displayCategory>
     <displayOrderInCategory>-1</displayOrderInCategory>
     <exclusionTags>
       <li>Addiction_Alcohol</li>
@@ -44,7 +44,7 @@
     <description>Carriers of this gene have extremely tough skin studded with rock-like plates that can deflect or absorb attacks.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-4</biostatMet>
-    <displayCategory>Lithoid</displayCategory>
+    <displayCategory>XylLithoid</displayCategory>
     <displayOrderInCategory>50</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MineralizedSkin</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
@@ -103,7 +103,7 @@
     <description>Carriers of this gene have a chance to develop a disease named petrification. Petrification slowly replaces tissues throughout the body with stone. The disease is incurable, but progress can be slowed with medical treatment, and the affected tissues can be removed surgically.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
-    <displayCategory>Lithoid</displayCategory>
+    <displayCategory>XylLithoid</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <prerequisite>XylLithoid</prerequisite>
