@@ -13,7 +13,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(HediffSet.DirtyCache))]
         public static void DirtyCache_Postfix(HediffSet __instance)
         {
-            NotificationManager.Instance.Notify(NotificationCategory.HediffsChanged, __instance.pawn);
+            NotificationManager.Instance.Notify(NotificationEvent.HediffsChanged, __instance.pawn);
         }
     }
 }

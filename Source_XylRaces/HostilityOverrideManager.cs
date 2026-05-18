@@ -77,7 +77,7 @@ namespace XylXenos
 
         public void RegisterWith(NotificationManager manager)
         {
-            manager.Register<Thing>(NotificationCategory.DamageDealt, null, Notify_PawnDamagedThing);
+            manager.Register<Thing>(NotificationEvent.DamageDealt, null, Notify_PawnDamagedThing);
         }
     }
 }

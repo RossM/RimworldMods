@@ -14,7 +14,7 @@ namespace XylXenos
         public void RegisterWith(NotificationManager manager);
     }
 
-    public enum NotificationCategory
+    public enum NotificationEvent
     {
         DamageDealt,
         DamageTaken,
@@ -26,7 +26,7 @@ namespace XylXenos
     [UsedImplicitly]
     public class NotificationManager(Game _) : GameComponent
     {
-        private class CategoryInfo
+        private class EventInfo
         {
             public readonly List<CallbackInfo> globalCallbacks = new();
             public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
@@ -42,7 +42,7 @@ namespace XylXenos
         public static NotificationManager Instance => Current.Game.GetComponent<NotificationManager>();
         private static bool doDebug = false;
 
-        private readonly CategoryInfo[] categoryInfos = new CategoryInfo[Enum.GetValues(typeof(NotificationCategory)).Length];
+        private readonly EventInfo[] events = new EventInfo[Enum.GetValues(typeof(NotificationEvent)).Length];
 
         [DebugAction(allowedGameStates = 0)]
         [UsedImplicitly]
@@ -52,34 +52,34 @@ namespace XylXenos
         }
 
         private void RegisterInternal<T>(
-            NotificationCategory category,
+            NotificationEvent eventType,
             Thing target,
             Action<Thing, T> callback,
             object callbackTarget,
             string name)
         {
-            CategoryInfo categoryInfo = categoryInfos[(int)category] ??= new();
+            EventInfo eventInfo = events[(int)eventType] ??= new();
 
             CallbackInfo callbackInfo = new() { wrappedCallback = callback, target = callbackTarget, name = name };
 
             if (target == null)
             {
-                if (categoryInfo.globalCallbacks.Any(c => c.target == callbackTarget && c.name == name))
+                if (eventInfo.globalCallbacks.Any(c => c.target == callbackTarget && c.name == name))
                 {
                     Log.Warning(
-                        $"Adding a duplicate callback: category={category} target={target} callbackTarget={callbackTarget} name={name}");
+                        $"Adding a duplicate callback: type={eventType} target={target} callbackTarget={callbackTarget} name={name}");
                     return;
                 }
 
-                categoryInfo.globalCallbacks.Add(callbackInfo);
+                eventInfo.globalCallbacks.Add(callbackInfo);
             }
             else
             {
-                List<CallbackInfo> localCallbacks = categoryInfo.localCallbacks.GetOrCreateValue(target);
+                List<CallbackInfo> localCallbacks = eventInfo.localCallbacks.GetOrCreateValue(target);
                 if (localCallbacks.Any(c => c.target == callbackTarget && c.name == name))
                 {
                     Log.Warning(
-                        $"Adding a duplicate callback: category={category} target={target} callbackTarget={callbackTarget} name={name}");
+                        $"Adding a duplicate callback: type={eventType} target={target} callbackTarget={callbackTarget} name={name}");
                     return;
                 }
 
@@ -87,56 +87,56 @@ namespace XylXenos
             }
         }
 
-        public void Register<T>(NotificationCategory category, Thing target, Action<Thing, T> callback)
+        public void Register<T>(NotificationEvent eventType, Thing target, Action<Thing, T> callback)
         {
             if (callback.Target is not INotificationTarget)
                 throw new InvalidOperationException("Only INotificationTargets can register for notifications");
 
-            RegisterInternal(category, target, callback, callback.Target, callback.Method.Name);
+            RegisterInternal(eventType, target, callback, callback.Target, callback.Method.Name);
         }
 
-        public void Register<T>(NotificationCategory category, Thing target, Action<T> callback)
+        public void Register<T>(NotificationEvent eventType, Thing target, Action<T> callback)
         {
             if (callback.Target is not INotificationTarget)
                 throw new InvalidOperationException("Only INotificationTargets can register for notifications");
 
-            RegisterInternal<T>(category, target, (_, data) => callback(data), callback.Target, callback.Method.Name);
+            RegisterInternal<T>(eventType, target, (_, data) => callback(data), callback.Target, callback.Method.Name);
         }
 
-        public void Register(NotificationCategory category, Thing target, Action<Thing> callback)
+        public void Register(NotificationEvent eventType, Thing target, Action<Thing> callback)
         {
             if (callback.Target is not INotificationTarget)
                 throw new InvalidOperationException("Only INotificationTargets can register for notifications");
 
-            RegisterInternal<object>(category, target, (t, _) => callback(t), callback.Target, callback.Method.Name);
+            RegisterInternal<object>(eventType, target, (t, _) => callback(t), callback.Target, callback.Method.Name);
         }
 
-        public void Register(NotificationCategory category, Thing target, Action callback)
+        public void Register(NotificationEvent eventType, Thing target, Action callback)
         {
             if (callback.Target is not INotificationTarget)
                 throw new InvalidOperationException("Only INotificationTargets can register for notifications");
 
-            RegisterInternal<object>(category, target, (_, _) => callback(), callback.Target, callback.Method.Name);
+            RegisterInternal<object>(eventType, target, (_, _) => callback(), callback.Target, callback.Method.Name);
         }
 
-        public void Notify(NotificationCategory category, Thing target, object data = null)
+        public void Notify(NotificationEvent eventType, Thing target, object data = null)
         {
             if (target == null)
                 return;
 
             if (doDebug)
-                Debug.Log($"Notify category={category} target={target} data={data}");
+                Debug.Log($"Notify category={eventType} target={target} data={data}");
 
-            CategoryInfo categoryInfo = categoryInfos[(int)category];
-            if (categoryInfo == null)
+            EventInfo eventInfo = events[(int)eventType];
+            if (eventInfo == null)
                 return;
 
-            foreach (CallbackInfo callbackInfo in categoryInfo.globalCallbacks)
+            foreach (CallbackInfo callbackInfo in eventInfo.globalCallbacks)
             {
                 DoNotify(callbackInfo, target, data);
             }
 
-            if (categoryInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbackInfos))
+            if (eventInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbackInfos))
             {
                 foreach (CallbackInfo callbackInfo in callbackInfos)
                 {

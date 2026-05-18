@@ -115,8 +115,8 @@ namespace XylXenos
         
         public void RegisterWith(NotificationManager manager)
         {
-            manager.Register(NotificationCategory.GenesChanged, parent, Notify_GenesChanged);
-            manager.Register(NotificationCategory.HediffsChanged, parent, Notify_HediffsChanged);
+            manager.Register(NotificationEvent.GenesChanged, parent, Notify_GenesChanged);
+            manager.Register(NotificationEvent.HediffsChanged, parent, Notify_HediffsChanged);
         }
     }
 }
