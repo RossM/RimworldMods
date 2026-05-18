@@ -27,9 +27,8 @@ namespace XylXenos
             ApparelChanged,
         }
 
-        class NotificationInfo(NotificationCategory category)
+        private class CategoryInfo
         {
-            public readonly NotificationCategory category = category;
             public readonly List<CallbackInfo> globalCallbacks = new();
             public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
         }
@@ -44,14 +43,7 @@ namespace XylXenos
         public static NotificationManager Instance => Current.Game.GetComponent<NotificationManager>();
         private static bool doDebug = false;
 
-        readonly List<NotificationInfo> infos =
-        [
-            new(NotificationCategory.DamageDealt),
-            new(NotificationCategory.DamageTaken),
-            new(NotificationCategory.GenesChanged),
-            new(NotificationCategory.HediffsChanged),
-            new(NotificationCategory.ApparelChanged),
-        ];
+        private readonly CategoryInfo[] categoryInfos = new CategoryInfo[Enum.GetValues(typeof(NotificationCategory)).Length];
 
         [DebugAction(allowedGameStates = 0)]
         [UsedImplicitly]
@@ -62,15 +54,18 @@ namespace XylXenos
 
         private void RegisterInternal<T>(NotificationCategory category, Thing target, Action<Thing, T> callback, object callbackTarget, string name)
         {
-            NotificationInfo info = infos.Single(info => info.category == category);
+            CategoryInfo categoryInfo = categoryInfos[(int)category] ??= new();
+
+            CallbackInfo callbackInfo = new() { wrappedCallback = callback, target = callbackTarget, name = name };
+
             if (target == null)
             {
-                info.globalCallbacks.Add(new() { wrappedCallback = callback, target = callbackTarget, name = name });
+                categoryInfo.globalCallbacks.Add(callbackInfo);
             }
             else
             {
-                List<CallbackInfo> localCallbacks = info.localCallbacks.GetOrCreateValue(target);
-                localCallbacks.Add(new() { wrappedCallback = callback, target = callbackTarget, name = name });
+                List<CallbackInfo> localCallbacks = categoryInfo.localCallbacks.GetOrCreateValue(target);
+                localCallbacks.Add(callbackInfo);
             }
         }
 
@@ -114,13 +109,16 @@ namespace XylXenos
             if (doDebug)
                 Debug.Log($"Notify category={category} target={target} data={data}");
 
-            NotificationInfo info = infos.Single(info => info.category == category);
-            foreach (CallbackInfo callbackInfo in info.globalCallbacks)
+            CategoryInfo categoryInfo = categoryInfos[(int)category];
+            if (categoryInfo == null)
+                return;
+
+            foreach (CallbackInfo callbackInfo in categoryInfo.globalCallbacks)
             {
                 DoNotify(callbackInfo, target, data);
             }
 
-            if (info.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbackInfos))
+            if (categoryInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbackInfos))
             {
                 foreach (CallbackInfo callbackInfo in callbackInfos)
                 {
