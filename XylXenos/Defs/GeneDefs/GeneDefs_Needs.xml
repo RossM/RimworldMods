@@ -5,7 +5,6 @@
   <GeneDef>
     <defName>XylAquatic</defName>
     <label>aquatic</label>
-    <labelShortAdj>aquatic</labelShortAdj>
     <description>Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
