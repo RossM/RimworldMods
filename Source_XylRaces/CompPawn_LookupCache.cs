@@ -42,7 +42,7 @@ namespace XylXenos
             if (genesByDef.TryGetValue(def, out List<Gene> value))
                 return value;
 
-            value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def == def).OrderByDescending(g => g.Active).ToList();
+            value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def == def).OrderByDescending(g => g.Active).ToList() ?? [];
             genesByDef.Add(def, value);
             return value;
         }
@@ -69,7 +69,7 @@ namespace XylXenos
             if (hediffsByType.TryGetValue(typeof(T), out IList value))
                 return (List<T>)value;
 
-            value = ((Pawn)parent).health.hediffSet.hediffs.OfType<T>().ToList() ?? [];
+            value = ((Pawn)parent).health.hediffSet.hediffs.OfType<T>().ToList();
             hediffsByType.Add(typeof(T), value);
             return (List<T>)value;
         }
