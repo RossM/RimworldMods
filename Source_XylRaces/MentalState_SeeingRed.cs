@@ -22,6 +22,7 @@ namespace XylXenos
             base.ExposeData();
             Scribe_References.Look(ref mote, nameof(mote));
         }
+
         public override bool ForceHostileTo(Thing t)
         {
             return pawn.HasActiveGeneOfType<SeeingRed>(g => g.ForceHostility(t));
