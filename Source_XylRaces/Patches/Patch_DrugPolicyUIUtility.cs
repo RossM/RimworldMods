@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using TranspilerUtil;
 using Verse;
+using XylXenos.Genes;
 
 namespace XylXenos.Patches
 {
@@ -22,7 +23,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(DefOf.XylDrugSensitive))]
+        [Feature(typeof(GeneDefExtension_Chemicals))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
@@ -44,8 +45,8 @@ namespace XylXenos.Patches
                 return true;
             }
 
-            var drugSensitive = pawn.genes?.GetGene(DefOf.XylDrugSensitive);
-            gene = drugSensitive;
+            gene = pawn.genes?.GenesListForReading.FirstOrDefault(g =>
+                g.def.GetModExtension<GeneDefExtension_Chemicals>()?.showInDrugPolicies == true);
             return gene != null;
         }
     }

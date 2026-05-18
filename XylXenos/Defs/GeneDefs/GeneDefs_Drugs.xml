@@ -20,6 +20,11 @@
     <statFactors>
       <XylGlobalAddictionChanceFactor>2.0</XylGlobalAddictionChanceFactor>
     </statFactors>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_Chemicals">
+        <showInDrugPolicies>true</showInDrugPolicies>
+      </li>
+    </modExtensions>
   </GeneDef>
 
   <GeneDef>
@@ -40,6 +45,11 @@
     <statFactors>
       <XylGlobalAddictionChanceFactor>0.7</XylGlobalAddictionChanceFactor>
     </statFactors>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_Chemicals">
+        <showInDrugPolicies>true</showInDrugPolicies>
+      </li>
+    </modExtensions>
   </GeneDef>
 
   <GeneDef>
@@ -69,6 +79,11 @@
         <degree>1</degree>
       </li>
     </suppressedTraits>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_Chemicals">
+        <showInDrugPolicies>true</showInDrugPolicies>
+      </li>
+    </modExtensions>
   </GeneDef>
 
 </Defs>

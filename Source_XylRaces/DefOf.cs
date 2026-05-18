@@ -38,7 +38,6 @@ namespace XylXenos
 
         #region GeneDefs
 
-        public static GeneDef XylDrugSensitive;
         public static GeneDef XylEcholocation;
 
         #endregion

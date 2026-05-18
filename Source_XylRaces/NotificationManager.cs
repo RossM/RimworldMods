@@ -23,7 +23,7 @@ namespace XylXenos
     }
 
     [UsedImplicitly]
-    public class NotificationManager(Game _) : GameComponent
+    public class NotificationManager : GameComponent
     {
         private class EventInfo
         {
@@ -42,6 +42,10 @@ namespace XylXenos
         private static bool doDebug = false;
 
         private readonly EventInfo[] events = new EventInfo[Enum.GetValues(typeof(NotificationEvent)).Length];
+
+        public NotificationManager(Game _)
+        {
+        }
 
         [DebugAction(allowedGameStates = 0)]
         [UsedImplicitly]
