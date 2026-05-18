@@ -171,9 +171,9 @@ namespace XylXenos
                 }
                 case Pawn pawn:
                 {
-                    foreach (Gene gene in pawn.genes?.GenesListForReading ?? [])
+                    foreach (Gene gene in pawn.genes?.GenesListForReading.EmptyIfNull())
                         CallRegistrationHandlers(gene);
-                    foreach (Hediff hediff in pawn.health.hediffSet.hediffs ?? [])
+                    foreach (Hediff hediff in pawn.health.hediffSet.hediffs.EmptyIfNull())
                         CallRegistrationHandlers(hediff);
                     break;
                 }
