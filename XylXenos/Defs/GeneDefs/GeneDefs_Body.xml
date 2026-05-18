@@ -158,8 +158,8 @@
 
   <GeneDef>
     <defName>XylMineralizedSkin</defName>
-    <label>mineralized skin</label>
-    <labelShortAdj>mineralized</labelShortAdj>
+    <label>rockskin</label>
+    <labelShortAdj>rock</labelShortAdj>
     <description>Carriers of this gene have extremely tough skin studded with rock-like plates that can deflect or absorb attacks.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-4</biostatMet>
