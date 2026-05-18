@@ -164,44 +164,32 @@ namespace XylXenos
             switch (thing)
             {
                 case HediffWithComps hediffWithComps:
-                    DoRegister(hediffWithComps);
+                {
+                    foreach (HediffComp comp in hediffWithComps.comps)
+                        CallRegistrationHandlers(comp);
                     break;
+                }
                 case Pawn pawn:
-                    DoRegister(pawn);
+                {
+                    foreach (Gene gene in pawn.genes?.GenesListForReading ?? [])
+                        CallRegistrationHandlers(gene);
+                    foreach (Hediff hediff in pawn.health.hediffSet.hediffs ?? [])
+                        CallRegistrationHandlers(hediff);
                     break;
+                }
                 case Map map:
-                    DoRegister(map);
+                {
+                    foreach (Pawn pawn in map.mapPawns.AllPawns)
+                        CallRegistrationHandlers(pawn);
                     break;
+                }
                 case Caravan caravan:
-                    DoRegister(caravan);
+                {
+                    foreach (Pawn pawn in caravan.PawnsListForReading)
+                        CallRegistrationHandlers(pawn);
                     break;
+                }
             }
-        }
-
-        private void DoRegister(Caravan caravan)
-        {
-            foreach (Pawn pawn in caravan.PawnsListForReading)
-                CallRegistrationHandlers(pawn);
-        }
-
-        private void DoRegister(Map map)
-        {
-            foreach (Pawn pawn in map.mapPawns.AllPawns)
-                CallRegistrationHandlers(pawn);
-        }
-
-        private void DoRegister(Pawn pawn)
-        {
-            foreach (Gene gene in pawn.genes?.GenesListForReading ?? [])
-                CallRegistrationHandlers(gene);
-            foreach (Hediff hediff in pawn.health.hediffSet.hediffs ?? [])
-                CallRegistrationHandlers(hediff);
-        }
-
-        private void DoRegister(HediffWithComps hediffWithComps)
-        {
-            foreach (HediffComp comp in hediffWithComps.comps)
-                CallRegistrationHandlers(comp);
         }
 
         public override void LoadedGame()
