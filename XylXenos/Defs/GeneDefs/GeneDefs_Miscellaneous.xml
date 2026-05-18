@@ -288,7 +288,7 @@
     <label>petrification</label>
     <description>Carriers of this gene have a chance to develop a disease named petrification. Petrification slowly replaces tissues throughout the body with stone. The disease is incurable, but progress can be slowed with medical treatment, and the affected tissues can be removed surgically.</description>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>2</biostatMet>
+    <biostatMet>3</biostatMet>
     <displayCategory>Healing</displayCategory>
     <displayOrderInCategory>210</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
