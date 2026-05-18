@@ -58,6 +58,9 @@ namespace XylXenos
             object callbackTarget,
             string name)
         {
+            if (callbackTarget is not INotificationTarget)
+                throw new InvalidOperationException("Only INotificationTargets can register for notifications");
+
             EventInfo eventInfo = events[(int)eventType] ??= new();
 
             CallbackInfo callbackInfo = new() { wrappedCallback = callback, target = callbackTarget, name = name };
@@ -89,33 +92,21 @@ namespace XylXenos
 
         public void Register<T>(NotificationEvent eventType, Thing target, Action<Thing, T> callback)
         {
-            if (callback.Target is not INotificationTarget)
-                throw new InvalidOperationException("Only INotificationTargets can register for notifications");
-
             RegisterInternal(eventType, target, callback, callback.Target, callback.Method.Name);
         }
 
         public void Register<T>(NotificationEvent eventType, Thing target, Action<T> callback)
         {
-            if (callback.Target is not INotificationTarget)
-                throw new InvalidOperationException("Only INotificationTargets can register for notifications");
-
             RegisterInternal<T>(eventType, target, (_, data) => callback(data), callback.Target, callback.Method.Name);
         }
 
         public void Register(NotificationEvent eventType, Thing target, Action<Thing> callback)
         {
-            if (callback.Target is not INotificationTarget)
-                throw new InvalidOperationException("Only INotificationTargets can register for notifications");
-
             RegisterInternal<object>(eventType, target, (t, _) => callback(t), callback.Target, callback.Method.Name);
         }
 
         public void Register(NotificationEvent eventType, Thing target, Action callback)
         {
-            if (callback.Target is not INotificationTarget)
-                throw new InvalidOperationException("Only INotificationTargets can register for notifications");
-
             RegisterInternal<object>(eventType, target, (_, _) => callback(), callback.Target, callback.Method.Name);
         }
 
