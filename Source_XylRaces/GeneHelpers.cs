@@ -157,16 +157,22 @@ public static class GeneHelpers
                 $"{"XylNewRecipes".Translate()}: {recipeDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
         }
 
-        IEnumerable<ThingDef> thingDef = DefDatabase<RecipeDef>.AllDefsListForReading
+        IEnumerable<ThingDef> thingDefs = DefDatabase<RecipeDef>.AllDefsListForReading
             .SelectMany(def => def.products.EmptyIfNull(), (_, c) => c.thingDef)
             .Where(def =>
             {
                 var modExtension = def.GetModExtension<DefModExtension_GeneDependent>();
                 return modExtension != null && modExtension.genePrerequisitesAny.EmptyIfNull().Contains(gene);
             }).ToList();
-        if (thingDef.Any())
+        if (thingDefs.Any())
         {
-            yield return $"{"XylNewRecipes".Translate()}: {thingDef.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
+            yield return $"{"XylNewRecipes".Translate()}: {thingDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
+        }
+
+        IEnumerable<MentalBreakDef> mentalBreakDefs = DefDatabase<MentalBreakDef>.AllDefsListForReading.Where(def => def.requiredGene == gene).ToList();
+        foreach (var mentalBreakDef in mentalBreakDefs)
+        {
+            yield return $"{"XylPossibleMentalBreak".Translate()}: {mentalBreakDef.mentalState.LabelCap}";
         }
     }
 

@@ -63,5 +63,6 @@
   <XylRequiresGene>Requires {0} gene</XylRequiresGene>
   <XylNewRecipes>New recipes</XylNewRecipes>
   <XylNewBuildings>New buildables</XylNewBuildings>
+  <XylPossibleMentalBreak>Possible mental break</XylPossibleMentalBreak>
 
 </LanguageData>

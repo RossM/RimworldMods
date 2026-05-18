@@ -114,12 +114,13 @@
     <defName>XylMeatDependence</defName>
     <label>meat dependence</label>
     <labelShortAdj>meat-dependent</labelShortAdj>
-    <description>Carriers of this gene are unable to synthesize certain essential nutrients and must obtain them by eating raw meat. After age 13, they become dependent on raw meat to survive. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death.</description>
+    <description>Carriers of this gene are unable to synthesize certain essential nutrients and must obtain them by eating raw meat. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
     <displayCategory>XylDiet</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MeatDependence</iconPath>
+    <minAgeActive>13</minAgeActive>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_DietDependency">
         <hediffDef>XylGeneticMeatNeed</hediffDef>
