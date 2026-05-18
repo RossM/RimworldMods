@@ -11,6 +11,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(JobGiver_ConfigurableHostilityResponse))]
     public static class Patch_JobGiver_ConfigurableHostilityResponse
     {
+        [Feature(typeof(Hediff_ForceBehavior))]
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch("TryGiveJob")]

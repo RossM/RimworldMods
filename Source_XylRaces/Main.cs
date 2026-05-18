@@ -1,4 +1,7 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using HarmonyLib;
 using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
@@ -18,6 +21,29 @@ namespace XylXenos
         public Main(ModContentPack content) : base(content)
         {
             Settings.instance = GetSettings<Settings>();
+
+            CheckForFeatureAttribute();
+        }
+
+        private static void CheckForFeatureAttribute()
+        {
+            var assembly = MethodBase.GetCurrentMethod().ReflectedType.Assembly;
+            foreach (TypeInfo type in assembly.DefinedTypes)
+            {
+                foreach (MethodInfo method in type.DeclaredMethods)
+                {
+                    List<CustomAttributeData> attributes = method.CustomAttributes.ToList();
+                    var hasFeature = attributes.Any(attribute => attribute.AttributeType == typeof(FeatureAttribute));
+                    var hasPrefix = attributes.Any(attribute => attribute.AttributeType == typeof(HarmonyPrefix));
+                    var hasPostfix = attributes.Any(attribute => attribute.AttributeType == typeof(HarmonyPostfix));
+                    var hasTranspiler = attributes.Any(attribute => attribute.AttributeType == typeof(HarmonyTranspiler));
+
+                    if ((hasPrefix || hasPostfix || hasTranspiler) && !hasFeature)
+                    {
+                        Log.Warning($"{type.Name}.{method.Name} is missing a [Feature] attribute");
+                    }
+                }
+            }
         }
 
         public override void DoSettingsWindowContents(Rect inRect)
