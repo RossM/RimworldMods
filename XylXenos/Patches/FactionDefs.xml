@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>
+      Defs/FactionDef[@Name="OutlanderFactionBase"]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <XylBossaps>0.025</XylBossaps>
+      <XylChyrr>0.01</XylChyrr>
+      <XylDvergr>0.05</XylDvergr>
+      <XylNixie>0.025</XylNixie>
+      <XylTitan>0.025</XylTitan>
+    </value>
+  </Operation>
+  
+  <Operation Class="PatchOperationAdd">
+    <xpath>
+      Defs/FactionDef[defName="Pirate"]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <XylBossaps>0.025</XylBossaps>
+      <XylChyrr>0.025</XylChyrr>
+      <XylDvergr>0.025</XylDvergr>
+      <XylNixie>0.025</XylNixie>
+      <XylTitan>0.025</XylTitan>
+      <XylTrog>0.025</XylTrog>
+      <XylWarcat>0.025</XylWarcat>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>
+      Defs/FactionDef[defName="PirateWaster"]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <XylBossaps>0.025</XylBossaps>
+      <XylChyrr>0.01</XylChyrr>
+      <XylDvergr>0.05</XylDvergr>
+      <XylNixie>0.025</XylNixie>
+      <XylTitan>0.025</XylTitan>
+      <XylTrog>0.05</XylTrog>
+      <XylWarcat>0.05</XylWarcat>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>
+      Defs/FactionDef[defName="Empire"]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <XylTitan>0.025</XylTitan>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>
+      Defs/FactionDef[defName="TradersGuild"]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <XylTitan>0.05</XylTitan>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>
+      Defs/FactionDef[
+        defName="OutlanderRefugee" or
+        defName="Beggars" or
+        defName="Pilgrims"
+      ]/xenotypeSet/xenotypeChances</xpath>
+    <value>
+      <XylBossaps>0.05</XylBossaps>
+      <XylChyrr>0.025</XylChyrr>
+      <XylDvergr>0.05</XylDvergr>
+      <XylNixie>0.05</XylNixie>
+      <XylTitan>0.025</XylTitan>
+    </value>
+  </Operation>
+  
+</Patch>
