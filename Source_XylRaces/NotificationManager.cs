@@ -34,7 +34,7 @@ namespace XylXenos
         public struct CallbackInfo
         {
             public Delegate wrappedCallback;
-            public object target;
+            public object source;
             public string name;
         }
 
@@ -58,22 +58,22 @@ namespace XylXenos
             NotificationEvent eventType,
             Thing target,
             Action<Thing, T> callback,
-            object callbackTarget,
+            object source,
             string name)
         {
-            if (callbackTarget is not INotificationTarget)
+            if (source is not INotificationTarget)
                 throw new InvalidOperationException("Only INotificationTargets can register for notifications");
 
             EventInfo eventInfo = events[(int)eventType] ??= new();
 
-            CallbackInfo callbackInfo = new() { wrappedCallback = callback, target = callbackTarget, name = name };
+            CallbackInfo callbackInfo = new() { wrappedCallback = callback, source = source, name = name };
 
             if (target == null)
             {
-                if (eventInfo.globalCallbacks.Any(c => c.target == callbackTarget && c.name == name))
+                if (eventInfo.globalCallbacks.Any(c => c.source == source && c.name == name))
                 {
                     Log.Warning(
-                        $"Adding a duplicate callback: type={eventType} target={target} callbackTarget={callbackTarget} name={name}");
+                        $"Adding a duplicate callback: type={eventType} target={target} callbackTarget={source} name={name}");
                     return;
                 }
 
@@ -82,10 +82,10 @@ namespace XylXenos
             else
             {
                 List<CallbackInfo> localCallbacks = eventInfo.localCallbacks.GetOrCreateValue(target);
-                if (localCallbacks.Any(c => c.target == callbackTarget && c.name == name))
+                if (localCallbacks.Any(c => c.source == source && c.name == name))
                 {
                     Log.Warning(
-                        $"Adding a duplicate callback: type={eventType} target={target} callbackTarget={callbackTarget} name={name}");
+                        $"Adding a duplicate callback: type={eventType} target={target} callbackTarget={source} name={name}");
                     return;
                 }
 
@@ -141,8 +141,17 @@ namespace XylXenos
 
         private static void DoNotify(CallbackInfo callbackInfo, Thing target, object data)
         {
+            // TODO Remove notification handlers when the corresponding things go away?
+            switch (callbackInfo.source)
+            {
+                case Thing { Destroyed: true }:
+                case ThingComp t when t.parent.Destroyed:
+                case MapComponent m when m.map.Disposed:
+                    return;
+            }
+
             if (doDebug)
-                Debug.Log($"  {callbackInfo.target} : {callbackInfo.name}");
+                Debug.Log($"  {callbackInfo.source} : {callbackInfo.name}");
 
             callbackInfo.wrappedCallback.DynamicInvoke(target, data);
         }

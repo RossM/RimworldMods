@@ -50,11 +50,14 @@ namespace XylXenos
 
         public void Notify_DamageTaken(Thing target, DamageInfo info)
         {
-            if (target.Map != map)
+            if (target?.Map != map)
                 return;
+            
             Thing source = info.Instigator;
-            if (source == null)
+            
+            if (source?.Faction == null || target?.Faction == null)
                 return;
+
             if (activeOverrides.Contains((source.Faction, target.Faction)))
                 lastHostileActionTick[source.Faction] = Find.TickManager.TicksGame;
         }
