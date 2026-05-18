@@ -11,7 +11,7 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>10</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Aquatic</iconPath>
-    <iconColor>(0.4, 0.6, 0.9)</iconColor>
+    <iconColor>(0.6, 0.6, 0.9)</iconColor>
     <statOffsets>
       <ComfyTemperatureMin>-5</ComfyTemperatureMin>
     </statOffsets>
