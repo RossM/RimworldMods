@@ -2,9 +2,9 @@
 using RimWorld;
 using Verse;
 using Verse.AI;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class MentalState_SeeingRed : MentalState

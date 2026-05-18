@@ -1,7 +1,7 @@
 ﻿using Verse;
 using Verse.AI;
 
-namespace XylRacesCore;
+namespace XylXenos;
 
 public abstract class JobDriver_InteractWithPawn : JobDriver
 {

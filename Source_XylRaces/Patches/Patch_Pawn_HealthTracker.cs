@@ -1,9 +1,9 @@
 ﻿using HarmonyLib;
 using JetBrains.Annotations;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(Pawn_HealthTracker))]
     public static class Patch_Pawn_HealthTracker

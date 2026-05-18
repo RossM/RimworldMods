@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class GeneTemplateDef : Def

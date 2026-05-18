@@ -6,7 +6,7 @@
   <Operation Class="PatchOperationAttributeAdd">
     <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet</xpath>
     <attribute>Class</attribute>
-    <value>XylRacesCore.XenotypeSetWithDefault</value>
+    <value>XylXenos.XenotypeSetWithDefault</value>
   </Operation>
   <Operation Class="PatchOperationAdd">
     <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet</xpath>

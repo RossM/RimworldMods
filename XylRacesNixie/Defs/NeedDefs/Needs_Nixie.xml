@@ -3,7 +3,7 @@
 
   <NeedDef>
     <defName>XylWetness</defName>
-    <needClass>XylRacesCore.Need_Wetness</needClass>
+    <needClass>XylXenos.Need_Wetness</needClass>
     <label>wetness</label>
     <description>This character needs to keep their skin moist by periodically soaking in water. This need can be met by standing in water, being outside in the rain, or using a shower.</description>
     <minIntelligence>Humanlike</minIntelligence>

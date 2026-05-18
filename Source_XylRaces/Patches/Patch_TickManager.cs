@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(TickManager))]
     public static class Patch_TickManager

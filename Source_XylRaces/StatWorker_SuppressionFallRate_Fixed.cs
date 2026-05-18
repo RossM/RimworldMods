@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class StatWorker_SuppressionFallRate_Fixed : StatWorker
     {

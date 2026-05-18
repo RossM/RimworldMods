@@ -7,9 +7,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using TranspilerUtil;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(GeneDef))]
     public static class Patch_GeneDef

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class DefModExtension_StartingItemSource : DefModExtension, IStartingItemSource

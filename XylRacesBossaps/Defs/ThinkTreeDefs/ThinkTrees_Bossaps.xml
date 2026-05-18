@@ -5,7 +5,7 @@
     <defName>XylSeeingRed</defName>
     <thinkRoot Class="ThinkNode_Priority">
       <subNodes>
-        <li Class="XylRacesCore.JobGiver_SeeingRed" />
+        <li Class="XylXenos.JobGiver_SeeingRed" />
         <li Class="JobGiver_RunRandom">
           <maxDanger>Deadly</maxDanger>
         </li>

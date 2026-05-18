@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class PawnRenderNode_Wings(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree)

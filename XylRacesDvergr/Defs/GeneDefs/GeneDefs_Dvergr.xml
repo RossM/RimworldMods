@@ -129,7 +129,7 @@
       </suffixSymbols>
     </symbolPack>
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_Designator">
+      <li Class="XylXenos.Genes.GeneDefExtension_Designator">
         <addDesignators>
           <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
         </addDesignators>
@@ -189,7 +189,7 @@
       <MoveSpeed>-0.1</MoveSpeed>
     </statOffsets>
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_Rendering">
+      <li Class="XylXenos.Genes.GeneDefExtension_Rendering">
         <modifiers>
           <li>
             <onlyRoot>true</onlyRoot>

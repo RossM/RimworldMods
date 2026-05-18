@@ -3,7 +3,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class JobGiver_GetWetness : ThinkNode_JobGiver
     {

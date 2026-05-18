@@ -9,7 +9,7 @@ using RimWorld;
 using TranspilerUtil;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(Need_Food))]
     public static class Patch_Need_Food

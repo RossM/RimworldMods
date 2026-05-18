@@ -1,7 +1,7 @@
 using RimWorld;
 using RimWorld.Planet;
 
-namespace XylRacesCore;
+namespace XylXenos;
 
 public static class MapHelpers
 {

@@ -4,7 +4,7 @@
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/ThinkTreeDef//li[@Class="JobGiver_SatisfyChemicalNeed"]</xpath>
     <value>
-      <li Class="XylRacesCore.JobGiver_SatisfyDietDependency" />
+      <li Class="XylXenos.JobGiver_SatisfyDietDependency" />
     </value>
   </Operation>
 

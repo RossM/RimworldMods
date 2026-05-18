@@ -47,7 +47,7 @@
     <isBad>false</isBad>
     <comps>
       <li Class="HediffCompProperties_ReplaceHediff">
-        <compClass>XylRacesCore.HediffComp_ReplaceOnRemoval</compClass>
+        <compClass>XylXenos.HediffComp_ReplaceOnRemoval</compClass>
         <manuallyTriggered>true</manuallyTriggered>
         <hediffs>
           <li>
@@ -139,7 +139,7 @@
     <defName>XylGeneticMeatNeed</defName>
     <label>raw meat dependency</label>
     <description>This individual is unable to synthesize certain essential nutrients and must obtain them by eating raw meat. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death.</description>
-    <hediffClass>XylRacesCore.Hediff_DietDependency</hediffClass>
+    <hediffClass>XylXenos.Hediff_DietDependency</hediffClass>
     <descriptionHyperlinks>
       <GeneDef>XylMeatDependence</GeneDef>
     </descriptionHyperlinks>

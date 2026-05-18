@@ -2,9 +2,9 @@
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(JoyGiver))]
     public class Patch_JoyGiver

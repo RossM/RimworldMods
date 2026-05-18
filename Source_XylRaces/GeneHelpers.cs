@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore;
+namespace XylXenos;
 
 public static class GeneHelpers
 {

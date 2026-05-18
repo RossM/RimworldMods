@@ -9,11 +9,11 @@
     <mods>
       <li>Ideology</li>
     </mods>
-    <match Class="XylRacesCore.PatchOperationAddOrMerge">
+    <match Class="XylXenos.PatchOperationAddOrMerge">
       <xpath>Defs/ThingDef[defName="Apparel_Blindfold"]</xpath>
       <value>
         <modExtensions>
-          <li Class="XylRacesCore.DefModExtension_GeneDependent">
+          <li Class="XylXenos.DefModExtension_GeneDependent">
             <genePrerequisitesAny>
               <li>XylEcholocation</li>
             </genePrerequisitesAny>
@@ -26,7 +26,7 @@
   <!-- 
   Most outer-layer apparel that covers the torso disables flight.
   -->
-  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>
       Defs/ThingDef[
         apparel/bodyPartGroups/li = "Torso" and
@@ -40,7 +40,7 @@
     </xpath>
     <value>
       <modExtensions>
-        <li Class="XylRacesCore.Genes.ThingDefExtension_Flight">
+        <li Class="XylXenos.Genes.ThingDefExtension_Flight">
           <allowsFlight>false</allowsFlight>
         </li>
       </modExtensions>

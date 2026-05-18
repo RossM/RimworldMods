@@ -8,7 +8,7 @@ using RimWorld;
 using TranspilerUtil;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(Psycast))]
     public static class Patch_Psycast

@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class IncidentDefExtension_WildTribe : DefModExtension
     {

@@ -4,7 +4,7 @@
   <Operation Class="PatchOperationReplace">
     <xpath>Defs/StatDef[defName="SlaveSuppressionFallRate"]/workerClass</xpath>
     <value>
-      <workerClass>XylRacesCore.StatWorker_SuppressionFallRate_Fixed</workerClass>
+      <workerClass>XylXenos.StatWorker_SuppressionFallRate_Fixed</workerClass>
     </value>
   </Operation>
 

@@ -7,7 +7,7 @@ using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(PawnGroupKindWorker_Trader))]
     public static class Patch_PawnGroupKindWorker_Trader

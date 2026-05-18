@@ -8,7 +8,7 @@
     <displayPriorityInXenotype>519</displayPriorityInXenotype>
   </GeneCategoryDef>
 
-  <XylRacesCore.GeneTemplateDef>
+  <XylXenos.GeneTemplateDef>
     <defName>XylPsycast</defName>
     <ignoreIllegalLabelCharacterConfigError>true</ignoreIllegalLabelCharacterConfigError>
     <geneTemplateType>PsychicAbility</geneTemplateType>
@@ -16,7 +16,7 @@
     <iconPath>{0}</iconPath>
     <description>The carrier automatically learns the {0} psycast, and can use it without a psylink.\n\n{DESCRIPTION}</description>
     <displayCategory>XylPsycasts</displayCategory>
-    <geneClass>XylRacesCore.Genes.Psycast</geneClass>
+    <geneClass>XylXenos.Genes.Psycast</geneClass>
     <biostats>
       <li>
         <levels>1~4</levels>
@@ -34,6 +34,6 @@
         <biostatCpx>1</biostatCpx>
       </li>
     </biostats>
-  </XylRacesCore.GeneTemplateDef>
+  </XylXenos.GeneTemplateDef>
   
 </Defs>

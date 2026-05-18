@@ -8,9 +8,9 @@ using JetBrains.Annotations;
 using RimWorld;
 using TranspilerUtil;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(SlaveRebellionUtility))]
     public static class Patch_SlaveRebellionUtility

@@ -10,7 +10,7 @@ using RimWorld;
 using TranspilerUtil;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(RaceProperties))]
     public static class Patch_RaceProperties

@@ -2,7 +2,7 @@
 
 <Patch>
 
-  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>Defs/ThingDef[defName="Brewery"]</xpath>
     <order>Append</order>
     <value>

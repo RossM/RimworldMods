@@ -3,7 +3,7 @@ using System.Linq;
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore.Genes
+namespace XylXenos.Genes
 {
     public class GeneDefExtension : DefModExtension
     {

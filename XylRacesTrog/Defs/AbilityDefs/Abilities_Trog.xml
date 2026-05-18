@@ -29,7 +29,7 @@
       <soundCast>Explosion_FirefoamPopper</soundCast>
     </verbProperties>
     <comps>
-      <li Class="XylRacesCore.CompProperties_AbilityToxicBurst">
+      <li Class="XylXenos.CompProperties_AbilityToxicBurst">
         <gasType>ToxGas</gasType>
         <cellsToFill>20</cellsToFill>
         <AIUseRadius>2.9</AIUseRadius>

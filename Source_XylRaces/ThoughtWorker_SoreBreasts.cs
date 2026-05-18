@@ -2,9 +2,9 @@
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class ThoughtWorker_SoreBreasts : ThoughtWorker

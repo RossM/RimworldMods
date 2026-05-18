@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using TranspilerUtil;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(PawnRenderer))]
     public static class Patch_PawnRenderer

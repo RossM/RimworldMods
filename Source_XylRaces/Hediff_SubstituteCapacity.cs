@@ -4,7 +4,7 @@ using System.Text;
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class HediffDefExtension_SubstituteCapacity : DefModExtension
     {

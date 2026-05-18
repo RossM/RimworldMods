@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(DefGenerator))]
     public static class Patch_DefGenerator

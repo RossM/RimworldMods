@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public interface IGene_HediffSource
     {

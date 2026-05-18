@@ -2,7 +2,7 @@
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class ThoughtWorker_HerdInstinct : ThoughtWorker

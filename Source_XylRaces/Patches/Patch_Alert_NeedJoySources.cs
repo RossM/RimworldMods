@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(Alert_NeedJoySources))]
     public static class Patch_Alert_NeedJoySources

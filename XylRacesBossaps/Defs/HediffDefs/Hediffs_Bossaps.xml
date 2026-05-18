@@ -8,7 +8,7 @@
     <descriptionHyperlinks>
       <GeneDef>XylSeeingRed</GeneDef>
     </descriptionHyperlinks>
-    <hediffClass>XylRacesCore.Hediff_ForceBehavior</hediffClass>
+    <hediffClass>XylXenos.Hediff_ForceBehavior</hediffClass>
     <initialSeverity>1.0</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
     <isBad>true</isBad>
@@ -34,7 +34,7 @@
       </li>
     </stages>
     <modExtensions>
-      <li Class="XylRacesCore.HediffDefExtension_ForceBehavior">
+      <li Class="XylXenos.HediffDefExtension_ForceBehavior">
         <thinkTree>XylSeeingRed</thinkTree>
         <mentalState>XylSeeingRed</mentalState>
         <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>

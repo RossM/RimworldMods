@@ -1,9 +1,9 @@
 ﻿using RimWorld;
 using Verse;
 using Verse.AI;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class Hediff_DietDependency : Hediff_Genetic
     {

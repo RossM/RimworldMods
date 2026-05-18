@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using RimWorld;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(Pawn_GeneTracker))]
     public static class Patch_Pawn_GeneTracker

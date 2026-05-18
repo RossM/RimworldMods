@@ -2,7 +2,7 @@
 <Defs>
 
   <HediffDef>
-    <hediffClass>XylRacesCore.Hediff_SubstituteCapacity</hediffClass>
+    <hediffClass>XylXenos.Hediff_SubstituteCapacity</hediffClass>
     <defName>XylEcholocation</defName>
     <label>echolocation</label>
     <description>This character has echolocation.</description>
@@ -14,7 +14,7 @@
     <keepOnBodyPartRestoration>true</keepOnBodyPartRestoration>
     <isBad>false</isBad>
     <modExtensions>
-      <li Class="XylRacesCore.HediffDefExtension_SubstituteCapacity">
+      <li Class="XylXenos.HediffDefExtension_SubstituteCapacity">
         <originalCapacity>Sight</originalCapacity>
         <substituteCapacity>Hearing</substituteCapacity>
         <mode>Maximum</mode>

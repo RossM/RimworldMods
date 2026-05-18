@@ -3,7 +3,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class JobGiver_HuntingVermin : ThinkNode_JobGiver

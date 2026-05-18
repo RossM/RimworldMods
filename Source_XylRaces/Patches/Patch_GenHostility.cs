@@ -4,9 +4,9 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(GenHostility))]
     public static class Patch_GenHostility

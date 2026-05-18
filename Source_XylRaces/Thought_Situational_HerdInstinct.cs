@@ -1,7 +1,7 @@
 ﻿using RimWorld;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class Thought_Situational_HerdInstinct : Thought_Situational
     {

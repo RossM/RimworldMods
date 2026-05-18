@@ -2,9 +2,9 @@
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(Pawn_ApparelTracker))]
     public static class Patch_Pawn_ApparelTracker

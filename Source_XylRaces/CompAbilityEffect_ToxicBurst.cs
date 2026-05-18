@@ -1,7 +1,7 @@
 ﻿using RimWorld;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class CompProperties_AbilityToxicBurst : CompProperties_AbilityReleaseGas
     {

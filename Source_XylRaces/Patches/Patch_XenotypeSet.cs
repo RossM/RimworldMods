@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using TranspilerUtil;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(XenotypeSet))]
     public static class Patch_XenotypeSet

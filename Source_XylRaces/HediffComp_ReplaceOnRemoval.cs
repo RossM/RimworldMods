@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class HediffComp_ReplaceOnRemoval : HediffComp_ReplaceHediff

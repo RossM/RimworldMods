@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using RimWorld.Planet;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(TileFinder))]
     public static class Patch_TileFinder

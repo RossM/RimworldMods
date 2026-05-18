@@ -10,8 +10,8 @@
   </MentalBreakDef>
   <MentalStateDef ParentName="BaseMentalState">
     <defName>XylHuntingVermin</defName>
-    <stateClass>XylRacesCore.MentalState_HuntingVermin</stateClass>
-    <workerClass>XylRacesCore.MentalStateWorker_HuntingVermin</workerClass>
+    <stateClass>XylXenos.MentalState_HuntingVermin</stateClass>
+    <workerClass>XylXenos.MentalStateWorker_HuntingVermin</workerClass>
     <label>hunting vermin</label>
     <category>Aggro</category>
     <blockInteractionInitiationExcept>

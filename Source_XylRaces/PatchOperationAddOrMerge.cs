@@ -6,7 +6,7 @@ using Verse;
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
 
-namespace XylRacesCore
+namespace XylXenos
 {
     // This works like PatchOperationAdd, except if the node to be added already exists, the new node's children are added
     // to the existing mode. For example, if the existing node is

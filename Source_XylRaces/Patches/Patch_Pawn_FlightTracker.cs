@@ -3,9 +3,9 @@ using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using Verse.AI;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(Pawn_FlightTracker))]
     public static class Patch_Pawn_FlightTracker

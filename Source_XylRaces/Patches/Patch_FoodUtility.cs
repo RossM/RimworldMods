@@ -3,10 +3,10 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 using static RimWorld.FoodUtility;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(FoodUtility))]
     public static class Patch_FoodUtility_NutritionForEater

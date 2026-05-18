@@ -6,7 +6,7 @@ using UnityEngine;
 using Verse;
 using Verse.AI;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class JobGiver_SatisfyDietDependency : ThinkNode_JobGiver

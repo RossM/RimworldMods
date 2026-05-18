@@ -1,4 +1,4 @@
-﻿namespace XylRacesCore.Genes
+﻿namespace XylXenos.Genes
 {
     public class GeneDefExtension_UIFilter : GeneDefExtension
     {

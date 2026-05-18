@@ -34,7 +34,7 @@
       <li>AptitudeStrong_Social</li>
     </genes>
     <modExtensions>
-      <li Class="XylRacesCore.XenotypeDefExtension">
+      <li Class="XylXenos.XenotypeDefExtension">
         <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
           <li MayRequire="Ludeon.RimWorld.Ideology">HighLife</li>

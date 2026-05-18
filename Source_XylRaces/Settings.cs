@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace XylRacesCore;
+namespace XylXenos;
 
 public class Settings : ModSettings
 {

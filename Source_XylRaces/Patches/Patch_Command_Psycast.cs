@@ -7,9 +7,9 @@ using JetBrains.Annotations;
 using RimWorld;
 using TranspilerUtil;
 using Verse;
-using Psycast = XylRacesCore.Genes.Psycast;
+using Psycast = XylXenos.Genes.Psycast;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(Command_Psycast))]
     public static class Patch_Command_Psycast

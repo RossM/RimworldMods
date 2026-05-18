@@ -5,7 +5,7 @@ using LudeonTK;
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public static class DebugOutputs
     {

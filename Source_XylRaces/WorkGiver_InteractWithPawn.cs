@@ -5,7 +5,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class WorkGiverDefExtension_InteractWithPawn : DefModExtension
     {

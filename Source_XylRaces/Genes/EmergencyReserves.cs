@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Verse;
 
-namespace XylRacesCore.Genes
+namespace XylXenos.Genes
 {
     [UsedImplicitly]
     public class EmergencyReserves : Gene

@@ -2,9 +2,9 @@
 using System.Linq;
 using RimWorld;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class HostilityOverrideManager(Map map) : MapComponent(map)
     {

@@ -2,7 +2,7 @@
 using Verse;
 using Verse.AI;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class JobGiver_SeeingRed : ThinkNode_JobGiver
     {

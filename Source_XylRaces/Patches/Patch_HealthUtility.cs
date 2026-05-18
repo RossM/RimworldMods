@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(HealthUtility))]
     public static class Patch_HealthUtility

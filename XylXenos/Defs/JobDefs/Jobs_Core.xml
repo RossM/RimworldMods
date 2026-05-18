@@ -4,7 +4,7 @@
   
   <JobDef>
     <defName>XylCastAbilityWithHeldThing</defName>
-    <driverClass>XylRacesCore.JobDriver_CastWithHeldThing</driverClass>
+    <driverClass>XylXenos.JobDriver_CastWithHeldThing</driverClass>
     <casualInterruptible>false</casualInterruptible>
     <collideWithPawns>true</collideWithPawns>
     <neverShowWeapon>true</neverShowWeapon>

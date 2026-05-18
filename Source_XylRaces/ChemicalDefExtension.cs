@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class ChemicalDefExtension : DefModExtension
     {

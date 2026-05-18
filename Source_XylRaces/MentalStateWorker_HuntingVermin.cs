@@ -2,7 +2,7 @@
 using Verse;
 using Verse.AI;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class MentalStateWorker_HuntingVermin : MentalStateWorker

@@ -1,6 +1,6 @@
 using Verse;
 
-namespace XylRacesCore;
+namespace XylXenos;
 
 public static class RenderHelpers
 {

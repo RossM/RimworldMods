@@ -2,12 +2,12 @@
 
 <Defs>
   
-  <XylRacesCore.Config>
-    <defName>XylRacesCoreConfig_Core</defName>
+  <XylXenos.Config>
+    <defName>XylXenosConfig_Core</defName>
     <ignoreGenesFromMods>
       <li>vanillaracesexpanded.android</li>
       <li>vanillaracesexpanded.starjack</li>
     </ignoreGenesFromMods>
-  </XylRacesCore.Config>
+  </XylXenos.Config>
 
 </Defs>

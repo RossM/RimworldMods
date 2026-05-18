@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using Verse;
 using Verse.AI;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(Pawn_Thinker))]
     public static class Patch_Pawn_Thinker

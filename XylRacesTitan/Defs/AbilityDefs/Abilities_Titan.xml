@@ -24,8 +24,8 @@
       </targetParams>
     </verbProperties>
     <comps>
-      <li Class="XylRacesCore.CompProperties_AbilityRockToss">
-        <compClass>XylRacesCore.CompAbilityEffect_RockToss</compClass>
+      <li Class="XylXenos.CompProperties_AbilityRockToss">
+        <compClass>XylXenos.CompAbilityEffect_RockToss</compClass>
         <destination>Selected</destination>
         <requiresLineOfSight>False</requiresLineOfSight>
         <applyMortarMissRadiusFactor>false</applyMortarMissRadiusFactor>
@@ -49,7 +49,7 @@
       <graphicClass>Graphic_Single</graphicClass>
       <shaderType>TransparentPostLight</shaderType>
     </graphicData>
-    <thingClass>XylRacesCore.Projectile_RockToss</thingClass>
+    <thingClass>XylXenos.Projectile_RockToss</thingClass>
     <projectile>
       <damageDef>XylThrownRock</damageDef>
       <!-- damage amount is the damage def default -->

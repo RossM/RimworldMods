@@ -3,8 +3,8 @@
 
   <ThoughtDef>
     <defName>XylHerdInstinct</defName>
-    <thoughtClass>XylRacesCore.Thought_Situational_HerdInstinct</thoughtClass>
-    <workerClass>XylRacesCore.ThoughtWorker_HerdInstinct</workerClass>
+    <thoughtClass>XylXenos.Thought_Situational_HerdInstinct</thoughtClass>
+    <workerClass>XylXenos.ThoughtWorker_HerdInstinct</workerClass>
     <requiredGenes>
       <li>XylHerdInstinct</li>
     </requiredGenes>
@@ -35,7 +35,7 @@
   <ThoughtDef>
     <defName>XylDocileEnslaved</defName>
     <thoughtClass>Thought_Situational</thoughtClass>
-    <workerClass>XylRacesCore.ThoughtWorker_PawnStatus</workerClass>
+    <workerClass>XylXenos.ThoughtWorker_PawnStatus</workerClass>
     <requiredGenes>
       <li>XylDocile</li>
     </requiredGenes>
@@ -47,7 +47,7 @@
       </li>
     </stages>
     <modExtensions>
-      <li Class="XylRacesCore.ThoughtDefExtension_PawnStatus">
+      <li Class="XylXenos.ThoughtDefExtension_PawnStatus">
         <status>Slave</status>
       </li>
     </modExtensions>
@@ -56,7 +56,7 @@
   <ThoughtDef>
     <defName>XylDocileImprisoned</defName>
     <thoughtClass>Thought_Situational</thoughtClass>
-    <workerClass>XylRacesCore.ThoughtWorker_PawnStatus</workerClass>
+    <workerClass>XylXenos.ThoughtWorker_PawnStatus</workerClass>
     <requiredGenes>
       <li>XylDocile</li>
     </requiredGenes>
@@ -68,7 +68,7 @@
       </li>
     </stages>
     <modExtensions>
-      <li Class="XylRacesCore.ThoughtDefExtension_PawnStatus">
+      <li Class="XylXenos.ThoughtDefExtension_PawnStatus">
         <status>Prisoner</status>
       </li>
     </modExtensions>
@@ -135,7 +135,7 @@
   <ThoughtDef>
     <defName>XylSoreBreasts</defName>
     <thoughtClass>Thought_Situational</thoughtClass>
-    <workerClass>XylRacesCore.ThoughtWorker_SoreBreasts</workerClass>
+    <workerClass>XylXenos.ThoughtWorker_SoreBreasts</workerClass>
     <requiredGenes>
       <li>XylHyperlactation</li>
     </requiredGenes>

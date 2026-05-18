@@ -5,7 +5,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class CompProperties_PawnLookupCache : CompProperties

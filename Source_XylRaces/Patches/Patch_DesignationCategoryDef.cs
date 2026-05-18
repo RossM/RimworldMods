@@ -4,10 +4,10 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 using static Verse.DesignationCategoryDef;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(DesignationCategoryDef))]
     public static class Patch_DesignationCategoryDef

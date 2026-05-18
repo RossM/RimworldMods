@@ -3,14 +3,14 @@
 
   <JobDef>
     <defName>XylTakeShower</defName>
-    <driverClass>XylRacesCore.JobDriver_TakeShower</driverClass>
+    <driverClass>XylXenos.JobDriver_TakeShower</driverClass>
     <reportString>taking a shower.</reportString>
     <joyDuration>3000</joyDuration>
   </JobDef>
 
   <JobDef>
     <defName>XylSoak</defName>
-    <driverClass>XylRacesCore.JobDriver_Soak</driverClass>
+    <driverClass>XylXenos.JobDriver_Soak</driverClass>
     <reportString>soaking.</reportString>
     <joyDuration>3000</joyDuration>
   </JobDef>

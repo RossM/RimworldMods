@@ -2,7 +2,7 @@
 using UnityEngine;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class PawnRenderNode_NotFur(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree)

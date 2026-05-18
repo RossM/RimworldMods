@@ -8,8 +8,8 @@
       <li Class="ThinkNode_ConditionalMentalState">
         <state>XylHuntingVermin</state>
         <subNodes>
-          <li Class="XylRacesCore.JobGiver_HuntingVermin" />
-          <li Class="XylRacesCore.JobGiver_SatisfyDietDependency" />
+          <li Class="XylXenos.JobGiver_HuntingVermin" />
+          <li Class="XylXenos.JobGiver_SatisfyDietDependency" />
           <li Class="ThinkNode_PrioritySorter">
             <subNodes>
               <li Class="JobGiver_GetFood">

@@ -2,9 +2,9 @@
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
-using Psycast = XylRacesCore.Genes.Psycast;
+using Psycast = XylXenos.Genes.Psycast;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public static class PsyHelpers
     {

@@ -3,7 +3,7 @@ using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public enum WetnessCategory : byte
     {

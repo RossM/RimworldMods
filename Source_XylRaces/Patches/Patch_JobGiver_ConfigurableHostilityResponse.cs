@@ -5,7 +5,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [Feature(nameof(Hediff_ForceBehavior))]
     [HarmonyPatch(typeof(JobGiver_ConfigurableHostilityResponse))]

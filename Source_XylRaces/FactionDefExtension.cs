@@ -4,7 +4,7 @@ using RimWorld;
 using RimWorld.Planet;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class FactionDefExtension : DefModExtension
     {

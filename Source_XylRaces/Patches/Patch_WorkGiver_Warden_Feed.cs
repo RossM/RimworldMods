@@ -5,7 +5,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(WorkGiver_Warden_Feed))]
     public static class Patch_WorkGiver_Warden_Feed

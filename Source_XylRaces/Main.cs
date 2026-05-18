@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     [StaticConstructorOnStartup]

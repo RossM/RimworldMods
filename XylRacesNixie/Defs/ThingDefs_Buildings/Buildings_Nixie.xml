@@ -37,7 +37,7 @@
     <designationCategory>Misc</designationCategory>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
     <modExtensions>
-      <li Class="XylRacesCore.ThingDefExtension_WetnessSource">
+      <li Class="XylXenos.ThingDefExtension_WetnessSource">
         <effecter>XylShowerSplash</effecter>
       </li>
     </modExtensions>

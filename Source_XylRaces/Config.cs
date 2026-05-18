@@ -2,7 +2,7 @@
 using System.Linq;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class Config : Def
     {
@@ -42,21 +42,21 @@ namespace XylRacesCore
         public static bool FeatureEnabled(Feature feature)
         {
             bool result = Instance.enabledFeatures.EmptyIfNull().Contains(feature);
-            Log.Message($"XylRacesCore feature check: {feature} = {result}");
+            Log.Message($"XylXenos feature check: {feature} = {result}");
             return result;
         }
 
         public static bool GeneOfTypeExists<T>()
         {
             bool result = DefDatabase<GeneDef>.AllDefs.Any(gene => typeof(T).IsAssignableFrom(gene.geneClass));
-            Log.Message($"XylRacesCore feature check: {typeof(T)} = {result}");
+            Log.Message($"XylXenos feature check: {typeof(T)} = {result}");
             return result;
         }
 
         public static bool GeneWithModExtensionExists<T>()
         {
             bool result = DefDatabase<GeneDef>.AllDefs.Any(gene => gene.modExtensions.EmptyIfNull().OfType<T>().Any());
-            Log.Message($"XylRacesCore feature check: {typeof(T)} = {result}");
+            Log.Message($"XylXenos feature check: {typeof(T)} = {result}");
             return result;
         }
     }

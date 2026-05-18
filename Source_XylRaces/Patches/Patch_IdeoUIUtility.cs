@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(IdeoUIUtility))]
     public static class Patch_IdeoUIUtility

@@ -38,7 +38,7 @@
       <li>ChemicalDependency_Alcohol</li>
     </genes>
     <modExtensions>
-      <li Class="XylRacesCore.XenotypeDefExtension">
+      <li Class="XylXenos.XenotypeDefExtension">
         <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
           <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>

@@ -2,9 +2,9 @@
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(JobGiver_OptimizeApparel))]
     public static class Patch_JobGiver_OptimizeApparel

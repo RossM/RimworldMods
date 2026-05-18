@@ -6,7 +6,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace XylRacesCore.Genes
+namespace XylXenos.Genes
 {
     public class GeneDefExtension_Flight : GeneDefExtension_WithIcon
     {

@@ -5,7 +5,7 @@
     <mods>
       <li>Ideology</li>
     </mods>
-    <match Class="XylRacesCore.PatchOperationAddOrMerge">
+    <match Class="XylXenos.PatchOperationAddOrMerge">
       <xpath>Defs/ThoughtDef[starts-with(defName,"AteNonMeat_")]</xpath>
       <value>
         <nullifyingGenes>
@@ -15,7 +15,7 @@
     </match>
   </Operation>
 
-  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>Defs/ThoughtDef[defName="SleptInBarracks"]</xpath>
     <value>
       <nullifyingGenes>
@@ -23,11 +23,11 @@
       </nullifyingGenes>
     </value>
   </Operation>
-  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>Defs/ThoughtDef[defName="SleptInBarracks"]</xpath>
     <value>
       <modExtensions>
-        <li Class="XylRacesCore.ThoughtDefExtension_Memory">
+        <li Class="XylXenos.ThoughtDefExtension_Memory">
           <extraThoughts>
             <li>XylSleptInBarracks_HerdInstinct</li>
           </extraThoughts>
@@ -36,7 +36,7 @@
     </value>
   </Operation>
 
-  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>Defs/ThoughtDef[defName="HoldingMePrisoner"]</xpath>
     <value>
       <nullifyingGenes>

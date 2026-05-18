@@ -32,7 +32,7 @@
       <Wort>5</Wort>
     </products>
     <modExtensions>
-      <li Class="XylRacesCore.DefModExtension_GeneDependent">
+      <li Class="XylXenos.DefModExtension_GeneDependent">
         <genePrerequisitesAny>
           <li>XylFungusEater</li>
         </genePrerequisitesAny>

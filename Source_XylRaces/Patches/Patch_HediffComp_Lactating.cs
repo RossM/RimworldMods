@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(HediffComp_Lactating))]
     public static class Patch_HediffComp_Lactating

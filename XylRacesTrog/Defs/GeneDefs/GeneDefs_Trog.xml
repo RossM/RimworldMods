@@ -11,7 +11,7 @@
     <displayOrderInCategory>501</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_InsectPheromones</iconPath>
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_HostilityOverride">
+      <li Class="XylXenos.Genes.GeneDefExtension_HostilityOverride">
         <disableHostilityFromFaction>Insect</disableHostilityFromFaction>
       </li>
     </modExtensions>
@@ -53,7 +53,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.AddHediff</geneClass>
+    <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylBioRejection</defName>
     <label>bio-rejection</label>
     <description>Carriers of this gene have a severe allergic reaction to any sort of artificial implant or body part. They will suffer continual pain until the implant or part is removed.</description>
@@ -68,7 +68,7 @@
       </li>
     </suppressedTraits>
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
+      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>XylBioRejection</hediff>
@@ -82,7 +82,7 @@
 
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.BonusGene</geneClass>
+    <geneClass>XylXenos.Genes.BonusGene</geneClass>
     <defName>XylGeneticAtavism</defName>
     <label>genetic atavism</label>
     <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
@@ -95,7 +95,7 @@
       <li>Extra gene chance: 50%</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_BonusGene">
+      <li Class="XylXenos.Genes.GeneDefExtension_BonusGene">
         <biostatArc>0~0</biostatArc>
         <biostatCpx>1~99</biostatCpx>
         <biostatMet>-2~2</biostatMet>

@@ -4,7 +4,7 @@
   <ScenPartDef>
     <defName>XylStartingSlaves</defName>
     <label>start with slave(s)</label>
-    <scenPartClass>XylRacesCore.ScenPart_StartingSlaves</scenPartClass>
+    <scenPartClass>XylXenos.ScenPart_StartingSlaves</scenPartClass>
     <category>StartingImportant</category>
     <selectionWeight>1.0</selectionWeight>
     <summaryPriority>310</summaryPriority>
@@ -13,7 +13,7 @@
   <ScenPartDef MayRequire="Ludeon.Rimworld.Royalty">
     <defName>XylPsylinkLevels</defName>
     <label>start with psylink levels</label>
-    <scenPartClass>XylRacesCore.ScenPart_PsylinkLevels</scenPartClass>
+    <scenPartClass>XylXenos.ScenPart_PsylinkLevels</scenPartClass>
     <category>StartingImportant</category>
     <selectionWeight>1.0</selectionWeight>
     <summaryPriority>311</summaryPriority>
@@ -22,7 +22,7 @@
   <ScenPartDef MayRequire="Ludeon.Rimworld.Royalty">
     <defName>XylPsycasts</defName>
     <label>start with psycast</label>
-    <scenPartClass>XylRacesCore.ScenPart_Psycast</scenPartClass>
+    <scenPartClass>XylXenos.ScenPart_Psycast</scenPartClass>
     <category>StartingImportant</category>
     <selectionWeight>1.0</selectionWeight>
     <summaryPriority>312</summaryPriority>

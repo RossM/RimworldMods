@@ -9,7 +9,7 @@ using TranspilerUtil;
 using UnityEngine;
 using Verse;
 
-namespace XylRacesCore.Patches
+namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(ConversionUtility))]
     public static class Patch_ConversionUtility

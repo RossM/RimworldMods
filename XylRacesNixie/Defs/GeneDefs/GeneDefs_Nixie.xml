@@ -33,7 +33,7 @@
     <renderNodeProperties>
       <li>
         <debugLabel>Scaleskin</debugLabel>
-        <nodeClass>XylRacesCore.PawnRenderNode_NotFur</nodeClass>
+        <nodeClass>XylXenos.PawnRenderNode_NotFur</nodeClass>
         <workerClass>PawnRenderNodeWorker_Fur</workerClass>
         <baseLayer>5</baseLayer>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
@@ -103,12 +103,12 @@
       </suffixSymbols>
     </symbolPack>
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_Designator">
+      <li Class="XylXenos.Genes.GeneDefExtension_Designator">
         <addDesignators>
           <li>XylShower</li>
         </addDesignators>
       </li>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_JoyGivers">
+      <li Class="XylXenos.Genes.GeneDefExtension_JoyGivers">
         <joyGiverChanceFactors>
           <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
         </joyGiverChanceFactors>

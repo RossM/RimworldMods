@@ -3,7 +3,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Verse;
 
-namespace XylRacesCore;
+namespace XylXenos;
 
 public static class HediffHelpers
 {

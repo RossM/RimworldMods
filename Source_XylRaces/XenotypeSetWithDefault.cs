@@ -1,6 +1,6 @@
 ﻿using RimWorld;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     public class XenotypeSetWithDefault : XenotypeSet
     {

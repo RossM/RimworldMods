@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     // This attribute serves as documentation of which patches are to support which parts of the mod. It
     // has no actual effect.

@@ -19,7 +19,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.DietDependency</geneClass>
+    <geneClass>XylXenos.Genes.DietDependency</geneClass>
     <defName>XylMeatDependence</defName>
     <label>meat dependence</label>
     <labelShortAdj>meat-dependent</labelShortAdj>
@@ -30,7 +30,7 @@
     <displayOrderInCategory>14</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MeatDependence</iconPath>
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_DietDependency">
+      <li Class="XylXenos.Genes.GeneDefExtension_DietDependency">
         <hediffDef>XylGeneticMeatNeed</hediffDef>
         <foodLabel>raw meat</foodLabel>
         <foodKind>Meat</foodKind>
@@ -43,7 +43,7 @@
         <startingFoodType>Meat</startingFoodType>
         <startingFoodNutrition>2~4</startingFoodNutrition>
       </li>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_IngestionThoughtOverride">
+      <li Class="XylXenos.Genes.GeneDefExtension_IngestionThoughtOverride">
         <thoughtOverrides>
           <li>
             <meatSources>
@@ -80,7 +80,7 @@
       <XylRawMeatFoodPoisonChanceOffset>-0.05</XylRawMeatFoodPoisonChanceOffset>
     </statOffsets>
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_IngestionThoughtOverride">
+      <li Class="XylXenos.Genes.GeneDefExtension_IngestionThoughtOverride">
         <thoughtOverrides>
           <li>
             <meatSources>
@@ -183,7 +183,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.AddHediff</geneClass>
+    <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylRetractableClaws</defName>
     <label>retractable claws</label>
     <labelShortAdj>claws</labelShortAdj>
@@ -195,7 +195,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_RetractableClaws</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
+      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>XylRetractableClaws</hediff>
@@ -232,7 +232,7 @@
   </GeneDef>
 
   <GeneDef>
-    <geneClass>XylRacesCore.Genes.AddHediff</geneClass>
+    <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylMoody</defName>
     <label>moody</label>
     <description>Carriers of this gene have a volatile emotional state. They randomly get good and bad moods.</description>
@@ -242,7 +242,7 @@
     <displayOrderInCategory>101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Moody</iconPath>
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_Hediff">
+      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
           <li Class="HediffGiver_Event">
             <hediff>XylMoody</hediff>

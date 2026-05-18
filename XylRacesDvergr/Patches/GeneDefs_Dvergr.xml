@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Patch>
 
-  <Operation Class="XylRacesCore.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>Defs/GeneDef[defName="RobustDigestion"]</xpath>
     <value>
       <exclusionTags>

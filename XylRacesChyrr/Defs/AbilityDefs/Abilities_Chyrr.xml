@@ -24,7 +24,7 @@
       </targetParams>
     </verbProperties>
     <comps>
-      <li Class="XylRacesCore.CompProperties_AbilitySonicWave">
+      <li Class="XylXenos.CompProperties_AbilitySonicWave">
         <radius>2.5</radius>
         <canHitFilledCells>true</canHitFilledCells>
       </li>

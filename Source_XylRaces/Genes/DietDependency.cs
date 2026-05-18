@@ -4,7 +4,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace XylRacesCore.Genes
+namespace XylXenos.Genes
 {
     public class GeneDefExtension_DietDependency : GeneDefExtension
     {

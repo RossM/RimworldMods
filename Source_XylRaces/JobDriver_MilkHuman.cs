@@ -4,9 +4,9 @@ using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using Verse.AI;
-using XylRacesCore.Genes;
+using XylXenos.Genes;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class JobDriver_MilkHuman : JobDriver_InteractWithPawn

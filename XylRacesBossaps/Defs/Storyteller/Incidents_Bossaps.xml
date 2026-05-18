@@ -8,14 +8,14 @@
     <targetTags>
       <li>Map_PlayerHome</li>
     </targetTags>
-    <workerClass>XylRacesCore.IncidentWorker_WildTribe</workerClass>
+    <workerClass>XylXenos.IncidentWorker_WildTribe</workerClass>
     <baseChance>0.5</baseChance>
     <populationEffect>IncreaseMedium</populationEffect>
     <letterLabel>{0} wander in</letterLabel>
     <letterText>A herd of wild {0} has wandered into the area.\n\nYou may attempt to tame them.\n\nThey will leave the area in a few days.</letterText>
     <letterDef>NeutralEvent</letterDef>
     <modExtensions>
-      <li Class="XylRacesCore.IncidentDefExtension_WildTribe">
+      <li Class="XylXenos.IncidentDefExtension_WildTribe">
         <xenotype>XylBossaps</xenotype>
         <pawnsCount>2 ~ 4</pawnsCount>
         <exitMapTicks>180000 ~ 300000</exitMapTicks> <!-- 3 to 5 days -->

@@ -2,7 +2,7 @@
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore
+namespace XylXenos
 {
     [UsedImplicitly]
     public class ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext : ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes

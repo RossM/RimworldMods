@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
-namespace XylRacesCore.Genes
+namespace XylXenos.Genes
 {
     [UsedImplicitly]
     public class ChemicalImmunity : Gene

@@ -4,7 +4,7 @@
 
   <GeneDef>
     <defName>XylSplicer</defName>
-    <geneClass>XylRacesCore.Genes.BonusGene</geneClass>
+    <geneClass>XylXenos.Genes.BonusGene</geneClass>
     <label>splicer</label>
     <description>TODO</description>
     <biostatArc>1</biostatArc>
@@ -14,7 +14,7 @@
     <displayOrderInCategory>0</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <modExtensions>
-      <li Class="XylRacesCore.Genes.GeneDefExtension_BonusGene">
+      <li Class="XylXenos.Genes.GeneDefExtension_BonusGene">
         <removeAfterAdding>true</removeAfterAdding>
         <count>14 ~ 21</count>
         <prohibitedGenes>
