@@ -119,11 +119,11 @@ namespace XylRacesCore
 
             int GetSkillModifier(XenotypeDef xenotypeDef, SkillDef skillDef)
             {
-                return (from gene in xenotypeDef.genes
-                    where gene.aptitudes != null
-                    from aptitude in gene.aptitudes
-                    where aptitude.skill == skillDef
-                    select aptitude.level).Sum();
+                return xenotypeDef.genes
+                    .SelectMany(gene => gene.aptitudes ?? [])
+                    .Where(aptitude => aptitude.skill == skillDef)
+                    .Select(aptitude => aptitude.level)
+                    .Sum();
             }
         }
     }
