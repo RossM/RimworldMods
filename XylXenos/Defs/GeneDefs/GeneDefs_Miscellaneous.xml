@@ -1,0 +1,373 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+
+<Defs>
+  
+  <GeneDef ParentName="GeneAggressionBase">
+    <defName>XylDocile</defName>
+    <label>docile</label>
+    <description>Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They are also less likely to start prison breaks, and never start social fights.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayOrderInCategory>5</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Docile</iconPath>
+    <socialFightChanceFactor>0</socialFightChanceFactor>
+    <prisonBreakMTBFactor>4</prisonBreakMTBFactor>
+    <statFactors>
+      <SlaveSuppressionFallRate MayRequire="Ludeon.RimWorld.Ideology">0.25</SlaveSuppressionFallRate>
+      <XylWillFallRate>4</XylWillFallRate>
+    </statFactors>
+    <suppressedTraits>
+      <li>
+        <def>Bloodlust</def>
+      </li>
+    </suppressedTraits>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_SlaveRebellion">
+        <slaveRebellionMtbFactor>4</slaveRebellionMtbFactor>
+        <neverRebelThresholdDays>120</neverRebelThresholdDays>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylXenos.Genes.SeeingRed</geneClass>
+    <defName>XylSeeingRed</defName>
+    <label>seeing red</label>
+    <description>Carriers of this gene have a chance of going into a blind range when they are damaged in combat, charging the nearest enemy and fighting in melee until all enemies are dead. During this state they are faster, stronger, and nearly immune to pain. This ability can't be controlled.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>4</biostatMet>
+    <displayCategory>Violence</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_SeeingRed">
+        <chance>0.15</chance>
+        <hediffDef>XylSeeingRed</hediffDef>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylXenos.Genes.Hyperlactation</geneClass>
+    <defName>XylHyperlactation</defName>
+    <label>hyperlactation</label>
+    <description>Female carriers of this gene produce large amounts of breast milk, and lactate even when not pregnant or breastfeeding. This gene is inactive on males.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Reproduction</displayCategory>
+    <displayOrderInCategory>200</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Hyperlactation</iconPath>
+    <minAgeActive>13</minAgeActive>
+    <customEffectDescriptions>
+      <li>Enables being milked</li>
+    </customEffectDescriptions>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_Hyperlactation">
+        <item>Milk</item>
+        <chargePerItem>0.1</chargePerItem>
+        <hediff>XylHyperlactating</hediff>
+        <milkedThoughts>
+          <li>XylMilked</li>
+          <li>XylMilkedMood</li>
+          <li>XylMilked_Masochist</li>
+          <li>XylMilkedMood_Masochist</li>
+        </milkedThoughts>
+        <activeGender>Female</activeGender>
+        <iconPath>Things/Item/Resource/Milk</iconPath>
+      </li>
+      <li Class="XylXenos.DefModExtension_StartingItemSource">
+        <item>Milk</item>
+        <chance>0.2</chance>
+        <count>5~10</count>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylXenos.Genes.AddHediff</geneClass>
+    <defName>XylPrecognition</defName>
+    <label>precognition</label>
+    <description>Carriers of this gene can see a short distance into the future, giving the ability to dodge both melee and ranged attacks. The effect scales with psychic sensitivity.</description>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <displayCategory>Violence</displayCategory>
+    <displayOrderInCategory>120</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Precognition</iconPath>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>XylPrecognition</hediff>
+            <partsToAffect>
+              <li>Head</li>
+            </partsToAffect>
+          </li>
+        </hediffGivers>
+        <applyImmediately>true</applyImmediately>
+        <reapplyOnPartRestored>true</reapplyOnPartRestored>
+      </li>
+    </modExtensions>
+    <customEffectDescriptions>
+      <li>Melee dodge chance: +15</li>
+      <li>Ranged dodge chance: +15</li>
+    </customEffectDescriptions>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylXenos.Genes.Flight</geneClass>
+    <defName>XylBatWings</defName>
+    <label>bat wings</label>
+    <description>Carriers of this gene have bat-like wings, allowing them to fly for short periods. Wearing some heavy torso-covering items will prevent flight.</description>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>-3</biostatMet>
+    <displayCategory>Movement</displayCategory>
+    <displayOrderInCategory>510</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_BatWings</iconPath>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>XylXenos.PawnRenderNode_Wings</nodeClass>
+        <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
+        <texPaths>
+          <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWings</li>
+          <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWingsExtended</li>
+        </texPaths>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <colorType>Hair</colorType>
+        <parentTagDef>Body</parentTagDef>
+        <drawData>
+          <defaultData>
+            <layer>10</layer>
+            <offset>(0,0,-0.1)</offset>
+          </defaultData>
+          <dataNorth>
+            <layer>80</layer>
+            <offset>(0,0,-0.1)</offset>
+          </dataNorth>
+          <dataSouth>
+            <layer>-10</layer>
+            <offset>(0,0,-0.1)</offset>
+          </dataSouth>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+    <capMods>
+      <li>
+        <capacity>Manipulation</capacity>
+        <offset>-0.1</offset>
+      </li>
+    </capMods>
+    <statOffsets>
+      <MaxFlightTime>8</MaxFlightTime>
+      <FlightCooldown>45</FlightCooldown>
+    </statOffsets>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_Flight">
+        <iconPath>Xyl/UI/Icons/Genes/Gene_BatWings</iconPath>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylXenos.Genes.Torpor</geneClass>
+    <defName>XylTorpor</defName>
+    <label>torpor</label>
+    <description>The body of a carrier of this gene automatically goes into hibernation in cold temperatures. This will impair their capabilities and eventually cause unconsciousness. It also reduces food consumption and slows the progression of hypothermia and starvation.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>Temperature</displayCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>-->
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_Torpor">
+        <hediff>XylTorpor</hediff>
+        <temperatureThreshold>11</temperatureThreshold>
+        <comfyTemperatureImportance>0.3</comfyTemperatureImportance>
+        <severityGainPerDayPerDegree>0.02</severityGainPerDayPerDegree>
+        <severityLossPerDayPerDegree>0.02</severityLossPerDayPerDegree>
+      </li>
+    </modExtensions>  
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylIndustrious</defName>
+    <label>industrious</label>
+    <labelShortAdj>industrious</labelShortAdj>
+    <description>Carriers of this gene are exceptionally fast workers.</description>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>25</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Industrious</iconPath>
+    <iconColor>(0.35, 0.55, 0.35)</iconColor>
+    <statOffsets>
+      <WorkSpeedGlobal>0.15</WorkSpeedGlobal>
+    </statOffsets>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>work</symbol></li>
+        <li><symbol>task</symbol></li>
+        <li><symbol>drive</symbol></li>
+        <li><symbol>press</symbol></li>
+        <li><symbol>forge</symbol></li>
+        <li><symbol>labor</symbol></li>
+        <li><symbol>hearth</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>grinder</symbol></li>
+        <li><symbol>maker</symbol></li>
+        <li><symbol>smith</symbol></li>
+        <li><symbol>delver</symbol></li>
+      </suffixSymbols>
+    </symbolPack>    
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylScaleskin</defName>
+    <label>scaleskin</label>
+    <labelShortAdj>scaleskinned</labelShortAdj>
+    <description>Carriers of this gene grow tough but flexible scales all over their body that can deflect or absorb attacks.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-3</biostatMet>
+    <displayCategory>XylBody</displayCategory>
+    <displayOrderInCategory>450</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Scaleskin</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <forcedHeadTypes>
+      <li>Female_Scaleskin_Average_Normal</li>
+      <li>Female_Scaleskin_Average_Pointy</li>
+      <li>Female_Scaleskin_Narrow_Normal</li>
+      <li>Female_Scaleskin_Narrow_Pointy</li>
+      <li>Male_Scaleskin_Average_Normal</li>
+      <li>Male_Scaleskin_Average_Pointy</li>
+      <li>Male_Scaleskin_Narrow_Normal</li>
+      <li>Male_Scaleskin_Narrow_Pointy</li>
+    </forcedHeadTypes>
+    <exclusionTags>
+      <li>Fur</li>
+    </exclusionTags>
+    <statOffsets>
+      <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
+      <ArmorRating_Blunt>0.15</ArmorRating_Blunt>
+    </statOffsets>
+    <fur>Scaleskin</fur>
+    <renderNodeProperties>
+      <li>
+        <debugLabel>Scaleskin</debugLabel>
+        <nodeClass>XylXenos.PawnRenderNode_NotFur</nodeClass>
+        <workerClass>PawnRenderNodeWorker_Fur</workerClass>
+        <baseLayer>5</baseLayer>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <colorType>Skin</colorType>
+        <useSkinShader>true</useSkinShader>
+        <parentTagDef>Body</parentTagDef>
+      </li>
+    </renderNodeProperties>
+    <symbolPack>
+      <prefixSymbols>
+        <li><symbol>scale</symbol></li>
+        <li><symbol>armor</symbol></li>
+        <li><symbol>hide</symbol></li>
+        <li><symbol>croc</symbol></li>
+      </prefixSymbols>
+      <suffixSymbols>
+        <li><symbol>hide</symbol></li>
+        <li><symbol>back</symbol></li>
+        <li><symbol>scale</symbol></li>
+      </suffixSymbols>
+    </symbolPack>
+  </GeneDef>
+  <FurDef>
+    <defName>Scaleskin</defName>
+    <noGraphic>true</noGraphic>
+    <bodyTypeGraphicPaths>
+      <Male>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Male</Male>
+      <Female>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Female</Female>
+      <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Hulk</Hulk>
+      <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Fat</Fat>
+      <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Thin</Thin>
+      <Child>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Child>
+      <Baby>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Baby>
+      <!-- Always covered by swaddled graphic -->
+    </bodyTypeGraphicPaths>
+  </FurDef>
+
+  <GeneDef>
+    <defName>XylInsectPheromones</defName>
+    <label>insect pheromones</label>
+    <description>Carriers of this gene produce special pheromones which make wild insects not attack them.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-3</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>501</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_InsectPheromones</iconPath>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_HostilityOverride">
+        <disableHostilityFromFaction>Insect</disableHostilityFromFaction>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylXenos.Genes.AddHediff</geneClass>
+    <defName>XylBioRejection</defName>
+    <label>bio-rejection</label>
+    <description>Carriers of this gene have a severe allergic reaction to any sort of artificial implant or body part. They will suffer continual pain until the implant or part is removed.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <displayOrderInCategory>300</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_BioRejection</iconPath>
+    <suppressedTraits>
+      <li>
+        <def>Transhumanist</def>
+      </li>
+    </suppressedTraits>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>XylBioRejection</hediff>
+            <countToAffect>1</countToAffect>
+          </li>
+        </hediffGivers>
+        <applyImmediately>true</applyImmediately>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylXenos.Genes.EmergencyReserves</geneClass>
+    <defName>XylEmergencyReserves</defName>
+    <label>emergency reserves</label>
+    <description>Carriers of this gene store extra oxygen and special proteins in their bone marrow. When the carrier is exposed to extreme heat, cold, toxins, or vacuum, these reserves temporarily flood the body, protecting tissues from damage.</description>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <displayOrderInCategory>90</displayOrderInCategory>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+  </GeneDef>
+
+  <GeneDef>
+    <geneClass>XylXenos.Genes.GravitySickness</geneClass>
+    <defName>XylGravitySickness</defName>
+    <label>gravity sickness</label>
+    <description>Carriers of this gene are prone to debilitating bouts of gravity sickness while on a planet's surface. They periodically suffer pain, nausea, and reduced consciousness for a day or so, or until they return to orbit.</description>
+    <displayCategory>Healing</displayCategory>
+    <displayOrderInCategory>200</displayOrderInCategory>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>5</biostatMet>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylMechAffinity</defName>
+    <label>mech affinity</label>
+    <description>Carriers of this gene are naturally adept at being mechanitors.</description>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>1100</displayOrderInCategory>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <statOffsets>
+      <MechBandwidth>3</MechBandwidth>
+    </statOffsets>
+  </GeneDef>
+
+</Defs>
