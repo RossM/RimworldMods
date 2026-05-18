@@ -8,14 +8,6 @@ namespace XylXenos
     [UsedImplicitly]
     public static class DefOf
     {
-        public static BiomeDef TemperateSwamp;
-
-        [MayRequire("Xylthixlm.Races.Nixie")] public static FactionDef XylTribeGentleNixie;
-
-        [MayRequire("Xylthixlm.Races.Nixie")] public static PawnKindDef XylSelkie;
-
-        [MayRequire("Xylthixlm.Races.Nixie")] public static JobDef XylTakeShower;
-
         static DefOf()
         {
             DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));
@@ -46,9 +38,20 @@ namespace XylXenos
 
         #region GeneDefs
 
-        [MayRequire("Xylthixlm.Races.Nixie")] public static GeneDef XylDrugSensitive;
+        public static GeneDef XylDrugSensitive;
+        public static GeneDef XylEcholocation;
 
-        [MayRequire("Xylthixlm.Races.Chyrr")] public static GeneDef XylEcholocation;
+        #endregion
+
+        #region Miscellaneous
+
+        public static BiomeDef TemperateSwamp;
+
+        public static FactionDef XylTribeGentleNixie;
+
+        public static PawnKindDef XylSelkie;
+
+        public static JobDef XylTakeShower;
 
         #endregion
     }
