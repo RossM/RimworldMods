@@ -97,7 +97,7 @@ namespace XylXenos.Patches
             float lactationNutritionUsed = PatchLactation.GetFirstHediffOfDef_Wrapper(p.health.hediffSet, HediffDefOf.Lactating, false)
                 ?.TryGetComp<HediffComp_Lactating>()?.AddedNutritionPerDay() ?? 0;
 
-            __result = (p.needs.food.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * 60000f + lactationNutritionUsed)
+            __result = (p.needs.food.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * GenDate.TicksPerDay + lactationNutritionUsed)
                 .ToString("0.##");
 
             return false;

@@ -96,7 +96,7 @@ namespace XylXenos.Genes
 
             foreach (var hediffGiver in DefExt.hediffGivers)
             {
-                if (Rand.MTBEventOccurs(DefExt.mtbDays, 60000f, checkInterval))
+                if (Rand.MTBEventOccurs(DefExt.mtbDays, GenDate.TicksPerDay, checkInterval))
                     Apply(hediffGiver);
             }
         }

@@ -132,7 +132,7 @@ namespace XylXenos.Patches
 
             string period = initiateSlaveRebellionMtbDays < 0
                 ? "Never".TranslateSimple()
-                : ((int)(initiateSlaveRebellionMtbDays * 60000f)).ToStringTicksToPeriod();
+                : ((int)(initiateSlaveRebellionMtbDays * GenDate.TicksPerDay)).ToStringTicksToPeriod();
             stringBuilder.Append($"{"SuppressionFinalInterval".Translate()}: {period}");
         }
     }

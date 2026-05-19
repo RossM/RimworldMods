@@ -156,7 +156,7 @@ namespace XylXenos.Genes
         {
             if (!Active)
                 yield break;
-            float milkPerDay = Lactating.Props.fullChargeAmount * 60000f / (Lactating.Props.ticksToFullCharge * DefExt.chargePerItem);
+            float milkPerDay = Lactating.Props.fullChargeAmount * GenDate.TicksPerDay / (Lactating.Props.ticksToFullCharge * DefExt.chargePerItem);
             yield return new StatDrawEntry(StatCategoryDefOf.PawnFood, "XylMilkProductionLabel".TranslateSimple(),
                 "PerDay".Translate(milkPerDay.ToStringByStyle(ToStringStyle.FloatOne)),
                 "XylMilkProductionDesc".TranslateSimple(), 1);

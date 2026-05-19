@@ -119,6 +119,7 @@ namespace XylXenos
 
             if (Props.disappearsAfterGiving)
             {
+                hasTriggered = true;
                 Pawn.health.RemoveHediff(parent);
             }
 
