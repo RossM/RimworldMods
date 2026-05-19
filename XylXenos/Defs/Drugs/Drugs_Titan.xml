@@ -2,10 +2,187 @@
 
 <Defs>
   
-  <!--<ThingDef ParentName="MakeableDrugBase">
+  <ThingDef ParentName="DrugPillBase">
     <defName>XylAtlasite</defName>
     <label>atlasite</label>
-    <description>A concoction of mechanites specifically designed for lithoids. A dose every three days will provide slight improvements in mood and performance. As long as the user continues taking atlasite regularly, the mechanites will gradually saturate their system, remaking it to be resistant to damage and hostile environments. However, even a single missed dose will disrupt the mechanites and reset the saturation process.</description>
-  </ThingDef>-->
+    <description>A concoction of atlas mechanites specifically designed for lithoids. A dose every three days will provide slight improvements in mood and performance. As long as the user continues taking atlasite regularly, the mechanites will gradually saturate their system, remaking it to be resistant to damage and hostile environments. However, even a single missed dose will disrupt the mechanites and rapidly reset the saturation process.</description>
+    <descriptionHyperlinks>
+      <HediffDef>XylAtlasiteHigh</HediffDef>
+    </descriptionHyperlinks>
+    <graphicData>
+      <texPath>Things/Item/Drug/Penoxycyline</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <drawSize>0.75</drawSize>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <MarketValue>50</MarketValue>
+      <Mass>0.01</Mass>
+    </statBases>
+    <techLevel>Ultra</techLevel>
+    <minRewardCount>10</minRewardCount>
+    <ingestible>
+      <drugCategory>Medical</drugCategory>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>XylAtlasiteHigh</hediffDef>
+          <severity>0.9</severity>
+        </li>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>XylAtlasiteSaturation</hediffDef>
+          <severity>0.001</severity>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <chemical>XylAtlasite</chemical>
+        <isCombatEnhancingDrug>true</isCombatEnhancingDrug>
+        <listOrder>2000</listOrder>
+      </li>
+    </comps>
+    <tradeTags>
+      <li>ExoticMisc</li>
+    </tradeTags>
+    <thingSetMakerTags><li>RewardStandardCore</li></thingSetMakerTags>
+    <allowedArchonexusCount>50</allowedArchonexusCount>
+  </ThingDef>
+  
+  <ChemicalDef>
+    <defName>XylAtlasite</defName>
+    <label>atlasite</label>
+    <canBinge>false</canBinge>
+    <canBeAddicted>false</canBeAddicted>
+    <generateAddictionGenes>false</generateAddictionGenes>
+    <modExtensions>
+      <li Class="XylXenos.ChemicalDefExtension">
+        <requiredGenesAll>
+          <li>XylLithoid</li>
+        </requiredGenesAll>
+      </li>
+    </modExtensions>
+  </ChemicalDef>
+  
+  <HediffDef>
+    <defName>XylAtlasiteHigh</defName>
+    <label>atlasite</label>
+    <labelNoun>atlasite</labelNoun>
+    <description>Atlas mechanites in the body. They provide slight benefits to mood and performance, and increase atlasite saturation gradually over time.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
+    <scenarioCanAdd>true</scenarioCanAdd>
+    <initialSeverity>0</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-0.3</severityPerDay>
+        <showDaysToRecover>true</showDaysToRecover>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <offset>0.1</offset>
+          </li>
+        </capMods>
+        <statFactors>
+          <RestFallRateFactor>0.8</RestFallRateFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <ThoughtDef>
+    <defName>XylAtlasiteHigh</defName>
+    <workerClass>ThoughtWorker_Hediff</workerClass>
+    <hediff>XylAtlasiteHigh</hediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <developmentalStageFilter>Baby, Child, Adult</developmentalStageFilter>
+    <stages>
+      <li>
+        <label>atlasite buzz</label>
+        <description>I feel warm and tingly.</description>
+        <baseMoodEffect>6</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  
+  <HediffDef>
+    <defName>XylAtlasiteSaturation</defName>
+    <label>atlasite saturation</label>
+    <labelNoun>accumulated atlasite</labelNoun>
+    <description>Accumulated effects of atlas mechanites in the body. They gradually remake the body to be tougher against all sorts of dangers. The saturation will rapidly decline if there are no atlasite mechanites active.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
+    <scenarioCanAdd>true</scenarioCanAdd>
+    <initialSeverity>0</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_Saturation">
+        <sourceHediff>XylAtlasiteHigh</sourceHediff>
+        <severityGainPerDay>0.033</severityGainPerDay>
+        <severityLossPerDay>-0.5</severityLossPerDay>
+      </li>
+    </comps>
+    <stages>
+      <li>
+      </li>
+      <li>
+        <minSeverity>0.2</minSeverity>
+        <statOffsets>
+          <ComfyTemperatureMin>-5</ComfyTemperatureMin>
+          <ComfyTemperatureMax>5</ComfyTemperatureMax>
+          <VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.1</VacuumResistance>
+        </statOffsets>
+      </li>
+      <li>
+        <minSeverity>0.4</minSeverity>
+        <statOffsets>
+          <ComfyTemperatureMin>-10</ComfyTemperatureMin>
+          <ComfyTemperatureMax>10</ComfyTemperatureMax>
+          <VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.2</VacuumResistance>
+        </statOffsets>
+      </li>
+      <li>
+        <minSeverity>0.6</minSeverity>
+        <statOffsets>
+          <ComfyTemperatureMin>-20</ComfyTemperatureMin>
+          <ComfyTemperatureMax>20</ComfyTemperatureMax>
+          <VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.3</VacuumResistance>
+        </statOffsets>
+        <statFactors>
+          <IncomingDamageFactor>0.9</IncomingDamageFactor>
+        </statFactors>
+      </li>
+      <li>
+        <minSeverity>0.8</minSeverity>
+        <statOffsets>
+          <ComfyTemperatureMin>-50</ComfyTemperatureMin>
+          <ComfyTemperatureMax>50</ComfyTemperatureMax>
+          <VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.55</VacuumResistance>
+        </statOffsets>
+        <statFactors>
+          <IncomingDamageFactor>0.7</IncomingDamageFactor>
+        </statFactors>
+      </li>
+      <li>
+        <minSeverity>0.99</minSeverity>
+        <statOffsets>
+          <ComfyTemperatureMin>-100</ComfyTemperatureMin>
+          <ComfyTemperatureMax>100</ComfyTemperatureMax>
+          <VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.95</VacuumResistance>
+        </statOffsets>
+        <statFactors>
+          <IncomingDamageFactor>0.5</IncomingDamageFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
   
 </Defs>
