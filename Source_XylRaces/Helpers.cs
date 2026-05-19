@@ -48,12 +48,6 @@ namespace XylXenos
                 yield return hediffComp;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> enumerable)
-        {
-            return enumerable ?? Enumerable.Empty<T>();
-        }
-
         public static float GetStatBase(this ThingDef thingDef, StatDef statDef)
         {
             return thingDef.statBases.FirstOrDefault(s => s.stat == statDef)?.value ?? statDef.defaultBaseValue;

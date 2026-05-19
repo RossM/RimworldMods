@@ -158,7 +158,7 @@ public static class GeneHelpers
         IEnumerable<RecipeDef> recipeDefs = DefDatabase<RecipeDef>.AllDefsListForReading.Where(def =>
         {
             var modExtension = def.GetModExtension<DefModExtension_GeneDependent>();
-            return modExtension != null && modExtension.genePrerequisitesAny.EmptyIfNull().Contains(gene);
+            return modExtension != null && (modExtension.genePrerequisitesAny ?? Enumerable.Empty<GeneDef>()).Contains(gene);
         }).ToList();
         if (recipeDefs.Any())
         {
@@ -167,12 +167,9 @@ public static class GeneHelpers
         }
 
         IEnumerable<ThingDef> thingDefs = DefDatabase<RecipeDef>.AllDefsListForReading
-            .SelectMany(def => def.products.EmptyIfNull(), (_, c) => c.thingDef)
-            .Where(def =>
-            {
-                var modExtension = def.GetModExtension<DefModExtension_GeneDependent>();
-                return modExtension != null && modExtension.genePrerequisitesAny.EmptyIfNull().Contains(gene);
-            }).ToList();
+            .SelectMany(def => def.products ?? Enumerable.Empty<ThingDefCountClass>(), (_, c) => c.thingDef)
+            .Where(def => def.GetModExtension<DefModExtension_GeneDependent>()?.genePrerequisitesAny?.Contains(gene) == true)
+            .ToList();
         if (thingDefs.Any())
         {
             yield return $"{"XylNewRecipes".Translate()}: {thingDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";

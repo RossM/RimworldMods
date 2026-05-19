@@ -122,7 +122,8 @@ namespace XylXenos
             int GetSkillModifier(XenotypeDef xenotypeDef, SkillDef skillDef)
             {
                 return xenotypeDef.genes
-                    .SelectMany(gene => gene.aptitudes.EmptyIfNull())
+                    .Where(gene => gene.aptitudes != null)
+                    .SelectMany(gene => gene.aptitudes)
                     .Where(aptitude => aptitude.skill == skillDef)
                     .Select(aptitude => aptitude.level)
                     .Sum();

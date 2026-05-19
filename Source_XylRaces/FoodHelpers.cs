@@ -116,7 +116,10 @@ public static class FoodHelpers
 
         foreach (var ext in eater.ActiveGeneDefExtensionsOfType<GeneDefExtension_IngestionThoughtOverride>())
         {
-            foreach (var thoughtOverride in ext.thoughtOverrides.EmptyIfNull())
+            if (ext.thoughtOverrides == null)
+                continue;
+
+            foreach (var thoughtOverride in ext.thoughtOverrides)
             {
                 if (thoughtOverride.thoughts.NullOrEmpty())
                     continue;

@@ -29,7 +29,7 @@ namespace XylXenos
 
         public static bool GeneWithModExtensionExists<T>()
         {
-            bool result = DefDatabase<GeneDef>.AllDefs.Any(gene => gene.modExtensions.EmptyIfNull().OfType<T>().Any());
+            bool result = DefDatabase<GeneDef>.AllDefs.Any(gene => gene.modExtensions?.OfType<T>().Any() == true);
             Log.Message($"XylXenos feature check: {typeof(T)} = {result}");
             return result;
         }
