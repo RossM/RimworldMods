@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
@@ -131,50 +131,36 @@ namespace XylXenos.Patches
             return instructionsList;
         }
 
-        private static float? GeneticManhunterOnDamageChance(Pawn pawn)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float GetManhunterOnDamageChance_Wrapper(Pawn pawn)
         {
-            return pawn?.ActiveGeneDefExtensionsOfType<GeneDefExtension_WildMan>()
-                .FirstOrDefault(e => e.manhunterOnDamageChance != null)?
-                .manhunterOnDamageChance;
+            return pawn.RaceManhunterOnDamageChance() * Find.Storyteller.difficulty.manhunterChanceOnDamageFactor;
         }
 
-        private static float? GeneticManhunterOnTameFailChance(Pawn pawn)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float GetManhunterOnTameFailChance_Wrapper(Pawn pawn)
         {
-            return pawn?.ActiveGeneDefExtensionsOfType<GeneDefExtension_WildMan>()
-                .FirstOrDefault(e => e.manhunterOnTameFailChance != null)?
-                .manhunterOnTameFailChance;
+            return pawn.RaceManhunterOnTameFailChance();
         }
 
-        public static float GetManhunterOnDamageChance_Wrapper(Pawn pawn, ThingDef def)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float RaceProperties_manhunterOnDamageChance_Wrapper(Pawn pawn)
         {
-            return (GeneticManhunterOnDamageChance(pawn) ?? def.race.manhunterOnDamageChance) *
-                   Find.Storyteller.difficulty.manhunterChanceOnDamageFactor;
+            return pawn.RaceManhunterOnDamageChance();
         }
 
-        public static float GetManhunterOnTameFailChance_Wrapper(Pawn pawn, ThingDef def)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float RaceProperties_manhunterOnTameFailChance_Wrapper(Pawn pawn)
         {
-            return GeneticManhunterOnTameFailChance(pawn) ?? def.race.manhunterOnTameFailChance;
+            return pawn.RaceManhunterOnTameFailChance();
         }
 
-        public static float RaceProperties_manhunterOnDamageChance_Wrapper(RaceProperties __instance, Pawn pawn)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TaggedString Def_LabelCap_Wrapper(Def __instance, Pawn pawn)
         {
-            return GeneticManhunterOnDamageChance(pawn) ?? __instance.manhunterOnDamageChance;
-        }
-
-        public static float RaceProperties_manhunterOnTameFailChance_Wrapper(RaceProperties __instance, Pawn pawn)
-        {
-            return GeneticManhunterOnTameFailChance(pawn) ?? __instance.manhunterOnTameFailChance;
-        }
-
-        public static TaggedString Def_LabelCap_Wrapper(Def __instance, ThingDef def, Pawn pawn)
-        {
-            if (__instance != def)
-                return __instance.LabelCap;
-
-            if (pawn?.GenesWithModExtension<GeneDefExtension_WildMan>().FirstOrDefault(g => g.Active) == null)
-                return __instance.LabelCap;
-
-            return pawn.genes?.XenotypeLabelCap ?? __instance.LabelCap;
+            return __instance == pawn.def && pawn?.HasActiveGeneDefExtensionsOfType<GeneDefExtension_WildMan>() == true
+                ? pawn.genes.XenotypeLabelCap
+                : __instance.LabelCap;
         }
     }
 }

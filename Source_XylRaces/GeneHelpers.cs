@@ -115,6 +115,15 @@ public static class GeneHelpers
         return pawn.GenesWithModExtension<T>().Where(g => g.Active).SelectMany(g => g.def.modExtensions.OfType<T>());
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool HasActiveGeneDefExtensionsOfType<T>(this Pawn pawn) where T : class
+    {
+        if (pawn.genes == null)
+            return false;
+
+        return pawn.GenesWithModExtension<T>().Any(g => g.Active);
+    }
+
     public static int BiostatMetForDisplay(this GeneDef geneDef)
     {
         var bonusGeneDefExt = geneDef.GetModExtension<GeneDefExtension_BonusGene>();
