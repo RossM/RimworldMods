@@ -18,7 +18,7 @@ namespace XylXenos
         private static Config instance;
         public List<JobDef> wetnessGivingJobs;
 
-        public List<string> ignoreGenesFromMods;
+        [NoTranslate] public List<string> ignoreGenesFromMods;
 
         public static bool GeneOfTypeExists<T>()
         {
