@@ -26,6 +26,9 @@
         <slaveRebellionMtbFactor>4</slaveRebellionMtbFactor>
         <neverRebelThresholdDays>120</neverRebelThresholdDays>
       </li>
+      <li Class="XylXenos.Genes.GeneDefExtension_WildMan">
+        <manhunterOnTameFailChance>0</manhunterOnTameFailChance>
+      </li>
     </modExtensions>
   </GeneDef>
 
@@ -43,6 +46,9 @@
       <li Class="XylXenos.Genes.GeneDefExtension_SeeingRed">
         <chance>0.15</chance>
         <hediffDef>XylSeeingRed</hediffDef>
+      </li>
+      <li Class="XylXenos.Genes.GeneDefExtension_WildMan">
+        <manhunterOnDamageChance>1</manhunterOnDamageChance>
       </li>
     </modExtensions>
   </GeneDef>
