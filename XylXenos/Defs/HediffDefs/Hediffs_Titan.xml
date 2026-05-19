@@ -30,7 +30,7 @@
             <mtbDays>5</mtbDays>
             <minSeverity>0.4</minSeverity>
             <hediff>XylPetrified</hediff>
-            <severityRange>0.1~0.25</severityRange>
+            <severityRange>0.1~0.4</severityRange>
             <canAffectAnyLivePart>true</canAffectAnyLivePart>
           </li>
         </hediffs>
@@ -203,6 +203,7 @@
       <GeneDef>XylPetrification</GeneDef>
       <HediffDef>XylPetrificationActive</HediffDef>
     </descriptionHyperlinks>
+    <defaultLabelColor>(0.5, 0.5, 0.5)</defaultLabelColor>
     <comps>
     </comps>
     <spawnThingOnRemoved>ChunkLimestone</spawnThingOnRemoved>
@@ -216,5 +217,32 @@
       </li>
     </stages>
   </HediffDef>
+
+  <RecipeDef ParentName="SurgeryFlesh">
+    <defName>XylExcisePetrifiedFlesh</defName>
+    <label>excise petrified flesh</label>
+    <description>Excise petrified flesh.</description>
+    <workerClass>Recipe_RemoveHediff</workerClass>
+    <jobString>Excising petrified flesh.</jobString>
+    <workAmount>3000</workAmount>
+    <removesHediff>XylPetrified</removesHediff>
+    <successfullyRemovedHediffMessage>{0} has successfully excised {1}'s petrified flesh.</successfullyRemovedHediffMessage>
+    <ingredients>
+      <li>
+        <filter>
+          <categories>
+            <li>Medicine</li>
+          </categories>
+        </filter>
+        <count>2</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <categories>
+        <li>Medicine</li>
+      </categories>
+    </fixedIngredientFilter>
+  </RecipeDef>
+
 
 </Defs>

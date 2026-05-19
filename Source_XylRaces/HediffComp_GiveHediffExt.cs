@@ -32,19 +32,32 @@ namespace XylXenos
 
             public bool ApplyTo(Pawn pawn, Hediff parent, List<Hediff> outAddedHediffs = null)
             {
+                float severityFraction = parent.Severity / GetMaxSeverity(pawn, parent);
+
                 List<Hediff> addedHediffs = [];
                 List<BodyPartDef> parts = sameBodyPart ? [parent.Part.def] : partsToAffect;
                 HediffGiverUtility.TryApply(pawn, hediff, parts, canAffectAnyLivePart, countRange.RandomInRange, addedHediffs, useCoverage: false);
                 foreach (Hediff item in addedHediffs)
                 {
                     if (inheritSeverity)
-                        item.Severity = parent.Severity;
+                        item.Severity = GetMaxSeverity(pawn, item) * severityFraction;
                     else if (severityRange != FloatRange.Zero)
                         item.Severity = severityRange.RandomInRange;
                 }
 
                 outAddedHediffs?.AddRange(addedHediffs);
                 return addedHediffs.Count > 0;
+            }
+
+            private static float GetMaxSeverity(Pawn pawn, Hediff item)
+            {
+                if (item is Hediff_Injury)
+                    return item.Part.def.GetMaxHealth(pawn);
+                if (item.def.maxSeverity >= 0)
+                    return item.def.maxSeverity;
+                if (item.def.lethalSeverity >= 0)
+                    return item.def.lethalSeverity;
+                return 1f;
             }
         }
 
@@ -89,7 +102,7 @@ namespace XylXenos
             }
 
             if (toTrigger.Count > 0)
-                Trigger();
+                Trigger(toTrigger);
     
             toTrigger.Clear();
         }
@@ -101,11 +114,21 @@ namespace XylXenos
             if (hasTriggeredForRemoval)
                 return;
             hasTriggeredForRemoval = true;
-            
-            Trigger();
+
+            toTrigger.Clear();
+            foreach (var hediff in Props.hediffs)
+            {
+                if (hediff.triggeredOnRemoval)
+                    toTrigger.Add(hediff);
+            }
+
+            if (toTrigger.Count > 0)
+                Trigger(toTrigger);
+
+            toTrigger.Clear();
         }
 
-        public void Trigger()
+        public void Trigger(IEnumerable<HediffCompProperties_GiveHediffExt.TriggeredHediff> hediffs)
         {
             bool shouldRemove = false;
 
@@ -116,7 +139,7 @@ namespace XylXenos
             }
 
             added.Clear();
-            foreach (HediffCompProperties_GiveHediffExt.TriggeredHediff triggeredHediff in toTrigger)
+            foreach (HediffCompProperties_GiveHediffExt.TriggeredHediff triggeredHediff in hediffs)
             {
                 if (triggeredHediff.skipIfAlreadyExists && Pawn.health.hediffSet.HasHediff(triggeredHediff.hediff))
                     continue;
