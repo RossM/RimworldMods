@@ -12,5 +12,6 @@ namespace XylXenos.Genes
     {
         public float? manhunterOnDamageChance;
         public float? manhunterOnTameFailChance;
+        public bool allowEnslave;
     }
 }
