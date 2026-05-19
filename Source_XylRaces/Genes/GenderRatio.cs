@@ -28,7 +28,12 @@ namespace XylXenos.Genes
         protected override IEnumerable<string> GetCustomEffectDescriptions()
         {
             yield return $"{"XylGenderRatioLabel".TranslateSimple()}: {GetGenderRatioDescription()}";
-            ;
+        }
+
+        protected override IEnumerable<StatDrawEntry> GetSpecialDisplayStats()
+        {
+            yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
+                GetGenderRatioDescription(), "XylGenderRatioDesc".TranslateSimple(), 1);
         }
     }
 
@@ -38,11 +43,5 @@ namespace XylXenos.Genes
         public GeneDefExtension_GenderRatio DefExt => def.GetModExtension<GeneDefExtension_GenderRatio>();
 
         public override bool Active => base.Active && pawn.genes.HasEndogene(def);
-
-        public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
-        {
-            yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
-                DefExt.GetGenderRatioDescription(), "XylGenderRatioDesc".TranslateSimple(), 1);
-        }
     }
 }
