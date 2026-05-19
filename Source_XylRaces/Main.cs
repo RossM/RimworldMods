@@ -32,11 +32,10 @@ namespace XylXenos
             {
                 foreach (MethodInfo method in type.DeclaredMethods)
                 {
-                    List<CustomAttributeData> attributes = method.CustomAttributes.ToList();
-                    var hasFeature = attributes.Any(attribute => attribute.AttributeType == typeof(FeatureAttribute));
-                    var hasPrefix = attributes.Any(attribute => attribute.AttributeType == typeof(HarmonyPrefix));
-                    var hasPostfix = attributes.Any(attribute => attribute.AttributeType == typeof(HarmonyPostfix));
-                    var hasTranspiler = attributes.Any(attribute => attribute.AttributeType == typeof(HarmonyTranspiler));
+                    var hasFeature = method.HasAttribute<FeatureAttribute>();
+                    var hasPrefix = method.HasAttribute<HarmonyPrefix>();
+                    var hasPostfix = method.HasAttribute<HarmonyPostfix>();
+                    var hasTranspiler = method.HasAttribute<HarmonyTranspiler>();
 
                     if ((hasPrefix || hasPostfix || hasTranspiler) && !hasFeature)
                     {
