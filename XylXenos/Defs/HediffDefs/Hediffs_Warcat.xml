@@ -46,9 +46,8 @@
     <maxSeverity>1.0</maxSeverity>
     <isBad>false</isBad>
     <comps>
-      <li Class="HediffCompProperties_ReplaceHediff">
-        <compClass>XylXenos.HediffComp_ReplaceOnRemoval</compClass>
-        <manuallyTriggered>true</manuallyTriggered>
+      <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
+        <triggeredOnRemoval>true</triggeredOnRemoval>
         <hediffs>
           <li>
             <hediff>XylFeralRageBacklash</hediff>
