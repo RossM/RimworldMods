@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using LudeonTK;
@@ -165,27 +166,27 @@ namespace XylXenos
             {
                 case HediffWithComps hediffWithComps:
                 {
-                    foreach (HediffComp comp in hediffWithComps.comps)
+                    foreach (HediffComp comp in hediffWithComps.comps ?? Enumerable.Empty<HediffComp>())
                         CallRegistrationHandlers(comp);
                     break;
                 }
                 case Pawn pawn:
                 {
-                    foreach (Gene gene in pawn.genes?.GenesListForReading.EmptyIfNull())
+                    foreach (Gene gene in pawn.genes?.GenesListForReading ?? Enumerable.Empty<Gene>())
                         CallRegistrationHandlers(gene);
-                    foreach (Hediff hediff in pawn.health.hediffSet.hediffs.EmptyIfNull())
+                    foreach (Hediff hediff in pawn.health.hediffSet.hediffs ?? Enumerable.Empty<Hediff>())
                         CallRegistrationHandlers(hediff);
                     break;
                 }
                 case Map map:
                 {
-                    foreach (Pawn pawn in map.mapPawns.AllPawns)
+                    foreach (Pawn pawn in map.mapPawns.AllPawns ?? Enumerable.Empty<Pawn>())
                         CallRegistrationHandlers(pawn);
                     break;
                 }
                 case Caravan caravan:
                 {
-                    foreach (Pawn pawn in caravan.PawnsListForReading)
+                    foreach (Pawn pawn in caravan.PawnsListForReading ?? Enumerable.Empty<Pawn>())
                         CallRegistrationHandlers(pawn);
                     break;
                 }

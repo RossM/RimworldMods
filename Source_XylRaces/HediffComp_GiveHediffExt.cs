@@ -19,31 +19,35 @@ namespace XylXenos
 
             public FloatRange severityRange = FloatRange.Zero;
             public bool inheritSeverity;
+            public bool sameBodyPart;
+            public bool canAffectAnyLivePart;
 
-            public void ApplyTo(Pawn pawn, float severity, List<Hediff> outAddedHediffs = null)
+            public bool skipIfAlreadyExists;
+            public bool triggeredManually;
+            public bool triggeredOnRemoval;
+            public bool disappearsAfterGiving;
+
+            public float minSeverity = 0f;
+            public float mtbDays = -1;
+
+            public bool ApplyTo(Pawn pawn, Hediff parent, List<Hediff> outAddedHediffs = null)
             {
                 List<Hediff> addedHediffs = [];
-                HediffGiverUtility.TryApply(pawn, hediff, partsToAffect, canAffectAnyLivePart: false, countRange.RandomInRange, addedHediffs, useCoverage: false);
+                List<BodyPartDef> parts = sameBodyPart ? [parent.Part.def] : partsToAffect;
+                HediffGiverUtility.TryApply(pawn, hediff, parts, canAffectAnyLivePart, countRange.RandomInRange, addedHediffs, useCoverage: false);
                 foreach (Hediff item in addedHediffs)
                 {
                     if (inheritSeverity)
-                        item.Severity = severity;
+                        item.Severity = parent.Severity;
                     else if (severityRange != FloatRange.Zero)
                         item.Severity = severityRange.RandomInRange;
                 }
 
                 outAddedHediffs?.AddRange(addedHediffs);
+                return addedHediffs.Count > 0;
             }
         }
 
-
-        public bool skipIfAlreadyExists;
-        public bool triggeredManually;
-        public bool triggeredOnRemoval;
-        public bool disappearsAfterGiving;
-
-        public float minSeverity = 0f;
-        public float mtbDays = -1;
 
         public List<TriggeredHediff> hediffs;
 
@@ -66,32 +70,45 @@ namespace XylXenos
         public HediffCompProperties_GiveHediffExt Props => (HediffCompProperties_GiveHediffExt)props;
 
         private readonly List<Hediff> added = [];
+        private readonly List<HediffCompProperties_GiveHediffExt.TriggeredHediff> toTrigger = [];
 
-        [Unsaved] private bool hasTriggered = false;
+        [Unsaved] private bool hasTriggeredForRemoval = false;
 
         public override void CompPostTickInterval(ref float severityAdjustment, int delta)
         {
-            if (Props.triggeredManually || Props.triggeredOnRemoval)
-                return;
-            if (parent.Severity < Props.minSeverity)
-                return;
-            if (Props.mtbDays > 0 && !Rand.MTBEventOccurs(Props.mtbDays, GenDate.TicksPerDay, delta))
-                return;
+            toTrigger.Clear();
+            foreach (var hediff in Props.hediffs)
+            {
+                if (hediff.triggeredManually || hediff.triggeredOnRemoval)
+                    continue;
+                if (parent.Severity < hediff.minSeverity)
+                    continue;
+                if (hediff.mtbDays > 0 && !Rand.MTBEventOccurs(hediff.mtbDays, GenDate.TicksPerDay, delta))
+                    continue;
+                toTrigger.Add(hediff);
+            }
 
-            Trigger();
+            if (toTrigger.Count > 0)
+                Trigger();
+    
+            toTrigger.Clear();
         }
 
         public override void CompPostPostRemoved()
         {
             base.CompPostPostRemoved();
-            if (hasTriggered)
+
+            if (hasTriggeredForRemoval)
                 return;
-            hasTriggered = true;
+            hasTriggeredForRemoval = true;
+            
             Trigger();
         }
 
         public void Trigger()
         {
+            bool shouldRemove = false;
+
             if (!Props.message.NullOrEmpty() && PawnUtility.ShouldSendNotificationAbout(parent.pawn))
             {
                 Messages.Message(Props.message.Formatted(parent.pawn.Named("PAWN")), parent.pawn,
@@ -99,11 +116,13 @@ namespace XylXenos
             }
 
             added.Clear();
-            foreach (HediffCompProperties_GiveHediffExt.TriggeredHediff triggeredHediff in Props.hediffs)
+            foreach (HediffCompProperties_GiveHediffExt.TriggeredHediff triggeredHediff in toTrigger)
             {
-                if (Props.skipIfAlreadyExists && Pawn.health.hediffSet.HasHediff(triggeredHediff.hediff))
+                if (triggeredHediff.skipIfAlreadyExists && Pawn.health.hediffSet.HasHediff(triggeredHediff.hediff))
                     continue;
-                triggeredHediff.ApplyTo(parent.pawn, parent.Severity, added);
+                bool result = triggeredHediff.ApplyTo(parent.pawn, parent, added);
+                if (triggeredHediff.disappearsAfterGiving && result)
+                    shouldRemove = true;
             }
 
             if (added.Empty())
@@ -117,9 +136,9 @@ namespace XylXenos
                 SendLetter();
             }
 
-            if (Props.disappearsAfterGiving)
+            if (shouldRemove)
             {
-                hasTriggered = true;
+                hasTriggeredForRemoval = true;
                 Pawn.health.RemoveHediff(parent);
             }
 

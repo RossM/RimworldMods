@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+
+<Defs>
+  
+  <HediffDef>
+    <defName>XylPetrificationActive</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>petrification</label>
+    <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylPetrification</GeneDef>
+      <HediffDef>XylPetrified</HediffDef>
+    </descriptionHyperlinks>
+    <initialSeverity>0.01</initialSeverity>
+    <lethalSeverity>1.0</lethalSeverity>
+    <minSeverity>0.01</minSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <alwaysShowSeverity>true</alwaysShowSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <tendable>true</tendable>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
+        <hediffs>
+          <li>
+            <triggeredOnRemoval>true</triggeredOnRemoval>
+            <hediff>XylPetrificationDormant</hediff>
+            <inheritSeverity>true</inheritSeverity>
+          </li>
+          <li>
+            <mtbDays>5</mtbDays>
+            <minSeverity>0.4</minSeverity>
+            <hediff>XylPetrified</hediff>
+            <severityRange>0.1~0.25</severityRange>
+            <canAffectAnyLivePart>true</canAffectAnyLivePart>
+          </li>
+        </hediffs>
+      </li>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDayRange>0.008~0.012</severityPerDayRange>
+      </li>
+      <li Class="HediffCompProperties_TendDuration">
+        <baseTendDurationHours>120</baseTendDurationHours>
+        <severityPerDayTended>0.01</severityPerDayTended>
+        <disappearsAtTotalTendQuality>3</disappearsAtTotalTendQuality>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <label>active, minor</label>
+        <painOffset>0.1</painOffset>
+      </li>
+      <li>
+        <minSeverity>0.4</minSeverity>
+        <label>active, major</label>
+        <painOffset>0.2</painOffset>
+      </li>
+      <li>
+        <minSeverity>0.8</minSeverity>
+        <label>active, extreme</label>
+        <painOffset>0.4</painOffset>
+        <lifeThreatening>true</lifeThreatening>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef>
+    <defName>XylPetrificationDormant</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>petrification</label>
+    <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.\n\nThe disease is currently inactive, but could recur at any time.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylPetrification</GeneDef>
+      <HediffDef>XylPetrified</HediffDef>
+    </descriptionHyperlinks>
+    <initialSeverity>0.01</initialSeverity>
+    <lethalSeverity>1.0</lethalSeverity>
+    <minSeverity>0.01</minSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <alwaysShowSeverity>true</alwaysShowSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
+        <hediffs>
+          <li>
+            <mtbDays>120</mtbDays>
+            <hediff>XylPetrificationActive</hediff>
+            <inheritSeverity>true</inheritSeverity>
+            <disappearsAfterGiving>true</disappearsAfterGiving>
+          </li>
+        </hediffs>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <label>dormant, minor</label>
+      </li>
+      <li>
+        <minSeverity>0.4</minSeverity>
+        <label>dormant, major</label>
+      </li>
+      <li>
+        <minSeverity>0.8</minSeverity>
+        <label>dormant, extreme</label>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef>
+    <defName>XylPetrified</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>petrified</label>
+    <description>This body part has been partially replaced with hard, rocky growths. They must be surgically removed to allow the part to heal.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylPetrification</GeneDef>
+      <HediffDef>XylPetrificationActive</HediffDef>
+    </descriptionHyperlinks>
+    <initialSeverity>0.01</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
+        <hediffs>
+          <li>
+            <minSeverity>1</minSeverity>
+            <hediff>XylPetrifiedTotal</hediff>
+            <inheritSeverity>true</inheritSeverity>
+            <sameBodyPart>true</sameBodyPart>
+            <disappearsAfterGiving>true</disappearsAfterGiving>
+          </li>
+          <li>
+            <triggeredOnRemoval>true</triggeredOnRemoval>
+            <hediff>SurgicalCut</hediff>
+            <inheritSeverity>true</inheritSeverity>
+            <sameBodyPart>true</sameBodyPart>
+          </li>
+        </hediffs>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
+      </li>
+      <li>
+        <minSeverity>0.1</minSeverity>
+        <label>minor</label>
+        <partEfficiencyOffset>-0.1</partEfficiencyOffset>
+      </li>
+      <li>
+        <minSeverity>0.2</minSeverity>
+        <label>minor</label>
+        <partEfficiencyOffset>-0.2</partEfficiencyOffset>
+      </li>
+      <li>
+        <minSeverity>0.3</minSeverity>
+        <label>minor</label>
+        <partEfficiencyOffset>-0.3</partEfficiencyOffset>
+      </li>
+      <li>
+        <minSeverity>0.4</minSeverity>
+        <label>major</label>
+        <partEfficiencyOffset>-0.4</partEfficiencyOffset>
+      </li>
+      <li>
+        <minSeverity>0.5</minSeverity>
+        <label>major</label>
+        <partEfficiencyOffset>-0.5</partEfficiencyOffset>
+      </li>
+      <li>
+        <minSeverity>0.6</minSeverity>
+        <label>major</label>
+        <partEfficiencyOffset>-0.6</partEfficiencyOffset>
+      </li>
+      <li>
+        <minSeverity>0.7</minSeverity>
+        <label>major</label>
+        <partEfficiencyOffset>-0.7</partEfficiencyOffset>
+      </li>
+      <li>
+        <minSeverity>0.8</minSeverity>
+        <label>extreme</label>
+        <partEfficiencyOffset>-0.8</partEfficiencyOffset>
+        <lifeThreatening>true</lifeThreatening>
+      </li>
+      <li>
+        <minSeverity>0.9</minSeverity>
+        <label>extreme</label>
+        <partEfficiencyOffset>-0.9</partEfficiencyOffset>
+        <lifeThreatening>true</lifeThreatening>
+      </li>
+      <li>
+        <minSeverity>1.0</minSeverity>
+        <label>extreme</label>
+        <partEfficiencyOffset>-1.0</partEfficiencyOffset>
+        <lifeThreatening>true</lifeThreatening>
+      </li>
+    </stages>
+  </HediffDef>
+  
+  <HediffDef ParentName="AddedBodyPartBase">
+    <defName>XylPetrifiedTotal</defName>
+    <label>petrified</label>
+    <description>This body part has been completely replaced with hard, rocky growths. They can be surgically removed, but the body part is lost.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylPetrification</GeneDef>
+      <HediffDef>XylPetrificationActive</HediffDef>
+    </descriptionHyperlinks>
+    <comps>
+    </comps>
+    <spawnThingOnRemoved>ChunkLimestone</spawnThingOnRemoved>
+    <addedPartProps>
+      <solid>true</solid>
+      <partEfficiency>0</partEfficiency>
+    </addedPartProps>
+    <stages>
+      <li>
+        <label>total</label>
+      </li>
+    </stages>
+  </HediffDef>
+
+</Defs>

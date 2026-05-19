@@ -115,7 +115,7 @@
     <defName>XylAtlasiteSaturation</defName>
     <label>atlasite saturation</label>
     <labelNoun>accumulated atlasite</labelNoun>
-    <description>Accumulated effects of atlas mechanites in the body. They gradually remake the body to be tougher against all sorts of dangers. The saturation will rapidly decline if there are no atlasite mechanites active.</description>
+    <description>Accumulated effects of atlas mechanites in the body. They gradually remake the body to be tougher against all sorts of dangers. The saturation will rapidly decline if there are no atlas mechanites active.</description>
     <hediffClass>HediffWithComps</hediffClass>
     <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
     <scenarioCanAdd>true</scenarioCanAdd>

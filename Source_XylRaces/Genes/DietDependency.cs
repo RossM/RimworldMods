@@ -23,7 +23,7 @@ namespace XylXenos.Genes
 
         public Hediff LinkedHediff => DefExt == null ? null : pawn.HediffsWithDef(DefExt.hediffDef).FirstOrDefault();
 
-        public override bool Active => base.Active && !pawn.IsGhoul;
+        public override bool Active => base.Active && pawn is { IsGhoul: false };
 
         public override void PostAdd()
         {

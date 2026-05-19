@@ -83,6 +83,11 @@
       <li Class="XylXenos.Genes.GeneDefExtension_Chemicals">
         <showInDrugPolicies>true</showInDrugPolicies>
       </li>
+      <li Class="XylXenos.DefModExtension_StartingItemSource">
+        <item>XylAtlasite</item>
+        <chance>0.02</chance>
+        <count>2~5</count>
+      </li>
     </modExtensions>
   </GeneDef>
 

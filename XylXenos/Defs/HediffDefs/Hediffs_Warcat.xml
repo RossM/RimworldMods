@@ -47,9 +47,9 @@
     <isBad>false</isBad>
     <comps>
       <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
-        <triggeredOnRemoval>true</triggeredOnRemoval>
         <hediffs>
           <li>
+            <triggeredOnRemoval>true</triggeredOnRemoval>
             <hediff>XylFeralRageBacklash</hediff>
           </li>
         </hediffs>
