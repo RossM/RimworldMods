@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <IncidentDef>
+    <defName>XylWildBossapsHerd</defName>
+    <workerClass>XylXenos.IncidentWorker_WildTribe</workerClass>
+    <label>wild bossaps herd</label>
+    <category>Misc</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <baseChance>0.5</baseChance>
+    <populationEffect>IncreaseMedium</populationEffect>
+    <letterLabel>{0} wander in</letterLabel>
+    <letterText>A herd of wild {0} has wandered into the area.\n\nYou may attempt to tame them.\n\nThey will leave the area in a few days.</letterText>
+    <letterDef>NeutralEvent</letterDef>
+    <modExtensions>
+      <li Class="XylXenos.IncidentDefExtension_WildTribe">
+        <faction>BossapsHerd</faction>
+        <pawnsCount>2 ~ 4</pawnsCount>
+        <exitMapTicks>180000 ~ 300000</exitMapTicks> <!-- 3 to 5 days -->
+        <forcedTraits>
+          <Nudist>0.3</Nudist>
+          <Ascetic>0.3</Ascetic>
+        </forcedTraits>
+      </li>
+    </modExtensions>
+  </IncidentDef>
+
+  <IncidentDef ParentName="DiseaseIncident">
+    <defName>XylDisease_Petrification</defName>
+    <workerClass>XylXenos.IncidentWorker_GeneticDisease</workerClass>
+    <label>petrification</label>
+    <category>Misc</category>
+    <baseChance>0.5</baseChance>
+    <earliestDay>10</earliestDay>
+    <minRefireDays>30</minRefireDays>
+    <minPopulation>4</minPopulation>
+    <diseaseIncident>XylPetrificationActive</diseaseIncident>
+    <diseaseMaxVictims>1</diseaseMaxVictims>
+    <letterLabel>Petrification: {PAWN_labelShort}</letterLabel>
+    <letterText>{PAWN_labelShort} has developed a genetically-linked disease called petrification. Parts of {PAWN_possessive} body will slowly develop hard, rock-like growths. There is no cure, but medical treatment can slow the progression, and the growths can be surgically removed.</letterText>
+    <diseaseLethalLetterText>If {PAWN_labelShort} isn't given high-quality medical care for the rest of {PAWN_possessive} life, the disease will eventually become fatal.</diseaseLethalLetterText>
+    <letterSingularForm>true</letterSingularForm>
+    <ignoreRecentSelectionWeighting>false</ignoreRecentSelectionWeighting>
+    <modExtensions>
+      <li Class="XylXenos.IncidentDefExtension_GeneticDisease">
+        <requiredGenesAny>
+          <li>XylPetrification</li>
+        </requiredGenesAny>
+        <chanceFactorPerTarget>0.2</chanceFactorPerTarget>
+      </li>
+    </modExtensions>
+  </IncidentDef>
+
+</Defs>
