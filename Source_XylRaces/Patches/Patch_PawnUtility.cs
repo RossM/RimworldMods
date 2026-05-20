@@ -158,7 +158,7 @@ namespace XylXenos.Patches
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TaggedString Def_LabelCap_Wrapper(Def __instance, Pawn pawn)
         {
-            return __instance == pawn.def && pawn?.HasActiveGeneDefExtensionOfType<GeneDefExtension_WildMan>() == true
+            return __instance == pawn.def && pawn.HasActiveGeneDefExtensionOfType<GeneDefExtension_WildMan>()
                 ? pawn.genes.XenotypeLabelCap
                 : __instance.LabelCap;
         }
