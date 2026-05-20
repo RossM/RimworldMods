@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/ThingDef[defName="Seal"]</xpath>
+    <attribute>Name</attribute>
+    <value>ThingDef_Seal</value>
+  </Operation>
+  <Operation Class="PatchOperationAttributeAdd">
+    <xpath>Defs/PawnKindDef[defName="Seal"]</xpath>
+    <attribute>Name</attribute>
+    <value>PawnKindDef_Seal</value>
+  </Operation>
+
+</Patch>
