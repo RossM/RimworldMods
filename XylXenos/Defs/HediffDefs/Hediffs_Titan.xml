@@ -71,7 +71,7 @@
 
   <HediffDef>
     <defName>XylPetrified</defName>
-    <hediffClass>HediffWithComps</hediffClass>
+    <hediffClass>XylXenos.Hediff_Petrified</hediffClass>
     <label>petrified</label>
     <labelNoun>petrified flesh</labelNoun>
     <description>This body part has been partially replaced with hard, rocky growths. They must be surgically removed to allow the part to heal.</description>
@@ -103,53 +103,18 @@
     </onlyLifeThreateningTo>
     <stages>
       <li>
-        <becomeVisible>false</becomeVisible>
-      </li>
-      <li>
-        <minSeverity>0.1</minSeverity>
         <label>minor</label>
-        <partEfficiencyOffset>-0.1</partEfficiencyOffset>
-      </li>
-      <li>
-        <minSeverity>0.2</minSeverity>
-        <label>minor</label>
-        <partEfficiencyOffset>-0.2</partEfficiencyOffset>
-      </li>
-      <li>
-        <minSeverity>0.3</minSeverity>
-        <label>minor</label>
-        <partEfficiencyOffset>-0.3</partEfficiencyOffset>
+        <partEfficiencyOffset>-1.0</partEfficiencyOffset>
       </li>
       <li>
         <minSeverity>0.4</minSeverity>
         <label>major</label>
-        <partEfficiencyOffset>-0.4</partEfficiencyOffset>
-      </li>
-      <li>
-        <minSeverity>0.5</minSeverity>
-        <label>major</label>
-        <partEfficiencyOffset>-0.5</partEfficiencyOffset>
-      </li>
-      <li>
-        <minSeverity>0.6</minSeverity>
-        <label>major</label>
-        <partEfficiencyOffset>-0.6</partEfficiencyOffset>
-      </li>
-      <li>
-        <minSeverity>0.7</minSeverity>
-        <label>major</label>
-        <partEfficiencyOffset>-0.7</partEfficiencyOffset>
+        <partEfficiencyOffset>-1.0</partEfficiencyOffset>
       </li>
       <li>
         <minSeverity>0.8</minSeverity>
         <label>extreme</label>
-        <partEfficiencyOffset>-0.8</partEfficiencyOffset>
-        <lifeThreatening>true</lifeThreatening>
-      </li>
-      <li>
-        <minSeverity>0.9</minSeverity>
-        <label>extreme</label>
-        <partEfficiencyOffset>-0.9</partEfficiencyOffset>
+        <partEfficiencyOffset>-1.0</partEfficiencyOffset>
         <lifeThreatening>true</lifeThreatening>
       </li>
       <li>
