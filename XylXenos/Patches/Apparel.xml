@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Patch>
 
   <!-- 
@@ -29,13 +30,13 @@
   <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>
       Defs/ThingDef[
-        apparel/bodyPartGroups/li = "Torso" and
-        apparel/bodyPartGroups/li = "Arms" and
-        apparel/layers/li = "Shell" and
-        not(
-          defName="Apparel_Jacket" or
-          defName="Apparel_Cape"
-        )
+      apparel/bodyPartGroups/li = "Torso" and
+      apparel/bodyPartGroups/li = "Arms" and
+      apparel/layers/li = "Shell" and
+      not(
+      defName="Apparel_Jacket" or
+      defName="Apparel_Cape"
+      )
       ]
     </xpath>
     <value>

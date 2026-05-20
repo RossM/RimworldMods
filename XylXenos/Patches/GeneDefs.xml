@@ -1,31 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Patch>
-  
+
   <!-- Display categories -->
-    
+
   <Operation Class="PatchOperationReplace">
     <xpath>
       Defs/GeneDef[
-        defName="StrongStomach" or 
-        defName="RobustDigestion"
-      ]/displayCategory</xpath>
+      defName="StrongStomach" or
+      defName="RobustDigestion"
+      ]/displayCategory
+    </xpath>
     <value>
       <displayCategory>XylDiet</displayCategory>
     </value>
   </Operation>
-  
+
   <Operation Class="PatchOperationReplace">
     <xpath>
       Defs/GeneDef[
-        @Name="GeneTailBase" or
-        defName="Furskin"
-      ]/displayCategory</xpath>
+      @Name="GeneTailBase" or
+      defName="Furskin"
+      ]/displayCategory
+    </xpath>
     <value>
       <displayCategory>XylBody</displayCategory>
     </value>
   </Operation>
-  
+
   <!-- Exclusion tags -->
 
   <Operation Class="XylXenos.PatchOperationAddOrMerge">
@@ -36,7 +38,7 @@
       </exclusionTags>
     </value>
   </Operation>
-  
+
   <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>Defs/GeneDef[defName="FacialRidges"]</xpath>
     <value>

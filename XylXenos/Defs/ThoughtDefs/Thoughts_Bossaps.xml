@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Defs>
 
   <ThoughtDef>
@@ -87,7 +88,7 @@
         <description>I had to sleep in an awful barracks, but at least I had company.</description>
         <baseMoodEffect>-2</baseMoodEffect>
       </li>
-      <li IsNull="True" />
+      <li IsNull="True"/>
       <!-- dull -->
       <li>
         <label>mediocre barracks</label>

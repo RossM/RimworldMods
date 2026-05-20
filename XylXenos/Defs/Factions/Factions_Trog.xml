@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Defs>
 
   <FactionDef ParentName="TribeSavageBase">
@@ -18,7 +19,7 @@
         <Pigskin>0.025</Pigskin>
         <Waster>0.1</Waster>
         <Yttakin>0.025</Yttakin>
-        <XylBossaps >0.025</XylBossaps>
+        <XylBossaps>0.025</XylBossaps>
         <XylChyrr>0.01</XylChyrr>
         <XylDvergr>0.025</XylDvergr>
         <XylNixie>0.025</XylNixie>
@@ -189,7 +190,7 @@
           <Tribal_Farmer>1</Tribal_Farmer>
         </options>
       </li>
-    </pawnGroupMakers>    
+    </pawnGroupMakers>
     <modExtensions>
       <li Class="XylXenos.FactionDefExtension">
         <nearbyPollution>0.01 ~ 9999</nearbyPollution>

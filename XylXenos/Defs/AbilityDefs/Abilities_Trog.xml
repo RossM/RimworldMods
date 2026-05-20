@@ -1,6 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Defs>
-  
+
   <AbilityDef>
     <defName>XylToxicBurst</defName>
     <label>toxic burst</label>
@@ -37,5 +38,4 @@
     </comps>
   </AbilityDef>
 
-  
 </Defs>

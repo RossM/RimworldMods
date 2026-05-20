@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Patch>
 
   <Operation Class="PatchOperationInsert">
@@ -10,7 +11,7 @@
       <li MayRequire="Ludeon.RimWorld.Odyssey">XylSelkie</li>
     </value>
   </Operation>
-  
+
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/BiomeDef/coastalWildAnimals/Seal[text()>0]</xpath>
     <value>

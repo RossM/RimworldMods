@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Patch>
 
   <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>
       Defs/ChemicalDef[not(
-        modExtensions/li[@Class="XylXenos.ChemicalDefExtension"] or
-        defName="Luciferium"
+      modExtensions/li[@Class="XylXenos.ChemicalDefExtension"] or
+      defName="Luciferium"
       )]
     </xpath>
     <value>

@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <LanguageData>
 
   <!-- Commands -->
@@ -45,7 +46,7 @@
   <XylSettingOption_fixLactationBugs_Always>All characters</XylSettingOption_fixLactationBugs_Always>
   <XylSettingOption_fixLactationBugs_Sometimes>Hyperlactating characters only</XylSettingOption_fixLactationBugs_Sometimes>
   <XylSettingOption_fixLactationBugs_Never>Never</XylSettingOption_fixLactationBugs_Never>
-  
+
   <!-- Misc -->
   <XylWildPeople>wild people</XylWildPeople>
   <XylScenPartForcedXenotypeSummary>{0} have a {1} chance to start with xenotype: {2}</XylScenPartForcedXenotypeSummary>

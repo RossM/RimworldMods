@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
   <RulePackDef Name="XylNamerPersonChyrrBase" Abstract="True">
@@ -8,7 +8,7 @@
         <li>r_name(p=3)->[firstName] '[nickName]' [lastName]</li>
 
         <li>firstName->[consonant]'[consonant][vowel]</li>
-        
+
         <li>lastName(p=3)->[SylY][SylY][nameEnd]</li>
         <li>lastName->[SylY][SylY][SylY][nameEnd]</li>
 

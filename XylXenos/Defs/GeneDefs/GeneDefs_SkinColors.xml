@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
 
@@ -46,7 +46,7 @@
     <skinColorOverride>(0.4,0.45,0.5)</skinColorOverride>
     <displayOrderInCategory>90</displayOrderInCategory>
   </GeneDef>
-  
+
   <GeneDef ParentName="GeneSkinColorOverride">
     <defName>XylSkin_LightSilver</defName>
     <label>light silver skin</label>

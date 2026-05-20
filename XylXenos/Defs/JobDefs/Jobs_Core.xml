@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
-  
+
   <JobDef>
     <defName>XylCastAbilityWithHeldThing</defName>
     <driverClass>XylXenos.JobDriver_CastWithHeldThing</driverClass>
@@ -11,5 +11,5 @@
     <tryStartFlying>true</tryStartFlying>
     <overrideFlyChance>1</overrideFlyChance>
   </JobDef>
-  
+
 </Defs>

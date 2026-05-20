@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Defs>
 
   <HediffDef>
@@ -88,7 +89,7 @@
     <isBad>true</isBad>
     <comps>
       <li Class="HediffCompProperties_Disappears">
-         <!--12 hours--> 
+        <!--12 hours-->
         <disappearsAfterTicks>30000</disappearsAfterTicks>
         <showRemainingTime>true</showRemainingTime>
       </li>
@@ -203,7 +204,7 @@
             <setMax>0.5</setMax>
           </li>
         </capMods>
-        </li>
+      </li>
     </stages>
     <comps>
       <li Class="HediffCompProperties_SeverityPerDay">

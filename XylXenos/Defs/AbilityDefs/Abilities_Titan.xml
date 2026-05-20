@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
 
@@ -20,7 +20,7 @@
         <canTargetBuildings>false</canTargetBuildings>
         <canTargetItems>True</canTargetItems>
         <thingCategory>Item</thingCategory>
-        <mapObjectTargetsMustBeAutoAttackable>False</mapObjectTargetsMustBeAutoAttackable>       
+        <mapObjectTargetsMustBeAutoAttackable>False</mapObjectTargetsMustBeAutoAttackable>
       </targetParams>
     </verbProperties>
     <comps>
@@ -72,14 +72,14 @@
       </li>
     </comps>
   </ThingDef>
-  
+
   <DamageDef ParentName="Bomb">
     <defName>XylThrownRock</defName>
     <deathMessage>{0} has been killed by a falling rock.</deathMessage>
-    <armorCategory>Blunt</armorCategory>    
+    <armorCategory>Blunt</armorCategory>
     <defaultDamage>30</defaultDamage>
     <plantDamageFactor>0.5</plantDamageFactor>
     <explosionHeatEnergyPerCell>0</explosionHeatEnergyPerCell>
   </DamageDef>
-  
+
 </Defs>

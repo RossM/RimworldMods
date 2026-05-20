@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Patch>
 
   <Operation Class="PatchOperationAdd">
     <xpath>Defs/StorytellerDef[@Name="BaseStoryteller"]/comps</xpath>
     <order>Append</order>
-    <value>     
+    <value>
       <li Class="StorytellerCompProperties_SingleMTB">
         <incident>XylDisease_Petrification</incident>
         <mtbDays>120</mtbDays>

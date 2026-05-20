@@ -1,11 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Patch>
 
   <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>Defs/ThingDef[@Name="BasePawn"]</xpath>
     <value>
       <comps>
-        <li Class="XylXenos.CompProperties_PawnLookupCache" />
+        <li Class="XylXenos.CompProperties_PawnLookupCache"/>
       </comps>
     </value>
   </Operation>

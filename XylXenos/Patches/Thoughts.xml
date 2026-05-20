@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Patch>
 
   <Operation Class="PatchOperationFindMod">
@@ -29,7 +30,7 @@
       </value>
     </match>
   </Operation>
-  
+
   <Operation Class="PatchOperationFindMod">
     <mods>
       <li>Ideology</li>
@@ -43,15 +44,15 @@
       </value>
     </match>
   </Operation>
-  
+
   <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>
       Defs/ThoughtDef[
-        defName="AteCorpse" or
-        defName="AteInsectMeatDirect" or
-        defName="AteInsectMeatAsIngredient" or
-        defName="AteHumanlikeMeatDirect" or
-        defName="AteHumanlikeMeatAsIngredient"
+      defName="AteCorpse" or
+      defName="AteInsectMeatDirect" or
+      defName="AteInsectMeatAsIngredient" or
+      defName="AteHumanlikeMeatDirect" or
+      defName="AteHumanlikeMeatAsIngredient"
       ]
     </xpath>
     <value>
@@ -94,7 +95,7 @@
       </nullifyingGenes>
     </value>
   </Operation>
-  
+
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/ThoughtDef/nullifyingGenes/li[text()="Furskin"]</xpath>
     <value>

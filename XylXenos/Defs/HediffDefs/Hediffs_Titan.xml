@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
-  
+
   <HediffDef>
     <defName>XylPetrification</defName>
     <hediffClass>XylXenos.Hediff_Petrification</hediffClass>
@@ -160,7 +160,7 @@
     </stages>
     <spawnThingOnRemoved>ChunkLimestone</spawnThingOnRemoved>
   </HediffDef>
-  
+
   <RecipeDef ParentName="SurgeryFlesh">
     <defName>XylExcisePetrifiedFlesh</defName>
     <label>excise petrified flesh</label>
@@ -186,6 +186,5 @@
       </categories>
     </fixedIngredientFilter>
   </RecipeDef>
-
 
 </Defs>

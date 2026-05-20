@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
-  
+
   <ThingDef ParentName="MakeableDrugPillBase">
     <defName>XylSoftener</defName>
     <label>softener</label>
@@ -48,7 +48,7 @@
       </li>
     </comps>
   </ThingDef>
-  
+
   <HediffDef>
     <defName>XylSoftenerHigh</defName>
     <hediffClass>Hediff_High</hediffClass>
@@ -64,15 +64,15 @@
         <showHoursToRecover>true</showHoursToRecover>
       </li>
     </comps>
-      <stages>
-        <li>
-          <makeImmuneTo>
-            <li>XylPetrification</li>
-          </makeImmuneTo>
-        </li>
-      </stages>
+    <stages>
+      <li>
+        <makeImmuneTo>
+          <li>XylPetrification</li>
+        </makeImmuneTo>
+      </li>
+    </stages>
   </HediffDef>
-  
+
   <ThingDef ParentName="DrugPillBase">
     <defName>XylAtlasite</defName>
     <label>atlasite</label>
@@ -114,10 +114,12 @@
     <tradeTags>
       <li>ExoticMisc</li>
     </tradeTags>
-    <thingSetMakerTags><li>RewardStandardCore</li></thingSetMakerTags>
+    <thingSetMakerTags>
+      <li>RewardStandardCore</li>
+    </thingSetMakerTags>
     <allowedArchonexusCount>50</allowedArchonexusCount>
   </ThingDef>
-  
+
   <ChemicalDef>
     <defName>XylAtlasite</defName>
     <label>atlasite</label>
@@ -132,7 +134,7 @@
       </li>
     </modExtensions>
   </ChemicalDef>
-  
+
   <HediffDef>
     <defName>XylAtlasiteHigh</defName>
     <label>atlasite</label>
@@ -180,7 +182,6 @@
     </stages>
   </ThoughtDef>
 
-  
   <HediffDef>
     <defName>XylAtlasiteSaturation</defName>
     <label>atlasite saturation</label>
@@ -254,5 +255,4 @@
     </stages>
   </HediffDef>
 
-  
 </Defs>

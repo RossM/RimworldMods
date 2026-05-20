@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
 
@@ -56,7 +56,7 @@
 
         <li>nameCore->[SylD][nameEnd]</li>
         <li>nameCore->[SylD][SylD][maybeHyphen][nameEnd]</li>
-        
+
         <li>nameEnd->bar</li>
         <li>nameEnd->baz</li>
         <li>nameEnd->bor</li>

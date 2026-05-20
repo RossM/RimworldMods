@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Defs>
 
   <HeadTypeDef Name="XylTrogBase" ParentName="AverageBase" Abstract="True">
@@ -39,5 +40,5 @@
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Trog_C</graphicPath>
     <gender>Female</gender>
   </HeadTypeDef>
-  
+
 </Defs>

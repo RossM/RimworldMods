@@ -1,12 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Patch>
 
   <!-- Needs -->
-  
+
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/ThinkTreeDef//li[@Class="JobGiver_SatisfyChemicalNeed"]</xpath>
     <value>
-      <li Class="XylXenos.JobGiver_SatisfyDietDependency" />
+      <li Class="XylXenos.JobGiver_SatisfyDietDependency"/>
     </value>
   </Operation>
 
@@ -21,16 +22,16 @@
   </Operation>
 
   <!-- Mental states -->
-  
-    <Operation Class="PatchOperationInsert">
+
+  <Operation Class="PatchOperationInsert">
     <xpath>Defs/ThinkTreeDef//li[state="MurderousRage"]</xpath>
     <value>
 
       <li Class="ThinkNode_ConditionalMentalState">
         <state>XylHuntingVermin</state>
         <subNodes>
-          <li Class="XylXenos.JobGiver_HuntingVermin" />
-          <li Class="XylXenos.JobGiver_SatisfyDietDependency" />
+          <li Class="XylXenos.JobGiver_HuntingVermin"/>
+          <li Class="XylXenos.JobGiver_SatisfyDietDependency"/>
           <li Class="ThinkNode_PrioritySorter">
             <subNodes>
               <li Class="JobGiver_GetFood">
@@ -41,14 +42,14 @@
               </li>
             </subNodes>
           </li>
-          <li Class="JobGiver_WanderColony" />
+          <li Class="JobGiver_WanderColony"/>
         </subNodes>
       </li>
 
       <li Class="ThinkNode_ConditionalMentalState">
         <state>XylSeeingRed</state>
         <subNodes>
-          <li Class="XylXenos.JobGiver_SeeingRed" />
+          <li Class="XylXenos.JobGiver_SeeingRed"/>
           <li Class="JobGiver_RunRandom">
             <maxDanger>Deadly</maxDanger>
           </li>
@@ -57,6 +58,5 @@
 
     </value>
   </Operation>
-
 
 </Patch>
