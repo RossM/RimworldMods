@@ -116,7 +116,7 @@ public static class GeneHelpers
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool HasActiveGeneDefExtensionsOfType<T>(this Pawn pawn) where T : class
+    public static bool HasActiveGeneDefExtensionOfType<T>(this Pawn pawn) where T : class
     {
         if (pawn.genes == null)
             return false;
