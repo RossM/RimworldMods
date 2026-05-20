@@ -1,5 +1,4 @@
 ﻿using System;
-using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using XylXenos.Genes;

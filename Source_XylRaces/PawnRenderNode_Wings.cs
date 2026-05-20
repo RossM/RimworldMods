@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Verse;
+﻿using Verse;
 
 namespace XylXenos
 {
