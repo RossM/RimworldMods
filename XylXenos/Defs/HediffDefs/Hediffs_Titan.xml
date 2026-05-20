@@ -80,6 +80,8 @@
     <everCurableByItem>false</everCurableByItem>
     <comps>
       <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
+        <letterLabel>Petrification: {PAWN_labelShort}</letterLabel>
+        <letterText>{PAWN_labelShort}'s petrification has become active again. Parts of {PAWN_possessive} body will slowly develop hard, rock-like growths. There is no cure, but medical treatment can slow the progression, and the growths can be surgically removed.\n\nIf {PAWN_labelShort} isn't given high-quality medical care for the rest of {PAWN_possessive} life, the disease will eventually become fatal.</letterText>
         <hediffs>
           <li>
             <mtbDays>120</mtbDays>
@@ -109,6 +111,7 @@
     <defName>XylPetrified</defName>
     <hediffClass>HediffWithComps</hediffClass>
     <label>petrified</label>
+    <labelNoun>petrified flesh</labelNoun>
     <description>This body part has been partially replaced with hard, rocky growths. They must be surgically removed to allow the part to heal.</description>
     <descriptionHyperlinks>
       <GeneDef>XylPetrification</GeneDef>
@@ -135,6 +138,13 @@
         </hediffs>
       </li>
     </comps>
+    <onlyLifeThreateningTo>
+      <li>Head</li>
+      <li>Brain</li>
+      <li>Neck</li>
+      <li>Spine</li>
+      <li>Torso</li>
+    </onlyLifeThreateningTo>
     <stages>
       <li>
         <becomeVisible>false</becomeVisible>
@@ -198,6 +208,7 @@
   <HediffDef ParentName="AddedBodyPartBase">
     <defName>XylPetrifiedTotal</defName>
     <label>petrified</label>
+    <labelNoun>petrified part</labelNoun>
     <description>This body part has been completely replaced with hard, rocky growths. They can be surgically removed, but the body part is lost.</description>
     <descriptionHyperlinks>
       <GeneDef>XylPetrification</GeneDef>

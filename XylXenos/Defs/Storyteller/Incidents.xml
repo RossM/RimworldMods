@@ -39,8 +39,7 @@
     <diseaseIncident>XylPetrificationActive</diseaseIncident>
     <diseaseMaxVictims>1</diseaseMaxVictims>
     <letterLabel>Petrification: {PAWN_labelShort}</letterLabel>
-    <letterText>{PAWN_labelShort} has developed a genetically-linked disease called petrification. Parts of {PAWN_possessive} body will slowly develop hard, rock-like growths. There is no cure, but medical treatment can slow the progression, and the growths can be surgically removed.</letterText>
-    <diseaseLethalLetterText>If {PAWN_labelShort} isn't given high-quality medical care for the rest of {PAWN_possessive} life, the disease will eventually become fatal.</diseaseLethalLetterText>
+    <letterText>{PAWN_labelShort} has developed a genetically-linked disease called petrification. Parts of {PAWN_possessive} body will slowly develop hard, rock-like growths. There is no cure, but medical treatment can slow the progression, and the growths can be surgically removed.\n\nIf {PAWN_labelShort} isn't given high-quality medical care for the rest of {PAWN_possessive} life, the disease will eventually become fatal.</letterText>
     <letterSingularForm>true</letterSingularForm>
     <ignoreRecentSelectionWeighting>false</ignoreRecentSelectionWeighting>
     <modExtensions>
