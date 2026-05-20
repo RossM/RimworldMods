@@ -290,7 +290,6 @@
 
   <GeneDef>
     <defName>XylPetrification</defName>
-    <geneClass>XylXenos.Genes.ChemicalImmunity</geneClass>
     <label>petrification</label>
     <description>Carriers of this gene have a chance to develop a disease named petrification. Petrification slowly replaces tissues throughout the body with stone. The disease is incurable, but progress can be slowed with medical treatment, and the affected tissues can be removed surgically.</description>
     <biostatCpx>1</biostatCpx>
@@ -299,6 +298,13 @@
     <displayOrderInCategory>210</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <prerequisite>XylLithoid</prerequisite>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_StartingItemSource">
+        <item>XylSoftener</item>
+        <chance>0.1</chance>
+        <count>5~10</count>
+      </li>      
+    </modExtensions>
   </GeneDef>
 
 </Defs>
