@@ -6,11 +6,11 @@
     <defName>XylSoftener</defName>
     <label>softener</label>
     <description>A drug for preventing petrification before it takes hold. Must be taken every five days to remain effective.\n\nThis drug only prevents petrification from developing. It has no effect on an existing disease.</description>
-    <descriptionHyperlinks
-      ><HediffDef>XylSoftenerHigh</HediffDef>
-        </descriptionHyperlinks>
+    <descriptionHyperlinks>
+      <HediffDef>XylSoftenerHigh</HediffDef>
+    </descriptionHyperlinks>
     <graphicData>
-      <texPath>Things/Item/Drug/Penoxycyline</texPath>
+      <texPath>Xyl/Things/Item/Drug/Softener</texPath>
       <graphicClass>Graphic_StackCount</graphicClass>
     </graphicData>
     <socialPropernessMatters>false</socialPropernessMatters>
@@ -83,7 +83,6 @@
     <graphicData>
       <texPath>Things/Item/Drug/Penoxycyline</texPath>
       <graphicClass>Graphic_StackCount</graphicClass>
-      <drawSize>0.75</drawSize>
     </graphicData>
     <rotatable>false</rotatable>
     <statBases>
@@ -97,7 +96,7 @@
       <outcomeDoers>
         <li Class="IngestionOutcomeDoer_GiveHediff">
           <hediffDef>XylAtlasiteHigh</hediffDef>
-          <severity>0.9</severity>
+          <severity>1.0</severity>
         </li>
         <li Class="IngestionOutcomeDoer_GiveHediff">
           <hediffDef>XylAtlasiteSaturation</hediffDef>
@@ -139,10 +138,10 @@
     <label>atlasite</label>
     <labelNoun>atlasite</labelNoun>
     <description>Atlas mechanites in the body. They provide slight benefits to mood and performance, and increase atlasite saturation gradually over time.</description>
-    <hediffClass>HediffWithComps</hediffClass>
+    <hediffClass>Hediff_High</hediffClass>
     <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
     <scenarioCanAdd>true</scenarioCanAdd>
-    <initialSeverity>0</initialSeverity>
+    <initialSeverity>1.0</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
     <isBad>false</isBad>
     <comps>
