@@ -26,11 +26,11 @@ namespace XylXenos.Patches
                     Mode = InstructionMatcher.OutputMode.Replace,
                     Pattern =
                     [
-                        new CodeInstruction(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate)),
+                        new(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate)),
                     ],
                     Output =
                     [
-                        new CodeInstruction(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate_Fixed)),
+                        new(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate_Fixed)),
                     ]
                 }
             }

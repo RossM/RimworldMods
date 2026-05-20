@@ -11,13 +11,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(XenotypeSet))]
     public static class Patch_XenotypeSet
     {
-        private static readonly InstructionMatcher Fixup_DefaultXenotype = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(nameof(XenotypeDefOf.Baseliner), XenotypeDefOf_Baseliner_Wrapper),
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_XenotypeDefOf_Baseliner
+            = InstructionMatcher.MakeRedirectRule(nameof(XenotypeDefOf.Baseliner), XenotypeDefOf_Baseliner_Wrapper);
 
         [Feature(typeof(XenotypeSetWithDefault))]
         [HarmonyTranspiler]
@@ -29,7 +24,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_DefaultXenotype.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_XenotypeDefOf_Baseliner,
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -43,7 +44,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_DefaultXenotype.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_XenotypeDefOf_Baseliner,
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

@@ -15,16 +15,10 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Dialog_CreateXenotype))]
     public class Patch_Dialog_CreateXenotype
     {
-        private static readonly InstructionMatcher Fixup_GenesInOrder = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.PropertyGetter(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder)),
-                    GenesInOrder_Wrapper
-                )
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_GenesInOrder = InstructionMatcher.MakeRedirectRule(
+            AccessTools.PropertyGetter(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder)),
+            GenesInOrder_Wrapper
+        );
 
         [Feature(typeof(GeneDefExtension_UIFilter))]
         [HarmonyTranspiler]
@@ -36,7 +30,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_GenesInOrder.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_GenesInOrder
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

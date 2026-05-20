@@ -13,15 +13,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(DrugPolicyUIUtility))]
     public static class Patch_DrugPolicyUIUtility
     {
-        private static readonly InstructionMatcher Fixup_DoAssignDrugPolicyButtons = new()
-        {
-            Rules =
-            {
-                // We can't just patch TryGetChemicalDependencyGene directly because it returns Gene_ChemicalDependency, and we
-                // need a function that returns just Gene.
-                InstructionMatcher.MakeRedirectRule(PawnUtility.TryGetChemicalDependencyGene, TryGetChemicalDependencyGene_Wrapper)
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_TryGetChemicalDependencyGene
+            = InstructionMatcher.MakeRedirectRule(PawnUtility.TryGetChemicalDependencyGene, TryGetChemicalDependencyGene_Wrapper);
 
         [Feature(typeof(GeneDefExtension_Chemicals))]
         [HarmonyTranspiler]
@@ -33,7 +26,15 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_DoAssignDrugPolicyButtons.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    // We can't just patch TryGetChemicalDependencyGene directly because it returns Gene_ChemicalDependency, and we
+                    // need a function that returns just Gene.
+                    Rule_TryGetChemicalDependencyGene
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

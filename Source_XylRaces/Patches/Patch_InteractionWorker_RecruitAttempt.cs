@@ -13,13 +13,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(InteractionWorker_RecruitAttempt))]
     public static class Patch_InteractionWorker_RecruitAttempt
     {
-        private static readonly InstructionMatcher Fixup_Interacted = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(StatExtension.GetStatValue, GetStatValue_Wrapper)
-            }
-        };
+        private static readonly InstructionMatcher.Rule Fixup_GetStatValue
+            = InstructionMatcher.MakeRedirectRule(StatExtension.GetStatValue, GetStatValue_Wrapper);
 
         [Feature(nameof(DefOf.XylResistanceFallRate))]
         [HarmonyTranspiler]
@@ -31,7 +26,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_Interacted.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Fixup_GetStatValue
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

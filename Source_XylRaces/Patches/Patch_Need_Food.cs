@@ -13,13 +13,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Need_Food))]
     public static class Patch_Need_Food
     {
-        private static readonly InstructionMatcher Fixup_FoodFallPerTickAssumingCategory = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(nameof(HediffComp_Lactating.AddedNutritionPerDay), AddedNutritionPerDay_Wrapper)
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_AddedNutritionPerDay
+            = InstructionMatcher.MakeRedirectRule(nameof(HediffComp_Lactating.AddedNutritionPerDay), AddedNutritionPerDay_Wrapper);
 
         [Feature(Config.Feature.FixLactationBugs)]
         [HarmonyTranspiler]
@@ -31,7 +26,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_FoodFallPerTickAssumingCategory.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_AddedNutritionPerDay
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

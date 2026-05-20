@@ -14,13 +14,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(RecipeDef))]
     public static class Patch_RecipeDef
     {
-        private static readonly InstructionMatcher Fixup_AvailableNow = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule("memePrerequisitesAny", RecipeDef_memePrerequisitesAny_Wrapper)
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_RecipeDef_memePrerequisitesAny
+            = InstructionMatcher.MakeRedirectRule("memePrerequisitesAny", RecipeDef_memePrerequisitesAny_Wrapper);
 
         [Feature(typeof(DefModExtension_GeneDependent))]
         [HarmonyTranspiler]
@@ -32,7 +27,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_AvailableNow.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_RecipeDef_memePrerequisitesAny
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

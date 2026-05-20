@@ -14,13 +14,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(GenConstruct))]
     public static class Patch_GenConstruct
     {
-        private static readonly InstructionMatcher Fixup_CanConstruct = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(nameof(Ideo.MembersCanBuild), MembersCanBuild_Wrapper)
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_MembersCanBuild
+            = InstructionMatcher.MakeRedirectRule(nameof(Ideo.MembersCanBuild), MembersCanBuild_Wrapper);
 
         [Feature(typeof(GeneDefExtension_Designator))]
         [HarmonyTranspiler]
@@ -32,7 +27,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_CanConstruct.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_MembersCanBuild
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

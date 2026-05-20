@@ -15,18 +15,13 @@ namespace XylXenos.Patches
     [HarmonyPatch]
     public static class PatchLactation
     {
-        private static readonly InstructionMatcher Fixup = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)]),
-                    GetFirstHediffOfDef_Wrapper, minMatches: 0),
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Method(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)]),
-                    HasHediff_Wrapper, minMatches: 0),
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_GetFirstHediffOfDef = InstructionMatcher.MakeRedirectRule(
+            AccessTools.Method(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)]),
+            GetFirstHediffOfDef_Wrapper, minMatches: 0);
+
+        private static readonly InstructionMatcher.Rule Rule_HasHediff = InstructionMatcher.MakeRedirectRule(
+            AccessTools.Method(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)]),
+            HasHediff_Wrapper, minMatches: 0);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Hediff GetFirstHediffOfDef_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
@@ -54,7 +49,14 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_GetFirstHediffOfDef,
+                    Rule_HasHediff,
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -68,7 +70,14 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_GetFirstHediffOfDef,
+                    Rule_HasHediff,
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -82,7 +91,14 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_GetFirstHediffOfDef,
+                    Rule_HasHediff,
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -96,7 +112,14 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_GetFirstHediffOfDef,
+                    Rule_HasHediff,
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -110,7 +133,14 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_GetFirstHediffOfDef,
+                    Rule_HasHediff,
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
@@ -124,7 +154,14 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_GetFirstHediffOfDef,
+                    Rule_HasHediff,
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
     }

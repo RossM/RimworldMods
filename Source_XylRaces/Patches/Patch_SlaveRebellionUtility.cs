@@ -15,9 +15,6 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(SlaveRebellionUtility))]
     public static class Patch_SlaveRebellionUtility
     {
-        public const float DocileFactor = 4f;
-        public const float NeverRebelThresholdDays = 120f;
-
         private static readonly InstructionMatcher Fixup_GetSlaveRebellionMtbCalculationExplanation = new()
         {
             Rules =

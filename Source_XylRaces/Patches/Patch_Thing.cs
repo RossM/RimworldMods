@@ -15,13 +15,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Thing))]
     public static class Patch_Thing
     {
-        private static readonly InstructionMatcher FixupIngested = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(StatExtension.GetStatValue, GetStatValue_Wrapper)
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_GetStatValue
+            = InstructionMatcher.MakeRedirectRule(StatExtension.GetStatValue, GetStatValue_Wrapper);
 
         [Feature(typeof(DietDependency))]
         [HarmonyPrefix]
@@ -58,7 +53,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            FixupIngested.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_GetStatValue
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

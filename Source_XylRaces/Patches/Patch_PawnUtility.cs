@@ -14,23 +14,23 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(PawnUtility))]
     public static class Patch_PawnUtility
     {
-        private static readonly InstructionMatcher.Rule GetManhunterOnDamageChance_Rule = InstructionMatcher.MakeRedirectRule(
+        private static readonly InstructionMatcher.Rule Rule_GetManhunterOnDamageChance = InstructionMatcher.MakeRedirectRule(
             AccessTools.Method(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(ThingDef)]),
             GetManhunterOnDamageChance_Wrapper);
 
-        private static readonly InstructionMatcher.Rule GetManhunterOnTameFailChance_Rule = InstructionMatcher.MakeRedirectRule(
+        private static readonly InstructionMatcher.Rule Rule_GetManhunterOnTameFailChance = InstructionMatcher.MakeRedirectRule(
             AccessTools.Method(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(ThingDef)]),
             GetManhunterOnTameFailChance_Wrapper);
 
-        private static readonly InstructionMatcher.Rule Def_LabelCap_Rule = InstructionMatcher.MakeRedirectRule(
+        private static readonly InstructionMatcher.Rule Rule_Def_LabelCap = InstructionMatcher.MakeRedirectRule(
             AccessTools.PropertyGetter(typeof(Def), nameof(Def.LabelCap)),
             Def_LabelCap_Wrapper);
 
-        private static readonly InstructionMatcher.Rule RaceProperties_manhunterOnDamageChance_Rule = InstructionMatcher.MakeRedirectRule(
+        private static readonly InstructionMatcher.Rule Rule_RaceProperties_manhunterOnDamageChance = InstructionMatcher.MakeRedirectRule(
             AccessTools.Field(typeof(RaceProperties), nameof(RaceProperties.manhunterOnDamageChance)),
             RaceProperties_manhunterOnDamageChance_Wrapper);
 
-        private static readonly InstructionMatcher.Rule RaceProperties_manhunterOnTameFailChance_Rule = InstructionMatcher.MakeRedirectRule(
+        private static readonly InstructionMatcher.Rule Rule_RaceProperties_manhunterOnTameFailChance = InstructionMatcher.MakeRedirectRule(
             AccessTools.Field(typeof(RaceProperties), nameof(RaceProperties.manhunterOnTameFailChance)),
             RaceProperties_manhunterOnTameFailChance_Wrapper);
 
@@ -61,7 +61,7 @@ namespace XylXenos.Patches
             {
                 Rules =
                 {
-                    GetManhunterOnDamageChance_Rule,
+                    Rule_GetManhunterOnDamageChance,
                 }
             }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
@@ -81,9 +81,9 @@ namespace XylXenos.Patches
             {
                 Rules =
                 {
-                    GetManhunterOnDamageChance_Rule,
-                    RaceProperties_manhunterOnDamageChance_Rule,
-                    Def_LabelCap_Rule,
+                    Rule_GetManhunterOnDamageChance,
+                    Rule_RaceProperties_manhunterOnDamageChance,
+                    Rule_Def_LabelCap,
                 }
             }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
@@ -103,7 +103,7 @@ namespace XylXenos.Patches
             {
                 Rules =
                 {
-                    GetManhunterOnTameFailChance_Rule,
+                    Rule_GetManhunterOnTameFailChance,
                 }
             }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
@@ -123,9 +123,9 @@ namespace XylXenos.Patches
             {
                 Rules =
                 {
-                    GetManhunterOnTameFailChance_Rule,
-                    RaceProperties_manhunterOnTameFailChance_Rule,
-                    Def_LabelCap_Rule,
+                    Rule_GetManhunterOnTameFailChance,
+                    Rule_RaceProperties_manhunterOnTameFailChance,
+                    Rule_Def_LabelCap,
                 }
             }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;

@@ -15,13 +15,8 @@ namespace XylXenos.Patches
     [HarmonyPatch]
     public static class PatchBiostatMet
     {
-        private static readonly InstructionMatcher Fixup_BiostatMet = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(nameof(GeneDef.biostatMet), GeneDef_biostatMet_Wrapper)
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_GeneDef_biostatMet
+            = InstructionMatcher.MakeRedirectRule(nameof(GeneDef.biostatMet), GeneDef_biostatMet_Wrapper);
 
         [UsedImplicitly]
         public static IEnumerable<MethodBase> TargetMethods()
@@ -42,7 +37,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_BiostatMet.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_GeneDef_biostatMet
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

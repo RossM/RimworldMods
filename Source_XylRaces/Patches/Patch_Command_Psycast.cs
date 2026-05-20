@@ -14,13 +14,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Command_Psycast))]
     public static class Patch_Command_Psycast
     {
-        private static readonly InstructionMatcher Fixup_GetPsycastLevel = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(PawnUtility.GetPsylinkLevel, GetPsylinkLevel_Wrapper)
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_GetPsylinkLevel
+            = InstructionMatcher.MakeRedirectRule(PawnUtility.GetPsylinkLevel, GetPsylinkLevel_Wrapper);
 
         [Feature(typeof(Psycast))]
         [HarmonyTranspiler]
@@ -32,7 +27,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_GetPsycastLevel.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_GetPsylinkLevel
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 

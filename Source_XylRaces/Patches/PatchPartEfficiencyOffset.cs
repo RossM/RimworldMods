@@ -1,13 +1,10 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+using HarmonyLib;
+using JetBrains.Annotations;
 using TranspilerUtil;
 using Verse;
 
@@ -18,20 +15,15 @@ namespace XylXenos.Patches
     {
         public static AccessTools.FieldRef<object, Hediff> hediffGetter;
 
-        private static readonly InstructionMatcher Fixup_HediffStage_partEfficiencyOffset = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Field(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset)),
-                    HediffStage_partEfficiencyOffset_Wrapper)
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_HediffStage_partEfficiencyOffset = InstructionMatcher.MakeRedirectRule(
+            AccessTools.Field(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset)),
+            HediffStage_partEfficiencyOffset_Wrapper);
 
         [UsedImplicitly]
         public static IEnumerable<MethodBase> TargetMethods()
         {
-            Type iteratorType = AccessTools.InnerTypes(typeof(HediffStatsUtility)).First(type => type.Name.Contains("<SpecialDisplayStats>"));
+            Type iteratorType = AccessTools.InnerTypes(typeof(HediffStatsUtility))
+                .First(type => type.Name.Contains("<SpecialDisplayStats>"));
             hediffGetter = AccessTools.FieldRefAccess<Hediff>(iteratorType, "<>3__instance");
             yield return AccessTools.Method(iteratorType, "MoveNext");
         }
@@ -46,7 +38,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_HediffStage_partEfficiencyOffset.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_HediffStage_partEfficiencyOffset
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
