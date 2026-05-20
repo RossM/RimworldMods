@@ -19,9 +19,10 @@ namespace XylXenos
 
             public FloatRange severityRange = FloatRange.Zero;
             public bool inheritSeverity;
+            public bool scaleSeverityWithPartHealth;
             public bool sameBodyPart;
             public bool canAffectAnyLivePart;
-            public bool scaleSeverityWithPartHealth;
+            public bool allowDuplicates;
 
             public bool skipIfAlreadyExists;
             public bool triggeredManually;
@@ -35,23 +36,70 @@ namespace XylXenos
             {
                 float severityFraction = parent.Severity / GetMaxSeverity(pawn, parent);
 
-                List<Hediff> addedHediffs = [];
+                bool success = false;
                 List<BodyPartDef> parts = sameBodyPart ? [parent.Part.def] : partsToAffect;
-                HediffGiverUtility.TryApply(pawn, hediff, parts, canAffectAnyLivePart, countRange.RandomInRange, addedHediffs);
-                foreach (Hediff item in addedHediffs)
-                {
-                    float severityScale = 1f;
-                    if (scaleSeverityWithPartHealth && item.Part != null)
-                        severityScale /= item.Part.def.GetMaxHealth(pawn);
 
-                    if (inheritSeverity)
-                        item.Severity = GetMaxSeverity(pawn, item) * severityFraction * severityScale;
-                    else if (severityRange != FloatRange.Zero)
-                        item.Severity = severityRange.RandomInRange * severityScale;
+                if (canAffectAnyLivePart || parts != null)
+                {
+                    for (int i = 0; i < countRange.RandomInRange; i++)
+                    {
+                        IEnumerable<BodyPartRecord> source = pawn.health.hediffSet.GetNotMissingParts();
+                        if (parts != null)
+                        {
+                            source = source.Where(p => ((IEnumerable<BodyPartDef>)parts).Contains(p.def));
+                        }
+
+                        if (canAffectAnyLivePart)
+                        {
+                            source = source.Where(p => p.def.alive);
+                        }
+
+                        source = source.Where(p =>
+                            (allowDuplicates || !pawn.health.hediffSet.HasHediff(hediff, p)) &&
+                            !pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(p)).ToList();
+                        if (!source.Any())
+                        {
+                            break;
+                        }
+
+                        BodyPartRecord bodyPartRecord = true ? source.RandomElementByWeight(x => x.coverageAbs) : source.RandomElement();
+
+                        Hediff hediff2
+                            = HediffMaker.MakeHediff(
+                                partRecord: bodyPartRecord, def: hediff,
+                                pawn: pawn);
+
+                        float severity;
+
+                        if (inheritSeverity)
+                            severity = GetMaxSeverity(pawn, hediff2) * severityFraction;
+                        else if (severityRange != FloatRange.Zero)
+                            severity = severityRange.RandomInRange;
+                        else
+                            severity = hediff2.Severity;
+
+                        if (scaleSeverityWithPartHealth && hediff2.Part != null)
+                            severity /= hediff2.Part.def.GetMaxHealth(pawn);
+
+                        hediff2.Severity = severity;
+
+                        pawn.health.AddHediff(hediff2);
+                        outAddedHediffs?.Add(hediff2);
+                        success = true;
+                    }
+                }
+                else
+                {
+                    if (!pawn.health.hediffSet.HasHediff(hediff))
+                    {
+                        Hediff hediff3 = HediffMaker.MakeHediff(hediff, pawn);
+                        pawn.health.AddHediff(hediff3);
+                        outAddedHediffs?.Add(hediff3);
+                        success = true;
+                    }
                 }
 
-                outAddedHediffs?.AddRange(addedHediffs);
-                return addedHediffs.Count > 0;
+                return success;
             }
 
             private static float GetMaxSeverity(Pawn pawn, Hediff item)
@@ -65,7 +113,6 @@ namespace XylXenos
                 return 1f;
             }
         }
-
 
         public List<TriggeredHediff> hediffs;
 

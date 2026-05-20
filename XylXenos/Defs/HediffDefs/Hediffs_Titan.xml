@@ -36,16 +36,18 @@
             <mtbDays>15</mtbDays>
             <hediff>XylPetrified</hediff>
             <severityRange>2~5</severityRange>
-            <canAffectAnyLivePart>true</canAffectAnyLivePart>
             <scaleSeverityWithPartHealth>true</scaleSeverityWithPartHealth>
+            <canAffectAnyLivePart>true</canAffectAnyLivePart>
+            <allowDuplicates>true</allowDuplicates>
           </li>
           <li>
             <mtbDays>5</mtbDays>
             <minSeverity>0.4</minSeverity>
             <hediff>XylPetrified</hediff>
             <severityRange>5~10</severityRange>
-            <canAffectAnyLivePart>true</canAffectAnyLivePart>
             <scaleSeverityWithPartHealth>true</scaleSeverityWithPartHealth>
+            <canAffectAnyLivePart>true</canAffectAnyLivePart>
+            <allowDuplicates>true</allowDuplicates>
           </li>
         </hediffs>
       </li>
