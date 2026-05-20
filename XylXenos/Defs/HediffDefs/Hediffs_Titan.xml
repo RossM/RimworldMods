@@ -9,7 +9,6 @@
     <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.</description>
     <descriptionHyperlinks>
       <GeneDef>XylPetrification</GeneDef>
-      <HediffDef>XylPetrified</HediffDef>
     </descriptionHyperlinks>
     <initialSeverity>0.01</initialSeverity>
     <lethalSeverity>1.0</lethalSeverity>
@@ -76,7 +75,6 @@
     <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.\n\nThe disease is currently inactive, but could recur at any time.</description>
     <descriptionHyperlinks>
       <GeneDef>XylPetrification</GeneDef>
-      <HediffDef>XylPetrified</HediffDef>
     </descriptionHyperlinks>
     <initialSeverity>0.01</initialSeverity>
     <lethalSeverity>1.0</lethalSeverity>
