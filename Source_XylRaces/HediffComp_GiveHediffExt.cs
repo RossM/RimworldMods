@@ -21,6 +21,7 @@ namespace XylXenos
             public bool inheritSeverity;
             public bool sameBodyPart;
             public bool canAffectAnyLivePart;
+            public bool scaleSeverityWithPartHealth;
 
             public bool skipIfAlreadyExists;
             public bool triggeredManually;
@@ -36,14 +37,17 @@ namespace XylXenos
 
                 List<Hediff> addedHediffs = [];
                 List<BodyPartDef> parts = sameBodyPart ? [parent.Part.def] : partsToAffect;
-                HediffGiverUtility.TryApply(pawn, hediff, parts, canAffectAnyLivePart, countRange.RandomInRange, addedHediffs,
-                    useCoverage: false);
+                HediffGiverUtility.TryApply(pawn, hediff, parts, canAffectAnyLivePart, countRange.RandomInRange, addedHediffs);
                 foreach (Hediff item in addedHediffs)
                 {
+                    float severityScale = 1f;
+                    if (scaleSeverityWithPartHealth && item.Part != null)
+                        severityScale /= item.Part.def.GetMaxHealth(pawn);
+
                     if (inheritSeverity)
-                        item.Severity = GetMaxSeverity(pawn, item) * severityFraction;
+                        item.Severity = GetMaxSeverity(pawn, item) * severityFraction * severityScale;
                     else if (severityRange != FloatRange.Zero)
-                        item.Severity = severityRange.RandomInRange;
+                        item.Severity = severityRange.RandomInRange * severityScale;
                 }
 
                 outAddedHediffs?.AddRange(addedHediffs);
