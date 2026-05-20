@@ -4,7 +4,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext : ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes
     {
         protected override void GenerateStartingPawns()

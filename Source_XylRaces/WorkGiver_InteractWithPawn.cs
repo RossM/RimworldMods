@@ -12,7 +12,7 @@ namespace XylXenos
         public JobDef job;
     }
 
-    [UsedImplicitly]
+    [UsedFromXml]
     public class WorkGiver_InteractWithPawn : WorkGiver_Scanner
     {
         public WorkGiverDefExtension_InteractWithPawn DefExt => def.GetModExtension<WorkGiverDefExtension_InteractWithPawn>();

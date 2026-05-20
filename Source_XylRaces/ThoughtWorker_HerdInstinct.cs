@@ -4,7 +4,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class ThoughtWorker_HerdInstinct : ThoughtWorker
     {
         protected override ThoughtState CurrentStateInternal(Pawn p)

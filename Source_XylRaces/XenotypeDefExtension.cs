@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class XenotypeDefExtension : DefModExtension
     {
         public bool allowSolidBackstories = true;

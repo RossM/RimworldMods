@@ -27,7 +27,6 @@ namespace XylXenos.Patches
         // Note: This patch is performance-sensitive
         [Feature(typeof(Flight))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_FlightTracker.FlightTick))]
         public static void FlightTick_Prefix(Pawn_FlightTracker __instance)
         {

@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class ThoughtDefExtension_PawnStatus : DefModExtension
     {
         public enum StatusMode
@@ -22,7 +22,7 @@ namespace XylXenos
         public StatusMode status = StatusMode.Any;
     }
 
-    [UsedImplicitly]
+    [UsedFromXml]
     public class ThoughtWorker_PawnStatus : ThoughtWorker
     {
         public ThoughtDefExtension_PawnStatus DefExt => def.GetModExtension<ThoughtDefExtension_PawnStatus>();

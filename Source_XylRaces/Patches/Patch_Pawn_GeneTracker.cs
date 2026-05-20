@@ -9,7 +9,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch("Notify_GenesChanged")]
         public static void Notify_GenesChanged_Postfix(Pawn_GeneTracker __instance)
         {

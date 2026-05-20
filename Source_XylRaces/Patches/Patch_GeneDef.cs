@@ -43,7 +43,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch("SpecialDisplayStats")]
         public static void SpecialDisplayStats_Postfix(GeneDef __instance, StatRequest req, ref IEnumerable<StatDrawEntry> __result)
         {

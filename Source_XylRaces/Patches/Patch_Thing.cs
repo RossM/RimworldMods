@@ -35,7 +35,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(GeneDefExtension_HostilityOverride), nameof(SeeingRed))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch("TakeDamage")]
         public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
         {
@@ -44,7 +43,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(FoodHelpers.GetFoodPoisonChanceOffset))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("Ingested")]
         public static IEnumerable<CodeInstruction> Ingested_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -73,7 +71,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Thing.PostMake))]
         public static void PostMake_Postfix(Thing __instance)
         {

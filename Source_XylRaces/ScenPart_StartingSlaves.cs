@@ -8,7 +8,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class ScenPart_StartingSlaves : ScenPart_PawnModifier
     {
         public int count;

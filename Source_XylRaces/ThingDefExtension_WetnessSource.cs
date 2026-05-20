@@ -3,7 +3,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class ThingDefExtension_WetnessSource : DefModExtension
     {
         public float wetnessLevel = 1.0f;

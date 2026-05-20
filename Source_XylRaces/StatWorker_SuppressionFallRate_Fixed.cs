@@ -49,7 +49,6 @@ namespace XylXenos
             return stringBuilder.ToString();
         }
 
-        [UsedImplicitly]
         public string GetExplanationForTooltip(StatRequest req)
         {
             StringBuilder stringBuilder = new StringBuilder();

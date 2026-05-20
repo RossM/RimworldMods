@@ -193,7 +193,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Hediff_SubstituteCapacity))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
         public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -230,7 +229,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Psycast))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
         public static void ShouldShowFor_Postfix(StatWorker __instance, StatRequest req, ref bool __result)
         {

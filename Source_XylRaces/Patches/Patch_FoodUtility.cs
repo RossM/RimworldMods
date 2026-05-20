@@ -46,7 +46,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch("TryAddIngestThought")]
         public static bool TryAddIngestThought_Prefix(
             Pawn ingester,

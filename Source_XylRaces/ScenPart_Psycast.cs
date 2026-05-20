@@ -7,7 +7,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class ScenPart_Psycast : ScenPart
     {
         private static IEnumerable<AbilityDef> PossiblePsycasts => possiblePsycastsInternal ??=

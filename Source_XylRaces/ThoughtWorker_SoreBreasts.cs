@@ -6,7 +6,7 @@ using XylXenos.Genes;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class ThoughtWorker_SoreBreasts : ThoughtWorker
     {
         private const int MaxSorenessLevel = 2;

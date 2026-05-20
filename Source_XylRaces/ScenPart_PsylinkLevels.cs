@@ -8,7 +8,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class ScenPart_PsylinkLevels : ScenPart
     {
         public int count = 1;

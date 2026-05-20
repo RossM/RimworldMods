@@ -4,7 +4,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class PawnRenderNode_NotFur(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree)
         : PawnRenderNode(pawn, props, tree)
     {

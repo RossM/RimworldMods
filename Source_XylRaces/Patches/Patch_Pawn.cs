@@ -27,7 +27,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_Pawn))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
         public static void HealthScale_Postfix(Pawn __instance, ref float __result)
         {
@@ -40,7 +39,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Psycast))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn.HasPsylink), MethodType.Getter)]
         public static bool HasPsylink_Prefix(Pawn __instance, ref bool __result)
         {
