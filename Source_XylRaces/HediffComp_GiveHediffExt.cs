@@ -19,7 +19,6 @@ namespace XylXenos
 
             public FloatRange severityRange = FloatRange.Zero;
             public bool inheritSeverity;
-            public bool scaleSeverityWithPartHealth;
             public bool sameBodyPart;
             public bool canAffectAnyLivePart;
             public bool allowDuplicates;
@@ -34,8 +33,6 @@ namespace XylXenos
 
             public bool ApplyTo(Pawn pawn, Hediff parent, List<Hediff> outAddedHediffs = null)
             {
-                float severityFraction = parent.Severity / GetMaxSeverity(pawn, parent);
-
                 bool success = false;
                 List<BodyPartDef> parts = sameBodyPart ? [parent.Part.def] : partsToAffect;
 
@@ -69,19 +66,10 @@ namespace XylXenos
                                 partRecord: bodyPartRecord, def: hediff,
                                 pawn: pawn);
 
-                        float severity;
-
                         if (inheritSeverity)
-                            severity = GetMaxSeverity(pawn, hediff2) * severityFraction;
+                            hediff2.Severity = parent.Severity;
                         else if (severityRange != FloatRange.Zero)
-                            severity = severityRange.RandomInRange;
-                        else
-                            severity = hediff2.Severity;
-
-                        if (scaleSeverityWithPartHealth && hediff2.Part != null)
-                            severity /= hediff2.Part.def.GetMaxHealth(pawn);
-
-                        hediff2.Severity = severity;
+                            hediff2.Severity = severityRange.RandomInRange;
 
                         pawn.health.AddHediff(hediff2);
                         outAddedHediffs?.Add(hediff2);
@@ -100,17 +88,6 @@ namespace XylXenos
                 }
 
                 return success;
-            }
-
-            private static float GetMaxSeverity(Pawn pawn, Hediff item)
-            {
-                if (item is Hediff_Injury)
-                    return item.Part.def.GetMaxHealth(pawn);
-                if (item.def.maxSeverity >= 0)
-                    return item.def.maxSeverity;
-                if (item.def.lethalSeverity >= 0)
-                    return item.def.lethalSeverity;
-                return 1f;
             }
         }
 

@@ -16,7 +16,7 @@ namespace XylXenos.Patches
             AccessTools.Field(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset)),
             HediffStage_partEfficiencyOffset_Wrapper);
 
-        [Feature(typeof(Hediff_Petrified))]
+        [Feature(typeof(HediffWithCompsExt))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         [HarmonyPatch(nameof(PawnCapacityUtility.CalculatePartEfficiency))]
@@ -39,8 +39,8 @@ namespace XylXenos.Patches
         public static float HediffStage_partEfficiencyOffset_Wrapper(HediffStage __instance, HediffSet diffSet)
         {
             var hediff = diffSet.hediffs.FirstOrDefault(hediff => hediff.CurStage == __instance);
-            if (hediff is Hediff_Petrified h)
-                return h.PartEfficiencyOffset;
+            if (hediff is HediffWithCompsExt ext)
+                return ext.PartEfficiencyOffset;
 
             return __instance.partEfficiencyOffset;
         }

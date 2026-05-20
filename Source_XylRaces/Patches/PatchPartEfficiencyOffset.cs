@@ -29,7 +29,7 @@ namespace XylXenos.Patches
         }
 
 
-        [Feature(typeof(Hediff_Petrified))]
+        [Feature(typeof(HediffWithCompsExt))]
         [HarmonyTranspiler]
         [UsedImplicitly]
         public static IEnumerable<CodeInstruction> Transpiler(
@@ -51,8 +51,8 @@ namespace XylXenos.Patches
         public static float HediffStage_partEfficiencyOffset_Wrapper(HediffStage __instance, object __caller)
         {
             var hediff = hediffGetter(__caller);
-            if (hediff is Hediff_Petrified h)
-                return h.PartEfficiencyOffset;
+            if (hediff is HediffWithCompsExt ext)
+                return ext.PartEfficiencyOffset;
 
             return __instance.partEfficiencyOffset;
         }

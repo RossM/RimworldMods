@@ -36,7 +36,6 @@
             <mtbDays>15</mtbDays>
             <hediff>XylPetrified</hediff>
             <severityRange>2~5</severityRange>
-            <scaleSeverityWithPartHealth>true</scaleSeverityWithPartHealth>
             <canAffectAnyLivePart>true</canAffectAnyLivePart>
             <allowDuplicates>true</allowDuplicates>
           </li>
@@ -45,7 +44,6 @@
             <minSeverity>0.4</minSeverity>
             <hediff>XylPetrified</hediff>
             <severityRange>5~10</severityRange>
-            <scaleSeverityWithPartHealth>true</scaleSeverityWithPartHealth>
             <canAffectAnyLivePart>true</canAffectAnyLivePart>
             <allowDuplicates>true</allowDuplicates>
           </li>
@@ -81,8 +79,6 @@
       <GeneDef>XylPetrification</GeneDef>
       <HediffDef>XylPetrification</HediffDef>
     </descriptionHyperlinks>
-    <initialSeverity>0.01</initialSeverity>
-    <maxSeverity>1.0</maxSeverity>
     <comps>
       <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
         <hediffs>

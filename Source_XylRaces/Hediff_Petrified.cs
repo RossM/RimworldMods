@@ -1,11 +1,14 @@
 ﻿using JetBrains.Annotations;
-using Verse;
 
 namespace XylXenos
 {
     [UsedImplicitly]
-    public class Hediff_Petrified : HediffWithComps
+    public class Hediff_Petrified : HediffWithCompsExt
     {
-        public virtual float PartEfficiencyOffset => CurStage.partEfficiencyOffset * Severity;
+        public virtual float RelativeSeverity => Severity / Part.def.GetMaxHealth(pawn);
+
+        public override float PartEfficiencyOffset => CurStage.partEfficiencyOffset * RelativeSeverity;
+
+        public override int CurStageIndex => def.StageAtSeverity(RelativeSeverity);
     }
 }
