@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
@@ -79,15 +78,18 @@ namespace XylXenos.Patches
                     {
                         tameChance *= 0.6f;
                     }
+
                     if (initiator.relations.DirectRelationExists(PawnRelationDefOf.Bond, recipient))
                     {
                         tameChance *= 4f;
                     }
+
                     if (initiator.Ideo != null && initiator.Ideo.IsVeneratedAnimal(recipient))
                     {
                         tameChance *= 2f;
                     }
                 }
+
                 if (Rand.Chance(tameChance))
                 {
                     if (GenGuest.TryEnslavePrisoner(initiator, recipient))
@@ -96,6 +98,7 @@ namespace XylXenos.Patches
                         {
                             letterDef = LetterDefOf.PositiveEvent;
                         }
+
                         letterLabel = "LetterLabelEnslavementSuccess".Translate() + ": " + recipient.LabelCap;
                         letterText = "LetterEnslavementSuccess".Translate(initiator, recipient);
                         letterDef = LetterDefOf.PositiveEvent;
@@ -104,6 +107,7 @@ namespace XylXenos.Patches
                         {
                             initiator.mindState.inspirationHandler.EndInspiration(InspirationDefOf.Inspired_Taming);
                         }
+
                         extraSentencePacks.Add(RulePackDefOf.Sentence_RecruitAttemptAccepted);
 
                         return true;

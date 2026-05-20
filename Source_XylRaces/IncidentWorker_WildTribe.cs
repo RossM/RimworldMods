@@ -98,7 +98,7 @@ namespace XylXenos
                     kind: PawnKindDefOf.WildMan,
                     faction: faction,
                     context: PawnGenerationContext.NonPlayer,
-                    forcedTraits: traits, 
+                    forcedTraits: traits,
                     developmentalStages: stage));
                 pawns.Add(pawn);
             }

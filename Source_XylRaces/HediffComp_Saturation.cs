@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Verse;
 
 namespace XylXenos
@@ -25,11 +20,11 @@ namespace XylXenos
     {
         public HediffCompProperties_Saturation Props => (HediffCompProperties_Saturation)props;
 
+        public override string CompLabelInBracketsExtra => (parent.Severity / parent.def.maxSeverity).ToStringPercent();
+
         public override float SeverityChangePerDay()
         {
             return Pawn.health.hediffSet.HasHediff(Props.sourceHediff) ? Props.severityGainPerDay : Props.severityLossPerDay;
         }
-
-        public override string CompLabelInBracketsExtra => (parent.Severity / parent.def.maxSeverity).ToStringPercent();
     }
 }

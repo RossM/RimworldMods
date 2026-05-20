@@ -42,7 +42,7 @@ namespace XylXenos.Patches
                 InstructionMatcher.MakeRedirectRule(
                     AccessTools.Method(typeof(List<ThingDefCount>), "Add"),
                     List_Add_Wrapper
-                    )
+                )
             }
         };
 

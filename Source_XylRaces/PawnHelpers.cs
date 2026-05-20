@@ -1,7 +1,6 @@
 using System.Linq;
 using Verse;
 using XylXenos.Genes;
-using XylXenos.Patches;
 
 namespace XylXenos;
 

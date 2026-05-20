@@ -36,7 +36,8 @@ namespace XylXenos
 
                 List<Hediff> addedHediffs = [];
                 List<BodyPartDef> parts = sameBodyPart ? [parent.Part.def] : partsToAffect;
-                HediffGiverUtility.TryApply(pawn, hediff, parts, canAffectAnyLivePart, countRange.RandomInRange, addedHediffs, useCoverage: false);
+                HediffGiverUtility.TryApply(pawn, hediff, parts, canAffectAnyLivePart, countRange.RandomInRange, addedHediffs,
+                    useCoverage: false);
                 foreach (Hediff item in addedHediffs)
                 {
                     if (inheritSeverity)
@@ -103,7 +104,7 @@ namespace XylXenos
 
             if (toTrigger.Count > 0)
                 Trigger(toTrigger);
-    
+
             toTrigger.Clear();
         }
 
