@@ -3,7 +3,7 @@
 <Defs>
   
   <HediffDef>
-    <defName>XylPetrificationActive</defName>
+    <defName>XylPetrification</defName>
     <hediffClass>HediffWithComps</hediffClass>
     <label>petrification</label>
     <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.</description>
@@ -25,6 +25,12 @@
             <triggeredOnRemoval>true</triggeredOnRemoval>
             <hediff>XylPetrificationDormant</hediff>
             <inheritSeverity>true</inheritSeverity>
+          </li>
+          <li>
+            <mtbDays>15</mtbDays>
+            <hediff>XylPetrified</hediff>
+            <severityRange>0.05~0.2</severityRange>
+            <canAffectAnyLivePart>true</canAffectAnyLivePart>
           </li>
           <li>
             <mtbDays>5</mtbDays>
@@ -85,7 +91,7 @@
         <hediffs>
           <li>
             <mtbDays>120</mtbDays>
-            <hediff>XylPetrificationActive</hediff>
+            <hediff>XylPetrification</hediff>
             <inheritSeverity>true</inheritSeverity>
             <disappearsAfterGiving>true</disappearsAfterGiving>
           </li>
@@ -115,7 +121,7 @@
     <description>This body part has been partially replaced with hard, rocky growths. They must be surgically removed to allow the part to heal.</description>
     <descriptionHyperlinks>
       <GeneDef>XylPetrification</GeneDef>
-      <HediffDef>XylPetrificationActive</HediffDef>
+      <HediffDef>XylPetrification</HediffDef>
     </descriptionHyperlinks>
     <initialSeverity>0.01</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
@@ -144,6 +150,7 @@
       <li>Neck</li>
       <li>Spine</li>
       <li>Torso</li>
+      <li>Heart</li>
     </onlyLifeThreateningTo>
     <stages>
       <li>
@@ -212,7 +219,7 @@
     <description>This body part has been completely replaced with hard, rocky growths. They can be surgically removed, but the body part is lost.</description>
     <descriptionHyperlinks>
       <GeneDef>XylPetrification</GeneDef>
-      <HediffDef>XylPetrificationActive</HediffDef>
+      <HediffDef>XylPetrification</HediffDef>
     </descriptionHyperlinks>
     <defaultLabelColor>(0.5, 0.5, 0.5)</defaultLabelColor>
     <comps>

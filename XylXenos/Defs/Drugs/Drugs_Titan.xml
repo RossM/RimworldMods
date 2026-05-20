@@ -2,6 +2,78 @@
 
 <Defs>
   
+  <ThingDef ParentName="MakeableDrugPillBase">
+    <defName>XylSoftener</defName>
+    <label>softener</label>
+    <description>A drug for preventing petrification before it takes hold. Must be taken every five days to remain effective.\n\nThis drug only prevents petrification from developing. It has no effect on an existing disease.</description>
+    <possessionCount>10</possessionCount>
+    <descriptionHyperlinks
+      ><HediffDef>XylSoftenerHigh</HediffDef>
+        </descriptionHyperlinks>
+    <graphicData>
+      <texPath>Things/Item/Drug/Penoxycyline</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+    </graphicData>
+    <socialPropernessMatters>false</socialPropernessMatters>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>1200</WorkToMake>
+      <MarketValue>36</MarketValue>
+      <Mass>0.005</Mass>
+      <Flammability>0.7</Flammability>
+    </statBases>
+    <techLevel>Industrial</techLevel>
+    <ingestible>
+      <drugCategory>Medical</drugCategory>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>XylSoftenerHigh</hediffDef>
+          <severity>1.0</severity>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <recipeMaker>
+      <!--<researchPrerequisite>PenoxycylineProduction</researchPrerequisite>-->
+      <recipeUsers>
+        <li>DrugLab</li>
+      </recipeUsers>
+      <displayPriority>3000</displayPriority>
+    </recipeMaker>
+    <costList>
+      <Neutroamine>4</Neutroamine>
+    </costList>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <listOrder>2000</listOrder>
+        <overdoseSeverityOffset>0.08~0.14</overdoseSeverityOffset>
+      </li>
+    </comps>
+  </ThingDef>
+  
+  <HediffDef>
+    <defName>XylSoftenerHigh</defName>
+    <hediffClass>Hediff_High</hediffClass>
+    <label>softener</label>
+    <description>Softener-induced immunity to petrification. This drug only prevents petrification from developing. It has no effect on an existing disease, even if it is currently dormant.</description>
+    <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
+    <scenarioCanAdd>true</scenarioCanAdd>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-0.18</severityPerDay>
+        <showHoursToRecover>true</showHoursToRecover>
+      </li>
+    </comps>
+      <stages>
+        <li>
+          <makeImmuneTo>
+            <li>XylPetrification</li>
+          </makeImmuneTo>
+        </li>
+      </stages>
+  </HediffDef>
+  
   <ThingDef ParentName="DrugPillBase">
     <defName>XylAtlasite</defName>
     <label>atlasite</label>
@@ -38,7 +110,7 @@
       <li Class="CompProperties_Drug">
         <chemical>XylAtlasite</chemical>
         <isCombatEnhancingDrug>true</isCombatEnhancingDrug>
-        <listOrder>2000</listOrder>
+        <listOrder>2200</listOrder>
       </li>
     </comps>
     <tradeTags>
