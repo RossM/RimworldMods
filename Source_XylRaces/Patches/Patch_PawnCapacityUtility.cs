@@ -1,13 +1,8 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+using HarmonyLib;
+using JetBrains.Annotations;
 using TranspilerUtil;
 using Verse;
 
@@ -17,15 +12,9 @@ namespace XylXenos.Patches
     public static class Patch_PawnCapacityUtility
 
     {
-        private static readonly InstructionMatcher Fixup_HediffStage_partEfficiencyOffset = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Field(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset)),
-                    HediffStage_partEfficiencyOffset_Wrapper)
-            }
-        };
+        private static readonly InstructionMatcher.Rule Rule_HediffStage_partEfficiencyOffset = InstructionMatcher.MakeRedirectRule(
+            AccessTools.Field(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset)),
+            HediffStage_partEfficiencyOffset_Wrapper);
 
         [Feature(typeof(Hediff_Petrified))]
         [HarmonyTranspiler]
@@ -37,7 +26,13 @@ namespace XylXenos.Patches
             MethodBase method)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_HediffStage_partEfficiencyOffset.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher()
+            {
+                Rules =
+                {
+                    Rule_HediffStage_partEfficiencyOffset
+                }
+            }.MatchAndReplace(method, ref instructionsList, generator);
             return instructionsList;
         }
 
