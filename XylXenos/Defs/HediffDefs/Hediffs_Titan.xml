@@ -203,13 +203,14 @@
         <lifeThreatening>true</lifeThreatening>
       </li>
     </stages>
+    <spawnThingOnRemoved>ChunkLimestone</spawnThingOnRemoved>
   </HediffDef>
   
   <RecipeDef ParentName="SurgeryFlesh">
     <defName>XylExcisePetrifiedFlesh</defName>
     <label>excise petrified flesh</label>
     <description>Excise petrified flesh.</description>
-    <workerClass>Recipe_RemoveHediff</workerClass>
+    <workerClass>XylXenos.Recipe_RemoveHediff_Petrified</workerClass>
     <jobString>Excising petrified flesh.</jobString>
     <workAmount>3000</workAmount>
     <removesHediff>XylPetrified</removesHediff>

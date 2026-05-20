@@ -52,8 +52,6 @@ namespace XylXenos
 
         public static JobDef XylTakeShower;
 
-        public static HediffDef XylPetrifiedTotal;
-
         #endregion
     }
 }
