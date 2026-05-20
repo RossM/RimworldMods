@@ -129,13 +129,6 @@
       <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
         <hediffs>
           <li>
-            <minSeverity>1</minSeverity>
-            <hediff>XylPetrifiedTotal</hediff>
-            <inheritSeverity>true</inheritSeverity>
-            <sameBodyPart>true</sameBodyPart>
-            <disappearsAfterGiving>true</disappearsAfterGiving>
-          </li>
-          <li>
             <triggeredOnRemoval>true</triggeredOnRemoval>
             <hediff>SurgicalCut</hediff>
             <inheritSeverity>true</inheritSeverity>
@@ -205,37 +198,13 @@
       </li>
       <li>
         <minSeverity>1.0</minSeverity>
-        <label>extreme</label>
+        <label>total</label>
         <partEfficiencyOffset>-1.0</partEfficiencyOffset>
         <lifeThreatening>true</lifeThreatening>
       </li>
     </stages>
   </HediffDef>
   
-  <HediffDef ParentName="AddedBodyPartBase">
-    <defName>XylPetrifiedTotal</defName>
-    <label>petrified</label>
-    <labelNoun>petrified part</labelNoun>
-    <description>This body part has been completely replaced with hard, rocky growths. They can be surgically removed, but the body part is lost.</description>
-    <descriptionHyperlinks>
-      <GeneDef>XylPetrification</GeneDef>
-      <HediffDef>XylPetrification</HediffDef>
-    </descriptionHyperlinks>
-    <defaultLabelColor>(0.5, 0.5, 0.5)</defaultLabelColor>
-    <comps>
-    </comps>
-    <spawnThingOnRemoved>ChunkLimestone</spawnThingOnRemoved>
-    <addedPartProps>
-      <solid>true</solid>
-      <partEfficiency>0</partEfficiency>
-    </addedPartProps>
-    <stages>
-      <li>
-        <label>total</label>
-      </li>
-    </stages>
-  </HediffDef>
-
   <RecipeDef ParentName="SurgeryFlesh">
     <defName>XylExcisePetrifiedFlesh</defName>
     <label>excise petrified flesh</label>
