@@ -199,6 +199,7 @@
         <label>total</label>
         <partEfficiencyOffset>-1.0</partEfficiencyOffset>
         <lifeThreatening>true</lifeThreatening>
+        <overrideTooltip>This body part has been completely replaced with hard, rocky growths and no longer functions. It can be surgically removed.</overrideTooltip>
       </li>
     </stages>
     <spawnThingOnRemoved>ChunkLimestone</spawnThingOnRemoved>
