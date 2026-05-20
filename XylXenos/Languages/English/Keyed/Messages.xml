@@ -64,5 +64,8 @@
   <XylNewRecipes>New recipes</XylNewRecipes>
   <XylNewBuildings>New buildables</XylNewBuildings>
   <XylPossibleMentalBreak>Possible mental break</XylPossibleMentalBreak>
+  <XylBecomesDormantAtTotalTendQuality>Becomes dormant at total tend quality</XylBecomesDormantAtTotalTendQuality>
+  <XylGrowthStateActive>active</XylGrowthStateActive>
+  <XylGrowthStateDormant>dormant</XylGrowthStateDormant>
 
 </LanguageData>

@@ -97,6 +97,8 @@ namespace XylXenos
                     continue;
                 if (parent.Severity < hediff.minSeverity)
                     continue;
+                if (parent.GetComp<HediffComp_GrowthMode_Petrification>()?.growthMode == PetrificationGrowthMode.Dormant)
+                    continue;
                 if (hediff.mtbDays > 0 && !Rand.MTBEventOccurs(hediff.mtbDays, GenDate.TicksPerDay, delta))
                     continue;
                 toTrigger.Add(hediff);
@@ -178,6 +180,25 @@ namespace XylXenos
                 TaggedString label = Props.letterLabel.Formatted(Pawn.Named("PAWN"), organs.Named("ORGANS"));
                 TaggedString text = Props.letterText.Formatted(Pawn.Named("PAWN"), organs.Named("ORGANS"));
                 Find.LetterStack.ReceiveLetter(label, text, Props.letterDef ?? LetterDefOf.NegativeEvent, Pawn);
+            }
+        }
+
+        public override IEnumerable<Gizmo> CompGetGizmos()
+        {
+            if (!DebugSettings.godMode)
+                yield break;
+
+            for (var index = 0; index < Props.hediffs.Count; index++)
+            {
+                HediffCompProperties_GiveHediffExt.TriggeredHediff hediff = Props.hediffs[index];
+                yield return new Command_Action()
+                {
+                    defaultLabel = parent.Part != null
+                        ? $"DEV: Trigger {parent.LabelBase} ({parent.Part?.Label}) #{index}"
+                        : $"DEV: Trigger {parent.LabelBase} #{index}",
+                    action = () => Trigger([hediff]),
+                    groupable = false,
+                };
             }
         }
     }

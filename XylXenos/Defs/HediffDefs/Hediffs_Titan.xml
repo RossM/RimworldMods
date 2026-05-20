@@ -4,7 +4,7 @@
   
   <HediffDef>
     <defName>XylPetrification</defName>
-    <hediffClass>HediffWithComps</hediffClass>
+    <hediffClass>XylXenos.Hediff_Petrification</hediffClass>
     <label>petrification</label>
     <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.</description>
     <descriptionHyperlinks>
@@ -18,13 +18,20 @@
     <everCurableByItem>false</everCurableByItem>
     <tendable>true</tendable>
     <comps>
+      <li Class="XylXenos.HediffCompProperties_GrowthMode_Petrification">
+        <severityPerDayRange>0.008~0.012</severityPerDayRange>
+        <becomeActiveMtbDays>120</becomeActiveMtbDays>
+        <messageBecomeActive>{PAWN_labelShort}'s petrification has become active.</messageBecomeActive>
+        <messageBecomeDormant>{PAWN_labelShort}'s petrification has gone dormant.</messageBecomeDormant>
+        <tipStringDormant>The disease is currently dormant, but could become active at any time.</tipStringDormant>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_TendDuration_Petrification">
+        <baseTendDurationHours>120</baseTendDurationHours>
+        <severityPerDayTended>0.01</severityPerDayTended>
+        <changeModeAtTotalTendQuality>3</changeModeAtTotalTendQuality>
+      </li>
       <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
         <hediffs>
-          <li>
-            <triggeredOnRemoval>true</triggeredOnRemoval>
-            <hediff>XylPetrificationDormant</hediff>
-            <inheritSeverity>true</inheritSeverity>
-          </li>
           <li>
             <mtbDays>15</mtbDays>
             <hediff>XylPetrified</hediff>
@@ -40,73 +47,22 @@
           </li>
         </hediffs>
       </li>
-      <li Class="HediffCompProperties_SeverityPerDay">
-        <severityPerDayRange>0.008~0.012</severityPerDayRange>
-      </li>
-      <li Class="HediffCompProperties_TendDuration">
-        <baseTendDurationHours>120</baseTendDurationHours>
-        <severityPerDayTended>0.01</severityPerDayTended>
-        <disappearsAtTotalTendQuality>3</disappearsAtTotalTendQuality>
-      </li>
     </comps>
     <stages>
       <li>
-        <label>active, minor</label>
+        <label>minor</label>
         <painOffset>0.1</painOffset>
       </li>
       <li>
         <minSeverity>0.4</minSeverity>
-        <label>active, major</label>
+        <label>major</label>
         <painOffset>0.2</painOffset>
       </li>
       <li>
         <minSeverity>0.8</minSeverity>
-        <label>active, extreme</label>
+        <label>extreme</label>
         <painOffset>0.4</painOffset>
         <lifeThreatening>true</lifeThreatening>
-      </li>
-    </stages>
-  </HediffDef>
-
-  <HediffDef>
-    <defName>XylPetrificationDormant</defName>
-    <hediffClass>HediffWithComps</hediffClass>
-    <label>petrification</label>
-    <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.\n\nThe disease is currently inactive, but could recur at any time.</description>
-    <descriptionHyperlinks>
-      <GeneDef>XylPetrification</GeneDef>
-    </descriptionHyperlinks>
-    <initialSeverity>0.01</initialSeverity>
-    <lethalSeverity>1.0</lethalSeverity>
-    <minSeverity>0.01</minSeverity>
-    <maxSeverity>1.0</maxSeverity>
-    <alwaysShowSeverity>true</alwaysShowSeverity>
-    <everCurableByItem>false</everCurableByItem>
-    <comps>
-      <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
-        <letterLabel>Petrification: {PAWN_labelShort}</letterLabel>
-        <letterText>{PAWN_labelShort}'s petrification has become active again. Parts of {PAWN_possessive} body will slowly develop hard, rock-like growths. There is no cure, but medical treatment can slow the progression, and the growths can be surgically removed.\n\nIf {PAWN_labelShort} isn't given high-quality medical care for the rest of {PAWN_possessive} life, the disease will eventually become fatal.</letterText>
-        <hediffs>
-          <li>
-            <mtbDays>120</mtbDays>
-            <hediff>XylPetrification</hediff>
-            <inheritSeverity>true</inheritSeverity>
-            <disappearsAfterGiving>true</disappearsAfterGiving>
-          </li>
-        </hediffs>
-      </li>
-    </comps>
-    <stages>
-      <li>
-        <label>dormant, minor</label>
-      </li>
-      <li>
-        <minSeverity>0.4</minSeverity>
-        <label>dormant, major</label>
-      </li>
-      <li>
-        <minSeverity>0.8</minSeverity>
-        <label>dormant, extreme</label>
       </li>
     </stages>
   </HediffDef>
