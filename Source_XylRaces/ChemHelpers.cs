@@ -34,7 +34,6 @@ public static class ChemHelpers
     }
 
     [DebugOutput("Economy")]
-    [UsedImplicitly]
     public static void DrugGeneRequirements()
     {
         TableDataGetter<ThingDef>[] columns =

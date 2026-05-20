@@ -10,7 +10,6 @@ namespace XylXenos
     public static class DebugOutputs
     {
         [DebugOutput]
-        [UsedImplicitly]
         public static void GeneDisplayOrder()
         {
             TableDataGetter<GeneDef>[] columns =
@@ -29,7 +28,6 @@ namespace XylXenos
         }
 
         [DebugOutput]
-        [UsedImplicitly]
         public static void FactionXenotypes()
         {
             List<TableDataGetter<FactionDef>> columns =
@@ -62,7 +60,6 @@ namespace XylXenos
         }
 
         [DebugOutput]
-        [UsedImplicitly]
         public static void PawnKindXenotypes()
         {
             List<TableDataGetter<PawnKindDef>> columns =
@@ -96,7 +93,6 @@ namespace XylXenos
         }
 
         [DebugOutput]
-        [UsedImplicitly]
         public static void XenotypeSkillAptitudes()
         {
             List<TableDataGetter<XenotypeDef>> columns =

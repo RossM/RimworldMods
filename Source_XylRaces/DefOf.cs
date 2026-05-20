@@ -5,7 +5,6 @@ using Verse;
 namespace XylXenos
 {
     [RimWorld.DefOf]
-    [UsedImplicitly]
     public static class DefOf
     {
         static DefOf()
