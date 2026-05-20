@@ -13,7 +13,6 @@ namespace XylXenos.Patches
     {
         [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(NutritionForEater))]
         public static void NutritionForEater_Postfix(Pawn eater, Thing food, ref float __result)
         {
@@ -22,7 +21,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(FoodOptimality))]
         public static void FoodOptimality_Postfix(
             Pawn eater,

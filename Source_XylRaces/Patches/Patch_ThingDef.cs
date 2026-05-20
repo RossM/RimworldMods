@@ -16,7 +16,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Flight))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(ThingDef.SpecialDisplayStats))]
         public static void SpecialDisplayStats_Postfix(ThingDef __instance, ref IEnumerable<StatDrawEntry> __result)
         {

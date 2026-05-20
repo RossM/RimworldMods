@@ -48,7 +48,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(IStartingItemSource))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("GeneratePossessions")]
         public static IEnumerable<CodeInstruction> GeneratePossessions_Transpiler(
             IEnumerable<CodeInstruction> instructions,

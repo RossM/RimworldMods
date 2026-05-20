@@ -37,6 +37,8 @@ namespace XylXenos
 
                     if ((hasPrefix || hasPostfix || hasTranspiler) && !hasFeature)
                         Log.Warning($"{type.Name}::{method.Name} is missing a [Feature] attribute");
+                    if (!(hasPrefix || hasPostfix || hasTranspiler) && hasFeature)
+                        Log.Warning($"{type.Name}::{method.Name} has [Feature] but no Harmony attribute");
 
                     if (hasPrefix && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
                         Log.Warning($"{type.Name}::{method.Name} should be named with _Prefix");

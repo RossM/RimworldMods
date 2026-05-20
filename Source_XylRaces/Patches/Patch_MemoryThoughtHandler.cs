@@ -10,7 +10,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(ThoughtDefExtension_Memory))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(MemoryThoughtHandler.TryGainMemory), [typeof(Thought_Memory), typeof(Pawn)])]
         public static void TryGainMemory_Postfix(MemoryThoughtHandler __instance, Thought_Memory newThought, Pawn otherPawn)
         {

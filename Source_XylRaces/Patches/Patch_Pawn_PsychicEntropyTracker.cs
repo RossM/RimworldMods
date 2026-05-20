@@ -10,7 +10,6 @@ namespace XylXenos.Patches
         // Note: This patch is performance-sensitive
         [Feature(typeof(Psycast))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedsPsyfocus), MethodType.Getter)]
         public static bool NeedsPsyfocus_Prefix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
         {
@@ -20,7 +19,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Psycast))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedToShowGizmo))]
         public static bool NeedToShowGizmo_Prefix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
         {

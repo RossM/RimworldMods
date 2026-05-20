@@ -41,7 +41,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeed")]
         public static IEnumerable<CodeInstruction> CanBreastfeed_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -62,7 +61,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
         public static IEnumerable<CodeInstruction> CanBreastfeedNow_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -83,7 +81,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
         public static IEnumerable<CodeInstruction> SuckleFromLactatingPawn_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -104,7 +101,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
         public static IEnumerable<CodeInstruction> QuestPartTick_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -125,7 +121,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
         public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -146,7 +141,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Hyperlactation))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
         public static IEnumerable<CodeInstruction> DrawRow_Transpiler(
             IEnumerable<CodeInstruction> instructions,

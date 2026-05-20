@@ -49,7 +49,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(DefOf.XylTakeShower))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("ParallelGetPreRenderResults")]
         public static IEnumerable<CodeInstruction> ParallelGetPreRenderResults_Transpiler(
             IEnumerable<CodeInstruction> instructions,

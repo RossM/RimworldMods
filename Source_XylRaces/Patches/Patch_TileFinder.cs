@@ -11,7 +11,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(FactionDefExtension))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor),
             [typeof(PlanetLayer), typeof(Faction), typeof(bool), typeof(Predicate<PlanetTile>)])]
         public static void RandomSettlementTileFor_Prefix(

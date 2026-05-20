@@ -11,7 +11,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(Flight))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(JobGiver_OptimizeApparel.ApparelScoreRaw))]
         public static bool ApparelScoreRaw_Prefix(Pawn pawn, Apparel ap, ref float __result)
         {

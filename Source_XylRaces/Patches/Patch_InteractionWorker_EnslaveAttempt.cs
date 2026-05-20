@@ -19,7 +19,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(DefOf.XylWillFallRate))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
         public static IEnumerable<CodeInstruction> Interacted_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -46,7 +45,8 @@ namespace XylXenos.Patches
             return value;
         }
 
-        [Feature(typeof(GeneDefExtension_WildMan))]
+        // TODO this does not do anything because it has no harmony attributes..
+        //[Feature(typeof(GeneDefExtension_WildMan))]
         public static bool Interacted_Prefix(
             Pawn initiator,
             Pawn recipient,

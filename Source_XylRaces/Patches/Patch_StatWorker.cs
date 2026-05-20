@@ -164,7 +164,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Hediff_SubstituteCapacity))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
         public static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(
             IEnumerable<CodeInstruction> instructions,

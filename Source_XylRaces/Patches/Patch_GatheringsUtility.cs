@@ -10,7 +10,6 @@ namespace XylXenos.Patches
     {
         [Feature(Config.Feature.Joyless)]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(GatheringsUtility.ShouldPawnKeepGathering))]
         public static bool ShouldPawnKeepGathering_Prefix(Pawn p, GatheringDef gatheringDef, ref bool __result)
         {

@@ -10,7 +10,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(ChemicalDefExtension))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch("GetSingleOptionFor")]
         public static bool GetSingleOptionFor_Prefix(
             FloatMenuOptionProvider_Ingest __instance,

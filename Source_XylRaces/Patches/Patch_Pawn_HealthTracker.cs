@@ -10,7 +10,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(AddHediff))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_HealthTracker.CheckForStateChange))]
         public static void CheckForStateChange_Postfix(Pawn_HealthTracker __instance)
         {

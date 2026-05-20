@@ -15,7 +15,6 @@ namespace XylXenos.Patches
         // Note: This patch is performance-sensitive
         [Feature(typeof(GeneDefExtension_Pawn))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
         public static void BodySize_Postfix(Pawn __instance, ref float __result)
         {

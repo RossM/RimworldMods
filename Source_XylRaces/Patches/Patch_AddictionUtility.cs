@@ -10,7 +10,6 @@ namespace XylXenos.Patches
     {
         [Feature(nameof(DefOf.XylDrugEffectMultiplier))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(AddictionUtility.ModifyChemicalEffectForToleranceAndBodySize))]
         public static bool ModifyChemicalEffectForToleranceAndBodySize_Prefix(
             Pawn pawn,
@@ -28,7 +27,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(DefOf.XylDrugEffectMultiplier))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(AddictionUtility.ModifyChemicalEffectForToleranceAndBodySize))]
         public static void ModifyChemicalEffectForToleranceAndBodySize_Postfix(Pawn pawn, ref float effect)
         {
@@ -37,7 +35,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(DefOf.XylDrugEffectMultiplier))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(AddictionUtility.CanBingeOnNow))]
         public static bool CanBingeOnNow_Prefix(
             Pawn pawn,

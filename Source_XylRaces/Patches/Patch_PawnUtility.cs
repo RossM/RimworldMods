@@ -36,7 +36,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(ChemicalDefExtension))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(PawnUtility.CanTakeDrug))]
         public static bool CanTakeDrug_Prefix(Pawn pawn, ThingDef drug, ref bool __result)
         {
@@ -49,7 +48,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(Pawn), typeof(Thing), typeof(float)])]
         public static IEnumerable<CodeInstruction> GetManhunterOnDamageChance_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -69,7 +67,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         public static IEnumerable<CodeInstruction> GetManhunterOnDamageChanceExplanation_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -91,7 +88,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(Pawn)])]
         public static IEnumerable<CodeInstruction> GetManhunterOnTameFailChance_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -111,7 +107,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
         public static IEnumerable<CodeInstruction> GetManhunterOnTameFailChanceExplanation_Transpiler(
             IEnumerable<CodeInstruction> instructions,

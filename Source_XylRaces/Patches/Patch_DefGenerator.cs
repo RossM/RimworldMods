@@ -10,7 +10,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(GeneDefGenerator_Psy))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(DefGenerator.GenerateImpliedDefs_PreResolve))]
         public static void GenerateImpliedDefs_PreResolve_Postfix(bool hotReload)
         {

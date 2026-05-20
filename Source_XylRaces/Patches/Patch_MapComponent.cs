@@ -9,7 +9,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(MapComponent.FinalizeInit))]
         public static void FinalizeInit_Postfix(MapComponent __instance)
         {

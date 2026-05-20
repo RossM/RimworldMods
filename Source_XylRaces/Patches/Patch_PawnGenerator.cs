@@ -33,7 +33,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_GenderRatio))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("TryGenerateNewPawnInternal")]
         public static IEnumerable<CodeInstruction> TryGenerateNewPawnInternal_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -77,7 +76,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_CongenitalHediff))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch("GenerateInitialHediffs")]
         public static void GenerateInitialHediffs_Postfix(Pawn pawn, PawnGenerationRequest request)
         {
@@ -93,7 +91,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(XenotypeSetWithDefault))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
         public static IEnumerable<CodeInstruction> XenotypesAvailableFor_Transpiler(
             IEnumerable<CodeInstruction> instructions,

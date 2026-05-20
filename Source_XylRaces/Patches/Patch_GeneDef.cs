@@ -19,7 +19,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("GetDescriptionFull")]
         public static IEnumerable<CodeInstruction> GetDescriptionFull_Transpiler(
             IEnumerable<CodeInstruction> instructions,

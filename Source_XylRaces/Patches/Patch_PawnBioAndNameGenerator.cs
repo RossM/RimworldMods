@@ -28,7 +28,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(XenotypeDefExtension))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
         public static IEnumerable<CodeInstruction> GiveAppropriateBioAndNameTo_Transpiler(
             IEnumerable<CodeInstruction> instructions,

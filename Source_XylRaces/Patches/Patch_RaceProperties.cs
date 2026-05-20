@@ -43,7 +43,6 @@ namespace XylXenos.Patches
 
         [Feature(Config.Feature.FixLactationBugs)]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
         public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -84,7 +83,6 @@ namespace XylXenos.Patches
 
         [Feature(Config.Feature.FixLactationBugs)]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]
         static bool GetTotalNutritionNeededPerDay_Prefix(Pawn p, ref string __result)
         {

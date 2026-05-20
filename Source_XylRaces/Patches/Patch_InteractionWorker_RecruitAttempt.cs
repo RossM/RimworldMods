@@ -18,7 +18,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(DefOf.XylResistanceFallRate))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(InteractionWorker_RecruitAttempt.Interacted))]
         public static IEnumerable<CodeInstruction> Interacted_Transpiler(
             IEnumerable<CodeInstruction> instructions,

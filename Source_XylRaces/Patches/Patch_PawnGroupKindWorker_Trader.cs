@@ -14,7 +14,6 @@ namespace XylXenos.Patches
     {
         [Feature(nameof(DefOf.XylTribeGentleNixie))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch("GenerateCarriers")]
         public static bool GenerateCarriers_Prefix(
             PawnGroupMakerParms parms,

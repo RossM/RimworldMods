@@ -60,7 +60,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_SlaveRebellion))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
         public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)
         {
@@ -88,7 +87,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_SlaveRebellion))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
         public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(
             IEnumerable<CodeInstruction> instructions,

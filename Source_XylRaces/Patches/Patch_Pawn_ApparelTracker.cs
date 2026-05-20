@@ -9,7 +9,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_ApparelTracker.Notify_ApparelChanged))]
         public static void Notify_ApparelChanged_Postfix(Pawn_ApparelTracker __instance)
         {

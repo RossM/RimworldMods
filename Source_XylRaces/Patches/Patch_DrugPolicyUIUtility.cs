@@ -18,7 +18,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_Chemicals))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
         public static IEnumerable<CodeInstruction> DoAssignDrugPolicyButtons_Transpiler(
             IEnumerable<CodeInstruction> instructions,

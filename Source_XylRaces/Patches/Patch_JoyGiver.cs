@@ -11,7 +11,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(GeneDefExtension_JoyGivers))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(JoyGiver.GetChance))]
         public static void GetChance_Postfix(JoyGiver __instance, Pawn pawn, ref float __result)
         {

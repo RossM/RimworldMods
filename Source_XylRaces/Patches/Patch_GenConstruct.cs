@@ -19,7 +19,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_Designator))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
         public static IEnumerable<CodeInstruction> CanConstruct_Transpiler(
             IEnumerable<CodeInstruction> instructions,

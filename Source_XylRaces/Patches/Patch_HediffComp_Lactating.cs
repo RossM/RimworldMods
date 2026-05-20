@@ -10,7 +10,6 @@ namespace XylXenos.Patches
     {
         [Feature(Config.Feature.FixLactationBugs)]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(HediffComp_Lactating.TryCharge))]
         public static void TryCharge_Prefix(HediffComp_Lactating __instance, ref float desiredChargeAmount)
         {

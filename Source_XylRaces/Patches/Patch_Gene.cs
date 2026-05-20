@@ -9,7 +9,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Gene.PostAdd))]
         public static void PostAdd_Postfix(Gene __instance)
         {

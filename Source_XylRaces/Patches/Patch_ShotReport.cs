@@ -12,7 +12,6 @@ namespace XylXenos.Patches
     {
         [Feature(nameof(DefOf.XylEcholocation))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(ShotReport.HitFactorFromShooter))]
         public static bool HitFactorFromShooter_Prefix(Thing caster, float distance, float? acc, ref float __result)
         {
@@ -34,7 +33,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(DefOf.XylEcholocation))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(ShotReport.HitReportFor))]
         public static void HitReportFor_Postfix(Thing caster, Verb verb, LocalTargetInfo target, ref ShotReport __result)
         {
@@ -52,7 +50,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(DefOf.XylRangedDodgeChance))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(ShotReport.GetTextReadout))]
         public static void GetTextReadout_Postfix(ShotReport __instance, ref string __result)
         {

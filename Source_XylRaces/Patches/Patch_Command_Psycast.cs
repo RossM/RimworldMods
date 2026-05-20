@@ -19,7 +19,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Psycast))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("DisabledCheck")]
         public static IEnumerable<CodeInstruction> DisabledCheck_Transpiler(
             IEnumerable<CodeInstruction> instructions,

@@ -18,7 +18,6 @@ namespace XylXenos.Patches
 
         [Feature(Config.Feature.FixLactationBugs)]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("FoodFallPerTickAssumingCategory")]
         public static IEnumerable<CodeInstruction> FoodFallPerTickAssumingCategory_Transpiler(
             IEnumerable<CodeInstruction> instructions,

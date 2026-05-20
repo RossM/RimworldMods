@@ -16,7 +16,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(XenotypeSetWithDefault))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(FactionDef.Description), MethodType.Getter)]
         public static IEnumerable<CodeInstruction> Description_Transpiler(
             IEnumerable<CodeInstruction> instructions,

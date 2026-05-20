@@ -18,7 +18,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Psycast))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("GizmoDisabled")]
         public static IEnumerable<CodeInstruction> GizmoDisabled_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -38,7 +37,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Psycast))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("CanCast", MethodType.Getter)]
         public static IEnumerable<CodeInstruction> CanCast_Transpiler(
             IEnumerable<CodeInstruction> instructions,

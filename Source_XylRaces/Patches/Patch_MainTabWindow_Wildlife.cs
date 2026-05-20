@@ -12,7 +12,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(IncidentWorker_WildTribe))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch("Pawns", MethodType.Getter)]
         public static bool Pawns_Prefix(MainTabWindow_Wildlife __instance, ref IEnumerable<Pawn> __result)
         {

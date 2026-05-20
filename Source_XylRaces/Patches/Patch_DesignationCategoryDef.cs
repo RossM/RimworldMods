@@ -14,7 +14,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(GeneDefExtension_Designator))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(DesignationCategoryDef.ResolvedAllowedDesignators), MethodType.Getter)]
         public static void ResolvedAllowedDesignators_Postfix(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
         {
@@ -23,7 +22,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_Designator))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(DesignationCategoryDef.AllResolvedAndIdeoDesignators), MethodType.Getter)]
         public static void AllResolvedAndIdeoDesignators_Postfix(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
         {

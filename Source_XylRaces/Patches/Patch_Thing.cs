@@ -20,7 +20,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(DietDependency))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch("IngestedCalculateAmounts")]
         public static void IngestedCalculateAmounts_Prefix(Thing __instance, Pawn ingester, ref float nutritionWanted)
         {

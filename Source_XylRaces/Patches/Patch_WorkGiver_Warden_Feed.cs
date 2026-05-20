@@ -12,7 +12,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(Hediff_DietDependency))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(WorkGiver_Warden_Feed.JobOnThing))]
         public static void JobOnThing_Postfix(WorkGiver_Warden_Feed __instance, Pawn pawn, Thing t, bool forced, ref Job __result)
         {

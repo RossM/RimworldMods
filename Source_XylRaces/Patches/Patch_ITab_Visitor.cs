@@ -38,7 +38,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(StatDefOf.SlaveSuppressionFallRate))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("DoSlaveTab")]
         public static IEnumerable<CodeInstruction> DoSlaveTab_Transpiler(
             IEnumerable<CodeInstruction> instructions,

@@ -10,7 +10,6 @@ namespace XylXenos.Patches
     {
         [Feature(nameof(DefOf.XylRangedDodgeChance))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Bullet.Impact))]
         public static void Impact_Prefix(Bullet __instance, ref Thing hitThing, bool blockedByShield)
         {

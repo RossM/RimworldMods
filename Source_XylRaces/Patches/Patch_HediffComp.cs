@@ -9,7 +9,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(HediffComp.CompPostPostAdd))]
         public static void CompPostPostAdd_Postfix(HediffComp __instance)
         {

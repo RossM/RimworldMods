@@ -19,7 +19,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(DefModExtension_GeneDependent))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
         public static IEnumerable<CodeInstruction> AvailableNow_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -45,7 +44,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(DefModExtension_GeneDependent))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
         public static void AvailableNow_Postfix(RecipeDef __instance, ref bool __result)
         {

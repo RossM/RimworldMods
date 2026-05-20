@@ -9,7 +9,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(HediffSet.DirtyCache))]
         public static void DirtyCache_Postfix(HediffSet __instance)
         {

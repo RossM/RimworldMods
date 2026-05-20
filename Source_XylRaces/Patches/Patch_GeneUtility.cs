@@ -11,7 +11,6 @@ namespace XylXenos.Patches
     {
         [Feature(nameof(DietDependency))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(GeneUtility.SatisfyChemicalGenes))]
         public static void SatisfyChemicalGenes_Postfix(Pawn pawn)
         {

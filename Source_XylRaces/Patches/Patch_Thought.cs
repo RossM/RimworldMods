@@ -10,7 +10,6 @@ namespace XylXenos.Patches
     {
         [Feature(Config.Feature.UIChange)]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Thought.Description), MethodType.Getter)]
         public static void Description_Postfix(Thought __instance, ref string __result)
         {

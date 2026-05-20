@@ -18,7 +18,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(DefOf.XylGlobalAddictionChanceFactor), nameof(ChemicalDefExtension))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
         public static bool AddictionChanceFactor_Prefix(Pawn_GeneTracker __instance, ChemicalDef chemical, out float __result)
         {
@@ -31,7 +30,6 @@ namespace XylXenos.Patches
 
         [Feature(nameof(DefOf.XylGlobalAddictionChanceFactor), nameof(ChemicalDefExtension))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
         public static void AddictionChanceFactor_Postfix(Pawn_GeneTracker __instance, ref float __result)
         {

@@ -12,7 +12,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(Flight))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
         public static bool Notify_JobStarted_Prefix(Pawn_FlightTracker __instance, Job job)
         {

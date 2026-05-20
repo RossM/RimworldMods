@@ -9,7 +9,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(ThingComp.Initialize))]
         public static void Initialize_Postfix(ThingComp __instance)
         {

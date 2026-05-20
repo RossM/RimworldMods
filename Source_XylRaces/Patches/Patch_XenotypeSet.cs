@@ -16,7 +16,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(XenotypeSetWithDefault))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(XenotypeSet.BaselinerChance), MethodType.Getter)]
         public static IEnumerable<CodeInstruction> BaselinerChance_Transpiler(
             IEnumerable<CodeInstruction> instructions,
@@ -36,7 +35,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(XenotypeSetWithDefault))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(XenotypeSet.Contains))]
         public static IEnumerable<CodeInstruction> Contains_Transpiler(
             IEnumerable<CodeInstruction> instructions,

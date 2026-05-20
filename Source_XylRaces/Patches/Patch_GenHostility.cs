@@ -17,7 +17,6 @@ namespace XylXenos.Patches
         // Note: This patch is performance-sensitive
         [Feature(typeof(GeneDefExtension_HostilityOverride))]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
         public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
         {

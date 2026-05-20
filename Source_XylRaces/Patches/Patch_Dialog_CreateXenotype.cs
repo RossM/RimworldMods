@@ -22,7 +22,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_UIFilter))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch("DrawGenes")]
         public static IEnumerable<CodeInstruction> DrawGenes_Transpiler(
             IEnumerable<CodeInstruction> instructions,

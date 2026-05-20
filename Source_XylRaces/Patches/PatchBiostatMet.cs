@@ -30,7 +30,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(BonusGene))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         public static IEnumerable<CodeInstruction> Transpiler(
             IEnumerable<CodeInstruction> instructions,
             ILGenerator generator,

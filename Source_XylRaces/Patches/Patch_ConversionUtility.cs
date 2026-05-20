@@ -52,7 +52,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(XenotypeDefExtension))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(ConversionUtility.ConversionPowerFactor_MemesVsTraits))]
         public static IEnumerable<CodeInstruction> ConversionPowerFactor_MemesVsTraits_Transpiler(
             IEnumerable<CodeInstruction> instructions,

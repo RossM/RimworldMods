@@ -13,7 +13,6 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(XenotypeDefExtension))]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch("GetMemeTip")]
         public static void GetMemeTip_Postfix(MemeDef meme, ref string __result)
         {

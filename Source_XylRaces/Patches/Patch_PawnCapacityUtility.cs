@@ -18,7 +18,6 @@ namespace XylXenos.Patches
 
         [Feature(typeof(HediffWithCompsExt))]
         [HarmonyTranspiler]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(PawnCapacityUtility.CalculatePartEfficiency))]
         public static IEnumerable<CodeInstruction> CalculatePartEfficiency_Transpiler(
             IEnumerable<CodeInstruction> instructions,
