@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
 
@@ -36,7 +37,12 @@ namespace XylXenos.Patches
                         // Call GetExtraStartingItems
                         CodeInstruction.Call(() => GetExtraStartingItems),
                     ]
-                }
+                },
+
+                InstructionMatcher.MakeRedirectRule(
+                    AccessTools.Method(typeof(List<ThingDefCount>), "Add"),
+                    List_Add_Wrapper
+                    )
             }
         };
 
@@ -66,6 +72,15 @@ namespace XylXenos.Patches
                 if (items.Count >= 2)
                     return;
             }
+        }
+
+        public static void List_Add_Wrapper(List<ThingDefCount> __instance, ThingDefCount item, Pawn pawn)
+        {
+            var chemical = item.ThingDef.GetCompProperties<CompProperties_Drug>()?.chemical;
+            if (chemical != null && !pawn.ChemicalIsAllowedByGenes(chemical))
+                return;
+
+            __instance.Add(item);
         }
     }
 }

@@ -301,7 +301,7 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_StartingItemSource">
         <item>XylSoftener</item>
-        <chance>0.1</chance>
+        <chance>0.05</chance>
         <count>5~10</count>
       </li>      
     </modExtensions>

@@ -6,7 +6,6 @@
     <defName>XylSoftener</defName>
     <label>softener</label>
     <description>A drug for preventing petrification before it takes hold. Must be taken every five days to remain effective.\n\nThis drug only prevents petrification from developing. It has no effect on an existing disease.</description>
-    <possessionCount>10</possessionCount>
     <descriptionHyperlinks
       ><HediffDef>XylSoftenerHigh</HediffDef>
         </descriptionHyperlinks>
