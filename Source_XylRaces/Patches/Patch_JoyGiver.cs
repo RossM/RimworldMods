@@ -13,7 +13,7 @@ namespace XylXenos.Patches
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(JoyGiver.GetChance))]
-        public static void GetChance(JoyGiver __instance, Pawn pawn, ref float __result)
+        public static void GetChance_Postfix(JoyGiver __instance, Pawn pawn, ref float __result)
         {
             foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_JoyGivers>())
             {

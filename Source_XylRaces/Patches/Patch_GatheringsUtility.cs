@@ -12,7 +12,7 @@ namespace XylXenos.Patches
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(GatheringsUtility.ShouldPawnKeepGathering))]
-        public static bool ShouldPawnKeepGathering(Pawn p, GatheringDef gatheringDef, ref bool __result)
+        public static bool ShouldPawnKeepGathering_Prefix(Pawn p, GatheringDef gatheringDef, ref bool __result)
         {
             __result = false;
             if (gatheringDef.respectTimetable && p.needs.joy == null)

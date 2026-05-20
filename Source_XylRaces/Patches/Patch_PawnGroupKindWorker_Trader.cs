@@ -16,7 +16,7 @@ namespace XylXenos.Patches
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch("GenerateCarriers")]
-        public static bool GenerateCarriers(
+        public static bool GenerateCarriers_Prefix(
             PawnGroupMakerParms parms,
             PawnGroupMaker groupMaker,
             Pawn trader,

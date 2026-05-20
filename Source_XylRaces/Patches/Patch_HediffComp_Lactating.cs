@@ -12,7 +12,7 @@ namespace XylXenos.Patches
         [HarmonyPrefix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(HediffComp_Lactating.TryCharge))]
-        public static void Patch_TryCharge(HediffComp_Lactating __instance, ref float desiredChargeAmount)
+        public static void TryCharge_Prefix(HediffComp_Lactating __instance, ref float desiredChargeAmount)
         {
             if (!Settings.instance.ShouldFixLactationBugsFor(__instance.Pawn))
                 return;

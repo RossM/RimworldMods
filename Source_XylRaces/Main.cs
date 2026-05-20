@@ -20,10 +20,10 @@ namespace XylXenos
         {
             Settings.instance = GetSettings<Settings>();
 
-            CheckForFeatureAttribute();
+            CodingStyleChecks();
         }
 
-        private static void CheckForFeatureAttribute()
+        private static void CodingStyleChecks()
         {
             var assembly = MethodBase.GetCurrentMethod().ReflectedType.Assembly;
             foreach (TypeInfo type in assembly.DefinedTypes)
@@ -36,9 +36,14 @@ namespace XylXenos
                     var hasTranspiler = method.HasAttribute<HarmonyTranspiler>();
 
                     if ((hasPrefix || hasPostfix || hasTranspiler) && !hasFeature)
-                    {
-                        Log.Warning($"{type.Name}.{method.Name} is missing a [Feature] attribute");
-                    }
+                        Log.Warning($"{type.Name}::{method.Name} is missing a [Feature] attribute");
+
+                    if (hasPrefix && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
+                        Log.Warning($"{type.Name}::{method.Name} should be named with _Prefix");
+                    if (hasPostfix && !(method.Name == "Postfix" || method.Name.EndsWith("_Postfix")))
+                        Log.Warning($"{type.Name}::{method.Name} should be named with _Postfix");
+                    if (hasTranspiler && !(method.Name == "Transpiler" || method.Name.EndsWith("_Transpiler")))
+                        Log.Warning($"{type.Name}::{method.Name} should be named with _Transpiler");
                 }
             }
         }

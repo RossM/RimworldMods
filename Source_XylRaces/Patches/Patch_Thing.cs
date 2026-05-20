@@ -76,7 +76,7 @@ namespace XylXenos.Patches
         [HarmonyPostfix]
         [UsedImplicitly]
         [HarmonyPatch(nameof(Thing.PostMake))]
-        public static void PostMake(Thing __instance)
+        public static void PostMake_Postfix(Thing __instance)
         {
             if (__instance is INotificationTarget target)
                 target.RegisterWith(NotificationManager.Instance);
