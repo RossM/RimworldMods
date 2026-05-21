@@ -65,7 +65,7 @@
     <capMods>
       <li>
         <capacity>Hearing</capacity>
-        <offset>0.2</offset>
+        <postFactor>1.2</postFactor>
       </li>
     </capMods>
   </GeneDef>
