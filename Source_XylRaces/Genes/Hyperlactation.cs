@@ -12,7 +12,6 @@ namespace XylXenos.Genes
         public float chargePerItem = 0.1f;
         public HediffDef hediff;
         public List<ThoughtDef> milkedThoughts;
-        public Gender? activeGender;
         public int ticksPerSorenessStage = 60000;
     }
 
@@ -32,16 +31,6 @@ namespace XylXenos.Genes
         public int? fullSinceTick;
 
         private HediffComp_Lactating lactatingInternal;
-
-        public override bool Active
-        {
-            get
-            {
-                if (!base.Active)
-                    return false;
-                return DefExt.activeGender == null || pawn?.gender == DefExt.activeGender;
-            }
-        }
 
         public override void ExposeData()
         {

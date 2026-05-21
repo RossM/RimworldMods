@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using Verse;
+using XylXenos.Genes;
 
 namespace XylXenos.Patches
 {
@@ -13,6 +14,20 @@ namespace XylXenos.Patches
         {
             if (__instance is INotificationTarget target)
                 target.RegisterWith(NotificationManager.Instance);
+        }
+
+        [Feature(typeof(GeneDefExtension_GenderLocked))]
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(Gene.Active), MethodType.Getter)]
+        public static bool Active_Prefix(Gene __instance, ref bool __result)
+        {
+            __result = false;
+
+            var activeGender = __instance.def.GetModExtension<GeneDefExtension_GenderLocked>()?.activeGender;
+            if (activeGender != null && activeGender != __instance.pawn.gender)
+                return false;
+
+            return true;
         }
     }
 }

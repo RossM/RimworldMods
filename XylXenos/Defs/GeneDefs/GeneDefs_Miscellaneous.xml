@@ -78,8 +78,10 @@
           <li>XylMilked_Masochist</li>
           <li>XylMilkedMood_Masochist</li>
         </milkedThoughts>
-        <activeGender>Female</activeGender>
         <iconPath>Things/Item/Resource/Milk</iconPath>
+      </li>
+      <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
+        <activeGender>Female</activeGender>
       </li>
       <li Class="XylXenos.DefModExtension_StartingItemSource">
         <item>Milk</item>
