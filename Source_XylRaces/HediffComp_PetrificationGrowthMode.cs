@@ -1,7 +1,8 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
+using System.Text;
 using Verse;
 
 namespace XylXenos
@@ -12,7 +13,7 @@ namespace XylXenos
         Dormant,
     }
 
-    public class HediffCompProperties_GrowthMode_Petrification : HediffCompProperties_SeverityPerDay
+    public class HediffCompProperties_PetrificationGrowthMode : HediffCompProperties_SeverityPerDay
     {
         public float becomeActiveMtbDays = -1;
         public float becomeDormantMtbDays = -1;
@@ -21,15 +22,15 @@ namespace XylXenos
         [MustTranslate] public string tipStringActive;
         [MustTranslate] public string tipStringDormant;
 
-        public HediffCompProperties_GrowthMode_Petrification()
+        public HediffCompProperties_PetrificationGrowthMode()
         {
-            compClass = typeof(HediffComp_GrowthMode_Petrification);
+            compClass = typeof(HediffComp_PetrificationGrowthMode);
         }
     }
 
-    public class HediffComp_GrowthMode_Petrification : HediffComp_SeverityPerDay
+    public class HediffComp_PetrificationGrowthMode : HediffComp_SeverityPerDay
     {
-        public HediffCompProperties_GrowthMode_Petrification TProps => (HediffCompProperties_GrowthMode_Petrification)props;
+        public HediffCompProperties_PetrificationGrowthMode TProps => (HediffCompProperties_PetrificationGrowthMode)props;
 
         public override string CompLabelInBracketsExtra => growthMode switch
         {
@@ -95,7 +96,7 @@ namespace XylXenos
                             Pawn, MessageTypeDefOf.NegativeHealthEvent);
                     }
 
-                        break;
+                    break;
                 }
                 case PetrificationGrowthMode.Dormant:
                 {

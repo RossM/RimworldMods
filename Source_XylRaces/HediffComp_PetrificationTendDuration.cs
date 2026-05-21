@@ -4,22 +4,22 @@ using Verse;
 
 namespace XylXenos
 {
-    public class HediffCompProperties_TendDuration_Petrification : HediffCompProperties_TendDuration
+    public class HediffCompProperties_PetrificationTendDuration : HediffCompProperties_TendDuration
     {
         public float changeModeAtTotalTendQuality;
 
-        public HediffCompProperties_TendDuration_Petrification()
+        public HediffCompProperties_PetrificationTendDuration()
         {
-            compClass = typeof(HediffComp_TendDuration_Petrification);
+            compClass = typeof(HediffComp_PetrificationTendDuration);
         }
     }
 
-    public class HediffComp_TendDuration_Petrification : HediffComp_TendDuration
+    public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
     {
-        public new HediffCompProperties_TendDuration_Petrification TProps => (HediffCompProperties_TendDuration_Petrification)props;
+        public new HediffCompProperties_PetrificationTendDuration TProps => (HediffCompProperties_PetrificationTendDuration)props;
 
         public PetrificationGrowthMode GrowthMode =>
-            parent.GetComp<HediffComp_GrowthMode_Petrification>()?.growthMode ?? PetrificationGrowthMode.Active;
+            parent.GetComp<HediffComp_PetrificationGrowthMode>()?.growthMode ?? PetrificationGrowthMode.Active;
 
         public virtual bool AllowTendExt => GrowthMode == PetrificationGrowthMode.Active;
 
@@ -112,9 +112,38 @@ namespace XylXenos
             if (totalTendQuality < TProps.changeModeAtTotalTendQuality)
                 return;
 
-            parent.GetComp<HediffComp_GrowthMode_Petrification>()?.ChangeGrowthMode();
+            parent.GetComp<HediffComp_PetrificationGrowthMode>()?.ChangeGrowthMode();
             totalTendQuality = 0;
             tendQuality = 0;
+        }
+
+        public override string CompDebugString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            if (IsTended)
+            {
+                stringBuilder.AppendLine("tendQuality: " + tendQuality.ToStringPercent());
+                if (!TProps.TendIsPermanent)
+                {
+                    stringBuilder.AppendLine("tendTicksLeft: " + tendTicksLeft);
+                }
+            }
+            else
+            {
+                stringBuilder.AppendLine("untended");
+            }
+
+            stringBuilder.AppendLine("severity/day: " + SeverityChangePerDay());
+            if (TProps.disappearsAtTotalTendQuality >= 0)
+            {
+                stringBuilder.AppendLine("totalTendQuality: " + totalTendQuality.ToString("F2") + " / " + TProps.disappearsAtTotalTendQuality);
+            }
+            else if (TProps.changeModeAtTotalTendQuality >= 0)
+            {
+                stringBuilder.AppendLine("totalTendQuality: " + totalTendQuality.ToString("F2") + " / " + TProps.changeModeAtTotalTendQuality);
+            }
+
+            return stringBuilder.ToString().Trim();
         }
     }
 }

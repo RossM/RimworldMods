@@ -10,7 +10,7 @@
     <descriptionHyperlinks>
       <GeneDef>XylPetrification</GeneDef>
     </descriptionHyperlinks>
-    <initialSeverity>0.01</initialSeverity>
+    <initialSeverity>0.1</initialSeverity>
     <lethalSeverity>1.0</lethalSeverity>
     <minSeverity>0.01</minSeverity>
     <maxSeverity>1.0</maxSeverity>
@@ -18,14 +18,14 @@
     <everCurableByItem>false</everCurableByItem>
     <tendable>true</tendable>
     <comps>
-      <li Class="XylXenos.HediffCompProperties_GrowthMode_Petrification">
+      <li Class="XylXenos.HediffCompProperties_PetrificationGrowthMode">
         <severityPerDayRange>0.008~0.012</severityPerDayRange>
         <becomeActiveMtbDays>120</becomeActiveMtbDays>
         <messageBecomeActive>{PAWN_labelShort}'s petrification has become active.</messageBecomeActive>
         <messageBecomeDormant>{PAWN_labelShort}'s petrification has gone dormant.</messageBecomeDormant>
         <tipStringDormant>The disease is currently dormant, but could become active at any time.</tipStringDormant>
       </li>
-      <li Class="XylXenos.HediffCompProperties_TendDuration_Petrification">
+      <li Class="XylXenos.HediffCompProperties_PetrificationTendDuration">
         <baseTendDurationHours>120</baseTendDurationHours>
         <severityPerDayTended>0.01</severityPerDayTended>
         <changeModeAtTotalTendQuality>3</changeModeAtTotalTendQuality>
@@ -79,6 +79,7 @@
       <GeneDef>XylPetrification</GeneDef>
       <HediffDef>XylPetrification</HediffDef>
     </descriptionHyperlinks>
+    <alwaysShowSeverity>true</alwaysShowSeverity>
     <comps>
       <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
         <hediffs>
