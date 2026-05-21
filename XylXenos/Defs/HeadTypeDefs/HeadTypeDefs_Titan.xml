@@ -2,25 +2,27 @@
 
 <Defs>
 
-  <HeadTypeDef ParentName="Male_AverageNormal">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Male_Osteoliths_Average_Normal</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Osteoliths_Average_Normal</graphicPath>
     <gender>Male</gender>
+    <eyeOffsetEastWest>(0.18, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
       <li>XylMineralizedSkin</li>
     </requiredGenes>
   </HeadTypeDef>
-  <HeadTypeDef ParentName="Male_AverageWide">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Male_Osteoliths_Average_Wide</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Osteoliths_Average_Wide</graphicPath>
     <gender>Male</gender>
+    <eyeOffsetEastWest>(0.18, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
       <li>XylMineralizedSkin</li>
     </requiredGenes>
   </HeadTypeDef>
-  <HeadTypeDef ParentName="Male_NarrowWide">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Male_Osteoliths_Narrow_Wide</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Osteoliths_Narrow_Wide</graphicPath>
     <gender>Male</gender>
@@ -30,25 +32,27 @@
     </requiredGenes>
   </HeadTypeDef>
 
-  <HeadTypeDef ParentName="Female_AverageNormal">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Female_Osteoliths_Average_Normal</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Osteoliths_Average_Normal</graphicPath>
     <gender>Female</gender>
+    <eyeOffsetEastWest>(0.13, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
       <li>XylMineralizedSkin</li>
     </requiredGenes>
   </HeadTypeDef>
-  <HeadTypeDef ParentName="Female_AverageWide">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Female_Osteoliths_Average_Wide</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Osteoliths_Average_Wide</graphicPath>
     <gender>Female</gender>
+    <eyeOffsetEastWest>(0.13, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
       <li>XylMineralizedSkin</li>
     </requiredGenes>
   </HeadTypeDef>
-  <HeadTypeDef ParentName="Female_NarrowWide">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Female_Osteoliths_Narrow_Wide</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Osteoliths_Narrow_Wide</graphicPath>
     <gender>Female</gender>

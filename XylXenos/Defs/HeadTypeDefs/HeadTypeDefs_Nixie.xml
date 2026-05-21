@@ -2,25 +2,27 @@
 
 <Defs>
 
-  <HeadTypeDef ParentName="Male_AverageNormal">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Male_Scaleskin_Average_Normal</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Scaleskin_Average_Normal</graphicPath>
     <gender>Male</gender>
+    <eyeOffsetEastWest>(0.18, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
       <li>XylScaleskin</li>
     </requiredGenes>
   </HeadTypeDef>
-  <HeadTypeDef ParentName="Male_AveragePointy">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Male_Scaleskin_Average_Pointy</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Scaleskin_Average_Pointy</graphicPath>
     <gender>Male</gender>
+    <eyeOffsetEastWest>(0.18, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
       <li>XylScaleskin</li>
     </requiredGenes>
   </HeadTypeDef>
-  <HeadTypeDef ParentName="Male_NarrowNormal">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Male_Scaleskin_Narrow_Normal</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Scaleskin_Narrow_Normal</graphicPath>
     <gender>Male</gender>
@@ -29,7 +31,7 @@
       <li>XylScaleskin</li>
     </requiredGenes>
   </HeadTypeDef>
-  <HeadTypeDef ParentName="Male_NarrowPointy">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Male_Scaleskin_Narrow_Pointy</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Scaleskin_Narrow_Pointy</graphicPath>
     <gender>Male</gender>
@@ -39,25 +41,27 @@
     </requiredGenes>
   </HeadTypeDef>
 
-  <HeadTypeDef ParentName="Female_AverageNormal">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Female_Scaleskin_Average_Normal</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Scaleskin_Average_Normal</graphicPath>
     <gender>Female</gender>
+    <eyeOffsetEastWest>(0.13, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
       <li>XylScaleskin</li>
     </requiredGenes>
   </HeadTypeDef>
-  <HeadTypeDef ParentName="Female_AveragePointy">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Female_Scaleskin_Average_Pointy</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Scaleskin_Average_Pointy</graphicPath>
     <gender>Female</gender>
+    <eyeOffsetEastWest>(0.13, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
       <li>XylScaleskin</li>
     </requiredGenes>
   </HeadTypeDef>
-  <HeadTypeDef ParentName="Female_NarrowNormal">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Female_Scaleskin_Narrow_Normal</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Scaleskin_Narrow_Normal</graphicPath>
     <gender>Female</gender>
@@ -66,7 +70,7 @@
       <li>XylScaleskin</li>
     </requiredGenes>
   </HeadTypeDef>
-  <HeadTypeDef ParentName="Female_NarrowPointy">
+  <HeadTypeDef ParentName="AverageBase">
     <defName>Female_Scaleskin_Narrow_Pointy</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Scaleskin_Narrow_Pointy</graphicPath>
     <gender>Female</gender>
