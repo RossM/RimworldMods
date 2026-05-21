@@ -43,7 +43,7 @@ namespace XylXenos.Patches
             return value;
         }
 
-        // TODO this does not do anything because it has no harmony attributes..
+        // TODO this does not do anything because it has no harmony attributes...
         //[Feature(typeof(GeneDefExtension_WildMan))]
         public static bool Interacted_Prefix(
             Pawn initiator,

@@ -9,14 +9,15 @@ namespace XylXenos
     [UsedFromXml]
     public class Hediff_DietDependency : Hediff_Genetic
     {
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         enum Stages
         {
+            // ReSharper disable UnusedMember.Local
             Satisfied = 1,
             Craving = 2,
             MildDeficiency = 3,
             SevereDeficiency = 4,
             Coma = 5,
+            // ReSharper restore UnusedMember.Local
         }
 
         public bool ShouldSatisfy => Severity >= def.stages[(int)Stages.Craving].minSeverity;
@@ -44,12 +45,14 @@ namespace XylXenos
                     var deathDays = def.lethalSeverity / severityPerDay;
                     text += "GeneDefChemicalNeedDurationDesc".Translate(Gene.DefExt.foodLabel,
                         pawn.Named("PAWN"),
+                        // ReSharper disable StringLiteralTypo
                         "PeriodDays".Translate(deficiencyDays).Named("DEFICIENCYDURATION"),
                         "PeriodDays".Translate(comaDays).Named("COMADURATION"),
                         "PeriodDays".Translate(deathDays).Named("DEATHDURATION")).Resolve();
+                        // ReSharper restore StringLiteralTypo
                     float daysBehind = Severity / severityPerDay;
                     float nutritionPerDay = severityPerDay * Gene.DefExt.severityReductionPerNutrition;
-                    text += "\n\n" + "XyInjestedBehind".Translate(Gene.DefExt.foodLabel,
+                    text += "\n\n" + "XylIngestedBehind".Translate(Gene.DefExt.foodLabel,
                         pawn.Named("PAWN"),
                         nutritionPerDay.ToStringDecimalIfSmall().Named("NUTRITION"),
                         "PeriodDays".Translate(daysBehind).Named("DURATION"));
