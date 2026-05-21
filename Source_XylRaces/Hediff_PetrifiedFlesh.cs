@@ -4,7 +4,7 @@ using UnityEngine;
 namespace XylXenos
 {
     [UsedImplicitly]
-    public class Hediff_Petrified : HediffWithCompsExt
+    public class Hediff_PetrifiedFlesh : HediffWithCompsExt
     {
         public virtual float RelativeSeverity => Severity / Part.def.GetMaxHealth(pawn);
 

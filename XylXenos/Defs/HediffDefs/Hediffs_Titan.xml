@@ -71,7 +71,7 @@
 
   <HediffDef>
     <defName>XylPetrifiedFlesh</defName>
-    <hediffClass>XylXenos.Hediff_Petrified</hediffClass>
+    <hediffClass>XylXenos.Hediff_PetrifiedFlesh</hediffClass>
     <label>petrified</label>
     <labelNoun>petrified flesh</labelNoun>
     <description>This body part has been partially replaced with hard, rocky growths. They must be surgically removed to allow the part to heal.</description>
