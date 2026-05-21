@@ -34,7 +34,7 @@
         <hediffs>
           <li>
             <mtbDays>15</mtbDays>
-            <hediff>XylPetrified</hediff>
+            <hediff>XylPetrifiedFlesh</hediff>
             <severityRange>2~5</severityRange>
             <canAffectAnyLivePart>true</canAffectAnyLivePart>
             <allowDuplicates>true</allowDuplicates>
@@ -42,7 +42,7 @@
           <li>
             <mtbDays>5</mtbDays>
             <minSeverity>0.4</minSeverity>
-            <hediff>XylPetrified</hediff>
+            <hediff>XylPetrifiedFlesh</hediff>
             <severityRange>5~10</severityRange>
             <canAffectAnyLivePart>true</canAffectAnyLivePart>
             <allowDuplicates>true</allowDuplicates>
@@ -70,7 +70,7 @@
   </HediffDef>
 
   <HediffDef>
-    <defName>XylPetrified</defName>
+    <defName>XylPetrifiedFlesh</defName>
     <hediffClass>XylXenos.Hediff_Petrified</hediffClass>
     <label>petrified</label>
     <labelNoun>petrified flesh</labelNoun>
@@ -133,7 +133,7 @@
     <workerClass>XylXenos.Recipe_RemoveHediff_Petrified</workerClass>
     <jobString>Excising petrified flesh.</jobString>
     <workAmount>3000</workAmount>
-    <removesHediff>XylPetrified</removesHediff>
+    <removesHediff>XylPetrifiedFlesh</removesHediff>
     <successfullyRemovedHediffMessage>{0} has successfully excised {1}'s petrified flesh.</successfullyRemovedHediffMessage>
     <ingredients>
       <li>
