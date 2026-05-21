@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using Verse.AI;
 using XylXenos.Genes;
