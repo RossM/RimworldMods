@@ -8,13 +8,16 @@
     <labelShortAdj>male bald</labelShortAdj>
     <description>Male carriers of this gene grow no hair on the head.</description>
     <iconPath>UI/Icons/Genes/Gene_HairStyleBaldOnly</iconPath>
-    <displayOrderInCategory>57.1</displayOrderInCategory>
+    <displayOrderInCategory>57.4</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>
       <tags>
         <li>Bald</li>
       </tags>
     </hairTagFilter>
+    <exclusionTags Inherit="false">
+      <li>HairStyleMale</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
         <activeGender>Male</activeGender>
@@ -28,13 +31,16 @@
     <labelShortAdj>male crop</labelShortAdj>
     <description>Male carriers of this gene can only grow short hair.</description>
     <iconPath>UI/Icons/Genes/Gene_HairStyleShortOnly</iconPath>
-    <displayOrderInCategory>57.2</displayOrderInCategory>
+    <displayOrderInCategory>57.5</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>
       <tags>
         <li>HairShort</li>
       </tags>
     </hairTagFilter>
+    <exclusionTags Inherit="false">
+      <li>HairStyleMale</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
         <activeGender>Male</activeGender>
@@ -48,13 +54,16 @@
     <labelShortAdj>male long-haired</labelShortAdj>
     <description>Male carriers of this gene grow hair on the head very quickly.</description>
     <iconPath>UI/Icons/Genes/Gene_HairStyleLongOnly</iconPath>
-    <displayOrderInCategory>57.3</displayOrderInCategory>
+    <displayOrderInCategory>57.6</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>
       <tags>
         <li>HairLong</li>
       </tags>
     </hairTagFilter>
+    <exclusionTags Inherit="false">
+      <li>HairStyleMale</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
         <activeGender>Male</activeGender>
@@ -68,13 +77,16 @@
     <labelShortAdj>female bald</labelShortAdj>
     <description>Female carriers of this gene grow no hair on the head.</description>
     <iconPath>UI/Icons/Genes/Gene_HairStyleBaldOnly</iconPath>
-    <displayOrderInCategory>57.4</displayOrderInCategory>
+    <displayOrderInCategory>57.1</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>
       <tags>
         <li>Bald</li>
       </tags>
     </hairTagFilter>
+    <exclusionTags Inherit="false">
+      <li>HairStyleFemale</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
         <activeGender>Female</activeGender>
@@ -88,13 +100,16 @@
     <labelShortAdj>female crop</labelShortAdj>
     <description>Female carriers of this gene can only grow short hair.</description>
     <iconPath>UI/Icons/Genes/Gene_HairStyleShortOnly</iconPath>
-    <displayOrderInCategory>57.5</displayOrderInCategory>
+    <displayOrderInCategory>57.2</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>
       <tags>
         <li>HairShort</li>
       </tags>
     </hairTagFilter>
+    <exclusionTags Inherit="false">
+      <li>HairStyleFemale</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
         <activeGender>Female</activeGender>
@@ -108,13 +123,16 @@
     <labelShortAdj>female long-haired</labelShortAdj>
     <description>Female carriers of this gene grow hair on the head very quickly.</description>
     <iconPath>UI/Icons/Genes/Gene_HairStyleLongOnly</iconPath>
-    <displayOrderInCategory>57.6</displayOrderInCategory>
+    <displayOrderInCategory>57.3</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>
       <tags>
         <li>HairLong</li>
       </tags>
     </hairTagFilter>
+    <exclusionTags Inherit="false">
+      <li>HairStyleFemale</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
         <activeGender>Female</activeGender>
