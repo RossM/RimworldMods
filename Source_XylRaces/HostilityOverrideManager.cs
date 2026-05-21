@@ -14,7 +14,7 @@ namespace XylXenos
         [Unsaved] private static Map lastMap;
         [Unsaved] private static HostilityOverrideManager lastManager;
 
-        public HashSet<(Faction, Faction)> activeOverrides = new();
+        public HashSet<(Faction, Faction)> activeOverrides = [];
         public Dictionary<Faction, int> lastHostileActionTick = new();
 
         public override void ExposeData()

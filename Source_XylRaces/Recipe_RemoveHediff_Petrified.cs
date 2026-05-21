@@ -8,6 +8,7 @@ namespace XylXenos
     [UsedFromXml]
     public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
     {
+        // ReSharper disable once ParameterHidesMember
         public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
         {
             List<Hediff> allHediffs = pawn.health.hediffSet.hediffs;

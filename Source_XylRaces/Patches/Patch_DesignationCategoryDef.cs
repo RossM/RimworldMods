@@ -29,7 +29,7 @@ namespace XylXenos.Patches
 
         private static void AddDesignators(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
         {
-            HashSet<Designator> geneDesignators = new();
+            HashSet<Designator> geneDesignators = [];
 
             foreach (var defExtension_designator in Faction.OfPlayer.GetPawns()
                          .SelectMany(pawn => pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>()))

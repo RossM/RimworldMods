@@ -130,8 +130,8 @@ namespace XylXenos.Genes
                 if (hediffGiver.partsToAffect.NullOrEmpty())
                     continue;
 
-                List<BodyPartRecord> partsToAdd = new();
-                List<BodyPartRecord> partsToRemove = new();
+                List<BodyPartRecord> partsToAdd = [];
+                List<BodyPartRecord> partsToRemove = [];
                 HediffDef hediffDef = hediffGiver.hediff;
 
                 foreach (BodyPartRecord part in affectedParts)

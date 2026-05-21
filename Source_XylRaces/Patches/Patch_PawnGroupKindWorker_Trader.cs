@@ -42,12 +42,12 @@ namespace XylXenos.Patches
             PawnKindDef kind = carrierOptions.RandomElementByWeight(genOption => genOption.selectionWeight).kind;
             int numAnimals = Mathf.CeilToInt(waresItems.Count / (kind.race.race.baseBodySize <= 4.0f ? 8f : 16f));
 
-            List<Pawn> carrierPawns = new List<Pawn>();
+            List<Pawn> carrierPawns = [];
             for (int i = 0; i < numAnimals; i++)
             {
                 Pawn pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(kind, parms.faction, PawnGenerationContext.NonPlayer,
                     parms.tile, forceGenerateNewPawn: false, allowDead: false, allowDowned: false, canGeneratePawnRelations: true,
-                    mustBeCapableOfViolence: false, 1f, forceAddFreeWarmLayerIfNeeded: false, allowGay: true, allowPregnant: false,
+                    mustBeCapableOfViolence: false, forceAddFreeWarmLayerIfNeeded: false, allowGay: true, allowPregnant: false,
                     allowFood: true, allowAddictions: true, fixedIdeo: parms.ideo, inhabitant: parms.inhabitants));
                 if (itemIndex < waresItems.Count)
                 {

@@ -25,6 +25,7 @@ namespace XylXenos
 
         private static void CodingStyleChecks()
         {
+            // ReSharper disable once PossibleNullReferenceException
             var assembly = MethodBase.GetCurrentMethod().ReflectedType.Assembly;
             foreach (TypeInfo type in assembly.DefinedTypes)
             {

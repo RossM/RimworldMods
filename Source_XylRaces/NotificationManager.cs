@@ -28,7 +28,7 @@ namespace XylXenos
     {
         private class EventInfo
         {
-            public readonly List<CallbackInfo> globalCallbacks = new();
+            public readonly List<CallbackInfo> globalCallbacks = [];
             public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
         }
 
@@ -74,6 +74,7 @@ namespace XylXenos
                 if (eventInfo.globalCallbacks.Any(c => c.source == source && c.name == name))
                 {
                     Log.Warning(
+                        // ReSharper disable once ExpressionIsAlwaysNull
                         $"Adding a duplicate callback: type={eventType} target={target} callbackTarget={source} name={name}");
                     return;
                 }
@@ -104,6 +105,7 @@ namespace XylXenos
             RegisterInternal<T>(eventType, target, (_, data) => callback(data), callback.Target, callback.Method.Name);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void Register(NotificationEvent eventType, Thing target, Action<Thing> callback)
         {
             RegisterInternal<object>(eventType, target, (t, _) => callback(t), callback.Target, callback.Method.Name);

@@ -73,6 +73,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(Thing.PostMake))]
         public static void PostMake_Postfix(Thing __instance)
         {
+            // ReSharper disable once SuspiciousTypeConversion.Global
             if (__instance is INotificationTarget target)
                 target.RegisterWith(NotificationManager.Instance);
         }

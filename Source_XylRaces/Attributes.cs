@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+// ReSharper disable UnusedParameter.Local
 
 namespace XylXenos
 {
@@ -24,7 +25,5 @@ namespace XylXenos
     }
 
     [MeansImplicitUse]
-    public class UsedFromXmlAttribute : Attribute
-    {
-    }
+    public class UsedFromXmlAttribute : Attribute;
 }

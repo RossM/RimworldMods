@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using System.Diagnostics.CodeAnalysis;
+using RimWorld;
 using Verse;
 using Verse.AI;
 using XylXenos.Genes;
@@ -8,7 +9,8 @@ namespace XylXenos
     [UsedFromXml]
     public class Hediff_DietDependency : Hediff_Genetic
     {
-        enum Stages : int
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
+        enum Stages
         {
             Satisfied = 1,
             Craving = 2,

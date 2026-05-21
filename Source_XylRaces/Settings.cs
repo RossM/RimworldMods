@@ -24,6 +24,7 @@ public class Settings : ModSettings
     public override void ExposeData()
     {
         Scribe_Values.Look(ref allowBackerBackstories, nameof(allowBackerBackstories), ThreeStateMode.Sometimes);
+        // ReSharper disable once RedundantArgumentDefaultValue
         Scribe_Values.Look(ref fixLactationBugs, nameof(fixLactationBugs), ThreeStateMode.Always);
     }
 

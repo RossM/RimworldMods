@@ -10,7 +10,7 @@ namespace XylXenos.Genes
     {
         public void RemoveInvalidHediffs()
         {
-            HashSet<HediffDef> hediffDefsToRemove = new();
+            HashSet<HediffDef> hediffDefsToRemove = [];
 
             foreach (var chemicalDef in DefDatabase<ChemicalDef>.AllDefs)
             {

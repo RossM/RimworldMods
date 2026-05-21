@@ -44,7 +44,7 @@ namespace XylXenos
 
         private readonly Order order = Order.Prepend;
 
-        private bool debug = false;
+        private readonly bool debug = false;
 
         protected override bool ApplyWorker(XmlDocument xml)
         {

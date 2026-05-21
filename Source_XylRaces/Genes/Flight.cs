@@ -49,7 +49,7 @@ namespace XylXenos.Genes
             string flyingDisabledBy = "";
             if (!flightAllowedByApparel)
             {
-                List<string> items = new();
+                List<string> items = [];
                 foreach (var item in pawn.apparel.WornApparel)
                 {
                     if (!ApparelAllowsFlight(item.def))

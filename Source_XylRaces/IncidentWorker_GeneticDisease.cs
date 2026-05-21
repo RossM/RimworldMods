@@ -44,8 +44,7 @@ namespace XylXenos
         // use a transpiler instead.
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
-            string blockedInfo;
-            List<Pawn> list = ApplyToPawns(ActualVictims(parms).ToList(), out blockedInfo);
+            List<Pawn> list = ApplyToPawns(ActualVictims(parms).ToList(), out var blockedInfo);
             if (!list.Any() && blockedInfo.NullOrEmpty())
             {
                 return false;
@@ -88,14 +87,14 @@ namespace XylXenos
                 else
                 {
                     StringBuilder stringBuilder = new StringBuilder();
-                    for (int i = 0; i < list.Count; i++)
+                    foreach (Pawn pawn in list)
                     {
                         if (stringBuilder.Length != 0)
                         {
                             stringBuilder.AppendLine();
                         }
 
-                        stringBuilder.AppendTagged("  - " + list[i].LabelNoCountColored.Resolve());
+                        stringBuilder.AppendTagged("  - " + pawn.LabelNoCountColored.Resolve());
                     }
 
                     baseLetterText

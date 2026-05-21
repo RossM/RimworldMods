@@ -17,8 +17,8 @@ namespace XylXenos.Patches
         {
             StringBuilder sb = new StringBuilder(__result);
 
-            List<XenotypeDef> agreeingXenotypes = new();
-            List<XenotypeDef> disagreeingXenotypes = new();
+            List<XenotypeDef> agreeingXenotypes = [];
+            List<XenotypeDef> disagreeingXenotypes = [];
 
             foreach (XenotypeDef def in DefDatabase<XenotypeDef>.AllDefs)
             {

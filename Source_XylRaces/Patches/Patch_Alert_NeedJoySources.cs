@@ -10,7 +10,7 @@ namespace XylXenos.Patches
         [Feature(Config.Feature.Joyless)]
         [HarmonyPrefix]
         [HarmonyPatch("NeedJoySource")]
-        public static bool NeedJoySource_Prefix(Map map, bool __result)
+        public static bool NeedJoySource_Prefix(Map map, ref bool __result)
         {
             __result = false;
 

@@ -45,7 +45,7 @@ public static class FoodHelpers
             return GetCookedNutritionFactor(eater, GetFoodType(foodDef));
         }
 
-        List<float> multipliers = new();
+        List<float> multipliers = [];
         foreach (var ingredient in compIngredients.ingredients)
         {
             multipliers.Add(GetCookedNutritionFactor(eater, GetFoodType(ingredient)));

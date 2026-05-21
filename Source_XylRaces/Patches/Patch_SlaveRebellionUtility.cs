@@ -73,7 +73,6 @@ namespace XylXenos.Patches
                 if (__result >= neverRebelThresholdDays)
                 {
                     __result = -1;
-                    return;
                 }
             }
         }

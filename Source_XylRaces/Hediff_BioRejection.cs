@@ -18,7 +18,7 @@ namespace XylXenos
         {
             get
             {
-                List<string> causes = new();
+                List<string> causes = [];
 
                 List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
                 foreach (Hediff hediff in hediffs)

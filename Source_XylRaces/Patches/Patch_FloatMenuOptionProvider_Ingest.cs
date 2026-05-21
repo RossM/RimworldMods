@@ -28,11 +28,9 @@ namespace XylXenos.Patches
 
             if (!context.FirstSelectedPawn.ChemicalIsAllowedByGenes(clickedThing.def))
             {
-                string text;
-                if (!clickedThing.def.ingestible.ingestCommandString.NullOrEmpty())
-                    text = clickedThing.def.ingestible.ingestCommandString.Formatted(clickedThing.LabelShort);
-                else
-                    text = "ConsumeThing".Translate(clickedThing.LabelShort, clickedThing);
+                string text = !clickedThing.def.ingestible.ingestCommandString.NullOrEmpty()
+                    ? clickedThing.def.ingestible.ingestCommandString.Formatted(clickedThing.LabelShort)
+                    : "ConsumeThing".Translate(clickedThing.LabelShort, clickedThing);
 
                 ChemicalDef chemicalDef = DrugStatsUtility.GetChemical(clickedThing.def);
                 var defExtension = chemicalDef.GetModExtension<ChemicalDefExtension>();

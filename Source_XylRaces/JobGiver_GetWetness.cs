@@ -19,7 +19,7 @@ namespace XylXenos
             {
                 if (wetnessGivingThingsInternal == null)
                 {
-                    wetnessGivingThingsInternal = new List<ThingDef>();
+                    wetnessGivingThingsInternal = [];
                     foreach (var def in DefDatabase<ThingDef>.AllDefs)
                     {
                         if (def.GetModExtension<ThingDefExtension_WetnessSource>() != null)

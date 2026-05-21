@@ -58,7 +58,7 @@ namespace XylXenos
                             break;
                         }
 
-                        BodyPartRecord bodyPartRecord = true ? source.RandomElementByWeight(x => x.coverageAbs) : source.RandomElement();
+                        BodyPartRecord bodyPartRecord = source.RandomElementByWeight(x => x.coverageAbs);
 
                         Hediff hediff2
                             = HediffMaker.MakeHediff(

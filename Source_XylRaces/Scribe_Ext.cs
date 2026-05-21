@@ -8,8 +8,8 @@ public static class Scribe_Ext
 {
     public static void Look<T1, T2>(ref HashSet<(T1, T2)> valueTuples, string label, LookMode lookMode)
     {
-        List<T1> listFirst = new();
-        List<T2> listSecond = new();
+        List<T1> listFirst = [];
+        List<T2> listSecond = [];
         if (Scribe.mode == LoadSaveMode.Saving)
         {
             foreach (var pair in valueTuples)
