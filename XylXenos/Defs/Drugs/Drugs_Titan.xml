@@ -43,11 +43,28 @@
     </costList>
     <comps>
       <li Class="CompProperties_Drug">
+        <chemical>XylSoftener</chemical>
         <listOrder>2000</listOrder>
         <overdoseSeverityOffset>0.08~0.14</overdoseSeverityOffset>
       </li>
     </comps>
   </ThingDef>
+
+  <ChemicalDef>
+    <defName>XylSoftener</defName>
+    <label>softener</label>
+    <canBinge>false</canBinge>
+    <canBeAddicted>false</canBeAddicted>
+    <generateAddictionGenes>false</generateAddictionGenes>
+    <modExtensions>
+      <li Class="XylXenos.ChemicalDefExtension">
+        <requiredGenesAll>
+          <li>XylLithoid</li>
+          <li>XylPetrification</li>
+        </requiredGenesAll>
+      </li>
+    </modExtensions>
+  </ChemicalDef>
 
   <HediffDef>
     <defName>XylSoftenerHigh</defName>
