@@ -33,7 +33,7 @@
       </li>
       <li Class="XylXenos.DefModExtension_StartingItemSource">
         <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
-        <chance>0.5</chance>
+        <chance>0.2</chance>
       </li>
       <li Class="XylXenos.Genes.GeneDefExtension_CongenitalHediff">
         <hediffGivers>
