@@ -4,6 +4,7 @@ using Verse.AI;
 
 namespace XylXenos
 {
+    [UsedFromXml]
     public class JobGiver_SeeingRed : ThinkNode_JobGiver
     {
         private const int MinMeleeChaseTicks = 420;

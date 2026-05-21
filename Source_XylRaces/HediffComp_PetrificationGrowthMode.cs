@@ -1,8 +1,7 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using RimWorld;
 using Verse;
 
 namespace XylXenos
@@ -13,6 +12,7 @@ namespace XylXenos
         Dormant,
     }
 
+    [UsedFromXml]
     public class HediffCompProperties_PetrificationGrowthMode : HediffCompProperties_SeverityPerDay
     {
         public float becomeActiveMtbDays = -1;

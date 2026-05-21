@@ -1,9 +1,8 @@
-﻿using JetBrains.Annotations;
-using Verse;
+﻿using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class HediffCompProperties_ForceMentalState : HediffCompProperties
     {
         public MentalStateDef mentalState;

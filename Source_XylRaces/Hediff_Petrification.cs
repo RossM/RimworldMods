@@ -2,6 +2,7 @@
 
 namespace XylXenos
 {
+    [UsedFromXml]
     public class Hediff_Petrification : HediffWithComps
     {
         public PetrificationGrowthMode GrowthMode =>

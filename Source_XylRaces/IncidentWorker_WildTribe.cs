@@ -7,6 +7,7 @@ using Verse;
 
 namespace XylXenos
 {
+    [UsedFromXml]
     public class IncidentDefExtension_WildTribe : DefModExtension
     {
         public class TraitChance
@@ -29,7 +30,7 @@ namespace XylXenos
         public List<TraitChance> forcedTraits;
     }
 
-    [UsedImplicitly]
+    [UsedFromXml]
     public class IncidentWorker_WildTribe : IncidentWorker
     {
         public IncidentDefExtension_WildTribe DefExt => def.GetModExtension<IncidentDefExtension_WildTribe>();

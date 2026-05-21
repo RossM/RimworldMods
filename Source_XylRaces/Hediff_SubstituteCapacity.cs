@@ -6,6 +6,7 @@ using Verse;
 
 namespace XylXenos
 {
+    [UsedFromXml]
     public class HediffDefExtension_SubstituteCapacity : DefModExtension
     {
         public enum SubstitutionMode
@@ -21,6 +22,7 @@ namespace XylXenos
         public List<StatDef> excludeStats;
     }
 
+    [UsedFromXml]
     public class Hediff_SubstituteCapacity : HediffWithComps
     {
         public HediffDefExtension_SubstituteCapacity DefExt => def.GetModExtension<HediffDefExtension_SubstituteCapacity>();

@@ -8,7 +8,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class IncidentDefExtension_GeneticDisease : DefModExtension
     {
         public List<GeneDef> requiredGenesAny;

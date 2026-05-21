@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class Hediff_BioRejection : Hediff
     {
         public override bool ShouldRemove => false;

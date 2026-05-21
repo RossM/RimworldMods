@@ -4,6 +4,7 @@ using Verse;
 
 namespace XylXenos
 {
+    [UsedFromXml]
     public class HediffCompProperties_PetrificationTendDuration : HediffCompProperties_TendDuration
     {
         public float changeModeAtTotalTendQuality;
@@ -136,11 +137,13 @@ namespace XylXenos
             stringBuilder.AppendLine("severity/day: " + SeverityChangePerDay());
             if (TProps.disappearsAtTotalTendQuality >= 0)
             {
-                stringBuilder.AppendLine("totalTendQuality: " + totalTendQuality.ToString("F2") + " / " + TProps.disappearsAtTotalTendQuality);
+                stringBuilder.AppendLine("totalTendQuality: " + totalTendQuality.ToString("F2") + " / " +
+                                         TProps.disappearsAtTotalTendQuality);
             }
             else if (TProps.changeModeAtTotalTendQuality >= 0)
             {
-                stringBuilder.AppendLine("totalTendQuality: " + totalTendQuality.ToString("F2") + " / " + TProps.changeModeAtTotalTendQuality);
+                stringBuilder.AppendLine("totalTendQuality: " + totalTendQuality.ToString("F2") + " / " +
+                                         TProps.changeModeAtTotalTendQuality);
             }
 
             return stringBuilder.ToString().Trim();

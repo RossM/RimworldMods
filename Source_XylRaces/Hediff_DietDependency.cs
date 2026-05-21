@@ -5,6 +5,7 @@ using XylXenos.Genes;
 
 namespace XylXenos
 {
+    [UsedFromXml]
     public class Hediff_DietDependency : Hediff_Genetic
     {
         enum Stages : int

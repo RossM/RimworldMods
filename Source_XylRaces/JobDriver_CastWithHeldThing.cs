@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using Verse.AI;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class JobDriver_CastWithHeldThing : JobDriver_CastAbility
     {
         protected override IEnumerable<Toil> MakeNewToils()

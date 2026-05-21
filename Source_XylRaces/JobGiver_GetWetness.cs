@@ -5,6 +5,7 @@ using Verse.AI;
 
 namespace XylXenos
 {
+    [UsedFromXml]
     public class JobGiver_GetWetness : ThinkNode_JobGiver
     {
         private static List<ThingDef> wetnessGivingThingsInternal;

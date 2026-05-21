@@ -1,9 +1,8 @@
-﻿using JetBrains.Annotations;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class Hediff_PetrifiedFlesh : HediffWithCompsExt
     {
         public virtual float RelativeSeverity => Severity / Part.def.GetMaxHealth(pawn);

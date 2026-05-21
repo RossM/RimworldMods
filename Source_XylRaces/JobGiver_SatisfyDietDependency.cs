@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -8,7 +7,7 @@ using Verse.AI;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class JobGiver_SatisfyDietDependency : ThinkNode_JobGiver
     {
         private static readonly List<Hediff_DietDependency> tmpDietDependencies = [];

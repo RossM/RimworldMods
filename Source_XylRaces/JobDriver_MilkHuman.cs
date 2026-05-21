@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -8,7 +7,7 @@ using XylXenos.Genes;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
     {
         private const float WorkTotal = 400f;

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class HediffCompProperties_GiveHediffExt : HediffCompProperties
     {
         public class TriggeredHediff

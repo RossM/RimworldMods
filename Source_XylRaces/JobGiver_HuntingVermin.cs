@@ -1,11 +1,10 @@
-﻿using JetBrains.Annotations;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using Verse.AI;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class JobGiver_HuntingVermin : ThinkNode_JobGiver
     {
         protected override Job TryGiveJob(Pawn pawn)

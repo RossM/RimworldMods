@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class GeneTemplateDef : Def
     {
         public enum GeneTemplateType
