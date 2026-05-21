@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+
 // ReSharper disable UnusedParameter.Local
 
 namespace XylXenos

@@ -48,7 +48,7 @@ namespace XylXenos
                         "PeriodDays".Translate(deficiencyDays).Named("DEFICIENCYDURATION"),
                         "PeriodDays".Translate(comaDays).Named("COMADURATION"),
                         "PeriodDays".Translate(deathDays).Named("DEATHDURATION")).Resolve();
-                        // ReSharper restore StringLiteralTypo
+                    // ReSharper restore StringLiteralTypo
                     float daysBehind = Severity / severityPerDay;
                     float nutritionPerDay = severityPerDay * Gene.DefExt.severityReductionPerNutrition;
                     text += "\n\n" + "XylIngestedBehind".Translate(Gene.DefExt.foodLabel,

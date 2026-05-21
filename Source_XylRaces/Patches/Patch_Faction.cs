@@ -14,7 +14,8 @@ namespace XylXenos.Patches
         {
             __instance.ideos?.Notify_MemberGainedOrLost();
 
-            if (p.RaceProps.Humanlike &&!__instance.def.humanlikeFaction && !p.IsSubhuman && !p.IsCreepJoiner && !p.IsWildMan() && !p.IsDuplicate && !p.Dead)
+            if (p.RaceProps.Humanlike && !__instance.def.humanlikeFaction && !p.IsSubhuman && !p.IsCreepJoiner && !p.IsWildMan() &&
+                !p.IsDuplicate && !p.Dead)
                 Log.Error("Humanlike pawn " + p.LabelShort + " was added to non-humanlike faction " + __instance.def.label);
 
             return false;

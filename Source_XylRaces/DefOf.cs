@@ -6,6 +6,12 @@ namespace XylXenos
     [RimWorld.DefOf]
     public static class DefOf
     {
+        #region GeneDefs
+
+        public static GeneDef XylEcholocation;
+
+        #endregion
+
         static DefOf()
         {
             DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));
@@ -31,12 +37,6 @@ namespace XylXenos
         public static StatDef XylRawNonMeatNutritionFactor;
         public static StatDef XylResistanceFallRate;
         public static StatDef XylWillFallRate;
-
-        #endregion
-
-        #region GeneDefs
-
-        public static GeneDef XylEcholocation;
 
         #endregion
 
