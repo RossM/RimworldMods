@@ -295,7 +295,7 @@
     <label>petrification</label>
     <description>Carriers of this gene have a chance to develop a disease named petrification. Petrification slowly replaces tissues throughout the body with stone. The disease is incurable, but progress can be slowed with medical treatment, and the affected tissues can be removed surgically.</description>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>3</biostatMet>
+    <biostatMet>4</biostatMet>
     <displayCategory>Healing</displayCategory>
     <displayOrderInCategory>210</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
@@ -309,18 +309,19 @@
     </modExtensions>
   </GeneDef>
 
-  <GeneDef ParentName="GeneLearningBase">
+  <GeneDef>
     <defName>XylLearning_Focused</defName>
     <label>focused</label>
     <description>Carriers of this gene care deeply about subjects they are interested in. They learn faster for skills they have a burning passion in, but much slower at skills they have no passion in.</description>
     <!--<iconPath>UI/Icons/Genes/Gene_SlowLearning</iconPath>-->
+    <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>36</displayOrderInCategory>
     <statOffsets>
       <XylLearnFactorPassionMajor>0.5</XylLearnFactorPassionMajor>
       <XylLearnFactorPassionNone>-0.25</XylLearnFactorPassionNone>
     </statOffsets>
     <biostatCpx>2</biostatCpx>
-    <biostatMet>2</biostatMet>
+    <biostatMet>1</biostatMet>
   </GeneDef>
 
 
