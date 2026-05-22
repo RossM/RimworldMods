@@ -38,7 +38,7 @@ namespace XylXenos
             base.PostStart(reason);
 
             if (!DefExt.iconPath.NullOrEmpty())
-                mote = MoteMaker.MakeThoughtBubble(pawn, DefExt.iconPath, maintain: true);
+                mote = MoteMaker.MakeThoughtBubble(pawn, DefExt.iconPath, maintain: false);
         }
 
         public override void MentalStateTick(int delta)

@@ -309,4 +309,18 @@
     </modExtensions>
   </GeneDef>
 
+  <GeneDef ParentName="GeneLearningBase">
+    <defName>XylLearning_Focused</defName>
+    <label>focused</label>
+    <description>Carriers of this gene care deeply about subjects they are interested in. They learn faster for skills they have a burning passion in, but much slower at skills they have no passion in.</description>
+    <!--<iconPath>UI/Icons/Genes/Gene_SlowLearning</iconPath>-->
+    <displayOrderInCategory>36</displayOrderInCategory>
+    <statOffsets>
+      <XylLearnFactorPassionMajor>0.5</XylLearnFactorPassionMajor>
+      <XylLearnFactorPassionNone>-0.25</XylLearnFactorPassionNone>
+    </statOffsets>
+    <biostatMet>2</biostatMet>
+  </GeneDef>
+
+
 </Defs>

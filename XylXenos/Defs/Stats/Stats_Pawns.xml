@@ -241,4 +241,44 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
 
+  <StatDef>
+    <defName>XylLearnFactorPassionNone</defName>
+    <label>learning rate (no passion)</label>
+    <description>The character's multiplier on the learning rate for skills with no passion.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>0.35</defaultBaseValue>
+    <showOnAnimals>false</showOnAnimals>
+    <showOnDrones>false</showOnDrones>
+    <hideAtValue>0.35</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>3501</displayPriorityInCategory>
+  </StatDef>
+  <StatDef>
+    <defName>XylLearnFactorPassionMinor</defName>
+    <label>learning rate (passion)</label>
+    <description>The character's multiplier on the learning rate for skills with regular passion.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <showOnAnimals>false</showOnAnimals>
+    <showOnDrones>false</showOnDrones>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>3501</displayPriorityInCategory>
+  </StatDef>
+  <StatDef>
+    <defName>XylLearnFactorPassionMajor</defName>
+    <label>learning rate (burning passion)</label>
+    <description>The character's multiplier on the learning rate for skills with burning passion.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1.5</defaultBaseValue>
+    <showOnAnimals>false</showOnAnimals>
+    <showOnDrones>false</showOnDrones>
+    <hideAtValue>1.5</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>3501</displayPriorityInCategory>
+  </StatDef>
+
 </Defs>

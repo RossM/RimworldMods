@@ -20,6 +20,9 @@ namespace XylXenos
         public static StatDef XylDrugEffectMultiplier;
         public static StatDef XylGlobalAddictionChanceFactor;
         public static StatDef XylHypothermiaProgressionFactor;
+        public static StatDef XylLearnFactorPassionMajor;
+        public static StatDef XylLearnFactorPassionMinor;
+        public static StatDef XylLearnFactorPassionNone;
         public static StatDef XylMalnutritionProgressionFactor;
         public static StatDef XylRangedDodgeChance;
         public static StatDef XylRawAnimalProductFoodPoisonChanceOffset;
