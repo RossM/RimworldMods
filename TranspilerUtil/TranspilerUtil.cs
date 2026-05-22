@@ -391,6 +391,45 @@ namespace TranspilerUtil
                     continue;
                 }
 
+                bool found = false;
+                for (int j = 0; j < calleeParameterTypes.Length; j++)
+                {
+                    if (calleeParameterTypes[j].Name.StartsWith("<") &&
+                        Attribute.IsDefined(calleeParameterTypes[j], typeof(CompilerGeneratedAttribute)))
+                    {
+                        var field = calleeParameterTypes[j].GetField(replacementParameterName, AccessTools.all);
+                        if (field != null)
+                        {
+                            output.Add(CodeInstruction.LoadArgument(j));
+                            output.Add(new CodeInstruction(OpCodes.Ldfld, field));
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (found)
+                    continue;
+
+                for (int j = 0; j < callerParameterTypes.Length; j++)
+                {
+                    if (callerParameterTypes[j].Name.StartsWith("<") &&
+                        Attribute.IsDefined(callerParameterTypes[j], typeof(CompilerGeneratedAttribute)))
+                    {
+                        var field = callerParameterTypes[j].GetField(replacementParameterName, AccessTools.all);
+                        if (field != null)
+                        {
+                            output.Add(CodeInstruction.LoadArgument(j));
+                            output.Add(new CodeInstruction(OpCodes.Ldfld, field));
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (found)
+                    continue;
+
                 calleeIndex = calleeParameterTypes.FirstIndexOf(type => type == replacementParameterType);
                 if (calleeIndex >= 0)
                 {

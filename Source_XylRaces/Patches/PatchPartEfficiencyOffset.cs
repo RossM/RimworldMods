@@ -15,10 +15,9 @@ namespace XylXenos.Patches
         [Feature(typeof(HediffWithCompsExt))]
         [WrappedMember(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset))]
         [InfixPatch(typeof(HediffStatsUtility), "<SpecialDisplayStats>:MoveNext")]
-        public static float HediffStage_partEfficiencyOffset_Wrapper(HediffStage __instance, object __caller)
+        public static float HediffStage_partEfficiencyOffset_Wrapper(HediffStage __instance, Hediff instance)
         {
-            var hediff = hediffGetter(__caller);
-            if (hediff is HediffWithCompsExt ext)
+            if (instance is HediffWithCompsExt ext)
                 return ext.PartEfficiencyOffset;
 
             return __instance.partEfficiencyOffset;
