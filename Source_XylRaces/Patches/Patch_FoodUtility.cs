@@ -2,7 +2,6 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
-using XylXenos.Genes;
 using static RimWorld.FoodUtility;
 
 namespace XylXenos.Patches

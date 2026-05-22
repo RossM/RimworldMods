@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
-using TranspilerUtil;
 using Verse;
 using XylXenos.Genes;
 
