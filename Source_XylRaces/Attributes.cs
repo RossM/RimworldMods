@@ -27,4 +27,34 @@ namespace XylXenos
 
     [MeansImplicitUse]
     public class UsedFromXmlAttribute : Attribute;
+
+    [MeansImplicitUse]
+    public class WrappedMemberAttribute(Type type, string memberName, Type[] parameterTypes = null) : Attribute
+    {
+        public readonly Type type = type;
+        public readonly string memberName = memberName;
+        public readonly Type[] parameterTypes = parameterTypes;
+    }
+
+    [MeansImplicitUse]
+    public class InfixPatchAttribute : Attribute
+    {
+        public readonly Type type;
+        public readonly string methodName;
+        public readonly Type[] parameterTypes;
+
+        public InfixPatchAttribute(string methodName, Type[] parameterTypes = null)
+        {
+            this.type = null;
+            this.methodName = methodName;
+            this.parameterTypes = parameterTypes;
+        }
+
+        public InfixPatchAttribute(Type type, string methodName, Type[] parameterTypes = null)
+        {
+            this.type = type;
+            this.methodName = methodName;
+            this.parameterTypes = parameterTypes;
+        }
+    }
 }
