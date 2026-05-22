@@ -319,6 +319,7 @@
       <XylLearnFactorPassionMajor>0.5</XylLearnFactorPassionMajor>
       <XylLearnFactorPassionNone>-0.25</XylLearnFactorPassionNone>
     </statOffsets>
+    <biostatCpx>2</biostatCpx>
     <biostatMet>2</biostatMet>
   </GeneDef>
 
