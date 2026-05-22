@@ -64,32 +64,23 @@ namespace XylXenos
                     if (wrappedMemberAttribute == null)
                         continue;
 
-                    MemberInfo wrappedMember = wrappedMemberAttribute.parameterTypes == null
-                        ? wrappedMemberAttribute.type.GetMember(wrappedMemberAttribute.memberName, AccessTools.all).Single()
-                        : wrappedMemberAttribute.type.GetMethod(wrappedMemberAttribute.memberName, AccessTools.all, null,
-                            wrappedMemberAttribute.parameterTypes, []);
-
-                    if (wrappedMember is PropertyInfo p)
-                        wrappedMember = p.GetMethod;
+                    MemberInfo wrappedMember = GetMember(wrappedMemberAttribute, wrappedMemberAttribute.type);
 
                     foreach (var infixPatchAttribute in infixPatchAttributes)
                     {
                         var patchedType = infixPatchAttribute.type ?? harmonyAttribute.info.declaringType;
 
-                        MethodInfo targetMethod = infixPatchAttribute.parameterTypes == null
-                            ? patchedType.GetMethod(infixPatchAttribute.methodName, AccessTools.all)
-                            : patchedType.GetMethod(infixPatchAttribute.methodName, AccessTools.all, null,
-                                infixPatchAttribute.parameterTypes, []);
+                        MethodInfo targetMethod = GetMethod(infixPatchAttribute, patchedType);
 
                         patches.Add(new() { targetMethod = targetMethod, wrappedMember = wrappedMember, wrapper = method });
                     }
                 }
             }
 
-            foreach (var patch in patches)
-            {
-                Debug.Log($"InfixPatch: {patch.targetMethod} : {patch.wrappedMember} : {patch.wrapper}");
-            }
+            //foreach (var patch in patches)
+            //{
+            //    Debug.Log($"InfixPatch: {patch.targetMethod} : {patch.wrappedMember} : {patch.wrapper}");
+            //}
 
             AssemblyBuilder assemblyBuilder
                 = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" },
@@ -104,10 +95,37 @@ namespace XylXenos
 
                 MethodInfo transpiler = MakeTranspiler(moduleBuilder, rules,
                     $"{group.Key.DeclaringType?.FullName?.Replace('.', '_')}_{group.Key.Name}_Transpiler");
-                Debug.Log($"transpiler = {transpiler} ({transpiler.IsStatic})");
+
+                Debug.Log($"Infix patching {group.Key} [{group.Count()} rule(s)]");
 
                 harmony.Patch(group.Key, transpiler: new HarmonyMethod(transpiler));
             }
+        }
+
+        private static MethodInfo GetMethod(InfixPatchAttribute infixPatchAttribute, Type type)
+        {
+            string[] nameParts = infixPatchAttribute.methodName.Split([':']);
+            for (int i = 0; i < nameParts.Length - 1; i++)
+                type = AccessTools.InnerTypes(type).First(type => type.Name.Contains(nameParts[i]));
+            string memberName = nameParts[nameParts.Length - 1];
+
+            return infixPatchAttribute.parameterTypes == null
+                ? type.GetMethod(memberName, AccessTools.all)
+                : type.GetMethod(memberName, AccessTools.all, null, infixPatchAttribute.parameterTypes, []);
+        }
+
+        private static MemberInfo GetMember(WrappedMemberAttribute wrappedMemberAttribute, Type type)
+        {
+            var memberName = wrappedMemberAttribute.memberName;
+
+            MemberInfo wrappedMember = wrappedMemberAttribute.parameterTypes == null
+                ? type.GetMember(memberName, AccessTools.all).Single()
+                : type.GetMethod(memberName, AccessTools.all, null,
+                    wrappedMemberAttribute.parameterTypes, []);
+
+            if (wrappedMember is PropertyInfo propertyInfo)
+                wrappedMember = propertyInfo.GetMethod;
+            return wrappedMember;
         }
 
         private static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, List<InstructionMatcher.Rule> rules, string typeName)

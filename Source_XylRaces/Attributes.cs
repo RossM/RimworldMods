@@ -29,6 +29,7 @@ namespace XylXenos
     public class UsedFromXmlAttribute : Attribute;
 
     [MeansImplicitUse]
+    [AttributeUsage(AttributeTargets.Method)]
     public class WrappedMemberAttribute(Type type, string memberName, Type[] parameterTypes = null) : Attribute
     {
         public readonly Type type = type;
@@ -37,24 +38,15 @@ namespace XylXenos
     }
 
     [MeansImplicitUse]
-    public class InfixPatchAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public class InfixPatchAttribute(Type type, string methodName, Type[] parameterTypes = null) : Attribute
     {
-        public readonly Type type;
-        public readonly string methodName;
-        public readonly Type[] parameterTypes;
+        public readonly Type type = type;
+        public readonly string methodName = methodName;
+        public readonly Type[] parameterTypes = parameterTypes;
 
-        public InfixPatchAttribute(string methodName, Type[] parameterTypes = null)
+        public InfixPatchAttribute(string methodName, Type[] parameterTypes = null) : this(null, methodName, parameterTypes)
         {
-            this.type = null;
-            this.methodName = methodName;
-            this.parameterTypes = parameterTypes;
-        }
-
-        public InfixPatchAttribute(Type type, string methodName, Type[] parameterTypes = null)
-        {
-            this.type = type;
-            this.methodName = methodName;
-            this.parameterTypes = parameterTypes;
         }
     }
 }

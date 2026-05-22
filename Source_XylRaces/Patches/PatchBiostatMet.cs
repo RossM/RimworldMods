@@ -15,37 +15,12 @@ namespace XylXenos.Patches
     [HarmonyPatch]
     public static class PatchBiostatMet
     {
-        private static readonly InstructionMatcher.Rule Rule_GeneDef_biostatMet
-            = InstructionMatcher.MakeRedirectRule(nameof(GeneDef.biostatMet), GeneDef_biostatMet_Wrapper);
-
-        [UsedImplicitly]
-        public static IEnumerable<MethodBase> TargetMethods()
-        {
-            yield return AccessTools.Method(typeof(Dialog_CreateXenotype), "DrawGene");
-            yield return AccessTools.Method(typeof(GeneCreationDialogBase), "OnGenesChanged");
-            yield return AccessTools.Method(typeof(GeneDef), "GetDescriptionFull");
-            Type iteratorType = AccessTools.InnerTypes(typeof(GeneDef)).First(type => type.Name.Contains("<SpecialDisplayStats>"));
-            yield return AccessTools.Method(iteratorType, "MoveNext");
-        }
-
         [Feature(typeof(BonusGene))]
-        [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> Transpiler(
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            new InstructionMatcher()
-            {
-                Rules =
-                {
-                    Rule_GeneDef_biostatMet
-                }
-            }.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
+        [WrappedMember(typeof(GeneDef), nameof(GeneDef.biostatMet))]
+        [InfixPatch(typeof(Dialog_CreateXenotype), "DrawGene")]
+        [InfixPatch(typeof(GeneCreationDialogBase), "OnGenesChanged")]
+        [InfixPatch(typeof(GeneDef), "GetDescriptionFull")]
+        [InfixPatch(typeof(GeneDef), "<SpecialDisplayStats>:MoveNext")]
         public static int GeneDef_biostatMet_Wrapper(GeneDef __instance)
         {
             return __instance.BiostatMetForDisplay();
