@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 using TranspilerUtil;
 using UnityEngine;
 using Verse;
+using Exception = System.Exception;
 
 namespace XylXenos
 {
@@ -56,23 +57,36 @@ namespace XylXenos
 
                 foreach (MethodInfo method in type.DeclaredMethods)
                 {
-                    var wrappedMemberAttribute
-                        = (WrappedMemberAttribute)Attribute.GetCustomAttribute(method, typeof(WrappedMemberAttribute));
-                    var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(InfixPatchAttribute))
-                        .Cast<InfixPatchAttribute>().ToArray();
-
-                    if (wrappedMemberAttribute == null)
-                        continue;
-
-                    MemberInfo wrappedMember = GetMember(wrappedMemberAttribute, wrappedMemberAttribute.type);
-
-                    foreach (var infixPatchAttribute in infixPatchAttributes)
+                    try
                     {
-                        var patchedType = infixPatchAttribute.type ?? harmonyAttribute.info.declaringType;
+                        var wrappedMemberAttribute
+                            = (WrappedMemberAttribute)Attribute.GetCustomAttribute(method, typeof(WrappedMemberAttribute));
+                        var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(InfixPatchAttribute))
+                            .Cast<InfixPatchAttribute>().ToArray();
 
-                        MethodInfo targetMethod = GetMethod(infixPatchAttribute, patchedType);
+                        if (wrappedMemberAttribute == null)
+                            continue;
 
-                        patches.Add(new() { targetMethod = targetMethod, wrappedMember = wrappedMember, wrapper = method });
+                        MemberInfo wrappedMember = GetMember(wrappedMemberAttribute.type, wrappedMemberAttribute.memberName,
+                            wrappedMemberAttribute.parameterTypes);
+                        if (wrappedMember == null)
+                            throw new InvalidOperationException("null wrapped member");
+
+                        foreach (var infixPatchAttribute in infixPatchAttributes)
+                        {
+                            var patchedType = infixPatchAttribute.type ?? harmonyAttribute.info.declaringType;
+
+                            MethodInfo targetMethod = (MethodInfo)GetMember(patchedType, infixPatchAttribute.methodName,
+                                infixPatchAttribute.parameterTypes);
+                            if (targetMethod == null)
+                                throw new InvalidOperationException("null target method");
+
+                            patches.Add(new() { targetMethod = targetMethod, wrappedMember = wrappedMember, wrapper = method });
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new InvalidOperationException($"Error processing {type}:{method}", e);
                     }
                 }
             }
@@ -102,26 +116,17 @@ namespace XylXenos
             }
         }
 
-        private static MethodInfo GetMethod(InfixPatchAttribute infixPatchAttribute, Type type)
+        private static MemberInfo GetMember(Type type, string memberName, Type[] parameterTypes)
         {
-            string[] nameParts = infixPatchAttribute.methodName.Split([':']);
+            string[] nameParts = memberName.Split([':']);
             for (int i = 0; i < nameParts.Length - 1; i++)
                 type = AccessTools.InnerTypes(type).First(type => type.Name.Contains(nameParts[i]));
-            string memberName = nameParts[nameParts.Length - 1];
+            memberName = nameParts[nameParts.Length - 1];
 
-            return infixPatchAttribute.parameterTypes == null
-                ? type.GetMethod(memberName, AccessTools.all)
-                : type.GetMethod(memberName, AccessTools.all, null, infixPatchAttribute.parameterTypes, []);
-        }
-
-        private static MemberInfo GetMember(WrappedMemberAttribute wrappedMemberAttribute, Type type)
-        {
-            var memberName = wrappedMemberAttribute.memberName;
-
-            MemberInfo wrappedMember = wrappedMemberAttribute.parameterTypes == null
+            MemberInfo wrappedMember = parameterTypes == null
                 ? type.GetMember(memberName, AccessTools.all).Single()
                 : type.GetMethod(memberName, AccessTools.all, null,
-                    wrappedMemberAttribute.parameterTypes, []);
+                    parameterTypes, []);
 
             if (wrappedMember is PropertyInfo propertyInfo)
                 wrappedMember = propertyInfo.GetMethod;

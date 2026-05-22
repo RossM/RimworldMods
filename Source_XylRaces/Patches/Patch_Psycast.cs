@@ -12,48 +12,11 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Psycast))]
     public static class Patch_Psycast
     {
-        private static readonly InstructionMatcher.Rule Rule_GetPsylinkLevel
-            = InstructionMatcher.MakeRedirectRule(PawnUtility.GetPsylinkLevel, GetPsylinkLevel_Wrapper);
-
         [Feature(typeof(Psycast))]
-        [HarmonyTranspiler]
-        [HarmonyPatch("GizmoDisabled")]
-        public static IEnumerable<CodeInstruction> GizmoDisabled_Transpiler(
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            new InstructionMatcher()
-            {
-                Rules =
-                {
-                    Rule_GetPsylinkLevel
-                }
-            }.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
-        [Feature(typeof(Psycast))]
-        [HarmonyTranspiler]
-        [HarmonyPatch("CanCast", MethodType.Getter)]
-        public static IEnumerable<CodeInstruction> CanCast_Transpiler(
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            new InstructionMatcher()
-            {
-                Rules =
-                {
-                    Rule_GetPsylinkLevel
-                }
-            }.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [WrappedMember(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel))]
+        [InfixPatch("GizmoDisabled")]
+        [InfixPatch("CanCast")]
         public static int GetPsylinkLevel_Wrapper(Psycast __caller, Pawn pawn)
         {
             return pawn.GetPsylinkLevelFor(__caller.def);
