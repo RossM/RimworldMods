@@ -110,7 +110,9 @@ namespace XylXenos
                 MethodInfo transpiler = MakeTranspiler(moduleBuilder, rules,
                     $"{group.Key.DeclaringType?.FullName?.Replace('.', '_')}_{group.Key.Name}_Transpiler");
 
-                Debug.Log($"Infix patching {group.Key.DeclaringType}::{group.Key} [{group.Count()} rule(s)]");
+                Debug.Log($"Infix patching {group.Key.DeclaringType}::{group.Key}");
+                foreach (var patch in group)
+                    Debug.Log($"  {patch.wrappedMember} -> {patch.wrapper}");
 
                 harmony.Patch(group.Key, transpiler: new HarmonyMethod(transpiler));
             }

@@ -12,37 +12,9 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(PawnGenerator))]
     public static class Patch_PawnGenerator
     {
-        private static readonly InstructionMatcher Fixup_TryGenerateNewPawnInternal = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo,
-                    GiveAppropriateBioAndNameTo_Wrapper)
-            }
-        };
-
-        private static readonly InstructionMatcher Fixup_DefaultXenotype = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(nameof(XenotypeDefOf.Baseliner), XenotypeDefOf_Baseliner_Wrapper),
-                InstructionMatcher.MakeRedirectRule("<XenotypesAvailableFor>g__AddOrAdjust|49_0", AddOrAdjust_Wrapper),
-            }
-        };
-
         [Feature(typeof(GeneDefExtension_GenderRatio))]
-        [HarmonyTranspiler]
-        [HarmonyPatch("TryGenerateNewPawnInternal")]
-        public static IEnumerable<CodeInstruction> TryGenerateNewPawnInternal_Transpiler(
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_TryGenerateNewPawnInternal.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
+        [WrappedMember(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
+        [InfixPatch("TryGenerateNewPawnInternal")]
         public static void GiveAppropriateBioAndNameTo_Wrapper(
             Pawn pawn,
             FactionDef factionType,
@@ -89,24 +61,17 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(XenotypeSetWithDefault))]
-        [HarmonyTranspiler]
-        [HarmonyPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
-        public static IEnumerable<CodeInstruction> XenotypesAvailableFor_Transpiler(
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_DefaultXenotype.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
+        [WrappedMember(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
+        [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
         public static XenotypeDef XenotypeDefOf_Baseliner_Wrapper(FactionDef factionDef = null, Faction faction = null)
         {
             FactionDef factionDef2 = faction?.def ?? factionDef;
             return XenotypeSetWithDefault.GetDefaultXenotype(factionDef2?.xenotypeSet);
         }
 
+        [Feature(typeof(XenotypeSetWithDefault))]
+        [WrappedMember(typeof(PawnGenerator), "<XenotypesAvailableFor>g__AddOrAdjust|49_0")]
+        [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
         public static void AddOrAdjust_Wrapper(XenotypeChance xenotypeChance, FactionDef factionDef = null, Faction faction = null)
         {
             FactionDef factionDef2 = faction?.def ?? factionDef;
