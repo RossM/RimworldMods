@@ -17,28 +17,10 @@ namespace XylXenos.Patches
         private static readonly TryGiveSolidBioTo_Fn TryGiveSolidBioTo_Original = AccessTools.MethodDelegate<TryGiveSolidBioTo_Fn>(
             AccessTools.Method(typeof(PawnBioAndNameGenerator), "TryGiveSolidBioTo"));
 
-        private static readonly InstructionMatcher Fixup_TryGiveSolidBioTo = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule("TryGiveSolidBioTo", TryGiveSolidBioTo_Wrapper)
-            }
-        };
-
         [Feature(typeof(XenotypeDefExtension))]
-        [HarmonyTranspiler]
-        [HarmonyPatch(nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
-        public static IEnumerable<CodeInstruction> GiveAppropriateBioAndNameTo_Transpiler(
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_TryGiveSolidBioTo.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [WrappedMember(typeof(PawnBioAndNameGenerator), "TryGiveSolidBioTo")]
+        [InfixPatch(nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
         public static bool TryGiveSolidBioTo_Wrapper(
             Pawn pawn,
             string requiredLastName,

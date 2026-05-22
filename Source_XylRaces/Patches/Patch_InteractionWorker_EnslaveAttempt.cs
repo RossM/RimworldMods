@@ -12,29 +12,10 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(InteractionWorker_EnslaveAttempt))]
     public static class Patch_InteractionWorker_EnslaveAttempt
     {
-        private static readonly InstructionMatcher.Rule Rule_GetStatValue
-            = InstructionMatcher.MakeRedirectRule(StatExtension.GetStatValue, GetStatValue_Wrapper);
-
         [Feature(nameof(DefOf.XylWillFallRate))]
-        [HarmonyTranspiler]
-        [HarmonyPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
-        public static IEnumerable<CodeInstruction> Interacted_Transpiler(
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            new InstructionMatcher()
-            {
-                Rules =
-                {
-                    Rule_GetStatValue
-                }
-            }.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [WrappedMember(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+        [InfixPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
         public static float GetStatValue_Wrapper(Thing thing, StatDef stat, Pawn recipient, bool applyPostProcess, int cacheStaleAfterTicks)
         {
             float value = thing.GetStatValue(stat, applyPostProcess, cacheStaleAfterTicks);

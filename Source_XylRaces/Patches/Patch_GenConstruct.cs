@@ -13,28 +13,9 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(GenConstruct))]
     public static class Patch_GenConstruct
     {
-        private static readonly InstructionMatcher.Rule Rule_MembersCanBuild
-            = InstructionMatcher.MakeRedirectRule(nameof(Ideo.MembersCanBuild), MembersCanBuild_Wrapper);
-
         [Feature(typeof(GeneDefExtension_Designator))]
-        [HarmonyTranspiler]
-        [HarmonyPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
-        public static IEnumerable<CodeInstruction> CanConstruct_Transpiler(
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            new InstructionMatcher()
-            {
-                Rules =
-                {
-                    Rule_MembersCanBuild
-                }
-            }.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
+        [WrappedMember(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
+        [InfixPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
         public static bool MembersCanBuild_Wrapper(Ideo __instance, Thing thing, Pawn p)
         {
             if (__instance.MembersCanBuild(thing))
