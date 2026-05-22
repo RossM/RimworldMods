@@ -14,9 +14,6 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Thing))]
     public static class Patch_Thing
     {
-        private static readonly InstructionMatcher.Rule Rule_GetStatValue
-            = InstructionMatcher.MakeRedirectRule(StatExtension.GetStatValue, GetStatValue_Wrapper);
-
         [Feature(typeof(DietDependency))]
         [HarmonyPrefix]
         [HarmonyPatch("IngestedCalculateAmounts")]
@@ -42,25 +39,9 @@ namespace XylXenos.Patches
         }
 
         [Feature(nameof(FoodHelpers.GetFoodPoisonChanceOffset))]
-        [HarmonyTranspiler]
-        [HarmonyPatch("Ingested")]
-        public static IEnumerable<CodeInstruction> Ingested_Transpiler(
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            new InstructionMatcher()
-            {
-                Rules =
-                {
-                    Rule_GetStatValue
-                }
-            }.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [WrappedMember(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+        [InfixPatch("Ingested")]
         public static float GetStatValue_Wrapper(Pawn ingester, Thing thing, StatDef stat, bool applyPostProcess, int cacheStaleAfterTicks)
         {
             float value = thing.GetStatValue(stat, applyPostProcess, cacheStaleAfterTicks);

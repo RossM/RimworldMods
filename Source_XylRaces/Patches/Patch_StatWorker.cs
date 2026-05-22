@@ -145,22 +145,6 @@ namespace XylXenos.Patches
             }
         };
 
-        private static readonly InstructionMatcher Fixup_GetValueUnfinalized = new()
-        {
-            Rules =
-            {
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Field(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
-                    PawnCapacityOffset_capacity_Wrapper
-                ),
-
-                InstructionMatcher.MakeRedirectRule(
-                    AccessTools.Field(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
-                    PawnCapacityFactor_capacity_Wrapper
-                ),
-            }
-        };
-
         [Feature(typeof(Hediff_SubstituteCapacity))]
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
@@ -190,21 +174,11 @@ namespace XylXenos.Patches
             return capacity;
         }
 
-        [Feature(typeof(Hediff_SubstituteCapacity))]
-        [HarmonyTranspiler]
-        [HarmonyPatch(nameof(StatWorker.GetValueUnfinalized))]
-        public static IEnumerable<CodeInstruction> GetValueUnfinalized_Transpiler(
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            Fixup_GetValueUnfinalized.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
         // Note: this patch is performance-sensitive
+        [Feature(typeof(Hediff_SubstituteCapacity))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [WrappedMember(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity))]
+        [InfixPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
         public static PawnCapacityDef PawnCapacityOffset_capacity_Wrapper(
             PawnCapacityOffset __instance,
             StatWorker __caller,
@@ -215,7 +189,10 @@ namespace XylXenos.Patches
             return foundHediff != null ? foundHediff.DefExt.substituteCapacity : __instance.capacity;
         }
 
+        [Feature(typeof(Hediff_SubstituteCapacity))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [WrappedMember(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity))]
+        [InfixPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
         public static PawnCapacityDef PawnCapacityFactor_capacity_Wrapper(
             PawnCapacityFactor __instance,
             StatWorker __caller,

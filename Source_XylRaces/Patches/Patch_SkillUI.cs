@@ -12,31 +12,12 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(SkillUI))]
     public static class Patch_SkillUI
     {
-        private static readonly InstructionMatcher.Rule Rule_GetLearningFactor
-            = InstructionMatcher.MakeRedirectRule(SkillUI.GetLearningFactor, GetLearningFactor_Wrapper);
-
         [Feature(nameof(DefOf.XylLearnFactorPassionNone))]
         [Feature(nameof(DefOf.XylLearnFactorPassionMinor))]
         [Feature(nameof(DefOf.XylLearnFactorPassionMajor))]
-        [HarmonyTranspiler]
-        [HarmonyPatch("GetSkillDescription")]
-        public static IEnumerable<CodeInstruction> GetSkillDescription_Transpiler(
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            new InstructionMatcher()
-            {
-                Rules =
-                {
-                    Rule_GetLearningFactor
-                }
-            }.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [WrappedMember(typeof(SkillUI), nameof(SkillUI.GetLearningFactor))]
+        [InfixPatch("GetSkillDescription")]
         public static float GetLearningFactor_Wrapper(Passion passion, SkillRecord sk)
         {
             return passion switch
