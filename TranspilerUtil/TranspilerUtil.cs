@@ -337,50 +337,6 @@ namespace TranspilerUtil
             };
         }
 
-        public static Rule MakeRedirectRule(MemberInfo oldMember, Delegate newMember, int minMatches = 1)
-        {
-            return MakeRedirectRule(oldMember, newMember.Method, minMatches);
-        }
-
-        public static Rule MakeRedirectRule(Delegate oldMember, Delegate newMember, int minMatches = 1)
-        {
-            return MakeRedirectRule(oldMember.Method, newMember.Method, minMatches);
-        }
-
-        public static Rule MakeRedirectRule(string oldMemberName, MethodInfo newMember, int minMatches = 1)
-        {
-            return new Rule
-            {
-                LateGenerator = (caller, instructions) =>
-                {
-                    MemberInfo oldMember = FindMemberInfo(oldMemberName, instructions);
-
-                    return RedirectRule_Core(caller, oldMember, newMember, minMatches);
-                }
-            };
-        }
-
-        public static Rule MakeRedirectRule(string oldMemberName, Delegate newMember, int minMatches = 1)
-        {
-            return MakeRedirectRule(oldMemberName, newMember.Method, minMatches);
-        }
-
-        private static MemberInfo FindMemberInfo(string oldMemberName, List<CodeInstruction> instructions)
-        {
-            MemberInfo oldMember = (MemberInfo)instructions.First(NameMatches).operand;
-            Debug.Log($"oldMemberName={oldMemberName} oldMember={oldMember}");
-            return oldMember;
-
-            bool NameMatches(CodeInstruction instruction)
-            {
-                if (instruction.opcode.Value == OpCodes.Call.Value || instruction.opcode.Value == OpCodes.Callvirt.Value)
-                    return ((MethodBase)instruction.operand).Name == oldMemberName;
-                if (instruction.opcode.Value == OpCodes.Ldfld.Value || instruction.opcode.Value == OpCodes.Ldsfld.Value)
-                    return ((FieldInfo)instruction.operand).Name == oldMemberName;
-                return false;
-            }
-        }
-
         private static Rule RedirectRule_Core(MethodBase caller, MemberInfo callee, MemberInfo replacement,
             int minMatches)
         {

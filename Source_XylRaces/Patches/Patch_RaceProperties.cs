@@ -17,8 +17,6 @@ namespace XylXenos.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(nameof(HediffSet.GetFirstHediffOfDef), GetFirstHediffOfDef_Wrapper),
-
                 new()
                 {
                     Min = 1, Max = 0,
@@ -53,7 +51,10 @@ namespace XylXenos.Patches
             return instructionsList;
         }
 
+        [Feature(Config.Feature.FixLactationBugs)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [WrappedMember(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
+        [InfixPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
         public static Hediff GetFirstHediffOfDef_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
         {
             // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes
