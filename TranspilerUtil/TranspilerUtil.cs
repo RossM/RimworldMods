@@ -388,9 +388,9 @@ namespace TranspilerUtil
             (Type[] calleeParameterTypes, string[] calleeParameterNames) = GetParameterTypesAndNames(callee, "__instance");
             (Type[] replacementParameterTypes, string[] replacementParameterNames) = GetParameterTypesAndNames(replacement, "__instance");
 
-            List<CodeInstruction> pattern = new();
-            List<CodeInstruction> output = new();
-            List<Type> localTypes = new();
+            List<CodeInstruction> pattern = [];
+            List<CodeInstruction> output = [];
+            List<Type> localTypes = [];
 
             pattern.Add(new CodeInstruction(OpcodeFor(callee), callee));
 
@@ -483,11 +483,11 @@ namespace TranspilerUtil
                     [field.DeclaringType], 
                     [instanceName]),
                 MethodInfo { IsStatic: true} method => (
-                    [.. (method?.GetParameters()).Select(p => p.ParameterType)],
-                    [.. (method?.GetParameters()).Select(p => p.Name)]),
+                    [.. (method.GetParameters()).Select(p => p.ParameterType)],
+                    [.. (method.GetParameters()).Select(p => p.Name)]),
                 MethodInfo method => (
-                    [method.DeclaringType, .. (method?.GetParameters()).Select(p => p.ParameterType)],
-                    [instanceName, .. (method?.GetParameters()).Select(p => p.Name)]),
+                    [method.DeclaringType, .. (method.GetParameters()).Select(p => p.ParameterType)],
+                    [instanceName, .. (method.GetParameters()).Select(p => p.Name)]),
                 _ => throw new InvalidOperationException()
             };
         }
