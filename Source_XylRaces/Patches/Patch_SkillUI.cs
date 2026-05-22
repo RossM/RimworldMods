@@ -15,9 +15,9 @@ namespace XylXenos.Patches
         private static readonly InstructionMatcher.Rule Rule_GetLearningFactor
             = InstructionMatcher.MakeRedirectRule(SkillUI.GetLearningFactor, GetLearningFactor_Wrapper);
 
-        [Feature(nameof(DefOf.XylLearnFactorPassionNone),
-            nameof(DefOf.XylLearnFactorPassionMinor),
-            nameof(DefOf.XylLearnFactorPassionMajor))]
+        [Feature(nameof(DefOf.XylLearnFactorPassionNone))]
+        [Feature(nameof(DefOf.XylLearnFactorPassionMinor))]
+        [Feature(nameof(DefOf.XylLearnFactorPassionMajor))]
         [HarmonyTranspiler]
         [HarmonyPatch("GetSkillDescription")]
         public static IEnumerable<CodeInstruction> GetSkillDescription_Transpiler(

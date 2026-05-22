@@ -32,7 +32,8 @@ namespace XylXenos.Patches
             }
         }
 
-        [Feature(nameof(GeneDefExtension_HostilityOverride), nameof(SeeingRed))]
+        [Feature(typeof(GeneDefExtension_HostilityOverride))]
+        [Feature(typeof(SeeingRed))]
         [HarmonyPrefix]
         [HarmonyPatch("TakeDamage")]
         public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)

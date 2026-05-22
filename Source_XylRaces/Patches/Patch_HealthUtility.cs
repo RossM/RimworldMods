@@ -7,7 +7,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(HealthUtility))]
     public static class Patch_HealthUtility
     {
-        [Feature(nameof(DefOf.XylHypothermiaProgressionFactor), nameof(DefOf.XylMalnutritionProgressionFactor))]
+        [Feature(nameof(DefOf.XylHypothermiaProgressionFactor))]
+        [Feature(nameof(DefOf.XylMalnutritionProgressionFactor))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(HealthUtility.AdjustSeverity))]
         public static void AdjustSeverity_Prefix(Pawn pawn, HediffDef hdDef, ref float sevOffset)

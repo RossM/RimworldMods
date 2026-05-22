@@ -14,7 +14,7 @@ namespace XylXenos.Patches
             NotificationManager.Instance.Notify(NotificationEvent.GenesChanged, __instance.pawn);
         }
 
-        [Feature(nameof(DefOf.XylGlobalAddictionChanceFactor), nameof(ChemicalDefExtension))]
+        [Feature(typeof(ChemicalDefExtension))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
         public static bool AddictionChanceFactor_Prefix(Pawn_GeneTracker __instance, ChemicalDef chemical, out float __result)
@@ -26,7 +26,7 @@ namespace XylXenos.Patches
             return true;
         }
 
-        [Feature(nameof(DefOf.XylGlobalAddictionChanceFactor), nameof(ChemicalDefExtension))]
+        [Feature(nameof(DefOf.XylGlobalAddictionChanceFactor))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
         public static void AddictionChanceFactor_Postfix(Pawn_GeneTracker __instance, ref float __result)

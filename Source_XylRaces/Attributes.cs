@@ -8,21 +8,19 @@ namespace XylXenos
     // This attribute serves as documentation of which patches are to support which parts of the mod. It
     // has no actual effect.
 
-    public class FeatureAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public class FeatureAttribute(string featureName) : Attribute
     {
-#pragma warning disable CS9113 // Parameter is unread.
-        public FeatureAttribute(params string[] featureNames)
+        // ReSharper disable once UnusedMember.Global
+        public readonly string featureName = featureName;
+
+        public FeatureAttribute(Config.Feature feature) : this(feature.ToString())
         {
         }
 
-        public FeatureAttribute(Config.Feature feature)
+        public FeatureAttribute(Type feature) : this(feature.Name)
         {
         }
-
-        public FeatureAttribute(Type feature)
-        {
-        }
-#pragma warning restore CS9113 // Parameter is unread.
     }
 
     [MeansImplicitUse]

@@ -7,9 +7,9 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(SkillRecord))]
     public static class Patch_SkillRecord
     {
-        [Feature(nameof(DefOf.XylLearnFactorPassionNone), 
-            nameof(DefOf.XylLearnFactorPassionMinor),
-            nameof(DefOf.XylLearnFactorPassionMajor))]
+        [Feature(nameof(DefOf.XylLearnFactorPassionNone))]
+        [Feature(nameof(DefOf.XylLearnFactorPassionMinor))]
+        [Feature(nameof(DefOf.XylLearnFactorPassionMajor))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(SkillRecord.LearnRateFactor))]
         public static void LearnRateFactor_Postfix(SkillRecord __instance, bool direct, ref float __result)
