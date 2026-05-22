@@ -44,9 +44,7 @@ namespace XylXenos.Patches
                 return true;
             }
 
-            gene = pawn.genes?.GenesListForReading.FirstOrDefault(g =>
-                g.def.GetModExtension<GeneDefExtension_Chemicals>()?.showInDrugPolicies == true);
-            return gene != null;
+            return GeneHelpers.TryGetChemicalDependencyGene(pawn, out gene);
         }
     }
 }

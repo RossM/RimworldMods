@@ -49,8 +49,7 @@ namespace XylXenos.Patches
         {
             if (ignoreRestrictions)
                 return genes;
-            return genes.Where(g =>
-                g.GetModExtension<GeneDefExtension_UIFilter>()?.ShouldBeVisible(inheritable) != false).ToList();
+            return genes.Where(g => GeneHelpers.GeneShouldBeVisible(g, inheritable)).ToList();
         }
     }
 }

@@ -35,12 +35,7 @@ namespace XylXenos.Patches
             __result += ThingDefOf.MealSimple.ingestible.optimalityOffsetHumanlikes *
                         ((nutritionFactor - 1.0f) / 0.8f);
 
-            // Check if this food satisfies a diet dependency
-            foreach (var gene in eater.ActiveGenesOfType<DietDependency>())
-            {
-                if (gene.ValidateFood(foodSource) && ((Hediff_DietDependency)gene.LinkedHediff).ShouldSatisfy)
-                    __result += 100f;
-            }
+            __result += FoodHelpers.FoodOptimalityBonus(eater, foodSource);
         }
 
         [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]

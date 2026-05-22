@@ -12,6 +12,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(Pawn_HealthTracker.CheckForStateChange))]
         public static void CheckForStateChange_Postfix(Pawn_HealthTracker __instance)
         {
+            // TODO Use notification manager
             foreach (var gene in __instance.pawn.ActiveGenesOfType<AddHediff>())
             {
                 gene.NotifyStateChange();

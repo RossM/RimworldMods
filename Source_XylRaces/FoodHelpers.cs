@@ -140,4 +140,17 @@ public static class FoodHelpers
 
         return false;
     }
+
+    public static float FoodOptimalityBonus(Pawn eater, Thing foodSource)
+    {
+        // Check if this food satisfies a diet dependency
+        float extra = 0f;
+        foreach (var gene in eater.ActiveGenesOfType<DietDependency>())
+        {
+            if (gene.ValidateFood(foodSource) && ((Hediff_DietDependency)gene.LinkedHediff).ShouldSatisfy)
+                extra += 100f;
+        }
+
+        return extra;
+    }
 }

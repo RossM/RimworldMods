@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using RimWorld;
 using Verse;
 using XylXenos.Genes;
@@ -193,5 +194,135 @@ public static class GeneHelpers
                     yield return specialDisplayStatEntry;
             }
         }
+    }
+
+    public static float ConversionPowerFactor_OffsetFromXenotype(Pawn pawn, Pawn recipient, bool invert, StringBuilder sb)
+    {
+        float result = 0;
+        string text = string.Empty;
+        XenotypeDef recipientXenotype = recipient.genes?.Xenotype;
+        if (recipientXenotype == null)
+            return 0;
+
+        var agreeingMemes = recipientXenotype.GetModExtension<XenotypeDefExtension>()?.agreeingMemes;
+        if (agreeingMemes != null)
+        {
+            foreach (MemeDef meme in pawn.Ideo.memes)
+            {
+                if (agreeingMemes.Contains(meme))
+                {
+                    float offset = invert ? -0.2f : 0.2f;
+                    result += offset;
+                    text += MemeAndXenotypeDesc(meme, recipientXenotype, offset);
+                }
+            }
+        }
+
+        var disagreeingMemes = recipientXenotype.GetModExtension<XenotypeDefExtension>()?.disagreeingMemes;
+        if (disagreeingMemes != null)
+        {
+            foreach (MemeDef meme in pawn.Ideo.memes)
+            {
+                if (disagreeingMemes.Contains(meme))
+                {
+                    float offset = invert ? 0.2f : -0.2f;
+                    result += offset;
+                    text += MemeAndXenotypeDesc(meme, recipientXenotype, offset);
+                }
+            }
+        }
+
+        if (sb != null && !text.NullOrEmpty())
+        {
+            sb.AppendInNewLine($" -  {"AbilityIdeoConvertBreakdownPawnIdeo".Translate(pawn.Named("PAWN"))}: {text}");
+        }
+
+        return result;
+
+        string MemeAndXenotypeDesc(MemeDef meme, XenotypeDef xenotype, float offset)
+        {
+            if (sb == null)
+            {
+                return string.Empty;
+            }
+
+            // Adding 1 to the offset and reporting it as a percentage is complete nonsense and gives the impression
+            // that these are factors being multiplied together rather than added. However, it's complete nonsense
+            // that matches what the base game does for traits, so I am holding my nose and matching it.
+            return
+                $"\n   -  {"XylAbilityIdeoConvertBreakdownMemeVsXenotype".Translate(meme.label.Named("MEME"), xenotype.label.Named("XENOTYPE")).CapitalizeFirst()}: {(1f + offset).ToStringPercent()}";
+        }
+    }
+
+    public static void AddDesignators(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
+    {
+        HashSet<Designator> geneDesignators = [];
+
+        foreach (var defExtension_designator in Faction.OfPlayer.GetPawns()
+                     .SelectMany(pawn => pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>()))
+        {
+            geneDesignators.AddRange(defExtension_designator.addDesignators.Where(def => def.designationCategory == __instance)
+                .Select(GetCachedDesignator));
+        }
+
+        if (geneDesignators.Any())
+            __result = __result.Concat(geneDesignators);
+
+        Designator GetCachedDesignator(BuildableDef def)
+        {
+            DesignationCategoryDef.BuildablePreceptBuilding key = new DesignationCategoryDef.BuildablePreceptBuilding(def, null);
+            if (!__instance.ideoBuildingDesignatorsCached.TryGetValue(key, out var value))
+            {
+                value = new Designator_Build(def);
+                __instance.ideoBuildingDesignatorsCached[key] = value;
+            }
+
+            return value;
+        }
+    }
+
+    public static bool GeneShouldBeVisible(GeneDef geneDef, bool inheritable)
+    {
+        return geneDef.GetModExtension<GeneDefExtension_UIFilter>()?.ShouldBeVisible(inheritable) != false;
+    }
+
+    public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene gene)
+    {
+        gene = pawn.genes?.GenesListForReading.FirstOrDefault(g =>
+            g.def.GetModExtension<GeneDefExtension_Chemicals>()?.showInDrugPolicies == true);
+        return gene != null;
+    }
+
+    public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
+    {
+        float factor = 1f;
+        foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_JoyGivers>())
+        {
+            if (defExt.joyGiverChanceFactors.NullOrEmpty())
+                continue;
+            foreach (var joyGiverFactor in defExt.joyGiverChanceFactors)
+            {
+                if (joyGiverFactor.joyGiver == joyGiver.def)
+                    factor *= joyGiverFactor.factor;
+            }
+        }
+
+        return factor;
+    }
+
+    public static float GetBodySizeFactor(Pawn pawn)
+    {
+        float factor = 1f;
+        foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
+            factor *= extension.bodySizeFactor;
+        return factor;
+    }
+
+    public static float GetHealthScaleFactor(Pawn pawn)
+    {
+        float factor = 1f;
+        foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
+            factor *= extension.healthScaleFactor;
+        return factor;
     }
 }

@@ -20,8 +20,7 @@ namespace XylXenos.Patches
             if (!Enabled)
                 return;
 
-            foreach (var extension in __instance.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
-                __result *= extension.bodySizeFactor;
+            __result *= GeneHelpers.GetBodySizeFactor(__instance);
         }
 
         [Feature(typeof(GeneDefExtension_Pawn))]
@@ -32,8 +31,7 @@ namespace XylXenos.Patches
             if (!Enabled)
                 return;
 
-            foreach (var extension in __instance.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
-                __result *= extension.healthScaleFactor;
+            __result *= GeneHelpers.GetHealthScaleFactor(__instance);
         }
 
         [Feature(typeof(Psycast))]
