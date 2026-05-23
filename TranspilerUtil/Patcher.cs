@@ -51,34 +51,8 @@ namespace TranspilerUtil
             {
                 resultLocalIndex = AddLocal(targetType);
 
-                if (targetType.IsByRef)
-                    throw new NotImplementedException($"IsByRef targetType {targetType}");
-
-                if (targetType.IsClass)
-                {
-                    output.Add(new(OpCodes.Ldnull));
-                    output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
-                }
-                else if (targetType.IsStruct())
-                {
-                    output.Add(new(OpCodes.Ldloca, resultLocalIndex));
-                    output.Add(new(OpCodes.Initobj, targetType));
-                }
-                else if (targetType.IsValueType)
-                {
-                    if (targetType == typeof(float))
-                        output.Add(new(OpCodes.Ldc_R4, (float)0));
-                    else if (targetType == typeof(double))
-                        output.Add(new(OpCodes.Ldc_R8, (double)0));
-                    else if (targetType == typeof(long) || targetType == typeof(ulong))
-                        output.Add(new(OpCodes.Ldc_I8, (long)0));
-                    else
-                        output.Add(new(OpCodes.Ldc_I4_0));
-
-                    output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
-                }
-                else
-                    throw new NotImplementedException($"targetType {targetType}");
+                if (prefixes.Count > 0)
+                    EmitInitialization(targetType, resultLocalIndex);
             }
 
             Label? skipLabel = null;
@@ -103,38 +77,42 @@ namespace TranspilerUtil
             }
             output.Add(new(OpcodeFor(wrapper), wrapper));
 
-            if (resultLocalIndex >= 0)
-                output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
-
-            if (skipLabel is { } label)
+            if (skipLabel != null || postfixes.Count > 0)
             {
-                var branchTarget = new CodeInstruction(OpCodes.Nop);
-                branchTarget.labels.Add(label);
-                output.Add(branchTarget);
-            }
+                if (resultLocalIndex >= 0)
+                    output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
 
-            foreach (var postfix in postfixes)
-            {
-                (Type[] types, string[] names) = GetParameterTypesAndNames(postfix, null);
-                for (int i = 0; i < types.Length; i++)
+                if (skipLabel is { } label)
                 {
-                    EmitParameterValue(types[i], names[i]);
+                    var branchTarget = new CodeInstruction(OpCodes.Nop);
+                    branchTarget.labels.Add(label);
+                    output.Add(branchTarget);
                 }
-                output.Add(new(OpcodeFor(postfix), postfix));
-                if (!postfix.ReturnType.IsVoid())
-                    output.Add(new(OpCodes.Pop));
-            }
 
-            if (resultLocalIndex >= 0)
-            {
-                if (targetType.IsStruct())
+                foreach (var postfix in postfixes)
                 {
-                    output.Add(new(OpCodes.Ldloca, resultLocalIndex));
-                    output.Add(new(OpCodes.Ldobj, targetType));
+                    (Type[] types, string[] names) = GetParameterTypesAndNames(postfix, null);
+                    for (int i = 0; i < types.Length; i++)
+                    {
+                        EmitParameterValue(types[i], names[i]);
+                    }
+
+                    output.Add(new(OpcodeFor(postfix), postfix));
+                    if (!postfix.ReturnType.IsVoid())
+                        output.Add(new(OpCodes.Pop));
                 }
-                else
+
+                if (resultLocalIndex >= 0)
                 {
-                    output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
+                    if (targetType.IsStruct())
+                    {
+                        output.Add(new(OpCodes.Ldloca, resultLocalIndex));
+                        output.Add(new(OpCodes.Ldobj, targetType));
+                    }
+                    else
+                    {
+                        output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
+                    }
                 }
             }
 
@@ -143,6 +121,38 @@ namespace TranspilerUtil
                 Debug.Log($"        local {local}");
             foreach (var inst in output)
                 Debug.Log($"        {inst}");
+        }
+
+        private void EmitInitialization(Type type, int localIndex)
+        {
+            if (type.IsByRef)
+                throw new NotImplementedException($"IsByRef targetType {type}");
+
+            if (type.IsClass)
+            {
+                output.Add(new(OpCodes.Ldnull));
+                output.Add(CodeInstruction.StoreLocal(localIndex));
+            }
+            else if (type.IsStruct())
+            {
+                output.Add(new(OpCodes.Ldloca, localIndex));
+                output.Add(new(OpCodes.Initobj, type));
+            }
+            else if (type.IsValueType)
+            {
+                if (type == typeof(float))
+                    output.Add(new(OpCodes.Ldc_R4, (float)0));
+                else if (type == typeof(double))
+                    output.Add(new(OpCodes.Ldc_R8, (double)0));
+                else if (type == typeof(long) || type == typeof(ulong))
+                    output.Add(new(OpCodes.Ldc_I8, (long)0));
+                else
+                    output.Add(new(OpCodes.Ldc_I4_0));
+
+                output.Add(CodeInstruction.StoreLocal(localIndex));
+            }
+            else
+                throw new NotImplementedException($"targetType {type}");
         }
 
         private void EmitParameterValue(Type parameterType, string parameterName)
