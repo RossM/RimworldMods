@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -8,13 +9,14 @@ namespace XylXenos;
 
 public static class FoodHelpers
 {
+    [Flags]
     public enum FoodType
     {
-        None,
-        Meat,
-        NonMeat,
-        Fungus,
-        AnimalProduct,
+        None = 0x0,
+        Meat = 0x1,
+        NonMeat = 0x2,
+        AnimalProduct = 0x4,
+        Fungus = 0x8,
     }
 
     public static FoodType GetFoodType(ThingDef foodDef)
@@ -22,7 +24,7 @@ public static class FoodHelpers
         FoodTypeFlags flags = foodDef.ingestible?.foodType ?? 0;
 
         if (flags == FoodTypeFlags.Fungus)
-            return FoodType.Fungus;
+            return FoodType.Fungus | FoodType.NonMeat;
         if ((flags & FoodTypeFlags.AnimalProduct) != 0)
             return FoodType.AnimalProduct;
         if ((flags & (FoodTypeFlags.VegetableOrFruit | FoodTypeFlags.Plant | FoodTypeFlags.Seed)) != 0)
@@ -56,26 +58,30 @@ public static class FoodHelpers
 
     private static float GetRawNutritionFactor(Pawn eater, FoodType foodType)
     {
-        return foodType switch
-        {
-            FoodType.Fungus => eater.GetStatValue(DefOf.XylRawFungusNutritionFactor) *
-                               eater.GetStatValue(DefOf.XylRawNonMeatNutritionFactor),
-            FoodType.Meat => eater.GetStatValue(DefOf.XylRawMeatNutritionFactor),
-            FoodType.AnimalProduct => eater.GetStatValue(DefOf.XylRawAnimalProductNutritionFactor),
-            FoodType.NonMeat => eater.GetStatValue(DefOf.XylRawNonMeatNutritionFactor),
-            _ => 1.0f
-        };
+        float result = 1f;
+        if (foodType.HasFlag(FoodType.Meat))
+            result *= eater.GetStatValue(DefOf.XylRawMeatNutritionFactor);
+        if (foodType.HasFlag(FoodType.NonMeat))
+            result *= eater.GetStatValue(DefOf.XylRawNonMeatNutritionFactor);
+        if (foodType.HasFlag(FoodType.AnimalProduct))
+            result *= eater.GetStatValue(DefOf.XylRawAnimalProductNutritionFactor);
+        if (foodType.HasFlag(FoodType.Fungus))
+            result *= eater.GetStatValue(DefOf.XylRawFungusNutritionFactor);
+        return result;
     }
 
     private static float GetCookedNutritionFactor(Pawn eater, FoodType foodType)
     {
-        return foodType switch
-        {
-            FoodType.Meat => eater.GetStatValue(DefOf.XylCookedMeatNutritionFactor),
-            FoodType.AnimalProduct => eater.GetStatValue(DefOf.XylCookedAnimalProductNutritionFactor),
-            FoodType.Fungus or FoodType.NonMeat => eater.GetStatValue(DefOf.XylCookedNonMeatNutritionFactor),
-            _ => 1.0f
-        };
+        float result = 1f;
+        if (foodType.HasFlag(FoodType.Meat))
+            result *= eater.GetStatValue(DefOf.XylCookedMeatNutritionFactor);
+        if (foodType.HasFlag(FoodType.NonMeat))
+            result *= eater.GetStatValue(DefOf.XylCookedNonMeatNutritionFactor);
+        if (foodType.HasFlag(FoodType.AnimalProduct))
+            result *= eater.GetStatValue(DefOf.XylCookedAnimalProductNutritionFactor);
+        //if (foodType.HasFlag(FoodType.Fungus))
+        //    result *= eater.GetStatValue(DefOf.XylCookedFungusNutritionFactor);
+        return result;
     }
 
     public static float GetFoodPoisonChanceOffset(Pawn eater, Thing foodSource)
@@ -86,16 +92,16 @@ public static class FoodHelpers
             return 0.0f;
 
         FoodType foodType = GetFoodType(foodSource.def);
-        var value = foodType switch
-        {
-            FoodType.Fungus => eater.GetStatValue(DefOf.XylRawFungusFoodPoisonChanceOffset) +
-                               eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceOffset),
-            FoodType.Meat => eater.GetStatValue(DefOf.XylRawMeatFoodPoisonChanceOffset),
-            FoodType.AnimalProduct => eater.GetStatValue(DefOf.XylRawAnimalProductFoodPoisonChanceOffset),
-            FoodType.NonMeat => eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceOffset),
-            _ => 0.0f
-        };
-        return value;
+        float result = 0f;
+        if (foodType.HasFlag(FoodType.Meat))
+            result += eater.GetStatValue(DefOf.XylRawMeatFoodPoisonChanceOffset);
+        if (foodType.HasFlag(FoodType.NonMeat))
+            result += eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceOffset);
+        if (foodType.HasFlag(FoodType.AnimalProduct))
+            result += eater.GetStatValue(DefOf.XylRawAnimalProductFoodPoisonChanceOffset);
+        if (foodType.HasFlag(FoodType.Fungus))
+            result += eater.GetStatValue(DefOf.XylRawFungusFoodPoisonChanceOffset);
+        return result;
     }
 
     public static bool IsRawFoodOrCorpse(this ThingDef foodDef)
