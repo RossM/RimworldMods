@@ -68,7 +68,7 @@ namespace XylXenos
             string name)
         {
             if (source is not INotificationListener)
-                throw new InvalidOperationException("Only INotificationTargets can register for notifications");
+                throw new InvalidOperationException("Only an INotificationListener can register for notifications");
 
             EventInfo eventInfo = events[(int)eventType] ??= new();
 
