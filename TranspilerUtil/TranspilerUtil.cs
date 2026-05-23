@@ -1,10 +1,10 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using HarmonyLib;
 using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
@@ -34,9 +34,6 @@ namespace TranspilerUtil
             public Type[] LocalTypes;
         }
 
-        public List<Rule> Rules = [];
-        public List<Type> LocalTypes = [];
-
         private class MatchData
         {
             public Rule rule;
@@ -44,8 +41,15 @@ namespace TranspilerUtil
             public Dictionary<int, int> privateMap;
         }
 
-        public bool TryMatchAndReplace(MethodBase method, ref List<CodeInstruction> instructions, out string reason,
-            ILGenerator generator = null, bool debug = false)
+        public List<Rule> Rules = [];
+        public List<Type> LocalTypes = [];
+
+        public bool TryMatchAndReplace(
+            MethodBase method,
+            ref List<CodeInstruction> instructions,
+            out string reason,
+            ILGenerator generator = null,
+            bool debug = false)
         {
             var localIndexMap = new Dictionary<int, int>();
             var matches = new List<MatchData>();
@@ -111,7 +115,7 @@ namespace TranspilerUtil
                         }
                         else if (patternInst.IsLdloc())
                         {
-                            isMatch = inst.IsLdloc() && 
+                            isMatch = inst.IsLdloc() &&
                                       inst.opcode.Value != OpCodes.Ldloca.Value &&
                                       inst.opcode.Value != OpCodes.Ldloca_S.Value;
                             if (!isMatch)
@@ -291,14 +295,12 @@ namespace TranspilerUtil
                                 Debug.Log($"COPYMATCH {outInstructions[outInstructions.Count - 1]}");
                         }
                     }
-
                 }
                 else
                 {
                     outInstructions.Add(instructions[instructionIndex]);
                     if (debug)
                         Debug.Log($"COPY {outInstructions[outInstructions.Count - 1]}");
-
                 }
             }
 
@@ -307,24 +309,26 @@ namespace TranspilerUtil
             return true;
         }
 
-        public void MatchAndReplace(MethodBase method, ref List<CodeInstruction> instructionsList,
-            ILGenerator generator = null, [CallerMemberName] string methodName = null, bool debug = false)
+        public void MatchAndReplace(
+            MethodBase method,
+            ref List<CodeInstruction> instructionsList,
+            ILGenerator generator = null,
+            [CallerMemberName] string methodName = null,
+            bool debug = false)
         {
             if (!TryMatchAndReplace(method, ref instructionsList, out string reason, generator, debug))
                 Log.Error($"{methodName ?? "<Unknown>"}: {reason}");
         }
 
         /// <summary>
-        /// This creates a rule that replaces all calls of a given method with calls of a given other method. The
-        /// new method's parameters will be filled with the values of the old method's parameters that have the
-        /// same name. If the old method doesn't have a parameter with that name, the parameters of the method
-        /// containing the call being modified are checked, and used if they match.
-        ///
-        /// You can also use __instance to match the instance the method was invoked on, and __caller to match
-        /// the instance the calling method was invoked on.
-        ///
-        /// If there isn't a parameter with a matching name, this will fall back to trying to match based
-        /// on parameter type, but this may result in less optimal code generation, and will give a warning.
+        ///     This creates a rule that replaces all calls of a given method with calls of a given other method. The
+        ///     new method's parameters will be filled with the values of the old method's parameters that have the
+        ///     same name. If the old method doesn't have a parameter with that name, the parameters of the method
+        ///     containing the call being modified are checked, and used if they match.
+        ///     You can also use __instance to match the instance the method was invoked on, and __caller to match
+        ///     the instance the calling method was invoked on.
+        ///     If there isn't a parameter with a matching name, this will fall back to trying to match based
+        ///     on parameter type, but this may result in less optimal code generation, and will give a warning.
         /// </summary>
         /// <param name="oldMember"></param>
         /// <param name="newMember"></param>
@@ -338,7 +342,10 @@ namespace TranspilerUtil
             };
         }
 
-        private static Rule RedirectRule_Core(MethodBase caller, MemberInfo callee, MemberInfo replacement,
+        private static Rule RedirectRule_Core(
+            MethodBase caller,
+            MemberInfo callee,
+            MemberInfo replacement,
             int minMatches)
         {
             (Type[] callerParameterTypes, string[] callerParameterNames) = GetParameterTypesAndNames(caller, "__caller");
@@ -380,7 +387,8 @@ namespace TranspilerUtil
                 if (calleeIndex >= 0)
                 {
                     if (calleeIndex < firstNonMatchingParameter)
-                        throw new InvalidOperationException($"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
+                        throw new InvalidOperationException(
+                            $"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
                     output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
                     continue;
                 }
@@ -434,9 +442,11 @@ namespace TranspilerUtil
                 calleeIndex = calleeParameterTypes.FirstIndexOf(type => type == replacementParameterType);
                 if (calleeIndex >= 0)
                 {
-                    Log.Warning($"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({callee.Name} -> {replacement.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {calleeParameterTypes[calleeIndex].Name} {calleeParameterNames[calleeIndex]}");
+                    Log.Warning(
+                        $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({callee.Name} -> {replacement.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {calleeParameterTypes[calleeIndex].Name} {calleeParameterNames[calleeIndex]}");
                     if (calleeIndex < firstNonMatchingParameter)
-                        throw new InvalidOperationException($"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
+                        throw new InvalidOperationException(
+                            $"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
                     output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
                     continue;
                 }
@@ -444,7 +454,8 @@ namespace TranspilerUtil
                 callerIndex = callerParameterTypes.FirstIndexOf(type => type == replacementParameterType);
                 if (callerIndex >= 0)
                 {
-                    Log.Warning($"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({callee.Name} -> {replacement.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
+                    Log.Warning(
+                        $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({callee.Name} -> {replacement.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
                     output.Add(CodeInstruction.LoadArgument(callerIndex));
                     continue;
                 }
@@ -473,12 +484,12 @@ namespace TranspilerUtil
             return member switch
             {
                 FieldInfo { IsStatic: true } => (
-                    [], 
+                    [],
                     []),
                 FieldInfo field => (
-                    [field.DeclaringType], 
+                    [field.DeclaringType],
                     [instanceName]),
-                MethodInfo { IsStatic: true} method => (
+                MethodInfo { IsStatic: true } method => (
                     [.. (method.GetParameters()).Select(p => p.ParameterType)],
                     [.. (method.GetParameters()).Select(p => p.Name)]),
                 MethodInfo method => (
