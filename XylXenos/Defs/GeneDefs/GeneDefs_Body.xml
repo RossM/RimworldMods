@@ -152,8 +152,8 @@
       <li>Fur</li>
     </exclusionTags>
     <statOffsets>
-      <ArmorRating_Sharp>0.8</ArmorRating_Sharp>
-      <ArmorRating_Blunt>0.6</ArmorRating_Blunt>
+      <ArmorRating_Sharp>0.7</ArmorRating_Sharp>
+      <ArmorRating_Blunt>0.4</ArmorRating_Blunt>
       <ArmorRating_Heat>0.5</ArmorRating_Heat>
       <MoveSpeed>-0.4</MoveSpeed>
     </statOffsets>
