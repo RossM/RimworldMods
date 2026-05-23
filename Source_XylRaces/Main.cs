@@ -107,7 +107,7 @@ namespace XylXenos
                 foreach (var patch in group)
                     rules.Add(InstructionMatcher.MakeRedirectRule(patch.wrappedMember, patch.wrapper));
 
-                MethodInfo transpiler = MakeTranspiler(moduleBuilder, rules,
+                MethodInfo transpiler = InstructionMatcher.MakeTranspiler(moduleBuilder, rules,
                     $"{group.Key.DeclaringType?.FullName?.Replace('.', '_')}_{group.Key.Name}_Transpiler");
 
                 //Debug.Log($"Infix patching {group.Key.DeclaringType}::{group.Key}");
@@ -133,42 +133,6 @@ namespace XylXenos
             if (wrappedMember is PropertyInfo propertyInfo)
                 wrappedMember = propertyInfo.GetMethod;
             return wrappedMember;
-        }
-
-        private static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, List<InstructionMatcher.Rule> rules, string typeName)
-        {
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
-
-            FieldBuilder rulesField = typeBuilder.DefineField("rules", typeof(List<InstructionMatcher.Rule>),
-                FieldAttributes.Public | FieldAttributes.Static);
-
-            MethodBuilder methodBuilder = typeBuilder.DefineMethod("Invoke", MethodAttributes.Public | MethodAttributes.Static,
-                typeof(IEnumerable<CodeInstruction>), [typeof(IEnumerable<CodeInstruction>), typeof(ILGenerator), typeof(MethodBase)]);
-            ILGenerator generator = methodBuilder.GetILGenerator();
-
-            Delegate matchAndReplace = MatchAndReplace;
-
-            generator.Emit(OpCodes.Ldsfld, rulesField);
-            generator.Emit(OpCodes.Ldarg_0);
-            generator.Emit(OpCodes.Ldarg_1);
-            generator.Emit(OpCodes.Ldarg_2);
-            generator.Emit(OpCodes.Call, matchAndReplace.Method);
-            generator.Emit(OpCodes.Ret);
-
-            Type type = typeBuilder.CreateType();
-            type.GetField(rulesField.Name).SetValue(null, rules);
-            return type.GetMethod(methodBuilder.Name);
-        }
-
-        public static List<CodeInstruction> MatchAndReplace(
-            List<InstructionMatcher.Rule> rules,
-            IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator,
-            MethodBase method)
-        {
-            var instructionsList = new List<CodeInstruction>(instructions);
-            new InstructionMatcher() { Rules = rules }.MatchAndReplace(method, ref instructionsList, generator);
-            return instructionsList;
         }
 
         private static void CodingStyleChecks()

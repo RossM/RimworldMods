@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 using OpCodes = System.Reflection.Emit.OpCodes;
@@ -497,6 +498,47 @@ namespace TranspilerUtil
                 MethodBase => OpCodes.Call,
                 _ => throw new InvalidOperationException()
             };
+        }
+
+        public static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, List<Rule> rules, string typeName)
+        {
+            TypeBuilder typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
+
+            FieldBuilder rulesField = typeBuilder.DefineField("rules", typeof(List<Rule>),
+                FieldAttributes.Public | FieldAttributes.Static);
+
+            MethodBuilder methodBuilder = typeBuilder.DefineMethod("Invoke", MethodAttributes.Public | MethodAttributes.Static,
+                typeof(IEnumerable<CodeInstruction>), [typeof(MethodBase), typeof(IEnumerable<CodeInstruction>), typeof(ILGenerator)]);
+            ILGenerator generator = methodBuilder.GetILGenerator();
+
+            MethodInfo matchAndReplace = typeof(InstructionMatcher).GetMethod("MatchAndReplace",
+                BindingFlags.Public | BindingFlags.Static,
+                null,
+                [typeof(List<Rule>), typeof(MethodBase), typeof(IEnumerable<CodeInstruction>), typeof(ILGenerator)],
+                []);
+
+            generator.Emit(OpCodes.Ldsfld, rulesField);
+            generator.Emit(OpCodes.Ldarg_0);
+            generator.Emit(OpCodes.Ldarg_1);
+            generator.Emit(OpCodes.Ldarg_2);
+            generator.Emit(OpCodes.Call, matchAndReplace);
+            generator.Emit(OpCodes.Ret);
+
+            Type type = typeBuilder.CreateType();
+            type.GetField(rulesField.Name).SetValue(null, rules);
+            return type.GetMethod(methodBuilder.Name);
+        }
+
+        [UsedImplicitly]
+        public static List<CodeInstruction> MatchAndReplace(
+            List<Rule> rules,
+            MethodBase method,
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator)
+        {
+            var instructionsList = new List<CodeInstruction>(instructions);
+            new InstructionMatcher() { Rules = rules }.MatchAndReplace(method, ref instructionsList, generator);
+            return instructionsList;
         }
     }
 }
