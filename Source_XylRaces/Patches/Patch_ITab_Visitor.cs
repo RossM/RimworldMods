@@ -14,7 +14,7 @@ namespace XylXenos.Patches
         {
             Rules =
             {
-                InstructionMatcher.MakeRedirectRule(
+                Patcher.MakeRedirectRule(
                     AccessTools.Method(typeof(StatWorker_SuppressionFallRate),
                         nameof(StatWorker_SuppressionFallRate.GetExplanationForTooltip)),
                     AccessTools.Method(typeof(StatWorker_SuppressionFallRate_Fixed),

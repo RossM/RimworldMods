@@ -18,7 +18,7 @@ namespace Source_XylIdeoTweaks
             Rules =
             {
                 // Change: Nudity requirements only disable noble/role apparel requirements for the gender they apply to
-                InstructionMatcher.MakeRedirectRule(
+                Patcher.MakeRedirectRule(
                     AccessTools.Method(typeof(IdeoUtility), nameof(IdeoUtility.IdeoPrefersNudity), [typeof(Ideo)]),
                     AccessTools.Method(typeof(Patch_ApparelUtility), nameof(IdeoPrefersNudity_Wrapper))
                     )
