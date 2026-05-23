@@ -40,7 +40,7 @@ namespace TranspilerUtil
                 EmitParameterValue(wrapperParameterTypes[i], wrapperParameterNames[i]);
             }
 
-            output.Add(new CodeInstruction(OpcodeFor(wrapper), wrapper));
+            output.Add(new(OpcodeFor(wrapper), wrapper));
         }
 
         private void EmitParameterValue(Type parameterType, string parameterName)
@@ -48,17 +48,14 @@ namespace TranspilerUtil
             int targetIndex = targetParameterNames.FirstIndexOf(name => name == parameterName);
             if (targetIndex >= 0)
             {
-                if (targetIndex < firstNonMatchingParameter)
-                    throw new InvalidOperationException(
-                        $"Can't reuse parameter named '{parameterName}' of type {parameterType.FullName}");
-                output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[targetIndex]));
+                EmitTargetParameter(parameterType, targetIndex);
                 return;
             }
 
             int callerIndex = callerParameterNames.FirstIndexOf(name => name == parameterName);
             if (callerIndex >= 0)
             {
-                output.Add(CodeInstruction.LoadArgument(callerIndex));
+                EmitCallerParameter(parameterType, callerIndex);
                 return;
             }
 
@@ -70,8 +67,8 @@ namespace TranspilerUtil
                     var field = targetParameterTypes[j].GetField(parameterName, AccessTools.all);
                     if (field != null)
                     {
-                        output.Add(CodeInstruction.LoadArgument(j));
-                        output.Add(new CodeInstruction(OpCodes.Ldfld, field));
+                        EmitTargetParameter(targetParameterTypes[j], j);
+                        output.Add(new(OpCodes.Ldfld, field));
                         return;
                     }
                 }
@@ -85,36 +82,34 @@ namespace TranspilerUtil
                     var field = callerParameterTypes[j].GetField(parameterName, AccessTools.all);
                     if (field != null)
                     {
-                        output.Add(CodeInstruction.LoadArgument(j));
-                        output.Add(new CodeInstruction(OpCodes.Ldfld, field));
+                        EmitCallerParameter(callerParameterTypes[j], j);
+                        output.Add(new(OpCodes.Ldfld, field));
                         return;
                     }
                 }
             }
 
-            targetIndex = targetParameterTypes.FirstIndexOf(type => type == parameterType);
-            if (targetIndex >= 0)
-            {
-                Log.Warning(
-                    $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({target.Name} -> {wrapper.Name}): Matching by type: {parameterType.Name} {parameterName} = {targetParameterTypes[targetIndex].Name} {targetParameterNames[targetIndex]}");
-                if (targetIndex < firstNonMatchingParameter)
-                    throw new InvalidOperationException(
-                        $"Can't reuse parameter named '{parameterName}' of type {parameterType.FullName}");
-                output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[targetIndex]));
-                return;
-            }
-
-            callerIndex = callerParameterTypes.FirstIndexOf(type => type == parameterType);
-            if (callerIndex >= 0)
-            {
-                Log.Warning(
-                    $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({target.Name} -> {wrapper.Name}): Matching by type: {parameterType.Name} {parameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
-                output.Add(CodeInstruction.LoadArgument(callerIndex));
-                return;
-            }
-
             throw new InvalidOperationException(
                 $"Couldn't find parameter named '{parameterName}' of type {parameterType.FullName}");
+        }
+
+        private void EmitCallerParameter(Type parameterType, int callerIndex)
+        {
+            if (parameterType.IsByRef && !callerParameterTypes[callerIndex].IsByRef)
+                output.Add(new(OpCodes.Ldarga, callerIndex));
+            else
+                output.Add(CodeInstruction.LoadArgument(callerIndex));
+        }
+
+        private void EmitTargetParameter(Type parameterType, int targetIndex)
+        {
+            if (targetIndex < firstNonMatchingParameter)
+                throw new InvalidOperationException(
+                    $"Can't reuse parameter named '{targetParameterNames[targetIndex]}' of type {parameterType.FullName}");
+            if (parameterType.IsByRef && !targetParameterTypes[targetIndex].IsByRef)
+                output.Add(new(OpCodes.Ldloca, parameterToLocalIndex[targetIndex]));
+            else
+                output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[targetIndex]));
         }
 
         private void EmitPrelude()
@@ -307,7 +302,7 @@ namespace TranspilerUtil
                 MethodInfo transpiler = MakeTranspiler(moduleBuilder, rules,
                     $"{targetMethod.DeclaringType?.FullName?.Replace('.', '_')}_{targetMethod.Name}_Transpiler");
 
-                harmony.Patch(targetMethod, transpiler: new HarmonyMethod(transpiler));
+                harmony.Patch(targetMethod, transpiler: new(transpiler));
             }
         }
 
