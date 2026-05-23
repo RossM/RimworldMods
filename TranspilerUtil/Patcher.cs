@@ -11,36 +11,33 @@ namespace TranspilerUtil
 {
     public class MethodPatchWorker(MethodBase caller, MemberInfo target, MemberInfo wrapper)
     {
+        public MethodBase caller = caller;
+        public MemberInfo target = target;
+        public MemberInfo wrapper = wrapper;
         public List<CodeInstruction> output = [];
         public List<Type> localTypes = [];
-        public MemberInfo wrapper = wrapper;
-        public MemberInfo target = target;
-        public MethodBase caller = caller;
+
         private Type[] callerParameterTypes;
         private string[] callerParameterNames;
-        private Type[] calleeParameterTypes;
-        private string[] calleeParameterNames;
-        private Type[] replacementParameterTypes;
-        private string[] replacementParameterNames;
+        private Type[] targetParameterTypes;
+        private string[] targetParameterNames;
+        private Type[] wrapperParameterTypes;
+        private string[] wrapperParameterNames;
         private int firstNonMatchingParameter;
         private int[] parameterToLocalIndex;
 
         public void EmitReplacement()
         {
             (callerParameterTypes, callerParameterNames) = GetParameterTypesAndNames(caller, "__caller");
-            (calleeParameterTypes, calleeParameterNames) = GetParameterTypesAndNames(target, "__instance");
-            (replacementParameterTypes, replacementParameterNames) = GetParameterTypesAndNames(wrapper, "__instance");
+            (targetParameterTypes, targetParameterNames) = GetParameterTypesAndNames(target, "__instance");
+            (wrapperParameterTypes, wrapperParameterNames) = GetParameterTypesAndNames(wrapper, "__instance");
 
             EmitPrelude();
 
             // Match each parameter of the replacement method
-            for (int i = firstNonMatchingParameter; i < replacementParameterNames.Length; i++)
+            for (int i = firstNonMatchingParameter; i < wrapperParameterNames.Length; i++)
             {
-                string replacementParameterName = replacementParameterNames[i];
-                Type replacementParameterType = replacementParameterTypes[i];
-
-                EmitParameterValue(replacementParameterName, replacementParameterType);
-                continue;
+                EmitParameterValue(wrapperParameterNames[i], wrapperParameterTypes[i]);
             }
 
             output.Add(new CodeInstruction(OpcodeFor(wrapper), wrapper));
@@ -48,7 +45,7 @@ namespace TranspilerUtil
 
         private void EmitParameterValue(string replacementParameterName, Type replacementParameterType)
         {
-            int calleeIndex = calleeParameterNames.FirstIndexOf(name => name == replacementParameterName);
+            int calleeIndex = targetParameterNames.FirstIndexOf(name => name == replacementParameterName);
             if (calleeIndex >= 0)
             {
                 if (calleeIndex < firstNonMatchingParameter)
@@ -65,12 +62,12 @@ namespace TranspilerUtil
                 return;
             }
 
-            for (int j = 0; j < calleeParameterTypes.Length; j++)
+            for (int j = 0; j < targetParameterTypes.Length; j++)
             {
-                if (calleeParameterTypes[j].Name.StartsWith("<") &&
-                    Attribute.IsDefined(calleeParameterTypes[j], typeof(CompilerGeneratedAttribute)))
+                if (targetParameterTypes[j].Name.StartsWith("<") &&
+                    Attribute.IsDefined(targetParameterTypes[j], typeof(CompilerGeneratedAttribute)))
                 {
-                    var field = calleeParameterTypes[j].GetField(replacementParameterName, AccessTools.all);
+                    var field = targetParameterTypes[j].GetField(replacementParameterName, AccessTools.all);
                     if (field != null)
                     {
                         output.Add(CodeInstruction.LoadArgument(j));
@@ -95,11 +92,11 @@ namespace TranspilerUtil
                 }
             }
 
-            calleeIndex = calleeParameterTypes.FirstIndexOf(type => type == replacementParameterType);
+            calleeIndex = targetParameterTypes.FirstIndexOf(type => type == replacementParameterType);
             if (calleeIndex >= 0)
             {
                 Log.Warning(
-                    $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({target.Name} -> {wrapper.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {calleeParameterTypes[calleeIndex].Name} {calleeParameterNames[calleeIndex]}");
+                    $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({target.Name} -> {wrapper.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {targetParameterTypes[calleeIndex].Name} {targetParameterNames[calleeIndex]}");
                 if (calleeIndex < firstNonMatchingParameter)
                     throw new InvalidOperationException(
                         $"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
@@ -124,22 +121,28 @@ namespace TranspilerUtil
         {
             // Instructions which are already on the stack in the right order don't need to be saved and restored
             firstNonMatchingParameter = 0;
-            while (firstNonMatchingParameter < replacementParameterNames.Length &&
-                   firstNonMatchingParameter < calleeParameterNames.Length &&
-                   replacementParameterNames[firstNonMatchingParameter] == calleeParameterNames[firstNonMatchingParameter])
+            while (firstNonMatchingParameter < wrapperParameterNames.Length &&
+                   firstNonMatchingParameter < targetParameterNames.Length &&
+                   wrapperParameterNames[firstNonMatchingParameter] == targetParameterNames[firstNonMatchingParameter])
             {
                 firstNonMatchingParameter++;
             }
 
             // Save all remaining parameters to local. The matcher will handle renumbering the locals to new
             // unused local indexes.
-            parameterToLocalIndex = new int[calleeParameterTypes.Length];
-            for (int i = calleeParameterTypes.Length - 1; i >= firstNonMatchingParameter; i--)
+            parameterToLocalIndex = new int[targetParameterTypes.Length];
+            for (int i = targetParameterTypes.Length - 1; i >= firstNonMatchingParameter; i--)
             {
-                parameterToLocalIndex[i] = localTypes.Count;
-                localTypes.Add(calleeParameterTypes[i]);
+                parameterToLocalIndex[i] = AddLocal(targetParameterTypes[i]);
                 output.Add(CodeInstruction.StoreLocal(parameterToLocalIndex[i]));
             }
+        }
+
+        private int AddLocal(Type type)
+        {
+            var localIndex = localTypes.Count;
+            localTypes.Add(type);
+            return localIndex;
         }
 
         private static (Type[] types, string[] names) GetParameterTypesAndNames(MemberInfo member, string instanceName)
@@ -259,7 +262,11 @@ namespace TranspilerUtil
                             if (targetMethod == null)
                                 throw new InvalidOperationException("null target method");
 
-                            patches.Add(new() { targetMethod = targetMethod, wrappedMember = wrappedMember, patchMethod = method, patchType = infixTargetAttribute.patchType });
+                            patches.Add(new()
+                            {
+                                targetMethod = targetMethod, wrappedMember = wrappedMember, patchMethod = method,
+                                patchType = infixTargetAttribute.patchType
+                            });
                         }
                     }
                     catch (Exception e)
