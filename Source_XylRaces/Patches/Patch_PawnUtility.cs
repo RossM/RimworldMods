@@ -21,40 +21,44 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(ThingDef)])]
+        [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(ThingDef)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(Pawn), typeof(Thing), typeof(float)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
-        public static float GetManhunterOnDamageChance_Wrapper(Pawn pawn)
+        public static void GetManhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
         {
-            return pawn.RaceManhunterOnDamageChance() * Find.Storyteller.difficulty.manhunterChanceOnDamageFactor;
+            if (pawn.RaceManhunterOnDamageChance() is { } f)
+                __result = f * Find.Storyteller.difficulty.manhunterChanceOnDamageFactor;
         }
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(ThingDef)])]
+        [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(ThingDef)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(Pawn)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
-        public static float GetManhunterOnTameFailChance_Wrapper(Pawn pawn)
+        public static void GetManhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
         {
-            return pawn.RaceManhunterOnTameFailChance();
+            if (pawn.RaceManhunterOnTameFailChance() is { } f)
+                __result = f;
         }
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(RaceProperties), nameof(RaceProperties.manhunterOnDamageChance))]
+        [InfixPostfix(typeof(RaceProperties), nameof(RaceProperties.manhunterOnDamageChance))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
-        public static float RaceProperties_manhunterOnDamageChance_Wrapper(Pawn pawn)
+        public static void RaceProperties_manhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
         {
-            return pawn.RaceManhunterOnDamageChance();
+            if (pawn.RaceManhunterOnDamageChance() is { } f)
+                __result = f;
         }
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(RaceProperties), nameof(RaceProperties.manhunterOnTameFailChance))]
+        [InfixPostfix(typeof(RaceProperties), nameof(RaceProperties.manhunterOnTameFailChance))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
-        public static float RaceProperties_manhunterOnTameFailChance_Wrapper(Pawn pawn)
+        public static void RaceProperties_manhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
         {
-            return pawn.RaceManhunterOnTameFailChance();
+            if (pawn.RaceManhunterOnTameFailChance() is { } f)
+                __result = f;
         }
 
         [Feature(typeof(GeneDefExtension_WildMan))]

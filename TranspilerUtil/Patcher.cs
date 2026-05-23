@@ -5,15 +5,19 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
+using UnityEngine;
 using Verse;
 
 namespace TranspilerUtil
 {
-    public class MethodPatchWorker(MethodBase caller, MemberInfo target, MemberInfo wrapper)
+    public class MethodPatchWorker(ILGenerator generator, MethodBase caller, MemberInfo target, MemberInfo wrapper, List<MethodInfo> prefixes, List<MethodInfo> postfixes)
     {
+        public ILGenerator generator = generator;
         public MethodBase caller = caller;
         public MemberInfo target = target;
-        public MemberInfo wrapper = wrapper;
+        public MemberInfo wrapper = wrapper ?? target;
+        public List<MethodInfo> prefixes = prefixes;
+        public List<MethodInfo> postfixes = postfixes;
         public List<CodeInstruction> output = [];
         public List<Type> localTypes = [];
 
@@ -25,6 +29,8 @@ namespace TranspilerUtil
         private string[] wrapperParameterNames;
         private int firstNonMatchingParameter;
         private int[] parameterToLocalIndex;
+        private int resultLocalIndex = -1;
+        private Type targetType;
 
         public void EmitReplacement()
         {
@@ -34,17 +40,119 @@ namespace TranspilerUtil
 
             EmitPrelude();
 
+            targetType = target switch
+            {
+                FieldInfo field => field.FieldType,
+                MethodInfo method => method.ReturnType,
+                _ => throw new NotSupportedException(),
+            };
+
+            if (!targetType.IsVoid())
+            {
+                resultLocalIndex = AddLocal(targetType);
+
+                if (targetType.IsByRef)
+                    throw new NotImplementedException($"IsByRef targetType {targetType}");
+
+                if (targetType.IsClass)
+                {
+                    output.Add(new(OpCodes.Ldnull));
+                    output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
+                }
+                else if (targetType.IsStruct())
+                {
+                    output.Add(new(OpCodes.Ldloca, resultLocalIndex));
+                    output.Add(new(OpCodes.Initobj, targetType));
+                }
+                else if (targetType.IsValueType)
+                {
+                    if (targetType == typeof(float))
+                        output.Add(new(OpCodes.Ldc_R4, (float)0));
+                    else if (targetType == typeof(double))
+                        output.Add(new(OpCodes.Ldc_R8, (double)0));
+                    else if (targetType == typeof(long) || targetType == typeof(ulong))
+                        output.Add(new(OpCodes.Ldc_I8, (long)0));
+                    else
+                        output.Add(new(OpCodes.Ldc_I4_0));
+
+                    output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
+                }
+                else
+                    throw new NotImplementedException($"targetType {targetType}");
+            }
+
+            Label? skipLabel = null;
+            foreach (var prefix in prefixes)
+            {
+                (Type[] types, string[] names) = GetParameterTypesAndNames(prefix, null);
+                for (int i = 0; i < types.Length; i++)
+                {
+                    EmitParameterValue(types[i], names[i]);
+                }
+                output.Add(new(OpcodeFor(prefix), prefix));
+                if (!prefix.ReturnType.IsVoid())
+                {
+                    output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
+                }
+            }
+
             // Match each parameter of the replacement method
             for (int i = firstNonMatchingParameter; i < wrapperParameterNames.Length; i++)
             {
                 EmitParameterValue(wrapperParameterTypes[i], wrapperParameterNames[i]);
             }
-
             output.Add(new(OpcodeFor(wrapper), wrapper));
+
+            if (resultLocalIndex >= 0)
+                output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
+
+            if (skipLabel is { } label)
+            {
+                var branchTarget = new CodeInstruction(OpCodes.Nop);
+                branchTarget.labels.Add(label);
+                output.Add(branchTarget);
+            }
+
+            foreach (var postfix in postfixes)
+            {
+                (Type[] types, string[] names) = GetParameterTypesAndNames(postfix, null);
+                for (int i = 0; i < types.Length; i++)
+                {
+                    EmitParameterValue(types[i], names[i]);
+                }
+                output.Add(new(OpcodeFor(postfix), postfix));
+                if (!postfix.ReturnType.IsVoid())
+                    output.Add(new(OpCodes.Pop));
+            }
+
+            if (resultLocalIndex >= 0)
+            {
+                if (targetType.IsStruct())
+                {
+                    output.Add(new(OpCodes.Ldloca, resultLocalIndex));
+                    output.Add(new(OpCodes.Ldobj, targetType));
+                }
+                else
+                {
+                    output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
+                }
+            }
+
+            Debug.Log($"    {caller} -> {target}");
+            foreach (var local in localTypes)
+                Debug.Log($"        local {local}");
+            foreach (var inst in output)
+                Debug.Log($"        {inst}");
         }
 
         private void EmitParameterValue(Type parameterType, string parameterName)
         {
+            if (parameterName == "__result" && resultLocalIndex >= 0)
+            {
+                EmitResult(parameterType);
+                return;
+            }
+
             int targetIndex = targetParameterNames.FirstIndexOf(name => name == parameterName);
             if (targetIndex >= 0)
             {
@@ -93,10 +201,28 @@ namespace TranspilerUtil
                 $"Couldn't find parameter named '{parameterName}' of type {parameterType.FullName}");
         }
 
+        private void EmitResult(Type parameterType)
+        {
+            if (parameterType.IsByRef)
+                output.Add(new(OpCodes.Ldloca, resultLocalIndex));
+            else if (parameterType.IsStruct())
+            {
+                output.Add(new(OpCodes.Ldloca, resultLocalIndex));
+                output.Add(new(OpCodes.Ldobj, targetType));
+            }
+            else
+                output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
+        }
+
         private void EmitCallerParameter(Type parameterType, int callerIndex)
         {
             if (parameterType.IsByRef && !callerParameterTypes[callerIndex].IsByRef)
                 output.Add(new(OpCodes.Ldarga, callerIndex));
+            else if (parameterType.IsStruct())
+            {
+                output.Add(new(OpCodes.Ldarga, callerIndex));
+                output.Add(new(OpCodes.Ldobj, callerParameterTypes[callerIndex]));
+            }
             else
                 output.Add(CodeInstruction.LoadArgument(callerIndex));
         }
@@ -106,21 +232,34 @@ namespace TranspilerUtil
             if (targetIndex < firstNonMatchingParameter)
                 throw new InvalidOperationException(
                     $"Can't reuse parameter named '{targetParameterNames[targetIndex]}' of type {parameterType.FullName}");
+
             if (parameterType.IsByRef && !targetParameterTypes[targetIndex].IsByRef)
                 output.Add(new(OpCodes.Ldloca, parameterToLocalIndex[targetIndex]));
+            else if (parameterType.IsStruct())
+            {
+                output.Add(new(OpCodes.Ldloca, targetIndex));
+                output.Add(new(OpCodes.Ldobj, parameterToLocalIndex[targetIndex]));
+            }
             else
                 output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[targetIndex]));
         }
 
         private void EmitPrelude()
         {
-            // Instructions which are already on the stack in the right order don't need to be saved and restored
             firstNonMatchingParameter = 0;
-            while (firstNonMatchingParameter < wrapperParameterNames.Length &&
-                   firstNonMatchingParameter < targetParameterNames.Length &&
-                   wrapperParameterNames[firstNonMatchingParameter] == targetParameterNames[firstNonMatchingParameter])
+
+            if (prefixes.Count == 0 && postfixes.Count == 0)
             {
-                firstNonMatchingParameter++;
+                // Instructions which are already on the stack in the right order don't need to be saved and restored
+                while (firstNonMatchingParameter < wrapperParameterNames.Length &&
+                       firstNonMatchingParameter < targetParameterNames.Length &&
+                       wrapperParameterNames[firstNonMatchingParameter] == targetParameterNames[firstNonMatchingParameter])
+                {
+                    firstNonMatchingParameter++;
+                }
+
+                if (firstNonMatchingParameter > 0)
+                    Debug.Log($"    firstNonMatchingParameter={firstNonMatchingParameter}");
             }
 
             // Save all remaining parameters to local. The matcher will handle renumbering the locals to new
@@ -184,8 +323,8 @@ namespace TranspilerUtil
 
         private struct PatchInfo
         {
-            public MemberInfo wrappedMember;
-            public MethodInfo targetMethod;
+            public MemberInfo target;
+            public MethodInfo caller;
             public MethodInfo patchMethod;
             public PatchType patchType;
         }
@@ -243,23 +382,23 @@ namespace TranspilerUtil
                         if (infixTargetAttribute == null)
                             continue;
 
-                        MemberInfo wrappedMember = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
+                        MemberInfo target = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
                             infixTargetAttribute.parameterTypes);
-                        if (wrappedMember == null)
+                        if (target == null)
                             throw new InvalidOperationException("null wrapped member");
 
                         foreach (var infixPatchAttribute in infixPatchAttributes)
                         {
                             var patchedType = infixPatchAttribute.type ?? harmonyAttribute.info.declaringType;
 
-                            MethodInfo targetMethod = (MethodInfo)GetMember(patchedType, infixPatchAttribute.methodName,
+                            MethodInfo caller = (MethodInfo)GetMember(patchedType, infixPatchAttribute.methodName,
                                 infixPatchAttribute.parameterTypes);
-                            if (targetMethod == null)
+                            if (caller == null)
                                 throw new InvalidOperationException("null target method");
 
                             patches.Add(new()
                             {
-                                targetMethod = targetMethod, wrappedMember = wrappedMember, patchMethod = method,
+                                caller = caller, target = target, patchMethod = method,
                                 patchType = infixTargetAttribute.patchType
                             });
                         }
@@ -271,38 +410,46 @@ namespace TranspilerUtil
                 }
             }
 
+            Debug.Log("Patcher");
+
             AssemblyBuilder assemblyBuilder
                 = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" },
                     AssemblyBuilderAccess.RunAndSave);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicTranspilersModule");
 
-            foreach (IGrouping<MethodInfo, PatchInfo> targetGroup in patches.GroupBy(patch => patch.targetMethod))
+            foreach (IGrouping<MethodInfo, PatchInfo> patchGroup in patches.GroupBy(patch => patch.caller))
             {
-                var targetMethod = targetGroup.Key;
-                List<InstructionMatcher.Rule> rules = [];
-                foreach (IGrouping<MemberInfo, PatchInfo> wrapGroup in targetGroup.GroupBy(patch => patch.wrappedMember))
-                {
-                    var wrappedMember = wrapGroup.Key;
-                    var wrapperMethod = wrapGroup.SingleOrDefault(patch => patch.patchType == PatchType.Wrapper).patchMethod;
-                    var prefixMethods = wrapGroup.Where(patch => patch.patchType == PatchType.Prefix).Select(patch => patch.targetMethod)
-                        .ToList();
-                    var postfixMethods = wrapGroup.Where(patch => patch.patchType == PatchType.Postfix).Select(patch => patch.targetMethod)
-                        .ToList();
+                var patchedMethod = patchGroup.Key;
 
-                    if (prefixMethods.Count == 0 && postfixMethods.Count == 0)
+                Debug.Log($"{patchedMethod}");
+
+                List<InstructionMatcher.Rule> rules = [];
+                foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patchGroup.GroupBy(patch => patch.target))
+                {
+                    var target = targetGroup.Key;
+                    var wrapper = targetGroup.SingleOrDefault(patch => patch.patchType == PatchType.Wrapper).patchMethod;
+                    var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.Prefix).Select(patch => patch.patchMethod).ToList();
+                    var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.Postfix).Select(patch => patch.patchMethod).ToList();
+
+                    Debug.Log($"    {target}: wrapper={wrapper != null} prefixes={prefixes.Count} postfixes={postfixes.Count}");
+
+                    rules.Add(new()
                     {
-                        rules.Add(MakeRedirectRule(wrappedMember, wrapperMethod));
-                    }
-                    else
-                    {
-                        throw new NotImplementedException();
-                    }
+                        LateGenerator = (caller, _, generator) => 
+                            RedirectRule_Core(generator,
+                                patchedMethod,
+                                target,
+                                wrapper,
+                                prefixes,
+                                postfixes,
+                                1)
+                    });
                 }
 
                 MethodInfo transpiler = MakeTranspiler(moduleBuilder, rules,
-                    $"{targetMethod.DeclaringType?.FullName?.Replace('.', '_')}_{targetMethod.Name}_Transpiler");
+                    $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler");
 
-                harmony.Patch(targetMethod, transpiler: new(transpiler));
+                harmony.Patch(patchedMethod, transpiler: new(transpiler));
             }
         }
 
@@ -341,22 +488,25 @@ namespace TranspilerUtil
         {
             return new()
             {
-                LateGenerator = (caller, _) => RedirectRule_Core(caller, oldMember, newMember, minMatches)
+                LateGenerator = (caller, _, generator) => RedirectRule_Core(generator, caller, oldMember, newMember, [], [], minMatches)
             };
         }
 
         private static InstructionMatcher.Rule RedirectRule_Core(
+            ILGenerator generator,
             MethodBase caller,
-            MemberInfo callee,
+            MemberInfo target,
             MemberInfo wrapper,
+            List<MethodInfo> prefixes,
+            List<MethodInfo> postfixes,
             int minMatches)
         {
             List<CodeInstruction> pattern =
             [
-                new(MethodPatchWorker.OpcodeFor(callee), callee),
+                new(MethodPatchWorker.OpcodeFor(target), target),
             ];
 
-            var methodPatchWorker = new MethodPatchWorker(caller, callee, wrapper);
+            var methodPatchWorker = new MethodPatchWorker(generator, caller, target, wrapper, prefixes, postfixes);
             methodPatchWorker.EmitReplacement();
 
             var rule = new InstructionMatcher.Rule()

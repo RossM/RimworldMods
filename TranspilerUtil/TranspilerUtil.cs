@@ -30,7 +30,7 @@ namespace TranspilerUtil
             public bool Chained = false;
             public CodeInstruction[] Pattern;
             public CodeInstruction[] Output;
-            public Func<MethodBase, List<CodeInstruction>, Rule> LateGenerator;
+            public Func<MethodBase, List<CodeInstruction>, ILGenerator, Rule> LateGenerator;
             public Type[] LocalTypes;
         }
 
@@ -39,6 +39,7 @@ namespace TranspilerUtil
             public Rule rule;
             public int start, end;
             public Dictionary<int, int> privateMap;
+            public Dictionary<Label, Label> labelMap;
         }
 
         public List<Rule> Rules = [];
@@ -68,7 +69,7 @@ namespace TranspilerUtil
             {
                 Rule rule = Rules[ruleIndex];
                 if (rule.LateGenerator != null)
-                    rule = rule.LateGenerator(method, instructions);
+                    rule = rule.LateGenerator(method, instructions, generator);
                 var matchCount = 0;
 
                 for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[matches.Count - 1].end + 1 : 0;
@@ -83,8 +84,8 @@ namespace TranspilerUtil
                         var inst = instructions[instructionIndex + patternIndex];
                         var patternInst = rule.Pattern[patternIndex];
 
-                        if (debug)
-                            Debug.Log($"COMPARE {patternInst} : {inst}");
+                        //if (debug)
+                        //    Debug.Log($"COMPARE {patternInst} : {inst}");
 
                         // For a load or store, map the local indexes in the pattern to the actual local indexes used
                         // in the function
@@ -161,6 +162,7 @@ namespace TranspilerUtil
                         start = instructionIndex,
                         end = instructionIndex + rule.Pattern.Length - 1,
                         privateMap = tempLocalIndexMap,
+                        labelMap = new(),
                     };
                     if (debug)
                         Debug.Log($"MATCH #{ruleIndex} {matchData.start}-{matchData.end}");
@@ -222,64 +224,38 @@ namespace TranspilerUtil
                         CodeInstruction replaceInst = match.rule.Output[i];
                         if (replaceInst.IsStloc())
                         {
-                            int localIndex = replaceInst.LocalIndex();
-                            if (localIndexMap.TryGetValue(localIndex, out int substituteIndex))
-                            {
-                            }
-                            else if (match.privateMap.TryGetValue(localIndex, out substituteIndex))
-                            {
-                            }
-                            else if (match.rule.LocalTypes != null && localIndex < match.rule.LocalTypes.Length && generator != null)
-                            {
-                                substituteIndex = generator.DeclareLocal(match.rule.LocalTypes[localIndex]).LocalIndex;
-                                match.privateMap.Add(localIndex, substituteIndex);
-                            }
-                            else if (LocalTypes != null && localIndex < LocalTypes.Count && generator != null)
-                            {
-                                substituteIndex = generator.DeclareLocal(LocalTypes[localIndex]).LocalIndex;
-                                localIndexMap.Add(localIndex, substituteIndex);
-                            }
-                            else
-                            {
-                                reason = $"Replacement pattern uses unknown local index #{localIndex}";
+                            if (!TryGetLocalIndex(ref reason, generator, localIndexMap, match, out var substituteIndex, replaceInst.LocalIndex()))
                                 return false;
-                            }
 
                             outInstructions.Add(CodeInstruction.StoreLocal(substituteIndex));
                         }
+                        else if (replaceInst.opcode == OpCodes.Ldloca || replaceInst.opcode == OpCodes.Ldloca_S)
+                        {
+                            if (!TryGetLocalIndex(ref reason, generator, localIndexMap, match, out var substituteIndex, (int)replaceInst.operand))
+                                return false;
+
+                            outInstructions.Add(new(OpCodes.Ldloca, substituteIndex));
+                        }
                         else if (replaceInst.IsLdloc())
                         {
-                            int localIndex = replaceInst.LocalIndex();
-                            if (localIndexMap.TryGetValue(localIndex, out int substituteIndex))
-                            {
-                            }
-                            else if (match.privateMap.TryGetValue(localIndex, out substituteIndex))
-                            {
-                            }
-                            else if (match.rule.LocalTypes != null && localIndex < match.rule.LocalTypes.Length && generator != null)
-                            {
-                                substituteIndex = generator.DeclareLocal(match.rule.LocalTypes[localIndex]).LocalIndex;
-                                match.privateMap.Add(localIndex, substituteIndex);
-                            }
-                            else if (LocalTypes != null && localIndex < LocalTypes.Count && generator != null)
-                            {
-                                substituteIndex = generator.DeclareLocal(LocalTypes[localIndex]).LocalIndex;
-                                localIndexMap.Add(localIndex, substituteIndex);
-                            }
-                            else
-                            {
-                                reason = $"Replacement pattern uses unknown local index #{localIndex}";
+                            if (!TryGetLocalIndex(ref reason, generator, localIndexMap, match, out var substituteIndex, replaceInst.LocalIndex()))
                                 return false;
-                            }
 
                             outInstructions.Add(CodeInstruction.LoadLocal(substituteIndex));
+                        }
+                        else if (replaceInst.operand is Label label)
+                        {
+                            outInstructions.Add(new(replaceInst.opcode, GetReplacementLabel(generator, match, label)));
                         }
                         else
                             outInstructions.Add(replaceInst);
 
+                        outInstructions[outInstructions.Count - 1].labels = replaceInst.labels
+                            .Select(label => GetReplacementLabel(generator, match, label)).ToList();
+
                         if (i == 0 && match.rule.Mode == OutputMode.Replace)
                         {
-                            outInstructions[outInstructions.Count - 1].labels = instructions[match.start].labels;
+                            outInstructions[outInstructions.Count - 1].labels.AddRange(instructions[match.start].labels);
                         }
 
                         if (debug)
@@ -309,6 +285,51 @@ namespace TranspilerUtil
             return true;
         }
 
+        private static Label GetReplacementLabel(ILGenerator generator, MatchData match, Label label)
+        {
+            if (!match.labelMap.TryGetValue(label, out Label replacementLabel))
+            {
+                replacementLabel = generator.DefineLabel();
+                match.labelMap.Add(label, replacementLabel);
+            }
+
+            return replacementLabel;
+        }
+
+        private bool TryGetLocalIndex(
+            ref string reason,
+            ILGenerator generator,
+            Dictionary<int, int> localIndexMap,
+            MatchData match,
+            out int substituteIndex,
+            int localIndex)
+        {
+            bool valid = true;
+            if (localIndexMap.TryGetValue(localIndex, out substituteIndex))
+            {
+            }
+            else if (match.privateMap.TryGetValue(localIndex, out substituteIndex))
+            {
+            }
+            else if (match.rule.LocalTypes != null && localIndex < match.rule.LocalTypes.Length && generator != null)
+            {
+                substituteIndex = generator.DeclareLocal(match.rule.LocalTypes[localIndex]).LocalIndex;
+                match.privateMap.Add(localIndex, substituteIndex);
+            }
+            else if (LocalTypes != null && localIndex < LocalTypes.Count && generator != null)
+            {
+                substituteIndex = generator.DeclareLocal(LocalTypes[localIndex]).LocalIndex;
+                localIndexMap.Add(localIndex, substituteIndex);
+            }
+            else
+            {
+                reason = $"Replacement pattern uses unknown local index #{localIndex}";
+                valid = false;
+            }
+
+            return valid;
+        }
+
         public void MatchAndReplace(
             MethodBase method,
             ref List<CodeInstruction> instructionsList,
@@ -328,7 +349,7 @@ namespace TranspilerUtil
             ILGenerator generator)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
-            new InstructionMatcher() { Rules = rules }.MatchAndReplace(method, ref instructionsList, generator);
+            new InstructionMatcher() { Rules = rules }.MatchAndReplace(method, ref instructionsList, generator, debug: false);
             return instructionsList;
         }
     }

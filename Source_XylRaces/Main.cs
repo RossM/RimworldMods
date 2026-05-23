@@ -50,36 +50,38 @@ namespace XylXenos
                     var hasPrefix = method.HasAttribute<HarmonyPrefix>();
                     var hasPostfix = method.HasAttribute<HarmonyPostfix>();
                     var hasTranspiler = method.HasAttribute<HarmonyTranspiler>();
-                    var hasInfix = method.HasAttribute<InfixPatchAttribute>();
-                    var hasWrappedMember = method.HasAttribute<InfixWrapperAttribute>();
+                    var hasInfixPatch = method.HasAttribute<InfixPatchAttribute>();
+                    var hasInfixWrapper = method.HasAttribute<InfixWrapperAttribute>();
+                    var hasInfixPrefix = method.HasAttribute<InfixPrefixAttribute>();
+                    var hasInfixPostfix = method.HasAttribute<InfixPostfixAttribute>();
 
-                    if ((hasPrefix || hasPostfix || hasTranspiler || hasInfix) && !hasFeature)
+                    if ((hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && !hasFeature)
                         Log.Warning($"{type.Name}::{method.Name} is missing a [Feature] attribute");
-                    if (!(hasPrefix || hasPostfix || hasTranspiler || hasInfix) && hasFeature)
+                    if (!(hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && hasFeature)
                         Log.Warning($"{type.Name}::{method.Name} has [Feature] but no Harmony attribute");
 
-                    if (hasInfix != hasWrappedMember)
-                        Log.Warning($"{type.Name}::{method.Name} has should have both [WrappedMember] and [InfixPatch]");
+                    if (hasInfixPatch != (hasInfixWrapper || hasInfixPrefix || hasInfixPostfix))
+                        Log.Warning($"{type.Name}::{method.Name} has should have both [InfixPatch] and one of [InfixWrapper], [InfixPrefix] or [InfixPostfix]");
 
-                    if (hasPrefix && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
+                    if ((hasPrefix || hasInfixPrefix) && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
                         Log.Warning($"{type.Name}::{method.Name} should be named with _Prefix");
-                    if (hasPostfix && !(method.Name == "Postfix" || method.Name.EndsWith("_Postfix")))
+                    if ((hasPostfix || hasInfixPostfix) && !(method.Name == "Postfix" || method.Name.EndsWith("_Postfix")))
                         Log.Warning($"{type.Name}::{method.Name} should be named with _Postfix");
                     if (hasTranspiler && !(method.Name == "Transpiler" || method.Name.EndsWith("_Transpiler")))
                         Log.Warning($"{type.Name}::{method.Name} should be named with _Transpiler");
-                    if (hasWrappedMember && !method.Name.EndsWith("_Wrapper"))
+                    if (hasInfixWrapper && !method.Name.EndsWith("_Wrapper"))
                         Log.Warning($"{type.Name}::{method.Name} should be named with _Wrapper");
 
                     var parameters = method.GetParameters();
                     ParameterInfo resultParameter = parameters.SingleOrDefault(p => p.Name == "__result");
-                    if (hasPrefix)
+                    if (hasPrefix || hasInfixPrefix)
                     {
                         if (resultParameter?.IsOut == false)
                             Log.Warning($"{type.Name}::{method.Name} should use 'out' for __result");
                         if (method.ReturnType.IsVoid() && resultParameter != null)
                             Log.Warning($"{type.Name}::{method.Name} returns void but uses __result");
                     }
-                    if (hasPostfix)
+                    if (hasPostfix || hasInfixPostfix)
                     {
                         if (resultParameter is { ParameterType.IsByRef: false })
                             Log.Warning($"{type.Name}::{method.Name} has a non-ref __result");

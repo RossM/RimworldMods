@@ -53,17 +53,15 @@ namespace XylXenos.Patches
 
         [Feature(Config.Feature.FixLactationBugs)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
+        [InfixPrefix(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
         [InfixPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
-        public static Hediff GetFirstHediffOfDef_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
+        public static bool GetFirstHediffOfDef_Prefix(HediffSet __instance, HediffDef def, bool mustBeVisible, out Hediff __result)
         {
+            __result = null;
             // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes
             // lactating pawns to need too much food. This turns out to be a problem for bossaps balance-wise, so I'm
             // fixing the bug.
-            if (Settings.instance.ShouldFixLactationBugsFor(__instance.pawn))
-                return null;
-
-            return PatchLactation.GetFirstHediffOfDef_Wrapper(__instance, def, mustBeVisible);
+            return !Settings.instance.ShouldFixLactationBugsFor(__instance.pawn);
         }
 
         public static void AddLactationExplanation(StringBuilder stringBuilder, Pawn pawn)
