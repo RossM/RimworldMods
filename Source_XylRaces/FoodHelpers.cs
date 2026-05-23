@@ -17,6 +17,8 @@ public static class FoodHelpers
         NonMeat = 0x2,
         AnimalProduct = 0x4,
         Fungus = 0x8,
+        Humanlike = 0x10,
+        Insect = 0x20,
     }
 
     public static FoodType GetFoodType(ThingDef foodDef)
@@ -30,7 +32,15 @@ public static class FoodHelpers
         if ((flags & (FoodTypeFlags.VegetableOrFruit | FoodTypeFlags.Plant | FoodTypeFlags.Seed)) != 0)
             return FoodType.NonMeat;
         if ((flags & (FoodTypeFlags.Meat | FoodTypeFlags.Corpse)) != 0)
-            return FoodType.Meat;
+        {
+            var foodType = FoodType.Meat;
+            if (foodDef.ingestible?.sourceDef.race.Humanlike == true)
+                foodType |= FoodType.Humanlike;
+            if (foodDef.ingestible?.sourceDef.race.FleshType == FleshTypeDefOf.Insectoid)
+                foodType |= FoodType.Insect;
+            return foodType;
+        }
+
         return FoodType.None;
     }
 
