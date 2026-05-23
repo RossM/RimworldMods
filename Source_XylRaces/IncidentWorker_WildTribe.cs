@@ -101,6 +101,7 @@ namespace XylXenos
                     context: PawnGenerationContext.NonPlayer,
                     forcedTraits: traits,
                     developmentalStages: stage));
+                pawn.SetFaction(null);
                 pawns.Add(pawn);
             }
 

@@ -42,8 +42,6 @@
       <li>(0.98, 0.75, 0.37)</li>
       <li>(0.97, 0.62, 0.52)</li>
     </colorSpectrum>
-    <basicMemberKind>WildMan</basicMemberKind>
-    <humanlikeFaction>false</humanlikeFaction>
     <generateNewLeaderFromMapMembersOnly>true</generateNewLeaderFromMapMembersOnly>
     <requiredCountAtGameStart>0</requiredCountAtGameStart>
     <mustStartOneEnemy>false</mustStartOneEnemy>
