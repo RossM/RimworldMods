@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using TranspilerUtil;
 
 namespace XylXenos.Patches
 {

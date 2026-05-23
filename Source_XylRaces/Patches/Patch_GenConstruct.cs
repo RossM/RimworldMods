@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using HarmonyLib;
 using RimWorld;
+using TranspilerUtil;
 using Verse;
 using XylXenos.Genes;
 

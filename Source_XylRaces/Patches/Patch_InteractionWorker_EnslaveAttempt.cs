@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 using RimWorld;
+using TranspilerUtil;
 using Verse;
 
 namespace XylXenos.Patches

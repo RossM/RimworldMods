@@ -511,35 +511,6 @@ namespace TranspilerUtil
             };
         }
 
-        public static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, List<Rule> rules, string typeName)
-        {
-            TypeBuilder typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
-
-            FieldBuilder rulesField = typeBuilder.DefineField("rules", typeof(List<Rule>),
-                FieldAttributes.Public | FieldAttributes.Static);
-
-            MethodBuilder methodBuilder = typeBuilder.DefineMethod("Invoke", MethodAttributes.Public | MethodAttributes.Static,
-                typeof(IEnumerable<CodeInstruction>), [typeof(MethodBase), typeof(IEnumerable<CodeInstruction>), typeof(ILGenerator)]);
-            ILGenerator generator = methodBuilder.GetILGenerator();
-
-            MethodInfo matchAndReplace = typeof(InstructionMatcher).GetMethod("MatchAndReplace",
-                BindingFlags.Public | BindingFlags.Static,
-                null,
-                [typeof(List<Rule>), typeof(MethodBase), typeof(IEnumerable<CodeInstruction>), typeof(ILGenerator)],
-                []);
-
-            generator.Emit(OpCodes.Ldsfld, rulesField);
-            generator.Emit(OpCodes.Ldarg_0);
-            generator.Emit(OpCodes.Ldarg_1);
-            generator.Emit(OpCodes.Ldarg_2);
-            generator.Emit(OpCodes.Call, matchAndReplace);
-            generator.Emit(OpCodes.Ret);
-
-            Type type = typeBuilder.CreateType();
-            type.GetField(rulesField.Name).SetValue(null, rules);
-            return type.GetMethod(methodBuilder.Name);
-        }
-
         [UsedImplicitly]
         public static List<CodeInstruction> MatchAndReplace(
             List<Rule> rules,
