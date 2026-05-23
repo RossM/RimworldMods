@@ -19,7 +19,12 @@ namespace XylXenos
     {
         DamageTaken,
         GenesChanged,
+        // HediffsChanged and HediffStateChange are generally both called when a pawn's hediffs change, but
+        // HediffsChanged is called as soon as the HediffSet is updated, while HediffStateChange is called
+        // slightly later when the game is checking for the results of the changes. I'm not sure if having
+        // both is really necessary but out of caution I'm leaving them both here for now.
         HediffsChanged,
+        HediffStateChange,
         ApparelChanged,
     }
 

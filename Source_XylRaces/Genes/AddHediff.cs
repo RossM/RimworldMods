@@ -53,7 +53,7 @@ namespace XylXenos.Genes
     }
 
     [UsedImplicitly]
-    public class AddHediff : Gene, IGene_HediffSource
+    public class AddHediff : Gene, IGene_HediffSource, INotificationTarget
     {
         public GeneDefExtension_Hediff DefExt => def.GetModExtension<GeneDefExtension_Hediff>();
 
@@ -113,7 +113,7 @@ namespace XylXenos.Genes
                 affectedParts.Add(hediff.Part);
         }
 
-        public void NotifyStateChange()
+        public void Notify_HediffStateChange()
         {
             if (!DefExt.reapplyOnPartRestored)
                 return;
@@ -192,6 +192,11 @@ namespace XylXenos.Genes
         bool IGene_HediffSource.CausesHediff(HediffDef hediffDef)
         {
             return DefExt?.hediffGivers.Any(g => g.hediff == hediffDef) ?? false;
+        }
+
+        public void RegisterWith(NotificationManager manager)
+        {
+            manager.Register(NotificationEvent.HediffStateChange, pawn, Notify_HediffStateChange);
         }
     }
 }
