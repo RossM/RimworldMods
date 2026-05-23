@@ -37,25 +37,25 @@ namespace TranspilerUtil
             // Match each parameter of the replacement method
             for (int i = firstNonMatchingParameter; i < wrapperParameterNames.Length; i++)
             {
-                EmitParameterValue(wrapperParameterNames[i], wrapperParameterTypes[i]);
+                EmitParameterValue(wrapperParameterTypes[i], wrapperParameterNames[i]);
             }
 
             output.Add(new CodeInstruction(OpcodeFor(wrapper), wrapper));
         }
 
-        private void EmitParameterValue(string replacementParameterName, Type replacementParameterType)
+        private void EmitParameterValue(Type parameterType, string parameterName)
         {
-            int calleeIndex = targetParameterNames.FirstIndexOf(name => name == replacementParameterName);
-            if (calleeIndex >= 0)
+            int targetIndex = targetParameterNames.FirstIndexOf(name => name == parameterName);
+            if (targetIndex >= 0)
             {
-                if (calleeIndex < firstNonMatchingParameter)
+                if (targetIndex < firstNonMatchingParameter)
                     throw new InvalidOperationException(
-                        $"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
-                output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
+                        $"Can't reuse parameter named '{parameterName}' of type {parameterType.FullName}");
+                output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[targetIndex]));
                 return;
             }
 
-            int callerIndex = callerParameterNames.FirstIndexOf(name => name == replacementParameterName);
+            int callerIndex = callerParameterNames.FirstIndexOf(name => name == parameterName);
             if (callerIndex >= 0)
             {
                 output.Add(CodeInstruction.LoadArgument(callerIndex));
@@ -67,7 +67,7 @@ namespace TranspilerUtil
                 if (targetParameterTypes[j].Name.StartsWith("<") &&
                     Attribute.IsDefined(targetParameterTypes[j], typeof(CompilerGeneratedAttribute)))
                 {
-                    var field = targetParameterTypes[j].GetField(replacementParameterName, AccessTools.all);
+                    var field = targetParameterTypes[j].GetField(parameterName, AccessTools.all);
                     if (field != null)
                     {
                         output.Add(CodeInstruction.LoadArgument(j));
@@ -82,7 +82,7 @@ namespace TranspilerUtil
                 if (callerParameterTypes[j].Name.StartsWith("<") &&
                     Attribute.IsDefined(callerParameterTypes[j], typeof(CompilerGeneratedAttribute)))
                 {
-                    var field = callerParameterTypes[j].GetField(replacementParameterName, AccessTools.all);
+                    var field = callerParameterTypes[j].GetField(parameterName, AccessTools.all);
                     if (field != null)
                     {
                         output.Add(CodeInstruction.LoadArgument(j));
@@ -92,29 +92,29 @@ namespace TranspilerUtil
                 }
             }
 
-            calleeIndex = targetParameterTypes.FirstIndexOf(type => type == replacementParameterType);
-            if (calleeIndex >= 0)
+            targetIndex = targetParameterTypes.FirstIndexOf(type => type == parameterType);
+            if (targetIndex >= 0)
             {
                 Log.Warning(
-                    $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({target.Name} -> {wrapper.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {targetParameterTypes[calleeIndex].Name} {targetParameterNames[calleeIndex]}");
-                if (calleeIndex < firstNonMatchingParameter)
+                    $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({target.Name} -> {wrapper.Name}): Matching by type: {parameterType.Name} {parameterName} = {targetParameterTypes[targetIndex].Name} {targetParameterNames[targetIndex]}");
+                if (targetIndex < firstNonMatchingParameter)
                     throw new InvalidOperationException(
-                        $"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
-                output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
+                        $"Can't reuse parameter named '{parameterName}' of type {parameterType.FullName}");
+                output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[targetIndex]));
                 return;
             }
 
-            callerIndex = callerParameterTypes.FirstIndexOf(type => type == replacementParameterType);
+            callerIndex = callerParameterTypes.FirstIndexOf(type => type == parameterType);
             if (callerIndex >= 0)
             {
                 Log.Warning(
-                    $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({target.Name} -> {wrapper.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
+                    $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({target.Name} -> {wrapper.Name}): Matching by type: {parameterType.Name} {parameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
                 output.Add(CodeInstruction.LoadArgument(callerIndex));
                 return;
             }
 
             throw new InvalidOperationException(
-                $"Couldn't find parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
+                $"Couldn't find parameter named '{parameterName}' of type {parameterType.FullName}");
         }
 
         private void EmitPrelude()
