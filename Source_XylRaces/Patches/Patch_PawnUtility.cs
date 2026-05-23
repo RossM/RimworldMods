@@ -21,7 +21,7 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(ThingDef)])]
+        [InfixWrapper(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(ThingDef)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(Pawn), typeof(Thing), typeof(float)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         public static float GetManhunterOnDamageChance_Wrapper(Pawn pawn)
@@ -31,7 +31,7 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(ThingDef)])]
+        [InfixWrapper(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(ThingDef)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(Pawn)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
         public static float GetManhunterOnTameFailChance_Wrapper(Pawn pawn)
@@ -41,7 +41,7 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(RaceProperties), nameof(RaceProperties.manhunterOnDamageChance))]
+        [InfixWrapper(typeof(RaceProperties), nameof(RaceProperties.manhunterOnDamageChance))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         public static float RaceProperties_manhunterOnDamageChance_Wrapper(Pawn pawn)
         {
@@ -50,7 +50,7 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(RaceProperties), nameof(RaceProperties.manhunterOnTameFailChance))]
+        [InfixWrapper(typeof(RaceProperties), nameof(RaceProperties.manhunterOnTameFailChance))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
         public static float RaceProperties_manhunterOnTameFailChance_Wrapper(Pawn pawn)
         {
@@ -59,7 +59,7 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(Def), nameof(Def.LabelCap))]
+        [InfixWrapper(typeof(Def), nameof(Def.LabelCap))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
         public static TaggedString Def_LabelCap_Wrapper(Def __instance, Pawn pawn)

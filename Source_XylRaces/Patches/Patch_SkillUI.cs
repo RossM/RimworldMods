@@ -13,7 +13,7 @@ namespace XylXenos.Patches
         [Feature(nameof(DefOf.XylLearnFactorPassionMinor))]
         [Feature(nameof(DefOf.XylLearnFactorPassionMajor))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(SkillUI), nameof(SkillUI.GetLearningFactor))]
+        [InfixWrapper(typeof(SkillUI), nameof(SkillUI.GetLearningFactor))]
         [InfixPatch("GetSkillDescription")]
         public static float GetLearningFactor_Wrapper(Passion passion, SkillRecord sk)
         {

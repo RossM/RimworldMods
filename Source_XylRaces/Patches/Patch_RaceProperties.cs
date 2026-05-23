@@ -53,7 +53,7 @@ namespace XylXenos.Patches
 
         [Feature(Config.Feature.FixLactationBugs)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
+        [InfixWrapper(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
         [InfixPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
         public static Hediff GetFirstHediffOfDef_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
         {

@@ -68,7 +68,7 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(CompProperties_Drug))]
-        [WrappedMember(typeof(List<ThingDefCount>), "Add")]
+        [InfixWrapper(typeof(List<ThingDefCount>), "Add")]
         [InfixPatch("GeneratePossessions")]
         public static void List_Add_Wrapper(List<ThingDefCount> __instance, ThingDefCount item, Pawn pawn)
         {

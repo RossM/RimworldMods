@@ -17,7 +17,7 @@ namespace XylXenos.Patches
 
         [Feature(typeof(XenotypeDefExtension))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(PawnBioAndNameGenerator), "TryGiveSolidBioTo")]
+        [InfixWrapper(typeof(PawnBioAndNameGenerator), "TryGiveSolidBioTo")]
         [InfixPatch(nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
         public static bool TryGiveSolidBioTo_Wrapper(
             Pawn pawn,

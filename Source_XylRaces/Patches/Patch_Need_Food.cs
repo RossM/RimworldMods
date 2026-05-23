@@ -11,7 +11,7 @@ namespace XylXenos.Patches
     {
         [Feature(Config.Feature.FixLactationBugs)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay))]
+        [InfixWrapper(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay))]
         [InfixPatch("FoodFallPerTickAssumingCategory")]
         static float AddedNutritionPerDay_Wrapper(HediffComp_Lactating __instance)
         {

@@ -13,7 +13,7 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(Hyperlactation))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)])]
+        [InfixWrapper(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)])]
         [InfixPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
         [InfixPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
         [InfixPatch(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
@@ -28,7 +28,7 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Hyperlactation))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)])]
+        [InfixWrapper(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)])]
         [InfixPatch(typeof(ChildcareUtility), "CanBreastfeed")]
         public static bool HasHediff_Wrapper(HediffSet __instance, HediffDef def, bool mustBeVisible)
         {

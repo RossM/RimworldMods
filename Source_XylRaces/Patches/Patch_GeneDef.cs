@@ -12,7 +12,7 @@ namespace XylXenos.Patches
     public static class Patch_GeneDef
     {
         [Feature(typeof(GeneDefExtension))]
-        [WrappedMember(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
+        [InfixWrapper(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
         [InfixPatch("GetDescriptionFull")]
         public static List<string> GeneDef_customEffectDescriptions_Wrapper(GeneDef __instance)
         {

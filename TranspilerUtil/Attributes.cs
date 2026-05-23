@@ -5,7 +5,7 @@ namespace TranspilerUtil
 {
     [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Method)]
-    public class WrappedMemberAttribute(Type type, string memberName, Type[] parameterTypes = null) : Attribute
+    public class InfixWrapperAttribute(Type type, string memberName, Type[] parameterTypes = null) : Attribute
     {
         public readonly Type type = type;
         public readonly string memberName = memberName;

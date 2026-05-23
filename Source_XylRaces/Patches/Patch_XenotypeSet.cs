@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     public static class Patch_XenotypeSet
     {
         [Feature(typeof(XenotypeSetWithDefault))]
-        [WrappedMember(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
+        [InfixWrapper(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
         [InfixPatch(nameof(XenotypeSet.BaselinerChance))]
         [InfixPatch(nameof(XenotypeSet.Contains))]
         public static XenotypeDef XenotypeDefOf_Baseliner_Wrapper(XenotypeSet __caller)

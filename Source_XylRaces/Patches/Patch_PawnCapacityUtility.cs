@@ -9,7 +9,7 @@ namespace XylXenos.Patches
 
     {
         [Feature(typeof(HediffWithCompsExt))]
-        [WrappedMember(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset))]
+        [InfixWrapper(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset))]
         [InfixPatch(nameof(PawnCapacityUtility.CalculatePartEfficiency))]
         public static float HediffStage_partEfficiencyOffset_Wrapper(HediffStage __instance, HediffSet diffSet)
         {

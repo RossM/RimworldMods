@@ -62,7 +62,7 @@ namespace TranspilerUtil
                     try
                     {
                         var wrappedMemberAttribute
-                            = (WrappedMemberAttribute)Attribute.GetCustomAttribute(method, typeof(WrappedMemberAttribute));
+                            = (InfixWrapperAttribute)Attribute.GetCustomAttribute(method, typeof(InfixWrapperAttribute));
                         var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(InfixPatchAttribute))
                             .Cast<InfixPatchAttribute>().ToArray();
 

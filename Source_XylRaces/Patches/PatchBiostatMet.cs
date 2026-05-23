@@ -10,7 +10,7 @@ namespace XylXenos.Patches
     public static class PatchBiostatMet
     {
         [Feature(typeof(BonusGene))]
-        [WrappedMember(typeof(GeneDef), nameof(GeneDef.biostatMet))]
+        [InfixWrapper(typeof(GeneDef), nameof(GeneDef.biostatMet))]
         [InfixPatch(typeof(Dialog_CreateXenotype), "DrawGene")]
         [InfixPatch(typeof(GeneCreationDialogBase), "OnGenesChanged")]
         [InfixPatch(typeof(GeneDef), "GetDescriptionFull")]

@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     public static class Patch_FactionDef
     {
         [Feature(typeof(XenotypeSetWithDefault))]
-        [WrappedMember(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
+        [InfixWrapper(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
         [InfixPatch(nameof(FactionDef.Description))]
         public static XenotypeDef XenotypeDefOf_Baseliner_Wrapper(FactionDef __caller)
         {

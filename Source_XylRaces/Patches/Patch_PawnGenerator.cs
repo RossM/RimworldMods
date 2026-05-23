@@ -10,7 +10,7 @@ namespace XylXenos.Patches
     public static class Patch_PawnGenerator
     {
         [Feature(typeof(GeneDefExtension_GenderRatio))]
-        [WrappedMember(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
+        [InfixWrapper(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
         [InfixPatch("TryGenerateNewPawnInternal")]
         public static void GiveAppropriateBioAndNameTo_Wrapper(
             Pawn pawn,
@@ -58,7 +58,7 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(XenotypeSetWithDefault))]
-        [WrappedMember(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
+        [InfixWrapper(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
         [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
         public static XenotypeDef XenotypeDefOf_Baseliner_Wrapper(FactionDef factionDef = null, Faction faction = null)
         {
@@ -67,7 +67,7 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(XenotypeSetWithDefault))]
-        [WrappedMember(typeof(PawnGenerator), "<XenotypesAvailableFor>g__AddOrAdjust|49_0")]
+        [InfixWrapper(typeof(PawnGenerator), "<XenotypesAvailableFor>g__AddOrAdjust|49_0")]
         [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
         public static void AddOrAdjust_Wrapper(XenotypeChance xenotypeChance, FactionDef factionDef = null, Faction faction = null)
         {

@@ -10,7 +10,7 @@ namespace XylXenos.Patches
     public static class Patch_DrugPolicyUIUtility
     {
         [Feature(typeof(GeneDefExtension_Chemicals))]
-        [WrappedMember(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene))]
+        [InfixWrapper(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene))]
         [InfixPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
         public static bool TryGetChemicalDependencyGene_Wrapper(Pawn pawn, out Gene gene)
         {

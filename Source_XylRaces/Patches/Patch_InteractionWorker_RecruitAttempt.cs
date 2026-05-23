@@ -11,7 +11,7 @@ namespace XylXenos.Patches
     {
         [Feature(nameof(DefOf.XylResistanceFallRate))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+        [InfixWrapper(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
         [InfixPatch(nameof(InteractionWorker_RecruitAttempt.Interacted))]
         public static float GetStatValue_Wrapper(Thing thing, StatDef stat, Pawn recipient, bool applyPostProcess, int cacheStaleAfterTicks)
         {

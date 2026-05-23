@@ -12,7 +12,7 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(Psycast))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel))]
+        [InfixWrapper(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel))]
         [InfixPatch("DisabledCheck")]
         public static int GetPsylinkLevel_Wrapper(Command_Psycast __caller, Pawn pawn)
         {

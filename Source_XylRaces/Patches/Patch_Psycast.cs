@@ -11,7 +11,7 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(Psycast))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel))]
+        [InfixWrapper(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel))]
         [InfixPatch("GizmoDisabled")]
         [InfixPatch("CanCast")]
         public static int GetPsylinkLevel_Wrapper(Psycast __caller, Pawn pawn)

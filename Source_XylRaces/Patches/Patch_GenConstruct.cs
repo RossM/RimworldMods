@@ -11,7 +11,7 @@ namespace XylXenos.Patches
     public static class Patch_GenConstruct
     {
         [Feature(typeof(GeneDefExtension_Designator))]
-        [WrappedMember(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
+        [InfixWrapper(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
         [InfixPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
         public static bool MembersCanBuild_Wrapper(Ideo __instance, Thing thing, Pawn p)
         {

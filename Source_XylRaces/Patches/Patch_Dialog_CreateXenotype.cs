@@ -14,7 +14,7 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(GeneDefExtension_UIFilter))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder))]
+        [InfixWrapper(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder))]
         [InfixPatch("DrawGenes")]
         public static List<GeneDef> GenesInOrder_Wrapper(Dialog_CreateXenotype __caller)
         {

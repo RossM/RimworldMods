@@ -13,7 +13,7 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(DefModExtension_GeneDependent))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(RecipeDef), "memePrerequisitesAny")]
+        [InfixWrapper(typeof(RecipeDef), "memePrerequisitesAny")]
         [InfixPatch(nameof(RecipeDef.AvailableNow))]
         public static List<MemeDef> RecipeDef_memePrerequisitesAny_Wrapper()
         {

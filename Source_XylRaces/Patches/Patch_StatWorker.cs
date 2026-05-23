@@ -177,7 +177,7 @@ namespace XylXenos.Patches
         // Note: this patch is performance-sensitive
         [Feature(typeof(Hediff_SubstituteCapacity))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity))]
+        [InfixWrapper(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity))]
         [InfixPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
         public static PawnCapacityDef PawnCapacityOffset_capacity_Wrapper(
             PawnCapacityOffset __instance,
@@ -191,7 +191,7 @@ namespace XylXenos.Patches
 
         [Feature(typeof(Hediff_SubstituteCapacity))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WrappedMember(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity))]
+        [InfixWrapper(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity))]
         [InfixPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
         public static PawnCapacityDef PawnCapacityFactor_capacity_Wrapper(
             PawnCapacityFactor __instance,

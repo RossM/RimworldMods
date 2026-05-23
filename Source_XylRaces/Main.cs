@@ -51,7 +51,7 @@ namespace XylXenos
                     var hasPostfix = method.HasAttribute<HarmonyPostfix>();
                     var hasTranspiler = method.HasAttribute<HarmonyTranspiler>();
                     var hasInfix = method.HasAttribute<InfixPatchAttribute>();
-                    var hasWrappedMember = method.HasAttribute<WrappedMemberAttribute>();
+                    var hasWrappedMember = method.HasAttribute<InfixWrapperAttribute>();
 
                     if ((hasPrefix || hasPostfix || hasTranspiler || hasInfix) && !hasFeature)
                         Log.Warning($"{type.Name}::{method.Name} is missing a [Feature] attribute");
