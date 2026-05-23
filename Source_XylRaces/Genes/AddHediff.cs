@@ -53,7 +53,7 @@ namespace XylXenos.Genes
     }
 
     [UsedImplicitly]
-    public class AddHediff : Gene, IGene_HediffSource, INotificationTarget
+    public class AddHediff : Gene, IGene_HediffSource, INotificationListener
     {
         public GeneDefExtension_Hediff DefExt => def.GetModExtension<GeneDefExtension_Hediff>();
 

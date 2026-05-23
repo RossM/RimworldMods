@@ -12,7 +12,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(Gene.PostAdd))]
         public static void PostAdd_Postfix(Gene __instance)
         {
-            if (__instance is INotificationTarget target)
+            if (__instance is INotificationListener target)
                 target.RegisterWith(NotificationManager.Instance);
         }
 

@@ -16,7 +16,7 @@ namespace XylXenos
         }
     }
 
-    public class CompPawn_LookupCache : ThingComp, INotificationTarget
+    public class CompPawn_LookupCache : ThingComp, INotificationListener
     {
         [Unsaved] private readonly Dictionary<Type, IList> genesByType = new();
         [Unsaved] private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();

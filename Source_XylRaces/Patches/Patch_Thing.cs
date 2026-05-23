@@ -52,7 +52,7 @@ namespace XylXenos.Patches
         public static void PostMake_Postfix(Thing __instance)
         {
             // ReSharper disable once SuspiciousTypeConversion.Global
-            if (__instance is INotificationTarget target)
+            if (__instance is INotificationListener target)
                 target.RegisterWith(NotificationManager.Instance);
         }
     }

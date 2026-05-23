@@ -11,7 +11,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(MapComponent.FinalizeInit))]
         public static void FinalizeInit_Postfix(MapComponent __instance)
         {
-            if (__instance is INotificationTarget target)
+            if (__instance is INotificationListener target)
                 target.RegisterWith(NotificationManager.Instance);
         }
     }

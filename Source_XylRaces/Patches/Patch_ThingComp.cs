@@ -11,7 +11,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(ThingComp.Initialize))]
         public static void Initialize_Postfix(ThingComp __instance)
         {
-            if (__instance is INotificationTarget target)
+            if (__instance is INotificationListener target)
                 target.RegisterWith(NotificationManager.Instance);
         }
     }

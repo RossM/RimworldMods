@@ -10,7 +10,7 @@ namespace XylXenos.Genes
         public HediffDef hediffDef;
     }
 
-    public class SeeingRed : Gene, INotificationTarget
+    public class SeeingRed : Gene, INotificationListener
     {
         public GeneDefExtension_SeeingRed DefExt => def.GetModExtension<GeneDefExtension_SeeingRed>();
 

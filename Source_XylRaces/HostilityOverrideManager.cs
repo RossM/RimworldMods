@@ -6,7 +6,7 @@ using XylXenos.Genes;
 
 namespace XylXenos
 {
-    public class HostilityOverrideManager(Map map) : MapComponent(map), INotificationTarget
+    public class HostilityOverrideManager(Map map) : MapComponent(map), INotificationListener
     {
         public const int violationDisableTicks = 2500;
         public const int updateFrequency = 60;

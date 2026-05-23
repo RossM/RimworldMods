@@ -10,7 +10,7 @@ using Verse;
 
 namespace XylXenos
 {
-    public interface INotificationTarget
+    public interface INotificationListener
     {
         public void RegisterWith(NotificationManager manager);
     }
@@ -67,7 +67,7 @@ namespace XylXenos
             object source,
             string name)
         {
-            if (source is not INotificationTarget)
+            if (source is not INotificationListener)
                 throw new InvalidOperationException("Only INotificationTargets can register for notifications");
 
             EventInfo eventInfo = events[(int)eventType] ??= new();
@@ -166,7 +166,7 @@ namespace XylXenos
 
         private void CallRegistrationHandlers(object thing)
         {
-            if (thing is INotificationTarget target)
+            if (thing is INotificationListener target)
                 target.RegisterWith(this);
 
             switch (thing)

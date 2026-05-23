@@ -12,7 +12,7 @@ namespace XylXenos.Patches
         public static void CompPostPostAdd_Postfix(HediffComp __instance)
         {
             // ReSharper disable once SuspiciousTypeConversion.Global
-            if (__instance is INotificationTarget target)
+            if (__instance is INotificationListener target)
                 target.RegisterWith(NotificationManager.Instance);
         }
     }

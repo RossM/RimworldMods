@@ -18,7 +18,7 @@ namespace XylXenos.Genes
         public bool allowsFlight = true;
     }
 
-    public class Flight : Gene, INotificationTarget
+    public class Flight : Gene, INotificationListener
     {
         public GeneDefExtension_Flight DefExt => def.GetModExtension<GeneDefExtension_Flight>();
         public bool autoFly = true;
