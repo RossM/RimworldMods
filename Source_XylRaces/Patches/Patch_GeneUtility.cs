@@ -13,10 +13,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(GeneUtility.SatisfyChemicalGenes))]
         public static void SatisfyChemicalGenes_Postfix(Pawn pawn)
         {
-            foreach (var gene in pawn.ActiveGenesOfType<DietDependency>())
-            {
-                gene.Reset();
-            }
+            NotificationManager.Instance.Notify(NotificationEvent.PostSatisfyGenes, pawn);
         }
     }
 }

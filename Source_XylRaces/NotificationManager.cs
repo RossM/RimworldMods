@@ -26,6 +26,7 @@ namespace XylXenos
         PostHediffsChanged,
         PostHediffStateChange,
         PostApparelChanged,
+        PostSatisfyGenes,
     }
 
     [UsedImplicitly]

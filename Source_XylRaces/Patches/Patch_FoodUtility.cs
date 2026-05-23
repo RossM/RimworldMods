@@ -48,9 +48,7 @@ namespace XylXenos.Patches
             ThingDef foodDef,
             MeatSourceCategory meatSourceCategory)
         {
-            if (FoodHelpers.IsThoughtFromIngestionDisallowedByGenes(ingester, def, foodDef, meatSourceCategory))
-                return false;
-            return true;
+            return !FoodHelpers.IsThoughtFromIngestionDisallowedByGenes(ingester, def, foodDef, meatSourceCategory);
         }
     }
 }

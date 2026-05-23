@@ -17,7 +17,7 @@ namespace XylXenos.Genes
         [MustTranslate] public string foodLabel;
     }
 
-    public class DietDependency : Gene, IGene_HediffSource, IStartingItemSource
+    public class DietDependency : Gene, IGene_HediffSource, IStartingItemSource, INotificationListener
     {
         public GeneDefExtension_DietDependency DefExt => def.GetModExtension<GeneDefExtension_DietDependency>();
 
@@ -200,5 +200,13 @@ namespace XylXenos.Genes
                 return true;
             }
         }
+
+        public void RegisterWith(NotificationManager manager)
+        {
+            manager.Register(NotificationEvent.PostSatisfyGenes, pawn, Reset);
+        }
+
+        // TODO: Need to handle satisfying the dependency for pawns in caravans. See Caravan_NeedsTracker.TrySatisfyChemicalNeed
+        // and CaravanInventoryUtility.TryGetBestFood.
     }
 }
