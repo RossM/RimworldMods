@@ -65,7 +65,6 @@ namespace TranspilerUtil
                 return;
             }
 
-            bool found = false;
             for (int j = 0; j < calleeParameterTypes.Length; j++)
             {
                 if (calleeParameterTypes[j].Name.StartsWith("<") &&
@@ -76,14 +75,10 @@ namespace TranspilerUtil
                     {
                         output.Add(CodeInstruction.LoadArgument(j));
                         output.Add(new CodeInstruction(OpCodes.Ldfld, field));
-                        found = true;
-                        break;
+                        return;
                     }
                 }
             }
-
-            if (found)
-                return;
 
             for (int j = 0; j < callerParameterTypes.Length; j++)
             {
@@ -95,14 +90,10 @@ namespace TranspilerUtil
                     {
                         output.Add(CodeInstruction.LoadArgument(j));
                         output.Add(new CodeInstruction(OpCodes.Ldfld, field));
-                        found = true;
-                        break;
+                        return;
                     }
                 }
             }
-
-            if (found)
-                return;
 
             calleeIndex = calleeParameterTypes.FirstIndexOf(type => type == replacementParameterType);
             if (calleeIndex >= 0)
