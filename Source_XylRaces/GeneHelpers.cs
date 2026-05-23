@@ -125,18 +125,18 @@ public static class GeneHelpers
         return pawn.GenesWithModExtension<T>().Any(g => g.Active);
     }
 
-    public static int BiostatMetForDisplay(this GeneDef geneDef)
+    public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
         var bonusGeneDefExt = geneDef.GetModExtension<GeneDefExtension_BonusGene>();
         if (bonusGeneDefExt == null)
-            return geneDef.biostatMet;
+            return 0;
         if (bonusGeneDefExt.geneChance < 1.0f)
-            return geneDef.biostatMet;
+            return 0;
         if (!bonusGeneDefExt.allowedGenes.NullOrEmpty())
-            return geneDef.biostatMet + bonusGeneDefExt.allowedGenes.Min(g => g.biostatMet);
+            return bonusGeneDefExt.allowedGenes.Min(g => g.biostatMet);
         if (bonusGeneDefExt.biostatMet.Includes(0))
-            return geneDef.biostatMet;
-        return geneDef.biostatMet + bonusGeneDefExt.biostatMet.min;
+            return 0;
+        return bonusGeneDefExt.biostatMet.min;
     }
 
     public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef gene)

@@ -55,7 +55,7 @@ namespace XylXenos.Patches
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPrefix(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
         [InfixPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
-        public static bool GetFirstHediffOfDef_Prefix(HediffSet __instance, HediffDef def, bool mustBeVisible, out Hediff __result)
+        public static bool GetFirstHediffOfDef_Prefix(HediffSet __instance, out Hediff __result)
         {
             __result = null;
             // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes

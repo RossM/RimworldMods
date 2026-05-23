@@ -10,14 +10,14 @@ namespace XylXenos.Patches
     public static class PatchBiostatMet
     {
         [Feature(typeof(BonusGene))]
-        [InfixWrapper(typeof(GeneDef), nameof(GeneDef.biostatMet))]
+        [InfixPostfix(typeof(GeneDef), nameof(GeneDef.biostatMet))]
         [InfixPatch(typeof(Dialog_CreateXenotype), "DrawGene")]
         [InfixPatch(typeof(GeneCreationDialogBase), "OnGenesChanged")]
         [InfixPatch(typeof(GeneDef), "GetDescriptionFull")]
         [InfixPatch(typeof(GeneDef), "<SpecialDisplayStats>:MoveNext")]
-        public static int GeneDef_biostatMet_Wrapper(GeneDef __instance)
+        public static void GeneDef_biostatMet_Postfix(GeneDef __instance, ref int __result)
         {
-            return __instance.BiostatMetForDisplay();
+            __result += __instance.BiostatMetForDisplayBonus();
         }
     }
 }
