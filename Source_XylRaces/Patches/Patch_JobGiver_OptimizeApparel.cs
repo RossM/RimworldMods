@@ -11,8 +11,10 @@ namespace XylXenos.Patches
         [Feature(typeof(Flight))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(JobGiver_OptimizeApparel.ApparelScoreRaw))]
-        public static bool ApparelScoreRaw_Prefix(Pawn pawn, Apparel ap, ref float __result)
+        public static bool ApparelScoreRaw_Prefix(Pawn pawn, Apparel ap, out float __result)
         {
+            __result = 0f;
+
             if (pawn.HasActiveGeneOfType<Flight>() && !Flight.ApparelAllowsFlight(ap.def))
             {
                 __result = -10f;

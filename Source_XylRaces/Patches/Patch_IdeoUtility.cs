@@ -9,7 +9,7 @@ namespace XylXenos.Patches
         [Feature(typeof(IncidentWorker_WildTribe))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(IdeoUtility.CanUseIdeo))]
-        public static bool CanUseIdeo_Prefix(FactionDef factionDef, Ideo ideo, IdeoGenerationParms parms, ref bool __result)
+        public static bool CanUseIdeo_Prefix(FactionDef factionDef, Ideo ideo, IdeoGenerationParms parms, out bool __result)
         {
             __result = false;
 

@@ -30,7 +30,7 @@ namespace XylXenos.Patches
         [Feature(typeof(SeeingRed))]
         [HarmonyPrefix]
         [HarmonyPatch("TakeDamage")]
-        public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo, ref DamageWorker.DamageResult __result)
+        public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo)
         {
             NotificationManager.Instance.Notify(NotificationEvent.PreDamageTaken, __instance, dinfo);
         }

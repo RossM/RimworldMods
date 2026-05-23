@@ -10,7 +10,7 @@ namespace XylXenos.Patches
         [Feature(typeof(Psycast))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedsPsyfocus), MethodType.Getter)]
-        public static bool NeedsPsyfocus_Prefix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
+        public static bool NeedsPsyfocus_Prefix(Pawn_PsychicEntropyTracker __instance, out bool __result)
         {
             __result = __instance.Pawn.NeedsPsyfocus();
             return false;
@@ -19,15 +19,10 @@ namespace XylXenos.Patches
         [Feature(typeof(Psycast))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedToShowGizmo))]
-        public static bool NeedToShowGizmo_Prefix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
+        public static bool NeedToShowGizmo_Prefix(Pawn_PsychicEntropyTracker __instance, out bool __result)
         {
-            if (__instance.Pawn.HasActivePsycastGene())
-            {
-                __result = true;
-                return false;
-            }
-
-            return true;
+            __result = true;
+            return !__instance.Pawn.HasActivePsycastGene();
         }
     }
 }

@@ -10,16 +10,11 @@ namespace XylXenos.Patches
         [Feature(Config.Feature.Joyless)]
         [HarmonyPrefix]
         [HarmonyPatch("NeedJoySource")]
-        public static bool NeedJoySource_Prefix(Map map, ref bool __result)
+        public static bool NeedJoySource_Prefix(Map map, out bool __result)
         {
             __result = false;
 
-            // Check if any pawns need joy
-            if (!map.mapPawns.FreeColonists.Any(pawn => pawn.needs.joy != null))
-                return false;
-
-            // Continue to regular checks
-            return true;
+            return map.mapPawns.FreeColonists.Any(pawn => pawn.needs.joy != null);
         }
     }
 }

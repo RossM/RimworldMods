@@ -17,8 +17,10 @@ namespace XylXenos.Patches
         [Feature(typeof(GeneDefExtension_HostilityOverride))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
-        public static bool HostileTo_Prefix(Thing a, Thing b, ref bool __result)
+        public static bool HostileTo_Prefix(Thing a, Thing b, out bool __result)
         {
+            __result = false;
+
             if (!Enabled)
                 return true;
 
@@ -36,14 +38,7 @@ namespace XylXenos.Patches
             if (pawn.kindDef.hostileToAll || pawn2.kindDef.hostileToAll)
                 return true;
 
-            if (DisableHostilityCheck(pawn, pawn2) || DisableHostilityCheck(pawn2, pawn))
-            {
-                __result = false;
-                return false;
-            }
-
-            // Continue to regular logic
-            return true;
+            return !DisableHostilityCheck(pawn, pawn2) && !DisableHostilityCheck(pawn2, pawn);
         }
 
         private static bool DisableHostilityCheck(Pawn pawn, Pawn pawn2)

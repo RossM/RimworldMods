@@ -13,13 +13,10 @@ namespace XylXenos.Patches
         [Feature(typeof(ChemicalDefExtension))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(PawnUtility.CanTakeDrug))]
-        public static bool CanTakeDrug_Prefix(Pawn pawn, ThingDef drug, ref bool __result)
+        public static bool CanTakeDrug_Prefix(Pawn pawn, ThingDef drug, out bool __result)
         {
-            if (pawn.ChemicalIsAllowedByGenes(drug))
-                return true;
-
             __result = false;
-            return false;
+            return pawn.ChemicalIsAllowedByGenes(drug);
         }
 
         [Feature(typeof(GeneDefExtension_WildMan))]

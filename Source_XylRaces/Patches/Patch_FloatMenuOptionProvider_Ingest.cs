@@ -14,8 +14,9 @@ namespace XylXenos.Patches
             FloatMenuOptionProvider_Ingest __instance,
             Thing clickedThing,
             FloatMenuContext context,
-            ref FloatMenuOption __result)
+            out FloatMenuOption __result)
         {
+            __result = null;
             if (clickedThing.def.ingestible is not { showIngestFloatOption: true })
             {
                 return true;

@@ -13,15 +13,10 @@ namespace XylXenos.Patches
         public static bool ModifyChemicalEffectForToleranceAndBodySize_Prefix(
             Pawn pawn,
             ChemicalDef chemicalDef,
-            ref float effect)
+            out float effect)
         {
-            if (!pawn.ChemicalIsAllowedByGenes(chemicalDef))
-            {
-                effect = 0f;
-                return false;
-            }
-
-            return true;
+            effect = 0f;
+            return pawn.ChemicalIsAllowedByGenes(chemicalDef);
         }
 
         [Feature(nameof(DefOf.XylDrugEffectMultiplier))]
@@ -39,7 +34,7 @@ namespace XylXenos.Patches
             Pawn pawn,
             ChemicalDef chemical,
             DrugCategory drugCategory,
-            ref bool __result)
+            out bool __result)
         {
             __result = false;
 

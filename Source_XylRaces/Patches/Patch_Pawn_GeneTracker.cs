@@ -20,10 +20,7 @@ namespace XylXenos.Patches
         public static bool AddictionChanceFactor_Prefix(Pawn_GeneTracker __instance, ChemicalDef chemical, out float __result)
         {
             __result = 0f;
-            if (!__instance.pawn.ChemicalIsAllowedByGenes(chemical))
-                return false;
-
-            return true;
+            return __instance.pawn.ChemicalIsAllowedByGenes(chemical);
         }
 
         [Feature(nameof(DefOf.XylGlobalAddictionChanceFactor))]

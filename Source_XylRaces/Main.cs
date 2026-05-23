@@ -69,6 +69,21 @@ namespace XylXenos
                         Log.Warning($"{type.Name}::{method.Name} should be named with _Transpiler");
                     if (hasWrappedMember && !method.Name.EndsWith("_Wrapper"))
                         Log.Warning($"{type.Name}::{method.Name} should be named with _Wrapper");
+
+                    var parameters = method.GetParameters();
+                    ParameterInfo resultParameter = parameters.SingleOrDefault(p => p.Name == "__result");
+                    if (hasPrefix)
+                    {
+                        if (resultParameter?.IsOut == false)
+                            Log.Warning($"{type.Name}::{method.Name} should use 'out' for __result");
+                        if (method.ReturnType.IsVoid() && resultParameter != null)
+                            Log.Warning($"{type.Name}::{method.Name} returns void but uses __result");
+                    }
+                    if (hasPostfix)
+                    {
+                        if (resultParameter is { ParameterType.IsByRef: false })
+                            Log.Warning($"{type.Name}::{method.Name} has a non-ref __result");
+                    }
                 }
             }
         }

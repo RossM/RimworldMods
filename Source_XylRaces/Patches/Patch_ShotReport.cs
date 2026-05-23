@@ -12,8 +12,10 @@ namespace XylXenos.Patches
         [Feature(nameof(DefOf.XylEcholocation))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(ShotReport.HitFactorFromShooter))]
-        public static bool HitFactorFromShooter_Prefix(Thing caster, float distance, float? acc, ref float __result)
+        public static bool HitFactorFromShooter_Prefix(Thing caster, float distance, float? acc, out float __result)
         {
+            __result = 0f;
+
             if (IsUsingEcholocation(caster))
             {
                 float shootingAccuracy = caster switch
