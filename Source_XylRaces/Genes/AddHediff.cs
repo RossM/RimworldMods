@@ -196,7 +196,7 @@ namespace XylXenos.Genes
 
         public void RegisterWith(NotificationManager manager)
         {
-            manager.Register(NotificationEvent.HediffStateChange, pawn, Notify_HediffStateChange);
+            manager.Register(NotificationEvent.PostHediffStateChange, pawn, Notify_HediffStateChange);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(Pawn_ApparelTracker.Notify_ApparelChanged))]
         public static void Notify_ApparelChanged_Postfix(Pawn_ApparelTracker __instance)
         {
-            NotificationManager.Instance.Notify(NotificationEvent.ApparelChanged, __instance.pawn);
+            NotificationManager.Instance.Notify(NotificationEvent.PostApparelChanged, __instance.pawn);
         }
     }
 }

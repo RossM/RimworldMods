@@ -11,7 +11,7 @@ namespace XylXenos.Patches
         [HarmonyPatch("Notify_GenesChanged")]
         public static void Notify_GenesChanged_Postfix(Pawn_GeneTracker __instance)
         {
-            NotificationManager.Instance.Notify(NotificationEvent.GenesChanged, __instance.pawn);
+            NotificationManager.Instance.Notify(NotificationEvent.PostGenesChanged, __instance.pawn);
         }
 
         [Feature(typeof(ChemicalDefExtension))]

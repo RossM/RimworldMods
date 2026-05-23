@@ -83,7 +83,7 @@ namespace XylXenos
 
         public void RegisterWith(NotificationManager manager)
         {
-            manager.Register<DamageInfo>(NotificationEvent.DamageTaken, null, Notify_DamageTaken);
+            manager.Register<DamageInfo>(NotificationEvent.PreDamageTaken, null, Notify_DamageTaken);
         }
     }
 }
