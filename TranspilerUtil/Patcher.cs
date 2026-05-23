@@ -9,13 +9,196 @@ using Verse;
 
 namespace TranspilerUtil
 {
+    public class MethodPatchWorker(MethodBase caller, MemberInfo target, MemberInfo wrapper)
+    {
+        public List<CodeInstruction> output = [];
+        public List<Type> localTypes = [];
+        public MemberInfo wrapper = wrapper;
+        public MemberInfo target = target;
+        public MethodBase caller = caller;
+        private Type[] callerParameterTypes;
+        private string[] callerParameterNames;
+        private Type[] calleeParameterTypes;
+        private string[] calleeParameterNames;
+        private Type[] replacementParameterTypes;
+        private string[] replacementParameterNames;
+        private int firstNonMatchingParameter;
+        private int[] parameterToLocalIndex;
+
+        public void EmitReplacement()
+        {
+            (callerParameterTypes, callerParameterNames) = GetParameterTypesAndNames(caller, "__caller");
+            (calleeParameterTypes, calleeParameterNames) = GetParameterTypesAndNames(target, "__instance");
+            (replacementParameterTypes, replacementParameterNames) = GetParameterTypesAndNames(wrapper, "__instance");
+
+            EmitPrelude();
+
+            // Match each parameter of the replacement method
+            for (int i = firstNonMatchingParameter; i < replacementParameterNames.Length; i++)
+            {
+                string replacementParameterName = replacementParameterNames[i];
+                Type replacementParameterType = replacementParameterTypes[i];
+
+                EmitParameterValue(replacementParameterName, replacementParameterType);
+                continue;
+            }
+
+            output.Add(new CodeInstruction(OpcodeFor(wrapper), wrapper));
+        }
+
+        private void EmitParameterValue(string replacementParameterName, Type replacementParameterType)
+        {
+            int calleeIndex = calleeParameterNames.FirstIndexOf(name => name == replacementParameterName);
+            if (calleeIndex >= 0)
+            {
+                if (calleeIndex < firstNonMatchingParameter)
+                    throw new InvalidOperationException(
+                        $"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
+                output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
+                return;
+            }
+
+            int callerIndex = callerParameterNames.FirstIndexOf(name => name == replacementParameterName);
+            if (callerIndex >= 0)
+            {
+                output.Add(CodeInstruction.LoadArgument(callerIndex));
+                return;
+            }
+
+            bool found = false;
+            for (int j = 0; j < calleeParameterTypes.Length; j++)
+            {
+                if (calleeParameterTypes[j].Name.StartsWith("<") &&
+                    Attribute.IsDefined(calleeParameterTypes[j], typeof(CompilerGeneratedAttribute)))
+                {
+                    var field = calleeParameterTypes[j].GetField(replacementParameterName, AccessTools.all);
+                    if (field != null)
+                    {
+                        output.Add(CodeInstruction.LoadArgument(j));
+                        output.Add(new CodeInstruction(OpCodes.Ldfld, field));
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (found)
+                return;
+
+            for (int j = 0; j < callerParameterTypes.Length; j++)
+            {
+                if (callerParameterTypes[j].Name.StartsWith("<") &&
+                    Attribute.IsDefined(callerParameterTypes[j], typeof(CompilerGeneratedAttribute)))
+                {
+                    var field = callerParameterTypes[j].GetField(replacementParameterName, AccessTools.all);
+                    if (field != null)
+                    {
+                        output.Add(CodeInstruction.LoadArgument(j));
+                        output.Add(new CodeInstruction(OpCodes.Ldfld, field));
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (found)
+                return;
+
+            calleeIndex = calleeParameterTypes.FirstIndexOf(type => type == replacementParameterType);
+            if (calleeIndex >= 0)
+            {
+                Log.Warning(
+                    $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({target.Name} -> {wrapper.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {calleeParameterTypes[calleeIndex].Name} {calleeParameterNames[calleeIndex]}");
+                if (calleeIndex < firstNonMatchingParameter)
+                    throw new InvalidOperationException(
+                        $"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
+                output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
+                return;
+            }
+
+            callerIndex = callerParameterTypes.FirstIndexOf(type => type == replacementParameterType);
+            if (callerIndex >= 0)
+            {
+                Log.Warning(
+                    $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({target.Name} -> {wrapper.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
+                output.Add(CodeInstruction.LoadArgument(callerIndex));
+                return;
+            }
+
+            throw new InvalidOperationException(
+                $"Couldn't find parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
+        }
+
+        private void EmitPrelude()
+        {
+            // Instructions which are already on the stack in the right order don't need to be saved and restored
+            firstNonMatchingParameter = 0;
+            while (firstNonMatchingParameter < replacementParameterNames.Length &&
+                   firstNonMatchingParameter < calleeParameterNames.Length &&
+                   replacementParameterNames[firstNonMatchingParameter] == calleeParameterNames[firstNonMatchingParameter])
+            {
+                firstNonMatchingParameter++;
+            }
+
+            // Save all remaining parameters to local. The matcher will handle renumbering the locals to new
+            // unused local indexes.
+            parameterToLocalIndex = new int[calleeParameterTypes.Length];
+            for (int i = calleeParameterTypes.Length - 1; i >= firstNonMatchingParameter; i--)
+            {
+                parameterToLocalIndex[i] = localTypes.Count;
+                localTypes.Add(calleeParameterTypes[i]);
+                output.Add(CodeInstruction.StoreLocal(parameterToLocalIndex[i]));
+            }
+        }
+
+        private static (Type[] types, string[] names) GetParameterTypesAndNames(MemberInfo member, string instanceName)
+        {
+            return member switch
+            {
+                FieldInfo { IsStatic: true } => (
+                    [],
+                    []),
+                FieldInfo field => (
+                    [field.DeclaringType],
+                    [instanceName]),
+                MethodInfo { IsStatic: true } method => (
+                    [.. (method.GetParameters()).Select(p => p.ParameterType)],
+                    [.. (method.GetParameters()).Select(p => p.Name)]),
+                MethodInfo method => (
+                    [method.DeclaringType, .. (method.GetParameters()).Select(p => p.ParameterType)],
+                    [instanceName, .. (method.GetParameters()).Select(p => p.Name)]),
+                _ => throw new InvalidOperationException()
+            };
+        }
+
+        public static OpCode OpcodeFor(MemberInfo callee)
+        {
+            return callee switch
+            {
+                FieldInfo { IsStatic: true } => OpCodes.Ldsfld,
+                FieldInfo => OpCodes.Ldfld,
+                MethodBase { IsVirtual: true } => OpCodes.Callvirt,
+                MethodBase => OpCodes.Call,
+                _ => throw new InvalidOperationException()
+            };
+        }
+    }
+
     public static class Patcher
     {
+        public enum PatchType
+        {
+            Wrapper,
+            Prefix,
+            Postfix,
+        }
+
         private struct PatchInfo
         {
             public MemberInfo wrappedMember;
             public MethodInfo targetMethod;
-            public MethodInfo wrapper;
+            public MethodInfo patchMethod;
+            public PatchType patchType;
         }
 
         public static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, List<InstructionMatcher.Rule> rules, string typeName)
@@ -61,16 +244,18 @@ namespace TranspilerUtil
                 {
                     try
                     {
-                        var wrappedMemberAttribute
-                            = (InfixWrapperAttribute)Attribute.GetCustomAttribute(method, typeof(InfixWrapperAttribute));
+                        var infixTargetAttribute
+                            = (InfixTargetAttribute)Attribute.GetCustomAttribute(method, typeof(InfixWrapperAttribute)) ??
+                              (InfixTargetAttribute)Attribute.GetCustomAttribute(method, typeof(InfixPrefixAttribute)) ??
+                              (InfixTargetAttribute)Attribute.GetCustomAttribute(method, typeof(InfixPostfixAttribute));
                         var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(InfixPatchAttribute))
                             .Cast<InfixPatchAttribute>().ToArray();
 
-                        if (wrappedMemberAttribute == null)
+                        if (infixTargetAttribute == null)
                             continue;
 
-                        MemberInfo wrappedMember = GetMember(wrappedMemberAttribute.type, wrappedMemberAttribute.memberName,
-                            wrappedMemberAttribute.parameterTypes);
+                        MemberInfo wrappedMember = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
+                            infixTargetAttribute.parameterTypes);
                         if (wrappedMember == null)
                             throw new InvalidOperationException("null wrapped member");
 
@@ -83,7 +268,7 @@ namespace TranspilerUtil
                             if (targetMethod == null)
                                 throw new InvalidOperationException("null target method");
 
-                            patches.Add(new() { targetMethod = targetMethod, wrappedMember = wrappedMember, wrapper = method });
+                            patches.Add(new() { targetMethod = targetMethod, wrappedMember = wrappedMember, patchMethod = method, patchType = infixTargetAttribute.patchType });
                         }
                     }
                     catch (Exception e)
@@ -98,20 +283,33 @@ namespace TranspilerUtil
                     AssemblyBuilderAccess.RunAndSave);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicTranspilersModule");
 
-            foreach (IGrouping<MethodInfo, PatchInfo> group in patches.GroupBy(patch => patch.targetMethod))
+            foreach (IGrouping<MethodInfo, PatchInfo> targetGroup in patches.GroupBy(patch => patch.targetMethod))
             {
+                var targetMethod = targetGroup.Key;
                 List<InstructionMatcher.Rule> rules = [];
-                foreach (var patch in group)
-                    rules.Add(MakeRedirectRule(patch.wrappedMember, patch.wrapper));
+                foreach (IGrouping<MemberInfo, PatchInfo> wrapGroup in targetGroup.GroupBy(patch => patch.wrappedMember))
+                {
+                    var wrappedMember = wrapGroup.Key;
+                    var wrapperMethod = wrapGroup.SingleOrDefault(patch => patch.patchType == PatchType.Wrapper).patchMethod;
+                    var prefixMethods = wrapGroup.Where(patch => patch.patchType == PatchType.Prefix).Select(patch => patch.targetMethod)
+                        .ToList();
+                    var postfixMethods = wrapGroup.Where(patch => patch.patchType == PatchType.Postfix).Select(patch => patch.targetMethod)
+                        .ToList();
+
+                    if (prefixMethods.Count == 0 && postfixMethods.Count == 0)
+                    {
+                        rules.Add(MakeRedirectRule(wrappedMember, wrapperMethod));
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
 
                 MethodInfo transpiler = MakeTranspiler(moduleBuilder, rules,
-                    $"{group.Key.DeclaringType?.FullName?.Replace('.', '_')}_{group.Key.Name}_Transpiler");
+                    $"{targetMethod.DeclaringType?.FullName?.Replace('.', '_')}_{targetMethod.Name}_Transpiler");
 
-                //Debug.Log($"Infix patching {group.Key.DeclaringType}::{group.Key}");
-                //foreach (var patch in group)
-                //    Debug.Log($"  {patch.wrappedMember} -> {patch.wrapper}");
-
-                harmony.Patch(group.Key, transpiler: new HarmonyMethod(transpiler));
+                harmony.Patch(targetMethod, transpiler: new HarmonyMethod(transpiler));
             }
         }
 
@@ -157,126 +355,16 @@ namespace TranspilerUtil
         private static InstructionMatcher.Rule RedirectRule_Core(
             MethodBase caller,
             MemberInfo callee,
-            MemberInfo replacement,
+            MemberInfo wrapper,
             int minMatches)
         {
-            (Type[] callerParameterTypes, string[] callerParameterNames) = GetParameterTypesAndNames(caller, "__caller");
-            (Type[] calleeParameterTypes, string[] calleeParameterNames) = GetParameterTypesAndNames(callee, "__instance");
-            (Type[] replacementParameterTypes, string[] replacementParameterNames) = GetParameterTypesAndNames(replacement, "__instance");
+            List<CodeInstruction> pattern =
+            [
+                new(MethodPatchWorker.OpcodeFor(callee), callee),
+            ];
 
-            List<CodeInstruction> pattern = [];
-            List<CodeInstruction> output = [];
-            List<Type> localTypes = [];
-
-            pattern.Add(new CodeInstruction(OpcodeFor(callee), callee));
-
-            // Instructions which are already on the stack in the right order don't need to be saved and restored
-            int firstNonMatchingParameter = 0;
-            while (firstNonMatchingParameter < replacementParameterNames.Length &&
-                   firstNonMatchingParameter < calleeParameterNames.Length &&
-                   replacementParameterNames[firstNonMatchingParameter] == calleeParameterNames[firstNonMatchingParameter])
-            {
-                firstNonMatchingParameter++;
-            }
-
-            // Save all remaining parameters to local. The matcher will handle renumbering the locals to new
-            // unused local indexes.
-            int[] parameterToLocalIndex = new int[calleeParameterTypes.Length];
-            for (int i = calleeParameterTypes.Length - 1; i >= firstNonMatchingParameter; i--)
-            {
-                parameterToLocalIndex[i] = localTypes.Count;
-                localTypes.Add(calleeParameterTypes[i]);
-                output.Add(CodeInstruction.StoreLocal(parameterToLocalIndex[i]));
-            }
-
-            // Match each parameter of the replacement method
-            for (int i = firstNonMatchingParameter; i < replacementParameterNames.Length; i++)
-            {
-                string replacementParameterName = replacementParameterNames[i];
-                Type replacementParameterType = replacementParameterTypes[i];
-
-                int calleeIndex = calleeParameterNames.FirstIndexOf(name => name == replacementParameterName);
-                if (calleeIndex >= 0)
-                {
-                    if (calleeIndex < firstNonMatchingParameter)
-                        throw new InvalidOperationException(
-                            $"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
-                    output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
-                    continue;
-                }
-
-                int callerIndex = callerParameterNames.FirstIndexOf(name => name == replacementParameterName);
-                if (callerIndex >= 0)
-                {
-                    output.Add(CodeInstruction.LoadArgument(callerIndex));
-                    continue;
-                }
-
-                bool found = false;
-                for (int j = 0; j < calleeParameterTypes.Length; j++)
-                {
-                    if (calleeParameterTypes[j].Name.StartsWith("<") &&
-                        Attribute.IsDefined(calleeParameterTypes[j], typeof(CompilerGeneratedAttribute)))
-                    {
-                        var field = calleeParameterTypes[j].GetField(replacementParameterName, AccessTools.all);
-                        if (field != null)
-                        {
-                            output.Add(CodeInstruction.LoadArgument(j));
-                            output.Add(new CodeInstruction(OpCodes.Ldfld, field));
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (found)
-                    continue;
-
-                for (int j = 0; j < callerParameterTypes.Length; j++)
-                {
-                    if (callerParameterTypes[j].Name.StartsWith("<") &&
-                        Attribute.IsDefined(callerParameterTypes[j], typeof(CompilerGeneratedAttribute)))
-                    {
-                        var field = callerParameterTypes[j].GetField(replacementParameterName, AccessTools.all);
-                        if (field != null)
-                        {
-                            output.Add(CodeInstruction.LoadArgument(j));
-                            output.Add(new CodeInstruction(OpCodes.Ldfld, field));
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (found)
-                    continue;
-
-                calleeIndex = calleeParameterTypes.FirstIndexOf(type => type == replacementParameterType);
-                if (calleeIndex >= 0)
-                {
-                    Log.Warning(
-                        $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({callee.Name} -> {replacement.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = {calleeParameterTypes[calleeIndex].Name} {calleeParameterNames[calleeIndex]}");
-                    if (calleeIndex < firstNonMatchingParameter)
-                        throw new InvalidOperationException(
-                            $"Can't reuse parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
-                    output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[calleeIndex]));
-                    continue;
-                }
-
-                callerIndex = callerParameterTypes.FirstIndexOf(type => type == replacementParameterType);
-                if (callerIndex >= 0)
-                {
-                    Log.Warning(
-                        $"RedirectMethodRule on {caller.DeclaringType?.FullName}.{caller.Name} ({callee.Name} -> {replacement.Name}): Matching by type: {replacementParameterType.Name} {replacementParameterName} = caller's {callerParameterTypes[callerIndex].Name} {callerParameterNames[callerIndex]}");
-                    output.Add(CodeInstruction.LoadArgument(callerIndex));
-                    continue;
-                }
-
-                throw new InvalidOperationException(
-                    $"Couldn't find parameter named '{replacementParameterName}' of type {replacementParameterType.FullName}");
-            }
-
-            output.Add(new CodeInstruction(OpcodeFor(replacement), replacement));
+            var methodPatchWorker = new MethodPatchWorker(caller, callee, wrapper);
+            methodPatchWorker.EmitReplacement();
 
             var rule = new InstructionMatcher.Rule()
             {
@@ -284,43 +372,11 @@ namespace TranspilerUtil
                 Max = 0,
                 Mode = InstructionMatcher.OutputMode.Replace,
                 Pattern = pattern.ToArray(),
-                Output = output.ToArray(),
-                LocalTypes = localTypes.ToArray(),
+                Output = methodPatchWorker.output.ToArray(),
+                LocalTypes = methodPatchWorker.localTypes.ToArray(),
             };
 
             return rule;
-        }
-
-        private static (Type[] types, string[] names) GetParameterTypesAndNames(MemberInfo member, string instanceName)
-        {
-            return member switch
-            {
-                FieldInfo { IsStatic: true } => (
-                    [],
-                    []),
-                FieldInfo field => (
-                    [field.DeclaringType],
-                    [instanceName]),
-                MethodInfo { IsStatic: true } method => (
-                    [.. (method.GetParameters()).Select(p => p.ParameterType)],
-                    [.. (method.GetParameters()).Select(p => p.Name)]),
-                MethodInfo method => (
-                    [method.DeclaringType, .. (method.GetParameters()).Select(p => p.ParameterType)],
-                    [instanceName, .. (method.GetParameters()).Select(p => p.Name)]),
-                _ => throw new InvalidOperationException()
-            };
-        }
-
-        private static OpCode OpcodeFor(MemberInfo callee)
-        {
-            return callee switch
-            {
-                FieldInfo { IsStatic: true } => OpCodes.Ldsfld,
-                FieldInfo => OpCodes.Ldfld,
-                MethodBase { IsVirtual: true } => OpCodes.Callvirt,
-                MethodBase => OpCodes.Call,
-                _ => throw new InvalidOperationException()
-            };
         }
     }
 }
