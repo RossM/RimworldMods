@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
 using RimWorld;
 using TranspilerUtil;
@@ -11,12 +12,12 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(Psycast))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel))]
+        [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel))]
         [InfixPatch("GizmoDisabled")]
         [InfixPatch("CanCast")]
-        public static int GetPsylinkLevel_Wrapper(Psycast __caller, Pawn pawn)
+        public static void GetPsylinkLevel_Postfix(Psycast __caller, Pawn pawn, ref int __result)
         {
-            return pawn.GetPsylinkLevelFor(__caller.def);
+            __result = Math.Max(__result, pawn.GetGeneticPsylinkLevelFor(__caller.def));
         }
     }
 }

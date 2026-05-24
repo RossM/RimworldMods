@@ -1,5 +1,4 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using RimWorld.Planet;
 using Verse;
 using Psycast = XylXenos.Genes.Psycast;
@@ -8,18 +7,15 @@ namespace XylXenos
 {
     public static class PsyHelpers
     {
-        public static int GetPsylinkLevelFor(this Pawn pawn, AbilityDef def)
+        public static int GetGeneticPsylinkLevelFor(this Pawn pawn, AbilityDef def)
         {
-            if (pawn.genes != null)
+            if (pawn.genes != null && pawn.genes.GenesListForReading.Any(gene =>
+                    gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
             {
-                if (pawn.genes.GenesListForReading.Any(gene =>
-                        gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
-                {
-                    return Math.Max(pawn.GetPsylinkLevel(), def.level);
-                }
+                return def.level;
             }
 
-            return pawn.GetPsylinkLevel();
+            return 0;
         }
 
         public static bool HasActivePsycastGene(this Pawn pawn)
@@ -29,7 +25,8 @@ namespace XylXenos
 
         public static bool NeedsPsyfocus(this Pawn pawn)
         {
-            if (pawn.psychicEntropy.Psylink == null && !pawn.HasActivePsycastGene())
+            // HasPsylink is patched to respect psycast genes
+            if (!pawn.HasPsylink)
                 return false;
             if (pawn.Suspended)
                 return false;

@@ -35,12 +35,11 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(Psycast))]
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch(nameof(Pawn.HasPsylink), MethodType.Getter)]
-        public static bool HasPsylink_Prefix(Pawn __instance, out bool __result)
+        public static void HasPsylink_Postfix(Pawn __instance, ref bool __result)
         {
-            __result = __instance.psychicEntropy?.Psylink != null || __instance.HasActivePsycastGene();
-            return false;
+            __result |= __instance.HasActivePsycastGene();
         }
     }
 }
