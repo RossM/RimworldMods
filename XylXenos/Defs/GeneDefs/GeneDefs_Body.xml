@@ -8,7 +8,7 @@
     <displayPriorityInXenotype>271</displayPriorityInXenotype>
   </GeneCategoryDef>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylDwarf</defName>
     <label>dwarf</label>
     <description>Carriers of this gene have smaller bodies with proportionately larger heads. Their short legs somewhat reduce their movement speed.</description>
@@ -23,21 +23,17 @@
     <statOffsets>
       <MoveSpeed>-0.1</MoveSpeed>
     </statOffsets>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Rendering">
-        <modifiers>
-          <li>
-            <onlyRoot>true</onlyRoot>
-            <scale>0.85</scale>
-          </li>
-          <li>
-            <renderNodeClass>PawnRenderNodeWorker_Head</renderNodeClass>
-            <scale>1.177</scale>
-          </li>
-        </modifiers>
+    <renderNodeModifiers>
+      <li>
+        <onlyRoot>true</onlyRoot>
+        <scale>0.85</scale>
       </li>
-    </modExtensions>
-  </GeneDef>
+      <li>
+        <renderNodeClass>PawnRenderNodeWorker_Head</renderNodeClass>
+        <scale>1.177</scale>
+      </li>
+    </renderNodeModifiers>
+  </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
     <defName>XylGiant</defName>
@@ -53,21 +49,17 @@
     </exclusionTags>
     <bodySizeFactor>1.5</bodySizeFactor>
     <healthScaleFactor>1.3</healthScaleFactor>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Rendering">
-        <modifiers>
-          <li>
-            <onlyRoot>true</onlyRoot>
-            <scale>1.2</scale>
-          </li>
-          <li>
-            <renderNodeClass>PawnRenderNodeWorker_Head</renderNodeClass>
-            <scale>0.9</scale>
-            <offset>0,0,-0.05</offset>
-          </li>
-        </modifiers>
+    <renderNodeModifiers>
+      <li>
+        <onlyRoot>true</onlyRoot>
+        <scale>1.2</scale>
       </li>
-    </modExtensions>
+      <li>
+        <renderNodeClass>PawnRenderNodeWorker_Head</renderNodeClass>
+        <scale>0.9</scale>
+        <offset>0,0,-0.05</offset>
+      </li>
+    </renderNodeModifiers>
   </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>

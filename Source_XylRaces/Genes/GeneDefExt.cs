@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using JetBrains.Annotations;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace XylXenos.Genes
@@ -17,6 +19,23 @@ namespace XylXenos.Genes
         {
             DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "joyGiver", xmlRoot.Name);
             factor = ParseHelper.FromString<float>(xmlRoot.FirstChild.Value);
+        }
+    }
+
+    public class RenderNodeModifier
+    {
+        public Type renderNodeClass = null;
+        public bool onlyRoot = false;
+        public float scale = 1.0f;
+        public Vector3 offset = Vector3.zero;
+
+        public bool Matches(PawnRenderNode node)
+        {
+            if (onlyRoot && node.parent != null)
+                return false;
+            if (renderNodeClass != null && node.Worker.GetType() != renderNodeClass)
+                return false;
+            return true;
         }
     }
 
@@ -44,6 +63,7 @@ namespace XylXenos.Genes
 
         public List<JoyGiverFactor> joyGiverChanceFactors;
         public List<BuildableDef> addDesignators;
+        public List<RenderNodeModifier> renderNodeModifiers;
 
         #region Implementation
 
