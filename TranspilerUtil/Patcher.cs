@@ -401,7 +401,7 @@ namespace TranspilerUtil
 
                 try
                 {
-                    Debug.Log($"{patchedMethod}");
+                    //Debug.Log($"{patchedMethod}");
 
                     List<InstructionMatcher.Rule> rules = [];
                     foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patchGroup.GroupBy(patch => patch.target))
@@ -412,7 +412,7 @@ namespace TranspilerUtil
                         var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.Postfix).Select(patch => patch.patchMethod)
                             .ToList();
 
-                        Debug.Log($"    {target}: prefixes={prefixes.Count} postfixes={postfixes.Count}");
+                        //Debug.Log($"    {target}: prefixes={prefixes.Count} postfixes={postfixes.Count}");
 
                         rules.Add(new()
                         {
