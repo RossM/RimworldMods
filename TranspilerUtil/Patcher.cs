@@ -47,11 +47,14 @@ namespace TranspilerUtil
                 _ => throw new NotSupportedException(),
             };
 
-            if (!targetType.IsVoid())
+            bool prefixUsesResult = prefixes.Any(method => method.GetParameters().Any(parameter => parameter.Name == "__result"));
+            bool postfixUsesResult = postfixes.Any(method => method.GetParameters().Any(parameter => parameter.Name == "__result"));
+
+            if (prefixUsesResult || postfixUsesResult)
             {
                 resultLocalIndex = AddLocal(targetType);
 
-                if (prefixes.Count > 0)
+                if (prefixUsesResult)
                     EmitInitialization(targetType, resultLocalIndex);
             }
 
@@ -104,15 +107,7 @@ namespace TranspilerUtil
 
                 if (resultLocalIndex >= 0)
                 {
-                    if (targetType.IsStruct())
-                    {
-                        output.Add(new(OpCodes.Ldloca, resultLocalIndex));
-                        output.Add(new(OpCodes.Ldobj, targetType));
-                    }
-                    else
-                    {
-                        output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
-                    }
+                    output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
                 }
             }
 
@@ -215,11 +210,6 @@ namespace TranspilerUtil
         {
             if (parameterType.IsByRef)
                 output.Add(new(OpCodes.Ldloca, resultLocalIndex));
-            else if (parameterType.IsStruct())
-            {
-                output.Add(new(OpCodes.Ldloca, resultLocalIndex));
-                output.Add(new(OpCodes.Ldobj, targetType));
-            }
             else
                 output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
         }
@@ -228,11 +218,6 @@ namespace TranspilerUtil
         {
             if (parameterType.IsByRef && !callerParameterTypes[callerIndex].IsByRef)
                 output.Add(new(OpCodes.Ldarga, callerIndex));
-            else if (parameterType.IsStruct())
-            {
-                output.Add(new(OpCodes.Ldarga, callerIndex));
-                output.Add(new(OpCodes.Ldobj, callerParameterTypes[callerIndex]));
-            }
             else
                 output.Add(CodeInstruction.LoadArgument(callerIndex));
         }
@@ -245,11 +230,6 @@ namespace TranspilerUtil
 
             if (parameterType.IsByRef && !targetParameterTypes[targetIndex].IsByRef)
                 output.Add(new(OpCodes.Ldloca, parameterToLocalIndex[targetIndex]));
-            else if (parameterType.IsStruct())
-            {
-                output.Add(new(OpCodes.Ldloca, targetIndex));
-                output.Add(new(OpCodes.Ldobj, parameterToLocalIndex[targetIndex]));
-            }
             else
                 output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[targetIndex]));
         }
