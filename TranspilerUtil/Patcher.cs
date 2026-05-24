@@ -134,7 +134,7 @@ namespace TranspilerUtil
             }
             else if (type.IsStruct())
             {
-                output.Add(new(OpCodes.Ldloca, localIndex));
+                output.Add(CodeInstructionUtil.LoadLocalAddress(localIndex));
                 output.Add(new(OpCodes.Initobj, type));
             }
             else if (type.IsValueType)
@@ -213,7 +213,9 @@ namespace TranspilerUtil
         private void EmitResult(Type parameterType)
         {
             if (parameterType.IsByRef)
-                output.Add(new(OpCodes.Ldloca, resultLocalIndex));
+            {
+                output.Add(CodeInstructionUtil.LoadLocalAddress(resultLocalIndex));
+            }
             else
                 output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
         }
@@ -233,7 +235,7 @@ namespace TranspilerUtil
                     $"Can't reuse parameter named '{targetParameterNames[targetIndex]}' of type {parameterType.FullName}");
 
             if (parameterType.IsByRef && !targetParameterTypes[targetIndex].IsByRef)
-                output.Add(new(OpCodes.Ldloca, parameterToLocalIndex[targetIndex]));
+                output.Add(CodeInstructionUtil.LoadLocalAddress(parameterToLocalIndex[targetIndex]));
             else
                 output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[targetIndex]));
         }

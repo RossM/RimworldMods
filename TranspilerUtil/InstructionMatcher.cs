@@ -46,6 +46,8 @@ public class InstructionMatcher
     public List<Rule> Rules = [];
     public List<Type> LocalTypes = [];
 
+    readonly List<Label> extraLabels = [];
+
     public bool TryMatchAndReplace(
         MethodBase method,
         ref List<CodeInstruction> instructions,
@@ -201,6 +203,8 @@ public class InstructionMatcher
             return false;
         }
 
+        extraLabels.Clear();
+
         // Make the substitutions
         var outInstructions = new List<CodeInstruction>();
         for (var instructionIndex = 0; instructionIndex < instructions.Count; instructionIndex++)
@@ -214,13 +218,16 @@ public class InstructionMatcher
                 {
                     for (int i = match.start; i <= match.end; i++)
                     {
-                        outInstructions.Add(instructions[i]);
+                        Emit(outInstructions, instructions[i]);
                         if (debug)
-                            Debug.Log($"COPYMATCH {outInstructions[outInstructions.Count - 1]}");
+                            Debug.Log($"COPY MATCH {outInstructions[outInstructions.Count - 1]}");
                     }
                 }
 
                 instructionIndex = match.end;
+
+                if (match.rule.Mode == OutputMode.Replace)
+                    extraLabels.AddRange(instructions[match.start].labels);
 
                 for (var i = 0; i < match.rule.Output.Length; i++)
                 {
@@ -231,7 +238,7 @@ public class InstructionMatcher
                                 replaceInst.LocalIndex()))
                             return false;
 
-                        outInstructions.Add(CodeInstruction.StoreLocal(substituteIndex));
+                        Emit(outInstructions, CodeInstruction.StoreLocal(substituteIndex));
                     }
                     else if (replaceInst.opcode == OpCodes.Ldloca || replaceInst.opcode == OpCodes.Ldloca_S)
                     {
@@ -239,7 +246,7 @@ public class InstructionMatcher
                                 (int)replaceInst.operand))
                             return false;
 
-                        outInstructions.Add(new(OpCodes.Ldloca, substituteIndex));
+                        Emit(outInstructions, CodeInstructionUtil.LoadLocalAddress(substituteIndex));
                     }
                     else if (replaceInst.IsLdloc())
                     {
@@ -247,22 +254,25 @@ public class InstructionMatcher
                                 replaceInst.LocalIndex()))
                             return false;
 
-                        outInstructions.Add(CodeInstruction.LoadLocal(substituteIndex));
+                        Emit(outInstructions, CodeInstruction.LoadLocal(substituteIndex));
+                    }
+                    else if (replaceInst.opcode == OpCodes.Nop)
+                    {
+                        extraLabels.AddRange(replaceInst.labels.Select(label => GetReplacementLabel(generator, match, label)));
+
+                        if (debug)
+                            Debug.Log($"SKIP {replaceInst}");
+                        continue;
                     }
                     else if (replaceInst.operand is Label label)
                     {
-                        outInstructions.Add(new(replaceInst.opcode, GetReplacementLabel(generator, match, label)));
+                        Emit(outInstructions, replaceInst.opcode, GetReplacementLabel(generator, match, label));
                     }
                     else
-                        outInstructions.Add(new(replaceInst.opcode, replaceInst.operand));
+                        Emit(outInstructions, replaceInst.opcode, replaceInst.operand);
 
-                    outInstructions[outInstructions.Count - 1].labels = replaceInst.labels
-                        .Select(label => GetReplacementLabel(generator, match, label)).ToList();
-
-                    if (i == 0 && match.rule.Mode == OutputMode.Replace)
-                    {
-                        outInstructions[outInstructions.Count - 1].labels.AddRange(instructions[match.start].labels);
-                    }
+                    outInstructions[outInstructions.Count - 1].labels.AddRange(replaceInst.labels
+                        .Select(label => GetReplacementLabel(generator, match, label)));
 
                     if (debug)
                         Debug.Log($"EMIT {outInstructions[outInstructions.Count - 1]}");
@@ -272,15 +282,15 @@ public class InstructionMatcher
                 {
                     for (int i = match.start; i <= match.end; i++)
                     {
-                        outInstructions.Add(instructions[i]);
+                        Emit(outInstructions, instructions[i]);
                         if (debug)
-                            Debug.Log($"COPYMATCH {outInstructions[outInstructions.Count - 1]}");
+                            Debug.Log($"COPY MATCH {outInstructions[outInstructions.Count - 1]}");
                     }
                 }
             }
             else
             {
-                outInstructions.Add(instructions[instructionIndex]);
+                Emit(outInstructions, instructions[instructionIndex]);
                 if (debug)
                     Debug.Log($"COPY {outInstructions[outInstructions.Count - 1]}");
             }
@@ -289,6 +299,32 @@ public class InstructionMatcher
         // Everything succeeded, now safe to change ref instructions
         instructions = outInstructions;
         return true;
+    }
+
+    private void Emit(List<CodeInstruction> outInstructions, CodeInstruction instruction)
+    {
+        Emit(outInstructions, instruction.opcode, instruction.operand, instruction.labels, instruction.blocks);
+    }
+
+    private void Emit(
+        List<CodeInstruction> outInstructions,
+        OpCode opcode,
+        object operand = null,
+        List<Label> labels = null,
+        List<ExceptionBlock> blocks = null)
+    {
+        CodeInstruction newInstruction = new(opcode, operand);
+        if (labels != null)
+            newInstruction.labels.AddRange(labels);
+        if (blocks != null)
+            newInstruction.blocks.AddRange(blocks);
+        if (extraLabels.Count > 0)
+        {
+            newInstruction.labels.AddRange(extraLabels);
+            extraLabels.Clear();
+        }
+
+        outInstructions.Add(newInstruction);
     }
 
     private static Label GetReplacementLabel(ILGenerator generator, MatchData match, Label label)
