@@ -242,7 +242,7 @@ namespace TranspilerUtil
 
         private void EmitPrelude()
         {
-            // Save all remaining parameters to local. The matcher will handle renumbering the locals to new
+            // Save all parameters to local. The matcher will handle renumbering the locals to new
             // unused local indexes.
             parameterToLocalIndex = new int[targetParameterTypes.Length];
             for (int i = targetParameterTypes.Length - 1; i >= 0; i--)
