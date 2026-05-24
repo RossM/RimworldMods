@@ -14,12 +14,11 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(GeneDefExtension_UIFilter))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder))]
+        [InfixPostfix(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder))]
         [InfixPatch("DrawGenes")]
-        public static List<GeneDef> GenesInOrder_Wrapper(Dialog_CreateXenotype __caller)
+        public static void GenesInOrder_Postfix(Dialog_CreateXenotype __caller, ref List<GeneDef> __result)
         {
-            var result = GeneUtility.GenesInOrder;
-            return FilterGenes(result, __caller.inheritable, __caller.ignoreRestrictions);
+            __result = FilterGenes(__result, __caller.inheritable, __caller.ignoreRestrictions);
         }
 
         private static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)

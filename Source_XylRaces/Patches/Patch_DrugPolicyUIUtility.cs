@@ -10,17 +10,12 @@ namespace XylXenos.Patches
     public static class Patch_DrugPolicyUIUtility
     {
         [Feature(typeof(GeneDefExtension_Chemicals))]
-        [InfixWrapper(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene))]
+        [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene))]
         [InfixPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
-        public static bool TryGetChemicalDependencyGene_Wrapper(Pawn pawn, out Gene gene)
+        public static void TryGetChemicalDependencyGene_Postfix(Pawn pawn, ref Gene gene, ref bool __result)
         {
-            if (PawnUtility.TryGetChemicalDependencyGene(pawn, out var chemicalDependency))
-            {
-                gene = chemicalDependency;
-                return true;
-            }
-
-            return GeneHelpers.TryGetChemicalDependencyGene(pawn, out gene);
+            if (__result == false)
+                __result = GeneHelpers.TryGetChemicalDependencyGene(pawn, out gene);
         }
     }
 }
