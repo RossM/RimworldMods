@@ -10,7 +10,6 @@ namespace XylXenos.Patches
     public static class Patch_Need_Food
     {
         [Feature(Config.Feature.FixLactationBugs)]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPostfix(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay))]
         [InfixPatch("FoodFallPerTickAssumingCategory")]
         static void AddedNutritionPerDay_Postfix(HediffComp_Lactating __instance, ref float __result)

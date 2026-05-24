@@ -9,7 +9,6 @@ namespace XylXenos.Patches
     public static class Patch_PawnBioAndNameGenerator
     {
         [Feature(typeof(XenotypeDefExtension))]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPrefix(typeof(PawnBioAndNameGenerator), "TryGiveSolidBioTo")]
         [InfixPatch(nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
         public static bool TryGiveSolidBioTo_Prefix(XenotypeDef xenotype, out bool __result)

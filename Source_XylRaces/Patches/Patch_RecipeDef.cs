@@ -12,7 +12,6 @@ namespace XylXenos.Patches
     public static class Patch_RecipeDef
     {
         [Feature(typeof(DefModExtension_GeneDependent))]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPostfix(typeof(RecipeDef), "memePrerequisitesAny")]
         [InfixPatch(nameof(RecipeDef.AvailableNow))]
         public static void RecipeDef_memePrerequisitesAny_Postfix(ref List<MemeDef> __result)

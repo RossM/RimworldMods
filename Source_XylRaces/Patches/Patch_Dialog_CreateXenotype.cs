@@ -13,7 +13,6 @@ namespace XylXenos.Patches
     public class Patch_Dialog_CreateXenotype
     {
         [Feature(typeof(GeneDefExtension_UIFilter))]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPostfix(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder))]
         [InfixPatch("DrawGenes")]
         public static void GenesInOrder_Postfix(Dialog_CreateXenotype __caller, ref List<GeneDef> __result)

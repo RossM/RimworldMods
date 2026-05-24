@@ -20,7 +20,6 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(GeneDefExtension_WildMan))]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(ThingDef)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(Pawn), typeof(Thing), typeof(float)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
@@ -31,7 +30,6 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(GeneDefExtension_WildMan))]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(ThingDef)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(Pawn)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
@@ -42,7 +40,6 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(GeneDefExtension_WildMan))]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPostfix(typeof(RaceProperties), nameof(RaceProperties.manhunterOnDamageChance))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         public static void RaceProperties_manhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
@@ -52,7 +49,6 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(GeneDefExtension_WildMan))]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPostfix(typeof(RaceProperties), nameof(RaceProperties.manhunterOnTameFailChance))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
         public static void RaceProperties_manhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
@@ -62,7 +58,6 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(GeneDefExtension_WildMan))]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPostfix(typeof(Def), nameof(Def.LabelCap))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]

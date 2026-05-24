@@ -11,7 +11,6 @@ namespace XylXenos.Patches
     public static class Patch_InteractionWorker_EnslaveAttempt
     {
         [Feature(nameof(DefOf.XylWillFallRate))]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
         [InfixPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
         public static void GetStatValue_Postfix(StatDef stat, Pawn recipient, ref float __result)

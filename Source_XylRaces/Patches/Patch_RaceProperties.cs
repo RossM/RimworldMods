@@ -52,7 +52,6 @@ namespace XylXenos.Patches
         }
 
         [Feature(Config.Feature.FixLactationBugs)]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPrefix(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
         [InfixPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
         public static bool GetFirstHediffOfDef_Prefix(HediffSet __instance, out Hediff __result)

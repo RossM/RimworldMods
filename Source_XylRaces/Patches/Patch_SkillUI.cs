@@ -12,7 +12,6 @@ namespace XylXenos.Patches
         [Feature(nameof(DefOf.XylLearnFactorPassionNone))]
         [Feature(nameof(DefOf.XylLearnFactorPassionMinor))]
         [Feature(nameof(DefOf.XylLearnFactorPassionMajor))]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPostfix(typeof(SkillUI), nameof(SkillUI.GetLearningFactor))]
         [InfixPatch("GetSkillDescription")]
         public static void GetLearningFactor_Postfix(Passion passion, SkillRecord sk, ref float __result)
