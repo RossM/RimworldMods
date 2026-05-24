@@ -24,7 +24,6 @@ namespace XylXenos
 
         public void RegisterWith(NotificationManager manager)
         {
-            Debug.Log($"CompPawn_GeneSet RegisterWith for {parent}");
             manager.Register(NotificationEvent.PostGenesChanged, parent, Notify_GenesChanged);
         }
 
@@ -49,13 +48,11 @@ namespace XylXenos
 
         public override void PostPostMake()
         {
-            Debug.Log($"CompPawn_GeneSet PostPostMake for {parent}");
             Update();
         }
 
         public override void PostMapInit()
         {
-            Debug.Log($"CompPawn_GeneSet PostMapInit for {parent}");
             Update();
         }
 
