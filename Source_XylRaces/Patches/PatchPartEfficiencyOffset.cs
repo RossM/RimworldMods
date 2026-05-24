@@ -8,20 +8,19 @@ namespace XylXenos.Patches
     [HarmonyPatch]
     public static class PatchPartEfficiencyOffset
     {
-        public static AccessTools.FieldRef<object, Hediff> hediffGetter = AccessTools.FieldRefAccess<Hediff>(
-            AccessTools.InnerTypes(typeof(HediffStatsUtility))
-                .First(type => type.Name.Contains("<SpecialDisplayStats>")),
-            "<>3__instance");
-
         [Feature(typeof(HediffWithCompsExt))]
-        [InfixWrapper(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset))]
+        [InfixPrefix(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset))]
         [InfixPatch(typeof(HediffStatsUtility), "<SpecialDisplayStats>:MoveNext")]
-        public static float HediffStage_partEfficiencyOffset_Wrapper(HediffStage __instance, Hediff instance)
+        public static bool HediffStage_partEfficiencyOffset_Prefix(HediffStage __instance, Hediff instance, out float __result)
         {
             if (instance is HediffWithCompsExt ext)
-                return ext.PartEfficiencyOffset;
+            {
+                __result = ext.PartEfficiencyOffset;
+                return false;
+            }
 
-            return __instance.partEfficiencyOffset;
+            __result = default;
+            return true;
         }
     }
 }

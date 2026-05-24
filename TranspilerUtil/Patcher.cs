@@ -10,7 +10,13 @@ using Verse;
 
 namespace TranspilerUtil
 {
-    public class MethodPatchWorker(ILGenerator generator, MethodBase caller, MemberInfo target, MemberInfo wrapper, List<MethodInfo> prefixes, List<MethodInfo> postfixes)
+    public class MethodPatchWorker(
+        ILGenerator generator,
+        MethodBase caller,
+        MemberInfo target,
+        MemberInfo wrapper,
+        List<MethodInfo> prefixes,
+        List<MethodInfo> postfixes)
     {
         public ILGenerator generator = generator;
         public MethodBase caller = caller;
@@ -47,14 +53,17 @@ namespace TranspilerUtil
                 _ => throw new NotSupportedException(),
             };
 
-            bool prefixUsesResult = prefixes.Any(method => method.GetParameters().Any(parameter => parameter.Name == "__result"));
-            bool postfixUsesResult = postfixes.Any(method => method.GetParameters().Any(parameter => parameter.Name == "__result"));
+            var prefixesUsingResult = prefixes.Where(method => method.GetParameters().Any(parameter => parameter.Name == "__result"))
+                .ToList();
+            var postfixesUsingResult = postfixes.Where(method => method.GetParameters().Any(parameter => parameter.Name == "__result"))
+                .ToList();
 
-            if (prefixUsesResult || postfixUsesResult)
+            if (prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
             {
                 resultLocalIndex = AddLocal(targetType);
 
-                if (prefixUsesResult)
+                if (prefixesUsingResult.Count > 0 &&
+                    !prefixesUsingResult[0].GetParameters().Single(parameter => parameter.Name == "__result").IsOut)
                     EmitInitialization(targetType, resultLocalIndex);
             }
 
@@ -66,6 +75,7 @@ namespace TranspilerUtil
                 {
                     EmitParameterValue(types[i], names[i]);
                 }
+
                 output.Add(new(OpcodeFor(prefix), prefix));
                 if (!prefix.ReturnType.IsVoid())
                 {
@@ -78,6 +88,7 @@ namespace TranspilerUtil
             {
                 EmitParameterValue(wrapperParameterTypes[i], wrapperParameterNames[i]);
             }
+
             output.Add(new(OpcodeFor(wrapper), wrapper));
 
             if (skipLabel != null || postfixes.Count > 0)
@@ -411,35 +422,53 @@ namespace TranspilerUtil
             {
                 var patchedMethod = patchGroup.Key;
 
-                Debug.Log($"{patchedMethod}");
-
-                List<InstructionMatcher.Rule> rules = [];
-                foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patchGroup.GroupBy(patch => patch.target))
+                try
                 {
-                    var target = targetGroup.Key;
-                    var wrapper = targetGroup.SingleOrDefault(patch => patch.patchType == PatchType.Wrapper).patchMethod;
-                    var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.Prefix).Select(patch => patch.patchMethod).ToList();
-                    var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.Postfix).Select(patch => patch.patchMethod).ToList();
+                    Debug.Log($"{patchedMethod}");
 
-                    Debug.Log($"    {target}: wrapper={wrapper != null} prefixes={prefixes.Count} postfixes={postfixes.Count}");
-
-                    rules.Add(new()
+                    List<InstructionMatcher.Rule> rules = [];
+                    foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patchGroup.GroupBy(patch => patch.target))
                     {
-                        LateGenerator = (caller, _, generator) => 
-                            RedirectRule_Core(generator,
-                                patchedMethod,
-                                target,
-                                wrapper,
-                                prefixes,
-                                postfixes,
-                                1)
-                    });
+                        var target = targetGroup.Key;
+                        var wrapper = targetGroup.SingleOrDefault(patch => patch.patchType == PatchType.Wrapper).patchMethod;
+                        var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.Prefix).Select(patch => patch.patchMethod)
+                            .ToList();
+                        var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.Postfix).Select(patch => patch.patchMethod)
+                            .ToList();
+
+                        Debug.Log($"    {target}: wrapper={wrapper != null} prefixes={prefixes.Count} postfixes={postfixes.Count}");
+
+                        rules.Add(new()
+                        {
+                            LateGenerator = (caller, _, generator) =>
+                                RedirectRule_Core(generator,
+                                    patchedMethod,
+                                    target,
+                                    wrapper,
+                                    prefixes,
+                                    postfixes,
+                                    1)
+                        });
+                    }
+
+                    MethodInfo transpiler = MakeTranspiler(moduleBuilder, rules,
+                        $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler");
+
+                    try
+                    {
+                        harmony.Patch(patchedMethod, transpiler: new(transpiler));
+                    }
+                    catch (Exception)
+                    {
+                        // Rerun with debug on so we see what went wrong
+                        InstructionMatcher.forceDebug = true;
+                        harmony.Patch(patchedMethod, transpiler: new(transpiler));
+                    }
                 }
-
-                MethodInfo transpiler = MakeTranspiler(moduleBuilder, rules,
-                    $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler");
-
-                harmony.Patch(patchedMethod, transpiler: new(transpiler));
+                catch (Exception e)
+                {
+                    throw new InvalidOperationException($"Error patching {patchedMethod.DeclaringType}:{patchedMethod.Name}", e);
+                }
             }
         }
 

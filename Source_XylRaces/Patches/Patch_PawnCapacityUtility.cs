@@ -9,15 +9,19 @@ namespace XylXenos.Patches
 
     {
         [Feature(typeof(HediffWithCompsExt))]
-        [InfixWrapper(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset))]
+        [InfixPrefix(typeof(HediffStage), nameof(HediffStage.partEfficiencyOffset))]
         [InfixPatch(nameof(PawnCapacityUtility.CalculatePartEfficiency))]
-        public static float HediffStage_partEfficiencyOffset_Wrapper(HediffStage __instance, HediffSet diffSet)
+        public static bool HediffStage_partEfficiencyOffset_Prefix(HediffStage __instance, HediffSet diffSet, out float __result)
         {
             var hediff = diffSet.hediffs.FirstOrDefault(hediff => hediff.CurStage == __instance);
             if (hediff is HediffWithCompsExt ext)
-                return ext.PartEfficiencyOffset;
+            {
+                __result = ext.PartEfficiencyOffset;
+                return false;
+            }
 
-            return __instance.partEfficiencyOffset;
+            __result = default;
+            return true;
         }
     }
 }
