@@ -17,14 +17,15 @@ namespace XylXenos.Patches
         }
 
         // Note: This patch is performance-sensitive
-        [Feature(typeof(GeneDefExtension_GenderLocked))]
+        [Feature(nameof(GeneDefExt.gender))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Gene.Active), MethodType.Getter)]
         public static void Active_Postfix(Gene __instance, ref bool __result)
         {
-            var activeGender = __instance.def.GetModExtension<GeneDefExtension_GenderLocked>()?.activeGender;
-            if (activeGender != null && activeGender != __instance.pawn.gender)
-                __result = false;
+            if (!__result)
+                return;
+            if (__instance.def is GeneDefExt ext)
+                __result = ext.gender == null || ext.gender == __instance.pawn.gender;
         }
     }
 }

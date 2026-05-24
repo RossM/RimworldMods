@@ -53,7 +53,7 @@
     </modExtensions>
   </GeneDef>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.Hyperlactation</geneClass>
     <defName>XylHyperlactation</defName>
     <label>hyperlactation</label>
@@ -67,6 +67,7 @@
     <customEffectDescriptions>
       <li>Enables being milked</li>
     </customEffectDescriptions>
+    <gender>Female</gender>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_Hyperlactation">
         <item>Milk</item>
@@ -80,16 +81,13 @@
         </milkedThoughts>
         <iconPath>Things/Item/Resource/Milk</iconPath>
       </li>
-      <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
-        <activeGender>Female</activeGender>
-      </li>
       <li Class="XylXenos.DefModExtension_StartingItemSource">
         <item>Milk</item>
         <chance>0.2</chance>
         <count>5~10</count>
       </li>
     </modExtensions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>
     <geneClass>XylXenos.Genes.AddHediff</geneClass>

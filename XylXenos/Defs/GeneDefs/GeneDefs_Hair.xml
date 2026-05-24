@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <GeneDef ParentName="GeneHairStyleBase">
+  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
     <defName>XylHair_BaldOnly_Male</defName>
     <label>bald males</label>
     <labelShortAdj>male bald</labelShortAdj>
@@ -18,14 +18,10 @@
     <exclusionTags Inherit="false">
       <li>HairStyleMale</li>
     </exclusionTags>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
-        <activeGender>Male</activeGender>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <gender>Male</gender>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef ParentName="GeneHairStyleBase">
+  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
     <defName>XylHair_ShortOnly_Male</defName>
     <label>short-haired males</label>
     <labelShortAdj>male crop</labelShortAdj>
@@ -41,14 +37,10 @@
     <exclusionTags Inherit="false">
       <li>HairStyleMale</li>
     </exclusionTags>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
-        <activeGender>Male</activeGender>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <gender>Male</gender>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef ParentName="GeneHairStyleBase">
+  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
     <defName>XylHair_LongOnly_Male</defName>
     <label>long-haired males</label>
     <labelShortAdj>male long-haired</labelShortAdj>
@@ -64,14 +56,10 @@
     <exclusionTags Inherit="false">
       <li>HairStyleMale</li>
     </exclusionTags>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
-        <activeGender>Male</activeGender>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <gender>Male</gender>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef ParentName="GeneHairStyleBase">
+  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
     <defName>XylHair_BaldOnly_Female</defName>
     <label>bald females</label>
     <labelShortAdj>female bald</labelShortAdj>
@@ -87,14 +75,10 @@
     <exclusionTags Inherit="false">
       <li>HairStyleFemale</li>
     </exclusionTags>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
-        <activeGender>Female</activeGender>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <gender>Female</gender>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef ParentName="GeneHairStyleBase">
+  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
     <defName>XylHair_ShortOnly_Female</defName>
     <label>short-haired females</label>
     <labelShortAdj>female crop</labelShortAdj>
@@ -110,14 +94,10 @@
     <exclusionTags Inherit="false">
       <li>HairStyleFemale</li>
     </exclusionTags>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
-        <activeGender>Female</activeGender>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <gender>Female</gender>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef ParentName="GeneHairStyleBase">
+  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
     <defName>XylHair_LongOnly_Female</defName>
     <label>long-haired females</label>
     <labelShortAdj>female long-haired</labelShortAdj>
@@ -133,11 +113,7 @@
     <exclusionTags Inherit="false">
       <li>HairStyleFemale</li>
     </exclusionTags>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_GenderLocked">
-        <activeGender>Female</activeGender>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <gender>Female</gender>
+  </XylXenos.Genes.GeneDefExt>
 
 </Defs>
