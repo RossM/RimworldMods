@@ -309,22 +309,6 @@ public static class GeneHelpers
         return factor;
     }
 
-    public static float GetBodySizeFactor(Pawn pawn)
-    {
-        float factor = 1f;
-        foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
-            factor *= extension.bodySizeFactor;
-        return factor;
-    }
-
-    public static float GetHealthScaleFactor(Pawn pawn)
-    {
-        float factor = 1f;
-        foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
-            factor *= extension.healthScaleFactor;
-        return factor;
-    }
-
     public static void ModifyGenderByGenes(Pawn pawn, PawnGenerationRequest request, XenotypeDef xenotype)
     {
         if (request.FixedGender != null)

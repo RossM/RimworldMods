@@ -6,5 +6,8 @@ namespace XylXenos.Genes
     public class GeneDefExt : GeneDef
     {
         public Gender? gender;
+
+        public float bodySizeFactor = 1.0f;
+        public float healthScaleFactor = 1.0f;
     }
 }

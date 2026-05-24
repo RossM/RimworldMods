@@ -7,7 +7,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class CompProperties_PawnLookupCache : CompProperties
     {
         public CompProperties_PawnLookupCache()

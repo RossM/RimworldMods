@@ -9,20 +9,20 @@ namespace XylXenos.Patches
     public static class Patch_Pawn
     {
         // Note: This patch is performance-sensitive
-        [Feature(typeof(GeneDefExtension_Pawn))]
+        [Feature(nameof(GeneDefExt.bodySizeFactor))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
         public static void BodySize_Postfix(Pawn __instance, ref float __result)
         {
-            __result *= GeneHelpers.GetBodySizeFactor(__instance);
+            __result *= __instance.GetComp<CompPawn_GeneSet>().bodySizeFactor;
         }
 
-        [Feature(typeof(GeneDefExtension_Pawn))]
+        [Feature(nameof(GeneDefExt.healthScaleFactor))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
         public static void HealthScale_Postfix(Pawn __instance, ref float __result)
         {
-            __result *= GeneHelpers.GetHealthScaleFactor(__instance);
+            __result *= __instance.GetComp<CompPawn_GeneSet>().healthScaleFactor;
         }
 
         [Feature(typeof(Psycast))]
