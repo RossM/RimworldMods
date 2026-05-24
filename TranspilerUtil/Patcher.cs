@@ -115,11 +115,11 @@ namespace TranspilerUtil
                 }
             }
 
-            Debug.Log($"    {caller} -> {target}");
-            foreach (var local in localTypes)
-                Debug.Log($"        local {local}");
-            foreach (var inst in output)
-                Debug.Log($"        {inst}");
+            //Debug.Log($"    {caller} -> {target}");
+            //foreach (var local in localTypes)
+            //    Debug.Log($"        local {local}");
+            //foreach (var inst in output)
+            //    Debug.Log($"        {inst}");
         }
 
         private void EmitInitialization(Type type, int localIndex)
@@ -388,7 +388,7 @@ namespace TranspilerUtil
                 }
             }
 
-            Debug.Log("Patcher");
+            //Debug.Log("Patcher");
 
             AssemblyBuilder assemblyBuilder
                 = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" },
