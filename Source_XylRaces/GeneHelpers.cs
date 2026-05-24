@@ -327,4 +327,25 @@ public static class GeneHelpers
     {
         return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
     }
+
+    public static IEnumerable<GeneDefExt> ExtendedGeneDefs(this Pawn pawn)
+    {
+        if (pawn.genes == null)
+            return Enumerable.Empty<GeneDefExt>();
+        return pawn.genes.GenesListForReading.Where(gene => gene.Active).Select(gene => gene.def).OfType<GeneDefExt>();
+    }
+
+    public static void GenerateCongenitalHediffs(Pawn pawn)
+    {
+        foreach (var def in pawn.ExtendedGeneDefs())
+        {
+            if (!def.congenitalHediffs.NullOrEmpty())
+            {
+                foreach (var congenitalHediff in def.congenitalHediffs)
+                {
+                    congenitalHediff.EventOccurred(pawn);
+                }
+            }
+        }
+    }
 }

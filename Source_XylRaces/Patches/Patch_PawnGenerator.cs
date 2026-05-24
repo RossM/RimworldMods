@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using System.Linq;
+using HarmonyLib;
 using RimWorld;
 using TranspilerUtil;
 using Verse;
@@ -20,19 +22,12 @@ namespace XylXenos.Patches
             GeneHelpers.ModifyGenderByGenes(pawn, request, xenotype);
         }
 
-        [Feature(typeof(GeneDefExtension_CongenitalHediff))]
+        [Feature(nameof(GeneDefExt.congenitalHediffs))]
         [HarmonyPostfix]
         [HarmonyPatch("GenerateInitialHediffs")]
         public static void GenerateInitialHediffs_Postfix(Pawn pawn, PawnGenerationRequest request)
         {
-            foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_CongenitalHediff>())
-            {
-                if (!Rand.Chance(extension.chance))
-                    continue;
-
-                foreach (var hediffGiver in extension.hediffGivers)
-                    hediffGiver.TryApply(pawn);
-            }
+            GeneHelpers.GenerateCongenitalHediffs(pawn);
         }
 
         [Feature(typeof(XenotypeSetWithDefault))]

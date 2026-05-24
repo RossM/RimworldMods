@@ -8,7 +8,7 @@
     <displayPriorityInXenotype>380</displayPriorityInXenotype>
   </GeneCategoryDef>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylEcholocation</defName>
     <label>echolocation</label>
@@ -18,6 +18,16 @@
     <displayCategory>XylSenses</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Echolocation</iconPath>
+    <congenitalHediffs>
+      <li>
+        <chance>0.15</chance>
+        <hediff>Blindness</hediff>
+        <partsToAffect>
+          <li>Eye</li>
+        </partsToAffect>
+        <countToAffect>2</countToAffect>
+      </li>
+    </congenitalHediffs>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
         <hediffGivers>
@@ -35,23 +45,11 @@
         <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
         <chance>0.2</chance>
       </li>
-      <li Class="XylXenos.Genes.GeneDefExtension_CongenitalHediff">
-        <hediffGivers>
-          <li Class="HediffGiver_Event">
-            <hediff>Blindness</hediff>
-            <partsToAffect>
-              <li>Eye</li>
-            </partsToAffect>
-            <countToAffect>2</countToAffect>
-          </li>
-        </hediffGivers>
-        <chance>0.15</chance>
-      </li>
     </modExtensions>
     <customEffectDescriptions>
       <li>Sight: use hearing if higher</li>
     </customEffectDescriptions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>
     <defName>XylKeenEars</defName>

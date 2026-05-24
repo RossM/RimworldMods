@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using System.Collections.Generic;
+using Verse;
 
 namespace XylXenos.Genes
 {
@@ -11,5 +12,7 @@ namespace XylXenos.Genes
         public float healthScaleFactor = 1.0f;
 
         public bool showInDrugPolicies = false;
+
+        public List<HediffGiver_Event> congenitalHediffs;
     }
 }
