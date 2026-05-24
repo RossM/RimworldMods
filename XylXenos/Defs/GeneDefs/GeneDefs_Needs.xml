@@ -21,13 +21,9 @@
     <joyGiverChanceFactors>
       <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
     </joyGiverChanceFactors>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Designator">
-        <addDesignators>
-          <li>XylShower</li>
-        </addDesignators>
-      </li>
-    </modExtensions>
+    <addDesignators>
+      <li>XylShower</li>
+    </addDesignators>
   </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>

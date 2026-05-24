@@ -43,8 +43,13 @@ namespace XylXenos.Genes
         public List<HediffGiver_Event> congenitalHediffs;
 
         public List<JoyGiverFactor> joyGiverChanceFactors;
+        public List<BuildableDef> addDesignators;
+
+        #region Implementation
 
         private List<string> customEffectDescriptionsInternal;
+
+        #endregion
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
         {
@@ -92,6 +97,12 @@ namespace XylXenos.Genes
                     yield return
                         $"{"StatsReport_Cooldown".Translate()}: {"StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall())}";
                 }
+            }
+
+            if (!addDesignators.NullOrEmpty())
+            {
+                yield return
+                    $"{"XylNewBuildings".Translate()}: {addDesignators.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
             }
         }
 

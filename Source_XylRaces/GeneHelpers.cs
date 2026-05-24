@@ -263,10 +263,9 @@ public static class GeneHelpers
     {
         HashSet<Designator> geneDesignators = [];
 
-        foreach (var defExtension_designator in Faction.OfPlayer.GetPawns()
-                     .SelectMany(pawn => pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>()))
+        foreach (var geneSet in Faction.OfPlayer.GetPawns().Select(pawn => pawn.GetComp<CompPawn_GeneSet>()))
         {
-            geneDesignators.AddRange(defExtension_designator.addDesignators.Where(def => def.designationCategory == __instance)
+            geneDesignators.AddRange(geneSet.addDesignators.Where(def => def.designationCategory == __instance)
                 .Select(GetCachedDesignator));
         }
 

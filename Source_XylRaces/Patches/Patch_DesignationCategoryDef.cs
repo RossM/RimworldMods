@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(DesignationCategoryDef))]
     public static class Patch_DesignationCategoryDef
     {
-        [Feature(typeof(GeneDefExtension_Designator))]
+        [Feature(nameof(GeneDefExt.addDesignators))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(DesignationCategoryDef.ResolvedAllowedDesignators), MethodType.Getter)]
         public static void ResolvedAllowedDesignators_Postfix(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
@@ -16,7 +16,7 @@ namespace XylXenos.Patches
             GeneHelpers.AddDesignators(__instance, ref __result);
         }
 
-        [Feature(typeof(GeneDefExtension_Designator))]
+        [Feature(nameof(GeneDefExt.addDesignators))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(DesignationCategoryDef.AllResolvedAndIdeoDesignators), MethodType.Getter)]
         public static void AllResolvedAndIdeoDesignators_Postfix(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)

@@ -10,7 +10,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(GenConstruct))]
     public static class Patch_GenConstruct
     {
-        [Feature(typeof(GeneDefExtension_Designator))]
+        [Feature(nameof(GeneDefExt.addDesignators))]
         [InfixPostfix(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
         [InfixPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
         public static void MembersCanBuild_Postfix(Ideo __instance, Thing thing, Pawn p, ref bool __result)
@@ -23,13 +23,12 @@ namespace XylXenos.Patches
 
             BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
 
-            bool hasGeneDesignator = p.ActiveGeneDefExtensionsOfType<GeneDefExtension_Designator>()
-                .Any(defExtension_designator => defExtension_designator.addDesignators.Contains(def));
+            bool hasGeneDesignator = p.GetComp<CompPawn_GeneSet>().addDesignators.Contains(def);
             if (!hasGeneDesignator && GenConstruct.tmpIdeoMemberNames.Count == 0)
             {
-                foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)
+                foreach (GeneDefExt gene in DefDatabase<GeneDef>.AllDefs.OfType<GeneDefExt>())
                 {
-                    if (gene.GetModExtension<GeneDefExtension_Designator>()?.addDesignators.Contains(def) ?? false)
+                    if (gene.addDesignators?.Contains(def) ?? false)
                         GenConstruct.tmpIdeoMemberNames.Add("XylCharactersWithGene".Translate(gene.LabelCap));
                 }
             }

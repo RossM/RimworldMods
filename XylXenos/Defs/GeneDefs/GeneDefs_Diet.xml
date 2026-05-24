@@ -84,7 +84,7 @@
     </modExtensions>
   </GeneDef>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylFungusEater</defName>
     <label>fungus eater</label>
     <labelShortAdj>fungus-eating</labelShortAdj>
@@ -100,14 +100,10 @@
     <statFactors>
       <XylRawFungusNutritionFactor>1.8</XylRawFungusNutritionFactor>
     </statFactors>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Designator">
-        <addDesignators>
-          <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
-        </addDesignators>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <addDesignators>
+      <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
+    </addDesignators>
+  </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>
     <geneClass>XylXenos.Genes.DietDependency</geneClass>

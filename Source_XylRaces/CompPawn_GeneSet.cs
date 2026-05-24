@@ -19,7 +19,8 @@ namespace XylXenos
     {
         [Unsaved] public float bodySizeFactor = 1.0f;
         [Unsaved] public float healthScaleFactor = 1.0f;
-        [Unsaved] public List<JoyGiverFactor> joyGiverChanceFactors;
+        [Unsaved] public List<JoyGiverFactor> joyGiverChanceFactors = [];
+        [Unsaved] public List<BuildableDef> addDesignators = [];
 
         public void RegisterWith(NotificationManager manager)
         {
@@ -31,7 +32,8 @@ namespace XylXenos
         {
             bodySizeFactor = 1.0f;
             healthScaleFactor = 1.0f;
-            (joyGiverChanceFactors ??= []).Clear();
+            joyGiverChanceFactors.Clear();
+            addDesignators.Clear();
 
             foreach (var def in ((Pawn)parent).ExtendedGeneDefs())
             {
@@ -40,6 +42,8 @@ namespace XylXenos
 
                 if (!def.joyGiverChanceFactors.NullOrEmpty())
                     joyGiverChanceFactors.AddRange(def.joyGiverChanceFactors);
+                if (!def.addDesignators.NullOrEmpty())
+                    addDesignators.AddRange(def.addDesignators);
             }
         }
 
