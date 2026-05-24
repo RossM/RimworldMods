@@ -47,6 +47,7 @@ public class InstructionMatcher
     public List<Type> LocalTypes = [];
 
     readonly List<Label> extraLabels = [];
+    private readonly List<ExceptionBlock> extraBlocks = [];
 
     public bool TryMatchAndReplace(
         MethodBase method,
@@ -204,6 +205,7 @@ public class InstructionMatcher
         }
 
         extraLabels.Clear();
+        extraBlocks.Clear();
 
         // Make the substitutions
         var outInstructions = new List<CodeInstruction>();
@@ -227,11 +229,13 @@ public class InstructionMatcher
                 instructionIndex = match.end;
 
                 if (match.rule.Mode == OutputMode.Replace)
-                    extraLabels.AddRange(instructions[match.start].labels);
-
-                for (var i = 0; i < match.rule.Output.Length; i++)
                 {
-                    CodeInstruction replaceInst = match.rule.Output[i];
+                    extraLabels.AddRange(instructions[match.start].labels);
+                    extraBlocks.AddRange(instructions[match.start].blocks);
+                }
+
+                foreach (CodeInstruction replaceInst in match.rule.Output)
+                {
                     if (replaceInst.IsStloc())
                     {
                         if (!TryGetLocalIndex(ref reason, generator, localIndexMap, match, out var substituteIndex,
@@ -278,6 +282,8 @@ public class InstructionMatcher
                         Debug.Log($"EMIT {outInstructions[outInstructions.Count - 1]}");
                 }
 
+                extraBlocks.Clear();
+
                 if (match.rule.Mode == OutputMode.InsertBefore)
                 {
                     for (int i = match.start; i <= match.end; i++)
@@ -323,6 +329,8 @@ public class InstructionMatcher
             newInstruction.labels.AddRange(extraLabels);
             extraLabels.Clear();
         }
+        if (extraBlocks.Count > 0)
+            newInstruction.blocks.AddRange(extraBlocks);
 
         outInstructions.Add(newInstruction);
     }
