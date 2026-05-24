@@ -11,17 +11,11 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(PawnRenderNodeWorker))]
     public static class Patch_PawnRenderNodeWorker
     {
-        public static bool Enabled => enabled.Value;
-        public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_Rendering>);
-
         [Feature(typeof(GeneDefExtension_Rendering))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(PawnRenderNodeWorker.ScaleFor))]
         public static void ScaleFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref Vector3 __result)
         {
-            if (!Enabled)
-                return;
-
             if (parms.pawn == null)
                 return;
 
@@ -40,9 +34,6 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(PawnRenderNodeWorker.OffsetFor))]
         public static void OffsetFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref Vector3 __result)
         {
-            if (!Enabled)
-                return;
-
             if (parms.pawn == null)
                 return;
 

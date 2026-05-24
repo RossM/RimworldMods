@@ -10,9 +10,6 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(GenHostility))]
     public static class Patch_GenHostility
     {
-        public static bool Enabled => enabled.Value;
-        public static Lazy<bool> enabled = new(Config.GeneWithModExtensionExists<GeneDefExtension_HostilityOverride>);
-
         // Note: This patch is performance-sensitive
         [Feature(typeof(GeneDefExtension_HostilityOverride))]
         [HarmonyPrefix]
@@ -20,9 +17,6 @@ namespace XylXenos.Patches
         public static bool HostileTo_Prefix(Thing a, Thing b, out bool __result)
         {
             __result = false;
-
-            if (!Enabled)
-                return true;
 
             // These are cases where we should respect the regular logic
             if (a.Destroyed || b.Destroyed || a == b)
