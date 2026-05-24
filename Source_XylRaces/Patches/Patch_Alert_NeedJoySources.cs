@@ -8,13 +8,12 @@ namespace XylXenos.Patches
     public static class Patch_Alert_NeedJoySources
     {
         [Feature(Config.Feature.Joyless)]
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch("NeedJoySource")]
-        public static bool NeedJoySource_Prefix(Map map, out bool __result)
+        public static void NeedJoySource_Postfix(Map map, ref bool __result)
         {
-            __result = false;
-
-            return map.mapPawns.FreeColonists.Any(pawn => pawn.needs.joy != null);
+            if (!map.mapPawns.FreeColonists.Any(pawn => pawn.needs.joy != null))
+                __result = false;
         }
     }
 }

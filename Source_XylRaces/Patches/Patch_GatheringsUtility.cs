@@ -8,12 +8,12 @@ namespace XylXenos.Patches
     public static class Patch_GatheringsUtility
     {
         [Feature(Config.Feature.Joyless)]
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch(nameof(GatheringsUtility.ShouldPawnKeepGathering))]
-        public static bool ShouldPawnKeepGathering_Prefix(Pawn p, GatheringDef gatheringDef, out bool __result)
+        public static void ShouldPawnKeepGathering_Posstfix(Pawn p, GatheringDef gatheringDef, ref bool __result)
         {
-            __result = false;
-            return !gatheringDef.respectTimetable || p.needs.joy != null;
+            if (gatheringDef.respectTimetable && p.needs.joy == null)
+                __result = false;
         }
     }
 }

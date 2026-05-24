@@ -15,20 +15,15 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(ChemicalDefExtension))]
-        [HarmonyPrefix]
-        [HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
-        public static bool AddictionChanceFactor_Prefix(Pawn_GeneTracker __instance, ChemicalDef chemical, out float __result)
-        {
-            __result = 0f;
-            return __instance.pawn.ChemicalIsAllowedByGenes(chemical);
-        }
-
         [Feature(nameof(DefOf.XylGlobalAddictionChanceFactor))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
-        public static void AddictionChanceFactor_Postfix(Pawn_GeneTracker __instance, ref float __result)
+        public static void AddictionChanceFactor_Postfix(Pawn_GeneTracker __instance, ChemicalDef chemical, ref float __result)
         {
-            __result *= __instance.pawn.GetStatValue(DefOf.XylGlobalAddictionChanceFactor);
+            if (!__instance.pawn.ChemicalIsAllowedByGenes(chemical))
+                __result = 0f;
+            else
+                __result *= __instance.pawn.GetStatValue(DefOf.XylGlobalAddictionChanceFactor);
         }
     }
 }

@@ -17,12 +17,12 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(Psycast))]
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedToShowGizmo))]
-        public static bool NeedToShowGizmo_Prefix(Pawn_PsychicEntropyTracker __instance, out bool __result)
+        public static void NeedToShowGizmo_Postfix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
         {
-            __result = true;
-            return !__instance.Pawn.HasActivePsycastGene();
+            if (__instance.Pawn.HasActivePsycastGene())
+                __result = true;
         }
     }
 }

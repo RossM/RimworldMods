@@ -17,14 +17,13 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(GeneDefExtension_GenderLocked))]
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch(nameof(Gene.Active), MethodType.Getter)]
-        public static bool Active_Prefix(Gene __instance, out bool __result)
+        public static void Active_Postfix(Gene __instance, ref bool __result)
         {
-            __result = false;
-
             var activeGender = __instance.def.GetModExtension<GeneDefExtension_GenderLocked>()?.activeGender;
-            return activeGender == null || activeGender == __instance.pawn.gender;
+            if (activeGender != null && activeGender != __instance.pawn.gender)
+                __result = false;
         }
     }
 }
