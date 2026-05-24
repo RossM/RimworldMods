@@ -34,4 +34,9 @@ public static class HediffHelpers
         return pawn.GetComp<CompPawn_LookupCache>()?.GetHediffsWithModExtension<T>() ??
                pawn.health.hediffSet.hediffs.Where(h => h.def.modExtensions?.OfType<T>().Any() == true);
     }
+
+    public static Hediff GetLactationHediff(HediffSet hediffSet)
+    {
+        return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
+    }
 }

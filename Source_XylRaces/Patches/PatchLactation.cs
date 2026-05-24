@@ -25,11 +25,6 @@ namespace XylXenos.Patches
                 __result = __instance.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
         }
 
-        public static Hediff GetLactationHediff(HediffSet hediffSet)
-        {
-            return hediffSet.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
-        }
-
         [Feature(typeof(Hyperlactation))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [InfixPostfix(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)])]
