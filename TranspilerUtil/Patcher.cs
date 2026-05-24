@@ -14,14 +14,12 @@ namespace TranspilerUtil
         ILGenerator generator,
         MethodBase caller,
         MemberInfo target,
-        MemberInfo wrapper,
         List<MethodInfo> prefixes,
         List<MethodInfo> postfixes)
     {
         public ILGenerator generator = generator;
         public MethodBase caller = caller;
         public MemberInfo target = target;
-        public MemberInfo wrapper = wrapper ?? target;
         public List<MethodInfo> prefixes = prefixes;
         public List<MethodInfo> postfixes = postfixes;
         public List<CodeInstruction> output = [];
@@ -31,9 +29,6 @@ namespace TranspilerUtil
         private string[] callerParameterNames;
         private Type[] targetParameterTypes;
         private string[] targetParameterNames;
-        private Type[] wrapperParameterTypes;
-        private string[] wrapperParameterNames;
-        private int firstNonMatchingParameter;
         private int[] parameterToLocalIndex;
         private int resultLocalIndex = -1;
         private Type targetType;
@@ -42,7 +37,6 @@ namespace TranspilerUtil
         {
             (callerParameterTypes, callerParameterNames) = GetParameterTypesAndNames(caller, "__caller");
             (targetParameterTypes, targetParameterNames) = GetParameterTypesAndNames(target, "__instance");
-            (wrapperParameterTypes, wrapperParameterNames) = GetParameterTypesAndNames(wrapper, "__instance");
 
             EmitPrelude();
 
@@ -83,13 +77,12 @@ namespace TranspilerUtil
                 }
             }
 
-            // Match each parameter of the replacement method
-            for (int i = firstNonMatchingParameter; i < wrapperParameterNames.Length; i++)
+            for (int i = 0; i < targetParameterTypes.Length; i++)
             {
-                EmitParameterValue(wrapperParameterTypes[i], wrapperParameterNames[i]);
+                EmitTargetParameter(targetParameterTypes[i], i);
             }
 
-            output.Add(new(OpcodeFor(wrapper), wrapper));
+            output.Add(new(OpcodeFor(target), target));
 
             if (skipLabel != null || postfixes.Count > 0)
             {
@@ -235,7 +228,7 @@ namespace TranspilerUtil
 
         private void EmitTargetParameter(Type parameterType, int targetIndex)
         {
-            if (targetIndex < firstNonMatchingParameter)
+            if (targetIndex < 0)
                 throw new InvalidOperationException(
                     $"Can't reuse parameter named '{targetParameterNames[targetIndex]}' of type {parameterType.FullName}");
 
@@ -247,26 +240,10 @@ namespace TranspilerUtil
 
         private void EmitPrelude()
         {
-            firstNonMatchingParameter = 0;
-
-            if (prefixes.Count == 0 && postfixes.Count == 0)
-            {
-                // Instructions which are already on the stack in the right order don't need to be saved and restored
-                while (firstNonMatchingParameter < wrapperParameterNames.Length &&
-                       firstNonMatchingParameter < targetParameterNames.Length &&
-                       wrapperParameterNames[firstNonMatchingParameter] == targetParameterNames[firstNonMatchingParameter])
-                {
-                    firstNonMatchingParameter++;
-                }
-
-                if (firstNonMatchingParameter > 0)
-                    Debug.Log($"    firstNonMatchingParameter={firstNonMatchingParameter}");
-            }
-
             // Save all remaining parameters to local. The matcher will handle renumbering the locals to new
             // unused local indexes.
             parameterToLocalIndex = new int[targetParameterTypes.Length];
-            for (int i = targetParameterTypes.Length - 1; i >= firstNonMatchingParameter; i--)
+            for (int i = targetParameterTypes.Length - 1; i >= 0; i--)
             {
                 parameterToLocalIndex[i] = AddLocal(targetParameterTypes[i]);
                 output.Add(CodeInstruction.StoreLocal(parameterToLocalIndex[i]));
@@ -317,7 +294,6 @@ namespace TranspilerUtil
     {
         public enum PatchType
         {
-            Wrapper,
             Prefix,
             Postfix,
         }
@@ -374,8 +350,7 @@ namespace TranspilerUtil
                     try
                     {
                         var infixTargetAttribute
-                            = (InfixTargetAttribute)Attribute.GetCustomAttribute(method, typeof(InfixWrapperAttribute)) ??
-                              (InfixTargetAttribute)Attribute.GetCustomAttribute(method, typeof(InfixPrefixAttribute)) ??
+                            = (InfixTargetAttribute)Attribute.GetCustomAttribute(method, typeof(InfixPrefixAttribute)) ??
                               (InfixTargetAttribute)Attribute.GetCustomAttribute(method, typeof(InfixPostfixAttribute));
                         var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(InfixPatchAttribute))
                             .Cast<InfixPatchAttribute>().ToArray();
@@ -430,13 +405,12 @@ namespace TranspilerUtil
                     foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patchGroup.GroupBy(patch => patch.target))
                     {
                         var target = targetGroup.Key;
-                        var wrapper = targetGroup.SingleOrDefault(patch => patch.patchType == PatchType.Wrapper).patchMethod;
                         var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.Prefix).Select(patch => patch.patchMethod)
                             .ToList();
                         var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.Postfix).Select(patch => patch.patchMethod)
                             .ToList();
 
-                        Debug.Log($"    {target}: wrapper={wrapper != null} prefixes={prefixes.Count} postfixes={postfixes.Count}");
+                        Debug.Log($"    {target}: prefixes={prefixes.Count} postfixes={postfixes.Count}");
 
                         rules.Add(new()
                         {
@@ -444,7 +418,6 @@ namespace TranspilerUtil
                                 RedirectRule_Core(generator,
                                     patchedMethod,
                                     target,
-                                    wrapper,
                                     prefixes,
                                     postfixes,
                                     1)
@@ -507,7 +480,7 @@ namespace TranspilerUtil
         {
             return new()
             {
-                LateGenerator = (caller, _, generator) => RedirectRule_Core(generator, caller, oldMember, newMember, [], [], minMatches)
+                LateGenerator = (caller, _, generator) => RedirectRule_Core(generator, caller, oldMember, [], [], minMatches)
             };
         }
 
@@ -515,7 +488,6 @@ namespace TranspilerUtil
             ILGenerator generator,
             MethodBase caller,
             MemberInfo target,
-            MemberInfo wrapper,
             List<MethodInfo> prefixes,
             List<MethodInfo> postfixes,
             int minMatches)
@@ -525,7 +497,7 @@ namespace TranspilerUtil
                 new(MethodPatchWorker.OpcodeFor(target), target),
             ];
 
-            var methodPatchWorker = new MethodPatchWorker(generator, caller, target, wrapper, prefixes, postfixes);
+            var methodPatchWorker = new MethodPatchWorker(generator, caller, target, prefixes, postfixes);
             methodPatchWorker.EmitReplacement();
 
             var rule = new InstructionMatcher.Rule()

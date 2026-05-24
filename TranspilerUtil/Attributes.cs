@@ -14,10 +14,6 @@ namespace TranspilerUtil
 
     [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Method)]
-    public class InfixWrapperAttribute(Type type, string memberName, Type[] parameterTypes = null) : InfixTargetAttribute(Patcher.PatchType.Wrapper, type, memberName, parameterTypes);
-
-    [MeansImplicitUse]
-    [AttributeUsage(AttributeTargets.Method)]
     public class InfixPrefixAttribute(Type type, string memberName, Type[] parameterTypes = null) : InfixTargetAttribute(Patcher.PatchType.Prefix, type, memberName, parameterTypes);
 
     [MeansImplicitUse]

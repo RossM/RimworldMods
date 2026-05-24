@@ -51,7 +51,6 @@ namespace XylXenos
                     var hasPostfix = method.HasAttribute<HarmonyPostfix>();
                     var hasTranspiler = method.HasAttribute<HarmonyTranspiler>();
                     var hasInfixPatch = method.HasAttribute<InfixPatchAttribute>();
-                    var hasInfixWrapper = method.HasAttribute<InfixWrapperAttribute>();
                     var hasInfixPrefix = method.HasAttribute<InfixPrefixAttribute>();
                     var hasInfixPostfix = method.HasAttribute<InfixPostfixAttribute>();
 
@@ -60,8 +59,8 @@ namespace XylXenos
                     if (!(hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && hasFeature)
                         Log.Warning($"{type.Name}::{method.Name} has [Feature] but no Harmony attribute");
 
-                    if (hasInfixPatch != (hasInfixWrapper || hasInfixPrefix || hasInfixPostfix))
-                        Log.Warning($"{type.Name}::{method.Name} has should have both [InfixPatch] and one of [InfixWrapper], [InfixPrefix] or [InfixPostfix]");
+                    if (hasInfixPatch != (hasInfixPrefix || hasInfixPostfix))
+                        Log.Warning($"{type.Name}::{method.Name} has should have both [InfixPatch] and one of [InfixPrefix] or [InfixPostfix]");
 
                     if ((hasPrefix || hasInfixPrefix) && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
                         Log.Warning($"{type.Name}::{method.Name} should be named with _Prefix");
@@ -69,8 +68,6 @@ namespace XylXenos
                         Log.Warning($"{type.Name}::{method.Name} should be named with _Postfix");
                     if (hasTranspiler && !(method.Name == "Transpiler" || method.Name.EndsWith("_Transpiler")))
                         Log.Warning($"{type.Name}::{method.Name} should be named with _Transpiler");
-                    if (hasInfixWrapper && !method.Name.EndsWith("_Wrapper"))
-                        Log.Warning($"{type.Name}::{method.Name} should be named with _Wrapper");
 
                     var parameters = method.GetParameters();
                     ParameterInfo resultParameter = parameters.SingleOrDefault(p => p.Name == "__result");
