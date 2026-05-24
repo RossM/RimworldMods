@@ -10,8 +10,8 @@ namespace XylXenos.Patches
     public static class Patch_DrugPolicyUIUtility
     {
         [Feature(typeof(GeneDefExtension_Chemicals))]
-        [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene))]
-        [InfixPatch(nameof(DrugPolicyUIUtility.DoAssignDrugPolicyButtons))]
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene))]
         public static void TryGetChemicalDependencyGene_Postfix(Pawn pawn, ref Gene gene, ref bool __result)
         {
             if (__result == false)
