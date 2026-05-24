@@ -12,14 +12,12 @@ namespace XylXenos.Patches
     {
         [Feature(nameof(DefOf.XylWillFallRate))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+        [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
         [InfixPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
-        public static float GetStatValue_Wrapper(Thing thing, StatDef stat, Pawn recipient, bool applyPostProcess, int cacheStaleAfterTicks)
+        public static void GetStatValue_Postfix(StatDef stat, Pawn recipient, ref float __result)
         {
-            float value = thing.GetStatValue(stat, applyPostProcess, cacheStaleAfterTicks);
             if (stat == StatDefOf.NegotiationAbility)
-                value *= recipient.GetStatValue(DefOf.XylWillFallRate);
-            return value;
+                __result *= recipient.GetStatValue(DefOf.XylWillFallRate);
         }
 
         // TODO this does not do anything because it has no harmony attributes...

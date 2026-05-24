@@ -17,17 +17,12 @@ namespace XylXenos.Patches
 
         [Feature(typeof(XenotypeDefExtension))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(PawnBioAndNameGenerator), "TryGiveSolidBioTo")]
+        [InfixPrefix(typeof(PawnBioAndNameGenerator), "TryGiveSolidBioTo")]
         [InfixPatch(nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
-        public static bool TryGiveSolidBioTo_Wrapper(
-            Pawn pawn,
-            string requiredLastName,
-            List<BackstoryCategoryFilter> backstoryCategories,
-            XenotypeDef xenotype)
+        public static bool TryGiveSolidBioTo_Prefix(XenotypeDef xenotype, out bool __result)
         {
-            if (!Settings.instance.AllowBackerBackstoriesFor(xenotype))
-                return false;
-            return TryGiveSolidBioTo_Original(pawn, requiredLastName, backstoryCategories);
+            __result = false;
+            return Settings.instance.AllowBackerBackstoriesFor(xenotype);
         }
     }
 }

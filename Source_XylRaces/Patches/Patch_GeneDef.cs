@@ -12,11 +12,15 @@ namespace XylXenos.Patches
     public static class Patch_GeneDef
     {
         [Feature(typeof(GeneDefExtension))]
-        [InfixWrapper(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
+        [InfixPostfix(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
         [InfixPatch("GetDescriptionFull")]
-        public static List<string> GeneDef_customEffectDescriptions_Wrapper(GeneDef __instance)
+        public static void GeneDef_customEffectDescriptions_Postfix(GeneDef __instance, ref List<string> __result)
         {
-            return __instance.GetGeneEffectDescriptions().ToList();
+            var extraDescriptions = __instance.GetGeneEffectDescriptions().ToList();
+            if (extraDescriptions.Count == 0)
+                return;
+
+            __result = __result.NullOrEmpty() ? extraDescriptions : __result.Concat(extraDescriptions).ToList();
         }
 
         [Feature(typeof(GeneDefExtension))]

@@ -11,14 +11,12 @@ namespace XylXenos.Patches
     {
         [Feature(Config.Feature.FixLactationBugs)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay))]
+        [InfixPostfix(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay))]
         [InfixPatch("FoodFallPerTickAssumingCategory")]
-        static float AddedNutritionPerDay_Wrapper(HediffComp_Lactating __instance)
+        static void AddedNutritionPerDay_Postfix(HediffComp_Lactating __instance, ref float __result)
         {
             if (Settings.instance.ShouldFixLactationBugsFor(__instance.Pawn))
-                return 0;
-
-            return __instance.AddedNutritionPerDay();
+                __result = 0f;
         }
     }
 }

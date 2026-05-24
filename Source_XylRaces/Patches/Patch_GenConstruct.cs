@@ -11,15 +11,15 @@ namespace XylXenos.Patches
     public static class Patch_GenConstruct
     {
         [Feature(typeof(GeneDefExtension_Designator))]
-        [InfixWrapper(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
+        [InfixPostfix(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
         [InfixPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
-        public static bool MembersCanBuild_Wrapper(Ideo __instance, Thing thing, Pawn p)
+        public static void MembersCanBuild_Postfix(Ideo __instance, Thing thing, Pawn p, ref bool __result)
         {
-            if (__instance.MembersCanBuild(thing))
-                return true;
+            if (__result)
+                return;
 
             if (__instance != p.Ideo)
-                return false;
+                return;
 
             BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
 
@@ -34,7 +34,7 @@ namespace XylXenos.Patches
                 }
             }
 
-            return hasGeneDesignator;
+            __result = hasGeneDesignator;
         }
     }
 }

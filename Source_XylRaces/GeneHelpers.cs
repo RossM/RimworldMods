@@ -141,12 +141,6 @@ public static class GeneHelpers
 
     public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef gene)
     {
-        if (!gene.customEffectDescriptions.NullOrEmpty())
-        {
-            foreach (var customEffectDescription in gene.customEffectDescriptions)
-                yield return customEffectDescription;
-        }
-
         if (!gene.modExtensions.NullOrEmpty())
         {
             foreach (var geneDefExtension in gene.modExtensions.OfType<GeneDefExtension>())

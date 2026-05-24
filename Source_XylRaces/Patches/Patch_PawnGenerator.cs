@@ -10,16 +10,14 @@ namespace XylXenos.Patches
     public static class Patch_PawnGenerator
     {
         [Feature(typeof(GeneDefExtension_GenderRatio))]
-        [InfixWrapper(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
+        [InfixPrefix(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
         [InfixPatch("TryGenerateNewPawnInternal")]
-        public static void GiveAppropriateBioAndNameTo_Wrapper(
+        public static void GiveAppropriateBioAndNameTo_Prefix(
             Pawn pawn,
-            FactionDef factionType,
             PawnGenerationRequest request,
             XenotypeDef xenotype)
         {
             ModifyGenderByGenes(pawn, request, xenotype);
-            PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo(pawn, factionType, request, xenotype);
         }
 
         public static void ModifyGenderByGenes(Pawn pawn, PawnGenerationRequest request, XenotypeDef xenotype)
@@ -58,21 +56,19 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(XenotypeSetWithDefault))]
-        [InfixWrapper(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
+        [InfixPostfix(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
         [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
-        public static XenotypeDef XenotypeDefOf_Baseliner_Wrapper(FactionDef factionDef = null, Faction faction = null)
+        public static void XenotypeDefOf_Baseliner_Postfix(FactionDef factionDef, Faction faction, ref XenotypeDef __result)
         {
-            FactionDef factionDef2 = faction?.def ?? factionDef;
-            return XenotypeSetWithDefault.GetDefaultXenotype(factionDef2?.xenotypeSet);
+            __result = ((faction?.def ?? factionDef)?.xenotypeSet).GetDefaultXenotype();
         }
 
         [Feature(typeof(XenotypeSetWithDefault))]
-        [InfixWrapper(typeof(PawnGenerator), "<XenotypesAvailableFor>g__AddOrAdjust|49_0")]
+        [InfixPrefix(typeof(PawnGenerator), "<XenotypesAvailableFor>g__AddOrAdjust|49_0")]
         [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
-        public static void AddOrAdjust_Wrapper(XenotypeChance xenotypeChance, FactionDef factionDef = null, Faction faction = null)
+        public static bool AddOrAdjust_Prefix(XenotypeChance xenotypeChance, FactionDef factionDef, Faction faction)
         {
-            FactionDef factionDef2 = faction?.def ?? factionDef;
-            if (xenotypeChance.xenotype != XenotypeSetWithDefault.GetDefaultXenotype(factionDef2?.xenotypeSet))
+            if (xenotypeChance.xenotype != ((faction?.def ?? factionDef)?.xenotypeSet).GetDefaultXenotype())
             {
                 if (PawnGenerator.tmpXenotypeChances.ContainsKey(xenotypeChance.xenotype))
                 {
@@ -83,6 +79,8 @@ namespace XylXenos.Patches
                     PawnGenerator.tmpXenotypeChances.Add(xenotypeChance.xenotype, xenotypeChance.chance);
                 }
             }
+
+            return false;
         }
     }
 }

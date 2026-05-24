@@ -13,7 +13,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(XenotypeSet.Contains))]
         public static XenotypeDef XenotypeDefOf_Baseliner_Wrapper(XenotypeSet __caller)
         {
-            return XenotypeSetWithDefault.GetDefaultXenotype(__caller);
+            return __caller.GetDefaultXenotype();
         }
     }
 }

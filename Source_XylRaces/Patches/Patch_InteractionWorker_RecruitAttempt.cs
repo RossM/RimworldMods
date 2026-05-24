@@ -11,14 +11,12 @@ namespace XylXenos.Patches
     {
         [Feature(nameof(DefOf.XylResistanceFallRate))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+        [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
         [InfixPatch(nameof(InteractionWorker_RecruitAttempt.Interacted))]
-        public static float GetStatValue_Wrapper(Thing thing, StatDef stat, Pawn recipient, bool applyPostProcess, int cacheStaleAfterTicks)
+        public static void GetStatValue_Postfix(StatDef stat, Pawn recipient, ref float __result)
         {
-            float value = thing.GetStatValue(stat, applyPostProcess, cacheStaleAfterTicks);
             if (stat == StatDefOf.NegotiationAbility)
-                value *= recipient.GetStatValue(DefOf.XylResistanceFallRate);
-            return value;
+                __result *= recipient.GetStatValue(DefOf.XylResistanceFallRate);
         }
     }
 }

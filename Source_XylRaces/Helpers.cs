@@ -57,5 +57,13 @@ namespace XylXenos
         {
             return Find.Maps.SelectMany(map => map.mapPawns.PawnsInFaction(faction));
         }
+
+        public static XenotypeDef GetDefaultXenotype(this XenotypeSet xenotypeSet)
+        {
+            if (xenotypeSet is XenotypeSetWithDefault withDefault)
+                return withDefault.defaultXenotype;
+            else
+                return XenotypeDefOf.Baseliner;
+        }
     }
 }
