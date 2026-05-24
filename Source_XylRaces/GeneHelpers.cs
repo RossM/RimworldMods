@@ -287,8 +287,7 @@ public static class GeneHelpers
 
     public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene gene)
     {
-        gene = pawn.genes?.GenesListForReading.FirstOrDefault(g =>
-            g.def.GetModExtension<GeneDefExtension_Chemicals>()?.showInDrugPolicies == true);
+        gene = pawn.genes?.GenesListForReading.FirstOrDefault(g => g.def is GeneDefExt { showInDrugPolicies: true });
         return gene != null;
     }
 

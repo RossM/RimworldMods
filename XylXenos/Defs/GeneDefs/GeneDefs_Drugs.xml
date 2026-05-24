@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylDrugSensitive</defName>
     <label>drug sensitive</label>
     <description>Carriers of this gene are easily affected by drugs. Effects from a single dose last longer, they gain tolerance faster, and they are more likely to become addicted.</description>
@@ -20,14 +20,10 @@
     <statFactors>
       <XylGlobalAddictionChanceFactor>2.0</XylGlobalAddictionChanceFactor>
     </statFactors>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Chemicals">
-        <showInDrugPolicies>true</showInDrugPolicies>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <showInDrugPolicies>true</showInDrugPolicies>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylDrugResistant</defName>
     <label>drug resistant</label>
     <description>Carriers of this gene are less affected by drugs. Effects from a single dose wear off faster, they gain tolerance slower, and they are less likely to become addicted.</description>
@@ -45,14 +41,10 @@
     <statFactors>
       <XylGlobalAddictionChanceFactor>0.7</XylGlobalAddictionChanceFactor>
     </statFactors>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Chemicals">
-        <showInDrugPolicies>true</showInDrugPolicies>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <showInDrugPolicies>true</showInDrugPolicies>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylLithoid</defName>
     <geneClass>XylXenos.Genes.ChemicalImmunity</geneClass>
     <label>lithoid</label>
@@ -79,16 +71,14 @@
         <degree>1</degree>
       </li>
     </suppressedTraits>
+    <showInDrugPolicies>true</showInDrugPolicies>
     <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Chemicals">
-        <showInDrugPolicies>true</showInDrugPolicies>
-      </li>
       <li Class="XylXenos.DefModExtension_StartingItemSource">
         <item>XylAtlasite</item>
         <chance>0.02</chance>
         <count>2~5</count>
       </li>
     </modExtensions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
 </Defs>

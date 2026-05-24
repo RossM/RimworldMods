@@ -9,5 +9,7 @@ namespace XylXenos.Genes
 
         public float bodySizeFactor = 1.0f;
         public float healthScaleFactor = 1.0f;
+
+        public bool showInDrugPolicies = false;
     }
 }
