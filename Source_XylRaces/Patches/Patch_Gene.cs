@@ -27,5 +27,13 @@ namespace XylXenos.Patches
             if (__instance.def is GeneDefExt ext)
                 __result = ext.gender == null || ext.gender == __instance.pawn.gender;
         }
+
+        [Feature(nameof(GeneDefExt.hediffGivers))]
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Gene.TickInterval))]
+        public static void TickInterval_Postfix(Gene __instance, int delta)
+        {
+            __instance.TickIntervalExt(delta);
+        }
     }
 }

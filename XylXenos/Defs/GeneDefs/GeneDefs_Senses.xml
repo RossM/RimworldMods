@@ -18,6 +18,14 @@
     <displayCategory>XylSenses</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Echolocation</iconPath>
+    <permanentHediffs>
+      <li>
+        <hediff>XylEcholocation</hediff>
+        <partsToAffect>
+          <li>Head</li>
+        </partsToAffect>
+      </li>
+    </permanentHediffs>
     <congenitalHediffs>
       <li>
         <chance>0.15</chance>
@@ -29,18 +37,6 @@
       </li>
     </congenitalHediffs>
     <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
-        <hediffGivers>
-          <li Class="HediffGiver_Event">
-            <hediff>XylEcholocation</hediff>
-            <partsToAffect>
-              <li>Head</li>
-            </partsToAffect>
-          </li>
-        </hediffGivers>
-        <applyImmediately>true</applyImmediately>
-        <reapplyOnPartRestored>true</reapplyOnPartRestored>
-      </li>
       <li Class="XylXenos.DefModExtension_StartingItemSource">
         <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
         <chance>0.2</chance>

@@ -6,58 +6,10 @@ using Verse;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_Hediff : GeneDefExtension
-    {
-        public List<HediffGiver> hediffGivers;
-        public bool applyImmediately = false;
-        public bool reapplyOnPartRestored = false;
-        public float mtbDays = 0.0f;
-
-        protected override IEnumerable<string> GetCustomEffectDescriptions()
-        {
-            foreach (Tool tool in hediffGivers.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
-                         .Where(verbGiver => verbGiver != null).SelectMany(verbGiver => verbGiver.tools))
-            {
-                float armorPenetration = tool.armorPenetration;
-                if (armorPenetration < 0f)
-                {
-                    armorPenetration = tool.power * 0.015f;
-                }
-
-                yield return $"{"StatsReport_MeleeDamage".Translate()}: {tool.power.ToStringByStyle(ToStringStyle.FloatTwo)}";
-                yield return $"{"ArmorPenetration".Translate()}: {armorPenetration.ToStringPercent()}";
-                yield return
-                    $"{"StatsReport_Cooldown".Translate()}: {"StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall())}";
-            }
-        }
-
-        protected override IEnumerable<StatDrawEntry> GetSpecialDisplayStats()
-        {
-            foreach (Tool tool in hediffGivers.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
-                         .Where(verbGiver => verbGiver != null).SelectMany(verbGiver => verbGiver.tools))
-            {
-                float armorPenetration = tool.armorPenetration;
-                if (armorPenetration < 0f)
-                {
-                    armorPenetration = tool.power * 0.015f;
-                }
-
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_MeleeDamage".Translate(),
-                    tool.power.ToStringByStyle(ToStringStyle.FloatTwo), "", 4102);
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "ArmorPenetration".Translate(),
-                    armorPenetration.ToStringPercent(), "ArmorPenetrationExplanation".Translate(), 4101);
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_Cooldown".Translate(),
-                    "StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall()), "", 4100);
-            }
-        }
-    }
-
     [UsedImplicitly]
     public class AddHediff : Gene, IGene_HediffSource, INotificationListener
     {
-        public GeneDefExtension_Hediff DefExt => def.GetModExtension<GeneDefExtension_Hediff>();
-
-        const int checkInterval = 60;
+        public GeneDefExt DefExt => (GeneDefExt)def;
 
         public HashSet<BodyPartRecord> affectedParts;
 
@@ -74,38 +26,20 @@ namespace XylXenos.Genes
             if (pawn.kindDef == null)
                 return;
 
-            if (Active && DefExt is { hediffGivers: not null, applyImmediately: true })
+            if (Active && !DefExt.permanentHediffs.NullOrEmpty())
             {
-                foreach (var hediffGiver in DefExt.hediffGivers)
+                foreach (var hediffGiver in DefExt.permanentHediffs)
                     Apply(hediffGiver);
             }
 
             base.PostAdd();
         }
 
-        public override void TickInterval(int delta)
-        {
-            base.TickInterval(delta);
-
-            if (!Active)
-                return;
-            if (DefExt is not { hediffGivers: not null, mtbDays: > 0.0f })
-                return;
-            if (!pawn.IsHashIntervalTick(checkInterval, delta))
-                return;
-
-            foreach (var hediffGiver in DefExt.hediffGivers)
-            {
-                if (Rand.MTBEventOccurs(DefExt.mtbDays, GenDate.TicksPerDay, checkInterval))
-                    Apply(hediffGiver);
-            }
-        }
-
-        private void Apply(HediffGiver hediffGiver)
+        private void Apply(HediffGiver_Event hediffGiver)
         {
             HashSet<Hediff> oldHediffs = [..pawn.health.hediffSet.hediffs];
 
-            if (!hediffGiver.TryApply(pawn))
+            if (!hediffGiver.EventOccurred(pawn))
                 return;
 
             affectedParts ??= [];
@@ -115,17 +49,14 @@ namespace XylXenos.Genes
 
         public void Notify_HediffStateChange()
         {
-            if (!DefExt.reapplyOnPartRestored)
-                return;
-
             if (!Active)
                 return;
-            if (DefExt is not { hediffGivers: not null, reapplyOnPartRestored: true })
+            if (DefExt.permanentHediffs.NullOrEmpty())
                 return;
             if (affectedParts.NullOrEmpty())
                 return;
 
-            foreach (var hediffGiver in DefExt.hediffGivers)
+            foreach (var hediffGiver in DefExt.permanentHediffs)
             {
                 if (hediffGiver.partsToAffect.NullOrEmpty())
                     continue;
@@ -133,6 +64,7 @@ namespace XylXenos.Genes
                 List<BodyPartRecord> partsToAdd = [];
                 List<BodyPartRecord> partsToRemove = [];
                 HediffDef hediffDef = hediffGiver.hediff;
+                int partCount = 0;
 
                 foreach (BodyPartRecord part in affectedParts)
                 {
@@ -154,13 +86,18 @@ namespace XylXenos.Genes
                             missingPart = true;
                     }
 
+                    if (alreadyHasHediff)
+                        partCount++;
                     if (missingPart && alreadyHasHediff)
                         partsToRemove.Add(part);
                     else if (!missingPart && !alreadyHasHediff)
                         partsToAdd.Add(part);
                 }
 
-                foreach (BodyPartRecord part in partsToAdd)
+                int maxToAdd = hediffGiver.countToAffect - partCount;
+                partsToAdd.Shuffle();
+
+                foreach (BodyPartRecord part in partsToAdd.Take(maxToAdd))
                 {
                     Hediff hediff = HediffMaker.MakeHediff(hediffDef, pawn, part);
                     pawn.health.AddHediff(hediff);
@@ -177,9 +114,9 @@ namespace XylXenos.Genes
         public override void PostRemove()
         {
             var extension = DefExt;
-            if (Active && extension?.hediffGivers != null)
+            if (Active && extension?.permanentHediffs != null)
             {
-                HashSet<HediffDef> defsToRemove = [..extension.hediffGivers.Select(hediffGiver => hediffGiver.hediff)];
+                HashSet<HediffDef> defsToRemove = [..extension.permanentHediffs.Select(hediffGiver => hediffGiver.hediff)];
                 foreach (var hediff in pawn.health.hediffSet.hediffs
                              .Where(hediff => defsToRemove.Contains(hediff.def))
                              .ToList())
@@ -191,7 +128,7 @@ namespace XylXenos.Genes
 
         bool IGene_HediffSource.CausesHediff(HediffDef hediffDef)
         {
-            return DefExt?.hediffGivers.Any(g => g.hediff == hediffDef) ?? false;
+            return DefExt?.permanentHediffs.Any(g => g.hediff == hediffDef) ?? false;
         }
 
         public void RegisterWith(NotificationManager manager)

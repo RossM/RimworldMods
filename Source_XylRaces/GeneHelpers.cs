@@ -142,6 +142,12 @@ public static class GeneHelpers
 
     public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef gene)
     {
+        if (gene is GeneDefExt ext)
+        {
+            foreach (var customEffectDescription in ext.CustomEffectDescriptions)
+                yield return customEffectDescription;
+        }
+
         if (!gene.modExtensions.NullOrEmpty())
         {
             foreach (var geneDefExtension in gene.modExtensions.OfType<GeneDefExtension>())
@@ -346,6 +352,23 @@ public static class GeneHelpers
                     congenitalHediff.EventOccurred(pawn);
                 }
             }
+        }
+    }
+
+    public static void TickIntervalExt(this Gene gene, int delta)
+    {
+        if (!gene.Active)
+            return;
+        if (gene.def is not GeneDefExt def)
+            return;
+        if (def.hediffGivers.NullOrEmpty())
+            return;
+        if (!gene.pawn.IsHashIntervalTick(60, delta))
+            return;
+
+        foreach (var hediffGiver in def.hediffGivers)
+        {
+            hediffGiver.OnIntervalPassed(gene.pawn, null);
         }
     }
 }

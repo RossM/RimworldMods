@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylLargeHorns</defName>
     <label>large horns</label>
@@ -33,26 +33,20 @@
         </drawData>
       </li>
     </renderNodeProperties>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
-        <hediffGivers>
-          <li Class="HediffGiver_Event">
-            <hediff>XylLargeHorns</hediff>
-            <partsToAffect>
-              <li>Head</li>
-            </partsToAffect>
-          </li>
-        </hediffGivers>
-        <applyImmediately>true</applyImmediately>
-        <reapplyOnPartRestored>true</reapplyOnPartRestored>
-      </li>
-    </modExtensions>
     <exclusionTags>
       <li>Headbone</li>
     </exclusionTags>
-  </GeneDef>
+    <permanentHediffs>
+      <li>
+        <hediff>XylLargeHorns</hediff>
+        <partsToAffect>
+          <li>Head</li>
+        </partsToAffect>
+      </li>
+    </permanentHediffs>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylRetractableClaws</defName>
     <label>retractable claws</label>
@@ -64,24 +58,18 @@
     <displayOrderInCategory>111</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_RetractableClaws</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
-        <hediffGivers>
-          <li Class="HediffGiver_Event">
-            <hediff>XylRetractableClaws</hediff>
-            <partsToAffect>
-              <li>Hand</li>
-            </partsToAffect>
-            <countToAffect>2</countToAffect>
-          </li>
-        </hediffGivers>
-        <applyImmediately>true</applyImmediately>
-        <reapplyOnPartRestored>true</reapplyOnPartRestored>
-      </li>
-    </modExtensions>
     <exclusionTags>
       <li>Hands</li>
     </exclusionTags>
-  </GeneDef>
+    <permanentHediffs>
+      <li>
+        <hediff>XylRetractableClaws</hediff>
+        <partsToAffect>
+          <li>Hand</li>
+        </partsToAffect>
+        <countToAffect>2</countToAffect>
+      </li>
+    </permanentHediffs>
+  </XylXenos.Genes.GeneDefExt>
 
 </Defs>

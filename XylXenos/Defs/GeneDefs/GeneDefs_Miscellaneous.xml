@@ -89,7 +89,7 @@
     </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylPrecognition</defName>
     <label>precognition</label>
@@ -99,25 +99,19 @@
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>130</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Precognition</iconPath>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
-        <hediffGivers>
-          <li Class="HediffGiver_Event">
-            <hediff>XylPrecognition</hediff>
-            <partsToAffect>
-              <li>Head</li>
-            </partsToAffect>
-          </li>
-        </hediffGivers>
-        <applyImmediately>true</applyImmediately>
-        <reapplyOnPartRestored>true</reapplyOnPartRestored>
+    <permanentHediffs>
+      <li Class="HediffGiver_Event">
+        <hediff>XylPrecognition</hediff>
+        <partsToAffect>
+          <li>Head</li>
+        </partsToAffect>
       </li>
-    </modExtensions>
+    </permanentHediffs>
     <customEffectDescriptions>
       <li>Melee dodge chance: +15</li>
       <li>Ranged dodge chance: +15</li>
     </customEffectDescriptions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>
     <geneClass>XylXenos.Genes.Flight</geneClass>
@@ -225,7 +219,7 @@
     </modExtensions>
   </GeneDef>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylBioRejection</defName>
     <label>bio-rejection</label>
@@ -240,18 +234,12 @@
         <def>Transhumanist</def>
       </li>
     </suppressedTraits>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
-        <hediffGivers>
-          <li Class="HediffGiver_Event">
-            <hediff>XylBioRejection</hediff>
-            <countToAffect>1</countToAffect>
-          </li>
-        </hediffGivers>
-        <applyImmediately>true</applyImmediately>
+    <permanentHediffs>
+      <li>
+        <hediff>XylBioRejection</hediff>
       </li>
-    </modExtensions>
-  </GeneDef>
+    </permanentHediffs>
+  </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>
     <geneClass>XylXenos.Genes.EmergencyReserves</geneClass>

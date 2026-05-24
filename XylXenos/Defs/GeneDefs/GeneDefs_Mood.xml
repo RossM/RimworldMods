@@ -19,8 +19,7 @@
     </suppressedTraits>
   </GeneDef>
 
-  <GeneDef>
-    <geneClass>XylXenos.Genes.AddHediff</geneClass>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylMoody</defName>
     <label>moody</label>
     <description>Carriers of this gene have a volatile emotional state. They randomly get good and bad moods.</description>
@@ -29,16 +28,13 @@
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Moody</iconPath>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Hediff">
-        <hediffGivers>
-          <li Class="HediffGiver_Event">
-            <hediff>XylMoody</hediff>
-          </li>
-        </hediffGivers>
+    <hediffGivers>
+      <li Class="XylXenos.HediffGiver_RandomExt">
+        <hediff>XylMoody</hediff>
         <mtbDays>2</mtbDays>
+        <sendLetter>false</sendLetter>
       </li>
-    </modExtensions>
-  </GeneDef>
+    </hediffGivers>
+  </XylXenos.Genes.GeneDefExt>
 
 </Defs>
