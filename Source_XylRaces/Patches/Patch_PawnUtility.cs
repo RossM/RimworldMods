@@ -63,14 +63,13 @@ namespace XylXenos.Patches
 
         [Feature(typeof(GeneDefExtension_WildMan))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(Def), nameof(Def.LabelCap))]
+        [InfixPostfix(typeof(Def), nameof(Def.LabelCap))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
-        public static TaggedString Def_LabelCap_Wrapper(Def __instance, Pawn pawn)
+        public static void Def_LabelCap_Postfix(Def __instance, Pawn pawn, ref TaggedString __result)
         {
-            return __instance == pawn.def && pawn.HasActiveGeneDefExtensionOfType<GeneDefExtension_WildMan>()
-                ? pawn.genes.XenotypeLabelCap
-                : __instance.LabelCap;
+            if (__instance == pawn.def && pawn.HasActiveGeneDefExtensionOfType<GeneDefExtension_WildMan>())
+                __result = pawn.genes.XenotypeLabelCap;
         }
     }
 }

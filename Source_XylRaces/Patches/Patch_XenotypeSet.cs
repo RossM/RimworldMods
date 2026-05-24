@@ -8,12 +8,12 @@ namespace XylXenos.Patches
     public static class Patch_XenotypeSet
     {
         [Feature(typeof(XenotypeSetWithDefault))]
-        [InfixWrapper(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
+        [InfixPostfix(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
         [InfixPatch(nameof(XenotypeSet.BaselinerChance))]
         [InfixPatch(nameof(XenotypeSet.Contains))]
-        public static XenotypeDef XenotypeDefOf_Baseliner_Wrapper(XenotypeSet __caller)
+        public static void XenotypeDefOf_Baseliner_Postfix(XenotypeSet __caller, ref XenotypeDef __result)
         {
-            return __caller.GetDefaultXenotype();
+            __result = __caller.GetDefaultXenotype();
         }
     }
 }

@@ -68,15 +68,12 @@ namespace XylXenos.Patches
         }
 
         [Feature(typeof(CompProperties_Drug))]
-        [InfixWrapper(typeof(List<ThingDefCount>), "Add")]
+        [InfixPrefix(typeof(List<ThingDefCount>), "Add")]
         [InfixPatch("GeneratePossessions")]
-        public static void List_Add_Wrapper(List<ThingDefCount> __instance, ThingDefCount item, Pawn pawn)
+        public static bool List_Add_Prefix(List<ThingDefCount> __instance, ThingDefCount item, Pawn pawn)
         {
             var chemical = item.ThingDef.GetCompProperties<CompProperties_Drug>()?.chemical;
-            if (chemical != null && !pawn.ChemicalIsAllowedByGenes(chemical))
-                return;
-
-            __instance.Add(item);
+            return chemical == null || pawn.ChemicalIsAllowedByGenes(chemical);
         }
     }
 }

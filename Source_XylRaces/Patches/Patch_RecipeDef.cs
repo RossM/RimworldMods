@@ -13,11 +13,11 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(DefModExtension_GeneDependent))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(RecipeDef), "memePrerequisitesAny")]
+        [InfixPostfix(typeof(RecipeDef), "memePrerequisitesAny")]
         [InfixPatch(nameof(RecipeDef.AvailableNow))]
-        public static List<MemeDef> RecipeDef_memePrerequisitesAny_Wrapper()
+        public static void RecipeDef_memePrerequisitesAny_Postfix(ref List<MemeDef> __result)
         {
-            return null;
+            __result = null;
         }
 
         [Feature(typeof(DefModExtension_GeneDependent))]

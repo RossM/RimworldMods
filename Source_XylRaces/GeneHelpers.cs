@@ -6,6 +6,7 @@ using System.Text;
 using RimWorld;
 using Verse;
 using XylXenos.Genes;
+using XylXenos.Patches;
 
 namespace XylXenos;
 
@@ -318,5 +319,25 @@ public static class GeneHelpers
         foreach (var extension in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_Pawn>())
             factor *= extension.healthScaleFactor;
         return factor;
+    }
+
+    public static void ModifyGenderByGenes(Pawn pawn, PawnGenerationRequest request, XenotypeDef xenotype)
+    {
+        if (request.FixedGender != null)
+            return;
+
+        GeneDef gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
+                       request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
+                       request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
+                       xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
+        if (gene == null)
+            return;
+
+        pawn.gender = gene.GetModExtension<GeneDefExtension_GenderRatio>().GetGender();
+    }
+
+    public static bool HasGenderRatio(GeneDef gene)
+    {
+        return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
     }
 }

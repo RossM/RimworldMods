@@ -37,14 +37,12 @@ namespace XylXenos.Patches
 
         [Feature(nameof(FoodHelpers.GetFoodPoisonChanceOffset))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+        [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
         [InfixPatch("Ingested")]
-        public static float GetStatValue_Wrapper(Pawn ingester, Thing thing, StatDef stat, bool applyPostProcess, int cacheStaleAfterTicks)
+        public static void GetStatValue_Postfix(Pawn ingester, Thing thing, StatDef stat, ref float __result)
         {
-            float value = thing.GetStatValue(stat, applyPostProcess, cacheStaleAfterTicks);
             if (stat == StatDefOf.FoodPoisonChanceFixedHuman)
-                value += FoodHelpers.GetFoodPoisonChanceOffset(ingester, thing);
-            return value;
+                __result += FoodHelpers.GetFoodPoisonChanceOffset(ingester, thing);
         }
 
         [Feature(typeof(NotificationManager))]

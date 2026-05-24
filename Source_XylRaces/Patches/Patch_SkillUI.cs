@@ -13,11 +13,11 @@ namespace XylXenos.Patches
         [Feature(nameof(DefOf.XylLearnFactorPassionMinor))]
         [Feature(nameof(DefOf.XylLearnFactorPassionMajor))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(SkillUI), nameof(SkillUI.GetLearningFactor))]
+        [InfixPostfix(typeof(SkillUI), nameof(SkillUI.GetLearningFactor))]
         [InfixPatch("GetSkillDescription")]
-        public static float GetLearningFactor_Wrapper(Passion passion, SkillRecord sk)
+        public static void GetLearningFactor_Postfix(Passion passion, SkillRecord sk, ref float __result)
         {
-            return passion switch
+            __result = passion switch
             {
                 Passion.None => sk.Pawn.GetStatValue(DefOf.XylLearnFactorPassionNone),
                 Passion.Minor => sk.Pawn.GetStatValue(DefOf.XylLearnFactorPassionMinor),

@@ -177,30 +177,34 @@ namespace XylXenos.Patches
         // Note: this patch is performance-sensitive
         [Feature(typeof(Hediff_SubstituteCapacity))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity))]
+        [InfixPostfix(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity))]
         [InfixPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
-        public static PawnCapacityDef PawnCapacityOffset_capacity_Wrapper(
+        public static void PawnCapacityOffset_capacity_Postfix(
             PawnCapacityOffset __instance,
             StatWorker __caller,
-            StatRequest req)
+            StatRequest req,
+            ref PawnCapacityDef __result)
         {
             Hediff_SubstituteCapacity foundHediff
                 = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
-            return foundHediff != null ? foundHediff.DefExt.substituteCapacity : __instance.capacity;
+            if (foundHediff != null)
+                __result = foundHediff.DefExt.substituteCapacity;
         }
 
         [Feature(typeof(Hediff_SubstituteCapacity))]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [InfixWrapper(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity))]
+        [InfixPostfix(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity))]
         [InfixPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
-        public static PawnCapacityDef PawnCapacityFactor_capacity_Wrapper(
+        public static void PawnCapacityFactor_capacity_Postfix(
             PawnCapacityFactor __instance,
             StatWorker __caller,
-            StatRequest req)
+            StatRequest req,
+            ref PawnCapacityDef __result)
         {
             Hediff_SubstituteCapacity foundHediff
                 = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
-            return foundHediff != null ? foundHediff.DefExt.substituteCapacity : __instance.capacity;
+            if (foundHediff != null)
+                __result = foundHediff.DefExt.substituteCapacity;
         }
 
         [Feature(typeof(Psycast))]

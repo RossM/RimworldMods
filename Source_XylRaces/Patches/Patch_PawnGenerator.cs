@@ -17,27 +17,7 @@ namespace XylXenos.Patches
             PawnGenerationRequest request,
             XenotypeDef xenotype)
         {
-            ModifyGenderByGenes(pawn, request, xenotype);
-        }
-
-        public static void ModifyGenderByGenes(Pawn pawn, PawnGenerationRequest request, XenotypeDef xenotype)
-        {
-            if (request.FixedGender != null)
-                return;
-
-            GeneDef gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
-                           request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
-                           request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
-                           xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
-            if (gene == null)
-                return;
-
-            pawn.gender = gene.GetModExtension<GeneDefExtension_GenderRatio>().GetGender();
-        }
-
-        public static bool HasGenderRatio(GeneDef gene)
-        {
-            return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
+            GeneHelpers.ModifyGenderByGenes(pawn, request, xenotype);
         }
 
         [Feature(typeof(GeneDefExtension_CongenitalHediff))]
