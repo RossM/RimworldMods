@@ -16,6 +16,7 @@ namespace XylXenos.Patches
                 target.RegisterWith(NotificationManager.Instance);
         }
 
+        // Note: This patch is performance-sensitive
         [Feature(typeof(GeneDefExtension_GenderLocked))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Gene.Active), MethodType.Getter)]
