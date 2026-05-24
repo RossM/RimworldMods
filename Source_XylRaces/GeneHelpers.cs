@@ -300,15 +300,10 @@ public static class GeneHelpers
     public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
     {
         float factor = 1f;
-        foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_JoyGivers>())
+        foreach (var joyGiverFactor in pawn.GetComp<CompPawn_GeneSet>().joyGiverChanceFactors)
         {
-            if (defExt.joyGiverChanceFactors.NullOrEmpty())
-                continue;
-            foreach (var joyGiverFactor in defExt.joyGiverChanceFactors)
-            {
-                if (joyGiverFactor.joyGiver == joyGiver.def)
-                    factor *= joyGiverFactor.factor;
-            }
+            if (joyGiverFactor.joyGiver == joyGiver.def)
+                factor *= joyGiverFactor.factor;
         }
 
         return factor;

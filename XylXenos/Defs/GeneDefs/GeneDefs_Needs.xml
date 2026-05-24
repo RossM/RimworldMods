@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylAquatic</defName>
     <label>aquatic</label>
     <description>Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long.</description>
@@ -18,19 +18,17 @@
     <enablesNeeds>
       <li>XylWetness</li>
     </enablesNeeds>
+    <joyGiverChanceFactors>
+      <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
+    </joyGiverChanceFactors>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_Designator">
         <addDesignators>
           <li>XylShower</li>
         </addDesignators>
       </li>
-      <li Class="XylXenos.Genes.GeneDefExtension_JoyGivers">
-        <joyGiverChanceFactors>
-          <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
-        </joyGiverChanceFactors>
-      </li>
     </modExtensions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>
     <defName>XylJoyless</defName>

@@ -1,10 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
 namespace XylXenos.Genes
 {
+    public class JoyGiverFactor
+    {
+        public JoyGiverDef joyGiver;
+        public float factor = 1.0f;
+
+        [UsedImplicitly]
+        public void LoadDataFromXmlCustom(XmlNode xmlRoot)
+        {
+            DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "joyGiver", xmlRoot.Name);
+            factor = ParseHelper.FromString<float>(xmlRoot.FirstChild.Value);
+        }
+    }
+
     [UsedFromXml]
     public class GeneDefExt : GeneDef
     {
@@ -26,6 +41,8 @@ namespace XylXenos.Genes
 
         // These are triggered when a character with the gene is created
         public List<HediffGiver_Event> congenitalHediffs;
+
+        public List<JoyGiverFactor> joyGiverChanceFactors;
 
         private List<string> customEffectDescriptionsInternal;
 

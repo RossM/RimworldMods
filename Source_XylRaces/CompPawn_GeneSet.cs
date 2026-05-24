@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 using XylXenos.Genes;
@@ -18,6 +19,7 @@ namespace XylXenos
     {
         [Unsaved] public float bodySizeFactor = 1.0f;
         [Unsaved] public float healthScaleFactor = 1.0f;
+        [Unsaved] public List<JoyGiverFactor> joyGiverChanceFactors;
 
         public void RegisterWith(NotificationManager manager)
         {
@@ -29,14 +31,15 @@ namespace XylXenos
         {
             bodySizeFactor = 1.0f;
             healthScaleFactor = 1.0f;
+            (joyGiverChanceFactors ??= []).Clear();
 
-            if (((Pawn)parent).genes == null)
-                return;
-
-            foreach (var def in ((Pawn)parent).genes.GenesListForReading.Where(gene => gene.Active).Select(gene => gene.def).OfType<GeneDefExt>())
+            foreach (var def in ((Pawn)parent).ExtendedGeneDefs())
             {
                 bodySizeFactor *= def.bodySizeFactor;
                 healthScaleFactor *= def.healthScaleFactor;
+
+                if (!def.joyGiverChanceFactors.NullOrEmpty())
+                    joyGiverChanceFactors.AddRange(def.joyGiverChanceFactors);
             }
         }
 
