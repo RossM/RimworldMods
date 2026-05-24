@@ -16,7 +16,9 @@ namespace Source_XylIdeoTweaks
             [UsedImplicitly] public static BodyPartGroupDef Neck;
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch("GenerateStartingOutfits")]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch("GenerateStartingOutfits")]
         public static void GenerateStartingOutfits_Postfix(OutfitDatabase __instance)
         {
             var outfitNudist = __instance.AllOutfits.First(outfit => outfit.label == "OutfitNudist".Translate());
@@ -25,7 +27,8 @@ namespace Source_XylIdeoTweaks
             outfitNudist.filter.SetAllow(SpecialThingFilterDefOf.AllowDeadmansApparel, allow: false);
             foreach (ThingDef def in DefDatabase<ThingDef>.AllDefs)
             {
-                if (def.apparel != null && (def.apparel.defaultOutfitTags.NotNullAndContains("Nudist") || (!def.apparel.countsAsClothingForNudity)))
+                if (def.apparel != null && (def.apparel.defaultOutfitTags.NotNullAndContains("Nudist") ||
+                                            (!def.apparel.countsAsClothingForNudity)))
                 {
                     outfitNudist.filter.SetAllow(def, allow: true);
                 }
@@ -37,7 +40,7 @@ namespace Source_XylIdeoTweaks
             outfitSlavePermissive.filter.SetAllow(SpecialThingFilterDefOf.AllowDeadmansApparel, allow: false);
             foreach (ThingDef def in DefDatabase<ThingDef>.AllDefs)
             {
-                if (def.apparel == null) 
+                if (def.apparel == null)
                     continue;
 
                 if (def.apparel.defaultOutfitTags.NotNullAndContains("Slave"))
@@ -46,16 +49,16 @@ namespace Source_XylIdeoTweaks
                     continue;
                 }
 
-                if (def.equippedStatOffsets != null && def.equippedStatOffsets.Any(modifier => modifier.stat == Defs.SlaveSuppressionOffset && modifier.value < 0))
+                if (def.equippedStatOffsets != null &&
+                    def.equippedStatOffsets.Any(modifier => modifier.stat == Defs.SlaveSuppressionOffset && modifier.value < 0))
                     continue;
-                if (def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.Torso) && def.apparel.layers.Contains(ApparelLayerDefOf.Shell)) 
+                if (def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.Torso) && def.apparel.layers.Contains(ApparelLayerDefOf.Shell))
                     continue;
                 if (def.apparel.bodyPartGroups.Contains(Defs.Neck) && def.apparel.layers.Contains(ApparelLayerDefOf.Overhead))
                     continue;
 
                 outfitSlavePermissive.filter.SetAllow(def, allow: true);
             }
-
         }
     }
 }

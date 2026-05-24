@@ -1,5 +1,5 @@
-﻿using JetBrains.Annotations;
-using HarmonyLib;
+﻿using HarmonyLib;
+using JetBrains.Annotations;
 using Verse;
 
 namespace Source_ExposableChecker

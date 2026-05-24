@@ -1,15 +1,17 @@
-﻿using HarmonyLib;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
 using JetBrains.Annotations;
+using RimWorld;
 
 namespace Source_XylIdeoTweaks
 {
     [HarmonyPatch(typeof(IdeoFoundation))]
     public class Patch_IdeoFoundation
     {
-        [HarmonyPrefix, UsedImplicitly, HarmonyPatch("FinalizeIdeo")]
+        [HarmonyPrefix]
+        [UsedImplicitly]
+        [HarmonyPatch("FinalizeIdeo")]
         public static bool FinalizeIdeo_Prefix(Ideo ideo)
         {
             // Change: Only remove conflicting apparel precepts when nudity is required
@@ -22,11 +24,13 @@ namespace Source_XylIdeoTweaks
             List<Precept> preceptsListForReading = ideo.PreceptsListForReading;
             for (int num = preceptsListForReading.Count - 1; num >= 0; num--)
             {
-                if (preceptsListForReading[num] is Precept_Apparel preceptApparel && nudityPrecepts.Any(precept => !preceptApparel.CompatibleWith(precept)))
+                if (preceptsListForReading[num] is Precept_Apparel preceptApparel &&
+                    nudityPrecepts.Any(precept => !preceptApparel.CompatibleWith(precept)))
                 {
                     ideo.RemovePrecept(preceptsListForReading[num]);
                 }
             }
+
             return false;
         }
     }

@@ -9,7 +9,9 @@ namespace Source_XylIdeoTweaks
     [HarmonyPatch(typeof(Pawn_StyleTracker))]
     public class Patch_Pawn_StyleTracker
     {
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn_StyleTracker.HasUnwantedBeard), MethodType.Getter)]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(Pawn_StyleTracker.HasUnwantedBeard), MethodType.Getter)]
         public static void HasUnwantedBeard_Postfix(Pawn_StyleTracker __instance, ref bool __result)
         {
             if (__result)
@@ -19,7 +21,9 @@ namespace Source_XylIdeoTweaks
             }
         }
 
-        [HarmonyPostfix, UsedImplicitly, HarmonyPatch(nameof(Pawn_StyleTracker.HasUnwantedHairStyle), MethodType.Getter)]
+        [HarmonyPostfix]
+        [UsedImplicitly]
+        [HarmonyPatch(nameof(Pawn_StyleTracker.HasUnwantedHairStyle), MethodType.Getter)]
         public static void HasUnwantedHairStyle_Postfix(Pawn_StyleTracker __instance, ref bool __result)
         {
             if (__result)
