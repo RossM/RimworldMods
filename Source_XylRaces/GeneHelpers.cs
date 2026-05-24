@@ -152,7 +152,7 @@ public static class GeneHelpers
         }
 
         // Official content doesn't need our help
-        if (gene.modContentPack.IsOfficialMod)
+        if (gene.modContentPack?.IsOfficialMod == true)
             yield break;
 
         IEnumerable<RecipeDef> recipeDefs = DefDatabase<RecipeDef>.AllDefsListForReading.Where(def =>

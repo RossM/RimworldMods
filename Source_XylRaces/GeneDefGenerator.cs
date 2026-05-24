@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylXenos
 {
-    public static class GeneDefGenerator_Psy
+    public static class GeneDefGenerator
     {
         public static IEnumerable<GeneDef> ImpliedGeneDefs(bool hotReload = false)
         {
