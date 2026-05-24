@@ -151,6 +151,10 @@ public static class GeneHelpers
             }
         }
 
+        // Official content doesn't need our help
+        if (gene.modContentPack.IsOfficialMod)
+            yield break;
+
         IEnumerable<RecipeDef> recipeDefs = DefDatabase<RecipeDef>.AllDefsListForReading.Where(def =>
         {
             var modExtension = def.GetModExtension<DefModExtension_GeneDependent>();
