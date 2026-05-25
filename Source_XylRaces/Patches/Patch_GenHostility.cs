@@ -42,7 +42,7 @@ namespace XylXenos.Patches
             if (!manager.HasAnyOverride(pawn.Faction, pawn2.Faction))
                 return false;
 
-            return pawn.IsColonyAnimal || pawn.GeneSet()?.disableHostilityFromFactions.Any(factionDef => factionDef == pawn2.Faction?.def) == true;
+            return pawn.IsColonyAnimal || pawn.GeneSet()?.disableHostilityFromFactions?.Any(factionDef => factionDef == pawn2.Faction?.def) == true;
         }
     }
 }

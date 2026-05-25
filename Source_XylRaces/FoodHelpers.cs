@@ -130,11 +130,11 @@ public static class FoodHelpers
             return false;
         }
 
-        GeneSet geneSet = eater.GeneSet();
-        if (geneSet == null)
+        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.GeneSet()?.ingestionThoughtOverrides;
+        if (thoughtOverrides == null)
             return false;
 
-        foreach (var thoughtOverride in geneSet.ingestionThoughtOverrides)
+        foreach (var thoughtOverride in thoughtOverrides)
         {
             if (thoughtOverride.thoughts.NullOrEmpty())
                 continue;

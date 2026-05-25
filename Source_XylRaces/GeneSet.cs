@@ -1,5 +1,6 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
+using RimWorld;
 using UnityEngine;
 using Verse;
 using XylXenos.Genes;
@@ -17,11 +18,11 @@ namespace XylXenos
         public float slaveRebellionThresholdDays = float.MaxValue;
         public float manhunterOnDamageChanceFactor = 1f;
         public float manhunterOnTameFailChanceFactor = 1f;
-        public List<JoyGiverFactor> joyGiverChanceFactors = [];
-        public List<BuildableDef> addDesignators = [];
-        public List<RenderNodeModifier> renderNodeModifiers = [];
-        public List<FactionDef> disableHostilityFromFactions = [];
-        public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides = [];
+        [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
+        [CanBeNull] public List<BuildableDef> addDesignators;
+        [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
+        [CanBeNull] public List<FactionDef> disableHostilityFromFactions;
+        [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
 
         private static GeneSet Make(Pawn pawn)
         {
@@ -39,11 +40,11 @@ namespace XylXenos
             slaveRebellionThresholdDays = float.MaxValue;
             manhunterOnDamageChanceFactor = 1f;
             manhunterOnTameFailChanceFactor = 1f;
-            joyGiverChanceFactors.Clear();
-            addDesignators.Clear();
-            renderNodeModifiers.Clear();
-            disableHostilityFromFactions.Clear();
-            ingestionThoughtOverrides.Clear();
+            joyGiverChanceFactors?.Clear();
+            addDesignators?.Clear();
+            renderNodeModifiers?.Clear();
+            disableHostilityFromFactions?.Clear();
+            ingestionThoughtOverrides?.Clear();
 
             foreach (var def in pawn.ActiveExtendedGeneDefs())
             {
@@ -54,17 +55,22 @@ namespace XylXenos
                 manhunterOnDamageChanceFactor *= def.manhunterOnDamageChanceFactor;
                 manhunterOnTameFailChanceFactor *= def.manhunterOnTameFailChanceFactor;
 
-                if (!def.joyGiverChanceFactors.NullOrEmpty())
-                    joyGiverChanceFactors.AddRange(def.joyGiverChanceFactors);
-                if (!def.addDesignators.NullOrEmpty())
-                    addDesignators.AddRange(def.addDesignators);
-                if (!def.renderNodeModifiers.NullOrEmpty())
-                    renderNodeModifiers.AddRange(def.renderNodeModifiers);
-                if (!def.disableHostilityFromFactions.NullOrEmpty())
-                    disableHostilityFromFactions.AddRange(def.disableHostilityFromFactions);
-                if (!def.ingestionThoughtOverrides.NullOrEmpty())
-                    ingestionThoughtOverrides.AddRange(def.ingestionThoughtOverrides);
+                AddList(ref joyGiverChanceFactors, def.joyGiverChanceFactors);
+                AddList(ref addDesignators, def.addDesignators);
+                AddList(ref renderNodeModifiers, def.renderNodeModifiers);
+                AddList(ref disableHostilityFromFactions, def.disableHostilityFromFactions);
+                AddList(ref ingestionThoughtOverrides, def.ingestionThoughtOverrides);
             }
+        }
+
+        private void AddList<T>(ref List<T> dest, List<T> source)
+        {
+            if (source.NullOrEmpty())
+                return;
+            if (dest == null)
+                dest = [..source];
+            else
+                dest.AddRange(source);
         }
 
         public void Notify_PostGenesChanged()

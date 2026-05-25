@@ -263,11 +263,12 @@ public static class GeneHelpers
     {
         HashSet<Designator> geneDesignators = [];
 
-        foreach (var geneSet in Faction.OfPlayer.GetPawns().Select(pawn => pawn.GeneSet()))
+        foreach (var designators in Faction.OfPlayer.GetPawns().Select(pawn => pawn.GeneSet()?.addDesignators))
         {
-            if (geneSet == null)
+            if (designators == null)
                 continue;
-            geneDesignators.AddRange(geneSet.addDesignators.Where(def => def.designationCategory == __instance)
+
+            geneDesignators.AddRange(designators.Where(def => def.designationCategory == __instance)
                 .Select(GetCachedDesignator));
         }
 
@@ -307,12 +308,12 @@ public static class GeneHelpers
 
     public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
     {
-        float factor = 1f;
-        GeneSet geneSet = pawn.GeneSet();
-        if (geneSet == null)
+        List<JoyGiverFactor> joyGiverChanceFactors = pawn.GeneSet()?.joyGiverChanceFactors;
+        if (joyGiverChanceFactors == null)
             return 1f;
 
-        foreach (var joyGiverFactor in geneSet.joyGiverChanceFactors)
+        float factor = 1f;
+        foreach (var joyGiverFactor in joyGiverChanceFactors)
         {
             if (joyGiverFactor.joyGiver == joyGiver.def)
                 factor *= joyGiverFactor.factor;
