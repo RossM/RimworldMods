@@ -80,7 +80,6 @@
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
-    <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylPrecognition</defName>
     <label>precognition</label>
     <description>Carriers of this gene can see a short distance into the future, giving the ability to dodge both melee and ranged attacks. The effect scales with psychic sensitivity.</description>
@@ -202,7 +201,6 @@
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
-    <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylBioRejection</defName>
     <label>bio-rejection</label>
     <description>Carriers of this gene have a severe allergic reaction to any sort of artificial implant or body part. They will suffer continual pain until the implant or part is removed.</description>

@@ -3,7 +3,6 @@
 <Defs>
 
   <XylXenos.Genes.GeneDefExt>
-    <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylLargeHorns</defName>
     <label>large horns</label>
     <description>Carriers of this gene have large horns that function as a weapon.</description>
@@ -47,7 +46,6 @@
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
-    <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylRetractableClaws</defName>
     <label>retractable claws</label>
     <labelShortAdj>claws</labelShortAdj>

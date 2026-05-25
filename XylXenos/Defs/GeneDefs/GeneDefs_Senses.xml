@@ -9,7 +9,6 @@
   </GeneCategoryDef>
 
   <XylXenos.Genes.GeneDefExt>
-    <geneClass>XylXenos.Genes.AddHediff</geneClass>
     <defName>XylEcholocation</defName>
     <label>echolocation</label>
     <description>Carriers of this gene can use high-frequency sound waves to "see" with their ears instead of their eyes.</description>
