@@ -34,20 +34,6 @@ namespace XylXenos
 
     public static class Helpers
     {
-        public static IEnumerable<T> EverythingOfType<T>(this Pawn pawn) where T : class
-        {
-            foreach (T gene in pawn.ActiveGenesOfType<T>())
-                yield return gene;
-            foreach (T geneDefExt in pawn.ActiveGeneDefExtensionsOfType<T>())
-                yield return geneDefExt;
-            foreach (T hediff in pawn.HediffsOfType<T>())
-                yield return hediff;
-            foreach (T hediffDefExt in pawn.HediffsWithModExtension<T>().SelectMany(h => h.def.modExtensions.OfType<T>()))
-                yield return hediffDefExt;
-            foreach (T hediffComp in pawn.HediffsWithComp<T>().SelectMany(h => h.comps.OfType<T>()))
-                yield return hediffComp;
-        }
-
         public static float GetStatBase(this ThingDef thingDef, StatDef statDef)
         {
             return thingDef.statBases.FirstOrDefault(s => s.stat == statDef)?.value ?? statDef.defaultBaseValue;

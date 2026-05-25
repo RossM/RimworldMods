@@ -46,6 +46,13 @@ namespace XylXenos.Genes
         }
     }
 
+    public class StartingItemOption
+    {
+        public ThingDef item;
+        public float chance = 1.0f;
+        public IntRange count = IntRange.One;
+    }
+
     [UsedFromXml]
     public class GeneDefExt : GeneDef
     {
@@ -70,21 +77,22 @@ namespace XylXenos.Genes
         public bool showInDrugPolicies = false;
 
         // These are triggered randomly over time
-        public List<HediffGiver> hediffGivers;
+        [CanBeNull] public List<HediffGiver> hediffGivers;
 
         // These are triggered when the gene is added
-        public List<HediffGiver_Event> permanentHediffs;
+        [CanBeNull] public List<HediffGiver_Event> permanentHediffs;
 
         // These are triggered when a character with the gene is created
-        public List<HediffGiver_Event> congenitalHediffs;
+        [CanBeNull] public List<HediffGiver_Event> congenitalHediffs;
 
-        public List<JoyGiverFactor> joyGiverChanceFactors;
-        public List<BuildableDef> addDesignators;
-        public List<RenderNodeModifier> renderNodeModifiers;
-        public List<FactionDef> disableHostilityFromFactions;
-        public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
+        [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
+        [CanBeNull] public List<BuildableDef> addDesignators;
+        [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
+        [CanBeNull] public List<FactionDef> disableHostilityFromFactions;
+        [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
+        [CanBeNull] public List<StartingItemOption> startingItems;
 
-        [NoTranslate] public string extraIconPath;
+        [NoTranslate][CanBeNull] public string extraIconPath;
 
         public GeneDefExt()
         {
@@ -186,12 +194,14 @@ namespace XylXenos.Genes
                 yield return configError;
 
             if (!permanentHediffs.NullOrEmpty() && !typeof(AddHediff).IsAssignableFrom(geneClass))
-                yield return "permanentHediffs exist but geneClass is not AddHediff or subclass thereof";
+                yield return "permanentHediffs set but geneClass is not AddHediff or subclass thereof";
 
             if (geneType != null && !typeof(GeneExt).IsAssignableFrom(geneClass))
                 yield return "geneType set but geneClass is not GeneExt or subclass thereof";
             if (gender != null && !typeof(GeneExt).IsAssignableFrom(geneClass))
                 yield return "gender set but geneClass is not GeneExt or subclass thereof";
+            if (!startingItems.NullOrEmpty() && !typeof(GeneExt).IsAssignableFrom(geneClass))
+                yield return "startingItems set but geneClass is not GeneExt or subclass thereof";
         }
 
         #region Implementation

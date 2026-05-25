@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace XylXenos.Genes
         [MustTranslate] public string foodLabel;
     }
 
-    public class DietDependency : GeneExt, IGene_HediffSource, IStartingItemSource, INotificationListener
+    public class DietDependency : GeneExt, IGene_HediffSource, INotificationListener
     {
         public GeneDefExtension_DietDependency DietDependencyDefExt => def.GetModExtension<GeneDefExtension_DietDependency>();
 
@@ -182,19 +183,20 @@ namespace XylXenos.Genes
             manager.Register(NotificationEvent.PostSatisfyGenes, pawn, Reset);
         }
 
-        public ThingDefCount? GetStartingItem()
+        public override IEnumerable<ThingDefCount> GetStartingItems()
         {
             if (DietDependencyDefExt?.startingFoodNutrition == null)
-                return null;
+                yield break;
 
             var foodDef = DefDatabase<ThingDef>.AllDefsListForReading.Where(GoodStartingFood).RandomElement();
             if (foodDef == null)
-                return null;
+                yield break;
 
             float nutritionNeeded = DietDependencyDefExt.startingFoodNutrition.Value.RandomInRange;
             int itemsNeeded = Mathf.CeilToInt(nutritionNeeded / foodDef.GetStatBase(StatDefOf.Nutrition));
 
-            return new(foodDef, Mathf.Clamp(itemsNeeded, 1, foodDef.stackLimit));
+            yield return new(foodDef, Mathf.Clamp(itemsNeeded, 1, foodDef.stackLimit));
+            yield break;
 
             bool GoodStartingFood(ThingDef thingDef)
             {

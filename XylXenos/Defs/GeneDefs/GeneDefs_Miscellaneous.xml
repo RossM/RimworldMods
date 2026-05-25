@@ -61,6 +61,13 @@
       <li>Enables being milked</li>
     </customEffectDescriptions>
     <gender>Female</gender>
+    <startingItems>
+      <li>
+        <item>Milk</item>
+        <chance>0.2</chance>
+        <count>5~10</count>
+      </li>
+    </startingItems>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_Hyperlactation">
         <item>Milk</item>
@@ -72,11 +79,6 @@
           <li>XylMilked_Masochist</li>
           <li>XylMilkedMood_Masochist</li>
         </milkedThoughts>
-      </li>
-      <li Class="XylXenos.DefModExtension_StartingItemSource">
-        <item>Milk</item>
-        <chance>0.2</chance>
-        <count>5~10</count>
       </li>
     </modExtensions>
   </XylXenos.Genes.GeneDefExt>
@@ -157,7 +159,7 @@
     </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.Torpor</geneClass>
     <defName>XylTorpor</defName>
     <label>torpor</label>
@@ -176,7 +178,7 @@
         <severityLossPerDayPerDegree>0.02</severityLossPerDayPerDegree>
       </li>
     </modExtensions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>
     <defName>XylIndustrious</defName>
@@ -262,7 +264,7 @@
     </statOffsets>
   </GeneDef>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylPetrification</defName>
     <label>petrification</label>
     <description>Carriers of this gene have a chance to develop a disease named petrification. Petrification slowly replaces tissues throughout the body with stone. The disease is incurable, but progress can be slowed with medical treatment, and the affected tissues can be removed surgically.</description>
@@ -272,14 +274,14 @@
     <displayOrderInCategory>210</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <prerequisite>XylLithoid</prerequisite>
-    <modExtensions>
-      <li Class="XylXenos.DefModExtension_StartingItemSource">
+    <startingItems>
+      <li>
         <item>XylSoftener</item>
         <chance>0.05</chance>
         <count>5~10</count>
       </li>
-    </modExtensions>
-  </GeneDef>
+    </startingItems>
+  </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>
     <defName>XylLearning_Focused</defName>

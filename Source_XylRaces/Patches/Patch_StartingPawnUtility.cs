@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
 using TranspilerUtil;
 using Verse;
+using XylXenos.Genes;
 
 namespace XylXenos.Patches
 {
@@ -55,11 +57,8 @@ namespace XylXenos.Patches
 
         public static void GetExtraStartingItems(Pawn pawn, List<ThingDefCount> items)
         {
-            foreach (var startingItemSource in pawn.EverythingOfType<IStartingItemSource>())
+            foreach (var item in pawn.genes.GenesListForReading.Where(gene => gene.Active).OfType<GeneExt>().SelectMany(gene => gene.GetStartingItems()))
             {
-                if (startingItemSource.GetStartingItem() is not { } item)
-                    continue;
-
                 items.Add(item);
 
                 if (items.Count >= 2)

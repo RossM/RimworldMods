@@ -2,6 +2,8 @@
 using System.Linq;
 using RimWorld;
 using Verse;
+using XylXenos.Genes;
+using Psycast = RimWorld.Psycast;
 
 namespace XylXenos
 {
@@ -33,9 +35,9 @@ namespace XylXenos
             string defName = $"{template.defName}_{def.defName}";
             GeneDef geneDef;
             if (hotReload)
-                geneDef = DefDatabase<GeneDef>.GetNamed(defName, errorOnFail: false) ?? new GeneDef();
+                geneDef = DefDatabase<GeneDef>.GetNamed(defName, errorOnFail: false) ?? new GeneDefExt();
             else
-                geneDef = new GeneDef();
+                geneDef = new GeneDefExt();
 
             geneDef.modContentPack = template.modContentPack;
 

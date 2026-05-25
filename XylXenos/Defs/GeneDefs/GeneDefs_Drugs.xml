@@ -72,13 +72,13 @@
       </li>
     </suppressedTraits>
     <showInDrugPolicies>true</showInDrugPolicies>
-    <modExtensions>
-      <li Class="XylXenos.DefModExtension_StartingItemSource">
+    <startingItems>
+      <li>
         <item>XylAtlasite</item>
         <chance>0.02</chance>
         <count>2~5</count>
       </li>
-    </modExtensions>
+    </startingItems>
   </XylXenos.Genes.GeneDefExt>
 
 </Defs>

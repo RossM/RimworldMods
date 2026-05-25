@@ -36,12 +36,12 @@
         <countToAffect>2</countToAffect>
       </li>
     </congenitalHediffs>
-    <modExtensions>
-      <li Class="XylXenos.DefModExtension_StartingItemSource">
+    <startingItems>
+      <li>
         <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
         <chance>0.2</chance>
       </li>
-    </modExtensions>
+    </startingItems>
     <customEffectDescriptions>
       <li>Sight: use hearing if higher</li>
     </customEffectDescriptions>
