@@ -25,6 +25,8 @@ namespace XylXenos.Genes
         public GeneDefExtension_BonusGene BonusGeneDefExt => def.GetModExtension<GeneDefExtension_BonusGene>();
 
         private bool IsXenogene => pawn.genes.Xenogenes.Contains(this);
+        private GeneType GeneType => IsXenogene ? GeneType.Xenogene : GeneType.Endogene;
+
         public List<Gene> addedGenes = [];
 
         public override void ExposeData()
@@ -86,6 +88,14 @@ namespace XylXenos.Genes
                 return 0.0f;
             if (!BonusGeneDefExt.biostatMet.Includes(geneDef.biostatMet))
                 return 0.0f;
+
+            if (geneDef is GeneDefExt geneDefExt)
+            {
+                if (geneDefExt.gender != null && geneDefExt.gender != pawn.gender)
+                    return 0.0f;
+                if (geneDefExt.geneType != null && geneDefExt.geneType != GeneType)
+                    return 0.0f;
+            }
 
             // Aptitude-giving genes must not apply to only disabled skills
             if (!geneDef.aptitudes.NullOrEmpty() && geneDef.aptitudes.All(aptitude => pawn.skills.GetSkill(aptitude.skill).TotallyDisabled))
