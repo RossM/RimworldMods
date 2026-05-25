@@ -7,7 +7,7 @@ namespace XylXenos
 {
     public class GeneSet(Pawn pawn) : INotificationListener
     {
-        public static PawnTracker<GeneSet> Tracker = new(Make);
+        public static readonly PawnTracker<GeneSet> Tracker = new(Make);
         public Pawn pawn = pawn;
 
         public float bodySizeFactor = 1f;

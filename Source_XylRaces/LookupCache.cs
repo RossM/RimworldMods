@@ -6,32 +6,33 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedFromXml]
-    public class CompProperties_PawnLookupCache : CompProperties
+    public class LookupCache(Pawn pawn) : INotificationListener
     {
-        public CompProperties_PawnLookupCache()
+        public static readonly PawnTracker<LookupCache> Tracker = new(Make);
+        public Pawn pawn = pawn;
+
+        private readonly Dictionary<Type, IList> genesByType = new();
+        private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
+        private readonly Dictionary<Type, List<Gene>> genesByModExt = new();
+
+        private readonly Dictionary<Type, IList> hediffsByType = new();
+        private readonly Dictionary<HediffDef, List<Hediff>> hediffsByDef = new();
+        private readonly Dictionary<Type, List<Hediff>> hediffsByModExt = new();
+        private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
+
+        private static LookupCache Make(Pawn pawn)
         {
-            compClass = typeof(CompPawn_LookupCache);
+            var cache = new LookupCache(pawn);
+            cache.RegisterWith(NotificationManager.Instance);
+            return cache;
         }
-    }
-
-    public class CompPawn_LookupCache : ThingComp, INotificationListener
-    {
-        [Unsaved] private readonly Dictionary<Type, IList> genesByType = new();
-        [Unsaved] private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
-        [Unsaved] private readonly Dictionary<Type, List<Gene>> genesByModExt = new();
-
-        [Unsaved] private readonly Dictionary<Type, IList> hediffsByType = new();
-        [Unsaved] private readonly Dictionary<HediffDef, List<Hediff>> hediffsByDef = new();
-        [Unsaved] private readonly Dictionary<Type, List<Hediff>> hediffsByModExt = new();
-        [Unsaved] private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
 
         public IEnumerable<T> GetGenesOfType<T>()
         {
             if (genesByType.TryGetValue(typeof(T), out IList value))
                 return (List<T>)value;
 
-            value = ((Pawn)parent).genes?.GenesListForReading.OfType<T>().ToList() ?? [];
+            value = pawn.genes?.GenesListForReading.OfType<T>().ToList() ?? [];
             genesByType.Add(typeof(T), value);
             return (List<T>)value;
         }
@@ -41,7 +42,7 @@ namespace XylXenos
             if (genesByDef.TryGetValue(def, out List<Gene> value))
                 return value;
 
-            value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def == def).OrderByDescending(g => g.Active).ToList() ?? [];
+            value = pawn.genes?.GenesListForReading.Where(g => g.def == def).OrderByDescending(g => g.Active).ToList() ?? [];
             genesByDef.Add(def, value);
             return value;
         }
@@ -51,7 +52,7 @@ namespace XylXenos
             if (genesByModExt.TryGetValue(typeof(T), out List<Gene> value))
                 return value;
 
-            value = ((Pawn)parent).genes?.GenesListForReading.Where(g => g.def.modExtensions?.OfType<T>().Any() == true).ToList() ?? [];
+            value = pawn.genes?.GenesListForReading.Where(g => g.def.modExtensions?.OfType<T>().Any() == true).ToList() ?? [];
             genesByModExt.Add(typeof(T), value);
             return value;
         }
@@ -68,7 +69,7 @@ namespace XylXenos
             if (hediffsByType.TryGetValue(typeof(T), out IList value))
                 return (List<T>)value;
 
-            value = ((Pawn)parent).health.hediffSet.hediffs.OfType<T>().ToList();
+            value = pawn.health.hediffSet.hediffs.OfType<T>().ToList();
             hediffsByType.Add(typeof(T), value);
             return (List<T>)value;
         }
@@ -78,7 +79,7 @@ namespace XylXenos
             if (hediffsByDef.TryGetValue(def, out List<Hediff> value))
                 return value;
 
-            value = ((Pawn)parent).health.hediffSet.hediffs.Where(g => g.def == def).ToList();
+            value = pawn.health.hediffSet.hediffs.Where(g => g.def == def).ToList();
             hediffsByDef.Add(def, value);
             return value;
         }
@@ -88,7 +89,7 @@ namespace XylXenos
             if (hediffsByModExt.TryGetValue(typeof(T), out List<Hediff> value))
                 return value;
 
-            value = ((Pawn)parent).health.hediffSet.hediffs.Where(g => g.def.modExtensions?.OfType<T>().Any() == true).ToList();
+            value = pawn.health.hediffSet.hediffs.Where(g => g.def.modExtensions?.OfType<T>().Any() == true).ToList();
             hediffsByModExt.Add(typeof(T), value);
             return value;
         }
@@ -98,7 +99,7 @@ namespace XylXenos
             if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))
                 return value;
 
-            value = ((Pawn)parent).health.hediffSet.hediffs.OfType<HediffWithComps>().Where(g => g.comps?.OfType<T>().Any() == true)
+            value = pawn.health.hediffSet.hediffs.OfType<HediffWithComps>().Where(g => g.comps?.OfType<T>().Any() == true)
                 .ToList();
             hediffsByComp.Add(typeof(T), value);
             return value;
@@ -114,8 +115,8 @@ namespace XylXenos
 
         public void RegisterWith(NotificationManager manager)
         {
-            manager.Register(NotificationEvent.PostGenesChanged, parent, Notify_GenesChanged);
-            manager.Register(NotificationEvent.PostHediffsChanged, parent, Notify_HediffsChanged);
+            manager.Register(NotificationEvent.PostGenesChanged, pawn, Notify_GenesChanged);
+            manager.Register(NotificationEvent.PostHediffsChanged, pawn, Notify_HediffsChanged);
         }
     }
 }

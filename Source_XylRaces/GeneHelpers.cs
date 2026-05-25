@@ -17,7 +17,7 @@ public static class GeneHelpers
         if (pawn.genes == null)
             return Enumerable.Empty<Gene>();
 
-        return pawn.GetComp<CompPawn_LookupCache>()?.GetGenesWithDef(def);
+        return pawn.LookupCache().GetGenesWithDef(def);
     }
 
     // This is faster than pawn.genes.HasActiveGene(def) because it caches
@@ -43,7 +43,7 @@ public static class GeneHelpers
         if (pawn.genes == null)
             return Enumerable.Empty<T>();
 
-        return pawn.GetComp<CompPawn_LookupCache>()?.GetGenesOfType<T>();
+        return pawn.LookupCache().GetGenesOfType<T>();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -104,7 +104,7 @@ public static class GeneHelpers
         if (pawn.genes == null)
             return Enumerable.Empty<Gene>();
 
-        return pawn.GetComp<CompPawn_LookupCache>()?.GetGenesWithModExtension<T>();
+        return pawn.LookupCache().GetGenesWithModExtension<T>();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

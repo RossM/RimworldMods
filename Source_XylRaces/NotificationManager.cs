@@ -207,6 +207,7 @@ namespace XylXenos
             foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
                 CallRegistrationHandlers(pawn);
 
+            LookupCache.Tracker.RegisterWith(this);
             GeneSet.Tracker.RegisterWith(this);
 
             foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
