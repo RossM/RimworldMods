@@ -130,21 +130,27 @@ public static class FoodHelpers
             return false;
         }
 
-        foreach (var thoughtOverride in eater.GeneSet().ingestionThoughtOverrides)
+        foreach (var ext in eater.ActiveGeneDefExtensionsOfType<GeneDefExtension_IngestionThoughtOverride>())
         {
-            if (thoughtOverride.thoughts.NullOrEmpty())
+            if (ext.thoughtOverrides == null)
                 continue;
 
-            if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
-                continue;
-
-            if (!thoughtOverride.meatSources.NullOrEmpty() &&
-                !thoughtOverride.meatSources.Contains(meatSourceCategory))
-                continue;
-
-            if (thoughtOverride.thoughts.Any(t => t == thought))
+            foreach (var thoughtOverride in ext.thoughtOverrides)
             {
-                return true;
+                if (thoughtOverride.thoughts.NullOrEmpty())
+                    continue;
+
+                if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
+                    continue;
+
+                if (!thoughtOverride.meatSources.NullOrEmpty() &&
+                    !thoughtOverride.meatSources.Contains(meatSourceCategory))
+                    continue;
+
+                if (thoughtOverride.thoughts.Any(t => t == thought))
+                {
+                    return true;
+                }
             }
         }
 

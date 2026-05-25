@@ -8,7 +8,7 @@
     <displayPriorityInXenotype>275</displayPriorityInXenotype>
   </GeneCategoryDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylCarnivoreStomach</defName>
     <label>carnivore stomach</label>
     <labelShortAdj>carnivorous</labelShortAdj>
@@ -29,21 +29,25 @@
     <statOffsets>
       <XylRawMeatFoodPoisonChanceOffset>-0.05</XylRawMeatFoodPoisonChanceOffset>
     </statOffsets>
-    <ingestionThoughtOverrides>
-      <li>
-        <meatSources>
-          <li>Undefined</li>
-          <li>Insect</li>
-          <li>Humanlike</li>
-        </meatSources>
-        <thoughts>
-          <li>AteRawFood</li>
-        </thoughts>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_IngestionThoughtOverride">
+        <thoughtOverrides>
+          <li>
+            <meatSources>
+              <li>Undefined</li>
+              <li>Insect</li>
+              <li>Humanlike</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </thoughtOverrides>
       </li>
-    </ingestionThoughtOverrides>
-  </XylXenos.Genes.GeneDefExt>
+    </modExtensions>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylHerbivoreStomach</defName>
     <label>herbivore stomach</label>
     <labelShortAdj>herbivorous</labelShortAdj>
@@ -64,17 +68,21 @@
     <statOffsets>
       <XylRawNonMeatFoodPoisonChanceOffset>-0.05</XylRawNonMeatFoodPoisonChanceOffset>
     </statOffsets>
-    <ingestionThoughtOverrides>
-      <li>
-        <meatSources>
-          <li>NotMeat</li>
-        </meatSources>
-        <thoughts>
-          <li>AteRawFood</li>
-        </thoughts>
+    <modExtensions>
+      <li Class="XylXenos.Genes.GeneDefExtension_IngestionThoughtOverride">
+        <thoughtOverrides>
+          <li>
+            <meatSources>
+              <li>NotMeat</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </thoughtOverrides>
       </li>
-    </ingestionThoughtOverrides>
-  </XylXenos.Genes.GeneDefExt>
+    </modExtensions>
+  </GeneDef>
 
   <XylXenos.Genes.GeneDefExt>
     <defName>XylFungusEater</defName>
@@ -97,7 +105,7 @@
     </addDesignators>
   </XylXenos.Genes.GeneDefExt>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <geneClass>XylXenos.Genes.DietDependency</geneClass>
     <defName>XylMeatDependence</defName>
     <label>meat dependence</label>
@@ -109,16 +117,6 @@
     <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MeatDependence</iconPath>
     <minAgeActive>13</minAgeActive>
-    <ingestionThoughtOverrides>
-      <li>
-        <meatSources>
-          <li>Undefined</li>
-        </meatSources>
-        <thoughts>
-          <li>AteRawFood</li>
-        </thoughts>
-      </li>
-    </ingestionThoughtOverrides>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_DietDependency">
         <hediffDef>XylGeneticMeatNeed</hediffDef>
@@ -133,7 +131,19 @@
         <startingFoodType>Meat</startingFoodType>
         <startingFoodNutrition>2~4</startingFoodNutrition>
       </li>
+      <li Class="XylXenos.Genes.GeneDefExtension_IngestionThoughtOverride">
+        <thoughtOverrides>
+          <li>
+            <meatSources>
+              <li>Undefined</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </thoughtOverrides>
+      </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
 </Defs>

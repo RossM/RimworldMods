@@ -372,7 +372,6 @@ public static class GeneHelpers
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static GeneSet GeneSet(this Pawn pawn)
     {
         return XylXenos.GeneSet.Tracker.Get(pawn);

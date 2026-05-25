@@ -10,7 +10,7 @@ namespace XylXenos.Patches
     public static class Patch_GenHostility
     {
         // Note: This patch is performance-sensitive
-        [Feature(nameof(GeneDefExt.disableHostilityFromFactions))]
+        [Feature(typeof(GeneDefExtension_HostilityOverride))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
         public static bool HostileTo_Prefix(Thing a, Thing b, out bool __result)
@@ -42,7 +42,8 @@ namespace XylXenos.Patches
             if (!manager.HasAnyOverride(pawn.Faction, pawn2.Faction))
                 return false;
 
-            return pawn.IsColonyAnimal || pawn.GeneSet().disableHostilityFromFactions.Any(factionDef => factionDef == pawn2.Faction?.def);
+            return pawn.IsColonyAnimal || pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_HostilityOverride>()
+                .Any(defExt => defExt.disableHostilityFromFaction == pawn2.Faction?.def);
         }
     }
 }

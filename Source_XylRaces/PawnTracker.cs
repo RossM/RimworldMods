@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Verse;
 
 namespace XylXenos;
@@ -9,7 +8,6 @@ public class PawnTracker<T>(Func<Pawn, T> makeFunc) : INotificationListener
 {
     private readonly Dictionary<int, T> data = new();
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T Get(Pawn pawn)
     {
         if (!data.TryGetValue(pawn.thingIDNumber, out T result))
