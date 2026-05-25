@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
 using TranspilerUtil;
 

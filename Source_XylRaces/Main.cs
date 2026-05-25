@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
 using TranspilerUtil;
 using UnityEngine;
 using Verse;
-using Exception = System.Exception;
 
 namespace XylXenos
 {
@@ -60,7 +57,8 @@ namespace XylXenos
                         Log.Warning($"{type.Name}::{method.Name} has [Feature] but no Harmony attribute");
 
                     if (hasInfixPatch != (hasInfixPrefix || hasInfixPostfix))
-                        Log.Warning($"{type.Name}::{method.Name} has should have both [InfixPatch] and one of [InfixPrefix] or [InfixPostfix]");
+                        Log.Warning(
+                            $"{type.Name}::{method.Name} has should have both [InfixPatch] and one of [InfixPrefix] or [InfixPostfix]");
 
                     if ((hasPrefix || hasInfixPrefix) && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
                         Log.Warning($"{type.Name}::{method.Name} should be named with _Prefix");
@@ -78,6 +76,7 @@ namespace XylXenos
                         if (method.ReturnType.IsVoid() && resultParameter != null)
                             Log.Warning($"{type.Name}::{method.Name} returns void but uses __result");
                     }
+
                     if (hasPostfix || hasInfixPostfix)
                     {
                         if (resultParameter is { ParameterType.IsByRef: false })

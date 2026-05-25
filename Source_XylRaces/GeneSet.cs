@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Verse;
 using XylXenos.Genes;
@@ -8,6 +7,7 @@ namespace XylXenos
 {
     public class GeneSet(Pawn pawn) : INotificationListener
     {
+        public static PawnTracker<GeneSet> Tracker = new(Make);
         public Pawn pawn = pawn;
 
         public float bodySizeFactor = 1f;
@@ -19,8 +19,6 @@ namespace XylXenos
         public List<JoyGiverFactor> joyGiverChanceFactors = [];
         public List<BuildableDef> addDesignators = [];
         public List<RenderNodeModifier> renderNodeModifiers = [];
-
-        public static PawnTracker<GeneSet> Tracker = new(Make);
 
         private static GeneSet Make(Pawn pawn)
         {

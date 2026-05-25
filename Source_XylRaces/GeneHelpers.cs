@@ -6,7 +6,6 @@ using System.Text;
 using RimWorld;
 using Verse;
 using XylXenos.Genes;
-using XylXenos.Patches;
 
 namespace XylXenos;
 

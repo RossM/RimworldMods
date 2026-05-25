@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using RimWorld;
 using Verse;
 
 namespace XylXenos;
@@ -20,12 +19,6 @@ public class PawnTracker<T>(Func<Pawn, T> makeFunc) : INotificationListener
         return result;
     }
 
-    public void RegisterWith(NotificationManager manager)
-    {
-        manager.Register(NotificationEvent.PostDiscard, null, Notify_PawnDiscarded);
-        manager.Register(NotificationEvent.PostGameDispose, null, Notify_PostGameDispose);
-    }
-
     private void Notify_PostGameDispose()
     {
         data.Clear();
@@ -34,5 +27,11 @@ public class PawnTracker<T>(Func<Pawn, T> makeFunc) : INotificationListener
     private void Notify_PawnDiscarded(Thing thing)
     {
         data.Remove(thing.thingIDNumber);
+    }
+
+    public void RegisterWith(NotificationManager manager)
+    {
+        manager.Register(NotificationEvent.PostDiscard, null, Notify_PawnDiscarded);
+        manager.Register(NotificationEvent.PostGameDispose, null, Notify_PostGameDispose);
     }
 }

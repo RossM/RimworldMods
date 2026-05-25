@@ -177,6 +177,11 @@ namespace XylXenos.Genes
             return DefExt?.hediffDef == hediffDef;
         }
 
+        public void RegisterWith(NotificationManager manager)
+        {
+            manager.Register(NotificationEvent.PostSatisfyGenes, pawn, Reset);
+        }
+
         public ThingDefCount? GetStartingItem()
         {
             if (DefExt?.startingFoodNutrition == null)
@@ -199,11 +204,6 @@ namespace XylXenos.Genes
                     return false;
                 return true;
             }
-        }
-
-        public void RegisterWith(NotificationManager manager)
-        {
-            manager.Register(NotificationEvent.PostSatisfyGenes, pawn, Reset);
         }
 
         // TODO: Need to handle satisfying the dependency for pawns in caravans. See Caravan_NeedsTracker.TrySatisfyChemicalNeed

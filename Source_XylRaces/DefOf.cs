@@ -12,6 +12,11 @@ namespace XylXenos
 
         #endregion
 
+        static DefOf()
+        {
+            DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));
+        }
+
         #region StatDefs
 
         public static StatDef XylCookedAnimalProductNutritionFactor;
@@ -49,10 +54,5 @@ namespace XylXenos
         public static JobDef XylTakeShower;
 
         #endregion
-
-        static DefOf()
-        {
-            DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));
-        }
     }
 }

@@ -86,14 +86,6 @@ namespace XylXenos.Genes
             }
         }
 
-        #region Implementation
-
-        private List<string> customEffectDescriptionsInternal;
-
-        private Texture2D cachedExtraIcon;
-
-        #endregion
-
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
         {
             foreach (var stat in base.SpecialDisplayStats(req))
@@ -160,5 +152,13 @@ namespace XylXenos.Genes
             if (!permanentHediffs.NullOrEmpty() && !typeof(AddHediff).IsAssignableFrom(geneClass))
                 yield return "permanentHediffs exist but geneClass is not AddHediff or subclass thereof";
         }
+
+        #region Implementation
+
+        private List<string> customEffectDescriptionsInternal;
+
+        private Texture2D cachedExtraIcon;
+
+        #endregion
     }
 }

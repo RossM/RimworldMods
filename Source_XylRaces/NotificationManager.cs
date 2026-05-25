@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using LudeonTK;
 using RimWorld;
-using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
@@ -20,6 +19,7 @@ namespace XylXenos
     {
         PreDamageTaken,
         PostGenesChanged,
+
         // PostHediffsChanged and PostHediffStateChange are generally both called when a pawn's hediffs change, but
         // PostHediffsChanged is called as soon as the HediffSet is updated, while PostHediffStateChange is called
         // slightly later when the game is checking for the results of the changes. I'm not sure if having both is

@@ -22,10 +22,10 @@ namespace XylXenos.Genes
     public class Flight : Gene, INotificationListener
     {
         public GeneDefExtension_Flight DefExt => def.GetModExtension<GeneDefExtension_Flight>();
-        public bool autoFly = true;
-        public bool autoFlyDrafted = true;
 
         public Texture2D ExtraIcon => ((GeneDefExt)def).ExtraIcon;
+        public bool autoFly = true;
+        public bool autoFlyDrafted = true;
 
         [Unsaved] private bool wasFlying;
 
