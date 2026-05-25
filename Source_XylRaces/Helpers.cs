@@ -34,6 +34,7 @@ namespace XylXenos
 
     public static class Helpers
     {
+        // ReSharper disable once UnusedMember.Global
         public static float GetStatBase(this ThingDef thingDef, StatDef statDef)
         {
             return thingDef.statBases.FirstOrDefault(s => s.stat == statDef)?.value ?? statDef.defaultBaseValue;

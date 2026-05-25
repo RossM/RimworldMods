@@ -8,7 +8,7 @@ namespace XylXenos
     {
         public override bool ShouldRemove => Gene is not { Active: true };
 
-        public GeneExt Gene => cachedGene ??= pawn.GenesOfType<GeneExt>().FirstOrDefault(gene => gene.CausesHediff(def));
+        public GeneExt Gene => cachedGene ??= pawn.ActiveGenesOfType<GeneExt>().FirstOrDefault(gene => gene.CausesHediff(def));
         [Unsaved] private GeneExt cachedGene;
 
         public override float Severity

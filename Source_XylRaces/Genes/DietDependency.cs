@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
-using RimWorld;
-using UnityEngine;
+﻿using RimWorld;
 using Verse;
 
 namespace XylXenos.Genes

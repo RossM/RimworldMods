@@ -136,6 +136,9 @@ namespace XylXenos.Genes
 
         private IEnumerable<Hediff> GetLinkedHediffs()
         {
+            if (DefExt.permanentHediffs.NullOrEmpty())
+                return Enumerable.Empty<Hediff>();
+
             HashSet<HediffDef> defs = [.. DefExt.permanentHediffs.Select(hediffGiver => hediffGiver.hediff)];
             IEnumerable<Hediff> hediffs = pawn.health.hediffSet.hediffs.Where(hediff => defs.Contains(hediff.def));
             return hediffs;

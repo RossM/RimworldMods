@@ -99,14 +99,14 @@ namespace XylXenos.Patches
             foreach (var def in pawn.ActiveDefExts())
             {
                 if (def.slaveRebellionMtbFactor != 1)
-                    stringBuilder.AppendLine($"{def.parent.LabelCap}: x{def.slaveRebellionMtbFactor.ToStringPercent()}");
+                    stringBuilder.AppendLine($"{def.parent?.LabelCap ?? "Genes".Translate().CapitalizeFirst()}: x{def.slaveRebellionMtbFactor.ToStringPercent()}");
             }
 
             if (initiateSlaveRebellionMtbDays < 0)
             {
                 var def = pawn.ActiveDefExts().OrderBy(def => def.slaveRebellionThresholdDays).FirstOrDefault();
                 if (def is { slaveRebellionThresholdDays: < float.MaxValue })
-                    stringBuilder.AppendLine($"{def.parent.LabelCap}: {"XylDocileThresholdReached".Translate(def.slaveRebellionThresholdDays)}");
+                    stringBuilder.AppendLine($"{def.parent?.LabelCap ?? "Genes".Translate().CapitalizeFirst()}: {"XylDocileThresholdReached".Translate(def.slaveRebellionThresholdDays)}");
             }
 
             string period = initiateSlaveRebellionMtbDays < 0

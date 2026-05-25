@@ -10,30 +10,27 @@ public static class HediffHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> HediffsOfType<T>(this Pawn pawn) where T : class
     {
-        return pawn.LookupCache().GetHediffsOfType<T>() ??
-               pawn.health.hediffSet.hediffs.OfType<T>();
+        return pawn.LookupCache().GetHediffsOfType<T>();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<HediffWithComps> HediffsWithComp<T>(this Pawn pawn) where T : class
     {
-        return pawn.LookupCache().GetHediffsWithComp<T>() ??
-               pawn.health.hediffSet.hediffs.OfType<HediffWithComps>().Where(h => h.comps.OfType<T>().Any());
+        return pawn.LookupCache().GetHediffsWithComp<T>();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    // ReSharper disable once UnusedMember.Global
     public static IEnumerable<Hediff> HediffsWithDef(this Pawn pawn, HediffDef def)
     {
-        return pawn.LookupCache().GetHediffsWithDef(def) ??
-               pawn.health.hediffSet.hediffs.Where(h => h.def == def);
+        return pawn.LookupCache().GetHediffsWithDef(def);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     // ReSharper disable once UnusedMember.Global
     public static IEnumerable<Hediff> HediffsWithModExtension<T>(this Pawn pawn) where T : class
     {
-        return pawn.LookupCache().GetHediffsWithModExtension<T>() ??
-               pawn.health.hediffSet.hediffs.Where(h => h.def.modExtensions?.OfType<T>().Any() == true);
+        return pawn.LookupCache().GetHediffsWithModExtension<T>();
     }
 
     public static Hediff GetLactationHediff(HediffSet hediffSet)

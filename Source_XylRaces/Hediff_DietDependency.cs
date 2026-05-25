@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 using Verse.AI;
-using XylXenos.Genes;
 
 namespace XylXenos
 {
@@ -26,8 +25,6 @@ namespace XylXenos
         }
 
         public bool ShouldSatisfy => Severity >= def.stages[(int)Stages.Craving].minSeverity;
-
-        public new GeneExt Gene => (GeneExt)base.Gene;
 
         public float SeverityReductionPerNutrition => Gene.DefExt.dietDependency!.severityReductionPerNutrition;
 
