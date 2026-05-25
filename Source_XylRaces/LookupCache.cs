@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Verse;
 
 namespace XylXenos
@@ -26,6 +27,7 @@ namespace XylXenos
             return cache;
         }
 
+        [NotNull]
         public IEnumerable<T> GetGenesOfType<T>()
         {
             if (genesByType.TryGetValue(typeof(T), out IList value))
@@ -36,6 +38,7 @@ namespace XylXenos
             return (List<T>)value;
         }
 
+        [NotNull]
         public List<Gene> GetGenesWithDef(GeneDef def)
         {
             if (genesByDef.TryGetValue(def, out List<Gene> value))
@@ -52,6 +55,7 @@ namespace XylXenos
             genesByType.Clear();
         }
 
+        [NotNull]
         public IEnumerable<T> GetHediffsOfType<T>()
         {
             if (hediffsByType.TryGetValue(typeof(T), out IList value))
@@ -62,6 +66,7 @@ namespace XylXenos
             return (List<T>)value;
         }
 
+        [NotNull]
         public List<Hediff> GetHediffsWithDef(HediffDef def)
         {
             if (hediffsByDef.TryGetValue(def, out List<Hediff> value))
@@ -72,6 +77,7 @@ namespace XylXenos
             return value;
         }
 
+        [NotNull]
         public IEnumerable<Hediff> GetHediffsWithModExtension<T>() where T : class
         {
             if (hediffsByModExt.TryGetValue(typeof(T), out List<Hediff> value))
@@ -82,6 +88,7 @@ namespace XylXenos
             return value;
         }
 
+        [NotNull]
         public IEnumerable<HediffWithComps> GetHediffsWithComp<T>() where T : class
         {
             if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))

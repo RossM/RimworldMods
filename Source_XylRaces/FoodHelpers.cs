@@ -34,9 +34,9 @@ public static class FoodHelpers
         if ((flags & (FoodTypeFlags.Meat | FoodTypeFlags.Corpse)) != 0)
         {
             var foodType = FoodType.Meat;
-            if (foodDef.ingestible?.sourceDef.race.Humanlike == true)
+            if (foodDef.ingestible?.sourceDef?.race?.Humanlike == true)
                 foodType |= FoodType.Humanlike;
-            if (foodDef.ingestible?.sourceDef.race.FleshType == FleshTypeDefOf.Insectoid)
+            if (foodDef.ingestible?.sourceDef?.race?.FleshType == FleshTypeDefOf.Insectoid)
                 foodType |= FoodType.Insect;
             return foodType;
         }
@@ -159,9 +159,9 @@ public static class FoodHelpers
     {
         // Check if this food satisfies a diet dependency
         float extra = 0f;
-        foreach (var gene in eater.ActiveGenesOfType<DietDependency>())
+        foreach (var hediff in eater.HediffsOfType<Hediff_DietDependency>())
         {
-            if (gene.ValidateFood(foodSource) && ((Hediff_DietDependency)gene.LinkedHediff).ShouldSatisfy)
+            if (hediff.ValidateFood(foodSource) && hediff.ShouldSatisfy)
                 extra += 100f;
         }
 

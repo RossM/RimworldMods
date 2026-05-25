@@ -98,7 +98,6 @@
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
-    <geneClass>XylXenos.Genes.DietDependency</geneClass>
     <defName>XylMeatDependence</defName>
     <label>meat dependence</label>
     <labelShortAdj>meat-dependent</labelShortAdj>
@@ -119,8 +118,19 @@
         </thoughts>
       </li>
     </ingestionThoughtOverrides>
+    <allowMutants>false</allowMutants>
+    <permanentHediffs>
+      <li>
+        <hediff>XylGeneticMeatNeed</hediff>
+      </li>
+    </permanentHediffs>
+    <startingItems>
+      <li>
+        <foodType>Meat</foodType>
+        <count>20~40</count>
+      </li>
+    </startingItems>
     <dietDependency>
-      <hediffDef>XylGeneticMeatNeed</hediffDef>
       <foodLabel>raw meat</foodLabel>
       <foodKind>Meat</foodKind>
       <rawOnly>true</rawOnly>
@@ -129,8 +139,6 @@
       nutrition requirement of 1.44, or 35% of their diet.
       -->
       <severityReductionPerNutrition>1.0</severityReductionPerNutrition>
-      <startingFoodType>Meat</startingFoodType>
-      <startingFoodNutrition>2~4</startingFoodNutrition>
     </dietDependency>
   </XylXenos.Genes.GeneDefExt>
 

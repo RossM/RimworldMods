@@ -49,6 +49,7 @@ namespace XylXenos.Genes
     public class StartingItemOption
     {
         public ThingDef item;
+        public FoodTypeFlags foodType;
         public float chance = 1.0f;
         public IntRange count = IntRange.One;
     }
@@ -62,6 +63,7 @@ namespace XylXenos.Genes
         public bool showInXenotypeCreation = true;
         public Gender? gender;
         public GeneType? geneType;
+        public bool allowMutants = true;
 
         public float bodySizeFactor = 1.0f;
         public float healthScaleFactor = 1.0f;
@@ -207,10 +209,6 @@ namespace XylXenos.Genes
                 yield return "bonusGenes set but geneClass is not BonusGene or subclass thereof";
             if (bonusGenes == null && typeof(BonusGenes).IsAssignableFrom(geneClass))
                 yield return "bonusGenes not set but geneClass is BonusGene or subclass thereof";
-            if (dietDependency != null && !typeof(DietDependency).IsAssignableFrom(geneClass))
-                yield return "dietDependency set but geneClass is not DietDependency or subclass thereof";
-            if (dietDependency == null && typeof(DietDependency).IsAssignableFrom(geneClass))
-                yield return "dietDependency not set but geneClass is DietDependency or subclass thereof";
             if (hyperlactation != null && !typeof(Hyperlactation).IsAssignableFrom(geneClass))
                 yield return "hyperlactation set but geneClass is not Hyperlactation or subclass thereof";
             if (hyperlactation == null && typeof(Hyperlactation).IsAssignableFrom(geneClass))

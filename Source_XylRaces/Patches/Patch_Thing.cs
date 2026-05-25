@@ -10,18 +10,17 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Thing))]
     public static class Patch_Thing
     {
-        [Feature(typeof(DietDependency))]
+        [Feature(nameof(GeneDefExt.dietDependency))]
         [HarmonyPrefix]
         [HarmonyPatch("IngestedCalculateAmounts")]
         public static void IngestedCalculateAmounts_Prefix(Thing __instance, Pawn ingester, ref float nutritionWanted)
         {
-            foreach (var dietDependency in ingester.ActiveGenesOfType<DietDependency>())
+            foreach (var hediff in ingester.HediffsOfType<Hediff_DietDependency>())
             {
-                if (!dietDependency.ValidateFood(__instance))
+                if (!hediff.ValidateFood(__instance))
                     continue;
 
-                float nutritionForNeed = dietDependency.NutritionWantedToSatisfy();
-                nutritionWanted = Math.Max(nutritionWanted, nutritionForNeed);
+                nutritionWanted = Math.Max(nutritionWanted, hediff.NutritionWantedToSatisfy());
             }
         }
 

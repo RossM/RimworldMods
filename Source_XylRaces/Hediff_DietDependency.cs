@@ -1,12 +1,18 @@
 ﻿using RimWorld;
+using System;
+using System.Linq;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 using XylXenos.Genes;
 
 namespace XylXenos
 {
+    // TODO: Need to handle satisfying the dependency for pawns in caravans. See Caravan_NeedsTracker.TrySatisfyChemicalNeed
+    // and CaravanInventoryUtility.TryGetBestFood.
+
     [UsedFromXml]
-    public class Hediff_DietDependency : Hediff_Genetic
+    public class Hediff_DietDependency : Hediff_Genetic, INotificationListener
     {
         enum Stages
         {
@@ -21,9 +27,9 @@ namespace XylXenos
 
         public bool ShouldSatisfy => Severity >= def.stages[(int)Stages.Craving].minSeverity;
 
-        public new DietDependency Gene => (DietDependency)base.Gene;
+        public new GeneExt Gene => (GeneExt)base.Gene;
 
-        public float SeverityReductionPerNutrition => Gene.DietDependencyInfo.severityReductionPerNutrition;
+        public float SeverityReductionPerNutrition => Gene.DefExt.dietDependency!.severityReductionPerNutrition;
 
         public override string TipStringExtra
         {
@@ -42,7 +48,7 @@ namespace XylXenos
                     var deficiencyDays = def.stages[(int)Stages.MildDeficiency].minSeverity / severityPerDay;
                     var comaDays = def.stages[(int)Stages.Coma].minSeverity / severityPerDay;
                     var deathDays = def.lethalSeverity / severityPerDay;
-                    text += "GeneDefChemicalNeedDurationDesc".Translate(Gene.DietDependencyInfo.foodLabel,
+                    text += "GeneDefChemicalNeedDurationDesc".Translate(Gene.DefExt.dietDependency!.foodLabel,
                         pawn.Named("PAWN"),
                         // ReSharper disable StringLiteralTypo
                         "PeriodDays".Translate(deficiencyDays).Named("DEFICIENCYDURATION"),
@@ -50,8 +56,8 @@ namespace XylXenos
                         "PeriodDays".Translate(deathDays).Named("DEATHDURATION")).Resolve();
                     // ReSharper restore StringLiteralTypo
                     float daysBehind = Severity / severityPerDay;
-                    float nutritionPerDay = severityPerDay * Gene.DietDependencyInfo.severityReductionPerNutrition;
-                    text += "\n\n" + "XylIngestedBehind".Translate(Gene.DietDependencyInfo.foodLabel,
+                    float nutritionPerDay = severityPerDay * Gene.DefExt.dietDependency!.severityReductionPerNutrition;
+                    text += "\n\n" + "XylIngestedBehind".Translate(Gene.DefExt.dietDependency!.foodLabel,
                         pawn.Named("PAWN"),
                         nutritionPerDay.ToStringDecimalIfSmall().Named("NUTRITION"),
                         "PeriodDays".Translate(daysBehind).Named("DURATION"));
@@ -95,7 +101,7 @@ namespace XylXenos
             return null;
         }
 
-        private static bool FoodValidator(Pawn pawn, Hediff_DietDependency dependency, Thing food)
+        private static bool FoodValidator(Pawn pawn, Hediff_DietDependency hediff, Thing food)
         {
             if (!food.def.IsIngestible)
                 return false;
@@ -104,14 +110,77 @@ namespace XylXenos
             if (!pawn.CanReserve(food))
                 return false;
 
-            DietDependency gene = dependency.Gene;
-            if (gene == null)
+            return hediff.ValidateFood(food);
+        }
+
+        public override void Notify_IngestedThing(Thing food, int numTaken)
+        {
+            float nutrition = FoodUtility.NutritionForEater(pawn, food);
+
+            if (numTaken > 0)
+                nutrition *= numTaken;
+            else if (pawn.needs?.food?.NutritionWanted != null)
             {
-                Log.Warning($"FoodValidator: Couldn't find corresponding gene for {dependency}");
-                return false;
+                // If only part of a corpse was consumed, numTaken will be 0, so assume the pawn eats until full.
+                // There doesn't seem to be an easy way to get the nutrition gained directly.
+                nutrition = Math.Min(nutrition, pawn.needs.food.NutritionWanted);
             }
 
-            return gene.ValidateFood(food);
+            var severityReduction = nutrition * Gene.DefExt.dietDependency!.severityReductionPerNutrition;
+
+            if (ValidateFood(food))
+                Severity -= severityReduction;
+        }
+
+        public float NutritionWantedToSatisfy()
+        {
+            float severityReductionPerNutrition = Gene.DefExt.dietDependency!.severityReductionPerNutrition;
+            float nutritionForNeed = Severity / severityReductionPerNutrition;
+            return nutritionForNeed;
+        }
+
+        public int ItemsWantedToSatisfy(Thing foodSource, ThingDef foodDef)
+        {
+            var nutritionNeeded = NutritionWantedToSatisfy();
+            var nutritionPerItem = FoodUtility.GetNutrition(pawn, foodSource, foodDef);
+            if (nutritionPerItem == 0)
+                return 0;
+            return Mathf.CeilToInt(nutritionNeeded / nutritionPerItem);
+        }
+
+        public bool ValidateFood(Thing food)
+        {
+            if (food.Destroyed || !food.IngestibleNow)
+                return false;
+
+            float nutrition = FoodUtility.NutritionForEater(Gene.pawn, food);
+            if (nutrition <= 0.0f)
+                return false;
+
+            if (!food.def.IsRawFoodOrCorpse() && Gene.DefExt.dietDependency!.rawOnly)
+                return false;
+
+            if (Gene.DefExt.dietDependency!.foodKind == FoodUtility.GetFoodKind(food))
+                return true;
+
+            var compIngredients = food.TryGetComp<CompIngredients>();
+            if (compIngredients == null)
+                return false;
+            if (Enumerable.Any(compIngredients.ingredients,
+                    ingredient => Gene.DefExt.dietDependency!.foodKind == FoodUtility.GetFoodKind(ingredient)))
+                return true;
+
+            return false;
+        }
+
+        public void Notify_PostSatisfyGenes()
+        {
+            Severity = 0;
+        }
+
+        public void RegisterWith(NotificationManager manager)
+        {
+            manager.Register(NotificationEvent.PostSatisfyGenes, pawn, Notify_PostSatisfyGenes);
         }
     }
 }

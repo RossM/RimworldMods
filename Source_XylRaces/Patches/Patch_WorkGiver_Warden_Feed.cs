@@ -39,7 +39,7 @@ namespace XylXenos.Patches
                 ThingDef foodDef = FoodUtility.GetFinalIngestibleDef(foodSource);
 
                 Job job = JobMaker.MakeJob(JobDefOf.FeedPatient, foodSource, prisoner);
-                job.count = hediff.Gene.ItemsWantedToSatisfy(foodSource, foodDef);
+                job.count = hediff.ItemsWantedToSatisfy(foodSource, foodDef);
                 __result = job;
                 return;
             }

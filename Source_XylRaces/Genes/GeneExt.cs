@@ -7,7 +7,7 @@ using Verse;
 
 namespace XylXenos.Genes
 {
-    public class GeneExt : Gene, IGene_HediffSource, INotificationListener
+    public class GeneExt : Gene, INotificationListener
     {
         public HashSet<BodyPartRecord> partsWithPermanentHediffs;
 
@@ -25,6 +25,8 @@ namespace XylXenos.Genes
                     return false;
                 if (DefExt.geneType == GeneType.Xenogene && !pawn.genes.HasXenogene(def))
                     return false;
+                if (DefExt.allowMutants && pawn.IsMutant)
+                    return false;
                 return true;
             }
         }
@@ -38,7 +40,15 @@ namespace XylXenos.Genes
             {
                 if (!Rand.Chance(startingItem.chance))
                     continue;
-                yield return new(startingItem.item, Mathf.Clamp(startingItem.count.RandomInRange, 1, startingItem.item.stackLimit));
+
+                var itemDef = startingItem.item ?? DefDatabase<ThingDef>.AllDefsListForReading.Where(thingDef => Validate(thingDef, startingItem)).RandomElement();
+
+                yield return new(itemDef, Mathf.Clamp(startingItem.count.RandomInRange, 1, itemDef.stackLimit));
+            }
+
+            bool Validate(ThingDef thingDef, StartingItemOption startingItem)
+            {
+                return thingDef.ingestible?.foodType.HasFlag(startingItem.foodType) == true;
             }
         }
 
@@ -102,18 +112,33 @@ namespace XylXenos.Genes
 
         public override void PostRemove()
         {
-            if (Active && DefExt.permanentHediffs != null)
+            if (!DefExt.permanentHediffs.NullOrEmpty())
             {
-                HashSet<HediffDef> defsToRemove = [.. DefExt.permanentHediffs.Select(hediffGiver => hediffGiver.hediff)];
-                foreach (var hediff in pawn.health.hediffSet.hediffs
-                             .Where(hediff => defsToRemove.Contains(hediff.def))
-                             .ToList())
+                foreach (var hediff in GetLinkedHediffs().ToList())
                     pawn.health.RemoveHediff(hediff);
             }
 
             RemoveInvalidHediffs();
 
             base.PostRemove();
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+
+            if (!DefExt.permanentHediffs.NullOrEmpty())
+            {
+                foreach (var hediff in GetLinkedHediffs())
+                    hediff.Severity = hediff.def.initialSeverity;
+            }
+        }
+
+        private IEnumerable<Hediff> GetLinkedHediffs()
+        {
+            HashSet<HediffDef> defs = [.. DefExt.permanentHediffs.Select(hediffGiver => hediffGiver.hediff)];
+            IEnumerable<Hediff> hediffs = pawn.health.hediffSet.hediffs.Where(hediff => defs.Contains(hediff.def));
+            return hediffs;
         }
 
         public void Notify_HediffStateChange()
