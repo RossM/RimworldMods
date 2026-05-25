@@ -108,8 +108,8 @@ namespace XylXenos.Genes
             get
             {
                 cachedExtraIcon ??= extraIconPath.NullOrEmpty()
-                    ? parent.Icon
-                    : ContentFinder<Texture2D>.Get(extraIconPath) ?? parent.Icon;
+                    ? parent?.Icon
+                    : ContentFinder<Texture2D>.Get(extraIconPath) ?? parent?.Icon;
                 return cachedExtraIcon;
             }
         }
@@ -233,6 +233,8 @@ namespace XylXenos.Genes
 
             if (parent.geneClass == typeof(Gene))
                 parent.geneClass = typeof(GeneExt);
+
+            GeneHelpers.defExtCache.Clear();
         }
 
         #region Implementation
@@ -241,7 +243,7 @@ namespace XylXenos.Genes
 
         private Texture2D cachedExtraIcon;
 
-        public GeneDef parent;
+        [CanBeNull] public GeneDef parent;
 
         #endregion
     }
@@ -249,7 +251,5 @@ namespace XylXenos.Genes
     [UsedFromXml]
     public class GeneDefExt : GeneDef
     {
-        [NotNull] public DefExt DefExt => defExtInternal ??= GetModExtension<DefExt>() ?? new DefExt();
-        [CanBeNull] private DefExt defExtInternal;
     }
 }

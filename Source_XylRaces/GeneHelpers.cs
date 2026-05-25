@@ -10,6 +10,8 @@ namespace XylXenos;
 
 public static class GeneHelpers
 {
+    public static readonly Dictionary<int, DefExt> defExtCache = new();
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<Gene> GenesOfDef(this Pawn pawn, GeneDef def)
     {
@@ -136,13 +138,19 @@ public static class GeneHelpers
     [CanBeNull]
     public static DefExt DefExt(this GeneDef gene)
     {
-        return (gene as GeneDefExt)?.DefExt;
+        if (!defExtCache.TryGetValue(gene.index, out DefExt defExt))
+        {
+            defExt = gene.GetModExtension<DefExt>();
+            defExtCache.Add(gene.index, defExt);
+        }
+
+        return defExt;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [CanBeNull]
     public static DefExt DefExt(this Gene gene)
     {
-        return (gene.def as GeneDefExt)?.DefExt;
+        return gene.def.DefExt();
     }
 }

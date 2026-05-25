@@ -60,8 +60,8 @@ namespace XylXenos
 
             geneDef.abilities = [def];
 
-            var defExt = geneDef.DefExt;
-            defExt.parent = geneDef;
+            if (!template.modExtensions.NullOrEmpty())
+                geneDef.modExtensions = [.. template.modExtensions];
 
             return geneDef;
         }
