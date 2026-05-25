@@ -25,7 +25,7 @@ namespace XylXenos.Patches
             }
         }
 
-        [Feature(typeof(GeneDefExtension_HostilityOverride))]
+        [Feature(typeof(HostilityOverrideManager))]
         [Feature(typeof(SeeingRed))]
         [HarmonyPrefix]
         [HarmonyPatch("TakeDamage")]

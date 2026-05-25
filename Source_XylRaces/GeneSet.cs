@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RimWorld;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using XylXenos.Genes;
@@ -19,6 +20,8 @@ namespace XylXenos
         public List<JoyGiverFactor> joyGiverChanceFactors = [];
         public List<BuildableDef> addDesignators = [];
         public List<RenderNodeModifier> renderNodeModifiers = [];
+        public List<FactionDef> disableHostilityFromFactions = [];
+        public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides = [];
 
         private static GeneSet Make(Pawn pawn)
         {
@@ -32,13 +35,15 @@ namespace XylXenos
         {
             bodySizeFactor = 1f;
             healthScaleFactor = 1f;
-            slaveRebellionMtbFactor = float.MaxValue;
-            slaveRebellionThresholdDays = -1f;
+            slaveRebellionMtbFactor = 1f;
+            slaveRebellionThresholdDays = float.MaxValue;
             manhunterOnDamageChanceFactor = 1f;
             manhunterOnTameFailChanceFactor = 1f;
             joyGiverChanceFactors.Clear();
             addDesignators.Clear();
             renderNodeModifiers.Clear();
+            disableHostilityFromFactions.Clear();
+            ingestionThoughtOverrides.Clear();
 
             foreach (var def in pawn.ActiveExtendedGeneDefs())
             {
@@ -55,6 +60,10 @@ namespace XylXenos
                     addDesignators.AddRange(def.addDesignators);
                 if (!def.renderNodeModifiers.NullOrEmpty())
                     renderNodeModifiers.AddRange(def.renderNodeModifiers);
+                if (!def.disableHostilityFromFactions.NullOrEmpty())
+                    disableHostilityFromFactions.AddRange(def.disableHostilityFromFactions);
+                if (!def.ingestionThoughtOverrides.NullOrEmpty())
+                    ingestionThoughtOverrides.AddRange(def.ingestionThoughtOverrides);
             }
         }
 
