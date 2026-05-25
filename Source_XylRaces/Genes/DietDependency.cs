@@ -185,6 +185,9 @@ namespace XylXenos.Genes
 
         public override IEnumerable<ThingDefCount> GetStartingItems()
         {
+            foreach (var startingItem in base.GetStartingItems())
+                yield return startingItem;
+
             if (DietDependencyDefExt?.startingFoodNutrition == null)
                 yield break;
 
@@ -196,6 +199,7 @@ namespace XylXenos.Genes
             int itemsNeeded = Mathf.CeilToInt(nutritionNeeded / foodDef.GetStatBase(StatDefOf.Nutrition));
 
             yield return new(foodDef, Mathf.Clamp(itemsNeeded, 1, foodDef.stackLimit));
+
             yield break;
 
             bool GoodStartingFood(ThingDef thingDef)
