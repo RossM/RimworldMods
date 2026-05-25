@@ -112,8 +112,7 @@ namespace XylXenos.Genes
             if (lactatingHediff != null)
                 pawn.health.RemoveHediff(lactatingHediff);
 
-            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff) ??
-                            pawn.health.AddHediff(DefExt.hediff);
+            Hediff hediff = pawn.health.GetOrAddHediff(DefExt.hediff);
             hediff.Severity = 1.0f;
 
             if (Lactating?.parent != hediff)
