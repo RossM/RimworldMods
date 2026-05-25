@@ -247,9 +247,4 @@ namespace XylXenos.Genes
 
         #endregion
     }
-
-    [UsedFromXml]
-    public class GeneDefExt : GeneDef
-    {
-    }
 }

@@ -33,11 +33,11 @@ namespace XylXenos
         private static GeneDef GetFromTemplate(GeneTemplateDef template, AbilityDef def, int displayOrderBase, bool hotReload)
         {
             string defName = $"{template.defName}_{def.defName}";
-            GeneDefExt geneDef;
+            GeneDef geneDef;
             if (hotReload)
-                geneDef = DefDatabase<GeneDef>.GetNamed(defName, errorOnFail: false) as GeneDefExt ?? new GeneDefExt();
+                geneDef = DefDatabase<GeneDef>.GetNamed(defName, errorOnFail: false) ?? new GeneDef();
             else
-                geneDef = new GeneDefExt();
+                geneDef = new GeneDef();
 
             geneDef.modContentPack = template.modContentPack;
 

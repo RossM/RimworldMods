@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylAquatic</defName>
     <label>aquatic</label>
     <description>Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long.</description>
@@ -28,9 +28,9 @@
         </addDesignators>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylJoyless</defName>
     <label>joyless</label>
     <description>Carriers of this gene are genetically incapable of feeling joy. They have no need for recreation, and get no mood bonuses or penalties from it. </description>
@@ -46,6 +46,6 @@
       <li Class="XylXenos.Genes.DefExt">
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
 </Defs>

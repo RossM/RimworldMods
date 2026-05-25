@@ -8,7 +8,7 @@
     <displayPriorityInXenotype>275</displayPriorityInXenotype>
   </GeneCategoryDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylCarnivoreStomach</defName>
     <label>carnivore stomach</label>
     <labelShortAdj>carnivorous</labelShortAdj>
@@ -45,9 +45,9 @@
         </ingestionThoughtOverrides>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylHerbivoreStomach</defName>
     <label>herbivore stomach</label>
     <labelShortAdj>herbivorous</labelShortAdj>
@@ -82,9 +82,9 @@
         </ingestionThoughtOverrides>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylFungusEater</defName>
     <label>fungus eater</label>
     <labelShortAdj>fungus-eating</labelShortAdj>
@@ -107,9 +107,9 @@
         </addDesignators>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylMeatDependence</defName>
     <label>meat dependence</label>
     <labelShortAdj>meat-dependent</labelShortAdj>
@@ -156,6 +156,6 @@
         </dietDependency>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
 </Defs>

@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylDrugSensitive</defName>
     <label>drug sensitive</label>
     <description>Carriers of this gene are easily affected by drugs. Effects from a single dose last longer, they gain tolerance faster, and they are more likely to become addicted.</description>
@@ -25,9 +25,9 @@
         <showInDrugPolicies>true</showInDrugPolicies>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylDrugResistant</defName>
     <label>drug resistant</label>
     <description>Carriers of this gene are less affected by drugs. Effects from a single dose wear off faster, they gain tolerance slower, and they are less likely to become addicted.</description>
@@ -50,9 +50,9 @@
         <showInDrugPolicies>true</showInDrugPolicies>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylLithoid</defName>
     <label>lithoid</label>
     <description>Carriers of this gene have a unique biochemistry that incorporates carbon-silicates. They are completely unaffected by most drugs that work on normal humans, and instead must use specialized drugs designed for lithoids.</description>
@@ -90,6 +90,6 @@
         </startingItems>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
 </Defs>

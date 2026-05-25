@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylHerdInstinct</defName>
     <label>herd instinct</label>
     <description>Carriers of this gene need the comfort of being in a large group. They get a mood penalty if there are too few members of the colony. They also don't mind sleeping in a barracks.</description>
@@ -21,9 +21,9 @@
       <li Class="XylXenos.Genes.DefExt">
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylMoody</defName>
     <label>moody</label>
     <description>Carriers of this gene have a volatile emotional state. They randomly get good and bad moods.</description>
@@ -43,6 +43,6 @@
         </hediffGivers>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
 </Defs>

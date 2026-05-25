@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <XylXenos.Genes.GeneDefExt Name="XylGenderRatioBase" Abstract="True">
+  <GeneDef Name="XylGenderRatioBase" Abstract="True">
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
@@ -10,9 +10,9 @@
     <exclusionTags>
       <li>Gender</li>
     </exclusionTags>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
+  <GeneDef ParentName="XylGenderRatioBase">
     <defName>XylGender_AlwaysFemale</defName>
     <label>always female</label>
     <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -39,9 +39,9 @@
         <geneType>Endogene</geneType>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
   
-  <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
+  <GeneDef ParentName="XylGenderRatioBase">
     <defName>XylGender_UsuallyFemale</defName>
     <label>usually female</label>
     <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -53,9 +53,9 @@
         <geneType>Endogene</geneType>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
   
-  <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
+  <GeneDef ParentName="XylGenderRatioBase">
     <defName>XylGender_UsuallyMale</defName>
     <label>usually male</label>
     <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -67,9 +67,9 @@
         <geneType>Endogene</geneType>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
   
-  <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
+  <GeneDef ParentName="XylGenderRatioBase">
     <defName>XylGender_AlwaysMale</defName>
     <label>always male</label>
     <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -96,6 +96,6 @@
         <geneType>Endogene</geneType>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
 </Defs>

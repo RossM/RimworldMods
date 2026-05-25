@@ -196,7 +196,7 @@ public static class PatchHelpers
                        request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
                        request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
                        xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
-        if (gene.DefExt()?.femaleChance is not { } chance)
+        if (gene?.DefExt()?.femaleChance is not { } chance)
             return;
 
         pawn.gender = Rand.Chance(chance) ? Gender.Female : Gender.Male;

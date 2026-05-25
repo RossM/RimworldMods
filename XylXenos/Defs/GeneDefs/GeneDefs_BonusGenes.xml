@@ -8,7 +8,7 @@
     <displayPriorityInXenotype>210</displayPriorityInXenotype>
   </GeneCategoryDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <geneClass>XylXenos.Genes.BonusGenes</geneClass>
     <defName>XylGeneticAtavism</defName>
     <label>genetic atavism</label>
@@ -31,17 +31,17 @@
         </bonusGenes>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt Name="XylSpecialistBase" Abstract="true">
+  <GeneDef Name="XylSpecialistBase" Abstract="true">
     <geneClass>XylXenos.Genes.BonusGenes</geneClass>
     <displayCategory>XylRandom</displayCategory>
     <exclusionTags>
       <li>XylSpecialist</li>
     </exclusionTags>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt ParentName="XylSpecialistBase">
+  <GeneDef ParentName="XylSpecialistBase">
     <defName>XylSpecialist</defName>
     <label>specialist</label>
     <description>The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level.</description>
@@ -72,9 +72,9 @@
         </bonusGenes>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt ParentName="XylSpecialistBase">
+  <GeneDef ParentName="XylSpecialistBase">
     <defName>XylSuperSpecialist</defName>
     <label>super-specialist</label>
     <description>The carrier's aptitude in one random skill is increased by 8. Aptitude acts like an offset on skill level. Additionally, one level of passion is added to that skill.</description>
@@ -105,9 +105,9 @@
         </bonusGenes>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylSplicer</defName>
     <geneClass>XylXenos.Genes.BonusGenes</geneClass>
     <label>splicer</label>
@@ -133,6 +133,6 @@
         </bonusGenes>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
 </Defs>

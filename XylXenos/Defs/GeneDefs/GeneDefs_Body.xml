@@ -8,7 +8,7 @@
     <displayPriorityInXenotype>271</displayPriorityInXenotype>
   </GeneCategoryDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylDwarf</defName>
     <label>dwarf</label>
     <description>Carriers of this gene have smaller bodies with proportionately larger heads. Their short legs somewhat reduce their movement speed.</description>
@@ -37,9 +37,9 @@
         </renderNodeModifiers>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylGiant</defName>
     <label>giant</label>
     <description>Carriers of this gene are exceptionally large. They can take more damage, carry more, and are more resistant to drugs and toxins, but are also easier to hit with ranged weapons.</description>
@@ -68,9 +68,9 @@
         </renderNodeModifiers>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylScaleskin</defName>
     <label>scaleskin</label>
     <labelShortAdj>scaly</labelShortAdj>
@@ -115,7 +115,7 @@
       <li Class="XylXenos.Genes.DefExt">
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
   <FurDef>
     <defName>Scaleskin</defName>
     <noGraphic>true</noGraphic>
@@ -131,7 +131,7 @@
     </bodyTypeGraphicPaths>
   </FurDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylMineralizedSkin</defName>
     <label>rockskin</label>
     <labelShortAdj>rock</labelShortAdj>
@@ -177,7 +177,7 @@
       <li Class="XylXenos.Genes.DefExt">
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
   <FurDef>
     <defName>Osteoliths</defName>
     <noGraphic>true</noGraphic>

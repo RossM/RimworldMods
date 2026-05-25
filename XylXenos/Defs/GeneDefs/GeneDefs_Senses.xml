@@ -8,7 +8,7 @@
     <displayPriorityInXenotype>380</displayPriorityInXenotype>
   </GeneCategoryDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylEcholocation</defName>
     <label>echolocation</label>
     <description>Carriers of this gene can use high-frequency sound waves to "see" with their ears instead of their eyes.</description>
@@ -48,9 +48,9 @@
         </startingItems>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt>
+  <GeneDef>
     <defName>XylKeenEars</defName>
     <label>keen ears</label>
     <description>Carriers of this gene have improved hearing.</description>
@@ -69,6 +69,6 @@
       <li Class="XylXenos.Genes.DefExt">
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
 </Defs>

@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
+  <GeneDef ParentName="GeneHairStyleBase">
     <defName>XylHair_BaldOnly_Male</defName>
     <label>bald males</label>
     <labelShortAdj>male bald</labelShortAdj>
@@ -23,9 +23,9 @@
         <gender>Male</gender>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
+  <GeneDef ParentName="GeneHairStyleBase">
     <defName>XylHair_ShortOnly_Male</defName>
     <label>short-haired males</label>
     <labelShortAdj>male crop</labelShortAdj>
@@ -46,9 +46,9 @@
         <gender>Male</gender>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
+  <GeneDef ParentName="GeneHairStyleBase">
     <defName>XylHair_LongOnly_Male</defName>
     <label>long-haired males</label>
     <labelShortAdj>male long-haired</labelShortAdj>
@@ -69,9 +69,9 @@
         <gender>Male</gender>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
+  <GeneDef ParentName="GeneHairStyleBase">
     <defName>XylHair_BaldOnly_Female</defName>
     <label>bald females</label>
     <labelShortAdj>female bald</labelShortAdj>
@@ -92,9 +92,9 @@
         <gender>Female</gender>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
+  <GeneDef ParentName="GeneHairStyleBase">
     <defName>XylHair_ShortOnly_Female</defName>
     <label>short-haired females</label>
     <labelShortAdj>female crop</labelShortAdj>
@@ -115,9 +115,9 @@
         <gender>Female</gender>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
-  <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
+  <GeneDef ParentName="GeneHairStyleBase">
     <defName>XylHair_LongOnly_Female</defName>
     <label>long-haired females</label>
     <labelShortAdj>female long-haired</labelShortAdj>
@@ -138,6 +138,6 @@
         <gender>Female</gender>
       </li>
     </modExtensions>
-  </XylXenos.Genes.GeneDefExt>
+  </GeneDef>
 
 </Defs>
