@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 using XylXenos.Genes;
@@ -264,6 +265,8 @@ public static class GeneHelpers
 
         foreach (var geneSet in Faction.OfPlayer.GetPawns().Select(pawn => pawn.GeneSet()))
         {
+            if (geneSet == null)
+                continue;
             geneDesignators.AddRange(geneSet.addDesignators.Where(def => def.designationCategory == __instance)
                 .Select(GetCachedDesignator));
         }
@@ -305,7 +308,11 @@ public static class GeneHelpers
     public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
     {
         float factor = 1f;
-        foreach (var joyGiverFactor in pawn.GeneSet().joyGiverChanceFactors)
+        GeneSet geneSet = pawn.GeneSet();
+        if (geneSet == null)
+            return 1f;
+
+        foreach (var joyGiverFactor in geneSet.joyGiverChanceFactors)
         {
             if (joyGiverFactor.joyGiver == joyGiver.def)
                 factor *= joyGiverFactor.factor;
@@ -373,8 +380,12 @@ public static class GeneHelpers
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [CanBeNull]
     public static GeneSet GeneSet(this Pawn pawn)
     {
+        if (pawn.genes == null)
+            return null;
+
         return XylXenos.GeneSet.Tracker.Get(pawn);
     }
 }

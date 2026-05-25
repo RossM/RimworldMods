@@ -67,6 +67,9 @@ namespace XylXenos.Patches
                 return;
 
             var geneSet = pawn.GeneSet();
+            if (geneSet == null)
+                return;
+
             __result *= geneSet.slaveRebellionMtbFactor;
             if (__result >= geneSet.slaveRebellionThresholdDays)
                 __result = -1;
