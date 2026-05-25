@@ -285,9 +285,16 @@ public static class GeneHelpers
         }
     }
 
-    public static bool GeneShouldBeVisible(GeneDef geneDef, bool inheritable)
+    public static bool GeneShouldBeVisible(GeneDef geneDef, GeneType geneType)
     {
-        return geneDef.GetModExtension<GeneDefExtension_UIFilter>()?.ShouldBeVisible(inheritable) != false;
+        if (geneDef is not GeneDefExt def)
+            return true;
+
+        if (!def.showInXenotypeCreation)
+            return false;
+        if (def.geneType != null && def.geneType != geneType)
+            return false;
+        return true;
     }
 
     public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene gene)

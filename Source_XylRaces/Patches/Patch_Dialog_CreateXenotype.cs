@@ -12,7 +12,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Dialog_CreateXenotype))]
     public class Patch_Dialog_CreateXenotype
     {
-        [Feature(typeof(GeneDefExtension_UIFilter))]
+        [Feature(nameof(GeneDefExt.showInXenotypeCreation))]
+        [Feature(nameof(GeneDefExt.geneType))]
         [InfixPostfix(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder))]
         [InfixPatch("DrawGenes")]
         public static void GenesInOrder_Postfix(Dialog_CreateXenotype __caller, ref List<GeneDef> __result)
@@ -24,7 +25,7 @@ namespace XylXenos.Patches
         {
             if (ignoreRestrictions)
                 return genes;
-            return genes.Where(g => GeneHelpers.GeneShouldBeVisible(g, inheritable)).ToList();
+            return genes.Where(g => GeneHelpers.GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene)).ToList();
         }
     }
 }

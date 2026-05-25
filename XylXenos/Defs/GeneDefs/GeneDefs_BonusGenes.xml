@@ -31,20 +31,16 @@
     </modExtensions>
   </GeneDef>
 
-  <GeneDef Name="XylSpecialistBase" Abstract="true">
+  <XylXenos.Genes.GeneDefExt Name="XylSpecialistBase" Abstract="true">
     <geneClass>XylXenos.Genes.BonusGene</geneClass>
     <displayCategory>XylRandom</displayCategory>
     <exclusionTags>
       <li>XylSpecialist</li>
     </exclusionTags>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_UIFilter">
-        <inheritable>false</inheritable>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <geneType>Xenogene</geneType>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef ParentName="XylSpecialistBase">
+  <XylXenos.Genes.GeneDefExt ParentName="XylSpecialistBase">
     <defName>XylSpecialist</defName>
     <label>specialist</label>
     <description>The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level.</description>
@@ -72,9 +68,9 @@
         </allowedGenes>
       </li>
     </modExtensions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef ParentName="XylSpecialistBase">
+  <XylXenos.Genes.GeneDefExt ParentName="XylSpecialistBase">
     <defName>XylSuperSpecialist</defName>
     <label>super-specialist</label>
     <description>The carrier's aptitude in one random skill is increased by 8. Aptitude acts like an offset on skill level. Additionally, one level of passion is added to that skill.</description>
@@ -102,9 +98,9 @@
         </allowedGenes>
       </li>
     </modExtensions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylSplicer</defName>
     <geneClass>XylXenos.Genes.BonusGene</geneClass>
     <label>splicer</label>
@@ -116,6 +112,7 @@
     <displayOrderInCategory>0</displayOrderInCategory>
     <canGenerateInGeneSet>false</canGenerateInGeneSet>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <showInXenotypeCreation>false</showInXenotypeCreation>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_BonusGene">
         <removeAfterAdding>true</removeAfterAdding>
@@ -126,10 +123,7 @@
           <li>XylGeneticAtavism</li>
         </prohibitedGenes>
       </li>
-      <li Class="XylXenos.Genes.GeneDefExtension_UIFilter">
-        <alwaysHide>true</alwaysHide>
-      </li>
     </modExtensions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
 </Defs>

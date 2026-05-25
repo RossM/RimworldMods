@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <GeneDef Name="XylGenderRatioBase" Abstract="True">
+  <XylXenos.Genes.GeneDefExt Name="XylGenderRatioBase" Abstract="True">
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
@@ -10,14 +10,10 @@
     <exclusionTags>
       <li>Gender</li>
     </exclusionTags>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_UIFilter">
-        <inheritable>true</inheritable>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <geneType>Endogene</geneType>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef ParentName="XylGenderRatioBase">
+  <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
     <geneClass>XylXenos.Genes.GenderRatio</geneClass>
     <defName>XylGender_AlwaysFemale</defName>
     <label>always female</label>
@@ -44,8 +40,8 @@
         </li>
       </suffixSymbols>
     </symbolPack>
-  </GeneDef>
-  <GeneDef ParentName="XylGenderRatioBase">
+  </XylXenos.Genes.GeneDefExt>
+  <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
     <geneClass>XylXenos.Genes.GenderRatio</geneClass>
     <defName>XylGender_UsuallyFemale</defName>
     <label>usually female</label>
@@ -57,8 +53,8 @@
         <femaleChance>0.75</femaleChance>
       </li>
     </modExtensions>
-  </GeneDef>
-  <GeneDef ParentName="XylGenderRatioBase">
+  </XylXenos.Genes.GeneDefExt>
+  <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
     <geneClass>XylXenos.Genes.GenderRatio</geneClass>
     <defName>XylGender_UsuallyMale</defName>
     <label>usually male</label>
@@ -70,8 +66,8 @@
         <femaleChance>0.25</femaleChance>
       </li>
     </modExtensions>
-  </GeneDef>
-  <GeneDef ParentName="XylGenderRatioBase">
+  </XylXenos.Genes.GeneDefExt>
+  <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
     <geneClass>XylXenos.Genes.GenderRatio</geneClass>
     <defName>XylGender_AlwaysMale</defName>
     <label>always male</label>
@@ -98,6 +94,6 @@
         </li>
       </suffixSymbols>
     </symbolPack>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
 </Defs>

@@ -45,7 +45,9 @@ namespace XylXenos.Genes
         public IEnumerable<string> CustomEffectDescriptions =>
             customEffectDescriptionsInternal ??= GetCustomEffectDescriptions().ToList();
 
+        public bool showInXenotypeCreation = true;
         public Gender? gender;
+        public GeneType? geneType;
 
         public float bodySizeFactor = 1.0f;
         public float healthScaleFactor = 1.0f;
