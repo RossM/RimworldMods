@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_Torpor : GeneDefExtension
+    public class GeneDefExtension_Torpor : DefModExtension
     {
         public HediffDef hediff;
         public float temperatureThreshold;

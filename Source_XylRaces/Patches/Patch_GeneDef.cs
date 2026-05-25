@@ -4,14 +4,13 @@ using HarmonyLib;
 using RimWorld;
 using TranspilerUtil;
 using Verse;
-using XylXenos.Genes;
 
 namespace XylXenos.Patches
 {
     [HarmonyPatch(typeof(GeneDef))]
     public static class Patch_GeneDef
     {
-        [Feature(typeof(GeneDefExtension))]
+        [Feature(typeof(DefModExtension))]
         [InfixPostfix(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
         [InfixPatch("GetDescriptionFull")]
         public static void GeneDef_customEffectDescriptions_Postfix(GeneDef __instance, ref List<string> __result)
@@ -21,16 +20,6 @@ namespace XylXenos.Patches
                 return;
 
             __result = __result.NullOrEmpty() ? extraDescriptions : __result.Concat(extraDescriptions).ToList();
-        }
-
-        [Feature(typeof(GeneDefExtension))]
-        [HarmonyPostfix]
-        [HarmonyPatch("SpecialDisplayStats")]
-        public static void SpecialDisplayStats_Postfix(GeneDef __instance, StatRequest req, ref IEnumerable<StatDrawEntry> __result)
-        {
-            var extraStats = __instance.GetGeneSpecialDisplayStats().ToList();
-            if (extraStats.Count > 0)
-                __result = __result.Concat(extraStats);
         }
     }
 }

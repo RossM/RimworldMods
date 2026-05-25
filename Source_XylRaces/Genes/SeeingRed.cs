@@ -4,7 +4,7 @@ using Verse;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_SeeingRed : GeneDefExtension
+    public class GeneDefExtension_SeeingRed : DefModExtension
     {
         public float chance = 1.0f;
         public HediffDef hediffDef;

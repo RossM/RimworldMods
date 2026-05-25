@@ -9,7 +9,7 @@ using Verse.AI;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_Flight : GeneDefExtension
+    public class GeneDefExtension_Flight : DefModExtension
     {
         public float autoFlyMinDistance = 25f;
     }

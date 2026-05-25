@@ -148,15 +148,6 @@ public static class GeneHelpers
                 yield return customEffectDescription;
         }
 
-        if (!gene.modExtensions.NullOrEmpty())
-        {
-            foreach (var geneDefExtension in gene.modExtensions.OfType<GeneDefExtension>())
-            {
-                foreach (var customEffectDescription in geneDefExtension.CustomEffectDescriptions)
-                    yield return customEffectDescription;
-            }
-        }
-
         // Official content doesn't need our help
         if (gene.modContentPack?.IsOfficialMod == true)
             yield break;
@@ -186,18 +177,6 @@ public static class GeneHelpers
         foreach (var mentalBreakDef in mentalBreakDefs)
         {
             yield return $"{"XylPossibleMentalBreak".Translate()}: {mentalBreakDef.mentalState.LabelCap}";
-        }
-    }
-
-    public static IEnumerable<StatDrawEntry> GetGeneSpecialDisplayStats(this GeneDef gene)
-    {
-        if (!gene.modExtensions.NullOrEmpty())
-        {
-            foreach (var geneDefExtension in gene.modExtensions.OfType<GeneDefExtension>())
-            {
-                foreach (var specialDisplayStatEntry in geneDefExtension.SpecialDisplayStats)
-                    yield return specialDisplayStatEntry;
-            }
         }
     }
 
