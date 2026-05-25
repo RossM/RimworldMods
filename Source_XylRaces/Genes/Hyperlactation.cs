@@ -6,7 +6,7 @@ using Verse;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_Hyperlactation : GeneDefExtension_WithIcon
+    public class GeneDefExtension_Hyperlactation : GeneDefExtension
     {
         public ThingDef item;
         public float chargePerItem = 0.1f;
@@ -18,6 +18,8 @@ namespace XylXenos.Genes
     public class Hyperlactation : Gene
     {
         public GeneDefExtension_Hyperlactation DefExt => def.GetModExtension<GeneDefExtension_Hyperlactation>();
+
+        public Texture2D ExtraIcon => ((GeneDefExt)def).ExtraIcon;
 
         public HediffComp_Lactating Lactating =>
             lactatingInternal ??= pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
@@ -57,7 +59,7 @@ namespace XylXenos.Genes
                 defaultDesc = "XylCommandMilkDesc".TranslateSimple(),
                 isActive = () => allowMilking,
                 toggleAction = () => { allowMilking = !allowMilking; },
-                icon = DefExt.Icon,
+                icon = ExtraIcon,
             };
 
             if (allowMilking)
@@ -68,7 +70,7 @@ namespace XylXenos.Genes
                     defaultDesc = "XylCommandMilkOnlyWhenFullDesc".TranslateSimple(),
                     isActive = () => onlyMilkWhenFull,
                     toggleAction = () => { onlyMilkWhenFull = !onlyMilkWhenFull; },
-                    icon = DefExt.Icon,
+                    icon = ExtraIcon,
                 };
             }
         }

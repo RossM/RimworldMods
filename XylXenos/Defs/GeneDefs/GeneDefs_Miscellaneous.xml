@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <GeneDef ParentName="GeneAggressionBase">
+  <XylXenos.Genes.GeneDefExt ParentName="GeneAggressionBase">
     <defName>XylDocile</defName>
     <label>docile</label>
     <description>Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They are also less likely to start prison breaks, and never start social fights.</description>
@@ -21,18 +21,12 @@
         <def>Bloodlust</def>
       </li>
     </suppressedTraits>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_SlaveRebellion">
-        <slaveRebellionMtbFactor>4</slaveRebellionMtbFactor>
-        <neverRebelThresholdDays>120</neverRebelThresholdDays>
-      </li>
-      <li Class="XylXenos.Genes.GeneDefExtension_WildMan">
-        <manhunterOnTameFailChance>0</manhunterOnTameFailChance>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <slaveRebellionMtbFactor>4</slaveRebellionMtbFactor>
+    <slaveRebellionThresholdDays>120</slaveRebellionThresholdDays>
+    <manhunterOnTameFailChanceFactor>0</manhunterOnTameFailChanceFactor>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.SeeingRed</geneClass>
     <defName>XylSeeingRed</defName>
     <label>seeing red</label>
@@ -42,16 +36,14 @@
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
+    <manhunterOnDamageChanceFactor>2</manhunterOnDamageChanceFactor>
     <modExtensions>
       <li Class="XylXenos.Genes.GeneDefExtension_SeeingRed">
         <chance>0.15</chance>
         <hediffDef>XylSeeingRed</hediffDef>
       </li>
-      <li Class="XylXenos.Genes.GeneDefExtension_WildMan">
-        <manhunterOnDamageChance>1</manhunterOnDamageChance>
-      </li>
     </modExtensions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.Hyperlactation</geneClass>
@@ -63,6 +55,7 @@
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Hyperlactation</iconPath>
+    <extraIconPath>Things/Item/Resource/Milk</extraIconPath>
     <minAgeActive>13</minAgeActive>
     <customEffectDescriptions>
       <li>Enables being milked</li>
@@ -79,7 +72,6 @@
           <li>XylMilked_Masochist</li>
           <li>XylMilkedMood_Masochist</li>
         </milkedThoughts>
-        <iconPath>Things/Item/Resource/Milk</iconPath>
       </li>
       <li Class="XylXenos.DefModExtension_StartingItemSource">
         <item>Milk</item>
@@ -113,7 +105,7 @@
     </customEffectDescriptions>
   </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.Flight</geneClass>
     <defName>XylBatWings</defName>
     <label>bat wings</label>
@@ -161,11 +153,9 @@
       <FlightCooldown>45</FlightCooldown>
     </statOffsets>
     <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Flight">
-        <iconPath>Xyl/UI/Icons/Genes/Gene_BatWings</iconPath>
-      </li>
+      <li Class="XylXenos.Genes.GeneDefExtension_Flight"/>
     </modExtensions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>
     <geneClass>XylXenos.Genes.Torpor</geneClass>

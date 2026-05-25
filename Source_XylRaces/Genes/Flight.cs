@@ -3,12 +3,13 @@ using System.Linq;
 using JetBrains.Annotations;
 using LudeonTK;
 using RimWorld;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_Flight : GeneDefExtension_WithIcon
+    public class GeneDefExtension_Flight : GeneDefExtension
     {
         public float autoFlyMinDistance = 25f;
     }
@@ -23,6 +24,8 @@ namespace XylXenos.Genes
         public GeneDefExtension_Flight DefExt => def.GetModExtension<GeneDefExtension_Flight>();
         public bool autoFly = true;
         public bool autoFlyDrafted = true;
+
+        public Texture2D ExtraIcon => ((GeneDefExt)def).ExtraIcon;
 
         [Unsaved] private bool wasFlying;
 
@@ -67,7 +70,7 @@ namespace XylXenos.Genes
                 defaultDesc = "XylCommandFlyDesc".TranslateSimple(),
                 Disabled = !pawn.flight.CanFlyNow || !flightAllowedByApparel,
                 cooldownPercentGetter = () => 1.0f - pawn.flight.flightCooldownTicks / (pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
-                icon = DefExt.Icon,
+                icon = ExtraIcon,
                 defaultDescPostfix = "\n\n" + $"""
                     {flyingDisabledBy}{"CooldownTime".TranslateSimple()}: {pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall()}{"LetterSecond".TranslateSimple()}
                     {"AbilityDuration".TranslateSimple()}: {pawn.GetStatValue(StatDefOf.MaxFlightTime).ToStringDecimalIfSmall()}{"LetterSecond".TranslateSimple()}
@@ -84,7 +87,7 @@ namespace XylXenos.Genes
                         defaultDesc = "XylCommandAutoFlyDraftedDesc".TranslateSimple(),
                         isActive = () => autoFlyDrafted,
                         toggleAction = () => { autoFlyDrafted = !autoFlyDrafted; },
-                        icon = DefExt.Icon,
+                        icon = ExtraIcon,
                     };
                 }
                 else
@@ -95,7 +98,7 @@ namespace XylXenos.Genes
                         defaultDesc = "XylCommandAutoFlyDesc".TranslateSimple(),
                         isActive = () => autoFly,
                         toggleAction = () => { autoFly = !autoFly; },
-                        icon = DefExt.Icon,
+                        icon = ExtraIcon,
                     };
                 }
             }

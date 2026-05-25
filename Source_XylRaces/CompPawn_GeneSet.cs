@@ -17,8 +17,12 @@ namespace XylXenos
 
     public class CompPawn_GeneSet : ThingComp, INotificationListener
     {
-        [Unsaved] public float bodySizeFactor = 1.0f;
-        [Unsaved] public float healthScaleFactor = 1.0f;
+        [Unsaved] public float bodySizeFactor = 1f;
+        [Unsaved] public float healthScaleFactor = 1f;
+        [Unsaved] public float slaveRebellionMtbFactor = 1f;
+        [Unsaved] public float slaveRebellionThresholdDays = float.MaxValue;
+        [Unsaved] public float manhunterOnDamageChanceFactor = 1f;
+        [Unsaved] public float manhunterOnTameFailChanceFactor = 1f;
         [Unsaved] public List<JoyGiverFactor> joyGiverChanceFactors = [];
         [Unsaved] public List<BuildableDef> addDesignators = [];
         [Unsaved] public List<RenderNodeModifier> renderNodeModifiers = [];
@@ -30,16 +34,24 @@ namespace XylXenos
 
         public void Update()
         {
-            bodySizeFactor = 1.0f;
-            healthScaleFactor = 1.0f;
+            bodySizeFactor = 1f;
+            healthScaleFactor = 1f;
+            slaveRebellionMtbFactor = float.MaxValue;
+            slaveRebellionThresholdDays = -1f;
+            manhunterOnDamageChanceFactor = 1f;
+            manhunterOnTameFailChanceFactor = 1f;
             joyGiverChanceFactors.Clear();
             addDesignators.Clear();
             renderNodeModifiers.Clear();
 
-            foreach (var def in ((Pawn)parent).ExtendedGeneDefs())
+            foreach (var def in ((Pawn)parent).ActiveExtendedGeneDefs())
             {
                 bodySizeFactor *= def.bodySizeFactor;
                 healthScaleFactor *= def.healthScaleFactor;
+                slaveRebellionMtbFactor *= def.slaveRebellionMtbFactor;
+                slaveRebellionThresholdDays = Mathf.Min(slaveRebellionThresholdDays, def.slaveRebellionThresholdDays);
+                manhunterOnDamageChanceFactor *= def.manhunterOnDamageChanceFactor;
+                manhunterOnTameFailChanceFactor *= def.manhunterOnTameFailChanceFactor;
 
                 if (!def.joyGiverChanceFactors.NullOrEmpty())
                     joyGiverChanceFactors.AddRange(def.joyGiverChanceFactors);
@@ -47,6 +59,7 @@ namespace XylXenos
                     addDesignators.AddRange(def.addDesignators);
                 if (!def.renderNodeModifiers.NullOrEmpty())
                     renderNodeModifiers.AddRange(def.renderNodeModifiers);
+                
             }
         }
 

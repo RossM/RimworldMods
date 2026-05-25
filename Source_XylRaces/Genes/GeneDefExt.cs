@@ -50,6 +50,12 @@ namespace XylXenos.Genes
         public float bodySizeFactor = 1.0f;
         public float healthScaleFactor = 1.0f;
 
+        public float slaveRebellionMtbFactor = 1.0f;
+        public float slaveRebellionThresholdDays = float.MaxValue;
+
+        public float manhunterOnDamageChanceFactor = 1.0f;
+        public float manhunterOnTameFailChanceFactor = 1.0f;
+
         public bool showInDrugPolicies = false;
 
         // These are triggered randomly over time
@@ -65,9 +71,24 @@ namespace XylXenos.Genes
         public List<BuildableDef> addDesignators;
         public List<RenderNodeModifier> renderNodeModifiers;
 
+        [NoTranslate] public string extraIconPath;
+
+        public Texture2D ExtraIcon
+        {
+            get
+            {
+                cachedExtraIcon ??= extraIconPath.NullOrEmpty()
+                    ? Icon
+                    : ContentFinder<Texture2D>.Get(iconPath) ?? Icon;
+                return cachedExtraIcon;
+            }
+        }
+
         #region Implementation
 
         private List<string> customEffectDescriptionsInternal;
+
+        private Texture2D cachedExtraIcon;
 
         #endregion
 
@@ -100,6 +121,9 @@ namespace XylXenos.Genes
 
         protected virtual IEnumerable<string> GetCustomEffectDescriptions()
         {
+            if (slaveRebellionMtbFactor != 1.0f)
+                yield return $"{"SlaveRebellionMTBDays".Translate()} x{slaveRebellionMtbFactor.ToStringPercent()}";
+
             if (!permanentHediffs.NullOrEmpty())
             {
                 foreach (Tool tool in permanentHediffs.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())

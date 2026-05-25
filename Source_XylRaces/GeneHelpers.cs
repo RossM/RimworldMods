@@ -328,7 +328,7 @@ public static class GeneHelpers
         return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
     }
 
-    public static IEnumerable<GeneDefExt> ExtendedGeneDefs(this Pawn pawn)
+    public static IEnumerable<GeneDefExt> ActiveExtendedGeneDefs(this Pawn pawn)
     {
         if (pawn.genes == null)
             return Enumerable.Empty<GeneDefExt>();
@@ -337,7 +337,7 @@ public static class GeneHelpers
 
     public static void GenerateCongenitalHediffs(Pawn pawn)
     {
-        foreach (var def in pawn.ExtendedGeneDefs())
+        foreach (var def in pawn.ActiveExtendedGeneDefs())
         {
             if (!def.congenitalHediffs.NullOrEmpty())
             {
