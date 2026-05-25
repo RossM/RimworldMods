@@ -46,7 +46,7 @@
     </customEffectDescriptions>
   </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylKeenEars</defName>
     <label>keen ears</label>
     <description>Carriers of this gene have improved hearing.</description>
@@ -61,6 +61,6 @@
         <postFactor>1.2</postFactor>
       </li>
     </capMods>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
 </Defs>

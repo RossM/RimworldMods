@@ -171,7 +171,7 @@
     </torpor>
   </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylIndustrious</defName>
     <label>industrious</label>
     <description>Carriers of this gene are exceptionally fast workers.</description>
@@ -184,7 +184,7 @@
     <statOffsets>
       <WorkSpeedGlobal>0.15</WorkSpeedGlobal>
     </statOffsets>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
     <defName>XylInsectPheromones</defName>
@@ -221,7 +221,7 @@
     </permanentHediffs>
   </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylEmergencyReserves</defName>
     <label>emergency reserves</label>
     <description>Carriers of this gene store extra oxygen and special proteins in their bone marrow. When the carrier is exposed to extreme heat, cold, toxins, or vacuum, these reserves temporarily flood the body, protecting tissues from damage.</description>
@@ -229,9 +229,9 @@
     <displayOrderInCategory>90</displayOrderInCategory>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylGravitySickness</defName>
     <label>gravity sickness</label>
     <description>Carriers of this gene are prone to debilitating bouts of gravity sickness while on a planet's surface. They periodically suffer pain, nausea, and reduced consciousness for a day or so, or until they return to orbit.</description>
@@ -239,9 +239,9 @@
     <displayOrderInCategory>200</displayOrderInCategory>
     <biostatCpx>1</biostatCpx>
     <biostatMet>5</biostatMet>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylMechAffinity</defName>
     <label>mech affinity</label>
     <description>Carriers of this gene are naturally adept at being mechanitors.</description>
@@ -252,7 +252,7 @@
     <statOffsets>
       <MechBandwidth>3</MechBandwidth>
     </statOffsets>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
     <defName>XylPetrification</defName>
@@ -273,7 +273,7 @@
     </startingItems>
   </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylLearning_Focused</defName>
     <label>focused</label>
     <description>Carriers of this gene care deeply about subjects they are interested in. They learn faster for skills they have a burning passion in, but much slower at skills they have no passion in.</description>
@@ -286,7 +286,7 @@
     </statOffsets>
     <biostatCpx>2</biostatCpx>
     <biostatMet>1</biostatMet>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
 
 </Defs>

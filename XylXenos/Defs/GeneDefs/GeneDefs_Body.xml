@@ -62,7 +62,7 @@
     </renderNodeModifiers>
   </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylScaleskin</defName>
     <label>scaleskin</label>
     <labelShortAdj>scaly</labelShortAdj>
@@ -103,7 +103,7 @@
         <parentTagDef>Body</parentTagDef>
       </li>
     </renderNodeProperties>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
   <FurDef>
     <defName>Scaleskin</defName>
     <noGraphic>true</noGraphic>
@@ -119,7 +119,7 @@
     </bodyTypeGraphicPaths>
   </FurDef>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylMineralizedSkin</defName>
     <label>rockskin</label>
     <labelShortAdj>rock</labelShortAdj>
@@ -161,7 +161,7 @@
       </li>
     </renderNodeProperties>
     <missingGeneRomanceChanceFactor>0.2</missingGeneRomanceChanceFactor>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
   <FurDef>
     <defName>Osteoliths</defName>
     <noGraphic>true</noGraphic>

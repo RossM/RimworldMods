@@ -26,7 +26,7 @@
     </addDesignators>
   </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylJoyless</defName>
     <label>joyless</label>
     <description>Carriers of this gene are genetically incapable of feeling joy. They have no need for recreation, and get no mood bonuses or penalties from it. </description>
@@ -38,6 +38,6 @@
     <disablesNeeds>
       <li>Joy</li>
     </disablesNeeds>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
 </Defs>

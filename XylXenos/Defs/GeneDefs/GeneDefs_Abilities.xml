@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylFeralRage</defName>
     <label>feral rage</label>
     <description>Carriers have the ability to enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%).</description>
@@ -17,9 +17,9 @@
     <descriptionHyperlinks>
       <AbilityDef>XylFeralRage</AbilityDef>
     </descriptionHyperlinks>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylRockToss</defName>
     <label>rock toss</label>
     <description>The carrier can pick up a rock chunk in combat and toss it. It will land near a targeted location, damaging everything in a radius around where it lands.</description>
@@ -34,9 +34,9 @@
     <descriptionHyperlinks>
       <AbilityDef>XylRockToss</AbilityDef>
     </descriptionHyperlinks>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylSonicWave</defName>
     <label>sonic wave</label>
     <description>Carriers of this gene are able to release a wave of high-intensity ultrasonic noise and psychic energy at a target. The noise will stun any non-mechanoid creature nearby.</description>
@@ -51,9 +51,9 @@
     <descriptionHyperlinks>
       <AbilityDef>XylSonicWave</AbilityDef>
     </descriptionHyperlinks>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylToxicBurst</defName>
     <label>toxic burst</label>
     <description>Carriers have the ability to release a cloud of tox gas around them from a special gland located near their anus. The gas affects the user normally.</description>
@@ -68,6 +68,6 @@
     </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
 </Defs>
