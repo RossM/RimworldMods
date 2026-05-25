@@ -10,27 +10,28 @@ namespace XylXenos.Patches
     {
         // Note: This patch is performance-sensitive
         [Feature(nameof(DefExt.disableHostilityFromFactions))]
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
-        public static bool HostileTo_Prefix(Thing a, Thing b, out bool __result)
+        public static void HostileTo_Postfix(Thing a, Thing b, ref bool __result)
         {
-            __result = false;
+            if (!__result)
+                return;
 
             // These are cases where we should respect the regular logic
             if (a.Destroyed || b.Destroyed || a == b)
-                return true;
+                return;
             if ((a.Faction == null && a.TryGetComp<CompCauseGameCondition>() != null) ||
                 (b.Faction == null && b.TryGetComp<CompCauseGameCondition>() != null))
-                return true;
+                return;
 
             if (a is not Pawn pawn || b is not Pawn pawn2)
-                return true;
+                return;
             if (pawn.IsActivityDormant() || pawn2.IsActivityDormant())
-                return true;
+                return;
             if (pawn.kindDef.hostileToAll || pawn2.kindDef.hostileToAll)
-                return true;
+                return;
 
-            return !DisableHostilityCheck(pawn, pawn2) && !DisableHostilityCheck(pawn2, pawn);
+            __result = !DisableHostilityCheck(pawn, pawn2) && !DisableHostilityCheck(pawn2, pawn);
         }
 
         private static bool DisableHostilityCheck(Pawn pawn, Pawn pawn2)
