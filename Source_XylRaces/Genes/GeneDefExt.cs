@@ -84,6 +84,11 @@ namespace XylXenos.Genes
 
         [NoTranslate] public string extraIconPath;
 
+        public GeneDefExt()
+        {
+            geneClass = typeof(GeneExt);
+        }
+
         public Texture2D ExtraIcon
         {
             get
@@ -160,6 +165,11 @@ namespace XylXenos.Genes
 
             if (!permanentHediffs.NullOrEmpty() && !typeof(AddHediff).IsAssignableFrom(geneClass))
                 yield return "permanentHediffs exist but geneClass is not AddHediff or subclass thereof";
+
+            if (geneType != null && !typeof(GeneExt).IsAssignableFrom(geneClass))
+                yield return "geneType set but geneClass is not GeneExt or subclass thereof";
+            if (gender != null && !typeof(GeneExt).IsAssignableFrom(geneClass))
+                yield return "gender set but geneClass is not GeneExt or subclass thereof";
         }
 
         #region Implementation

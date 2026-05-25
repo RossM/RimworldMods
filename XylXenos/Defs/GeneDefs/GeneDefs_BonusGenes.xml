@@ -8,7 +8,7 @@
     <displayPriorityInXenotype>210</displayPriorityInXenotype>
   </GeneCategoryDef>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.BonusGene</geneClass>
     <defName>XylGeneticAtavism</defName>
     <label>genetic atavism</label>
@@ -29,7 +29,7 @@
         <geneChance>0.5</geneChance>
       </li>
     </modExtensions>
-  </GeneDef>
+  </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt Name="XylSpecialistBase" Abstract="true">
     <geneClass>XylXenos.Genes.BonusGene</geneClass>

@@ -14,7 +14,6 @@
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
-    <geneClass>XylXenos.Genes.GenderRatio</geneClass>
     <defName>XylGender_AlwaysFemale</defName>
     <label>always female</label>
     <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -42,7 +41,6 @@
     </symbolPack>
   </XylXenos.Genes.GeneDefExt>
   <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
-    <geneClass>XylXenos.Genes.GenderRatio</geneClass>
     <defName>XylGender_UsuallyFemale</defName>
     <label>usually female</label>
     <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -55,7 +53,6 @@
     </modExtensions>
   </XylXenos.Genes.GeneDefExt>
   <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
-    <geneClass>XylXenos.Genes.GenderRatio</geneClass>
     <defName>XylGender_UsuallyMale</defName>
     <label>usually male</label>
     <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -68,7 +65,6 @@
     </modExtensions>
   </XylXenos.Genes.GeneDefExt>
   <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
-    <geneClass>XylXenos.Genes.GenderRatio</geneClass>
     <defName>XylGender_AlwaysMale</defName>
     <label>always male</label>
     <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is a germline gene.</description>
