@@ -144,7 +144,7 @@ namespace XylXenos
 
             foreach (CallbackInfo callbackInfo in eventInfo.globalCallbacks)
             {
-                DoNotify(callbackInfo, target, data);
+                DoNotify(callbackInfo, target, data, eventType);
             }
 
             if (target == null)
@@ -154,12 +154,12 @@ namespace XylXenos
             {
                 foreach (CallbackInfo callbackInfo in callbackInfos)
                 {
-                    DoNotify(callbackInfo, target, data);
+                    DoNotify(callbackInfo, target, data, eventType);
                 }
             }
         }
 
-        private static void DoNotify(CallbackInfo callbackInfo, Thing target, object data)
+        private static void DoNotify(CallbackInfo callbackInfo, Thing target, object data, NotificationEvent eventType)
         {
             // TODO Remove notification handlers when the corresponding things go away?
             switch (callbackInfo.source)
@@ -173,7 +173,21 @@ namespace XylXenos
             if (doDebug)
                 Debug.Log($"  {callbackInfo.source} : {callbackInfo.name}");
 
-            callbackInfo.wrappedCallback.DynamicInvoke(target, data);
+            try
+            {
+                callbackInfo.wrappedCallback.DynamicInvoke(target, data);
+            }
+            catch (Exception exception)
+            {
+                if (Prefs.DevMode)
+                {
+                    Log.Error($"Exception notifying {callbackInfo.source} : {callbackInfo.name} ({eventType} on {target}): {exception}");
+                }
+                else if (callbackInfo.source != null)
+                {
+                    Log.ErrorOnce($"Exception notifying {callbackInfo.source} : {callbackInfo.name} ({eventType} on {target}). Suppressing further errors. Exception: {exception}", callbackInfo.source.GetHashCode() ^ 0x1c502196);
+                }
+            }
         }
 
         private void CallRegistrationHandlers(object thing)
