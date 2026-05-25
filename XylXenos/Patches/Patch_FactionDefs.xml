@@ -66,9 +66,9 @@
   <Operation Class="PatchOperationAdd">
     <xpath>
       Defs/FactionDef[
-      defName="OutlanderRefugee" or
-      defName="Beggars" or
-      defName="Pilgrims"
+        defName="OutlanderRefugee" or
+        defName="Beggars" or
+        defName="Pilgrims"
       ]/xenotypeSet/xenotypeChances
     </xpath>
     <value>

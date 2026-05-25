@@ -7,8 +7,8 @@
   <Operation Class="PatchOperationReplace">
     <xpath>
       Defs/GeneDef[
-      defName="StrongStomach" or
-      defName="RobustDigestion"
+        defName="StrongStomach" or
+        defName="RobustDigestion"
       ]/displayCategory
     </xpath>
     <value>
@@ -19,8 +19,8 @@
   <Operation Class="PatchOperationReplace">
     <xpath>
       Defs/GeneDef[
-      @Name="GeneTailBase" or
-      defName="Furskin"
+        @Name="GeneTailBase" or
+        defName="Furskin"
       ]/displayCategory
     </xpath>
     <value>

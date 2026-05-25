@@ -48,11 +48,11 @@
   <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>
       Defs/ThoughtDef[
-      defName="AteCorpse" or
-      defName="AteInsectMeatDirect" or
-      defName="AteInsectMeatAsIngredient" or
-      defName="AteHumanlikeMeatDirect" or
-      defName="AteHumanlikeMeatAsIngredient"
+        defName="AteCorpse" or
+        defName="AteInsectMeatDirect" or
+        defName="AteInsectMeatAsIngredient" or
+        defName="AteHumanlikeMeatDirect" or
+        defName="AteHumanlikeMeatAsIngredient"
       ]
     </xpath>
     <value>
