@@ -200,9 +200,6 @@ namespace XylXenos.Genes
             foreach (var configError in base.ConfigErrors())
                 yield return configError;
 
-            if (!permanentHediffs.NullOrEmpty() && !typeof(AddHediff).IsAssignableFrom(geneClass))
-                yield return "permanentHediffs set but geneClass is not AddHediff or subclass thereof";
-
             if (geneType != null && !typeof(GeneExt).IsAssignableFrom(geneClass))
                 yield return "geneType set but geneClass is not GeneExt or subclass thereof";
             if (gender != null && !typeof(GeneExt).IsAssignableFrom(geneClass))
@@ -210,6 +207,10 @@ namespace XylXenos.Genes
             if (!startingItems.NullOrEmpty() && !typeof(GeneExt).IsAssignableFrom(geneClass))
                 yield return "startingItems set but geneClass is not GeneExt or subclass thereof";
 
+            if (!permanentHediffs.NullOrEmpty() && !typeof(AddHediff).IsAssignableFrom(geneClass))
+                yield return "permanentHediffs set but geneClass is not AddHediff or subclass thereof";
+            if (permanentHediffs.NullOrEmpty() && typeof(AddHediff).IsAssignableFrom(geneClass))
+                yield return "permanentHediffs not set but geneClass is AddHediff or subclass thereof";
             if (bonusGenes != null && !typeof(BonusGenes).IsAssignableFrom(geneClass))
                 yield return "bonusGenes set but geneClass is not BonusGene or subclass thereof";
             if (bonusGenes == null && typeof(BonusGenes).IsAssignableFrom(geneClass))
