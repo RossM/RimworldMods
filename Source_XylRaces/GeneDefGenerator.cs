@@ -33,9 +33,9 @@ namespace XylXenos
         private static GeneDef GetFromTemplate(GeneTemplateDef template, AbilityDef def, int displayOrderBase, bool hotReload)
         {
             string defName = $"{template.defName}_{def.defName}";
-            GeneDef geneDef;
+            GeneDefExt geneDef;
             if (hotReload)
-                geneDef = DefDatabase<GeneDef>.GetNamed(defName, errorOnFail: false) ?? new GeneDefExt();
+                geneDef = DefDatabase<GeneDef>.GetNamed(defName, errorOnFail: false) as GeneDefExt ?? new GeneDefExt();
             else
                 geneDef = new GeneDefExt();
 
@@ -59,6 +59,9 @@ namespace XylXenos
             geneDef.biostatMet = biostatInfo.biostatMet;
 
             geneDef.abilities = [def];
+
+            var defExt = geneDef.DefExt;
+            defExt.parent = geneDef;
 
             return geneDef;
         }

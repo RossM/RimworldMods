@@ -11,8 +11,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Dialog_CreateXenotype))]
     public class Patch_Dialog_CreateXenotype
     {
-        [Feature(nameof(GeneDefExt.showInXenotypeCreation))]
-        [Feature(nameof(GeneDefExt.geneType))]
+        [Feature(nameof(DefExt.showInXenotypeCreation))]
+        [Feature(nameof(DefExt.geneType))]
         [InfixPostfix(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder))]
         [InfixPatch("DrawGenes")]
         public static void GenesInOrder_Postfix(Dialog_CreateXenotype __caller, ref List<GeneDef> __result)

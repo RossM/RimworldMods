@@ -21,12 +21,16 @@
     <customEffectDescriptions>
       <li>Extra gene chance: 50%</li>
     </customEffectDescriptions>
-    <bonusGenes>
-      <biostatArc>0~0</biostatArc>
-      <biostatCpx>1~99</biostatCpx>
-      <biostatMet>-2~2</biostatMet>
-      <geneChance>0.5</geneChance>
-    </bonusGenes>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <bonusGenes>
+          <biostatArc>0~0</biostatArc>
+          <biostatCpx>1~99</biostatCpx>
+          <biostatMet>-2~2</biostatMet>
+          <geneChance>0.5</geneChance>
+        </bonusGenes>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt Name="XylSpecialistBase" Abstract="true">
@@ -35,7 +39,6 @@
     <exclusionTags>
       <li>XylSpecialist</li>
     </exclusionTags>
-    <geneType>Xenogene</geneType>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt ParentName="XylSpecialistBase">
@@ -46,24 +49,29 @@
     <biostatMet>0</biostatMet>
     <displayOrderInCategory>201</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
-    <bonusGenes>
-      <removeAfterAdding>true</removeAfterAdding>
-      <ignoreSelectionWeight>true</ignoreSelectionWeight>
-      <allowedGenes>
-        <!--<li>AptitudeStrong_Shooting</li>-->
-        <!--<li>AptitudeStrong_Melee</li>-->
-        <li>AptitudeStrong_Construction</li>
-        <li>AptitudeStrong_Mining</li>
-        <li>AptitudeStrong_Cooking</li>
-        <li>AptitudeStrong_Plants</li>
-        <li>AptitudeStrong_Animals</li>
-        <li>AptitudeStrong_Crafting</li>
-        <li>AptitudeStrong_Artistic</li>
-        <li>AptitudeStrong_Medicine</li>
-        <li>AptitudeStrong_Social</li>
-        <li>AptitudeStrong_Intellectual</li>
-      </allowedGenes>
-    </bonusGenes>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <geneType>Xenogene</geneType>
+        <bonusGenes>
+          <removeAfterAdding>true</removeAfterAdding>
+          <ignoreSelectionWeight>true</ignoreSelectionWeight>
+          <allowedGenes>
+            <!--<li>AptitudeStrong_Shooting</li>-->
+            <!--<li>AptitudeStrong_Melee</li>-->
+            <li>AptitudeStrong_Construction</li>
+            <li>AptitudeStrong_Mining</li>
+            <li>AptitudeStrong_Cooking</li>
+            <li>AptitudeStrong_Plants</li>
+            <li>AptitudeStrong_Animals</li>
+            <li>AptitudeStrong_Crafting</li>
+            <li>AptitudeStrong_Artistic</li>
+            <li>AptitudeStrong_Medicine</li>
+            <li>AptitudeStrong_Social</li>
+            <li>AptitudeStrong_Intellectual</li>
+          </allowedGenes>
+        </bonusGenes>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt ParentName="XylSpecialistBase">
@@ -74,24 +82,29 @@
     <biostatMet>0</biostatMet>
     <displayOrderInCategory>202</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
-    <bonusGenes>
-      <removeAfterAdding>true</removeAfterAdding>
-      <ignoreSelectionWeight>true</ignoreSelectionWeight>
-      <allowedGenes>
-        <!--<li>AptitudeRemarkable_Shooting</li>-->
-        <!--<li>AptitudeRemarkable_Melee</li>-->
-        <li>AptitudeRemarkable_Construction</li>
-        <li>AptitudeRemarkable_Mining</li>
-        <li>AptitudeRemarkable_Cooking</li>
-        <li>AptitudeRemarkable_Plants</li>
-        <li>AptitudeRemarkable_Animals</li>
-        <li>AptitudeRemarkable_Crafting</li>
-        <li>AptitudeRemarkable_Artistic</li>
-        <li>AptitudeRemarkable_Medicine</li>
-        <li>AptitudeRemarkable_Social</li>
-        <li>AptitudeRemarkable_Intellectual</li>
-      </allowedGenes>
-    </bonusGenes>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <geneType>Xenogene</geneType>
+        <bonusGenes>
+          <removeAfterAdding>true</removeAfterAdding>
+          <ignoreSelectionWeight>true</ignoreSelectionWeight>
+          <allowedGenes>
+            <!--<li>AptitudeRemarkable_Shooting</li>-->
+            <!--<li>AptitudeRemarkable_Melee</li>-->
+            <li>AptitudeRemarkable_Construction</li>
+            <li>AptitudeRemarkable_Mining</li>
+            <li>AptitudeRemarkable_Cooking</li>
+            <li>AptitudeRemarkable_Plants</li>
+            <li>AptitudeRemarkable_Animals</li>
+            <li>AptitudeRemarkable_Crafting</li>
+            <li>AptitudeRemarkable_Artistic</li>
+            <li>AptitudeRemarkable_Medicine</li>
+            <li>AptitudeRemarkable_Social</li>
+            <li>AptitudeRemarkable_Intellectual</li>
+          </allowedGenes>
+        </bonusGenes>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -106,16 +119,20 @@
     <displayOrderInCategory>0</displayOrderInCategory>
     <canGenerateInGeneSet>false</canGenerateInGeneSet>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
-    <showInXenotypeCreation>false</showInXenotypeCreation>
-    <bonusGenes>
-      <removeAfterAdding>true</removeAfterAdding>
-      <count>14 ~ 21</count>
-      <prohibitedGenes>
-        <li>ViolenceDisabled</li>
-        <li>Inbred</li>
-        <li>XylGeneticAtavism</li>
-      </prohibitedGenes>
-    </bonusGenes>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <bonusGenes>
+          <removeAfterAdding>true</removeAfterAdding>
+          <count>14 ~ 21</count>
+          <prohibitedGenes>
+            <li>ViolenceDisabled</li>
+            <li>Inbred</li>
+            <li>XylGeneticAtavism</li>
+          </prohibitedGenes>
+        </bonusGenes>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
 </Defs>

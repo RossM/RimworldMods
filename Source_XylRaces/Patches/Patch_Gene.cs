@@ -16,7 +16,7 @@ namespace XylXenos.Patches
                 target.RegisterWith(NotificationManager.Instance);
         }
 
-        [Feature(nameof(GeneDefExt.hediffGivers))]
+        [Feature(nameof(DefExt.hediffGivers))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Gene.TickInterval))]
         public static void TickInterval_Postfix(Gene __instance, int delta)

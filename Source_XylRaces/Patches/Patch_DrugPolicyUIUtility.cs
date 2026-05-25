@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(DrugPolicyUIUtility))]
     public static class Patch_DrugPolicyUIUtility
     {
-        [Feature(nameof(GeneDefExt.showInDrugPolicies))]
+        [Feature(nameof(DefExt.showInDrugPolicies))]
         [HarmonyPostfix]
         [HarmonyPatch(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene))]
         public static void TryGetChemicalDependencyGene_Postfix(Pawn pawn, ref Gene gene, ref bool __result)

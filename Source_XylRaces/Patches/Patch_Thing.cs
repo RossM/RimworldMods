@@ -10,7 +10,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(Thing))]
     public static class Patch_Thing
     {
-        [Feature(nameof(GeneDefExt.dietDependency))]
+        [Feature(nameof(DefExt.dietDependency))]
         [HarmonyPrefix]
         [HarmonyPatch("IngestedCalculateAmounts")]
         public static void IngestedCalculateAmounts_Prefix(Thing __instance, Pawn ingester, ref float nutritionWanted)

@@ -23,7 +23,7 @@ namespace XylXenos.Genes
     {
         [NotNull] public FlightInfo FlightInfo => DefExt.flight!;
 
-        public Texture2D ExtraIcon => ((GeneDefExt)def).ExtraIcon;
+        public Texture2D ExtraIcon => DefExt.ExtraIcon;
         public bool autoFly = true;
         public bool autoFlyDrafted = true;
 

@@ -17,6 +17,10 @@
         <def>Recluse</def>
       </li>
     </suppressedTraits>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -28,13 +32,17 @@
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Moody</iconPath>
-    <hediffGivers>
-      <li Class="XylXenos.HediffGiver_RandomExt">
-        <hediff>XylMoody</hediff>
-        <mtbDays>2</mtbDays>
-        <sendLetter>false</sendLetter>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <hediffGivers>
+          <li Class="XylXenos.HediffGiver_RandomExt">
+            <hediff>XylMoody</hediff>
+            <mtbDays>2</mtbDays>
+            <sendLetter>false</sendLetter>
+          </li>
+        </hediffGivers>
       </li>
-    </hediffGivers>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
 </Defs>

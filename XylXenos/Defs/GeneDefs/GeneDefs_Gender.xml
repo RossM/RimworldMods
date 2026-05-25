@@ -10,7 +10,6 @@
     <exclusionTags>
       <li>Gender</li>
     </exclusionTags>
-    <geneType>Endogene</geneType>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
@@ -19,7 +18,6 @@
     <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is a germline gene.</description>
     <displayOrderInCategory>300</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysFemale</iconPath>
-    <femaleChance>1.0</femaleChance>
     <symbolPack>
       <prefixSymbols>
         <li>
@@ -35,6 +33,12 @@
         </li>
       </suffixSymbols>
     </symbolPack>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <femaleChance>1.0</femaleChance>
+        <geneType>Endogene</geneType>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
   
   <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
@@ -43,7 +47,12 @@
     <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is a germline gene.</description>
     <displayOrderInCategory>301</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyFemale</iconPath>
-    <femaleChance>0.75</femaleChance>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <femaleChance>0.75</femaleChance>
+        <geneType>Endogene</geneType>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
   
   <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
@@ -52,7 +61,12 @@
     <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is a germline gene.</description>
     <displayOrderInCategory>302</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyMale</iconPath>
-    <femaleChance>0.25</femaleChance>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <femaleChance>0.25</femaleChance>
+        <geneType>Endogene</geneType>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
   
   <XylXenos.Genes.GeneDefExt ParentName="XylGenderRatioBase">
@@ -61,7 +75,6 @@
     <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is a germline gene.</description>
     <displayOrderInCategory>303</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysMale</iconPath>
-    <femaleChance>0.0</femaleChance>
     <symbolPack>
       <prefixSymbols>
         <li>
@@ -77,6 +90,12 @@
         </li>
       </suffixSymbols>
     </symbolPack>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <femaleChance>0.0</femaleChance>
+        <geneType>Endogene</geneType>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
 </Defs>

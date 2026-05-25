@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using RimWorld;
 using TranspilerUtil;
 using Verse;
+using XylXenos.Genes;
 
 namespace XylXenos.Patches
 {
@@ -19,6 +22,18 @@ namespace XylXenos.Patches
                 return;
 
             __result = __result.NullOrEmpty() ? extraDescriptions : __result.Concat(extraDescriptions).ToList();
+        }
+
+        [Feature(typeof(DefModExtension))]
+        [HarmonyPostfix]
+        [HarmonyPatch("SpecialDisplayStats")]
+        public static void GeneDef_SpecialDisplayStats_Postfix(GeneDef __instance, StatRequest req, ref IEnumerable<StatDrawEntry> __result)
+        {
+            var defExt = __instance.GetModExtension<DefExt>();
+            if (defExt == null)
+                return;
+
+            __result = __result.Concat(defExt.SpecialDisplayStats(req));
         }
     }
 }

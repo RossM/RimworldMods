@@ -17,33 +17,37 @@
     <displayCategory>XylSenses</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Echolocation</iconPath>
-    <permanentHediffs>
-      <li>
-        <hediff>XylEcholocation</hediff>
-        <partsToAffect>
-          <li>Head</li>
-        </partsToAffect>
-      </li>
-    </permanentHediffs>
-    <congenitalHediffs>
-      <li>
-        <chance>0.15</chance>
-        <hediff>Blindness</hediff>
-        <partsToAffect>
-          <li>Eye</li>
-        </partsToAffect>
-        <countToAffect>2</countToAffect>
-      </li>
-    </congenitalHediffs>
-    <startingItems>
-      <li>
-        <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
-        <chance>0.2</chance>
-      </li>
-    </startingItems>
     <customEffectDescriptions>
       <li>Sight: use hearing if higher</li>
     </customEffectDescriptions>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <permanentHediffs>
+          <li>
+            <hediff>XylEcholocation</hediff>
+            <partsToAffect>
+              <li>Head</li>
+            </partsToAffect>
+          </li>
+        </permanentHediffs>
+        <congenitalHediffs>
+          <li>
+            <chance>0.15</chance>
+            <hediff>Blindness</hediff>
+            <partsToAffect>
+              <li>Eye</li>
+            </partsToAffect>
+            <countToAffect>2</countToAffect>
+          </li>
+        </congenitalHediffs>
+        <startingItems>
+          <li>
+            <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
+            <chance>0.2</chance>
+          </li>
+        </startingItems>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -61,6 +65,10 @@
         <postFactor>1.2</postFactor>
       </li>
     </capMods>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
 </Defs>

@@ -18,7 +18,7 @@ namespace XylXenos.Patches
                 __result = false;
         }
 
-        [Feature(nameof(GeneDefExt.manhunterOnDamageChanceFactor))]
+        [Feature(nameof(DefExt.manhunterOnDamageChanceFactor))]
         [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(ThingDef)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(Pawn), typeof(Thing), typeof(float)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
@@ -27,7 +27,7 @@ namespace XylXenos.Patches
             __result *= pawn.GeneSet()?.manhunterOnDamageChanceFactor ?? 1f;
         }
 
-        [Feature(nameof(GeneDefExt.manhunterOnTameFailChanceFactor))]
+        [Feature(nameof(DefExt.manhunterOnTameFailChanceFactor))]
         [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(ThingDef)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(Pawn)])]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
@@ -36,7 +36,7 @@ namespace XylXenos.Patches
             __result *= pawn.GeneSet()?.manhunterOnTameFailChanceFactor ?? 1f;
         }
 
-        [Feature(nameof(GeneDefExt.manhunterOnDamageChanceFactor))]
+        [Feature(nameof(DefExt.manhunterOnDamageChanceFactor))]
         [InfixPostfix(typeof(RaceProperties), nameof(RaceProperties.manhunterOnDamageChance))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         public static void RaceProperties_manhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
@@ -44,7 +44,7 @@ namespace XylXenos.Patches
             __result *= pawn.GeneSet()?.manhunterOnDamageChanceFactor ?? 1f;
         }
 
-        [Feature(nameof(GeneDefExt.manhunterOnTameFailChanceFactor))]
+        [Feature(nameof(DefExt.manhunterOnTameFailChanceFactor))]
         [InfixPostfix(typeof(RaceProperties), nameof(RaceProperties.manhunterOnTameFailChance))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
         public static void RaceProperties_manhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
@@ -52,8 +52,8 @@ namespace XylXenos.Patches
             __result *= pawn.GeneSet()?.manhunterOnTameFailChanceFactor ?? 1f;
         }
 
-        [Feature(nameof(GeneDefExt.manhunterOnDamageChanceFactor))]
-        [Feature(nameof(GeneDefExt.manhunterOnTameFailChanceFactor))]
+        [Feature(nameof(DefExt.manhunterOnDamageChanceFactor))]
+        [Feature(nameof(DefExt.manhunterOnTameFailChanceFactor))]
         [InfixPostfix(typeof(Def), nameof(Def.LabelCap))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]

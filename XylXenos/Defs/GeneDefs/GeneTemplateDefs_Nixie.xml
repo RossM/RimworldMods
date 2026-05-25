@@ -34,6 +34,10 @@
         <biostatCpx>1</biostatCpx>
       </li>
     </biostats>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+      </li>
+    </modExtensions>
   </XylXenos.GeneTemplateDef>
 
 </Defs>

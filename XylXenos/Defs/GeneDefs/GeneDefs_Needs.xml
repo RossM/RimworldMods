@@ -18,12 +18,16 @@
     <enablesNeeds>
       <li>XylWetness</li>
     </enablesNeeds>
-    <joyGiverChanceFactors>
-      <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
-    </joyGiverChanceFactors>
-    <addDesignators>
-      <li>XylShower</li>
-    </addDesignators>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <joyGiverChanceFactors>
+          <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
+        </joyGiverChanceFactors>
+        <addDesignators>
+          <li>XylShower</li>
+        </addDesignators>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -38,6 +42,10 @@
     <disablesNeeds>
       <li>Joy</li>
     </disablesNeeds>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
 </Defs>

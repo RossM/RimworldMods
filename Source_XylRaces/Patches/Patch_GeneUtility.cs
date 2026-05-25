@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(GeneUtility))]
     public static class Patch_GeneUtility
     {
-        [Feature(nameof(GeneDefExt.dietDependency))]
+        [Feature(nameof(DefExt.dietDependency))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(GeneUtility.SatisfyChemicalGenes))]
         public static void SatisfyChemicalGenes_Postfix(Pawn pawn)

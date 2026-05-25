@@ -9,7 +9,7 @@ namespace XylXenos.Patches
     public static class Patch_GenHostility
     {
         // Note: This patch is performance-sensitive
-        [Feature(nameof(GeneDefExt.disableHostilityFromFactions))]
+        [Feature(nameof(DefExt.disableHostilityFromFactions))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
         public static bool HostileTo_Prefix(Thing a, Thing b, out bool __result)

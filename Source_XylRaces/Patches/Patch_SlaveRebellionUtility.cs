@@ -57,8 +57,8 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(GeneDefExt.slaveRebellionMtbFactor))]
-        [Feature(nameof(GeneDefExt.slaveRebellionThresholdDays))]
+        [Feature(nameof(DefExt.slaveRebellionMtbFactor))]
+        [Feature(nameof(DefExt.slaveRebellionThresholdDays))]
         [HarmonyPostfix]
         [HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
         public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)
@@ -75,8 +75,8 @@ namespace XylXenos.Patches
                 __result = -1;
         }
 
-        [Feature(nameof(GeneDefExt.slaveRebellionMtbFactor))]
-        [Feature(nameof(GeneDefExt.slaveRebellionThresholdDays))]
+        [Feature(nameof(DefExt.slaveRebellionMtbFactor))]
+        [Feature(nameof(DefExt.slaveRebellionThresholdDays))]
         [HarmonyTranspiler]
         [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
         public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(
@@ -99,14 +99,14 @@ namespace XylXenos.Patches
             foreach (var def in pawn.ActiveDefExts())
             {
                 if (def.slaveRebellionMtbFactor != 1)
-                    stringBuilder.AppendLine($"{def.LabelCap}: x{def.slaveRebellionMtbFactor.ToStringPercent()}");
+                    stringBuilder.AppendLine($"{def.parent.LabelCap}: x{def.slaveRebellionMtbFactor.ToStringPercent()}");
             }
 
             if (initiateSlaveRebellionMtbDays < 0)
             {
                 var def = pawn.ActiveDefExts().OrderBy(def => def.slaveRebellionThresholdDays).FirstOrDefault();
                 if (def is { slaveRebellionThresholdDays: < float.MaxValue })
-                    stringBuilder.AppendLine($"{def.LabelCap}: {"XylDocileThresholdReached".Translate(def.slaveRebellionThresholdDays)}");
+                    stringBuilder.AppendLine($"{def.parent.LabelCap}: {"XylDocileThresholdReached".Translate(def.slaveRebellionThresholdDays)}");
             }
 
             string period = initiateSlaveRebellionMtbDays < 0

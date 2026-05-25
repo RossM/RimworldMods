@@ -18,7 +18,11 @@
     <exclusionTags Inherit="false">
       <li>HairStyleMale</li>
     </exclusionTags>
-    <gender>Male</gender>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <gender>Male</gender>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
@@ -37,7 +41,11 @@
     <exclusionTags Inherit="false">
       <li>HairStyleMale</li>
     </exclusionTags>
-    <gender>Male</gender>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <gender>Male</gender>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
@@ -56,7 +64,11 @@
     <exclusionTags Inherit="false">
       <li>HairStyleMale</li>
     </exclusionTags>
-    <gender>Male</gender>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <gender>Male</gender>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
@@ -75,7 +87,11 @@
     <exclusionTags Inherit="false">
       <li>HairStyleFemale</li>
     </exclusionTags>
-    <gender>Female</gender>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <gender>Female</gender>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
@@ -94,7 +110,11 @@
     <exclusionTags Inherit="false">
       <li>HairStyleFemale</li>
     </exclusionTags>
-    <gender>Female</gender>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <gender>Female</gender>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt ParentName="GeneHairStyleBase">
@@ -113,7 +133,11 @@
     <exclusionTags Inherit="false">
       <li>HairStyleFemale</li>
     </exclusionTags>
-    <gender>Female</gender>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <gender>Female</gender>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
 </Defs>

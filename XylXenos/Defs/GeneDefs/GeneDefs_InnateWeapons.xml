@@ -35,14 +35,18 @@
     <exclusionTags>
       <li>Headbone</li>
     </exclusionTags>
-    <permanentHediffs>
-      <li>
-        <hediff>XylLargeHorns</hediff>
-        <partsToAffect>
-          <li>Head</li>
-        </partsToAffect>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <permanentHediffs>
+          <li>
+            <hediff>XylLargeHorns</hediff>
+            <partsToAffect>
+              <li>Head</li>
+            </partsToAffect>
+          </li>
+        </permanentHediffs>
       </li>
-    </permanentHediffs>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -59,15 +63,19 @@
     <exclusionTags>
       <li>Hands</li>
     </exclusionTags>
-    <permanentHediffs>
-      <li>
-        <hediff>XylRetractableClaws</hediff>
-        <partsToAffect>
-          <li>Hand</li>
-        </partsToAffect>
-        <countToAffect>2</countToAffect>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <permanentHediffs>
+          <li>
+            <hediff>XylRetractableClaws</hediff>
+            <partsToAffect>
+              <li>Hand</li>
+            </partsToAffect>
+            <countToAffect>2</countToAffect>
+          </li>
+        </permanentHediffs>
       </li>
-    </permanentHediffs>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
 </Defs>

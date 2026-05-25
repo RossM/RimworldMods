@@ -1,9 +1,10 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using RimWorld;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Xml;
-using JetBrains.Annotations;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -54,8 +55,7 @@ namespace XylXenos.Genes
         public IntRange count = IntRange.One;
     }
 
-    [UsedFromXml]
-    public class GeneDefExt : GeneDef
+    public class DefExt : DefModExtension
     {
         public IEnumerable<string> CustomEffectDescriptions =>
             customEffectDescriptionsInternal ??= GetCustomEffectDescriptions().ToList();
@@ -103,18 +103,13 @@ namespace XylXenos.Genes
         [CanBeNull] public SeeingRedInfo seeingRed;
         [CanBeNull] public TorporInfo torpor;
 
-        public GeneDefExt()
-        {
-            geneClass = typeof(GeneExt);
-        }
-
         public Texture2D ExtraIcon
         {
             get
             {
                 cachedExtraIcon ??= extraIconPath.NullOrEmpty()
-                    ? Icon
-                    : ContentFinder<Texture2D>.Get(iconPath) ?? Icon;
+                    ? parent.Icon
+                    : ContentFinder<Texture2D>.Get(extraIconPath) ?? parent.Icon;
                 return cachedExtraIcon;
             }
         }
@@ -130,11 +125,8 @@ namespace XylXenos.Genes
             };
         }
 
-        public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+        public IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
         {
-            foreach (var stat in base.SpecialDisplayStats(req))
-                yield return stat;
-
             if (!permanentHediffs.NullOrEmpty())
             {
                 foreach (Tool tool in permanentHediffs.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
@@ -199,6 +191,10 @@ namespace XylXenos.Genes
 
         public override IEnumerable<string> ConfigErrors()
         {
+            var geneClass = parent?.geneClass;
+            if (geneClass == null)
+                yield break;
+
             foreach (var configError in base.ConfigErrors())
                 yield return configError;
 
@@ -223,12 +219,37 @@ namespace XylXenos.Genes
                 yield return "torpor not set but geneClass is Torpor or subclass thereof";
         }
 
+        public override void ResolveReferences(Def parentDef)
+        {
+            base.ResolveReferences(parentDef);
+
+            parent = parentDef as GeneDef;
+            if (parent == null)
+            {
+                if (parentDef is not GeneTemplateDef)
+                    Log.Warning("XylXenos DefExt is applied to def other than GeneDef or GeneTemplateDef");
+                return;
+            }
+
+            if (parent.geneClass == typeof(Gene))
+                parent.geneClass = typeof(GeneExt);
+        }
+
         #region Implementation
 
         private List<string> customEffectDescriptionsInternal;
 
         private Texture2D cachedExtraIcon;
 
+        public GeneDef parent;
+
         #endregion
+    }
+
+    [UsedFromXml]
+    public class GeneDefExt : GeneDef
+    {
+        [NotNull] public DefExt DefExt => defExtInternal ??= GetModExtension<DefExt>() ?? new DefExt();
+        [CanBeNull] private DefExt defExtInternal;
     }
 }

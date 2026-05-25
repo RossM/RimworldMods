@@ -11,7 +11,7 @@ namespace XylXenos.Genes
     {
         public HashSet<BodyPartRecord> partsWithPermanentHediffs;
 
-        [NotNull] public GeneDefExt DefExt => this.DefExt()!;
+        [NotNull] public DefExt DefExt => this.DefExt()!;
 
         public override bool Active
         {
@@ -139,6 +139,36 @@ namespace XylXenos.Genes
             HashSet<HediffDef> defs = [.. DefExt.permanentHediffs.Select(hediffGiver => hediffGiver.hediff)];
             IEnumerable<Hediff> hediffs = pawn.health.hediffSet.hediffs.Where(hediff => defs.Contains(hediff.def));
             return hediffs;
+        }
+
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
+        {
+            if (!DefExt.permanentHediffs.NullOrEmpty())
+            {
+                foreach (Tool tool in DefExt.permanentHediffs.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
+                             .Where(verbGiver => verbGiver != null).SelectMany(verbGiver => verbGiver.tools))
+                {
+                    float armorPenetration = tool.armorPenetration;
+                    if (armorPenetration < 0f)
+                    {
+                        armorPenetration = tool.power * 0.015f;
+                    }
+
+                    // TODO: Calculate DPS
+                    yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_MeleeDamage".Translate(),
+                        tool.power.ToStringByStyle(ToStringStyle.FloatTwo), "", 4102);
+                    yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "ArmorPenetration".Translate(),
+                        armorPenetration.ToStringPercent(), "ArmorPenetrationExplanation".Translate(), 4101);
+                    yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_Cooldown".Translate(),
+                        "StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall()), "", 4100);
+                }
+            }
+
+            if (DefExt.femaleChance != null)
+            {
+                yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
+                    DefExt.GetGenderRatioDescription(), "XylGenderRatioDesc".TranslateSimple(), 1);
+            }
         }
 
         public void Notify_HediffStateChange()

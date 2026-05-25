@@ -21,9 +21,13 @@
         <def>Bloodlust</def>
       </li>
     </suppressedTraits>
-    <slaveRebellionMtbFactor>4</slaveRebellionMtbFactor>
-    <slaveRebellionThresholdDays>120</slaveRebellionThresholdDays>
-    <manhunterOnTameFailChanceFactor>0</manhunterOnTameFailChanceFactor>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <slaveRebellionMtbFactor>4</slaveRebellionMtbFactor>
+        <slaveRebellionThresholdDays>120</slaveRebellionThresholdDays>
+        <manhunterOnTameFailChanceFactor>0</manhunterOnTameFailChanceFactor>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -36,11 +40,15 @@
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
-    <manhunterOnDamageChanceFactor>2</manhunterOnDamageChanceFactor>
-    <seeingRed>
-      <chance>0.15</chance>
-      <hediffDef>XylSeeingRed</hediffDef>
-    </seeingRed>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <manhunterOnDamageChanceFactor>2</manhunterOnDamageChanceFactor>
+        <seeingRed>
+          <chance>0.15</chance>
+          <hediffDef>XylSeeingRed</hediffDef>
+        </seeingRed>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -53,30 +61,34 @@
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Hyperlactation</iconPath>
-    <extraIconPath>Things/Item/Resource/Milk</extraIconPath>
     <minAgeActive>13</minAgeActive>
     <customEffectDescriptions>
       <li>Enables being milked</li>
     </customEffectDescriptions>
-    <gender>Female</gender>
-    <startingItems>
-      <li>
-        <item>Milk</item>
-        <chance>0.2</chance>
-        <count>5~10</count>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <extraIconPath>Things/Item/Resource/Milk</extraIconPath>
+        <gender>Female</gender>
+        <startingItems>
+          <li>
+            <item>Milk</item>
+            <chance>0.2</chance>
+            <count>5~10</count>
+          </li>
+        </startingItems>
+        <hyperlactation>
+          <item>Milk</item>
+          <chargePerItem>0.1</chargePerItem>
+          <hediff>XylHyperlactating</hediff>
+          <milkedThoughts>
+            <li>XylMilked</li>
+            <li>XylMilkedMood</li>
+            <li>XylMilked_Masochist</li>
+            <li>XylMilkedMood_Masochist</li>
+          </milkedThoughts>
+        </hyperlactation>
       </li>
-    </startingItems>
-    <hyperlactation>
-      <item>Milk</item>
-      <chargePerItem>0.1</chargePerItem>
-      <hediff>XylHyperlactating</hediff>
-      <milkedThoughts>
-        <li>XylMilked</li>
-        <li>XylMilkedMood</li>
-        <li>XylMilked_Masochist</li>
-        <li>XylMilkedMood_Masochist</li>
-      </milkedThoughts>
-    </hyperlactation>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -88,18 +100,22 @@
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>130</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Precognition</iconPath>
-    <permanentHediffs>
-      <li Class="HediffGiver_Event">
-        <hediff>XylPrecognition</hediff>
-        <partsToAffect>
-          <li>Head</li>
-        </partsToAffect>
-      </li>
-    </permanentHediffs>
     <customEffectDescriptions>
       <li>Melee dodge chance: +15</li>
       <li>Ranged dodge chance: +15</li>
     </customEffectDescriptions>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <permanentHediffs>
+          <li Class="HediffGiver_Event">
+            <hediff>XylPrecognition</hediff>
+            <partsToAffect>
+              <li>Head</li>
+            </partsToAffect>
+          </li>
+        </permanentHediffs>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -149,7 +165,11 @@
       <MaxFlightTime>8</MaxFlightTime>
       <FlightCooldown>45</FlightCooldown>
     </statOffsets>
-    <flight/>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <flight/>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -162,13 +182,17 @@
     <displayCategory>Temperature</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>-->
-    <torpor>
-      <hediff>XylTorpor</hediff>
-      <temperatureThreshold>11</temperatureThreshold>
-      <comfyTemperatureImportance>0.3</comfyTemperatureImportance>
-      <severityGainPerDayPerDegree>0.02</severityGainPerDayPerDegree>
-      <severityLossPerDayPerDegree>0.02</severityLossPerDayPerDegree>
-    </torpor>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <torpor>
+          <hediff>XylTorpor</hediff>
+          <temperatureThreshold>11</temperatureThreshold>
+          <comfyTemperatureImportance>0.3</comfyTemperatureImportance>
+          <severityGainPerDayPerDegree>0.02</severityGainPerDayPerDegree>
+          <severityLossPerDayPerDegree>0.02</severityLossPerDayPerDegree>
+        </torpor>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -184,6 +208,10 @@
     <statOffsets>
       <WorkSpeedGlobal>0.15</WorkSpeedGlobal>
     </statOffsets>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -195,9 +223,13 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>501</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_InsectPheromones</iconPath>
-    <disableHostilityFromFactions>
-      <li>Insect</li>
-    </disableHostilityFromFactions>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <disableHostilityFromFactions>
+          <li>Insect</li>
+        </disableHostilityFromFactions>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -214,11 +246,15 @@
         <def>Transhumanist</def>
       </li>
     </suppressedTraits>
-    <permanentHediffs>
-      <li>
-        <hediff>XylBioRejection</hediff>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <permanentHediffs>
+          <li>
+            <hediff>XylBioRejection</hediff>
+          </li>
+        </permanentHediffs>
       </li>
-    </permanentHediffs>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -229,6 +265,10 @@
     <displayOrderInCategory>90</displayOrderInCategory>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -239,6 +279,10 @@
     <displayOrderInCategory>200</displayOrderInCategory>
     <biostatCpx>1</biostatCpx>
     <biostatMet>5</biostatMet>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -252,6 +296,10 @@
     <statOffsets>
       <MechBandwidth>3</MechBandwidth>
     </statOffsets>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -264,13 +312,17 @@
     <displayOrderInCategory>210</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <prerequisite>XylLithoid</prerequisite>
-    <startingItems>
-      <li>
-        <item>XylSoftener</item>
-        <chance>0.05</chance>
-        <count>5~10</count>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <startingItems>
+          <li>
+            <item>XylSoftener</item>
+            <chance>0.05</chance>
+            <count>5~10</count>
+          </li>
+        </startingItems>
       </li>
-    </startingItems>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -286,6 +338,10 @@
     </statOffsets>
     <biostatCpx>2</biostatCpx>
     <biostatMet>1</biostatMet>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
 

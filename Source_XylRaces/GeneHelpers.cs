@@ -97,10 +97,10 @@ public static class GeneHelpers
         return false;
     }
 
-    public static IEnumerable<GeneDefExt> ActiveDefExts(this Pawn pawn)
+    public static IEnumerable<DefExt> ActiveDefExts(this Pawn pawn)
     {
         if (pawn.genes == null)
-            return Enumerable.Empty<GeneDefExt>();
+            return Enumerable.Empty<DefExt>();
         return pawn.genes.GenesListForReading.Where(gene => gene.Active).Select(gene => gene.DefExt()).Where(defExt => defExt != null);
     }
 
@@ -134,15 +134,15 @@ public static class GeneHelpers
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [CanBeNull]
-    public static GeneDefExt DefExt(this GeneDef gene)
+    public static DefExt DefExt(this GeneDef gene)
     {
-        return gene as GeneDefExt;
+        return (gene as GeneDefExt)?.DefExt;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [CanBeNull]
-    public static GeneDefExt DefExt(this Gene gene)
+    public static DefExt DefExt(this Gene gene)
     {
-        return gene.def as GeneDefExt;
+        return (gene.def as GeneDefExt)?.DefExt;
     }
 }

@@ -29,18 +29,22 @@
     <statOffsets>
       <XylRawMeatFoodPoisonChanceOffset>-0.05</XylRawMeatFoodPoisonChanceOffset>
     </statOffsets>
-    <ingestionThoughtOverrides>
-      <li>
-        <meatSources>
-          <li>Undefined</li>
-          <li>Insect</li>
-          <li>Humanlike</li>
-        </meatSources>
-        <thoughts>
-          <li>AteRawFood</li>
-        </thoughts>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <ingestionThoughtOverrides>
+          <li>
+            <meatSources>
+              <li>Undefined</li>
+              <li>Insect</li>
+              <li>Humanlike</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </ingestionThoughtOverrides>
       </li>
-    </ingestionThoughtOverrides>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -64,16 +68,20 @@
     <statOffsets>
       <XylRawNonMeatFoodPoisonChanceOffset>-0.05</XylRawNonMeatFoodPoisonChanceOffset>
     </statOffsets>
-    <ingestionThoughtOverrides>
-      <li>
-        <meatSources>
-          <li>NotMeat</li>
-        </meatSources>
-        <thoughts>
-          <li>AteRawFood</li>
-        </thoughts>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <ingestionThoughtOverrides>
+          <li>
+            <meatSources>
+              <li>NotMeat</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </ingestionThoughtOverrides>
       </li>
-    </ingestionThoughtOverrides>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -92,9 +100,13 @@
     <statFactors>
       <XylRawFungusNutritionFactor>1.8</XylRawFungusNutritionFactor>
     </statFactors>
-    <addDesignators>
-      <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
-    </addDesignators>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <addDesignators>
+          <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
+        </addDesignators>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -108,38 +120,42 @@
     <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MeatDependence</iconPath>
     <minAgeActive>13</minAgeActive>
-    <ingestionThoughtOverrides>
-      <li>
-        <meatSources>
-          <li>Undefined</li>
-        </meatSources>
-        <thoughts>
-          <li>AteRawFood</li>
-        </thoughts>
-      </li>
-    </ingestionThoughtOverrides>
-    <allowMutants>false</allowMutants>
-    <permanentHediffs>
-      <li>
-        <hediff>XylGeneticMeatNeed</hediff>
-      </li>
-    </permanentHediffs>
-    <startingItems>
-      <li>
-        <foodType>Meat</foodType>
-        <count>20~40</count>
-      </li>
-    </startingItems>
-    <dietDependency>
-      <foodLabel>raw meat</foodLabel>
-      <foodKind>Meat</foodKind>
-      <rawOnly>true</rawOnly>
-      <!-- 
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <ingestionThoughtOverrides>
+          <li>
+            <meatSources>
+              <li>Undefined</li>
+            </meatSources>
+            <thoughts>
+              <li>AteRawFood</li>
+            </thoughts>
+          </li>
+        </ingestionThoughtOverrides>
+        <allowMutants>false</allowMutants>
+        <permanentHediffs>
+          <li>
+            <hediff>XylGeneticMeatNeed</hediff>
+          </li>
+        </permanentHediffs>
+        <startingItems>
+          <li>
+            <foodType>Meat</foodType>
+            <count>20~40</count>
+          </li>
+        </startingItems>
+        <dietDependency>
+          <foodLabel>raw meat</foodLabel>
+          <foodKind>Meat</foodKind>
+          <rawOnly>true</rawOnly>
+          <!-- 
       This requires that the warcat eat 0.5 nutrition per day in raw meat out of a total
       nutrition requirement of 1.44, or 35% of their diet.
       -->
-      <severityReductionPerNutrition>1.0</severityReductionPerNutrition>
-    </dietDependency>
+          <severityReductionPerNutrition>1.0</severityReductionPerNutrition>
+        </dietDependency>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
 </Defs>

@@ -20,7 +20,11 @@
     <statFactors>
       <XylGlobalAddictionChanceFactor>2.0</XylGlobalAddictionChanceFactor>
     </statFactors>
-    <showInDrugPolicies>true</showInDrugPolicies>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <showInDrugPolicies>true</showInDrugPolicies>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -41,7 +45,11 @@
     <statFactors>
       <XylGlobalAddictionChanceFactor>0.7</XylGlobalAddictionChanceFactor>
     </statFactors>
-    <showInDrugPolicies>true</showInDrugPolicies>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <showInDrugPolicies>true</showInDrugPolicies>
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -70,14 +78,18 @@
         <degree>1</degree>
       </li>
     </suppressedTraits>
-    <showInDrugPolicies>true</showInDrugPolicies>
-    <startingItems>
-      <li>
-        <item>XylAtlasite</item>
-        <chance>0.02</chance>
-        <count>2~5</count>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <showInDrugPolicies>true</showInDrugPolicies>
+        <startingItems>
+          <li>
+            <item>XylAtlasite</item>
+            <chance>0.02</chance>
+            <count>2~5</count>
+          </li>
+        </startingItems>
       </li>
-    </startingItems>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
 </Defs>

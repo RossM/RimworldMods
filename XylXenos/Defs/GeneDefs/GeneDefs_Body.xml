@@ -23,16 +23,20 @@
     <statOffsets>
       <MoveSpeed>-0.1</MoveSpeed>
     </statOffsets>
-    <renderNodeModifiers>
-      <li>
-        <onlyRoot>true</onlyRoot>
-        <scale>0.85</scale>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <renderNodeModifiers>
+          <li>
+            <onlyRoot>true</onlyRoot>
+            <scale>0.85</scale>
+          </li>
+          <li>
+            <renderNodeClass>PawnRenderNodeWorker_Head</renderNodeClass>
+            <scale>1.177</scale>
+          </li>
+        </renderNodeModifiers>
       </li>
-      <li>
-        <renderNodeClass>PawnRenderNodeWorker_Head</renderNodeClass>
-        <scale>1.177</scale>
-      </li>
-    </renderNodeModifiers>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -47,19 +51,23 @@
     <exclusionTags>
       <li>BodySize</li>
     </exclusionTags>
-    <bodySizeFactor>1.5</bodySizeFactor>
-    <healthScaleFactor>1.3</healthScaleFactor>
-    <renderNodeModifiers>
-      <li>
-        <onlyRoot>true</onlyRoot>
-        <scale>1.2</scale>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+        <bodySizeFactor>1.5</bodySizeFactor>
+        <healthScaleFactor>1.3</healthScaleFactor>
+        <renderNodeModifiers>
+          <li>
+            <onlyRoot>true</onlyRoot>
+            <scale>1.2</scale>
+          </li>
+          <li>
+            <renderNodeClass>PawnRenderNodeWorker_Head</renderNodeClass>
+            <scale>0.9</scale>
+            <offset>0,0,-0.05</offset>
+          </li>
+        </renderNodeModifiers>
       </li>
-      <li>
-        <renderNodeClass>PawnRenderNodeWorker_Head</renderNodeClass>
-        <scale>0.9</scale>
-        <offset>0,0,-0.05</offset>
-      </li>
-    </renderNodeModifiers>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -103,6 +111,10 @@
         <parentTagDef>Body</parentTagDef>
       </li>
     </renderNodeProperties>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
   <FurDef>
     <defName>Scaleskin</defName>
@@ -161,6 +173,10 @@
       </li>
     </renderNodeProperties>
     <missingGeneRomanceChanceFactor>0.2</missingGeneRomanceChanceFactor>
+    <modExtensions>
+      <li Class="XylXenos.Genes.DefExt">
+      </li>
+    </modExtensions>
   </XylXenos.Genes.GeneDefExt>
   <FurDef>
     <defName>Osteoliths</defName>

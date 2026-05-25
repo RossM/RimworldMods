@@ -20,7 +20,7 @@ namespace XylXenos.Genes
     {
         [NotNull] public HyperlactationInfo HyperlactationInfo => DefExt.hyperlactation!;
 
-        public Texture2D ExtraIcon => ((GeneDefExt)def).ExtraIcon;
+        public Texture2D ExtraIcon => DefExt.ExtraIcon;
 
         public HediffComp_Lactating Lactating =>
             lactatingInternal ??= pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();

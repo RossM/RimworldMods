@@ -9,7 +9,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(PawnGenerator))]
     public static class Patch_PawnGenerator
     {
-        [Feature(nameof(GeneDefExt.femaleChance))]
+        [Feature(nameof(DefExt.femaleChance))]
         [InfixPrefix(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
         [InfixPatch("TryGenerateNewPawnInternal")]
         public static void GiveAppropriateBioAndNameTo_Prefix(
@@ -20,7 +20,7 @@ namespace XylXenos.Patches
             PatchHelpers.ModifyGenderByGenes(pawn, request, xenotype);
         }
 
-        [Feature(nameof(GeneDefExt.congenitalHediffs))]
+        [Feature(nameof(DefExt.congenitalHediffs))]
         [HarmonyPostfix]
         [HarmonyPatch("GenerateInitialHediffs")]
         public static void GenerateInitialHediffs_Postfix(Pawn pawn, PawnGenerationRequest request)
