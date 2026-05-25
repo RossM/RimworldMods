@@ -6,10 +6,8 @@ using Verse;
 namespace XylXenos.Genes
 {
     [UsedImplicitly]
-    public class AddHediff : Gene, IGene_HediffSource, INotificationListener
+    public class AddHediff : GeneExt, IGene_HediffSource, INotificationListener
     {
-        public GeneDefExt DefExt => (GeneDefExt)def;
-
         public HashSet<BodyPartRecord> affectedParts;
 
         public override void ExposeData()

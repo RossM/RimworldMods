@@ -17,11 +17,11 @@ namespace XylXenos.Genes
         [MustTranslate] public string foodLabel;
     }
 
-    public class DietDependency : Gene, IGene_HediffSource, IStartingItemSource, INotificationListener
+    public class DietDependency : GeneExt, IGene_HediffSource, IStartingItemSource, INotificationListener
     {
-        public GeneDefExtension_DietDependency DefExt => def.GetModExtension<GeneDefExtension_DietDependency>();
+        public GeneDefExtension_DietDependency DietDependencyDefExt => def.GetModExtension<GeneDefExtension_DietDependency>();
 
-        public Hediff LinkedHediff => DefExt == null ? null : pawn.HediffsWithDef(DefExt.hediffDef).FirstOrDefault();
+        public Hediff LinkedHediff => DietDependencyDefExt == null ? null : pawn.HediffsWithDef(DietDependencyDefExt.hediffDef).FirstOrDefault();
 
         public override bool Active => base.Active && pawn is { IsGhoul: false };
 
@@ -35,7 +35,7 @@ namespace XylXenos.Genes
         {
             if (Active)
             {
-                var extension = DefExt;
+                var extension = DietDependencyDefExt;
                 if (extension == null)
                     return;
                 var hediff = HediffMaker.MakeHediff(extension.hediffDef, pawn);
@@ -56,7 +56,7 @@ namespace XylXenos.Genes
 
         public override void Notify_IngestedThing(Thing food, int numTaken)
         {
-            var extension = DefExt;
+            var extension = DietDependencyDefExt;
             if (extension == null)
             {
                 Log.Warning(
@@ -110,7 +110,7 @@ namespace XylXenos.Genes
             if (nutrition <= 0.0f)
                 return false;
 
-            var extension = DefExt;
+            var extension = DietDependencyDefExt;
             if (extension == null)
             {
                 Log.Warning("Gene_DietDependency.ValidateFood called without a GeneDefExtension_DietDependency");
@@ -140,7 +140,7 @@ namespace XylXenos.Genes
             if (food.GetStatBase(StatDefOf.Nutrition) <= 0)
                 return false;
 
-            var extension = DefExt;
+            var extension = DietDependencyDefExt;
             if (extension == null)
             {
                 Log.Warning("Gene_DietDependency.ValidateFood called without a GeneDefExtension_DietDependency");
@@ -158,7 +158,7 @@ namespace XylXenos.Genes
 
         public float NutritionWantedToSatisfy()
         {
-            float severityReductionPerNutrition = DefExt.severityReductionPerNutrition;
+            float severityReductionPerNutrition = DietDependencyDefExt.severityReductionPerNutrition;
             float nutritionForNeed = LinkedHediff.Severity / severityReductionPerNutrition;
             return nutritionForNeed;
         }
@@ -174,7 +174,7 @@ namespace XylXenos.Genes
 
         public bool CausesHediff(HediffDef hediffDef)
         {
-            return DefExt?.hediffDef == hediffDef;
+            return DietDependencyDefExt?.hediffDef == hediffDef;
         }
 
         public void RegisterWith(NotificationManager manager)
@@ -184,21 +184,21 @@ namespace XylXenos.Genes
 
         public ThingDefCount? GetStartingItem()
         {
-            if (DefExt?.startingFoodNutrition == null)
+            if (DietDependencyDefExt?.startingFoodNutrition == null)
                 return null;
 
             var foodDef = DefDatabase<ThingDef>.AllDefsListForReading.Where(GoodStartingFood).RandomElement();
             if (foodDef == null)
                 return null;
 
-            float nutritionNeeded = DefExt.startingFoodNutrition.Value.RandomInRange;
+            float nutritionNeeded = DietDependencyDefExt.startingFoodNutrition.Value.RandomInRange;
             int itemsNeeded = Mathf.CeilToInt(nutritionNeeded / foodDef.GetStatBase(StatDefOf.Nutrition));
 
             return new(foodDef, Mathf.Clamp(itemsNeeded, 1, foodDef.stackLimit));
 
             bool GoodStartingFood(ThingDef thingDef)
             {
-                if (thingDef.ingestible?.foodType.HasFlag(DefExt.startingFoodType) != true)
+                if (thingDef.ingestible?.foodType.HasFlag(DietDependencyDefExt.startingFoodType) != true)
                     return false;
                 if (!ValidateFood(thingDef))
                     return false;

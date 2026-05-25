@@ -19,9 +19,9 @@ namespace XylXenos.Genes
         public bool allowsFlight = true;
     }
 
-    public class Flight : Gene, INotificationListener
+    public class Flight : GeneExt, INotificationListener
     {
-        public GeneDefExtension_Flight DefExt => def.GetModExtension<GeneDefExtension_Flight>();
+        public GeneDefExtension_Flight FlightDefExt => def.GetModExtension<GeneDefExtension_Flight>();
 
         public Texture2D ExtraIcon => ((GeneDefExt)def).ExtraIcon;
         public bool autoFly = true;
@@ -125,7 +125,7 @@ namespace XylXenos.Genes
                 flightAllowedByApparel &&
                 (pawn.Drafted ? autoFlyDrafted : autoFly) &&
                 pawn.pather.Moving &&
-                pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= DefExt.autoFlyMinDistance &&
+                pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= FlightDefExt.autoFlyMinDistance &&
                 pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
             {
                 flight.StartFlying();

@@ -6,7 +6,7 @@ using Verse;
 namespace XylXenos.Genes
 {
     [UsedImplicitly]
-    public class ChemicalImmunity : Gene
+    public class ChemicalImmunity : GeneExt
     {
         public void RemoveInvalidHediffs()
         {

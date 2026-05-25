@@ -15,9 +15,9 @@ namespace XylXenos.Genes
     }
 
     [UsedImplicitly]
-    public class Torpor : Gene
+    public class Torpor : GeneExt
     {
-        public GeneDefExtension_Torpor DefExt => def.GetModExtension<GeneDefExtension_Torpor>();
+        public GeneDefExtension_Torpor TorporDefExt => def.GetModExtension<GeneDefExtension_Torpor>();
 
         public override void TickInterval(int delta)
         {
@@ -31,15 +31,15 @@ namespace XylXenos.Genes
             if (!pawn.IsHashIntervalTick(checkInterval, delta))
                 return;
 
-            float minimumTemperature = Mathf.Lerp(DefExt.temperatureThreshold,
-                pawn.GetStatValue(StatDefOf.ComfyTemperatureMin), DefExt.comfyTemperatureImportance);
+            float minimumTemperature = Mathf.Lerp(TorporDefExt.temperatureThreshold,
+                pawn.GetStatValue(StatDefOf.ComfyTemperatureMin), TorporDefExt.comfyTemperatureImportance);
             float temperatureDifference = minimumTemperature - pawn.AmbientTemperature;
             float changePerDay = temperatureDifference * (temperatureDifference > 0
-                ? DefExt.severityGainPerDayPerDegree
-                : DefExt.severityLossPerDayPerDegree);
-            HealthUtility.AdjustSeverity(pawn, DefExt.hediff, (checkInterval / (float)GenDate.TicksPerDay) * changePerDay);
+                ? TorporDefExt.severityGainPerDayPerDegree
+                : TorporDefExt.severityLossPerDayPerDegree);
+            HealthUtility.AdjustSeverity(pawn, TorporDefExt.hediff, (checkInterval / (float)GenDate.TicksPerDay) * changePerDay);
 
-            Hediff torpor = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediff);
+            Hediff torpor = pawn.health.hediffSet.GetFirstHediffOfDef(TorporDefExt.hediff);
 
             if ((torpor?.CurStageIndex ?? 0) >= 3)
                 pawn.needs.rest.CurLevelPercentage = Mathf.Min(pawn.needs.rest.CurLevelPercentage, 0.1f);

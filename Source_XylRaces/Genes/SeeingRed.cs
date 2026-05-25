@@ -10,9 +10,9 @@ namespace XylXenos.Genes
         public HediffDef hediffDef;
     }
 
-    public class SeeingRed : Gene, INotificationListener
+    public class SeeingRed : GeneExt, INotificationListener
     {
-        public GeneDefExtension_SeeingRed DefExt => def.GetModExtension<GeneDefExtension_SeeingRed>();
+        public GeneDefExtension_SeeingRed SeeingRedDefExt => def.GetModExtension<GeneDefExtension_SeeingRed>();
 
         const int checkInterval = 60;
         public HashSet<Thing> extraEnemies;
@@ -30,7 +30,7 @@ namespace XylXenos.Genes
                 return;
             if (extraEnemies != null)
             {
-                Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
+                Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(SeeingRedDefExt.hediffDef);
                 if (hediff == null)
                     extraEnemies.Clear();
             }
@@ -44,19 +44,19 @@ namespace XylXenos.Genes
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
             yield return new StatDrawEntry(StatCategoryDefOf.PawnCombat, "XylRageChanceLabel".TranslateSimple(),
-                DefExt.chance.ToStringPercent(), "XylRageChanceDesc".TranslateSimple(), 1);
+                SeeingRedDefExt.chance.ToStringPercent(), "XylRageChanceDesc".TranslateSimple(), 1);
         }
 
         public void Notify_DamageTaken(DamageInfo damageInfo)
         {
-            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(DefExt.hediffDef);
+            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(SeeingRedDefExt.hediffDef);
 
-            if (hediff == null && !Rand.Chance(DefExt.chance))
+            if (hediff == null && !Rand.Chance(SeeingRedDefExt.chance))
                 return;
             if (pawn.Downed)
                 return;
 
-            hediff ??= pawn.health.AddHediff(DefExt.hediffDef);
+            hediff ??= pawn.health.AddHediff(SeeingRedDefExt.hediffDef);
             if (hediff == null)
                 return;
 

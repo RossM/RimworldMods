@@ -2,7 +2,7 @@
 
 namespace XylXenos.Genes
 {
-    public class Psycast : Gene
+    public class Psycast : GeneExt
     {
         public override void PostAdd()
         {
