@@ -17,7 +17,7 @@ namespace XylXenos.Patches
             PawnGenerationRequest request,
             XenotypeDef xenotype)
         {
-            GeneHelpers.ModifyGenderByGenes(pawn, request, xenotype);
+            PatchHelpers.ModifyGenderByGenes(pawn, request, xenotype);
         }
 
         [Feature(nameof(GeneDefExt.congenitalHediffs))]
@@ -25,7 +25,7 @@ namespace XylXenos.Patches
         [HarmonyPatch("GenerateInitialHediffs")]
         public static void GenerateInitialHediffs_Postfix(Pawn pawn, PawnGenerationRequest request)
         {
-            GeneHelpers.GenerateCongenitalHediffs(pawn);
+            PatchHelpers.GenerateCongenitalHediffs(pawn);
         }
 
         [Feature(typeof(XenotypeSetWithDefault))]

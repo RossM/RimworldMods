@@ -13,7 +13,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(JoyGiver.GetChance))]
         public static void GetChance_Postfix(JoyGiver __instance, Pawn pawn, ref float __result)
         {
-            var factor = GeneHelpers.GetJoyFactor(pawn, __instance);
+            var factor = PatchHelpers.GetJoyFactor(pawn, __instance);
             __result *= factor;
         }
     }

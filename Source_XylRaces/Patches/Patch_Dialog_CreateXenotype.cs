@@ -24,7 +24,7 @@ namespace XylXenos.Patches
         {
             if (ignoreRestrictions)
                 return genes;
-            return genes.Where(g => GeneHelpers.GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene)).ToList();
+            return genes.Where(g => PatchHelpers.GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene)).ToList();
         }
     }
 }

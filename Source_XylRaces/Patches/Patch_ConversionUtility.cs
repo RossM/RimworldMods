@@ -33,14 +33,14 @@ namespace XylXenos.Patches
                         CodeInstruction.LoadArgument(0),
                         new CodeInstruction(OpCodes.Ldc_I4_0),
                         CodeInstruction.LoadArgument(2),
-                        CodeInstruction.Call(() => GeneHelpers.ConversionPowerFactor_OffsetFromXenotype),
+                        CodeInstruction.Call(() => PatchHelpers.ConversionPowerFactor_OffsetFromXenotype),
                         new CodeInstruction(OpCodes.Add),
                         // + OffsetFromXenotype(recipient, recipient, true, sb)
                         CodeInstruction.LoadArgument(1),
                         CodeInstruction.LoadArgument(0),
                         new CodeInstruction(OpCodes.Ldc_I4_1),
                         CodeInstruction.LoadArgument(2),
-                        CodeInstruction.Call(() => GeneHelpers.ConversionPowerFactor_OffsetFromXenotype),
+                        CodeInstruction.Call(() => PatchHelpers.ConversionPowerFactor_OffsetFromXenotype),
                         new CodeInstruction(OpCodes.Add),
                     ]
                 }
