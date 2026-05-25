@@ -23,10 +23,10 @@ namespace XylXenos.Patches
 
             BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
 
-            bool hasGeneDesignator = p.GeneSet()?.addDesignators.Contains(def) ?? false;
+            bool hasGeneDesignator = p.GeneSet()?.addDesignators?.Contains(def) ?? false;
             if (!hasGeneDesignator && GenConstruct.tmpIdeoMemberNames.Count == 0)
             {
-                foreach (GeneDefExt gene in DefDatabase<GeneDef>.AllDefs.OfType<GeneDefExt>())
+                foreach (GeneDefExt gene in DefDatabase<GeneDef>.AllDefs.Select(gene => gene.DefExt()).Where(gene => gene != null))
                 {
                     if (gene.addDesignators?.Contains(def) ?? false)
                         GenConstruct.tmpIdeoMemberNames.Add("XylCharactersWithGene".Translate(gene.LabelCap));

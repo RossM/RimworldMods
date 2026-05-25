@@ -140,22 +140,23 @@ public static class GeneHelpers
         return bonusGeneDefExt.biostatMet.min;
     }
 
-    public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef gene)
+    public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef geneDef)
     {
-        if (gene is GeneDefExt ext)
+        var defExt = geneDef.DefExt();
+        if (defExt != null)
         {
-            foreach (var customEffectDescription in ext.CustomEffectDescriptions)
+            foreach (var customEffectDescription in defExt.CustomEffectDescriptions)
                 yield return customEffectDescription;
         }
 
         // Official content doesn't need our help
-        if (gene.modContentPack?.IsOfficialMod == true)
+        if (geneDef.modContentPack?.IsOfficialMod == true)
             yield break;
 
         IEnumerable<RecipeDef> recipeDefs = DefDatabase<RecipeDef>.AllDefsListForReading.Where(def =>
         {
             var modExtension = def.GetModExtension<DefModExtension_GeneDependent>();
-            return modExtension != null && (modExtension.genePrerequisitesAny ?? Enumerable.Empty<GeneDef>()).Contains(gene);
+            return modExtension != null && (modExtension.genePrerequisitesAny ?? Enumerable.Empty<GeneDef>()).Contains(geneDef);
         }).ToList();
         if (recipeDefs.Any())
         {
@@ -165,7 +166,7 @@ public static class GeneHelpers
 
         IEnumerable<ThingDef> thingDefs = DefDatabase<RecipeDef>.AllDefsListForReading
             .SelectMany(def => def.products ?? Enumerable.Empty<ThingDefCountClass>(), (_, c) => c.thingDef)
-            .Where(def => def.GetModExtension<DefModExtension_GeneDependent>()?.genePrerequisitesAny?.Contains(gene) == true)
+            .Where(def => def.GetModExtension<DefModExtension_GeneDependent>()?.genePrerequisitesAny?.Contains(geneDef) == true)
             .ToList();
         if (thingDefs.Any())
         {
@@ -173,7 +174,7 @@ public static class GeneHelpers
         }
 
         IEnumerable<MentalBreakDef> mentalBreakDefs
-            = DefDatabase<MentalBreakDef>.AllDefsListForReading.Where(def => def.requiredGene == gene).ToList();
+            = DefDatabase<MentalBreakDef>.AllDefsListForReading.Where(def => def.requiredGene == geneDef).ToList();
         foreach (var mentalBreakDef in mentalBreakDefs)
         {
             yield return $"{"XylPossibleMentalBreak".Translate()}: {mentalBreakDef.mentalState.LabelCap}";
@@ -269,20 +270,22 @@ public static class GeneHelpers
 
     public static bool GeneShouldBeVisible(GeneDef geneDef, GeneType geneType)
     {
-        if (geneDef is not GeneDefExt def)
+        var defExt = geneDef.DefExt();
+        if (defExt == null)
             return true;
 
-        if (!def.showInXenotypeCreation)
+        if (!defExt.showInXenotypeCreation)
             return false;
-        if (def.geneType != null && def.geneType != geneType)
+        if (defExt.geneType != null && defExt.geneType != geneType)
             return false;
+
         return true;
     }
 
-    public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene gene)
+    public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene outGene)
     {
-        gene = pawn.genes?.GenesListForReading.FirstOrDefault(g => g.def is GeneDefExt { showInDrugPolicies: true });
-        return gene != null;
+        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene => gene.Active && gene.DefExt()?.showInDrugPolicies == true);
+        return outGene != null;
     }
 
     public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
@@ -310,7 +313,7 @@ public static class GeneHelpers
                        request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
                        request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
                        xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
-        if ((gene as GeneDefExt)?.femaleChance is not { } chance)
+        if (gene.DefExt()?.femaleChance is not { } chance)
             return;
 
         pawn.gender = Rand.Chance(chance) ? Gender.Female : Gender.Male;
@@ -318,19 +321,19 @@ public static class GeneHelpers
 
     public static bool HasGenderRatio(GeneDef geneDef)
     {
-        return geneDef is GeneDefExt { femaleChance: not null };
+        return geneDef.DefExt()?.femaleChance != null;
     }
 
-    public static IEnumerable<GeneDefExt> ActiveExtendedGeneDefs(this Pawn pawn)
+    public static IEnumerable<GeneDefExt> ActiveDefExts(this Pawn pawn)
     {
         if (pawn.genes == null)
             return Enumerable.Empty<GeneDefExt>();
-        return pawn.genes.GenesListForReading.Where(gene => gene.Active).Select(gene => gene.def).OfType<GeneDefExt>();
+        return pawn.genes.GenesListForReading.Where(gene => gene.Active).Select(gene => gene.DefExt()).Where(defExt => defExt != null);
     }
 
     public static void GenerateCongenitalHediffs(Pawn pawn)
     {
-        foreach (var def in pawn.ActiveExtendedGeneDefs())
+        foreach (var def in pawn.ActiveDefExts())
         {
             if (!def.congenitalHediffs.NullOrEmpty())
             {
@@ -346,14 +349,15 @@ public static class GeneHelpers
     {
         if (!gene.Active)
             return;
-        if (gene.def is not GeneDefExt def)
+        var defExt = gene.DefExt();
+        if (defExt == null)
             return;
-        if (def.hediffGivers.NullOrEmpty())
+        if (defExt.hediffGivers.NullOrEmpty())
             return;
         if (!gene.pawn.IsHashIntervalTick(60, delta))
             return;
 
-        foreach (var hediffGiver in def.hediffGivers)
+        foreach (var hediffGiver in defExt.hediffGivers)
         {
             hediffGiver.OnIntervalPassed(gene.pawn, null);
         }
@@ -367,5 +371,19 @@ public static class GeneHelpers
             return null;
 
         return XylXenos.GeneSet.Tracker.Get(pawn);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [CanBeNull]
+    public static GeneDefExt DefExt(this GeneDef gene)
+    {
+        return gene as GeneDefExt;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [CanBeNull]
+    public static GeneDefExt DefExt(this Gene gene)
+    {
+        return gene.def as GeneDefExt;
     }
 }

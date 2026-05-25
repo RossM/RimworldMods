@@ -46,7 +46,7 @@ namespace XylXenos
             disableHostilityFromFactions?.Clear();
             ingestionThoughtOverrides?.Clear();
 
-            foreach (var def in pawn.ActiveExtendedGeneDefs())
+            foreach (var def in pawn.ActiveDefExts())
             {
                 bodySizeFactor *= def.bodySizeFactor;
                 healthScaleFactor *= def.healthScaleFactor;

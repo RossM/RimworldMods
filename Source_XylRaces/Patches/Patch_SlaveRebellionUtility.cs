@@ -96,7 +96,7 @@ namespace XylXenos.Patches
 
             float initiateSlaveRebellionMtbDays = SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn);
 
-            foreach (var def in pawn.ActiveExtendedGeneDefs())
+            foreach (var def in pawn.ActiveDefExts())
             {
                 if (def.slaveRebellionMtbFactor != 1)
                     stringBuilder.AppendLine($"{def.LabelCap}: x{def.slaveRebellionMtbFactor.ToStringPercent()}");
@@ -104,7 +104,7 @@ namespace XylXenos.Patches
 
             if (initiateSlaveRebellionMtbDays < 0)
             {
-                var def = pawn.ActiveExtendedGeneDefs().OrderBy(def => def.slaveRebellionThresholdDays).FirstOrDefault();
+                var def = pawn.ActiveDefExts().OrderBy(def => def.slaveRebellionThresholdDays).FirstOrDefault();
                 if (def is { slaveRebellionThresholdDays: < float.MaxValue })
                     stringBuilder.AppendLine($"{def.LabelCap}: {"XylDocileThresholdReached".Translate(def.slaveRebellionThresholdDays)}");
             }
