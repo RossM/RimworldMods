@@ -19,7 +19,7 @@ namespace XylXenos.Genes
         [MustTranslate] public string foodLabel;
     }
 
-    public class DietDependency : GeneExt, IGene_HediffSource, INotificationListener
+    public class DietDependency : GeneExt, IGene_HediffSource
     {
         [NotNull] public DietDependencyInfo DietDependencyInfo => DefExt.dietDependency!;
 
@@ -155,8 +155,10 @@ namespace XylXenos.Genes
             return DietDependencyInfo.hediffDef == hediffDef;
         }
 
-        public void RegisterWith(NotificationManager manager)
+        public override void RegisterWith(NotificationManager manager)
         {
+            base.RegisterWith(manager);
+
             manager.Register(NotificationEvent.PostSatisfyGenes, pawn, Reset);
         }
 

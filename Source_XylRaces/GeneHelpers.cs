@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using JetBrains.Annotations;
-using RimWorld;
 using Verse;
 using XylXenos.Genes;
 

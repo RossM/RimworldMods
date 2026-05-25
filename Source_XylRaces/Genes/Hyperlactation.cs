@@ -12,7 +12,7 @@ namespace XylXenos.Genes
         public ThingDef item;
         public float chargePerItem = 0.1f;
         public HediffDef hediff;
-        public List<ThoughtDef> milkedThoughts;
+        [CanBeNull] public List<ThoughtDef> milkedThoughts;
         public int ticksPerSorenessStage = 60000;
     }
 

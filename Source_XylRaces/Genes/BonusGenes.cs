@@ -12,8 +12,8 @@ namespace XylXenos.Genes
         public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
         public IntRange biostatMet = new(int.MinValue, int.MaxValue);
         public float geneChance = 1.0f;
-        public List<GeneDef> allowedGenes;
-        public List<GeneDef> prohibitedGenes;
+        [CanBeNull] public List<GeneDef> allowedGenes;
+        [CanBeNull] public List<GeneDef> prohibitedGenes;
         public bool removeAfterAdding = false;
         public bool ignoreSelectionWeight = false;
         public IntRange count = IntRange.One;

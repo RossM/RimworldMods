@@ -19,7 +19,7 @@ namespace XylXenos.Genes
         public bool allowsFlight = true;
     }
 
-    public class Flight : GeneExt, INotificationListener
+    public class Flight : GeneExt
     {
         [NotNull] public FlightInfo FlightInfo => DefExt.flight!;
 
@@ -179,8 +179,10 @@ namespace XylXenos.Genes
             CheckApparel();
         }
 
-        public void RegisterWith(NotificationManager manager)
+        public override void RegisterWith(NotificationManager manager)
         {
+            base.RegisterWith(manager);
+
             manager.Register(NotificationEvent.PostApparelChanged, pawn, Notify_ApparelChanged);
         }
     }

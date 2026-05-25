@@ -39,8 +39,11 @@ namespace XylXenos
             if (gene == null)
                 return;
 
-            foreach (var thoughtDef in gene.HyperlactationInfo.milkedThoughts)
-                Target.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);
+            if (!gene.HyperlactationInfo.milkedThoughts.NullOrEmpty())
+            {
+                foreach (var thoughtDef in gene.HyperlactationInfo.milkedThoughts)
+                    Target.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);
+            }
 
             var lactationCharge = gene.Lactating;
             if (lactationCharge == null)

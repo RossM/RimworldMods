@@ -185,7 +185,7 @@ namespace XylXenos.Genes
             return DefExt.permanentHediffs?.Any(g => g.hediff == hediffDef) ?? false;
         }
 
-        public void RegisterWith(NotificationManager manager)
+        public virtual void RegisterWith(NotificationManager manager)
         {
             if (!DefExt.permanentHediffs.NullOrEmpty())
                 manager.Register(NotificationEvent.PostHediffStateChange, pawn, Notify_HediffStateChange);
