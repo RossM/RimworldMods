@@ -180,7 +180,7 @@ namespace XylXenos.Genes
             }
         }
 
-        bool IGene_HediffSource.CausesHediff(HediffDef hediffDef)
+        public virtual bool CausesHediff(HediffDef hediffDef)
         {
             return DefExt.permanentHediffs?.Any(g => g.hediff == hediffDef) ?? false;
         }
