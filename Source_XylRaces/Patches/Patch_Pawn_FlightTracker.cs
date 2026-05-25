@@ -30,7 +30,7 @@ namespace XylXenos.Patches
         public static void FlightTick_Prefix(Pawn_FlightTracker __instance)
         {
             var pawn = __instance.pawn;
-            if (pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
+            if (__instance.Flying && pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
             {
                 if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Flight>() is { } gene)
                 {
