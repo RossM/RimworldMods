@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
+using HarmonyLib;
 using UnityEngine;
 using Verse;
 using XylXenos.Genes;
@@ -16,7 +17,11 @@ namespace XylXenos.Patches
             if (parms.pawn == null)
                 return;
 
-            foreach (var modifier in parms.pawn.GeneSet().renderNodeModifiers)
+            List<RenderNodeModifier> renderNodeModifiers = parms.pawn.GeneSet()?.renderNodeModifiers;
+            if (renderNodeModifiers == null)
+                return;
+
+            foreach (var modifier in renderNodeModifiers)
             {
                 if (modifier.Matches(node))
                     __result *= modifier.scale;
@@ -31,7 +36,11 @@ namespace XylXenos.Patches
             if (parms.pawn == null)
                 return;
 
-            foreach (var modifier in parms.pawn.GeneSet().renderNodeModifiers)
+            List<RenderNodeModifier> renderNodeModifiers = parms.pawn.GeneSet()?.renderNodeModifiers;
+            if (renderNodeModifiers == null)
+                return;
+
+            foreach (var modifier in renderNodeModifiers)
             {
                 if (modifier.Matches(node))
                     __result += modifier.offset;
