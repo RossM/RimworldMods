@@ -11,6 +11,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(ThingComp.Initialize))]
         public static void Initialize_Postfix(ThingComp __instance)
         {
+            // ReSharper disable once SuspiciousTypeConversion.Global
             if (__instance is INotificationListener target)
                 target.RegisterWith(NotificationManager.Instance);
         }

@@ -111,7 +111,7 @@ namespace XylXenos.Genes
         public override void PostRemove()
         {
             var extension = DefExt;
-            if (Active && extension?.permanentHediffs != null)
+            if (Active && extension.permanentHediffs != null)
             {
                 HashSet<HediffDef> defsToRemove = [..extension.permanentHediffs.Select(hediffGiver => hediffGiver.hediff)];
                 foreach (var hediff in pawn.health.hediffSet.hediffs
@@ -125,7 +125,7 @@ namespace XylXenos.Genes
 
         bool IGene_HediffSource.CausesHediff(HediffDef hediffDef)
         {
-            return DefExt?.permanentHediffs?.Any(g => g.hediff == hediffDef) ?? false;
+            return DefExt.permanentHediffs?.Any(g => g.hediff == hediffDef) ?? false;
         }
 
         public void RegisterWith(NotificationManager manager)

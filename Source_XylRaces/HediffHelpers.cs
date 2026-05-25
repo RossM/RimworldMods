@@ -29,6 +29,7 @@ public static class HediffHelpers
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    // ReSharper disable once UnusedMember.Global
     public static IEnumerable<Hediff> HediffsWithModExtension<T>(this Pawn pawn) where T : class
     {
         return pawn.LookupCache().GetHediffsWithModExtension<T>() ??

@@ -20,6 +20,7 @@ namespace XylXenos.Patches
 
         // TODO this does not do anything because it has no harmony attributes...
         //[Feature(typeof(GeneDefExtension_WildMan))]
+        // ReSharper disable once UnusedMember.Global
         public static bool Interacted_Prefix(
             Pawn initiator,
             Pawn recipient,

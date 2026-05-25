@@ -38,8 +38,6 @@ namespace XylXenos.Genes
             if (Active)
             {
                 var extension = DietDependencyInfo;
-                if (extension == null)
-                    return;
                 var hediff = HediffMaker.MakeHediff(extension.hediffDef, pawn);
                 pawn.health.AddHediff(hediff);
             }
@@ -58,14 +56,6 @@ namespace XylXenos.Genes
 
         public override void Notify_IngestedThing(Thing food, int numTaken)
         {
-            var extension = DietDependencyInfo;
-            if (extension == null)
-            {
-                Log.Warning(
-                    "Gene_DietDependency.Notify_IngestedThing called without a GeneDefExtension_DietDependency");
-                return;
-            }
-
             float nutrition = FoodUtility.NutritionForEater(pawn, food);
 
             if (numTaken > 0)
@@ -77,7 +67,7 @@ namespace XylXenos.Genes
                 nutrition = Math.Min(nutrition, pawn.needs.food.NutritionWanted);
             }
 
-            var severityReduction = nutrition * extension.severityReductionPerNutrition;
+            var severityReduction = nutrition * DietDependencyInfo.severityReductionPerNutrition;
 
             if (ValidateFood(food))
                 ReduceSeverity(severityReduction);
@@ -112,24 +102,17 @@ namespace XylXenos.Genes
             if (nutrition <= 0.0f)
                 return false;
 
-            var extension = DietDependencyInfo;
-            if (extension == null)
-            {
-                Log.Warning("Gene_DietDependency.ValidateFood called without a GeneDefExtension_DietDependency");
-                return false;
-            }
-
-            if (!food.def.IsRawFoodOrCorpse() && extension.rawOnly)
+            if (!food.def.IsRawFoodOrCorpse() && DietDependencyInfo.rawOnly)
                 return false;
 
-            if (extension.foodKind == FoodUtility.GetFoodKind(food))
+            if (DietDependencyInfo.foodKind == FoodUtility.GetFoodKind(food))
                 return true;
 
             var compIngredients = food.TryGetComp<CompIngredients>();
             if (compIngredients == null)
                 return false;
             if (Enumerable.Any(compIngredients.ingredients,
-                    ingredient => extension.foodKind == FoodUtility.GetFoodKind(ingredient)))
+                    ingredient => DietDependencyInfo.foodKind == FoodUtility.GetFoodKind(ingredient)))
                 return true;
 
             return false;
@@ -142,17 +125,10 @@ namespace XylXenos.Genes
             if (food.GetStatBase(StatDefOf.Nutrition) <= 0)
                 return false;
 
-            var extension = DietDependencyInfo;
-            if (extension == null)
-            {
-                Log.Warning("Gene_DietDependency.ValidateFood called without a GeneDefExtension_DietDependency");
-                return false;
-            }
-
-            if (!food.IsRawFoodOrCorpse() && extension.rawOnly)
+            if (!food.IsRawFoodOrCorpse() && DietDependencyInfo.rawOnly)
                 return false;
 
-            if (extension.foodKind == FoodUtility.GetFoodKind(food))
+            if (DietDependencyInfo.foodKind == FoodUtility.GetFoodKind(food))
                 return true;
 
             return false;
@@ -176,7 +152,7 @@ namespace XylXenos.Genes
 
         public bool CausesHediff(HediffDef hediffDef)
         {
-            return DietDependencyInfo?.hediffDef == hediffDef;
+            return DietDependencyInfo.hediffDef == hediffDef;
         }
 
         public void RegisterWith(NotificationManager manager)
@@ -189,7 +165,7 @@ namespace XylXenos.Genes
             foreach (var startingItem in base.GetStartingItems())
                 yield return startingItem;
 
-            if (DietDependencyInfo?.startingFoodNutrition == null)
+            if (DietDependencyInfo.startingFoodNutrition == null)
                 yield break;
 
             var foodDef = DefDatabase<ThingDef>.AllDefsListForReading.Where(GoodStartingFood).RandomElement();

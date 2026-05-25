@@ -42,7 +42,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(typeof(IStartingItemSource))]
+        [Feature(nameof(GeneDefExt.startingItems))]
         [HarmonyTranspiler]
         [HarmonyPatch("GeneratePossessions")]
         public static IEnumerable<CodeInstruction> GeneratePossessions_Transpiler(

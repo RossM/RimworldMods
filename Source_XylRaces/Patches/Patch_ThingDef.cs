@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -10,17 +9,11 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(ThingDef))]
     public static class Patch_ThingDef
     {
-        public static bool Enabled => enabled.Value;
-        public static Lazy<bool> enabled = new(Config.GeneOfTypeExists<Flight>);
-
         [Feature(typeof(Flight))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(ThingDef.SpecialDisplayStats))]
         public static void SpecialDisplayStats_Postfix(ThingDef __instance, ref IEnumerable<StatDrawEntry> __result)
         {
-            if (!Enabled)
-                return;
-
             if (__instance.apparel != null)
             {
                 bool allowsFlight = Flight.ApparelAllowsFlight(__instance);

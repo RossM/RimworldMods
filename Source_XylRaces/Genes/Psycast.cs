@@ -1,6 +1,4 @@
-﻿using Verse;
-
-namespace XylXenos.Genes
+﻿namespace XylXenos.Genes
 {
     public class Psycast : GeneExt
     {
