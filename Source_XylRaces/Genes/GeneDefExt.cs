@@ -9,6 +9,13 @@ using Verse;
 
 namespace XylXenos.Genes
 {
+    public class GeneIngestionThoughtOverride
+    {
+        public ThingDef thing;
+        public List<MeatSourceCategory> meatSources;
+        public List<ThoughtDef> thoughts;
+    }
+
     public class JoyGiverFactor
     {
         public JoyGiverDef joyGiver;
@@ -72,6 +79,8 @@ namespace XylXenos.Genes
         public List<JoyGiverFactor> joyGiverChanceFactors;
         public List<BuildableDef> addDesignators;
         public List<RenderNodeModifier> renderNodeModifiers;
+        public List<FactionDef> disableHostilityFromFactions;
+        public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
 
         [NoTranslate] public string extraIconPath;
 

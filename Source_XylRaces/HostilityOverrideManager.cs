@@ -70,9 +70,8 @@ namespace XylXenos
             activeOverrides.Clear();
             foreach (var pawn in map.mapPawns.AllPawns)
             {
-                foreach (var defExt in pawn.ActiveGeneDefExtensionsOfType<GeneDefExtension_HostilityOverride>())
+                foreach (var factionDef in pawn.GeneSet().disableHostilityFromFactions)
                 {
-                    FactionDef factionDef = defExt.disableHostilityFromFaction;
                     foreach (var targetFaction in Find.FactionManager.AllFactions.Where(faction => faction.def == factionDef))
                     {
                         activeOverrides.Add((pawn.Faction, targetFaction));

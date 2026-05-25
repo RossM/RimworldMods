@@ -193,7 +193,7 @@
     </statOffsets>
   </GeneDef>
 
-  <GeneDef>
+  <XylXenos.Genes.GeneDefExt>
     <defName>XylInsectPheromones</defName>
     <label>insect pheromones</label>
     <description>Carriers of this gene produce special pheromones which make wild insects not attack them.</description>
@@ -202,12 +202,10 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>501</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_InsectPheromones</iconPath>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_HostilityOverride">
-        <disableHostilityFromFaction>Insect</disableHostilityFromFaction>
-      </li>
-    </modExtensions>
-  </GeneDef>
+    <disableHostilityFromFactions>
+      <li>Insect</li>
+    </disableHostilityFromFactions>
+  </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
     <geneClass>XylXenos.Genes.AddHediff</geneClass>
