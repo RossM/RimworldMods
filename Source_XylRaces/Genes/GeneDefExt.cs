@@ -65,6 +65,8 @@ namespace XylXenos.Genes
         public float manhunterOnDamageChanceFactor = 1.0f;
         public float manhunterOnTameFailChanceFactor = 1.0f;
 
+        public float? femaleChance;
+
         public bool showInDrugPolicies = false;
 
         // These are triggered randomly over time
@@ -100,6 +102,17 @@ namespace XylXenos.Genes
             }
         }
 
+        public string GetGenderRatioDescription()
+        {
+            return femaleChance switch
+            {
+                >= 1.0f => "XylGenderRatioAlwaysFemale".Translate(),
+                <= 0.0f => "XylGenderRatioAlwaysMale".Translate(),
+                { } chance => "XylGenderRatioValue".Translate(chance.ToStringPercent(),
+                    (1 - chance).ToStringPercent())
+            };
+        }
+
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
         {
             foreach (var stat in base.SpecialDisplayStats(req))
@@ -124,6 +137,12 @@ namespace XylXenos.Genes
                     yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_Cooldown".Translate(),
                         "StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall()), "", 4100);
                 }
+            }
+
+            if (femaleChance != null)
+            {
+                yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
+                    GetGenderRatioDescription(), "XylGenderRatioDesc".TranslateSimple(), 1);
             }
         }
 
@@ -150,6 +169,9 @@ namespace XylXenos.Genes
                         $"{"StatsReport_Cooldown".Translate()}: {"StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall())}";
                 }
             }
+
+            if (femaleChance != null)
+                yield return $"{"XylGenderRatioLabel".TranslateSimple()}: {GetGenderRatioDescription()}";
 
             if (!addDesignators.NullOrEmpty())
             {

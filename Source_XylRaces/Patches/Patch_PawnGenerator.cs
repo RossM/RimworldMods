@@ -9,7 +9,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(PawnGenerator))]
     public static class Patch_PawnGenerator
     {
-        [Feature(typeof(GeneDefExtension_GenderRatio))]
+        [Feature(nameof(GeneDefExt.femaleChance))]
         [InfixPrefix(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
         [InfixPatch("TryGenerateNewPawnInternal")]
         public static void GiveAppropriateBioAndNameTo_Prefix(

@@ -331,15 +331,15 @@ public static class GeneHelpers
                        request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
                        request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
                        xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
-        if (gene == null)
+        if ((gene as GeneDefExt)?.femaleChance is not { } chance)
             return;
 
-        pawn.gender = gene.GetModExtension<GeneDefExtension_GenderRatio>().GetGender();
+        pawn.gender = Rand.Chance(chance) ? Gender.Female : Gender.Male;
     }
 
-    public static bool HasGenderRatio(GeneDef gene)
+    public static bool HasGenderRatio(GeneDef geneDef)
     {
-        return gene.GetModExtension<GeneDefExtension_GenderRatio>() != null;
+        return geneDef is GeneDefExt { femaleChance: not null };
     }
 
     public static IEnumerable<GeneDefExt> ActiveExtendedGeneDefs(this Pawn pawn)
