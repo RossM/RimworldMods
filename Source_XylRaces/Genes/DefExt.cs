@@ -222,18 +222,25 @@ namespace XylXenos.Genes
         {
             base.ResolveReferences(parentDef);
 
-            parent = parentDef as GeneDef;
-            if (parent == null)
-            {
-                if (parentDef is not GeneTemplateDef)
-                    Log.Warning("XylXenos DefExt is applied to def other than GeneDef or GeneTemplateDef");
-                return;
-            }
-
-            if (parent.geneClass == typeof(Gene))
-                parent.geneClass = typeof(GeneExt);
-
             GeneHelpers.defExtCache.Clear();
+            
+            switch (parentDef)
+            {
+                case GeneDef geneDef:
+                {
+                    parent = geneDef;
+                    if (parent.geneClass == typeof(Gene))
+                        parent.geneClass = typeof(GeneExt);
+                    break;
+                }
+                case GeneTemplateDef: 
+                    break;
+                default:
+                {
+                    Log.Warning($"XylXenos DefExt is applied to def other than GeneDef or GeneTemplateDef: {parentDef.GetType().Name} {parentDef.defName}");
+                    break;
+                }
+            }
         }
 
         #region Implementation
