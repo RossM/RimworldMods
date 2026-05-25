@@ -263,7 +263,7 @@ public static class GeneHelpers
     {
         HashSet<Designator> geneDesignators = [];
 
-        foreach (var geneSet in Faction.OfPlayer.GetPawns().Select(pawn => pawn.GetComp<CompPawn_GeneSet>()))
+        foreach (var geneSet in Faction.OfPlayer.GetPawns().Select(pawn => pawn.GeneSet()))
         {
             geneDesignators.AddRange(geneSet.addDesignators.Where(def => def.designationCategory == __instance)
                 .Select(GetCachedDesignator));
@@ -306,7 +306,7 @@ public static class GeneHelpers
     public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
     {
         float factor = 1f;
-        foreach (var joyGiverFactor in pawn.GetComp<CompPawn_GeneSet>().joyGiverChanceFactors)
+        foreach (var joyGiverFactor in pawn.GeneSet().joyGiverChanceFactors)
         {
             if (joyGiverFactor.joyGiver == joyGiver.def)
                 factor *= joyGiverFactor.factor;
@@ -371,5 +371,10 @@ public static class GeneHelpers
         {
             hediffGiver.OnIntervalPassed(gene.pawn, null);
         }
+    }
+
+    public static GeneSet GeneSet(this Pawn pawn)
+    {
+        return XylXenos.GeneSet.Tracker.Get(pawn);
     }
 }

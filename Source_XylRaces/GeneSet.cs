@@ -6,30 +6,28 @@ using XylXenos.Genes;
 
 namespace XylXenos
 {
-    [UsedFromXml]
-    public class CompProperties_PawnGeneSet : CompProperties
+    public class GeneSet(Pawn pawn) : INotificationListener
     {
-        public CompProperties_PawnGeneSet()
-        {
-            compClass = typeof(CompPawn_GeneSet);
-        }
-    }
+        public Pawn pawn = pawn;
 
-    public class CompPawn_GeneSet : ThingComp, INotificationListener
-    {
-        [Unsaved] public float bodySizeFactor = 1f;
-        [Unsaved] public float healthScaleFactor = 1f;
-        [Unsaved] public float slaveRebellionMtbFactor = 1f;
-        [Unsaved] public float slaveRebellionThresholdDays = float.MaxValue;
-        [Unsaved] public float manhunterOnDamageChanceFactor = 1f;
-        [Unsaved] public float manhunterOnTameFailChanceFactor = 1f;
-        [Unsaved] public List<JoyGiverFactor> joyGiverChanceFactors = [];
-        [Unsaved] public List<BuildableDef> addDesignators = [];
-        [Unsaved] public List<RenderNodeModifier> renderNodeModifiers = [];
+        public float bodySizeFactor = 1f;
+        public float healthScaleFactor = 1f;
+        public float slaveRebellionMtbFactor = 1f;
+        public float slaveRebellionThresholdDays = float.MaxValue;
+        public float manhunterOnDamageChanceFactor = 1f;
+        public float manhunterOnTameFailChanceFactor = 1f;
+        public List<JoyGiverFactor> joyGiverChanceFactors = [];
+        public List<BuildableDef> addDesignators = [];
+        public List<RenderNodeModifier> renderNodeModifiers = [];
 
-        public void RegisterWith(NotificationManager manager)
+        public static PawnTracker<GeneSet> Tracker = new(Make);
+
+        private static GeneSet Make(Pawn pawn)
         {
-            manager.Register(NotificationEvent.PostGenesChanged, parent, Notify_GenesChanged);
+            var geneSet = new GeneSet(pawn);
+            geneSet.RegisterWith(NotificationManager.Instance);
+            geneSet.Update();
+            return geneSet;
         }
 
         public void Update()
@@ -44,7 +42,7 @@ namespace XylXenos
             addDesignators.Clear();
             renderNodeModifiers.Clear();
 
-            foreach (var def in ((Pawn)parent).ActiveExtendedGeneDefs())
+            foreach (var def in pawn.ActiveExtendedGeneDefs())
             {
                 bodySizeFactor *= def.bodySizeFactor;
                 healthScaleFactor *= def.healthScaleFactor;
@@ -59,23 +57,23 @@ namespace XylXenos
                     addDesignators.AddRange(def.addDesignators);
                 if (!def.renderNodeModifiers.NullOrEmpty())
                     renderNodeModifiers.AddRange(def.renderNodeModifiers);
-                
             }
         }
 
-        public override void PostPostMake()
+        public void Notify_PostGenesChanged()
         {
             Update();
         }
 
-        public override void PostMapInit()
+        public void Notify_PostLoadedGame()
         {
             Update();
         }
 
-        private void Notify_GenesChanged()
+        public void RegisterWith(NotificationManager manager)
         {
-            Update();
+            manager.Register(NotificationEvent.PostGenesChanged, pawn, Notify_PostGenesChanged);
+            manager.Register(NotificationEvent.PostLoadedGame, pawn, Notify_PostLoadedGame);
         }
     }
 }

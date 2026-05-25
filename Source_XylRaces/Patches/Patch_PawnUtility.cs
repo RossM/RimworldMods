@@ -26,7 +26,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         public static void GetManhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
         {
-            __result *= pawn.GetComp<CompPawn_GeneSet>().manhunterOnDamageChanceFactor;
+            __result *= pawn.GeneSet().manhunterOnDamageChanceFactor;
         }
 
         [Feature(nameof(GeneDefExt.manhunterOnTameFailChanceFactor))]
@@ -35,7 +35,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
         public static void GetManhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
         {
-            __result *= pawn.GetComp<CompPawn_GeneSet>().manhunterOnTameFailChanceFactor;
+            __result *= pawn.GeneSet().manhunterOnTameFailChanceFactor;
         }
 
         [Feature(nameof(GeneDefExt.manhunterOnDamageChanceFactor))]
@@ -43,7 +43,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         public static void RaceProperties_manhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
         {
-            __result *= pawn.GetComp<CompPawn_GeneSet>().manhunterOnDamageChanceFactor;
+            __result *= pawn.GeneSet().manhunterOnDamageChanceFactor;
         }
 
         [Feature(nameof(GeneDefExt.manhunterOnTameFailChanceFactor))]
@@ -51,7 +51,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
         public static void RaceProperties_manhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
         {
-            __result *= pawn.GetComp<CompPawn_GeneSet>().manhunterOnTameFailChanceFactor;
+            __result *= pawn.GeneSet().manhunterOnTameFailChanceFactor;
         }
 
         [Feature(nameof(GeneDefExt.manhunterOnDamageChanceFactor))]
@@ -64,7 +64,7 @@ namespace XylXenos.Patches
             if (__instance != pawn.def)
                 return;
 
-            var geneSet = pawn.GetComp<CompPawn_GeneSet>();
+            var geneSet = pawn.GeneSet();
             if (geneSet.manhunterOnDamageChanceFactor != 1f || geneSet.manhunterOnTameFailChanceFactor != 1f)
                 __result = pawn.genes.XenotypeLabelCap;
         }

@@ -17,7 +17,7 @@ namespace XylXenos.Patches
             if (parms.pawn == null)
                 return;
 
-            foreach (var modifier in parms.pawn.GetComp<CompPawn_GeneSet>().renderNodeModifiers)
+            foreach (var modifier in parms.pawn.GeneSet().renderNodeModifiers)
             {
                 if (modifier.Matches(node))
                     __result *= modifier.scale;
@@ -32,7 +32,7 @@ namespace XylXenos.Patches
             if (parms.pawn == null)
                 return;
 
-            foreach (var modifier in parms.pawn.GetComp<CompPawn_GeneSet>().renderNodeModifiers)
+            foreach (var modifier in parms.pawn.GeneSet().renderNodeModifiers)
             {
                 if (modifier.Matches(node))
                     __result += modifier.offset;

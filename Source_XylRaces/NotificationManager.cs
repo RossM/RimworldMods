@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using LudeonTK;
+using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 using Verse;
@@ -27,6 +28,10 @@ namespace XylXenos
         PostHediffStateChange,
         PostApparelChanged,
         PostSatisfyGenes,
+        PostDiscard,
+        PostPostMake,
+        PostLoadedGame,
+        PostGameDispose,
     }
 
     [UsedImplicitly]
@@ -68,8 +73,11 @@ namespace XylXenos
             object source,
             string name)
         {
-            if (source is not INotificationListener)
+            if (source != null && source is not INotificationListener)
                 throw new InvalidOperationException("Only an INotificationListener can register for notifications");
+
+            if (doDebug)
+                Debug.Log($"Register eventType={eventType} target={target} source={source} name={name}");
 
             EventInfo eventInfo = events[(int)eventType] ??= new();
 
@@ -124,11 +132,11 @@ namespace XylXenos
 
         public void Notify(NotificationEvent eventType, Thing target, object data = null)
         {
-            if (target == null)
+            if (Scribe.mode != LoadSaveMode.Inactive)
                 return;
 
             if (doDebug)
-                Debug.Log($"Notify category={eventType} target={target} data={data}");
+                Debug.Log($"Notify eventType={eventType} target={target} data={data}");
 
             EventInfo eventInfo = events[(int)eventType];
             if (eventInfo == null)
@@ -138,6 +146,9 @@ namespace XylXenos
             {
                 DoNotify(callbackInfo, target, data);
             }
+
+            if (target == null)
+                return;
 
             if (eventInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbackInfos))
             {
@@ -186,18 +197,6 @@ namespace XylXenos
                         CallRegistrationHandlers(hediff);
                     break;
                 }
-                case Map map:
-                {
-                    foreach (Pawn pawn in map.mapPawns.AllPawns ?? Enumerable.Empty<Pawn>())
-                        CallRegistrationHandlers(pawn);
-                    break;
-                }
-                case Caravan caravan:
-                {
-                    foreach (Pawn pawn in caravan.PawnsListForReading ?? Enumerable.Empty<Pawn>())
-                        CallRegistrationHandlers(pawn);
-                    break;
-                }
             }
         }
 
@@ -205,12 +204,13 @@ namespace XylXenos
         {
             using var _ = new ProfileBlock();
 
-            foreach (Map map in Current.Game.Maps)
-                CallRegistrationHandlers(map);
-            foreach (Pawn pawn in Current.Game.World.worldPawns.AllPawnsAliveOrDead)
+            foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
                 CallRegistrationHandlers(pawn);
-            foreach (Caravan caravan in Current.Game.World.worldObjects.Caravans)
-                CallRegistrationHandlers(caravan);
+
+            GeneSet.Tracker.RegisterWith(this);
+
+            foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
+                Notify(NotificationEvent.PostLoadedGame, pawn);
         }
     }
 }

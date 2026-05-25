@@ -66,7 +66,7 @@ namespace XylXenos.Patches
             if (__result < 0)
                 return;
 
-            var geneSet = pawn.GetComp<CompPawn_GeneSet>();
+            var geneSet = pawn.GeneSet();
             __result *= geneSet.slaveRebellionMtbFactor;
             if (__result >= geneSet.slaveRebellionThresholdDays)
                 __result = -1;

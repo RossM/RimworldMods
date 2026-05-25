@@ -7,7 +7,6 @@
     <value>
       <comps>
         <li Class="XylXenos.CompProperties_PawnLookupCache"/>
-        <li Class="XylXenos.CompProperties_PawnGeneSet"/>
       </comps>
     </value>
   </Operation>

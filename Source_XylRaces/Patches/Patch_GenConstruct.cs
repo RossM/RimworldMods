@@ -23,7 +23,7 @@ namespace XylXenos.Patches
 
             BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
 
-            bool hasGeneDesignator = p.GetComp<CompPawn_GeneSet>().addDesignators.Contains(def);
+            bool hasGeneDesignator = p.GeneSet().addDesignators.Contains(def);
             if (!hasGeneDesignator && GenConstruct.tmpIdeoMemberNames.Count == 0)
             {
                 foreach (GeneDefExt gene in DefDatabase<GeneDef>.AllDefs.OfType<GeneDefExt>())

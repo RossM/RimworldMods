@@ -14,7 +14,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
         public static void BodySize_Postfix(Pawn __instance, ref float __result)
         {
-            __result *= __instance.GetComp<CompPawn_GeneSet>().bodySizeFactor;
+            __result *= __instance.GeneSet().bodySizeFactor;
         }
 
         [Feature(nameof(GeneDefExt.healthScaleFactor))]
@@ -22,7 +22,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
         public static void HealthScale_Postfix(Pawn __instance, ref float __result)
         {
-            __result *= __instance.GetComp<CompPawn_GeneSet>().healthScaleFactor;
+            __result *= __instance.GeneSet().healthScaleFactor;
         }
 
         [Feature(typeof(Psycast))]
@@ -31,6 +31,22 @@ namespace XylXenos.Patches
         public static void HasPsylink_Postfix(Pawn __instance, ref bool __result)
         {
             __result |= __instance.HasActivePsycastGene();
+        }
+
+        [Feature(typeof(GeneSet))]
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Pawn.Discard))]
+        public static void Discard_Postfix(Pawn __instance)
+        {
+            NotificationManager.Instance.Notify(NotificationEvent.PostDiscard, __instance);
+        }
+
+        [Feature(typeof(GeneSet))]
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Pawn.PostMake))]
+        public static void PostMake_Postfix(Pawn __instance)
+        {
+            NotificationManager.Instance.Notify(NotificationEvent.PostPostMake, __instance);
         }
     }
 }

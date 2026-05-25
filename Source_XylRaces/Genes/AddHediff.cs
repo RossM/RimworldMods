@@ -128,7 +128,7 @@ namespace XylXenos.Genes
 
         bool IGene_HediffSource.CausesHediff(HediffDef hediffDef)
         {
-            return DefExt?.permanentHediffs.Any(g => g.hediff == hediffDef) ?? false;
+            return DefExt?.permanentHediffs?.Any(g => g.hediff == hediffDef) ?? false;
         }
 
         public void RegisterWith(NotificationManager manager)
