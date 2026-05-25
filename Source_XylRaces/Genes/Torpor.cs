@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_Torpor : DefModExtension
+    public class TorporInfo
     {
         public HediffDef hediff;
         public float temperatureThreshold;
@@ -17,7 +17,7 @@ namespace XylXenos.Genes
     [UsedImplicitly]
     public class Torpor : GeneExt
     {
-        public GeneDefExtension_Torpor TorporDefExt => def.GetModExtension<GeneDefExtension_Torpor>();
+        [NotNull] public TorporInfo TorporInfo => DefExt.torpor!;
 
         public override void TickInterval(int delta)
         {
@@ -31,15 +31,15 @@ namespace XylXenos.Genes
             if (!pawn.IsHashIntervalTick(checkInterval, delta))
                 return;
 
-            float minimumTemperature = Mathf.Lerp(TorporDefExt.temperatureThreshold,
-                pawn.GetStatValue(StatDefOf.ComfyTemperatureMin), TorporDefExt.comfyTemperatureImportance);
+            float minimumTemperature = Mathf.Lerp(TorporInfo.temperatureThreshold,
+                pawn.GetStatValue(StatDefOf.ComfyTemperatureMin), TorporInfo.comfyTemperatureImportance);
             float temperatureDifference = minimumTemperature - pawn.AmbientTemperature;
             float changePerDay = temperatureDifference * (temperatureDifference > 0
-                ? TorporDefExt.severityGainPerDayPerDegree
-                : TorporDefExt.severityLossPerDayPerDegree);
-            HealthUtility.AdjustSeverity(pawn, TorporDefExt.hediff, (checkInterval / (float)GenDate.TicksPerDay) * changePerDay);
+                ? TorporInfo.severityGainPerDayPerDegree
+                : TorporInfo.severityLossPerDayPerDegree);
+            HealthUtility.AdjustSeverity(pawn, TorporInfo.hediff, (checkInterval / (float)GenDate.TicksPerDay) * changePerDay);
 
-            Hediff torpor = pawn.health.hediffSet.GetFirstHediffOfDef(TorporDefExt.hediff);
+            Hediff torpor = pawn.health.hediffSet.GetFirstHediffOfDef(TorporInfo.hediff);
 
             if ((torpor?.CurStageIndex ?? 0) >= 3)
                 pawn.needs.rest.CurLevelPercentage = Mathf.Min(pawn.needs.rest.CurLevelPercentage, 0.1f);

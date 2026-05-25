@@ -101,16 +101,16 @@ public static class GeneHelpers
 
     public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
-        var bonusGeneDefExt = geneDef.GetModExtension<GeneDefExtension_BonusGene>();
-        if (bonusGeneDefExt == null)
+        var bonusGenes = geneDef.DefExt()?.bonusGenes;
+        if (bonusGenes == null)
             return 0;
-        if (bonusGeneDefExt.geneChance < 1.0f)
+        if (bonusGenes.geneChance < 1.0f)
             return 0;
-        if (!bonusGeneDefExt.allowedGenes.NullOrEmpty())
-            return bonusGeneDefExt.allowedGenes.Min(g => g.biostatMet);
-        if (bonusGeneDefExt.biostatMet.Includes(0))
+        if (!bonusGenes.allowedGenes.NullOrEmpty())
+            return bonusGenes.allowedGenes.Min(g => g.biostatMet);
+        if (bonusGenes.biostatMet.Includes(0))
             return 0;
-        return bonusGeneDefExt.biostatMet.min;
+        return bonusGenes.biostatMet.min;
     }
 
     public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef geneDef)

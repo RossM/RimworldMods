@@ -9,7 +9,7 @@ using Verse.AI;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_Flight : DefModExtension
+    public class FlightInfo
     {
         public float autoFlyMinDistance = 25f;
     }
@@ -21,7 +21,7 @@ namespace XylXenos.Genes
 
     public class Flight : GeneExt, INotificationListener
     {
-        public GeneDefExtension_Flight FlightDefExt => def.GetModExtension<GeneDefExtension_Flight>();
+        [NotNull] public FlightInfo FlightInfo => DefExt.flight!;
 
         public Texture2D ExtraIcon => ((GeneDefExt)def).ExtraIcon;
         public bool autoFly = true;
@@ -125,7 +125,7 @@ namespace XylXenos.Genes
                 flightAllowedByApparel &&
                 (pawn.Drafted ? autoFlyDrafted : autoFly) &&
                 pawn.pather.Moving &&
-                pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= FlightDefExt.autoFlyMinDistance &&
+                pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= FlightInfo.autoFlyMinDistance &&
                 pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
             {
                 flight.StartFlying();

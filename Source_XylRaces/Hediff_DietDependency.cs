@@ -23,7 +23,7 @@ namespace XylXenos
 
         public new DietDependency Gene => (DietDependency)base.Gene;
 
-        public float SeverityReductionPerNutrition => Gene.DietDependencyDefExt.severityReductionPerNutrition;
+        public float SeverityReductionPerNutrition => Gene.DietDependencyInfo.severityReductionPerNutrition;
 
         public override string TipStringExtra
         {
@@ -42,7 +42,7 @@ namespace XylXenos
                     var deficiencyDays = def.stages[(int)Stages.MildDeficiency].minSeverity / severityPerDay;
                     var comaDays = def.stages[(int)Stages.Coma].minSeverity / severityPerDay;
                     var deathDays = def.lethalSeverity / severityPerDay;
-                    text += "GeneDefChemicalNeedDurationDesc".Translate(Gene.DietDependencyDefExt.foodLabel,
+                    text += "GeneDefChemicalNeedDurationDesc".Translate(Gene.DietDependencyInfo.foodLabel,
                         pawn.Named("PAWN"),
                         // ReSharper disable StringLiteralTypo
                         "PeriodDays".Translate(deficiencyDays).Named("DEFICIENCYDURATION"),
@@ -50,8 +50,8 @@ namespace XylXenos
                         "PeriodDays".Translate(deathDays).Named("DEATHDURATION")).Resolve();
                     // ReSharper restore StringLiteralTypo
                     float daysBehind = Severity / severityPerDay;
-                    float nutritionPerDay = severityPerDay * Gene.DietDependencyDefExt.severityReductionPerNutrition;
-                    text += "\n\n" + "XylIngestedBehind".Translate(Gene.DietDependencyDefExt.foodLabel,
+                    float nutritionPerDay = severityPerDay * Gene.DietDependencyInfo.severityReductionPerNutrition;
+                    text += "\n\n" + "XylIngestedBehind".Translate(Gene.DietDependencyInfo.foodLabel,
                         pawn.Named("PAWN"),
                         nutritionPerDay.ToStringDecimalIfSmall().Named("NUTRITION"),
                         "PeriodDays".Translate(daysBehind).Named("DURATION"));

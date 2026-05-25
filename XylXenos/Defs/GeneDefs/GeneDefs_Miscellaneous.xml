@@ -37,12 +37,10 @@
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
     <manhunterOnDamageChanceFactor>2</manhunterOnDamageChanceFactor>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_SeeingRed">
-        <chance>0.15</chance>
-        <hediffDef>XylSeeingRed</hediffDef>
-      </li>
-    </modExtensions>
+    <seeingRed>
+      <chance>0.15</chance>
+      <hediffDef>XylSeeingRed</hediffDef>
+    </seeingRed>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -68,19 +66,17 @@
         <count>5~10</count>
       </li>
     </startingItems>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Hyperlactation">
-        <item>Milk</item>
-        <chargePerItem>0.1</chargePerItem>
-        <hediff>XylHyperlactating</hediff>
-        <milkedThoughts>
-          <li>XylMilked</li>
-          <li>XylMilkedMood</li>
-          <li>XylMilked_Masochist</li>
-          <li>XylMilkedMood_Masochist</li>
-        </milkedThoughts>
-      </li>
-    </modExtensions>
+    <hyperlactation>
+      <item>Milk</item>
+      <chargePerItem>0.1</chargePerItem>
+      <hediff>XylHyperlactating</hediff>
+      <milkedThoughts>
+        <li>XylMilked</li>
+        <li>XylMilkedMood</li>
+        <li>XylMilked_Masochist</li>
+        <li>XylMilkedMood_Masochist</li>
+      </milkedThoughts>
+    </hyperlactation>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -154,9 +150,7 @@
       <MaxFlightTime>8</MaxFlightTime>
       <FlightCooldown>45</FlightCooldown>
     </statOffsets>
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Flight"/>
-    </modExtensions>
+    <flight/>
   </XylXenos.Genes.GeneDefExt>
 
   <XylXenos.Genes.GeneDefExt>
@@ -169,15 +163,13 @@
     <displayCategory>Temperature</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>-->
-    <modExtensions>
-      <li Class="XylXenos.Genes.GeneDefExtension_Torpor">
-        <hediff>XylTorpor</hediff>
-        <temperatureThreshold>11</temperatureThreshold>
-        <comfyTemperatureImportance>0.3</comfyTemperatureImportance>
-        <severityGainPerDayPerDegree>0.02</severityGainPerDayPerDegree>
-        <severityLossPerDayPerDegree>0.02</severityLossPerDayPerDegree>
-      </li>
-    </modExtensions>
+    <torpor>
+      <hediff>XylTorpor</hediff>
+      <temperatureThreshold>11</temperatureThreshold>
+      <comfyTemperatureImportance>0.3</comfyTemperatureImportance>
+      <severityGainPerDayPerDegree>0.02</severityGainPerDayPerDegree>
+      <severityLossPerDayPerDegree>0.02</severityLossPerDayPerDegree>
+    </torpor>
   </XylXenos.Genes.GeneDefExt>
 
   <GeneDef>

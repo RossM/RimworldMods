@@ -6,7 +6,7 @@ using Verse;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_BonusGene : DefModExtension
+    public class BonusGenesInfo
     {
         public IntRange biostatArc = IntRange.Zero;
         public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
@@ -20,9 +20,9 @@ namespace XylXenos.Genes
     }
 
     [UsedImplicitly]
-    public class BonusGene : GeneExt
+    public class BonusGenes : GeneExt
     {
-        public GeneDefExtension_BonusGene BonusGeneDefExt => def.GetModExtension<GeneDefExtension_BonusGene>();
+        [NotNull] public BonusGenesInfo BonusGenesInfo => DefExt.bonusGenes!;
 
         private bool IsXenogene => pawn.genes.Xenogenes.Contains(this);
         private GeneType GeneType => IsXenogene ? GeneType.Xenogene : GeneType.Endogene;
@@ -39,21 +39,21 @@ namespace XylXenos.Genes
         {
             base.PostAdd();
 
-            if (!Rand.Chance(BonusGeneDefExt.geneChance))
+            if (!Rand.Chance(BonusGenesInfo.geneChance))
                 return;
 
-            int count = BonusGeneDefExt.count.RandomInRange;
+            int count = BonusGenesInfo.count.RandomInRange;
 
             for (int i = 0; i < count; i++)
             {
-                List<GeneDef> genes = !BonusGeneDefExt.allowedGenes.NullOrEmpty()
-                    ? BonusGeneDefExt.allowedGenes
+                List<GeneDef> genes = !BonusGenesInfo.allowedGenes.NullOrEmpty()
+                    ? BonusGenesInfo.allowedGenes
                     : DefDatabase<GeneDef>.AllDefsListForReading;
                 if (genes.TryRandomElementByWeight(GeneWeight, out GeneDef geneDef))
                     AddGene(geneDef);
             }
 
-            if (BonusGeneDefExt.removeAfterAdding)
+            if (BonusGenesInfo.removeAfterAdding)
                 pawn.genes.RemoveGene(this);
         }
 
@@ -79,14 +79,14 @@ namespace XylXenos.Genes
             if (geneDef.modContentPack != null && Config.Instance.ignoreGenesFromMods.Contains(geneDef.modContentPack.PackageId))
                 return 0.0f;
 
-            if (!BonusGeneDefExt.prohibitedGenes.NullOrEmpty() && BonusGeneDefExt.prohibitedGenes.Contains(geneDef))
+            if (!BonusGenesInfo.prohibitedGenes.NullOrEmpty() && BonusGenesInfo.prohibitedGenes.Contains(geneDef))
                 return 0.0f;
 
-            if (!BonusGeneDefExt.biostatArc.Includes(geneDef.biostatArc))
+            if (!BonusGenesInfo.biostatArc.Includes(geneDef.biostatArc))
                 return 0.0f;
-            if (!BonusGeneDefExt.biostatCpx.Includes(geneDef.biostatCpx))
+            if (!BonusGenesInfo.biostatCpx.Includes(geneDef.biostatCpx))
                 return 0.0f;
-            if (!BonusGeneDefExt.biostatMet.Includes(geneDef.biostatMet))
+            if (!BonusGenesInfo.biostatMet.Includes(geneDef.biostatMet))
                 return 0.0f;
 
             if (geneDef is GeneDefExt geneDefExt)
@@ -133,14 +133,14 @@ namespace XylXenos.Genes
                 }
             }
 
-            return BonusGeneDefExt.ignoreSelectionWeight ? 1.0f : geneDef.selectionWeight;
+            return BonusGenesInfo.ignoreSelectionWeight ? 1.0f : geneDef.selectionWeight;
         }
 
         public override void PostRemove()
         {
             base.PostRemove();
 
-            if (BonusGeneDefExt.removeAfterAdding)
+            if (BonusGenesInfo.removeAfterAdding)
                 return;
             if (addedGenes == null)
                 return;
@@ -152,7 +152,7 @@ namespace XylXenos.Genes
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
             yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylAtavismChanceLabel".TranslateSimple(),
-                BonusGeneDefExt.geneChance.ToStringPercent(), "XylAtavismChanceDesc".TranslateSimple(), 1002);
+                BonusGenesInfo.geneChance.ToStringPercent(), "XylAtavismChanceDesc".TranslateSimple(), 1002);
             if (addedGenes == null)
                 yield break;
             string text = string.Join(", ", addedGenes.Select(g => g.Label)).CapitalizeFirst();

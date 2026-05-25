@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using RimWorld;
 using Verse;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_SeeingRed : DefModExtension
+    public class SeeingRedInfo
     {
         public float chance = 1.0f;
         public HediffDef hediffDef;
@@ -12,7 +13,7 @@ namespace XylXenos.Genes
 
     public class SeeingRed : GeneExt, INotificationListener
     {
-        public GeneDefExtension_SeeingRed SeeingRedDefExt => def.GetModExtension<GeneDefExtension_SeeingRed>();
+        [NotNull] public SeeingRedInfo SeeingRedDefExt => DefExt.seeingRed!;
 
         const int checkInterval = 60;
         public HashSet<Thing> extraEnemies;

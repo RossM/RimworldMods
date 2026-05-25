@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 using Verse;
 
@@ -11,7 +12,7 @@ namespace XylXenos.Genes
 {
     public class GeneExt : Gene
     {
-        public GeneDefExt DefExt => (GeneDefExt)def;
+        [NotNull] public GeneDefExt DefExt => this.DefExt()!;
 
         public override bool Active
         {

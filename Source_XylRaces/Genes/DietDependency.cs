@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_DietDependency : DefModExtension
+    public class DietDependencyInfo
     {
         public HediffDef hediffDef;
         public FoodKind foodKind = FoodKind.Any;
@@ -20,9 +21,9 @@ namespace XylXenos.Genes
 
     public class DietDependency : GeneExt, IGene_HediffSource, INotificationListener
     {
-        public GeneDefExtension_DietDependency DietDependencyDefExt => def.GetModExtension<GeneDefExtension_DietDependency>();
+        [NotNull] public DietDependencyInfo DietDependencyInfo => DefExt.dietDependency!;
 
-        public Hediff LinkedHediff => DietDependencyDefExt == null ? null : pawn.HediffsWithDef(DietDependencyDefExt.hediffDef).FirstOrDefault();
+        public Hediff LinkedHediff => pawn.HediffsWithDef(DietDependencyInfo.hediffDef).FirstOrDefault();
 
         public override bool Active => base.Active && pawn is { IsGhoul: false };
 
@@ -36,7 +37,7 @@ namespace XylXenos.Genes
         {
             if (Active)
             {
-                var extension = DietDependencyDefExt;
+                var extension = DietDependencyInfo;
                 if (extension == null)
                     return;
                 var hediff = HediffMaker.MakeHediff(extension.hediffDef, pawn);
@@ -57,7 +58,7 @@ namespace XylXenos.Genes
 
         public override void Notify_IngestedThing(Thing food, int numTaken)
         {
-            var extension = DietDependencyDefExt;
+            var extension = DietDependencyInfo;
             if (extension == null)
             {
                 Log.Warning(
@@ -111,7 +112,7 @@ namespace XylXenos.Genes
             if (nutrition <= 0.0f)
                 return false;
 
-            var extension = DietDependencyDefExt;
+            var extension = DietDependencyInfo;
             if (extension == null)
             {
                 Log.Warning("Gene_DietDependency.ValidateFood called without a GeneDefExtension_DietDependency");
@@ -141,7 +142,7 @@ namespace XylXenos.Genes
             if (food.GetStatBase(StatDefOf.Nutrition) <= 0)
                 return false;
 
-            var extension = DietDependencyDefExt;
+            var extension = DietDependencyInfo;
             if (extension == null)
             {
                 Log.Warning("Gene_DietDependency.ValidateFood called without a GeneDefExtension_DietDependency");
@@ -159,7 +160,7 @@ namespace XylXenos.Genes
 
         public float NutritionWantedToSatisfy()
         {
-            float severityReductionPerNutrition = DietDependencyDefExt.severityReductionPerNutrition;
+            float severityReductionPerNutrition = DietDependencyInfo.severityReductionPerNutrition;
             float nutritionForNeed = LinkedHediff.Severity / severityReductionPerNutrition;
             return nutritionForNeed;
         }
@@ -175,7 +176,7 @@ namespace XylXenos.Genes
 
         public bool CausesHediff(HediffDef hediffDef)
         {
-            return DietDependencyDefExt?.hediffDef == hediffDef;
+            return DietDependencyInfo?.hediffDef == hediffDef;
         }
 
         public void RegisterWith(NotificationManager manager)
@@ -188,14 +189,14 @@ namespace XylXenos.Genes
             foreach (var startingItem in base.GetStartingItems())
                 yield return startingItem;
 
-            if (DietDependencyDefExt?.startingFoodNutrition == null)
+            if (DietDependencyInfo?.startingFoodNutrition == null)
                 yield break;
 
             var foodDef = DefDatabase<ThingDef>.AllDefsListForReading.Where(GoodStartingFood).RandomElement();
             if (foodDef == null)
                 yield break;
 
-            float nutritionNeeded = DietDependencyDefExt.startingFoodNutrition.Value.RandomInRange;
+            float nutritionNeeded = DietDependencyInfo.startingFoodNutrition.Value.RandomInRange;
             int itemsNeeded = Mathf.CeilToInt(nutritionNeeded / foodDef.GetStatBase(StatDefOf.Nutrition));
 
             yield return new(foodDef, Mathf.Clamp(itemsNeeded, 1, foodDef.stackLimit));
@@ -204,7 +205,7 @@ namespace XylXenos.Genes
 
             bool GoodStartingFood(ThingDef thingDef)
             {
-                if (thingDef.ingestible?.foodType.HasFlag(DietDependencyDefExt.startingFoodType) != true)
+                if (thingDef.ingestible?.foodType.HasFlag(DietDependencyInfo.startingFoodType) != true)
                     return false;
                 if (!ValidateFood(thingDef))
                     return false;

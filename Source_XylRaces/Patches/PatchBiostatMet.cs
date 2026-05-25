@@ -9,7 +9,7 @@ namespace XylXenos.Patches
     [HarmonyPatch]
     public static class PatchBiostatMet
     {
-        [Feature(typeof(BonusGene))]
+        [Feature(typeof(BonusGenes))]
         [InfixPostfix(typeof(GeneDef), nameof(GeneDef.biostatMet))]
         [InfixPatch(typeof(Dialog_CreateXenotype), "DrawGene")]
         [InfixPatch(typeof(GeneCreationDialogBase), "OnGenesChanged")]

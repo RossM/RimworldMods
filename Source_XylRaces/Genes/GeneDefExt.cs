@@ -94,6 +94,13 @@ namespace XylXenos.Genes
 
         [NoTranslate][CanBeNull] public string extraIconPath;
 
+        [CanBeNull] public BonusGenesInfo bonusGenes;
+        [CanBeNull] public DietDependencyInfo dietDependency;
+        [CanBeNull] public FlightInfo flight;
+        [CanBeNull] public HyperlactationInfo hyperlactation;
+        [CanBeNull] public SeeingRedInfo seeingRed;
+        [CanBeNull] public TorporInfo torpor;
+
         public GeneDefExt()
         {
             geneClass = typeof(GeneExt);
@@ -202,6 +209,27 @@ namespace XylXenos.Genes
                 yield return "gender set but geneClass is not GeneExt or subclass thereof";
             if (!startingItems.NullOrEmpty() && !typeof(GeneExt).IsAssignableFrom(geneClass))
                 yield return "startingItems set but geneClass is not GeneExt or subclass thereof";
+
+            if (bonusGenes != null && !typeof(BonusGenes).IsAssignableFrom(geneClass))
+                yield return "bonusGenes set but geneClass is not BonusGene or subclass thereof";
+            if (bonusGenes == null && typeof(BonusGenes).IsAssignableFrom(geneClass))
+                yield return "bonusGenes not set but geneClass is BonusGene or subclass thereof";
+            if (dietDependency != null && !typeof(DietDependency).IsAssignableFrom(geneClass))
+                yield return "dietDependency set but geneClass is not DietDependency or subclass thereof";
+            if (dietDependency == null && typeof(DietDependency).IsAssignableFrom(geneClass))
+                yield return "dietDependency not set but geneClass is DietDependency or subclass thereof";
+            if (hyperlactation != null && !typeof(Hyperlactation).IsAssignableFrom(geneClass))
+                yield return "hyperlactation set but geneClass is not Hyperlactation or subclass thereof";
+            if (hyperlactation == null && typeof(Hyperlactation).IsAssignableFrom(geneClass))
+                yield return "hyperlactation not set but geneClass is Hyperlactation or subclass thereof";
+            if (seeingRed != null && !typeof(SeeingRed).IsAssignableFrom(geneClass))
+                yield return "seeingRed set but geneClass is not SeeingRed or subclass thereof";
+            if (seeingRed == null && typeof(SeeingRed).IsAssignableFrom(geneClass))
+                yield return "seeingRed not set but geneClass is SeeingRed or subclass thereof";
+            if (torpor != null && !typeof(Torpor).IsAssignableFrom(geneClass))
+                yield return "torpor set but geneClass is not Torpor or subclass thereof";
+            if (torpor == null && typeof(Torpor).IsAssignableFrom(geneClass))
+                yield return "torpor not set but geneClass is Torpor or subclass thereof";
         }
 
         #region Implementation

@@ -39,7 +39,7 @@ namespace XylXenos
             if (gene == null)
                 return;
 
-            foreach (var thoughtDef in gene.HyperlactationDefExt.milkedThoughts)
+            foreach (var thoughtDef in gene.HyperlactationInfo.milkedThoughts)
                 Target.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);
 
             var lactationCharge = gene.Lactating;
@@ -47,7 +47,7 @@ namespace XylXenos
                 return;
 
             int qty = gene.MilkCount;
-            lactationCharge.GreedyConsume(gene.HyperlactationDefExt.chargePerItem * qty);
+            lactationCharge.GreedyConsume(gene.HyperlactationInfo.chargePerItem * qty);
 
             if (!Rand.Chance(doer.GetStatValue(StatDefOf.AnimalGatherYield)))
             {
@@ -57,8 +57,8 @@ namespace XylXenos
 
             while (qty > 0)
             {
-                int stackQty = Math.Min(qty, gene.HyperlactationDefExt.item.stackLimit);
-                Thing thing = ThingMaker.MakeThing(gene.HyperlactationDefExt.item);
+                int stackQty = Math.Min(qty, gene.HyperlactationInfo.item.stackLimit);
+                Thing thing = ThingMaker.MakeThing(gene.HyperlactationInfo.item);
                 thing.stackCount = stackQty;
                 qty -= stackQty;
                 if (!GenPlace.TryPlaceThing(thing, doer.Position, doer.Map, ThingPlaceMode.Near))

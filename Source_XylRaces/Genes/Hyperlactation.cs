@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace XylXenos.Genes
 {
-    public class GeneDefExtension_Hyperlactation : DefModExtension
+    public class HyperlactationInfo
     {
         public ThingDef item;
         public float chargePerItem = 0.1f;
@@ -17,14 +18,14 @@ namespace XylXenos.Genes
 
     public class Hyperlactation : GeneExt
     {
-        public GeneDefExtension_Hyperlactation HyperlactationDefExt => def.GetModExtension<GeneDefExtension_Hyperlactation>();
+        [NotNull] public HyperlactationInfo HyperlactationInfo => DefExt.hyperlactation!;
 
         public Texture2D ExtraIcon => ((GeneDefExt)def).ExtraIcon;
 
         public HediffComp_Lactating Lactating =>
             lactatingInternal ??= pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
 
-        public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / HyperlactationDefExt.chargePerItem);
+        public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / HyperlactationInfo.chargePerItem);
 
         const int checkInterval = 60;
         public bool allowMilking = true;
@@ -112,7 +113,7 @@ namespace XylXenos.Genes
             if (lactatingHediff != null)
                 pawn.health.RemoveHediff(lactatingHediff);
 
-            Hediff hediff = pawn.health.GetOrAddHediff(HyperlactationDefExt.hediff);
+            Hediff hediff = pawn.health.GetOrAddHediff(HyperlactationInfo.hediff);
             hediff.Severity = 1.0f;
 
             if (Lactating?.parent != hediff)
@@ -128,7 +129,7 @@ namespace XylXenos.Genes
 
             var requiredCount = 1;
             if (onlyMilkWhenFull)
-                requiredCount = Mathf.FloorToInt(Lactating.Props.fullChargeAmount / HyperlactationDefExt.chargePerItem);
+                requiredCount = Mathf.FloorToInt(Lactating.Props.fullChargeAmount / HyperlactationInfo.chargePerItem);
 
             return MilkCount >= requiredCount;
         }
@@ -138,7 +139,7 @@ namespace XylXenos.Genes
             soreness = -1;
             if (fullSinceTick == null)
                 return false;
-            soreness = Mathf.FloorToInt((float)(Find.TickManager.TicksGame - fullSinceTick.Value) / HyperlactationDefExt.ticksPerSorenessStage);
+            soreness = Mathf.FloorToInt((float)(Find.TickManager.TicksGame - fullSinceTick.Value) / HyperlactationInfo.ticksPerSorenessStage);
             return true;
         }
 
@@ -147,7 +148,7 @@ namespace XylXenos.Genes
             if (!Active)
                 yield break;
             float milkPerDay = Lactating.Props.fullChargeAmount * GenDate.TicksPerDay /
-                               (Lactating.Props.ticksToFullCharge * HyperlactationDefExt.chargePerItem);
+                               (Lactating.Props.ticksToFullCharge * HyperlactationInfo.chargePerItem);
             yield return new StatDrawEntry(StatCategoryDefOf.PawnFood, "XylMilkProductionLabel".TranslateSimple(),
                 "PerDay".Translate(milkPerDay.ToStringByStyle(ToStringStyle.FloatOne)),
                 "XylMilkProductionDesc".TranslateSimple(), 1);
