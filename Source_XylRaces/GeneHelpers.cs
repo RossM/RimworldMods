@@ -99,33 +99,6 @@ public static class GeneHelpers
         return false;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<Gene> GenesWithModExtension<T>(this Pawn pawn) where T : class
-    {
-        if (pawn.genes == null)
-            return Enumerable.Empty<Gene>();
-
-        return pawn.LookupCache().GetGenesWithModExtension<T>();
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> ActiveGeneDefExtensionsOfType<T>(this Pawn pawn) where T : class
-    {
-        if (pawn.genes == null)
-            return Enumerable.Empty<T>();
-
-        return pawn.GenesWithModExtension<T>().Where(g => g.Active).SelectMany(g => g.def.modExtensions.OfType<T>());
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool HasActiveGeneDefExtensionOfType<T>(this Pawn pawn) where T : class
-    {
-        if (pawn.genes == null)
-            return false;
-
-        return pawn.GenesWithModExtension<T>().Any(g => g.Active);
-    }
-
     public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
         var bonusGeneDefExt = geneDef.GetModExtension<GeneDefExtension_BonusGene>();

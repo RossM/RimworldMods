@@ -13,7 +13,6 @@ namespace XylXenos
 
         private readonly Dictionary<Type, IList> genesByType = new();
         private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
-        private readonly Dictionary<Type, List<Gene>> genesByModExt = new();
 
         private readonly Dictionary<Type, IList> hediffsByType = new();
         private readonly Dictionary<HediffDef, List<Hediff>> hediffsByDef = new();
@@ -47,20 +46,9 @@ namespace XylXenos
             return value;
         }
 
-        public IEnumerable<Gene> GetGenesWithModExtension<T>() where T : class
-        {
-            if (genesByModExt.TryGetValue(typeof(T), out List<Gene> value))
-                return value;
-
-            value = pawn.genes?.GenesListForReading.Where(g => g.def.modExtensions?.OfType<T>().Any() == true).ToList() ?? [];
-            genesByModExt.Add(typeof(T), value);
-            return value;
-        }
-
         public void Notify_GenesChanged()
         {
             genesByDef.Clear();
-            genesByModExt.Clear();
             genesByType.Clear();
         }
 
