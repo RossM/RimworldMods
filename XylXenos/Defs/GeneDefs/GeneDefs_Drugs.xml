@@ -69,14 +69,8 @@
     </exclusionTags>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <suppressedTraits>
-      <li>
-        <def>DrugDesire</def>
-        <degree>2</degree>
-      </li>
-      <li>
-        <def>DrugDesire</def>
-        <degree>1</degree>
-      </li>
+      <DrugDesire>1</DrugDesire>
+      <DrugDesire>2</DrugDesire>
     </suppressedTraits>
     <modExtensions>
       <li Class="XylXenos.Genes.DefExt">

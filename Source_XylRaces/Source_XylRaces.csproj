@@ -45,6 +45,7 @@
     <Publicize Include="Assembly-CSharp:Verse.PawnGenerator.tmpXenotypeChances" />
     <Publicize Include="Assembly-CSharp:Verse.ShotReport.factorFromCoveringGas" />
     <Publicize Include="Assembly-CSharp:Verse.ShotReport.target" />
+    <Publicize Include="Assembly-CSharp:Verse.XmlToObjectUtils.customDataLoadMethodCache" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,9 +13,7 @@
     <displayOrderInCategory>120</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_FastReflexes</iconPath>
     <forcedTraits>
-      <li>
-        <def>Nimble</def>
-      </li>
+      <Nimble />
     </forcedTraits>
   </GeneDef>
 
@@ -33,9 +31,7 @@
       <li>MelancholyAndEvenTemper</li>
     </exclusionTags>
     <forcedTraits>
-      <li>
-        <def>TorturedArtist</def>
-      </li>
+      <TorturedArtist />
     </forcedTraits>
   </GeneDef>
 
@@ -49,9 +45,7 @@
     <displayOrderInCategory>71</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Nocturnal</iconPath>
     <forcedTraits>
-      <li>
-        <def>NightOwl</def>
-      </li>
+      <NightOwl />
     </forcedTraits>
   </GeneDef>
 
@@ -65,9 +59,7 @@
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_PainReversal</iconPath>
     <forcedTraits>
-      <li>
-        <def>Masochist</def>
-      </li>
+      <Masochist />
     </forcedTraits>
   </GeneDef>
 
@@ -82,10 +74,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_Stoic</iconPath>
     <iconColor>(0.5, 0.5, 0.5)</iconColor>
     <forcedTraits>
-      <li>
-        <def>Nerves</def>
-        <degree>1</degree>
-      </li>
+      <Nerves>1</Nerves>
     </forcedTraits>
   </GeneDef>
 
@@ -99,12 +88,8 @@
     <displayOrderInCategory>300</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <forcedTraits>
-      <li>
-        <def>Cannibal</def>
-      </li>
-      <li>
-        <def>Gourmand</def>
-      </li>
+      <Cannibal />
+      <Gourmand />
     </forcedTraits>
   </GeneDef>
 
@@ -118,61 +103,21 @@
     <displayOrderInCategory>602</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>
     <suppressedTraits>
-      <li>
-        <def>NaturalMood</def>
-        <degree>2</degree>
-      </li>
-      <li>
-        <def>NaturalMood</def>
-        <degree>1</degree>
-      </li>
-      <li>
-        <def>NaturalMood</def>
-        <degree>-1</degree>
-      </li>
-      <li>
-        <def>NaturalMood</def>
-        <degree>-2</degree>
-      </li>
-      <li>
-        <def>Nerves</def>
-        <degree>2</degree>
-      </li>
-      <li>
-        <def>Nerves</def>
-        <degree>1</degree>
-      </li>
-      <li>
-        <def>Nerves</def>
-        <degree>-1</degree>
-      </li>
-      <li>
-        <def>Nerves</def>
-        <degree>-2</degree>
-      </li>
-      <li>
-        <def>Neurotic</def>
-        <degree>2</degree>
-      </li>
-      <li>
-        <def>Neurotic</def>
-        <degree>1</degree>
-      </li>
-      <li>
-        <def>Bloodlust</def>
-      </li>
-      <li>
-        <def>TooSmart</def>
-      </li>
-      <li>
-        <def>Greedy</def>
-      </li>
-      <li>
-        <def>Jealous</def>
-      </li>
-      <li>
-        <def>TorturedArtist</def>
-      </li>
+      <NaturalMood>-2</NaturalMood>
+      <NaturalMood>-1</NaturalMood>
+      <NaturalMood>1</NaturalMood>
+      <NaturalMood>2</NaturalMood>
+      <Nerves>-2</Nerves>
+      <Nerves>-1</Nerves>
+      <Nerves>1</Nerves>
+      <Nerves>2</Nerves>
+      <Neurotic>1</Neurotic>
+      <Neurotic>2</Neurotic>
+      <Bloodlust />
+      <TooSmart />
+      <Greedy />
+      <Jealous />
+      <TorturedArtist />
     </suppressedTraits>
     <exclusionTags>
       <li>MelancholyAndEvenTemper</li>

@@ -13,9 +13,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_HerdInstinct</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <suppressedTraits>
-      <li>
-        <def>Recluse</def>
-      </li>
+      <Recluse />
     </suppressedTraits>
     <modExtensions>
       <li Class="XylXenos.Genes.DefExt">

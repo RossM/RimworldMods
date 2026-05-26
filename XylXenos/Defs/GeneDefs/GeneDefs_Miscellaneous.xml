@@ -17,9 +17,7 @@
       <XylWillFallRate>4</XylWillFallRate>
     </statFactors>
     <suppressedTraits>
-      <li>
-        <def>Bloodlust</def>
-      </li>
+      <Bloodlust />
     </suppressedTraits>
     <modExtensions>
       <li Class="XylXenos.Genes.DefExt">
@@ -243,9 +241,7 @@
     <displayOrderInCategory>300</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_BioRejection</iconPath>
     <suppressedTraits>
-      <li>
-        <def>Transhumanist</def>
-      </li>
+      <Transhumanist />
     </suppressedTraits>
     <modExtensions>
       <li Class="XylXenos.Genes.DefExt">
