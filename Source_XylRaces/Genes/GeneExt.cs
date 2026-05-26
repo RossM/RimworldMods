@@ -12,7 +12,7 @@ namespace XylXenos.Genes
         [NotNull]
         public DefExt DefExt => this.DefExt()!;
 
-        [Unsaved] private bool removing = false;
+        [Unsaved] private bool removed = false;
 
         public override bool Active
         {
@@ -95,7 +95,7 @@ namespace XylXenos.Genes
 
         public override void PostRemove()
         {
-            removing = true;
+            removed = true;
 
             if (!DefExt.permanentHediffs.NullOrEmpty())
             {
@@ -165,7 +165,7 @@ namespace XylXenos.Genes
                 return;
             if (DefExt.permanentHediffs.NullOrEmpty())
                 return;
-            if (removing)
+            if (removed)
                 return;
 
             foreach (var hediffGiver in DefExt.permanentHediffs)

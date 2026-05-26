@@ -94,7 +94,7 @@ namespace XylXenos
             if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))
                 return value;
 
-            value = pawn.health.hediffSet.hediffs.OfType<HediffWithComps>().Where(g => g.comps?.OfType<T>().Any() == true)
+            value = pawn.health.hediffSet.hediffs.OfType<HediffWithComps>().Where(hediff => hediff.comps?.OfType<T>().Any() == true)
                 .ToList();
             hediffsByComp.Add(typeof(T), value);
             return value;
