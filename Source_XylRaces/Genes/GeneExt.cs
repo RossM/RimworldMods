@@ -107,6 +107,9 @@ namespace XylXenos.Genes
 
             RemoveInvalidHediffs();
 
+            if (DefExt.hasPsycast)
+                pawn.psychicEntropy.SetInitialPsyfocusLevel();
+
             base.PostAdd();
         }
 

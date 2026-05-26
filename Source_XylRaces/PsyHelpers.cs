@@ -1,7 +1,6 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
 using Verse;
-using Psycast = XylXenos.Genes.Psycast;
 
 namespace XylXenos
 {
@@ -10,7 +9,7 @@ namespace XylXenos
         public static int GetGeneticPsylinkLevelFor(this Pawn pawn, AbilityDef def)
         {
             if (pawn.genes != null && pawn.genes.GenesListForReading.Any(gene =>
-                    gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
+                    gene.Active && gene.DefExt()?.hasPsycast == true && gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
             {
                 return def.level;
             }
@@ -20,7 +19,7 @@ namespace XylXenos
 
         public static bool HasActivePsycastGene(this Pawn pawn)
         {
-            return pawn.HasActiveGeneOfType<Psycast>();
+            return pawn.GeneSet()?.hasPsycast == true;
         }
 
         public static bool NeedsPsyfocus(this Pawn pawn)

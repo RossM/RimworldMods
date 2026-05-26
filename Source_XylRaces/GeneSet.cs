@@ -23,6 +23,7 @@ namespace XylXenos
         [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
         [CanBeNull] public List<FactionDef> disableHostilityFromFactions;
         [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
+        public bool hasPsycast = false;
 
         private static GeneSet Make(Pawn pawn)
         {
@@ -45,6 +46,7 @@ namespace XylXenos
             renderNodeModifiers?.Clear();
             disableHostilityFromFactions?.Clear();
             ingestionThoughtOverrides?.Clear();
+            hasPsycast = false;
 
             foreach (var def in pawn.ActiveDefExts())
             {
@@ -60,6 +62,8 @@ namespace XylXenos
                 AddList(ref renderNodeModifiers, def.renderNodeModifiers);
                 AddList(ref disableHostilityFromFactions, def.disableHostilityFromFactions);
                 AddList(ref ingestionThoughtOverrides, def.ingestionThoughtOverrides);
+
+                hasPsycast |= def.hasPsycast;
             }
         }
 

@@ -102,6 +102,8 @@ namespace XylXenos.Genes
         [CanBeNull] public SeeingRedInfo seeingRed;
         [CanBeNull] public TorporInfo torpor;
 
+        public bool hasPsycast;
+
         public Texture2D ExtraIcon
         {
             get
@@ -229,11 +231,13 @@ namespace XylXenos.Genes
                 case GeneDef geneDef:
                 {
                     parent = geneDef;
-                    if (parent.geneClass == typeof(Gene))
-                        parent.geneClass = typeof(GeneExt);
+                    if (geneDef.geneClass == typeof(Gene))
+                        geneDef.geneClass = typeof(GeneExt);
                     break;
                 }
-                case GeneTemplateDef: 
+                case GeneTemplateDef templateDef:
+                    if (templateDef.geneClass == typeof(Gene))
+                        templateDef.geneClass = typeof(GeneExt);
                     break;
                 default:
                 {

@@ -24,7 +24,7 @@ namespace XylXenos.Patches
             __result *= __instance.GeneSet()?.healthScaleFactor ?? 1f;
         }
 
-        [Feature(typeof(Psycast))]
+        [Feature(nameof(DefExt.hasPsycast))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Pawn.HasPsylink), MethodType.Getter)]
         public static void HasPsylink_Postfix(Pawn __instance, ref bool __result)

@@ -16,7 +16,6 @@
     <iconPath>{0}</iconPath>
     <description>The carrier automatically learns the {0} psycast, and can use it without a psylink.\n\n{DESCRIPTION}</description>
     <displayCategory>XylPsycasts</displayCategory>
-    <geneClass>XylXenos.Genes.Psycast</geneClass>
     <biostats>
       <li>
         <levels>1~4</levels>
@@ -36,6 +35,7 @@
     </biostats>
     <modExtensions>
       <li Class="XylXenos.Genes.DefExt">
+        <hasPsycast>true</hasPsycast>
       </li>
     </modExtensions>
   </XylXenos.GeneTemplateDef>

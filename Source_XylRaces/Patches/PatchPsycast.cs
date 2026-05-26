@@ -2,13 +2,13 @@ using System;
 using RimWorld;
 using TranspilerUtil;
 using Verse;
-using Psycast = XylXenos.Genes.Psycast;
+using XylXenos.Genes;
 
 namespace XylXenos.Patches;
 
 public static class PatchPsycast
 {
-    [Feature(typeof(Psycast))]
+    [Feature(nameof(DefExt.hasPsycast))]
     [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel))]
     [InfixPatch("DisabledCheck")]
     public static void GetPsylinkLevel_Postfix(Command_Psycast __caller, Pawn pawn, ref int __result)
@@ -16,7 +16,7 @@ public static class PatchPsycast
         __result = Math.Max(__result, pawn.GetGeneticPsylinkLevelFor(__caller.Ability.def));
     }
 
-    [Feature(typeof(RimWorld.Psycast))]
+    [Feature(nameof(DefExt.hasPsycast))]
     [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel))]
     [InfixPatch("GizmoDisabled")]
     [InfixPatch("CanCast")]
