@@ -9,6 +9,14 @@ using Verse;
 
 namespace XylXenos.Genes
 {
+    public class DietDependencyInfo
+    {
+        public FoodKind foodKind = FoodKind.Any;
+        public bool rawOnly = false;
+        public float severityReductionPerNutrition = 1f;
+        [MustTranslate] public string foodLabel;
+    }
+
     public class GeneIngestionThoughtOverride
     {
         public ThingDef thing;
@@ -93,7 +101,7 @@ namespace XylXenos.Genes
         [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
         [CanBeNull] public List<StartingItemOption> startingItems;
 
-        [NoTranslate][CanBeNull] public string extraIconPath;
+        [NoTranslate] [CanBeNull] public string extraIconPath;
 
         [CanBeNull] public BonusGenesInfo bonusGenes;
         [CanBeNull] public DietDependencyInfo dietDependency;
@@ -220,7 +228,7 @@ namespace XylXenos.Genes
             base.ResolveReferences(parentDef);
 
             GeneHelpers.defExtCache.Clear();
-            
+
             switch (parentDef)
             {
                 case GeneDef geneDef:
@@ -236,7 +244,8 @@ namespace XylXenos.Genes
                     break;
                 default:
                 {
-                    Log.Warning($"XylXenos DefExt is applied to def other than GeneDef or GeneTemplateDef: {parentDef.GetType().Name} {parentDef.defName}");
+                    Log.Warning(
+                        $"XylXenos DefExt is applied to def other than GeneDef or GeneTemplateDef: {parentDef.GetType().Name} {parentDef.defName}");
                     break;
                 }
             }

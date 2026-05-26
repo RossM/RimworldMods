@@ -1,6 +1,6 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using System.Linq;
+using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -25,12 +25,16 @@ namespace XylXenos
             // ReSharper restore UnusedMember.Local
         }
 
-        private GeneExt geneInternal;
         public GeneExt Gene => geneInternal ??= (GeneExt)pawn.genes.GetGene(GetComp<HediffComp_Genetic>().Props.gene);
 
         public bool ShouldSatisfy => Severity >= def.stages[(int)Stages.Craving].minSeverity;
 
         public float SeverityReductionPerNutrition => Gene.DefExt.dietDependency!.severityReductionPerNutrition;
+        private string FoodLabel => Gene.DefExt.dietDependency!.foodLabel;
+        private FoodKind FoodKind => Gene.DefExt.dietDependency!.foodKind;
+        private bool RawOnly => Gene.DefExt.dietDependency!.rawOnly;
+
+        private GeneExt geneInternal;
 
         public override string TipStringExtra
         {
@@ -49,7 +53,7 @@ namespace XylXenos
                     var deficiencyDays = def.stages[(int)Stages.MildDeficiency].minSeverity / severityPerDay;
                     var comaDays = def.stages[(int)Stages.Coma].minSeverity / severityPerDay;
                     var deathDays = def.lethalSeverity / severityPerDay;
-                    text += "GeneDefChemicalNeedDurationDesc".Translate(Gene.DefExt.dietDependency!.foodLabel,
+                    text += "GeneDefChemicalNeedDurationDesc".Translate(FoodLabel,
                         pawn.Named("PAWN"),
                         // ReSharper disable StringLiteralTypo
                         "PeriodDays".Translate(deficiencyDays).Named("DEFICIENCYDURATION"),
@@ -57,8 +61,8 @@ namespace XylXenos
                         "PeriodDays".Translate(deathDays).Named("DEATHDURATION")).Resolve();
                     // ReSharper restore StringLiteralTypo
                     float daysBehind = Severity / severityPerDay;
-                    float nutritionPerDay = severityPerDay * Gene.DefExt.dietDependency!.severityReductionPerNutrition;
-                    text += "\n\n" + "XylIngestedBehind".Translate(Gene.DefExt.dietDependency!.foodLabel,
+                    float nutritionPerDay = severityPerDay * SeverityReductionPerNutrition;
+                    text += "\n\n" + "XylIngestedBehind".Translate(FoodLabel,
                         pawn.Named("PAWN"),
                         nutritionPerDay.ToStringDecimalIfSmall().Named("NUTRITION"),
                         "PeriodDays".Translate(daysBehind).Named("DURATION"));
@@ -127,17 +131,13 @@ namespace XylXenos
                 nutrition = Math.Min(nutrition, pawn.needs.food.NutritionWanted);
             }
 
-            var severityReduction = nutrition * Gene.DefExt.dietDependency!.severityReductionPerNutrition;
-
             if (ValidateFood(food))
-                Severity -= severityReduction;
+                Severity -= nutrition * SeverityReductionPerNutrition;
         }
 
         public float NutritionWantedToSatisfy()
         {
-            float severityReductionPerNutrition = Gene.DefExt.dietDependency!.severityReductionPerNutrition;
-            float nutritionForNeed = Severity / severityReductionPerNutrition;
-            return nutritionForNeed;
+            return Severity / SeverityReductionPerNutrition;
         }
 
         public int ItemsWantedToSatisfy(Thing foodSource, ThingDef foodDef)
@@ -158,17 +158,17 @@ namespace XylXenos
             if (nutrition <= 0.0f)
                 return false;
 
-            if (!food.def.IsRawFoodOrCorpse() && Gene.DefExt.dietDependency!.rawOnly)
+            if (!food.def.IsRawFoodOrCorpse() && RawOnly)
                 return false;
 
-            if (Gene.DefExt.dietDependency!.foodKind == FoodUtility.GetFoodKind(food))
+            if (FoodKind == FoodUtility.GetFoodKind(food))
                 return true;
 
             var compIngredients = food.TryGetComp<CompIngredients>();
             if (compIngredients == null)
                 return false;
             if (Enumerable.Any(compIngredients.ingredients,
-                    ingredient => Gene.DefExt.dietDependency!.foodKind == FoodUtility.GetFoodKind(ingredient)))
+                    ingredient => FoodKind == FoodUtility.GetFoodKind(ingredient)))
                 return true;
 
             return false;
