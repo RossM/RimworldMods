@@ -104,7 +104,7 @@
         <debugLabel>Scaleskin</debugLabel>
         <nodeClass>XylXenos.PawnRenderNode_NotFur</nodeClass>
         <workerClass>PawnRenderNodeWorker_Fur</workerClass>
-        <baseLayer>5</baseLayer>
+        <baseLayer>1</baseLayer>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <colorType>Skin</colorType>
         <useSkinShader>true</useSkinShader>
