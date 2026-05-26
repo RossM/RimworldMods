@@ -13,12 +13,15 @@ namespace XylXenos.Genes
         public DefExt DefExt => this.DefExt()!;
 
         [Unsaved] private bool removed = false;
+        public bool Removed => removed;
 
         public override bool Active
         {
             get
             {
                 if (!base.Active)
+                    return false;
+                if (removed)
                     return false;
                 if (DefExt.gender != null && DefExt.gender != pawn.gender)
                     return false;
@@ -164,8 +167,6 @@ namespace XylXenos.Genes
             if (!Active)
                 return;
             if (DefExt.permanentHediffs.NullOrEmpty())
-                return;
-            if (removed)
                 return;
 
             foreach (var hediffGiver in DefExt.permanentHediffs)

@@ -7,6 +7,7 @@ using LudeonTK;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using XylXenos.Genes;
 
 namespace XylXenos
 {
@@ -173,6 +174,7 @@ namespace XylXenos
                 case Thing { Destroyed: true }:
                 case ThingComp t when t.parent.Destroyed:
                 case MapComponent m when m.map.Disposed:
+                case GeneExt { Removed: true }:
                     return;
             }
 
