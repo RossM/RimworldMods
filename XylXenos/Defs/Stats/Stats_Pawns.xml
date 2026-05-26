@@ -156,6 +156,19 @@
     <displayPriorityInCategory>1001</displayPriorityInCategory>
     <showOnDrones>false</showOnDrones>
   </StatDef>
+  <StatDef>
+    <defName>XylSlaveRebellionMtbFactor</defName>
+    <label>slave rebellion interval</label>
+    <description>Affects the average amount of time before the character will rebel as a slave.</description>
+    <category>PawnSocial</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <showOnAnimals>false</showOnAnimals>
+    <showOnDrones>false</showOnDrones>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1002</displayPriorityInCategory>
+  </StatDef>
 
   <StatDef>
     <defName>XylRangedDodgeChance</defName>

@@ -75,7 +75,6 @@ namespace XylXenos.Genes
         public float bodySizeFactor = 1.0f;
         public float healthScaleFactor = 1.0f;
 
-        public float slaveRebellionMtbFactor = 1.0f;
         public float slaveRebellionThresholdDays = float.MaxValue;
 
         public float manhunterOnDamageChanceFactor = 1.0f;
@@ -165,9 +164,6 @@ namespace XylXenos.Genes
 
         protected virtual IEnumerable<string> GetCustomEffectDescriptions()
         {
-            if (slaveRebellionMtbFactor != 1.0f)
-                yield return $"{"SlaveRebellionMTBDays".Translate()} x{slaveRebellionMtbFactor.ToStringPercent()}";
-
             if (!permanentHediffs.NullOrEmpty())
             {
                 foreach (Tool tool in permanentHediffs.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())

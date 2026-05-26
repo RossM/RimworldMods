@@ -15,13 +15,13 @@
     <statFactors>
       <SlaveSuppressionFallRate MayRequire="Ludeon.RimWorld.Ideology">0.25</SlaveSuppressionFallRate>
       <XylWillFallRate>4</XylWillFallRate>
+      <XylSlaveRebellionMtbFactor>4</XylSlaveRebellionMtbFactor>
     </statFactors>
     <suppressedTraits>
       <Bloodlust />
     </suppressedTraits>
     <modExtensions>
       <li Class="XylXenos.Genes.DefExt">
-        <slaveRebellionMtbFactor>4</slaveRebellionMtbFactor>
         <slaveRebellionThresholdDays>120</slaveRebellionThresholdDays>
         <manhunterOnTameFailChanceFactor>0</manhunterOnTameFailChanceFactor>
       </li>

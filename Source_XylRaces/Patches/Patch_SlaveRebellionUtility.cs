@@ -57,7 +57,7 @@ namespace XylXenos.Patches
             }
         };
 
-        [Feature(nameof(DefExt.slaveRebellionMtbFactor))]
+        [Feature(nameof(DefOf.XylSlaveRebellionMtbFactor))]
         [Feature(nameof(DefExt.slaveRebellionThresholdDays))]
         [HarmonyPostfix]
         [HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
@@ -70,12 +70,12 @@ namespace XylXenos.Patches
             if (geneSet == null)
                 return;
 
-            __result *= geneSet.slaveRebellionMtbFactor;
+            __result *= pawn.GetStatValue(DefOf.XylSlaveRebellionMtbFactor);
             if (__result >= geneSet.slaveRebellionThresholdDays)
                 __result = -1;
         }
 
-        [Feature(nameof(DefExt.slaveRebellionMtbFactor))]
+        [Feature(nameof(DefOf.XylSlaveRebellionMtbFactor))]
         [Feature(nameof(DefExt.slaveRebellionThresholdDays))]
         [HarmonyTranspiler]
         [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
@@ -96,11 +96,11 @@ namespace XylXenos.Patches
 
             float initiateSlaveRebellionMtbDays = SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn);
 
-            foreach (var def in pawn.ActiveDefExts())
-            {
-                if (def.slaveRebellionMtbFactor != 1)
-                    stringBuilder.AppendLine($"{def.parent?.LabelCap ?? "Genes".Translate().CapitalizeFirst()}: x{def.slaveRebellionMtbFactor.ToStringPercent()}");
-            }
+            StatRequest statRequest = StatRequest.For(pawn);
+            float baseValueFor = DefOf.XylSlaveRebellionMtbFactor.Worker.GetBaseValueFor(statRequest);
+            ToStringNumberSense toStringNumberSense = DefOf.XylSlaveRebellionMtbFactor.toStringNumberSense;
+            DefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor, "");
+            DefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense, stringBuilder, "");
 
             if (initiateSlaveRebellionMtbDays < 0)
             {

@@ -39,6 +39,7 @@ namespace XylXenos
         public static StatDef XylRawNonMeatFoodPoisonChanceOffset;
         public static StatDef XylRawNonMeatNutritionFactor;
         public static StatDef XylResistanceFallRate;
+        public static StatDef XylSlaveRebellionMtbFactor;
         public static StatDef XylWillFallRate;
 
         #endregion

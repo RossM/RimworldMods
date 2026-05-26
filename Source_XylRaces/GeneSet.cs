@@ -14,7 +14,6 @@ namespace XylXenos
 
         public float bodySizeFactor = 1f;
         public float healthScaleFactor = 1f;
-        public float slaveRebellionMtbFactor = 1f;
         public float slaveRebellionThresholdDays = float.MaxValue;
         public float manhunterOnDamageChanceFactor = 1f;
         public float manhunterOnTameFailChanceFactor = 1f;
@@ -37,7 +36,6 @@ namespace XylXenos
         {
             bodySizeFactor = 1f;
             healthScaleFactor = 1f;
-            slaveRebellionMtbFactor = 1f;
             slaveRebellionThresholdDays = float.MaxValue;
             manhunterOnDamageChanceFactor = 1f;
             manhunterOnTameFailChanceFactor = 1f;
@@ -52,7 +50,6 @@ namespace XylXenos
             {
                 bodySizeFactor *= def.bodySizeFactor;
                 healthScaleFactor *= def.healthScaleFactor;
-                slaveRebellionMtbFactor *= def.slaveRebellionMtbFactor;
                 slaveRebellionThresholdDays = Mathf.Min(slaveRebellionThresholdDays, def.slaveRebellionThresholdDays);
                 manhunterOnDamageChanceFactor *= def.manhunterOnDamageChanceFactor;
                 manhunterOnTameFailChanceFactor *= def.manhunterOnTameFailChanceFactor;
