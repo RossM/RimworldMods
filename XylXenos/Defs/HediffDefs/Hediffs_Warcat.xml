@@ -32,6 +32,9 @@
           </li>
         </tools>
       </li>
+      <li Class="XylXenos.HediffCompProperties_Genetic">
+        <gene>XylRetractableClaws</gene>
+      </li>
     </comps>
   </HediffDef>
 
@@ -148,6 +151,15 @@
     <maxSeverity>15</maxSeverity>
     <lethalSeverity>15</lethalSeverity>
     <allowMothballIfLowPriorityWorldPawn>true</allowMothballIfLowPriorityWorldPawn>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>0.5</severityPerDay>
+        <minAge>13</minAge>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_Genetic">
+        <gene>XylMeatDependence</gene>
+      </li>
+    </comps>
     <stages>
       <li>
         <becomeVisible>false</becomeVisible>
@@ -206,12 +218,6 @@
         </capMods>
       </li>
     </stages>
-    <comps>
-      <li Class="HediffCompProperties_SeverityPerDay">
-        <severityPerDay>0.5</severityPerDay>
-        <minAge>13</minAge>
-      </li>
-    </comps>
   </HediffDef>
 
 </Defs>

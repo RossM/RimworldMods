@@ -4,7 +4,7 @@ using Verse;
 namespace XylXenos
 {
     [UsedFromXml]
-    public class Hediff_BioRejection : Hediff
+    public class Hediff_BioRejection : HediffWithComps
     {
         public override bool ShouldRemove => false;
 

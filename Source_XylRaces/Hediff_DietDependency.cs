@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using XylXenos.Genes;
 
 namespace XylXenos
 {
@@ -11,7 +12,7 @@ namespace XylXenos
     // and CaravanInventoryUtility.TryGetBestFood.
 
     [UsedFromXml]
-    public class Hediff_DietDependency : Hediff_Genetic, INotificationListener
+    public class Hediff_DietDependency : HediffWithComps, INotificationListener
     {
         enum Stages
         {
@@ -23,6 +24,9 @@ namespace XylXenos
             Coma = 5,
             // ReSharper restore UnusedMember.Local
         }
+
+        private GeneExt geneInternal;
+        public GeneExt Gene => geneInternal ??= (GeneExt)pawn.genes.GetGene(GetComp<HediffComp_Genetic>().Props.gene);
 
         public bool ShouldSatisfy => Severity >= def.stages[(int)Stages.Craving].minSeverity;
 
