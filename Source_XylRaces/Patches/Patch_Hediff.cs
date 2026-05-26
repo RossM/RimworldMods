@@ -3,13 +3,13 @@ using Verse;
 
 namespace XylXenos.Patches
 {
-    [HarmonyPatch(typeof(MapComponent))]
-    public static class Patch_MapComponent
+    [HarmonyPatch(typeof(Hediff))]
+    public static class Patch_Hediff
     {
         [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
-        [HarmonyPatch(nameof(MapComponent.FinalizeInit))]
-        public static void FinalizeInit_Postfix(MapComponent __instance)
+        [HarmonyPatch(nameof(Hediff.PostAdd))]
+        public static void PostAdd_Postfix(Hediff __instance)
         {
             if (__instance is INotificationListener target)
                 target.RegisterWith(NotificationManager.Instance);
@@ -17,11 +17,11 @@ namespace XylXenos.Patches
 
         [Feature(typeof(NotificationManager))]
         [HarmonyPostfix]
-        [HarmonyPatch(nameof(MapComponent.MapRemoved))]
-        public static void MapRemoved_Postfix(MapComponent __instance)
+        [HarmonyPatch(nameof(Hediff.PostRemoved))]
+        public static void PostRemoved_Postfix(Hediff __instance)
         {
             if (__instance is INotificationListener target)
-                NotificationManager.Instance.UnregisterAll(target, null);
+                NotificationManager.Instance.UnregisterAll(target, __instance.pawn);
         }
     }
 }

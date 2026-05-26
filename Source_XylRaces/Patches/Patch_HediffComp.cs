@@ -15,5 +15,15 @@ namespace XylXenos.Patches
             if (__instance is INotificationListener target)
                 target.RegisterWith(NotificationManager.Instance);
         }
+
+        [Feature(typeof(NotificationManager))]
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(HediffComp.CompPostPostRemoved))]
+        public static void CompPostPostRemoved_Postfix(HediffComp __instance)
+        {
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (__instance is INotificationListener target)
+                NotificationManager.Instance.UnregisterAll(target, __instance.parent.pawn);
+        }
     }
 }

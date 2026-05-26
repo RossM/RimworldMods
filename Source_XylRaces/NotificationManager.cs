@@ -137,6 +137,23 @@ namespace XylXenos
             RegisterInternal<object>(eventType, target, (_, _) => callback(), callback.Target, callback.Method.Name);
         }
 
+        public void UnregisterAll(INotificationListener listener, Thing target)
+        {
+            if (target == null)
+            {
+                foreach (var eventInfo in events)
+                    eventInfo?.globalCallbacks?.RemoveAll(callbackInfo => callbackInfo.source == listener);
+            }
+            else
+            {
+                foreach (var eventInfo in events)
+                {
+                    if (eventInfo?.localCallbacks?.TryGetValue(target, out List<CallbackInfo> callbacks) == true)
+                        callbacks.RemoveAll(callbackInfo => callbackInfo.source == listener);
+                }
+            }
+        }
+
         public void Notify(NotificationEvent eventType, Thing target, object data = null)
         {
             if (Scribe.mode != LoadSaveMode.Inactive)

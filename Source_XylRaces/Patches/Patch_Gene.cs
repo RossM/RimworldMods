@@ -16,6 +16,15 @@ namespace XylXenos.Patches
                 target.RegisterWith(NotificationManager.Instance);
         }
 
+        [Feature(typeof(NotificationManager))]
+        [HarmonyPostfix]
+        [HarmonyPatch(nameof(Gene.PostRemove))]
+        public static void PostRemove_Postfix(Gene __instance)
+        {
+            if (__instance is INotificationListener target)
+                NotificationManager.Instance.UnregisterAll(target, __instance.pawn);
+        }
+
         [Feature(nameof(DefExt.hediffGivers))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Gene.TickInterval))]
