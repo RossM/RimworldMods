@@ -94,7 +94,12 @@ namespace XylXenos
                 throw new InvalidOperationException("Only an INotificationListener can register for notifications");
 
             if (doDebug)
-                Debug.Log($"Register eventType={eventType} target={target} listener={listener} name={name}");
+            {
+                if (target == null)
+                    Debug.Log($"Register eventType={eventType} global listener={listener} name={name}");
+                else
+                    Debug.Log($"Register eventType={eventType} target={target} listener={listener} name={name}");
+            }
 
             var records = registeredEvents.GetOrCreateValue(listener);
             records.Add(new(eventType, target));
@@ -108,8 +113,7 @@ namespace XylXenos
                 if (eventInfo.globalCallbacks.Any(c => c.listener == listener && c.name == name))
                 {
                     Log.Warning(
-                        // ReSharper disable once ExpressionIsAlwaysNull
-                        $"Adding a duplicate callback: type={eventType} target={target} listener={listener} name={name}");
+                        $"Adding a duplicate callback: type={eventType} global listener={listener} name={name}");
                     return;
                 }
 
