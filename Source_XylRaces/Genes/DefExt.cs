@@ -100,7 +100,6 @@ namespace XylXenos.Genes
         [CanBeNull] public FlightInfo flight;
         [CanBeNull] public HyperlactationInfo hyperlactation;
         [CanBeNull] public SeeingRedInfo seeingRed;
-        [CanBeNull] public TorporInfo torpor;
 
         public bool hasPsycast;
 
@@ -214,10 +213,6 @@ namespace XylXenos.Genes
                 yield return "seeingRed set but geneClass is not SeeingRed or subclass thereof";
             if (seeingRed == null && typeof(SeeingRed).IsAssignableFrom(geneClass))
                 yield return "seeingRed not set but geneClass is SeeingRed or subclass thereof";
-            if (torpor != null && !typeof(Torpor).IsAssignableFrom(geneClass))
-                yield return "torpor set but geneClass is not Torpor or subclass thereof";
-            if (torpor == null && typeof(Torpor).IsAssignableFrom(geneClass))
-                yield return "torpor not set but geneClass is Torpor or subclass thereof";
         }
 
         public override void ResolveReferences(Def parentDef)
