@@ -21,7 +21,7 @@ namespace XylXenos.Patches
         public static void PostRemoved_Postfix(Hediff __instance)
         {
             if (__instance is INotificationListener target)
-                NotificationManager.Instance.UnregisterAll(target, __instance.pawn);
+                NotificationManager.Instance.UnregisterAll(target);
         }
     }
 }

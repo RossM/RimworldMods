@@ -21,7 +21,7 @@ namespace XylXenos.Patches
         public static void MapRemoved_Postfix(MapComponent __instance)
         {
             if (__instance is INotificationListener target)
-                NotificationManager.Instance.UnregisterAll(target, null);
+                NotificationManager.Instance.UnregisterAll(target);
         }
     }
 }

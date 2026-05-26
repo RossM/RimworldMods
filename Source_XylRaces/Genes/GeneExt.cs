@@ -99,6 +99,7 @@ namespace XylXenos.Genes
         public override void PostRemove()
         {
             removed = true;
+            NotificationManager.Instance.UnregisterAll(this);
 
             if (!DefExt.permanentHediffs.NullOrEmpty())
             {

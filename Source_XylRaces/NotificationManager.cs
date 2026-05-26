@@ -50,10 +50,17 @@ namespace XylXenos
             public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
         }
 
+        private class RegistrationRecord(NotificationEvent eventType, Thing target)
+        {
+            public readonly NotificationEvent eventType = eventType;
+            public readonly bool isGlobal = target == null;
+            public readonly System.WeakReference<Thing> target = target == null ? null : new(target);
+        }
+
         public struct CallbackInfo
         {
             public Delegate wrappedCallback;
-            public object source;
+            public INotificationListener listener;
             public string name;
         }
 
@@ -61,6 +68,8 @@ namespace XylXenos
         private static bool doDebug = false;
 
         private readonly EventInfo[] events = new EventInfo[Enum.GetValues(typeof(NotificationEvent)).Length];
+
+        private readonly ConditionalWeakTable<INotificationListener, List<RegistrationRecord>> registeredEvents = new();
 
         public NotificationManager(Game _)
         {
@@ -80,23 +89,26 @@ namespace XylXenos
             object source,
             string name)
         {
-            if (source != null && source is not INotificationListener)
+            if (source is not INotificationListener listener)
                 throw new InvalidOperationException("Only an INotificationListener can register for notifications");
 
             if (doDebug)
-                Debug.Log($"Register eventType={eventType} target={target} source={source} name={name}");
+                Debug.Log($"Register eventType={eventType} target={target} listener={listener} name={name}");
+
+            var records = registeredEvents.GetOrCreateValue(listener);
+            records.Add(new(eventType, target));
 
             EventInfo eventInfo = events[(int)eventType] ??= new();
 
-            CallbackInfo callbackInfo = new() { wrappedCallback = callback, source = source, name = name };
+            CallbackInfo callbackInfo = new() { wrappedCallback = callback, listener = listener, name = name };
 
             if (target == null)
             {
-                if (eventInfo.globalCallbacks.Any(c => c.source == source && c.name == name))
+                if (eventInfo.globalCallbacks.Any(c => c.listener == listener && c.name == name))
                 {
                     Log.Warning(
                         // ReSharper disable once ExpressionIsAlwaysNull
-                        $"Adding a duplicate callback: type={eventType} target={target} callbackTarget={source} name={name}");
+                        $"Adding a duplicate callback: type={eventType} target={target} listener={listener} name={name}");
                     return;
                 }
 
@@ -105,10 +117,10 @@ namespace XylXenos
             else
             {
                 List<CallbackInfo> localCallbacks = eventInfo.localCallbacks.GetOrCreateValue(target);
-                if (localCallbacks.Any(c => c.source == source && c.name == name))
+                if (localCallbacks.Any(c => c.listener == listener && c.name == name))
                 {
                     Log.Warning(
-                        $"Adding a duplicate callback: type={eventType} target={target} callbackTarget={source} name={name}");
+                        $"Adding a duplicate callback: type={eventType} target={target} listener={listener} name={name}");
                     return;
                 }
 
@@ -137,21 +149,26 @@ namespace XylXenos
             RegisterInternal<object>(eventType, target, (_, _) => callback(), callback.Target, callback.Method.Name);
         }
 
-        public void UnregisterAll(INotificationListener listener, Thing target)
+        public void UnregisterAll(INotificationListener listener)
         {
-            if (target == null)
+            if (!registeredEvents.TryGetValue(listener, out List<RegistrationRecord> records))
+                return;
+
+            foreach (var record in records)
             {
-                foreach (var eventInfo in events)
-                    eventInfo?.globalCallbacks?.RemoveAll(callbackInfo => callbackInfo.source == listener);
-            }
-            else
-            {
-                foreach (var eventInfo in events)
+                if (record.isGlobal)
+                    events[(int)record.eventType]?.globalCallbacks?.RemoveAll(callback => callback.listener == listener);
+                else
                 {
-                    if (eventInfo?.localCallbacks?.TryGetValue(target, out List<CallbackInfo> callbacks) == true)
-                        callbacks.RemoveAll(callbackInfo => callbackInfo.source == listener);
+                    if (!record.target.TryGetTarget(out Thing target))
+                        continue;
+
+                    if (events[(int)record.eventType]?.localCallbacks?.TryGetValue(target, out var callbacks) == true)
+                        callbacks.RemoveAll(callback => callback.listener == listener);
                 }
             }
+
+            registeredEvents.Remove(listener);
         }
 
         public void Notify(NotificationEvent eventType, Thing target, object data = null)
@@ -185,18 +202,20 @@ namespace XylXenos
 
         private static void DoNotify(CallbackInfo callbackInfo, Thing target, object data, NotificationEvent eventType)
         {
-            // TODO Remove notification handlers when the corresponding things go away?
-            switch (callbackInfo.source)
+            switch (callbackInfo.listener)
             {
+                // ReSharper disable SuspiciousTypeConversion.Global
                 case Thing { Destroyed: true }:
                 case ThingComp t when t.parent.Destroyed:
+                // ReSharper restore SuspiciousTypeConversion.Global
                 case MapComponent m when m.map.Disposed:
                 case GeneExt { Removed: true }:
+                    Log.Warning($"A destroyed thing got an event: {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target})");
                     return;
             }
 
             if (doDebug)
-                Debug.Log($"  {callbackInfo.source} : {callbackInfo.name}");
+                Debug.Log($"  {callbackInfo.listener} : {callbackInfo.name}");
 
             try
             {
@@ -206,11 +225,11 @@ namespace XylXenos
             {
                 if (Prefs.DevMode)
                 {
-                    Log.Error($"Exception notifying {callbackInfo.source} : {callbackInfo.name} ({eventType} on {target}): {exception}");
+                    Log.Error($"Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}): {exception}");
                 }
-                else if (callbackInfo.source != null)
+                else if (callbackInfo.listener != null)
                 {
-                    Log.ErrorOnce($"Exception notifying {callbackInfo.source} : {callbackInfo.name} ({eventType} on {target}). Suppressing further errors. Exception: {exception}", callbackInfo.source.GetHashCode() ^ 0x1c502196);
+                    Log.ErrorOnce($"Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}). Suppressing further errors. Exception: {exception}", callbackInfo.listener.GetHashCode() ^ 0x1c502196);
                 }
             }
         }

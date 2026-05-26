@@ -22,7 +22,7 @@ namespace XylXenos.Patches
         public static void PostRemove_Postfix(Gene __instance)
         {
             if (__instance is INotificationListener target)
-                NotificationManager.Instance.UnregisterAll(target, __instance.pawn);
+                NotificationManager.Instance.UnregisterAll(target);
         }
 
         [Feature(nameof(DefExt.hediffGivers))]
