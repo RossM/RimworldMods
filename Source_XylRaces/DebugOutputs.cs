@@ -66,13 +66,13 @@ namespace XylXenos
                 new("defName", pawnKindDef => pawnKindDef.defName),
                 new("label", pawnKindDef => pawnKindDef.LabelCap),
             ];
-            foreach (var xenotypeDef in DefDatabase<XenotypeDef>.AllDefs)
+            foreach (var def in DefDatabase<XenotypeDef>.AllDefs)
             {
-                var defCaptured = xenotypeDef;
+                var xenotypeDef = def;
 
-                columns.Add(new(defCaptured.defName, pawnKindDef =>
+                columns.Add(new(xenotypeDef.defName, pawnKindDef =>
                 {
-                    float xenotypeChance = GetXenotypeChance(pawnKindDef, defCaptured);
+                    float xenotypeChance = GetXenotypeChance(pawnKindDef, xenotypeDef);
                     return xenotypeChance > 0 ? xenotypeChance.ToStringPercent() : "";
                 }));
             }
@@ -99,13 +99,13 @@ namespace XylXenos
                 new("defName", xenotypeDef => xenotypeDef.defName),
                 new("label", xenotypeDef => xenotypeDef.LabelCap),
             ];
-            foreach (var skillDef in DefDatabase<SkillDef>.AllDefs)
+            foreach (var def in DefDatabase<SkillDef>.AllDefs)
             {
-                var defCaptured = skillDef;
+                var skillDef = def;
 
-                columns.Add(new(defCaptured.LabelCap, xenotypeDef =>
+                columns.Add(new(skillDef.LabelCap, xenotypeDef =>
                 {
-                    int skillModifier = GetSkillModifier(xenotypeDef, defCaptured);
+                    int skillModifier = GetSkillModifier(xenotypeDef, skillDef);
 
                     return skillModifier != 0 ? skillModifier.ToStringWithSign() : "";
                 }));
@@ -122,6 +122,41 @@ namespace XylXenos
                     .Where(aptitude => aptitude.skill == skillDef)
                     .Select(aptitude => aptitude.level)
                     .Sum();
+            }
+        }
+
+        [DebugOutput]
+        public static void FactionMemes()
+        {
+            List<TableDataGetter<FactionDef>> columns =
+            [
+                new("defName", factionDef => factionDef.defName),
+                new("label", factionDef => factionDef.LabelCap),
+            ];
+            foreach (var def in DefDatabase<MemeDef>.AllDefs.Where(memeDef => memeDef.category == MemeCategory.Normal).OrderBy(memeDef => memeDef.label))
+            {
+                var memeDef = def;
+
+                columns.Add(new(memeDef.LabelCap, factionDef =>
+                {
+                    if (factionDef.requiredMemes?.Contains(memeDef) == true)
+                        return "Req";
+                    if (!factionDef.allowedMemes.NullOrEmpty())
+                        return factionDef.allowedMemes.Contains(memeDef) ? "\u2713" : "";
+                    if (!factionDef.disallowedMemes.NullOrEmpty())
+                        return factionDef.disallowedMemes.Contains(memeDef) ? "" : "\u2713";
+                    return "";
+                }));
+            }
+
+            DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs.Where(ShouldShow), columns.ToArray());
+            return;
+
+            bool ShouldShow(FactionDef factionDef)
+            {
+                return !factionDef.requiredMemes.NullOrEmpty() || 
+                       !factionDef.allowedMemes.NullOrEmpty() ||
+                       !factionDef.disallowedMemes.NullOrEmpty();
             }
         }
     }

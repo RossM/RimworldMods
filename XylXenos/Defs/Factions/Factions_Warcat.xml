@@ -22,14 +22,15 @@
     <replacesFaction MayRequire="Ludeon.Rimworld.Ideology">TribeCannibal</replacesFaction>
     <naturalEnemy>true</naturalEnemy>
     <requiredMemes>
-      <li MayRequire="Ludeon.RimWorld.Ideology">HumanPrimacy</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">Cannibal</li>
     </requiredMemes>
     <allowedMemes>
-      <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">HumanPrimacy</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Individualist</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">Loyalist</li>
-      <li MayRequire="Ludeon.RimWorld.Ideology">Raider</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">PainIsVirtue</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Raider</li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>
     </allowedMemes>
     <disallowedMemes IsNull="true"/>
   </FactionDef>
