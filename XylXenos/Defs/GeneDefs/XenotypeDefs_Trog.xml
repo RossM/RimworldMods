@@ -45,6 +45,7 @@
       <li Class="XylXenos.XenotypeDefExtension">
         <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Darkness</li>
           <li MayRequire="Ludeon.RimWorld.Ideology">FleshPurity</li>
         </agreeingMemes>
         <disagreeingMemes>
