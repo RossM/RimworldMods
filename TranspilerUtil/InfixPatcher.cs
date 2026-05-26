@@ -17,6 +17,12 @@ namespace TranspilerUtil
             Postfix,
         }
 
+        delegate List<CodeInstruction> MatchAndReplaceFn(
+            List<InstructionMatcher.Rule> rules,
+            MethodBase method,
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator);
+
         private class MethodPatchWorker(
             ILGenerator generator,
             MethodBase caller,
@@ -445,11 +451,7 @@ namespace TranspilerUtil
                 typeof(IEnumerable<CodeInstruction>), [typeof(MethodBase), typeof(IEnumerable<CodeInstruction>), typeof(ILGenerator)]);
             ILGenerator generator = methodBuilder.GetILGenerator();
 
-            MethodInfo matchAndReplace = typeof(InstructionMatcher).GetMethod("MatchAndReplace",
-                BindingFlags.Public | BindingFlags.Static,
-                null,
-                [typeof(List<InstructionMatcher.Rule>), typeof(MethodBase), typeof(IEnumerable<CodeInstruction>), typeof(ILGenerator)],
-                []);
+            MethodInfo matchAndReplace = ((MatchAndReplaceFn)InstructionMatcher.MatchAndReplace).Method;
 
             generator.Emit(OpCodes.Ldsfld, rulesField);
             generator.Emit(OpCodes.Ldarg_0);
