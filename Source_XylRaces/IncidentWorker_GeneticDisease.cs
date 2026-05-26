@@ -16,7 +16,7 @@ namespace XylXenos
 
         public override IEnumerable<string> ConfigErrors()
         {
-            if (requiredGenesAny == null || requiredGenesAny.Count == 0)
+            if (requiredGenesAny.NullOrEmpty())
                 yield return "requiredGenesAny must have at least one entry";
         }
     }
