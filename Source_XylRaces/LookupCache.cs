@@ -49,7 +49,7 @@ namespace XylXenos
             return value;
         }
 
-        public void Notify_GenesChanged()
+        public void Notify_PostGenesChanged()
         {
             genesByDef.Clear();
             genesByType.Clear();
@@ -100,7 +100,7 @@ namespace XylXenos
             return value;
         }
 
-        public void Notify_HediffsChanged()
+        public void Notify_PostHediffsChanged()
         {
             hediffsByComp.Clear();
             hediffsByDef.Clear();
@@ -110,8 +110,8 @@ namespace XylXenos
 
         public void RegisterWith(NotificationManager manager)
         {
-            manager.Register(NotificationEvent.PostGenesChanged, pawn, Notify_GenesChanged);
-            manager.Register(NotificationEvent.PostHediffsChanged, pawn, Notify_HediffsChanged);
+            manager.Register(NotificationEvent.PostGenesChanged, pawn, Notify_PostGenesChanged);
+            manager.Register(NotificationEvent.PostHediffsChanged, pawn, Notify_PostHediffsChanged);
         }
     }
 }
