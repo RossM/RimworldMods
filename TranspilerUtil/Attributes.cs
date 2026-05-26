@@ -3,9 +3,9 @@ using System;
 
 namespace TranspilerUtil
 {
-    public abstract class InfixTargetAttribute(Patcher.PatchType patchType, Type type, string memberName, Type[] parameterTypes) : Attribute
+    public abstract class InfixTargetAttribute(InfixPatcher.PatchType patchType, Type type, string memberName, Type[] parameterTypes) : Attribute
     {
-        public readonly Patcher.PatchType patchType = patchType;
+        public readonly InfixPatcher.PatchType patchType = patchType;
         public readonly Type type = type;
         public readonly string memberName = memberName;
         public readonly Type[] parameterTypes = parameterTypes;
@@ -14,11 +14,11 @@ namespace TranspilerUtil
 
     [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Method)]
-    public class InfixPrefixAttribute(Type type, string memberName, Type[] parameterTypes = null) : InfixTargetAttribute(Patcher.PatchType.Prefix, type, memberName, parameterTypes);
+    public class InfixPrefixAttribute(Type type, string memberName, Type[] parameterTypes = null) : InfixTargetAttribute(InfixPatcher.PatchType.Prefix, type, memberName, parameterTypes);
 
     [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Method)]
-    public class InfixPostfixAttribute(Type type, string memberName, Type[] parameterTypes = null) : InfixTargetAttribute(Patcher.PatchType.Postfix, type, memberName, parameterTypes);
+    public class InfixPostfixAttribute(Type type, string memberName, Type[] parameterTypes = null) : InfixTargetAttribute(InfixPatcher.PatchType.Postfix, type, memberName, parameterTypes);
 
     [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]

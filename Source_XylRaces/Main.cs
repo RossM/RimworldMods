@@ -23,7 +23,7 @@ namespace XylXenos
 
             harmony.PatchAll();
 
-            Patcher.PatchInfix(harmony, MyAssembly);
+            InfixPatcher.PatchInfix(harmony, MyAssembly);
         }
 
         public Main(ModContentPack content) : base(content)
