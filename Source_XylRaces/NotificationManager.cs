@@ -36,10 +36,11 @@ namespace XylXenos
     }
 
     /// <summary>
-    /// This enables listeners to register for global or pawn-specific callbacks which are triggered by patched
-    /// hooks. This makes it easy to write genes, hediffs, ThingComps, and so on that react to events without
-    /// needing specific patches to wire the correct events to each listener. Implement <see cref="INotificationListener"/>
-    /// and register for the needed callbacks in <see cref="INotificationListener.RegisterWith"/>.
+    ///     This enables listeners to register for global or pawn-specific callbacks which are triggered by patched
+    ///     hooks. This makes it easy to write genes, hediffs, ThingComps, and so on that react to events without
+    ///     needing specific patches to wire the correct events to each listener. Implement
+    ///     <see cref="INotificationListener" />
+    ///     and register for the needed callbacks in <see cref="INotificationListener.RegisterWith" />.
     /// </summary>
     [UsedImplicitly]
     public class NotificationManager : GameComponent
@@ -229,7 +230,9 @@ namespace XylXenos
                 }
                 else if (callbackInfo.listener != null)
                 {
-                    Log.ErrorOnce($"Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}). Suppressing further errors. Exception: {exception}", callbackInfo.listener.GetHashCode() ^ 0x1c502196);
+                    Log.ErrorOnce(
+                        $"Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}). Suppressing further errors. Exception: {exception}",
+                        callbackInfo.listener.GetHashCode() ^ 0x1c502196);
                 }
             }
         }
