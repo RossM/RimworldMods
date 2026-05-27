@@ -25,10 +25,8 @@
       <XylRawMeatNutritionFactor>1.8</XylRawMeatNutritionFactor>
       <XylRawNonMeatNutritionFactor>0.5</XylRawNonMeatNutritionFactor>
       <XylCookedNonMeatNutritionFactor>0.8</XylCookedNonMeatNutritionFactor>
+      <XylRawMeatFoodPoisonChanceFactor>0</XylRawMeatFoodPoisonChanceFactor>
     </statFactors>
-    <statOffsets>
-      <XylRawMeatFoodPoisonChanceOffset>-0.05</XylRawMeatFoodPoisonChanceOffset>
-    </statOffsets>
     <modExtensions>
       <li Class="XylXenos.Genes.DefExt">
         <ingestionThoughtOverrides>
@@ -64,10 +62,8 @@
       <XylRawNonMeatNutritionFactor>1.8</XylRawNonMeatNutritionFactor>
       <XylRawMeatNutritionFactor>0.5</XylRawMeatNutritionFactor>
       <XylCookedMeatNutritionFactor>0.8</XylCookedMeatNutritionFactor>
+      <XylRawNonMeatFoodPoisonChanceFactor>0</XylRawNonMeatFoodPoisonChanceFactor>
     </statFactors>
-    <statOffsets>
-      <XylRawNonMeatFoodPoisonChanceOffset>-0.05</XylRawNonMeatFoodPoisonChanceOffset>
-    </statOffsets>
     <modExtensions>
       <li Class="XylXenos.Genes.DefExt">
         <ingestionThoughtOverrides>

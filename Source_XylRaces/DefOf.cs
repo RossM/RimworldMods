@@ -30,13 +30,13 @@ namespace XylXenos
         public static StatDef XylLearnFactorPassionNone;
         public static StatDef XylMalnutritionProgressionFactor;
         public static StatDef XylRangedDodgeChance;
-        public static StatDef XylRawAnimalProductFoodPoisonChanceOffset;
+        public static StatDef XylRawAnimalProductFoodPoisonChanceFactor;
         public static StatDef XylRawAnimalProductNutritionFactor;
-        public static StatDef XylRawFungusFoodPoisonChanceOffset;
+        public static StatDef XylRawFungusFoodPoisonChanceFactor;
         public static StatDef XylRawFungusNutritionFactor;
-        public static StatDef XylRawMeatFoodPoisonChanceOffset;
+        public static StatDef XylRawMeatFoodPoisonChanceFactor;
         public static StatDef XylRawMeatNutritionFactor;
-        public static StatDef XylRawNonMeatFoodPoisonChanceOffset;
+        public static StatDef XylRawNonMeatFoodPoisonChanceFactor;
         public static StatDef XylRawNonMeatNutritionFactor;
         public static StatDef XylResistanceFallRate;
         public static StatDef XylSlaveRebellionMtbFactor;

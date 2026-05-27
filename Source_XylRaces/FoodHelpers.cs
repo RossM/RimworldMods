@@ -94,23 +94,23 @@ public static class FoodHelpers
         return result;
     }
 
-    public static float GetFoodPoisonChanceOffset(Pawn eater, Thing foodSource)
+    public static float GetFoodPoisonChanceFactor(Pawn eater, Thing foodSource)
     {
         var foodDef = foodSource.def;
 
         if (!IsRawFoodOrCorpse(foodDef))
-            return 0.0f;
+            return 1f;
 
         FoodType foodType = GetFoodType(foodSource.def);
-        float result = 0f;
+        float result = 1f;
         if (foodType.HasFlag(FoodType.Meat))
-            result += eater.GetStatValue(DefOf.XylRawMeatFoodPoisonChanceOffset);
+            result *= eater.GetStatValue(DefOf.XylRawMeatFoodPoisonChanceFactor);
         if (foodType.HasFlag(FoodType.NonMeat))
-            result += eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceOffset);
+            result *= eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceFactor);
         if (foodType.HasFlag(FoodType.AnimalProduct))
-            result += eater.GetStatValue(DefOf.XylRawAnimalProductFoodPoisonChanceOffset);
+            result *= eater.GetStatValue(DefOf.XylRawAnimalProductFoodPoisonChanceFactor);
         if (foodType.HasFlag(FoodType.Fungus))
-            result += eater.GetStatValue(DefOf.XylRawFungusFoodPoisonChanceOffset);
+            result *= eater.GetStatValue(DefOf.XylRawFungusFoodPoisonChanceFactor);
         return result;
     }
 
