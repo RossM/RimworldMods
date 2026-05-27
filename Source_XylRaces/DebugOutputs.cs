@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using LudeonTK;
 using RimWorld;
 using Verse;
@@ -133,7 +134,8 @@ namespace XylXenos
                 new("defName", factionDef => factionDef.defName),
                 new("label", factionDef => factionDef.LabelCap),
             ];
-            foreach (var def in DefDatabase<MemeDef>.AllDefs.Where(memeDef => memeDef.category == MemeCategory.Normal).OrderBy(memeDef => memeDef.label))
+            foreach (var def in DefDatabase<MemeDef>.AllDefs.Where(memeDef => memeDef.category == MemeCategory.Normal)
+                         .OrderBy(memeDef => memeDef.label))
             {
                 var memeDef = def;
 
@@ -154,10 +156,42 @@ namespace XylXenos
 
             bool ShouldShow(FactionDef factionDef)
             {
-                return !factionDef.requiredMemes.NullOrEmpty() || 
+                return !factionDef.requiredMemes.NullOrEmpty() ||
                        !factionDef.allowedMemes.NullOrEmpty() ||
                        !factionDef.disallowedMemes.NullOrEmpty();
             }
+        }
+
+        [DebugOutput]
+        public static void GenerateXenohumanNames()
+        {
+            List<DebugMenuOption> list = new List<DebugMenuOption>();
+
+            foreach (XenotypeDef item in DefDatabase<XenotypeDef>.AllDefs.OrderBy((XenotypeDef x) => x.defName))
+            {
+                XenotypeDef localDef = item;
+
+                list.Add(new DebugMenuOption(localDef.defName, DebugMenuOptionMode.Action, delegate
+                {
+                    StringBuilder sb = new();
+
+                    for (int i = 0; i < 30; i++)
+                    {
+                        var nameMaker = localDef.GetNameMaker(Rand.Chance(0.5f) ? Gender.Female : Gender.Male);
+                        if (nameMaker == null)
+                            continue;
+                        var name = NameTriple.FromString(NameGenerator.GenerateName(nameMaker));
+                        sb.AppendLine(name.ToStringFull);
+                    }
+
+                    if (sb.Length > 0)
+                        Log.Message(sb.ToString());
+                    else
+                        Log.Message($"No name maker for {localDef.label}");
+                }));
+            }
+
+            Find.WindowStack.Add(new Dialog_DebugOptionListLister(list));
         }
     }
 }
