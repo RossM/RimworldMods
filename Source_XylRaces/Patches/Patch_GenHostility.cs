@@ -24,25 +24,24 @@ namespace XylXenos.Patches
                 (b.Faction == null && b.TryGetComp<CompCauseGameCondition>() != null))
                 return;
 
-            if (a is not Pawn pawn || b is not Pawn pawn2)
-                return;
-            if (pawn.IsActivityDormant() || pawn2.IsActivityDormant())
-                return;
-            if (pawn.kindDef.hostileToAll || pawn2.kindDef.hostileToAll)
+            if ((a as Pawn)?.kindDef.hostileToAll == true || (b as Pawn)?.kindDef.hostileToAll == true)
                 return;
 
-            __result = !DisableHostilityCheck(pawn, pawn2) && !DisableHostilityCheck(pawn2, pawn);
+            __result = !DisableHostilityCheck(a, b) && !DisableHostilityCheck(b, a);
         }
 
-        private static bool DisableHostilityCheck(Pawn pawn, Pawn pawn2)
+        private static bool DisableHostilityCheck(Thing a, Thing b)
         {
-            var manager = HostilityOverrideManager.GetManager(pawn.Map);
-            if (manager == null)
-                return false;
-            if (!manager.HasAnyOverride(pawn.Faction, pawn2.Faction))
+            if (a is not Pawn pawn)
                 return false;
 
-            return pawn.IsColonyAnimal || pawn.GeneSet()?.disableHostilityFromFactions?.Any(factionDef => factionDef == pawn2.Faction?.def) == true;
+            var manager = HostilityOverrideManager.GetManager(a.Map);
+            if (manager == null)
+                return false;
+            if (!manager.HasAnyOverride(a.Faction, b.Faction))
+                return false;
+
+            return pawn.IsColonyAnimal || pawn.GeneSet()?.disableHostilityFromFactions?.Any(factionDef => factionDef == b.Faction?.def) == true;
         }
     }
 }
