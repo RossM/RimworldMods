@@ -167,7 +167,7 @@ namespace XylXenos
         {
             List<DebugMenuOption> list = new List<DebugMenuOption>();
 
-            foreach (XenotypeDef item in DefDatabase<XenotypeDef>.AllDefs.OrderBy((XenotypeDef x) => x.defName))
+            foreach (XenotypeDef item in DefDatabase<XenotypeDef>.AllDefs.Where(def => def.nameMaker != null).OrderBy(def => def.defName))
             {
                 XenotypeDef localDef = item;
 
@@ -178,8 +178,6 @@ namespace XylXenos
                     for (int i = 0; i < 30; i++)
                     {
                         var nameMaker = localDef.GetNameMaker(Rand.Chance(0.5f) ? Gender.Female : Gender.Male);
-                        if (nameMaker == null)
-                            continue;
                         var name = NameTriple.FromString(NameGenerator.GenerateName(nameMaker));
                         sb.AppendLine(name.ToStringFull);
                     }
