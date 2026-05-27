@@ -24,9 +24,6 @@ namespace XylXenos.Genes
     {
         [NotNull] public BonusGenesInfo BonusGenesInfo => DefExt.bonusGenes!;
 
-        private bool IsXenogene => pawn.genes.Xenogenes.Contains(this);
-        private GeneType GeneType => IsXenogene ? GeneType.Xenogene : GeneType.Endogene;
-
         public List<Gene> addedGenes = [];
 
         public override void ExposeData()
@@ -68,7 +65,7 @@ namespace XylXenos.Genes
                                                   pawn.genes.GenesListForReading.Sum(g => g.Active ? g.def.biostatMet : 0)))
                 return;
 
-            addedGenes.Add(pawn.genes.AddGene(geneDef, IsXenogene));
+            addedGenes.Add(pawn.genes.AddGene(geneDef, GeneType == GeneType.Xenogene));
         }
 
         private float GeneWeight(GeneDef geneDef)

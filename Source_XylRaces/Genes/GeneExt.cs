@@ -12,8 +12,12 @@ namespace XylXenos.Genes
         [NotNull]
         public DefExt DefExt => this.DefExt()!;
 
-        [Unsaved] private bool removed = false;
+        public GeneType GeneType => geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
+
         public bool Removed => removed;
+
+        [Unsaved] private GeneType? geneTypeInternal;
+        [Unsaved] private bool removed = false;
 
         public override bool Active
         {
@@ -25,9 +29,7 @@ namespace XylXenos.Genes
                     return false;
                 if (DefExt.gender != null && DefExt.gender != pawn.gender)
                     return false;
-                if (DefExt.geneType == GeneType.Endogene && !pawn.genes.HasEndogene(def))
-                    return false;
-                if (DefExt.geneType == GeneType.Xenogene && !pawn.genes.HasXenogene(def))
+                if (DefExt.geneType != null && DefExt.geneType != GeneType)
                     return false;
                 if (DefExt.allowMutants && pawn.IsMutant)
                     return false;
