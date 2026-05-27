@@ -9,7 +9,27 @@
 
         <li>firstName->[first1][first2][first3]</li>
 
-        <li>lastName->[Color][BodyPart]</li>
+        <li>lastName(p=2)->[Color][BodyPart]</li>
+        <li>lastName->[primitiveWeapon][BodyPart]</li>
+        <li>lastName->[Color][primitiveWeapon]</li>
+
+        <li>primitiveWeapon->axe</li>
+        <li>primitiveWeapon->blade</li>
+        <li>primitiveWeapon->bow</li>
+        <li>primitiveWeapon->club</li>
+        <li>primitiveWeapon->dagger</li>
+        <li>primitiveWeapon->edge</li>
+        <li>primitiveWeapon->knife</li>
+        <li>primitiveWeapon->lance</li>
+        <li>primitiveWeapon->log</li>
+        <li>primitiveWeapon->saber</li>
+        <li>primitiveWeapon->scimitar</li>
+        <li>primitiveWeapon->scythe</li>
+        <li>primitiveWeapon->sling</li>
+        <li>primitiveWeapon->shiv</li>
+        <li>primitiveWeapon->spear</li>
+        <li>primitiveWeapon->staff</li>
+        <li>primitiveWeapon->sword</li>
 
         <li>first1->b</li>
         <li>first1->br</li>
