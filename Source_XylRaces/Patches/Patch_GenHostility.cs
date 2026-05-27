@@ -17,31 +17,17 @@ namespace XylXenos.Patches
             if (!__result)
                 return;
 
-            // These are cases where we should respect the regular logic
-            if (a.Destroyed || b.Destroyed || a == b)
-                return;
-            if ((a.Faction == null && a.TryGetComp<CompCauseGameCondition>() != null) ||
-                (b.Faction == null && b.TryGetComp<CompCauseGameCondition>() != null))
+            if (a.Faction == null || b.Faction == null)
                 return;
 
             if ((a as Pawn)?.kindDef.hostileToAll == true || (b as Pawn)?.kindDef.hostileToAll == true)
                 return;
 
-            __result = !DisableHostilityCheck(a, b) && !DisableHostilityCheck(b, a);
-        }
-
-        private static bool DisableHostilityCheck(Thing a, Thing b)
-        {
-            if (a is not Pawn pawn)
-                return false;
-
             var manager = HostilityOverrideManager.GetManager(a.Map);
             if (manager == null)
-                return false;
-            if (!manager.HasAnyOverride(a.Faction, b.Faction))
-                return false;
+                return;
 
-            return pawn.IsColonyAnimal || pawn.GeneSet()?.disableHostilityFromFactions?.Any(factionDef => factionDef == b.Faction?.def) == true;
+            __result = !manager.HostilityDisabled(b, a) && !manager.HostilityDisabled(a, b);
         }
     }
 }

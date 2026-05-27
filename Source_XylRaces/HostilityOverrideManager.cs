@@ -36,6 +36,17 @@ namespace XylXenos
             return lastManager;
         }
 
+        public bool HostilityDisabled(Thing source, Thing target)
+        {
+            if (target is not Pawn targetPawn)
+                return false;
+
+            if (!HasAnyOverride(target.Faction, source.Faction))
+                return false;
+
+            return targetPawn.IsColonyAnimal || targetPawn.GeneSet()?.disableHostilityFromFactions?.Any(factionDef => factionDef == source.Faction?.def) == true;
+        }
+
         public bool HasAnyOverride(Faction from, Faction to)
         {
             if (activeOverrides == null || !activeOverrides.Contains((from, to)))
