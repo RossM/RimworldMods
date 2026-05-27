@@ -9,8 +9,8 @@
 
         <li>firstName->[consonant]'[consonant][vowel]</li>
 
-        <li>lastName(p=3)->[SylY][SylY][nameEnd]</li>
-        <li>lastName->[SylY][SylY][SylY][nameEnd]</li>
+        <li>lastName->[SylStart][SylEnd][nameEnd]</li>
+        <li>lastName(p=0.2)->[SylStart][SylStart][SylEnd][nameEnd]</li>
 
         <li>consonant->b</li>
         <li>consonant->ch</li>
@@ -29,22 +29,29 @@
         <li>vowel->u</li>
         <li>vowel->ua</li>
 
-        <li>nameEnd->a</li>
-        <li>nameEnd->es</li>
-        <li>nameEnd->i</li>
-        <li>nameEnd->ia</li>
-        <li>nameEnd->odes</li>
         <li>nameEnd->ops</li>
-        <li>nameEnd->or</li>
-        <li>nameEnd->os</li>
-        <li>nameEnd->um</li>
-        <li>nameEnd->ur</li>
         <li>nameEnd->us</li>
+        <li>nameEnd->a</li>
         <li>nameEnd->yx</li>
+        <li>nameEnd->is</li>
+        <li>nameEnd->um</li>
+        <li>nameEnd->essa</li>
+        <li>nameEnd->sa</li>
+        <li>nameEnd->io</li>
+        <li>nameEnd->ia</li>
+        <li>nameEnd->or</li>
+        <li>nameEnd->ax</li>
+        <li>nameEnd->ens</li>
+        <li>nameEnd->lopex</li>
+        <li>nameEnd->os</li>
+        <li>nameEnd->on</li>
+        <li>nameEnd->ias</li>
+        <li>nameEnd->ugo</li>
 
       </rulesStrings>
       <rulesFiles>
-        <li>SylY->Xyl/WordParts/Syllables_Chyrr</li>
+        <li>SylStart->Xyl/WordParts/Syllables_Starts_Chyrr</li>
+        <li>SylEnd->Xyl/WordParts/Syllables_Ends_Chyrr</li>
       </rulesFiles>
     </rulePack>
   </RulePackDef>
