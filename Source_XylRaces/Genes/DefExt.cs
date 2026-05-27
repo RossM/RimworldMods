@@ -60,6 +60,7 @@ namespace XylXenos.Genes
         public FoodTypeFlags foodType;
         public float chance = 1.0f;
         public IntRange count = IntRange.One;
+        public FloatRange nutritionAmount = FloatRange.Zero;
     }
 
     public class DefExt : DefModExtension

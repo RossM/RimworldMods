@@ -137,7 +137,7 @@
         <startingItems>
           <li>
             <foodType>Meat</foodType>
-            <count>20~40</count>
+            <nutritionAmount>1~2</nutritionAmount>
           </li>
         </startingItems>
         <dietDependency>

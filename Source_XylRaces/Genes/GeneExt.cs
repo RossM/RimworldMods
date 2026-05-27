@@ -49,8 +49,16 @@ namespace XylXenos.Genes
 
                 var itemDef = startingItem.item ?? DefDatabase<ThingDef>.AllDefsListForReading
                     .Where(thingDef => Validate(thingDef, startingItem)).RandomElement();
+                if (itemDef == null)
+                    continue;
 
-                yield return new(itemDef, Mathf.Clamp(startingItem.count.RandomInRange, 1, itemDef.stackLimit));
+                int count;
+                if (startingItem.nutritionAmount != FloatRange.Zero)
+                    count = Mathf.FloorToInt(startingItem.nutritionAmount.RandomInRange / Helpers.GetStatBase(itemDef, StatDefOf.Nutrition));
+                else
+                    count = startingItem.count.RandomInRange;
+
+                yield return new(itemDef, Mathf.Clamp(count, 1, itemDef.stackLimit));
             }
 
             bool Validate(ThingDef thingDef, StartingItemOption startingItem)
