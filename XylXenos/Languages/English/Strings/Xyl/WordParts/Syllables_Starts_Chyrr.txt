@@ -1,4 +1,5 @@
 ﻿a
+alio
 an
 ari
 arti
@@ -6,8 +7,10 @@ austro
 baeo
 balantio
 balio
+barba
 brachy
 cardio
+casi
 centro
 chalino
 cheiro
@@ -24,6 +27,8 @@ dryado
 dyaco
 ecto
 emballo
+eo
+epomo
 ero
 eu
 eumo
@@ -38,6 +43,7 @@ harpyio
 hespero
 hippo
 hylo
+hyp
 idio
 keri
 lampro

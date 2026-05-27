@@ -1,6 +1,5 @@
 ﻿acerod
 aethal
-alionycter
 ametrid
 anth
 antrozo
@@ -9,11 +8,9 @@ ard
 arite
 asell
 asellisc
-barbastell
 bauer
 be
 caroll
-casinycter
 centur
 cephal
 chil
@@ -36,9 +33,7 @@ ec
 eidol
 elul
 enchisthen
-eonycter
 epom
-epomophor
 eptesic
 er
 euderm
@@ -46,7 +41,6 @@ gloss
 harpiol
 histiot
 hyps
-hypsignath
 laephot
 laim
 latid
@@ -86,6 +80,7 @@ pharot
 phil
 philet
 phonisc
+phor
 phyll
 platalin
 platym
@@ -104,7 +99,9 @@ rostr
 rousett
 rrhin
 sider
+signath
 sphaer
+stell
 stom
 strell
 sturnir
