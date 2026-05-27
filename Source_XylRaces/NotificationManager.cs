@@ -162,7 +162,7 @@ namespace XylXenos
             foreach (var record in records)
             {
                 if (record.isGlobal)
-                    events[(int)record.eventType]?.globalCallbacks?.RemoveAll(callback => callback.listener == listener);
+                    events[(int)record.eventType]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
                 else
                 {
                     if (!record.target.TryGetTarget(out Thing target))
