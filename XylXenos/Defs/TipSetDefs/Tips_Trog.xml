@@ -7,7 +7,8 @@
     <tips>
 
       <li TKey="XylTrogPets">The insect pheromones gene will also protect colony animals.</li>
-      <li TKey="XylTrogPsylink">A psylink won't trigger bio-rejection in trogs.</li>
+      <li TKey="XylTrogPsylink">A psylink won't trigger bio-rejection in trogs, but a mechlink will.</li>
+      <li TKey="XylTrogInsects">Trogs can make use of wild insects in multiple ways. You can try taming them, or just lure enemies close to a hive.</li>
 
     </tips>
   </TipSetDef>
