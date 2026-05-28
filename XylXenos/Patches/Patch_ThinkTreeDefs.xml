@@ -12,7 +12,8 @@
   </Operation>
 
   <Operation Class="PatchOperationInsert">
-    <xpath>Defs/ThinkTreeDef//li[@Class="JobGiver_Meditate"]</xpath>
+    <xpath>Defs/ThinkTreeDef//li[@Class="ThinkNode_Priority_GetJoy" and subNodes/li[@Class="JobGiver_GetJoy"]]</xpath>
+    <order>Append</order>
     <value>
       <li Class="XylXenos.JobGiver_GetWetness">
         <showerJobDef>XylTakeShower</showerJobDef>
