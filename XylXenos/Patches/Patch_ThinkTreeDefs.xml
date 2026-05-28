@@ -23,8 +23,9 @@
 
   <!-- Mental states -->
 
-  <Operation Class="PatchOperationInsert">
-    <xpath>Defs/ThinkTreeDef//li[state="MurderousRage"]</xpath>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/ThinkTreeDef[defName="MentalStateNonCritical"]/thinkRoot/subNodes</xpath>
+    <order>Append</order>
     <value>
 
       <li Class="ThinkNode_ConditionalMentalState">
@@ -45,6 +46,14 @@
           <li Class="JobGiver_WanderColony"/>
         </subNodes>
       </li>
+
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/ThinkTreeDef[defName="MentalStateCritical"]/thinkRoot/subNodes</xpath>
+    <order>Append</order>
+    <value>
 
       <li Class="ThinkNode_ConditionalMentalState">
         <state>XylSeeingRed</state>
