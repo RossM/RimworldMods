@@ -21,14 +21,14 @@
       <li Class="XylXenos.HediffCompProperties_GrowthModeExt">
         <modes>
           <li>
-            <name>active</name>
+            <label>active</label>
             <isActive>true</isActive>
             <severityPerDayRange>0.008~0.012</severityPerDayRange>
             <message>{PAWN_labelShort}'s petrification has become active.</message>
             <messageType>NegativeHealthEvent</messageType>
           </li>
           <li>
-            <name>dormant</name>
+            <label>dormant</label>
             <causesNoPain>true</causesNoPain>
             <changeMtbDays>120</changeMtbDays>
             <message>{PAWN_labelShort}'s petrification has gone dormant.</message>

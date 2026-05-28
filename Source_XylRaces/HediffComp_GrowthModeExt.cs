@@ -13,7 +13,7 @@ namespace XylXenos
         public float changeMtbDays = -1;
         public float severityPerDay = 0f;
         public FloatRange severityPerDayRange = FloatRange.Zero;
-        [MustTranslate] public string name;
+        [MustTranslate] public string label;
         [MustTranslate] public string message;
         public MessageTypeDef messageType;
         [MustTranslate] public string tipString;
@@ -34,7 +34,7 @@ namespace XylXenos
     {
         public HediffCompProperties_GrowthModeExt TProps => (HediffCompProperties_GrowthModeExt)props;
 
-        public override string CompLabelInBracketsExtra => growthMode.name;
+        public override string CompLabelInBracketsExtra => growthMode.label;
 
         public override string CompTipStringExtra => growthMode.tipString;
 
