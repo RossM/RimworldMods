@@ -4,7 +4,7 @@
 
   <HediffDef>
     <defName>XylPetrification</defName>
-    <hediffClass>XylXenos.Hediff_Petrification</hediffClass>
+    <hediffClass>HediffWithComps</hediffClass>
     <label>petrification</label>
     <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.</description>
     <descriptionHyperlinks>
@@ -18,12 +18,24 @@
     <everCurableByItem>false</everCurableByItem>
     <tendable>true</tendable>
     <comps>
-      <li Class="XylXenos.HediffCompProperties_PetrificationGrowthMode">
-        <severityPerDayRange>0.008~0.012</severityPerDayRange>
-        <becomeActiveMtbDays>120</becomeActiveMtbDays>
-        <messageBecomeActive>{PAWN_labelShort}'s petrification has become active.</messageBecomeActive>
-        <messageBecomeDormant>{PAWN_labelShort}'s petrification has gone dormant.</messageBecomeDormant>
-        <tipStringDormant>The disease is currently dormant, but could become active at any time.</tipStringDormant>
+      <li Class="XylXenos.HediffCompProperties_GrowthModeExt">
+        <modes>
+          <li>
+            <name>active</name>
+            <isActive>true</isActive>
+            <severityPerDayRange>0.008~0.012</severityPerDayRange>
+            <message>{PAWN_labelShort}'s petrification has become active.</message>
+            <messageType>NegativeHealthEvent</messageType>
+          </li>
+          <li>
+            <name>dormant</name>
+            <causesNoPain>true</causesNoPain>
+            <changeMtbDays>120</changeMtbDays>
+            <message>{PAWN_labelShort}'s petrification has gone dormant.</message>
+            <messageType>NeutralEvent</messageType>
+            <tipString>The disease is currently dormant, but could become active at any time.</tipString>
+          </li>
+        </modes>
       </li>
       <li Class="XylXenos.HediffCompProperties_PetrificationTendDuration">
         <baseTendDurationHours>120</baseTendDurationHours>

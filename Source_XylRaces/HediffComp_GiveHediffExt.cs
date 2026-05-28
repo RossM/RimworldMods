@@ -124,7 +124,7 @@ namespace XylXenos
                     continue;
                 if (parent.Severity < hediff.minSeverity)
                     continue;
-                if (parent.GetComp<HediffComp_PetrificationGrowthMode>()?.growthMode == PetrificationGrowthMode.Dormant)
+                if (parent.GetComp<HediffComp_GrowthModeExt>()?.IsActive == false)
                     continue;
                 if (hediff.mtbDays > 0 && !Rand.MTBEventOccurs(hediff.mtbDays, GenDate.TicksPerDay, delta))
                     continue;

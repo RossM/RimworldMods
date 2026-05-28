@@ -39,6 +39,7 @@
     <Publicize Include="Assembly-CSharp:RimWorld.WorkGiver_Warden.ShouldTakeCareOfPrisoner" />
     <Publicize Include="Assembly-CSharp:Verse.AI.Pawn_MindState.CheckStartMentalStateBecauseRecruitAttempted" />
     <Publicize Include="Assembly-CSharp:Verse.DesignationCategoryDef.ideoBuildingDesignatorsCached" />
+    <Publicize Include="Assembly-CSharp:Verse.Hediff.causesNoPain" />
     <Publicize Include="Assembly-CSharp:Verse.HediffComp_TendDuration.totalTendQuality" />
     <Publicize Include="Assembly-CSharp:Verse.IntRange.Includes" />
     <Publicize Include="Assembly-CSharp:Verse.Pawn_HealthTracker.pawn" />

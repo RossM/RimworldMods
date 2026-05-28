@@ -19,13 +19,12 @@ namespace XylXenos
     {
         public new HediffCompProperties_PetrificationTendDuration TProps => (HediffCompProperties_PetrificationTendDuration)props;
 
-        public PetrificationGrowthMode GrowthMode =>
-            parent.GetComp<HediffComp_PetrificationGrowthMode>()?.growthMode ?? PetrificationGrowthMode.Active;
+        public bool IsActive => parent.GetComp<HediffComp_GrowthModeExt>()?.IsActive ?? true;
 
-        public virtual bool AllowTendExt => GrowthMode == PetrificationGrowthMode.Active;
+        public virtual bool AllowTendExt => IsActive;
 
         public override TextureAndColor CompStateIcon =>
-            GrowthMode == PetrificationGrowthMode.Active ? base.CompStateIcon : TextureAndColor.None;
+            IsActive ? base.CompStateIcon : TextureAndColor.None;
 
         public override string CompTipStringExtra
         {
@@ -79,8 +78,7 @@ namespace XylXenos
                         }
                     }
 
-                    if (!Pawn.Dead && !TProps.TendIsPermanent && parent.TendableNow(ignoreTimer: true) &&
-                        GrowthMode == PetrificationGrowthMode.Active)
+                    if (!Pawn.Dead && !TProps.TendIsPermanent && parent.TendableNow(ignoreTimer: true) && IsActive)
                     {
                         int num = tendTicksLeft - TProps.TendTicksOverlap;
                         if (num < 0)
@@ -113,7 +111,7 @@ namespace XylXenos
             if (totalTendQuality < TProps.changeModeAtTotalTendQuality)
                 return;
 
-            parent.GetComp<HediffComp_PetrificationGrowthMode>()?.ChangeGrowthMode();
+            parent.GetComp<HediffComp_GrowthModeExt>()?.ChangeGrowthMode();
             totalTendQuality = 0;
             tendQuality = 0;
         }
