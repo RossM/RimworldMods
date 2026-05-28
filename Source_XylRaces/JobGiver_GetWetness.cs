@@ -144,12 +144,16 @@ namespace XylXenos
         public override float GetPriority(Pawn pawn)
         {
             var need_wetness = pawn.needs?.TryGetNeed<Need_Wetness>();
-            if (need_wetness is not { ShouldFulfill: true })
+            if (need_wetness == null)
                 return 0.0f;
 
-            return pawn.timetable?.CurrentAssignment == TimeAssignmentDefOf.Anything
-                ? ThinkNodePriority.MiscNeed
-                : ThinkNodePriority.AnythingJoy;
+            var projectedWetness = need_wetness.CurLevel - 8f * need_wetness.FallPerHour;
+
+            if (need_wetness.CurLevel < Need_Wetness.thresholdWet && projectedWetness < Need_Wetness.thresholdNeutral)
+                return ThinkNodePriority.MiscNeed;
+            if (need_wetness.CurLevel < 0.95f)
+                return ThinkNodePriority.AvoidIdle;
+            return 0.0f;
         }
     }
 }

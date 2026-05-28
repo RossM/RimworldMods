@@ -16,14 +16,12 @@ namespace XylXenos
 
     public class Need_Wetness(Pawn pawn) : Need_Seeker(pawn)
     {
-        public bool ShouldFulfill => CurLevel <= 0.67f;
+        public float TemperatureFactor => TemperatureWetnessFallFactorCurve.Evaluate(pawn.AmbientTemperature);
 
-        private float TemperatureFactor => TemperatureWetnessFallFactorCurve.Evaluate(pawn.AmbientTemperature);
-
-        private const float thresholdWet = 0.90f;
-        private const float thresholdNeutral = 0.50f;
-        private const float thresholdDry = 0.25f;
-        private const float thresholdVeryDry = 0.05f;
+        public const float thresholdWet = 0.90f;
+        public const float thresholdNeutral = 0.50f;
+        public const float thresholdDry = 0.25f;
+        public const float thresholdVeryDry = 0.05f;
 
         private static readonly SimpleCurve TemperatureWetnessFallFactorCurve =
         [
@@ -123,22 +121,24 @@ namespace XylXenos
             float curInstantLevel = CurInstantLevel;
             if (curInstantLevel > CurLevel)
             {
-                CurLevel += def.seekerRisePerHour * 0.06f;
+                CurLevel += RisePerHour * 0.06f;
                 CurLevel = Mathf.Min(CurLevel, curInstantLevel);
             }
             else if (curInstantLevel < CurLevel)
             {
-                CurLevel -= def.seekerFallPerHour * TemperatureFactor * 0.06f;
+                CurLevel -= FallPerHour * 0.06f;
                 CurLevel = Mathf.Max(CurLevel, curInstantLevel);
             }
         }
+
+        public float RisePerHour => def.seekerRisePerHour;
+        public float FallPerHour => def.seekerFallPerHour * TemperatureFactor;
 
         public override string GetTipString()
         {
             float ambientTemperature = pawn.AmbientTemperature;
             float temperatureFactor = TemperatureWetnessFallFactorCurve.Evaluate(ambientTemperature);
-            float modifiedFallRate = def.seekerFallPerHour * temperatureFactor;
-            float hoursPerDay = modifiedFallRate * 24.0f / (modifiedFallRate + def.seekerRisePerHour);
+            float hoursPerDay = FallPerHour * 24.0f / (FallPerHour + RisePerHour);
             return base.GetTipString() + "\n\n" + "XylWetnessNeedModifiedByTemperature".Translate(
                     pawn.Named("PAWN"),
                     ambientTemperature.ToStringTemperature().Named("TEMPERATURE"),
