@@ -36,6 +36,7 @@ shaft
 ship
 shirt
 skull
+sleeves
 smith
 tooth
 tower
