@@ -26,13 +26,9 @@ namespace XylXenos
         }
 
         public GeneExt Gene => geneInternal ??= (GeneExt)pawn.genes.GetGene(GetComp<HediffComp_Genetic>().Props.gene);
+        public DietDependencyInfo DietDependencyInfo => Gene.DefExt.dietDependency!;
 
         public bool ShouldSatisfy => Severity >= def.stages[(int)Stages.Craving].minSeverity;
-
-        public float SeverityReductionPerNutrition => Gene.DefExt.dietDependency!.severityReductionPerNutrition;
-        private string FoodLabel => Gene.DefExt.dietDependency!.foodLabel;
-        private FoodKind FoodKind => Gene.DefExt.dietDependency!.foodKind;
-        private bool RawOnly => Gene.DefExt.dietDependency!.rawOnly;
 
         private GeneExt geneInternal;
 
@@ -42,31 +38,28 @@ namespace XylXenos
             {
                 string text = base.TipStringExtra;
 
-                if (Gene != null)
-                {
-                    if (!text.NullOrEmpty())
-                        text += "\n\n";
+                if (!text.NullOrEmpty())
+                    text += "\n\n";
 
-                    var severityPerDay =
-                        ((HediffCompProperties_SeverityPerDay)GetComp<HediffComp_SeverityPerDay>().props)
-                        .severityPerDay;
-                    var deficiencyDays = def.stages[(int)Stages.MildDeficiency].minSeverity / severityPerDay;
-                    var comaDays = def.stages[(int)Stages.Coma].minSeverity / severityPerDay;
-                    var deathDays = def.lethalSeverity / severityPerDay;
-                    text += "GeneDefChemicalNeedDurationDesc".Translate(FoodLabel,
-                        pawn.Named("PAWN"),
-                        // ReSharper disable StringLiteralTypo
-                        "PeriodDays".Translate(deficiencyDays).Named("DEFICIENCYDURATION"),
-                        "PeriodDays".Translate(comaDays).Named("COMADURATION"),
-                        "PeriodDays".Translate(deathDays).Named("DEATHDURATION")).Resolve();
-                    // ReSharper restore StringLiteralTypo
-                    float daysBehind = Severity / severityPerDay;
-                    float nutritionPerDay = severityPerDay * SeverityReductionPerNutrition;
-                    text += "\n\n" + "XylIngestedBehind".Translate(FoodLabel,
-                        pawn.Named("PAWN"),
-                        nutritionPerDay.ToStringDecimalIfSmall().Named("NUTRITION"),
-                        "PeriodDays".Translate(daysBehind).Named("DURATION"));
-                }
+                var severityPerDay =
+                    ((HediffCompProperties_SeverityPerDay)GetComp<HediffComp_SeverityPerDay>().props)
+                    .severityPerDay;
+                var deficiencyDays = def.stages[(int)Stages.MildDeficiency].minSeverity / severityPerDay;
+                var comaDays = def.stages[(int)Stages.Coma].minSeverity / severityPerDay;
+                var deathDays = def.lethalSeverity / severityPerDay;
+                text += "GeneDefChemicalNeedDurationDesc".Translate(DietDependencyInfo.foodLabel,
+                    pawn.Named("PAWN"),
+                    // ReSharper disable StringLiteralTypo
+                    "PeriodDays".Translate(deficiencyDays).Named("DEFICIENCYDURATION"),
+                    "PeriodDays".Translate(comaDays).Named("COMADURATION"),
+                    "PeriodDays".Translate(deathDays).Named("DEATHDURATION")).Resolve();
+                // ReSharper restore StringLiteralTypo
+                float daysBehind = Severity / severityPerDay;
+                float nutritionPerDay = severityPerDay * DietDependencyInfo.severityReductionPerNutrition;
+                text += "\n\n" + "XylIngestedBehind".Translate(DietDependencyInfo.foodLabel,
+                    pawn.Named("PAWN"),
+                    nutritionPerDay.ToStringDecimalIfSmall().Named("NUTRITION"),
+                    "PeriodDays".Translate(daysBehind).Named("DURATION"));
 
                 return text;
             }
@@ -132,12 +125,12 @@ namespace XylXenos
             }
 
             if (ValidateFood(food))
-                Severity -= nutrition * SeverityReductionPerNutrition;
+                Severity -= nutrition * DietDependencyInfo.severityReductionPerNutrition;
         }
 
         public float NutritionWantedToSatisfy()
         {
-            return Severity / SeverityReductionPerNutrition;
+            return Severity / DietDependencyInfo.severityReductionPerNutrition;
         }
 
         public int ItemsWantedToSatisfy(Thing foodSource, ThingDef foodDef)
@@ -154,21 +147,21 @@ namespace XylXenos
             if (food.Destroyed || !food.IngestibleNow)
                 return false;
 
-            float nutrition = FoodUtility.NutritionForEater(Gene.pawn, food);
+            float nutrition = FoodUtility.NutritionForEater(pawn, food);
             if (nutrition <= 0.0f)
                 return false;
 
-            if (!food.def.IsRawFoodOrCorpse() && RawOnly)
+            if (!food.def.IsRawFoodOrCorpse() && DietDependencyInfo.rawOnly)
                 return false;
 
-            if (FoodKind == FoodUtility.GetFoodKind(food))
+            if (DietDependencyInfo.foodKind == FoodUtility.GetFoodKind(food))
                 return true;
 
             var compIngredients = food.TryGetComp<CompIngredients>();
             if (compIngredients == null)
                 return false;
             if (Enumerable.Any(compIngredients.ingredients,
-                    ingredient => FoodKind == FoodUtility.GetFoodKind(ingredient)))
+                    ingredient => DietDependencyInfo.foodKind == FoodUtility.GetFoodKind(ingredient)))
                 return true;
 
             return false;

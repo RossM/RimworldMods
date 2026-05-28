@@ -39,7 +39,7 @@ namespace XylXenos
                         continue;
 
                     float nutritionPer = FoodUtility.NutritionForEater(pawn, food);
-                    float nutritionNeeded = dietDependency.Severity / dietDependency.SeverityReductionPerNutrition;
+                    float nutritionNeeded = dietDependency.Severity / dietDependency.DietDependencyInfo.severityReductionPerNutrition;
                     int count = Mathf.CeilToInt(nutritionNeeded / nutritionPer);
 
                     Pawn pawn2 = (food.ParentHolder as Pawn_InventoryTracker)?.pawn;
