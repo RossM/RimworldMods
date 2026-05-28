@@ -19,12 +19,8 @@ namespace XylXenos
     {
         public new HediffCompProperties_PetrificationTendDuration TProps => (HediffCompProperties_PetrificationTendDuration)props;
 
-        public bool IsActive => parent.GetComp<HediffComp_GrowthModeExt>()?.IsActive ?? true;
-
-        public virtual bool AllowTendExt => IsActive;
-
         public override TextureAndColor CompStateIcon =>
-            IsActive ? base.CompStateIcon : TextureAndColor.None;
+            parent.TendableNow(ignoreTimer: true) ? base.CompStateIcon : TextureAndColor.None;
 
         public override string CompTipStringExtra
         {
@@ -78,7 +74,7 @@ namespace XylXenos
                         }
                     }
 
-                    if (!Pawn.Dead && !TProps.TendIsPermanent && parent.TendableNow(ignoreTimer: true) && IsActive)
+                    if (!Pawn.Dead && !TProps.TendIsPermanent && parent.TendableNow(ignoreTimer: true))
                     {
                         int num = tendTicksLeft - TProps.TendTicksOverlap;
                         if (num < 0)

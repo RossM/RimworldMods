@@ -4,7 +4,7 @@
 
   <HediffDef>
     <defName>XylPetrification</defName>
-    <hediffClass>HediffWithComps</hediffClass>
+    <hediffClass>XylXenos.HediffWithCompsExt</hediffClass>
     <label>petrification</label>
     <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.</description>
     <descriptionHyperlinks>
@@ -30,6 +30,7 @@
           <li>
             <label>dormant</label>
             <causesNoPain>true</causesNoPain>
+            <allowTend>false</allowTend>
             <changeMtbDays>120</changeMtbDays>
             <message>{PAWN_labelShort}'s petrification has gone dormant.</message>
             <messageType>NeutralEvent</messageType>
