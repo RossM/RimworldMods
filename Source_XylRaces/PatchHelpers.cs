@@ -64,20 +64,26 @@ public static class PatchHelpers
         }
     }
 
-    public static float ConversionPowerFactor_OffsetFromXenotype(Pawn pawn, Pawn recipient, bool invert, StringBuilder sb)
+    public static float ConversionPowerFactor_OffsetFromXenotype(Pawn pawn, bool invert, StringBuilder sb, Pawn recipient)
     {
-        float result = 0;
-        string text = string.Empty;
-        XenotypeDef recipientXenotype = recipient.genes?.Xenotype;
-        if (recipientXenotype == null)
-            return 0;
+        float result = 0f;
 
-        var agreeingMemes = recipientXenotype.GetModExtension<XenotypeDefExtension>()?.agreeingMemes;
-        if (agreeingMemes != null)
+        Ideo ideo = pawn.Ideo;
+        if (ideo == null)
+            return 0f;
+
+        XenotypeDef recipientXenotype = recipient.genes?.Xenotype;
+        var xenotypeDefExtension = recipientXenotype?.GetModExtension<XenotypeDefExtension>();
+        if (xenotypeDefExtension == null)
+            return 0f;
+
+        string text = "";
+
+        if (!xenotypeDefExtension.agreeingMemes.NullOrEmpty())
         {
-            foreach (MemeDef meme in pawn.Ideo.memes)
+            foreach (MemeDef meme in ideo.memes)
             {
-                if (agreeingMemes.Contains(meme))
+                if (xenotypeDefExtension.agreeingMemes.Contains(meme))
                 {
                     float offset = invert ? -0.2f : 0.2f;
                     result += offset;
@@ -85,13 +91,11 @@ public static class PatchHelpers
                 }
             }
         }
-
-        var disagreeingMemes = recipientXenotype.GetModExtension<XenotypeDefExtension>()?.disagreeingMemes;
-        if (disagreeingMemes != null)
+        if (!xenotypeDefExtension.disagreeingMemes.NullOrEmpty())
         {
-            foreach (MemeDef meme in pawn.Ideo.memes)
+            foreach (MemeDef meme in ideo.memes)
             {
-                if (disagreeingMemes.Contains(meme))
+                if (xenotypeDefExtension.disagreeingMemes.Contains(meme))
                 {
                     float offset = invert ? 0.2f : -0.2f;
                     result += offset;
@@ -99,11 +103,8 @@ public static class PatchHelpers
                 }
             }
         }
-
         if (sb != null && !text.NullOrEmpty())
-        {
             sb.AppendInNewLine($" -  {"AbilityIdeoConvertBreakdownPawnIdeo".Translate(pawn.Named("PAWN"))}: {text}");
-        }
 
         return result;
 
