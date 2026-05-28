@@ -4,7 +4,7 @@
 
   <HediffDef>
     <defName>XylPetrification</defName>
-    <hediffClass>XylXenos.HediffWithCompsExt</hediffClass>
+    <hediffClass>HediffWithComps</hediffClass>
     <label>petrification</label>
     <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.</description>
     <descriptionHyperlinks>

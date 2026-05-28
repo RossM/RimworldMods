@@ -29,6 +29,23 @@ namespace XylXenos
         {
             compClass = typeof(HediffComp_GrowthModeExt);
         }
+
+        public override void ResolveReferences(HediffDef parent)
+        {
+            base.ResolveReferences(parent);
+
+            if (parent.hediffClass == typeof(HediffWithComps))
+                parent.hediffClass = typeof(HediffWithCompsExt);
+        }
+
+        public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
+        {
+            foreach (var error in base.ConfigErrors(parentDef))
+                yield return error;
+
+            if (!typeof(HediffWithCompsExt).IsAssignableFrom(parentDef.hediffClass))
+                yield return "hediffClass must be HediffWithCompsExt or a subclass thereof";
+        }
     }
 
     public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay
