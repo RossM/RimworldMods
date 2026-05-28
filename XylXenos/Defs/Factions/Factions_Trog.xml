@@ -27,7 +27,11 @@
       </xenotypeChances>
     </xenotypeSet>
     <colorSpectrum Inherit="false">
-      <li>(0.3, 0.5, 0.125)</li>
+      <li>(0.30, 0.50, 0.125)</li>
+      <li>(0.30, 0.40, 0.05)</li>
+      <li>(0.55, 0.40, 0.30)</li>
+      <li>(0.85, 0.85, 0.15)</li>
+      <li>(0.50, 0.40, 0.80)</li>
     </colorSpectrum>
     <factionNameMaker>XylNamerFactionTribalTrog</factionNameMaker>
     <settlementNameMaker>XylNamerSettlementTribalTrog</settlementNameMaker>

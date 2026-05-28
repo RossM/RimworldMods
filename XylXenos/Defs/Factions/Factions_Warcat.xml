@@ -15,7 +15,11 @@
       </xenotypeChances>
     </xenotypeSet>
     <colorSpectrum Inherit="false">
-      <li>(0.85, 0.55, 0)</li>
+      <li>(0.85, 0.55, 0.00)</li>
+      <li>(0.60, 0.50, 0.35)</li>
+      <li>(0.90, 0.85, 0.40)</li>
+      <li>(0.70, 0.90, 0.35)</li>
+      <li>(0.10, 0.50, 0.00)</li>
     </colorSpectrum>
     <factionNameMaker>XylNamerFactionTribalWarcat</factionNameMaker>
     <settlementNameMaker>XylNamerSettlementTribalWarcat</settlementNameMaker>
