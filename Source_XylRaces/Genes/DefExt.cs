@@ -116,8 +116,8 @@ namespace XylXenos.Genes
             get
             {
                 cachedExtraIcon ??= extraIconPath.NullOrEmpty()
-                    ? parent?.Icon
-                    : ContentFinder<Texture2D>.Get(extraIconPath) ?? parent?.Icon;
+                    ? (parent as GeneDef)?.Icon
+                    : ContentFinder<Texture2D>.Get(extraIconPath) ?? (parent as GeneDef)?.Icon;
                 return cachedExtraIcon;
             }
         }
@@ -196,7 +196,7 @@ namespace XylXenos.Genes
 
         public override IEnumerable<string> ConfigErrors()
         {
-            var geneClass = parent?.geneClass;
+            var geneClass = (parent as GeneDef)?.geneClass ?? (parent as GeneTemplateDef)?.geneClass;
             if (geneClass == null)
                 yield break;
 
@@ -224,13 +224,14 @@ namespace XylXenos.Genes
         {
             base.ResolveReferences(parentDef);
 
+            parent = parentDef;
+
             GeneHelpers.defExtCache.Clear();
 
             switch (parentDef)
             {
                 case GeneDef geneDef:
                 {
-                    parent = geneDef;
                     if (geneDef.geneClass == typeof(Gene))
                         geneDef.geneClass = typeof(GeneExt);
                     break;
@@ -254,7 +255,7 @@ namespace XylXenos.Genes
 
         private Texture2D cachedExtraIcon;
 
-        [CanBeNull] public GeneDef parent;
+        [CanBeNull] public Def parent;
 
         #endregion
     }
