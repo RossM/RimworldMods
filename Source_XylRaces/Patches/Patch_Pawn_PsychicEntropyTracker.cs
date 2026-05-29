@@ -12,7 +12,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedsPsyfocus), MethodType.Getter)]
         public static bool NeedsPsyfocus_Prefix(Pawn_PsychicEntropyTracker __instance, out bool __result)
         {
-            __result = __instance.Pawn.NeedsPsyfocus();
+            __result = __instance.Pawn.NeedsPsyfocus;
             return false;
         }
 
@@ -21,7 +21,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedToShowGizmo))]
         public static void NeedToShowGizmo_Postfix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
         {
-            if (__instance.Pawn.HasActivePsycastGene())
+            if (__instance.Pawn.HasActivePsycastGene)
                 __result = true;
         }
     }

@@ -87,7 +87,7 @@ namespace XylXenos.Genes
             if (!BonusGenesInfo.biostatMet.Includes(geneDef.biostatMet))
                 return 0.0f;
 
-            var defExt = geneDef.DefExt();
+            var defExt = geneDef.DefExt;
             if (defExt != null)
             {
                 if (defExt.gender != null && defExt.gender != pawn.gender)

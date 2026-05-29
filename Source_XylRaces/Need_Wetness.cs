@@ -80,9 +80,9 @@ namespace XylXenos
             {
                 var caravan = pawn.GetCaravan();
                 var tile = Find.WorldGrid[caravan.Tile];
-                if (tile.IsCoastalOrRiverTile())
+                if (tile.IsCoastalOrRiverTile)
                     return 1.0f;
-                if (tile.IsWetlandBiome())
+                if (tile.IsWetlandBiome)
                     return 1.0f;
                 return RainfallToWetnessCurve.Evaluate(tile.rainfall);
             }

@@ -45,7 +45,7 @@ namespace XylXenos
                 return false;
 
             return targetPawn.IsColonyAnimal ||
-                   targetPawn.GeneSet()?.disableHostilityFromFactions?.Any(factionDef => factionDef == source.Faction?.def) == true;
+                   targetPawn.GeneSet?.disableHostilityFromFactions?.Any(factionDef => factionDef == source.Faction?.def) == true;
         }
 
         public bool HasAnyOverride(Faction from, Faction to)
@@ -81,7 +81,7 @@ namespace XylXenos
             activeOverrides.Clear();
             foreach (var pawn in map.mapPawns.AllPawns)
             {
-                List<FactionDef> factions = pawn.GeneSet()?.disableHostilityFromFactions;
+                List<FactionDef> factions = pawn.GeneSet?.disableHostilityFromFactions;
                 if (factions == null)
                     continue;
 

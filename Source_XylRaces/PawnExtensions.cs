@@ -14,10 +14,9 @@ public static class PawnExtensions
 {
     extension(Pawn pawn)
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public LookupCache LookupCache()
+        public LookupCache LookupCache
         {
-            return XylXenos.LookupCache.Tracker.Get(pawn);
+            [MethodImpl(MethodImplOptions.AggressiveInlining)] get => LookupCache.Tracker.Get(pawn);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -26,7 +25,7 @@ public static class PawnExtensions
             if (pawn.genes == null)
                 return [];
 
-            return pawn.LookupCache().GetGenesWithDef(def);
+            return pawn.LookupCache.GetGenesWithDef(def);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -50,7 +49,7 @@ public static class PawnExtensions
             if (pawn.genes == null)
                 return [];
 
-            return pawn.LookupCache().GetGenesOfType<T>();
+            return pawn.LookupCache.GetGenesOfType<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -110,23 +109,20 @@ public static class PawnExtensions
         {
             if (pawn.genes == null)
                 return [];
-            return pawn.genes.GenesListForReading.Where(gene => gene.Active).Select(gene => gene.DefExt()).Where(defExt => defExt != null);
+            return pawn.genes.GenesListForReading.Where(gene => gene.Active).Select(gene => gene.DefExt).Where(defExt => defExt != null);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CanBeNull]
-        public GeneSet GeneSet()
+        public GeneSet GeneSet
         {
-            if (pawn.genes == null)
-                return null;
-
-            return XylXenos.GeneSet.Tracker.Get(pawn);
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => pawn.genes == null ? null : GeneSet.Tracker.Get(pawn);
         }
 
         public int GetGeneticPsylinkLevelFor(AbilityDef def)
         {
             if (pawn.genes != null && pawn.genes.GenesListForReading.Any(gene =>
-                    gene.Active && gene.DefExt()?.hasPsycast == true && gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
+                    gene.Active && gene.DefExt?.hasPsycast == true && gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
             {
                 return def.level;
             }
@@ -134,21 +130,49 @@ public static class PawnExtensions
             return 0;
         }
 
-        public bool HasActivePsycastGene()
+        public bool HasActivePsycastGene => pawn.GeneSet?.hasPsycast == true;
+
+        public bool NeedsPsyfocus
         {
-            return pawn.GeneSet()?.hasPsycast == true;
+            get
+            {
+                // HasPsylink is patched to respect psycast genes
+                if (!pawn.HasPsylink)
+                    return false;
+                if (pawn.Suspended)
+                    return false;
+                if (!pawn.Spawned && !pawn.IsCaravanMember())
+                    return false;
+                return true;
+            }
         }
 
-        public bool NeedsPsyfocus()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IEnumerable<T> HediffsOfType<T>() where T : class
         {
-            // HasPsylink is patched to respect psycast genes
-            if (!pawn.HasPsylink)
-                return false;
-            if (pawn.Suspended)
-                return false;
-            if (!pawn.Spawned && !pawn.IsCaravanMember())
-                return false;
-            return true;
+            return pawn.LookupCache.GetHediffsOfType<T>();
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IEnumerable<HediffWithComps> HediffsWithComp<T>() where T : class
+        {
+            return pawn.LookupCache.GetHediffsWithComp<T>();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once UnusedMember.Global
+        public IEnumerable<Hediff> HediffsWithDef(HediffDef def)
+        {
+            return pawn.LookupCache.GetHediffsWithDef(def);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once UnusedMember.Global
+        public IEnumerable<Hediff> HediffsWithModExtension<T>() where T : class
+        {
+            return pawn.LookupCache.GetHediffsWithModExtension<T>();
+        }
+
+        public Hediff LactationHediff => pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
     }
 }

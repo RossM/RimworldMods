@@ -17,7 +17,7 @@ namespace XylXenos.Patches
             if (parms.pawn == null)
                 return;
 
-            List<RenderNodeModifier> renderNodeModifiers = parms.pawn.GeneSet()?.renderNodeModifiers;
+            List<RenderNodeModifier> renderNodeModifiers = parms.pawn.GeneSet?.renderNodeModifiers;
             if (renderNodeModifiers == null)
                 return;
 
@@ -36,7 +36,7 @@ namespace XylXenos.Patches
             if (parms.pawn == null)
                 return;
 
-            List<RenderNodeModifier> renderNodeModifiers = parms.pawn.GeneSet()?.renderNodeModifiers;
+            List<RenderNodeModifier> renderNodeModifiers = parms.pawn.GeneSet?.renderNodeModifiers;
             if (renderNodeModifiers == null)
                 return;
 

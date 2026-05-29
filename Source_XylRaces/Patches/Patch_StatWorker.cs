@@ -212,7 +212,7 @@ namespace XylXenos.Patches
         [HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
         public static void ShouldShowFor_Postfix(StatWorker __instance, StatRequest req, ref bool __result)
         {
-            if (req.Thing is Pawn pawn && pawn.HasActivePsycastGene())
+            if (req.Thing is Pawn pawn && pawn.HasActivePsycastGene)
             {
                 if (__instance.stat == StatDefOf.PsychicEntropyRecoveryRate)
                     __result = true;

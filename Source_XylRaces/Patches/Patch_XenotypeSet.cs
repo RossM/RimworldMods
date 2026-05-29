@@ -13,7 +13,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(XenotypeSet.Contains))]
         public static void XenotypeDefOf_Baseliner_Postfix(XenotypeSet __caller, ref XenotypeDef __result)
         {
-            __result = __caller.GetDefaultXenotype();
+            __result = __caller.DefaultXenotype;
         }
     }
 }

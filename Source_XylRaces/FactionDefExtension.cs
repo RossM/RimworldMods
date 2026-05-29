@@ -18,7 +18,7 @@ namespace XylXenos
             if (planetTile.Tile is not SurfaceTile surfaceTile)
                 return false;
 
-            if (waterRequired && !surfaceTile.IsCoastalOrRiverTile())
+            if (waterRequired && !surfaceTile.IsCoastalOrRiverTile)
                 return false;
 
             if (allowedBiomes != null && !surfaceTile.Biomes.Any(biomeDef => allowedBiomes.Contains(biomeDef)))

@@ -7,10 +7,7 @@ public static class ThingDefExtensions
 {
     extension(ThingDef foodDef)
     {
-        public bool IsRawFoodOrCorpse()
-        {
-            return foodDef.IsRawHumanFood() || foodDef.IsCorpse;
-        }
+        public bool IsRawFoodOrCorpse => foodDef.IsRawHumanFood() || foodDef.IsCorpse;
 
         public float GetStatBase(StatDef statDef)
         {

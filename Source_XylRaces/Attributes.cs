@@ -25,4 +25,7 @@ namespace XylXenos
 
     [MeansImplicitUse]
     public class UsedFromXmlAttribute : Attribute;
+
+    [MeansImplicitUse]
+    public class UsedFromReflectionAttribute : Attribute;
 }

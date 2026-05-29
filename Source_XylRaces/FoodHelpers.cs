@@ -46,7 +46,7 @@ public static class FoodHelpers
 
     public static float GetExtraNutritionFactor(Pawn eater, Thing foodSource, ThingDef foodDef)
     {
-        if (foodDef.IsRawFoodOrCorpse())
+        if (foodDef.IsRawFoodOrCorpse)
         {
             return GetRawNutritionFactor(eater, GetFoodType(foodDef));
         }
@@ -98,7 +98,7 @@ public static class FoodHelpers
     {
         var foodDef = foodSource.def;
 
-        if (!foodDef.IsRawFoodOrCorpse())
+        if (!foodDef.IsRawFoodOrCorpse)
             return 1f;
 
         FoodType foodType = GetFoodType(foodSource.def);
@@ -125,7 +125,7 @@ public static class FoodHelpers
             return false;
         }
 
-        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.GeneSet()?.ingestionThoughtOverrides;
+        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.GeneSet?.ingestionThoughtOverrides;
         if (thoughtOverrides == null)
             return false;
 

@@ -9,11 +9,10 @@ public static class GeneExtensions
 {
     extension(Gene gene)
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CanBeNull]
-        public DefExt DefExt()
+        public DefExt DefExt
         {
-            return gene.def.DefExt();
+            [MethodImpl(MethodImplOptions.AggressiveInlining)] get => gene.def.DefExt;
         }
     }
 }

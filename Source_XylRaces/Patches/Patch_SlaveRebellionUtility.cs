@@ -66,7 +66,7 @@ namespace XylXenos.Patches
             if (__result < 0)
                 return;
 
-            var geneSet = pawn.GeneSet();
+            var geneSet = pawn.GeneSet;
             if (geneSet == null)
                 return;
 

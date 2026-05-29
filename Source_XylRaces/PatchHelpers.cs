@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
@@ -13,7 +14,7 @@ public static class PatchHelpers
 {
     public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
-        var bonusGenes = geneDef.DefExt()?.bonusGenes;
+        var bonusGenes = geneDef.DefExt?.bonusGenes;
         if (bonusGenes == null)
             return 0;
         if (bonusGenes.geneChance < 1.0f)
@@ -27,7 +28,7 @@ public static class PatchHelpers
 
     public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef geneDef)
     {
-        var defExt = geneDef.DefExt();
+        var defExt = geneDef.DefExt;
         if (defExt != null)
         {
             foreach (var customEffectDescription in defExt.CustomEffectDescriptions)
@@ -131,7 +132,7 @@ public static class PatchHelpers
     {
         HashSet<Designator> geneDesignators = [];
 
-        foreach (var designators in Faction.OfPlayer.GetPawns().Select(pawn => pawn.GeneSet()?.addDesignators))
+        foreach (var designators in Faction.OfPlayer.AllPawns.Select(pawn => pawn.GeneSet?.addDesignators))
         {
             if (designators == null)
                 continue;
@@ -158,7 +159,7 @@ public static class PatchHelpers
 
     public static bool GeneShouldBeVisible(GeneDef geneDef, GeneType geneType)
     {
-        var defExt = geneDef.DefExt();
+        var defExt = geneDef.DefExt;
         if (defExt == null)
             return true;
 
@@ -172,13 +173,13 @@ public static class PatchHelpers
 
     public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene outGene)
     {
-        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene => gene.Active && gene.DefExt()?.showInDrugPolicies == true);
+        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene => gene.Active && gene.DefExt?.showInDrugPolicies == true);
         return outGene != null;
     }
 
     public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
     {
-        List<JoyGiverFactor> joyGiverChanceFactors = pawn.GeneSet()?.joyGiverChanceFactors;
+        List<JoyGiverFactor> joyGiverChanceFactors = pawn.GeneSet?.joyGiverChanceFactors;
         if (joyGiverChanceFactors == null)
             return 1f;
 
@@ -201,7 +202,7 @@ public static class PatchHelpers
                        request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
                        request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
                        xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
-        if (gene?.DefExt()?.femaleChance is not { } chance)
+        if (gene?.DefExt?.femaleChance is not { } chance)
             return;
 
         pawn.gender = Rand.Chance(chance) ? Gender.Female : Gender.Male;
@@ -209,7 +210,7 @@ public static class PatchHelpers
 
     public static bool HasGenderRatio(GeneDef geneDef)
     {
-        return geneDef.DefExt()?.femaleChance != null;
+        return geneDef.DefExt?.femaleChance != null;
     }
 
     public static void GenerateCongenitalHediffs(Pawn pawn)
@@ -297,5 +298,16 @@ public static class PatchHelpers
                 return f.layerWhitelist.Contains(layer.Def);
             return true;
         }
+    }
+
+    [UsedImplicitly]
+    public static PawnRenderFlags ModifyRenderFlags(Pawn pawn, PawnRenderFlags flags)
+    {
+        if (pawn.CurJobDef == DefOf.XylTakeShower && !pawn.pather.Moving)
+        {
+            flags &= ~(PawnRenderFlags.Clothes | PawnRenderFlags.Headgear);
+        }
+
+        return flags;
     }
 }

@@ -24,7 +24,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         public static void GetManhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
         {
-            __result *= pawn.GeneSet()?.manhunterOnDamageChanceFactor ?? 1f;
+            __result *= pawn.GeneSet?.manhunterOnDamageChanceFactor ?? 1f;
         }
 
         [Feature(nameof(DefExt.manhunterOnTameFailChanceFactor))]
@@ -33,7 +33,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
         public static void GetManhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
         {
-            __result *= pawn.GeneSet()?.manhunterOnTameFailChanceFactor ?? 1f;
+            __result *= pawn.GeneSet?.manhunterOnTameFailChanceFactor ?? 1f;
         }
 
         [Feature(nameof(DefExt.manhunterOnDamageChanceFactor))]
@@ -41,7 +41,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
         public static void RaceProperties_manhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
         {
-            __result *= pawn.GeneSet()?.manhunterOnDamageChanceFactor ?? 1f;
+            __result *= pawn.GeneSet?.manhunterOnDamageChanceFactor ?? 1f;
         }
 
         [Feature(nameof(DefExt.manhunterOnTameFailChanceFactor))]
@@ -49,7 +49,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
         public static void RaceProperties_manhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
         {
-            __result *= pawn.GeneSet()?.manhunterOnTameFailChanceFactor ?? 1f;
+            __result *= pawn.GeneSet?.manhunterOnTameFailChanceFactor ?? 1f;
         }
 
         [Feature(nameof(DefExt.manhunterOnDamageChanceFactor))]
@@ -62,7 +62,7 @@ namespace XylXenos.Patches
             if (__instance != pawn.def)
                 return;
 
-            var geneSet = pawn.GeneSet();
+            var geneSet = pawn.GeneSet;
             if (geneSet == null)
                 return;
 

@@ -38,7 +38,7 @@ namespace XylXenos.Patches
                         // Load pawnRenderFlags
                         CodeInstruction.LoadLocal(0),
                         // Get modified flags
-                        CodeInstruction.Call(typeof(RenderHelpers), nameof(RenderHelpers.ModifyRenderFlags)),
+                        CodeInstruction.Call(typeof(PatchHelpers), nameof(PatchHelpers.ModifyRenderFlags)),
                         // Save pawnRenderFlags
                         CodeInstruction.StoreLocal(0),
                     ]

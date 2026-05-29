@@ -34,7 +34,7 @@ namespace XylXenos.Patches
             if (parms.tile.Valid)
             {
                 Tile tile = Find.WorldGrid[parms.tile];
-                if (!tile.IsCoastalOrRiverTile())
+                if (!tile.IsCoastalOrRiverTile)
                     carrierOptions = carrierOptions.Where(genOption => genOption.kind != DefOf.XylSelkie);
                 carrierOptions = carrierOptions.Where(genOption => tile.PrimaryBiome.IsPackAnimalAllowed(genOption.kind.race));
             }

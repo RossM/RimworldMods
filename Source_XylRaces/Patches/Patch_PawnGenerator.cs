@@ -33,7 +33,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
         public static void XenotypeDefOf_Baseliner_Postfix(FactionDef factionDef, Faction faction, ref XenotypeDef __result)
         {
-            __result = ((faction?.def ?? factionDef)?.xenotypeSet).GetDefaultXenotype();
+            __result = ((faction?.def ?? factionDef)?.xenotypeSet).DefaultXenotype;
         }
 
         [Feature(typeof(XenotypeSetWithDefault))]
@@ -41,7 +41,7 @@ namespace XylXenos.Patches
         [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
         public static bool AddOrAdjust_Prefix(XenotypeChance xenotypeChance, FactionDef factionDef, Faction faction)
         {
-            if (xenotypeChance.xenotype != ((faction?.def ?? factionDef)?.xenotypeSet).GetDefaultXenotype())
+            if (xenotypeChance.xenotype != ((faction?.def ?? factionDef)?.xenotypeSet).DefaultXenotype)
             {
                 if (PawnGenerator.tmpXenotypeChances.ContainsKey(xenotypeChance.xenotype))
                 {

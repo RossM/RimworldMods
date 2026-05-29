@@ -10,17 +10,20 @@ public static class GeneDefExtensions
 {
     extension(GeneDef gene)
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CanBeNull]
-        public DefExt DefExt()
+        public DefExt DefExt
         {
-            if (!defExtCache.TryGetValue(gene.index, out DefExt defExt))
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
             {
-                defExt = gene.GetModExtension<DefExt>();
-                defExtCache.Add(gene.index, defExt);
-            }
+                if (!defExtCache.TryGetValue(gene.index, out DefExt defExt))
+                {
+                    defExt = gene.GetModExtension<DefExt>();
+                    defExtCache.Add(gene.index, defExt);
+                }
 
-            return defExt;
+                return defExt;
+            }
         }
     }
 

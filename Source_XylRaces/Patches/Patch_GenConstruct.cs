@@ -22,12 +22,12 @@ namespace XylXenos.Patches
 
             BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
 
-            bool hasGeneDesignator = p.GeneSet()?.addDesignators?.Contains(def) ?? false;
+            bool hasGeneDesignator = p.GeneSet?.addDesignators?.Contains(def) ?? false;
             if (!hasGeneDesignator && GenConstruct.tmpIdeoMemberNames.Count == 0)
             {
                 foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)
                 {
-                    var defExt = gene.DefExt();
+                    var defExt = gene.DefExt;
                     if (defExt == null)
                         continue;
                     if (defExt.addDesignators?.Contains(def) ?? false)

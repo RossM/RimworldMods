@@ -9,9 +9,6 @@ public static class FactionExtensions
 {
     extension(Faction faction)
     {
-        public IEnumerable<Pawn> GetPawns()
-        {
-            return Find.Maps.SelectMany(map => map.mapPawns.PawnsInFaction(faction));
-        }
+        public IEnumerable<Pawn> AllPawns => Find.Maps.SelectMany(map => map.mapPawns.PawnsInFaction(faction));
     }
 }

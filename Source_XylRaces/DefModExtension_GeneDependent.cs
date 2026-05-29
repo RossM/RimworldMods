@@ -16,7 +16,7 @@ namespace XylXenos
 
             foreach (var gene in genePrerequisitesAny)
             {
-                if (Faction.OfPlayer.GetPawns().Any(p => p.HasActiveGene(gene)))
+                if (Faction.OfPlayer.AllPawns.Any(p => p.HasActiveGene(gene)))
                 {
                     return true;
                 }

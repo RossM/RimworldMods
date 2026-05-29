@@ -10,7 +10,7 @@ namespace XylXenos.Genes
     public class GeneExt : Gene, INotificationListener
     {
         [NotNull]
-        public DefExt DefExt => this.DefExt()!;
+        public DefExt DefExt => def.DefExt!;
 
         public GeneType GeneType => geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 

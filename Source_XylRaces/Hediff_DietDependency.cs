@@ -149,7 +149,7 @@ namespace XylXenos
             if (nutrition <= 0.0f)
                 return false;
 
-            if (!food.def.IsRawFoodOrCorpse() && DietDependencyInfo.rawOnly)
+            if (!food.def.IsRawFoodOrCorpse && DietDependencyInfo.rawOnly)
                 return false;
 
             if (DietDependencyInfo.foodKind == FoodUtility.GetFoodKind(food))
