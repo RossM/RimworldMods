@@ -2,7 +2,7 @@
 
 namespace XylXenos;
 
-public class MentalStateDefExtension_SeeingRed : DefModExtension
+public class DefModExtension_MentalState_SeeingRed : DefModExtension
 {
     public string iconPath;
 }
@@ -10,7 +10,7 @@ public class MentalStateDefExtension_SeeingRed : DefModExtension
 [UsedFromXml]
 public class MentalState_SeeingRed : MentalState
 {
-    public MentalStateDefExtension_SeeingRed DefExt => def.GetModExtension<MentalStateDefExtension_SeeingRed>();
+    public DefModExtension_MentalState_SeeingRed DefExt => def.GetModExtension<DefModExtension_MentalState_SeeingRed>();
     private MoteBubble mote;
 
     public override void ExposeData()

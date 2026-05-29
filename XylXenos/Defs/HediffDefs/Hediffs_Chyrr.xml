@@ -20,7 +20,7 @@
       </li>
     </comps>
     <modExtensions>
-      <li Class="XylXenos.HediffDefExtension_SubstituteCapacity">
+      <li Class="XylXenos.DefModExtension_Hediff_SubstituteCapacity">
         <originalCapacity>Sight</originalCapacity>
         <substituteCapacity>Hearing</substituteCapacity>
         <mode>Maximum</mode>

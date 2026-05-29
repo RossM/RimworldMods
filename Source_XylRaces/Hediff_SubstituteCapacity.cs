@@ -1,7 +1,7 @@
 ﻿namespace XylXenos;
 
 [UsedFromXml]
-public class HediffDefExtension_SubstituteCapacity : DefModExtension
+public class DefModExtension_Hediff_SubstituteCapacity : DefModExtension
 {
     public enum SubstitutionMode
     {
@@ -19,7 +19,7 @@ public class HediffDefExtension_SubstituteCapacity : DefModExtension
 [UsedFromXml]
 public class Hediff_SubstituteCapacity : HediffWithComps
 {
-    public HediffDefExtension_SubstituteCapacity DefExt => def.GetModExtension<HediffDefExtension_SubstituteCapacity>();
+    public DefModExtension_Hediff_SubstituteCapacity DefExt => def.GetModExtension<DefModExtension_Hediff_SubstituteCapacity>();
 
     [Unsaved] private int lastActiveCheckTick = int.MinValue;
 
@@ -36,8 +36,8 @@ public class Hediff_SubstituteCapacity : HediffWithComps
             float substituteLevel = pawn.health.capacities.GetLevel(DefExt.substituteCapacity);
             field = DefExt.mode switch
             {
-                HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => substituteLevel > originalLevel,
-                HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => substituteLevel < originalLevel,
+                DefModExtension_Hediff_SubstituteCapacity.SubstitutionMode.Maximum => substituteLevel > originalLevel,
+                DefModExtension_Hediff_SubstituteCapacity.SubstitutionMode.Minimum => substituteLevel < originalLevel,
                 _ => true
             };
             lastActiveCheckTick = curTick;
@@ -64,9 +64,9 @@ public class Hediff_SubstituteCapacity : HediffWithComps
     {
         string desc = DefExt.mode switch
         {
-            HediffDefExtension_SubstituteCapacity.SubstitutionMode.Always => "XylSubstituteCapacityAlwaysDesc",
-            HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => "XylSubstituteCapacityHigherDesc",
-            HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => "XylSubstituteCapacityLowerDesc",
+            DefModExtension_Hediff_SubstituteCapacity.SubstitutionMode.Always => "XylSubstituteCapacityAlwaysDesc",
+            DefModExtension_Hediff_SubstituteCapacity.SubstitutionMode.Maximum => "XylSubstituteCapacityHigherDesc",
+            DefModExtension_Hediff_SubstituteCapacity.SubstitutionMode.Minimum => "XylSubstituteCapacityLowerDesc",
             _ => throw new NotSupportedException()
         };
         sb.Append(desc.Translate(DefExt.substituteCapacity.label, DefExt.originalCapacity.label)

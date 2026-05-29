@@ -48,7 +48,7 @@
       </li>
     </stages>
     <modExtensions>
-      <li Class="XylXenos.ThoughtDefExtension_PawnStatus">
+      <li Class="XylXenos.DefModExtension_Thought_PawnStatus">
         <status>Slave</status>
       </li>
     </modExtensions>
@@ -69,7 +69,7 @@
       </li>
     </stages>
     <modExtensions>
-      <li Class="XylXenos.ThoughtDefExtension_PawnStatus">
+      <li Class="XylXenos.DefModExtension_Thought_PawnStatus">
         <status>Prisoner</status>
       </li>
     </modExtensions>

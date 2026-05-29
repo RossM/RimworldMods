@@ -41,7 +41,7 @@
     </xpath>
     <value>
       <modExtensions>
-        <li Class="XylXenos.ThingDefExtension_Flight">
+        <li Class="XylXenos.DefModExtension_Thing_Flight">
           <allowsFlight>false</allowsFlight>
         </li>
       </modExtensions>

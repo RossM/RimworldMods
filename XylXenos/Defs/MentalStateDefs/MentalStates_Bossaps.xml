@@ -13,7 +13,7 @@
     <beginLetter></beginLetter>
     <recoveryMessage></recoveryMessage>
     <modExtensions>
-      <li Class="XylXenos.MentalStateDefExtension_SeeingRed">
+      <li Class="XylXenos.DefModExtension_MentalState_SeeingRed">
         <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
       </li>
     </modExtensions>

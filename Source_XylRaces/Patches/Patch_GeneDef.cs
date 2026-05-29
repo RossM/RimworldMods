@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(GeneDef))]
 public static class Patch_GeneDef
 {
-    [Feature(typeof(DefModExtension))]
+    [Feature(typeof(DefModExtension_Gene))]
     [InfixPostfix(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
     [InfixPatch("GetDescriptionFull")]
     public static void GeneDef_customEffectDescriptions_Postfix(GeneDef __instance, ref List<string> __result)
@@ -15,7 +15,7 @@ public static class Patch_GeneDef
         __result = __result.NullOrEmpty() ? extraDescriptions : __result.Concat(extraDescriptions).ToList();
     }
 
-    [Feature(typeof(DefModExtension))]
+    [Feature(typeof(DefModExtension_Gene))]
     [HarmonyPostfix]
     [HarmonyPatch("SpecialDisplayStats")]
     public static void GeneDef_SpecialDisplayStats_Postfix(GeneDef __instance, StatRequest req, ref IEnumerable<StatDrawEntry> __result)

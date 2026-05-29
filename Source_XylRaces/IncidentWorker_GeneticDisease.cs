@@ -1,7 +1,7 @@
 ﻿namespace XylXenos;
 
 [UsedFromXml]
-public class IncidentDefExtension_GeneticDisease : DefModExtension
+public class DefModExtension_Incident_GeneticDisease : DefModExtension
 {
     public List<GeneDef> requiredGenesAny;
     public float chanceFactorPerTarget = 1f;
@@ -16,7 +16,7 @@ public class IncidentDefExtension_GeneticDisease : DefModExtension
 [UsedFromXml]
 public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
 {
-    public IncidentDefExtension_GeneticDisease DefExt => def.GetModExtension<IncidentDefExtension_GeneticDisease>();
+    public DefModExtension_Incident_GeneticDisease DefExt => def.GetModExtension<DefModExtension_Incident_GeneticDisease>();
 
     protected override IEnumerable<Pawn> PotentialVictimCandidates(IIncidentTarget target)
     {

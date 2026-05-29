@@ -1,6 +1,6 @@
 ﻿namespace XylXenos;
 
-public class WorkGiverDefExtension_InteractWithPawn : DefModExtension
+public class DefModExtension_WorkGiver_InteractWithPawn : DefModExtension
 {
     public JobDef job;
 }
@@ -8,7 +8,7 @@ public class WorkGiverDefExtension_InteractWithPawn : DefModExtension
 [UsedFromXml]
 public class WorkGiver_InteractWithPawn : WorkGiver_Scanner
 {
-    public WorkGiverDefExtension_InteractWithPawn DefExt => def.GetModExtension<WorkGiverDefExtension_InteractWithPawn>();
+    public DefModExtension_WorkGiver_InteractWithPawn DefExt => def.GetModExtension<DefModExtension_WorkGiver_InteractWithPawn>();
 
     public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
     {

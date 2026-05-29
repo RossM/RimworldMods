@@ -14,7 +14,7 @@
       <li>Manipulation</li>
     </requiredCapacities>
     <modExtensions>
-      <li Class="XylXenos.WorkGiverDefExtension_InteractWithPawn">
+      <li Class="XylXenos.DefModExtension_WorkGiver_InteractWithPawn">
         <job>XylMilkHuman</job>
       </li>
     </modExtensions>

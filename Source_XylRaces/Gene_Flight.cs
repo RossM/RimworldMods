@@ -7,7 +7,7 @@ public class FlightInfo
     public float autoFlyMinDistance = 25f;
 }
 
-public class ThingDefExtension_Flight : DefModExtension
+public class DefModExtension_Thing_Flight : DefModExtension
 {
     public bool allowsFlight = true;
 }
@@ -137,7 +137,7 @@ public class Gene_Flight : GeneExt
 
     public static bool ApparelAllowsFlight(ThingDef thingDef)
     {
-        return thingDef.GetModExtension<ThingDefExtension_Flight>() is not { allowsFlight: false };
+        return thingDef.GetModExtension<DefModExtension_Thing_Flight>() is not { allowsFlight: false };
     }
 
     private void CheckApparel()

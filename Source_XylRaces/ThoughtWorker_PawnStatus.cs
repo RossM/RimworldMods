@@ -1,7 +1,7 @@
 ﻿namespace XylXenos;
 
 [UsedFromXml]
-public class ThoughtDefExtension_PawnStatus : DefModExtension
+public class DefModExtension_Thought_PawnStatus : DefModExtension
 {
     public enum StatusMode
     {
@@ -20,19 +20,19 @@ public class ThoughtDefExtension_PawnStatus : DefModExtension
 [UsedFromXml]
 public class ThoughtWorker_PawnStatus : ThoughtWorker
 {
-    public ThoughtDefExtension_PawnStatus DefExt => def.GetModExtension<ThoughtDefExtension_PawnStatus>();
+    public DefModExtension_Thought_PawnStatus DefExt => def.GetModExtension<DefModExtension_Thought_PawnStatus>();
 
     private bool Check(Pawn p)
     {
         return DefExt.status switch
         {
-            ThoughtDefExtension_PawnStatus.StatusMode.Any => true,
-            ThoughtDefExtension_PawnStatus.StatusMode.Slave => p.IsSlave,
-            ThoughtDefExtension_PawnStatus.StatusMode.NotSlave => !p.IsSlave,
-            ThoughtDefExtension_PawnStatus.StatusMode.Prisoner => p.IsPrisoner,
-            ThoughtDefExtension_PawnStatus.StatusMode.NotPrisoner => !p.IsPrisoner,
-            ThoughtDefExtension_PawnStatus.StatusMode.Freeman => p.IsFreeman,
-            ThoughtDefExtension_PawnStatus.StatusMode.NotFreeman => !p.IsFreeman,
+            DefModExtension_Thought_PawnStatus.StatusMode.Any => true,
+            DefModExtension_Thought_PawnStatus.StatusMode.Slave => p.IsSlave,
+            DefModExtension_Thought_PawnStatus.StatusMode.NotSlave => !p.IsSlave,
+            DefModExtension_Thought_PawnStatus.StatusMode.Prisoner => p.IsPrisoner,
+            DefModExtension_Thought_PawnStatus.StatusMode.NotPrisoner => !p.IsPrisoner,
+            DefModExtension_Thought_PawnStatus.StatusMode.Freeman => p.IsFreeman,
+            DefModExtension_Thought_PawnStatus.StatusMode.NotFreeman => !p.IsFreeman,
             _ => throw new ArgumentOutOfRangeException()
         };
     }
