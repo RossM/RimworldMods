@@ -223,9 +223,11 @@ public class DefExt : DefModExtension
                 break;
             }
             case GeneTemplateDef templateDef:
+            {
                 if (templateDef.geneClass == typeof(Gene))
                     templateDef.geneClass = typeof(GeneExt);
                 break;
+            }
             default:
             {
                 Log.Warning(
