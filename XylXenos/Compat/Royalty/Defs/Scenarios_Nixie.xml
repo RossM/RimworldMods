@@ -119,7 +119,6 @@
     </scenario>
   </ScenarioDef>
 
-
   <PawnKindDef ParentName="BasePlayerPawnKind">
     <defName>XylNixie_Siren</defName>
     <label>colonist</label>
