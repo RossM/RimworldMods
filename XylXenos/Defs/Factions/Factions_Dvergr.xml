@@ -27,7 +27,7 @@
     </xenotypeSet>
     <colorSpectrum Inherit="false">
       <li>(0.5, 0.3, 0.2)</li>
-      <li>(0.7, 0.6, 0.5)</li>
+      <li>(0.8, 0.5, 0.35)</li>
     </colorSpectrum>
     <factionNameMaker>XylNamerFactionOutlanderDvergr</factionNameMaker>
     <settlementNameMaker>XylNamerSettlementOutlanderDvergr</settlementNameMaker>
