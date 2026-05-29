@@ -16,6 +16,7 @@
     </xenotypeSet>
     <colorSpectrum Inherit="false">
       <li>(0.85, 0.55, 0)</li>
+      <li>(0.9, 0.8, 0.3)</li>
     </colorSpectrum>
     <factionNameMaker>XylNamerFactionTribalWarcat</factionNameMaker>
     <settlementNameMaker>XylNamerSettlementTribalWarcat</settlementNameMaker>

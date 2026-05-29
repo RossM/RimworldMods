@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RimWorld;
+using RimWorld.Planet;
+using UnityEngine;
 using Verse;
 using XylXenos.Genes;
 
@@ -219,6 +221,75 @@ public static class PatchHelpers
                     congenitalHediff.EventOccurred(pawn);
                 }
             }
+        }
+    }
+
+    public static float GenerateDistinctiveFactionColor(Faction faction, IEnumerable<Faction> allFactions)
+    {
+        List<Color> factionColors = allFactions.Select(otherFaction => otherFaction.Color).ToList();
+
+        float bestColorFromSpectrum = 0f;
+        float bestDistanceMin = -1f;
+
+        for (int i = 0; i < 20; i++)
+        {
+            float colorFromSpectrum = Rand.Value;
+            float distanceMin = float.MaxValue;
+            Color color = ColorsFromSpectrum.Get(faction.def.colorSpectrum, colorFromSpectrum);
+
+            foreach (Color otherColor in factionColors)
+                distanceMin = Mathf.Min(distanceMin, ColorDistance(color, otherColor));
+
+            if (distanceMin > bestDistanceMin)
+            {
+                bestColorFromSpectrum = colorFromSpectrum;
+                bestDistanceMin = distanceMin;
+            }
+        }
+
+        return bestColorFromSpectrum;
+
+        // This is a simple approximate perceptual color distance function
+        static float ColorDistance(Color a, Color b)
+        {
+            Color diff = a - b;
+            return diff.r * diff.r + 2 * diff.g * diff.g + diff.b * diff.b;
+        }
+    }
+
+    public static void ReassignFactionColors(PlanetLayer layer)
+    {
+        // Ensure we don't alter world generation
+        Rand.PushState();
+
+        try
+        {
+
+            List<Faction> allFactions = Find.FactionManager.AllFactionsListForReading
+                .Where(faction => CanExistOnLayer(layer, faction.def)).ToList();
+            List<Faction> shuffledFactions = allFactions.Where(faction => faction.def.colorSpectrum != null).ToList();
+            shuffledFactions.Shuffle();
+
+            foreach (var faction in shuffledFactions)
+            {
+                faction.colorFromSpectrum
+                    = PatchHelpers.GenerateDistinctiveFactionColor(faction, allFactions.Where(otherFaction => otherFaction != faction));
+            }
+        }
+        finally
+        {
+            Rand.PopState();
+        }
+
+        return;
+
+        static bool CanExistOnLayer(PlanetLayer layer, FactionDef f)
+        {
+            if (!f.layerBlacklist.NullOrEmpty() && f.layerBlacklist.Contains(layer.Def))
+                return false;
+            if (!f.layerWhitelist.NullOrEmpty() || !layer.IsRootSurface)
+                return f.layerWhitelist.Contains(layer.Def);
+            return true;
         }
     }
 }

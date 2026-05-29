@@ -28,6 +28,7 @@
     </xenotypeSet>
     <colorSpectrum Inherit="false">
       <li>(0.3, 0.5, 0.125)</li>
+      <li>(0.45, 0.35, 0)</li>
     </colorSpectrum>
     <factionNameMaker>XylNamerFactionTribalTrog</factionNameMaker>
     <settlementNameMaker>XylNamerSettlementTribalTrog</settlementNameMaker>

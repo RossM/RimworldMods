@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,45 +14,15 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(FactionGenerator))]
     public static class Patch_FactionGenerator
     {
-        [Feature("TODO")]
+        [Feature(nameof(Settings.useDistinctiveFactionColors))]
         [HarmonyPostfix]
-        [HarmonyPatch(nameof(FactionGenerator.NewRandomColorFromSpectrum))]
-        public static void NewRandomColorFromSpectrum_Postfix(Faction faction, ref float __result)
+        [HarmonyPatch("InitializeFactions")]
+        public static void InitializeFactions_Postfix(PlanetLayer layer)
         {
-            List<Faction> allFactions = Find.FactionManager.AllFactionsListForReading;
-            List<Color> factionColors = allFactions.Select(otherFaction => otherFaction.Color).ToList();
-
-            if (faction.def.colorSpectrum.NullOrEmpty())
+            if (!Settings.instance.useDistinctiveFactionColors)
                 return;
 
-            float bestColorFromSpectrum = 0f;
-            float bestDistanceMin = -1f;
-
-            for (int i = 0; i < 20; i++)
-            {
-                float colorFromSpectrum = Rand.Value;
-                float distanceMin = float.MaxValue;
-                Color color = ColorsFromSpectrum.Get(faction.def.colorSpectrum, colorFromSpectrum);
-
-                foreach (Color otherColor in factionColors)
-                    distanceMin = Mathf.Min(distanceMin, ColorDistance(color, otherColor));
-
-                if (distanceMin > bestDistanceMin)
-                {
-                    bestColorFromSpectrum = colorFromSpectrum;
-                    bestDistanceMin = distanceMin;
-                }
-
-                Debug.Log($"faction={faction} bestColorFromSpectrum={bestColorFromSpectrum} bestDistanceMin={bestDistanceMin}");
-            }
-
-            __result = bestColorFromSpectrum;
-
-            float ColorDistance(Color a, Color b)
-            {
-                Color diff = a - b;
-                return diff.r * diff.r + 2 * diff.g * diff.g + diff.b * diff.b;
-            }
+            PatchHelpers.ReassignFactionColors(layer);
         }
     }
 }

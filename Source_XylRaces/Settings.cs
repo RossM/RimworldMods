@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -21,11 +23,14 @@ public class Settings : ModSettings
     public ThreeStateMode allowBackerBackstories = ThreeStateMode.Sometimes;
     public ThreeStateMode fixLactationBugs = ThreeStateMode.Always;
 
+    public bool useDistinctiveFactionColors;
+
     public override void ExposeData()
     {
         Scribe_Values.Look(ref allowBackerBackstories, nameof(allowBackerBackstories), ThreeStateMode.Sometimes);
         // ReSharper disable once RedundantArgumentDefaultValue
         Scribe_Values.Look(ref fixLactationBugs, nameof(fixLactationBugs), ThreeStateMode.Always);
+        Scribe_Values.Look(ref useDistinctiveFactionColors, nameof(useDistinctiveFactionColors), true);
     }
 
     public void DoSettingsWindowContents(Rect inRect)
@@ -34,29 +39,39 @@ public class Settings : ModSettings
 
         listing.Begin(inRect);
 
-        ThreeStateSetting(listing, nameof(allowBackerBackstories));
-        ThreeStateSetting(listing, nameof(fixLactationBugs));
+        EnumSetting<ThreeStateMode>(listing, nameof(allowBackerBackstories));
+        EnumSetting<ThreeStateMode>(listing, nameof(fixLactationBugs));
+
+        listing.CheckboxLabeled("Use distinctive faction colors", ref useDistinctiveFactionColors);
 
         listing.End();
     }
 
-    private void ThreeStateSetting(Listing_Standard listing, string fieldName)
+    private void EnumSetting<T>(Listing_Standard listing, string fieldName)
     {
-        var valueRef = AccessTools.FieldRefAccess<ThreeStateMode>(GetType(), fieldName);
+        var valueRef = AccessTools.FieldRefAccess<T>(GetType(), fieldName);
+
+        var enumType = typeof(T);
 
         if (listing.ButtonTextLabeled(
                 $"XylSettingDescription_{fieldName}".Translate(),
                 $"XylSettingOption_{fieldName}_{valueRef(this).ToString()}".Translate(),
                 tooltip: $"XylSettingTooltip_{fieldName}".Translate()))
         {
-            Find.WindowStack.Add(new FloatMenu([
-                new($"XylSettingOption_{fieldName}_{ThreeStateMode.Always}".Translate(),
-                    () => { valueRef(this) = ThreeStateMode.Always; }),
-                new($"XylSettingOption_{fieldName}_{ThreeStateMode.Sometimes}".Translate(),
-                    () => { valueRef(this) = ThreeStateMode.Sometimes; }),
-                new($"XylSettingOption_{fieldName}_{ThreeStateMode.Never}".Translate(),
-                    () => { valueRef(this) = ThreeStateMode.Never; }),
-            ]));
+            var names = Enum.GetNames(enumType);
+            var values = (T[])Enum.GetValues(enumType);
+
+            List<FloatMenuOption> options = [];
+            for (int i = 0; i < names.Length; i++)
+            {
+                var curName = names[i];
+                var curValue = values[i];
+
+                options.Add(new($"XylSettingOption_{fieldName}_{curName}".Translate(),
+                    () => { valueRef(this) = curValue; }));
+            }
+
+            Find.WindowStack.Add(new FloatMenu(options));
         }
     }
 
