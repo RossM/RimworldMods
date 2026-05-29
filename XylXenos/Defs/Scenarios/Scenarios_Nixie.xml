@@ -122,6 +122,13 @@
           <closeSound>GameStartSting</closeSound>
         </li>
 
+        <li Class="ScenPart_CreateIncident">
+          <def>CreateIncident</def>
+          <incident>XylCultistJoin</incident>
+          <minDays>30</minDays>
+          <maxDays>60</maxDays>
+        </li>
+
       </parts>
     </scenario>
   </ScenarioDef>

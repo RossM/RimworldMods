@@ -54,6 +54,10 @@ namespace XylXenos
 
         public static JobDef XylTakeShower;
 
+        public static HediffDef XylCultistSong;
+
+        public static BodyPartDef Brain;
+
         #endregion
     }
 }
