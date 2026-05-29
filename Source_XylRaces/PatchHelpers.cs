@@ -300,7 +300,7 @@ public static class PatchHelpers
         }
     }
 
-    [UsedImplicitly]
+    [UsedFromReflection]
     public static PawnRenderFlags ModifyRenderFlags(Pawn pawn, PawnRenderFlags flags)
     {
         if (pawn.CurJobDef == DefOf.XylTakeShower && !pawn.pather.Moving)

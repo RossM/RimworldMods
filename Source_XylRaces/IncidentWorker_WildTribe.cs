@@ -15,7 +15,7 @@ namespace XylXenos
             public TraitDef trait;
             public float chance = 1.0f;
 
-            [UsedImplicitly]
+            [UsedFromReflection]
             public void LoadDataFromXmlCustom(XmlNode xmlRoot)
             {
                 DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "trait", xmlRoot.Name);

@@ -7,7 +7,7 @@ using Verse.AI;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class MentalState_HuntingVermin : MentalState
     {
         private const int checkInterval = 120;

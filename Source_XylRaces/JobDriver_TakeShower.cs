@@ -6,7 +6,7 @@ using Verse.AI;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class JobDriver_TakeShower : JobDriver
     {
         public override bool TryMakePreToilReservations(bool errorOnFailed)

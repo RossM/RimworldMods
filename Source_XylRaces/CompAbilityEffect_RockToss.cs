@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class CompProperties_AbilityRockToss : CompProperties_EffectWithDest
     {
         public float minRange;

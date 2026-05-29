@@ -11,7 +11,7 @@ namespace XylXenos
         public string iconPath;
     }
 
-    [UsedImplicitly]
+    [UsedFromXml]
     public class MentalState_SeeingRed : MentalState
     {
         public MentalStateDefExtension_SeeingRed DefExt => def.GetModExtension<MentalStateDefExtension_SeeingRed>();

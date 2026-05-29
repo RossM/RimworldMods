@@ -31,7 +31,7 @@ namespace XylXenos
     //     <li>Bar</li>
     //   </list>
     // </def>
-    [UsedImplicitly]
+    [UsedFromXml]
     public class PatchOperationAddOrMerge : PatchOperationPathed
     {
         private enum Order

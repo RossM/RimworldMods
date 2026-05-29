@@ -10,7 +10,7 @@ using Verse;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromReflection]
     [StaticConstructorOnStartup]
     public class Main : Mod
     {

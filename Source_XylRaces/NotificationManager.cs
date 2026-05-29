@@ -42,7 +42,7 @@ namespace XylXenos
     ///     <see cref="INotificationListener" />
     ///     and register for the needed callbacks in <see cref="INotificationListener.RegisterWith" />.
     /// </summary>
-    [UsedImplicitly]
+    [UsedFromReflection]
     public class NotificationManager : GameComponent
     {
         private class EventInfo
@@ -77,7 +77,6 @@ namespace XylXenos
         }
 
         [DebugAction(allowedGameStates = 0)]
-        [UsedImplicitly]
         public static void ToggleNotificationManagerLogging()
         {
             doDebug = !doDebug;

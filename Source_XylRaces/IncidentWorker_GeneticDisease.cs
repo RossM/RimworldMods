@@ -21,7 +21,7 @@ namespace XylXenos
         }
     }
 
-    [UsedImplicitly]
+    [UsedFromXml]
     public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
     {
         public IncidentDefExtension_GeneticDisease DefExt => def.GetModExtension<IncidentDefExtension_GeneticDisease>();

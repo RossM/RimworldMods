@@ -4,7 +4,7 @@ using Verse.AI;
 
 namespace XylXenos
 {
-    [UsedImplicitly]
+    [UsedFromXml]
     public class MentalStateWorker_HuntingVermin : MentalStateWorker
     {
         public override bool StateCanOccur(Pawn pawn)
