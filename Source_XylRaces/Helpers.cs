@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using RimWorld;
 using Verse;
 
 namespace XylXenos
@@ -29,37 +26,6 @@ namespace XylXenos
             if (!_enabled)
                 return;
             DeepProfiler.End();
-        }
-    }
-
-    public static class Helpers
-    {
-        // ReSharper disable once UnusedMember.Global
-        extension(ThingDef thingDef)
-        {
-            public float GetStatBase(StatDef statDef)
-            {
-                return thingDef.statBases.FirstOrDefault(s => s.stat == statDef)?.value ?? statDef.defaultBaseValue;
-            }
-        }
-
-        extension(Faction faction)
-        {
-            public IEnumerable<Pawn> GetPawns()
-            {
-                return Find.Maps.SelectMany(map => map.mapPawns.PawnsInFaction(faction));
-            }
-        }
-
-        extension(XenotypeSet xenotypeSet)
-        {
-            public XenotypeDef GetDefaultXenotype()
-            {
-                if (xenotypeSet is XenotypeSetWithDefault withDefault)
-                    return withDefault.defaultXenotype;
-                else
-                    return XenotypeDefOf.Baseliner;
-            }
         }
     }
 }

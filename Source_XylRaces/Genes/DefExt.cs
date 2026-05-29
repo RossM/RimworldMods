@@ -219,7 +219,7 @@ namespace XylXenos.Genes
 
             parent = parentDef;
 
-            GeneHelpers.defExtCache.Clear();
+            GeneDefExtensions.defExtCache.Clear();
 
             switch (parentDef)
             {

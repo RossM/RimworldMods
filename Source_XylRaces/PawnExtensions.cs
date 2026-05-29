@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using RimWorld;
+using RimWorld.Planet;
 using Verse;
 using XylXenos.Genes;
 
 namespace XylXenos;
 
-public static class GeneHelpers
+public static class PawnExtensions
 {
-    public static readonly Dictionary<int, DefExt> defExtCache = new();
-
     extension(Pawn pawn)
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public LookupCache LookupCache()
+        {
+            return XylXenos.LookupCache.Tracker.Get(pawn);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<Gene> GenesOfDef(GeneDef def)
         {
@@ -23,8 +29,6 @@ public static class GeneHelpers
             return pawn.LookupCache().GetGenesWithDef(def);
         }
 
-        // This is faster than pawn.genes.HasActiveGene(def) because it caches
-        // the gene lookup.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasActiveGene(GeneDef def)
         {
@@ -118,31 +122,33 @@ public static class GeneHelpers
 
             return XylXenos.GeneSet.Tracker.Get(pawn);
         }
-    }
 
-    extension(GeneDef gene)
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CanBeNull]
-        public DefExt DefExt()
+        public int GetGeneticPsylinkLevelFor(AbilityDef def)
         {
-            if (!defExtCache.TryGetValue(gene.index, out DefExt defExt))
+            if (pawn.genes != null && pawn.genes.GenesListForReading.Any(gene =>
+                    gene.Active && gene.DefExt()?.hasPsycast == true && gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
             {
-                defExt = gene.GetModExtension<DefExt>();
-                defExtCache.Add(gene.index, defExt);
+                return def.level;
             }
 
-            return defExt;
+            return 0;
         }
-    }
 
-    extension(Gene gene)
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [CanBeNull]
-        public DefExt DefExt()
+        public bool HasActivePsycastGene()
         {
-            return gene.def.DefExt();
+            return pawn.GeneSet()?.hasPsycast == true;
+        }
+
+        public bool NeedsPsyfocus()
+        {
+            // HasPsylink is patched to respect psycast genes
+            if (!pawn.HasPsylink)
+                return false;
+            if (pawn.Suspended)
+                return false;
+            if (!pawn.Spawned && !pawn.IsCaravanMember())
+                return false;
+            return true;
         }
     }
 }

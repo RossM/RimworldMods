@@ -3,7 +3,7 @@ using RimWorld.Planet;
 
 namespace XylXenos;
 
-public static class MapHelpers
+public static class TileExtensions
 {
     extension(Tile tile)
     {

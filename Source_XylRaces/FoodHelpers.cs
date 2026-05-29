@@ -114,14 +114,6 @@ public static class FoodHelpers
         return result;
     }
 
-    extension(ThingDef foodDef)
-    {
-        public bool IsRawFoodOrCorpse()
-        {
-            return foodDef.IsRawHumanFood() || foodDef.IsCorpse;
-        }
-    }
-
     public static bool IsThoughtFromIngestionDisallowedByGenes(
         Pawn eater,
         ThoughtDef thought,
