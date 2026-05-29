@@ -270,10 +270,13 @@ public static class PatchHelpers
             List<Faction> shuffledFactions = allFactions.Where(faction => faction.def.colorSpectrum != null).ToList();
             shuffledFactions.Shuffle();
 
-            foreach (var faction in shuffledFactions)
+            for (int iter = 0; iter < 3; iter++)
             {
-                faction.colorFromSpectrum
-                    = PatchHelpers.GenerateDistinctiveFactionColor(faction, allFactions.Where(otherFaction => otherFaction != faction));
+                foreach (var faction in shuffledFactions)
+                {
+                    faction.colorFromSpectrum
+                        = GenerateDistinctiveFactionColor(faction, allFactions.Where(otherFaction => otherFaction != faction));
+                }
             }
         }
         finally
