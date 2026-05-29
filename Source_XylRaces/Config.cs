@@ -13,9 +13,8 @@ namespace XylXenos
             UIChange,
         }
 
-        public static Config Instance => instance ??= DefDatabase<Config>.AllDefs.Single();
+        public static Config Instance => field ??= DefDatabase<Config>.AllDefs.Single();
 
-        private static Config instance;
         public List<JobDef> wetnessGivingJobs;
 
         [NoTranslate] public List<string> ignoreGenesFromMods;

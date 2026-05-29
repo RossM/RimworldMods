@@ -5,9 +5,12 @@ namespace XylXenos;
 
 public static class PawnHelpers
 {
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static LookupCache LookupCache(this Pawn pawn)
+    extension(Pawn pawn)
     {
-        return XylXenos.LookupCache.Tracker.Get(pawn);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public LookupCache LookupCache()
+        {
+            return XylXenos.LookupCache.Tracker.Get(pawn);
+        }
     }
 }

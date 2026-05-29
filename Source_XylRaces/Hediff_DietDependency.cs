@@ -25,12 +25,10 @@ namespace XylXenos
             // ReSharper restore UnusedMember.Local
         }
 
-        public GeneExt Gene => geneInternal ??= (GeneExt)pawn.genes.GetGene(GetComp<HediffComp_Genetic>().Props.gene);
+        public GeneExt Gene => field ??= (GeneExt)pawn.genes.GetGene(GetComp<HediffComp_Genetic>().Props.gene);
         public DietDependencyInfo DietDependencyInfo => Gene.DefExt.dietDependency!;
 
         public bool ShouldSatisfy => Severity >= def.stages[(int)Stages.Craving].minSeverity;
-
-        private GeneExt geneInternal;
 
         public override string TipStringExtra
         {

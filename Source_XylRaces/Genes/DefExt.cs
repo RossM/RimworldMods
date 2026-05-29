@@ -65,8 +65,21 @@ namespace XylXenos.Genes
 
     public class DefExt : DefModExtension
     {
-        public IEnumerable<string> CustomEffectDescriptions =>
-            customEffectDescriptionsInternal ??= GetCustomEffectDescriptions().ToList();
+        public IEnumerable<string> CustomEffectDescriptions => field ??= GetCustomEffectDescriptions().ToList();
+
+        public Texture2D ExtraIcon =>
+            field ??= extraIconPath.NullOrEmpty()
+                ? (parent as GeneDef)?.Icon
+                : ContentFinder<Texture2D>.Get(extraIconPath) ?? (parent as GeneDef)?.Icon;
+
+        public string GenderRatioDescription =>
+            femaleChance switch
+            {
+                >= 1.0f => "XylGenderRatioAlwaysFemale".Translate(),
+                <= 0.0f => "XylGenderRatioAlwaysMale".Translate(),
+                { } chance => "XylGenderRatioValue".Translate(chance.ToStringPercent(),
+                    (1 - chance).ToStringPercent())
+            };
 
         public bool showInXenotypeCreation = true;
         public Gender? gender;
@@ -111,27 +124,7 @@ namespace XylXenos.Genes
 
         public bool hasPsycast;
 
-        public Texture2D ExtraIcon
-        {
-            get
-            {
-                cachedExtraIcon ??= extraIconPath.NullOrEmpty()
-                    ? (parent as GeneDef)?.Icon
-                    : ContentFinder<Texture2D>.Get(extraIconPath) ?? (parent as GeneDef)?.Icon;
-                return cachedExtraIcon;
-            }
-        }
-
-        public string GetGenderRatioDescription()
-        {
-            return femaleChance switch
-            {
-                >= 1.0f => "XylGenderRatioAlwaysFemale".Translate(),
-                <= 0.0f => "XylGenderRatioAlwaysMale".Translate(),
-                { } chance => "XylGenderRatioValue".Translate(chance.ToStringPercent(),
-                    (1 - chance).ToStringPercent())
-            };
-        }
+        [CanBeNull] public Def parent;
 
         public IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
         {
@@ -159,7 +152,7 @@ namespace XylXenos.Genes
             if (femaleChance != null)
             {
                 yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
-                    GetGenderRatioDescription(), "XylGenderRatioDesc".TranslateSimple(), 1);
+                    GenderRatioDescription, "XylGenderRatioDesc".TranslateSimple(), 1);
             }
         }
 
@@ -185,7 +178,7 @@ namespace XylXenos.Genes
             }
 
             if (femaleChance != null)
-                yield return $"{"XylGenderRatioLabel".TranslateSimple()}: {GetGenderRatioDescription()}";
+                yield return $"{"XylGenderRatioLabel".TranslateSimple()}: {GenderRatioDescription}";
 
             if (!addDesignators.NullOrEmpty())
             {
@@ -248,15 +241,5 @@ namespace XylXenos.Genes
                 }
             }
         }
-
-        #region Implementation
-
-        private List<string> customEffectDescriptionsInternal;
-
-        private Texture2D cachedExtraIcon;
-
-        [CanBeNull] public Def parent;
-
-        #endregion
     }
 }

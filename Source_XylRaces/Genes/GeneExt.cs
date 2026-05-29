@@ -167,7 +167,7 @@ namespace XylXenos.Genes
             if (DefExt.femaleChance != null)
             {
                 yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
-                    DefExt.GetGenderRatioDescription(), "XylGenderRatioDesc".TranslateSimple(), 1);
+                    DefExt.GenderRatioDescription, "XylGenderRatioDesc".TranslateSimple(), 1);
             }
         }
 

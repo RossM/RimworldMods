@@ -8,8 +8,6 @@ namespace XylXenos
     [UsedFromXml]
     public class JobGiver_GetWetness : ThinkNode_JobGiver
     {
-        private static List<ThingDef> wetnessGivingThingsInternal;
-
         public JobDef showerJobDef;
         public JobDef soakJobDef;
 
@@ -17,17 +15,17 @@ namespace XylXenos
         {
             get
             {
-                if (wetnessGivingThingsInternal == null)
+                if (field == null)
                 {
-                    wetnessGivingThingsInternal = [];
+                    field = [];
                     foreach (var def in DefDatabase<ThingDef>.AllDefs)
                     {
                         if (def.GetModExtension<ThingDefExtension_WetnessSource>() != null)
-                            wetnessGivingThingsInternal.Add(def);
+                            field.Add(def);
                     }
                 }
 
-                return wetnessGivingThingsInternal;
+                return field;
             }
         }
 

@@ -35,22 +35,31 @@ namespace XylXenos
     public static class Helpers
     {
         // ReSharper disable once UnusedMember.Global
-        public static float GetStatBase(this ThingDef thingDef, StatDef statDef)
+        extension(ThingDef thingDef)
         {
-            return thingDef.statBases.FirstOrDefault(s => s.stat == statDef)?.value ?? statDef.defaultBaseValue;
+            public float GetStatBase(StatDef statDef)
+            {
+                return thingDef.statBases.FirstOrDefault(s => s.stat == statDef)?.value ?? statDef.defaultBaseValue;
+            }
         }
 
-        public static IEnumerable<Pawn> GetPawns(this Faction faction)
+        extension(Faction faction)
         {
-            return Find.Maps.SelectMany(map => map.mapPawns.PawnsInFaction(faction));
+            public IEnumerable<Pawn> GetPawns()
+            {
+                return Find.Maps.SelectMany(map => map.mapPawns.PawnsInFaction(faction));
+            }
         }
 
-        public static XenotypeDef GetDefaultXenotype(this XenotypeSet xenotypeSet)
+        extension(XenotypeSet xenotypeSet)
         {
-            if (xenotypeSet is XenotypeSetWithDefault withDefault)
-                return withDefault.defaultXenotype;
-            else
-                return XenotypeDefOf.Baseliner;
+            public XenotypeDef GetDefaultXenotype()
+            {
+                if (xenotypeSet is XenotypeSetWithDefault withDefault)
+                    return withDefault.defaultXenotype;
+                else
+                    return XenotypeDefOf.Baseliner;
+            }
         }
     }
 }

@@ -20,8 +20,7 @@ namespace XylXenos
     {
         public HediffCompProperties_SetNeed Props => (HediffCompProperties_SetNeed)props;
 
-        public Need Need => needInternal ??= Pawn.needs.TryGetNeed(Props.need);
-        private Need needInternal;
+        public Need Need => field ??= Pawn.needs.TryGetNeed(Props.need);
 
         public override void CompPostTickInterval(ref float severityAdjustment, int delta)
         {

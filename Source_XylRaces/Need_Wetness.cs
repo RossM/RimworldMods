@@ -44,19 +44,18 @@ namespace XylXenos
         ];
 
         private int lastInstantWetnessCheckTick;
-        private float lastInstantWetness;
 
         public override float CurInstantLevel
         {
             get
             {
                 if (lastInstantWetnessCheckTick == Find.TickManager.TicksGame)
-                    return lastInstantWetness;
+                    return field;
 
                 lastInstantWetnessCheckTick = Find.TickManager.TicksGame;
-                lastInstantWetness = CalculateInstantWetness();
+                field = CalculateInstantWetness();
 
-                return lastInstantWetness;
+                return field;
             }
         }
 

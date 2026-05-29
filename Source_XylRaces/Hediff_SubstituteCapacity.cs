@@ -28,26 +28,26 @@ namespace XylXenos
         public HediffDefExtension_SubstituteCapacity DefExt => def.GetModExtension<HediffDefExtension_SubstituteCapacity>();
 
         [Unsaved] private int lastActiveCheckTick = int.MinValue;
-        [Unsaved] private bool active;
 
+        [field: Unsaved]
         public bool Active
         {
             get
             {
                 int curTick = Find.TickManager.TicksGame;
                 if (curTick < lastActiveCheckTick + 60)
-                    return active;
+                    return field;
 
                 float originalLevel = pawn.health.capacities.GetLevel(DefExt.originalCapacity);
                 float substituteLevel = pawn.health.capacities.GetLevel(DefExt.substituteCapacity);
-                active = DefExt.mode switch
+                field = DefExt.mode switch
                 {
                     HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => substituteLevel > originalLevel,
                     HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => substituteLevel < originalLevel,
                     _ => true
                 };
                 lastActiveCheckTick = curTick;
-                return active;
+                return field;
             }
         }
 
