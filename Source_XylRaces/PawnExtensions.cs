@@ -105,13 +105,6 @@ public static class PawnExtensions
             return false;
         }
 
-        public IEnumerable<DefExt> ActiveDefExts()
-        {
-            if (pawn.genes == null)
-                return [];
-            return pawn.genes.GenesListForReading.Where(gene => gene.Active).Select(gene => gene.DefExt).Where(defExt => defExt != null);
-        }
-
         [CanBeNull]
         public GeneSet GeneSet
         {
@@ -122,7 +115,7 @@ public static class PawnExtensions
         public int GetGeneticPsylinkLevelFor(AbilityDef def)
         {
             if (pawn.genes != null && pawn.genes.GenesListForReading.Any(gene =>
-                    gene.Active && gene.DefExt?.hasPsycast == true && gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
+                    gene.Active && gene.def.DefExt?.hasPsycast == true && gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
             {
                 return def.level;
             }

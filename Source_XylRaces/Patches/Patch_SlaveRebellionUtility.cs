@@ -105,10 +105,12 @@ namespace XylXenos.Patches
 
             if (initiateSlaveRebellionMtbDays < 0)
             {
-                var def = pawn.ActiveDefExts().OrderBy(def => def.slaveRebellionThresholdDays).FirstOrDefault();
+                var def = pawn.ActiveGenesOfType<GeneExt>().Select(gene => gene.DefExt).OrderBy(def => def.slaveRebellionThresholdDays).FirstOrDefault();
                 if (def is { slaveRebellionThresholdDays: < float.MaxValue })
+                {
                     stringBuilder.AppendLine(
                         $"{def.parent?.LabelCap ?? "Genes".Translate().CapitalizeFirst()}: {"XylDocileThresholdReached".Translate(def.slaveRebellionThresholdDays)}");
+                }
             }
 
             string period = initiateSlaveRebellionMtbDays < 0

@@ -173,7 +173,7 @@ public static class PatchHelpers
 
     public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene outGene)
     {
-        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene => gene.Active && gene.DefExt?.showInDrugPolicies == true);
+        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene => gene.Active && gene.def.DefExt?.showInDrugPolicies == true);
         return outGene != null;
     }
 
@@ -215,11 +215,11 @@ public static class PatchHelpers
 
     public static void GenerateCongenitalHediffs(Pawn pawn)
     {
-        foreach (var def in pawn.ActiveDefExts())
+        foreach (GeneExt gene in pawn.ActiveGenesOfType<GeneExt>())
         {
-            if (!def.congenitalHediffs.NullOrEmpty())
+            if (!gene.DefExt.congenitalHediffs.NullOrEmpty())
             {
-                foreach (var congenitalHediff in def.congenitalHediffs)
+                foreach (var congenitalHediff in gene.DefExt.congenitalHediffs)
                 {
                     congenitalHediff.EventOccurred(pawn);
                 }

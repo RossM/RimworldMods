@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using RimWorld;
 using UnityEngine;
@@ -46,21 +47,26 @@ namespace XylXenos
             ingestionThoughtOverrides?.Clear();
             hasPsycast = false;
 
-            foreach (var def in pawn.ActiveDefExts())
+            if (pawn.genes != null)
             {
-                bodySizeFactor *= def.bodySizeFactor;
-                healthScaleFactor *= def.healthScaleFactor;
-                slaveRebellionThresholdDays = Mathf.Min(slaveRebellionThresholdDays, def.slaveRebellionThresholdDays);
-                manhunterOnDamageChanceFactor *= def.manhunterOnDamageChanceFactor;
-                manhunterOnTameFailChanceFactor *= def.manhunterOnTameFailChanceFactor;
+                foreach (var gene in pawn.ActiveGenesOfType<GeneExt>())
+                {
+                    var def = gene.DefExt;
 
-                AddList(ref joyGiverChanceFactors, def.joyGiverChanceFactors);
-                AddList(ref addDesignators, def.addDesignators);
-                AddList(ref renderNodeModifiers, def.renderNodeModifiers);
-                AddList(ref disableHostilityFromFactions, def.disableHostilityFromFactions);
-                AddList(ref ingestionThoughtOverrides, def.ingestionThoughtOverrides);
+                    bodySizeFactor *= def.bodySizeFactor;
+                    healthScaleFactor *= def.healthScaleFactor;
+                    slaveRebellionThresholdDays = Mathf.Min(slaveRebellionThresholdDays, def.slaveRebellionThresholdDays);
+                    manhunterOnDamageChanceFactor *= def.manhunterOnDamageChanceFactor;
+                    manhunterOnTameFailChanceFactor *= def.manhunterOnTameFailChanceFactor;
 
-                hasPsycast |= def.hasPsycast;
+                    AddList(ref joyGiverChanceFactors, def.joyGiverChanceFactors);
+                    AddList(ref addDesignators, def.addDesignators);
+                    AddList(ref renderNodeModifiers, def.renderNodeModifiers);
+                    AddList(ref disableHostilityFromFactions, def.disableHostilityFromFactions);
+                    AddList(ref ingestionThoughtOverrides, def.ingestionThoughtOverrides);
+
+                    hasPsycast |= def.hasPsycast;
+                }
             }
         }
 
