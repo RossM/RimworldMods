@@ -1,73 +1,66 @@
-﻿using HarmonyLib;
-using RimWorld;
-using TranspilerUtil;
-using Verse;
-using XylXenos.Genes;
+﻿namespace XylXenos.Patches;
 
-namespace XylXenos.Patches
+[HarmonyPatch(typeof(PawnUtility))]
+public static class Patch_PawnUtility
 {
-    [HarmonyPatch(typeof(PawnUtility))]
-    public static class Patch_PawnUtility
+    [Feature(typeof(DefModExtension_Chemical))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(PawnUtility.CanTakeDrug))]
+    public static void CanTakeDrug_Postfix(Pawn pawn, ThingDef drug, ref bool __result)
     {
-        [Feature(typeof(DefModExtension_Chemical))]
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(PawnUtility.CanTakeDrug))]
-        public static void CanTakeDrug_Postfix(Pawn pawn, ThingDef drug, ref bool __result)
-        {
-            if (!pawn.ChemicalIsAllowedByGenes(drug))
-                __result = false;
-        }
+        if (!pawn.ChemicalIsAllowedByGenes(drug))
+            __result = false;
+    }
 
-        [Feature(nameof(DefExt.manhunterOnDamageChanceFactor))]
-        [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(ThingDef)])]
-        [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(Pawn), typeof(Thing), typeof(float)])]
-        [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
-        public static void GetManhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
-        {
-            __result *= pawn.GeneSet?.manhunterOnDamageChanceFactor ?? 1f;
-        }
+    [Feature(nameof(DefExt.manhunterOnDamageChanceFactor))]
+    [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(ThingDef)])]
+    [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(Pawn), typeof(Thing), typeof(float)])]
+    [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
+    public static void GetManhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
+    {
+        __result *= pawn.GeneSet?.manhunterOnDamageChanceFactor ?? 1f;
+    }
 
-        [Feature(nameof(DefExt.manhunterOnTameFailChanceFactor))]
-        [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(ThingDef)])]
-        [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(Pawn)])]
-        [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
-        public static void GetManhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
-        {
-            __result *= pawn.GeneSet?.manhunterOnTameFailChanceFactor ?? 1f;
-        }
+    [Feature(nameof(DefExt.manhunterOnTameFailChanceFactor))]
+    [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(ThingDef)])]
+    [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChance), [typeof(Pawn)])]
+    [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
+    public static void GetManhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
+    {
+        __result *= pawn.GeneSet?.manhunterOnTameFailChanceFactor ?? 1f;
+    }
 
-        [Feature(nameof(DefExt.manhunterOnDamageChanceFactor))]
-        [InfixPostfix(typeof(RaceProperties), nameof(RaceProperties.manhunterOnDamageChance))]
-        [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
-        public static void RaceProperties_manhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
-        {
-            __result *= pawn.GeneSet?.manhunterOnDamageChanceFactor ?? 1f;
-        }
+    [Feature(nameof(DefExt.manhunterOnDamageChanceFactor))]
+    [InfixPostfix(typeof(RaceProperties), nameof(RaceProperties.manhunterOnDamageChance))]
+    [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
+    public static void RaceProperties_manhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
+    {
+        __result *= pawn.GeneSet?.manhunterOnDamageChanceFactor ?? 1f;
+    }
 
-        [Feature(nameof(DefExt.manhunterOnTameFailChanceFactor))]
-        [InfixPostfix(typeof(RaceProperties), nameof(RaceProperties.manhunterOnTameFailChance))]
-        [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
-        public static void RaceProperties_manhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
-        {
-            __result *= pawn.GeneSet?.manhunterOnTameFailChanceFactor ?? 1f;
-        }
+    [Feature(nameof(DefExt.manhunterOnTameFailChanceFactor))]
+    [InfixPostfix(typeof(RaceProperties), nameof(RaceProperties.manhunterOnTameFailChance))]
+    [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
+    public static void RaceProperties_manhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
+    {
+        __result *= pawn.GeneSet?.manhunterOnTameFailChanceFactor ?? 1f;
+    }
 
-        [Feature(nameof(DefExt.manhunterOnDamageChanceFactor))]
-        [Feature(nameof(DefExt.manhunterOnTameFailChanceFactor))]
-        [InfixPostfix(typeof(Def), nameof(Def.LabelCap))]
-        [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
-        [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
-        public static void Def_LabelCap_Postfix(Def __instance, Pawn pawn, ref TaggedString __result)
-        {
-            if (__instance != pawn.def)
-                return;
+    [Feature(nameof(DefExt.manhunterOnDamageChanceFactor))]
+    [Feature(nameof(DefExt.manhunterOnTameFailChanceFactor))]
+    [InfixPostfix(typeof(Def), nameof(Def.LabelCap))]
+    [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
+    [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
+    public static void Def_LabelCap_Postfix(Def __instance, Pawn pawn, ref TaggedString __result)
+    {
+        if (__instance != pawn.def)
+            return;
 
-            var geneSet = pawn.GeneSet;
-            if (geneSet == null)
-                return;
+        var geneSet = pawn.GeneSet;
+        if (geneSet == null)
+            return;
 
-            if (geneSet.manhunterOnDamageChanceFactor != 1f || geneSet.manhunterOnTameFailChanceFactor != 1f)
-                __result = pawn.genes.XenotypeLabelCap;
-        }
+        if (geneSet.manhunterOnDamageChanceFactor != 1f || geneSet.manhunterOnTameFailChanceFactor != 1f)
+            __result = pawn.genes.XenotypeLabelCap;
     }
 }

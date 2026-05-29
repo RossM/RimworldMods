@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using Verse;
-
 namespace XylXenos;
 
 public static class Scribe_Ext

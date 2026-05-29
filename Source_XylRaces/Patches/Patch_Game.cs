@@ -1,17 +1,13 @@
-﻿using HarmonyLib;
-using Verse;
+﻿namespace XylXenos.Patches;
 
-namespace XylXenos.Patches
+[HarmonyPatch(typeof(Game))]
+public static class Patch_Game
 {
-    [HarmonyPatch(typeof(Game))]
-    public static class Patch_Game
+    [Feature(typeof(GeneSet))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Game.Dispose))]
+    public static void Dispose_Postfix()
     {
-        [Feature(typeof(GeneSet))]
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(Game.Dispose))]
-        public static void Dispose_Postfix()
-        {
-            NotificationManager.Instance.Notify(NotificationEvent.PostGameDispose, null);
-        }
+        NotificationManager.Instance.Notify(NotificationEvent.PostGameDispose, null);
     }
 }

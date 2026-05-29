@@ -1,9 +1,6 @@
-﻿using RimWorld;
+﻿namespace XylXenos;
 
-namespace XylXenos
+public class XenotypeSetWithDefault : XenotypeSet
 {
-    public class XenotypeSetWithDefault : XenotypeSet
-    {
-        public XenotypeDef defaultXenotype;
-    }
+    public XenotypeDef defaultXenotype;
 }

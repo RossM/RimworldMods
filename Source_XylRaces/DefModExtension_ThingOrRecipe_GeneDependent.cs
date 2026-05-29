@@ -1,28 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
-using Verse;
+﻿namespace XylXenos;
 
-namespace XylXenos
+public class DefModExtension_ThingOrRecipe_GeneDependent : DefModExtension
 {
-    public class DefModExtension_ThingOrRecipe_GeneDependent : DefModExtension
+    public List<GeneDef> genePrerequisitesAny;
+
+    public bool Validate()
     {
-        public List<GeneDef> genePrerequisitesAny;
+        if (genePrerequisitesAny.NullOrEmpty())
+            return true;
 
-        public bool Validate()
+        foreach (var gene in genePrerequisitesAny)
         {
-            if (genePrerequisitesAny.NullOrEmpty())
-                return true;
-
-            foreach (var gene in genePrerequisitesAny)
+            if (Faction.OfPlayer.AllPawns.Any(p => p.HasActiveGene(gene)))
             {
-                if (Faction.OfPlayer.AllPawns.Any(p => p.HasActiveGene(gene)))
-                {
-                    return true;
-                }
+                return true;
             }
-
-            return false;
         }
+
+        return false;
     }
 }

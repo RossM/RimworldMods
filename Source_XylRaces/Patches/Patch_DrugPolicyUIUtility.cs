@@ -1,20 +1,14 @@
-﻿using HarmonyLib;
-using RimWorld;
-using Verse;
-using XylXenos.Genes;
+﻿namespace XylXenos.Patches;
 
-namespace XylXenos.Patches
+[HarmonyPatch(typeof(DrugPolicyUIUtility))]
+public static class Patch_DrugPolicyUIUtility
 {
-    [HarmonyPatch(typeof(DrugPolicyUIUtility))]
-    public static class Patch_DrugPolicyUIUtility
+    [Feature(nameof(DefExt.showInDrugPolicies))]
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene))]
+    public static void TryGetChemicalDependencyGene_Postfix(Pawn pawn, ref Gene gene, ref bool __result)
     {
-        [Feature(nameof(DefExt.showInDrugPolicies))]
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene))]
-        public static void TryGetChemicalDependencyGene_Postfix(Pawn pawn, ref Gene gene, ref bool __result)
-        {
-            if (!__result)
-                __result = PatchHelpers.TryGetChemicalDependencyGene(pawn, out gene);
-        }
+        if (!__result)
+            __result = PatchHelpers.TryGetChemicalDependencyGene(pawn, out gene);
     }
 }

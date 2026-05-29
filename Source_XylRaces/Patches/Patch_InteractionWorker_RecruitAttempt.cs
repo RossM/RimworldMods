@@ -1,20 +1,14 @@
-﻿using HarmonyLib;
-using RimWorld;
-using TranspilerUtil;
-using Verse;
+﻿namespace XylXenos.Patches;
 
-namespace XylXenos.Patches
+[HarmonyPatch(typeof(InteractionWorker_RecruitAttempt))]
+public static class Patch_InteractionWorker_RecruitAttempt
 {
-    [HarmonyPatch(typeof(InteractionWorker_RecruitAttempt))]
-    public static class Patch_InteractionWorker_RecruitAttempt
+    [Feature(nameof(DefOf.XylResistanceFallRate))]
+    [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+    [InfixPatch(nameof(InteractionWorker_RecruitAttempt.Interacted))]
+    public static void GetStatValue_Postfix(StatDef stat, Pawn recipient, ref float __result)
     {
-        [Feature(nameof(DefOf.XylResistanceFallRate))]
-        [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
-        [InfixPatch(nameof(InteractionWorker_RecruitAttempt.Interacted))]
-        public static void GetStatValue_Postfix(StatDef stat, Pawn recipient, ref float __result)
-        {
-            if (stat == StatDefOf.NegotiationAbility)
-                __result *= recipient.GetStatValue(DefOf.XylResistanceFallRate);
-        }
+        if (stat == StatDefOf.NegotiationAbility)
+            __result *= recipient.GetStatValue(DefOf.XylResistanceFallRate);
     }
 }

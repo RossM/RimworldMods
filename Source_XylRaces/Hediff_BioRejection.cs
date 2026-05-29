@@ -1,40 +1,36 @@
-﻿using System.Collections.Generic;
-using Verse;
+﻿namespace XylXenos;
 
-namespace XylXenos
+[UsedFromXml]
+public class Hediff_BioRejection : HediffWithComps
 {
-    [UsedFromXml]
-    public class Hediff_BioRejection : HediffWithComps
+    public override bool ShouldRemove => false;
+
+    public override float Severity
     {
-        public override bool ShouldRemove => false;
+        get => pawn.health.hediffSet.CountAddedAndImplantedParts() * 1.0f;
+        set { }
+    }
 
-        public override float Severity
+    public override string Description
+    {
+        get
         {
-            get => pawn.health.hediffSet.CountAddedAndImplantedParts() * 1.0f;
-            set { }
-        }
+            List<string> causes = [];
 
-        public override string Description
-        {
-            get
+            List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
+            foreach (Hediff hediff in hediffs)
             {
-                List<string> causes = [];
-
-                List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
-                foreach (Hediff hediff in hediffs)
+                if (hediff.def.countsAsAddedPartOrImplant)
                 {
-                    if (hediff.def.countsAsAddedPartOrImplant)
-                    {
-                        causes.Add(hediff.Label);
-                    }
+                    causes.Add(hediff.Label);
                 }
+            }
 
-                return $"""
+            return $"""
                     {base.Description}
                     
                     {"CausedBy".Translate()}: {causes.ToCommaList().CapitalizeFirst()}
                     """;
-            }
         }
     }
 }

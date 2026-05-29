@@ -1,41 +1,34 @@
-﻿using HarmonyLib;
-using RimWorld;
-using Verse;
-using Verse.AI;
-using XylXenos.Genes;
+﻿namespace XylXenos.Patches;
 
-namespace XylXenos.Patches
+[HarmonyPatch(typeof(Pawn_FlightTracker))]
+public static class Patch_Pawn_FlightTracker
 {
-    [HarmonyPatch(typeof(Pawn_FlightTracker))]
-    public static class Patch_Pawn_FlightTracker
+    [Feature(typeof(Flight))]
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
+    public static bool Notify_JobStarted_Prefix(Pawn_FlightTracker __instance, Job job)
     {
-        [Feature(typeof(Flight))]
-        [HarmonyPrefix]
-        [HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
-        public static bool Notify_JobStarted_Prefix(Pawn_FlightTracker __instance, Job job)
+        var pawn = __instance?.pawn;
+        if (pawn is { IsPlayerControlled: true } && pawn.HasActiveGeneOfType<Flight>())
         {
-            var pawn = __instance?.pawn;
-            if (pawn is { IsPlayerControlled: true } && pawn.HasActiveGeneOfType<Flight>())
-            {
-                return false;
-            }
-
-            return true;
+            return false;
         }
 
-        // Note: This patch is performance-sensitive
-        [Feature(typeof(Flight))]
-        [HarmonyPrefix]
-        [HarmonyPatch(nameof(Pawn_FlightTracker.FlightTick))]
-        public static void FlightTick_Prefix(Pawn_FlightTracker __instance)
+        return true;
+    }
+
+    // Note: This patch is performance-sensitive
+    [Feature(typeof(Flight))]
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(Pawn_FlightTracker.FlightTick))]
+    public static void FlightTick_Prefix(Pawn_FlightTracker __instance)
+    {
+        var pawn = __instance.pawn;
+        if (__instance.Flying && pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
         {
-            var pawn = __instance.pawn;
-            if (__instance.Flying && pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
+            if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Flight>() is { } gene)
             {
-                if (pawn.IsPlayerControlled && pawn.genes?.GetFirstGeneOfType<Flight>() is { } gene)
-                {
-                    gene.Notify_Downed();
-                }
+                gene.Notify_Downed();
             }
         }
     }

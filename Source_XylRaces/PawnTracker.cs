@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Verse;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 /// <summary>
 ///     Provides one shared helper object per pawn for state that is important for the mod but not appropriate to keep in

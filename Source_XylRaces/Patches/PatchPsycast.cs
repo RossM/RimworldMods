@@ -1,9 +1,3 @@
-using System;
-using RimWorld;
-using TranspilerUtil;
-using Verse;
-using XylXenos.Genes;
-
 namespace XylXenos.Patches;
 
 public static class PatchPsycast

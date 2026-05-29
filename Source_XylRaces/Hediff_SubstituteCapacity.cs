@@ -1,130 +1,123 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using RimWorld;
-using Verse;
+﻿namespace XylXenos;
 
-namespace XylXenos
+[UsedFromXml]
+public class HediffDefExtension_SubstituteCapacity : DefModExtension
 {
-    [UsedFromXml]
-    public class HediffDefExtension_SubstituteCapacity : DefModExtension
+    public enum SubstitutionMode
     {
-        public enum SubstitutionMode
-        {
-            Always,
-            Maximum,
-            Minimum,
-        }
-
-        public SubstitutionMode mode;
-        public PawnCapacityDef originalCapacity;
-        public PawnCapacityDef substituteCapacity;
-        public List<StatDef> excludeStats;
+        Always,
+        Maximum,
+        Minimum,
     }
 
-    [UsedFromXml]
-    public class Hediff_SubstituteCapacity : HediffWithComps
+    public SubstitutionMode mode;
+    public PawnCapacityDef originalCapacity;
+    public PawnCapacityDef substituteCapacity;
+    public List<StatDef> excludeStats;
+}
+
+[UsedFromXml]
+public class Hediff_SubstituteCapacity : HediffWithComps
+{
+    public HediffDefExtension_SubstituteCapacity DefExt => def.GetModExtension<HediffDefExtension_SubstituteCapacity>();
+
+    [Unsaved] private int lastActiveCheckTick = int.MinValue;
+
+    [field: Unsaved]
+    public bool Active
     {
-        public HediffDefExtension_SubstituteCapacity DefExt => def.GetModExtension<HediffDefExtension_SubstituteCapacity>();
-
-        [Unsaved] private int lastActiveCheckTick = int.MinValue;
-
-        [field: Unsaved]
-        public bool Active
+        get
         {
-            get
-            {
-                int curTick = Find.TickManager.TicksGame;
-                if (curTick < lastActiveCheckTick + 60)
-                    return field;
-
-                float originalLevel = pawn.health.capacities.GetLevel(DefExt.originalCapacity);
-                float substituteLevel = pawn.health.capacities.GetLevel(DefExt.substituteCapacity);
-                field = DefExt.mode switch
-                {
-                    HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => substituteLevel > originalLevel,
-                    HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => substituteLevel < originalLevel,
-                    _ => true
-                };
-                lastActiveCheckTick = curTick;
+            int curTick = Find.TickManager.TicksGame;
+            if (curTick < lastActiveCheckTick + 60)
                 return field;
-            }
-        }
 
-        public override string Description
-        {
-            get
+            float originalLevel = pawn.health.capacities.GetLevel(DefExt.originalCapacity);
+            float substituteLevel = pawn.health.capacities.GetLevel(DefExt.substituteCapacity);
+            field = DefExt.mode switch
             {
-                var sb = new StringBuilder(base.Description);
-
-                sb.AppendLine();
-                sb.AppendLine();
-
-                ExtraDescription(sb);
-
-                return sb.ToString();
-            }
-        }
-
-        private void ExtraDescription(StringBuilder sb)
-        {
-            string desc = DefExt.mode switch
-            {
-                HediffDefExtension_SubstituteCapacity.SubstitutionMode.Always => "XylSubstituteCapacityAlwaysDesc",
-                HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => "XylSubstituteCapacityHigherDesc",
-                HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => "XylSubstituteCapacityLowerDesc",
-                _ => throw new NotSupportedException()
+                HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => substituteLevel > originalLevel,
+                HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => substituteLevel < originalLevel,
+                _ => true
             };
-            sb.Append(desc.Translate(DefExt.substituteCapacity.label, DefExt.originalCapacity.label)
-                .CapitalizeFirst());
+            lastActiveCheckTick = curTick;
+            return field;
         }
+    }
 
-        public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+    public override string Description
+    {
+        get
         {
-            foreach (var statDrawEntry in base.SpecialDisplayStats(req))
-                yield return statDrawEntry;
+            var sb = new StringBuilder(base.Description);
 
-            float difference = pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
-                               pawn.health.capacities.GetLevel(DefExt.originalCapacity);
-            if (!Active)
-                difference = 0;
+            sb.AppendLine();
+            sb.AppendLine();
 
-            var sb = new StringBuilder();
             ExtraDescription(sb);
 
-            yield return new StatDrawEntry(StatCategoryDefOf.CapacityEffects,
-                "XylEffectiveCapacity".Translate(DefExt.originalCapacity.label),
-                difference.ToStringPercentSigned(), sb.ToString(), 1);
+            return sb.ToString();
         }
+    }
 
-        public bool Validate(StatDef statDef, PawnCapacityDef pawnCapacityDef)
+    private void ExtraDescription(StringBuilder sb)
+    {
+        string desc = DefExt.mode switch
         {
-            if (!Active)
-                return false;
-            if (DefExt.originalCapacity != pawnCapacityDef)
-                return false;
-            if (DefExt.excludeStats != null && DefExt.excludeStats.Contains(statDef))
-                return false;
-            return true;
-        }
+            HediffDefExtension_SubstituteCapacity.SubstitutionMode.Always => "XylSubstituteCapacityAlwaysDesc",
+            HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => "XylSubstituteCapacityHigherDesc",
+            HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => "XylSubstituteCapacityLowerDesc",
+            _ => throw new NotSupportedException()
+        };
+        sb.Append(desc.Translate(DefExt.substituteCapacity.label, DefExt.originalCapacity.label)
+            .CapitalizeFirst());
+    }
 
-        public TaggedString GetDescription()
+    public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+    {
+        foreach (var statDrawEntry in base.SpecialDisplayStats(req))
+            yield return statDrawEntry;
+
+        float difference = pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
+                           pawn.health.capacities.GetLevel(DefExt.originalCapacity);
+        if (!Active)
+            difference = 0;
+
+        var sb = new StringBuilder();
+        ExtraDescription(sb);
+
+        yield return new StatDrawEntry(StatCategoryDefOf.CapacityEffects,
+            "XylEffectiveCapacity".Translate(DefExt.originalCapacity.label),
+            difference.ToStringPercentSigned(), sb.ToString(), 1);
+    }
+
+    public bool Validate(StatDef statDef, PawnCapacityDef pawnCapacityDef)
+    {
+        if (!Active)
+            return false;
+        if (DefExt.originalCapacity != pawnCapacityDef)
+            return false;
+        if (DefExt.excludeStats != null && DefExt.excludeStats.Contains(statDef))
+            return false;
+        return true;
+    }
+
+    public TaggedString GetDescription()
+    {
+        float modifier = pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
+                         pawn.health.capacities.GetLevel(DefExt.originalCapacity);
+        return
+            $"{LabelCap}: {DefExt.originalCapacity.LabelCap} -> {DefExt.substituteCapacity.LabelCap} ({modifier.ToStringPercentSigned()})";
+    }
+
+    public static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
+    {
+        foreach (Hediff_SubstituteCapacity hediff in pawn.HediffsOfType<Hediff_SubstituteCapacity>())
         {
-            float modifier = pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
-                             pawn.health.capacities.GetLevel(DefExt.originalCapacity);
-            return
-                $"{LabelCap}: {DefExt.originalCapacity.LabelCap} -> {DefExt.substituteCapacity.LabelCap} ({modifier.ToStringPercentSigned()})";
+            if (hediff.Validate(stat, capacity))
+                return hediff;
         }
 
-        public static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
-        {
-            foreach (Hediff_SubstituteCapacity hediff in pawn.HediffsOfType<Hediff_SubstituteCapacity>())
-            {
-                if (hediff.Validate(stat, capacity))
-                    return hediff;
-            }
-
-            return null;
-        }
+        return null;
     }
 }

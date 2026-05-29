@@ -1,119 +1,112 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
-using Verse;
-using Verse.AI;
+﻿namespace XylXenos;
 
-namespace XylXenos
+[UsedFromXml]
+public class MentalState_HuntingVermin : MentalState
 {
-    [UsedFromXml]
-    public class MentalState_HuntingVermin : MentalState
+    private const int checkInterval = 120;
+
+    private static readonly List<Pawn> tmpTargets = [];
+    public Pawn target;
+
+    public override void ExposeData()
     {
-        private const int checkInterval = 120;
+        base.ExposeData();
+        Scribe_References.Look(ref target, nameof(target));
+    }
 
-        private static readonly List<Pawn> tmpTargets = [];
-        public Pawn target;
+    public override RandomSocialMode SocialModeMax()
+    {
+        return RandomSocialMode.Off;
+    }
 
-        public override void ExposeData()
+    public override void PreStart()
+    {
+        base.PreStart();
+        TryFindNewTarget();
+    }
+
+    public override void MentalStateTick(int delta)
+    {
+        base.MentalStateTick(delta);
+
+        if (target is { Dead: true })
         {
-            base.ExposeData();
-            Scribe_References.Look(ref target, nameof(target));
-        }
-
-        public override RandomSocialMode SocialModeMax()
-        {
-            return RandomSocialMode.Off;
-        }
-
-        public override void PreStart()
-        {
-            base.PreStart();
-            TryFindNewTarget();
-        }
-
-        public override void MentalStateTick(int delta)
-        {
-            base.MentalStateTick(delta);
-
-            if (target is { Dead: true })
-            {
-                if (pawn.CurJob.def == JobDefOf.AttackMelee || pawn.CurJob.def == JobDefOf.Ingest)
-                    return;
-
-                if (!pawn.HediffsOfType<Hediff_DietDependency>().Any(hediff => hediff.ShouldSatisfy))
-                    RecoverFromState();
-                else if (Rand.Chance(0.2f))
-                    RecoverFromState();
-                else if (!TryFindNewTarget())
-                    RecoverFromState();
-
+            if (pawn.CurJob.def == JobDefOf.AttackMelee || pawn.CurJob.def == JobDefOf.Ingest)
                 return;
-            }
 
-            if (!pawn.IsHashIntervalTick(checkInterval, delta))
-                return;
-            if (IsTargetStillValidAndReachable())
-                return;
-            if (!TryFindNewTarget())
+            if (!pawn.HediffsOfType<Hediff_DietDependency>().Any(hediff => hediff.ShouldSatisfy))
                 RecoverFromState();
+            else if (Rand.Chance(0.2f))
+                RecoverFromState();
+            else if (!TryFindNewTarget())
+                RecoverFromState();
+
+            return;
         }
 
-        public override TaggedString GetBeginLetterText()
+        if (!pawn.IsHashIntervalTick(checkInterval, delta))
+            return;
+        if (IsTargetStillValidAndReachable())
+            return;
+        if (!TryFindNewTarget())
+            RecoverFromState();
+    }
+
+    public override TaggedString GetBeginLetterText()
+    {
+        if (target == null)
         {
-            if (target == null)
-            {
-                Log.Error("No target. This should have been checked in this mental state's worker.");
-                return "";
-            }
-
-            return def.beginLetter.Formatted(pawn.NameShortColored, target.NameShortColored, pawn.Named("PAWN"), target.Named("TARGET"))
-                .AdjustedFor(pawn).Resolve()
-                .CapitalizeFirst();
+            Log.Error("No target. This should have been checked in this mental state's worker.");
+            return "";
         }
 
-        private bool TryFindNewTarget()
+        return def.beginLetter.Formatted(pawn.NameShortColored, target.NameShortColored, pawn.Named("PAWN"), target.Named("TARGET"))
+            .AdjustedFor(pawn).Resolve()
+            .CapitalizeFirst();
+    }
+
+    private bool TryFindNewTarget()
+    {
+        target = FindPawnToKill(pawn);
+        return target != null;
+    }
+
+    public bool IsTargetStillValidAndReachable()
+    {
+        if (target is { SpawnedParentOrMe: not null } && (target.SpawnedParentOrMe is not Pawn || target.SpawnedParentOrMe == target))
         {
-            target = FindPawnToKill(pawn);
-            return target != null;
+            return pawn.CanReach(target.SpawnedParentOrMe, PathEndMode.Touch, Danger.Deadly, canBashDoors: true);
         }
 
-        public bool IsTargetStillValidAndReachable()
+        return false;
+    }
+
+    public static Pawn FindPawnToKill(Pawn pawn)
+    {
+        if (!pawn.Spawned)
         {
-            if (target is { SpawnedParentOrMe: not null } && (target.SpawnedParentOrMe is not Pawn || target.SpawnedParentOrMe == target))
-            {
-                return pawn.CanReach(target.SpawnedParentOrMe, PathEndMode.Touch, Danger.Deadly, canBashDoors: true);
-            }
-
-            return false;
+            return null;
         }
 
-        public static Pawn FindPawnToKill(Pawn pawn)
+        tmpTargets.Clear();
+        IReadOnlyList<Pawn> allPawnsSpawned = pawn.Map.mapPawns.AllPawnsSpawned;
+        foreach (Pawn pawn2 in allPawnsSpawned)
         {
-            if (!pawn.Spawned)
+            if (pawn2.Faction == null && pawn2.IsAnimal && pawn2.BodySize <= pawn.BodySize &&
+                pawn2.RaceProps.manhunterOnDamageChance <= 0.1f &&
+                pawn.CanReach(pawn2, PathEndMode.Touch, Danger.Some))
             {
-                return null;
+                tmpTargets.Add(pawn2);
             }
-
-            tmpTargets.Clear();
-            IReadOnlyList<Pawn> allPawnsSpawned = pawn.Map.mapPawns.AllPawnsSpawned;
-            foreach (Pawn pawn2 in allPawnsSpawned)
-            {
-                if (pawn2.Faction == null && pawn2.IsAnimal && pawn2.BodySize <= pawn.BodySize &&
-                    pawn2.RaceProps.manhunterOnDamageChance <= 0.1f &&
-                    pawn.CanReach(pawn2, PathEndMode.Touch, Danger.Some))
-                {
-                    tmpTargets.Add(pawn2);
-                }
-            }
-
-            if (!tmpTargets.Any())
-            {
-                return null;
-            }
-
-            Pawn result = tmpTargets.OrderBy(p => pawn.Position.DistanceToSquared(p.Position)).ThenBy(_ => Rand.Value).FirstOrDefault();
-            tmpTargets.Clear();
-            return result;
         }
+
+        if (!tmpTargets.Any())
+        {
+            return null;
+        }
+
+        Pawn result = tmpTargets.OrderBy(p => pawn.Position.DistanceToSquared(p.Position)).ThenBy(_ => Rand.Value).FirstOrDefault();
+        tmpTargets.Clear();
+        return result;
     }
 }

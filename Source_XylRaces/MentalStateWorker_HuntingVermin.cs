@@ -1,19 +1,15 @@
-﻿using Verse;
-using Verse.AI;
+﻿namespace XylXenos;
 
-namespace XylXenos
+[UsedFromXml]
+public class MentalStateWorker_HuntingVermin : MentalStateWorker
 {
-    [UsedFromXml]
-    public class MentalStateWorker_HuntingVermin : MentalStateWorker
+    public override bool StateCanOccur(Pawn pawn)
     {
-        public override bool StateCanOccur(Pawn pawn)
+        if (!base.StateCanOccur(pawn))
         {
-            if (!base.StateCanOccur(pawn))
-            {
-                return false;
-            }
-
-            return MentalState_HuntingVermin.FindPawnToKill(pawn) != null;
+            return false;
         }
+
+        return MentalState_HuntingVermin.FindPawnToKill(pawn) != null;
     }
 }

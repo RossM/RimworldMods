@@ -1,22 +1,19 @@
-﻿using Verse;
+﻿namespace XylXenos;
 
-namespace XylXenos
+[UsedFromXml]
+public class HediffCompProperties_Genetic : HediffCompProperties
 {
-    [UsedFromXml]
-    public class HediffCompProperties_Genetic : HediffCompProperties
+    public GeneDef gene;
+
+    public HediffCompProperties_Genetic()
     {
-        public GeneDef gene;
-
-        public HediffCompProperties_Genetic()
-        {
-            compClass = typeof(HediffComp_Genetic);
-        }
+        compClass = typeof(HediffComp_Genetic);
     }
+}
 
-    public class HediffComp_Genetic : HediffComp
-    {
-        public HediffCompProperties_Genetic Props => (HediffCompProperties_Genetic)props;
+public class HediffComp_Genetic : HediffComp
+{
+    public HediffCompProperties_Genetic Props => (HediffCompProperties_Genetic)props;
 
-        public override bool CompShouldRemove => !Pawn.HasActiveGene(Props.gene);
-    }
+    public override bool CompShouldRemove => !Pawn.HasActiveGene(Props.gene);
 }

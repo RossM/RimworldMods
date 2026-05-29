@@ -1,83 +1,76 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
-using UnityEngine;
-using Verse;
+﻿namespace XylXenos;
 
-namespace XylXenos
+[UsedFromXml]
+public class ScenPart_Psycast : ScenPart
 {
-    [UsedFromXml]
-    public class ScenPart_Psycast : ScenPart
+    private static IEnumerable<AbilityDef> PossiblePsycasts => possiblePsycastsInternal ??=
+        DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
+                abilityDef.verbProperties?.verbClass == typeof(Verb_CastPsycast))
+            .OrderBy(abilityDef => abilityDef.level)
+            .ThenBy(AbilityDef => AbilityDef.label).ToList();
+
+    private static List<AbilityDef> possiblePsycastsInternal;
+
+    public AbilityDef psycast;
+
+    public override void ExposeData()
     {
-        private static IEnumerable<AbilityDef> PossiblePsycasts => possiblePsycastsInternal ??=
-            DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
-                    abilityDef.verbProperties?.verbClass == typeof(Verb_CastPsycast))
-                .OrderBy(abilityDef => abilityDef.level)
-                .ThenBy(AbilityDef => AbilityDef.label).ToList();
+        base.ExposeData();
+        Scribe_Defs.Look(ref psycast, nameof(psycast));
+    }
 
-        private static List<AbilityDef> possiblePsycastsInternal;
+    public override void DoEditInterface(Listing_ScenEdit listing)
+    {
+        Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 2f + 1f);
 
-        public AbilityDef psycast;
+        var listing_Standard = new Listing_Standard();
+        listing_Standard.Begin(scenPartRect.TopHalf());
+        listing_Standard.ColumnWidth = scenPartRect.width;
+        listing_Standard.End();
 
-        public override void ExposeData()
+        if (!Widgets.ButtonText(scenPartRect.BottomHalf(), GetLabel(psycast)))
         {
-            base.ExposeData();
-            Scribe_Defs.Look(ref psycast, nameof(psycast));
+            return;
         }
 
-        public override void DoEditInterface(Listing_ScenEdit listing)
+        var list = new List<FloatMenuOption>();
+        foreach (AbilityDef item in PossiblePsycasts)
         {
-            Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 2f + 1f);
-
-            var listing_Standard = new Listing_Standard();
-            listing_Standard.Begin(scenPartRect.TopHalf());
-            listing_Standard.ColumnWidth = scenPartRect.width;
-            listing_Standard.End();
-
-            if (!Widgets.ButtonText(scenPartRect.BottomHalf(), GetLabel(psycast)))
-            {
-                return;
-            }
-
-            var list = new List<FloatMenuOption>();
-            foreach (AbilityDef item in PossiblePsycasts)
-            {
-                AbilityDef localDef = item;
-                list.Add(new FloatMenuOption(GetLabel(localDef), delegate { psycast = localDef; }));
-            }
-
-            Find.WindowStack.Add(new FloatMenu(list));
+            AbilityDef localDef = item;
+            list.Add(new FloatMenuOption(GetLabel(localDef), delegate { psycast = localDef; }));
         }
 
-        private string GetLabel(AbilityDef abilityDef)
-        {
-            return "XylScenPartPsycastLabel".Translate(abilityDef.label.CapitalizeFirst(), abilityDef.level);
-        }
+        Find.WindowStack.Add(new FloatMenu(list));
+    }
 
-        public override void Randomize()
-        {
-            psycast = PossiblePsycasts.RandomElement();
-        }
+    private string GetLabel(AbilityDef abilityDef)
+    {
+        return "XylScenPartPsycastLabel".Translate(abilityDef.label.CapitalizeFirst(), abilityDef.level);
+    }
 
-        public override bool HasNullDefs()
-        {
-            if (base.HasNullDefs())
-                return true;
-            return psycast == null;
-        }
+    public override void Randomize()
+    {
+        psycast = PossiblePsycasts.RandomElement();
+    }
 
-        public override void Notify_NewPawnGenerating(Pawn pawn, PawnGenerationContext context)
-        {
-            if (context != PawnGenerationContext.PlayerStarter)
-                return;
+    public override bool HasNullDefs()
+    {
+        if (base.HasNullDefs())
+            return true;
+        return psycast == null;
+    }
 
-            if (CanLearnPsycast(pawn, psycast))
-                pawn.abilities.GainAbility(psycast);
-        }
+    public override void Notify_NewPawnGenerating(Pawn pawn, PawnGenerationContext context)
+    {
+        if (context != PawnGenerationContext.PlayerStarter)
+            return;
 
-        private bool CanLearnPsycast(Pawn pawn, AbilityDef abilityDef)
-        {
-            return pawn.GetPsylinkLevel() >= abilityDef.level && pawn.abilities.GetAbility(abilityDef) == null;
-        }
+        if (CanLearnPsycast(pawn, psycast))
+            pawn.abilities.GainAbility(psycast);
+    }
+
+    private bool CanLearnPsycast(Pawn pawn, AbilityDef abilityDef)
+    {
+        return pawn.GetPsylinkLevel() >= abilityDef.level && pawn.abilities.GetAbility(abilityDef) == null;
     }
 }

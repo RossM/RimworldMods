@@ -1,7 +1,4 @@
-﻿using Verse;
-using Verse.AI;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 public abstract class JobDriver_InteractWithPawn : JobDriver
 {

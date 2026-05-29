@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
-using Verse;
-using XylXenos.Genes;
-
 namespace XylXenos;
 
 public static class FoodHelpers

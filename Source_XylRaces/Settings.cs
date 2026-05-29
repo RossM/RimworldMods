@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using HarmonyLib;
-using RimWorld;
-using UnityEngine;
-using Verse;
-using XylXenos.Genes;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 public class Settings : ModSettings
 {

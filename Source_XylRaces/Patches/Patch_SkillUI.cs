@@ -1,27 +1,21 @@
-﻿using System;
-using HarmonyLib;
-using RimWorld;
-using TranspilerUtil;
+﻿namespace XylXenos.Patches;
 
-namespace XylXenos.Patches
+[HarmonyPatch(typeof(SkillUI))]
+public static class Patch_SkillUI
 {
-    [HarmonyPatch(typeof(SkillUI))]
-    public static class Patch_SkillUI
+    [Feature(nameof(DefOf.XylLearnFactorPassionNone))]
+    [Feature(nameof(DefOf.XylLearnFactorPassionMinor))]
+    [Feature(nameof(DefOf.XylLearnFactorPassionMajor))]
+    [InfixPostfix(typeof(SkillUI), nameof(SkillUI.GetLearningFactor))]
+    [InfixPatch("GetSkillDescription")]
+    public static void GetLearningFactor_Postfix(Passion passion, SkillRecord sk, ref float __result)
     {
-        [Feature(nameof(DefOf.XylLearnFactorPassionNone))]
-        [Feature(nameof(DefOf.XylLearnFactorPassionMinor))]
-        [Feature(nameof(DefOf.XylLearnFactorPassionMajor))]
-        [InfixPostfix(typeof(SkillUI), nameof(SkillUI.GetLearningFactor))]
-        [InfixPatch("GetSkillDescription")]
-        public static void GetLearningFactor_Postfix(Passion passion, SkillRecord sk, ref float __result)
+        __result = passion switch
         {
-            __result = passion switch
-            {
-                Passion.None => sk.Pawn.GetStatValue(DefOf.XylLearnFactorPassionNone),
-                Passion.Minor => sk.Pawn.GetStatValue(DefOf.XylLearnFactorPassionMinor),
-                Passion.Major => sk.Pawn.GetStatValue(DefOf.XylLearnFactorPassionMajor),
-                _ => throw new ArgumentOutOfRangeException(nameof(passion), passion, null)
-            };
-        }
+            Passion.None => sk.Pawn.GetStatValue(DefOf.XylLearnFactorPassionNone),
+            Passion.Minor => sk.Pawn.GetStatValue(DefOf.XylLearnFactorPassionMinor),
+            Passion.Major => sk.Pawn.GetStatValue(DefOf.XylLearnFactorPassionMajor),
+            _ => throw new ArgumentOutOfRangeException(nameof(passion), passion, null)
+        };
     }
 }

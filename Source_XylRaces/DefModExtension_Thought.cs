@@ -1,11 +1,6 @@
-﻿using System.Collections.Generic;
-using RimWorld;
-using Verse;
+﻿namespace XylXenos;
 
-namespace XylXenos
+public class DefModExtension_Thought : DefModExtension
 {
-    public class DefModExtension_Thought : DefModExtension
-    {
-        public List<ThoughtDef> extraThoughts;
-    }
+    public List<ThoughtDef> extraThoughts;
 }

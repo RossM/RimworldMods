@@ -1,19 +1,14 @@
-﻿using HarmonyLib;
-using RimWorld;
-using Verse;
+﻿namespace XylXenos.Patches;
 
-namespace XylXenos.Patches
+[HarmonyPatch(typeof(DefGenerator))]
+public static class Patch_DefGenerator
 {
-    [HarmonyPatch(typeof(DefGenerator))]
-    public static class Patch_DefGenerator
+    [Feature(typeof(GeneDefGenerator))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(DefGenerator.GenerateImpliedDefs_PreResolve))]
+    public static void GenerateImpliedDefs_PreResolve_Postfix(bool hotReload)
     {
-        [Feature(typeof(GeneDefGenerator))]
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(DefGenerator.GenerateImpliedDefs_PreResolve))]
-        public static void GenerateImpliedDefs_PreResolve_Postfix(bool hotReload)
-        {
-            foreach (GeneDef def in GeneDefGenerator.ImpliedGeneDefs(hotReload))
-                DefGenerator.AddImpliedDef(def, hotReload);
-        }
+        foreach (GeneDef def in GeneDefGenerator.ImpliedGeneDefs(hotReload))
+            DefGenerator.AddImpliedDef(def, hotReload);
     }
 }

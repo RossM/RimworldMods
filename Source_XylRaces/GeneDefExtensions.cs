@@ -1,9 +1,3 @@
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
-using Verse;
-using XylXenos.Genes;
-
 namespace XylXenos;
 
 public static class GeneDefExtensions

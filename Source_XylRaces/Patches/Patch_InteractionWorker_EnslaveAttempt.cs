@@ -1,101 +1,94 @@
-﻿using System.Collections.Generic;
-using HarmonyLib;
-using RimWorld;
-using TranspilerUtil;
-using Verse;
+﻿namespace XylXenos.Patches;
 
-namespace XylXenos.Patches
+[HarmonyPatch(typeof(InteractionWorker_EnslaveAttempt))]
+public static class Patch_InteractionWorker_EnslaveAttempt
 {
-    [HarmonyPatch(typeof(InteractionWorker_EnslaveAttempt))]
-    public static class Patch_InteractionWorker_EnslaveAttempt
+    [Feature(nameof(DefOf.XylWillFallRate))]
+    [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+    [InfixPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
+    public static void GetStatValue_Postfix(StatDef stat, Pawn recipient, ref float __result)
     {
-        [Feature(nameof(DefOf.XylWillFallRate))]
-        [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
-        [InfixPatch(nameof(InteractionWorker_EnslaveAttempt.Interacted))]
-        public static void GetStatValue_Postfix(StatDef stat, Pawn recipient, ref float __result)
-        {
-            if (stat == StatDefOf.NegotiationAbility)
-                __result *= recipient.GetStatValue(DefOf.XylWillFallRate);
-        }
+        if (stat == StatDefOf.NegotiationAbility)
+            __result *= recipient.GetStatValue(DefOf.XylWillFallRate);
+    }
 
-        // TODO this does not do anything because it has no harmony attributes...
-        //[Feature(typeof(GeneDefExtension_WildMan))]
-        // ReSharper disable once UnusedMember.Global
-        public static bool Interacted_Prefix(
-            Pawn initiator,
-            Pawn recipient,
-            List<RulePackDef> extraSentencePacks,
-            out string letterText,
-            out string letterLabel,
-            out LetterDef letterDef,
-            out LookTargets lookTargets)
-        {
-            letterText = null;
-            letterLabel = null;
-            letterDef = null;
-            lookTargets = null;
+    // TODO this does not do anything because it has no harmony attributes...
+    //[Feature(typeof(GeneDefExtension_WildMan))]
+    // ReSharper disable once UnusedMember.Global
+    public static bool Interacted_Prefix(
+        Pawn initiator,
+        Pawn recipient,
+        List<RulePackDef> extraSentencePacks,
+        out string letterText,
+        out string letterLabel,
+        out LetterDef letterDef,
+        out LookTargets lookTargets)
+    {
+        letterText = null;
+        letterLabel = null;
+        letterDef = null;
+        lookTargets = null;
 
-            if (recipient.IsWildMan() &&
-                (recipient.Faction == null || !recipient.Faction.def.humanlikeFaction))
+        if (recipient.IsWildMan() &&
+            (recipient.Faction == null || !recipient.Faction.def.humanlikeFaction))
+        {
+            float tameChance;
+            if (initiator.InspirationDef == InspirationDefOf.Inspired_Taming)
             {
-                float tameChance;
-                if (initiator.InspirationDef == InspirationDefOf.Inspired_Taming)
+                tameChance = 1f;
+                initiator.mindState.inspirationHandler.EndInspiration(InspirationDefOf.Inspired_Taming);
+            }
+            else
+            {
+                tameChance = initiator.GetStatValue(StatDefOf.TameAnimalChance);
+                float statValue = recipient.GetStatValue(StatDefOf.Wildness);
+                tameChance *= InteractionWorker_RecruitAttempt.TameChanceFactorCurve_Wildness.Evaluate(statValue);
+                if (recipient.IsPrisonerInPrisonCell())
                 {
-                    tameChance = 1f;
-                    initiator.mindState.inspirationHandler.EndInspiration(InspirationDefOf.Inspired_Taming);
-                }
-                else
-                {
-                    tameChance = initiator.GetStatValue(StatDefOf.TameAnimalChance);
-                    float statValue = recipient.GetStatValue(StatDefOf.Wildness);
-                    tameChance *= InteractionWorker_RecruitAttempt.TameChanceFactorCurve_Wildness.Evaluate(statValue);
-                    if (recipient.IsPrisonerInPrisonCell())
-                    {
-                        tameChance *= 0.6f;
-                    }
-
-                    if (initiator.relations.DirectRelationExists(PawnRelationDefOf.Bond, recipient))
-                    {
-                        tameChance *= 4f;
-                    }
-
-                    if (initiator.Ideo != null && initiator.Ideo.IsVeneratedAnimal(recipient))
-                    {
-                        tameChance *= 2f;
-                    }
+                    tameChance *= 0.6f;
                 }
 
-                if (Rand.Chance(tameChance))
+                if (initiator.relations.DirectRelationExists(PawnRelationDefOf.Bond, recipient))
                 {
-                    if (GenGuest.TryEnslavePrisoner(initiator, recipient))
-                    {
-                        if (!letterLabel.NullOrEmpty())
-                        {
-                            letterDef = LetterDefOf.PositiveEvent;
-                        }
-
-                        letterLabel = "LetterLabelEnslavementSuccess".Translate() + ": " + recipient.LabelCap;
-                        letterText = "LetterEnslavementSuccess".Translate(initiator, recipient);
-                        letterDef = LetterDefOf.PositiveEvent;
-                        lookTargets = new LookTargets(recipient, initiator);
-                        if (initiator.InspirationDef == InspirationDefOf.Inspired_Taming)
-                        {
-                            initiator.mindState.inspirationHandler.EndInspiration(InspirationDefOf.Inspired_Taming);
-                        }
-
-                        extraSentencePacks.Add(RulePackDefOf.Sentence_RecruitAttemptAccepted);
-                    }
+                    tameChance *= 4f;
                 }
-                else
+
+                if (initiator.Ideo != null && initiator.Ideo.IsVeneratedAnimal(recipient))
                 {
-                    TaggedString taggedString = "TextMote_TameFail".Translate(tameChance.ToStringPercent());
-                    MoteMaker.ThrowText((initiator.DrawPos + recipient.DrawPos) / 2f, initiator.Map, taggedString, 8f);
-                    recipient.mindState.CheckStartMentalStateBecauseRecruitAttempted(initiator);
-                    extraSentencePacks.Add(RulePackDefOf.Sentence_RecruitAttemptRejected);
+                    tameChance *= 2f;
                 }
             }
 
-            return true;
+            if (Rand.Chance(tameChance))
+            {
+                if (GenGuest.TryEnslavePrisoner(initiator, recipient))
+                {
+                    if (!letterLabel.NullOrEmpty())
+                    {
+                        letterDef = LetterDefOf.PositiveEvent;
+                    }
+
+                    letterLabel = "LetterLabelEnslavementSuccess".Translate() + ": " + recipient.LabelCap;
+                    letterText = "LetterEnslavementSuccess".Translate(initiator, recipient);
+                    letterDef = LetterDefOf.PositiveEvent;
+                    lookTargets = new LookTargets(recipient, initiator);
+                    if (initiator.InspirationDef == InspirationDefOf.Inspired_Taming)
+                    {
+                        initiator.mindState.inspirationHandler.EndInspiration(InspirationDefOf.Inspired_Taming);
+                    }
+
+                    extraSentencePacks.Add(RulePackDefOf.Sentence_RecruitAttemptAccepted);
+                }
+            }
+            else
+            {
+                TaggedString taggedString = "TextMote_TameFail".Translate(tameChance.ToStringPercent());
+                MoteMaker.ThrowText((initiator.DrawPos + recipient.DrawPos) / 2f, initiator.Map, taggedString, 8f);
+                recipient.mindState.CheckStartMentalStateBecauseRecruitAttempted(initiator);
+                extraSentencePacks.Add(RulePackDefOf.Sentence_RecruitAttemptRejected);
+            }
         }
+
+        return true;
     }
 }

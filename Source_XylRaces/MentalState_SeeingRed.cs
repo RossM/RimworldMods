@@ -1,57 +1,51 @@
-﻿using RimWorld;
-using Verse;
-using Verse.AI;
-using XylXenos.Genes;
+﻿namespace XylXenos;
 
-namespace XylXenos
+public class MentalStateDefExtension_SeeingRed : DefModExtension
 {
-    public class MentalStateDefExtension_SeeingRed : DefModExtension
+    public string iconPath;
+}
+
+[UsedFromXml]
+public class MentalState_SeeingRed : MentalState
+{
+    public MentalStateDefExtension_SeeingRed DefExt => def.GetModExtension<MentalStateDefExtension_SeeingRed>();
+    private MoteBubble mote;
+
+    public override void ExposeData()
     {
-        public string iconPath;
+        base.ExposeData();
+        Scribe_References.Look(ref mote, nameof(mote));
     }
 
-    [UsedFromXml]
-    public class MentalState_SeeingRed : MentalState
+    public override bool ForceHostileTo(Thing t)
     {
-        public MentalStateDefExtension_SeeingRed DefExt => def.GetModExtension<MentalStateDefExtension_SeeingRed>();
-        private MoteBubble mote;
+        return pawn.HasActiveGeneOfType<SeeingRed>(g => g.ForceHostility(t));
+    }
 
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_References.Look(ref mote, nameof(mote));
-        }
+    public override RandomSocialMode SocialModeMax()
+    {
+        return RandomSocialMode.Off;
+    }
 
-        public override bool ForceHostileTo(Thing t)
-        {
-            return pawn.HasActiveGeneOfType<SeeingRed>(g => g.ForceHostility(t));
-        }
+    public override void PostStart(string reason)
+    {
+        base.PostStart(reason);
 
-        public override RandomSocialMode SocialModeMax()
-        {
-            return RandomSocialMode.Off;
-        }
+        if (!DefExt.iconPath.NullOrEmpty())
+            mote = MoteMaker.MakeThoughtBubble(pawn, DefExt.iconPath, maintain: false);
+    }
 
-        public override void PostStart(string reason)
-        {
-            base.PostStart(reason);
+    public override void MentalStateTick(int delta)
+    {
+        base.MentalStateTick(delta);
 
-            if (!DefExt.iconPath.NullOrEmpty())
-                mote = MoteMaker.MakeThoughtBubble(pawn, DefExt.iconPath, maintain: false);
-        }
+        mote?.Maintain();
+    }
 
-        public override void MentalStateTick(int delta)
-        {
-            base.MentalStateTick(delta);
+    public override void PostEnd()
+    {
+        base.PostEnd();
 
-            mote?.Maintain();
-        }
-
-        public override void PostEnd()
-        {
-            base.PostEnd();
-
-            mote?.Destroy();
-        }
+        mote?.Destroy();
     }
 }

@@ -1,6 +1,4 @@
-﻿using Verse;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 public class HediffWithCompsExt : HediffWithComps
 {

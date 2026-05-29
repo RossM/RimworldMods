@@ -1,126 +1,119 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Xml;
-using HarmonyLib;
-using TranspilerUtil;
-using UnityEngine;
-using Verse;
 
-namespace XylXenos
+namespace XylXenos;
+
+[UsedFromReflection]
+[StaticConstructorOnStartup]
+public class Main : Mod
 {
-    [UsedFromReflection]
-    [StaticConstructorOnStartup]
-    public class Main : Mod
+    // ReSharper disable PossibleNullReferenceException
+    private static Assembly MyAssembly => MethodBase.GetCurrentMethod().ReflectedType.Assembly;
+    // ReSharper restore PossibleNullReferenceException
+
+    static Main()
     {
-        // ReSharper disable PossibleNullReferenceException
-        private static Assembly MyAssembly => MethodBase.GetCurrentMethod().ReflectedType.Assembly;
-        // ReSharper restore PossibleNullReferenceException
+        CodingStyleChecks();
 
-        static Main()
+        var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
+
+        harmony.PatchAll();
+
+        InfixPatcher.PatchInfix(harmony, MyAssembly);
+
+        RegisterXmlLoaders();
+    }
+
+    public Main(ModContentPack content) : base(content)
+    {
+        Settings.instance = GetSettings<Settings>();
+    }
+
+    // This a stupid trick to add a custom XML parser to a type that should have one but doesn't.
+    private static void RegisterXmlLoaders()
+    {
+        XmlToObjectUtils.customDataLoadMethodCache[typeof(GeneticTraitData)]
+            = ((Action<GeneticTraitData, XmlNode>)GeneticTraitData_LoadDataFromXmlCustom).Method;
+    }
+
+    public static void GeneticTraitData_LoadDataFromXmlCustom(GeneticTraitData data, XmlNode xmlRoot)
+    {
+        if (xmlRoot.Name == "li")
         {
-            CodingStyleChecks();
-
-            var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
-
-            harmony.PatchAll();
-
-            InfixPatcher.PatchInfix(harmony, MyAssembly);
-
-            RegisterXmlLoaders();
+            DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(data, "def",
+                xmlRoot.ChildNodes.OfType<XmlNode>().Single(node => node.Name == "def").InnerText);
+            XmlNode degreeNode = xmlRoot.ChildNodes.OfType<XmlNode>().SingleOrDefault(node => node.Name == "degree");
+            if (degreeNode != null)
+                data.degree = ParseHelper.FromString<int>(degreeNode.InnerText);
         }
-
-        public Main(ModContentPack content) : base(content)
+        else
         {
-            Settings.instance = GetSettings<Settings>();
+            DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(data, "def", xmlRoot.Name);
+            if (xmlRoot.HasChildNodes)
+                data.degree = ParseHelper.FromString<int>(xmlRoot.FirstChild.Value);
         }
+    }
 
-        // This a stupid trick to add a custom XML parser to a type that should have one but doesn't.
-        private static void RegisterXmlLoaders()
+    private static void CodingStyleChecks()
+    {
+        Assembly assembly = MyAssembly;
+        foreach (TypeInfo type in assembly.DefinedTypes)
         {
-            XmlToObjectUtils.customDataLoadMethodCache[typeof(GeneticTraitData)]
-                = ((Action<GeneticTraitData, XmlNode>)GeneticTraitData_LoadDataFromXmlCustom).Method;
-        }
+            if (!Attribute.IsDefined(type, typeof(HarmonyPatch)))
+                continue;
 
-        public static void GeneticTraitData_LoadDataFromXmlCustom(GeneticTraitData data, XmlNode xmlRoot)
-        {
-            if (xmlRoot.Name == "li")
+            foreach (MethodInfo method in type.DeclaredMethods)
             {
-                DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(data, "def",
-                    xmlRoot.ChildNodes.OfType<XmlNode>().Single(node => node.Name == "def").InnerText);
-                XmlNode degreeNode = xmlRoot.ChildNodes.OfType<XmlNode>().SingleOrDefault(node => node.Name == "degree");
-                if (degreeNode != null)
-                    data.degree = ParseHelper.FromString<int>(degreeNode.InnerText);
-            }
-            else
-            {
-                DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(data, "def", xmlRoot.Name);
-                if (xmlRoot.HasChildNodes)
-                    data.degree = ParseHelper.FromString<int>(xmlRoot.FirstChild.Value);
-            }
-        }
+                var hasFeature = method.HasAttribute<FeatureAttribute>();
+                var hasPrefix = method.HasAttribute<HarmonyPrefix>();
+                var hasPostfix = method.HasAttribute<HarmonyPostfix>();
+                var hasTranspiler = method.HasAttribute<HarmonyTranspiler>();
+                var hasInfixPatch = method.HasAttribute<InfixPatchAttribute>();
+                var hasInfixPrefix = method.HasAttribute<InfixPrefixAttribute>();
+                var hasInfixPostfix = method.HasAttribute<InfixPostfixAttribute>();
 
-        private static void CodingStyleChecks()
-        {
-            Assembly assembly = MyAssembly;
-            foreach (TypeInfo type in assembly.DefinedTypes)
-            {
-                if (!Attribute.IsDefined(type, typeof(HarmonyPatch)))
-                    continue;
+                if ((hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && !hasFeature)
+                    Log.Warning($"{type.Name}::{method.Name} is missing a [Feature] attribute");
+                if (!(hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && hasFeature)
+                    Log.Warning($"{type.Name}::{method.Name} has [Feature] but no Harmony attribute");
 
-                foreach (MethodInfo method in type.DeclaredMethods)
+                if (hasInfixPatch != (hasInfixPrefix || hasInfixPostfix))
+                    Log.Warning(
+                        $"{type.Name}::{method.Name} has should have both [InfixPatch] and one of [InfixPrefix] or [InfixPostfix]");
+
+                if ((hasPrefix || hasInfixPrefix) && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
+                    Log.Warning($"{type.Name}::{method.Name} should be named with _Prefix");
+                if ((hasPostfix || hasInfixPostfix) && !(method.Name == "Postfix" || method.Name.EndsWith("_Postfix")))
+                    Log.Warning($"{type.Name}::{method.Name} should be named with _Postfix");
+                if (hasTranspiler && !(method.Name == "Transpiler" || method.Name.EndsWith("_Transpiler")))
+                    Log.Warning($"{type.Name}::{method.Name} should be named with _Transpiler");
+
+                var parameters = method.GetParameters();
+                ParameterInfo resultParameter = parameters.SingleOrDefault(p => p.Name == "__result");
+                if (hasPrefix || hasInfixPrefix)
                 {
-                    var hasFeature = method.HasAttribute<FeatureAttribute>();
-                    var hasPrefix = method.HasAttribute<HarmonyPrefix>();
-                    var hasPostfix = method.HasAttribute<HarmonyPostfix>();
-                    var hasTranspiler = method.HasAttribute<HarmonyTranspiler>();
-                    var hasInfixPatch = method.HasAttribute<InfixPatchAttribute>();
-                    var hasInfixPrefix = method.HasAttribute<InfixPrefixAttribute>();
-                    var hasInfixPostfix = method.HasAttribute<InfixPostfixAttribute>();
+                    if (resultParameter?.IsOut == false)
+                        Log.Warning($"{type.Name}::{method.Name} should use 'out' for __result");
+                    if (method.ReturnType.IsVoid() && resultParameter != null)
+                        Log.Warning($"{type.Name}::{method.Name} returns void but uses __result");
+                }
 
-                    if ((hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && !hasFeature)
-                        Log.Warning($"{type.Name}::{method.Name} is missing a [Feature] attribute");
-                    if (!(hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && hasFeature)
-                        Log.Warning($"{type.Name}::{method.Name} has [Feature] but no Harmony attribute");
-
-                    if (hasInfixPatch != (hasInfixPrefix || hasInfixPostfix))
-                        Log.Warning(
-                            $"{type.Name}::{method.Name} has should have both [InfixPatch] and one of [InfixPrefix] or [InfixPostfix]");
-
-                    if ((hasPrefix || hasInfixPrefix) && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
-                        Log.Warning($"{type.Name}::{method.Name} should be named with _Prefix");
-                    if ((hasPostfix || hasInfixPostfix) && !(method.Name == "Postfix" || method.Name.EndsWith("_Postfix")))
-                        Log.Warning($"{type.Name}::{method.Name} should be named with _Postfix");
-                    if (hasTranspiler && !(method.Name == "Transpiler" || method.Name.EndsWith("_Transpiler")))
-                        Log.Warning($"{type.Name}::{method.Name} should be named with _Transpiler");
-
-                    var parameters = method.GetParameters();
-                    ParameterInfo resultParameter = parameters.SingleOrDefault(p => p.Name == "__result");
-                    if (hasPrefix || hasInfixPrefix)
-                    {
-                        if (resultParameter?.IsOut == false)
-                            Log.Warning($"{type.Name}::{method.Name} should use 'out' for __result");
-                        if (method.ReturnType.IsVoid() && resultParameter != null)
-                            Log.Warning($"{type.Name}::{method.Name} returns void but uses __result");
-                    }
-
-                    if (hasPostfix || hasInfixPostfix)
-                    {
-                        if (resultParameter is { ParameterType.IsByRef: false })
-                            Log.Warning($"{type.Name}::{method.Name} has a non-ref __result");
-                    }
+                if (hasPostfix || hasInfixPostfix)
+                {
+                    if (resultParameter is { ParameterType.IsByRef: false })
+                        Log.Warning($"{type.Name}::{method.Name} has a non-ref __result");
                 }
             }
         }
+    }
 
-        public override void DoSettingsWindowContents(Rect inRect)
-        {
-            Settings.instance.DoSettingsWindowContents(inRect);
-        }
+    public override void DoSettingsWindowContents(Rect inRect)
+    {
+        Settings.instance.DoSettingsWindowContents(inRect);
+    }
 
-        public override string SettingsCategory()
-        {
-            return Content.Name;
-        }
+    public override string SettingsCategory()
+    {
+        return Content.Name;
     }
 }

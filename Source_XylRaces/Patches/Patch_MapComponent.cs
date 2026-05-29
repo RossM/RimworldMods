@@ -1,27 +1,23 @@
-﻿using HarmonyLib;
-using Verse;
+﻿namespace XylXenos.Patches;
 
-namespace XylXenos.Patches
+[HarmonyPatch(typeof(MapComponent))]
+public static class Patch_MapComponent
 {
-    [HarmonyPatch(typeof(MapComponent))]
-    public static class Patch_MapComponent
+    [Feature(typeof(NotificationManager))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(MapComponent.FinalizeInit))]
+    public static void FinalizeInit_Postfix(MapComponent __instance)
     {
-        [Feature(typeof(NotificationManager))]
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(MapComponent.FinalizeInit))]
-        public static void FinalizeInit_Postfix(MapComponent __instance)
-        {
-            if (__instance is INotificationListener target)
-                target.RegisterWith(NotificationManager.Instance);
-        }
+        if (__instance is INotificationListener target)
+            target.RegisterWith(NotificationManager.Instance);
+    }
 
-        [Feature(typeof(NotificationManager))]
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(MapComponent.MapRemoved))]
-        public static void MapRemoved_Postfix(MapComponent __instance)
-        {
-            if (__instance is INotificationListener target)
-                NotificationManager.Instance.UnregisterAll(target);
-        }
+    [Feature(typeof(NotificationManager))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(MapComponent.MapRemoved))]
+    public static void MapRemoved_Postfix(MapComponent __instance)
+    {
+        if (__instance is INotificationListener target)
+            NotificationManager.Instance.UnregisterAll(target);
     }
 }

@@ -1,55 +1,50 @@
-﻿using RimWorld;
-using Verse;
-using Verse.AI;
+﻿namespace XylXenos;
 
-namespace XylXenos
+[UsedFromXml]
+public class JobGiver_SeeingRed : ThinkNode_JobGiver
 {
-    [UsedFromXml]
-    public class JobGiver_SeeingRed : ThinkNode_JobGiver
+    private const int MinMeleeChaseTicks = 420;
+
+    private const int MaxMeleeChaseTicks = 900;
+
+    private float maxAttackDistance = 40f;
+
+    protected override Job TryGiveJob(Pawn pawn)
     {
-        private const int MinMeleeChaseTicks = 420;
-
-        private const int MaxMeleeChaseTicks = 900;
-
-        private float maxAttackDistance = 40f;
-
-        protected override Job TryGiveJob(Pawn pawn)
+        if (pawn.TryGetAttackVerb(null) == null)
         {
-            if (pawn.TryGetAttackVerb(null) == null)
-            {
-                return null;
-            }
-
-            Thing thing = FindAttackTarget(pawn);
-            if (thing != null)
-            {
-                Job job = JobMaker.MakeJob(JobDefOf.AttackMelee, thing);
-                job.maxNumMeleeAttacks = 1;
-                job.expiryInterval = Rand.Range(MinMeleeChaseTicks, MaxMeleeChaseTicks);
-                job.canBashDoors = true;
-                return job;
-            }
-
             return null;
         }
 
-        private Thing FindAttackTarget(Pawn pawn)
+        Thing thing = FindAttackTarget(pawn);
+        if (thing != null)
         {
-            return (Thing)AttackTargetFinder.BestAttackTarget(pawn, TargetScanFlags.NeedReachable, IsGoodTarget, 0f, maxAttackDistance,
-                canBashDoors: true);
+            Job job = JobMaker.MakeJob(JobDefOf.AttackMelee, thing);
+            job.maxNumMeleeAttacks = 1;
+            job.expiryInterval = Rand.Range(MinMeleeChaseTicks, MaxMeleeChaseTicks);
+            job.canBashDoors = true;
+            return job;
         }
 
-        protected virtual bool IsGoodTarget(Thing thing)
-        {
-            return thing is Pawn { Spawned: true, Downed: false } pawn && !pawn.IsPsychologicallyInvisible() ||
-                   thing is Building { Spawned: true } building && building.def.building.IsTurret;
-        }
+        return null;
+    }
 
-        public override ThinkNode DeepCopy(bool resolve = true)
-        {
-            var obj = (JobGiver_SeeingRed)base.DeepCopy(resolve);
-            obj.maxAttackDistance = maxAttackDistance;
-            return obj;
-        }
+    private Thing FindAttackTarget(Pawn pawn)
+    {
+        return (Thing)AttackTargetFinder.BestAttackTarget(pawn, TargetScanFlags.NeedReachable, IsGoodTarget, 0f, maxAttackDistance,
+            canBashDoors: true);
+    }
+
+    protected virtual bool IsGoodTarget(Thing thing)
+    {
+        return thing is Pawn { Spawned: true, Downed: false } pawn && !pawn.IsPsychologicallyInvisible() ||
+               thing is Building { Spawned: true } building && building.def.building.IsTurret;
+    }
+
+    public override ThinkNode DeepCopy(bool resolve = true)
+    {
+        var obj = (JobGiver_SeeingRed)base.DeepCopy(resolve);
+        obj.maxAttackDistance = maxAttackDistance;
+        return obj;
     }
 }

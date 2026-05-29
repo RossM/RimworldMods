@@ -1,283 +1,272 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using LudeonTK;
-using RimWorld;
-using UnityEngine;
-using Verse;
-using XylXenos.Genes;
+﻿namespace XylXenos;
 
-namespace XylXenos
+public interface INotificationListener
 {
-    public interface INotificationListener
+    public void RegisterWith(NotificationManager manager);
+}
+
+public enum NotificationEvent
+{
+    PreDamageTaken,
+    PostGenesChanged,
+
+    // PostHediffsChanged and PostHediffStateChange are generally both called when a pawn's hediffs change, but
+    // PostHediffsChanged is called as soon as the HediffSet is updated, while PostHediffStateChange is called
+    // slightly later when the game is checking for the results of the changes. I'm not sure if having both is
+    // really necessary but out of caution I'm leaving them both here for now.
+    PostHediffsChanged,
+    PostHediffStateChange,
+    PostApparelChanged,
+    PostSatisfyGenes,
+    PostDiscard,
+    PostPostMake,
+    PostLoadedGame,
+    PostGameDispose,
+}
+
+/// <summary>
+///     This enables listeners to register for global or pawn-specific callbacks which are triggered by patched
+///     hooks. This makes it easy to write genes, hediffs, ThingComps, and so on that react to events without
+///     needing specific patches to wire the correct events to each listener. Implement
+///     <see cref="INotificationListener" />
+///     and register for the needed callbacks in <see cref="INotificationListener.RegisterWith" />.
+/// </summary>
+[UsedFromReflection]
+public class NotificationManager : GameComponent
+{
+    private class EventInfo
     {
-        public void RegisterWith(NotificationManager manager);
+        public readonly List<CallbackInfo> globalCallbacks = [];
+        public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
     }
 
-    public enum NotificationEvent
+    private class RegistrationInfo(NotificationEvent eventType, Thing target)
     {
-        PreDamageTaken,
-        PostGenesChanged,
-
-        // PostHediffsChanged and PostHediffStateChange are generally both called when a pawn's hediffs change, but
-        // PostHediffsChanged is called as soon as the HediffSet is updated, while PostHediffStateChange is called
-        // slightly later when the game is checking for the results of the changes. I'm not sure if having both is
-        // really necessary but out of caution I'm leaving them both here for now.
-        PostHediffsChanged,
-        PostHediffStateChange,
-        PostApparelChanged,
-        PostSatisfyGenes,
-        PostDiscard,
-        PostPostMake,
-        PostLoadedGame,
-        PostGameDispose,
+        public readonly NotificationEvent eventType = eventType;
+        public readonly bool isGlobal = target == null;
+        public readonly System.WeakReference<Thing> target = target == null ? null : new(target);
     }
 
-    /// <summary>
-    ///     This enables listeners to register for global or pawn-specific callbacks which are triggered by patched
-    ///     hooks. This makes it easy to write genes, hediffs, ThingComps, and so on that react to events without
-    ///     needing specific patches to wire the correct events to each listener. Implement
-    ///     <see cref="INotificationListener" />
-    ///     and register for the needed callbacks in <see cref="INotificationListener.RegisterWith" />.
-    /// </summary>
-    [UsedFromReflection]
-    public class NotificationManager : GameComponent
+    public struct CallbackInfo
     {
-        private class EventInfo
+        public Delegate wrappedCallback;
+        public INotificationListener listener;
+        public string name;
+    }
+
+    public static NotificationManager Instance => Current.Game.GetComponent<NotificationManager>();
+    private static bool doDebug = false;
+
+    private readonly EventInfo[] events = new EventInfo[Enum.GetValues(typeof(NotificationEvent)).Length];
+
+    private readonly ConditionalWeakTable<INotificationListener, List<RegistrationInfo>> registeredEvents = new();
+
+    public NotificationManager(Game _)
+    {
+    }
+
+    [DebugAction(allowedGameStates = 0)]
+    public static void ToggleNotificationManagerLogging()
+    {
+        doDebug = !doDebug;
+    }
+
+    private void RegisterInternal<T>(
+        NotificationEvent eventType,
+        Thing target,
+        Action<Thing, T> callback,
+        object source,
+        string name)
+    {
+        if (source is not INotificationListener listener)
+            throw new InvalidOperationException("Only an INotificationListener can register for notifications");
+
+        if (doDebug)
+            Debug.Log(
+                $"Register eventType={eventType} {(target == null ? "global" : $"target={target}")} listener={listener} name={name}");
+
+        var records = registeredEvents.GetOrCreateValue(listener);
+        records.Add(new(eventType, target));
+
+        EventInfo eventInfo = events[(int)eventType] ??= new();
+
+        CallbackInfo callbackInfo = new() { wrappedCallback = callback, listener = listener, name = name };
+
+        if (target == null)
         {
-            public readonly List<CallbackInfo> globalCallbacks = [];
-            public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
-        }
-
-        private class RegistrationInfo(NotificationEvent eventType, Thing target)
-        {
-            public readonly NotificationEvent eventType = eventType;
-            public readonly bool isGlobal = target == null;
-            public readonly System.WeakReference<Thing> target = target == null ? null : new(target);
-        }
-
-        public struct CallbackInfo
-        {
-            public Delegate wrappedCallback;
-            public INotificationListener listener;
-            public string name;
-        }
-
-        public static NotificationManager Instance => Current.Game.GetComponent<NotificationManager>();
-        private static bool doDebug = false;
-
-        private readonly EventInfo[] events = new EventInfo[Enum.GetValues(typeof(NotificationEvent)).Length];
-
-        private readonly ConditionalWeakTable<INotificationListener, List<RegistrationInfo>> registeredEvents = new();
-
-        public NotificationManager(Game _)
-        {
-        }
-
-        [DebugAction(allowedGameStates = 0)]
-        public static void ToggleNotificationManagerLogging()
-        {
-            doDebug = !doDebug;
-        }
-
-        private void RegisterInternal<T>(
-            NotificationEvent eventType,
-            Thing target,
-            Action<Thing, T> callback,
-            object source,
-            string name)
-        {
-            if (source is not INotificationListener listener)
-                throw new InvalidOperationException("Only an INotificationListener can register for notifications");
-
-            if (doDebug)
-                Debug.Log(
-                    $"Register eventType={eventType} {(target == null ? "global" : $"target={target}")} listener={listener} name={name}");
-
-            var records = registeredEvents.GetOrCreateValue(listener);
-            records.Add(new(eventType, target));
-
-            EventInfo eventInfo = events[(int)eventType] ??= new();
-
-            CallbackInfo callbackInfo = new() { wrappedCallback = callback, listener = listener, name = name };
-
-            if (target == null)
+            if (eventInfo.globalCallbacks.Any(c => c.listener == listener && c.name == name))
             {
-                if (eventInfo.globalCallbacks.Any(c => c.listener == listener && c.name == name))
-                {
-                    Log.Warning(
-                        $"Adding a duplicate callback: type={eventType} global listener={listener} name={name}");
-                    return;
-                }
-
-                eventInfo.globalCallbacks.Add(callbackInfo);
+                Log.Warning(
+                    $"Adding a duplicate callback: type={eventType} global listener={listener} name={name}");
+                return;
             }
+
+            eventInfo.globalCallbacks.Add(callbackInfo);
+        }
+        else
+        {
+            List<CallbackInfo> localCallbacks = eventInfo.localCallbacks.GetOrCreateValue(target);
+            if (localCallbacks.Any(c => c.listener == listener && c.name == name))
+            {
+                Log.Warning(
+                    $"Adding a duplicate callback: type={eventType} target={target} listener={listener} name={name}");
+                return;
+            }
+
+            localCallbacks.Add(callbackInfo);
+        }
+    }
+
+    public void Register<T>(NotificationEvent eventType, Thing target, Action<Thing, T> callback)
+    {
+        RegisterInternal(eventType, target, callback, callback.Target, callback.Method.Name);
+    }
+
+    public void Register<T>(NotificationEvent eventType, Thing target, Action<T> callback)
+    {
+        RegisterInternal<T>(eventType, target, (_, data) => callback(data), callback.Target, callback.Method.Name);
+    }
+
+    // ReSharper disable once UnusedMember.Global
+    public void Register(NotificationEvent eventType, Thing target, Action<Thing> callback)
+    {
+        RegisterInternal<object>(eventType, target, (t, _) => callback(t), callback.Target, callback.Method.Name);
+    }
+
+    public void Register(NotificationEvent eventType, Thing target, Action callback)
+    {
+        RegisterInternal<object>(eventType, target, (_, _) => callback(), callback.Target, callback.Method.Name);
+    }
+
+    public void UnregisterAll(INotificationListener listener)
+    {
+        if (!registeredEvents.TryGetValue(listener, out List<RegistrationInfo> records))
+            return;
+
+        foreach (var record in records)
+        {
+            if (record.isGlobal)
+                events[(int)record.eventType]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
             else
             {
-                List<CallbackInfo> localCallbacks = eventInfo.localCallbacks.GetOrCreateValue(target);
-                if (localCallbacks.Any(c => c.listener == listener && c.name == name))
-                {
-                    Log.Warning(
-                        $"Adding a duplicate callback: type={eventType} target={target} listener={listener} name={name}");
-                    return;
-                }
+                if (!record.target.TryGetTarget(out Thing target))
+                    continue;
 
-                localCallbacks.Add(callbackInfo);
+                if (events[(int)record.eventType]?.localCallbacks?.TryGetValue(target, out var callbacks) == true)
+                    callbacks.RemoveAll(callback => callback.listener == listener);
             }
         }
 
-        public void Register<T>(NotificationEvent eventType, Thing target, Action<Thing, T> callback)
+        registeredEvents.Remove(listener);
+    }
+
+    public void Notify(NotificationEvent eventType, Thing target, object data = null)
+    {
+        if (Scribe.mode != LoadSaveMode.Inactive)
+            return;
+
+        if (doDebug)
+            Debug.Log($"Notify eventType={eventType} target={target} data={data}");
+
+        EventInfo eventInfo = events[(int)eventType];
+        if (eventInfo == null)
+            return;
+
+        foreach (CallbackInfo callbackInfo in eventInfo.globalCallbacks)
         {
-            RegisterInternal(eventType, target, callback, callback.Target, callback.Method.Name);
+            DoNotify(callbackInfo, target, data, eventType);
         }
 
-        public void Register<T>(NotificationEvent eventType, Thing target, Action<T> callback)
+        if (target == null)
+            return;
+
+        if (eventInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbackInfos))
         {
-            RegisterInternal<T>(eventType, target, (_, data) => callback(data), callback.Target, callback.Method.Name);
-        }
-
-        // ReSharper disable once UnusedMember.Global
-        public void Register(NotificationEvent eventType, Thing target, Action<Thing> callback)
-        {
-            RegisterInternal<object>(eventType, target, (t, _) => callback(t), callback.Target, callback.Method.Name);
-        }
-
-        public void Register(NotificationEvent eventType, Thing target, Action callback)
-        {
-            RegisterInternal<object>(eventType, target, (_, _) => callback(), callback.Target, callback.Method.Name);
-        }
-
-        public void UnregisterAll(INotificationListener listener)
-        {
-            if (!registeredEvents.TryGetValue(listener, out List<RegistrationInfo> records))
-                return;
-
-            foreach (var record in records)
-            {
-                if (record.isGlobal)
-                    events[(int)record.eventType]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
-                else
-                {
-                    if (!record.target.TryGetTarget(out Thing target))
-                        continue;
-
-                    if (events[(int)record.eventType]?.localCallbacks?.TryGetValue(target, out var callbacks) == true)
-                        callbacks.RemoveAll(callback => callback.listener == listener);
-                }
-            }
-
-            registeredEvents.Remove(listener);
-        }
-
-        public void Notify(NotificationEvent eventType, Thing target, object data = null)
-        {
-            if (Scribe.mode != LoadSaveMode.Inactive)
-                return;
-
-            if (doDebug)
-                Debug.Log($"Notify eventType={eventType} target={target} data={data}");
-
-            EventInfo eventInfo = events[(int)eventType];
-            if (eventInfo == null)
-                return;
-
-            foreach (CallbackInfo callbackInfo in eventInfo.globalCallbacks)
+            foreach (CallbackInfo callbackInfo in callbackInfos)
             {
                 DoNotify(callbackInfo, target, data, eventType);
             }
+        }
+    }
 
-            if (target == null)
+    private static void DoNotify(CallbackInfo callbackInfo, Thing target, object data, NotificationEvent eventType)
+    {
+        switch (callbackInfo.listener)
+        {
+            // ReSharper disable SuspiciousTypeConversion.Global
+            case Thing { Destroyed: true }:
+            case ThingComp t when t.parent.Destroyed:
+            // ReSharper restore SuspiciousTypeConversion.Global
+            case MapComponent m when m.map.Disposed:
+            case GeneExt { Removed: true }:
+                Log.Warning($"A destroyed thing got an event: {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target})");
                 return;
-
-            if (eventInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbackInfos))
-            {
-                foreach (CallbackInfo callbackInfo in callbackInfos)
-                {
-                    DoNotify(callbackInfo, target, data, eventType);
-                }
-            }
         }
 
-        private static void DoNotify(CallbackInfo callbackInfo, Thing target, object data, NotificationEvent eventType)
+        if (doDebug)
+            Debug.Log($"  {callbackInfo.listener} : {callbackInfo.name}");
+
+        try
         {
-            switch (callbackInfo.listener)
-            {
-                // ReSharper disable SuspiciousTypeConversion.Global
-                case Thing { Destroyed: true }:
-                case ThingComp t when t.parent.Destroyed:
-                // ReSharper restore SuspiciousTypeConversion.Global
-                case MapComponent m when m.map.Disposed:
-                case GeneExt { Removed: true }:
-                    Log.Warning($"A destroyed thing got an event: {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target})");
-                    return;
-            }
-
-            if (doDebug)
-                Debug.Log($"  {callbackInfo.listener} : {callbackInfo.name}");
-
-            try
-            {
-                callbackInfo.wrappedCallback.DynamicInvoke(target, data);
-            }
-            catch (Exception exception)
-            {
-                if (Prefs.DevMode)
-                {
-                    Log.Error($"Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}): {exception}");
-                }
-                else if (callbackInfo.listener != null)
-                {
-                    Log.ErrorOnce(
-                        $"Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}). Suppressing further errors. Exception: {exception}",
-                        callbackInfo.listener.GetHashCode() ^ 0x1c502196);
-                }
-            }
+            callbackInfo.wrappedCallback.DynamicInvoke(target, data);
         }
-
-        private void CallRegistrationHandlers(object thing)
+        catch (Exception exception)
         {
-            if (thing is INotificationListener target)
-                target.RegisterWith(this);
-
-            switch (thing)
+            if (Prefs.DevMode)
             {
-                case HediffWithComps hediffWithComps:
-                {
-                    foreach (HediffComp comp in hediffWithComps.comps ?? Enumerable.Empty<HediffComp>())
-                        CallRegistrationHandlers(comp);
-                    break;
-                }
-                case Pawn pawn:
-                {
-                    foreach (Gene gene in pawn.genes?.GenesListForReading ?? Enumerable.Empty<Gene>())
-                        CallRegistrationHandlers(gene);
-                    foreach (Hediff hediff in pawn.health.hediffSet.hediffs ?? Enumerable.Empty<Hediff>())
-                        CallRegistrationHandlers(hediff);
-                    break;
-                }
+                Log.Error($"Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}): {exception}");
+            }
+            else if (callbackInfo.listener != null)
+            {
+                Log.ErrorOnce(
+                    $"Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}). Suppressing further errors. Exception: {exception}",
+                    callbackInfo.listener.GetHashCode() ^ 0x1c502196);
             }
         }
+    }
 
-        public static List<INotificationListener> extraListeners = [];
+    private void CallRegistrationHandlers(object thing)
+    {
+        if (thing is INotificationListener target)
+            target.RegisterWith(this);
 
-        public override void LoadedGame()
+        switch (thing)
         {
-            using var _ = new ProfileBlock();
-
-            foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
-                CallRegistrationHandlers(pawn);
-            foreach (var listener in extraListeners)
-                listener.RegisterWith(this);
-
-            foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
-                Notify(NotificationEvent.PostLoadedGame, pawn);
+            case HediffWithComps hediffWithComps:
+            {
+                foreach (HediffComp comp in hediffWithComps.comps ?? Enumerable.Empty<HediffComp>())
+                    CallRegistrationHandlers(comp);
+                break;
+            }
+            case Pawn pawn:
+            {
+                foreach (Gene gene in pawn.genes?.GenesListForReading ?? Enumerable.Empty<Gene>())
+                    CallRegistrationHandlers(gene);
+                foreach (Hediff hediff in pawn.health.hediffSet.hediffs ?? Enumerable.Empty<Hediff>())
+                    CallRegistrationHandlers(hediff);
+                break;
+            }
         }
+    }
 
-        public override void FinalizeInit()
-        {
-            foreach (var listener in extraListeners)
-                listener.RegisterWith(this);
-        }
+    public static List<INotificationListener> extraListeners = [];
+
+    public override void LoadedGame()
+    {
+        using var _ = new ProfileBlock();
+
+        foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
+            CallRegistrationHandlers(pawn);
+        foreach (var listener in extraListeners)
+            listener.RegisterWith(this);
+
+        foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
+            Notify(NotificationEvent.PostLoadedGame, pawn);
+    }
+
+    public override void FinalizeInit()
+    {
+        foreach (var listener in extraListeners)
+            listener.RegisterWith(this);
     }
 }

@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using Verse;
+﻿namespace XylXenos;
 
-namespace XylXenos
+public class DefModExtension_Chemical : DefModExtension
 {
-    public class DefModExtension_Chemical : DefModExtension
-    {
-        public List<GeneDef> requiredGenesAll;
-        public List<GeneDef> requiredGenesAny;
-        public List<GeneDef> prohibitedGenes;
-    }
+    public List<GeneDef> requiredGenesAll;
+    public List<GeneDef> requiredGenesAny;
+    public List<GeneDef> prohibitedGenes;
 }

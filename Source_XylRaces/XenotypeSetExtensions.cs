@@ -1,5 +1,3 @@
-using RimWorld;
-
 namespace XylXenos;
 
 public static class XenotypeSetExtensions

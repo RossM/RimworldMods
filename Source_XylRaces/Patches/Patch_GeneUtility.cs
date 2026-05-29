@@ -1,19 +1,13 @@
-﻿using HarmonyLib;
-using RimWorld;
-using Verse;
-using XylXenos.Genes;
+﻿namespace XylXenos.Patches;
 
-namespace XylXenos.Patches
+[HarmonyPatch(typeof(GeneUtility))]
+public static class Patch_GeneUtility
 {
-    [HarmonyPatch(typeof(GeneUtility))]
-    public static class Patch_GeneUtility
+    [Feature(nameof(DefExt.dietDependency))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(GeneUtility.SatisfyChemicalGenes))]
+    public static void SatisfyChemicalGenes_Postfix(Pawn pawn)
     {
-        [Feature(nameof(DefExt.dietDependency))]
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(GeneUtility.SatisfyChemicalGenes))]
-        public static void SatisfyChemicalGenes_Postfix(Pawn pawn)
-        {
-            NotificationManager.Instance.Notify(NotificationEvent.PostSatisfyGenes, pawn);
-        }
+        NotificationManager.Instance.Notify(NotificationEvent.PostSatisfyGenes, pawn);
     }
 }

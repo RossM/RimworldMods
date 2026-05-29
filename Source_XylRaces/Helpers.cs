@@ -1,31 +1,26 @@
-using System;
-using System.Runtime.CompilerServices;
-using Verse;
+namespace XylXenos;
 
-namespace XylXenos
+public readonly struct ProfileBlock : IDisposable
 {
-    public readonly struct ProfileBlock : IDisposable
+    public const bool GlobalEnabled = true;
+    private readonly bool _enabled;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ProfileBlock(bool enabled = GlobalEnabled, [CallerMemberName] string methodName = null)
     {
-        public const bool GlobalEnabled = true;
-        private readonly bool _enabled;
+        _enabled = enabled;
+        if (!_enabled)
+            return;
+        string label = methodName ?? "<Unknown>";
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ProfileBlock(bool enabled = GlobalEnabled, [CallerMemberName] string methodName = null)
-        {
-            _enabled = enabled;
-            if (!_enabled)
-                return;
-            string label = methodName ?? "<Unknown>";
+        DeepProfiler.Start(label);
+    }
 
-            DeepProfiler.Start(label);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Dispose()
-        {
-            if (!_enabled)
-                return;
-            DeepProfiler.End();
-        }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Dispose()
+    {
+        if (!_enabled)
+            return;
+        DeepProfiler.End();
     }
 }

@@ -1,22 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Verse;
+﻿namespace XylXenos;
 
-namespace XylXenos
+public class Config : Def
 {
-    public class Config : Def
+    public enum Feature
     {
-        public enum Feature
-        {
-            FixLactationBugs,
-            Joyless,
-            UIChange,
-        }
-
-        public static Config Instance => field ??= DefDatabase<Config>.AllDefs.Single();
-
-        public List<JobDef> wetnessGivingJobs;
-
-        [NoTranslate] public List<string> ignoreGenesFromMods;
+        FixLactationBugs,
+        Joyless,
+        UIChange,
     }
+
+    public static Config Instance => field ??= DefDatabase<Config>.AllDefs.Single();
+
+    public List<JobDef> wetnessGivingJobs;
+
+    [NoTranslate] public List<string> ignoreGenesFromMods;
 }

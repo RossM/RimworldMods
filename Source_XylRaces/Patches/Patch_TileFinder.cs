@@ -1,35 +1,31 @@
-﻿using System;
-using HarmonyLib;
-using RimWorld;
-using RimWorld.Planet;
+﻿using RimWorld.Planet;
 
-namespace XylXenos.Patches
+namespace XylXenos.Patches;
+
+[HarmonyPatch(typeof(TileFinder))]
+public static class Patch_TileFinder
 {
-    [HarmonyPatch(typeof(TileFinder))]
-    public static class Patch_TileFinder
+    [Feature(typeof(DefModExtension_Faction))]
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor), typeof(PlanetLayer), typeof(Faction), typeof(bool),
+        typeof(Predicate<PlanetTile>))]
+    public static void RandomSettlementTileFor_Prefix(
+        PlanetLayer layer,
+        Faction faction,
+        bool mustBeAutoChoosable,
+        ref Predicate<PlanetTile> extraValidator)
     {
-        [Feature(typeof(DefModExtension_Faction))]
-        [HarmonyPrefix]
-        [HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor), typeof(PlanetLayer), typeof(Faction), typeof(bool),
-            typeof(Predicate<PlanetTile>))]
-        public static void RandomSettlementTileFor_Prefix(
-            PlanetLayer layer,
-            Faction faction,
-            bool mustBeAutoChoosable,
-            ref Predicate<PlanetTile> extraValidator)
+        var extension = faction?.def?.GetModExtension<DefModExtension_Faction>();
+        if (extension == null)
+            return;
+
+        var oldValidator = extraValidator;
+        extraValidator = planetTile =>
         {
-            var extension = faction?.def?.GetModExtension<DefModExtension_Faction>();
-            if (extension == null)
-                return;
+            if (oldValidator != null && !oldValidator(planetTile))
+                return false;
 
-            var oldValidator = extraValidator;
-            extraValidator = planetTile =>
-            {
-                if (oldValidator != null && !oldValidator(planetTile))
-                    return false;
-
-                return extension.ValidatePlanetTile(planetTile);
-            };
-        }
+            return extension.ValidatePlanetTile(planetTile);
+        };
     }
 }
