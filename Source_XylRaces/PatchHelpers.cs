@@ -226,14 +226,16 @@ public static class PatchHelpers
 
     public static float GenerateDistinctiveFactionColor(Faction faction, IEnumerable<Faction> allFactions)
     {
+        const int candidateCount = 21;
+
         List<Color> factionColors = allFactions.Select(otherFaction => otherFaction.Color).ToList();
 
         float bestColorFromSpectrum = 0f;
         float bestDistanceMin = -1f;
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < candidateCount; i++)
         {
-            float colorFromSpectrum = Rand.Value;
+            float colorFromSpectrum = i / (float)(candidateCount - 1);
             float distanceMin = float.MaxValue;
             Color color = ColorsFromSpectrum.Get(faction.def.colorSpectrum, colorFromSpectrum);
 
