@@ -27,10 +27,11 @@ public class Settings : ModSettings
 
     public override void ExposeData()
     {
+        // ReSharper disable RedundantArgumentDefaultValue
         Scribe_Values.Look(ref allowBackerBackstories, nameof(allowBackerBackstories), ThreeStateMode.Sometimes);
-        // ReSharper disable once RedundantArgumentDefaultValue
         Scribe_Values.Look(ref fixLactationBugs, nameof(fixLactationBugs), ThreeStateMode.Always);
         Scribe_Values.Look(ref useDistinctiveFactionColors, nameof(useDistinctiveFactionColors), true);
+        // ReSharper restore RedundantArgumentDefaultValue
     }
 
     public void DoSettingsWindowContents(Rect inRect)
@@ -41,10 +42,16 @@ public class Settings : ModSettings
 
         EnumSetting<ThreeStateMode>(listing, nameof(allowBackerBackstories));
         EnumSetting<ThreeStateMode>(listing, nameof(fixLactationBugs));
-
-        listing.CheckboxLabeled("Use distinctive faction colors", ref useDistinctiveFactionColors);
+        BoolSetting(listing, nameof(useDistinctiveFactionColors));
 
         listing.End();
+    }
+
+    private void BoolSetting(Listing_Standard listing, string fieldName)
+    {
+        var valueRef = AccessTools.FieldRefAccess<bool>(GetType(), fieldName);
+
+        listing.CheckboxLabeled($"XylSettingDescription_{fieldName}".Translate(), ref valueRef(this), $"XylSettingTooltip_{fieldName}".Translate());
     }
 
     private void EnumSetting<T>(Listing_Standard listing, string fieldName)

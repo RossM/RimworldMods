@@ -45,7 +45,9 @@
   <XylSettingTooltip_fixLactationBugs>There are multiple bugs in the base game that make lactating characters eat more than expected, which can be a balance problem for Bossaps. This setting controls fixing those bugs to reduce the nutrition consumption for lactating characters.</XylSettingTooltip_fixLactationBugs>
   <XylSettingOption_fixLactationBugs_Always>All characters</XylSettingOption_fixLactationBugs_Always>
   <XylSettingOption_fixLactationBugs_Sometimes>Hyperlactating characters only</XylSettingOption_fixLactationBugs_Sometimes>
-  <XylSettingOption_fixLactationBugs_Never>Never</XylSettingOption_fixLactationBugs_Never>
+  <XylSettingOption_fixLactationBugs_Never>Never (not recommended)</XylSettingOption_fixLactationBugs_Never>
+  <XylSettingDescription_useDistinctiveFactionColors>More distinctive faction colors</XylSettingDescription_useDistinctiveFactionColors>
+  <XylSettingTooltip_useDistinctiveFactionColors>The way the game generates faction colors can sometimes assign very similar colors to different factions. This setting uses a different algorithm that tries to make the colors of all the factions more visually distinctive.</XylSettingTooltip_useDistinctiveFactionColors>
 
   <!-- Misc -->
   <XylWildPeople>wild people</XylWildPeople>
