@@ -24,6 +24,9 @@ namespace XylXenos
 
         public override void Notify_NewPawnGenerating(Pawn pawn, PawnGenerationContext context)
         {
+            if (context != PawnGenerationContext.PlayerStarter)
+                return;
+
             for (var i = 0; i < count; ++i)
             {
                 if (givePsycasts)

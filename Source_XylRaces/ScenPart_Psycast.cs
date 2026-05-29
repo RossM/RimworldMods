@@ -68,6 +68,9 @@ namespace XylXenos
 
         public override void Notify_NewPawnGenerating(Pawn pawn, PawnGenerationContext context)
         {
+            if (context != PawnGenerationContext.PlayerStarter)
+                return;
+
             if (CanLearnPsycast(pawn, psycast))
                 pawn.abilities.GainAbility(psycast);
         }
