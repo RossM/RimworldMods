@@ -93,6 +93,7 @@ public static class PatchHelpers
                 }
             }
         }
+
         if (!xenotypeDefExtension.disagreeingMemes.NullOrEmpty())
         {
             foreach (MemeDef meme in ideo.memes)
@@ -105,6 +106,7 @@ public static class PatchHelpers
                 }
             }
         }
+
         if (sb != null && !text.NullOrEmpty())
             sb.AppendInNewLine($" -  {"AbilityIdeoConvertBreakdownPawnIdeo".Translate(pawn.Named("PAWN"))}: {text}");
 
@@ -266,7 +268,6 @@ public static class PatchHelpers
 
         try
         {
-
             List<Faction> allFactions = Find.FactionManager.AllFactionsListForReading
                 .Where(faction => CanExistOnLayer(layer, faction.def)).ToList();
             List<Faction> shuffledFactions = allFactions.Where(faction => faction.def.colorSpectrum != null).ToList();
