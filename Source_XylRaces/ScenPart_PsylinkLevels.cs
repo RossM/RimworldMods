@@ -22,18 +22,14 @@ namespace XylXenos
             Scribe_Values.Look(ref givePsycasts, nameof(givePsycasts));
         }
 
-        public override void GenerateIntoMap(Map map)
+        public override void Notify_NewPawnGenerating(Pawn pawn, PawnGenerationContext context)
         {
             for (var i = 0; i < count; ++i)
             {
-                Pawn pawn = map.mapPawns.FreeColonists.RandomElementByWeight(PawnWeight);
-                if (pawn != null)
-                {
-                    if (givePsycasts)
-                        pawn.ChangePsylinkLevel(1, false);
-                    else
-                        ChangePsylinkLevelWithoutAbility(pawn, 1, false);
-                }
+                if (givePsycasts)
+                    pawn.ChangePsylinkLevel(1, false);
+                else
+                    ChangePsylinkLevelWithoutAbility(pawn, 1, false);
             }
         }
 
@@ -71,11 +67,6 @@ namespace XylXenos
                 mainPsylinkSource.def.maxSeverity);
         }
 
-        private static float PawnWeight(Pawn Pawn)
-        {
-            return (1 + Pawn.GetPsylinkLevel()) * Pawn.GetStatValue(StatDefOf.PsychicSensitivity);
-        }
-
         public override void DoEditInterface(Listing_ScenEdit listing)
         {
             Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 2f + 1f);
@@ -83,14 +74,6 @@ namespace XylXenos
             Widgets.TextFieldNumeric(scenPartRect, ref count, ref countBuf, 1, 10);
             scenPartRect.y += RowHeight;
             Widgets.CheckboxLabeled(scenPartRect, "Give psycasts", ref givePsycasts);
-        }
-
-        public override IEnumerable<string> GetSummaryListEntries(string tag)
-        {
-            if (tag == "PlayerStartsWith")
-            {
-                yield return $"{StatDefOf.Ability_RequiredPsylink.LabelCap} x{count}";
-            }
         }
     }
 }

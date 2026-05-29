@@ -17,15 +17,11 @@ namespace XylXenos
 
         private static List<AbilityDef> possiblePsycastsInternal;
 
-        public int count = 1;
         public AbilityDef psycast;
-
-        private string countBuf;
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref count, nameof(count));
             Scribe_Defs.Look(ref psycast, nameof(psycast));
         }
 
@@ -36,7 +32,6 @@ namespace XylXenos
             var listing_Standard = new Listing_Standard();
             listing_Standard.Begin(scenPartRect.TopHalf());
             listing_Standard.ColumnWidth = scenPartRect.width;
-            listing_Standard.TextFieldNumeric(ref count, ref countBuf, 1f);
             listing_Standard.End();
 
             if (!Widgets.ButtonText(scenPartRect.BottomHalf(), GetLabel(psycast)))
@@ -71,32 +66,15 @@ namespace XylXenos
             return psycast == null;
         }
 
-        public override void GenerateIntoMap(Map map)
+        public override void Notify_NewPawnGenerating(Pawn pawn, PawnGenerationContext context)
         {
-            for (var i = 0; i < count; i++)
-            {
-                if (!map.mapPawns.FreeColonists.Where(CanLearnPsycast).TryRandomElement(out Pawn pawn))
-                    return;
+            if (CanLearnPsycast(pawn, psycast))
                 pawn.abilities.GainAbility(psycast);
-            }
-        }
-
-        private bool CanLearnPsycast(Pawn pawn)
-        {
-            return CanLearnPsycast(pawn, psycast);
         }
 
         private bool CanLearnPsycast(Pawn pawn, AbilityDef abilityDef)
         {
             return pawn.GetPsylinkLevel() >= abilityDef.level && pawn.abilities.GetAbility(abilityDef) == null;
-        }
-
-        public override IEnumerable<string> GetSummaryListEntries(string tag)
-        {
-            if (tag == "PlayerStartsWith")
-            {
-                yield return $"{"XylPsycast".TranslateSimple().CapitalizeFirst()}: {psycast.LabelCap} x1";
-            }
         }
     }
 }

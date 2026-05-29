@@ -41,22 +41,18 @@
         </li>
         <li Class="XylXenos.ScenPart_Psycast">
           <def>XylPsycasts</def>
-          <count>1</count>
           <psycast>WordOfTrust</psycast>
         </li>
         <li Class="XylXenos.ScenPart_Psycast">
           <def>XylPsycasts</def>
-          <count>1</count>
           <psycast>WordOfJoy</psycast>
         </li>
         <li Class="XylXenos.ScenPart_Psycast">
           <def>XylPsycasts</def>
-          <count>1</count>
           <psycast>WordOfLove</psycast>
         </li>
         <li Class="XylXenos.ScenPart_Psycast">
           <def>XylPsycasts</def>
-          <count>1</count>
           <psycast>Waterskip</psycast>
         </li>
 
@@ -85,16 +81,6 @@
           <def>StartingThing_Defined</def>
           <thingDef>Gun_AssaultRifle</thingDef>
         </li>
-        <!--<li Class="ScenPart_StartingThing_Defined">
-          <def>StartingThing_Defined</def>
-          <thingDef>Apparel_Robe</thingDef>
-          <stuff>Hyperweave</stuff>
-        </li>
-        <li Class="ScenPart_StartingThing_Defined">
-          <def>StartingThing_Defined</def>
-          <thingDef>Apparel_HatHood</thingDef>
-          <stuff>Hyperweave</stuff>
-        </li>-->
         <li Class="ScenPart_StartingAnimal">
           <def>StartingAnimal</def>
           <count>1</count>
