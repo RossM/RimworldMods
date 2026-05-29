@@ -97,7 +97,7 @@ namespace XylXenos
             {
                 Messages.Message(
                     growthMode.message.Formatted(Pawn.Named("PAWN")),
-                    Pawn, 
+                    Pawn,
                     growthMode.messageType ?? MessageTypeDefOf.NegativeHealthEvent);
             }
         }
@@ -114,7 +114,7 @@ namespace XylXenos
             if (!DebugSettings.godMode)
                 yield break;
 
-            yield return new Command_Action()
+            yield return new Command_Action
             {
                 defaultLabel = "DEV: Toggle petrification growth state",
                 action = ChangeGrowthMode,

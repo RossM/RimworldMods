@@ -116,7 +116,7 @@ public static class FoodHelpers
 
     public static bool IsRawFoodOrCorpse(this ThingDef foodDef)
     {
-        return (foodDef.IsRawHumanFood() || foodDef.IsCorpse);
+        return foodDef.IsRawHumanFood() || foodDef.IsCorpse;
     }
 
     public static bool IsThoughtFromIngestionDisallowedByGenes(

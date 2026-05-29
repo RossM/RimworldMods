@@ -41,7 +41,8 @@ namespace XylXenos
 
         private static XenotypeDef GetRandomXenotype()
         {
-            HashSet<XenotypeDef> playerXenotypes = Faction.OfPlayer.GetPawns().Where(pawn => pawn.genes != null).Select(pawn => pawn.genes.Xenotype).ToHashSet();
+            HashSet<XenotypeDef> playerXenotypes = Faction.OfPlayer.GetPawns().Where(pawn => pawn.genes != null)
+                .Select(pawn => pawn.genes.Xenotype).ToHashSet();
             XenotypeDef xenotype = null;
             Dictionary<XenotypeDef, float> weights = new();
             foreach (var faction in Find.FactionManager.AllFactionsListForReading)

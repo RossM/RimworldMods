@@ -50,7 +50,8 @@ public class Settings : ModSettings
     {
         var valueRef = AccessTools.FieldRefAccess<bool>(GetType(), fieldName);
 
-        listing.CheckboxLabeled($"XylSettingDescription_{fieldName}".Translate(), ref valueRef(this), $"XylSettingTooltip_{fieldName}".Translate());
+        listing.CheckboxLabeled($"XylSettingDescription_{fieldName}".Translate(), ref valueRef(this),
+            $"XylSettingTooltip_{fieldName}".Translate());
     }
 
     private void EnumSetting<T>(Listing_Standard listing, string fieldName)

@@ -94,7 +94,8 @@ namespace XylXenos
                 throw new InvalidOperationException("Only an INotificationListener can register for notifications");
 
             if (doDebug)
-                Debug.Log($"Register eventType={eventType} {(target == null ? "global" : $"target={target}")} listener={listener} name={name}");
+                Debug.Log(
+                    $"Register eventType={eventType} {(target == null ? "global" : $"target={target}")} listener={listener} name={name}");
 
             var records = registeredEvents.GetOrCreateValue(listener);
             records.Add(new(eventType, target));

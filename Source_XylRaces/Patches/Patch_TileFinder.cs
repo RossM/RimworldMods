@@ -10,7 +10,8 @@ namespace XylXenos.Patches
     {
         [Feature(typeof(FactionDefExtension))]
         [HarmonyPrefix]
-        [HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor), typeof(PlanetLayer), typeof(Faction), typeof(bool), typeof(Predicate<PlanetTile>))]
+        [HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor), typeof(PlanetLayer), typeof(Faction), typeof(bool),
+            typeof(Predicate<PlanetTile>))]
         public static void RandomSettlementTileFor_Prefix(
             PlanetLayer layer,
             Faction faction,

@@ -22,7 +22,8 @@ namespace XylXenos.Genes
     [UsedImplicitly]
     public class BonusGenes : GeneExt
     {
-        [NotNull] public BonusGenesInfo BonusGenesInfo => DefExt.bonusGenes!;
+        [NotNull]
+        public BonusGenesInfo BonusGenesInfo => DefExt.bonusGenes!;
 
         public List<Gene> addedGenes = [];
 

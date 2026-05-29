@@ -23,7 +23,7 @@ namespace XylXenos.Patches
         {
             // ReSharper disable once SuspiciousTypeConversion.Global
             if (__instance is INotificationListener target)
-               NotificationManager.Instance.UnregisterAll(target);
+                NotificationManager.Instance.UnregisterAll(target);
         }
     }
 }

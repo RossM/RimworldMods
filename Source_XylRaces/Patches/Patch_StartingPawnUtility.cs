@@ -57,7 +57,8 @@ namespace XylXenos.Patches
 
         public static void GetExtraStartingItems(Pawn pawn, List<ThingDefCount> items)
         {
-            foreach (var item in pawn.genes.GenesListForReading.Where(gene => gene.Active).OfType<GeneExt>().SelectMany(gene => gene.GetStartingItems()))
+            foreach (var item in pawn.genes.GenesListForReading.Where(gene => gene.Active).OfType<GeneExt>()
+                         .SelectMany(gene => gene.GetStartingItems()))
             {
                 items.Add(item);
 

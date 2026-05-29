@@ -32,8 +32,8 @@ public static class Scribe_Ext
             }
         }
 
-        if ((lookMode == LookMode.Reference && Scribe.mode == LoadSaveMode.ResolvingCrossRefs) ||
-            (lookMode != LookMode.Reference && Scribe.mode == LoadSaveMode.LoadingVars))
+        if (lookMode == LookMode.Reference && Scribe.mode == LoadSaveMode.ResolvingCrossRefs ||
+            lookMode != LookMode.Reference && Scribe.mode == LoadSaveMode.LoadingVars)
         {
             valueTuples = [];
             if (listFirst != null && listSecond != null)

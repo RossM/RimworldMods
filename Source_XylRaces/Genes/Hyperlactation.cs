@@ -18,7 +18,8 @@ namespace XylXenos.Genes
 
     public class Hyperlactation : GeneExt
     {
-        [NotNull] public HyperlactationInfo HyperlactationInfo => DefExt.hyperlactation!;
+        [NotNull]
+        public HyperlactationInfo HyperlactationInfo => DefExt.hyperlactation!;
 
         public Texture2D ExtraIcon => DefExt.ExtraIcon;
 
@@ -27,7 +28,7 @@ namespace XylXenos.Genes
 
         public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / HyperlactationInfo.chargePerItem);
 
-        const int checkInterval = 60;
+        private const int checkInterval = 60;
         public bool allowMilking = true;
         public bool onlyMilkWhenFull = true;
 
@@ -139,7 +140,8 @@ namespace XylXenos.Genes
             soreness = -1;
             if (fullSinceTick == null)
                 return false;
-            soreness = Mathf.FloorToInt((float)(Find.TickManager.TicksGame - fullSinceTick.Value) / HyperlactationInfo.ticksPerSorenessStage);
+            soreness = Mathf.FloorToInt(
+                (float)(Find.TickManager.TicksGame - fullSinceTick.Value) / HyperlactationInfo.ticksPerSorenessStage);
             return true;
         }
 

@@ -71,7 +71,7 @@ namespace XylXenos
         {
             List<FactionRelation> factionRelations = Find.FactionManager.AllFactionsListForReading
                 .Where(item => !item.def.PermanentlyHostileTo(DefExt.faction))
-                .Select(item => new FactionRelation() { other = item, kind = FactionRelationKind.Neutral })
+                .Select(item => new FactionRelation { other = item, kind = FactionRelationKind.Neutral })
                 .ToList();
             Faction faction = FactionGenerator.NewGeneratedFactionWithRelations(DefExt.faction, factionRelations, hidden: true);
             faction.temporary = true;
@@ -91,9 +91,9 @@ namespace XylXenos
 
             for (int i = 0; i < count; i++)
             {
-                DevelopmentalStage stage = (Find.Storyteller.difficulty.ChildrenAllowed
-                    ? (DevelopmentalStage.Child | DevelopmentalStage.Adult)
-                    : DevelopmentalStage.Adult);
+                DevelopmentalStage stage = Find.Storyteller.difficulty.ChildrenAllowed
+                    ? DevelopmentalStage.Child | DevelopmentalStage.Adult
+                    : DevelopmentalStage.Adult;
                 List<TraitDef> traits = DefExt.forcedTraits.Where(t => Rand.Chance(t.chance)).Select(t => t.trait).ToList();
                 Pawn pawn = PawnGenerator.GeneratePawn(new(
                     kind: PawnKindDefOf.WildMan,

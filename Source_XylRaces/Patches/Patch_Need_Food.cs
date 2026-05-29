@@ -11,7 +11,7 @@ namespace XylXenos.Patches
         [Feature(Config.Feature.FixLactationBugs)]
         [InfixPostfix(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay))]
         [InfixPatch("FoodFallPerTickAssumingCategory")]
-        static void AddedNutritionPerDay_Postfix(HediffComp_Lactating __instance, ref float __result)
+        private static void AddedNutritionPerDay_Postfix(HediffComp_Lactating __instance, ref float __result)
         {
             if (Settings.instance.ShouldFixLactationBugsFor(__instance.Pawn))
                 __result = 0f;

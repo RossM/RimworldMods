@@ -14,7 +14,7 @@ namespace XylXenos
     [UsedFromXml]
     public class Hediff_DietDependency : HediffWithComps, INotificationListener
     {
-        enum Stages
+        private enum Stages
         {
             // ReSharper disable UnusedMember.Local
             Satisfied = 1,

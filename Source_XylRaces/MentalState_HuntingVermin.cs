@@ -10,7 +10,7 @@ namespace XylXenos
     [UsedImplicitly]
     public class MentalState_HuntingVermin : MentalState
     {
-        const int checkInterval = 120;
+        private const int checkInterval = 120;
 
         private static readonly List<Pawn> tmpTargets = [];
         public Pawn target;

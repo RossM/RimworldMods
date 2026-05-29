@@ -42,8 +42,8 @@ namespace XylXenos
                 float substituteLevel = pawn.health.capacities.GetLevel(DefExt.substituteCapacity);
                 active = DefExt.mode switch
                 {
-                    HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => (substituteLevel > originalLevel),
-                    HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => (substituteLevel < originalLevel),
+                    HediffDefExtension_SubstituteCapacity.SubstitutionMode.Maximum => substituteLevel > originalLevel,
+                    HediffDefExtension_SubstituteCapacity.SubstitutionMode.Minimum => substituteLevel < originalLevel,
                     _ => true
                 };
                 lastActiveCheckTick = curTick;
@@ -110,8 +110,8 @@ namespace XylXenos
 
         public TaggedString GetDescription()
         {
-            float modifier = (pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
-                              pawn.health.capacities.GetLevel(DefExt.originalCapacity));
+            float modifier = pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
+                             pawn.health.capacities.GetLevel(DefExt.originalCapacity);
             return
                 $"{LabelCap}: {DefExt.originalCapacity.LabelCap} -> {DefExt.substituteCapacity.LabelCap} ({modifier.ToStringPercentSigned()})";
         }

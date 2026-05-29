@@ -100,13 +100,15 @@ namespace XylXenos.Patches
             float baseValueFor = DefOf.XylSlaveRebellionMtbFactor.Worker.GetBaseValueFor(statRequest);
             ToStringNumberSense toStringNumberSense = DefOf.XylSlaveRebellionMtbFactor.toStringNumberSense;
             DefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor);
-            DefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense, stringBuilder);
+            DefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense,
+                stringBuilder);
 
             if (initiateSlaveRebellionMtbDays < 0)
             {
                 var def = pawn.ActiveDefExts().OrderBy(def => def.slaveRebellionThresholdDays).FirstOrDefault();
                 if (def is { slaveRebellionThresholdDays: < float.MaxValue })
-                    stringBuilder.AppendLine($"{def.parent?.LabelCap ?? "Genes".Translate().CapitalizeFirst()}: {"XylDocileThresholdReached".Translate(def.slaveRebellionThresholdDays)}");
+                    stringBuilder.AppendLine(
+                        $"{def.parent?.LabelCap ?? "Genes".Translate().CapitalizeFirst()}: {"XylDocileThresholdReached".Translate(def.slaveRebellionThresholdDays)}");
             }
 
             string period = initiateSlaveRebellionMtbDays < 0

@@ -44,7 +44,8 @@ namespace XylXenos
             if (!HasAnyOverride(target.Faction, source.Faction))
                 return false;
 
-            return targetPawn.IsColonyAnimal || targetPawn.GeneSet()?.disableHostilityFromFactions?.Any(factionDef => factionDef == source.Faction?.def) == true;
+            return targetPawn.IsColonyAnimal ||
+                   targetPawn.GeneSet()?.disableHostilityFromFactions?.Any(factionDef => factionDef == source.Faction?.def) == true;
         }
 
         public bool HasAnyOverride(Faction from, Faction to)

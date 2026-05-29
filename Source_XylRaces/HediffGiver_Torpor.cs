@@ -18,10 +18,11 @@ namespace XylXenos
                 pawn.GetStatValue(StatDefOf.ComfyTemperatureMin), comfyTemperatureImportance);
 
             float temperatureDifference = minimumTemperature - pawn.AmbientTemperature;
-            
-            float changePerDay = temperatureDifference * (temperatureDifference > 0 ? severityGainPerDayPerDegree : severityLossPerDayPerDegree);
-            
-            HealthUtility.AdjustSeverity(pawn, hediff, (60f / GenDate.TicksPerDay) * changePerDay);
+
+            float changePerDay = temperatureDifference *
+                                 (temperatureDifference > 0 ? severityGainPerDayPerDegree : severityLossPerDayPerDegree);
+
+            HealthUtility.AdjustSeverity(pawn, hediff, 60f / GenDate.TicksPerDay * changePerDay);
         }
     }
 }

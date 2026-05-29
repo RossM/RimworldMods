@@ -1,9 +1,9 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
+using HarmonyLib;
+using JetBrains.Annotations;
 using TranspilerUtil;
 using UnityEngine;
 using Verse;
@@ -31,19 +31,26 @@ namespace XylXenos
             RegisterXmlLoaders();
         }
 
+        public Main(ModContentPack content) : base(content)
+        {
+            Settings.instance = GetSettings<Settings>();
+        }
+
         // This a stupid trick to add a custom XML parser to a type that should have one but doesn't.
         private static void RegisterXmlLoaders()
         {
-            XmlToObjectUtils.customDataLoadMethodCache[typeof(GeneticTraitData)] = ((Action<GeneticTraitData, XmlNode>)GeneticTraitData_LoadDataFromXmlCustom).Method;
+            XmlToObjectUtils.customDataLoadMethodCache[typeof(GeneticTraitData)]
+                = ((Action<GeneticTraitData, XmlNode>)GeneticTraitData_LoadDataFromXmlCustom).Method;
         }
 
         public static void GeneticTraitData_LoadDataFromXmlCustom(GeneticTraitData data, XmlNode xmlRoot)
         {
             if (xmlRoot.Name == "li")
             {
-                DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(data, "def", xmlRoot.ChildNodes.OfType<XmlNode>().Single(node => node.Name == "def").InnerText);
+                DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(data, "def",
+                    xmlRoot.ChildNodes.OfType<XmlNode>().Single(node => node.Name == "def").InnerText);
                 XmlNode degreeNode = xmlRoot.ChildNodes.OfType<XmlNode>().SingleOrDefault(node => node.Name == "degree");
-                if (degreeNode  != null)
+                if (degreeNode != null)
                     data.degree = ParseHelper.FromString<int>(degreeNode.InnerText);
             }
             else
@@ -52,12 +59,6 @@ namespace XylXenos
                 if (xmlRoot.HasChildNodes)
                     data.degree = ParseHelper.FromString<int>(xmlRoot.FirstChild.Value);
             }
-        }
-
-        public Main(ModContentPack content) : base(content)
-        {
-            Settings.instance = GetSettings<Settings>();
-
         }
 
         private static void CodingStyleChecks()

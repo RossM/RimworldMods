@@ -6,9 +6,9 @@ using Verse;
 namespace XylXenos;
 
 /// <summary>
-/// Provides one shared helper object per pawn for state that is important for the mod but not appropriate to keep in
-/// a pawn ThingComp, such as lookup caches or gene-derived aggregate values. Use <see cref="Get"/> to retrieve a
-/// pawn's instance.
+///     Provides one shared helper object per pawn for state that is important for the mod but not appropriate to keep in
+///     a pawn ThingComp, such as lookup caches or gene-derived aggregate values. Use <see cref="Get" /> to retrieve a
+///     pawn's instance.
 /// </summary>
 public class PawnTracker<T>(Func<Pawn, T> makeFunc) : INotificationListener
 {

@@ -21,7 +21,8 @@ namespace XylXenos.Genes
 
     public class Flight : GeneExt
     {
-        [NotNull] public FlightInfo FlightInfo => DefExt.flight!;
+        [NotNull]
+        public FlightInfo FlightInfo => DefExt.flight!;
 
         public Texture2D ExtraIcon => DefExt.ExtraIcon;
         public bool autoFly = true;
@@ -63,7 +64,7 @@ namespace XylXenos.Genes
                     = $"{"ApparelRequirementDisabledLabel".Translate()}: {items.ToCommaList(useAnd: true).CapitalizeFirst()}\n\n";
             }
 
-            yield return new Command_ActionWithCooldown()
+            yield return new Command_ActionWithCooldown
             {
                 action = () => { pawn.flight.StartFlying(); },
                 defaultLabel = "XylCommandFlyLabel".TranslateSimple(),

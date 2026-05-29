@@ -43,11 +43,11 @@ namespace XylXenos
                 {
                     if (TProps.showTendQuality)
                     {
-                        var tendedLabel = ((parent.Part != null && parent.Part.def.IsSolid(parent.Part, Pawn.health.hediffSet.hediffs))
+                        var tendedLabel = parent.Part != null && parent.Part.def.IsSolid(parent.Part, Pawn.health.hediffSet.hediffs)
                             ? TProps.labelSolidTendedWell
-                            : (parent.Part is not { depth: BodyPartDepth.Inside }
+                            : parent.Part is not { depth: BodyPartDepth.Inside }
                                 ? TProps.labelTendedWell
-                                : TProps.labelTendedWellInner));
+                                : TProps.labelTendedWellInner;
 
                         if (tendedLabel != null)
                         {

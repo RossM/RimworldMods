@@ -52,7 +52,9 @@ namespace XylXenos.Genes
                 if (itemDef == null)
                     continue;
 
-                var count = startingItem.nutritionAmount != FloatRange.Zero ? Mathf.FloorToInt(startingItem.nutritionAmount.RandomInRange / itemDef.GetStatBase(StatDefOf.Nutrition)) : startingItem.count.RandomInRange;
+                var count = startingItem.nutritionAmount != FloatRange.Zero
+                    ? Mathf.FloorToInt(startingItem.nutritionAmount.RandomInRange / itemDef.GetStatBase(StatDefOf.Nutrition))
+                    : startingItem.count.RandomInRange;
 
                 yield return new(itemDef, Mathf.Clamp(count, 1, itemDef.stackLimit));
             }
@@ -184,7 +186,6 @@ namespace XylXenos.Genes
             {
                 hediffGiver.OnIntervalPassed(pawn, null);
             }
-
         }
 
         public void Notify_HediffStateChange()

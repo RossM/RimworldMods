@@ -218,7 +218,7 @@ namespace XylXenos
             for (var index = 0; index < Props.hediffs.Count; index++)
             {
                 HediffCompProperties_GiveHediffExt.TriggeredHediff hediff = Props.hediffs[index];
-                yield return new Command_Action()
+                yield return new Command_Action
                 {
                     defaultLabel = parent.Part != null
                         ? $"DEV: Trigger {parent.LabelBase} ({parent.Part?.Label}) #{index}"

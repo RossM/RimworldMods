@@ -18,6 +18,9 @@ namespace XylXenos
     {
         public float TemperatureFactor => TemperatureWetnessFallFactorCurve.Evaluate(pawn.AmbientTemperature);
 
+        public float RisePerHour => def.seekerRisePerHour;
+        public float FallPerHour => def.seekerFallPerHour * TemperatureFactor;
+
         public const float thresholdWet = 0.90f;
         public const float thresholdNeutral = 0.50f;
         public const float thresholdDry = 0.25f;
@@ -130,9 +133,6 @@ namespace XylXenos
                 CurLevel = Mathf.Max(CurLevel, curInstantLevel);
             }
         }
-
-        public float RisePerHour => def.seekerRisePerHour;
-        public float FallPerHour => def.seekerFallPerHour * TemperatureFactor;
 
         public override string GetTipString()
         {

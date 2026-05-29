@@ -7,3 +7,4 @@ Assemblies
 *.user
 Art/*.zip
 /Build
+/.github

@@ -80,7 +80,7 @@ namespace XylXenos.Patches
         [Feature(Config.Feature.FixLactationBugs)]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]
-        static bool GetTotalNutritionNeededPerDay_Prefix(Pawn p, out string __result)
+        private static bool GetTotalNutritionNeededPerDay_Prefix(Pawn p, out string __result)
         {
             __result = null;
             if (!Settings.instance.ShouldFixLactationBugsFor(p))

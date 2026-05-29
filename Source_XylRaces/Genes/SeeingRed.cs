@@ -13,9 +13,10 @@ namespace XylXenos.Genes
 
     public class SeeingRed : GeneExt
     {
-        [NotNull] public SeeingRedInfo SeeingRedDefExt => DefExt.seeingRed!;
+        [NotNull]
+        public SeeingRedInfo SeeingRedDefExt => DefExt.seeingRed!;
 
-        const int checkInterval = 60;
+        private const int checkInterval = 60;
         public HashSet<Thing> extraEnemies;
 
         public override void ExposeData()
