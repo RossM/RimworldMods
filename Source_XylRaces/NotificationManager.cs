@@ -260,18 +260,25 @@ namespace XylXenos
             }
         }
 
+        public static List<INotificationListener> extraListeners = [];
+
         public override void LoadedGame()
         {
             using var _ = new ProfileBlock();
 
             foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
                 CallRegistrationHandlers(pawn);
-
-            LookupCache.Tracker.RegisterWith(this);
-            GeneSet.Tracker.RegisterWith(this);
+            foreach (var listener in extraListeners)
+                listener.RegisterWith(this);
 
             foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
                 Notify(NotificationEvent.PostLoadedGame, pawn);
+        }
+
+        public override void FinalizeInit()
+        {
+            foreach (var listener in extraListeners)
+                listener.RegisterWith(this);
         }
     }
 }

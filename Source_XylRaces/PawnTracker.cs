@@ -10,9 +10,16 @@ namespace XylXenos;
 ///     a pawn ThingComp, such as lookup caches or gene-derived aggregate values. Use <see cref="Get" /> to retrieve a
 ///     pawn's instance.
 /// </summary>
-public class PawnTracker<T>(Func<Pawn, T> makeFunc) : INotificationListener
+public class PawnTracker<T> : INotificationListener
 {
     private readonly Dictionary<int, T> data = new();
+    private readonly Func<Pawn, T> makeFunc;
+
+    public PawnTracker(Func<Pawn, T> makeFunc)
+    {
+        this.makeFunc = makeFunc;
+        NotificationManager.extraListeners.Add(this);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T Get(Pawn pawn)
