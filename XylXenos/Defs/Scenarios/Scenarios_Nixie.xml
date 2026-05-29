@@ -133,4 +133,103 @@
     </scenario>
   </ScenarioDef>
 
+
+  <PawnKindDef ParentName="BasePlayerPawnKind">
+    <defName>XylNixie_Siren</defName>
+    <label>colonist</label>
+    <chemicalAddictionChance>0.06</chemicalAddictionChance>
+    <apparelTags>
+      <li>IndustrialBasic</li>
+      <li>IndustrialAdvanced</li>
+    </apparelTags>
+    <apparelRequired>
+      <li>Apparel_Robe</li>
+      <li>Apparel_HatHood</li>
+    </apparelRequired>
+    <ignoreFactionApparelStuffRequirements>true</ignoreFactionApparelStuffRequirements>
+    <specificApparelRequirements Inherit="False">
+      <li>
+        <stuff>Hyperweave</stuff>
+        <colorGenerator Class="ColorGenerator_Options">
+          <options>
+            <li>
+              <only>(0.2, 0.4, 0.8)</only>
+            </li>
+            <li>
+              <only>(0.3, 0.6, 0.85)</only>
+            </li>
+            <li>
+              <only>(0.4, 0.8, 0.9)</only>
+            </li>
+            <li>
+              <only>(0.5, 0.6, 0.9)</only>
+            </li>
+            <li>
+              <only>(0.6, 0.4, 0.9)</only>
+            </li>
+            <li>
+              <only>(0.45, 0.2, 0.75)</only>
+            </li>
+            <li>
+              <only>(0.3, 0.0, 0.6)</only>
+            </li>
+            <li>
+              <only>(0.24, 0.2, 0.7)</only>
+            </li>
+          </options>
+        </colorGenerator>
+      </li>
+    </specificApparelRequirements>
+    <apparelAllowHeadgearChance>1</apparelAllowHeadgearChance>
+    <apparelMoney>0</apparelMoney>
+    <backstoryCryptosleepCommonality>1</backstoryCryptosleepCommonality>
+    <techHediffsChance>0.25</techHediffsChance>
+    <techHediffsMoney>800~1200</techHediffsMoney>
+    <techHediffsTags>
+      <li>Simple</li>
+      <li>Advanced</li>
+      <li>ImplantEmpireCommon</li>
+    </techHediffsTags>
+    <techHediffsDisallowTags>
+      <li>PainCauser</li>
+    </techHediffsDisallowTags>
+    <initialResistanceRange>13~21</initialResistanceRange>
+  </PawnKindDef>
+
+  <IncidentDef>
+    <defName>XylCultistJoin</defName>
+    <category>Special</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>XylXenos.IncidentWorker_CultistJoin</workerClass>
+    <letterLabel>The song calls</letterLabel>
+    <letterText>A [PAWN_title] named [PAWN_nameDef] has heard the song and is joining the colony.</letterText>
+    <baseChance>0</baseChance>
+    <pawnKind>Drifter</pawnKind>
+  </IncidentDef>
+
+  <HediffDef>
+    <defName>XylCultistSong</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>the song</label>
+    <description>This character has heard the song and opened their mind to the cosmos. They know the truths that will never reach the ears of those who do not listen.</description>
+    <isBad>false</isBad>
+    <defaultLabelColor>(0.6, 0.6, 1.0)</defaultLabelColor>
+    <comps>
+      <li Class="HediffCompProperties_RemoveIfOtherHediff">
+        <hediffs>
+          <li>BrainwipeComa</li>
+        </hediffs>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <statOffsets>
+          <PsychicSensitivity>0.2</PsychicSensitivity>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
 </Defs>
