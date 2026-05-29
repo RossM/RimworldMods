@@ -1,7 +1,9 @@
-﻿namespace XylXenos;
+﻿using Verse;
+
+namespace XylXenos;
 
 [UsedFromXml]
-public class ScenPart_Psycast : ScenPart
+public class ScenPart_Psycast : ScenPart_PawnModifier
 {
     private static IEnumerable<AbilityDef> PossiblePsycasts => possiblePsycastsInternal ??=
         DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
@@ -21,26 +23,12 @@ public class ScenPart_Psycast : ScenPart
 
     public override void DoEditInterface(Listing_ScenEdit listing)
     {
-        Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 2f + 1f);
+        Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 4f);
 
-        var listing_Standard = new Listing_Standard();
-        listing_Standard.Begin(scenPartRect.TopHalf());
-        listing_Standard.ColumnWidth = scenPartRect.width;
-        listing_Standard.End();
+        if (Widgets.ButtonText(scenPartRect.TopPartPixels(RowHeight), GetLabel(psycast)))
+            FloatMenuUtility.MakeMenu(PossiblePsycasts, GetLabel, abilityDef => delegate { psycast = abilityDef; });
 
-        if (!Widgets.ButtonText(scenPartRect.BottomHalf(), GetLabel(psycast)))
-        {
-            return;
-        }
-
-        var list = new List<FloatMenuOption>();
-        foreach (AbilityDef item in PossiblePsycasts)
-        {
-            AbilityDef localDef = item;
-            list.Add(new FloatMenuOption(GetLabel(localDef), delegate { psycast = localDef; }));
-        }
-
-        Find.WindowStack.Add(new FloatMenu(list));
+        DoPawnModifierEditInterface(scenPartRect.BottomPartPixels(RowHeight * 2f));
     }
 
     private string GetLabel(AbilityDef abilityDef)
@@ -60,11 +48,18 @@ public class ScenPart_Psycast : ScenPart
         return psycast == null;
     }
 
-    public override void Notify_NewPawnGenerating(Pawn pawn, PawnGenerationContext context)
+    protected override void ModifyNewPawn(Pawn pawn)
     {
-        if (context != PawnGenerationContext.PlayerStarter)
-            return;
+        LearnPsycast(pawn);
+    }
 
+    protected override void ModifyHideOffMapStartingPawnPostMapGenerate(Pawn pawn)
+    {
+        LearnPsycast(pawn);
+    }
+
+    private void LearnPsycast(Pawn pawn)
+    {
         if (CanLearnPsycast(pawn, psycast))
             pawn.abilities.GainAbility(psycast);
     }

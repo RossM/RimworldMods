@@ -38,23 +38,33 @@
           <def>XylPsylinkLevels</def>
           <count>3</count>
           <givePsycasts>false</givePsycasts>
+          <context>PlayerStarter</context>
         </li>
         <li Class="XylXenos.ScenPart_Psycast">
           <def>XylPsycasts</def>
           <psycast>WordOfTrust</psycast>
+          <context>PlayerStarter</context>
         </li>
         <li Class="XylXenos.ScenPart_Psycast">
           <def>XylPsycasts</def>
           <psycast>WordOfJoy</psycast>
+          <context>PlayerStarter</context>
         </li>
         <li Class="XylXenos.ScenPart_Psycast">
           <def>XylPsycasts</def>
           <psycast>WordOfLove</psycast>
+          <context>PlayerStarter</context>
         </li>
         <li Class="XylXenos.ScenPart_Psycast">
           <def>XylPsycasts</def>
           <psycast>Waterskip</psycast>
+          <context>PlayerStarter</context>
         </li>
+        <!--<li Class="ScenPart_ForcedHediff">
+          <hediff>XylCultistSong</hediff>
+          <severityRange>1</severityRange>
+          <context>PlayerStarter</context>
+        </li>-->
 
         <!-- Player starting stuff spawn method-->
         <li Class="ScenPart_StartingThing_Defined">
@@ -113,6 +123,7 @@
           <incident>XylCultistJoin</incident>
           <minDays>30</minDays>
           <maxDays>60</maxDays>
+          <repeat>true</repeat>
         </li>
 
       </parts>
@@ -183,6 +194,7 @@
 
   <IncidentDef>
     <defName>XylCultistJoin</defName>
+    <label>cultist joins</label>
     <category>Special</category>
     <targetTags>
       <li>Map_PlayerHome</li>
@@ -201,6 +213,8 @@
     <description>This character has heard the song and opened their mind to the cosmos. They know the truths that will never reach the ears of those who do not listen.</description>
     <isBad>false</isBad>
     <defaultLabelColor>(0.6, 0.6, 1.0)</defaultLabelColor>
+    <initialSeverity>1</initialSeverity>
+    <scenarioCanAdd>true</scenarioCanAdd>
     <comps>
       <li Class="HediffCompProperties_RemoveIfOtherHediff">
         <hediffs>

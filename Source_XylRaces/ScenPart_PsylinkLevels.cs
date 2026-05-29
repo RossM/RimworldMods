@@ -1,7 +1,7 @@
 ﻿namespace XylXenos;
 
 [UsedFromXml]
-public class ScenPart_PsylinkLevels : ScenPart
+public class ScenPart_PsylinkLevels : ScenPart_PawnModifier
 {
     public int count = 1;
     public bool givePsycasts = true;
@@ -15,11 +15,18 @@ public class ScenPart_PsylinkLevels : ScenPart
         Scribe_Values.Look(ref givePsycasts, nameof(givePsycasts));
     }
 
-    public override void Notify_NewPawnGenerating(Pawn pawn, PawnGenerationContext context)
+    protected override void ModifyNewPawn(Pawn pawn)
     {
-        if (context != PawnGenerationContext.PlayerStarter)
-            return;
+        GivePsylink(pawn);
+    }
 
+    protected override void ModifyHideOffMapStartingPawnPostMapGenerate(Pawn pawn)
+    {
+        GivePsylink(pawn);
+    }
+
+    private void GivePsylink(Pawn pawn)
+    {
         for (var i = 0; i < count; ++i)
         {
             if (givePsycasts)
@@ -65,10 +72,9 @@ public class ScenPart_PsylinkLevels : ScenPart
 
     public override void DoEditInterface(Listing_ScenEdit listing)
     {
-        Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 2f + 1f);
-        scenPartRect.height = RowHeight;
-        Widgets.TextFieldNumeric(scenPartRect, ref count, ref countBuf, 1, 10);
-        scenPartRect.y += RowHeight;
-        Widgets.CheckboxLabeled(scenPartRect, "Give psycasts", ref givePsycasts);
+        Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 4f);
+        Widgets.TextFieldNumeric(scenPartRect.TopPartPixels(RowHeight), ref count, ref countBuf, 1, 10);
+        Widgets.CheckboxLabeled(new(scenPartRect.x, scenPartRect.y + RowHeight, scenPartRect.width, RowHeight), "Give psycasts", ref givePsycasts);
+        DoPawnModifierEditInterface(scenPartRect.BottomPartPixels(RowHeight * 2f));
     }
 }
