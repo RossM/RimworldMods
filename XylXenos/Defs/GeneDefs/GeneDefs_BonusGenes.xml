@@ -9,7 +9,7 @@
   </GeneCategoryDef>
 
   <GeneDef>
-    <geneClass>XylXenos.Genes.BonusGenes</geneClass>
+    <geneClass>XylXenos.Gene_BonusGenes</geneClass>
     <defName>XylGeneticAtavism</defName>
     <label>genetic atavism</label>
     <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
@@ -34,7 +34,7 @@
   </GeneDef>
 
   <GeneDef Name="XylSpecialistBase" Abstract="true">
-    <geneClass>XylXenos.Genes.BonusGenes</geneClass>
+    <geneClass>XylXenos.Gene_BonusGenes</geneClass>
     <displayCategory>XylRandom</displayCategory>
     <exclusionTags>
       <li>XylSpecialist</li>
@@ -109,7 +109,7 @@
 
   <GeneDef>
     <defName>XylSplicer</defName>
-    <geneClass>XylXenos.Genes.BonusGenes</geneClass>
+    <geneClass>XylXenos.Gene_BonusGenes</geneClass>
     <label>splicer</label>
     <description>TODO</description>
     <biostatArc>1</biostatArc>

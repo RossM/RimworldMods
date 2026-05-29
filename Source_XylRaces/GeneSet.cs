@@ -1,4 +1,6 @@
-﻿namespace XylXenos;
+﻿using XylXenos;
+
+namespace XylXenos;
 
 public class GeneSet(Pawn pawn) : INotificationListener
 {

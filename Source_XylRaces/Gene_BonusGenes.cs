@@ -1,4 +1,6 @@
-﻿namespace XylXenos.Genes;
+﻿using XylXenos;
+
+namespace XylXenos;
 
 public class BonusGenesInfo
 {
@@ -14,7 +16,7 @@ public class BonusGenesInfo
 }
 
 [UsedImplicitly]
-public class BonusGenes : GeneExt
+public class Gene_BonusGenes : GeneExt
 {
     [NotNull]
     public BonusGenesInfo BonusGenesInfo => DefExt.bonusGenes!;

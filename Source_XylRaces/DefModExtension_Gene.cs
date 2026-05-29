@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using XylXenos;
 
 namespace XylXenos;
 
@@ -192,17 +193,17 @@ public class DefModExtension_Gene : DefModExtension
         if (!typeof(GeneExt).IsAssignableFrom(geneClass))
             yield return "geneClass is not GeneExt or subclass thereof";
 
-        if (bonusGenes != null && !typeof(BonusGenes).IsAssignableFrom(geneClass))
+        if (bonusGenes != null && !typeof(Gene_BonusGenes).IsAssignableFrom(geneClass))
             yield return "bonusGenes set but geneClass is not BonusGene or subclass thereof";
-        if (bonusGenes == null && typeof(BonusGenes).IsAssignableFrom(geneClass))
+        if (bonusGenes == null && typeof(Gene_BonusGenes).IsAssignableFrom(geneClass))
             yield return "bonusGenes not set but geneClass is BonusGene or subclass thereof";
-        if (hyperlactation != null && !typeof(Hyperlactation).IsAssignableFrom(geneClass))
+        if (hyperlactation != null && !typeof(Gene_Hyperlactation).IsAssignableFrom(geneClass))
             yield return "hyperlactation set but geneClass is not Hyperlactation or subclass thereof";
-        if (hyperlactation == null && typeof(Hyperlactation).IsAssignableFrom(geneClass))
+        if (hyperlactation == null && typeof(Gene_Hyperlactation).IsAssignableFrom(geneClass))
             yield return "hyperlactation not set but geneClass is Hyperlactation or subclass thereof";
-        if (seeingRed != null && !typeof(SeeingRed).IsAssignableFrom(geneClass))
+        if (seeingRed != null && !typeof(Gene_SeeingRed).IsAssignableFrom(geneClass))
             yield return "seeingRed set but geneClass is not SeeingRed or subclass thereof";
-        if (seeingRed == null && typeof(SeeingRed).IsAssignableFrom(geneClass))
+        if (seeingRed == null && typeof(Gene_SeeingRed).IsAssignableFrom(geneClass))
             yield return "seeingRed not set but geneClass is SeeingRed or subclass thereof";
     }
 

@@ -1,4 +1,6 @@
-﻿namespace XylXenos;
+﻿using XylXenos;
+
+namespace XylXenos;
 
 public class MentalStateDefExtension_SeeingRed : DefModExtension
 {
@@ -19,7 +21,7 @@ public class MentalState_SeeingRed : MentalState
 
     public override bool ForceHostileTo(Thing t)
     {
-        return pawn.HasActiveGeneOfType<SeeingRed>(g => g.ForceHostility(t));
+        return pawn.HasActiveGeneOfType<Gene_SeeingRed>(g => g.ForceHostility(t));
     }
 
     public override RandomSocialMode SocialModeMax()

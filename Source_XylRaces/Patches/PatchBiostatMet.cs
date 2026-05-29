@@ -3,7 +3,7 @@
 [HarmonyPatch]
 public static class PatchBiostatMet
 {
-    [Feature(typeof(BonusGenes))]
+    [Feature(typeof(Gene_BonusGenes))]
     [InfixPostfix(typeof(GeneDef), nameof(GeneDef.biostatMet))]
     [InfixPatch(typeof(Dialog_CreateXenotype), "DrawGene")]
     [InfixPatch(typeof(GeneCreationDialogBase), "OnGenesChanged")]

@@ -1,4 +1,6 @@
-﻿namespace XylXenos.Genes;
+﻿using XylXenos;
+
+namespace XylXenos;
 
 public class GeneExt : Gene, INotificationListener
 {

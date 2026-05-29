@@ -1,4 +1,6 @@
-﻿namespace XylXenos;
+﻿using XylXenos;
+
+namespace XylXenos;
 
 public interface INotificationListener
 {

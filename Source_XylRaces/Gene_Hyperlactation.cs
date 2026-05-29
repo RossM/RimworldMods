@@ -1,4 +1,6 @@
-﻿namespace XylXenos.Genes;
+﻿using XylXenos;
+
+namespace XylXenos;
 
 public class HyperlactationInfo
 {
@@ -9,7 +11,7 @@ public class HyperlactationInfo
     public int ticksPerSorenessStage = 60000;
 }
 
-public class Hyperlactation : GeneExt
+public class Gene_Hyperlactation : GeneExt
 {
     [NotNull]
     public HyperlactationInfo HyperlactationInfo => DefExt.hyperlactation!;

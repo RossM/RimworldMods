@@ -1,4 +1,6 @@
-﻿namespace XylXenos;
+﻿using XylXenos;
+
+namespace XylXenos;
 
 public class Settings : ModSettings
 {
@@ -80,7 +82,7 @@ public class Settings : ModSettings
         {
             ThreeStateMode.Always => true,
             ThreeStateMode.Never => false,
-            ThreeStateMode.Sometimes => pawn.HasActiveGeneOfType<Hyperlactation>(),
+            ThreeStateMode.Sometimes => pawn.HasActiveGeneOfType<Gene_Hyperlactation>(),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

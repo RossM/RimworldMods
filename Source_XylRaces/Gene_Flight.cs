@@ -1,4 +1,6 @@
-﻿namespace XylXenos.Genes;
+﻿using XylXenos;
+
+namespace XylXenos;
 
 public class FlightInfo
 {
@@ -10,7 +12,7 @@ public class ThingDefExtension_Flight : DefModExtension
     public bool allowsFlight = true;
 }
 
-public class Flight : GeneExt
+public class Gene_Flight : GeneExt
 {
     [NotNull]
     public FlightInfo FlightInfo => DefExt.flight!;

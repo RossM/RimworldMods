@@ -1,4 +1,6 @@
-﻿namespace XylXenos;
+﻿using XylXenos;
+
+namespace XylXenos;
 
 [UsedFromXml]
 public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
@@ -22,13 +24,13 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
         if (target.Downed)
             return false;
 
-        var gene = target.FirstActiveGeneOfType<Hyperlactation>();
+        var gene = target.FirstActiveGeneOfType<Gene_Hyperlactation>();
         return gene is { allowMilking: true } && gene.ReadyToMilk();
     }
 
     private void Gather(Pawn doer)
     {
-        var gene = Target.FirstActiveGeneOfType<Hyperlactation>();
+        var gene = Target.FirstActiveGeneOfType<Gene_Hyperlactation>();
         if (gene == null)
             return;
 
@@ -99,7 +101,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
         toil.FailOnDespawnedOrNull(TargetIndex.A);
         toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
         toil.AddEndCondition(() =>
-            Target.FirstActiveGeneOfType<Hyperlactation>()?.MilkCount is > 0 ? JobCondition.Ongoing : JobCondition.Incompletable);
+            Target.FirstActiveGeneOfType<Gene_Hyperlactation>()?.MilkCount is > 0 ? JobCondition.Ongoing : JobCondition.Incompletable);
         toil.defaultCompleteMode = ToilCompleteMode.Never;
         toil.WithProgressBar(TargetIndex.A, () => gatherProgress / WorkTotal);
         toil.activeSkill = () => SkillDefOf.Animals;

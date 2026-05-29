@@ -1,4 +1,6 @@
-﻿namespace XylXenos.Genes;
+﻿using XylXenos;
+
+namespace XylXenos;
 
 public class SeeingRedInfo
 {
@@ -6,7 +8,7 @@ public class SeeingRedInfo
     public HediffDef hediffDef;
 }
 
-public class SeeingRed : GeneExt
+public class Gene_SeeingRed : GeneExt
 {
     [NotNull]
     public SeeingRedInfo SeeingRedDefExt => DefExt.seeingRed!;
