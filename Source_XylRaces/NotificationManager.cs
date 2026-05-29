@@ -51,7 +51,7 @@ namespace XylXenos
             public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
         }
 
-        private class RegistrationRecord(NotificationEvent eventType, Thing target)
+        private class RegistrationInfo(NotificationEvent eventType, Thing target)
         {
             public readonly NotificationEvent eventType = eventType;
             public readonly bool isGlobal = target == null;
@@ -70,7 +70,7 @@ namespace XylXenos
 
         private readonly EventInfo[] events = new EventInfo[Enum.GetValues(typeof(NotificationEvent)).Length];
 
-        private readonly ConditionalWeakTable<INotificationListener, List<RegistrationRecord>> registeredEvents = new();
+        private readonly ConditionalWeakTable<INotificationListener, List<RegistrationInfo>> registeredEvents = new();
 
         public NotificationManager(Game _)
         {
@@ -151,7 +151,7 @@ namespace XylXenos
 
         public void UnregisterAll(INotificationListener listener)
         {
-            if (!registeredEvents.TryGetValue(listener, out List<RegistrationRecord> records))
+            if (!registeredEvents.TryGetValue(listener, out List<RegistrationInfo> records))
                 return;
 
             foreach (var record in records)
