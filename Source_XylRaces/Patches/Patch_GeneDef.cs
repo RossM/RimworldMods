@@ -20,7 +20,7 @@ public static class Patch_GeneDef
     [HarmonyPatch("SpecialDisplayStats")]
     public static void GeneDef_SpecialDisplayStats_Postfix(GeneDef __instance, StatRequest req, ref IEnumerable<StatDrawEntry> __result)
     {
-        var defExt = __instance.GetModExtension<DefExt>();
+        var defExt = __instance.GetModExtension<DefModExtension_Gene>();
         if (defExt == null)
             return;
 

@@ -21,7 +21,7 @@
       <li>Sight: use hearing if higher</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <permanentHediffs>
           <li>
             <hediff>XylEcholocation</hediff>
@@ -66,7 +66,7 @@
       </li>
     </capMods>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>

@@ -3,7 +3,7 @@
 public class GeneExt : Gene, INotificationListener
 {
     [NotNull]
-    public DefExt DefExt => def.DefExt!;
+    public DefModExtension_Gene DefExt => def.DefExt!;
 
     public GeneType GeneType => geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 

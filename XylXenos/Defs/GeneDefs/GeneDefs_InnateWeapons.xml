@@ -36,7 +36,7 @@
       <li>Headbone</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <permanentHediffs>
           <li>
             <hediff>XylLargeHorns</hediff>
@@ -64,7 +64,7 @@
       <li>Hands</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <permanentHediffs>
           <li>
             <hediff>XylRetractableClaws</hediff>

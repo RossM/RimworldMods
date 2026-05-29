@@ -34,7 +34,7 @@
       </suffixSymbols>
     </symbolPack>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <femaleChance>1.0</femaleChance>
         <geneType>Endogene</geneType>
       </li>
@@ -48,7 +48,7 @@
     <displayOrderInCategory>301</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyFemale</iconPath>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <femaleChance>0.75</femaleChance>
         <geneType>Endogene</geneType>
       </li>
@@ -62,7 +62,7 @@
     <displayOrderInCategory>302</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyMale</iconPath>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <femaleChance>0.25</femaleChance>
         <geneType>Endogene</geneType>
       </li>
@@ -91,7 +91,7 @@
       </suffixSymbols>
     </symbolPack>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <femaleChance>0.0</femaleChance>
         <geneType>Endogene</geneType>
       </li>

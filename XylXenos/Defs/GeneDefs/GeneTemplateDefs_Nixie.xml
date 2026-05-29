@@ -34,7 +34,7 @@
       </li>
     </biostats>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <hasPsycast>true</hasPsycast>
       </li>
     </modExtensions>

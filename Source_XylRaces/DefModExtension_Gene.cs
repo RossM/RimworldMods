@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace XylXenos.Genes;
+namespace XylXenos;
 
 public class DietDependencyInfo
 {
@@ -56,7 +56,7 @@ public class StartingItemOption
     public FloatRange nutritionAmount = FloatRange.Zero;
 }
 
-public class DefExt : DefModExtension
+public class DefModExtension_Gene : DefModExtension
 {
     public IEnumerable<string> CustomEffectDescriptions => field ??= GetCustomEffectDescriptions().ToList();
 

@@ -18,7 +18,7 @@
       <AbilityDef>XylFeralRage</AbilityDef>
     </descriptionHyperlinks>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>
@@ -39,7 +39,7 @@
       <AbilityDef>XylRockToss</AbilityDef>
     </descriptionHyperlinks>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>
@@ -60,7 +60,7 @@
       <AbilityDef>XylSonicWave</AbilityDef>
     </descriptionHyperlinks>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>
@@ -81,7 +81,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>

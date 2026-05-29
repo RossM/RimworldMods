@@ -22,7 +22,7 @@
       <li>Extra gene chance: 50%</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <bonusGenes>
           <biostatArc>0~0</biostatArc>
           <biostatCpx>1~99</biostatCpx>
@@ -50,7 +50,7 @@
     <displayOrderInCategory>201</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <geneType>Xenogene</geneType>
         <bonusGenes>
           <removeAfterAdding>true</removeAfterAdding>
@@ -83,7 +83,7 @@
     <displayOrderInCategory>202</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <geneType>Xenogene</geneType>
         <bonusGenes>
           <removeAfterAdding>true</removeAfterAdding>
@@ -120,7 +120,7 @@
     <canGenerateInGeneSet>false</canGenerateInGeneSet>
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <showInXenotypeCreation>false</showInXenotypeCreation>
         <bonusGenes>
           <removeAfterAdding>true</removeAfterAdding>

@@ -21,7 +21,7 @@
       <Bloodlust />
     </suppressedTraits>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <slaveRebellionThresholdDays>120</slaveRebellionThresholdDays>
         <manhunterOnTameFailChanceFactor>0</manhunterOnTameFailChanceFactor>
       </li>
@@ -39,7 +39,7 @@
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <manhunterOnDamageChanceFactor>2</manhunterOnDamageChanceFactor>
         <seeingRed>
           <chance>0.15</chance>
@@ -64,7 +64,7 @@
       <li>Enables being milked</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <extraIconPath>Things/Item/Resource/Milk</extraIconPath>
         <gender>Female</gender>
         <allowMutants>false</allowMutants>
@@ -104,7 +104,7 @@
       <li>Ranged dodge chance: +15</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <permanentHediffs>
           <li Class="HediffGiver_Event">
             <hediff>XylPrecognition</hediff>
@@ -165,7 +165,7 @@
       <FlightCooldown>45</FlightCooldown>
     </statOffsets>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <flight/>
       </li>
     </modExtensions>
@@ -181,7 +181,7 @@
     <displayOrderInCategory>100</displayOrderInCategory>
     <!--<iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>-->
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <hediffGivers>
           <li Class="XylXenos.HediffGiver_Torpor">
             <hediff>XylTorpor</hediff>
@@ -209,7 +209,7 @@
       <WorkSpeedGlobal>0.15</WorkSpeedGlobal>
     </statOffsets>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>
@@ -224,7 +224,7 @@
     <displayOrderInCategory>501</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_InsectPheromones</iconPath>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <disableHostilityFromFactions>
           <li>Insect</li>
         </disableHostilityFromFactions>
@@ -245,7 +245,7 @@
       <Transhumanist />
     </suppressedTraits>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <permanentHediffs>
           <li>
             <hediff>XylBioRejection</hediff>
@@ -264,7 +264,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>
@@ -278,7 +278,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>5</biostatMet>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>
@@ -295,7 +295,7 @@
       <MechBandwidth>3</MechBandwidth>
     </statOffsets>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>
@@ -311,7 +311,7 @@
     <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
     <prerequisite>XylLithoid</prerequisite>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
         <startingItems>
           <li>
             <item>XylSoftener</item>
@@ -337,7 +337,7 @@
     <biostatCpx>2</biostatCpx>
     <biostatMet>1</biostatMet>
     <modExtensions>
-      <li Class="XylXenos.Genes.DefExt">
+      <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>

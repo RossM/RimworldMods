@@ -5,14 +5,14 @@ public static class GeneDefExtensions
     extension(GeneDef gene)
     {
         [CanBeNull]
-        public DefExt DefExt
+        public DefModExtension_Gene DefExt
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (!defExtCache.TryGetValue(gene.index, out DefExt defExt))
+                if (!defExtCache.TryGetValue(gene.index, out DefModExtension_Gene defExt))
                 {
-                    defExt = gene.GetModExtension<DefExt>();
+                    defExt = gene.GetModExtension<DefModExtension_Gene>();
                     defExtCache.Add(gene.index, defExt);
                 }
 
@@ -21,5 +21,5 @@ public static class GeneDefExtensions
         }
     }
 
-    public static readonly Dictionary<int, DefExt> defExtCache = new();
+    public static readonly Dictionary<int, DefModExtension_Gene> defExtCache = new();
 }

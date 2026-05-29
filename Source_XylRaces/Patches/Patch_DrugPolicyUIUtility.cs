@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(DrugPolicyUIUtility))]
 public static class Patch_DrugPolicyUIUtility
 {
-    [Feature(nameof(DefExt.showInDrugPolicies))]
+    [Feature(nameof(DefModExtension_Gene.showInDrugPolicies))]
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PawnUtility), nameof(PawnUtility.TryGetChemicalDependencyGene))]
     public static void TryGetChemicalDependencyGene_Postfix(Pawn pawn, ref Gene gene, ref bool __result)

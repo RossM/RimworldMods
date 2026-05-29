@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(GenConstruct))]
 public static class Patch_GenConstruct
 {
-    [Feature(nameof(DefExt.addDesignators))]
+    [Feature(nameof(DefModExtension_Gene.addDesignators))]
     [InfixPostfix(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
     [InfixPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
     public static void MembersCanBuild_Postfix(Ideo __instance, Thing thing, Pawn p, ref bool __result)
