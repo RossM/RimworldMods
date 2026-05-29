@@ -8,7 +8,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(TileFinder))]
     public static class Patch_TileFinder
     {
-        [Feature(typeof(FactionDefExtension))]
+        [Feature(typeof(DefModExtension_Faction))]
         [HarmonyPrefix]
         [HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor), typeof(PlanetLayer), typeof(Faction), typeof(bool),
             typeof(Predicate<PlanetTile>))]
@@ -18,7 +18,7 @@ namespace XylXenos.Patches
             bool mustBeAutoChoosable,
             ref Predicate<PlanetTile> extraValidator)
         {
-            var extension = faction?.def?.GetModExtension<FactionDefExtension>();
+            var extension = faction?.def?.GetModExtension<DefModExtension_Faction>();
             if (extension == null)
                 return;
 

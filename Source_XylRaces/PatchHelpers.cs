@@ -41,7 +41,7 @@ public static class PatchHelpers
 
         IEnumerable<RecipeDef> recipeDefs = DefDatabase<RecipeDef>.AllDefsListForReading.Where(def =>
         {
-            var modExtension = def.GetModExtension<DefModExtension_GeneDependent>();
+            var modExtension = def.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>();
             return modExtension != null && (modExtension.genePrerequisitesAny ?? Enumerable.Empty<GeneDef>()).Contains(geneDef);
         }).ToList();
         if (recipeDefs.Any())
@@ -52,7 +52,7 @@ public static class PatchHelpers
 
         IEnumerable<ThingDef> thingDefs = DefDatabase<RecipeDef>.AllDefsListForReading
             .SelectMany(def => def.products ?? Enumerable.Empty<ThingDefCountClass>(), (_, c) => c.thingDef)
-            .Where(def => def.GetModExtension<DefModExtension_GeneDependent>()?.genePrerequisitesAny?.Contains(geneDef) == true)
+            .Where(def => def.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>()?.genePrerequisitesAny?.Contains(geneDef) == true)
             .ToList();
         if (thingDefs.Any())
         {
@@ -76,7 +76,7 @@ public static class PatchHelpers
             return 0f;
 
         XenotypeDef recipientXenotype = recipient.genes?.Xenotype;
-        var xenotypeDefExtension = recipientXenotype?.GetModExtension<XenotypeDefExtension>();
+        var xenotypeDefExtension = recipientXenotype?.GetModExtension<DefModExtension_Xenotype>();
         if (xenotypeDefExtension == null)
             return 0f;
 

@@ -7,12 +7,12 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(MemoryThoughtHandler))]
     public static class Patch_MemoryThoughtHandler
     {
-        [Feature(typeof(ThoughtDefExtension_Memory))]
+        [Feature(typeof(DefModExtension_Thought))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(MemoryThoughtHandler.TryGainMemory), typeof(Thought_Memory), typeof(Pawn))]
         public static void TryGainMemory_Postfix(MemoryThoughtHandler __instance, Thought_Memory newThought, Pawn otherPawn)
         {
-            var extension = newThought.def.GetModExtension<ThoughtDefExtension_Memory>();
+            var extension = newThought.def.GetModExtension<DefModExtension_Thought>();
             if (extension?.extraThoughts == null)
                 return;
             foreach (var thoughtDef in extension.extraThoughts)

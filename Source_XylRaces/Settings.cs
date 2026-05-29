@@ -99,7 +99,7 @@ public class Settings : ModSettings
         {
             ThreeStateMode.Always => true,
             ThreeStateMode.Never => false,
-            ThreeStateMode.Sometimes => xenotypeDef?.GetModExtension<XenotypeDefExtension>()?.allowSolidBackstories ?? true,
+            ThreeStateMode.Sometimes => xenotypeDef?.GetModExtension<DefModExtension_Xenotype>()?.allowSolidBackstories ?? true,
             _ => throw new ArgumentOutOfRangeException()
         };
     }

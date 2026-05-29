@@ -5,13 +5,13 @@
   <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>
       Defs/ChemicalDef[not(
-        modExtensions/li[@Class="XylXenos.ChemicalDefExtension"] or
+        modExtensions/li[@Class="XylXenos.DefModExtension_Chemical"] or
         defName="Luciferium"
       )]
     </xpath>
     <value>
       <modExtensions>
-        <li Class="XylXenos.ChemicalDefExtension">
+        <li Class="XylXenos.DefModExtension_Chemical">
           <prohibitedGenes>
             <li>XylLithoid</li>
           </prohibitedGenes>

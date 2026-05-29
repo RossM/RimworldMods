@@ -193,7 +193,7 @@
       </li>
     </pawnGroupMakers>
     <modExtensions>
-      <li Class="XylXenos.FactionDefExtension">
+      <li Class="XylXenos.DefModExtension_Faction">
         <nearbyPollution>0.01 ~ 9999</nearbyPollution>
       </li>
     </modExtensions>

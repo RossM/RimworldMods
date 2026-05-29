@@ -10,7 +10,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(RecipeDef))]
     public static class Patch_RecipeDef
     {
-        [Feature(typeof(DefModExtension_GeneDependent))]
+        [Feature(typeof(DefModExtension_ThingOrRecipe_GeneDependent))]
         [InfixPostfix(typeof(RecipeDef), "memePrerequisitesAny")]
         [InfixPatch(nameof(RecipeDef.AvailableNow))]
         public static void RecipeDef_memePrerequisitesAny_Postfix(ref List<MemeDef> __result)
@@ -18,7 +18,7 @@ namespace XylXenos.Patches
             __result = null;
         }
 
-        [Feature(typeof(DefModExtension_GeneDependent))]
+        [Feature(typeof(DefModExtension_ThingOrRecipe_GeneDependent))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
         public static void AvailableNow_Postfix(RecipeDef __instance, ref bool __result)
@@ -28,9 +28,9 @@ namespace XylXenos.Patches
             if (!__result)
                 return;
 
-            DefModExtension_GeneDependent extension =
-                __instance.GetModExtension<DefModExtension_GeneDependent>() ??
-                __instance.products.Select(t => t.thingDef.GetModExtension<DefModExtension_GeneDependent>()).FirstOrDefault(e => e != null);
+            DefModExtension_ThingOrRecipe_GeneDependent extension =
+                __instance.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>() ??
+                __instance.products.Select(t => t.thingDef.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>()).FirstOrDefault(e => e != null);
 
             if (extension == null && __instance.memePrerequisitesAny == null)
                 return;

@@ -9,7 +9,7 @@ public static class ChemHelpers
 {
     public static bool ChemicalIsAllowedByGenes(this Pawn pawn, ChemicalDef chemicalDef)
     {
-        var defExtension = chemicalDef?.GetModExtension<ChemicalDefExtension>();
+        var defExtension = chemicalDef?.GetModExtension<DefModExtension_Chemical>();
         if (defExtension == null)
             return true;
 
@@ -40,13 +40,13 @@ public static class ChemHelpers
             new("defName", thingDef => thingDef.defName),
             new("label", thingDef => thingDef.LabelCap),
             new("prohibitedGenes",
-                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<ChemicalDefExtension>()?.prohibitedGenes
+                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<DefModExtension_Chemical>()?.prohibitedGenes
                     ?.Select(geneDef => geneDef.defName).ToCommaList() ?? ""),
             new("requiredGenesAll",
-                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<ChemicalDefExtension>()?.requiredGenesAll
+                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<DefModExtension_Chemical>()?.requiredGenesAll
                     ?.Select(geneDef => geneDef.defName).ToCommaList() ?? ""),
             new("requiredGenesAny",
-                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<ChemicalDefExtension>()?.requiredGenesAny
+                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<DefModExtension_Chemical>()?.requiredGenesAny
                     ?.Select(geneDef => geneDef.defName).ToCommaList() ?? ""),
         ];
         DebugTables.MakeTablesDialog(

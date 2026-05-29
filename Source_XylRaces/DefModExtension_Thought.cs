@@ -4,7 +4,7 @@ using Verse;
 
 namespace XylXenos
 {
-    public class ThoughtDefExtension_Memory : DefModExtension
+    public class DefModExtension_Thought : DefModExtension
     {
         public List<ThoughtDef> extraThoughts;
     }

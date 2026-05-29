@@ -94,7 +94,7 @@ namespace XylXenos
 
             if (Config.Instance.wetnessGivingJobs.Contains(pawn.CurJobDef) && !pawn.pather.Moving)
             {
-                var wetnessSource = pawn.CurJob?.targetA.Thing?.def.GetModExtension<ThingDefExtension_WetnessSource>();
+                var wetnessSource = pawn.CurJob?.targetA.Thing?.def.GetModExtension<DefModExtension_Thing_WetnessSource>();
                 return wetnessSource?.wetnessLevel ?? 1.0f;
             }
 

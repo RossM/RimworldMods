@@ -69,7 +69,7 @@
         <li>XylHerdInstinct</li>
       </nullifyingGenes>
       <modExtensions>
-        <li Class="XylXenos.ThoughtDefExtension_Memory">
+        <li Class="XylXenos.DefModExtension_Thought">
           <extraThoughts>
             <li>XylSleptInBarracks_HerdInstinct</li>
           </extraThoughts>

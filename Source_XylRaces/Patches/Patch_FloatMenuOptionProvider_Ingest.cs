@@ -7,7 +7,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(FloatMenuOptionProvider_Ingest))]
     public static class Patch_FloatMenuOptionProvider_Ingest
     {
-        [Feature(typeof(ChemicalDefExtension))]
+        [Feature(typeof(DefModExtension_Chemical))]
         [HarmonyPrefix]
         [HarmonyPatch("GetSingleOptionFor")]
         public static bool GetSingleOptionFor_Prefix(
@@ -34,7 +34,7 @@ namespace XylXenos.Patches
                     : "ConsumeThing".Translate(clickedThing.LabelShort, clickedThing);
 
                 ChemicalDef chemicalDef = DrugStatsUtility.GetChemical(clickedThing.def);
-                var defExtension = chemicalDef.GetModExtension<ChemicalDefExtension>();
+                var defExtension = chemicalDef.GetModExtension<DefModExtension_Chemical>();
 
                 if (!defExtension.prohibitedGenes.NullOrEmpty())
                 {

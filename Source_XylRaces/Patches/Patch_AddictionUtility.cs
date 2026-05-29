@@ -7,7 +7,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(AddictionUtility))]
     public static class Patch_AddictionUtility
     {
-        [Feature(typeof(ChemicalDefExtension))]
+        [Feature(typeof(DefModExtension_Chemical))]
         [Feature(nameof(DefOf.XylDrugEffectMultiplier))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(AddictionUtility.ModifyChemicalEffectForToleranceAndBodySize))]
@@ -22,7 +22,7 @@ namespace XylXenos.Patches
                 effect *= pawn.GetStatValue(DefOf.XylDrugEffectMultiplier);
         }
 
-        [Feature(typeof(ChemicalDefExtension))]
+        [Feature(typeof(DefModExtension_Chemical))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(AddictionUtility.CanBingeOnNow))]
         public static void CanBingeOnNow_Postfix(

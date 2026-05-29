@@ -42,7 +42,7 @@ namespace XylXenos
                     actor.Rotation = Rot4.Random;
             };
 
-            var wetnessSource = job.targetA.Thing?.def.GetModExtension<ThingDefExtension_WetnessSource>();
+            var wetnessSource = job.targetA.Thing?.def.GetModExtension<DefModExtension_Thing_WetnessSource>();
             if (wetnessSource is { effecter: not null })
             {
                 toil.WithEffect(wetnessSource.effecter, TargetIndex.A);

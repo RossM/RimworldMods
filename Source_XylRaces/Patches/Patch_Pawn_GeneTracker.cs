@@ -14,7 +14,7 @@ namespace XylXenos.Patches
             NotificationManager.Instance.Notify(NotificationEvent.PostGenesChanged, __instance.pawn);
         }
 
-        [Feature(typeof(ChemicalDefExtension))]
+        [Feature(typeof(DefModExtension_Chemical))]
         [Feature(nameof(DefOf.XylGlobalAddictionChanceFactor))]
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]

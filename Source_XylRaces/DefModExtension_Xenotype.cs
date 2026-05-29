@@ -5,7 +5,7 @@ using Verse;
 namespace XylXenos
 {
     [UsedFromXml]
-    public class XenotypeDefExtension : DefModExtension
+    public class DefModExtension_Xenotype : DefModExtension
     {
         public bool allowSolidBackstories = true;
         public List<MemeDef> agreeingMemes;

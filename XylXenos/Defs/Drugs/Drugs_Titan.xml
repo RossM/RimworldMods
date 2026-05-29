@@ -57,7 +57,7 @@
     <canBeAddicted>false</canBeAddicted>
     <generateAddictionGenes>false</generateAddictionGenes>
     <modExtensions>
-      <li Class="XylXenos.ChemicalDefExtension">
+      <li Class="XylXenos.DefModExtension_Chemical">
         <requiredGenesAll>
           <li>XylLithoid</li>
           <li>XylPetrification</li>
@@ -144,7 +144,7 @@
     <canBeAddicted>false</canBeAddicted>
     <generateAddictionGenes>false</generateAddictionGenes>
     <modExtensions>
-      <li Class="XylXenos.ChemicalDefExtension">
+      <li Class="XylXenos.DefModExtension_Chemical">
         <requiredGenesAll>
           <li>XylLithoid</li>
         </requiredGenesAll>

@@ -6,7 +6,7 @@ using Verse;
 
 namespace XylXenos
 {
-    public class FactionDefExtension : DefModExtension
+    public class DefModExtension_Faction : DefModExtension
     {
         public List<BiomeDef> allowedBiomes;
         public List<Hilliness> allowedHilliness;

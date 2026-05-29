@@ -36,7 +36,7 @@
       <li>AptitudeStrong_Plants</li>
     </genes>
     <modExtensions>
-      <li Class="XylXenos.XenotypeDefExtension">
+      <li Class="XylXenos.DefModExtension_Xenotype">
         <agreeingMemes>
           <li MayRequire="Ludeon.RimWorld.Ideology">AnimalPersonhood</li>
           <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>

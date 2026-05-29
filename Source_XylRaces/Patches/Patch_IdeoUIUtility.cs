@@ -10,7 +10,7 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(IdeoUIUtility))]
     public static class Patch_IdeoUIUtility
     {
-        [Feature(typeof(XenotypeDefExtension))]
+        [Feature(typeof(DefModExtension_Xenotype))]
         [HarmonyPostfix]
         [HarmonyPatch("GetMemeTip")]
         public static void GetMemeTip_Postfix(MemeDef meme, ref string __result)
@@ -22,7 +22,7 @@ namespace XylXenos.Patches
 
             foreach (XenotypeDef def in DefDatabase<XenotypeDef>.AllDefs)
             {
-                var modExt = def.GetModExtension<XenotypeDefExtension>();
+                var modExt = def.GetModExtension<DefModExtension_Xenotype>();
                 if (modExt != null)
                 {
                     if (modExt.agreeingMemes?.Contains(meme) == true)

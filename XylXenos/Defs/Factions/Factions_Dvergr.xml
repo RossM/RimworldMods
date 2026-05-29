@@ -43,7 +43,7 @@
       <li MayRequire="Ludeon.RimWorld.Anomaly">Ritualist</li>
     </disallowedMemes>
     <modExtensions>
-      <li Class="XylXenos.FactionDefExtension">
+      <li Class="XylXenos.DefModExtension_Faction">
         <allowedHilliness>
           <li>LargeHills</li>
           <li>Mountainous</li>

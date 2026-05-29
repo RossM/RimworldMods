@@ -9,8 +9,8 @@ namespace XylXenos.Patches
     [HarmonyPatch(typeof(ConversionUtility))]
     public static class Patch_ConversionUtility
     {
-        [Feature(nameof(XenotypeDefExtension.agreeingMemes))]
-        [Feature(nameof(XenotypeDefExtension.disagreeingMemes))]
+        [Feature(nameof(DefModExtension_Xenotype.agreeingMemes))]
+        [Feature(nameof(DefModExtension_Xenotype.disagreeingMemes))]
         [InfixPostfix(typeof(ConversionUtility), "<ConversionPowerFactor_MemesVsTraits>g__OffsetFromIdeo|1_1")]
         [InfixPatch(typeof(ConversionUtility), nameof(ConversionUtility.ConversionPowerFactor_MemesVsTraits))]
         public static void OffsetFromIdeo_Postfix(Pawn pawn, bool invert, StringBuilder sb, Pawn recipient, ref float __result)

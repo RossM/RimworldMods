@@ -35,7 +35,7 @@
     <maxConfigurableAtWorldCreation>9999</maxConfigurableAtWorldCreation>
     <configurationListOrderPriority>30</configurationListOrderPriority>
     <modExtensions>
-      <li Class="XylXenos.FactionDefExtension">
+      <li Class="XylXenos.DefModExtension_Faction">
         <waterRequired>true</waterRequired>
       </li>
     </modExtensions>

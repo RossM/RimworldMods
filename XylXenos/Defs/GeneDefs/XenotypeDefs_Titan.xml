@@ -35,7 +35,7 @@
       <li>AptitudePoor_Intellectual</li>
     </genes>
     <modExtensions>
-      <li Class="XylXenos.XenotypeDefExtension">
+      <li Class="XylXenos.DefModExtension_Xenotype">
         <agreeingMemes>
           <li MayRequire="Ludeon.RimWorld.Odyssey">Shipborn</li>
         </agreeingMemes>

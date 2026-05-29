@@ -5,7 +5,7 @@ using Verse;
 
 namespace XylXenos
 {
-    public class DefModExtension_GeneDependent : DefModExtension
+    public class DefModExtension_ThingOrRecipe_GeneDependent : DefModExtension
     {
         public List<GeneDef> genePrerequisitesAny;
 

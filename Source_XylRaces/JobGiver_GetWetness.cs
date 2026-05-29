@@ -20,7 +20,7 @@ namespace XylXenos
                     field = [];
                     foreach (var def in DefDatabase<ThingDef>.AllDefs)
                     {
-                        if (def.GetModExtension<ThingDefExtension_WetnessSource>() != null)
+                        if (def.GetModExtension<DefModExtension_Thing_WetnessSource>() != null)
                             field.Add(def);
                     }
                 }
