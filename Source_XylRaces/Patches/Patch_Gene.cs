@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using Verse;
-using XylXenos.Genes;
 
 namespace XylXenos.Patches
 {
@@ -23,14 +22,6 @@ namespace XylXenos.Patches
         {
             if (__instance is INotificationListener target)
                 NotificationManager.Instance.UnregisterAll(target);
-        }
-
-        [Feature(nameof(DefExt.hediffGivers))]
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(Gene.TickInterval))]
-        public static void TickInterval_Postfix(Gene __instance, int delta)
-        {
-            __instance.TickIntervalExt(delta);
         }
     }
 }

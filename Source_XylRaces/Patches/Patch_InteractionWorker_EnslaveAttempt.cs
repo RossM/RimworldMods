@@ -84,8 +84,6 @@ namespace XylXenos.Patches
                         }
 
                         extraSentencePacks.Add(RulePackDefOf.Sentence_RecruitAttemptAccepted);
-
-                        return true;
                     }
                 }
                 else
@@ -94,8 +92,6 @@ namespace XylXenos.Patches
                     MoteMaker.ThrowText((initiator.DrawPos + recipient.DrawPos) / 2f, initiator.Map, taggedString, 8f);
                     recipient.mindState.CheckStartMentalStateBecauseRecruitAttempted(initiator);
                     extraSentencePacks.Add(RulePackDefOf.Sentence_RecruitAttemptRejected);
-
-                    return true;
                 }
             }
 

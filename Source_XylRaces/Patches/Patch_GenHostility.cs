@@ -11,7 +11,7 @@ namespace XylXenos.Patches
         // Note: This patch is performance-sensitive
         [Feature(nameof(DefExt.disableHostilityFromFactions))]
         [HarmonyPostfix]
-        [HarmonyPatch(nameof(GenHostility.HostileTo), [typeof(Thing), typeof(Thing)])]
+        [HarmonyPatch(nameof(GenHostility.HostileTo), typeof(Thing), typeof(Thing))]
         public static void HostileTo_Postfix(Thing a, Thing b, ref bool __result)
         {
             if (!__result)

@@ -16,7 +16,7 @@ public static class GeneHelpers
     public static IEnumerable<Gene> GenesOfDef(this Pawn pawn, GeneDef def)
     {
         if (pawn.genes == null)
-            return Enumerable.Empty<Gene>();
+            return [];
 
         return pawn.LookupCache().GetGenesWithDef(def);
     }
@@ -42,12 +42,13 @@ public static class GeneHelpers
     public static IEnumerable<T> GenesOfType<T>(this Pawn pawn) where T : class
     {
         if (pawn.genes == null)
-            return Enumerable.Empty<T>();
+            return [];
 
         return pawn.LookupCache().GetGenesOfType<T>();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    // ReSharper disable once UnusedMember.Global
     public static IEnumerable<T> ActiveGenesOfType<T>(this Pawn pawn) where T : class
     {
         foreach (T g in pawn.GenesOfType<T>())
@@ -102,26 +103,8 @@ public static class GeneHelpers
     public static IEnumerable<DefExt> ActiveDefExts(this Pawn pawn)
     {
         if (pawn.genes == null)
-            return Enumerable.Empty<DefExt>();
+            return [];
         return pawn.genes.GenesListForReading.Where(gene => gene.Active).Select(gene => gene.DefExt()).Where(defExt => defExt != null);
-    }
-
-    public static void TickIntervalExt(this Gene gene, int delta)
-    {
-        if (!gene.Active)
-            return;
-        var defExt = gene.DefExt();
-        if (defExt == null)
-            return;
-        if (defExt.hediffGivers.NullOrEmpty())
-            return;
-        if (!gene.pawn.IsHashIntervalTick(60, delta))
-            return;
-
-        foreach (var hediffGiver in defExt.hediffGivers)
-        {
-            hediffGiver.OnIntervalPassed(gene.pawn, null);
-        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

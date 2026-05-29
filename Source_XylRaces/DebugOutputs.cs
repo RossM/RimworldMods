@@ -165,7 +165,7 @@ namespace XylXenos
         [DebugOutput]
         public static void GenerateXenohumanNames()
         {
-            List<DebugMenuOption> list = new List<DebugMenuOption>();
+            List<DebugMenuOption> list = [];
 
             foreach (XenotypeDef item in DefDatabase<XenotypeDef>.AllDefs.Where(def => def.nameMaker != null).OrderBy(def => def.defName))
             {
@@ -182,10 +182,7 @@ namespace XylXenos
                         sb.AppendLine(name.ToStringFull);
                     }
 
-                    if (sb.Length > 0)
-                        Log.Message(sb.ToString());
-                    else
-                        Log.Message($"No name maker for {localDef.label}");
+                    Log.Message(sb.Length > 0 ? sb.ToString() : $"No name maker for {localDef.label}");
                 }));
             }
 

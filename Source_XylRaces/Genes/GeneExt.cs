@@ -52,11 +52,7 @@ namespace XylXenos.Genes
                 if (itemDef == null)
                     continue;
 
-                int count;
-                if (startingItem.nutritionAmount != FloatRange.Zero)
-                    count = Mathf.FloorToInt(startingItem.nutritionAmount.RandomInRange / Helpers.GetStatBase(itemDef, StatDefOf.Nutrition));
-                else
-                    count = startingItem.count.RandomInRange;
+                var count = startingItem.nutritionAmount != FloatRange.Zero ? Mathf.FloorToInt(startingItem.nutritionAmount.RandomInRange / itemDef.GetStatBase(StatDefOf.Nutrition)) : startingItem.count.RandomInRange;
 
                 yield return new(itemDef, Mathf.Clamp(count, 1, itemDef.stackLimit));
             }
@@ -136,7 +132,7 @@ namespace XylXenos.Genes
         private IEnumerable<Hediff> GetLinkedHediffs()
         {
             if (DefExt.permanentHediffs.NullOrEmpty())
-                return Enumerable.Empty<Hediff>();
+                return [];
 
             HashSet<HediffDef> defs = [.. DefExt.permanentHediffs.Select(hediffGiver => hediffGiver.hediff)];
             return pawn.health.hediffSet.hediffs.Where(hediff => defs.Contains(hediff.def)).ToList();
@@ -171,6 +167,24 @@ namespace XylXenos.Genes
                 yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
                     DefExt.GetGenderRatioDescription(), "XylGenderRatioDesc".TranslateSimple(), 1);
             }
+        }
+
+        public override void TickInterval(int delta)
+        {
+            base.TickInterval(delta);
+
+            if (!Active)
+                return;
+            if (DefExt.hediffGivers.NullOrEmpty())
+                return;
+            if (!pawn.IsHashIntervalTick(60, delta))
+                return;
+
+            foreach (var hediffGiver in DefExt.hediffGivers)
+            {
+                hediffGiver.OnIntervalPassed(pawn, null);
+            }
+
         }
 
         public void Notify_HediffStateChange()

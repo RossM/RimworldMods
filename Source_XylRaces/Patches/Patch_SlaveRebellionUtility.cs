@@ -99,8 +99,8 @@ namespace XylXenos.Patches
             StatRequest statRequest = StatRequest.For(pawn);
             float baseValueFor = DefOf.XylSlaveRebellionMtbFactor.Worker.GetBaseValueFor(statRequest);
             ToStringNumberSense toStringNumberSense = DefOf.XylSlaveRebellionMtbFactor.toStringNumberSense;
-            DefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor, "");
-            DefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense, stringBuilder, "");
+            DefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor);
+            DefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense, stringBuilder);
 
             if (initiateSlaveRebellionMtbDays < 0)
             {

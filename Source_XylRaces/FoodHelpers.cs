@@ -46,7 +46,7 @@ public static class FoodHelpers
 
     public static float GetExtraNutritionFactor(Pawn eater, Thing foodSource, ThingDef foodDef)
     {
-        if (IsRawFoodOrCorpse(foodDef))
+        if (foodDef.IsRawFoodOrCorpse())
         {
             return GetRawNutritionFactor(eater, GetFoodType(foodDef));
         }
@@ -98,7 +98,7 @@ public static class FoodHelpers
     {
         var foodDef = foodSource.def;
 
-        if (!IsRawFoodOrCorpse(foodDef))
+        if (!foodDef.IsRawFoodOrCorpse())
             return 1f;
 
         FoodType foodType = GetFoodType(foodSource.def);

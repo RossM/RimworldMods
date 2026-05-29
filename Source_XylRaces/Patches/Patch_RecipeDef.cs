@@ -25,7 +25,7 @@ namespace XylXenos.Patches
         {
             if (DebugSettings.godMode)
                 return;
-            if (__result == false)
+            if (!__result)
                 return;
 
             DefModExtension_GeneDependent extension =

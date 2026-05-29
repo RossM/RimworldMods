@@ -21,7 +21,7 @@ namespace XylXenos
             
             float changePerDay = temperatureDifference * (temperatureDifference > 0 ? severityGainPerDayPerDegree : severityLossPerDayPerDegree);
             
-            HealthUtility.AdjustSeverity(pawn, hediff, (60f / (float)GenDate.TicksPerDay) * changePerDay);
+            HealthUtility.AdjustSeverity(pawn, hediff, (60f / GenDate.TicksPerDay) * changePerDay);
         }
     }
 }

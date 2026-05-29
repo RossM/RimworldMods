@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using RimWorld.Planet;
 using Verse;
 
 namespace XylXenos
@@ -69,12 +68,11 @@ namespace XylXenos
 
         private static Ideo GetRandomIdeo()
         {
-            Ideo ideo;
-            if (!Find.IdeoManager.IdeosListForReading.Where((Ideo i) => !Faction.OfPlayer.ideos.Has(i))
-                    .TryRandomElementByWeight((Ideo x) => IdeoUtility.IdeoChangeToWeight(null, x), out ideo))
+            if (!Find.IdeoManager.IdeosListForReading.Where(i => !Faction.OfPlayer.ideos.Has(i))
+                    .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out Ideo ideo))
             {
-                Find.IdeoManager.IdeosListForReading.Where((Ideo i) => !Faction.OfPlayer.ideos.IsPrimary(i))
-                    .TryRandomElementByWeight((Ideo x) => IdeoUtility.IdeoChangeToWeight(null, x), out ideo);
+                Find.IdeoManager.IdeosListForReading.Where(i => !Faction.OfPlayer.ideos.IsPrimary(i))
+                    .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out ideo);
             }
 
             return ideo;

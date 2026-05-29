@@ -19,7 +19,7 @@ namespace XylXenos.Patches
         [InfixPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
         public static void GetFirstHediffOfDef_Postfix(HediffSet __instance, HediffDef def, bool mustBeVisible, ref Hediff __result)
         {
-            if (def == HediffDefOf.Lactating && mustBeVisible == false)
+            if (def == HediffDefOf.Lactating && !mustBeVisible)
                 __result = __instance.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
         }
 
@@ -28,7 +28,7 @@ namespace XylXenos.Patches
         [InfixPatch(typeof(ChildcareUtility), "CanBreastfeed")]
         public static void HasHediff_Postfix(HediffSet __instance, HediffDef def, bool mustBeVisible, ref bool __result)
         {
-            if (def == HediffDefOf.Lactating && mustBeVisible == false)
+            if (def == HediffDefOf.Lactating && !mustBeVisible)
                 __result = __instance.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
         }
     }
