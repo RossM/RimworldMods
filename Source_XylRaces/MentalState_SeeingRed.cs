@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using Verse.AI;
 using XylXenos.Genes;

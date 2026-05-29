@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
-using XylXenos.Genes;
 
 namespace XylXenos;
 
