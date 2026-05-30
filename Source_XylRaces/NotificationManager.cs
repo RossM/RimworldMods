@@ -1,6 +1,4 @@
-﻿using XylXenos;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 public interface INotificationListener
 {
@@ -24,6 +22,8 @@ public enum NotificationEvent
     PostPostMake,
     PostLoadedGame,
     PostGameDispose,
+
+    PawnGenerationEarly,
 }
 
 /// <summary>
@@ -61,7 +61,7 @@ public class NotificationManager : GameComponent
 
     private readonly EventInfo[] events = new EventInfo[Enum.GetValues(typeof(NotificationEvent)).Length];
 
-    private readonly ConditionalWeakTable<INotificationListener, List<RegistrationInfo>> registeredEvents = new();
+    private ConditionalWeakTable<INotificationListener, List<RegistrationInfo>> registeredEvents = new();
 
     public NotificationManager(Game _)
     {
@@ -270,5 +270,12 @@ public class NotificationManager : GameComponent
     {
         foreach (var listener in extraListeners)
             listener.RegisterWith(this);
+    }
+
+    public void Reset()
+    {
+        registeredEvents = new();
+        for (int i = 0; i < events.Length; i++)
+            events[i] = null;
     }
 }

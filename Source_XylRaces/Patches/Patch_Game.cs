@@ -9,5 +9,6 @@ public static class Patch_Game
     public static void Dispose_Postfix()
     {
         NotificationManager.Instance.Notify(NotificationEvent.PostGameDispose, null);
+        NotificationManager.Instance.Reset();
     }
 }

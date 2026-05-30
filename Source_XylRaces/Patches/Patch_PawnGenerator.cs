@@ -3,7 +3,16 @@
 [HarmonyPatch(typeof(PawnGenerator))]
 public static class Patch_PawnGenerator
 {
+    private static XenotypeDef xenotypeOverride;
+
+    public class PawnGenerationEarlyData(PawnGenerationRequest request, XenotypeDef xenotype)
+    {
+        public PawnGenerationRequest request = request;
+        public XenotypeDef xenotype = xenotype;
+    }
+
     [Feature(nameof(DefModExtension_Gene.femaleChance))]
+    [Feature(nameof(NotificationEvent.PawnGenerationEarly))]
     [InfixPrefix(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
     [InfixPatch("TryGenerateNewPawnInternal")]
     public static void GiveAppropriateBioAndNameTo_Prefix(
@@ -12,6 +21,19 @@ public static class Patch_PawnGenerator
         XenotypeDef xenotype)
     {
         PatchHelpers.ModifyGenderByGenes(pawn, request, xenotype);
+
+        var data = new PawnGenerationEarlyData(request, xenotype);
+        NotificationManager.Instance.Notify(NotificationEvent.PawnGenerationEarly, pawn, data);
+
+        xenotypeOverride = data.xenotype;
+    }
+
+    [Feature(nameof(NotificationEvent.PawnGenerationEarly))]
+    [InfixPrefix(typeof(PawnGenerator), "GenerateGenes")]
+    [InfixPatch("TryGenerateNewPawnInternal")]
+    public static void GenerateGenes_Prefix(ref XenotypeDef xenotype)
+    {
+        xenotype = xenotypeOverride;
     }
 
     [Feature(nameof(DefModExtension_Gene.congenitalHediffs))]

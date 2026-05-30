@@ -1,7 +1,9 @@
-﻿namespace XylXenos;
+﻿using static XylXenos.Patches.Patch_PawnGenerator;
+
+namespace XylXenos;
 
 [UsedFromXml]
-public class ScenPart_RandomXenotype : ScenPart_PawnModifier
+public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListener
 {
     public bool allowArchite;
 
@@ -9,31 +11,6 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier
     {
         base.ExposeData();
         Scribe_Values.Look(ref allowArchite, nameof(allowArchite));
-    }
-
-    protected override void ModifyNewPawn(Pawn pawn)
-    {
-        var xenotype = DefDatabase<XenotypeDef>.AllDefs.Where(ValidateXenotype).RandomElement();
-
-        // TODO
-        // Note that there are a couple of things added by genes in character creation that we don't
-        // reset here because doing so requires modifying more than just genes:
-        //   * gender
-        //   * congenital hediffs
-        //
-        // The cleanest solution would be to hook things earlier in pawn creation rather than trying
-        // to modify the pawn after the fact.
-        //
-        // Also, probably we shouldn't affect babies.
-
-        List<Gene> list2 = pawn.genes.Endogenes;
-        for (int num = list2.Count - 1; num >= 0; num--)
-        {
-            Gene gene = list2[num];
-            if (gene.def.endogeneCategory != EndogeneCategory.Melanin && gene.def.endogeneCategory != EndogeneCategory.HairColor)
-                pawn.genes.RemoveGene(gene);
-        }
-        pawn.genes.SetXenotype(xenotype);
     }
 
     private bool ValidateXenotype(XenotypeDef xenotypeDef)
@@ -46,5 +23,33 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier
         Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 4f);
         Widgets.CheckboxLabeled(scenPartRect.TopPartPixels(RowHeight), "Allow archite xenotypes", ref allowArchite);
         DoPawnModifierEditInterface(scenPartRect.BottomPartPixels(RowHeight * 2f));
+    }
+
+    public void Notify_PawnGenerationEarly(Thing thing, PawnGenerationEarlyData data)
+    {
+        var pawn = thing as Pawn;
+        if (pawn == null)
+            return;
+
+        if (data.request.ForcedCustomXenotype != null)
+            return;
+
+        if (context.Includes(data.request.Context) && Rand.Chance(chance) && pawn.RaceProps.Humanlike)
+        {
+            var xenotype = DefDatabase<XenotypeDef>.AllDefs.Where(ValidateXenotype).RandomElement();
+
+            Log.Message($"Xenotype {data.xenotype} -> {xenotype}");
+            data.xenotype = xenotype;
+        }
+    }
+
+    public override void PreConfigure()
+    {
+        RegisterWith(NotificationManager.Instance);        
+    }
+
+    public void RegisterWith(NotificationManager manager)
+    {
+        manager.Register<PawnGenerationEarlyData>(NotificationEvent.PawnGenerationEarly, null, Notify_PawnGenerationEarly);
     }
 }
