@@ -210,7 +210,7 @@
           <!--<li>West</li>-->
         </visibleFacing>
         <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
-        <baseLayer>63</baseLayer>
+        <baseLayer>53</baseLayer>
       </li>
     </renderNodeProperties>
     <randomBrightnessFactor>0.18</randomBrightnessFactor>
