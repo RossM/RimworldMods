@@ -20,12 +20,13 @@ public static class Patch_PawnGenerator
         PawnGenerationRequest request,
         XenotypeDef xenotype)
     {
-        PatchHelpers.ModifyGenderByGenes(pawn, request, xenotype);
-
         var data = new PawnGenerationEarlyData(request, xenotype);
         NotificationManager.Instance.Notify(NotificationEvent.PawnGenerationEarly, pawn, data);
 
         xenotypeOverride = data.xenotype;
+
+        PatchHelpers.ModifyGenderByGenes(pawn, request, data.xenotype);
+
     }
 
     [Feature(nameof(NotificationEvent.PawnGenerationEarly))]
