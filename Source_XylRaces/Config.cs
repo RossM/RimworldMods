@@ -7,6 +7,7 @@ public class Config : Def
         FixLactationBugs,
         Joyless,
         UIChange,
+        Parthenogenesis,
     }
 
     public static Config Instance => field ??= DefDatabase<Config>.AllDefs.Single();
