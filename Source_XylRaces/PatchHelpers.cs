@@ -313,16 +313,12 @@ public static class PatchHelpers
 
     public static DominantParent GetDominantParent(Pawn father, Pawn mother)
     {
-        bool fatherHasStrongXenotype = HasStrongXenotype(father);
-        bool motherHasStrongXenotype = HasStrongXenotype(mother);
+        int fatherStrength = XenotypeStrength(father);
+        int motherStrength = XenotypeStrength(mother);
 
-        if (fatherHasStrongXenotype && !motherHasStrongXenotype)
+        if (fatherStrength > motherStrength)
             return DominantParent.Father;
-        if (motherHasStrongXenotype && !fatherHasStrongXenotype)
-            return DominantParent.Mother;
-
-        // This is a change to normal game behavior but is needed to make parthenogenesis work right
-        if (mother != null && father == null)
+        if (motherStrength > fatherStrength)
             return DominantParent.Mother;
 
         return DominantParent.None;
@@ -335,11 +331,11 @@ public static class PatchHelpers
         destination.genes.iconDef = source.genes.iconDef;
     }
 
-    private static bool HasStrongXenotype(Pawn pawn)
+    private static int XenotypeStrength(Pawn pawn)
     {
         if (pawn?.genes == null)
-            return false;
+            return int.MinValue;
 
-        return pawn.ActiveGenesOfType<GeneExt>().Any(gene => gene.DefExt.strongXenotype);
+        return pawn.ActiveGenesOfType<GeneExt>().Sum(gene => gene.DefExt.xenotypeStrength);
     }
 }

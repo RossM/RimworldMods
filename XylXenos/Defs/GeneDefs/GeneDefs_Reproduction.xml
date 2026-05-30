@@ -101,16 +101,35 @@
   <GeneDef>
     <defName>XylStrongGenes</defName>
     <label>strong genes</label>
-    <description>When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the carrier's genes unless the other parent also has this gene.\n\nThis gene has no effect unless it is a germline gene.</description>
+    <description>When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the carrier's endogenes unless the other parent also has this gene.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
-    <selectionWeight>0</selectionWeight>
+    <exclusionTags>
+      <li>XenotypeStrength</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
-        <strongXenotype>true</strongXenotype>
-        <geneType>Endogene</geneType>
+        <xenotypeStrength>1</xenotypeStrength>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylWeakGenes</defName>
+    <label>weak genes</label>
+    <description>When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the other parent's endogenes unless the other parent also has this gene.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Reproduction</displayCategory>
+    <displayOrderInCategory>400</displayOrderInCategory>
+    <exclusionTags>
+      <li>XenotypeStrength</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Gene">
+        <xenotypeStrength>-1</xenotypeStrength>
       </li>
     </modExtensions>
   </GeneDef>

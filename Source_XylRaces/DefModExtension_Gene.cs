@@ -80,7 +80,7 @@ public class DefModExtension_Gene : DefModExtension
     public GeneType? geneType;
     public bool allowMutants = true;
 
-    public bool strongXenotype;
+    public int xenotypeStrength;
 
     public float bodySizeFactor = 1.0f;
     public float healthScaleFactor = 1.0f;
