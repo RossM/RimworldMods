@@ -29,4 +29,13 @@
     <summaryPriority>312</summaryPriority>
   </ScenPartDef>
 
+  <ScenPartDef>
+    <defName>XylRandomXenotypes</defName>
+    <label>randomize xenotype</label>
+    <scenPartClass>XylXenos.ScenPart_RandomXenotype</scenPartClass>
+    <category>StartingImportant</category>
+    <selectionWeight>1.0</selectionWeight>
+    <summaryPriority>313</summaryPriority>
+  </ScenPartDef>
+
 </Defs>
