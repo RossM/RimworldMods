@@ -1,10 +1,16 @@
 using RimWorld.Planet;
-using XylXenos;
 
 namespace XylXenos;
 
 public static class PatchHelpers
 {
+    public enum DominantParent
+    {
+        None,
+        Mother,
+        Father,
+    }
+
     public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
         var bonusGenes = geneDef.DefExt?.bonusGenes;
@@ -45,7 +51,8 @@ public static class PatchHelpers
 
         IEnumerable<ThingDef> thingDefs = DefDatabase<RecipeDef>.AllDefsListForReading
             .SelectMany(def => def.products ?? Enumerable.Empty<ThingDefCountClass>(), (_, c) => c.thingDef)
-            .Where(def => def.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>()?.genePrerequisitesAny?.Contains(geneDef) == true)
+            .Where(def => def.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>()?.genePrerequisitesAny?.Contains(geneDef) ==
+                          true)
             .ToList();
         if (thingDefs.Any())
         {
@@ -302,13 +309,6 @@ public static class PatchHelpers
         }
 
         return flags;
-    }
-
-    public enum DominantParent
-    {
-        None,
-        Mother,
-        Father,
     }
 
     public static DominantParent GetDominantParent(Pawn father, Pawn mother)
