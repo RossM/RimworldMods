@@ -138,14 +138,6 @@
     <displayOrderInCategory>460</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MineralizedSkin</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
-    <forcedHeadTypes>
-      <li>Female_Osteoliths_Average_Normal</li>
-      <li>Female_Osteoliths_Average_Wide</li>
-      <li>Female_Osteoliths_Narrow_Wide</li>
-      <li>Male_Osteoliths_Average_Normal</li>
-      <li>Male_Osteoliths_Average_Wide</li>
-      <li>Male_Osteoliths_Narrow_Wide</li>
-    </forcedHeadTypes>
     <exclusionTags>
       <li>Fur</li>
     </exclusionTags>
@@ -158,23 +150,29 @@
     <renderNodeProperties>
       <li>
         <debugLabel>Osteoliths</debugLabel>
-        <nodeClass>PawnRenderNode</nodeClass>
+        <nodeClass>XylXenos.PawnRenderNode_HeadPattern</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <baseLayer>51</baseLayer>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <colorType>Skin</colorType>
+        <useSkinShader>true</useSkinShader>
+        <parentTagDef>Head</parentTagDef>
+        <texPaths>
+          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/Osteoliths/Osteoliths</li>
+        </texPaths>
+      </li>
+      <li>
+        <debugLabel>Osteoliths</debugLabel>
+        <nodeClass>XylXenos.PawnRenderNode_BodyPattern</nodeClass>
         <workerClass>PawnRenderNodeWorker_Body</workerClass>
         <baseLayer>1</baseLayer>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <colorType>Skin</colorType>
         <useSkinShader>true</useSkinShader>
         <parentTagDef>Body</parentTagDef>
-        <bodyTypeGraphicPaths>
-          <Male>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Male</Male>
-          <Female>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Female</Female>
-          <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Hulk</Hulk>
-          <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Fat</Fat>
-          <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Thin</Thin>
-          <Child>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Child</Child>
-          <Baby>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Child</Baby>
-          <!-- Always covered by swaddled graphic -->
-        </bodyTypeGraphicPaths>
+        <texPaths>
+          <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/Osteoliths/Osteoliths</li>
+        </texPaths>
       </li>
     </renderNodeProperties>
     <missingGeneRomanceChanceFactor>0.2</missingGeneRomanceChanceFactor>
