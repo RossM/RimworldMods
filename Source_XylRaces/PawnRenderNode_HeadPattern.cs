@@ -4,11 +4,6 @@
 public class PawnRenderNode_HeadPattern(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree)
     : PawnRenderNode_Head(pawn, props, tree)
 {
-    //public override GraphicMeshSet MeshSetFor(Pawn pawn)
-    //{
-    //    return HumanlikeMeshPoolUtility.GetHumanlikeHairSetForPawn(pawn);
-    //}
-
     public override Graphic GraphicFor(Pawn pawn)
     {
         if (!pawn.health.hediffSet.HasHead)
