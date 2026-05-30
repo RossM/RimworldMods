@@ -58,7 +58,7 @@
     <labelShortAdj>dark silver</labelShortAdj>
     <description>Carriers of this gene produce a pigment that gives their skin a dark silver color.</description>
     <!-- HSV (209,20,50) -->
-    <skinColorOverride>(102,145,127)</skinColorOverride>
+    <skinColorOverride>(102,115,127)</skinColorOverride>
     <displayOrderInCategory>90</displayOrderInCategory>
   </GeneDef>
 
