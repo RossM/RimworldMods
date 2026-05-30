@@ -214,7 +214,6 @@
     <isBad>false</isBad>
     <defaultLabelColor>(0.6, 0.6, 1.0)</defaultLabelColor>
     <initialSeverity>1</initialSeverity>
-    <scenarioCanAdd>true</scenarioCanAdd>
     <comps>
       <li Class="HediffCompProperties_RemoveIfOtherHediff">
         <hediffs>
