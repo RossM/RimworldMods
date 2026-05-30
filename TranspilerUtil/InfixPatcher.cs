@@ -21,7 +21,8 @@ namespace TranspilerUtil
             List<InstructionMatcher.Rule> rules,
             MethodBase method,
             IEnumerable<CodeInstruction> instructions,
-            ILGenerator generator);
+            ILGenerator generator,
+            bool debug);
 
         private class MethodPatchWorker(
             ILGenerator generator,
@@ -311,6 +312,7 @@ namespace TranspilerUtil
             public MethodInfo caller;
             public MethodInfo patchMethod;
             public PatchType patchType;
+            public bool debug;
         }
 
         public static void PatchInfix(Harmony harmony, Assembly assembly)
@@ -332,6 +334,7 @@ namespace TranspilerUtil
                               (InfixTargetAttribute)Attribute.GetCustomAttribute(method, typeof(InfixPostfixAttribute));
                         var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(InfixPatchAttribute))
                             .Cast<InfixPatchAttribute>().ToArray();
+                        bool debug = Attribute.GetCustomAttribute(method, typeof(InfixDebugAttribute)) != null;
 
                         if (infixTargetAttribute == null)
                             continue;
@@ -353,7 +356,7 @@ namespace TranspilerUtil
                             patches.Add(new()
                             {
                                 caller = caller, target = target, patchMethod = method,
-                                patchType = infixTargetAttribute.patchType
+                                patchType = infixTargetAttribute.patchType, debug = debug,
                             });
                         }
                     }
@@ -402,8 +405,10 @@ namespace TranspilerUtil
                         });
                     }
 
+                    bool debug = patchGroup.Any(info => info.debug);
+
                     MethodInfo transpiler = MakeTranspiler(moduleBuilder, rules,
-                        $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler");
+                        $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler", debug);
 
                     try
                     {
@@ -427,8 +432,8 @@ namespace TranspilerUtil
         {
             string[] nameParts = memberName.Split([':']);
             for (int i = 0; i < nameParts.Length - 1; i++)
-                type = AccessTools.InnerTypes(type).First(type => type.Name.Contains(nameParts[i]));
-            memberName = nameParts[nameParts.Length - 1];
+                type = AccessTools.InnerTypes(type).First(type1 => type1.Name.Contains(nameParts[i]));
+            memberName = nameParts[^1];
 
             MemberInfo wrappedMember = parameterTypes == null
                 ? type.GetMember(memberName, AccessTools.all).Single()
@@ -440,11 +445,13 @@ namespace TranspilerUtil
             return wrappedMember;
         }
 
-        private static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, List<InstructionMatcher.Rule> rules, string typeName)
+        private static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, List<InstructionMatcher.Rule> rules, string typeName, bool debug)
         {
             TypeBuilder typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
 
             FieldBuilder rulesField = typeBuilder.DefineField("rules", typeof(List<InstructionMatcher.Rule>),
+                FieldAttributes.Public | FieldAttributes.Static);
+            FieldBuilder debugField = typeBuilder.DefineField("debug", typeof(bool),
                 FieldAttributes.Public | FieldAttributes.Static);
 
             MethodBuilder methodBuilder = typeBuilder.DefineMethod("Invoke", MethodAttributes.Public | MethodAttributes.Static,
@@ -457,11 +464,13 @@ namespace TranspilerUtil
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldarg_1);
             generator.Emit(OpCodes.Ldarg_2);
+            generator.Emit(OpCodes.Ldsfld, debugField);
             generator.Emit(OpCodes.Call, matchAndReplace);
             generator.Emit(OpCodes.Ret);
 
             Type type = typeBuilder.CreateType();
             type.GetField(rulesField.Name).SetValue(null, rules);
+            type.GetField(debugField.Name).SetValue(null, debug);
             return type.GetMethod(methodBuilder.Name);
         }
 

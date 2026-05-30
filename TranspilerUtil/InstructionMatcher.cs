@@ -397,10 +397,11 @@ public class InstructionMatcher
         List<Rule> rules,
         MethodBase method,
         IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator)
+        ILGenerator generator,
+        bool debug)
     {
         var instructionsList = new List<CodeInstruction>(instructions);
-        new InstructionMatcher() { Rules = rules }.MatchAndReplace(method, ref instructionsList, generator);
+        new InstructionMatcher() { Rules = rules }.MatchAndReplace(method, ref instructionsList, generator, debug: debug);
         return instructionsList;
     }
 }
