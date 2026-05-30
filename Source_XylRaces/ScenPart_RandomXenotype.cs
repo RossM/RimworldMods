@@ -37,8 +37,6 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListe
         if (context.Includes(data.request.Context) && Rand.Chance(chance) && pawn.RaceProps.Humanlike)
         {
             var xenotype = DefDatabase<XenotypeDef>.AllDefs.Where(ValidateXenotype).RandomElement();
-
-            Log.Message($"Xenotype {data.xenotype} -> {xenotype}");
             data.xenotype = xenotype;
         }
     }
