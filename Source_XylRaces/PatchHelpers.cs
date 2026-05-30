@@ -342,13 +342,4 @@ public static class PatchHelpers
 
         return pawn.ActiveGenesOfType<GeneExt>().Any(gene => gene.DefExt.strongXenotype);
     }
-
-    public static RimWorld.GeneSet CreateGeneSetFrom(Pawn pawn)
-    {
-        RimWorld.GeneSet result = new();
-        foreach (var gene in pawn.genes.Endogenes)
-            result.AddGene(gene.def);
-        result.SetNameDirect(pawn.genes.xenotypeName);
-        return result;
-    }
 }

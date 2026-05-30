@@ -9,21 +9,23 @@ public class Patch_PregnancyUtility
 {
     [Feature(nameof(DefModExtension_Gene.strongXenotype))]
     [HarmonyPostfix]
-    [HarmonyPatch(nameof(PregnancyUtility.GetInheritedGeneSet), 
+    [HarmonyPatch(nameof(PregnancyUtility.GetInheritedGenes), 
         [typeof(Pawn), typeof(Pawn), typeof(bool)],
-        [ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref])]
-    public static void GetInheritedGeneSet_Postfix(Pawn father, Pawn mother, ref RimWorld.GeneSet __result)
+        [ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Out])]
+    public static void GetInheritedGenes_Postfix(Pawn father, Pawn mother, ref List<GeneDef> __result)
     {
+        Log.Message($"GetInheritedGenes_Postfix: father={father} mother={mother} dominant parent={PatchHelpers.GetDominantParent(father, mother)}");
+
         switch (PatchHelpers.GetDominantParent(father, mother))
         {
             case PatchHelpers.DominantParent.Mother:
             {
-                __result = PatchHelpers.CreateGeneSetFrom(mother);
+                __result = mother.genes.Endogenes.Select(gene => gene.def).ToList();
                 break;
             }
             case PatchHelpers.DominantParent.Father:
             {
-                __result = PatchHelpers.CreateGeneSetFrom(father);
+                __result = father.genes.Endogenes.Select(gene => gene.def).ToList();
                 break;
             }
         }
