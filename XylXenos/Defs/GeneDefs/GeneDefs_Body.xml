@@ -99,17 +99,26 @@
       <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
       <ArmorRating_Blunt>0.15</ArmorRating_Blunt>
     </statOffsets>
-    <fur>Scaleskin</fur>
     <renderNodeProperties>
       <li>
         <debugLabel>Scaleskin</debugLabel>
-        <nodeClass>XylXenos.PawnRenderNode_NotFur</nodeClass>
-        <workerClass>PawnRenderNodeWorker_Fur</workerClass>
+        <nodeClass>PawnRenderNode</nodeClass>
+        <workerClass>PawnRenderNodeWorker_Body</workerClass>
         <baseLayer>1</baseLayer>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <colorType>Skin</colorType>
         <useSkinShader>true</useSkinShader>
         <parentTagDef>Body</parentTagDef>
+        <bodyTypeGraphicPaths>
+          <Male>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Male</Male>
+          <Female>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Female</Female>
+          <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Hulk</Hulk>
+          <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Fat</Fat>
+          <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Thin</Thin>
+          <Child>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Child>
+          <Baby>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Baby>
+          <!-- Child: Always covered by swaddled graphic -->
+        </bodyTypeGraphicPaths>
       </li>
     </renderNodeProperties>
     <modExtensions>
@@ -117,20 +126,6 @@
       </li>
     </modExtensions>
   </GeneDef>
-  <FurDef>
-    <defName>Scaleskin</defName>
-    <noGraphic>true</noGraphic>
-    <bodyTypeGraphicPaths>
-      <Male>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Male</Male>
-      <Female>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Female</Female>
-      <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Hulk</Hulk>
-      <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Fat</Fat>
-      <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Thin</Thin>
-      <Child>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Child>
-      <Baby>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Baby>
-      <!-- Always covered by swaddled graphic -->
-    </bodyTypeGraphicPaths>
-  </FurDef>
 
   <GeneDef>
     <defName>XylMineralizedSkin</defName>
@@ -160,17 +155,26 @@
       <ArmorRating_Heat>0.5</ArmorRating_Heat>
       <MoveSpeed>-0.4</MoveSpeed>
     </statOffsets>
-    <fur>Osteoliths</fur>
     <renderNodeProperties>
       <li>
         <debugLabel>Osteoliths</debugLabel>
-        <nodeClass>XylXenos.PawnRenderNode_NotFur</nodeClass>
-        <workerClass>PawnRenderNodeWorker_Fur</workerClass>
+        <nodeClass>PawnRenderNode</nodeClass>
+        <workerClass>PawnRenderNodeWorker_Body</workerClass>
         <baseLayer>1</baseLayer>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <colorType>Skin</colorType>
         <useSkinShader>true</useSkinShader>
         <parentTagDef>Body</parentTagDef>
+        <bodyTypeGraphicPaths>
+          <Male>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Male</Male>
+          <Female>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Female</Female>
+          <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Hulk</Hulk>
+          <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Fat</Fat>
+          <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Thin</Thin>
+          <Child>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Child</Child>
+          <Baby>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Child</Baby>
+          <!-- Always covered by swaddled graphic -->
+        </bodyTypeGraphicPaths>
       </li>
     </renderNodeProperties>
     <missingGeneRomanceChanceFactor>0.2</missingGeneRomanceChanceFactor>
@@ -179,19 +183,5 @@
       </li>
     </modExtensions>
   </GeneDef>
-  <FurDef>
-    <defName>Osteoliths</defName>
-    <noGraphic>true</noGraphic>
-    <bodyTypeGraphicPaths>
-      <Male>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Male</Male>
-      <Female>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Female</Female>
-      <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Hulk</Hulk>
-      <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Fat</Fat>
-      <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Thin</Thin>
-      <Child>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Child</Child>
-      <Baby>Xyl/Things/Pawn/Humanlike/Bodies/Osteoliths_Child</Baby>
-      <!-- Always covered by swaddled graphic -->
-    </bodyTypeGraphicPaths>
-  </FurDef>
 
 </Defs>
