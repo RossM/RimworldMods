@@ -15,6 +15,17 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier
     {
         var xenotype = DefDatabase<XenotypeDef>.AllDefs.Where(ValidateXenotype).RandomElement();
 
+        // TODO
+        // Note that there are a couple of things added by genes in character creation that we don't
+        // reset here because doing so requires modifying more than just genes:
+        //   * gender
+        //   * congenital hediffs
+        //
+        // The cleanest solution would be to hook things earlier in pawn creation rather than trying
+        // to modify the pawn after the fact.
+        //
+        // Also, probably we shouldn't affect babies.
+
         List<Gene> list2 = pawn.genes.Endogenes;
         for (int num = list2.Count - 1; num >= 0; num--)
         {
