@@ -234,9 +234,9 @@
           <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/Ribs/Ribs</li>
         </texPaths>
         <visibleFacing>
-          <!--<li>East</li>-->
+          <li>East</li>
           <li>South</li>
-          <!--<li>West</li>-->
+          <li>West</li>
         </visibleFacing>
         <baseLayer>3</baseLayer>
       </li>
