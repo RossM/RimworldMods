@@ -1,4 +1,5 @@
-﻿using static XylXenos.Patches.Patch_PawnGenerator;
+﻿using RimWorld;
+using static XylXenos.Patches.Patch_PawnGenerator;
 
 namespace XylXenos;
 
@@ -32,6 +33,9 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListe
             return;
 
         if (data.request.ForcedCustomXenotype != null)
+            return;
+
+        if (data.xenotype != null && data.xenotype.AllGenes.Any(gene => gene.biostatArc > 0))
             return;
 
         if (context.Includes(data.request.Context) && Rand.Chance(chance) && pawn.RaceProps.Humanlike)
