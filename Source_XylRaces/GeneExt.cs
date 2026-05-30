@@ -251,4 +251,23 @@ public class GeneExt : Gene, INotificationListener
         if (!DefExt.permanentHediffs.NullOrEmpty())
             manager.Register(NotificationEvent.PostHediffStateChange, pawn, Notify_HediffStateChange);
     }
+
+    public override IEnumerable<Gizmo> GetGizmos()
+    {
+        if (!DebugSettings.godMode)
+            yield break;
+        if (DefExt.hediffGivers == null)
+            yield break;
+
+        for (var index = 0; index < DefExt.hediffGivers.Count; index++)
+        {
+            HediffGiver hediffGiver = DefExt.hediffGivers[index];
+            yield return new Command_Action
+            {
+                defaultLabel = $"DEV: Trigger {Label} ({hediffGiver.hediff.label}) #{index}",
+                action = () => hediffGiver.TryApply(pawn),
+                groupable = false,
+            };
+        }
+    }
 }
