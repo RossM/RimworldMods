@@ -98,4 +98,44 @@
     </modExtensions>
   </GeneDef>
 
+  <!-- This doesn't work yet. -->
+  <!--<GeneDef>
+    <defName>XylStrongGenes</defName>
+    <label>strong genes</label>
+    <description>When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the carrier's genes unless the other parent also has this gene.\n\nThis gene has no effect unless it is a germline gene.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Reproduction</displayCategory>
+    <displayOrderInCategory>400</displayOrderInCategory>
+    <selectionWeight>0</selectionWeight>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Gene">
+        <strongXenotype>true</strongXenotype>
+        <geneType>Endogene</geneType>
+      </li>
+    </modExtensions>
+  </GeneDef>-->
+
+  <GeneDef>
+    <defName>XylParthenogenic</defName>
+    <label>parthenogenic</label>
+    <description>Female carriers of this gene can become spontaneously pregnant without a father.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayCategory>Reproduction</displayCategory>
+    <displayOrderInCategory>410</displayOrderInCategory>
+    <minAgeActive>16</minAgeActive>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Gene">
+        <gender>Female</gender>
+        <hediffGivers>
+          <li Class="HediffGiver_Random">
+            <mtbDays>120</mtbDays>
+            <hediff>PregnantHuman</hediff>
+          </li>
+        </hediffGivers>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
 </Defs>

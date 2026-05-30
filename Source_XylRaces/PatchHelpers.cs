@@ -303,4 +303,52 @@ public static class PatchHelpers
 
         return flags;
     }
+
+    public enum DominantParent
+    {
+        None,
+        Mother,
+        Father,
+    }
+
+    public static DominantParent GetDominantParent(Pawn father, Pawn mother)
+    {
+        bool fatherHasStrongXenotype = HasStrongXenotype(father);
+        bool motherHasStrongXenotype = HasStrongXenotype(mother);
+
+        if (fatherHasStrongXenotype && !motherHasStrongXenotype)
+            return DominantParent.Father;
+        if (motherHasStrongXenotype && !fatherHasStrongXenotype)
+            return DominantParent.Mother;
+
+        // This is a change to normal game behavior but is needed to make parthenogenesis work right
+        if (mother != null && father == null)
+            return DominantParent.Mother;
+
+        return DominantParent.None;
+    }
+
+    public static void CopyXenotype(Pawn destination, Pawn source)
+    {
+        destination.genes.SetXenotypeDirect(source.genes.Xenotype);
+        destination.genes.xenotypeName = source.genes.xenotypeName;
+        destination.genes.iconDef = source.genes.iconDef;
+    }
+
+    private static bool HasStrongXenotype(Pawn pawn)
+    {
+        if (pawn?.genes == null)
+            return false;
+
+        return pawn.ActiveGenesOfType<GeneExt>().Any(gene => gene.DefExt.strongXenotype);
+    }
+
+    public static RimWorld.GeneSet CreateGeneSetFrom(Pawn pawn)
+    {
+        RimWorld.GeneSet result = new();
+        foreach (var gene in pawn.genes.Endogenes)
+            result.AddGene(gene.def);
+        result.SetNameDirect(pawn.genes.xenotypeName);
+        return result;
+    }
 }
