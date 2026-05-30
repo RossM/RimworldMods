@@ -1,7 +1,26 @@
 ﻿using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Xml;
 
 namespace XylXenos;
+
+[StaticConstructorOnStartup]
+public static class PatchLate
+{
+    // ReSharper disable PossibleNullReferenceException
+    private static Assembly MyAssembly => MethodBase.GetCurrentMethod().ReflectedType.Assembly;
+    // ReSharper restore PossibleNullReferenceException
+
+    static PatchLate()
+    {
+        var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
+
+        harmony.PatchCategory("PostLoadDefs");
+
+        // TODO Split infix patching into early and late
+        InfixPatcher.PatchInfix(harmony, MyAssembly);
+    }
+}
 
 [UsedFromReflection]
 [StaticConstructorOnStartup]
@@ -11,22 +30,18 @@ public class Main : Mod
     private static Assembly MyAssembly => MethodBase.GetCurrentMethod().ReflectedType.Assembly;
     // ReSharper restore PossibleNullReferenceException
 
-    static Main()
+    public Main(ModContentPack content) : base(content)
     {
+        Settings.instance = GetSettings<Settings>();
+
         CodingStyleChecks();
 
         var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
 
-        harmony.PatchAll();
-
-        InfixPatcher.PatchInfix(harmony, MyAssembly);
+        harmony.PatchCategory("PreLoadDefs");
+        harmony.PatchCategory(null);
 
         RegisterXmlLoaders();
-    }
-
-    public Main(ModContentPack content) : base(content)
-    {
-        Settings.instance = GetSettings<Settings>();
     }
 
     // This a stupid trick to add a custom XML parser to a type that should have one but doesn't.

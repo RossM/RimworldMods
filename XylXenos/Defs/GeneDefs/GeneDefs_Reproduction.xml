@@ -98,8 +98,7 @@
     </modExtensions>
   </GeneDef>
 
-  <!-- This doesn't work yet. -->
-  <!--<GeneDef>
+  <GeneDef>
     <defName>XylStrongGenes</defName>
     <label>strong genes</label>
     <description>When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the carrier's genes unless the other parent also has this gene.\n\nThis gene has no effect unless it is a germline gene.</description>
@@ -114,7 +113,7 @@
         <geneType>Endogene</geneType>
       </li>
     </modExtensions>
-  </GeneDef>-->
+  </GeneDef>
 
   <GeneDef>
     <defName>XylParthenogenic</defName>

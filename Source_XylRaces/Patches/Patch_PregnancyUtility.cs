@@ -1,11 +1,10 @@
 ﻿namespace XylXenos.Patches;
 
-// This does not work because .NET invokes the static constructor for PregnancyUtility, which has a bug
-// that causes it to throw an exception.
-
-#if false
+// This patch must be applied after defs are loaded, otherwise the static constructor for
+// PregnancyUtility reads a null DefOf and throws an exception.
 
 [HarmonyPatch(typeof(PregnancyUtility))]
+[HarmonyPatchCategory("PostLoadDefs")]
 public class Patch_PregnancyUtility
 {
     [Feature(nameof(DefModExtension_Gene.strongXenotype))]
@@ -31,29 +30,27 @@ public class Patch_PregnancyUtility
     }
 
     [Feature(nameof(DefModExtension_Gene.strongXenotype))]
-    [InfixPostfix(typeof(PregnancyUtility), "TryGetInheritedXenotype")]
+    [InfixPostfix(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn), [typeof(PawnGenerationRequest)])]
     [InfixPatch(nameof(PregnancyUtility.ApplyBirthOutcome))]
-    public static void TryGetInheritedXenotype_Postfix(Pawn pawn, Pawn mother, Pawn father, ref bool __result)
+    public static void GeneratePawn_Postfix(Pawn geneticMother, Pawn father, ref Pawn __result)
     {
-        switch (PatchHelpers.GetDominantParent(father, mother))
+        switch (PatchHelpers.GetDominantParent(father, geneticMother))
         {
             case PatchHelpers.DominantParent.Mother:
             {
-                PatchHelpers.CopyXenotype(pawn, mother);
-                __result = false;
+                PatchHelpers.CopyXenotype(__result, geneticMother);
                 break;
             }
             case PatchHelpers.DominantParent.Father:
             {
-                PatchHelpers.CopyXenotype(pawn, father);
-                __result = false;
+                PatchHelpers.CopyXenotype(__result, father);
                 break;
             }
         }
     }
 
     [Feature(nameof(DefModExtension_Gene.strongXenotype))]
-    [InfixPostfix(typeof(PregnancyUtility), "ShouldBeHybrid")]
+    [InfixPostfix(typeof(PregnancyUtility), "ShouldByHybrid")]
     [InfixPatch(nameof(PregnancyUtility.ApplyBirthOutcome))]
     public static void ShouldBeHybrid_Postfix(Pawn mother, Pawn father, ref bool __result)
     {
@@ -61,5 +58,3 @@ public class Patch_PregnancyUtility
             __result = false;
     }
 }
-
-#endif
