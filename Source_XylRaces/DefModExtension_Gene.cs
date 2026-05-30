@@ -122,6 +122,15 @@ public class DefModExtension_Gene : DefModExtension
 
     public IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
     {
+        if (bodySizeFactor != 1.0f)
+        {
+            yield return new(StatCategoryDefOf.BasicsPawn, "BodySize".Translate(), bodySizeFactor.ToStringPercent(), "Stat_Race_BodySize_Desc".Translate(), 4195);
+        }
+        if (healthScaleFactor != 1.0f)
+        {
+            yield return new(StatCategoryDefOf.BasicsPawn, "HitPointsBasic".Translate(), healthScaleFactor.ToStringPercent(), "XylHitPointsDesc".Translate(), 4194);
+        }
+
         if (!permanentHediffs.NullOrEmpty())
         {
             foreach (Tool tool in permanentHediffs.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
@@ -152,6 +161,11 @@ public class DefModExtension_Gene : DefModExtension
 
     protected virtual IEnumerable<string> GetCustomEffectDescriptions()
     {
+        if (bodySizeFactor != 1.0f)
+            yield return $"{"BodySize".Translate().CapitalizeFirst()}: {bodySizeFactor.ToStringPercent()}";
+        if (healthScaleFactor != 1.0f)
+            yield return $"{"HitPointsBasic".Translate().CapitalizeFirst()}: {healthScaleFactor.ToStringPercent()}";
+
         if (!permanentHediffs.NullOrEmpty())
         {
             foreach (Tool tool in permanentHediffs.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
