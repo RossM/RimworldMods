@@ -25,6 +25,7 @@
     </statOffsets>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
+        <bodySizeFactor>0.9</bodySizeFactor>
         <renderNodeModifiers>
           <li>
             <onlyRoot>true</onlyRoot>
