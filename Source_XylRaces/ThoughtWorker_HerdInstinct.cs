@@ -5,13 +5,10 @@ public class ThoughtWorker_HerdInstinct : ThoughtWorker
 {
     protected override ThoughtState CurrentStateInternal(Pawn p)
     {
-        if (!p.Spawned)
-            return ThoughtState.Inactive;
-        if (ThoughtUtility.ThoughtNullified(p, def))
+        if (!p.Spawned || ThoughtUtility.ThoughtNullified(p, def) || p.Faction != Faction.OfPlayer)
             return ThoughtState.Inactive;
 
-        int colonistCount = p.Map.mapPawns.ColonistsSpawnedCount;
-        return colonistCount switch
+        return p.Map.mapPawns.ColonistsSpawnedCount switch
         {
             <= Thought_Situational_HerdInstinct.NumPawns_Alone => ThoughtState.ActiveAtStage(0),
             <= Thought_Situational_HerdInstinct.NumPawns_SmallHerd => ThoughtState.ActiveAtStage(1),
