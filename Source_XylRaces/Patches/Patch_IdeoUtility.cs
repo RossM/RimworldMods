@@ -6,11 +6,11 @@ public static class Patch_IdeoUtility
     [Feature(typeof(IncidentWorker_WildTribe))]
     [HarmonyPrefix]
     [HarmonyPatch(nameof(IdeoUtility.CanUseIdeo))]
-    public static bool CanUseIdeo_Prefix(FactionDef factionDef, Ideo ideo, IdeoGenerationParms parms, out bool __result)
+    public static bool CanUseIdeo_Prefix(FactionDef factionDef, Ideo ideo, out bool __result)
     {
         __result = false;
 
-        XenotypeSet xenotypeSet = parms.forFaction?.xenotypeSet;
+        XenotypeSet xenotypeSet = factionDef.xenotypeSet;
         if (xenotypeSet == null)
             return true;
 

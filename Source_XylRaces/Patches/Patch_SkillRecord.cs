@@ -8,7 +8,7 @@ public static class Patch_SkillRecord
     [Feature(nameof(DefOf.XylLearnFactorPassionMajor))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(SkillRecord.LearnRateFactor))]
-    public static void LearnRateFactor_Postfix(SkillRecord __instance, bool direct, ref float __result)
+    public static void LearnRateFactor_Postfix(SkillRecord __instance, ref float __result)
     {
         __result *= __instance.passion switch
         {

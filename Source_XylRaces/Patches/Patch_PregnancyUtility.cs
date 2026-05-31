@@ -12,12 +12,12 @@ public class Patch_PregnancyUtility
     [HarmonyPatch(nameof(PregnancyUtility.GetInheritedGenes),
         [typeof(Pawn), typeof(Pawn), typeof(bool)],
         [ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Out])]
-    public static void GetInheritedGenes_Postfix(Pawn father, Pawn mother, ref List<GeneDef> __result)
+    public static void GetInheritedGenes_Postfix(Pawn mother, Pawn father, ref List<GeneDef> __result)
     {
         Log.Message(
-            $"GetInheritedGenes_Postfix: father={father} mother={mother} dominant parent={PatchHelpers.GetDominantParent(father, mother)}");
+            $"GetInheritedGenes_Postfix: mother={mother} father={father} dominant parent={PatchHelpers.GetDominantParent(mother, father)}");
 
-        switch (PatchHelpers.GetDominantParent(father, mother))
+        switch (PatchHelpers.GetDominantParent(mother, father))
         {
             case PatchHelpers.DominantParent.Mother:
             {
@@ -37,7 +37,7 @@ public class Patch_PregnancyUtility
     [InfixPatch(nameof(PregnancyUtility.ApplyBirthOutcome))]
     public static void GeneratePawn_Postfix(Pawn geneticMother, Pawn father, ref Pawn __result)
     {
-        switch (PatchHelpers.GetDominantParent(father, geneticMother))
+        switch (PatchHelpers.GetDominantParent(geneticMother, father))
         {
             case PatchHelpers.DominantParent.Mother:
             {
@@ -57,7 +57,7 @@ public class Patch_PregnancyUtility
     [InfixPatch(nameof(PregnancyUtility.ApplyBirthOutcome))]
     public static void ShouldBeHybrid_Postfix(Pawn mother, Pawn father, ref bool __result)
     {
-        if (PatchHelpers.GetDominantParent(father, mother) != PatchHelpers.DominantParent.None)
+        if (PatchHelpers.GetDominantParent(mother, father) != PatchHelpers.DominantParent.None)
             __result = false;
     }
 }

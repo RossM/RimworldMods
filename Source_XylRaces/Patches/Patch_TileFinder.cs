@@ -10,9 +10,7 @@ public static class Patch_TileFinder
     [HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor), typeof(PlanetLayer), typeof(Faction), typeof(bool),
         typeof(Predicate<PlanetTile>))]
     public static void RandomSettlementTileFor_Prefix(
-        PlanetLayer layer,
         Faction faction,
-        bool mustBeAutoChoosable,
         ref Predicate<PlanetTile> extraValidator)
     {
         var extension = faction?.def?.GetModExtension<DefModExtension_Faction>();

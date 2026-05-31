@@ -39,7 +39,7 @@ public static class Patch_PawnGenerator
     [Feature(nameof(DefModExtension_Gene.congenitalHediffs))]
     [HarmonyPostfix]
     [HarmonyPatch("GenerateInitialHediffs")]
-    public static void GenerateInitialHediffs_Postfix(Pawn pawn, PawnGenerationRequest request)
+    public static void GenerateInitialHediffs_Postfix(Pawn pawn)
     {
         PatchHelpers.GenerateCongenitalHediffs(pawn);
     }

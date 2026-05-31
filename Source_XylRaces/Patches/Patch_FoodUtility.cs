@@ -20,8 +20,6 @@ public static class Patch_FoodUtility_NutritionForEater
         Pawn eater,
         Thing foodSource,
         ThingDef foodDef,
-        float dist,
-        bool takingToInventory,
         ref float __result)
     {
         float nutritionFactor = FoodHelpers.GetExtraNutritionFactor(eater, foodSource, foodDef);
@@ -39,8 +37,6 @@ public static class Patch_FoodUtility_NutritionForEater
     public static bool TryAddIngestThought_Prefix(
         Pawn ingester,
         ThoughtDef def,
-        Precept fromPrecept,
-        List<ThoughtFromIngesting> ingestThoughts,
         ThingDef foodDef,
         MeatSourceCategory meatSourceCategory)
     {

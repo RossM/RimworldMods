@@ -311,7 +311,7 @@ public static class PatchHelpers
         return flags;
     }
 
-    public static DominantParent GetDominantParent(Pawn father, Pawn mother)
+    public static DominantParent GetDominantParent(Pawn mother, Pawn father)
     {
         int fatherStrength = XenotypeStrength(father);
         int motherStrength = XenotypeStrength(mother);

@@ -6,7 +6,7 @@ public static class Patch_Bullet
     [Feature(nameof(DefOf.XylRangedDodgeChance))]
     [HarmonyPrefix]
     [HarmonyPatch(nameof(Bullet.Impact))]
-    public static void Impact_Prefix(Bullet __instance, ref Thing hitThing, bool blockedByShield)
+    public static void Impact_Prefix(ref Thing hitThing, bool blockedByShield)
     {
         if (hitThing is Pawn pawn && !blockedByShield)
         {

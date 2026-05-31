@@ -205,12 +205,12 @@ public static class Patch_StatWorker
     [HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
     public static void ShouldShowFor_Postfix(StatWorker __instance, StatRequest req, ref bool __result)
     {
-        if (req.Thing is Pawn pawn && pawn.HasActivePsycastGene)
-        {
-            if (__instance.stat == StatDefOf.PsychicEntropyRecoveryRate)
-                __result = true;
-            if (__instance.stat == StatDefOf.PsychicEntropyMax)
-                __result = true;
-        }
+        if (req.Thing is not Pawn { HasActivePsycastGene: true })
+            return;
+
+        if (__instance.stat == StatDefOf.PsychicEntropyRecoveryRate)
+            __result = true;
+        if (__instance.stat == StatDefOf.PsychicEntropyMax)
+            __result = true;
     }
 }

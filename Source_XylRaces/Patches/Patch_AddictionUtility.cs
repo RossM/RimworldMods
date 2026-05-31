@@ -24,7 +24,6 @@ public static class Patch_AddictionUtility
     public static void CanBingeOnNow_Postfix(
         Pawn pawn,
         ChemicalDef chemical,
-        DrugCategory drugCategory,
         ref bool __result)
     {
         if (!pawn.ChemicalIsAllowedByGenes(chemical))
