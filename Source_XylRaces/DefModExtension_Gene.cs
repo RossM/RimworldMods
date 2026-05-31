@@ -74,6 +74,8 @@ public class DefModExtension_Gene : DefModExtension
                 (1 - chance).ToStringPercent())
         };
 
+    #region Properties of the gene itself
+
     /// <summary>
     /// If false, this gene won't show up in xenotype creation unless "ignore restrictions" is checked.
     /// </summary>
@@ -95,11 +97,14 @@ public class DefModExtension_Gene : DefModExtension
     public bool allowMutants = true;
 
     /// <summary>
-    /// Affects how genes are inherited. If one parent has a higher total xenotype strength than the other,
-    /// the baby will inherit all the endogenes from that parent and none of the endogenes from the other
-    /// parent.
+    /// The path for an additional icon accessed through the <see cref="ExtraIcon"/> property.
+    /// This is usually used as the icon for a gizmo.
     /// </summary>
-    public int xenotypeStrength;
+    [NoTranslate][CanBeNull] public string extraIconPath;
+
+    #endregion
+
+    #region Properties which are aggregated in GeneSet for fast access
 
     /// <summary>
     /// Scales pawn body size, which affects many things including the chance of being hit by ranged fire.
@@ -125,6 +130,55 @@ public class DefModExtension_Gene : DefModExtension
     /// A multiplier on the chance of this pawn going manhunter when a tame attempt fails as a wild man.
     /// </summary>
     public float manhunterOnTameFailChanceFactor = 1.0f;
+
+    /// <summary>
+    /// If true, the pawn will have psychic entropy with or without a psylink, and any psycast
+    /// abilities added by this gene in <see cref="GeneDef.abilities"/> will be usable without
+    /// a psylink.
+    /// </summary>
+    public bool hasPsycast;
+
+    /// <summary>
+    /// Modifiers to the chances of the pawn selecting certain joy sources.
+    /// </summary>
+    [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
+
+    /// <summary>
+    /// Additional buildables (e.g. fungal gravel) which this gene enables.
+    /// </summary>
+    [CanBeNull] public List<BuildableDef> addDesignators;
+
+    /// <summary>
+    /// Modifiers to the scale and offset to specific nodes in the pawn's render tree, used to
+    /// change the pawn's visual in a different way than just adding additional nodes.
+    /// </summary>
+    [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
+
+    /// <summary>
+    /// If set, the pawn won't be attacked by pawns of a specific other faction type even if
+    /// those pawns are normally hostile. If any pawn from the carrier's faction attacks a
+    /// pawn or building from the enemy faction, the effect is lost for 2500 ticks (1 in-game
+    /// hour). Tame animals from the pawn's action also benefit from the effect.
+    /// </summary>
+    [CanBeNull] public List<FactionDef> disableHostilityFromFactions;
+
+    /// <summary>
+    /// Disables thoughts from ingesting foods on a more granular level than just disabling an
+    /// entire thought, for example it can disable the negative thought from eating raw food
+    /// but only for raw meat.
+    /// </summary>
+    [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
+
+    #endregion
+
+    #region Properties which are not aggregated in GeneSet
+
+    /// <summary>
+    /// Affects how genes are inherited. If one parent has a higher total xenotype strength than the other,
+    /// the baby will inherit all the endogenes from that parent and none of the endogenes from the other
+    /// parent.
+    /// </summary>
+    public int xenotypeStrength;
 
     /// <summary>
     /// If non-null, determines the gender ratio of children. Note that it is the baby's genes that
@@ -160,48 +214,15 @@ public class DefModExtension_Gene : DefModExtension
     [CanBeNull] public List<HediffGiver_Event> congenitalHediffs;
 
     /// <summary>
-    /// Modifiers to the chances of the pawn selecting certain joy sources.
-    /// </summary>
-    [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
-
-    /// <summary>
-    /// Additional buildables (e.g. fungal gravel) which this gene enables.
-    /// </summary>
-    [CanBeNull] public List<BuildableDef> addDesignators;
-
-    /// <summary>
-    /// Modifiers to the scale and offset to specific nodes in the pawn's render tree, used to
-    /// change the pawn's visual in a different way than just adding additional nodes.
-    /// </summary>
-    [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
-
-    /// <summary>
-    /// If set, the pawn won't be attacked by pawns of a specific other faction type even if
-    /// those pawns are normally hostile. If any pawn from the carrier's faction attacks a
-    /// pawn or building from the enemy faction, the effect is lost for 2500 ticks (1 in-game
-    /// hour). Tame animals from the pawn's action also benefit from the effect.
-    /// </summary>
-    [CanBeNull] public List<FactionDef> disableHostilityFromFactions;
-
-    /// <summary>
-    /// Disables thoughts from ingesting foods on a more granular level than just disabling an
-    /// entire thought, for example it can disable the negative thought from eating raw food
-    /// but only for raw meat.
-    /// </summary>
-    [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
-
-    /// <summary>
     /// Starting items which have a chance of being generated on the pawn as one of the player's
     /// starting colonists. A colonist can only have two starting items so these might not be
     /// added even if the chance is 100%.
     /// </summary>
     [CanBeNull] public List<StartingItemOption> startingItems;
 
-    /// <summary>
-    /// The path for an additional icon accessed through the <see cref="ExtraIcon"/> property.
-    /// This is usually used as the icon for a gizmo.
-    /// </summary>
-    [NoTranslate] [CanBeNull] public string extraIconPath;
+    #endregion
+
+    #region Properties for specific GeneExt subclasses
 
     /// <summary>
     /// Properties for <see cref="Gene_BonusGenes"/>.
@@ -228,17 +249,16 @@ public class DefModExtension_Gene : DefModExtension
     /// </summary>
     [CanBeNull] public SeeingRedInfo seeingRed;
 
-    /// <summary>
-    /// If true, the pawn will have psychic entropy with or without a psylink, and any psycast
-    /// abilities added by this gene in <see cref="GeneDef.abilities"/> will be usable without
-    /// a psylink.
-    /// </summary>
-    public bool hasPsycast;
+    #endregion
+
+    #region Properties which are filled automatically and shouldn't be set in XML
 
     /// <summary>
     /// The <see cref="GeneDef"/> or <see cref="GeneTemplateDef"/> this object is attached to.
     /// </summary>
     [CanBeNull] public Def parent;
+
+    #endregion
 
     public IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
     {
