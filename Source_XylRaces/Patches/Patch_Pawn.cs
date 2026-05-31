@@ -28,7 +28,7 @@ public static class Patch_Pawn
         __result |= __instance.HasActivePsycastGene;
     }
 
-    [Feature(typeof(GeneTracker))]
+    [Feature(nameof(NotificationDefOf.PostDiscard))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.Discard))]
     public static void Discard_Postfix(Pawn __instance)
@@ -36,7 +36,7 @@ public static class Patch_Pawn
         NotificationManager.Instance.Notify(NotificationDefOf.PostDiscard, __instance);
     }
 
-    [Feature(typeof(GeneTracker))]
+    [Feature(nameof(NotificationDefOf.PostPostMake))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.PostMake))]
     public static void PostMake_Postfix(Pawn __instance)

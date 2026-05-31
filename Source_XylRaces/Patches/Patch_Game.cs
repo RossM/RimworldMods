@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(Game))]
 public static class Patch_Game
 {
-    [Feature(typeof(GeneTracker))]
+    [Feature(nameof(NotificationDefOf.GlobalPostGameDispose))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Game.Dispose))]
     public static void Dispose_Postfix()

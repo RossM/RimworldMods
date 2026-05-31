@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(Pawn_ApparelTracker))]
 public static class Patch_Pawn_ApparelTracker
 {
-    [Feature(typeof(NotificationManager))]
+    [Feature(nameof(NotificationDefOf.PostApparelChanged))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn_ApparelTracker.Notify_ApparelChanged))]
     public static void Notify_ApparelChanged_Postfix(Pawn_ApparelTracker __instance)

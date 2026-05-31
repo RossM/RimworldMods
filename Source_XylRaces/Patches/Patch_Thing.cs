@@ -17,8 +17,7 @@ public static class Patch_Thing
         }
     }
 
-    [Feature(typeof(HostilityOverrideManager))]
-    [Feature(typeof(Gene_SeeingRed))]
+    [Feature(nameof(NotificationDefOf.PreDamageTaken))]
     [HarmonyPrefix]
     [HarmonyPatch("TakeDamage")]
     public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo)
