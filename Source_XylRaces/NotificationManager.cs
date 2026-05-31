@@ -117,6 +117,12 @@ public static class NotificationDefOf
     ///     Called after <see cref="Pawn.Kill(Verse.DamageInfo?,Hediff)" />.
     /// </summary>
     public static NotificationDef PostPawnKilled;
+
+    static NotificationDefOf()
+    {
+        DefOfHelper.EnsureInitializedInCtor(typeof(NotificationDefOf));
+    }
+
 }
 
 /// <summary>
