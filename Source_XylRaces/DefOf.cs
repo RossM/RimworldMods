@@ -1,16 +1,19 @@
 ﻿namespace XylXenos;
 
 [RimWorld.DefOf]
-[NoReorder]
 public static class DefOf
 {
-    #region GeneDefs
+    public static BiomeDef TemperateSwamp;
+
+    public static FactionDef XylTribeGentleNixie;
 
     public static GeneDef XylEcholocation;
 
-    #endregion
+    public static HediffDef XylCultistSong;
 
-    #region StatDefs
+    public static JobDef XylTakeShower;
+
+    public static PawnKindDef XylSelkie;
 
     public static StatDef XylCookedAnimalProductNutritionFactor;
     public static StatDef XylCookedMeatNutritionFactor;
@@ -34,22 +37,6 @@ public static class DefOf
     public static StatDef XylResistanceFallRate;
     public static StatDef XylSlaveRebellionMtbFactor;
     public static StatDef XylWillFallRate;
-
-    #endregion
-
-    #region Miscellaneous
-
-    public static BiomeDef TemperateSwamp;
-
-    public static FactionDef XylTribeGentleNixie;
-
-    public static PawnKindDef XylSelkie;
-
-    public static JobDef XylTakeShower;
-
-    public static HediffDef XylCultistSong;
-
-    #endregion
 
     static DefOf()
     {

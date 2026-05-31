@@ -42,10 +42,38 @@ public class NotificationDef : Def
 public static class NotificationDefOf
 {
     /// <summary>
-    ///     Called before <see cref="Thing.TakeDamage" />.
-    ///     This hook passes a <see cref="DamageInfo" /> as its "data" parameter.
+    ///     Called after <see cref="Game.Dispose" />, immediately before the notification manager unregisters all listeners.
+    ///     This hook passes null as its "pawn" parameter, so can only be used as a global hook.
     /// </summary>
-    public static NotificationDef PreTakeDamage;
+    public static NotificationDef GlobalPostGameDispose;
+
+    /// <summary>
+    ///     Called inside <see cref="PawnGenerator.TryGenerateNewPawnInternal" /> before the <see cref="Pawn" />'s bio and name
+    ///     are generated.
+    ///     This hook can be used to modify the pawn's <see cref="Gender" /> and <see cref="XenotypeDef" /> during generation.
+    ///     This hook passes a <see cref="PawnGenerationEarlyData" /> as the "data" parameter.
+    /// </summary>
+    public static NotificationDef PawnGenerationEarly;
+
+    /// <summary>
+    ///     Called after <see cref="Pawn_ApparelTracker.Notify_ApparelChanged" />.
+    /// </summary>
+    public static NotificationDef PostApparelChanged;
+
+    /// <summary>
+    ///     Called after <see cref="Pawn_HealthTracker.CheckForStateChange" />.
+    /// </summary>
+    public static NotificationDef PostCheckForStateChange;
+
+    /// <summary>
+    ///     Called after <see cref="Thing.Discard" />.
+    /// </summary>
+    public static NotificationDef PostDiscard;
+
+    /// <summary>
+    ///     Called after <see cref="Pawn_HealthTracker.MakeDowned" />.
+    /// </summary>
+    public static NotificationDef PostDowned;
 
     /// <summary>
     ///     Called after <see cref="Pawn_GeneTracker.Notify_GenesChanged" />.
@@ -63,54 +91,10 @@ public static class NotificationDefOf
     public static NotificationDef PostHediffsChanged;
 
     /// <summary>
-    ///     Called after <see cref="Pawn_HealthTracker.CheckForStateChange" />.
-    /// </summary>
-    public static NotificationDef PostCheckForStateChange;
-
-    /// <summary>
-    ///     Called after <see cref="Pawn_ApparelTracker.Notify_ApparelChanged" />.
-    /// </summary>
-    public static NotificationDef PostApparelChanged;
-
-    /// <summary>
-    ///     Called after <see cref="GeneUtility.SatisfyChemicalGenes" />.
-    /// </summary>
-    public static NotificationDef PostSatisfyChemicalGenes;
-
-    /// <summary>
-    ///     Called after <see cref="Thing.Discard" />.
-    /// </summary>
-    public static NotificationDef PostDiscard;
-
-    /// <summary>
-    ///     Called after <see cref="Thing.PostMake" />.
-    /// </summary>
-    public static NotificationDef PostPostMake;
-
-    /// <summary>
     ///     Called after <see cref="NotificationManager.LoadedGame" />, immediately after the notification manager
     ///     has called <see cref="INotificationListener.RegisterWith" /> on all listeners.
     /// </summary>
     public static NotificationDef PostLoadedGame;
-
-    /// <summary>
-    ///     Called after <see cref="Game.Dispose" />, immediately before the notification manager unregisters all listeners.
-    ///     This hook passes null as its "pawn" parameter, so can only be used as a global hook.
-    /// </summary>
-    public static NotificationDef GlobalPostGameDispose;
-
-    /// <summary>
-    ///     Called inside <see cref="PawnGenerator.TryGenerateNewPawnInternal" /> before the <see cref="Pawn" />'s bio and name
-    ///     are generated.
-    ///     This hook can be used to modify the pawn's <see cref="Gender" /> and <see cref="XenotypeDef" /> during generation.
-    ///     This hook passes a <see cref="PawnGenerationEarlyData" /> as the "data" parameter.
-    /// </summary>
-    public static NotificationDef PawnGenerationEarly;
-
-    /// <summary>
-    ///     Called after <see cref="Pawn_HealthTracker.MakeDowned" />.
-    /// </summary>
-    public static NotificationDef PostDowned;
 
 
     /// <summary>
@@ -118,11 +102,26 @@ public static class NotificationDefOf
     /// </summary>
     public static NotificationDef PostPawnKilled;
 
+    /// <summary>
+    ///     Called after <see cref="Thing.PostMake" />.
+    /// </summary>
+    public static NotificationDef PostPostMake;
+
+    /// <summary>
+    ///     Called after <see cref="GeneUtility.SatisfyChemicalGenes" />.
+    /// </summary>
+    public static NotificationDef PostSatisfyChemicalGenes;
+
+    /// <summary>
+    ///     Called before <see cref="Thing.TakeDamage" />.
+    ///     This hook passes a <see cref="DamageInfo" /> as its "data" parameter.
+    /// </summary>
+    public static NotificationDef PreTakeDamage;
+
     static NotificationDefOf()
     {
         DefOfHelper.EnsureInitializedInCtor(typeof(NotificationDefOf));
     }
-
 }
 
 /// <summary>
