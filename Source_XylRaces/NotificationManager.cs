@@ -187,11 +187,23 @@ public class NotificationManager : GameComponent
 
     public void Register<T>(NotificationDef eventType, Thing target, Action<Thing, T> callback)
     {
+        if (!typeof(T).IsAssignableFrom(eventType.dataType))
+        {
+            Log.ErrorOnce($"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
+                Gen.HashCombineInt(0x467A56FF, eventType.index, callback.Target.GetType().GetHashCode(), 0));
+        }
+
         RegisterInternal(eventType, target, callback, callback.Target, callback.Method.Name);
     }
 
     public void Register<T>(NotificationDef eventType, Thing target, Action<T> callback)
     {
+        if (!typeof(T).IsAssignableFrom(eventType.dataType))
+        {
+            Log.ErrorOnce($"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
+                Gen.HashCombineInt(0x467A56FF, eventType.index, callback.Target.GetType().GetHashCode(), 0));
+        }
+
         RegisterInternal<T>(eventType, target, (_, data) => callback(data), callback.Target, callback.Method.Name);
     }
 
@@ -240,33 +252,33 @@ public class NotificationManager : GameComponent
         {
             if (eventType.global && target != null)
             {
-                Log.WarningOnce($"Notification {eventType.defName} is global but was called with target {target}",
-                    "NotifyGlobalCalledWithThing".GetHashCode() ^ eventType.index);
+                Log.ErrorOnce($"Notification {eventType.defName} is global but was called with target {target}",
+                    Gen.HashCombineInt(0x34330AEF, eventType.index));
             }
 
             if (!eventType.global && target == null)
             {
-                Log.WarningOnce($"Notification {eventType.defName} is not global but was called with null target",
-                    "NotifyCalledWithoutThing".GetHashCode() ^ eventType.index);
+                Log.ErrorOnce($"Notification {eventType.defName} is not global but was called with null target",
+                    Gen.HashCombineInt(0x140A0CA2, eventType.index));
             }
 
             if (eventType.dataType != null && data == null)
             {
-                Log.WarningOnce($"Notification {eventType.defName} should take data of type {eventType.dataType} but was given null",
-                    "NotifyCalledWithoutData".GetHashCode() ^ eventType.index);
+                Log.ErrorOnce($"Notification {eventType.defName} should take data of type {eventType.dataType} but was given null",
+                    Gen.HashCombineInt(0xEEB8AC2, eventType.index));
             }
 
             if (eventType.dataType != null && data != null && !eventType.dataType.IsAssignableFrom(data.GetType()))
             {
-                Log.WarningOnce(
+                Log.ErrorOnce(
                     $"Notification {eventType.defName} should take data of type {eventType.dataType} but was given {data.GetType()}",
-                    "NotifyCalledWithWrongData".GetHashCode() ^ eventType.index);
+                    Gen.HashCombineInt(0x4D53041B, eventType.index));
             }
 
             if (eventType.dataType == null && data != null)
             {
-                Log.WarningOnce($"Notification {eventType.defName} shouldn't take data but was given {data.GetType()}",
-                    "NotifyCalledWithData".GetHashCode() ^ eventType.index);
+                Log.ErrorOnce($"Notification {eventType.defName} shouldn't take data but was given {data.GetType()}",
+                    Gen.HashCombineInt(0x7A213146, eventType.index));
             }
         }
 
