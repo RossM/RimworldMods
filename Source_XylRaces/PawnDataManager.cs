@@ -13,7 +13,7 @@ public class PawnDataManager<T> : INotificationListener
     public PawnDataManager(Func<Pawn, T> makeFunc)
     {
         this.makeFunc = makeFunc;
-        NotificationManager.extraListeners.Add(this);
+        NotificationManager.staticListeners.Add(this);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

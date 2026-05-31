@@ -59,7 +59,8 @@ public class NotificationManager : GameComponent
     public static NotificationManager Instance => Current.Game.GetComponent<NotificationManager>();
     private static bool doDebug = false;
 
-    public static List<INotificationListener> extraListeners = [];
+    public static List<INotificationListener> staticListeners = [];
+    public HashSet<INotificationListener> alreadyRegisteredStaticListeners = new();
 
     private readonly EventInfo[] events = new EventInfo[Enum.GetValues(typeof(NotificationEvent)).Length];
 
@@ -259,7 +260,7 @@ public class NotificationManager : GameComponent
 
         foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
             CallRegistrationHandlers(pawn);
-        foreach (var listener in extraListeners)
+        foreach (var listener in staticListeners)
             listener.RegisterWith(this);
 
         foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
@@ -268,8 +269,14 @@ public class NotificationManager : GameComponent
 
     public override void FinalizeInit()
     {
-        foreach (var listener in extraListeners)
+        foreach (var listener in staticListeners)
+        {
+            if (alreadyRegisteredStaticListeners.Contains(listener))
+                continue;
+
             listener.RegisterWith(this);
+            alreadyRegisteredStaticListeners.Add(listener);
+        }
     }
 
     public void Reset()
@@ -277,5 +284,6 @@ public class NotificationManager : GameComponent
         registeredEvents = new();
         for (int i = 0; i < events.Length; i++)
             events[i] = null;
+        alreadyRegisteredStaticListeners.Clear();
     }
 }
