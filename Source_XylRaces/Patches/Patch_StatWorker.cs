@@ -151,29 +151,12 @@ public static class Patch_StatWorker
         return instructionsList;
     }
 
-    public static void AppendSubstitutionDescription(
-        StringBuilder sb,
-        string whitespace,
-        Hediff_SubstituteCapacity foundHediff)
-    {
-        if (foundHediff != null)
-            sb.AppendLine($"{whitespace}        {foundHediff.GetDescription()}");
-    }
-
-    public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity foundHediff, PawnCapacityDef capacity)
-    {
-        if (foundHediff != null)
-            capacity = foundHediff.DefExt.substituteCapacity;
-        return capacity;
-    }
-
-    // Note: this patch is performance-sensitive
     [Feature(typeof(Hediff_SubstituteCapacity))]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [InfixPostfix(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity))]
+    [InfixPostfix(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity))]
     [InfixPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
-    public static void PawnCapacityOffset_capacity_Postfix(
-        PawnCapacityOffset __instance,
+    public static void PawnCapacityFactor_capacity_Postfix(
+        PawnCapacityFactor __instance,
         StatWorker __caller,
         StatRequest req,
         ref PawnCapacityDef __result)
@@ -184,12 +167,13 @@ public static class Patch_StatWorker
             __result = foundHediff.DefExt.substituteCapacity;
     }
 
+    // Note: this patch is performance-sensitive
     [Feature(typeof(Hediff_SubstituteCapacity))]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [InfixPostfix(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity))]
+    [InfixPostfix(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity))]
     [InfixPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
-    public static void PawnCapacityFactor_capacity_Postfix(
-        PawnCapacityFactor __instance,
+    public static void PawnCapacityOffset_capacity_Postfix(
+        PawnCapacityOffset __instance,
         StatWorker __caller,
         StatRequest req,
         ref PawnCapacityDef __result)
@@ -212,5 +196,21 @@ public static class Patch_StatWorker
             __result = true;
         if (__instance.stat == StatDefOf.PsychicEntropyMax)
             __result = true;
+    }
+
+    public static void AppendSubstitutionDescription(
+        StringBuilder sb,
+        string whitespace,
+        Hediff_SubstituteCapacity foundHediff)
+    {
+        if (foundHediff != null)
+            sb.AppendLine($"{whitespace}        {foundHediff.GetDescription()}");
+    }
+
+    public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity foundHediff, PawnCapacityDef capacity)
+    {
+        if (foundHediff != null)
+            capacity = foundHediff.DefExt.substituteCapacity;
+        return capacity;
     }
 }

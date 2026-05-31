@@ -12,20 +12,20 @@ public static class Patch_Pawn
         __result *= __instance.GeneTracker?.bodySizeFactor ?? 1f;
     }
 
-    [Feature(nameof(DefModExtension_Gene.healthScaleFactor))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
-    public static void HealthScale_Postfix(Pawn __instance, ref float __result)
-    {
-        __result *= __instance.GeneTracker?.healthScaleFactor ?? 1f;
-    }
-
     [Feature(nameof(DefModExtension_Gene.hasPsycast))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.HasPsylink), MethodType.Getter)]
     public static void HasPsylink_Postfix(Pawn __instance, ref bool __result)
     {
         __result |= __instance.HasActivePsycastGene;
+    }
+
+    [Feature(nameof(DefModExtension_Gene.healthScaleFactor))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
+    public static void HealthScale_Postfix(Pawn __instance, ref float __result)
+    {
+        __result *= __instance.GeneTracker?.healthScaleFactor ?? 1f;
     }
 
     [Feature(nameof(NotificationDefOf.PostPawnKilled))]

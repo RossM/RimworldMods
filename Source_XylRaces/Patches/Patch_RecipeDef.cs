@@ -4,14 +4,6 @@
 public static class Patch_RecipeDef
 {
     [Feature(typeof(DefModExtension_ThingOrRecipe_GeneDependent))]
-    [InfixPostfix(typeof(RecipeDef), "memePrerequisitesAny")]
-    [InfixPatch(nameof(RecipeDef.AvailableNow))]
-    public static void RecipeDef_memePrerequisitesAny_Postfix(ref List<MemeDef> __result)
-    {
-        __result = null;
-    }
-
-    [Feature(typeof(DefModExtension_ThingOrRecipe_GeneDependent))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
     public static void AvailableNow_Postfix(RecipeDef __instance, ref bool __result)
@@ -37,5 +29,13 @@ public static class Patch_RecipeDef
             return;
 
         __result = false;
+    }
+
+    [Feature(typeof(DefModExtension_ThingOrRecipe_GeneDependent))]
+    [InfixPostfix(typeof(RecipeDef), "memePrerequisitesAny")]
+    [InfixPatch(nameof(RecipeDef.AvailableNow))]
+    public static void RecipeDef_memePrerequisitesAny_Postfix(ref List<MemeDef> __result)
+    {
+        __result = null;
     }
 }

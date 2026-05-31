@@ -4,6 +4,18 @@
 public static class Patch_AddictionUtility
 {
     [Feature(typeof(DefModExtension_Chemical))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(AddictionUtility.CanBingeOnNow))]
+    public static void CanBingeOnNow_Postfix(
+        Pawn pawn,
+        ChemicalDef chemical,
+        ref bool __result)
+    {
+        if (!pawn.ChemicalIsAllowedByGenes(chemical))
+            __result = false;
+    }
+
+    [Feature(typeof(DefModExtension_Chemical))]
     [Feature(nameof(DefOf.XylDrugEffectMultiplier))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(AddictionUtility.ModifyChemicalEffectForToleranceAndBodySize))]
@@ -16,17 +28,5 @@ public static class Patch_AddictionUtility
             effect = 0f;
         else
             effect *= pawn.GetStatValue(DefOf.XylDrugEffectMultiplier);
-    }
-
-    [Feature(typeof(DefModExtension_Chemical))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(AddictionUtility.CanBingeOnNow))]
-    public static void CanBingeOnNow_Postfix(
-        Pawn pawn,
-        ChemicalDef chemical,
-        ref bool __result)
-    {
-        if (!pawn.ChemicalIsAllowedByGenes(chemical))
-            __result = false;
     }
 }

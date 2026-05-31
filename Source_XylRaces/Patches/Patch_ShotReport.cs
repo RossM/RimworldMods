@@ -3,6 +3,23 @@
 [HarmonyPatch(typeof(ShotReport))]
 public static class Patch_ShotReport
 {
+    [Feature(nameof(DefOf.XylRangedDodgeChance))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(ShotReport.GetTextReadout))]
+    public static void GetTextReadout_Postfix(ShotReport __instance, ref string __result)
+    {
+        if (__instance.target.Thing is Pawn targetPawn)
+        {
+            float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(targetPawn);
+            if (rangedDodgeChance > 0)
+            {
+                StringBuilder sb = new StringBuilder(__result);
+                sb.AppendLine($"   {DefOf.XylRangedDodgeChance.LabelCap}: {rangedDodgeChance.ToStringPercent()}");
+                __result = sb.ToString();
+            }
+        }
+    }
+
     [Feature(nameof(DefOf.XylEcholocation))]
     [HarmonyPrefix]
     [HarmonyPatch(nameof(ShotReport.HitFactorFromShooter))]
@@ -41,22 +58,5 @@ public static class Patch_ShotReport
     {
         return caster is Pawn pawn && pawn.HasActiveGene(DefOf.XylEcholocation) && PawnUtility.IsBiologicallyOrArtificiallyBlind(pawn)
                && pawn.health.capacities.GetLevel(PawnCapacityDefOf.Hearing) >= 0.2f;
-    }
-
-    [Feature(nameof(DefOf.XylRangedDodgeChance))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(ShotReport.GetTextReadout))]
-    public static void GetTextReadout_Postfix(ShotReport __instance, ref string __result)
-    {
-        if (__instance.target.Thing is Pawn targetPawn)
-        {
-            float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(targetPawn);
-            if (rangedDodgeChance > 0)
-            {
-                StringBuilder sb = new StringBuilder(__result);
-                sb.AppendLine($"   {DefOf.XylRangedDodgeChance.LabelCap}: {rangedDodgeChance.ToStringPercent()}");
-                __result = sb.ToString();
-            }
-        }
     }
 }

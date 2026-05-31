@@ -56,20 +56,6 @@ public static class Patch_RaceProperties
         return !Settings.instance.ShouldFixLactationBugsFor(__instance.pawn);
     }
 
-    public static void AddLactationExplanation(StringBuilder stringBuilder, Pawn pawn)
-    {
-        if (!Settings.instance.ShouldFixLactationBugsFor(pawn))
-            return;
-
-        var hediffComp_Lactating = pawn.LactationHediff?.TryGetComp<HediffComp_Lactating>();
-        if (hediffComp_Lactating != null)
-        {
-            stringBuilder.AppendLine(
-                $"{pawn.LactationHediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
-            stringBuilder.AppendLine();
-        }
-    }
-
     [Feature(Config.Feature.FixLactationBugs)]
     [HarmonyPrefix]
     [HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]
@@ -88,5 +74,19 @@ public static class Patch_RaceProperties
             .ToString("0.##");
 
         return false;
+    }
+
+    public static void AddLactationExplanation(StringBuilder stringBuilder, Pawn pawn)
+    {
+        if (!Settings.instance.ShouldFixLactationBugsFor(pawn))
+            return;
+
+        var hediffComp_Lactating = pawn.LactationHediff?.TryGetComp<HediffComp_Lactating>();
+        if (hediffComp_Lactating != null)
+        {
+            stringBuilder.AppendLine(
+                $"{pawn.LactationHediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
+            stringBuilder.AppendLine();
+        }
     }
 }

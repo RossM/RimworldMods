@@ -13,6 +13,24 @@ public static class Patch_PawnUtility
     }
 
     [Feature(nameof(DefModExtension_Gene.manhunterOnDamageChanceFactor))]
+    [Feature(nameof(DefModExtension_Gene.manhunterOnTameFailChanceFactor))]
+    [InfixPostfix(typeof(Def), nameof(Def.LabelCap))]
+    [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
+    [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
+    public static void Def_LabelCap_Postfix(Def __instance, Pawn pawn, ref TaggedString __result)
+    {
+        if (__instance != pawn.def)
+            return;
+
+        var geneSet = pawn.GeneTracker;
+        if (geneSet == null)
+            return;
+
+        if (geneSet.manhunterOnDamageChanceFactor != 1f || geneSet.manhunterOnTameFailChanceFactor != 1f)
+            __result = pawn.genes.XenotypeLabelCap;
+    }
+
+    [Feature(nameof(DefModExtension_Gene.manhunterOnDamageChanceFactor))]
     [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(ThingDef)])]
     [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChance), [typeof(Pawn), typeof(Thing), typeof(float)])]
     [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
@@ -44,23 +62,5 @@ public static class Patch_PawnUtility
     public static void RaceProperties_manhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
     {
         __result *= pawn.GeneTracker?.manhunterOnTameFailChanceFactor ?? 1f;
-    }
-
-    [Feature(nameof(DefModExtension_Gene.manhunterOnDamageChanceFactor))]
-    [Feature(nameof(DefModExtension_Gene.manhunterOnTameFailChanceFactor))]
-    [InfixPostfix(typeof(Def), nameof(Def.LabelCap))]
-    [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
-    [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
-    public static void Def_LabelCap_Postfix(Def __instance, Pawn pawn, ref TaggedString __result)
-    {
-        if (__instance != pawn.def)
-            return;
-
-        var geneSet = pawn.GeneTracker;
-        if (geneSet == null)
-            return;
-
-        if (geneSet.manhunterOnDamageChanceFactor != 1f || geneSet.manhunterOnTameFailChanceFactor != 1f)
-            __result = pawn.genes.XenotypeLabelCap;
     }
 }

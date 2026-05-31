@@ -51,6 +51,20 @@ public static class Patch_SlaveRebellionUtility
 
     [Feature(nameof(DefOf.XylSlaveRebellionMtbFactor))]
     [Feature(nameof(DefModExtension_Gene.slaveRebellionThresholdDays))]
+    [HarmonyTranspiler]
+    [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
+    public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(
+        IEnumerable<CodeInstruction> instructions,
+        ILGenerator generator,
+        MethodBase method)
+    {
+        var instructionsList = new List<CodeInstruction>(instructions);
+        Fixup_GetSlaveRebellionMtbCalculationExplanation.MatchAndReplace(method, ref instructionsList, generator);
+        return instructionsList;
+    }
+
+    [Feature(nameof(DefOf.XylSlaveRebellionMtbFactor))]
+    [Feature(nameof(DefModExtension_Gene.slaveRebellionThresholdDays))]
     [HarmonyPostfix]
     [HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
     public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)
@@ -65,20 +79,6 @@ public static class Patch_SlaveRebellionUtility
         __result *= pawn.GetStatValue(DefOf.XylSlaveRebellionMtbFactor);
         if (__result >= geneTracker.slaveRebellionThresholdDays)
             __result = -1;
-    }
-
-    [Feature(nameof(DefOf.XylSlaveRebellionMtbFactor))]
-    [Feature(nameof(DefModExtension_Gene.slaveRebellionThresholdDays))]
-    [HarmonyTranspiler]
-    [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
-    public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(
-        IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator,
-        MethodBase method)
-    {
-        var instructionsList = new List<CodeInstruction>(instructions);
-        Fixup_GetSlaveRebellionMtbCalculationExplanation.MatchAndReplace(method, ref instructionsList, generator);
-        return instructionsList;
     }
 
     private static void FinishExplanation(StringBuilder stringBuilder, Pawn pawn)
