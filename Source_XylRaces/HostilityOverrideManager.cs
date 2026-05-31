@@ -96,5 +96,6 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
     }
 
     public void PreUnregister(NotificationManager manager)
-    {}
+    {
+    }
 }

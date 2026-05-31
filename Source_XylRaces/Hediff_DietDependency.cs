@@ -167,5 +167,6 @@ public class Hediff_DietDependency : HediffWithComps, INotificationListener
     }
 
     public void PreUnregister(NotificationManager manager)
-    {}
+    {
+    }
 }

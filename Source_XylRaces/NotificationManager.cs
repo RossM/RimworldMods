@@ -9,20 +9,26 @@ public class PawnGenerationEarlyData(PawnGenerationRequest request, XenotypeDef 
 public interface INotificationListener
 {
     /// <summary>
-    /// Called when a listener is created or loaded. The listener should call <see cref="O:XylXenos.NotificationManager.Register"/>
-    /// to register for any notifications they want to receive.
+    ///     Called when a listener is created or loaded. The listener should call
+    ///     <see cref="O:XylXenos.NotificationManager.Register" />
+    ///     to register for any notifications they want to receive.
     /// </summary>
-    /// <param name="manager">The <see cref="NotificationManager"/> that should be registered with. This is always
-    /// <see cref="NotificationManager.Instance"/>.</param>
+    /// <param name="manager">
+    ///     The <see cref="NotificationManager" /> that should be registered with. This is always
+    ///     <see cref="NotificationManager.Instance" />.
+    /// </param>
     public void RegisterWith(NotificationManager manager);
 
     /// <summary>
-    /// Called when a listener is about to be removed from the notification manager. Notifications registered by the listener directly
-    /// will be removed automatically, but if there are any child objects such as Comps that need to be unregistered, call
-    /// <see cref="NotificationManager.UnregisterAll"/> for each one.
+    ///     Called when a listener is about to be removed from the notification manager. Notifications registered by the
+    ///     listener directly
+    ///     will be removed automatically, but if there are any child objects such as Comps that need to be unregistered, call
+    ///     <see cref="NotificationManager.UnregisterAll" /> for each one.
     /// </summary>
-    /// <param name="manager">The <see cref="NotificationManager"/> that should be unregistered with. This is always
-    /// <see cref="NotificationManager.Instance"/>.</param>
+    /// <param name="manager">
+    ///     The <see cref="NotificationManager" /> that should be unregistered with. This is always
+    ///     <see cref="NotificationManager.Instance" />.
+    /// </param>
     public void PreUnregister(NotificationManager manager);
 }
 
@@ -36,14 +42,13 @@ public class NotificationDef : Def
 public static class NotificationDefOf
 {
     /// <summary>
-    /// Called before <see cref="Thing.TakeDamage"/>.
-    ///
-    /// This hook passes a <see cref="DamageInfo"/> as its "data" parameter.
+    ///     Called before <see cref="Thing.TakeDamage" />.
+    ///     This hook passes a <see cref="DamageInfo" /> as its "data" parameter.
     /// </summary>
     public static NotificationDef PreDamageTaken;
 
     /// <summary>
-    /// Called after <see cref="Pawn_GeneTracker.Notify_GenesChanged"/>.
+    ///     Called after <see cref="Pawn_GeneTracker.Notify_GenesChanged" />.
     /// </summary>
     public static NotificationDef PostGenesChanged;
 
@@ -53,53 +58,52 @@ public static class NotificationDefOf
     // really necessary but out of caution I'm leaving them both here for now.
 
     /// <summary>
-    /// Called after <see cref="HediffSet.DirtyCache"/>.
+    ///     Called after <see cref="HediffSet.DirtyCache" />.
     /// </summary>
     public static NotificationDef PostHediffsChanged;
 
     /// <summary>
-    /// Called after <see cref="Pawn_HealthTracker.CheckForStateChange"/>.
+    ///     Called after <see cref="Pawn_HealthTracker.CheckForStateChange" />.
     /// </summary>
     public static NotificationDef PostHediffStateChange;
 
     /// <summary>
-    /// Called after <see cref="Pawn_ApparelTracker.Notify_ApparelChanged"/>.
+    ///     Called after <see cref="Pawn_ApparelTracker.Notify_ApparelChanged" />.
     /// </summary>
     public static NotificationDef PostApparelChanged;
 
     /// <summary>
-    /// Called after <see cref="GeneUtility.SatisfyChemicalGenes"/>.
+    ///     Called after <see cref="GeneUtility.SatisfyChemicalGenes" />.
     /// </summary>
     public static NotificationDef PostSatisfyGenes;
 
     /// <summary>
-    /// Called after <see cref="Pawn.Discard"/>.
+    ///     Called after <see cref="Pawn.Discard" />.
     /// </summary>
     public static NotificationDef PostDiscard;
 
     /// <summary>
-    /// Called after <see cref="Pawn.PostMake"/>.
+    ///     Called after <see cref="Pawn.PostMake" />.
     /// </summary>
     public static NotificationDef PostPostMake;
 
     /// <summary>
-    /// Called after <see cref="NotificationManager.LoadedGame"/>, immediately after the notification manager
-    /// has called <see cref="INotificationListener.RegisterWith"/> on all listeners.
+    ///     Called after <see cref="NotificationManager.LoadedGame" />, immediately after the notification manager
+    ///     has called <see cref="INotificationListener.RegisterWith" /> on all listeners.
     /// </summary>
     public static NotificationDef PostLoadedGame;
 
     /// <summary>
-    /// Called after <see cref="Game.Dispose"/>, immediately before the notification manager unregisters all listeners.
-    ///
-    /// This hook passes null as its "pawn" parameter, so can only be used as a global hook.
+    ///     Called after <see cref="Game.Dispose" />, immediately before the notification manager unregisters all listeners.
+    ///     This hook passes null as its "pawn" parameter, so can only be used as a global hook.
     /// </summary>
     public static NotificationDef GlobalPostGameDispose;
 
     /// <summary>
-    /// Called inside <see cref="PawnGenerator.TryGenerateNewPawnInternal"/> before the <see cref="Pawn"/>'s bio and name are generated.
-    /// This hook can be used to modify the pawn's <see cref="Gender"/> and <see cref="XenotypeDef"/> during generation.
-    ///
-    /// This hook passes a <see cref="PawnGenerationEarlyData"/> as the "data" parameter.
+    ///     Called inside <see cref="PawnGenerator.TryGenerateNewPawnInternal" /> before the <see cref="Pawn" />'s bio and name
+    ///     are generated.
+    ///     This hook can be used to modify the pawn's <see cref="Gender" /> and <see cref="XenotypeDef" /> during generation.
+    ///     This hook passes a <see cref="PawnGenerationEarlyData" /> as the "data" parameter.
     /// </summary>
     public static NotificationDef PawnGenerationEarly;
 }
@@ -204,7 +208,8 @@ public class NotificationManager : GameComponent
     {
         if (!typeof(T).IsAssignableFrom(eventType.dataType))
         {
-            Log.ErrorOnce($"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
+            Log.ErrorOnce(
+                $"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventType.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
@@ -215,7 +220,8 @@ public class NotificationManager : GameComponent
     {
         if (!typeof(T).IsAssignableFrom(eventType.dataType))
         {
-            Log.ErrorOnce($"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
+            Log.ErrorOnce(
+                $"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventType.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
@@ -238,7 +244,8 @@ public class NotificationManager : GameComponent
     {
         if (!typeof(T).IsAssignableFrom(eventType.dataType))
         {
-            Log.ErrorOnce($"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
+            Log.ErrorOnce(
+                $"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventType.index, callback.Target.GetType().GetHashCode(), 0));
         }
 

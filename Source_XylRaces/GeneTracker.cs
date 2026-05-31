@@ -150,5 +150,6 @@ public class GeneTracker(Pawn pawn) : INotificationListener
     }
 
     public void PreUnregister(NotificationManager manager)
-    {}
+    {
+    }
 }

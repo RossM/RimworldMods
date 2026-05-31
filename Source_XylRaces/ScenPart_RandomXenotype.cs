@@ -53,5 +53,6 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListe
     }
 
     public void PreUnregister(NotificationManager manager)
-    {}
+    {
+    }
 }

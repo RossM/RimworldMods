@@ -270,5 +270,6 @@ public class GeneExt : Gene, INotificationListener
     }
 
     public void PreUnregister(NotificationManager manager)
-    {}
+    {
+    }
 }

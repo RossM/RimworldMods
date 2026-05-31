@@ -45,5 +45,6 @@ public class PawnDataManager<T> : INotificationListener
     }
 
     public void PreUnregister(NotificationManager manager)
-    {}
+    {
+    }
 }

@@ -110,5 +110,6 @@ public class GeneAndHediffCache(Pawn pawn) : INotificationListener
     }
 
     public void PreUnregister(NotificationManager manager)
-    {}
+    {
+    }
 }
