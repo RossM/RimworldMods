@@ -147,6 +147,7 @@ public class NotificationManager : GameComponent
         public Delegate wrappedCallback;
         public INotificationListener listener;
         public string name;
+        public int priority;
 
         public override string ToString()
         {
@@ -164,6 +165,8 @@ public class NotificationManager : GameComponent
 
     private ConditionalWeakTable<INotificationListener, List<RegistrationInfo>> registrations = new();
 
+    private readonly List<CallbackInfo> tempCallbacks = [];
+
     public NotificationManager(Game _)
     {
     }
@@ -179,21 +182,22 @@ public class NotificationManager : GameComponent
         Thing target,
         Action<Thing, T> callback,
         object source,
-        string name)
+        string name,
+        int priority)
     {
         if (source is not INotificationListener listener)
             throw new InvalidOperationException("Only an INotificationListener can register for notifications");
 
         if (doDebug)
             Debug.Log(
-                $"NotificationManager: Register notification={notification} {(target == null ? "global" : $"target=[{target}]")} listener={listener} name={name}");
+                $"NotificationManager: Register notification={notification} {(target == null ? "global" : $"target=[{target}]")} listener={listener} name={name} priority={priority}");
 
         var records = registrations.GetOrCreateValue(listener);
         records.Add(new(notification, target));
 
         NotificationInfo notificationInfo = notifications[notification.index] ??= new();
 
-        CallbackInfo callbackInfo = new() { wrappedCallback = callback, listener = listener, name = name };
+        CallbackInfo callbackInfo = new() { wrappedCallback = callback, listener = listener, name = name, priority = priority };
 
         if (target == null)
         {
@@ -220,7 +224,7 @@ public class NotificationManager : GameComponent
         }
     }
 
-    public void Register<T>(NotificationDef notification, Thing target, [NotNull] Action<Thing, T> callback)
+    public void Register<T>(NotificationDef notification, Thing target, [NotNull] Action<Thing, T> callback, int priority = 0)
     {
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
@@ -239,10 +243,10 @@ public class NotificationManager : GameComponent
                 Gen.HashCombineInt(0x467A56FF, notification.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
-        RegisterInternal(notification, target, callback, callback.Target, MethodName(callback));
+        RegisterInternal(notification, target, callback, callback.Target, MethodName(callback), priority);
     }
 
-    public void Register<T>(NotificationDef notification, Thing target, [NotNull] Action<T> callback)
+    public void Register<T>(NotificationDef notification, Thing target, [NotNull] Action<T> callback, int priority = 0)
     {
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
@@ -261,11 +265,11 @@ public class NotificationManager : GameComponent
                 Gen.HashCombineInt(0x467A56FF, notification.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
-        RegisterInternal<T>(notification, target, (_, data) => callback(data), callback.Target, MethodName(callback));
+        RegisterInternal<T>(notification, target, (_, data) => callback(data), callback.Target, MethodName(callback), priority);
     }
 
     // ReSharper disable once UnusedMember.Global
-    public void Register(NotificationDef notification, Thing target, [NotNull] Action<Thing> callback)
+    public void Register(NotificationDef notification, Thing target, [NotNull] Action<Thing> callback, int priority = 0)
     {
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
@@ -277,10 +281,10 @@ public class NotificationManager : GameComponent
             return;
         }
 
-        RegisterInternal<object>(notification, target, (t, _) => callback(t), callback.Target, MethodName(callback));
+        RegisterInternal<object>(notification, target, (t, _) => callback(t), callback.Target, MethodName(callback), priority);
     }
 
-    public void Register(NotificationDef notification, Thing target, [NotNull] Action callback)
+    public void Register(NotificationDef notification, Thing target, [NotNull] Action callback, int priority = 0)
     {
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
@@ -292,7 +296,7 @@ public class NotificationManager : GameComponent
             return;
         }
 
-        RegisterInternal<object>(notification, target, (_, _) => callback(), callback.Target, MethodName(callback));
+        RegisterInternal<object>(notification, target, (_, _) => callback(), callback.Target, MethodName(callback), priority);
     }
 
     private static string MethodName(Delegate fn)
@@ -326,7 +330,7 @@ public class NotificationManager : GameComponent
                 Gen.HashCombineInt(0x467A56FF, notification.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
-        RegisterInternal(notification, target, callback, listener, $"{listener.GetType().Name}.<{notification.defName}>");
+        RegisterInternal(notification, target, callback, listener, $"{listener.GetType().Name}.<{notification.defName}>", 0);
     }
 
     public void UnregisterAll(INotificationListener listener)
@@ -401,21 +405,17 @@ public class NotificationManager : GameComponent
         if (notificationInfo == null)
             return;
 
-        foreach (CallbackInfo callbackInfo in notificationInfo.globalCallbacks)
+        tempCallbacks.Clear();
+        tempCallbacks.AddRange(notificationInfo.globalCallbacks);
+        if (target != null && notificationInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbackInfos))
+            tempCallbacks.AddRange(callbackInfos);
+
+        foreach (CallbackInfo callbackInfo in tempCallbacks.OrderByDescending(callback => callback.priority))
         {
             DoNotify(notification, callbackInfo, target, data);
         }
 
-        if (target == null)
-            return;
-
-        if (notificationInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbackInfos))
-        {
-            foreach (CallbackInfo callbackInfo in callbackInfos)
-            {
-                DoNotify(notification, callbackInfo, target, data);
-            }
-        }
+        tempCallbacks.Clear();
     }
 
     private static void DoNotify(NotificationDef notification, CallbackInfo callbackInfo, Thing target, object data)
@@ -434,7 +434,7 @@ public class NotificationManager : GameComponent
         }
 
         if (doDebug)
-            Debug.Log($"NotificationManager:   {callbackInfo}");
+            Debug.Log($"NotificationManager:   {callbackInfo} (priority {callbackInfo.priority})");
 
         try
         {
