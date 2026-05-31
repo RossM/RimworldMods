@@ -1,4 +1,6 @@
-﻿namespace XylXenos;
+﻿using XylXenos.Patches;
+
+namespace XylXenos;
 
 public interface INotificationListener
 {
@@ -7,22 +9,72 @@ public interface INotificationListener
 
 public enum NotificationEvent
 {
+    /// <summary>
+    /// Called before <see cref="Thing.TakeDamage"/>.
+    ///
+    /// This hook passes a <see cref="DamageInfo"/> as its "data" parameter.
+    /// </summary>
     PreDamageTaken,
+
+    /// <summary>
+    /// Called after <see cref="Pawn_GeneTracker.Notify_GenesChanged"/>.
+    /// </summary>
     PostGenesChanged,
 
     // PostHediffsChanged and PostHediffStateChange are generally both called when a pawn's hediffs change, but
     // PostHediffsChanged is called as soon as the HediffSet is updated, while PostHediffStateChange is called
     // slightly later when the game is checking for the results of the changes. I'm not sure if having both is
     // really necessary but out of caution I'm leaving them both here for now.
-    PostHediffsChanged,
-    PostHediffStateChange,
-    PostApparelChanged,
-    PostSatisfyGenes,
-    PostDiscard,
-    PostPostMake,
-    PostLoadedGame,
-    PostGameDispose,
 
+    /// <summary>
+    /// Called after <see cref="HediffSet.DirtyCache"/>.
+    /// </summary>
+    PostHediffsChanged,
+
+    /// <summary>
+    /// Called after <see cref="Pawn_HealthTracker.CheckForStateChange"/>.
+    /// </summary>
+    PostHediffStateChange,
+
+    /// <summary>
+    /// Called after <see cref="Pawn_ApparelTracker.Notify_ApparelChanged"/>.
+    /// </summary>
+    PostApparelChanged,
+
+    /// <summary>
+    /// Called after <see cref="GeneUtility.SatisfyChemicalGenes"/>.
+    /// </summary>
+    PostSatisfyGenes,
+
+    /// <summary>
+    /// Called after <see cref="Pawn.Discard"/>.
+    /// </summary>
+    PostDiscard,
+
+    /// <summary>
+    /// Called after <see cref="Pawn.PostMake"/>.
+    /// </summary>
+    PostPostMake,
+
+    /// <summary>
+    /// Called after <see cref="NotificationManager.LoadedGame"/>, immediately after the notification manager
+    /// has called <see cref="INotificationListener.RegisterWith"/> on all listeners.
+    /// </summary>
+    PostLoadedGame,
+
+    /// <summary>
+    /// Called after <see cref="Game.Dispose"/>, immediately before the notification manager unregisters all listeners.
+    ///
+    /// This hook passes null as its "pawn" parameter, so can only be used as a global hook.
+    /// </summary>
+    GlobalPostGameDispose,
+
+    /// <summary>
+    /// Called inside <see cref="PawnGenerator.TryGenerateNewPawnInternal"/> before the <see cref="Pawn"/>'s bio and name are generated.
+    /// This hook can be used to modify the pawn's <see cref="Gender"/> and <see cref="XenotypeDef"/> during generation.
+    ///
+    /// This hook passes a <see cref="Patch_PawnGenerator.PawnGenerationEarlyData"/> as the "data" parameter.
+    /// </summary>
     PawnGenerationEarly,
 }
 
