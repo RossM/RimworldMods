@@ -153,7 +153,6 @@ public class Gene_Flight : GeneExt
     }
 
     [DebugOutput("Economy")]
-    [UsedImplicitly]
     public static void ApparelAllowsFlight()
     {
         TableDataGetter<ThingDef>[] columns =

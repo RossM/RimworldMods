@@ -22,7 +22,7 @@ public class JoyGiverFactor
     public JoyGiverDef joyGiver;
     public float factor = 1.0f;
 
-    [UsedImplicitly]
+    [UsedFromReflection]
     public void LoadDataFromXmlCustom(XmlNode xmlRoot)
     {
         DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "joyGiver", xmlRoot.Name);

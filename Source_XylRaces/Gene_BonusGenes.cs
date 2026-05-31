@@ -13,7 +13,7 @@ public class BonusGenesInfo
     public IntRange count = IntRange.One;
 }
 
-[UsedImplicitly]
+[UsedFromXml]
 public class Gene_BonusGenes : GeneExt
 {
     [NotNull]
