@@ -136,6 +136,11 @@ public class NotificationManager : GameComponent
         public Delegate wrappedCallback;
         public INotificationListener listener;
         public string name;
+
+        public override string ToString()
+        {
+            return $"{name}[{listener}]";
+        }
     }
 
     public static NotificationManager Instance => Current.Game.GetComponent<NotificationManager>();
@@ -170,7 +175,7 @@ public class NotificationManager : GameComponent
 
         if (doDebug)
             Debug.Log(
-                $"NotificationManager: Register eventType={notification} {(target == null ? "global" : $"target={target}")} listener={listener} name={name}");
+                $"NotificationManager: Register notification={notification} {(target == null ? "global" : $"target=[{target}]")} listener={listener} name={name}");
 
         var records = registrations.GetOrCreateValue(listener);
         records.Add(new(notification, target));
@@ -223,7 +228,7 @@ public class NotificationManager : GameComponent
                 Gen.HashCombineInt(0x467A56FF, notification.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
-        RegisterInternal(notification, target, callback, callback.Target, callback.Method.Name);
+        RegisterInternal(notification, target, callback, callback.Target, MethodName(callback));
     }
 
     public void Register<T>(NotificationDef notification, Thing target, [NotNull] Action<T> callback)
@@ -245,7 +250,7 @@ public class NotificationManager : GameComponent
                 Gen.HashCombineInt(0x467A56FF, notification.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
-        RegisterInternal<T>(notification, target, (_, data) => callback(data), callback.Target, callback.Method.Name);
+        RegisterInternal<T>(notification, target, (_, data) => callback(data), callback.Target, MethodName(callback));
     }
 
     // ReSharper disable once UnusedMember.Global
@@ -261,7 +266,7 @@ public class NotificationManager : GameComponent
             return;
         }
 
-        RegisterInternal<object>(notification, target, (t, _) => callback(t), callback.Target, callback.Method.Name);
+        RegisterInternal<object>(notification, target, (t, _) => callback(t), callback.Target, MethodName(callback));
     }
 
     public void Register(NotificationDef notification, Thing target, [NotNull] Action callback)
@@ -276,7 +281,12 @@ public class NotificationManager : GameComponent
             return;
         }
 
-        RegisterInternal<object>(notification, target, (_, _) => callback(), callback.Target, callback.Method.Name);
+        RegisterInternal<object>(notification, target, (_, _) => callback(), callback.Target, MethodName(callback));
+    }
+
+    private static string MethodName(Delegate fn)
+    {
+        return $"{fn.Method.DeclaringType?.Name ?? "<global>"}.{fn.Method.Name}";
     }
 
     // ReSharper disable once UnusedMember.Global
@@ -305,7 +315,7 @@ public class NotificationManager : GameComponent
                 Gen.HashCombineInt(0x467A56FF, notification.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
-        RegisterInternal(notification, target, callback, listener, $"{listener.GetType().Name}:{notification.defName}");
+        RegisterInternal(notification, target, callback, listener, $"{listener.GetType().Name}.<{notification.defName}>");
     }
 
     public void UnregisterAll(INotificationListener listener)
@@ -338,7 +348,7 @@ public class NotificationManager : GameComponent
             return;
 
         if (doDebug)
-            Debug.Log($"NotificationManager: Notify notification={notification} target={target} data={data}");
+            Debug.Log($"NotificationManager: Notify notification={notification} target=[{target}] data={data}");
 
         if (Prefs.DevMode)
         {
@@ -408,12 +418,12 @@ public class NotificationManager : GameComponent
             case MapComponent m when m.map.Disposed:
             case GeneExt { Removed: true }:
                 Log.Warning(
-                    $"NotificationManager: A destroyed thing got an event: {callbackInfo.listener} : {callbackInfo.name} ({notification.defName} on {target})");
+                    $"NotificationManager: A destroyed thing got an event: {callbackInfo} ({notification.defName} on {target})");
                 return;
         }
 
         if (doDebug)
-            Debug.Log($"NotificationManager:   {callbackInfo.listener} : {callbackInfo.name}");
+            Debug.Log($"NotificationManager:   {callbackInfo}");
 
         try
         {
@@ -424,12 +434,12 @@ public class NotificationManager : GameComponent
             if (Prefs.DevMode)
             {
                 Log.Error(
-                    $"NotificationManager: Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({notification} on {target}): {exception}");
+                    $"NotificationManager: Exception notifying {callbackInfo} ({notification} on {target}): {exception}");
             }
             else if (callbackInfo.listener != null)
             {
                 Log.ErrorOnce(
-                    $"NotificationManager: Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({notification} on {target}). Suppressing further errors. Exception: {exception}",
+                    $"NotificationManager: Exception notifying {callbackInfo} ({notification} on {target}). Suppressing further errors. Exception: {exception}",
                     callbackInfo.listener.GetHashCode() ^ 0x1c502196);
             }
         }
