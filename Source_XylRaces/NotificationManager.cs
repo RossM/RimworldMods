@@ -170,7 +170,7 @@ public class NotificationManager : GameComponent
 
         if (doDebug)
             Debug.Log(
-                $"Register eventType={eventType} {(target == null ? "global" : $"target={target}")} listener={listener} name={name}");
+                $"NotificationManager: Register eventType={eventType} {(target == null ? "global" : $"target={target}")} listener={listener} name={name}");
 
         var records = registeredEvents.GetOrCreateValue(listener);
         records.Add(new(eventType, target));
@@ -184,7 +184,7 @@ public class NotificationManager : GameComponent
             if (eventInfo.globalCallbacks.Any(c => c.listener == listener && c.name == name))
             {
                 Log.Warning(
-                    $"Adding a duplicate callback: type={eventType} global listener={listener} name={name}");
+                    $"NotificationManager: Adding a duplicate callback: type={eventType} global listener={listener} name={name}");
                 return;
             }
 
@@ -196,7 +196,7 @@ public class NotificationManager : GameComponent
             if (localCallbacks.Any(c => c.listener == listener && c.name == name))
             {
                 Log.Warning(
-                    $"Adding a duplicate callback: type={eventType} target={target} listener={listener} name={name}");
+                    $"NotificationManager: Adding a duplicate callback: type={eventType} target={target} listener={listener} name={name}");
                 return;
             }
 
@@ -204,24 +204,44 @@ public class NotificationManager : GameComponent
         }
     }
 
-    public void Register<T>(NotificationDef eventType, Thing target, Action<Thing, T> callback)
+    public void Register<T>(NotificationDef eventType, Thing target, [NotNull] Action<Thing, T> callback)
     {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        if (eventType == null)
+        {
+            Log.WarningOnce($"NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
+                Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
+            return;
+        }
+
         if (!typeof(T).IsAssignableFrom(eventType.dataType))
         {
             Log.ErrorOnce(
-                $"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
+                $"NotificationManager: Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventType.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
         RegisterInternal(eventType, target, callback, callback.Target, callback.Method.Name);
     }
 
-    public void Register<T>(NotificationDef eventType, Thing target, Action<T> callback)
+    public void Register<T>(NotificationDef eventType, Thing target, [NotNull] Action<T> callback)
     {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        if (eventType == null)
+        {
+            Log.WarningOnce($"NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
+                Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
+            return;
+        }
+
         if (!typeof(T).IsAssignableFrom(eventType.dataType))
         {
             Log.ErrorOnce(
-                $"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
+                $"NotificationManager: Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventType.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
@@ -229,23 +249,59 @@ public class NotificationManager : GameComponent
     }
 
     // ReSharper disable once UnusedMember.Global
-    public void Register(NotificationDef eventType, Thing target, Action<Thing> callback)
+    public void Register(NotificationDef eventType, Thing target, [NotNull] Action<Thing> callback)
     {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        if (eventType == null)
+        {
+            Log.WarningOnce($"NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
+                Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
+            return;
+        }
+
         RegisterInternal<object>(eventType, target, (t, _) => callback(t), callback.Target, callback.Method.Name);
     }
 
-    public void Register(NotificationDef eventType, Thing target, Action callback)
+    public void Register(NotificationDef eventType, Thing target, [NotNull] Action callback)
     {
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        if (eventType == null)
+        {
+            Log.WarningOnce($"NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
+                Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
+            return;
+        }
+
         RegisterInternal<object>(eventType, target, (_, _) => callback(), callback.Target, callback.Method.Name);
     }
 
     // ReSharper disable once UnusedMember.Global
-    public void Register<T>(INotificationListener listener, NotificationDef eventType, Thing target, Action<Thing, T> callback)
+    public void Register<T>(
+        [NotNull] INotificationListener listener,
+        NotificationDef eventType,
+        Thing target,
+        [NotNull] Action<Thing, T> callback)
     {
+        if (listener == null)
+            throw new ArgumentNullException(nameof(listener));
+        if (callback == null)
+            throw new ArgumentNullException(nameof(callback));
+
+        if (eventType == null)
+        {
+            Log.WarningOnce($"NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
+                Gen.HashCombineInt(0x7AEC159, listener?.GetHashCode() ?? 0));
+            return;
+        }
+
         if (!typeof(T).IsAssignableFrom(eventType.dataType))
         {
             Log.ErrorOnce(
-                $"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
+                $"NotificationManager: Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventType.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
@@ -282,38 +338,39 @@ public class NotificationManager : GameComponent
             return;
 
         if (doDebug)
-            Debug.Log($"Notify eventType={eventType} target={target} data={data}");
+            Debug.Log($"NotificationManager: Notify eventType={eventType} target={target} data={data}");
 
         if (Prefs.DevMode)
         {
             if (eventType.global && target != null)
             {
-                Log.ErrorOnce($"Notification {eventType.defName} is global but was called with target {target}",
+                Log.ErrorOnce($"NotificationManager: Notification {eventType.defName} is global but was called with target {target}",
                     Gen.HashCombineInt(0x34330AEF, eventType.index));
             }
 
             if (!eventType.global && target == null)
             {
-                Log.ErrorOnce($"Notification {eventType.defName} is not global but was called with null target",
+                Log.ErrorOnce($"NotificationManager: Notification {eventType.defName} is not global but was called with null target",
                     Gen.HashCombineInt(0x140A0CA2, eventType.index));
             }
 
             if (eventType.dataType != null && data == null)
             {
-                Log.ErrorOnce($"Notification {eventType.defName} should take data of type {eventType.dataType} but was given null",
+                Log.ErrorOnce(
+                    $"NotificationManager: Notification {eventType.defName} should take data of type {eventType.dataType} but was given null",
                     Gen.HashCombineInt(0xEEB8AC2, eventType.index));
             }
 
             if (eventType.dataType != null && data != null && !eventType.dataType.IsAssignableFrom(data.GetType()))
             {
                 Log.ErrorOnce(
-                    $"Notification {eventType.defName} should take data of type {eventType.dataType} but was given {data.GetType()}",
+                    $"NotificationManager: Notification {eventType.defName} should take data of type {eventType.dataType} but was given {data.GetType()}",
                     Gen.HashCombineInt(0x4D53041B, eventType.index));
             }
 
             if (eventType.dataType == null && data != null)
             {
-                Log.ErrorOnce($"Notification {eventType.defName} shouldn't take data but was given {data.GetType()}",
+                Log.ErrorOnce($"NotificationManager: Notification {eventType.defName} shouldn't take data but was given {data.GetType()}",
                     Gen.HashCombineInt(0x7A213146, eventType.index));
             }
         }
@@ -350,12 +407,12 @@ public class NotificationManager : GameComponent
             case MapComponent m when m.map.Disposed:
             case GeneExt { Removed: true }:
                 Log.Warning(
-                    $"A destroyed thing got an event: {callbackInfo.listener} : {callbackInfo.name} ({eventType.defName} on {target})");
+                    $"NotificationManager: A destroyed thing got an event: {callbackInfo.listener} : {callbackInfo.name} ({eventType.defName} on {target})");
                 return;
         }
 
         if (doDebug)
-            Debug.Log($"  {callbackInfo.listener} : {callbackInfo.name}");
+            Debug.Log($"NotificationManager:   {callbackInfo.listener} : {callbackInfo.name}");
 
         try
         {
@@ -365,12 +422,13 @@ public class NotificationManager : GameComponent
         {
             if (Prefs.DevMode)
             {
-                Log.Error($"Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}): {exception}");
+                Log.Error(
+                    $"NotificationManager: Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}): {exception}");
             }
             else if (callbackInfo.listener != null)
             {
                 Log.ErrorOnce(
-                    $"Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}). Suppressing further errors. Exception: {exception}",
+                    $"NotificationManager: Exception notifying {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target}). Suppressing further errors. Exception: {exception}",
                     callbackInfo.listener.GetHashCode() ^ 0x1c502196);
             }
         }
