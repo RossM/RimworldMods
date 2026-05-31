@@ -1,6 +1,7 @@
 ﻿namespace XylXenos;
 
 [RimWorld.DefOf]
+[NoReorder]
 public static class DefOf
 {
     #region GeneDefs
@@ -8,11 +9,6 @@ public static class DefOf
     public static GeneDef XylEcholocation;
 
     #endregion
-
-    static DefOf()
-    {
-        DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));
-    }
 
     #region StatDefs
 
@@ -56,4 +52,9 @@ public static class DefOf
     public static BodyPartDef Brain;
 
     #endregion
+
+    static DefOf()
+    {
+        DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));
+    }
 }
