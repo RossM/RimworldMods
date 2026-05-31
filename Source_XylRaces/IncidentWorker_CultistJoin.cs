@@ -28,7 +28,7 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
 
         Pawn pawn = PawnGenerator.GeneratePawn(pawnGenerationRequest);
 
-        var hediff = HediffMaker.MakeHediff(DefOf.XylCultistSong, pawn, pawn.health.hediffSet.GetBodyPartRecord(DefOf.Brain));
+        var hediff = HediffMaker.MakeHediff(DefOf.XylCultistSong, pawn);
         pawn.health.AddHediff(hediff);
 
         return pawn;

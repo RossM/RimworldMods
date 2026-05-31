@@ -49,8 +49,6 @@ public static class DefOf
 
     public static HediffDef XylCultistSong;
 
-    public static BodyPartDef Brain;
-
     #endregion
 
     static DefOf()
