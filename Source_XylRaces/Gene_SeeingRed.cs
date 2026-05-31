@@ -69,6 +69,6 @@ public class Gene_SeeingRed : GeneExt
     {
         base.RegisterWith(manager);
 
-        manager.Register<DamageInfo>(NotificationEvent.PreDamageTaken, pawn, Notify_DamageTaken);
+        manager.Register<DamageInfo>(NotificationDefOf.PreDamageTaken, pawn, Notify_DamageTaken);
     }
 }

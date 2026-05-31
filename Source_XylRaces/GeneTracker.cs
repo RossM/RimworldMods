@@ -145,7 +145,7 @@ public class GeneTracker(Pawn pawn) : INotificationListener
 
     public void RegisterWith(NotificationManager manager)
     {
-        manager.Register(NotificationEvent.PostGenesChanged, pawn, Notify_PostGenesChanged);
-        manager.Register(NotificationEvent.PostLoadedGame, pawn, Notify_PostLoadedGame);
+        manager.Register(NotificationDefOf.PostGenesChanged, pawn, Notify_PostGenesChanged);
+        manager.Register(NotificationDefOf.PostLoadedGame, pawn, Notify_PostLoadedGame);
     }
 }

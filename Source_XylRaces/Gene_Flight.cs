@@ -174,6 +174,6 @@ public class Gene_Flight : GeneExt
     {
         base.RegisterWith(manager);
 
-        manager.Register(NotificationEvent.PostApparelChanged, pawn, Notify_ApparelChanged);
+        manager.Register(NotificationDefOf.PostApparelChanged, pawn, Notify_ApparelChanged);
     }
 }

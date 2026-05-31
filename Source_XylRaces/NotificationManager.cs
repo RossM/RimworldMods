@@ -2,24 +2,37 @@
 
 namespace XylXenos;
 
+public class PawnGenerationEarlyData(PawnGenerationRequest request, XenotypeDef xenotype)
+{
+    public PawnGenerationRequest request = request;
+    public XenotypeDef xenotype = xenotype;
+}
+
 public interface INotificationListener
 {
     public void RegisterWith(NotificationManager manager);
 }
 
-public enum NotificationEvent
+public class NotificationDef : Def
+{
+    public bool global = false;
+    public Type dataType = null;
+}
+
+[RimWorld.DefOf]
+public static class NotificationDefOf
 {
     /// <summary>
     /// Called before <see cref="Thing.TakeDamage"/>.
     ///
     /// This hook passes a <see cref="DamageInfo"/> as its "data" parameter.
     /// </summary>
-    PreDamageTaken,
+    public static NotificationDef PreDamageTaken;
 
     /// <summary>
     /// Called after <see cref="Pawn_GeneTracker.Notify_GenesChanged"/>.
     /// </summary>
-    PostGenesChanged,
+    public static NotificationDef PostGenesChanged;
 
     // PostHediffsChanged and PostHediffStateChange are generally both called when a pawn's hediffs change, but
     // PostHediffsChanged is called as soon as the HediffSet is updated, while PostHediffStateChange is called
@@ -29,53 +42,53 @@ public enum NotificationEvent
     /// <summary>
     /// Called after <see cref="HediffSet.DirtyCache"/>.
     /// </summary>
-    PostHediffsChanged,
+    public static NotificationDef PostHediffsChanged;
 
     /// <summary>
     /// Called after <see cref="Pawn_HealthTracker.CheckForStateChange"/>.
     /// </summary>
-    PostHediffStateChange,
+    public static NotificationDef PostHediffStateChange;
 
     /// <summary>
     /// Called after <see cref="Pawn_ApparelTracker.Notify_ApparelChanged"/>.
     /// </summary>
-    PostApparelChanged,
+    public static NotificationDef PostApparelChanged;
 
     /// <summary>
     /// Called after <see cref="GeneUtility.SatisfyChemicalGenes"/>.
     /// </summary>
-    PostSatisfyGenes,
+    public static NotificationDef PostSatisfyGenes;
 
     /// <summary>
     /// Called after <see cref="Pawn.Discard"/>.
     /// </summary>
-    PostDiscard,
+    public static NotificationDef PostDiscard;
 
     /// <summary>
     /// Called after <see cref="Pawn.PostMake"/>.
     /// </summary>
-    PostPostMake,
+    public static NotificationDef PostPostMake;
 
     /// <summary>
     /// Called after <see cref="NotificationManager.LoadedGame"/>, immediately after the notification manager
     /// has called <see cref="INotificationListener.RegisterWith"/> on all listeners.
     /// </summary>
-    PostLoadedGame,
+    public static NotificationDef PostLoadedGame;
 
     /// <summary>
     /// Called after <see cref="Game.Dispose"/>, immediately before the notification manager unregisters all listeners.
     ///
     /// This hook passes null as its "pawn" parameter, so can only be used as a global hook.
     /// </summary>
-    GlobalPostGameDispose,
+    public static NotificationDef GlobalPostGameDispose;
 
     /// <summary>
     /// Called inside <see cref="PawnGenerator.TryGenerateNewPawnInternal"/> before the <see cref="Pawn"/>'s bio and name are generated.
     /// This hook can be used to modify the pawn's <see cref="Gender"/> and <see cref="XenotypeDef"/> during generation.
     ///
-    /// This hook passes a <see cref="Patch_PawnGenerator.PawnGenerationEarlyData"/> as the "data" parameter.
+    /// This hook passes a <see cref="PawnGenerationEarlyData"/> as the "data" parameter.
     /// </summary>
-    PawnGenerationEarly,
+    public static NotificationDef PawnGenerationEarly;
 }
 
 /// <summary>
@@ -94,9 +107,9 @@ public class NotificationManager : GameComponent
         public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
     }
 
-    private class RegistrationInfo(NotificationEvent eventType, Thing target)
+    private class RegistrationInfo(NotificationDef eventType, Thing target)
     {
-        public readonly NotificationEvent eventType = eventType;
+        public readonly NotificationDef eventType = eventType;
         public readonly bool isGlobal = target == null;
         public readonly System.WeakReference<Thing> target = target == null ? null : new(target);
     }
@@ -112,9 +125,9 @@ public class NotificationManager : GameComponent
     private static bool doDebug = false;
 
     public static List<INotificationListener> staticListeners = [];
-    public HashSet<INotificationListener> alreadyRegisteredStaticListeners = new();
+    [Unsaved] public HashSet<INotificationListener> alreadyRegisteredStaticListeners = [];
 
-    private readonly EventInfo[] events = new EventInfo[Enum.GetValues(typeof(NotificationEvent)).Length];
+    private readonly EventInfo[] events = new EventInfo[DefDatabase<NotificationDef>.DefCount];
 
     private ConditionalWeakTable<INotificationListener, List<RegistrationInfo>> registeredEvents = new();
 
@@ -129,7 +142,7 @@ public class NotificationManager : GameComponent
     }
 
     private void RegisterInternal<T>(
-        NotificationEvent eventType,
+        NotificationDef eventType,
         Thing target,
         Action<Thing, T> callback,
         object source,
@@ -145,7 +158,7 @@ public class NotificationManager : GameComponent
         var records = registeredEvents.GetOrCreateValue(listener);
         records.Add(new(eventType, target));
 
-        EventInfo eventInfo = events[(int)eventType] ??= new();
+        EventInfo eventInfo = events[eventType.index] ??= new();
 
         CallbackInfo callbackInfo = new() { wrappedCallback = callback, listener = listener, name = name };
 
@@ -174,23 +187,23 @@ public class NotificationManager : GameComponent
         }
     }
 
-    public void Register<T>(NotificationEvent eventType, Thing target, Action<Thing, T> callback)
+    public void Register<T>(NotificationDef eventType, Thing target, Action<Thing, T> callback)
     {
         RegisterInternal(eventType, target, callback, callback.Target, callback.Method.Name);
     }
 
-    public void Register<T>(NotificationEvent eventType, Thing target, Action<T> callback)
+    public void Register<T>(NotificationDef eventType, Thing target, Action<T> callback)
     {
         RegisterInternal<T>(eventType, target, (_, data) => callback(data), callback.Target, callback.Method.Name);
     }
 
     // ReSharper disable once UnusedMember.Global
-    public void Register(NotificationEvent eventType, Thing target, Action<Thing> callback)
+    public void Register(NotificationDef eventType, Thing target, Action<Thing> callback)
     {
         RegisterInternal<object>(eventType, target, (t, _) => callback(t), callback.Target, callback.Method.Name);
     }
 
-    public void Register(NotificationEvent eventType, Thing target, Action callback)
+    public void Register(NotificationDef eventType, Thing target, Action callback)
     {
         RegisterInternal<object>(eventType, target, (_, _) => callback(), callback.Target, callback.Method.Name);
     }
@@ -203,13 +216,13 @@ public class NotificationManager : GameComponent
         foreach (var record in records)
         {
             if (record.isGlobal)
-                events[(int)record.eventType]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
+                events[record.eventType.index]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
             else
             {
                 if (!record.target.TryGetTarget(out Thing target))
                     continue;
 
-                if (events[(int)record.eventType]?.localCallbacks?.TryGetValue(target, out var callbacks) == true)
+                if (events[record.eventType.index]?.localCallbacks?.TryGetValue(target, out var callbacks) == true)
                     callbacks.RemoveAll(callback => callback.listener == listener);
             }
         }
@@ -217,7 +230,7 @@ public class NotificationManager : GameComponent
         registeredEvents.Remove(listener);
     }
 
-    public void Notify(NotificationEvent eventType, Thing target, object data = null)
+    public void Notify(NotificationDef eventType, Thing target, object data = null)
     {
         if (Scribe.mode != LoadSaveMode.Inactive)
             return;
@@ -225,7 +238,41 @@ public class NotificationManager : GameComponent
         if (doDebug)
             Debug.Log($"Notify eventType={eventType} target={target} data={data}");
 
-        EventInfo eventInfo = events[(int)eventType];
+        if (Prefs.DevMode)
+        {
+            if (eventType.global && target != null)
+            {
+                Log.WarningOnce($"Notification {eventType.defName} is global but was called with target {target}",
+                    "NotifyGlobalCalledWithThing".GetHashCode() ^ eventType.index);
+            }
+
+            if (!eventType.global && target == null)
+            {
+                Log.WarningOnce($"Notification {eventType.defName} is not global but was called with null target",
+                    "NotifyCalledWithoutThing".GetHashCode() ^ eventType.index);
+            }
+
+            if (eventType.dataType != null && data == null)
+            {
+                Log.WarningOnce($"Notification {eventType.defName} should take data of type {eventType.dataType} but was given null",
+                    "NotifyCalledWithoutData".GetHashCode() ^ eventType.index);
+            }
+
+            if (eventType.dataType != null && data != null && !eventType.dataType.IsAssignableFrom(data.GetType()))
+            {
+                Log.WarningOnce(
+                    $"Notification {eventType.defName} should take data of type {eventType.dataType} but was given {data.GetType()}",
+                    "NotifyCalledWithWrongData".GetHashCode() ^ eventType.index);
+            }
+
+            if (eventType.dataType == null && data != null)
+            {
+                Log.WarningOnce($"Notification {eventType.defName} shouldn't take data but was given {data.GetType()}",
+                    "NotifyCalledWithData".GetHashCode() ^ eventType.index);
+            }
+        }
+
+        EventInfo eventInfo = events[eventType.index];
         if (eventInfo == null)
             return;
 
@@ -246,7 +293,7 @@ public class NotificationManager : GameComponent
         }
     }
 
-    private static void DoNotify(CallbackInfo callbackInfo, Thing target, object data, NotificationEvent eventType)
+    private static void DoNotify(CallbackInfo callbackInfo, Thing target, object data, NotificationDef eventType)
     {
         switch (callbackInfo.listener)
         {
@@ -256,7 +303,8 @@ public class NotificationManager : GameComponent
             // ReSharper restore SuspiciousTypeConversion.Global
             case MapComponent m when m.map.Disposed:
             case GeneExt { Removed: true }:
-                Log.Warning($"A destroyed thing got an event: {callbackInfo.listener} : {callbackInfo.name} ({eventType} on {target})");
+                Log.Warning(
+                    $"A destroyed thing got an event: {callbackInfo.listener} : {callbackInfo.name} ({eventType.defName} on {target})");
                 return;
         }
 
@@ -316,7 +364,7 @@ public class NotificationManager : GameComponent
             listener.RegisterWith(this);
 
         foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
-            Notify(NotificationEvent.PostLoadedGame, pawn);
+            Notify(NotificationDefOf.PostLoadedGame, pawn);
     }
 
     public override void FinalizeInit()

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <XylXenos.NotificationDef>
+    <defName>PreDamageTaken</defName>
+    <dataType>DamageInfo</dataType>
+  </XylXenos.NotificationDef>
+  <XylXenos.NotificationDef>
+    <defName>PostGenesChanged</defName>
+  </XylXenos.NotificationDef>
+  <XylXenos.NotificationDef>
+    <defName>PostHediffsChanged</defName>
+  </XylXenos.NotificationDef>
+  <XylXenos.NotificationDef>
+    <defName>PostHediffStateChange</defName>
+  </XylXenos.NotificationDef>
+  <XylXenos.NotificationDef>
+    <defName>PostApparelChanged</defName>
+  </XylXenos.NotificationDef>
+  <XylXenos.NotificationDef>
+    <defName>PostSatisfyGenes</defName>
+  </XylXenos.NotificationDef>
+  <XylXenos.NotificationDef>
+    <defName>PostDiscard</defName>
+  </XylXenos.NotificationDef>
+  <XylXenos.NotificationDef>
+    <defName>PostPostMake</defName>
+  </XylXenos.NotificationDef>
+  <XylXenos.NotificationDef>
+    <defName>PostLoadedGame</defName>
+  </XylXenos.NotificationDef>
+  <XylXenos.NotificationDef>
+    <defName>GlobalPostGameDispose</defName>
+    <global>true</global>
+  </XylXenos.NotificationDef>
+  <XylXenos.NotificationDef>
+    <defName>PawnGenerationEarly</defName>
+    <dataType>XylXenos.PawnGenerationEarlyData</dataType>
+  </XylXenos.NotificationDef>
+
+</Defs>

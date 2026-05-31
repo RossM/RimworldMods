@@ -8,7 +8,7 @@ public static class Patch_Pawn_GeneTracker
     [HarmonyPatch("Notify_GenesChanged")]
     public static void Notify_GenesChanged_Postfix(Pawn_GeneTracker __instance)
     {
-        NotificationManager.Instance.Notify(NotificationEvent.PostGenesChanged, __instance.pawn);
+        NotificationManager.Instance.Notify(NotificationDefOf.PostGenesChanged, __instance.pawn);
     }
 
     [Feature(typeof(DefModExtension_Chemical))]

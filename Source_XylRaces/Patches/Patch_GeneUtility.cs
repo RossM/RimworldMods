@@ -8,6 +8,6 @@ public static class Patch_GeneUtility
     [HarmonyPatch(nameof(GeneUtility.SatisfyChemicalGenes))]
     public static void SatisfyChemicalGenes_Postfix(Pawn pawn)
     {
-        NotificationManager.Instance.Notify(NotificationEvent.PostSatisfyGenes, pawn);
+        NotificationManager.Instance.Notify(NotificationDefOf.PostSatisfyGenes, pawn);
     }
 }

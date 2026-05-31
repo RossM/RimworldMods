@@ -33,7 +33,7 @@ public static class Patch_Pawn
     [HarmonyPatch(nameof(Pawn.Discard))]
     public static void Discard_Postfix(Pawn __instance)
     {
-        NotificationManager.Instance.Notify(NotificationEvent.PostDiscard, __instance);
+        NotificationManager.Instance.Notify(NotificationDefOf.PostDiscard, __instance);
     }
 
     [Feature(typeof(GeneTracker))]
@@ -41,6 +41,6 @@ public static class Patch_Pawn
     [HarmonyPatch(nameof(Pawn.PostMake))]
     public static void PostMake_Postfix(Pawn __instance)
     {
-        NotificationManager.Instance.Notify(NotificationEvent.PostPostMake, __instance);
+        NotificationManager.Instance.Notify(NotificationDefOf.PostPostMake, __instance);
     }
 }

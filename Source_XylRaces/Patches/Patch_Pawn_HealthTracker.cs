@@ -8,6 +8,6 @@ public static class Patch_Pawn_HealthTracker
     [HarmonyPatch(nameof(Pawn_HealthTracker.CheckForStateChange))]
     public static void CheckForStateChange_Postfix(Pawn_HealthTracker __instance)
     {
-        NotificationManager.Instance.Notify(NotificationEvent.PostHediffStateChange, __instance.pawn);
+        NotificationManager.Instance.Notify(NotificationDefOf.PostHediffStateChange, __instance.pawn);
     }
 }

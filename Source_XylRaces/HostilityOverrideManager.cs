@@ -92,6 +92,6 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
 
     public void RegisterWith(NotificationManager manager)
     {
-        manager.Register<DamageInfo>(NotificationEvent.PreDamageTaken, null, Notify_DamageTaken);
+        manager.Register<DamageInfo>(NotificationDefOf.PreDamageTaken, null, Notify_DamageTaken);
     }
 }

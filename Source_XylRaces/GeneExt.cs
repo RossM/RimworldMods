@@ -266,6 +266,6 @@ public class GeneExt : Gene, INotificationListener
     public virtual void RegisterWith(NotificationManager manager)
     {
         if (!DefExt.permanentHediffs.NullOrEmpty())
-            manager.Register(NotificationEvent.PostHediffStateChange, pawn, Notify_HediffStateChange);
+            manager.Register(NotificationDefOf.PostHediffStateChange, pawn, Notify_HediffStateChange);
     }
 }

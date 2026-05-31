@@ -1,4 +1,5 @@
-﻿using static XylXenos.Patches.Patch_PawnGenerator;
+﻿using XylXenos.Patches;
+using static XylXenos.Patches.Patch_PawnGenerator;
 
 namespace XylXenos;
 
@@ -51,6 +52,6 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListe
 
     public void RegisterWith(NotificationManager manager)
     {
-        manager.Register<PawnGenerationEarlyData>(NotificationEvent.PawnGenerationEarly, null, Notify_PawnGenerationEarly);
+        manager.Register<PawnGenerationEarlyData>(NotificationDefOf.PawnGenerationEarly, null, Notify_PawnGenerationEarly);
     }
 }

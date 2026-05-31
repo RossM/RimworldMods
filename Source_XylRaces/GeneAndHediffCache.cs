@@ -105,7 +105,7 @@ public class GeneAndHediffCache(Pawn pawn) : INotificationListener
 
     public void RegisterWith(NotificationManager manager)
     {
-        manager.Register(NotificationEvent.PostGenesChanged, pawn, Notify_PostGenesChanged);
-        manager.Register(NotificationEvent.PostHediffsChanged, pawn, Notify_PostHediffsChanged);
+        manager.Register(NotificationDefOf.PostGenesChanged, pawn, Notify_PostGenesChanged);
+        manager.Register(NotificationDefOf.PostHediffsChanged, pawn, Notify_PostHediffsChanged);
     }
 }

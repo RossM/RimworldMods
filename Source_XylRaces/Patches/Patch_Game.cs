@@ -8,7 +8,7 @@ public static class Patch_Game
     [HarmonyPatch(nameof(Game.Dispose))]
     public static void Dispose_Postfix()
     {
-        NotificationManager.Instance.Notify(NotificationEvent.GlobalPostGameDispose, null);
+        NotificationManager.Instance.Notify(NotificationDefOf.GlobalPostGameDispose, null);
         NotificationManager.Instance.Reset();
     }
 }

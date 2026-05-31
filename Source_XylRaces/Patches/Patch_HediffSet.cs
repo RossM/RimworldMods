@@ -8,6 +8,6 @@ public class Patch_HediffSet
     [HarmonyPatch(nameof(HediffSet.DirtyCache))]
     public static void DirtyCache_Postfix(HediffSet __instance)
     {
-        NotificationManager.Instance.Notify(NotificationEvent.PostHediffsChanged, __instance.pawn);
+        NotificationManager.Instance.Notify(NotificationDefOf.PostHediffsChanged, __instance.pawn);
     }
 }
