@@ -45,7 +45,7 @@ public static class NotificationDefOf
     ///     Called before <see cref="Thing.TakeDamage" />.
     ///     This hook passes a <see cref="DamageInfo" /> as its "data" parameter.
     /// </summary>
-    public static NotificationDef PreDamageTaken;
+    public static NotificationDef PreTakeDamage;
 
     /// <summary>
     ///     Called after <see cref="Pawn_GeneTracker.Notify_GenesChanged" />.
@@ -65,7 +65,7 @@ public static class NotificationDefOf
     /// <summary>
     ///     Called after <see cref="Pawn_HealthTracker.CheckForStateChange" />.
     /// </summary>
-    public static NotificationDef PostHediffStateChange;
+    public static NotificationDef PostCheckForStateChange;
 
     /// <summary>
     ///     Called after <see cref="Pawn_ApparelTracker.Notify_ApparelChanged" />.
@@ -75,7 +75,7 @@ public static class NotificationDefOf
     /// <summary>
     ///     Called after <see cref="GeneUtility.SatisfyChemicalGenes" />.
     /// </summary>
-    public static NotificationDef PostSatisfyGenes;
+    public static NotificationDef PostSatisfyChemicalGenes;
 
     /// <summary>
     ///     Called after <see cref="Thing.Discard" />.
