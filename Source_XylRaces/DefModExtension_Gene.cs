@@ -52,7 +52,7 @@ public class StartingItemOption
     public ThingDef item;
     public FoodTypeFlags foodType;
     public float chance = 1.0f;
-    public IntRange count = IntRange.One;
+    public IntRange count = IntRange.Zero;
     public FloatRange nutritionAmount = FloatRange.Zero;
 }
 
