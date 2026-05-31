@@ -5,7 +5,7 @@ public class ThoughtWorker_HerdInstinct : ThoughtWorker
 {
     protected override ThoughtState CurrentStateInternal(Pawn p)
     {
-        if (!p.Spawned || ThoughtUtility.ThoughtNullified(p, def) || p.Faction != Faction.OfPlayer)
+        if (!p.Spawned || ThoughtUtility.ThoughtNullified(p, def) || !p.IsColonist)
             return ThoughtState.Inactive;
 
         return p.Map.mapPawns.ColonistsSpawnedCount switch
