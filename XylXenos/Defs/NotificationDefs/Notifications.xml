@@ -53,4 +53,8 @@
     <defName>PostDowned</defName>
   </XylXenos.NotificationDef>
 
+  <XylXenos.NotificationDef>
+    <defName>PostPawnKilled</defName>
+  </XylXenos.NotificationDef>
+
 </Defs>

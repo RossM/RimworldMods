@@ -111,6 +111,12 @@ public static class NotificationDefOf
     ///     Called after <see cref="Pawn_HealthTracker.MakeDowned" />.
     /// </summary>
     public static NotificationDef PostDowned;
+
+
+    /// <summary>
+    ///     Called after <see cref="Pawn.Kill(Verse.DamageInfo?,Hediff)" />.
+    /// </summary>
+    public static NotificationDef PostPawnKilled;
 }
 
 /// <summary>
