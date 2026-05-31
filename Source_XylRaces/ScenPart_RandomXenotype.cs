@@ -51,4 +51,7 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListe
     {
         manager.Register<PawnGenerationEarlyData>(NotificationDefOf.PawnGenerationEarly, null, Notify_PawnGenerationEarly);
     }
+
+    public void PreUnregister(NotificationManager manager)
+    {}
 }

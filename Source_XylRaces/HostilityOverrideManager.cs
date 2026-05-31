@@ -94,4 +94,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
     {
         manager.Register<DamageInfo>(NotificationDefOf.PreDamageTaken, null, Notify_DamageTaken);
     }
+
+    public void PreUnregister(NotificationManager manager)
+    {}
 }

@@ -165,4 +165,7 @@ public class Hediff_DietDependency : HediffWithComps, INotificationListener
     {
         manager.Register(NotificationDefOf.PostSatisfyGenes, pawn, Notify_PostSatisfyGenes);
     }
+
+    public void PreUnregister(NotificationManager manager)
+    {}
 }

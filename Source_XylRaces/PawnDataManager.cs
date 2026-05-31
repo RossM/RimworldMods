@@ -43,4 +43,7 @@ public class PawnDataManager<T> : INotificationListener
         manager.Register(NotificationDefOf.PostDiscard, null, Notify_PawnDiscarded);
         manager.Register(NotificationDefOf.GlobalPostGameDispose, null, Notify_PostGameDispose);
     }
+
+    public void PreUnregister(NotificationManager manager)
+    {}
 }

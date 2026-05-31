@@ -9,6 +9,7 @@ public class PawnGenerationEarlyData(PawnGenerationRequest request, XenotypeDef 
 public interface INotificationListener
 {
     public void RegisterWith(NotificationManager manager);
+    public void PreUnregister(NotificationManager manager);
 }
 
 public class NotificationDef : Def
@@ -220,6 +221,8 @@ public class NotificationManager : GameComponent
 
     public void UnregisterAll(INotificationListener listener)
     {
+        listener.PreUnregister(this);
+
         if (!registeredEvents.TryGetValue(listener, out List<RegistrationInfo> records))
             return;
 
