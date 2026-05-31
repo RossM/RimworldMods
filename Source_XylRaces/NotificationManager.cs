@@ -8,7 +8,21 @@ public class PawnGenerationEarlyData(PawnGenerationRequest request, XenotypeDef 
 
 public interface INotificationListener
 {
+    /// <summary>
+    /// Called when a listener is created or loaded. The listener should call <see cref="O:XylXenos.NotificationManager.Register"/>
+    /// to register for any notifications they want to receive.
+    /// </summary>
+    /// <param name="manager">The <see cref="NotificationManager"/> that should be registered with. This is always
+    /// <see cref="NotificationManager.Instance"/>.</param>
     public void RegisterWith(NotificationManager manager);
+
+    /// <summary>
+    /// Called when a listener is about to be removed from the notification manager. Notifications registered by the listener directly
+    /// will be removed automatically, but if there are any child objects such as Comps that need to be unregistered, call
+    /// <see cref="NotificationManager.UnregisterAll"/> for each one.
+    /// </summary>
+    /// <param name="manager">The <see cref="NotificationManager"/> that should be unregistered with. This is always
+    /// <see cref="NotificationManager.Instance"/>.</param>
     public void PreUnregister(NotificationManager manager);
 }
 
