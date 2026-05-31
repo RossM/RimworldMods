@@ -107,7 +107,7 @@ public class DefModExtension_Gene : DefModExtension
     public float bodySizeFactor = 1.0f;
 
     /// <summary>
-    /// Scales body part hit points.
+    /// Scales body part hit points for all body parts.
     /// </summary>
     public float healthScaleFactor = 1.0f;
 
