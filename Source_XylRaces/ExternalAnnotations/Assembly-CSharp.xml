@@ -10,6 +10,9 @@
   <member name="T:RimWorld.DefOf">
     <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor"/>
   </member>
+  <member name="T:Verse.StaticConstructorOnStartup">
+    <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor"/>
+  </member>
 
   <member name="M:Verse.GenCollection.NullOrEmpty``1(System.Collections.Generic.HashSet{``0})">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
