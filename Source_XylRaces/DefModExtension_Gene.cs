@@ -88,6 +88,8 @@ public class DefModExtension_Gene : DefModExtension
 
     /// <summary>
     /// If non-null, this restricts the genes to being only active as an endogene or only active as a xenogene.
+    /// It also hides the gene in xenotype creation unless the correct type of xenotype is being created or
+    /// "ignore restrictions" is checked.
     /// </summary>
     public GeneType? geneType;
 
