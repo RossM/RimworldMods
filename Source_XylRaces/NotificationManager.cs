@@ -233,6 +233,18 @@ public class NotificationManager : GameComponent
         RegisterInternal<object>(eventType, target, (_, _) => callback(), callback.Target, callback.Method.Name);
     }
 
+    // ReSharper disable once UnusedMember.Global
+    public void Register<T>(INotificationListener listener, NotificationDef eventType, Thing target, Action<Thing, T> callback)
+    {
+        if (!typeof(T).IsAssignableFrom(eventType.dataType))
+        {
+            Log.ErrorOnce($"Registered callback for {callback.Target.GetType()} {eventType.defName} expects {typeof(T)} but event will pass {eventType.dataType}",
+                Gen.HashCombineInt(0x467A56FF, eventType.index, callback.Target.GetType().GetHashCode(), 0));
+        }
+
+        RegisterInternal(eventType, target, callback, listener, $"{listener.GetType().Name}:{eventType.defName}");
+    }
+
     public void UnregisterAll(INotificationListener listener)
     {
         listener.PreUnregister(this);
