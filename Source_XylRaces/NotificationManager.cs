@@ -1,6 +1,4 @@
-﻿using XylXenos.Patches;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 public class PawnGenerationEarlyData(PawnGenerationRequest request, XenotypeDef xenotype)
 {
