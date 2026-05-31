@@ -11,7 +11,7 @@ public static class Patch_Hediff_Pregnant
         if (__instance.Mother != null || __instance.Father != null)
             return;
 
-        RimWorld.GeneSet inheritedGeneSet = PregnancyUtility.GetInheritedGeneSet(null, __instance.pawn, out var success);
+        GeneSet inheritedGeneSet = PregnancyUtility.GetInheritedGeneSet(null, __instance.pawn, out var success);
         if (success)
         {
             __instance.SetParents(__instance.pawn, null, inheritedGeneSet);

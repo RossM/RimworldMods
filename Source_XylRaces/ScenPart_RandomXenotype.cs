@@ -1,7 +1,4 @@
-﻿using XylXenos.Patches;
-using static XylXenos.Patches.Patch_PawnGenerator;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 [UsedFromXml]
 public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListener
