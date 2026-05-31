@@ -3,15 +3,18 @@
 [UsedFromXml]
 public class ScenPart_Psycast : ScenPart_PawnModifier
 {
-    private static IEnumerable<AbilityDef> PossiblePsycasts => possiblePsycastsInternal ??=
-        DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
+    private static IEnumerable<AbilityDef> PossiblePsycasts => field ??=
+        GetPossiblePsycasts();
+
+    public AbilityDef psycast;
+
+    private static List<AbilityDef> GetPossiblePsycasts()
+    {
+        return DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
                 abilityDef.verbProperties?.verbClass == typeof(Verb_CastPsycast))
             .OrderBy(abilityDef => abilityDef.level)
             .ThenBy(AbilityDef => AbilityDef.label).ToList();
-
-    private static List<AbilityDef> possiblePsycastsInternal;
-
-    public AbilityDef psycast;
+    }
 
     public override void ExposeData()
     {

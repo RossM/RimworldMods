@@ -58,13 +58,7 @@ public class ScenPart_PsylinkLevels : ScenPart_PawnModifier
         }
 
         if (levelOffset > 0)
-        {
-            float num = Math.Min(levelOffset, mainPsylinkSource.def.maxSeverity - mainPsylinkSource.level);
-            for (var i = 0; i < num; i++)
-            {
-                pawn.psychicEntropy?.Notify_GainedPsylink();
-            }
-        }
+            pawn.psychicEntropy?.Notify_GainedPsylink();
 
         mainPsylinkSource.level = (int)Mathf.Clamp(mainPsylinkSource.level + levelOffset, mainPsylinkSource.def.minSeverity,
             mainPsylinkSource.def.maxSeverity);
