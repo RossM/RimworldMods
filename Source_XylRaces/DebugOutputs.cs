@@ -181,4 +181,25 @@ public static class DebugOutputs
 
         Find.WindowStack.Add(new Dialog_DebugOptionListLister(list));
     }
+
+    [DebugOutput("Economy")]
+    public static void DrugGeneRequirements()
+    {
+        TableDataGetter<ThingDef>[] columns =
+        [
+            new("defName", thingDef => thingDef.defName),
+            new("label", thingDef => thingDef.LabelCap),
+            new("prohibitedGenes",
+                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<DefModExtension_Chemical>()?.prohibitedGenes
+                    ?.Select(geneDef => geneDef.defName).ToCommaList() ?? ""),
+            new("requiredGenesAll",
+                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<DefModExtension_Chemical>()?.requiredGenesAll
+                    ?.Select(geneDef => geneDef.defName).ToCommaList() ?? ""),
+            new("requiredGenesAny",
+                thingDef => DrugStatsUtility.GetChemical(thingDef)?.GetModExtension<DefModExtension_Chemical>()?.requiredGenesAny
+                    ?.Select(geneDef => geneDef.defName).ToCommaList() ?? ""),
+        ];
+        DebugTables.MakeTablesDialog(
+            DefDatabase<ThingDef>.AllDefs.Where(thingDef => thingDef.IsDrug).OrderBy(thingDef => thingDef.BaseMarketValue), columns);
+    }
 }
