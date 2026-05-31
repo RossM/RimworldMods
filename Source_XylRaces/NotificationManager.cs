@@ -78,12 +78,12 @@ public static class NotificationDefOf
     public static NotificationDef PostSatisfyGenes;
 
     /// <summary>
-    ///     Called after <see cref="Pawn.Discard" />.
+    ///     Called after <see cref="Thing.Discard" />.
     /// </summary>
     public static NotificationDef PostDiscard;
 
     /// <summary>
-    ///     Called after <see cref="Pawn.PostMake" />.
+    ///     Called after <see cref="Thing.PostMake" />.
     /// </summary>
     public static NotificationDef PostPostMake;
 

@@ -44,6 +44,8 @@ public static class Patch_Thing
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (__instance is INotificationListener target)
             target.RegisterWith(NotificationManager.Instance);
+
+        NotificationManager.Instance.Notify(NotificationDefOf.PostPostMake, __instance);
     }
 
     [Feature(typeof(NotificationManager))]
@@ -54,5 +56,13 @@ public static class Patch_Thing
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (__instance is INotificationListener target)
             NotificationManager.Instance.UnregisterAll(target);
+    }
+
+    [Feature(nameof(NotificationDefOf.PostDiscard))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Thing.Discard))]
+    public static void Discard_Postfix(Thing __instance)
+    {
+        NotificationManager.Instance.Notify(NotificationDefOf.PostDiscard, __instance);
     }
 }
