@@ -106,6 +106,11 @@ public static class NotificationDefOf
     ///     This hook passes a <see cref="PawnGenerationEarlyData" /> as the "data" parameter.
     /// </summary>
     public static NotificationDef PawnGenerationEarly;
+
+    /// <summary>
+    ///     Called after <see cref="Pawn_HealthTracker.MakeDowned" />.
+    /// </summary>
+    public static NotificationDef PostDowned;
 }
 
 /// <summary>

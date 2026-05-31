@@ -128,9 +128,12 @@ public class Gene_Flight : GeneExt
     // This would be unfortunate, so try to move the pawn to a better position.
     public void Notify_Downed()
     {
-        var newCell = CellFinder.StandableCellNear(pawn.Position, pawn.Map, 5f);
-        if (newCell != IntVec3.Invalid)
-            pawn.Position = newCell;
+        if (pawn.Flying && pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
+        {
+            var newCell = CellFinder.StandableCellNear(pawn.Position, pawn.Map, 5f);
+            if (newCell != IntVec3.Invalid)
+                pawn.Position = newCell;
+        }
     }
 
     public static bool ApparelAllowsFlight(ThingDef thingDef)
@@ -175,5 +178,6 @@ public class Gene_Flight : GeneExt
         base.RegisterWith(manager);
 
         manager.Register(NotificationDefOf.PostApparelChanged, pawn, Notify_ApparelChanged);
+        manager.Register(NotificationDefOf.PostDowned, pawn, Notify_Downed);
     }
 }

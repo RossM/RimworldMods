@@ -49,4 +49,8 @@
     <dataType>XylXenos.PawnGenerationEarlyData</dataType>
   </XylXenos.NotificationDef>
 
+  <XylXenos.NotificationDef>
+    <defName>PostDowned</defName>
+  </XylXenos.NotificationDef>
+
 </Defs>
