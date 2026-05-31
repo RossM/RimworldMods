@@ -23,7 +23,8 @@ public static class Patch_RecipeDef
 
         DefModExtension_ThingOrRecipe_GeneDependent extension =
             __instance.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>() ??
-            __instance.products.Select(t => t.thingDef.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>()).FirstOrDefault(e => e != null);
+            __instance.products.Select(t => t.thingDef.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>())
+                .FirstOrDefault(e => e != null);
 
         if (extension == null && __instance.memePrerequisitesAny == null)
             return;

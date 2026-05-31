@@ -1,6 +1,4 @@
-﻿using Verse;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 [UsedFromXml]
 public class ScenPart_Psycast : ScenPart_PawnModifier

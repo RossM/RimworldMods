@@ -1,6 +1,4 @@
-﻿using XylXenos;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 [UsedFromXml]
 public class JobDriver_MilkHuman : JobDriver_InteractWithPawn

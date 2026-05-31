@@ -1,6 +1,4 @@
-﻿using XylXenos;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 // TODO: Need to handle satisfying the dependency for pawns in caravans. See Caravan_NeedsTracker.TrySatisfyChemicalNeed
 // and CaravanInventoryUtility.TryGetBestFood.
 

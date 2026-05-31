@@ -9,7 +9,7 @@ public static class DebugActions
 
         //var pawnKindDefs = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef k) => k.RaceProps.Humanlike).ToList();
 
-        var pawnKindDefs = new List<PawnKindDef>()
+        var pawnKindDefs = new List<PawnKindDef>
         {
             DefDatabase<PawnKindDef>.GetNamed("Tribal_Penitent"),
             DefDatabase<PawnKindDef>.GetNamed("Tribal_Archer"),

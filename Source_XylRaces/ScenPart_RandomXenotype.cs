@@ -1,5 +1,4 @@
-﻿using RimWorld;
-using static XylXenos.Patches.Patch_PawnGenerator;
+﻿using static XylXenos.Patches.Patch_PawnGenerator;
 
 namespace XylXenos;
 
@@ -47,7 +46,7 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListe
 
     public override void PreConfigure()
     {
-        RegisterWith(NotificationManager.Instance);        
+        RegisterWith(NotificationManager.Instance);
     }
 
     public void RegisterWith(NotificationManager manager)

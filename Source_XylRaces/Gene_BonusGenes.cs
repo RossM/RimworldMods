@@ -1,6 +1,4 @@
-﻿using XylXenos;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 public class BonusGenesInfo
 {

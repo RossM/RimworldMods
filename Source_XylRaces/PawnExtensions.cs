@@ -6,9 +6,36 @@ public static class PawnExtensions
 {
     extension(Pawn pawn)
     {
+        public bool HasActivePsycastGene => pawn.GeneSet?.hasPsycast == true;
+
+        public Hediff LactationHediff => pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
+
         public LookupCache LookupCache
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)] get => LookupCache.Tracker.Get(pawn);
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => LookupCache.Tracker.Get(pawn);
+        }
+
+        [CanBeNull]
+        public GeneSet GeneSet
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => pawn.genes == null ? null : GeneSet.Tracker.Get(pawn);
+        }
+
+        public bool NeedsPsyfocus
+        {
+            get
+            {
+                // HasPsylink is patched to respect psycast genes
+                if (!pawn.HasPsylink)
+                    return false;
+                if (pawn.Suspended)
+                    return false;
+                if (!pawn.Spawned && !pawn.IsCaravanMember())
+                    return false;
+                return true;
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -97,13 +124,6 @@ public static class PawnExtensions
             return false;
         }
 
-        [CanBeNull]
-        public GeneSet GeneSet
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => pawn.genes == null ? null : GeneSet.Tracker.Get(pawn);
-        }
-
         public int GetGeneticPsylinkLevelFor(AbilityDef def)
         {
             if (pawn.genes != null && pawn.genes.GenesListForReading.Any(gene =>
@@ -113,23 +133,6 @@ public static class PawnExtensions
             }
 
             return 0;
-        }
-
-        public bool HasActivePsycastGene => pawn.GeneSet?.hasPsycast == true;
-
-        public bool NeedsPsyfocus
-        {
-            get
-            {
-                // HasPsylink is patched to respect psycast genes
-                if (!pawn.HasPsylink)
-                    return false;
-                if (pawn.Suspended)
-                    return false;
-                if (!pawn.Spawned && !pawn.IsCaravanMember())
-                    return false;
-                return true;
-            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -157,7 +160,5 @@ public static class PawnExtensions
         {
             return pawn.LookupCache.GetHediffsWithModExtension<T>();
         }
-
-        public Hediff LactationHediff => pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
     }
 }

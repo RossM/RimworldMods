@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
-using XylXenos;
 
 namespace XylXenos.Patches;
 
@@ -98,7 +97,8 @@ public static class Patch_SlaveRebellionUtility
 
         if (initiateSlaveRebellionMtbDays < 0)
         {
-            var def = pawn.ActiveGenesOfType<GeneExt>().Select(gene => gene.DefExt).OrderBy(def => def.slaveRebellionThresholdDays).FirstOrDefault();
+            var def = pawn.ActiveGenesOfType<GeneExt>().Select(gene => gene.DefExt).OrderBy(def => def.slaveRebellionThresholdDays)
+                .FirstOrDefault();
             if (def is { slaveRebellionThresholdDays: < float.MaxValue })
             {
                 stringBuilder.AppendLine(

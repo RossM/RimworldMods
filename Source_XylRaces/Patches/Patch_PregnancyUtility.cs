@@ -9,12 +9,13 @@ public class Patch_PregnancyUtility
 {
     [Feature(nameof(DefModExtension_Gene.xenotypeStrength))]
     [HarmonyPostfix]
-    [HarmonyPatch(nameof(PregnancyUtility.GetInheritedGenes), 
+    [HarmonyPatch(nameof(PregnancyUtility.GetInheritedGenes),
         [typeof(Pawn), typeof(Pawn), typeof(bool)],
         [ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Out])]
     public static void GetInheritedGenes_Postfix(Pawn father, Pawn mother, ref List<GeneDef> __result)
     {
-        Log.Message($"GetInheritedGenes_Postfix: father={father} mother={mother} dominant parent={PatchHelpers.GetDominantParent(father, mother)}");
+        Log.Message(
+            $"GetInheritedGenes_Postfix: father={father} mother={mother} dominant parent={PatchHelpers.GetDominantParent(father, mother)}");
 
         switch (PatchHelpers.GetDominantParent(father, mother))
         {

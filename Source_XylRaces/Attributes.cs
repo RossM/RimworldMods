@@ -1,6 +1,4 @@
-﻿
-
-// ReSharper disable UnusedParameter.Local
+﻿// ReSharper disable UnusedParameter.Local
 
 namespace XylXenos;
 // This attribute serves as documentation of which patches are to support which parts of the mod. It

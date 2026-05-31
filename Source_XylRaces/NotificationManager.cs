@@ -59,6 +59,8 @@ public class NotificationManager : GameComponent
     public static NotificationManager Instance => Current.Game.GetComponent<NotificationManager>();
     private static bool doDebug = false;
 
+    public static List<INotificationListener> extraListeners = [];
+
     private readonly EventInfo[] events = new EventInfo[Enum.GetValues(typeof(NotificationEvent)).Length];
 
     private ConditionalWeakTable<INotificationListener, List<RegistrationInfo>> registeredEvents = new();
@@ -250,8 +252,6 @@ public class NotificationManager : GameComponent
             }
         }
     }
-
-    public static List<INotificationListener> extraListeners = [];
 
     public override void LoadedGame()
     {

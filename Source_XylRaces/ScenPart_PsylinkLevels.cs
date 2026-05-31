@@ -74,7 +74,8 @@ public class ScenPart_PsylinkLevels : ScenPart_PawnModifier
     {
         Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 4f);
         Widgets.TextFieldNumeric(scenPartRect.TopPartPixels(RowHeight), ref count, ref countBuf, 1, 10);
-        Widgets.CheckboxLabeled(new(scenPartRect.x, scenPartRect.y + RowHeight, scenPartRect.width, RowHeight), "Give psycasts", ref givePsycasts);
+        Widgets.CheckboxLabeled(new(scenPartRect.x, scenPartRect.y + RowHeight, scenPartRect.width, RowHeight), "Give psycasts",
+            ref givePsycasts);
         DoPawnModifierEditInterface(scenPartRect.BottomPartPixels(RowHeight * 2f));
     }
 }

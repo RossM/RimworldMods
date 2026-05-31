@@ -1,6 +1,4 @@
-﻿using XylXenos;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 public class GeneExt : Gene, INotificationListener
 {
@@ -246,12 +244,6 @@ public class GeneExt : Gene, INotificationListener
         }
     }
 
-    public virtual void RegisterWith(NotificationManager manager)
-    {
-        if (!DefExt.permanentHediffs.NullOrEmpty())
-            manager.Register(NotificationEvent.PostHediffStateChange, pawn, Notify_HediffStateChange);
-    }
-
     public override IEnumerable<Gizmo> GetGizmos()
     {
         if (!DebugSettings.godMode)
@@ -269,5 +261,11 @@ public class GeneExt : Gene, INotificationListener
                 groupable = false,
             };
         }
+    }
+
+    public virtual void RegisterWith(NotificationManager manager)
+    {
+        if (!DefExt.permanentHediffs.NullOrEmpty())
+            manager.Register(NotificationEvent.PostHediffStateChange, pawn, Notify_HediffStateChange);
     }
 }

@@ -1,6 +1,4 @@
-﻿using XylXenos;
-
-namespace XylXenos.Patches;
+﻿namespace XylXenos.Patches;
 
 [HarmonyPatch]
 public static class PatchLactation

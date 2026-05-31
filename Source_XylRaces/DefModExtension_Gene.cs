@@ -56,6 +56,7 @@ public class StartingItemOption
     public FloatRange nutritionAmount = FloatRange.Zero;
 }
 
+[NoReorder]
 public class DefModExtension_Gene : DefModExtension
 {
     public IEnumerable<string> CustomEffectDescriptions => field ??= GetCustomEffectDescriptions().ToList();
@@ -77,97 +78,97 @@ public class DefModExtension_Gene : DefModExtension
     #region Properties of the gene itself
 
     /// <summary>
-    /// If false, this gene won't show up in xenotype creation unless "ignore restrictions" is checked.
+    ///     If false, this gene won't show up in xenotype creation unless "ignore restrictions" is checked.
     /// </summary>
     public bool showInXenotypeCreation = true;
 
     /// <summary>
-    /// If non-null, this restricts which genders the gene is active on.
+    ///     If non-null, this restricts which genders the gene is active on.
     /// </summary>
     public Gender? gender;
 
     /// <summary>
-    /// If non-null, this restricts the genes to being only active as an endogene or only active as a xenogene.
-    /// It also hides the gene in xenotype creation unless the correct type of xenotype is being created or
-    /// "ignore restrictions" is checked.
+    ///     If non-null, this restricts the genes to being only active as an endogene or only active as a xenogene.
+    ///     It also hides the gene in xenotype creation unless the correct type of xenotype is being created or
+    ///     "ignore restrictions" is checked.
     /// </summary>
     public GeneType? geneType;
 
     /// <summary>
-    /// If false, this gene is not active on mutants (ghouls, shamblers, etc.)
+    ///     If false, this gene is not active on mutants (ghouls, shamblers, etc.)
     /// </summary>
     public bool allowMutants = true;
 
     /// <summary>
-    /// The path for an additional icon accessed through the <see cref="ExtraIcon"/> property.
-    /// This is usually used as the icon for a gizmo.
+    ///     The path for an additional icon accessed through the <see cref="ExtraIcon" /> property.
+    ///     This is usually used as the icon for a gizmo.
     /// </summary>
-    [NoTranslate][CanBeNull] public string extraIconPath;
+    [NoTranslate] [CanBeNull] public string extraIconPath;
 
     #endregion
 
     #region Properties which are aggregated in GeneSet for fast access
 
     /// <summary>
-    /// Scales pawn body size, which affects many things including the chance of being hit by ranged fire.
+    ///     Scales pawn body size, which affects many things including the chance of being hit by ranged fire.
     /// </summary>
     public float bodySizeFactor = 1.0f;
 
     /// <summary>
-    /// Scales body part hit points for all body parts.
+    ///     Scales body part hit points for all body parts.
     /// </summary>
     public float healthScaleFactor = 1.0f;
 
     /// <summary>
-    /// If set, any slave rebellion MTB days higher than this value will be changed to "never".
+    ///     If set, any slave rebellion MTB days higher than this value will be changed to "never".
     /// </summary>
     public float slaveRebellionThresholdDays = float.MaxValue;
 
     /// <summary>
-    /// A multiplier on the chance of this pawn going manhunter when damaged as a wild man.
+    ///     A multiplier on the chance of this pawn going manhunter when damaged as a wild man.
     /// </summary>
     public float manhunterOnDamageChanceFactor = 1.0f;
 
     /// <summary>
-    /// A multiplier on the chance of this pawn going manhunter when a tame attempt fails as a wild man.
+    ///     A multiplier on the chance of this pawn going manhunter when a tame attempt fails as a wild man.
     /// </summary>
     public float manhunterOnTameFailChanceFactor = 1.0f;
 
     /// <summary>
-    /// If true, the pawn will have psychic entropy with or without a psylink, and any psycast
-    /// abilities added by this gene in <see cref="GeneDef.abilities"/> will be usable without
-    /// a psylink.
+    ///     If true, the pawn will have psychic entropy with or without a psylink, and any psycast
+    ///     abilities added by this gene in <see cref="GeneDef.abilities" /> will be usable without
+    ///     a psylink.
     /// </summary>
     public bool hasPsycast;
 
     /// <summary>
-    /// Modifiers to the chances of the pawn selecting certain joy sources.
+    ///     Modifiers to the chances of the pawn selecting certain joy sources.
     /// </summary>
     [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
 
     /// <summary>
-    /// Additional buildables (e.g. fungal gravel) which this gene enables.
+    ///     Additional buildables (e.g. fungal gravel) which this gene enables.
     /// </summary>
     [CanBeNull] public List<BuildableDef> addDesignators;
 
     /// <summary>
-    /// Modifiers to the scale and offset to specific nodes in the pawn's render tree, used to
-    /// change the pawn's visual in a different way than just adding additional nodes.
+    ///     Modifiers to the scale and offset to specific nodes in the pawn's render tree, used to
+    ///     change the pawn's visual in a different way than just adding additional nodes.
     /// </summary>
     [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
 
     /// <summary>
-    /// If set, the pawn won't be attacked by pawns of a specific other faction type even if
-    /// those pawns are normally hostile. If any pawn from the carrier's faction attacks a
-    /// pawn or building from the enemy faction, the effect is lost for 2500 ticks (1 in-game
-    /// hour). Tame animals from the pawn's action also benefit from the effect.
+    ///     If set, the pawn won't be attacked by pawns of a specific other faction type even if
+    ///     those pawns are normally hostile. If any pawn from the carrier's faction attacks a
+    ///     pawn or building from the enemy faction, the effect is lost for 2500 ticks (1 in-game
+    ///     hour). Tame animals from the pawn's action also benefit from the effect.
     /// </summary>
     [CanBeNull] public List<FactionDef> disableHostilityFromFactions;
 
     /// <summary>
-    /// Disables thoughts from ingesting foods on a more granular level than just disabling an
-    /// entire thought, for example it can disable the negative thought from eating raw food
-    /// but only for raw meat.
+    ///     Disables thoughts from ingesting foods on a more granular level than just disabling an
+    ///     entire thought, for example it can disable the negative thought from eating raw food
+    ///     but only for raw meat.
     /// </summary>
     [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
 
@@ -176,49 +177,49 @@ public class DefModExtension_Gene : DefModExtension
     #region Properties which are not aggregated in GeneSet
 
     /// <summary>
-    /// Affects how genes are inherited. If one parent has a higher total xenotype strength than the other,
-    /// the baby will inherit all the endogenes from that parent and none of the endogenes from the other
-    /// parent.
+    ///     Affects how genes are inherited. If one parent has a higher total xenotype strength than the other,
+    ///     the baby will inherit all the endogenes from that parent and none of the endogenes from the other
+    ///     parent.
     /// </summary>
     public int xenotypeStrength;
 
     /// <summary>
-    /// If non-null, determines the gender ratio of children. Note that it is the baby's genes that
-    /// determine the baby's gender, not the parents'. Also note that only the first gene with this
-    /// set will have an effect.
+    ///     If non-null, determines the gender ratio of children. Note that it is the baby's genes that
+    ///     determine the baby's gender, not the parents'. Also note that only the first gene with this
+    ///     set will have an effect.
     /// </summary>
     public float? femaleChance;
 
     /// <summary>
-    /// If true, this gene will show up in the policies tab next to the selected drug policy, e.g.
-    /// "Social drugs (drug resistant)".
+    ///     If true, this gene will show up in the policies tab next to the selected drug policy, e.g.
+    ///     "Social drugs (drug resistant)".
     /// </summary>
     public bool showInDrugPolicies = false;
 
     /// <summary>
-    /// Hediff givers which will trigger randomly over time.
+    ///     Hediff givers which will trigger randomly over time.
     /// </summary>
     [CanBeNull] public List<HediffGiver> hediffGivers;
 
     /// <summary>
-    /// Hediff givers which are triggered when the gene is added. The corresponding hediffs are
-    /// automatically removed when the gene is removed. If the hediff is on a body part, it will
-    /// be removed if the part is lost or replaced with an artificial replacement, and readded if
-    /// the part is regrown.
+    ///     Hediff givers which are triggered when the gene is added. The corresponding hediffs are
+    ///     automatically removed when the gene is removed. If the hediff is on a body part, it will
+    ///     be removed if the part is lost or replaced with an artificial replacement, and readded if
+    ///     the part is regrown.
     /// </summary>
     [CanBeNull] public List<HediffGiver_Event> permanentHediffs;
 
     /// <summary>
-    /// Hediff givers which are triggered when the pawn is created, either as a new adult or as a
-    /// baby. These are not removed if the gene is lost, and are not added if the gene is added
-    /// to an existing pawn.
+    ///     Hediff givers which are triggered when the pawn is created, either as a new adult or as a
+    ///     baby. These are not removed if the gene is lost, and are not added if the gene is added
+    ///     to an existing pawn.
     /// </summary>
     [CanBeNull] public List<HediffGiver_Event> congenitalHediffs;
 
     /// <summary>
-    /// Starting items which have a chance of being generated on the pawn as one of the player's
-    /// starting colonists. A colonist can only have two starting items so these might not be
-    /// added even if the chance is 100%.
+    ///     Starting items which have a chance of being generated on the pawn as one of the player's
+    ///     starting colonists. A colonist can only have two starting items so these might not be
+    ///     added even if the chance is 100%.
     /// </summary>
     [CanBeNull] public List<StartingItemOption> startingItems;
 
@@ -227,27 +228,27 @@ public class DefModExtension_Gene : DefModExtension
     #region Properties for specific GeneExt subclasses
 
     /// <summary>
-    /// Properties for <see cref="Gene_BonusGenes"/>.
+    ///     Properties for <see cref="Gene_BonusGenes" />.
     /// </summary>
     [CanBeNull] public BonusGenesInfo bonusGenes;
 
     /// <summary>
-    /// Properties for <see cref="Hediff_DietDependency"/>.
+    ///     Properties for <see cref="Hediff_DietDependency" />.
     /// </summary>
     [CanBeNull] public DietDependencyInfo dietDependency;
 
     /// <summary>
-    /// Properties for <see cref="Gene_Flight"/>.
+    ///     Properties for <see cref="Gene_Flight" />.
     /// </summary>
     [CanBeNull] public FlightInfo flight;
 
     /// <summary>
-    /// Properties for <see cref="Gene_Hyperlactation"/>.
+    ///     Properties for <see cref="Gene_Hyperlactation" />.
     /// </summary>
     [CanBeNull] public HyperlactationInfo hyperlactation;
 
     /// <summary>
-    /// Properties for <see cref="Gene_SeeingRed"/>.
+    ///     Properties for <see cref="Gene_SeeingRed" />.
     /// </summary>
     [CanBeNull] public SeeingRedInfo seeingRed;
 
@@ -256,7 +257,7 @@ public class DefModExtension_Gene : DefModExtension
     #region Properties which are filled automatically and shouldn't be set in XML
 
     /// <summary>
-    /// The <see cref="GeneDef"/> or <see cref="GeneTemplateDef"/> this object is attached to.
+    ///     The <see cref="GeneDef" /> or <see cref="GeneTemplateDef" /> this object is attached to.
     /// </summary>
     [CanBeNull] public Def parent;
 
@@ -266,11 +267,14 @@ public class DefModExtension_Gene : DefModExtension
     {
         if (bodySizeFactor != 1.0f)
         {
-            yield return new(StatCategoryDefOf.BasicsPawn, "BodySize".Translate(), bodySizeFactor.ToStringPercent(), "Stat_Race_BodySize_Desc".Translate(), 4195);
+            yield return new(StatCategoryDefOf.BasicsPawn, "BodySize".Translate(), bodySizeFactor.ToStringPercent(),
+                "Stat_Race_BodySize_Desc".Translate(), 4195);
         }
+
         if (healthScaleFactor != 1.0f)
         {
-            yield return new(StatCategoryDefOf.BasicsPawn, "HitPointsBasic".Translate(), healthScaleFactor.ToStringPercent(), "XylHitPointsDesc".Translate(), 4194);
+            yield return new(StatCategoryDefOf.BasicsPawn, "HitPointsBasic".Translate(), healthScaleFactor.ToStringPercent(),
+                "XylHitPointsDesc".Translate(), 4194);
         }
 
         if (!permanentHediffs.NullOrEmpty())

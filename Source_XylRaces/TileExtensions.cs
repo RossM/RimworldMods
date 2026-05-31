@@ -9,7 +9,7 @@ public static class TileExtensions
         public bool IsCoastalOrRiverTile => tile.IsCoastal || tile is SurfaceTile { Rivers.Count: > 0 };
 
         public bool IsWetlandBiome =>
-            tile.PrimaryBiome == BiomeDefOf.TropicalSwamp || 
+            tile.PrimaryBiome == BiomeDefOf.TropicalSwamp ||
             tile.PrimaryBiome == DefOf.TemperateSwamp ||
             tile.PrimaryBiome == BiomeDefOf.ColdBog;
     }

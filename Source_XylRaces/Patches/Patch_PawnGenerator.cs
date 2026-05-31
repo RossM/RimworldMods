@@ -3,13 +3,13 @@
 [HarmonyPatch(typeof(PawnGenerator))]
 public static class Patch_PawnGenerator
 {
-    private static XenotypeDef xenotypeOverride;
-
     public class PawnGenerationEarlyData(PawnGenerationRequest request, XenotypeDef xenotype)
     {
         public PawnGenerationRequest request = request;
         public XenotypeDef xenotype = xenotype;
     }
+
+    private static XenotypeDef xenotypeOverride;
 
     [Feature(nameof(DefModExtension_Gene.femaleChance))]
     [Feature(nameof(NotificationEvent.PawnGenerationEarly))]
@@ -26,7 +26,6 @@ public static class Patch_PawnGenerator
         xenotypeOverride = data.xenotype;
 
         PatchHelpers.ModifyGenderByGenes(pawn, request, data.xenotype);
-
     }
 
     [Feature(nameof(NotificationEvent.PawnGenerationEarly))]

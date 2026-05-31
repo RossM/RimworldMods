@@ -1,6 +1,4 @@
-﻿using XylXenos;
-
-namespace XylXenos.Patches;
+﻿namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(Pawn_FlightTracker))]
 public static class Patch_Pawn_FlightTracker
