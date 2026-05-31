@@ -23,28 +23,14 @@ public static class PawnExtensions
             get => pawn.genes == null ? null : GeneTracker.DataManager.Get(pawn);
         }
 
-        public bool NeedsPsyfocus
-        {
-            get
-            {
-                // HasPsylink is patched to respect psycast genes
-                if (!pawn.HasPsylink)
-                    return false;
-                if (pawn.Suspended)
-                    return false;
-                if (!pawn.Spawned && !pawn.IsCaravanMember())
-                    return false;
-                return true;
-            }
-        }
+        public bool NeedsPsyfocus =>
+            // HasPsylink is patched to respect psycast genes
+            pawn.HasPsylink && !pawn.Suspended && (pawn.Spawned || pawn.IsCaravanMember());
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<Gene> GenesOfDef(GeneDef def)
         {
-            if (pawn.genes == null)
-                return [];
-
-            return pawn.GeneAndHediffCache.GetGenesWithDef(def);
+            return pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithDef(def);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -65,10 +51,7 @@ public static class PawnExtensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<T> GenesOfType<T>() where T : class
         {
-            if (pawn.genes == null)
-                return [];
-
-            return pawn.GeneAndHediffCache.GetGenesOfType<T>();
+            return pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
