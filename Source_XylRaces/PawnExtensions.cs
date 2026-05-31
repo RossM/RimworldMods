@@ -6,21 +6,21 @@ public static class PawnExtensions
 {
     extension(Pawn pawn)
     {
-        public bool HasActivePsycastGene => pawn.GeneSet?.hasPsycast == true;
+        public bool HasActivePsycastGene => pawn.GeneTracker?.hasPsycast == true;
 
         public Hediff LactationHediff => pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
 
-        public LookupCache LookupCache
+        public GeneAndHediffCache GeneAndHediffCache
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => LookupCache.Tracker.Get(pawn);
+            get => GeneAndHediffCache.DataManager.Get(pawn);
         }
 
         [CanBeNull]
-        public GeneSet GeneSet
+        public GeneTracker GeneTracker
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => pawn.genes == null ? null : GeneSet.Tracker.Get(pawn);
+            get => pawn.genes == null ? null : GeneTracker.DataManager.Get(pawn);
         }
 
         public bool NeedsPsyfocus
@@ -44,7 +44,7 @@ public static class PawnExtensions
             if (pawn.genes == null)
                 return [];
 
-            return pawn.LookupCache.GetGenesWithDef(def);
+            return pawn.GeneAndHediffCache.GetGenesWithDef(def);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -68,7 +68,7 @@ public static class PawnExtensions
             if (pawn.genes == null)
                 return [];
 
-            return pawn.LookupCache.GetGenesOfType<T>();
+            return pawn.GeneAndHediffCache.GetGenesOfType<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -138,27 +138,27 @@ public static class PawnExtensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<T> HediffsOfType<T>() where T : class
         {
-            return pawn.LookupCache.GetHediffsOfType<T>();
+            return pawn.GeneAndHediffCache.GetHediffsOfType<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<HediffWithComps> HediffsWithComp<T>() where T : class
         {
-            return pawn.LookupCache.GetHediffsWithComp<T>();
+            return pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once UnusedMember.Global
         public IEnumerable<Hediff> HediffsWithDef(HediffDef def)
         {
-            return pawn.LookupCache.GetHediffsWithDef(def);
+            return pawn.GeneAndHediffCache.GetHediffsWithDef(def);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once UnusedMember.Global
         public IEnumerable<Hediff> HediffsWithModExtension<T>() where T : class
         {
-            return pawn.LookupCache.GetHediffsWithModExtension<T>();
+            return pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
         }
 
         public bool ChemicalIsAllowedByGenes(ChemicalDef chemicalDef)

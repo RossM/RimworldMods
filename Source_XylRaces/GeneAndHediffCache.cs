@@ -2,9 +2,9 @@
 
 namespace XylXenos;
 
-public class LookupCache(Pawn pawn) : INotificationListener
+public class GeneAndHediffCache(Pawn pawn) : INotificationListener
 {
-    public static readonly PawnTracker<LookupCache> Tracker = new(Make);
+    public static readonly PawnDataManager<GeneAndHediffCache> DataManager = new(Make);
     public Pawn pawn = pawn;
 
     private readonly Dictionary<Type, IList> genesByType = new();
@@ -15,9 +15,9 @@ public class LookupCache(Pawn pawn) : INotificationListener
     private readonly Dictionary<Type, List<Hediff>> hediffsByModExt = new();
     private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
 
-    private static LookupCache Make(Pawn pawn)
+    private static GeneAndHediffCache Make(Pawn pawn)
     {
-        var cache = new LookupCache(pawn);
+        var cache = new GeneAndHediffCache(pawn);
         cache.RegisterWith(NotificationManager.Instance);
         return cache;
     }

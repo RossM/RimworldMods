@@ -18,7 +18,7 @@ public static class Patch_PawnUtility
     [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
     public static void GetManhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
     {
-        __result *= pawn.GeneSet?.manhunterOnDamageChanceFactor ?? 1f;
+        __result *= pawn.GeneTracker?.manhunterOnDamageChanceFactor ?? 1f;
     }
 
     [Feature(nameof(DefModExtension_Gene.manhunterOnTameFailChanceFactor))]
@@ -27,7 +27,7 @@ public static class Patch_PawnUtility
     [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
     public static void GetManhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
     {
-        __result *= pawn.GeneSet?.manhunterOnTameFailChanceFactor ?? 1f;
+        __result *= pawn.GeneTracker?.manhunterOnTameFailChanceFactor ?? 1f;
     }
 
     [Feature(nameof(DefModExtension_Gene.manhunterOnDamageChanceFactor))]
@@ -35,7 +35,7 @@ public static class Patch_PawnUtility
     [InfixPatch(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
     public static void RaceProperties_manhunterOnDamageChance_Postfix(Pawn pawn, ref float __result)
     {
-        __result *= pawn.GeneSet?.manhunterOnDamageChanceFactor ?? 1f;
+        __result *= pawn.GeneTracker?.manhunterOnDamageChanceFactor ?? 1f;
     }
 
     [Feature(nameof(DefModExtension_Gene.manhunterOnTameFailChanceFactor))]
@@ -43,7 +43,7 @@ public static class Patch_PawnUtility
     [InfixPatch(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
     public static void RaceProperties_manhunterOnTameFailChance_Postfix(Pawn pawn, ref float __result)
     {
-        __result *= pawn.GeneSet?.manhunterOnTameFailChanceFactor ?? 1f;
+        __result *= pawn.GeneTracker?.manhunterOnTameFailChanceFactor ?? 1f;
     }
 
     [Feature(nameof(DefModExtension_Gene.manhunterOnDamageChanceFactor))]
@@ -56,7 +56,7 @@ public static class Patch_PawnUtility
         if (__instance != pawn.def)
             return;
 
-        var geneSet = pawn.GeneSet;
+        var geneSet = pawn.GeneTracker;
         if (geneSet == null)
             return;
 

@@ -132,7 +132,7 @@ public static class PatchHelpers
     {
         HashSet<Designator> geneDesignators = [];
 
-        foreach (var designators in Faction.OfPlayer.AllPawns.Select(pawn => pawn.GeneSet?.addDesignators))
+        foreach (var designators in Faction.OfPlayer.AllPawns.Select(pawn => pawn.GeneTracker?.addDesignators))
         {
             if (designators == null)
                 continue;
@@ -179,7 +179,7 @@ public static class PatchHelpers
 
     public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
     {
-        List<JoyGiverFactor> joyGiverChanceFactors = pawn.GeneSet?.joyGiverChanceFactors;
+        List<JoyGiverFactor> joyGiverChanceFactors = pawn.GeneTracker?.joyGiverChanceFactors;
         if (joyGiverChanceFactors == null)
             return 1f;
 

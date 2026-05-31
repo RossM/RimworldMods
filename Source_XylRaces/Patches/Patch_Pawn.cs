@@ -9,7 +9,7 @@ public static class Patch_Pawn
     [HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
     public static void BodySize_Postfix(Pawn __instance, ref float __result)
     {
-        __result *= __instance.GeneSet?.bodySizeFactor ?? 1f;
+        __result *= __instance.GeneTracker?.bodySizeFactor ?? 1f;
     }
 
     [Feature(nameof(DefModExtension_Gene.healthScaleFactor))]
@@ -17,7 +17,7 @@ public static class Patch_Pawn
     [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
     public static void HealthScale_Postfix(Pawn __instance, ref float __result)
     {
-        __result *= __instance.GeneSet?.healthScaleFactor ?? 1f;
+        __result *= __instance.GeneTracker?.healthScaleFactor ?? 1f;
     }
 
     [Feature(nameof(DefModExtension_Gene.hasPsycast))]
@@ -28,7 +28,7 @@ public static class Patch_Pawn
         __result |= __instance.HasActivePsycastGene;
     }
 
-    [Feature(typeof(GeneSet))]
+    [Feature(typeof(GeneTracker))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.Discard))]
     public static void Discard_Postfix(Pawn __instance)
@@ -36,7 +36,7 @@ public static class Patch_Pawn
         NotificationManager.Instance.Notify(NotificationEvent.PostDiscard, __instance);
     }
 
-    [Feature(typeof(GeneSet))]
+    [Feature(typeof(GeneTracker))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.PostMake))]
     public static void PostMake_Postfix(Pawn __instance)

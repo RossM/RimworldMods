@@ -58,12 +58,12 @@ public static class Patch_SlaveRebellionUtility
         if (__result < 0)
             return;
 
-        var geneSet = pawn.GeneSet;
-        if (geneSet == null)
+        var geneTracker = pawn.GeneTracker;
+        if (geneTracker == null)
             return;
 
         __result *= pawn.GetStatValue(DefOf.XylSlaveRebellionMtbFactor);
-        if (__result >= geneSet.slaveRebellionThresholdDays)
+        if (__result >= geneTracker.slaveRebellionThresholdDays)
             __result = -1;
     }
 

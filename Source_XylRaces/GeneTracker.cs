@@ -1,11 +1,11 @@
 ﻿namespace XylXenos;
 
-public class GeneSet(Pawn pawn) : INotificationListener
+public class GeneTracker(Pawn pawn) : INotificationListener
 {
     /// <summary>
     ///     A tracker used to find the object associated with a specific <see cref="Pawn" />.
     /// </summary>
-    public static readonly PawnTracker<GeneSet> Tracker = new(Make);
+    public static readonly PawnDataManager<GeneTracker> DataManager = new(Make);
 
     /// <summary>
     ///     The <see cref="Pawn" /> this object applies to.
@@ -78,9 +78,9 @@ public class GeneSet(Pawn pawn) : INotificationListener
     /// </summary>
     [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
 
-    private static GeneSet Make(Pawn pawn)
+    private static GeneTracker Make(Pawn pawn)
     {
-        var geneSet = new GeneSet(pawn);
+        var geneSet = new GeneTracker(pawn);
         geneSet.RegisterWith(NotificationManager.Instance);
         geneSet.Update();
         return geneSet;

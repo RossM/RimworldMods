@@ -118,7 +118,7 @@ public static class FoodHelpers
             return false;
         }
 
-        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.GeneSet?.ingestionThoughtOverrides;
+        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.GeneTracker?.ingestionThoughtOverrides;
         if (thoughtOverrides == null)
             return false;
 

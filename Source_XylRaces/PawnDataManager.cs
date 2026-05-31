@@ -5,12 +5,12 @@
 ///     a pawn ThingComp, such as lookup caches or gene-derived aggregate values. Use <see cref="Get" /> to retrieve a
 ///     pawn's instance.
 /// </summary>
-public class PawnTracker<T> : INotificationListener
+public class PawnDataManager<T> : INotificationListener
 {
     private readonly Dictionary<int, T> data = new();
     private readonly Func<Pawn, T> makeFunc;
 
-    public PawnTracker(Func<Pawn, T> makeFunc)
+    public PawnDataManager(Func<Pawn, T> makeFunc)
     {
         this.makeFunc = makeFunc;
         NotificationManager.extraListeners.Add(this);
