@@ -60,11 +60,12 @@
           <psycast>Waterskip</psycast>
           <context>PlayerStarter</context>
         </li>
-        <!--<li Class="ScenPart_ForcedHediff">
+        <li Class="ScenPart_ForcedHediff">
+          <def>ForcedHediff</def>
           <hediff>XylCultistSong</hediff>
           <severityRange>1</severityRange>
           <context>PlayerStarter</context>
-        </li>-->
+        </li>
 
         <!-- Player starting stuff spawn method-->
         <li Class="ScenPart_StartingThing_Defined">
@@ -214,6 +215,8 @@
     <isBad>false</isBad>
     <defaultLabelColor>(0.6, 0.6, 1.0)</defaultLabelColor>
     <initialSeverity>1</initialSeverity>
+    <defaultInstallPart>Brain</defaultInstallPart>
+    <scenarioCanAdd>true</scenarioCanAdd>
     <comps>
       <li Class="HediffCompProperties_RemoveIfOtherHediff">
         <hediffs>
