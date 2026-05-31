@@ -24,8 +24,6 @@ public class GeneExt : Gene, INotificationListener
                 return false;
             if (DefExt.geneType != null && DefExt.geneType != GeneType)
                 return false;
-            if (!DefExt.allowMutants && pawn.IsMutant)
-                return false;
             return true;
         }
     }

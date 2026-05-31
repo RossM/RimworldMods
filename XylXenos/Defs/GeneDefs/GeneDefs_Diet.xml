@@ -128,7 +128,6 @@
             </thoughts>
           </li>
         </ingestionThoughtOverrides>
-        <allowMutants>false</allowMutants>
         <permanentHediffs>
           <li>
             <hediff>XylGeneticMeatNeed</hediff>

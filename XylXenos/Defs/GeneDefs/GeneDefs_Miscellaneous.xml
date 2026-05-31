@@ -67,7 +67,6 @@
       <li Class="XylXenos.DefModExtension_Gene">
         <extraIconPath>Things/Item/Resource/Milk</extraIconPath>
         <gender>Female</gender>
-        <allowMutants>false</allowMutants>
         <startingItems>
           <li>
             <item>Milk</item>

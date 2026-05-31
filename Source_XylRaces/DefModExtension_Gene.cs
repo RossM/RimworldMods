@@ -95,11 +95,6 @@ public class DefModExtension_Gene : DefModExtension
     public GeneType? geneType;
 
     /// <summary>
-    ///     If false, this gene is not active on mutants (ghouls, shamblers, etc.)
-    /// </summary>
-    public bool allowMutants = true;
-
-    /// <summary>
     ///     The path for an additional icon accessed through the <see cref="ExtraIcon" /> property.
     ///     This is usually used as the icon for a gizmo.
     /// </summary>
