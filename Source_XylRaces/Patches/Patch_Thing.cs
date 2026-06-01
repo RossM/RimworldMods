@@ -18,6 +18,9 @@ public static class Patch_Thing
     [HarmonyPatch(nameof(Thing.Discard))]
     public static void Discard_Postfix(Thing __instance)
     {
+        if (!IsInteresting(__instance))
+            return;
+
         NotificationManager.Instance.Notify(NotificationDefOf.PostDiscard, __instance);
     }
 
@@ -55,6 +58,9 @@ public static class Patch_Thing
         if (__instance is INotificationListener target)
             target.RegisterWith(NotificationManager.Instance);
 
+        if (!IsInteresting(__instance))
+            return;
+
         NotificationManager.Instance.Notify(NotificationDefOf.PostPostMake, __instance);
     }
 
@@ -63,6 +69,11 @@ public static class Patch_Thing
     [HarmonyPatch("TakeDamage")]
     public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo)
     {
+        if (!IsInteresting(__instance))
+            return;
+
         NotificationManager.Instance.Notify(NotificationDefOf.PreTakeDamage, __instance, dinfo);
     }
+
+    private static bool IsInteresting(Thing thing) => thing is ThingWithComps and not (Projectile or Plant);
 }
