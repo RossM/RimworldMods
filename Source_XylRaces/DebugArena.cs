@@ -34,6 +34,12 @@ public static class DebugArena
         {
             foreach (var xenotype in xenotypes)
             {
+                if (pawnKindDef.requiredWorkTags.HasFlag(WorkTags.Violent) &&
+                    xenotype.AllGenes.Any(def => def.defName == "ViolenceDisabled"))
+                {
+                    continue;
+                }
+
                 PawnKindDef newPawnKindDef = Gen.MemberwiseClone(pawnKindDef);
                 newPawnKindDef.useFactionXenotypes = false;
                 newPawnKindDef.xenotypeSet = new XenotypeSet();
@@ -56,15 +62,63 @@ public static class DebugArena
             return;
         List<PawnKindDef> kinds = kindsEnumerable.ToList();
         int currentFights = 0;
+
+        Dictionary<PawnKindDef, int> wins = new();
+        Dictionary<PawnKindDef, int> total = new();
+
+        foreach (var def in kinds)
+        {
+            wins[def] = 0;
+            total[def] = 0;
+        }
+
+        string path = GenFilePaths.SaveDataFolderPath + Path.DirectorySeparatorChar + "CombatArena.csv";
+        try
+        {
+            using var streamReader = new StreamReader(path);
+            while (streamReader.ReadLine() is { } line)
+            {
+                var parts = line.Split(',');
+                var lhsDef = kinds.FirstOrDefault(def => def.defName == parts[0]);
+                var rhsDef = kinds.FirstOrDefault(def => def.defName == parts[2]);
+                var score = int.Parse(parts[4]);
+
+                if (lhsDef != null)
+                    total[lhsDef] += 1;
+                if (rhsDef != null)
+                    total[rhsDef] += 1;
+
+                switch (score)
+                {
+                    case > 0 when lhsDef != null: wins[lhsDef] += 1; break;
+                    case < 0 when rhsDef != null: wins[rhsDef] += 1; break;
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+
+        StringBuilder sb = new StringBuilder();
+        foreach (var def in kinds)
+            sb.AppendLine($"{def.defName}: {wins[def]} wins / {total[def]} total");
+        Debug.Log(sb.ToString());
+
         Current.Game.GetComponent<GameComponent_DebugTools>().AddPerFrameCallback(delegate
         {
             if (currentFights >= 15)
                 return false;
-            PawnKindDef lhsDef = kinds.RandomElement();
-            PawnKindDef rhsDef = kinds.RandomElement();
 
-            float lhsPower = lhsDef.combatPower;
-            float rhsPower = rhsDef.combatPower;
+            int highestTotal = total.Values.Max();
+
+            PawnKindDef lhsDef = kinds.RandomElementByWeight(def => 5 + (highestTotal - total[def]));
+            PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(def => 5 + (highestTotal - total[def]));
+
+            // This is a quick-and-dirty heuristic that completely ignores the number of pawns on each side
+            float lhsPower = (float)(wins[lhsDef] + 1) / (total[lhsDef] + 2);
+            float rhsPower = (float)(wins[rhsDef] + 1) / (total[rhsDef] + 2);
+
             int totalCombatants = RandRangeExponential(2, 40);
 
             int lhsCount = GenMath.RoundRandom(totalCombatants * rhsPower / (lhsPower + rhsPower));
@@ -86,7 +140,6 @@ public static class DebugArena
                 currentFights -= 1;
 
                 // Log to file
-                string path = GenFilePaths.SaveDataFolderPath + Path.DirectorySeparatorChar + "CombatArena.csv";
                 using StreamWriter streamWriter = new StreamWriter(path, append: true);
                 int score = result.winner switch
                 {
@@ -96,6 +149,15 @@ public static class DebugArena
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 streamWriter.WriteLine($"{lhsDef.defName},{lhs.Count},{rhsDef.defName},{rhs.Count},{score}");
+
+                total[lhsDef] += 1;
+                total[rhsDef] += 1;
+
+                switch (result.winner)
+                {
+                    case ArenaResult.Winner.Lhs: wins[lhsDef] += 1; break;
+                    case ArenaResult.Winner.Rhs: wins[rhsDef] += 1; break;
+                }
             }
         });
     }
