@@ -102,6 +102,7 @@
         <minSeverity>0.1</minSeverity>
         <becomeVisible>true</becomeVisible>
         <hungerRateFactor>0.5</hungerRateFactor>
+        <restFallFactor>1.25</restFallFactor>
         <capMods>
           <li>
             <capacity>Consciousness</capacity>
@@ -117,6 +118,7 @@
         <label>half-asleep</label>
         <minSeverity>0.25</minSeverity>
         <hungerRateFactor>0.25</hungerRateFactor>
+        <restFallFactor>2</restFallFactor>
         <capMods>
           <li>
             <capacity>Consciousness</capacity>
