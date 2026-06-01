@@ -34,11 +34,8 @@ public static class DebugArena
         {
             foreach (var xenotype in xenotypes)
             {
-                if (pawnKindDef.requiredWorkTags.HasFlag(WorkTags.Violent) &&
-                    xenotype.AllGenes.Any(def => def.defName == "ViolenceDisabled"))
-                {
+                if (xenotype.AllGenes.Any(def => (def.disabledWorkTags & pawnKindDef.requiredWorkTags) != 0))
                     continue;
-                }
 
                 PawnKindDef newPawnKindDef = Gen.MemberwiseClone(pawnKindDef);
                 newPawnKindDef.useFactionXenotypes = false;
