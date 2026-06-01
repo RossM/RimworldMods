@@ -59,7 +59,7 @@ public static class Patch_RaceProperties
     [Feature(Config.Feature.FixLactationBugs)]
     [HarmonyPrefix]
     [HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]
-    private static bool GetTotalNutritionNeededPerDay_Prefix(Pawn p, out string __result)
+    private static bool NutritionEatenPerDay_Prefix(Pawn p, out string __result)
     {
         __result = null;
         if (!Settings.instance.ShouldFixLactationBugsFor(p))
