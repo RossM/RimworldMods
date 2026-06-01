@@ -28,6 +28,14 @@ public static class DebugArena
             DefDatabase<PawnKindDef>.GetNamed("Mercenary_Slasher"),
         };
 
+        if (ModLister.RoyaltyInstalled)
+        {
+            pawnKindDefs.Add(DefDatabase<PawnKindDef>.GetNamed("Empire_Fighter_Janissary"));
+            pawnKindDefs.Add(DefDatabase<PawnKindDef>.GetNamed("Empire_Fighter_Cataphract"));
+        }
+
+        Dictionary<string, string> xenotypeSuffixes = new();
+
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.ToList();
 
         foreach (var pawnKindDef in pawnKindDefs)
@@ -37,11 +45,14 @@ public static class DebugArena
                 if (xenotype.AllGenes.Any(def => (def.disabledWorkTags & pawnKindDef.requiredWorkTags) != 0))
                     continue;
 
+                if (!xenotypeSuffixes.TryGetValue(xenotype.defName, out string xenotypeSuffix))
+                    xenotypeSuffix = "";
+
                 PawnKindDef newPawnKindDef = Gen.MemberwiseClone(pawnKindDef);
                 newPawnKindDef.useFactionXenotypes = false;
                 newPawnKindDef.xenotypeSet = new XenotypeSet();
                 newPawnKindDef.xenotypeSet.xenotypeChances = [new(xenotype, 1.0f)];
-                newPawnKindDef.defName = $"{pawnKindDef.defName}_{xenotype.defName}";
+                newPawnKindDef.defName = $"{pawnKindDef.defName}_{xenotype.defName}{xenotypeSuffix}";
                 newPawnKindDef.label = $"{xenotype.label} {pawnKindDef.label}";
                 newPawnKindDef.ignoreFactionApparelStuffRequirements = true;
                 newPawnKindDef.combatPower = pawnKindDef.combatPower * xenotype.combatPowerFactor;
@@ -99,7 +110,7 @@ public static class DebugArena
 
         StringBuilder sb = new StringBuilder();
         foreach (var def in kinds)
-            sb.AppendLine($"{def.defName}: {wins[def]} wins / {total[def]} total");
+            sb.AppendLine($"{def.defName}: {def.combatPower} combat power, {wins[def]} wins / {total[def]} total");
         Debug.Log(sb.ToString());
 
         Current.Game.GetComponent<GameComponent_DebugTools>().AddPerFrameCallback(delegate
