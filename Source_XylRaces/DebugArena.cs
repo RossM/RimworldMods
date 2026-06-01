@@ -34,7 +34,11 @@ public static class DebugArena
             pawnKindDefs.Add(DefDatabase<PawnKindDef>.GetNamed("Empire_Fighter_Cataphract"));
         }
 
-        Dictionary<string, string> xenotypeSuffixes = new();
+        Dictionary<string, string> xenotypeSuffixes = new()
+        {
+            { "XylChyrr", "Fixed" },
+            { "XylGaunt", "2" },
+        };
 
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.ToList();
 

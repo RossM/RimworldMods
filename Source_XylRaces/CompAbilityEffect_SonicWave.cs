@@ -54,6 +54,9 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
 
     public override bool AICanTargetNow(LocalTargetInfo target)
     {
+        bool affectsAlly = false;
+        bool affectsEnemy = false;
+
         if (Pawn.Faction != null)
         {
             foreach (IntVec3 item in AffectedCells(target))
@@ -61,15 +64,18 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
                 List<Thing> thingList = item.GetThingList(Pawn.Map);
                 foreach (var targetPawn in thingList.OfType<Pawn>())
                 {
-                    if (targetPawn.Faction == Pawn.Faction && targetPawn.RaceProps.IsFlesh)
+                    if (targetPawn.RaceProps.IsFlesh && !targetPawn.stances.stunner.Stunned)
                     {
-                        return false;
+                        if (targetPawn != Pawn && targetPawn.Faction == Pawn.Faction)
+                            affectsAlly = true;
+                        else if (targetPawn.HostileTo(Pawn))
+                            affectsEnemy = true;
                     }
                 }
             }
         }
 
-        return true;
+        return affectsEnemy && !affectsAlly;
     }
 
     private List<IntVec3> AffectedCells(LocalTargetInfo target)

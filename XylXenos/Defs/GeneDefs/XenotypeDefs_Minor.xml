@@ -8,6 +8,7 @@
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon4</iconPath>
     <inheritable>true</inheritable>
     <genes>
+      <li>XylWoundHealing_UltraFast</li>
       <li>Superclotting</li>
       <li>MoveSpeed_VeryQuick</li>
       <li>NakedSpeed</li>

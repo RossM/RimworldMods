@@ -247,6 +247,11 @@ public class DefModExtension_Gene : DefModExtension
     /// </summary>
     [CanBeNull] public SeeingRedInfo seeingRed;
 
+    /// <summary>
+    ///     Properties for <see cref="Gene_Regeneration" />.
+    /// </summary>
+    [CanBeNull] public RegenerationInfo regeneration;
+
     #endregion
 
     #region Properties which are filled automatically and shouldn't be set in XML

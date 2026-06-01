@@ -365,5 +365,25 @@
     </modExtensions>
   </GeneDef>
 
+  <GeneDef>
+    <defName>XylWoundHealing_UltraFast</defName>
+    <geneClass>XylXenos.Gene_Regeneration</geneClass>
+    <label>ultra-fast wound healing</label>
+    <description>Carriers of this gene heal wounds unnaturally quickly, often recovering from even the most serious injuries in mere hours. It won't fix permanent scars or blood loss.</description>
+    <displayCategory>Archite</displayCategory>
+    <displayOrderInCategory>0</displayOrderInCategory>
+    <biostatCpx>1</biostatCpx>
+    <biostatArc>1</biostatArc>
+    <exclusionTags>
+      <li>WoundHealingRate</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Gene">
+        <regeneration>
+          <healthPerHour>40</healthPerHour>
+        </regeneration>
+      </li>
+    </modExtensions>
+  </GeneDef>
 
 </Defs>
