@@ -6,6 +6,7 @@
     <defName>XylGaunt</defName>
     <label>gaunt</label>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon4</iconPath>
+    <inheritable>true</inheritable>
     <genes>
       <li>Superclotting</li>
       <li>MoveSpeed_VeryQuick</li>
@@ -45,6 +46,7 @@
     <defName>XylSuccuboid</defName>
     <label>succuboid</label>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon3</iconPath>
+    <inheritable>true</inheritable>
     <genes>
       <li>XylPsycast_WordOfLove</li>
       <li>PsychicAbility_Enhanced</li>
