@@ -1,5 +1,5 @@
-using RimWorld.Planet;
 using System.IO;
+using RimWorld.Planet;
 using Verse.AI.Group;
 using static Verse.ArenaUtility;
 
@@ -65,7 +65,7 @@ public static class DebugArena
 
             float lhsPower = lhsDef.combatPower;
             float rhsPower = rhsDef.combatPower;
-            int totalCombatants = Rand.Range(2, 40);
+            int totalCombatants = RandRangeExponential(2, 40);
 
             int lhsCount = GenMath.RoundRandom(totalCombatants * rhsPower / (lhsPower + rhsPower));
             int rhsCount = totalCombatants - lhsCount;
@@ -100,37 +100,52 @@ public static class DebugArena
         });
     }
 
+    private static int RandRangeExponential(float min, float max)
+    {
+        return GenMath.RoundRandom(Mathf.Exp(Rand.Range(Mathf.Log(min), Mathf.Log(max))));
+    }
+
     public static bool BeginArenaFight(List<PawnKindDef> lhs, List<PawnKindDef> rhs, Action<ArenaResult> callback)
     {
-        MapParent mapParent = (MapParent)WorldObjectMaker.MakeWorldObject(WorldObjectDefOf.Debug_Arena);
-        mapParent.Tile = TileFinder.RandomSettlementTileFor(Faction.OfPlayer, mustBeAutoChoosable: true, tile => lhs.Concat(rhs).Any(def => Find.World.tileTemperatures.SeasonAndOutdoorTemperatureAcceptableFor(tile, def.race)));
-        mapParent.SetFaction(Faction.OfPlayer);
-        Find.WorldObjects.Add(mapParent);
-        Map map = GetOrGenerateMapUtility.GetOrGenerateMap(mapParent.Tile, new IntVec3(50, 1, 50), null);
-        MultipleCaravansCellFinder.FindStartingCellsFor2Groups(map, out var first, out var second);
-        List<Pawn> lhs2 = SpawnPawnSet(map, lhs, first, Faction.OfAncients);
-        List<Pawn> rhs2 = SpawnPawnSet(map, rhs, second, Faction.OfAncientsHostile);
+        var tile = TileFinder.RandomSettlementTileFor(Faction.OfPlayer, mustBeAutoChoosable: true,
+            tile => lhs.Concat(rhs).Any(def => Find.World.tileTemperatures.SeasonAndOutdoorTemperatureAcceptableFor(tile, def.race)));
+        Map map = GetOrGenerateMapUtility.GetOrGenerateMap(tile, new IntVec3(50, 1, 50), WorldObjectDefOf.Debug_Arena);
 
-        // Check that both sides actually spawned
-        if (lhs2.Count == 0 || rhs2.Count == 0)
+        try
         {
-            foreach (var pawn in lhs2.Concat(rhs2))
+            MapParent mapParent = map.Parent;
+            mapParent.SetFaction(Faction.OfPlayer);
+
+            MultipleCaravansCellFinder.FindStartingCellsFor2Groups(map, out var first, out var second);
+            List<Pawn> lhs2 = SpawnPawnSet(map, lhs, first, Faction.OfAncients);
+            List<Pawn> rhs2 = SpawnPawnSet(map, rhs, second, Faction.OfAncientsHostile);
+
+            // Check that both sides actually spawned
+            if (lhs2.Count == 0 || rhs2.Count == 0)
             {
-                if (!pawn.Destroyed)
-                    pawn.Destroy();
+                foreach (var pawn in lhs2.Concat(rhs2))
+                {
+                    if (!pawn.Destroyed)
+                        pawn.Destroy();
+                }
+
+                mapParent.Destroy();
+                return false;
             }
 
-            mapParent.Destroy();
-            map.Dispose();
-            return false;
+            RimWorld.Planet.DebugArena component = mapParent.GetComponent<RimWorld.Planet.DebugArena>();
+            component.lhs = lhs2;
+            component.rhs = rhs2;
+            component.callback = callback;
+
+            return true;
         }
-
-        RimWorld.Planet.DebugArena component = mapParent.GetComponent<RimWorld.Planet.DebugArena>();
-        component.lhs = lhs2;
-        component.rhs = rhs2;
-        component.callback = callback;
-
-        return true;
+        catch (Exception)
+        {
+            if (map is { Disposed: false })
+                Current.Game.DeinitAndRemoveMap(map, false);
+            throw;
+        }
     }
 
     public static List<Pawn> SpawnPawnSet(Map map, List<PawnKindDef> kinds, IntVec3 spot, Faction faction)
@@ -139,7 +154,7 @@ public static class DebugArena
         for (int i = 0; i < kinds.Count; i++)
         {
             Pawn pawn = PawnGenerator.GeneratePawn(kinds[i], faction);
-            
+
             // Check if pawn is null
             if (pawn == null)
                 continue;
@@ -150,6 +165,7 @@ public static class DebugArena
             else
                 pawn.Destroy();
         }
+
         LordMaker.MakeNewLord(faction, new LordJob_DefendPoint(map.Center), map, list);
         return list;
     }
