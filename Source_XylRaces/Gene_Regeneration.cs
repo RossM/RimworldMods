@@ -25,7 +25,6 @@ public class Gene_Regeneration : GeneExt
         pawn.health.hediffSet.GetHediffs(ref tmpHediffInjuries, hediff => hediff.CanHealNaturally());
 
         float healingAmount = RegenerationInfo.healthPerHour * pawn.HealthScale * updateInterval / GenDate.TicksPerHour / tmpHediffInjuries.Count;
-        Log.Message($"Healing amount: {healingAmount}, injuries: {tmpHediffInjuries.Count}");
         foreach (var hediff in tmpHediffInjuries)
             hediff.Heal(healingAmount);
     }
