@@ -80,12 +80,12 @@
     <comps>
       <li Class="HediffCompProperties_MessageAboveSeverity">
         <severity>0.1</severity>
-        <message>{PAWN} is beginning to enter torpor.</message>
+        <message>{0} is beginning to enter torpor.</message>
         <messageType>NegativeHealthEvent</messageType>
       </li>
       <li Class="XylXenos.HediffCompProperties_SetNeed">
         <need>Rest</need>
-        <levelPercentage>0.1</levelPercentage>
+        <levelPercentage>0~0.1</levelPercentage>
         <severityRange>0.5~999</severityRange>
       </li>
       <li Class="XylXenos.HediffCompProperties_Genetic">
