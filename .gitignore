@@ -9,3 +9,4 @@ Art/*.zip
 /Build
 /.github
 /DataAnalysis/__pycache__
+DataAnalysis/elo_ratings.csv
