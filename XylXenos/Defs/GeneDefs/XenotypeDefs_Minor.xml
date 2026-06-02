@@ -9,6 +9,7 @@
     <inheritable>true</inheritable>
     <genes>
       <li>XylWoundHealing_UltraFast</li>
+      <li>XylUnnaturalToughness</li>
       <li>Superclotting</li>
       <li>MoveSpeed_VeryQuick</li>
       <li>NakedSpeed</li>
@@ -19,7 +20,6 @@
       <li>KillThirst</li>
       <li>XylRetractableClaws</li>
       <li>LowSleep</li>
-      <li>Robust</li>
       <li>Pain_Reduced</li>
       <li>Sterile</li>
       <li>XylParthenogenic</li>

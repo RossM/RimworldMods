@@ -37,7 +37,7 @@ public static class DebugArena
         Dictionary<string, string> xenotypeSuffixes = new()
         {
             { "XylChyrr", "Fixed" },
-            { "XylGaunt", "2" },
+            { "XylGaunt", "3" },
         };
 
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.ToList();
