@@ -48,7 +48,7 @@
     <defName>XylSuccuboid</defName>
     <label>succuboid</label>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon3</iconPath>
-    <combatPowerFactor>1.0</combatPowerFactor>
+    <combatPowerFactor>0.9</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
       <li>XylPsycast_WordOfLove</li>
