@@ -151,7 +151,7 @@ def parse_args() -> argparse.Namespace:
         "--center-penalty",
         type=float,
         default=1e-1,
-        help="MSE penalty on rating offsets from 1500. Default: 1e-1",
+        help="MSE penalty on large scores. Default: 1e-1",
     )
     return parser.parse_args()
 
