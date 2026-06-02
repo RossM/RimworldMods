@@ -8,3 +8,4 @@ Assemblies
 Art/*.zip
 /Build
 /.github
+/DataAnalysis/__pycache__
