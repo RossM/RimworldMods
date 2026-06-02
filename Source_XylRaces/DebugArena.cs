@@ -7,6 +7,8 @@ namespace XylXenos;
 
 public static class DebugArena
 {
+    private const int maxFights = 5;
+
     [DebugAction("Autotests")]
     public static void BattleRoyaleByXenotype()
     {
@@ -119,7 +121,7 @@ public static class DebugArena
 
         Current.Game.GetComponent<GameComponent_DebugTools>().AddPerFrameCallback(delegate
         {
-            if (currentFights >= 15)
+            if (currentFights >= maxFights)
                 return false;
 
             int highestTotal = total.Values.Max();
