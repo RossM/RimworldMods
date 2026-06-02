@@ -8,6 +8,7 @@
     <description>Dvergr hail from craggy, mineral-rich worlds where most things worth doing happen underground. Short and stoic, they're built for labor, not conversation—tireless workers who'd rather break rock than make small talk. Raw fungus keeps them alive, though they hate the taste, and they need alcohol to get them through the working day. Smiles are rare, rest rarer—and now and then, after a long silence, one of them makes something no one else could.</description>
     <iconPath>Xyl/UI/Icons/Xenotypes/Dvergr_small</iconPath>
     <displayPriority>-103</displayPriority>
+    <combatPowerFactor>1.0</combatPowerFactor>
     <inheritable>true</inheritable>
     <nameMaker>XylNamerPersonDvergr</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>

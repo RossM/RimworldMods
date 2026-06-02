@@ -9,7 +9,7 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Trog_small</iconPath>
     <displayPriority>-106</displayPriority>
     <inheritable>true</inheritable>
-    <!--<combatPowerFactor>1.2</combatPowerFactor>-->
+    <combatPowerFactor>1.3</combatPowerFactor>
     <nameMaker>XylNamerPersonTrog</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>

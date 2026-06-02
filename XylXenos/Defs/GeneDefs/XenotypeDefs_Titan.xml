@@ -9,7 +9,7 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Titan_small</iconPath>
     <displayPriority>-105</displayPriority>
     <inheritable>false</inheritable>
-    <!--<combatPowerFactor>2.0</combatPowerFactor>-->
+    <combatPowerFactor>1.3</combatPowerFactor>
     <genes>
       <li>XylRockToss</li>
       <li>XylLithoid</li>

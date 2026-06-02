@@ -6,6 +6,7 @@
     <defName>XylGaunt</defName>
     <label>gaunt</label>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon4</iconPath>
+    <combatPowerFactor>2.7</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
       <li>XylWoundHealing_UltraFast</li>
@@ -47,6 +48,7 @@
     <defName>XylSuccuboid</defName>
     <label>succuboid</label>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon3</iconPath>
+    <combatPowerFactor>1.0</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
       <li>XylPsycast_WordOfLove</li>
