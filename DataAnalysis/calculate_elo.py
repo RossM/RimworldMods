@@ -90,7 +90,7 @@ def train_elo(
         logits = score_a - score_b
         fit_loss = F.binary_cross_entropy_with_logits(logits, targets)
         elo_offsets = rating_logits / ELO_LOGIT_SCALE
-        center_loss = torch.mean(elo_offsets.square())
+        center_loss = torch.mean(rating_logits.square())
         loss = fit_loss + center_penalty * center_loss
         return loss, fit_loss, center_loss
 
@@ -150,8 +150,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--center-penalty",
         type=float,
-        default=1e-6,
-        help="MSE penalty on rating offsets from 1500. Default: 1e-6",
+        default=1e-3,
+        help="MSE penalty on rating offsets from 1500. Default: 1e-3",
     )
     return parser.parse_args()
 
