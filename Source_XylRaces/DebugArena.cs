@@ -127,9 +127,8 @@ public static class DebugArena
             PawnKindDef lhsDef = kinds.RandomElementByWeight(def => 5 + (highestTotal - total[def]));
             PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(def => 5 + (highestTotal - total[def]));
 
-            // This is a quick-and-dirty heuristic that completely ignores the number of pawns on each side
-            float lhsPower = (float)(wins[lhsDef] + 1) / (total[lhsDef] + 2);
-            float rhsPower = (float)(wins[rhsDef] + 1) / (total[rhsDef] + 2);
+            float lhsPower = lhsDef.combatPower;
+            float rhsPower = rhsDef.combatPower;
 
             int totalCombatants = RandRangeExponential(2, 40);
 
