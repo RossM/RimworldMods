@@ -31,13 +31,13 @@ namespace TranspilerUtil
             List<MethodInfo> prefixes,
             List<MethodInfo> postfixes)
         {
-            public ILGenerator generator = generator;
-            public MethodBase caller = caller;
-            public MemberInfo target = target;
-            public List<MethodInfo> prefixes = prefixes;
-            public List<MethodInfo> postfixes = postfixes;
-            public List<CodeInstruction> output = [];
-            public List<Type> localTypes = [];
+            public readonly ILGenerator generator = generator;
+            public readonly MethodBase caller = caller;
+            public readonly MemberInfo target = target;
+            public readonly List<MethodInfo> prefixes = prefixes;
+            public readonly List<MethodInfo> postfixes = postfixes;
+            public readonly List<CodeInstruction> output = [];
+            public readonly List<Type> localTypes = [];
 
             private Type[] callerParameterTypes;
             private string[] callerParameterNames;
@@ -482,7 +482,7 @@ namespace TranspilerUtil
         ///     You can also use __instance to match the instance the method was invoked on, and __caller to match
         ///     the instance the calling method was invoked on.
         ///     If there isn't a parameter with a matching name, this will fall back to trying to match based
-        ///     on parameter type, but this may result in less optimal code generation, and will give a warning.
+        ///     on parameter type, but this will give a warning.
         /// </summary>
         /// <param name="oldMember"></param>
         /// <param name="newMember"></param>
