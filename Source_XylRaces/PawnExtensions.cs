@@ -10,6 +10,10 @@ public static class PawnExtensions
 
         public Hediff LactationHediff => pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
 
+        public bool NeedsPsyfocus =>
+            // HasPsylink is patched to respect psycast genes
+            pawn.HasPsylink && !pawn.Suspended && (pawn.Spawned || pawn.IsCaravanMember());
+
         public GeneAndHediffCache GeneAndHediffCache
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -23,15 +27,8 @@ public static class PawnExtensions
             get => pawn.genes == null ? null : GeneTracker.DataManager.Get(pawn);
         }
 
-        public bool NeedsPsyfocus =>
-            // HasPsylink is patched to respect psycast genes
-            pawn.HasPsylink && !pawn.Suspended && (pawn.Spawned || pawn.IsCaravanMember());
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<Gene> GenesOfDef(GeneDef def)
-        {
-            return pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithDef(def);
-        }
+        public IEnumerable<Gene> GenesOfDef(GeneDef def) => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithDef(def);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasActiveGene(GeneDef def)
@@ -49,10 +46,7 @@ public static class PawnExtensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<T> GenesOfType<T>() where T : class
-        {
-            return pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>();
-        }
+        public IEnumerable<T> GenesOfType<T>() where T : class => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once UnusedMember.Global
@@ -119,30 +113,18 @@ public static class PawnExtensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<T> HediffsOfType<T>() where T : class
-        {
-            return pawn.GeneAndHediffCache.GetHediffsOfType<T>();
-        }
+        public IEnumerable<T> HediffsOfType<T>() where T : class => pawn.GeneAndHediffCache.GetHediffsOfType<T>();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<HediffWithComps> HediffsWithComp<T>() where T : class
-        {
-            return pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
-        }
+        public IEnumerable<HediffWithComps> HediffsWithComp<T>() where T : class => pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once UnusedMember.Global
-        public IEnumerable<Hediff> HediffsWithDef(HediffDef def)
-        {
-            return pawn.GeneAndHediffCache.GetHediffsWithDef(def);
-        }
+        public IEnumerable<Hediff> HediffsWithDef(HediffDef def) => pawn.GeneAndHediffCache.GetHediffsWithDef(def);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once UnusedMember.Global
-        public IEnumerable<Hediff> HediffsWithModExtension<T>() where T : class
-        {
-            return pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
-        }
+        public IEnumerable<Hediff> HediffsWithModExtension<T>() where T : class => pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
 
         public bool ChemicalIsAllowedByGenes(ChemicalDef chemicalDef)
         {
