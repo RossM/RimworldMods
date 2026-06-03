@@ -51,11 +51,12 @@
     <combatPowerFactor>1.0</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
+      <li>XylPsycast_ChaosSkip</li>
       <li>XylPsycast_WordOfLove</li>
       <li>PsychicAbility_Enhanced</li>
       <li>NakedSpeed</li>
       <li>XylBatWings</li>
-      <li>XylLargeHorns</li>
+      <li>MeleeDamage_Weak</li>
       <li>VerySleepy</li>
       <li>Delicate</li>
       <li>Libido_High</li>
@@ -63,6 +64,7 @@
       <li>XylStrongGenes</li>
       <li>Beauty_Beautiful</li>
       <li>Hair_LongOnly</li>
+      <li>Headbone_MiniHorns</li>
       <li>Body_Standard</li>
       <li>Hair_Pink</li>
       <li>Hair_LightPurple</li>

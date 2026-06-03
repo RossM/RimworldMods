@@ -39,6 +39,8 @@ public static class DebugArena
         Dictionary<string, string> xenotypeSuffixes = new()
         {
             { "XylChyrr", "Fixed" },
+            { "XylNixie", "Psycasts" },
+            { "XylSuccuboid", "Psycasts" },
             { "XylGaunt", "3" },
         };
 

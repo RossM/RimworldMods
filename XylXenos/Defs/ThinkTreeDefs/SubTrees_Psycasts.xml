@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <ThinkTreeDef>
+    <defName>XylCastPsycast</defName>
+    <insertTag>Humanlike_PostMentalState</insertTag>
+    <insertPriority>0</insertPriority>
+    <thinkRoot Class="ThinkNode_ConditionalColonist">
+      <invert>true</invert>
+      <subNodes>
+        <li Class="ThinkNode_ConditionalUnderCombatPressure">
+          <maxThreatDistance>45</maxThreatDistance>
+          <minCloseTargets>1</minCloseTargets>
+          <subNodes>
+
+            <!-- Defensive behaviors -->
+            <li Class="ThinkNode_Priority">
+              <subNodes>
+
+                <!-- Chaos skip on self -->
+                <li Class="XylXenos.ThinkNode_ConditionalHasGene" MayRequire="Ludeon.RimWorld.Royalty">
+                  <gene>XylPsycast_ChaosSkip</gene>
+                  <subNodes>
+                    <li Class="ThinkNode_ConditionalUnderCombatPressure">
+                      <maxThreatDistance>2</maxThreatDistance>
+                      <minCloseTargets>2</minCloseTargets>
+                      <subNodes>
+                        <li Class="JobGiver_AICastAbilityOnSelf">
+                          <ability>ChaosSkip</ability>
+                        </li>
+                      </subNodes>
+                    </li>
+                  </subNodes>
+                </li>
+
+              </subNodes>
+            </li>
+
+            <!-- High priority buffs -->
+            <li Class="ThinkNode_Random">
+              <subNodes>
+
+                <!-- Focus on self -->
+                <li Class="XylXenos.ThinkNode_ConditionalHasGene" MayRequire="Ludeon.RimWorld.Royalty">
+                  <gene>XylPsycast_Focus</gene>
+                  <subNodes>
+                    <li Class="ThinkNode_ConditionalAbilityCastLastTick">
+                      <ability>Focus</ability>
+                      <maxTicksAgo>60</maxTicksAgo>
+                      <invert>true</invert>
+                      <subNodes>
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnAlly">
+                          <ability>Focus</ability>
+                          <selfOnly>true</selfOnly>
+                        </li>
+                      </subNodes>
+                    </li>
+                  </subNodes>
+                </li>
+
+              </subNodes>
+            </li>
+
+            <!-- Buffs and offensive behaviors -->
+            <li Class="ThinkNode_Random">
+              <subNodes>
+
+                <!-- Focus on ally -->
+                <li Class="XylXenos.ThinkNode_ConditionalHasGene" MayRequire="Ludeon.RimWorld.Royalty">
+                  <gene>XylPsycast_Focus</gene>
+                  <subNodes>
+                    <li Class="ThinkNode_ConditionalAbilityCastLastTick">
+                      <ability>Focus</ability>
+                      <maxTicksAgo>60</maxTicksAgo>
+                      <invert>true</invert>
+                      <subNodes>
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnAlly">
+                          <ability>Focus</ability>
+                        </li>
+                      </subNodes>
+                    </li>
+                  </subNodes>
+                </li>
+
+                <!-- Chaos skip on enemy in cover -->
+                <li Class="XylXenos.ThinkNode_ConditionalHasGene" MayRequire="Ludeon.RimWorld.Royalty">
+                  <gene>XylPsycast_ChaosSkip</gene>
+                  <subNodes>
+                    <li Class="ThinkNode_ConditionalAbilityCastLastTick">
+                      <ability>ChaosSkip</ability>
+                      <maxTicksAgo>300</maxTicksAgo>
+                      <invert>true</invert>
+                      <subNodes>
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnEnemyInCover">
+                          <ability>ChaosSkip</ability>
+                        </li>
+                      </subNodes>
+                    </li>
+                  </subNodes>
+                </li>
+
+                <!-- Beckon on enemy in cover -->
+                <li Class="XylXenos.ThinkNode_ConditionalHasGene" MayRequire="Ludeon.RimWorld.Royalty">
+                  <gene>XylPsycast_Beckon</gene>
+                  <subNodes>
+                    <li Class="ThinkNode_ConditionalAbilityCastLastTick">
+                      <ability>Beckon</ability>
+                      <maxTicksAgo>300</maxTicksAgo>
+                      <invert>true</invert>
+                      <subNodes>
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnEnemyInCover">
+                          <ability>Beckon</ability>
+                        </li>
+                      </subNodes>
+                    </li>
+                  </subNodes>
+                </li>
+
+              </subNodes>
+            </li>
+
+          </subNodes>
+        </li>
+      </subNodes>
+    </thinkRoot>
+  </ThinkTreeDef>
+
+</Defs>
