@@ -127,7 +127,8 @@ public static class DebugArena
             int highestTotal = total.Values.Max();
 
             PawnKindDef lhsDef = kinds.RandomElementByWeight(def => 5 + (highestTotal - total[def]));
-            PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(def => 5 + (highestTotal - total[def]));
+            PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(def =>
+                Mathf.Min(def.combatPower / lhsDef.combatPower, lhsDef.combatPower / def.combatPower));
 
             float lhsPower = lhsDef.combatPower;
             float rhsPower = rhsDef.combatPower;
