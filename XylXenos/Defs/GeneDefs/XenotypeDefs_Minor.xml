@@ -6,7 +6,7 @@
     <defName>XylGaunt</defName>
     <label>gaunt</label>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon4</iconPath>
-    <combatPowerFactor>2.8</combatPowerFactor>
+    <combatPowerFactor>2.7</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
       <li>XylWoundHealing_UltraFast</li>
