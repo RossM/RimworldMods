@@ -18,7 +18,7 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
     [
         new(0.0f, 1.0f),
         new(25.0f, 0.1f),
-        new(50.0f, 0.0f),
+        new(50.0f, 0.01f),
     ];
 
     protected override LocalTargetInfo GetTarget(Pawn caster, Ability ability)
@@ -70,6 +70,8 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
             {
                 foreach (var affectedTarget in ability.GetAffectedTargets((LocalTargetInfo)targetPawn))
                 {
+                    // Avoid hitting pawns with a faction we might anger. We allow hitting factionless pawns here,
+                    // such as wild animals.
                     if (affectedTarget.Thing is Pawn { Faction: not null } otherPawn && !otherPawn.HostileTo(caster))
                         badTarget = true;
                 }

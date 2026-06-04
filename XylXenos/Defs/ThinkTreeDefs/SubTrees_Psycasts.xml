@@ -189,6 +189,7 @@
                       <subNodes>
                         <li Class="XylXenos.JobGiver_AICastAbilityOnTarget">
                           <ability>Beckon</ability>
+                          <targetEnemies>true</targetEnemies>
                           <onlyTargetRanged>true</onlyTargetRanged>
                           <onlyInCover>true</onlyInCover>
                         </li>
