@@ -38,7 +38,6 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
     {
         HashSet<XenotypeDef> playerXenotypes = Faction.OfPlayer.AllPawns.Where(pawn => pawn.genes != null)
             .Select(pawn => pawn.genes.Xenotype).ToHashSet();
-        XenotypeDef xenotype = null;
         Dictionary<XenotypeDef, float> weights = new();
         foreach (var faction in Find.FactionManager.AllFactionsListForReading)
         {
@@ -51,12 +50,12 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
                 var entry = xenotypeSet[i];
                 weights[entry.xenotype] = weights.GetWithFallback(entry.xenotype) + entry.chance;
             }
+        }
 
-            if (!weights.Keys.Where(xenotypeDef => !playerXenotypes.Contains(xenotypeDef))
-                    .TryRandomElementByWeight(xenotypeDef => weights[xenotypeDef], out xenotype))
-            {
-                weights.Keys.TryRandomElementByWeight(xenotypeDef => weights[xenotypeDef], out xenotype);
-            }
+        if (!weights.Keys.Where(xenotypeDef => !playerXenotypes.Contains(xenotypeDef))
+                .TryRandomElementByWeight(xenotypeDef => weights[xenotypeDef], out XenotypeDef xenotype))
+        {
+            weights.Keys.TryRandomElementByWeight(xenotypeDef => weights[xenotypeDef], out xenotype);
         }
 
         return xenotype;
