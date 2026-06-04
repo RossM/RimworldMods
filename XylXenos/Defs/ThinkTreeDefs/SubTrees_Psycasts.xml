@@ -50,9 +50,9 @@
                       <maxTicksAgo>60</maxTicksAgo>
                       <invert>true</invert>
                       <subNodes>
-                        <li Class="XylXenos.JobGiver_AICastAbilityOnAlly">
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnTarget">
                           <ability>Focus</ability>
-                          <selfOnly>true</selfOnly>
+                          <targetSelf>true</targetSelf>
                         </li>
                       </subNodes>
                     </li>
@@ -75,8 +75,83 @@
                       <maxTicksAgo>60</maxTicksAgo>
                       <invert>true</invert>
                       <subNodes>
-                        <li Class="XylXenos.JobGiver_AICastAbilityOnAlly">
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnTarget">
                           <ability>Focus</ability>
+                          <targetAllies>True</targetAllies>
+                        </li>
+                      </subNodes>
+                    </li>
+                  </subNodes>
+                </li>
+
+                <!-- Stun on enemy -->
+                <li Class="XylXenos.ThinkNode_ConditionalHasGene" MayRequire="Ludeon.RimWorld.Royalty">
+                  <gene>XylPsycast_Stun</gene>
+                  <subNodes>
+                    <li Class="ThinkNode_ConditionalAbilityCastLastTick">
+                      <ability>Stun</ability>
+                      <maxTicksAgo>60</maxTicksAgo>
+                      <invert>true</invert>
+                      <subNodes>
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnTarget">
+                          <ability>Stun</ability>
+                          <targetEnemies>true</targetEnemies>
+                        </li>
+                      </subNodes>
+                    </li>
+                  </subNodes>
+                </li>
+
+                <!-- Burden on enemy -->
+                <li Class="XylXenos.ThinkNode_ConditionalHasGene" MayRequire="Ludeon.RimWorld.Royalty">
+                  <gene>XylPsycast_Burden</gene>
+                  <subNodes>
+                    <li Class="ThinkNode_ConditionalAbilityCastLastTick">
+                      <ability>Burden</ability>
+                      <maxTicksAgo>60</maxTicksAgo>
+                      <invert>true</invert>
+                      <subNodes>
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnTarget">
+                          <ability>Burden</ability>
+                          <targetEnemies>true</targetEnemies>
+                          <onlyTargetMelee>true</onlyTargetMelee>
+                          <minDistance>8</minDistance>
+                        </li>
+                      </subNodes>
+                    </li>
+                  </subNodes>
+                </li>
+
+                <!-- Blinding pulse on enemy -->
+                <li Class="XylXenos.ThinkNode_ConditionalHasGene" MayRequire="Ludeon.RimWorld.Royalty">
+                  <gene>XylPsycast_BlindingPulse</gene>
+                  <subNodes>
+                    <li Class="ThinkNode_ConditionalAbilityCastLastTick">
+                      <ability>BlindingPulse</ability>
+                      <maxTicksAgo>60</maxTicksAgo>
+                      <invert>true</invert>
+                      <subNodes>
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnTarget">
+                          <ability>BlindingPulse</ability>
+                          <targetEnemies>true</targetEnemies>
+                        </li>
+                      </subNodes>
+                    </li>
+                  </subNodes>
+                </li>
+
+                <!-- Vertigo pulse on enemy -->
+                <li Class="XylXenos.ThinkNode_ConditionalHasGene" MayRequire="Ludeon.RimWorld.Royalty">
+                  <gene>XylPsycast_VertigoPulse</gene>
+                  <subNodes>
+                    <li Class="ThinkNode_ConditionalAbilityCastLastTick">
+                      <ability>VertigoPulse</ability>
+                      <maxTicksAgo>60</maxTicksAgo>
+                      <invert>true</invert>
+                      <subNodes>
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnTarget">
+                          <ability>VertigoPulse</ability>
+                          <targetEnemies>true</targetEnemies>
                         </li>
                       </subNodes>
                     </li>
@@ -92,8 +167,11 @@
                       <maxTicksAgo>300</maxTicksAgo>
                       <invert>true</invert>
                       <subNodes>
-                        <li Class="XylXenos.JobGiver_AICastAbilityOnEnemyInCover">
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnTarget">
                           <ability>ChaosSkip</ability>
+                          <targetEnemies>true</targetEnemies>
+                          <onlyTargetMelee>true</onlyTargetMelee>
+                          <onlyInCover>true</onlyInCover>
                         </li>
                       </subNodes>
                     </li>
@@ -109,13 +187,19 @@
                       <maxTicksAgo>300</maxTicksAgo>
                       <invert>true</invert>
                       <subNodes>
-                        <li Class="XylXenos.JobGiver_AICastAbilityOnEnemyInCover">
+                        <li Class="XylXenos.JobGiver_AICastAbilityOnTarget">
                           <ability>Beckon</ability>
+                          <onlyTargetMelee>true</onlyTargetMelee>
+                          <onlyInCover>true</onlyInCover>
                         </li>
                       </subNodes>
                     </li>
                   </subNodes>
                 </li>
+                
+                <!-- TODO Skip -->
+                <!-- TODO Smokepop -->
+                <!-- TODO Waterskip -->
 
               </subNodes>
             </li>
