@@ -55,15 +55,6 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
             if (!caster.CanSee(targetPawn))
                 continue;
 
-            foreach (var comp in ability.EffectComps)
-            {
-                if (!comp.AICanTargetNow(targetPawn))
-                    badTarget = true;
-            }
-
-            if (badTarget)
-                continue;
-
             var giveHediffEffect = ability.CompOfType<CompAbilityEffect_GiveHediff>();
             if (giveHediffEffect != null && targetPawn.health.hediffSet.HasHediff(giveHediffEffect.Props.hediffDef))
                 continue;
