@@ -49,6 +49,9 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
             if (targetPawn.Downed)
                 continue;
 
+            if (!ability.def.verbProperties.targetParams.CanTarget(targetPawn))
+                continue;
+
             if (minDistance > 0f && targetPawn.Position.DistanceTo(caster.Position) < minDistance)
                 continue;
 
