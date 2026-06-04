@@ -23,7 +23,6 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
 
     protected override LocalTargetInfo GetTarget(Pawn caster, Ability ability)
     {
-        //  CoverUtility.CalculateOverallBlockChance
         potentialTargets.Clear();
 
         if (!ability.CanCast)
