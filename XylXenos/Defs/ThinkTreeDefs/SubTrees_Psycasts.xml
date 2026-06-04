@@ -170,7 +170,7 @@
                         <li Class="XylXenos.JobGiver_AICastAbilityOnTarget">
                           <ability>ChaosSkip</ability>
                           <targetEnemies>true</targetEnemies>
-                          <onlyTargetMelee>true</onlyTargetMelee>
+                          <onlyTargetRanged>true</onlyTargetRanged>
                           <onlyInCover>true</onlyInCover>
                         </li>
                       </subNodes>
@@ -189,7 +189,7 @@
                       <subNodes>
                         <li Class="XylXenos.JobGiver_AICastAbilityOnTarget">
                           <ability>Beckon</ability>
-                          <onlyTargetMelee>true</onlyTargetMelee>
+                          <onlyTargetRanged>true</onlyTargetRanged>
                           <onlyInCover>true</onlyInCover>
                         </li>
                       </subNodes>

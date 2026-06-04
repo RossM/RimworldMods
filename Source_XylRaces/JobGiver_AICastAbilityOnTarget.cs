@@ -7,6 +7,7 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
     public bool targetEnemies;
     public bool targetAllies;
     public bool onlyTargetMelee;
+    public bool onlyTargetRanged;
     public bool onlyInCover;
     public bool avoidHittingNonEnemies = true;
     public float minDistance = 0f;
@@ -78,11 +79,10 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
                     continue;
             }
 
-            if (onlyTargetMelee)
-            {
-                if (targetPawn.equipment?.PrimaryEq?.PrimaryVerb?.IsMeleeAttack ?? true)
-                    continue;
-            }
+            if (onlyTargetRanged && targetPawn.equipment?.PrimaryEq?.PrimaryVerb?.IsMeleeAttack != false)
+                continue;
+            if (onlyTargetMelee && targetPawn.equipment?.PrimaryEq?.PrimaryVerb?.IsMeleeAttack == false)
+                continue;
 
             if (onlyInCover)
             {
@@ -111,6 +111,7 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
         copy.targetEnemies = targetEnemies;
         copy.targetSelf = targetSelf;
         copy.onlyTargetMelee = onlyTargetMelee;
+        copy.onlyTargetRanged = onlyTargetRanged;
         copy.onlyInCover = onlyInCover;
         copy.avoidHittingNonEnemies = avoidHittingNonEnemies;
         copy.minDistance = minDistance;
