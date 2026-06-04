@@ -192,6 +192,7 @@
                           <targetEnemies>true</targetEnemies>
                           <onlyTargetRanged>true</onlyTargetRanged>
                           <onlyInCover>true</onlyInCover>
+                          <minDistance>4</minDistance>
                         </li>
                       </subNodes>
                     </li>
