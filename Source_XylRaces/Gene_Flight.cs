@@ -114,6 +114,7 @@ public class Gene_Flight : GeneExt
             return;
 
         if (!flight.Flying &&
+            !pawn.Downed &&
             flightAllowedByApparel &&
             (pawn.Drafted ? autoFlyDrafted : autoFly) &&
             pawn.pather.Moving &&
