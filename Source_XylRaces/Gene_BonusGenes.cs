@@ -6,6 +6,7 @@ public class BonusGenesInfo
     public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
     public IntRange biostatMet = new(int.MinValue, int.MaxValue);
     public float geneChance = 1.0f;
+    public GeneType? addedGeneType;
     [CanBeNull] public List<GeneDef> allowedGenes;
     [CanBeNull] public List<GeneDef> prohibitedGenes;
     public bool removeAfterAdding = false;
@@ -60,7 +61,8 @@ public class Gene_BonusGenes : GeneExt
                                               pawn.genes.GenesListForReading.Sum(g => g.Active ? g.def.biostatMet : 0)))
             return;
 
-        addedGenes.Add(pawn.genes.AddGene(geneDef, GeneType == GeneType.Xenogene));
+        var geneType = BonusGenesInfo.addedGeneType ?? GeneType;
+        addedGenes.Add(pawn.genes.AddGene(geneDef, geneType == GeneType.Xenogene));
     }
 
     private float GeneWeight(GeneDef geneDef)

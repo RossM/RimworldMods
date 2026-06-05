@@ -28,6 +28,7 @@
           <biostatCpx>1~99</biostatCpx>
           <biostatMet>-2~2</biostatMet>
           <geneChance>0.5</geneChance>
+          <addedGeneType>Xenogene</addedGeneType>
         </bonusGenes>
       </li>
     </modExtensions>

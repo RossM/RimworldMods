@@ -17,7 +17,7 @@ public class Gene_Flight : GeneExt
 
     public Texture2D ExtraIcon => DefExt.ExtraIcon;
 
-    public bool CanFlyNow => pawn.flight is { CanEverFly: true } && !pawn.Downed && flightAllowedByApparel;
+    public bool CanFlyNow => pawn.flight is { CanFlyNow: true } && !pawn.Downed && flightAllowedByApparel;
 
     public bool autoFly = true;
     public bool autoFlyDrafted = true;
@@ -63,7 +63,7 @@ public class Gene_Flight : GeneExt
             action = () => { pawn.flight.StartFlying(); },
             defaultLabel = "XylCommandFlyLabel".TranslateSimple(),
             defaultDesc = "XylCommandFlyDesc".TranslateSimple(),
-            Disabled = !pawn.flight.CanFlyNow || !flightAllowedByApparel,
+            Disabled = !CanFlyNow,
             cooldownPercentGetter = () => 1.0f - pawn.flight.flightCooldownTicks / (pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
             icon = ExtraIcon,
             defaultDescPostfix = "\n\n" + $"""
@@ -116,8 +116,7 @@ public class Gene_Flight : GeneExt
         if (!CanFlyNow)
             return;
 
-        if (!flight.Flying &&
-            (pawn.Drafted ? autoFlyDrafted : autoFly) &&
+        if ((pawn.Drafted ? autoFlyDrafted : autoFly) &&
             pawn.pather.Moving &&
             pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= FlightInfo.autoFlyMinDistance &&
             pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
