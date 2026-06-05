@@ -51,7 +51,7 @@
     <combatPowerFactor>1.0</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
-      <li>XylPsycast_BlindingPulse</li>
+      <li>XylPsycast_ChaosSkip</li>
       <li>XylPsycast_WordOfLove</li>
       <li>PsychicAbility_Enhanced</li>
       <li>NakedSpeed</li>

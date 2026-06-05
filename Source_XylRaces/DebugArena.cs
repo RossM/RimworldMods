@@ -14,8 +14,6 @@ public static class DebugArena
     {
         var pawnKindsForBattleRoyale = new List<PawnKindDef>();
 
-        //var pawnKindDefs = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef k) => k.RaceProps.Humanlike).ToList();
-
         var pawnKindDefs = new List<PawnKindDef>
         {
             DefDatabase<PawnKindDef>.GetNamed("Tribal_Penitent"),
@@ -38,10 +36,6 @@ public static class DebugArena
 
         Dictionary<string, string> xenotypeSuffixes = new()
         {
-            { "XylChyrr", "Fixed" },
-            { "XylNixie", "PsycastsFixed" },
-            { "XylSuccuboid", "Psycasts2Fixed" },
-            { "XylGaunt", "3" },
         };
 
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.ToList();
@@ -128,9 +122,8 @@ public static class DebugArena
 
             int highestTotal = total.Values.Max();
 
-            PawnKindDef lhsDef = kinds.RandomElementByWeight(def => 5 + (highestTotal - total[def]));
-            PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(def =>
-                Mathf.Min(def.combatPower / lhsDef.combatPower, lhsDef.combatPower / def.combatPower));
+            PawnKindDef lhsDef = kinds.RandomElementByWeight(def => 1.0f / (1 + total[def]));
+            PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(def => 1.0f / (1 + total[def]));
 
             float lhsPower = lhsDef.combatPower;
             float rhsPower = rhsDef.combatPower;
