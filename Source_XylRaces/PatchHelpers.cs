@@ -338,4 +338,16 @@ public static class PatchHelpers
 
         return pawn.ActiveGenesOfType<GeneExt>().Sum(gene => gene.DefExt.xenotypeStrength);
     }
+
+    public static bool HyperlactatingPrisonerInRoomCanProduce(Room r, ThingDef thingDef)
+    {
+        if (r is not { IsPrisonCell: true })
+            return false;
+        foreach (Pawn owner in r.Owners)
+        {
+            if (owner.FirstActiveGeneOfType<Gene_Hyperlactation>()?.def.DefExt?.hyperlactation?.item == thingDef)
+                return true;
+        }
+        return false;
+    }
 }
