@@ -16,6 +16,9 @@ public class Gene_Flight : GeneExt
     public FlightInfo FlightInfo => DefExt.flight!;
 
     public Texture2D ExtraIcon => DefExt.ExtraIcon;
+
+    public bool CanFlyNow => pawn.flight is { CanEverFly: true } && !pawn.Downed && flightAllowedByApparel;
+
     public bool autoFly = true;
     public bool autoFlyDrafted = true;
 
@@ -110,12 +113,10 @@ public class Gene_Flight : GeneExt
             wasFlying = flight.Flying;
         }
 
-        if (!flight.CanEverFly)
+        if (!CanFlyNow)
             return;
 
         if (!flight.Flying &&
-            !pawn.Downed &&
-            flightAllowedByApparel &&
             (pawn.Drafted ? autoFlyDrafted : autoFly) &&
             pawn.pather.Moving &&
             pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= FlightInfo.autoFlyMinDistance &&
