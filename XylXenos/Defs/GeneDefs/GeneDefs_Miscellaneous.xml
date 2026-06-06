@@ -139,7 +139,7 @@
         <parentTagDef>Body</parentTagDef>
         <drawData>
           <defaultData>
-            <layer>10</layer>
+            <layer>50</layer>
             <offset>(0,0,-0.1)</offset>
           </defaultData>
           <dataNorth>
