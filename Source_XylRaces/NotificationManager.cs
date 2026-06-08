@@ -118,6 +118,12 @@ public static class NotificationDefOf
     /// </summary>
     public static NotificationDef PreTakeDamage;
 
+    /// <summary>
+    ///     Called after a pawn does lovin'.
+    ///     This hook passes a <see cref="Pawn" /> as its "data" parameter.
+    /// </summary>
+    public static NotificationDef PostLovin;
+
     static NotificationDefOf()
     {
         DefOfHelper.EnsureInitializedInCtor(typeof(NotificationDefOf));

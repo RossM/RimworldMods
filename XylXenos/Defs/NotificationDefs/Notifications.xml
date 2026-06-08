@@ -57,4 +57,9 @@
     <defName>PostPawnKilled</defName>
   </XylXenos.NotificationDef>
 
+  <XylXenos.NotificationDef>
+    <defName>PostLovin</defName>
+    <dataType>Pawn</dataType>
+  </XylXenos.NotificationDef>
+
 </Defs>

@@ -4,7 +4,7 @@
 
   <ThoughtDef>
     <defName>XylNeedWetness</defName>
-    <workerClass>XylXenos.ThoughtWorker_NeedWetness</workerClass>
+    <workerClass>XylXenos.ThoughtWorker_Need</workerClass>
     <stages>
       <li>
         <label>parched</label>
@@ -21,12 +21,25 @@
         <description>My skin is a bit dry. I should find some water.</description>
         <baseMoodEffect>-5</baseMoodEffect>
       </li>
+      <li IsNull="True" />
       <li>
         <label>soaking wet</label>
         <description>I'm soaking wet and I love it!</description>
         <baseMoodEffect>3</baseMoodEffect>
       </li>
     </stages>
+    <modExtensions>
+      <li Class="XylXenos.ThoughtDefExtension_Need">
+        <need>XylWetness</need>
+        <stages>
+          <li>0</li>
+          <li>0.05</li>
+          <li>0.25</li>
+          <li>0.5</li>
+          <li>0.9</li>
+        </stages>
+      </li>
+    </modExtensions>
   </ThoughtDef>
 
 </Defs>
