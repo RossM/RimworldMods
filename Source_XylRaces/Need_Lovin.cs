@@ -7,11 +7,10 @@ public class Need_Lovin : Need
 
     public Hediff_LovinAddiction LovinAddictionHediff => pawn.HediffsOfType<Hediff_LovinAddiction>().SingleOrDefault();
 
-    public const float ThreshSatisfied = 0.1f;
+    public const float ThreshSatisfied = 0.01f;
 
     public Need_Lovin(Pawn pawn) : base(pawn)
     {
-        threshPercents = [ThreshSatisfied];
     }
 
     public override float CurLevel
