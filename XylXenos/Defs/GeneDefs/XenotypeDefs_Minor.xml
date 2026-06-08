@@ -51,7 +51,6 @@
     <combatPowerFactor>1.0</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
-      <li>XylPsycast_ChaosSkip</li>
       <li>XylPsycast_WordOfLove</li>
       <li>PsychicAbility_Enhanced</li>
       <li>NakedSpeed</li>
@@ -70,6 +69,7 @@
       <li>Hair_LightPurple</li>
       <li>XylSkin_Pink</li>
       <li>Tail_Smooth</li>
+      <li>XylShameless</li>
       <li>XylLazy</li>
       <li>Hair_Grayless</li>
       <li>AptitudeStrong_Social</li>

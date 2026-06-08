@@ -18,19 +18,24 @@
     <displayCategory>XylPsycasts</displayCategory>
     <biostats>
       <li>
-        <levels>1~4</levels>
+        <levels>1~2</levels>
         <biostatCpx>1</biostatCpx>
         <biostatMet>-2</biostatMet>
       </li>
       <li>
+        <levels>3~4</levels>
+        <biostatCpx>2</biostatCpx>
+        <biostatMet>-2</biostatMet>
+      </li>
+      <li>
         <levels>5</levels>
+        <biostatCpx>3</biostatCpx>
         <biostatArc>1</biostatArc>
-        <biostatCpx>1</biostatCpx>
       </li>
       <li>
         <levels>6</levels>
+        <biostatCpx>3</biostatCpx>
         <biostatArc>2</biostatArc>
-        <biostatCpx>1</biostatCpx>
       </li>
     </biostats>
     <modExtensions>

@@ -124,4 +124,52 @@
     </exclusionTags>
   </GeneDef>
 
+  <GeneDef>
+    <defName>XylShameless</defName>
+    <label>shameless</label>
+    <description>Carriers of this gene are never ashamed by nudity, and are much happier when not wearing clothes.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>200</displayOrderInCategory>
+    <forcedTraits>
+      <Nudist />
+    </forcedTraits>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylIndustrious</defName>
+    <label>industrious</label>
+    <description>Carriers of this gene are exceptionally fast workers.</description>
+    <biostatCpx>2</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>25</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Industrious</iconPath>
+    <iconColor>(0.35, 0.55, 0.35)</iconColor>
+    <exclusionTags>
+      <li>WorkSpeed</li>
+    </exclusionTags>
+    <forcedTraits>
+      <Industriousness>1</Industriousness>
+    </forcedTraits>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylLazy</defName>
+    <label>lazy</label>
+    <description>Carriers of this gene are slow workers.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>26</displayOrderInCategory>
+    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_Industrious</iconPath>-->
+    <exclusionTags>
+      <li>WorkSpeed</li>
+    </exclusionTags>
+    <forcedTraits>
+      <Industriousness>-1</Industriousness>
+    </forcedTraits>
+  </GeneDef>
+
 </Defs>
