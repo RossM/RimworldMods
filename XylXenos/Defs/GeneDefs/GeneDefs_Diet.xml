@@ -153,4 +153,119 @@
     </modExtensions>
   </GeneDef>
 
+  <HediffDef>
+    <defName>XylGeneticMeatNeed</defName>
+    <label>raw meat dependency</label>
+    <description>This individual is unable to synthesize certain essential nutrients and must obtain them by eating raw meat. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death.</description>
+    <hediffClass>XylXenos.Hediff_DietDependency</hediffClass>
+    <descriptionHyperlinks>
+      <GeneDef>XylMeatDependence</GeneDef>
+    </descriptionHyperlinks>
+    <everCurableByItem>false</everCurableByItem>
+    <initialSeverity>0</initialSeverity>
+    <maxSeverity>15</maxSeverity>
+    <lethalSeverity>15</lethalSeverity>
+    <allowMothballIfLowPriorityWorldPawn>true</allowMothballIfLowPriorityWorldPawn>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>0.5</severityPerDay>
+        <minAge>13</minAge>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_Genetic">
+        <gene>XylMeatDependence</gene>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
+      </li>
+      <li>
+        <minSeverity>0.001</minSeverity>
+        <becomeVisible>true</becomeVisible>
+      </li>
+      <li>
+        <label>craving</label>
+        <minSeverity>1</minSeverity>
+      </li>
+      <li>
+        <label>mild deficiency</label>
+        <minSeverity>2.5</minSeverity>
+        <painOffset>0.1</painOffset>
+        <mentalStateGivers>
+          <li>
+            <mentalState>XylHuntingVermin</mentalState>
+            <mtbDays>0.5</mtbDays>
+          </li>
+        </mentalStateGivers>
+      </li>
+      <li>
+        <label>severe deficiency</label>
+        <minSeverity>5</minSeverity>
+        <painOffset>0.5</painOffset>
+        <mentalBreakMtbDays>1.0</mentalBreakMtbDays>
+        <capMods>
+          <li>
+            <capacity>Manipulation</capacity>
+            <setMax>0.5</setMax>
+          </li>
+        </capMods>
+        <mentalStateGivers>
+          <li>
+            <mentalState>XylHuntingVermin</mentalState>
+            <mtbDays>0.5</mtbDays>
+          </li>
+        </mentalStateGivers>
+      </li>
+      <li>
+        <label>coma</label>
+        <minSeverity>7.5</minSeverity>
+        <lifeThreatening>true</lifeThreatening>
+        <painOffset>0.5</painOffset>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <setMax>0.1</setMax>
+          </li>
+          <li>
+            <capacity>Manipulation</capacity>
+            <setMax>0.5</setMax>
+          </li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <MentalBreakDef>
+    <defName>XylHuntingVermin</defName>
+    <mentalState>XylHuntingVermin</mentalState>
+    <intensity>Minor</intensity>
+    <baseCommonality>1</baseCommonality>
+    <requiredGene>XylMeatDependence</requiredGene>
+  </MentalBreakDef>
+  
+  <MentalStateDef ParentName="BaseMentalState">
+    <defName>XylHuntingVermin</defName>
+    <stateClass>XylXenos.MentalState_HuntingVermin</stateClass>
+    <workerClass>XylXenos.MentalStateWorker_HuntingVermin</workerClass>
+    <label>hunting vermin</label>
+    <category>Aggro</category>
+    <blockInteractionInitiationExcept>
+      <li>Insult</li>
+    </blockInteractionInitiationExcept>
+    <blockInteractionRecipientExcept>
+      <li>Insult</li>
+    </blockInteractionRecipientExcept>
+    <blockRandomInteraction>true</blockRandomInteraction>
+    <colonistsOnly>true</colonistsOnly>
+    <minTicksBeforeRecovery>15000</minTicksBeforeRecovery>
+    <maxTicksBeforeRecovery>15000</maxTicksBeforeRecovery>
+    <recoverFromSleep>true</recoverFromSleep>
+    <nameColor>(0.9,0.2,0.5)</nameColor>
+    <recoveryMessage>{0} is no longer hunting.</recoveryMessage>
+    <beginLetter>{0} has decided to kill and eat {1}.</beginLetter>
+    <beginLetterDef>ThreatSmall</beginLetterDef>
+    <baseInspectLine>Mental state: Hunting vermin</baseInspectLine>
+    <allowBeatfire>true</allowBeatfire>
+  </MentalStateDef>
+
 </Defs>

@@ -91,6 +91,63 @@
     </modExtensions>
   </GeneDef>
 
+  <HediffDef>
+    <defName>XylSeeingRed</defName>
+    <label>seeing red</label>
+    <description>A temporary frenzy state. The character can't be controlled until the frenzy ends.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylSeeingRed</GeneDef>
+    </descriptionHyperlinks>
+    <hediffClass>HediffWithComps</hediffClass>
+    <initialSeverity>1.0</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>true</isBad>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <!--15 seconds-->
+        <disappearsAfterTicks>900</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_ForceMentalState">
+        <mentalState>XylSeeingRed</mentalState>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_Genetic">
+        <gene>XylSeeingRed</gene>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>0.5</offset>
+          </li>
+        </capMods>
+        <statFactors>
+          <MeleeDamageFactor>1.5</MeleeDamageFactor>
+        </statFactors>
+        <painFactor>0.1</painFactor>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <MentalStateDef ParentName="Berserk">
+    <defName>XylSeeingRed</defName>
+    <stateClass>XylXenos.MentalState_SeeingRed</stateClass>
+    <label>seeing red</label>
+    <minTicksBeforeRecovery>99999999</minTicksBeforeRecovery>
+    <maxTicksBeforeRecovery>99999999</maxTicksBeforeRecovery>
+    <baseInspectLine>Mental state: Seeing red</baseInspectLine>
+    <nameColor>(0.8,0.1,0.2)</nameColor>
+    <beginLetter></beginLetter>
+    <recoveryMessage></recoveryMessage>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_MentalState_SeeingRed">
+        <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
+      </li>
+    </modExtensions>
+  </MentalStateDef>
+
   <GeneDef>
     <defName>XylHyperlactation</defName>
     <geneClass>XylXenos.Gene_Hyperlactation</geneClass>
@@ -130,6 +187,50 @@
       </li>
     </modExtensions>
   </GeneDef>
+
+  <HediffDef ParentName="Lactating">
+    <defName>XylHyperlactating</defName>
+    <label>hyperlactating</label>
+    <description>The condition of being able to breastfeed a baby. The breasts are actively producing and storing milk. This character produces milk continually as long as they get adequate food.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylHyperlactation</GeneDef>
+    </descriptionHyperlinks>
+    <comps Inherit="False">
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>0</severityPerDay>
+      </li>
+      <li Class="HediffCompProperties_MessageOnRemoval">
+        <messageOnNonZeroSeverity>false</messageOnNonZeroSeverity>
+        <message>{0} is no longer lactating.</message>
+        <messageType>SilentInput</messageType>
+        <onlyMessageForColonistsOrPrisoners>true</onlyMessageForColonistsOrPrisoners>
+      </li>
+      <li Class="HediffCompProperties_Lactating">
+        <ticksToFullCharge>60000</ticksToFullCharge>
+        <!-- 6 hrs: 2 to feed a baby and 4 to recover. -->
+        <initialCharge>0.125</initialCharge>
+        <fullChargeAmount>0.5</fullChargeAmount>
+        <labelInBrackets>milk fullness {CHARGEFACTOR_percentage}</labelInBrackets>
+        <minChargeToActivate>0.031</minChargeToActivate>
+        <!-- some hysteresis so when breastfeeding starts we're sure it can continue for a while. -->
+      </li>
+      <li Class="HediffCompProperties_RemoveIfOtherHediff">
+        <hediffs>
+          <li>Malnutrition</li>
+        </hediffs>
+        <stages>2~</stages>
+        <mtbHours>4</mtbHours>
+        <message>{0} is no longer lactating due to malnutrition.</message>
+        <messageType>SilentInput</messageType>
+        <onlyMessageForColonistsOrPrisoners>true</onlyMessageForColonistsOrPrisoners>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_Genetic">
+        <gene>XylHyperlactation</gene>
+      </li>
+    </comps>
+    <!-- Default Lactating has a fertilityFactor of 0.05. Remove that. -->
+    <stages IsNull="True"/>
+  </HediffDef>
 
   <ThoughtDef>
     <defName>XylSoreBreasts</defName>
@@ -255,6 +356,35 @@
     </modExtensions>
   </GeneDef>
 
+  <HediffDef>
+    <defName>XylPrecognition</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>precognition</label>
+    <description>This character has the ability to see a short distance into the future, giving a chance to dodge both melee and ranged attacks in combat. The effect scales with psychic sensitivity.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylPrecognition</GeneDef>
+    </descriptionHyperlinks>
+    <initialSeverity>1.0</initialSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <keepOnBodyPartRestoration>true</keepOnBodyPartRestoration>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_Genetic">
+        <gene>XylPrecognition</gene>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
+        <statOffsets>
+          <MeleeDodgeChance>15</MeleeDodgeChance>
+          <XylRangedDodgeChance>15</XylRangedDodgeChance>
+        </statOffsets>
+        <statOffsetEffectMultiplier>PsychicSensitivity</statOffsetEffectMultiplier>
+      </li>
+    </stages>
+  </HediffDef>
+
   <GeneDef>
     <defName>XylBatWings</defName>
     <geneClass>XylXenos.Gene_Flight</geneClass>
@@ -333,6 +463,90 @@
     </modExtensions>
   </GeneDef>
 
+  <HediffDef>
+    <defName>XylTorpor</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>torpor</label>
+    <description>This character's body is responding to low temperature by entering a state of hibernation. Their metabolism will slow, and they will eventually fall unconscious. The condition will reverse itself if the character is kept warm.</description>
+    <overrideTooltip>{PAWN}'s body is responding to low temperature by entering a state of hibernation. {PAWN_possessive} metabolism will slow, and {PAWN_pronoun} will eventually fall unconscious. The condition will reverse itself if {PAWN_pronoun} is kept warm.</overrideTooltip>
+    <descriptionHyperlinks>
+      <GeneDef>XylTorpor</GeneDef>
+    </descriptionHyperlinks>
+    <initialSeverity>0.001</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <comps>
+      <li Class="HediffCompProperties_MessageAboveSeverity">
+        <severity>0.1</severity>
+        <message>{0} is beginning to enter torpor.</message>
+        <messageType>NegativeHealthEvent</messageType>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_SetNeed">
+        <need>Rest</need>
+        <levelPercentage>0~0.1</levelPercentage>
+        <severityRange>0.5~999</severityRange>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_Genetic">
+        <gene>XylTorpor</gene>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <label>yawning</label>
+        <becomeVisible>false</becomeVisible>
+      </li>
+      <li>
+        <label>groggy</label>
+        <minSeverity>0.1</minSeverity>
+        <becomeVisible>true</becomeVisible>
+        <hungerRateFactor>0.5</hungerRateFactor>
+        <restFallFactor>1.25</restFallFactor>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <setMax>0.8</setMax>
+          </li>
+        </capMods>
+        <statFactors>
+          <XylHypothermiaProgressionFactor>0.5</XylHypothermiaProgressionFactor>
+          <XylMalnutritionProgressionFactor>0.5</XylMalnutritionProgressionFactor>
+        </statFactors>
+      </li>
+      <li>
+        <label>half-asleep</label>
+        <minSeverity>0.25</minSeverity>
+        <hungerRateFactor>0.25</hungerRateFactor>
+        <restFallFactor>2</restFallFactor>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <setMax>0.5</setMax>
+          </li>
+        </capMods>
+        <statFactors>
+          <XylHypothermiaProgressionFactor>0.25</XylHypothermiaProgressionFactor>
+          <XylMalnutritionProgressionFactor>0.25</XylMalnutritionProgressionFactor>
+        </statFactors>
+      </li>
+      <li>
+        <label>hibernating</label>
+        <minSeverity>0.5</minSeverity>
+        <lifeThreatening>true</lifeThreatening>
+        <hungerRateFactor>0.1</hungerRateFactor>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <setMax>0.1</setMax>
+          </li>
+        </capMods>
+        <statFactors>
+          <XylHypothermiaProgressionFactor>0.1</XylHypothermiaProgressionFactor>
+          <XylMalnutritionProgressionFactor>0.1</XylMalnutritionProgressionFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
   <GeneDef>
     <defName>XylInsectPheromones</defName>
     <label>insect pheromones</label>
@@ -373,6 +587,35 @@
       </li>
     </modExtensions>
   </GeneDef>
+
+  <HediffDef>
+    <defName>XylBioRejection</defName>
+    <hediffClass>XylXenos.Hediff_BioRejection</hediffClass>
+    <label>bio-rejection</label>
+    <description>Suffering from a severe allergic reaction to an artificial body part or implant. The only way to stop the reaction is to remove the artificial part or parts.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylBioRejection</GeneDef>
+    </descriptionHyperlinks>
+    <initialSeverity>0.0</initialSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <keepOnBodyPartRestoration>true</keepOnBodyPartRestoration>
+    <isBad>true</isBad>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_Genetic">
+        <gene>XylBioRejection</gene>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <minSeverity>0</minSeverity>
+        <becomeVisible>false</becomeVisible>
+      </li>
+      <li>
+        <minSeverity>1</minSeverity>
+        <painOffset>0.4</painOffset>
+      </li>
+    </stages>
+  </HediffDef>
 
   <GeneDef>
     <defName>XylEmergencyReserves</defName>
@@ -441,6 +684,170 @@
       </li>
     </modExtensions>
   </GeneDef>
+
+  <HediffDef>
+    <defName>XylPetrification</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>petrification</label>
+    <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylPetrification</GeneDef>
+    </descriptionHyperlinks>
+    <initialSeverity>0.1</initialSeverity>
+    <lethalSeverity>1.0</lethalSeverity>
+    <minSeverity>0.01</minSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <alwaysShowSeverity>true</alwaysShowSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <tendable>true</tendable>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_GrowthModeExt">
+        <modes>
+          <li>
+            <label>active</label>
+            <isActive>true</isActive>
+            <severityPerDayRange>0.008~0.012</severityPerDayRange>
+            <message>{PAWN_labelShort}'s petrification has become active.</message>
+            <messageType>NegativeHealthEvent</messageType>
+          </li>
+          <li>
+            <label>dormant</label>
+            <causesNoPain>true</causesNoPain>
+            <allowTend>false</allowTend>
+            <changeMtbDays>120</changeMtbDays>
+            <message>{PAWN_labelShort}'s petrification has gone dormant.</message>
+            <messageType>NeutralEvent</messageType>
+            <tipString>The disease is currently dormant, but could become active at any time.</tipString>
+          </li>
+        </modes>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_PetrificationTendDuration">
+        <baseTendDurationHours>120</baseTendDurationHours>
+        <severityPerDayTended>0.01</severityPerDayTended>
+        <changeModeAtTotalTendQuality>3</changeModeAtTotalTendQuality>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
+        <hediffs>
+          <li>
+            <mtbDays>15</mtbDays>
+            <hediff>XylPetrifiedFlesh</hediff>
+            <severityRange>2~5</severityRange>
+            <canAffectAnyLivePart>true</canAffectAnyLivePart>
+            <allowDuplicates>true</allowDuplicates>
+          </li>
+          <li>
+            <mtbDays>5</mtbDays>
+            <minSeverity>0.4</minSeverity>
+            <hediff>XylPetrifiedFlesh</hediff>
+            <severityRange>5~10</severityRange>
+            <canAffectAnyLivePart>true</canAffectAnyLivePart>
+            <allowDuplicates>true</allowDuplicates>
+          </li>
+        </hediffs>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <label>minor</label>
+        <painOffset>0.1</painOffset>
+      </li>
+      <li>
+        <minSeverity>0.4</minSeverity>
+        <label>major</label>
+        <painOffset>0.2</painOffset>
+      </li>
+      <li>
+        <minSeverity>0.8</minSeverity>
+        <label>extreme</label>
+        <painOffset>0.4</painOffset>
+        <lifeThreatening>true</lifeThreatening>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef>
+    <defName>XylPetrifiedFlesh</defName>
+    <hediffClass>XylXenos.Hediff_PetrifiedFlesh</hediffClass>
+    <label>petrified</label>
+    <labelNoun>petrified flesh</labelNoun>
+    <description>This body part has been partially replaced with hard, rocky growths. They must be surgically removed to allow the part to heal.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylPetrification</GeneDef>
+      <HediffDef>XylPetrification</HediffDef>
+    </descriptionHyperlinks>
+    <alwaysShowSeverity>true</alwaysShowSeverity>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
+        <hediffs>
+          <li>
+            <triggeredOnRemoval>true</triggeredOnRemoval>
+            <hediff>SurgicalCut</hediff>
+            <inheritSeverity>true</inheritSeverity>
+            <sameBodyPart>true</sameBodyPart>
+          </li>
+        </hediffs>
+      </li>
+    </comps>
+    <onlyLifeThreateningTo>
+      <li>Head</li>
+      <li>Brain</li>
+      <li>Neck</li>
+      <li>Spine</li>
+      <li>Torso</li>
+      <li>Heart</li>
+    </onlyLifeThreateningTo>
+    <stages>
+      <li>
+        <label>minor</label>
+        <partEfficiencyOffset>-1.0</partEfficiencyOffset>
+      </li>
+      <li>
+        <minSeverity>0.4</minSeverity>
+        <label>major</label>
+        <partEfficiencyOffset>-1.0</partEfficiencyOffset>
+      </li>
+      <li>
+        <minSeverity>0.8</minSeverity>
+        <label>extreme</label>
+        <partEfficiencyOffset>-1.0</partEfficiencyOffset>
+        <lifeThreatening>true</lifeThreatening>
+      </li>
+      <li>
+        <minSeverity>1.0</minSeverity>
+        <label>total</label>
+        <partEfficiencyOffset>-1.0</partEfficiencyOffset>
+        <lifeThreatening>true</lifeThreatening>
+        <overrideTooltip>This body part has been completely replaced with hard, rocky growths and no longer functions. It can be surgically removed.</overrideTooltip>
+      </li>
+    </stages>
+    <spawnThingOnRemoved>ChunkLimestone</spawnThingOnRemoved>
+  </HediffDef>
+
+  <RecipeDef ParentName="SurgeryFlesh">
+    <defName>XylExcisePetrifiedFlesh</defName>
+    <label>excise petrified flesh</label>
+    <description>Excise petrified flesh.</description>
+    <workerClass>XylXenos.Recipe_RemoveHediff_Petrified</workerClass>
+    <jobString>Excising petrified flesh.</jobString>
+    <workAmount>3000</workAmount>
+    <removesHediff>XylPetrifiedFlesh</removesHediff>
+    <successfullyRemovedHediffMessage>{0} has successfully excised {1}'s petrified flesh.</successfullyRemovedHediffMessage>
+    <ingredients>
+      <li>
+        <filter>
+          <categories>
+            <li>Medicine</li>
+          </categories>
+        </filter>
+        <count>2</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <categories>
+        <li>Medicine</li>
+      </categories>
+    </fixedIngredientFilter>
+  </RecipeDef>
 
   <GeneDef>
     <defName>XylLearning_Focused</defName>

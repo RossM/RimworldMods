@@ -50,6 +50,40 @@
     </modExtensions>
   </GeneDef>
 
+  <HediffDef>
+    <defName>XylEcholocation</defName>
+    <hediffClass>XylXenos.Hediff_SubstituteCapacity</hediffClass>
+    <label>echolocation</label>
+    <description>This character has echolocation.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylEcholocation</GeneDef>
+    </descriptionHyperlinks>
+    <initialSeverity>1.0</initialSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <keepOnBodyPartRestoration>true</keepOnBodyPartRestoration>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_Genetic">
+        <gene>XylEcholocation</gene>
+      </li>
+    </comps>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Hediff_SubstituteCapacity">
+        <originalCapacity>Sight</originalCapacity>
+        <substituteCapacity>Hearing</substituteCapacity>
+        <mode>Maximum</mode>
+        <excludeStats>
+          <li>ReadingSpeed</li>
+        </excludeStats>
+      </li>
+    </modExtensions>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
+      </li>
+    </stages>
+  </HediffDef>
+
   <GeneDef>
     <defName>XylKeenEars</defName>
     <label>keen ears</label>

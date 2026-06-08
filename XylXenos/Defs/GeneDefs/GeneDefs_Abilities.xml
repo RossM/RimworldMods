@@ -23,6 +23,120 @@
     </modExtensions>
   </GeneDef>
 
+  <AbilityDef>
+    <defName>XylFeralRage</defName>
+    <label>feral rage</label>
+    <description>Enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%) for a short time. After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%).</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_FeralRage</iconPath>
+    <!-- 1 day -->
+    <cooldownTicksRange>60000</cooldownTicksRange>
+    <writeCombatLog>True</writeCombatLog>
+    <hostile>false</hostile>
+    <displayGizmoWhileUndrafted>false</displayGizmoWhileUndrafted>
+    <disableGizmoWhileUndrafted>false</disableGizmoWhileUndrafted>
+    <aiCanUse>true</aiCanUse>
+    <ai_IsOffensive>true</ai_IsOffensive>
+    <groupAbility>true</groupAbility>
+    <targetRequired>false</targetRequired>
+    <statBases>
+      <!-- 3 hours -->
+      <Ability_Duration>125</Ability_Duration>
+    </statBases>
+    <verbProperties>
+      <verbClass>Verb_CastAbility</verbClass>
+      <drawAimPie>false</drawAimPie>
+      <requireLineOfSight>false</requireLineOfSight>
+      <nonInterruptingSelfCast>true</nonInterruptingSelfCast>
+      <!--<soundCast>Pawn_Ghoul_Frenzy</soundCast>-->
+      <targetable>false</targetable>
+      <targetParams>
+        <canTargetSelf>true</canTargetSelf>
+      </targetParams>
+    </verbProperties>
+    <comps>
+      <li Class="CompProperties_AbilityGiveHediff">
+        <compClass>CompAbilityEffect_GiveHediff</compClass>
+        <hediffDef>XylFeralRage</hediffDef>
+        <onlyApplyToSelf>true</onlyApplyToSelf>
+      </li>
+      <li Class="CompProperties_AbilityEffecterOnCaster">
+        <effecterDef>XylFeralRage</effecterDef>
+      </li>
+    </comps>
+  </AbilityDef>
+
+  <HediffDef>
+    <defName>XylFeralRage</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>feral rage</label>
+    <description>A temporary frenzy state. It increases movement and melee attack speed.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylFeralRage</GeneDef>
+    </descriptionHyperlinks>
+    <initialSeverity>1.0</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
+        <hediffs>
+          <li>
+            <triggeredOnRemoval>true</triggeredOnRemoval>
+            <hediff>XylFeralRageBacklash</hediff>
+          </li>
+        </hediffs>
+      </li>
+      <li Class="HediffCompProperties_Disappears">
+        <!-- This value doesn't matter, the actual duration is set by the AbilityDef -->
+        <disappearsAfterTicks>15000</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>0.5</offset>
+          </li>
+        </capMods>
+        <statFactors>
+          <MeleeCooldownFactor>0.67</MeleeCooldownFactor>
+        </statFactors>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef>
+    <defName>XylFeralRageBacklash</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>feral rage (backlash)</label>
+    <description>Recovering from a frenzy state. Causes pain and decreases movement speed.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylFeralRage</GeneDef>
+    </descriptionHyperlinks>
+    <initialSeverity>1.0</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>true</isBad>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <!--12 hours-->
+        <disappearsAfterTicks>30000</disappearsAfterTicks>
+        <showRemainingTime>true</showRemainingTime>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>-0.2</offset>
+          </li>
+        </capMods>
+        <painOffset>0.1</painOffset>
+      </li>
+    </stages>
+  </HediffDef>
+
   <GeneDef>
     <defName>XylRockToss</defName>
     <label>rock toss</label>
@@ -43,6 +157,86 @@
       </li>
     </modExtensions>
   </GeneDef>
+
+  <AbilityDef>
+    <defName>XylRockToss</defName>
+    <label>rock toss</label>
+    <description>Pick up a rock chunk and toss it. It will land near the targeted location, damaging everything in a radius around where it lands.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_RockToss</iconPath>
+    <!-- 8 hours -->
+    <cooldownTicksRange>20000</cooldownTicksRange>
+    <jobDef>XylCastAbilityWithHeldThing</jobDef>
+    <verbProperties>
+      <verbClass>Verb_CastAbilityTouch</verbClass>
+      <warmupTime>2</warmupTime>
+      <range>10000</range>
+      <requireLineOfSight>false</requireLineOfSight>
+      <targetParams>
+        <canTargetPawns>false</canTargetPawns>
+        <canTargetBuildings>false</canTargetBuildings>
+        <canTargetItems>True</canTargetItems>
+        <thingCategory>Item</thingCategory>
+        <mapObjectTargetsMustBeAutoAttackable>False</mapObjectTargetsMustBeAutoAttackable>
+      </targetParams>
+    </verbProperties>
+    <comps>
+      <li Class="XylXenos.CompProperties_AbilityRockToss">
+        <compClass>XylXenos.CompAbilityEffect_RockToss</compClass>
+        <destination>Selected</destination>
+        <requiresLineOfSight>False</requiresLineOfSight>
+        <applyMortarMissRadiusFactor>false</applyMortarMissRadiusFactor>
+        <range>40.9</range>
+        <minRange>7.9</minRange>
+        <forcedMissRadius>4</forcedMissRadius>
+        <clamorType>Ability</clamorType>
+        <clamorRadius>10</clamorRadius>
+        <destClamorType>Ability</destClamorType>
+        <destClamorRadius>10</destClamorRadius>
+        <projectileDef>XylBullet_RockToss</projectileDef>
+      </li>
+    </comps>
+  </AbilityDef>
+
+  <ThingDef ParentName="BaseBullet">
+    <defName>XylBullet_RockToss</defName>
+    <label>thrown rock</label>
+    <graphicData>
+      <texPath>Things/Projectile/ShellHighExplosive</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>TransparentPostLight</shaderType>
+    </graphicData>
+    <thingClass>XylXenos.Projectile_RockToss</thingClass>
+    <projectile>
+      <damageDef>XylThrownRock</damageDef>
+      <!-- damage amount is the damage def default -->
+      <speed>41</speed>
+      <explosionRadius>2.9</explosionRadius>
+      <soundHitThickRoof>Artillery_HitThickRoof</soundHitThickRoof>
+      <soundExplode>MortarBomb_Explode</soundExplode>
+      <soundImpactAnticipate>MortarRound_PreImpact</soundImpactAnticipate>
+      <soundAmbient>MortarRound_Ambient</soundAmbient>
+      <useGraphicClass>true</useGraphicClass>
+      <arcHeightFactor>2</arcHeightFactor>
+      <shadowSize>0.4</shadowSize>
+      <spinRate>1</spinRate>
+    </projectile>
+    <comps>
+      <li Class="CompProperties_ThingContainer">
+        <compClass>CompThingContainer</compClass>
+        <stackLimit>1</stackLimit>
+        <drawContainedThing>false</drawContainedThing>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <DamageDef ParentName="Bomb">
+    <defName>XylThrownRock</defName>
+    <deathMessage>{0} has been killed by a falling rock.</deathMessage>
+    <armorCategory>Blunt</armorCategory>
+    <defaultDamage>30</defaultDamage>
+    <plantDamageFactor>0.5</plantDamageFactor>
+    <explosionHeatEnergyPerCell>0</explosionHeatEnergyPerCell>
+  </DamageDef>
 
   <GeneDef>
     <defName>XylSonicWave</defName>
@@ -65,6 +259,39 @@
     </modExtensions>
   </GeneDef>
 
+  <AbilityDef>
+    <defName>XylSonicWave</defName>
+    <label>sonic wave</label>
+    <description>Releases a wave of high-intensity ultrasonic noise and psychic energy at a target that stuns nearby organic creatures. Mechanoids and drones are immune.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_SonicWave</iconPath>
+    <cooldownTicksRange>120000</cooldownTicksRange>
+    <aiCanUse>true</aiCanUse>
+    <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
+    <casterMustBeCapableOfViolence>false</casterMustBeCapableOfViolence>
+    <statBases>
+      <Ability_Duration>3</Ability_Duration>
+    </statBases>
+    <charges>3</charges>
+    <cooldownPerCharge>true</cooldownPerCharge>
+    <verbProperties>
+      <verbClass>Verb_CastAbility</verbClass>
+      <range>10.9</range>
+      <warmupTime>0.5</warmupTime>
+      <soundCast>PsychicShockLanceCast</soundCast>
+      <targetParams>
+      </targetParams>
+    </verbProperties>
+    <comps>
+      <li Class="XylXenos.CompProperties_AbilitySonicWave">
+        <radius>2.5</radius>
+        <canHitFilledCells>true</canHitFilledCells>
+      </li>
+      <li Class="CompProperties_AbilityFleckOnTarget">
+        <fleckDef>PsycastPsychicEffect</fleckDef>
+      </li>
+    </comps>
+  </AbilityDef>
+
   <GeneDef>
     <defName>XylToxicBurst</defName>
     <label>toxic burst</label>
@@ -85,5 +312,42 @@
       </li>
     </modExtensions>
   </GeneDef>
+
+  <AbilityDef>
+    <defName>XylToxicBurst</defName>
+    <label>toxic burst</label>
+    <description>Releases a cloud of tox gas in an area around the user. The user is affected by the gas normally.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_ToxicBurst</iconPath>
+    <cooldownTicksRange>300000</cooldownTicksRange>
+    <!-- 5 days -->
+    <aiCanUse>true</aiCanUse>
+    <showPsycastEffects>false</showPsycastEffects>
+    <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
+    <casterMustBeCapableOfViolence>false</casterMustBeCapableOfViolence>
+    <hostile>false</hostile>
+    <targetRequired>false</targetRequired>
+    <statBases>
+      <Ability_Duration>0</Ability_Duration>
+    </statBases>
+    <verbProperties>
+      <verbClass>Verb_CastAbility</verbClass>
+      <label>toxic burst</label>
+      <drawAimPie>false</drawAimPie>
+      <warmupTime>0.5</warmupTime>
+      <violent>false</violent>
+      <targetable>false</targetable>
+      <targetParams>
+        <canTargetSelf>true</canTargetSelf>
+      </targetParams>
+      <soundCast>Explosion_FirefoamPopper</soundCast>
+    </verbProperties>
+    <comps>
+      <li Class="XylXenos.CompProperties_AbilityToxicBurst">
+        <gasType>ToxGas</gasType>
+        <cellsToFill>20</cellsToFill>
+        <AIUseRadius>2.9</AIUseRadius>
+      </li>
+    </comps>
+  </AbilityDef>
 
 </Defs>
