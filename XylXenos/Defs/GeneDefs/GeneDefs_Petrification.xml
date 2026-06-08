@@ -66,41 +66,55 @@
         <severityPerDayTended>0.01</severityPerDayTended>
         <changeModeAtTotalTendQuality>3</changeModeAtTotalTendQuality>
       </li>
-      <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
-        <hediffs>
-          <li>
-            <mtbDays>15</mtbDays>
-            <hediff>XylPetrifiedFlesh</hediff>
-            <severityRange>2~5</severityRange>
-            <canAffectAnyLivePart>true</canAffectAnyLivePart>
-            <allowDuplicates>true</allowDuplicates>
-          </li>
-          <li>
-            <mtbDays>5</mtbDays>
-            <minSeverity>0.4</minSeverity>
-            <hediff>XylPetrifiedFlesh</hediff>
-            <severityRange>5~10</severityRange>
-            <canAffectAnyLivePart>true</canAffectAnyLivePart>
-            <allowDuplicates>true</allowDuplicates>
-          </li>
-        </hediffs>
+      <li>
+        <compClass>XylXenos.HediffComp_DebugHediffGivers</compClass>
       </li>
     </comps>
     <stages>
       <li>
         <label>minor</label>
         <painOffset>0.1</painOffset>
+        <hediffGivers>
+          <li Class="XylXenos.HediffGiver_RandomExt">
+            <mtbDays>15</mtbDays>
+            <hediff>XylPetrifiedFlesh</hediff>
+            <severityRange>2~5</severityRange>
+            <canAffectAnyLivePart>true</canAffectAnyLivePart>
+            <allowDuplicates>true</allowDuplicates>
+            <sendLetter>false</sendLetter>
+          </li>          
+        </hediffGivers>
       </li>
       <li>
         <minSeverity>0.4</minSeverity>
         <label>major</label>
         <painOffset>0.2</painOffset>
+        <hediffGivers>
+          <li Class="XylXenos.HediffGiver_RandomExt">
+            <mtbDays>5</mtbDays>
+            <hediff>XylPetrifiedFlesh</hediff>
+            <severityRange>5~10</severityRange>
+            <canAffectAnyLivePart>true</canAffectAnyLivePart>
+            <allowDuplicates>true</allowDuplicates>
+            <sendLetter>false</sendLetter>
+          </li>
+        </hediffGivers>
       </li>
       <li>
         <minSeverity>0.8</minSeverity>
         <label>extreme</label>
         <painOffset>0.4</painOffset>
         <lifeThreatening>true</lifeThreatening>
+        <hediffGivers>
+          <li Class="XylXenos.HediffGiver_RandomExt">
+            <mtbDays>5</mtbDays>
+            <hediff>XylPetrifiedFlesh</hediff>
+            <severityRange>5~10</severityRange>
+            <canAffectAnyLivePart>true</canAffectAnyLivePart>
+            <allowDuplicates>true</allowDuplicates>
+            <sendLetter>false</sendLetter>
+          </li>
+        </hediffGivers>
       </li>
     </stages>
   </HediffDef>
