@@ -236,7 +236,7 @@
     <hediffClass>XylXenos.Hediff_LovinAddiction</hediffClass>
     <label>lovin' addiction</label>
     <description>This character has developed a neurochemical need for physical love with a carrier of the love euphoria gene.</description>
-    <overrideTooltip>{PAWN_nameIndef} has developed a neurochemical need for physical love with {PARTNER_nameIndef} or another character of the love euphoria gene.</overrideTooltip>
+    <overrideTooltip>{PAWN_nameIndef} has developed a neurochemical need for physical love with {PARTNER_nameIndef} or another carrier of the love euphoria gene.</overrideTooltip>
     <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
     <chemicalNeed>XylLovin</chemicalNeed>
     <initialSeverity>1</initialSeverity>
