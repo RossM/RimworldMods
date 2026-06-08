@@ -31,13 +31,6 @@
     <modExtensions>
       <li Class="XylXenos.ThoughtDefExtension_Need">
         <need>XylWetness</need>
-        <stages>
-          <li>0</li>
-          <li>0.05</li>
-          <li>0.25</li>
-          <li>0.5</li>
-          <li>0.9</li>
-        </stages>
       </li>
     </modExtensions>
   </ThoughtDef>

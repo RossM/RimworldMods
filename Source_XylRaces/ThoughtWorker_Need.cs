@@ -1,5 +1,10 @@
 ﻿namespace XylXenos;
 
+public interface INeed
+{
+    public int CurStage { get; }
+}
+
 [UsedFromXml]
 public class ThoughtDefExtension_Need : DefModExtension
 {
@@ -23,16 +28,22 @@ public class ThoughtWorker_Need : ThoughtWorker
 
         float needLevel = need.CurLevel;
 
-        for (int i = DefExt.stages.Count - 1; i >= 0; i--)
+        int stage;
+
+        if (need is INeed iNeed)
+            stage = iNeed.CurStage;
+        else
         {
-            var minLevel = DefExt.stages[i];
-            if (minLevel > needLevel)
-                continue;
-            if (def.stages[i] == null)
-                return ThoughtState.Inactive;
-            return ThoughtState.ActiveAtStage(i);
+            for (stage = DefExt.stages.Count - 1; stage >= 0; stage--)
+            {
+                var minLevel = DefExt.stages[stage];
+                if (minLevel <= needLevel)
+                    break;
+            }
         }
 
-        return ThoughtState.Inactive;
+        if (stage < 0 || stage >= def.stages.Count || def.stages[stage] == null)
+            return ThoughtState.Inactive;
+        return ThoughtState.ActiveAtStage(stage);
     }
 }

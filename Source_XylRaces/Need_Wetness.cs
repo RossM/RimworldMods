@@ -11,7 +11,7 @@ public enum WetnessCategory : byte
     Wet,
 }
 
-public class Need_Wetness(Pawn pawn) : Need_Seeker(pawn)
+public class Need_Wetness(Pawn pawn) : Need_Seeker(pawn), INeed
 {
     public float TemperatureFactor => TemperatureWetnessFallFactorCurve.Evaluate(pawn.AmbientTemperature);
 
@@ -155,4 +155,6 @@ public class Need_Wetness(Pawn pawn) : Need_Seeker(pawn)
         threshPercents ??= [thresholdVeryDry, thresholdDry, thresholdNeutral, thresholdWet];
         base.DrawOnGUI(rect, maxThresholdMarkers, customMargin, drawArrows, doTooltip, rectForTooltip, drawLabel);
     }
+
+    public int CurStage => (int)CurCategory;
 }
