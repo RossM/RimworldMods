@@ -194,9 +194,9 @@
 
   <HediffDef>
     <defName>XylLoveEuphoria</defName>
-    <hediffClass>HediffWithComps</hediffClass>
+    <hediffClass>XylXenos.HediffWithCompsExt</hediffClass>
     <label>love euphoria</label>
-    <description>TODO</description>
+    <description>This character is experiencing elevated mood due to lovin' with a carrier of the love euphoria gene.</description>
     <initialSeverity>1</initialSeverity>
     <isBad>false</isBad>
     <comps>
@@ -216,14 +216,14 @@
 
   <ThoughtDef>
     <defName>XylLoveEuphoria</defName>
-    <workerClass>ThoughtWorker_Hediff</workerClass>
+    <workerClass>XylXenos.ThoughtWorker_WithPartner</workerClass>
     <hediff>XylLoveEuphoria</hediff>
     <validWhileDespawned>true</validWhileDespawned>
     <developmentalStageFilter>Adult</developmentalStageFilter>
     <stages>
       <li>
         <label>love euphoria</label>
-        <description>TODO</description>
+        <description>I can't get enough of {PARTNER_nameIndef}!</description>
         <baseMoodEffect>12</baseMoodEffect>
       </li>
     </stages>
@@ -233,7 +233,8 @@
     <defName>XylLovinAddiction</defName>
     <hediffClass>XylXenos.Hediff_LovinAddiction</hediffClass>
     <label>lovin' addiction</label>
-    <description>TODO</description>
+    <description>This character has developed a neurochemical need for physical love with a carrier of the love euphoria gene.</description>
+    <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
     <chemicalNeed>XylLovin</chemicalNeed>
     <initialSeverity>1</initialSeverity>
     <comps>
@@ -262,7 +263,7 @@
 
   <ThoughtDef>
     <defName>XylLovinWithdrawal</defName>
-    <workerClass>XylXenos.ThoughtWorker_LovinWithdrawal</workerClass>
+    <workerClass>XylXenos.ThoughtWorker_WithPartner</workerClass>
     <hediff>XylLovinAddiction</hediff>
     <validWhileDespawned>true</validWhileDespawned>
     <developmentalStageFilter>Adult</developmentalStageFilter>
