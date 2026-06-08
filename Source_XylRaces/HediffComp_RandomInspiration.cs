@@ -18,6 +18,8 @@ public class HediffComp_RandomInspiration : HediffComp
 
     public const int checkFrequency = 150;
 
+    public override string CompTipStringExtra => $"  - {"XylCausesRandomInspirations".Translate()}";
+
     public override void CompPostTickInterval(ref float severityAdjustment, int delta)
     {
         if (!Pawn.IsHashIntervalTick(checkFrequency, delta))
