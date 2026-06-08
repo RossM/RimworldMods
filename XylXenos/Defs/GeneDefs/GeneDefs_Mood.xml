@@ -166,6 +166,9 @@
     <hediff>XylMoody</hediff>
     <labelInBracketsExtraForHediff>upset</labelInBracketsExtraForHediff>
     <validWhileDespawned>true</validWhileDespawned>
+    <requiredGenes>
+      <li>XylMoody</li>
+    </requiredGenes>
     <stages>
       <li>
         <label>bad mood</label>
@@ -182,6 +185,9 @@
     <hediff>XylMoody</hediff>
     <labelInBracketsExtraForHediff>happy</labelInBracketsExtraForHediff>
     <validWhileDespawned>true</validWhileDespawned>
+    <requiredGenes>
+      <li>XylMoody</li>
+    </requiredGenes>
     <stages>
       <li>
         <label>good mood</label>
