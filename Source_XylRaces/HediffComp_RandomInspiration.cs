@@ -40,7 +40,7 @@ public class HediffComp_RandomInspiration : HediffComp
         if (inspiration == null)
             return;
 
-        Pawn partner = Pawn.HediffsOfType<Hediff_LovinAddiction>().FirstOrDefault()?.sourcePawn;
+        Pawn partner = (parent as HediffWithCompsExt)?.sourcePawn;
 
         Pawn.mindState.inspirationHandler.TryStartInspiration(inspiration, Props.letter.Formatted(Pawn.Named("PAWN"), partner.Named("PARTNER")));
     }
