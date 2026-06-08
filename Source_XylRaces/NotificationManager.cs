@@ -242,7 +242,7 @@ public class NotificationManager : GameComponent
 
         if (notification == null)
         {
-            Log.WarningOnce($"NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
+            Log.WarningOnce("NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
                 Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
             return;
         }
@@ -264,7 +264,7 @@ public class NotificationManager : GameComponent
 
         if (notification == null)
         {
-            Log.WarningOnce($"NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
+            Log.WarningOnce("NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
                 Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
             return;
         }
@@ -287,7 +287,7 @@ public class NotificationManager : GameComponent
 
         if (notification == null)
         {
-            Log.WarningOnce($"NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
+            Log.WarningOnce("NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
                 Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
             return;
         }
@@ -302,7 +302,7 @@ public class NotificationManager : GameComponent
 
         if (notification == null)
         {
-            Log.WarningOnce($"NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
+            Log.WarningOnce("NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
                 Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
             return;
         }
@@ -329,8 +329,8 @@ public class NotificationManager : GameComponent
 
         if (notification == null)
         {
-            Log.WarningOnce($"NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
-                Gen.HashCombineInt(0x7AEC159, listener?.GetHashCode() ?? 0));
+            Log.WarningOnce("NotificationManager: eventType is null - are you missing a NotificationDef in XML?",
+                Gen.HashCombineInt(0x7AEC159, listener.GetHashCode()));
             return;
         }
 

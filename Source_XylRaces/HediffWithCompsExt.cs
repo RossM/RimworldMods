@@ -28,6 +28,7 @@ public class HediffWithCompsExt : HediffWithComps
 
     private static readonly StringBuilder tipSb = new();
 
+    // ReSharper disable once ParameterHidesMember
     public override string GetTooltip(Pawn pawn, bool showHediffsDebugInfo)
     {
         tipSb.Clear();

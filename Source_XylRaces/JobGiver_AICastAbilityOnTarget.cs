@@ -21,6 +21,7 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
         new(50.0f, 0.01f),
     ];
 
+    // ReSharper disable once ParameterHidesMember
     protected override LocalTargetInfo GetTarget(Pawn caster, Ability ability)
     {
         potentialTargets.Clear();

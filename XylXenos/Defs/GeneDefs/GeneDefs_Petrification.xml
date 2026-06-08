@@ -45,7 +45,6 @@
         <modes>
           <li>
             <label>active</label>
-            <isActive>true</isActive>
             <severityPerDayRange>0.008~0.012</severityPerDayRange>
             <message>{PAWN_labelShort}'s petrification has become active.</message>
             <messageType>NegativeHealthEvent</messageType>

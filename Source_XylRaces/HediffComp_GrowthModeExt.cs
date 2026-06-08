@@ -2,7 +2,6 @@
 
 public class GrowthMode
 {
-    public bool isActive = false;
     public bool causesNoPain = false;
     public bool allowTend = true;
     public float changeMtbDays = -1;
@@ -50,7 +49,6 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay
 
     public override string CompTipStringExtra => growthMode.tipString;
 
-    public bool IsActive => growthMode.isActive;
     public bool AllowTend => growthMode.allowTend;
 
     public GrowthMode growthMode;

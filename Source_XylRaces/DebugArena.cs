@@ -52,8 +52,10 @@ public static class DebugArena
 
                 PawnKindDef newPawnKindDef = Gen.MemberwiseClone(pawnKindDef);
                 newPawnKindDef.useFactionXenotypes = false;
-                newPawnKindDef.xenotypeSet = new XenotypeSet();
-                newPawnKindDef.xenotypeSet.xenotypeChances = [new(xenotype, 1.0f)];
+                newPawnKindDef.xenotypeSet = new XenotypeSet
+                {
+                    xenotypeChances = [new(xenotype, 1.0f)],
+                };
                 newPawnKindDef.defName = $"{pawnKindDef.defName}_{xenotype.defName}{xenotypeSuffix}";
                 newPawnKindDef.label = $"{xenotype.label} {pawnKindDef.label}";
                 newPawnKindDef.ignoreFactionApparelStuffRequirements = true;
@@ -120,8 +122,6 @@ public static class DebugArena
             if (currentFights >= maxFights)
                 return false;
 
-            int highestTotal = total.Values.Max();
-
             PawnKindDef lhsDef = kinds.RandomElementByWeight(def => 1.0f / (1 + total[def]));
             PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(def => 1.0f / (1 + total[def]));
 
@@ -146,6 +146,7 @@ public static class DebugArena
 
             void FightCompletedCallback(ArenaResult result)
             {
+                // ReSharper disable once AccessToModifiedClosure
                 currentFights -= 1;
 
                 // Log to file
@@ -221,10 +222,10 @@ public static class DebugArena
 
     public static List<Pawn> SpawnPawnSet(Map map, List<PawnKindDef> kinds, IntVec3 spot, Faction faction)
     {
-        List<Pawn> list = new List<Pawn>();
-        for (int i = 0; i < kinds.Count; i++)
+        List<Pawn> list = [];
+        foreach (PawnKindDef pawnKind in kinds)
         {
-            Pawn pawn = PawnGenerator.GeneratePawn(kinds[i], faction);
+            Pawn pawn = PawnGenerator.GeneratePawn(pawnKind, faction);
 
             // Check if pawn is null
             if (pawn == null)
