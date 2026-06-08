@@ -204,10 +204,13 @@
         <severityPerDay>-1</severityPerDay>
         <showHoursToRecover>true</showHoursToRecover>
       </li>
+      <li Class="XylXenos.HediffCompProperties_RandomInspiration">
+        <mtbDays>5</mtbDays>
+        <letter>Thanks to love euphoria from {PARTNER_nameIndef}, {PAWN_nameIndef} has experienced an inspiration!</letter>
+      </li>
     </comps>
-    <!-- Effects TODO -->
     <stages>
-      <li></li>
+      <li/>
     </stages>
   </HediffDef>
 
