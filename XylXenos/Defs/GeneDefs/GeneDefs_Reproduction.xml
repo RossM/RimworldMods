@@ -183,7 +183,7 @@
     <defName>XylLovin</defName>
     <needClass>XylXenos.Need_Lovin</needClass>
     <label>lovin'</label>
-    <description>TODO</description>
+    <description>Because of a lovin' addiction, this person needs to regularly make physical love with a carrier of the love euphoria gene to avoid withdrawal symptoms.</description>
     <listPriority>50</listPriority>
     <minIntelligence>Humanlike</minIntelligence>
     <fallPerDay>0.33</fallPerDay>
