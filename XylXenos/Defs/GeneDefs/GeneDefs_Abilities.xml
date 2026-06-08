@@ -77,13 +77,8 @@
     <maxSeverity>1.0</maxSeverity>
     <isBad>false</isBad>
     <comps>
-      <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
-        <hediffs>
-          <li>
-            <triggeredOnRemoval>true</triggeredOnRemoval>
-            <hediff>XylFeralRageBacklash</hediff>
-          </li>
-        </hediffs>
+      <li Class="XylXenos.HediffCompProperties_GiveHediffOnRemoval">
+        <hediff>XylFeralRageBacklash</hediff>
       </li>
       <li Class="HediffCompProperties_Disappears">
         <!-- This value doesn't matter, the actual duration is set by the AbilityDef -->

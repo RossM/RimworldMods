@@ -131,15 +131,9 @@
     </descriptionHyperlinks>
     <alwaysShowSeverity>true</alwaysShowSeverity>
     <comps>
-      <li Class="XylXenos.HediffCompProperties_GiveHediffExt">
-        <hediffs>
-          <li>
-            <triggeredOnRemoval>true</triggeredOnRemoval>
-            <hediff>SurgicalCut</hediff>
-            <inheritSeverity>true</inheritSeverity>
-            <sameBodyPart>true</sameBodyPart>
-          </li>
-        </hediffs>
+      <li Class="XylXenos.HediffCompProperties_GiveHediffOnRemoval">
+        <hediff>SurgicalCut</hediff>
+        <inheritSeverity>true</inheritSeverity>
       </li>
     </comps>
     <onlyLifeThreateningTo>
