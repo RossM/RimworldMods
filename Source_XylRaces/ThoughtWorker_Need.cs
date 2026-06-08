@@ -26,14 +26,14 @@ public class ThoughtWorker_Need : ThoughtWorker
         if (need == null)
             return ThoughtState.Inactive;
 
-        float needLevel = need.CurLevel;
-
         int stage;
 
         if (need is INeed iNeed)
             stage = iNeed.CurStage;
         else
         {
+            float needLevel = need.CurLevel;
+
             for (stage = DefExt.stages.Count - 1; stage >= 0; stage--)
             {
                 var minLevel = DefExt.stages[stage];
