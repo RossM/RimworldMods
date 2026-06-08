@@ -160,7 +160,7 @@
     <defName>XylLoveEuphoria</defName>
     <geneClass>XylXenos.Gene_LoveEuphoria</geneClass>
     <label>love euphoria</label>
-    <description>TODO</description>
+    <description>Carriers of this gene secrete chemicals that cause a euphoric, drug-like high in any partner they do lovin' with. The chemicals grant a long-lasting mood bonus, but are highly addictive.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Reproduction</displayCategory>
@@ -183,7 +183,7 @@
     <defName>XylLovin</defName>
     <needClass>XylXenos.Need_Lovin</needClass>
     <label>lovin'</label>
-    <description>Carriers of this gene secrete chemicals that cause a euphoric, drug-like high in any partner they do lovin' with. The chemicals grant a long-lasting mood bonus, but are highly addictive.</description>
+    <description>TODO</description>
     <listPriority>50</listPriority>
     <minIntelligence>Humanlike</minIntelligence>
     <fallPerDay>0.33</fallPerDay>
@@ -198,6 +198,9 @@
     <label>love euphoria</label>
     <description>This character is experiencing elevated mood due to lovin' with a carrier of the love euphoria gene.</description>
     <overrideTooltip>{PAWN_nameIndef} is experiencing elevated mood due to lovin' with {PARTNER_nameIndef}.</overrideTooltip>
+    <descriptionHyperlinks>
+      <GeneDef>XylLoveEuphoria</GeneDef>
+    </descriptionHyperlinks>
     <defaultLabelColor>(0.6, 0.6, 1.0)</defaultLabelColor>
     <initialSeverity>1</initialSeverity>
     <isBad>false</isBad>
@@ -237,6 +240,9 @@
     <label>lovin' addiction</label>
     <description>This character has developed a neurochemical need for physical love with a carrier of the love euphoria gene.</description>
     <overrideTooltip>{PAWN_nameIndef} has developed a neurochemical need for physical love with {PARTNER_nameIndef} or another carrier of the love euphoria gene.</overrideTooltip>
+    <descriptionHyperlinks>
+      <GeneDef>XylLoveEuphoria</GeneDef>
+    </descriptionHyperlinks>
     <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
     <chemicalNeed>XylLovin</chemicalNeed>
     <initialSeverity>1</initialSeverity>
