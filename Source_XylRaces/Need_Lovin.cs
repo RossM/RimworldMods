@@ -1,13 +1,34 @@
 ﻿namespace XylXenos;
 
 [UsedFromXml]
-public class Need_Lovin(Pawn pawn) : Need(pawn), INotificationListener
+public class Need_Lovin : Need
 {
-    public const float FallPerDay = 0.3f;
+    public bool Satisfied => CurLevel >= ThreshSatisfied;
+
+    public Hediff_LovinAddiction LovinAddictionHediff => pawn.HediffsOfType<Hediff_LovinAddiction>().SingleOrDefault();
+
+    public const float ThreshSatisfied = 0.1f;
+
+    public Need_Lovin(Pawn pawn) : base(pawn)
+    {
+        threshPercents = [ThreshSatisfied];
+    }
+
+    public override float CurLevel
+    {
+        get => base.CurLevel;
+        set
+        {
+            bool oldSatisfied = Satisfied;
+            base.CurLevel = value;
+            if (Satisfied != oldSatisfied)
+                CategoryChanged();
+        }
+    }
 
     public override void NeedInterval()
     {
-        CurLevel -= 150 * FallPerDay / GenDate.TicksPerDay;
+        CurLevel -= def.fallPerDay * (150f / GenDate.TicksPerDay);
     }
 
     public override void SetInitialLevel()
@@ -15,17 +36,8 @@ public class Need_Lovin(Pawn pawn) : Need(pawn), INotificationListener
         CurLevel = 1.0f;
     }
 
-    public void Notify_PostLovin()
+    public void CategoryChanged()
     {
-        CurLevel = 1.0f;
-    }
-
-    public void RegisterWith(NotificationManager manager)
-    {
-        manager.Register(NotificationDefOf.PostLovin, pawn, Notify_PostLovin);
-    }
-
-    public void PreUnregister(NotificationManager manager)
-    {
+        LovinAddictionHediff?.Notify_NeedCategoryChanged();
     }
 }

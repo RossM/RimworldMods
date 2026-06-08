@@ -156,4 +156,121 @@
     </modExtensions>
   </GeneDef>
 
+  <GeneDef>
+    <defName>XylLoveEuphoria</defName>
+    <geneClass>XylXenos.Gene_LoveEuphoria</geneClass>
+    <label>love euphoria</label>
+    <description>TODO</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayCategory>Reproduction</displayCategory>
+    <displayOrderInCategory>500</displayOrderInCategory>
+    <minAgeActive>16</minAgeActive>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Gene">
+        <loveEuphoria>
+          <need>XylLovin</need>
+          <hediffs>
+            <li>XylLoveEuphoria</li>
+            <li>XylLovinAddiction</li>
+          </hediffs>
+        </loveEuphoria>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <NeedDef>
+    <defName>XylLovin</defName>
+    <needClass>XylXenos.Need_Lovin</needClass>
+    <label>lovin'</label>
+    <description>TODO</description>
+    <listPriority>50</listPriority>
+    <minIntelligence>Humanlike</minIntelligence>
+    <fallPerDay>0.3</fallPerDay>
+    <onlyIfCausedByHediff>true</onlyIfCausedByHediff>
+    <freezeWhileSleeping>false</freezeWhileSleeping>
+    <freezeInMentalState>false</freezeInMentalState>
+  </NeedDef>
+
+  <HediffDef>
+    <defName>XylLoveEuphoria</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>love euphoria</label>
+    <description>TODO</description>
+    <initialSeverity>1</initialSeverity>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-1</severityPerDay>
+        <showHoursToRecover>true</showHoursToRecover>
+      </li>
+    </comps>
+    <!-- Effects TODO -->
+    <stages>
+      <li></li>
+    </stages>
+  </HediffDef>
+
+  <ThoughtDef>
+    <defName>XylLoveEuphoria</defName>
+    <workerClass>ThoughtWorker_Hediff</workerClass>
+    <hediff>XylLoveEuphoria</hediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <developmentalStageFilter>Adult</developmentalStageFilter>
+    <stages>
+      <li>
+        <label>love euphoria</label>
+        <description>TODO</description>
+        <baseMoodEffect>12</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <HediffDef>
+    <defName>XylLovinAddiction</defName>
+    <hediffClass>XylXenos.Hediff_LovinAddiction</hediffClass>
+    <label>lovin' addiction</label>
+    <description>TODO</description>
+    <chemicalNeed>XylLovin</chemicalNeed>
+    <initialSeverity>1</initialSeverity>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-0.0333</severityPerDay>
+        <showDaysToRecover>true</showDaysToRecover>
+      </li>
+      <li Class="HediffCompProperties_GiveLovinMTBFactor">
+        <lovinMTBFactor>0.5</lovinMTBFactor>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <!-- Dummy value just to shut up a config error -->
+        <minSeverity>-1</minSeverity>
+      </li>
+      <li>
+        <label>withdrawal</label>
+        <statOffsets>
+          <RestFallRateFactor>0.4</RestFallRateFactor>
+          <WorkSpeedGlobal>-0.2</WorkSpeedGlobal>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <ThoughtDef>
+    <defName>XylLovinWithdrawal</defName>
+    <workerClass>XylXenos.ThoughtWorker_LovinWithdrawal</workerClass>
+    <hediff>XylLovinAddiction</hediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <developmentalStageFilter>Adult</developmentalStageFilter>
+    <stages>
+      <li IsNull="True" />
+      <li>
+        <label>lovin' withdrawal</label>
+        <description>I can't forget the feel of {PARTNER_possessive} touch...</description>
+        <baseMoodEffect>-6</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
 </Defs>

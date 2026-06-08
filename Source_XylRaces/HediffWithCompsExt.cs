@@ -2,6 +2,8 @@
 
 public class HediffWithCompsExt : HediffWithComps
 {
+    public Pawn sourcePawn;
+
     public virtual float PartEfficiencyOffset => CurStage.partEfficiencyOffset;
 
     public override bool TendableNow(bool ignoreTimer = false)
@@ -16,5 +18,11 @@ public class HediffWithCompsExt : HediffWithComps
         }
 
         return true;
+    }
+
+    public override void ExposeData()
+    {
+        base.ExposeData();
+        Scribe_References.Look(ref sourcePawn, nameof(sourcePawn));
     }
 }
