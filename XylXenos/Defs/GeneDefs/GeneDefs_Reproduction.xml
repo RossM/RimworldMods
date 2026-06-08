@@ -197,6 +197,8 @@
     <hediffClass>XylXenos.HediffWithCompsExt</hediffClass>
     <label>love euphoria</label>
     <description>This character is experiencing elevated mood due to lovin' with a carrier of the love euphoria gene.</description>
+    <overrideTooltip>{PAWN_nameIndef} is experiencing elevated mood due to lovin' with {PARTNER_nameIndef}.</overrideTooltip>
+    <defaultLabelColor>(0.6, 0.6, 1.0)</defaultLabelColor>
     <initialSeverity>1</initialSeverity>
     <isBad>false</isBad>
     <comps>
@@ -234,6 +236,7 @@
     <hediffClass>XylXenos.Hediff_LovinAddiction</hediffClass>
     <label>lovin' addiction</label>
     <description>This character has developed a neurochemical need for physical love with a carrier of the love euphoria gene.</description>
+    <overrideTooltip>{PAWN_nameIndef} has developed a neurochemical need for physical love with {PARTNER_nameIndef} or another character of the love euphoria gene.</overrideTooltip>
     <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
     <chemicalNeed>XylLovin</chemicalNeed>
     <initialSeverity>1</initialSeverity>
