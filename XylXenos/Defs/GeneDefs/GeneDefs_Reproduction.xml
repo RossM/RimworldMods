@@ -186,7 +186,7 @@
     <description>TODO</description>
     <listPriority>50</listPriority>
     <minIntelligence>Humanlike</minIntelligence>
-    <fallPerDay>0.3</fallPerDay>
+    <fallPerDay>0.33</fallPerDay>
     <onlyIfCausedByHediff>true</onlyIfCausedByHediff>
     <freezeWhileSleeping>false</freezeWhileSleeping>
     <freezeInMentalState>false</freezeInMentalState>
