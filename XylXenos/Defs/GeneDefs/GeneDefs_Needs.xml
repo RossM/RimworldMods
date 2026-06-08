@@ -30,6 +30,52 @@
     </modExtensions>
   </GeneDef>
 
+  <NeedDef>
+    <defName>XylWetness</defName>
+    <needClass>XylXenos.Need_Wetness</needClass>
+    <label>wetness</label>
+    <description>This character needs to keep their skin moist by periodically soaking in water. This need can be met by standing in water, being outside in the rain, or using a shower.</description>
+    <minIntelligence>Humanlike</minIntelligence>
+    <seekerRisePerHour>0.1986</seekerRisePerHour>
+    <seekerFallPerHour>0.0139</seekerFallPerHour>
+    <onlyIfCausedByGene>true</onlyIfCausedByGene>
+    <freezeWhileSleeping>false</freezeWhileSleeping>
+    <freezeInMentalState>false</freezeInMentalState>
+  </NeedDef>
+
+  <ThoughtDef>
+    <defName>XylNeedWetness</defName>
+    <workerClass>XylXenos.ThoughtWorker_Need</workerClass>
+    <stages>
+      <li>
+        <label>parched</label>
+        <description>My skin is cracked and bleeding. Please! I need water!</description>
+        <baseMoodEffect>-20</baseMoodEffect>
+      </li>
+      <li>
+        <label>very dry skin</label>
+        <description>My skin is dry and itchy. It's very unpleasant.</description>
+        <baseMoodEffect>-12</baseMoodEffect>
+      </li>
+      <li>
+        <label>dry skin</label>
+        <description>My skin is a bit dry. I should find some water.</description>
+        <baseMoodEffect>-5</baseMoodEffect>
+      </li>
+      <li IsNull="True" />
+      <li>
+        <label>soaking wet</label>
+        <description>I'm soaking wet and I love it!</description>
+        <baseMoodEffect>3</baseMoodEffect>
+      </li>
+    </stages>
+    <modExtensions>
+      <li Class="XylXenos.ThoughtDefExtension_Need">
+        <need>XylWetness</need>
+      </li>
+    </modExtensions>
+  </ThoughtDef>
+
   <GeneDef>
     <defName>XylJoyless</defName>
     <label>joyless</label>

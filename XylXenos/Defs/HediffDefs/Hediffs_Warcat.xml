@@ -111,34 +111,6 @@
   </HediffDef>
 
   <HediffDef>
-    <defName>XylMoody</defName>
-    <label>moody</label>
-    <description>This character is genetically predisposed to severely fluctuating moods.</description>
-    <descriptionHyperlinks>
-      <GeneDef>XylMoody</GeneDef>
-    </descriptionHyperlinks>
-    <hediffClass>HediffWithComps</hediffClass>
-    <comps>
-      <li Class="HediffCompProperties_Disappears">
-        <!-- 8~16 hours -->
-        <disappearsAfterTicks>20000~40000</disappearsAfterTicks>
-        <showRemainingTime>false</showRemainingTime>
-      </li>
-      <li Class="HediffCompProperties_GiveRandomSituationalThought">
-        <thoughtDefs>
-          <li>XylMoody_Up</li>
-          <li>XylMoody_Down</li>
-        </thoughtDefs>
-      </li>
-    </comps>
-    <stages>
-      <li>
-        <becomeVisible>false</becomeVisible>
-      </li>
-    </stages>
-  </HediffDef>
-
-  <HediffDef>
     <defName>XylGeneticMeatNeed</defName>
     <label>raw meat dependency</label>
     <description>This individual is unable to synthesize certain essential nutrients and must obtain them by eating raw meat. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death.</description>

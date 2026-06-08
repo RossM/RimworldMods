@@ -28,6 +28,48 @@
     </modExtensions>
   </GeneDef>
 
+  <ThoughtDef>
+    <defName>XylDocileEnslaved</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <workerClass>XylXenos.ThoughtWorker_PawnStatus</workerClass>
+    <requiredGenes>
+      <li>XylDocile</li>
+    </requiredGenes>
+    <stages>
+      <li>
+        <label>docile enslaved</label>
+        <description>It's so comforting having someone else to tell me what to do.</description>
+        <baseMoodEffect>20</baseMoodEffect>
+      </li>
+    </stages>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Thought_PawnStatus">
+        <status>Slave</status>
+      </li>
+    </modExtensions>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>XylDocileImprisoned</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <workerClass>XylXenos.ThoughtWorker_PawnStatus</workerClass>
+    <requiredGenes>
+      <li>XylDocile</li>
+    </requiredGenes>
+    <stages>
+      <li>
+        <label>docile imprisoned</label>
+        <description>It's so comforting having someone else to tell me what to do.</description>
+        <baseMoodEffect>20</baseMoodEffect>
+      </li>
+    </stages>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Thought_PawnStatus">
+        <status>Prisoner</status>
+      </li>
+    </modExtensions>
+  </ThoughtDef>
+
   <GeneDef>
     <defName>XylSeeingRed</defName>
     <geneClass>XylXenos.Gene_SeeingRed</geneClass>
@@ -88,6 +130,103 @@
       </li>
     </modExtensions>
   </GeneDef>
+
+  <ThoughtDef>
+    <defName>XylSoreBreasts</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <workerClass>XylXenos.ThoughtWorker_SoreBreasts</workerClass>
+    <requiredGenes>
+      <li>XylHyperlactation</li>
+    </requiredGenes>
+    <stages>
+      <li>
+        <label>full breasts</label>
+        <description>My breasts are getting full and heavy. This is slightly uncomfortable.</description>
+        <baseMoodEffect>-2</baseMoodEffect>
+      </li>
+      <li>
+        <label>sore breasts</label>
+        <description>My breasts are full, heavy, and sore. This is very uncomfortable.</description>
+        <baseMoodEffect>-4</baseMoodEffect>
+      </li>
+      <li>
+        <label>very sore breasts</label>
+        <description>My breasts are very full, heavy, and sore. This very uncomfortable.</description>
+        <baseMoodEffect>-6</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>XylMilked</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>10</durationDays>
+    <stackLimit>3</stackLimit>
+    <nullifyingTraits>
+      <li>Masochist</li>
+    </nullifyingTraits>
+    <stages>
+      <li>
+        <label>milked</label>
+        <labelSocial>milked me</labelSocial>
+        <description>I was milked like an animal. It was humiliating.</description>
+        <baseOpinionOffset>-5</baseOpinionOffset>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>XylMilkedMood</defName>
+    <durationDays>10</durationDays>
+    <stackLimit>3</stackLimit>
+    <nullifyingTraits>
+      <li>Masochist</li>
+    </nullifyingTraits>
+    <stages>
+      <li>
+        <label>milked</label>
+        <description>I was milked like an animal. It was humiliating.</description>
+        <baseMoodEffect>-5</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>XylMilked_Masochist</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>10</durationDays>
+    <stackLimit>3</stackLimit>
+    <requiredTraits>
+      <li>Masochist</li>
+    </requiredTraits>
+    <replaceThoughts>
+      <li>XylMilked</li>
+    </replaceThoughts>
+    <stages>
+      <li>
+        <label>masochist milked</label>
+        <labelSocial>milked me</labelSocial>
+        <description>I was milked like an animal. It was thrilling.</description>
+        <baseOpinionOffset>5</baseOpinionOffset>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>XylMilkedMood_Masochist</defName>
+    <durationDays>10</durationDays>
+    <stackLimit>3</stackLimit>
+    <requiredTraits>
+      <li>Masochist</li>
+    </requiredTraits>
+    <replaceThoughts>
+      <li>XylMilkedMood</li>
+    </replaceThoughts>
+    <stages>
+      <li>
+        <label>masochist milked</label>
+        <description>I was milked like an animal. It was thrilling.</description>
+        <baseMoodEffect>2</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
 
   <GeneDef>
     <defName>XylPrecognition</defName>

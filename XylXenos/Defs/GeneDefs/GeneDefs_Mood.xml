@@ -21,6 +21,94 @@
     </modExtensions>
   </GeneDef>
 
+  <ThoughtDef>
+    <defName>XylHerdInstinct</defName>
+    <thoughtClass>XylXenos.Thought_Situational_HerdInstinct</thoughtClass>
+    <workerClass>XylXenos.ThoughtWorker_HerdInstinct</workerClass>
+    <requiredGenes>
+      <li>XylHerdInstinct</li>
+    </requiredGenes>
+    <stages>
+      <li>
+        <label>herd instinct alone</label>
+        <description>I'm so lonely. I need a herd!</description>
+        <baseMoodEffect>-12</baseMoodEffect>
+      </li>
+      <li>
+        <label>herd instinct in small group</label>
+        <description>This herd is so small. We need more members.</description>
+        <baseMoodEffect>-6</baseMoodEffect>
+      </li>
+      <li>
+        <label>herd instinct in large group</label>
+        <description>Our herd is strong.</description>
+        <baseMoodEffect>3</baseMoodEffect>
+      </li>
+      <li>
+        <label>herd instinct in huge group</label>
+        <description>Our herd has so many members! I love it!</description>
+        <baseMoodEffect>6</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>XylSleptInBarracks_HerdInstinct</defName>
+    <durationDays>1</durationDays>
+    <stackLimit>1</stackLimit>
+    <requiredGenes>
+      <li>XylHerdInstinct</li>
+    </requiredGenes>
+    <stages>
+      <li>
+        <label>awful barracks</label>
+        <description>I had to sleep in an awful barracks, but at least I had company.</description>
+        <baseMoodEffect>-2</baseMoodEffect>
+      </li>
+      <li IsNull="True"/> <!-- dull -->
+      <li>
+        <label>mediocre barracks</label>
+        <description>I had to sleep in a mediocre barracks.</description>
+        <baseMoodEffect>1</baseMoodEffect>
+      </li>
+      <li>
+        <label>decent barracks</label>
+        <description>I slept in a decent barracks.</description>
+        <baseMoodEffect>2</baseMoodEffect>
+      </li>
+      <li>
+        <label>slightly impressive barracks</label>
+        <description>I got to sleep in a pretty nice barracks. I like it.</description>
+        <baseMoodEffect>3</baseMoodEffect>
+      </li>
+      <li>
+        <label>impressive barracks</label>
+        <description>I got to sleep in an impressive barracks. It was great.</description>
+        <baseMoodEffect>4</baseMoodEffect>
+      </li>
+      <li>
+        <label>very impressive barracks</label>
+        <description>I slept in a very impressive barracks. I love it.</description>
+        <baseMoodEffect>5</baseMoodEffect>
+      </li>
+      <li>
+        <label>extremely impressive barracks</label>
+        <description>I slept in an extremely impressive barracks. It was marvelous.</description>
+        <baseMoodEffect>6</baseMoodEffect>
+      </li>
+      <li>
+        <label>unbelievably impressive barracks</label>
+        <description>The barracks I slept in was unbelievably impressive. It was truly astounding.</description>
+        <baseMoodEffect>7</baseMoodEffect>
+      </li>
+      <li>
+        <label>wondrously impressive barracks</label>
+        <description>I slept in a barracks that was simply wondrous. </description>
+        <baseMoodEffect>8</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
   <GeneDef>
     <defName>XylMoody</defName>
     <label>moody</label>
@@ -42,5 +130,65 @@
       </li>
     </modExtensions>
   </GeneDef>
+
+  <HediffDef>
+    <defName>XylMoody</defName>
+    <label>moody</label>
+    <description>This character is genetically predisposed to severely fluctuating moods.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylMoody</GeneDef>
+    </descriptionHyperlinks>
+    <hediffClass>HediffWithComps</hediffClass>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <!-- 8~16 hours -->
+        <disappearsAfterTicks>20000~40000</disappearsAfterTicks>
+        <showRemainingTime>false</showRemainingTime>
+      </li>
+      <li Class="HediffCompProperties_GiveRandomSituationalThought">
+        <thoughtDefs>
+          <li>XylMoody_Up</li>
+          <li>XylMoody_Down</li>
+        </thoughtDefs>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <becomeVisible>false</becomeVisible>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <ThoughtDef>
+    <defName>XylMoody_Down</defName>
+    <workerClass>ThoughtWorker_HediffThoughtRandom</workerClass>
+    <developmentalStageFilter>Adult</developmentalStageFilter>
+    <hediff>XylMoody</hediff>
+    <labelInBracketsExtraForHediff>upset</labelInBracketsExtraForHediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>bad mood</label>
+        <description>I'm just upset today. I feel like punching something.</description>
+        <baseMoodEffect>-12</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>XylMoody_Up</defName>
+    <workerClass>ThoughtWorker_HediffThoughtRandom</workerClass>
+    <developmentalStageFilter>Adult</developmentalStageFilter>
+    <hediff>XylMoody</hediff>
+    <labelInBracketsExtraForHediff>happy</labelInBracketsExtraForHediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>good mood</label>
+        <description>I'm so happy right now!</description>
+        <baseMoodEffect>12</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
 
 </Defs>
