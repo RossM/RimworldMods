@@ -1,17 +1,13 @@
 ﻿namespace XylXenos;
 
 [UsedFromXml]
-public class Need_Lovin : Need
+public class Need_Lovin(Pawn pawn) : Need(pawn)
 {
     public bool Satisfied => CurLevel >= ThreshSatisfied;
 
     public Hediff_LovinAddiction LovinAddictionHediff => pawn.HediffsOfType<Hediff_LovinAddiction>().SingleOrDefault();
 
     public const float ThreshSatisfied = 0.01f;
-
-    public Need_Lovin(Pawn pawn) : base(pawn)
-    {
-    }
 
     public override float CurLevel
     {

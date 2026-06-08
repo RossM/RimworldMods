@@ -11,12 +11,14 @@ public enum WetnessCategory : byte
     Wet,
 }
 
-public class Need_Wetness(Pawn pawn) : Need_Seeker(pawn), INeed
+public class Need_Wetness : Need_Seeker, INeed
 {
     public float TemperatureFactor => TemperatureWetnessFallFactorCurve.Evaluate(pawn.AmbientTemperature);
 
     public float RisePerHour => def.seekerRisePerHour;
     public float FallPerHour => def.seekerFallPerHour * TemperatureFactor;
+
+    public int CurStage => (int)CurCategory;
 
     public const float thresholdWet = 0.90f;
     public const float thresholdNeutral = 0.50f;
@@ -41,6 +43,11 @@ public class Need_Wetness(Pawn pawn) : Need_Seeker(pawn), INeed
     ];
 
     private int lastInstantWetnessCheckTick;
+
+    public Need_Wetness(Pawn pawn) : base(pawn)
+    {
+        threshPercents = [thresholdVeryDry, thresholdDry, thresholdNeutral, thresholdWet];
+    }
 
     public override float CurInstantLevel
     {
@@ -142,19 +149,4 @@ public class Need_Wetness(Pawn pawn) : Need_Seeker(pawn), INeed
                 hoursPerDay.ToStringDecimalIfSmall().Named("HOURS"))
             ;
     }
-
-    public override void DrawOnGUI(
-        Rect rect,
-        int maxThresholdMarkers = int.MaxValue,
-        float customMargin = -1,
-        bool drawArrows = true,
-        bool doTooltip = true,
-        Rect? rectForTooltip = null,
-        bool drawLabel = true)
-    {
-        threshPercents ??= [thresholdVeryDry, thresholdDry, thresholdNeutral, thresholdWet];
-        base.DrawOnGUI(rect, maxThresholdMarkers, customMargin, drawArrows, doTooltip, rectForTooltip, drawLabel);
-    }
-
-    public int CurStage => (int)CurCategory;
 }
