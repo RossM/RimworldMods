@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <ThingDef ParentName="ForceJob">
+    <defName>XylMote_ForceJobMentalState</defName>
+    <mote>
+      <fadeInTime>0.1</fadeInTime>
+      <fadeOutTime>0.1</fadeOutTime>
+      <solidTime>999999</solidTime>
+    </mote>
+  </ThingDef>
+
+</Defs>

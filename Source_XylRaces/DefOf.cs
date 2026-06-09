@@ -38,6 +38,8 @@ public static class DefOf
     public static StatDef XylSlaveRebellionMtbFactor;
     public static StatDef XylWillFallRate;
 
+    public static ThingDef XylMote_ForceJobMentalState;
+
     static DefOf()
     {
         DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));

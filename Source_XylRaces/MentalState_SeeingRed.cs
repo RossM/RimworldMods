@@ -32,7 +32,17 @@ public class MentalState_SeeingRed : MentalState
         base.PostStart(reason);
 
         if (!DefExt.iconPath.NullOrEmpty())
-            mote = MoteMaker.MakeThoughtBubble(pawn, DefExt.iconPath, maintain: true);
+            mote = MakeThoughtBubble(pawn, DefExt.iconPath);
+    }
+
+    public static MoteBubble MakeThoughtBubble(Pawn pawn, string iconPath)
+    {
+        MoteMaker.ExistingMoteBubbleOn(pawn)?.Destroy();
+        MoteBubble obj = (MoteBubble)ThingMaker.MakeThing(DefOf.XylMote_ForceJobMentalState);
+        obj.SetupMoteBubble(ContentFinder<Texture2D>.Get(iconPath), null);
+        obj.Attach(pawn);
+        GenSpawn.Spawn(obj, pawn.Position, pawn.Map);
+        return obj;
     }
 
     public override void MentalStateTick(int delta)
