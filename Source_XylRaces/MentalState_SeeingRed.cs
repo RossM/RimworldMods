@@ -45,13 +45,6 @@ public class MentalState_SeeingRed : MentalState
         return obj;
     }
 
-    public override void MentalStateTick(int delta)
-    {
-        base.MentalStateTick(delta);
-
-        mote?.Maintain();
-    }
-
     public override void PostEnd()
     {
         base.PostEnd();
