@@ -45,11 +45,19 @@ public class MentalState_SeeingRed : MentalState
         return obj;
     }
 
+    public override void MentalStateTick(int delta)
+    {
+        base.MentalStateTick(delta);
+
+        if (mote?.Destroyed == false)
+            mote.Maintain();
+    }
+
     public override void PostEnd()
     {
         base.PostEnd();
 
         if (mote?.Destroyed == false)
-            mote?.Destroy();
+            mote.Destroy();
     }
 }

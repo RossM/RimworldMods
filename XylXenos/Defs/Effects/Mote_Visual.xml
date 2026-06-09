@@ -6,8 +6,9 @@
     <defName>XylMote_ForceJobMentalState</defName>
     <mote>
       <fadeInTime>0.1</fadeInTime>
-      <fadeOutTime>0.1</fadeOutTime>
+      <fadeOutTime>0.5</fadeOutTime>
       <solidTime>999999</solidTime>
+      <needsMaintenance>true</needsMaintenance>
     </mote>
   </ThingDef>
 
