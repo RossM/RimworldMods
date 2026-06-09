@@ -90,15 +90,6 @@ public static class DebugArena
             }
         }
 
-        pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
-            DefDatabase<PawnKindDef>.GetNamed("Tribal_Penitent"), DefDatabase<XenotypeDef>.GetNamed("XylTrog")));
-        pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
-            DefDatabase<PawnKindDef>.GetNamed("Tribal_Archer"), DefDatabase<XenotypeDef>.GetNamed("XylWarcat")));
-        pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
-            DefDatabase<PawnKindDef>.GetNamed("Town_Guard"), DefDatabase<XenotypeDef>.GetNamed("XylDvergr")));
-        pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
-            DefDatabase<PawnKindDef>.GetNamed("Mercenary_Gunner"), DefDatabase<XenotypeDef>.GetNamed("Hussar")));
-
         PerformBattleRoyale(pawnKindsForBattleRoyale);
     }
 
