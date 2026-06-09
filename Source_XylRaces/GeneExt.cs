@@ -222,14 +222,9 @@ public class GeneExt : Gene, INotificationListener
         }
     }
 
-    public void Notify_HediffStateChange()
+    private void UpdatePermanentHediffs()
     {
-        if (!Active)
-            return;
-        if (DefExt.permanentHediffs.NullOrEmpty())
-            return;
-
-        foreach (var hediffGiver in DefExt.permanentHediffs)
+        foreach (var hediffGiver in DefExt.permanentHediffs!)
         {
             if (hediffGiver.partsToAffect.NullOrEmpty())
                 continue;
@@ -283,6 +278,16 @@ public class GeneExt : Gene, INotificationListener
                 pawn.health.RemoveHediff(hediff);
             }
         }
+    }
+
+    public void Notify_HediffStateChange()
+    {
+        if (!Active)
+            return;
+        if (DefExt.permanentHediffs.NullOrEmpty())
+            return;
+
+        UpdatePermanentHediffs();
     }
 
     public void Notify_PostGenerateNewPawn(PawnGenerationRequest request)
