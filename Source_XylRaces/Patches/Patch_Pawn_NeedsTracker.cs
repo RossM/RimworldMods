@@ -4,16 +4,6 @@
 public static class Patch_Pawn_NeedsTracker
 {
     [Feature(typeof(NotificationManager))]
-    [InfixPostfix(typeof(Need), nameof(Need.SetInitialLevel))]
-    [InfixPatch("AddNeed")]
-    public static void SetInitialLevel_Postfix(Need __instance)
-    {
-        // ReSharper disable once SuspiciousTypeConversion.Global
-        if (__instance is INotificationListener listener)
-            listener.RegisterWith(NotificationManager.Instance);
-    }
-
-    [Feature(typeof(NotificationManager))]
     [InfixPostfix(typeof(Need), nameof(Need.OnNeedRemoved))]
     [InfixPatch("RemoveNeed")]
     public static void OnNeedRemoved_Postfix(Need __instance)
@@ -23,4 +13,13 @@ public static class Patch_Pawn_NeedsTracker
             NotificationManager.Instance.UnregisterAll(listener);
     }
 
+    [Feature(typeof(NotificationManager))]
+    [InfixPostfix(typeof(Need), nameof(Need.SetInitialLevel))]
+    [InfixPatch("AddNeed")]
+    public static void SetInitialLevel_Postfix(Need __instance)
+    {
+        // ReSharper disable once SuspiciousTypeConversion.Global
+        if (__instance is INotificationListener listener)
+            listener.RegisterWith(NotificationManager.Instance);
+    }
 }

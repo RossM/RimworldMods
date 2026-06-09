@@ -362,7 +362,7 @@ public class DefModExtension_Gene : DefModExtension
             yield return "geneClass is not GeneExt or subclass thereof";
 
         string error;
-        
+
         error = CheckCorrectClass(bonusGenes, typeof(Gene_BonusGenes));
         if (error != null)
             yield return error;
@@ -381,8 +381,8 @@ public class DefModExtension_Gene : DefModExtension
     }
 
     private string CheckCorrectClass(
-        object field, 
-        Type type, 
+        object field,
+        Type type,
         [CallerArgumentExpression("field")] string fieldName = null)
     {
         var geneClass = (parent as GeneDef)?.geneClass ?? (parent as GeneTemplateDef)?.geneClass;
@@ -391,7 +391,7 @@ public class DefModExtension_Gene : DefModExtension
             return $"{fieldName} set but geneClass is not {type.Name} or subclass thereof";
         if (field == null && type.IsAssignableFrom(geneClass))
             return $"{fieldName} not set but geneClass is {type.Name} or subclass thereof";
-        
+
         return null;
     }
 

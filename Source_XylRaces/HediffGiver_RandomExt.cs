@@ -57,12 +57,13 @@ public class HediffGiver_RandomExt : HediffGiver
                 if (!allowDuplicates)
                     parts = parts.Where(p => !pawn.health.hediffSet.HasHediff(hediff, p));
                 parts = parts.Where(p => !pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(p));
-                
+
                 parts = parts.ToList();
                 if (!parts.Any())
                     break;
 
-                Hediff newHediff = HediffMaker.MakeHediff(partRecord: parts.RandomElementByWeight(x => x.coverageAbs), def: hediff, pawn: pawn);
+                Hediff newHediff = HediffMaker.MakeHediff(partRecord: parts.RandomElementByWeight(x => x.coverageAbs), def: hediff,
+                    pawn: pawn);
 
                 if (inheritSeverity)
                     newHediff.Severity = cause.Severity;
@@ -72,6 +73,7 @@ public class HediffGiver_RandomExt : HediffGiver
                 pawn.health.AddHediff(newHediff);
                 result = true;
             }
+
             return result;
         }
         else

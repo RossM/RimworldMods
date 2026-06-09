@@ -3,15 +3,6 @@
 [UsedFromXml]
 public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
 {
-    public bool targetSelf;
-    public bool targetEnemies;
-    public bool targetAllies;
-    public bool onlyTargetMelee;
-    public bool onlyTargetRanged;
-    public bool onlyInCover;
-    public bool avoidHittingNonEnemies = true;
-    public float minDistance = 0f;
-
     private static readonly List<Pawn> potentialTargets = [];
 
     private static readonly SimpleCurve distanceWeight =
@@ -20,6 +11,15 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
         new(25.0f, 0.1f),
         new(50.0f, 0.01f),
     ];
+
+    public bool targetSelf;
+    public bool targetEnemies;
+    public bool targetAllies;
+    public bool onlyTargetMelee;
+    public bool onlyTargetRanged;
+    public bool onlyInCover;
+    public bool avoidHittingNonEnemies = true;
+    public float minDistance = 0f;
 
     // ReSharper disable once ParameterHidesMember
     protected override LocalTargetInfo GetTarget(Pawn caster, Ability ability)

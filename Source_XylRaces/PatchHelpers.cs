@@ -348,6 +348,7 @@ public static class PatchHelpers
             if (owner.FirstActiveGeneOfType<Gene_Hyperlactation>()?.def.DefExt?.hyperlactation?.item == thingDef)
                 return true;
         }
+
         return false;
     }
 }

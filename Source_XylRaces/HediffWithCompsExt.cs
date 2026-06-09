@@ -2,9 +2,10 @@
 
 public class HediffWithCompsExt : HediffWithComps
 {
-    public Pawn sourcePawn;
-
     public virtual float PartEfficiencyOffset => CurStage.partEfficiencyOffset;
+
+    private static readonly StringBuilder tipSb = new();
+    public Pawn sourcePawn;
 
     public override bool TendableNow(bool ignoreTimer = false)
     {
@@ -25,8 +26,6 @@ public class HediffWithCompsExt : HediffWithComps
         base.ExposeData();
         Scribe_References.Look(ref sourcePawn, nameof(sourcePawn));
     }
-
-    private static readonly StringBuilder tipSb = new();
 
     // ReSharper disable once ParameterHidesMember
     public override string GetTooltip(Pawn pawn, bool showHediffsDebugInfo)
@@ -51,6 +50,7 @@ public class HediffWithCompsExt : HediffWithComps
             if (!description.NullOrEmpty())
                 tipSb.AppendLine().AppendLine(description);
         }
+
         if (!def.extraTooltip.NullOrEmpty())
             tipSb.AppendLine().AppendLineTagged(def.extraTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("PARTNER")));
         if (curStage != null && !curStage.extraTooltip.NullOrEmpty())

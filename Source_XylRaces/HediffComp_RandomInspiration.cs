@@ -16,9 +16,9 @@ public class HediffComp_RandomInspiration : HediffComp
 {
     public HediffCompProperties_RandomInspiration Props => (HediffCompProperties_RandomInspiration)props;
 
-    public const int checkFrequency = 150;
-
     public override string CompTipStringExtra => $"  - {"XylCausesRandomInspirations".Translate()}";
+
+    public const int checkFrequency = 150;
 
     public override void CompPostTickInterval(ref float severityAdjustment, int delta)
     {
@@ -42,6 +42,7 @@ public class HediffComp_RandomInspiration : HediffComp
 
         Pawn partner = (parent as HediffWithCompsExt)?.sourcePawn;
 
-        Pawn.mindState.inspirationHandler.TryStartInspiration(inspiration, Props.letter.Formatted(Pawn.Named("PAWN"), partner.Named("PARTNER")));
+        Pawn.mindState.inspirationHandler.TryStartInspiration(inspiration,
+            Props.letter.Formatted(Pawn.Named("PAWN"), partner.Named("PARTNER")));
     }
 }

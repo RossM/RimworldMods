@@ -96,6 +96,12 @@ public static class NotificationDefOf
     /// </summary>
     public static NotificationDef PostLoadedGame;
 
+    /// <summary>
+    ///     Called after a pawn does lovin'.
+    ///     This hook passes a <see cref="Pawn" /> as its "data" parameter.
+    /// </summary>
+    public static NotificationDef PostLovin;
+
 
     /// <summary>
     ///     Called after <see cref="Pawn.Kill(Verse.DamageInfo?,Hediff)" />.
@@ -117,12 +123,6 @@ public static class NotificationDefOf
     ///     This hook passes a <see cref="DamageInfo" /> as its "data" parameter.
     /// </summary>
     public static NotificationDef PreTakeDamage;
-
-    /// <summary>
-    ///     Called after a pawn does lovin'.
-    ///     This hook passes a <see cref="Pawn" /> as its "data" parameter.
-    /// </summary>
-    public static NotificationDef PostLovin;
 
     static NotificationDefOf()
     {

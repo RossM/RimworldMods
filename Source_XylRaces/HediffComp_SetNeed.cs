@@ -34,7 +34,8 @@ public class HediffComp_SetNeed : HediffComp
                 return $"  - {Props.need.LabelCap}: {"min".Translate().CapitalizeFirst()} {Props.levelPercentage.min.ToStringPercent()}";
             if (Props.levelPercentage.min == Props.levelPercentage.max)
                 return $"  - {Props.need.LabelCap}: {Props.levelPercentage.min.ToStringPercent()}";
-            return $"  - {Props.need.LabelCap}: {Props.levelPercentage.min.ToStringPercent()}-{Props.levelPercentage.max.ToStringPercent()}";
+            return
+                $"  - {Props.need.LabelCap}: {Props.levelPercentage.min.ToStringPercent()}-{Props.levelPercentage.max.ToStringPercent()}";
         }
     }
 

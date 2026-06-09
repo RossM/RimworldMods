@@ -18,6 +18,7 @@ public class Hediff_LovinAddiction : HediffWithCompsExt
                     text += "\n";
                 text += $"{"CreatesNeed".Translate()}: {Need.LabelCap} ({Need.CurLevelPercentage.ToStringPercent("F0")})";
             }
+
             return text;
         }
     }
