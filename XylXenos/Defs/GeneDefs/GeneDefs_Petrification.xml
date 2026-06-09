@@ -10,7 +10,7 @@
     <biostatMet>4</biostatMet>
     <displayCategory>Healing</displayCategory>
     <displayOrderInCategory>210</displayOrderInCategory>
-    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <prerequisite>XylLithoid</prerequisite>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">

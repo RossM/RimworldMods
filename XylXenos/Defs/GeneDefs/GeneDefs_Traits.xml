@@ -86,7 +86,7 @@
     <biostatMet>2</biostatMet>
     <displayCategory>XylDiet</displayCategory>
     <displayOrderInCategory>300</displayOrderInCategory>
-    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <forcedTraits>
       <Cannibal />
       <Gourmand />
@@ -132,6 +132,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <forcedTraits>
       <Nudist />
     </forcedTraits>
@@ -163,7 +164,7 @@
     <biostatMet>2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>26</displayOrderInCategory>
-    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_Industrious</iconPath>-->
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <exclusionTags>
       <li>WorkSpeed</li>
     </exclusionTags>

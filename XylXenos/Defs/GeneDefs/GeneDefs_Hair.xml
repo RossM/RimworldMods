@@ -7,7 +7,7 @@
     <label>bald males</label>
     <labelShortAdj>male bald</labelShortAdj>
     <description>Male carriers of this gene grow no hair on the head.</description>
-    <iconPath>UI/Icons/Genes/Gene_HairStyleBaldOnly</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <displayOrderInCategory>57.4</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>
@@ -30,7 +30,7 @@
     <label>short-haired males</label>
     <labelShortAdj>male crop</labelShortAdj>
     <description>Male carriers of this gene can only grow short hair.</description>
-    <iconPath>UI/Icons/Genes/Gene_HairStyleShortOnly</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <displayOrderInCategory>57.5</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>
@@ -53,7 +53,7 @@
     <label>long-haired males</label>
     <labelShortAdj>male long-haired</labelShortAdj>
     <description>Male carriers of this gene grow hair on the head very quickly.</description>
-    <iconPath>UI/Icons/Genes/Gene_HairStyleLongOnly</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <displayOrderInCategory>57.6</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>
@@ -76,7 +76,7 @@
     <label>bald females</label>
     <labelShortAdj>female bald</labelShortAdj>
     <description>Female carriers of this gene grow no hair on the head.</description>
-    <iconPath>UI/Icons/Genes/Gene_HairStyleBaldOnly</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <displayOrderInCategory>57.1</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>
@@ -99,7 +99,7 @@
     <label>short-haired females</label>
     <labelShortAdj>female crop</labelShortAdj>
     <description>Female carriers of this gene can only grow short hair.</description>
-    <iconPath>UI/Icons/Genes/Gene_HairStyleShortOnly</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <displayOrderInCategory>57.2</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>
@@ -122,7 +122,7 @@
     <label>long-haired females</label>
     <labelShortAdj>female long-haired</labelShortAdj>
     <description>Female carriers of this gene grow hair on the head very quickly.</description>
-    <iconPath>UI/Icons/Genes/Gene_HairStyleLongOnly</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <displayOrderInCategory>57.3</displayOrderInCategory>
     <hairTagFilter>
       <whitelist>true</whitelist>

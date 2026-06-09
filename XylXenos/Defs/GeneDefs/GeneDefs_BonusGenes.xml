@@ -49,7 +49,7 @@
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayOrderInCategory>201</displayOrderInCategory>
-    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
         <geneType>Xenogene</geneType>
@@ -82,7 +82,7 @@
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayOrderInCategory>202</displayOrderInCategory>
-    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
         <geneType>Xenogene</geneType>
@@ -119,7 +119,7 @@
     <displayCategory>Archite</displayCategory>
     <displayOrderInCategory>0</displayOrderInCategory>
     <canGenerateInGeneSet>false</canGenerateInGeneSet>
-    <!--<iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>-->
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
         <showInXenotypeCreation>false</showInXenotypeCreation>

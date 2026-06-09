@@ -190,6 +190,7 @@
     <description>Carriers of this gene have a distinctive mark on their forehead.</description>
     <displayCategory>Cosmetic</displayCategory>
     <displayOrderInCategory>502</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <biostatCpx>0</biostatCpx>
     <renderNodeProperties>
       <li>
@@ -222,6 +223,7 @@
     <description>Carriers of this gene have visible ribs.</description>
     <displayCategory>Cosmetic</displayCategory>
     <displayOrderInCategory>503</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <biostatCpx>0</biostatCpx>
     <renderNodeProperties>
       <li>

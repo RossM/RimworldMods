@@ -106,6 +106,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <exclusionTags>
       <li>XenotypeStrength</li>
     </exclusionTags>
@@ -124,6 +125,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>401</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <exclusionTags>
       <li>XenotypeStrength</li>
     </exclusionTags>
@@ -142,6 +144,7 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>410</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <minAgeActive>16</minAgeActive>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
@@ -165,6 +168,7 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>500</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <minAgeActive>16</minAgeActive>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">

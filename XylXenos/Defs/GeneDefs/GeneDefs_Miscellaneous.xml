@@ -266,7 +266,7 @@
     <biostatMet>2</biostatMet>
     <displayCategory>Temperature</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <!--<iconPath>Xyl/UI/Icons/Abilities/SonicWave</iconPath>-->
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
         <hediffGivers>
@@ -442,6 +442,7 @@
     <description>Carriers of this gene store extra oxygen and special proteins in their bone marrow. When the carrier is exposed to extreme heat, cold, toxins, or vacuum, these reserves temporarily flood the body, protecting tissues from damage.</description>
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>90</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <modExtensions>
@@ -456,6 +457,7 @@
     <description>Carriers of this gene are prone to debilitating bouts of gravity sickness while on a planet's surface. They periodically suffer pain, nausea, and reduced consciousness for a day or so, or until they return to orbit.</description>
     <displayCategory>Healing</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>5</biostatMet>
     <modExtensions>
@@ -470,6 +472,7 @@
     <description>Carriers of this gene are naturally adept at being mechanitors.</description>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>1100</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <statOffsets>
@@ -485,9 +488,9 @@
     <defName>XylLearning_Focused</defName>
     <label>focused</label>
     <description>Carriers of this gene care deeply about subjects they are interested in. They learn faster for skills they have a burning passion in, but much slower at skills they have no passion in.</description>
-    <!--<iconPath>UI/Icons/Genes/Gene_SlowLearning</iconPath>-->
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>36</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <statOffsets>
       <XylLearnFactorPassionMajor>0.5</XylLearnFactorPassionMajor>
       <XylLearnFactorPassionNone>-0.25</XylLearnFactorPassionNone>
@@ -507,6 +510,7 @@
     <description>Carriers of this gene heal wounds unnaturally quickly, often recovering from even the most serious injuries in mere hours. It won't fix permanent scars or blood loss.</description>
     <displayCategory>Archite</displayCategory>
     <displayOrderInCategory>0</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <biostatCpx>4</biostatCpx>
     <biostatArc>1</biostatArc>
     <exclusionTags>
@@ -527,6 +531,7 @@
     <description>Carriers of this gene take much less injuries than others from the same damage. Archites in their bones and flesh toughen every part of their body.</description>
     <displayCategory>Archite</displayCategory>
     <displayOrderInCategory>0</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <biostatCpx>3</biostatCpx>
     <biostatArc>1</biostatArc>
     <statFactors>

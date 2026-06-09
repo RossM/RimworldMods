@@ -60,6 +60,7 @@
     <biostatMet>1</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>250</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <exclusionTags>
       <li>Addiction_Alcohol</li>
       <li>Addiction_GoJuice</li>
