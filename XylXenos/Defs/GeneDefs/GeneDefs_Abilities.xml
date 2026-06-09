@@ -304,6 +304,12 @@
     <biostatMet>-2</biostatMet>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
+        <extraApparel>
+          <li>
+            <item>Apparel_GasMask</item>
+            <chance>0.5</chance>
+          </li>
+        </extraApparel>
       </li>
     </modExtensions>
   </GeneDef>

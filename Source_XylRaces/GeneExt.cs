@@ -209,6 +209,8 @@ public class GeneExt : Gene, INotificationListener
     {
         foreach (var item in DefExt.extraApparel!)
         {
+            if (!ValidApparel(pawn, item.item, item.ignoreRestrictions))
+                continue;
             if (!Rand.Chance(item.chance))
                 continue;
 
@@ -220,6 +222,29 @@ public class GeneExt : Gene, INotificationListener
                 pawn.apparel.Wear(apparel, dropReplacedApparel: false);
             }
         }
+    }
+
+    public static bool ValidApparel(Pawn pawn, ThingDef thing, bool ignoreRestrictions = false)
+    {
+        if (!thing.apparel.PawnCanWear(pawn))
+            return false;
+
+        if (ignoreRestrictions)
+            return true;
+
+        if (!pawn.kindDef.apparelTags.NullOrEmpty() && 
+            !pawn.kindDef.apparelTags.Any(tag => thing.apparel.tags.Contains(tag)))
+        {
+            return false;
+        }
+
+        if (!pawn.kindDef.apparelDisallowTags.NullOrEmpty() &&
+            pawn.kindDef.apparelDisallowTags.Any(tag => thing.apparel.tags.Contains(tag)))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private void UpdatePermanentHediffs()

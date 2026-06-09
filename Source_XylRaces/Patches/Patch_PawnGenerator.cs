@@ -69,7 +69,7 @@ public static class Patch_PawnGenerator
     [Feature(nameof(NotificationDefOf.PostGenerateNewPawn))]
     [HarmonyPostfix]
     [HarmonyPatch("TryGenerateNewPawnInternal")]
-    public static void TryGenerateNewPawnInternal_Postfix(Pawn __result, ref PawnGenerationRequest request)
+    public static void TryGenerateNewPawnInternal_Postfix(ref Pawn __result, ref PawnGenerationRequest request)
     {
         if (__result == null)
             return;

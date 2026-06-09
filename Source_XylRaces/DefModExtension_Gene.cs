@@ -54,6 +54,7 @@ public class StartingItemOption
     public float chance = 1.0f;
     public IntRange count = IntRange.Zero;
     public FloatRange nutritionAmount = FloatRange.Zero;
+    public bool ignoreRestrictions;
 }
 
 [NoReorder]
