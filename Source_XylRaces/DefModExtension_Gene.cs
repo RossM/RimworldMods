@@ -348,28 +348,51 @@ public class DefModExtension_Gene : DefModExtension
 
     public override IEnumerable<string> ConfigErrors()
     {
-        var geneClass = (parent as GeneDef)?.geneClass ?? (parent as GeneTemplateDef)?.geneClass;
-        if (geneClass == null)
-            yield break;
-
         foreach (var configError in base.ConfigErrors())
             yield return configError;
+
+        var geneClass = (parent as GeneDef)?.geneClass ?? (parent as GeneTemplateDef)?.geneClass;
+        if (geneClass == null)
+        {
+            yield return $"{GetType().Name} may only be applied to GeneDef or GeneTemplateDef";
+            yield break;
+        }
 
         if (!typeof(GeneExt).IsAssignableFrom(geneClass))
             yield return "geneClass is not GeneExt or subclass thereof";
 
-        if (bonusGenes != null && !typeof(Gene_BonusGenes).IsAssignableFrom(geneClass))
-            yield return "bonusGenes set but geneClass is not BonusGene or subclass thereof";
-        if (bonusGenes == null && typeof(Gene_BonusGenes).IsAssignableFrom(geneClass))
-            yield return "bonusGenes not set but geneClass is BonusGene or subclass thereof";
-        if (hyperlactation != null && !typeof(Gene_Hyperlactation).IsAssignableFrom(geneClass))
-            yield return "hyperlactation set but geneClass is not Hyperlactation or subclass thereof";
-        if (hyperlactation == null && typeof(Gene_Hyperlactation).IsAssignableFrom(geneClass))
-            yield return "hyperlactation not set but geneClass is Hyperlactation or subclass thereof";
-        if (seeingRed != null && !typeof(Gene_SeeingRed).IsAssignableFrom(geneClass))
-            yield return "seeingRed set but geneClass is not SeeingRed or subclass thereof";
-        if (seeingRed == null && typeof(Gene_SeeingRed).IsAssignableFrom(geneClass))
-            yield return "seeingRed not set but geneClass is SeeingRed or subclass thereof";
+        string error;
+        
+        error = CheckCorrectClass(bonusGenes, typeof(Gene_BonusGenes));
+        if (error != null)
+            yield return error;
+
+        error = CheckCorrectClass(hyperlactation, typeof(Gene_Hyperlactation));
+        if (error != null)
+            yield return error;
+
+        error = CheckCorrectClass(seeingRed, typeof(Gene_SeeingRed));
+        if (error != null)
+            yield return error;
+
+        error = CheckCorrectClass(loveEuphoria, typeof(Gene_LoveEuphoria));
+        if (error != null)
+            yield return error;
+    }
+
+    private string CheckCorrectClass(
+        object field, 
+        Type type, 
+        [CallerArgumentExpression("field")] string fieldName = null)
+    {
+        var geneClass = (parent as GeneDef)?.geneClass ?? (parent as GeneTemplateDef)?.geneClass;
+
+        if (field != null && !type.IsAssignableFrom(geneClass))
+            return $"{fieldName} set but geneClass is not {type.Name} or subclass thereof";
+        if (field == null && type.IsAssignableFrom(geneClass))
+            return $"{fieldName} not set but geneClass is {type.Name} or subclass thereof";
+        
+        return null;
     }
 
     public override void ResolveReferences(Def parentDef)
