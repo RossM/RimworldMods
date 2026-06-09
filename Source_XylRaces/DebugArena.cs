@@ -174,11 +174,14 @@ public static class DebugArena
             if (currentFights >= maxFights)
                 return false;
 
-            PawnKindDef lhsDef = kinds.RandomElementByWeight(def => 1.0f / (1 + total[def]));
-            PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(def => 1.0f / (1 + total[def]));
+            float PawnKindWeight(PawnKindDef def) => 1.0f / (1 + Math.Min(wins[def], total[def] - wins[def]));
 
-            float lhsPower = lhsDef.combatPower;
-            float rhsPower = rhsDef.combatPower;
+            PawnKindDef lhsDef = kinds.RandomElementByWeight(PawnKindWeight);
+            PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(PawnKindWeight);
+
+            float exponent = Rand.Range(1.0f, 2.0f);
+            float lhsPower = Mathf.Pow(lhsDef.combatPower, exponent);
+            float rhsPower = Mathf.Pow(rhsDef.combatPower, exponent);
 
             int totalCombatants = RandRangeExponential(2, 40);
 
