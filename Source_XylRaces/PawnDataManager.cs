@@ -28,14 +28,14 @@ public class PawnDataManager<T> : INotificationListener
         return result;
     }
 
-    private void Notify_PostGameDispose()
-    {
-        data.Clear();
-    }
-
     private void Notify_PawnDiscarded(Thing thing)
     {
         data.Remove(thing.thingIDNumber);
+    }
+
+    private void Notify_PostGameDispose()
+    {
+        data.Clear();
     }
 
     public void RegisterWith(NotificationManager manager)

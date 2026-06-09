@@ -44,12 +44,6 @@ public class GeneAndHediffCache(Pawn pawn) : INotificationListener
         return value;
     }
 
-    public void Notify_PostGenesChanged()
-    {
-        genesByDef.Clear();
-        genesByType.Clear();
-    }
-
     [NotNull]
     public IEnumerable<T> GetHediffsOfType<T>()
     {
@@ -93,6 +87,12 @@ public class GeneAndHediffCache(Pawn pawn) : INotificationListener
             .ToList();
         hediffsByComp.Add(typeof(T), value);
         return value;
+    }
+
+    public void Notify_PostGenesChanged()
+    {
+        genesByDef.Clear();
+        genesByType.Clear();
     }
 
     public void Notify_PostHediffsChanged()

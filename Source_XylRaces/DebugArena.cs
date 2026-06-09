@@ -280,7 +280,7 @@ public static class DebugArena
         foreach (PawnKindDef pawnKind in kinds)
         {
             PawnGenerationRequest request = new PawnGenerationRequest(
-                kind: pawnKind, 
+                kind: pawnKind,
                 faction: faction,
                 tile: map.Parent.Tile,
                 forceGenerateNewPawn: true,

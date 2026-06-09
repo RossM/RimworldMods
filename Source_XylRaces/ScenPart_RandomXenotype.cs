@@ -23,6 +23,11 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListe
         DoPawnModifierEditInterface(scenPartRect.BottomPartPixels(RowHeight * 2f));
     }
 
+    public override void PreConfigure()
+    {
+        RegisterWith(NotificationManager.Instance);
+    }
+
     public void Notify_PawnGenerationEarly(Thing thing, PawnGenerationEarlyData data)
     {
         var pawn = thing as Pawn;
@@ -40,11 +45,6 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListe
             var xenotype = DefDatabase<XenotypeDef>.AllDefs.Where(ValidateXenotype).RandomElement();
             data.xenotype = xenotype;
         }
-    }
-
-    public override void PreConfigure()
-    {
-        RegisterWith(NotificationManager.Instance);
     }
 
     public void RegisterWith(NotificationManager manager)

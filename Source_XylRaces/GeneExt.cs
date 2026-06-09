@@ -186,6 +186,42 @@ public class GeneExt : Gene, INotificationListener
         }
     }
 
+    public override IEnumerable<Gizmo> GetGizmos()
+    {
+        if (!DebugSettings.godMode)
+            yield break;
+        if (DefExt.hediffGivers == null)
+            yield break;
+
+        for (var index = 0; index < DefExt.hediffGivers.Count; index++)
+        {
+            HediffGiver hediffGiver = DefExt.hediffGivers[index];
+            yield return new Command_Action
+            {
+                defaultLabel = $"DEV: Trigger {Label} ({hediffGiver.hediff.label}) #{index}",
+                action = () => hediffGiver.TryApply(pawn),
+                groupable = false,
+            };
+        }
+    }
+
+    public void GenerateExtraApparel()
+    {
+        foreach (var item in DefExt.extraApparel!)
+        {
+            if (!Rand.Chance(item.chance))
+                continue;
+
+            var apparel = PawnApparelGenerator.GenerateApparelOfDefFor(pawn, item.item);
+            if (apparel != null && apparel.PawnCanWear(pawn))
+            {
+                PawnApparelGenerator.PostProcessApparel(apparel, pawn);
+                PawnGenerator.PostProcessGeneratedGear(apparel, pawn);
+                pawn.apparel.Wear(apparel, dropReplacedApparel: false);
+            }
+        }
+    }
+
     public void Notify_HediffStateChange()
     {
         if (!Active)
@@ -245,42 +281,6 @@ public class GeneExt : Gene, INotificationListener
             {
                 Hediff hediff = pawn.health.hediffSet.hediffs.First(h => h.def == hediffDef && h.Part == part);
                 pawn.health.RemoveHediff(hediff);
-            }
-        }
-    }
-
-    public override IEnumerable<Gizmo> GetGizmos()
-    {
-        if (!DebugSettings.godMode)
-            yield break;
-        if (DefExt.hediffGivers == null)
-            yield break;
-
-        for (var index = 0; index < DefExt.hediffGivers.Count; index++)
-        {
-            HediffGiver hediffGiver = DefExt.hediffGivers[index];
-            yield return new Command_Action
-            {
-                defaultLabel = $"DEV: Trigger {Label} ({hediffGiver.hediff.label}) #{index}",
-                action = () => hediffGiver.TryApply(pawn),
-                groupable = false,
-            };
-        }
-    }
-
-    public void GenerateExtraApparel()
-    {
-        foreach (var item in DefExt.extraApparel!)
-        {
-            if (!Rand.Chance(item.chance))
-                continue;
-
-            var apparel = PawnApparelGenerator.GenerateApparelOfDefFor(pawn, item.item);
-            if (apparel != null && apparel.PawnCanWear(pawn))
-            {
-                PawnApparelGenerator.PostProcessApparel(apparel, pawn);
-                PawnGenerator.PostProcessGeneratedGear(apparel, pawn);
-                pawn.apparel.Wear(apparel, dropReplacedApparel: false);
             }
         }
     }

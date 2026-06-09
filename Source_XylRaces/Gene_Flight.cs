@@ -125,18 +125,6 @@ public class Gene_Flight : GeneExt
         }
     }
 
-    // If a downed flying pawn lands on a non-walkable tile, they are killed and their corpse destroyed.
-    // This would be unfortunate, so try to move the pawn to a better position.
-    public void Notify_Downed()
-    {
-        if (pawn.Flying && pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
-        {
-            var newCell = CellFinder.StandableCellNear(pawn.Position, pawn.Map, 5f);
-            if (newCell != IntVec3.Invalid)
-                pawn.Position = newCell;
-        }
-    }
-
     public static bool ApparelAllowsFlight(ThingDef thingDef)
     {
         return thingDef.GetModExtension<DefModExtension_Thing_Flight>() is not { allowsFlight: false };
@@ -172,6 +160,18 @@ public class Gene_Flight : GeneExt
     public void Notify_ApparelChanged()
     {
         CheckApparel();
+    }
+
+    // If a downed flying pawn lands on a non-walkable tile, they are killed and their corpse destroyed.
+    // This would be unfortunate, so try to move the pawn to a better position.
+    public void Notify_Downed()
+    {
+        if (pawn.Flying && pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
+        {
+            var newCell = CellFinder.StandableCellNear(pawn.Position, pawn.Map, 5f);
+            if (newCell != IntVec3.Invalid)
+                pawn.Position = newCell;
+        }
     }
 
     public override void RegisterWith(NotificationManager manager)

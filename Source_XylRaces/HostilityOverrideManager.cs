@@ -54,20 +54,6 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
         return hostileActionTick + violationDisableTicks < Find.TickManager.TicksGame;
     }
 
-    public void Notify_DamageTaken(Thing target, DamageInfo info)
-    {
-        if (target?.Map != map)
-            return;
-
-        Thing source = info.Instigator;
-
-        if (source?.Faction == null || target?.Faction == null)
-            return;
-
-        if (activeOverrides.Contains((source.Faction, target.Faction)))
-            lastHostileActionTick[source.Faction] = Find.TickManager.TicksGame;
-    }
-
     public override void MapComponentTick()
     {
         if (Find.TickManager.TicksGame % updateFrequency != 0)
@@ -88,6 +74,20 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
                 }
             }
         }
+    }
+
+    public void Notify_DamageTaken(Thing target, DamageInfo info)
+    {
+        if (target?.Map != map)
+            return;
+
+        Thing source = info.Instigator;
+
+        if (source?.Faction == null || target?.Faction == null)
+            return;
+
+        if (activeOverrides.Contains((source.Faction, target.Faction)))
+            lastHostileActionTick[source.Faction] = Find.TickManager.TicksGame;
     }
 
     public void RegisterWith(NotificationManager manager)

@@ -76,8 +76,8 @@ public static class NotificationDefOf
     public static NotificationDef PostDowned;
 
     /// <summary>
-    ///     Called after <see cref="PawnGenerator.GenerateNewPawnInternal"/>.
-    ///     This hook passes a <see cref="PawnGenerationRequest"/> as its "data" parameter.
+    ///     Called after <see cref="PawnGenerator.GenerateNewPawnInternal" />.
+    ///     This hook passes a <see cref="PawnGenerationRequest" /> as its "data" parameter.
     /// </summary>
     public static NotificationDef PostGenerateNewPawn;
 
@@ -120,8 +120,8 @@ public static class NotificationDefOf
     public static NotificationDef PostPostMake;
 
     /// <summary>
-    ///     Called after <see cref="PawnGenerator.RedressPawn"/>.
-    ///     This hook passes a <see cref="PawnGenerationRequest"/> as its "data" parameter.
+    ///     Called after <see cref="PawnGenerator.RedressPawn" />.
+    ///     This hook passes a <see cref="PawnGenerationRequest" /> as its "data" parameter.
     /// </summary>
     public static NotificationDef PostRedressPawn;
 

@@ -60,20 +60,20 @@ public static class Patch_PawnGenerator
 
     [Feature(nameof(NotificationDefOf.PostGenerateNewPawn))]
     [HarmonyPostfix]
+    [HarmonyPatch(nameof(PawnGenerator.RedressPawn))]
+    public static void RedressPawn_Postfix(Pawn pawn, PawnGenerationRequest request)
+    {
+        NotificationManager.Instance.Notify(NotificationDefOf.PostRedressPawn, pawn, request);
+    }
+
+    [Feature(nameof(NotificationDefOf.PostGenerateNewPawn))]
+    [HarmonyPostfix]
     [HarmonyPatch("TryGenerateNewPawnInternal")]
     public static void TryGenerateNewPawnInternal_Postfix(Pawn __result, ref PawnGenerationRequest request)
     {
         if (__result == null)
             return;
         NotificationManager.Instance.Notify(NotificationDefOf.PostGenerateNewPawn, __result, request);
-    }
-
-    [Feature(nameof(NotificationDefOf.PostGenerateNewPawn))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(PawnGenerator.RedressPawn))]
-    public static void RedressPawn_Postfix(Pawn pawn, PawnGenerationRequest request)
-    {
-        NotificationManager.Instance.Notify(NotificationDefOf.PostRedressPawn, pawn, request);
     }
 
     [Feature(typeof(XenotypeSetWithDefault))]
