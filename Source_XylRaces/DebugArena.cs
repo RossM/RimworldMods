@@ -279,7 +279,14 @@ public static class DebugArena
         List<Pawn> list = [];
         foreach (PawnKindDef pawnKind in kinds)
         {
-            Pawn pawn = PawnGenerator.GeneratePawn(pawnKind, faction, map.Parent.Tile);
+            PawnGenerationRequest request = new PawnGenerationRequest(
+                kind: pawnKind, 
+                faction: faction,
+                tile: map.Parent.Tile,
+                forceGenerateNewPawn: true,
+                mustBeCapableOfViolence: true);
+
+            Pawn pawn = PawnGenerator.GeneratePawn(request);
 
             // Check if pawn is null
             if (pawn == null)
