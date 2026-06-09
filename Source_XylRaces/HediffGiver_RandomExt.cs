@@ -42,7 +42,7 @@ public class HediffGiver_RandomExt : HediffGiver
         return TryApplyInner(pawn, cause);
     }
 
-    public bool TryApplyInner(Pawn pawn, Hediff cause)
+    private bool TryApplyInner(Pawn pawn, Hediff cause)
     {
         if (canAffectAnyLivePart || partsToAffect != null)
         {
