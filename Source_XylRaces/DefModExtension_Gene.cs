@@ -219,7 +219,7 @@ public class DefModExtension_Gene : DefModExtension
     [CanBeNull] public List<StartingItemOption> startingItems;
 
     /// <summary>
-    ///     Starting items which have a chance of being generated as apparel on a pawn. This
+    ///     Items which have a chance of being generated as extra apparel on a pawn. This
     ///     includes both player and non-player pawns.
     /// </summary>
     [CanBeNull] public List<StartingItemOption> extraApparel;
