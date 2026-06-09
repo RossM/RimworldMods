@@ -9,6 +9,10 @@ public static class DebugArena
 {
     private const int maxFights = 5;
 
+    private static readonly Dictionary<string, string> xenotypeSuffixes = new()
+    {
+    };
+
     [DebugAction("Autotests")]
     public static void BattleRoyaleByXenotype()
     {
@@ -34,15 +38,14 @@ public static class DebugArena
             pawnKindDefs.Add(DefDatabase<PawnKindDef>.GetNamed("Empire_Fighter_Cataphract"));
         }
 
-        var xenotypes = DefDatabase<XenotypeDef>.AllDefs.ToList();
+        bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
+
+        var xenotypes = DefDatabase<XenotypeDef>.AllDefs.Where(ValidXenotype).ToList();
 
         foreach (var pawnKindDef in pawnKindDefs)
         {
             foreach (var xenotype in xenotypes)
             {
-                if (xenotype.AllGenes.Any(def => (def.disabledWorkTags & pawnKindDef.requiredWorkTags) != 0))
-                    continue;
-
                 PawnKindDef newPawnKindDef = PawnKindWithXenotype(pawnKindDef, xenotype);
                 pawnKindsForBattleRoyale.Add(newPawnKindDef);
             }
@@ -51,12 +54,8 @@ public static class DebugArena
         PerformBattleRoyale(pawnKindsForBattleRoyale);
     }
 
-    static readonly Dictionary<string, string> xenotypeSuffixes = new()
-    {
-    };
     private static PawnKindDef PawnKindWithXenotype(PawnKindDef pawnKindDef, XenotypeDef xenotype)
     {
-
         if (!xenotypeSuffixes.TryGetValue(xenotype.defName, out string xenotypeSuffix))
             xenotypeSuffix = "";
 
