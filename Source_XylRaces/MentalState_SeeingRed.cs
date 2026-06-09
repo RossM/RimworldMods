@@ -32,7 +32,7 @@ public class MentalState_SeeingRed : MentalState
         base.PostStart(reason);
 
         if (!DefExt.iconPath.NullOrEmpty())
-            mote = MoteMaker.MakeThoughtBubble(pawn, DefExt.iconPath, maintain: false);
+            mote = MoteMaker.MakeThoughtBubble(pawn, DefExt.iconPath, maintain: true);
     }
 
     public override void MentalStateTick(int delta)
@@ -46,6 +46,7 @@ public class MentalState_SeeingRed : MentalState
     {
         base.PostEnd();
 
-        mote?.Destroy();
+        if (mote?.Destroyed == false)
+            mote?.Destroy();
     }
 }
