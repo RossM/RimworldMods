@@ -75,44 +75,27 @@ public static class DebugArena
     [DebugAction("Autotests")]
     public static void BattleRoyaleByPawnKind()
     {
-        List<PawnKindDef> pawnKindsForBattleRoyale =
-        [
-            DefDatabase<PawnKindDef>.GetNamed("Boomrat"),
-            DefDatabase<PawnKindDef>.GetNamed("Chicken"),
-            DefDatabase<PawnKindDef>.GetNamed("Emu"),
-            DefDatabase<PawnKindDef>.GetNamed("Muffalo"),
-            DefDatabase<PawnKindDef>.GetNamed("Warg"),
-            DefDatabase<PawnKindDef>.GetNamed("Elephant"),
-            DefDatabase<PawnKindDef>.GetNamed("Rhinoceros"),
-            DefDatabase<PawnKindDef>.GetNamed("Tiger"),
-            DefDatabase<PawnKindDef>.GetNamed("Megascarab"),
-            DefDatabase<PawnKindDef>.GetNamed("Spelopede"),
-            DefDatabase<PawnKindDef>.GetNamed("Megaspider"),
-        ];
-
-        if (ModLister.OdysseyInstalled)
+        List<PawnKindDef> pawnKindsForBattleRoyale = [];
+        foreach (var pawnKindDef in DefDatabase<PawnKindDef>.AllDefsListForReading)
         {
-            pawnKindsForBattleRoyale.Add(DefDatabase<PawnKindDef>.GetNamed("Seal"));
-            pawnKindsForBattleRoyale.Add(DefDatabase<PawnKindDef>.GetNamed("Mastodon"));
-            pawnKindsForBattleRoyale.Add(DefDatabase<PawnKindDef>.GetNamed("Locust"));
-
-            pawnKindsForBattleRoyale.Add(DefDatabase<PawnKindDef>.GetNamed("XylSelkie"));
+            if (pawnKindDef.RaceProps.Animal)
+                pawnKindsForBattleRoyale.Add(pawnKindDef);
+            else if (pawnKindDef.RaceProps.Humanlike && pawnKindDef.defaultFactionDef?.isPlayer == false && pawnKindDef.titleRequired == null)
+            {
+                var xenotypeSet = pawnKindDef.xenotypeSet ?? pawnKindDef.defaultFactionDef?.xenotypeSet;
+                var xenotype = XenotypeDefOf.Baseliner;
+                if (xenotypeSet != null)
+                    xenotype = xenotypeSet?.Count == 1 ? xenotypeSet[0].xenotype : xenotypeSet.DefaultXenotype;
+                pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(pawnKindDef, xenotype));
+            }
         }
 
         pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
-            DefDatabase<PawnKindDef>.GetNamed("Tribal_Penitent"), XenotypeDefOf.Baseliner));
-        pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
             DefDatabase<PawnKindDef>.GetNamed("Tribal_Penitent"), DefDatabase<XenotypeDef>.GetNamed("XylTrog")));
-        pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
-            DefDatabase<PawnKindDef>.GetNamed("Tribal_Archer"), XenotypeDefOf.Baseliner));
         pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
             DefDatabase<PawnKindDef>.GetNamed("Tribal_Archer"), DefDatabase<XenotypeDef>.GetNamed("XylWarcat")));
         pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
-            DefDatabase<PawnKindDef>.GetNamed("Town_Guard"), XenotypeDefOf.Baseliner));
-        pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
             DefDatabase<PawnKindDef>.GetNamed("Town_Guard"), DefDatabase<XenotypeDef>.GetNamed("XylDvergr")));
-        pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
-            DefDatabase<PawnKindDef>.GetNamed("Mercenary_Gunner"), XenotypeDefOf.Baseliner));
         pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(
             DefDatabase<PawnKindDef>.GetNamed("Mercenary_Gunner"), DefDatabase<XenotypeDef>.GetNamed("Hussar")));
 
