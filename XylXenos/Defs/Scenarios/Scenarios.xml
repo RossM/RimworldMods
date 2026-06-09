@@ -1,6 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
+  
+  <ScenarioDef ParentName="Crashlanded">
+    <defName>XylMenagerie</defName>
+    <label>Menagerie</label>
+    <description>The classic Crashlanded scenario, but any character can be any xenotype (with a few exceptions).</description>
+    <scenario>
+      <summary>Any character can be any xenotype.</summary>
+      <parts>
+        <li Class="XylXenos.ScenPart_RandomXenotype">
+          <def>XylRandomXenotypes</def>
+          <chance>1</chance>
+          <context>PlayerStarter</context>
+        </li>
+        <li Class="XylXenos.ScenPart_RandomXenotype">
+          <def>XylRandomXenotypes</def>
+          <chance>0.5</chance>
+          <context>NonPlayer</context>
+        </li>
+      </parts>
+    </scenario>
+  </ScenarioDef>
 
   <ScenarioDef ParentName="ScenarioBase" MayRequire="Ludeon.RimWorld.Royalty">
     <defName>XylDvergrFortress</defName>
