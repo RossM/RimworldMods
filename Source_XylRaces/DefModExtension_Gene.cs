@@ -225,7 +225,8 @@ public class DefModExtension_Gene : DefModExtension
     /// <summary>
     ///     Properties for <see cref="Gene_BonusGenes" />.
     /// </summary>
-    [CanBeNull] public BonusGenesInfo bonusGenes;
+    [CanBeNull] [GeneClass(typeof(Gene_BonusGenes))]
+    public BonusGenesInfo bonusGenes;
 
     /// <summary>
     ///     Properties for <see cref="Hediff_DietDependency" />.
@@ -235,27 +236,32 @@ public class DefModExtension_Gene : DefModExtension
     /// <summary>
     ///     Properties for <see cref="Gene_Flight" />.
     /// </summary>
-    [CanBeNull] public FlightInfo flight;
+    [CanBeNull] [GeneClass(typeof(Gene_Flight))]
+    public FlightInfo flight;
 
     /// <summary>
     ///     Properties for <see cref="Gene_Hyperlactation" />.
     /// </summary>
-    [CanBeNull] public HyperlactationInfo hyperlactation;
+    [CanBeNull] [GeneClass(typeof(Gene_Hyperlactation))]
+    public HyperlactationInfo hyperlactation;
 
     /// <summary>
     ///     Properties for <see cref="Gene_SeeingRed" />.
     /// </summary>
-    [CanBeNull] public SeeingRedInfo seeingRed;
+    [CanBeNull] [GeneClass(typeof(Gene_SeeingRed))]
+    public SeeingRedInfo seeingRed;
 
     /// <summary>
     ///     Properties for <see cref="Gene_Regeneration" />.
     /// </summary>
-    [CanBeNull] public RegenerationInfo regeneration;
+    [CanBeNull] [GeneClass(typeof(Gene_Regeneration))]
+    public RegenerationInfo regeneration;
 
     /// <summary>
     ///     Properties for <see cref="Gene_LoveEuphoria" />.
     /// </summary>
-    [CanBeNull] public LoveEuphoriaInfo loveEuphoria;
+    [CanBeNull] [GeneClass(typeof(Gene_LoveEuphoria))]
+    public LoveEuphoriaInfo loveEuphoria;
 
     #endregion
 
@@ -361,36 +367,29 @@ public class DefModExtension_Gene : DefModExtension
         if (!typeof(GeneExt).IsAssignableFrom(geneClass))
             yield return "geneClass is not GeneExt or subclass thereof";
 
-        string error;
+        foreach (var fieldInfo in GetType().GetFields())
+        {
+            var expectedClass = fieldInfo.TryGetAttribute<GeneClassAttribute>()?.geneClass;
+            if (expectedClass == null)
+                continue;
 
-        error = CheckCorrectClass(bonusGenes, typeof(Gene_BonusGenes));
-        if (error != null)
-            yield return error;
-
-        error = CheckCorrectClass(hyperlactation, typeof(Gene_Hyperlactation));
-        if (error != null)
-            yield return error;
-
-        error = CheckCorrectClass(seeingRed, typeof(Gene_SeeingRed));
-        if (error != null)
-            yield return error;
-
-        error = CheckCorrectClass(loveEuphoria, typeof(Gene_LoveEuphoria));
-        if (error != null)
-            yield return error;
+            string error = CheckCorrectClass(fieldInfo.GetValue(this), expectedClass, fieldInfo.Name);
+            if (error != null)
+                yield return error;
+        }
     }
 
     private string CheckCorrectClass(
         object field,
-        Type type,
+        Type expectedClass,
         [CallerArgumentExpression("field")] string fieldName = null)
     {
         var geneClass = (parent as GeneDef)?.geneClass ?? (parent as GeneTemplateDef)?.geneClass;
 
-        if (field != null && !type.IsAssignableFrom(geneClass))
-            return $"{fieldName} set but geneClass is not {type.Name} or subclass thereof";
-        if (field == null && type.IsAssignableFrom(geneClass))
-            return $"{fieldName} not set but geneClass is {type.Name} or subclass thereof";
+        if (field != null && !expectedClass.IsAssignableFrom(geneClass))
+            return $"{fieldName} set but geneClass is not {expectedClass.Name} or subclass thereof";
+        if (field == null && expectedClass.IsAssignableFrom(geneClass))
+            return $"{fieldName} not set but geneClass is {expectedClass.Name} or subclass thereof";
 
         return null;
     }
