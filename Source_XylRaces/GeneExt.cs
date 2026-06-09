@@ -268,10 +268,45 @@ public class GeneExt : Gene, INotificationListener
         }
     }
 
+    public void GenerateExtraApparel()
+    {
+        foreach (var item in DefExt.extraApparel!)
+        {
+            if (!Rand.Chance(item.chance))
+                continue;
+
+            var apparel = PawnApparelGenerator.GenerateApparelOfDefFor(pawn, item.item);
+            if (apparel != null && apparel.PawnCanWear(pawn))
+            {
+                PawnApparelGenerator.PostProcessApparel(apparel, pawn);
+                PawnGenerator.PostProcessGeneratedGear(apparel, pawn);
+                pawn.apparel.Wear(apparel, dropReplacedApparel: false);
+            }
+        }
+    }
+
+    public void Notify_PostGenerateNewPawn(PawnGenerationRequest request)
+    {
+        if (!request.ForceNoGear && !request.AllowedDevelopmentalStages.Newborn())
+            GenerateExtraApparel();
+    }
+
+    public void Notify_PostRedressPawn(PawnGenerationRequest request)
+    {
+        if (!request.ForceNoGear && !request.AllowedDevelopmentalStages.Newborn())
+            GenerateExtraApparel();
+    }
+
     public virtual void RegisterWith(NotificationManager manager)
     {
         if (!DefExt.permanentHediffs.NullOrEmpty())
             manager.Register(NotificationDefOf.PostCheckForStateChange, pawn, Notify_HediffStateChange);
+
+        if (!DefExt.extraApparel.NullOrEmpty())
+        {
+            manager.Register<PawnGenerationRequest>(NotificationDefOf.PostGenerateNewPawn, pawn, Notify_PostGenerateNewPawn);
+            manager.Register<PawnGenerationRequest>(NotificationDefOf.PostRedressPawn, pawn, Notify_PostRedressPawn);
+        }
     }
 
     public void PreUnregister(NotificationManager manager)

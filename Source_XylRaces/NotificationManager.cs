@@ -76,6 +76,12 @@ public static class NotificationDefOf
     public static NotificationDef PostDowned;
 
     /// <summary>
+    ///     Called after <see cref="PawnGenerator.GenerateNewPawnInternal"/>.
+    ///     This hook passes a <see cref="PawnGenerationRequest"/> as its "data" parameter.
+    /// </summary>
+    public static NotificationDef PostGenerateNewPawn;
+
+    /// <summary>
     ///     Called after <see cref="Pawn_GeneTracker.Notify_GenesChanged" />.
     /// </summary>
     public static NotificationDef PostGenesChanged;
@@ -112,6 +118,12 @@ public static class NotificationDefOf
     ///     Called after <see cref="Thing.PostMake" />.
     /// </summary>
     public static NotificationDef PostPostMake;
+
+    /// <summary>
+    ///     Called after <see cref="PawnGenerator.RedressPawn"/>.
+    ///     This hook passes a <see cref="PawnGenerationRequest"/> as its "data" parameter.
+    /// </summary>
+    public static NotificationDef PostRedressPawn;
 
     /// <summary>
     ///     Called after <see cref="GeneUtility.SatisfyChemicalGenes" />.

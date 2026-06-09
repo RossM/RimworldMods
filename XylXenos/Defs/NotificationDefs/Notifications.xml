@@ -62,4 +62,14 @@
     <dataType>Pawn</dataType>
   </XylXenos.NotificationDef>
 
+  <XylXenos.NotificationDef>
+    <defName>PostRedressPawn</defName>
+    <dataType>PawnGenerationRequest</dataType>
+  </XylXenos.NotificationDef>
+
+  <XylXenos.NotificationDef>
+    <defName>PostGenerateNewPawn</defName>
+    <dataType>PawnGenerationRequest</dataType>
+  </XylXenos.NotificationDef>
+
 </Defs>
