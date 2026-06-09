@@ -226,6 +226,9 @@ public class GeneExt : Gene, INotificationListener
 
     public static bool ValidApparel(Pawn pawn, ThingDef thing, bool ignoreRestrictions = false)
     {
+        if (thing == null)
+            return false;
+
         if (!thing.apparel.PawnCanWear(pawn))
             return false;
 

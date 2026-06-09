@@ -40,12 +40,13 @@
             <countToAffect>2</countToAffect>
           </li>
         </congenitalHediffs>
-        <startingItems>
+        <extraApparel>
           <li>
             <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
             <chance>0.2</chance>
+            <ignoreRestrictions>true</ignoreRestrictions>
           </li>
-        </startingItems>
+        </extraApparel>
       </li>
     </modExtensions>
   </GeneDef>
