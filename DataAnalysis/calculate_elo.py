@@ -14,8 +14,9 @@ DEFAULT_OUTPUT = Path(__file__).resolve().parent / "elo_ratings.csv"
 ELO_LOGIT_SCALE = math.log(10.0) / 400.0
 
 
-def load_matches(path: Path) -> tuple[list[str], torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+def load_matches(path: Path) -> tuple[list[str], list[int], torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
     unit_to_index: dict[str, int] = {}
+    unit_appearances: list[int] = []
     side_a: list[int] = []
     side_b: list[int] = []
     count_a: list[float] = []
@@ -25,6 +26,7 @@ def load_matches(path: Path) -> tuple[list[str], torch.Tensor, torch.Tensor, tor
     def index_for(unit_type: str) -> int:
         if unit_type not in unit_to_index:
             unit_to_index[unit_type] = len(unit_to_index)
+            unit_appearances.append(0)
         return unit_to_index[unit_type]
 
     with path.open(newline="", encoding="utf-8") as combat_log:
@@ -45,8 +47,13 @@ def load_matches(path: Path) -> tuple[list[str], torch.Tensor, torch.Tensor, tor
             if result not in (-1, 0, 1):
                 raise ValueError(f"Expected result -1, 0, or 1 on line {line_number}, got {result}")
 
-            side_a.append(index_for(unit_a))
-            side_b.append(index_for(unit_b))
+            index_a = index_for(unit_a)
+            index_b = index_for(unit_b)
+            unit_appearances[index_a] += 1
+            unit_appearances[index_b] += 1
+
+            side_a.append(index_a)
+            side_b.append(index_b)
             count_a.append(math.log(parsed_count_a))
             count_b.append(math.log(parsed_count_b))
             targets.append({1: 1.0, 0: 0.5, -1: 0.0}[result])
@@ -54,6 +61,7 @@ def load_matches(path: Path) -> tuple[list[str], torch.Tensor, torch.Tensor, tor
     unit_types = [unit_type for unit_type, _index in sorted(unit_to_index.items(), key=lambda item: item[1])]
     return (
         unit_types,
+        unit_appearances,
         torch.tensor(side_a, dtype=torch.long),
         torch.tensor(side_b, dtype=torch.long),
         torch.tensor(count_a, dtype=torch.float32),
@@ -117,17 +125,23 @@ def train_elo(
     return ratings, combat_power
 
 
-def write_ratings(path: Path, unit_types: list[str], ratings: torch.Tensor, combat_power: torch.Tensor) -> None:
+def write_ratings(
+    path: Path,
+    unit_types: list[str],
+    unit_appearances: list[int],
+    ratings: torch.Tensor,
+    combat_power: torch.Tensor,
+) -> None:
     ranked = sorted(
-        zip(unit_types, ratings.tolist(), combat_power.tolist(), strict=True),
-        key=lambda item: item[1],
+        zip(unit_types, unit_appearances, ratings.tolist(), combat_power.tolist(), strict=True),
+        key=lambda item: item[2],
         reverse=True,
     )
     with path.open("w", newline="", encoding="utf-8") as output:
         writer = csv.writer(output)
-        writer.writerow(["unit_type", "elo", "combat_power"])
-        for unit_type, rating, power in ranked:
-            writer.writerow([unit_type, f"{rating:.2f}", f"{power:.2f}"])
+        writer.writerow(["unit_type", "appearances", "elo", "combat_power"])
+        for unit_type, appearances, rating, power in ranked:
+            writer.writerow([unit_type, appearances, f"{rating:.2f}", f"{power:.2f}"])
 
 
 def parse_args() -> argparse.Namespace:
@@ -160,7 +174,7 @@ def main() -> None:
     torch.manual_seed(0)
     args = parse_args()
 
-    unit_types, side_a, side_b, count_a, count_b, targets = load_matches(args.input)
+    unit_types, unit_appearances, side_a, side_b, count_a, count_b, targets = load_matches(args.input)
     if not unit_types:
         raise ValueError(f"No matches found in {args.input}")
 
@@ -176,7 +190,7 @@ def main() -> None:
         tolerance_change=args.tolerance_change,
         center_penalty=args.center_penalty,
     )
-    write_ratings(args.output, unit_types, ratings, combat_power)
+    write_ratings(args.output, unit_types, unit_appearances, ratings, combat_power)
 
     print(f"Wrote {len(unit_types)} Elo ratings to {args.output}")
 
