@@ -9,6 +9,7 @@
       <fadeOutTime>0.5</fadeOutTime>
       <solidTime>999999</solidTime>
       <needsMaintenance>true</needsMaintenance>
+      <fadeOutUnmaintained>true</fadeOutUnmaintained>
     </mote>
   </ThingDef>
 
