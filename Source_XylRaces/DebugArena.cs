@@ -24,10 +24,10 @@ public static class DebugArena
         [
             "Tribal_Penitent",
             "Tribal_Archer",
-            "Drifter",
+            "Logger",
             "Grenadier_Destructive",
+            "Mercenary_Gunner",
             "Empire_Fighter_Janissary",
-            "Empire_Fighter_StellicGuardMelee",
         ];
 
         bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
