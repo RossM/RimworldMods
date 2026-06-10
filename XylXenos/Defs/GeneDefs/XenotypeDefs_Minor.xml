@@ -3,48 +3,6 @@
 <Defs>
 
   <XenotypeDef>
-    <defName>XylGaunt</defName>
-    <label>gaunt</label>
-    <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon4</iconPath>
-    <combatPowerFactor>2.7</combatPowerFactor>
-    <inheritable>true</inheritable>
-    <genes>
-      <li>XylWoundHealing_UltraFast</li>
-      <li>XylUnnaturalToughness</li>
-      <li>Superclotting</li>
-      <li>MoveSpeed_VeryQuick</li>
-      <li>NakedSpeed</li>
-      <li>UVSensitivity_Intense</li>
-      <li>FireTerror</li>
-      <li>Aggression_HyperAggressive</li>
-      <li>MeleeDamage_Strong</li>
-      <li>KillThirst</li>
-      <li>XylRetractableClaws</li>
-      <li>LowSleep</li>
-      <li>Pain_Reduced</li>
-      <li>Sterile</li>
-      <li>XylParthenogenic</li>
-      <li>Eyes_Red</li>
-      <li>Beard_NoBeardOnly</li>
-      <li>Ears_Pointed</li>
-      <li>Head_Gaunt</li>
-      <li>XylRibs</li>
-      <li>Body_Standard</li>
-      <li>Body_Thin</li>
-      <li>Hair_DarkBlack</li>
-      <li>Hair_InkBlack</li>
-      <li>XylSkin_DarkPurple</li>
-      <li>XylVoracious</li>
-      <li>XylDwarf</li>
-      <li>DarkVision</li>
-      <li>CaveDweller</li>
-      <li>Unstoppable</li>
-      <li>AptitudeRemarkable_Melee</li>
-      <li>AptitudeTerrible_Animals</li>
-    </genes>
-  </XenotypeDef>
-
-  <XenotypeDef>
     <defName>XylSuccuboid</defName>
     <label>succuboid</label>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon3</iconPath>
