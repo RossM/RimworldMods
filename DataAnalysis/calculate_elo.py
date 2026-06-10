@@ -125,7 +125,7 @@ def train_elo(
     samples = torch.bincount(side_a, minlength = unit_count) + torch.bincount(side_b, minlength = unit_count)
     learned_logits = rating_logits.detach()
     ratings = 1500.0 + (learned_logits / ELO_LOGIT_SCALE) * (1 - 0.98 ** samples)
-    combat_power = torch.exp(learned_logits / count_importance.item()) * 60.0
+    combat_power = torch.exp(learned_logits / count_importance.item()) * 120.0
     return ratings, combat_power, samples
 
 
