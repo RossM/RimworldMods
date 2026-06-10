@@ -24,16 +24,9 @@ public static class DebugArena
         [
             "Tribal_Penitent",
             "Tribal_Archer",
-            "Tribal_Miner",
             "Drifter",
-            "Salvager_Pirate",
-            "Horaxian_Gunner",
-            "Miner",
             "Grenadier_Destructive",
             "Empire_Fighter_Janissary",
-            "Salvager_Elite",
-            "Empire_Fighter_StellicGuardRanged",
-            "Logger",
             "Empire_Fighter_StellicGuardMelee",
         ];
 
