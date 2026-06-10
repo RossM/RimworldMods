@@ -121,7 +121,7 @@ def train_elo(
 
     learned_logits = rating_logits.detach()
     ratings = 1500.0 + (learned_logits / ELO_LOGIT_SCALE)
-    combat_power = torch.exp(learned_logits) * 60.0
+    combat_power = torch.exp(learned_logits / count_importance.item()) * 60.0
     return ratings, combat_power
 
 
