@@ -207,8 +207,8 @@ public static class DebugArena
             PawnKindDef lhsDef = kinds.RandomElementByWeight(PawnKindWeight);
             PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(PawnKindWeight);
 
-            float lhsPower = lhsDef.combatPower * Rand.Range(1f, 4f);
-            float rhsPower = rhsDef.combatPower * Rand.Range(1f, 4f);
+            float lhsPower = lhsDef.combatPower * Mathf.Pow(5f, Rand.Range(-1f, 1f));
+            float rhsPower = rhsDef.combatPower;
 
             int totalCombatants = RandRangeExponential(2, 40);
 
