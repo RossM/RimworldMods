@@ -54,24 +54,6 @@ public static class DebugArena
         PerformBattleRoyale(pawnKindsForBattleRoyale);
     }
 
-    private static PawnKindDef PawnKindWithXenotype(PawnKindDef pawnKindDef, XenotypeDef xenotype)
-    {
-        if (!xenotypeSuffixes.TryGetValue(xenotype.defName, out string xenotypeSuffix))
-            xenotypeSuffix = "";
-
-        PawnKindDef newPawnKindDef = Gen.MemberwiseClone(pawnKindDef);
-        newPawnKindDef.useFactionXenotypes = false;
-        newPawnKindDef.xenotypeSet = new XenotypeSet
-        {
-            xenotypeChances = [new(xenotype, 1.0f)],
-        };
-        newPawnKindDef.defName = $"{pawnKindDef.defName}_{xenotype.defName}{xenotypeSuffix}";
-        newPawnKindDef.label = $"{xenotype.label} {pawnKindDef.label}";
-        newPawnKindDef.ignoreFactionApparelStuffRequirements = true;
-        newPawnKindDef.combatPower = pawnKindDef.combatPower * xenotype.combatPowerFactor;
-        return newPawnKindDef;
-    }
-
     [DebugAction("Autotests")]
     public static void BattleRoyaleByPawnKind()
     {
@@ -91,6 +73,55 @@ public static class DebugArena
         }
 
         PerformBattleRoyale(pawnKindsForBattleRoyale);
+    }
+
+    [DebugAction("Autotests")]
+    public static void BattleRoyaleSpecial()
+    {
+        List<PawnKindDef> pawnKindsForBattleRoyale = [];
+        List<(string pawnKind, string xenotype)> pairs =
+        [
+            ("Empire_Fighter_StellicGuardMelee", "Baseliner"),
+            ("Empire_Fighter_StellicGuardRanged", "Baseliner"),
+            ("HiveQueen", null),
+            ("Empire_Fighter_Cataphract", "XylTitan"),
+            ("AlphaThrumbo", null),
+            ("Grenadier_Destructive", "XylTrog"),
+            ("Empire_Fighter_Cataphract", "XylWarcat"),
+            ("Mercenary_Slasher", "XylWarcat"),
+            ("TradersGuild_Elite", "Baseliner"),
+            ("Empire_Fighter_Cataphract", "XylTrog"),
+            ("Empire_Fighter_Janissary", "Impid"),
+            ("Mercenary_Slasher", "Neanderthal"),
+        ];
+
+        foreach (var pair in pairs)
+        {
+            var pawnKindDef = DefDatabase<PawnKindDef>.GetNamed(pair.pawnKind);
+            pawnKindsForBattleRoyale.Add(pair.xenotype != null
+                ? PawnKindWithXenotype(pawnKindDef, DefDatabase<XenotypeDef>.GetNamed(pair.xenotype))
+                : pawnKindDef);
+        }
+
+        PerformBattleRoyale(pawnKindsForBattleRoyale);
+    }
+
+    private static PawnKindDef PawnKindWithXenotype(PawnKindDef pawnKindDef, XenotypeDef xenotype)
+    {
+        if (!xenotypeSuffixes.TryGetValue(xenotype.defName, out string xenotypeSuffix))
+            xenotypeSuffix = "";
+
+        PawnKindDef newPawnKindDef = Gen.MemberwiseClone(pawnKindDef);
+        newPawnKindDef.useFactionXenotypes = false;
+        newPawnKindDef.xenotypeSet = new XenotypeSet
+        {
+            xenotypeChances = [new(xenotype, 1.0f)],
+        };
+        newPawnKindDef.defName = $"{pawnKindDef.defName}_{xenotype.defName}{xenotypeSuffix}";
+        newPawnKindDef.label = $"{xenotype.label} {pawnKindDef.label}";
+        newPawnKindDef.ignoreFactionApparelStuffRequirements = true;
+        newPawnKindDef.combatPower = pawnKindDef.combatPower * xenotype.combatPowerFactor;
+        return newPawnKindDef;
     }
 
     public static void PerformBattleRoyale(IEnumerable<PawnKindDef> kindsEnumerable)
@@ -156,6 +187,12 @@ public static class DebugArena
             float exponent = Rand.Range(1.0f, 2.0f);
             float lhsPower = Mathf.Pow(lhsDef.combatPower, exponent);
             float rhsPower = Mathf.Pow(rhsDef.combatPower, exponent);
+
+            if (Rand.Chance(0.5f))
+            {
+                lhsPower *= (float)(1 + wins[lhsDef]) / (1 + total[lhsDef] - wins[lhsDef]);
+                rhsPower *= (float)(1 + wins[rhsDef]) / (1 + total[rhsDef] - wins[rhsDef]);
+            }
 
             int totalCombatants = RandRangeExponential(2, 40);
 
