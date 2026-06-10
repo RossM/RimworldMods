@@ -13,37 +13,40 @@ public static class DebugArena
     {
     };
 
+    static readonly Dictionary<string, float> combatPowerTmp = new();
+
     [DebugAction("Autotests")]
     public static void BattleRoyaleByXenotype()
     {
         var pawnKindsForBattleRoyale = new List<PawnKindDef>();
 
-        var pawnKindDefs = new List<PawnKindDef>
-        {
-            DefDatabase<PawnKindDef>.GetNamed("Tribal_Penitent"),
-            DefDatabase<PawnKindDef>.GetNamed("Tribal_Archer"),
-            DefDatabase<PawnKindDef>.GetNamed("Tribal_Berserker"),
-            DefDatabase<PawnKindDef>.GetNamed("Scavenger"),
-            DefDatabase<PawnKindDef>.GetNamed("Villager"),
-            DefDatabase<PawnKindDef>.GetNamed("Town_Guard"),
-            DefDatabase<PawnKindDef>.GetNamed("Grenadier_Destructive"),
-            DefDatabase<PawnKindDef>.GetNamed("Mercenary_Gunner"),
-            DefDatabase<PawnKindDef>.GetNamed("Mercenary_Sniper"),
-            DefDatabase<PawnKindDef>.GetNamed("Mercenary_Slasher"),
-        };
-
-        if (ModLister.RoyaltyInstalled)
-        {
-            pawnKindDefs.Add(DefDatabase<PawnKindDef>.GetNamed("Empire_Fighter_Janissary"));
-            pawnKindDefs.Add(DefDatabase<PawnKindDef>.GetNamed("Empire_Fighter_Cataphract"));
-        }
+        List<string> pawnKinds =
+        [
+            "Tribal_Penitent",
+            "Tribal_Archer",
+            "Tribal_Miner",
+            "Drifter",
+            "Salvager_Pirate",
+            "Horaxian_Gunner",
+            "Miner",
+            "Grenadier_Destructive",
+            "Empire_Fighter_Janissary",
+            "Salvager_Elite",
+            "Empire_Fighter_StellicGuardRanged",
+            "Logger",
+            "Empire_Fighter_StellicGuardMelee",
+        ];
 
         bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
 
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.Where(ValidXenotype).ToList();
 
-        foreach (var pawnKindDef in pawnKindDefs)
+        foreach (var pawnKind in pawnKinds)
         {
+            var pawnKindDef = DefDatabase<PawnKindDef>.GetNamed(pawnKind);
+            if (pawnKindDef == null)
+                continue;
+
             foreach (var xenotype in xenotypes)
             {
                 PawnKindDef newPawnKindDef = PawnKindWithXenotype(pawnKindDef, xenotype);
@@ -163,10 +166,12 @@ public static class DebugArena
             total[def] = 0;
         }
 
-        string path = GenFilePaths.SaveDataFolderPath + Path.DirectorySeparatorChar + "CombatArena.csv";
+        string resultsPath = GenFilePaths.SaveDataFolderPath + Path.DirectorySeparatorChar + "CombatArena.csv";
+        string ratingsPath = GenFilePaths.SaveDataFolderPath + Path.DirectorySeparatorChar + "elo_ratings.csv";
+
         try
         {
-            using var streamReader = new StreamReader(path);
+            using var streamReader = new StreamReader(resultsPath);
             while (streamReader.ReadLine() is { } line)
             {
                 var parts = line.Split(',');
@@ -201,14 +206,44 @@ public static class DebugArena
             if (currentFights >= maxFights)
                 return false;
 
-            bool winners = Rand.Chance(0.5f);
+            combatPowerTmp.Clear();
+
+            // We read the ratings every time in case they have changed
+            try
+            {
+                using var streamReader = new StreamReader(ratingsPath);
+                while (streamReader.ReadLine() is { } line)
+                {
+                    var parts = line.Split(',');
+
+                    if (parts[0] == "unit_type")
+                        continue;
+
+                    string unit_type = parts[0];
+                    float combat_power = float.Parse(parts[3]);
+
+                    combatPowerTmp[unit_type] = combat_power;
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
             float PawnKindWeight(PawnKindDef def) => Mathf.Pow(0.98f, total[def]);
 
             PawnKindDef lhsDef = kinds.RandomElementByWeight(PawnKindWeight);
             PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(PawnKindWeight);
 
-            float lhsPower = lhsDef.combatPower * Mathf.Pow(5f, Rand.Range(-1f, 1f));
-            float rhsPower = rhsDef.combatPower;
+            if (!combatPowerTmp.TryGetValue(lhsDef.defName, out float lhsPower))
+                lhsPower = lhsDef.combatPower;
+            if (!combatPowerTmp.TryGetValue(rhsDef.defName, out float rhsPower))
+                rhsPower = rhsDef.combatPower;
+
+            lhsPower = Mathf.Clamp(lhsPower, 20, 800);
+            rhsPower = Mathf.Clamp(rhsPower, 20, 800);
+
+            lhsPower *= Mathf.Pow(5f, Rand.Range(-1f, 1f));
 
             int totalCombatants = RandRangeExponential(2, 40);
 
@@ -232,7 +267,7 @@ public static class DebugArena
                 currentFights -= 1;
 
                 // Log to file
-                using StreamWriter streamWriter = new StreamWriter(path, append: true);
+                using StreamWriter streamWriter = new StreamWriter(resultsPath, append: true);
                 int score = result.winner switch
                 {
                     ArenaResult.Winner.Other => 0,

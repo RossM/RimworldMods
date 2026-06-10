@@ -143,9 +143,9 @@ def write_ratings(
     )
     with path.open("w", newline="", encoding="utf-8") as output:
         writer = csv.writer(output)
-        writer.writerow(["unit_type", "appearances", "elo", "combat_power"])
-        for unit_type, appearances, rating, power in ranked:
-            writer.writerow([unit_type, appearances, f"{rating:.2f}", f"{power:.2f}"])
+        writer.writerow(["unit_type", "samples", "elo", "combat_power"])
+        for unit_type, samples, rating, power in ranked:
+            writer.writerow([unit_type, samples, f"{rating:.2f}", f"{power:.2f}"])
 
 
 def parse_args() -> argparse.Namespace:
@@ -168,8 +168,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--center-penalty",
         type=float,
-        default=1e-1,
-        help="MSE penalty on large scores. Default: 1e-1",
+        default=1e-4,
+        help="MSE penalty on large scores. Default: 1e-4",
     )
     return parser.parse_args()
 
