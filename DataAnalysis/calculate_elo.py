@@ -99,7 +99,10 @@ def train_elo(
         fit_loss = F.binary_cross_entropy_with_logits(logits, targets)
         elo_offsets = rating_logits / ELO_LOGIT_SCALE
         center_loss = torch.mean(rating_logits.square())
-        loss = fit_loss + center_penalty * center_loss
+        if center_penalty > 0:
+            loss = fit_loss + center_penalty * center_loss
+        else:
+            loss = fit_loss + torch.mean(rating_logits).square()
         return loss, fit_loss, center_loss
 
     def closure() -> torch.Tensor:
