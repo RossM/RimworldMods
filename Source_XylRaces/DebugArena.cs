@@ -110,6 +110,12 @@ public static class DebugArena
             ("PirateBoss", "Baseliner"),
             ("Empire_Fighter_Cataphract", "Hussar"),
             ("Empire_Fighter_StellicGuardMelee", "Baseliner"),
+            ("Boomrat", null),
+            ("XylSelkie", null),
+            ("Dromedary", null),
+            ("Bear_Grizzly", null),
+            ("AlphaThrumbo", null),
+            ("HiveQueen", null),
         ];
 
         foreach (var pair in pairs)
