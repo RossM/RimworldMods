@@ -188,11 +188,8 @@ public static class DebugArena
             float lhsPower = Mathf.Pow(lhsDef.combatPower, exponent);
             float rhsPower = Mathf.Pow(rhsDef.combatPower, exponent);
 
-            if (Rand.Chance(0.5f))
-            {
-                lhsPower *= (float)(1 + wins[lhsDef]) / (1 + total[lhsDef] - wins[lhsDef]);
-                rhsPower *= (float)(1 + wins[rhsDef]) / (1 + total[rhsDef] - wins[rhsDef]);
-            }
+            lhsPower *= Rand.Range(1f, 4f);
+            rhsPower *= Rand.Range(1f, 4f);
 
             int totalCombatants = RandRangeExponential(2, 40);
 
