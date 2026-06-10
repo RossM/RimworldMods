@@ -24,9 +24,11 @@ public static class DebugArena
         [
             "Tribal_Penitent",
             "Tribal_Archer",
-            "Logger",
+            "Tribal_Berserker",
             "Grenadier_Destructive",
+            "Mercenary_Slasher",
             "Mercenary_Gunner",
+            "Salvager_Elite",
             "Empire_Fighter_Janissary",
         ];
 
