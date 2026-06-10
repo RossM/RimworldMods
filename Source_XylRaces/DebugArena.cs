@@ -67,7 +67,7 @@ public static class DebugArena
                 var xenotypeSet = pawnKindDef.xenotypeSet ?? pawnKindDef.defaultFactionDef?.xenotypeSet;
                 var xenotype = XenotypeDefOf.Baseliner;
                 if (xenotypeSet != null)
-                    xenotype = xenotypeSet?.Count == 1 ? xenotypeSet[0].xenotype : xenotypeSet.DefaultXenotype;
+                    xenotype = xenotypeSet.Count == 1 && xenotypeSet[0].chance >= 1 ? xenotypeSet[0].xenotype : xenotypeSet.DefaultXenotype;
                 pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(pawnKindDef, xenotype));
             }
         }
@@ -202,17 +202,13 @@ public static class DebugArena
                 return false;
 
             bool winners = Rand.Chance(0.5f);
-            float PawnKindWeight(PawnKindDef def) => 1.0f / (1 + (winners ? wins[def] : total[def] - wins[def]));
+            float PawnKindWeight(PawnKindDef def) => Mathf.Pow(0.98f, total[def]);
 
             PawnKindDef lhsDef = kinds.RandomElementByWeight(PawnKindWeight);
             PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(PawnKindWeight);
 
-            float exponent = Rand.Range(1.0f, 2.0f);
-            float lhsPower = Mathf.Pow(lhsDef.combatPower, exponent);
-            float rhsPower = Mathf.Pow(rhsDef.combatPower, exponent);
-
-            lhsPower *= Rand.Range(1f, 4f);
-            rhsPower *= Rand.Range(1f, 4f);
+            float lhsPower = lhsDef.combatPower * Rand.Range(1f, 4f);
+            float rhsPower = rhsDef.combatPower * Rand.Range(1f, 4f);
 
             int totalCombatants = RandRangeExponential(2, 40);
 
