@@ -147,7 +147,8 @@ public static class DebugArena
             if (currentFights >= maxFights)
                 return false;
 
-            float PawnKindWeight(PawnKindDef def) => 1.0f / (1 + Math.Min(wins[def], total[def] - wins[def]));
+            bool winners = Rand.Chance(0.5f);
+            float PawnKindWeight(PawnKindDef def) => 1.0f / (1 + (winners ? wins[def] : total[def] - wins[def]));
 
             PawnKindDef lhsDef = kinds.RandomElementByWeight(PawnKindWeight);
             PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(PawnKindWeight);
