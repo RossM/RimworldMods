@@ -81,7 +81,7 @@ def train_elo(
     tolerance_grad: float,
     tolerance_change: float,
     center_penalty: float,
-) -> tuple[torch.Tensor, torch.Tensor]:
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     rating_logits = torch.nn.Parameter(torch.zeros(unit_count, dtype=torch.float32))
     count_importance = torch.nn.Parameter(torch.tensor(0.0, dtype=torch.float32))
     optimizer = torch.optim.LBFGS(
@@ -122,21 +122,22 @@ def train_elo(
             f"count_importance={count_importance.item():.6f}"
         )
 
+    samples = torch.bincount(side_a) + torch.bincount(side_b)
     learned_logits = rating_logits.detach()
-    ratings = 1500.0 + (learned_logits / ELO_LOGIT_SCALE)
+    ratings = 1500.0 + (learned_logits / ELO_LOGIT_SCALE) * (1 - 0.98 ** samples)
     combat_power = torch.exp(learned_logits / count_importance.item()) * 60.0
-    return ratings, combat_power
+    return ratings, combat_power, samples
 
 
 def write_ratings(
     path: Path,
     unit_types: list[str],
-    unit_appearances: list[int],
+    samples: torch.Tensor,
     ratings: torch.Tensor,
     combat_power: torch.Tensor,
 ) -> None:
     ranked = sorted(
-        zip(unit_types, unit_appearances, ratings.tolist(), combat_power.tolist(), strict=True),
+        zip(unit_types, samples.tolist(), ratings.tolist(), combat_power.tolist(), strict=True),
         key=lambda item: item[2],
         reverse=True,
     )
@@ -181,7 +182,7 @@ def main() -> None:
     if not unit_types:
         raise ValueError(f"No matches found in {args.input}")
 
-    ratings, combat_power = train_elo(
+    ratings, combat_power, samples = train_elo(
         side_a=side_a,
         side_b=side_b,
         count_a=count_a,
@@ -193,7 +194,7 @@ def main() -> None:
         tolerance_change=args.tolerance_change,
         center_penalty=args.center_penalty,
     )
-    write_ratings(args.output, unit_types, unit_appearances, ratings, combat_power)
+    write_ratings(args.output, unit_types, samples, ratings, combat_power)
 
     print(f"Wrote {len(unit_types)} Elo ratings to {args.output}")
 
