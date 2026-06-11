@@ -8,6 +8,7 @@ public class Config : Def
         Joyless,
         UIChange,
         Parthenogenesis,
+        MiscBugfix
     }
 
     public static Config Instance => field ??= DefDatabase<Config>.AllDefs.Single();
