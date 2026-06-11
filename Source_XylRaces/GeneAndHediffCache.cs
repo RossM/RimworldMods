@@ -2,10 +2,9 @@
 
 namespace XylXenos;
 
-public class GeneAndHediffCache(Pawn pawn) : INotificationListener
+public class GeneAndHediffCache : INotificationListener, IPawnData
 {
-    public static readonly PawnDataManager<GeneAndHediffCache> DataManager = new(Make);
-    public Pawn pawn = pawn;
+    public Pawn pawn;
 
     private readonly Dictionary<Type, IList> genesByType = new();
     private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
@@ -15,11 +14,10 @@ public class GeneAndHediffCache(Pawn pawn) : INotificationListener
     private readonly Dictionary<Type, List<Hediff>> hediffsByModExt = new();
     private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
 
-    private static GeneAndHediffCache Make(Pawn pawn)
+    public void Init(Pawn pawn)
     {
-        var cache = new GeneAndHediffCache(pawn);
-        cache.RegisterWith(NotificationManager.Instance);
-        return cache;
+        this.pawn = pawn;
+        RegisterWith(NotificationManager.Instance);
     }
 
     [NotNull]

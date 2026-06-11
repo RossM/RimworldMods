@@ -1,50 +1,59 @@
 ﻿namespace XylXenos;
 
+public interface IPawnData
+{
+    void Init(Pawn pawn);
+}
+
 /// <summary>
 ///     Provides one shared helper object per pawn for state that is important for the mod but not appropriate to keep in
 ///     a pawn ThingComp, such as lookup caches or gene-derived aggregate values. Use <see cref="Get" /> to retrieve a
 ///     pawn's instance.
 /// </summary>
-public class PawnDataManager<T> : INotificationListener
+public static class PawnDataManager<T> where T : IPawnData, new()
 {
-    private readonly Dictionary<int, T> data = new();
-    private readonly Func<Pawn, T> makeFunc;
+    private static readonly Dictionary<int, T> data = new();
 
-    public PawnDataManager(Func<Pawn, T> makeFunc)
+    class Listener : INotificationListener
     {
-        this.makeFunc = makeFunc;
-        NotificationManager.staticListeners.Add(this);
+        private void Notify_PawnDiscarded(Thing thing)
+        {
+            data.Remove(thing.thingIDNumber);
+        }
+
+        private void Notify_PostGameDispose()
+        {
+            data.Clear();
+        }
+
+        public void RegisterWith(NotificationManager manager)
+        {
+            manager.Register(NotificationDefOf.PostDiscard, null, Notify_PawnDiscarded);
+            manager.Register(NotificationDefOf.GlobalPostGameDispose, null, Notify_PostGameDispose);
+        }
+
+        public void PreUnregister(NotificationManager manager)
+        {
+        }
+    }
+
+    private static readonly Listener listener = new();
+
+    static PawnDataManager()
+    {
+        NotificationManager.staticListeners.Add(listener);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public T Get(Pawn pawn)
+    public static T Get(Pawn pawn)
     {
         if (!data.TryGetValue(pawn.thingIDNumber, out T result))
         {
-            result = makeFunc(pawn);
+            result = new T();
+            result.Init(pawn);
             data.Add(pawn.thingIDNumber, result);
         }
 
         return result;
-    }
-
-    private void Notify_PawnDiscarded(Thing thing)
-    {
-        data.Remove(thing.thingIDNumber);
-    }
-
-    private void Notify_PostGameDispose()
-    {
-        data.Clear();
-    }
-
-    public void RegisterWith(NotificationManager manager)
-    {
-        manager.Register(NotificationDefOf.PostDiscard, null, Notify_PawnDiscarded);
-        manager.Register(NotificationDefOf.GlobalPostGameDispose, null, Notify_PostGameDispose);
-    }
-
-    public void PreUnregister(NotificationManager manager)
-    {
     }
 }
