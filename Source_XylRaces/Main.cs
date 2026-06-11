@@ -32,12 +32,16 @@ public class Main : Mod
     {
         Settings.instance = GetSettings<Settings>();
 
-        CodingStyleChecks();
+        using (new ProfileBlock("Coding style checks"))
+            CodingStyleChecks();
 
         var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
 
-        harmony.PatchCategory("PreLoadDefs");
-        harmony.PatchCategory(null);
+        using (new ProfileBlock("Harmony patching"))
+        {
+            harmony.PatchCategory("PreLoadDefs");
+            harmony.PatchCategory(null);
+        }
 
         RegisterXmlLoaders();
     }
