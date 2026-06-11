@@ -47,6 +47,9 @@ def load_matches(path: Path) -> tuple[list[str], list[int], torch.Tensor, torch.
             if result not in (-1, 0, 1):
                 raise ValueError(f"Expected result -1, 0, or 1 on line {line_number}, got {result}")
 
+            if result == 0:
+                continue
+
             index_a = index_for(unit_a)
             index_b = index_for(unit_b)
             unit_appearances[index_a] += 1
