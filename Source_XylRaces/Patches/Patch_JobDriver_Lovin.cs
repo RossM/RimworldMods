@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(JobDriver_Lovin))]
 public static class Patch_JobDriver_Lovin
 {
-    [Feature(typeof(NotificationManager))]
+    [Feature(nameof(NotificationDefOf.PostLovin))]
     [HarmonyPostfix]
     [HarmonyPatch("<MakeNewToils>b__12_4")]
     public static void MakeNewToils_Postfix(JobDriver_Lovin __instance)
