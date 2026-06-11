@@ -1,3 +1,4 @@
+using System.Collections;
 using System.IO;
 using RimWorld.Planet;
 using Verse.AI.Group;
@@ -32,6 +33,33 @@ public static class DebugArena
             "Empire_Fighter_Janissary",
         ];
 
+        List<string> animalPawnKinds =
+        [
+            "AlphaThrumbo",
+            "HiveQueen",
+            "Thrumbo",
+            "Megasloth",
+            "Elephant",
+            "Bear_Grizzly",
+            "Rhinoceros",
+            "Warg",
+            "Megaspider",
+            "Panther",
+            "Spelopede",
+            "Muffalo",
+            "Husky",
+            "Cassowary",
+            "Cobra",
+            "GuineaPig",
+            "Monkey",
+            "Rat",
+            "Locust",
+            "Megascarab",
+            "Hare",
+            "Chicken",
+            "Sparrow",
+        ];
+
         bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
 
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.Where(ValidXenotype).ToList();
@@ -47,6 +75,15 @@ public static class DebugArena
                 PawnKindDef newPawnKindDef = PawnKindWithXenotype(pawnKindDef, xenotype);
                 pawnKindsForBattleRoyale.Add(newPawnKindDef);
             }
+        }
+
+        foreach (var pawnKind in animalPawnKinds)
+        {
+            var pawnKindDef = DefDatabase<PawnKindDef>.GetNamed(pawnKind);
+            if (pawnKindDef == null)
+                continue;
+
+            pawnKindsForBattleRoyale.Add(pawnKindDef);
         }
 
         PerformBattleRoyale(pawnKindsForBattleRoyale);
@@ -74,57 +111,29 @@ public static class DebugArena
     }
 
     [DebugAction("Autotests")]
-    public static void BattleRoyaleSpecial()
+    public static void BattleRoyaleTop50()
     {
-        List<PawnKindDef> pawnKindsForBattleRoyale = [];
-        List<(string pawnKind, string xenotype)> pairs =
-        [
-            ("Sparrow", null),
-            ("Chicken", null),
-            ("Hare", null),
-            ("Tortoise", null),
-            ("Megascarab", null),
-            ("Goose", null),
-            ("Raccoon", null),
-            ("Yak", null),
-            ("Capybara", null),
-            ("Muffalo", null),
-            ("Caribou", null),
-            ("Megaspider", null),
-            ("LabradorRetriever", null),
-            ("Elephant", null),
-            ("Thrumbo", null),
-            ("Megasloth", null),
-            ("Tribal_Penitent", "Starjack"),
-            ("Mercenary_Gunner", "Genie"),
-            ("Scavenger", "Impid"),
-            ("Tribal_Archer", "XylNixie"),
-            ("Grenadier_Destructive", "Yttakin"),
-            ("Mercenary_Slasher", "Baseliner"),
-            ("Hunter", "Baseliner"),
-            ("Villager", "XylBossaps"),
-            ("AncientSoldier", "Baseliner"),
-            ("Mercenary_Gunner", "Hussar"),
-            ("PirateBoss", "Baseliner"),
-            ("Empire_Fighter_Cataphract", "Hussar"),
-            ("Empire_Fighter_StellicGuardMelee", "Baseliner"),
-            ("Boomrat", null),
-            ("XylSelkie", null),
-            ("Dromedary", null),
-            ("Bear_Grizzly", null),
-            ("AlphaThrumbo", null),
-            ("HiveQueen", null),
-        ];
+        bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
 
-        foreach (var pair in pairs)
+        var xenotypes = DefDatabase<XenotypeDef>.AllDefs.Where(ValidXenotype).ToList();
+
+        List<PawnKindDef> pawnKindsForBattleRoyale = [];
+        foreach (var pawnKindDef in DefDatabase<PawnKindDef>.AllDefsListForReading)
         {
-            var pawnKindDef = DefDatabase<PawnKindDef>.GetNamed(pair.pawnKind);
-            pawnKindsForBattleRoyale.Add(pair.xenotype != null
-                ? PawnKindWithXenotype(pawnKindDef, DefDatabase<XenotypeDef>.GetNamed(pair.xenotype))
-                : pawnKindDef);
+            if (pawnKindDef.RaceProps.Humanlike)
+            {
+                foreach (var xenotypeDef in xenotypes)
+                {
+                    pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(pawnKindDef, xenotypeDef));
+                }
+            }
+            else
+            {
+                pawnKindsForBattleRoyale.Add(pawnKindDef);
+            }
         }
 
-        PerformBattleRoyale(pawnKindsForBattleRoyale);
+        PerformBattleRoyale(pawnKindsForBattleRoyale, scoreRankLimit: 50);
     }
 
     private static PawnKindDef PawnKindWithXenotype(PawnKindDef pawnKindDef, XenotypeDef xenotype)
@@ -145,7 +154,7 @@ public static class DebugArena
         return newPawnKindDef;
     }
 
-    public static void PerformBattleRoyale(IEnumerable<PawnKindDef> kindsEnumerable)
+    public static void PerformBattleRoyale(IEnumerable<PawnKindDef> kindsEnumerable, int scoreRankLimit = -1)
     {
         if (!ValidateArenaCapability())
             return;
@@ -215,9 +224,11 @@ public static class DebugArena
                         continue;
 
                     string unit_type = parts[0];
+                    int samples = int.Parse(parts[1]);
                     float combat_power = float.Parse(parts[3]);
 
-                    combatPowerTmp[unit_type] = combat_power;
+                    if (samples >= 10)
+                        combatPowerTmp[unit_type] = combat_power;
                 }
             }
             catch (Exception)
@@ -226,14 +237,17 @@ public static class DebugArena
             }
 
             float PawnKindWeight(PawnKindDef def) => Mathf.Pow(0.98f, total[def]);
+            float CombatPower(PawnKindDef def) => combatPowerTmp.TryGetValue(def.defName, out float value) ? value : def.combatPower;
 
-            PawnKindDef lhsDef = kinds.RandomElementByWeight(PawnKindWeight);
-            PawnKindDef rhsDef = kinds.Where(def => def != lhsDef).RandomElementByWeight(PawnKindWeight);
+            List<PawnKindDef> filteredKinds = kinds;
+            if (scoreRankLimit > 0)
+                filteredKinds = kinds.OrderByDescending(CombatPower).Take(scoreRankLimit).ToList();
 
-            if (!combatPowerTmp.TryGetValue(lhsDef.defName, out float lhsPower))
-                lhsPower = lhsDef.combatPower;
-            if (!combatPowerTmp.TryGetValue(rhsDef.defName, out float rhsPower))
-                rhsPower = rhsDef.combatPower;
+            PawnKindDef lhsDef = filteredKinds.RandomElementByWeight(PawnKindWeight);
+            PawnKindDef rhsDef = filteredKinds.Where(def => def != lhsDef).RandomElementByWeight(PawnKindWeight);
+
+            float lhsPower = CombatPower(lhsDef);
+            float rhsPower = CombatPower(rhsDef);
 
             lhsPower = Mathf.Clamp(lhsPower, 20, 800);
             rhsPower = Mathf.Clamp(rhsPower, 20, 800);
