@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using System.Xml;
 
 namespace XylXenos;
@@ -6,10 +7,6 @@ namespace XylXenos;
 [StaticConstructorOnStartup]
 public static class PatchLate
 {
-    // ReSharper disable PossibleNullReferenceException
-    private static Assembly MyAssembly => MethodBase.GetCurrentMethod().ReflectedType.Assembly;
-    // ReSharper restore PossibleNullReferenceException
-
     static PatchLate()
     {
         var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
@@ -17,7 +14,7 @@ public static class PatchLate
         harmony.PatchCategory("PostLoadDefs");
 
         // TODO Split infix patching into early and late
-        InfixPatcher.PatchInfix(harmony, MyAssembly);
+        InfixPatcher.PatchInfix(harmony, Assembly.GetExecutingAssembly());
     }
 }
 
@@ -25,9 +22,11 @@ public static class PatchLate
 [StaticConstructorOnStartup]
 public class Main : Mod
 {
-    // ReSharper disable PossibleNullReferenceException
-    private static Assembly MyAssembly => MethodBase.GetCurrentMethod().ReflectedType.Assembly;
-    // ReSharper restore PossibleNullReferenceException
+    [DebugAction(allowedGameStates = AllowedGameStates.Entry)]
+    public static void DebuggerBreak()
+    {
+        Debugger.Break();
+    }
 
     public Main(ModContentPack content) : base(content)
     {
@@ -70,7 +69,7 @@ public class Main : Mod
 
     private static void CodingStyleChecks()
     {
-        Assembly assembly = MyAssembly;
+        Assembly assembly = Assembly.GetExecutingAssembly();
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
             if (!Attribute.IsDefined(type, typeof(HarmonyPatch)))
