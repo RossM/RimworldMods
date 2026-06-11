@@ -21,31 +21,26 @@ public static class DebugArena
     {
         var pawnKindsForBattleRoyale = new List<PawnKindDef>();
 
-        List<string> pawnKinds =
+        List<string> humanoidPawnKinds =
         [
-            "Tribal_Penitent",
             "Tribal_Archer",
             "Tribal_Berserker",
-            "Grenadier_Destructive",
             "Mercenary_Slasher",
             "Mercenary_Gunner",
-            "Salvager_Elite",
-            "Empire_Fighter_Janissary",
+            "Empire_Fighter_StellicGuardMelee",
+            "Empire_Fighter_StellicGuardRanged",
         ];
 
-        List<string> animalPawnKinds =
+        List<string> otherPawnKinds =
         [
-            "AlphaThrumbo",
-            "HiveQueen",
+            // Select animals
             "Thrumbo",
             "Megasloth",
             "Elephant",
             "Bear_Grizzly",
             "Rhinoceros",
             "Warg",
-            "Megaspider",
             "Panther",
-            "Spelopede",
             "Muffalo",
             "Husky",
             "Cassowary",
@@ -53,18 +48,32 @@ public static class DebugArena
             "GuineaPig",
             "Monkey",
             "Rat",
-            "Locust",
-            "Megascarab",
             "Hare",
             "Chicken",
             "Sparrow",
+
+            // Insects
+            "Megaspider",
+            "Spelopede",
+            "Megascarab",
+            "Locust",
+            "Larva",
+
+            // Mechs
+            "Mech_CentipedeBlaster",
+            "Mech_CentipedeGunner",
+            "Mech_CentipedeBurner",
+            "Mech_Lancer",
+            "Mech_Scyther",
+            "Mech_Pikeman",
+            "Mech_Termite",
         ];
 
         bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
 
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.Where(ValidXenotype).ToList();
 
-        foreach (var pawnKind in pawnKinds)
+        foreach (var pawnKind in humanoidPawnKinds)
         {
             var pawnKindDef = DefDatabase<PawnKindDef>.GetNamed(pawnKind);
             if (pawnKindDef == null)
@@ -77,7 +86,7 @@ public static class DebugArena
             }
         }
 
-        foreach (var pawnKind in animalPawnKinds)
+        foreach (var pawnKind in otherPawnKinds)
         {
             var pawnKindDef = DefDatabase<PawnKindDef>.GetNamed(pawnKind);
             if (pawnKindDef == null)
@@ -93,6 +102,26 @@ public static class DebugArena
     public static void BattleRoyaleByPawnKind()
     {
         List<PawnKindDef> pawnKindsForBattleRoyale = [];
+
+        foreach (var pawnKindDef in DefDatabase<PawnKindDef>.AllDefsListForReading)
+        {
+            // Nociosphere starts inactive so nothing happens
+            if (pawnKindDef == PawnKindDefOf.Nociosphere)
+                continue;
+            // Revenants hide and cause the battle to time out
+            if (pawnKindDef == PawnKindDefOf.Revenant)
+                continue;
+
+            if (pawnKindDef.RaceProps.Humanlike)
+            {
+                pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(pawnKindDef, GetDefaultXenotype(pawnKindDef)));
+            }
+            else
+            {
+                pawnKindsForBattleRoyale.Add(pawnKindDef);
+            }
+        }
+
         foreach (var pawnKindDef in DefDatabase<PawnKindDef>.AllDefsListForReading)
         {
             if (pawnKindDef.RaceProps.Animal)
@@ -141,6 +170,14 @@ public static class DebugArena
         }
 
         PerformBattleRoyale(pawnKindsForBattleRoyale, scoreRankLimit: 50);
+    }
+
+    private static XenotypeDef GetDefaultXenotype(PawnKindDef pawnKindDef)
+    {
+        var xenotypeSet = pawnKindDef.xenotypeSet ?? pawnKindDef.defaultFactionDef?.xenotypeSet;
+        if (xenotypeSet != null)
+            return xenotypeSet.Count == 1 && xenotypeSet[0].chance >= 1 ? xenotypeSet[0].xenotype : xenotypeSet.DefaultXenotype;
+        return XenotypeDefOf.Baseliner;
     }
 
     private static PawnKindDef PawnKindWithXenotype(PawnKindDef pawnKindDef, XenotypeDef xenotype)
@@ -259,7 +296,7 @@ public static class DebugArena
             lhsPower = Mathf.Clamp(lhsPower, 20, 800);
             rhsPower = Mathf.Clamp(rhsPower, 20, 800);
 
-            lhsPower *= Mathf.Pow(5f, Rand.Range(-1f, 1f));
+            lhsPower *= Mathf.Pow(2f, Rand.Range(-1f, 1f));
 
             int totalCombatants = RandRangeExponential(2, 40);
 
