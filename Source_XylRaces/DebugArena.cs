@@ -120,6 +120,13 @@ public static class DebugArena
         List<PawnKindDef> pawnKindsForBattleRoyale = [];
         foreach (var pawnKindDef in DefDatabase<PawnKindDef>.AllDefsListForReading)
         {
+            // Nociosphere starts inactive so nothing happens
+            if (pawnKindDef == PawnKindDefOf.Nociosphere)
+                continue;
+            // Revenants hide and cause the battle to time out
+            if (pawnKindDef == PawnKindDefOf.Revenant)
+                continue;
+
             if (pawnKindDef.RaceProps.Humanlike)
             {
                 foreach (var xenotypeDef in xenotypes)
@@ -227,7 +234,7 @@ public static class DebugArena
                     int samples = int.Parse(parts[1]);
                     float combat_power = float.Parse(parts[3]);
 
-                    if (samples >= 10)
+                    if (samples >= Rand.Range(1, 30))
                         combatPowerTmp[unit_type] = combat_power;
                 }
             }
