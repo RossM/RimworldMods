@@ -32,7 +32,7 @@ public class GeneAndHediffCache : INotificationListener, IPawnData
     }
 
     [NotNull]
-    public List<Gene> GetGenesWithDef(GeneDef def)
+    public IEnumerable<Gene> GetGenesWithDef(GeneDef def)
     {
         if (genesByDef.TryGetValue(def, out List<Gene> value))
             return value;
@@ -54,7 +54,7 @@ public class GeneAndHediffCache : INotificationListener, IPawnData
     }
 
     [NotNull]
-    public List<Hediff> GetHediffsWithDef(HediffDef def)
+    public IEnumerable<Hediff> GetHediffsWithDef(HediffDef def)
     {
         if (hediffsByDef.TryGetValue(def, out List<Hediff> value))
             return value;
