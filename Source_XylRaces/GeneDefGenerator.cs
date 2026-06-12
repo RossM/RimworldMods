@@ -2,9 +2,11 @@
 
 namespace XylXenos;
 
+[DefGenerator(typeof(GeneDef))]
 public static class GeneDefGenerator
 {
-    public static IEnumerable<GeneDef> ImpliedGeneDefs(bool hotReload = false)
+    [UsedFromReflection]
+    public static IEnumerable<GeneDef> ImpliedDefs(bool hotReload = false)
     {
         foreach (GeneTemplateDef template in DefDatabase<GeneTemplateDef>.AllDefs)
         {

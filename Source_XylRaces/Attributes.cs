@@ -29,3 +29,9 @@ public class GeneClassAttribute(Type geneClass) : Attribute
 {
     public readonly Type geneClass = geneClass;
 }
+
+[MeansImplicitUse]
+public class DefGeneratorAttribute(Type defType) : Attribute
+{
+    public readonly Type defType = defType;
+}
