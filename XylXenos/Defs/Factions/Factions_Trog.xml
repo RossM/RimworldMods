@@ -35,6 +35,13 @@
     <maxConfigurableAtWorldCreation>9999</maxConfigurableAtWorldCreation>
     <configurationListOrderPriority>50</configurationListOrderPriority>
     <permanentEnemy>true</permanentEnemy>
+    <apparelStuffFilter Inherit="false">
+      <stuffCategoriesToAllow>
+        <li>Metallic</li>
+        <li>Leathery</li>
+        <li>Woody</li>
+      </stuffCategoriesToAllow>
+    </apparelStuffFilter>
     <requiredMemes>
       <li MayRequire="Ludeon.RimWorld.Ideology">Structure_Animist</li>
     </requiredMemes>

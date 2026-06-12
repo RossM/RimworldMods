@@ -31,6 +31,15 @@
     </colorSpectrum>
     <factionNameMaker>XylNamerFactionOutlanderDvergr</factionNameMaker>
     <settlementNameMaker>XylNamerSettlementOutlanderDvergr</settlementNameMaker>
+    <apparelStuffFilter Inherit="false">
+      <stuffCategoriesToAllow>
+        <li>Metallic</li>
+        <li>Leathery</li>
+      </stuffCategoriesToAllow>
+      <thingDefs>
+        <li>DevilstrandCloth</li>
+      </thingDefs>
+    </apparelStuffFilter>
     <requiredMemes Inherit="false">
       <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
     </requiredMemes>
