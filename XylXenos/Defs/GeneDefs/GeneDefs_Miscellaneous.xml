@@ -114,6 +114,9 @@
       <li Class="XylXenos.HediffCompProperties_Genetic">
         <gene>XylSeeingRed</gene>
       </li>
+      <li Class="XylXenos.HediffCompProperties_MoteBubble">
+        <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
+      </li>
     </comps>
     <stages>
       <li>
@@ -141,11 +144,6 @@
     <nameColor>(0.8,0.1,0.2)</nameColor>
     <beginLetter></beginLetter>
     <recoveryMessage></recoveryMessage>
-    <modExtensions>
-      <li Class="XylXenos.DefModExtension_MentalState_SeeingRed">
-        <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
-      </li>
-    </modExtensions>
   </MentalStateDef>
 
   <GeneDef>
