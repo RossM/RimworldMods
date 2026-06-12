@@ -28,11 +28,11 @@
         <bodySizeFactor>0.9</bodySizeFactor>
         <renderNodeModifiers>
           <li>
-            <onlyRoot>true</onlyRoot>
+            <tag>Root</tag>
             <scale>0.85</scale>
           </li>
           <li>
-            <renderNodeClass>PawnRenderNodeWorker_Head</renderNodeClass>
+            <tag>Head</tag>
             <scale>1.177</scale>
           </li>
         </renderNodeModifiers>
@@ -58,11 +58,11 @@
         <healthScaleFactor>1.3</healthScaleFactor>
         <renderNodeModifiers>
           <li>
-            <onlyRoot>true</onlyRoot>
+            <tag>Root</tag>
             <scale>1.2</scale>
           </li>
           <li>
-            <renderNodeClass>PawnRenderNodeWorker_Head</renderNodeClass>
+            <tag>Head</tag>
             <scale>0.9</scale>
             <offset>0,0,-0.05</offset>
           </li>

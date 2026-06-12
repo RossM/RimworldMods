@@ -32,18 +32,13 @@ public class JoyGiverFactor
 
 public class RenderNodeModifier
 {
-    public Type renderNodeClass = null;
-    public bool onlyRoot = false;
+    public PawnRenderNodeTagDef tag;
     public float scale = 1.0f;
     public Vector3 offset = Vector3.zero;
 
     public bool Matches(PawnRenderNode node)
     {
-        if (onlyRoot && node.parent != null)
-            return false;
-        if (renderNodeClass != null && node.Worker.GetType() != renderNodeClass)
-            return false;
-        return true;
+        return node.Props.tagDef == tag;
     }
 }
 
