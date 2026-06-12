@@ -15,9 +15,6 @@ public static class Patch_GenHostility
         if (a.Faction == null || b.Faction == null)
             return;
 
-        if ((a as Pawn)?.kindDef.hostileToAll == true || (b as Pawn)?.kindDef.hostileToAll == true)
-            return;
-
         var manager = HostilityOverrideManager.GetManager(a.Map);
         if (manager == null)
             return;

@@ -19,6 +19,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
             valueLookMode: LookMode.Value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static HostilityOverrideManager GetManager(Map map)
     {
         if (map == null)
