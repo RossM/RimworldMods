@@ -1,4 +1,6 @@
+using System.Linq.Expressions;
 using RimWorld.Planet;
+using XylXenos.Patches;
 
 namespace XylXenos;
 
@@ -350,5 +352,50 @@ public static class PatchHelpers
         }
 
         return false;
+    }
+
+    public static void RunDefGenerators(bool hotReload)
+    {
+        foreach (var type in GenTypes.AllTypesWithAttribute<DefGeneratorAttribute>())
+        {
+            try
+            {
+                Type defType = type.TryGetAttribute<DefGeneratorAttribute>().defType;
+
+                var impliedDefsMethodInfo = type.GetMethod("ImpliedDefs");
+                if (impliedDefsMethodInfo == null)
+                {
+                    Log.Error($"{type.Name} is marked as DefGenerator but doesn't have ImpliedDefs method");
+                    continue;
+                }
+
+                var addImpliedDefMethodInfo = typeof(DefGenerator).GetMethod(nameof(DefGenerator.AddImpliedDef))!.MakeGenericMethod(defType);
+                var eachMethodInfo = typeof(PatchHelpers).GetMethod(nameof(Each))!.MakeGenericMethod(defType);
+
+                // Build a lambda that will call Each(ImpliedDefs(hotReload), def => AddImpliedDef(def, hotReload))
+                ParameterExpression defParameter = Expression.Parameter(typeof(Def), "def");
+                var addDefsFn = Expression.Lambda<Action>(
+                    Expression.Call(eachMethodInfo,
+                        Expression.Call(impliedDefsMethodInfo,
+                            Expression.Constant(hotReload)),
+                        Expression.Lambda(
+                            Expression.Call(addImpliedDefMethodInfo,
+                                Expression.Convert(defParameter, defType),
+                                Expression.Constant(hotReload)), 
+                            defParameter))).Compile();
+
+                addDefsFn();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error running def generator {type.AssemblyQualifiedName}: {e}");
+            }
+        }
+    }
+
+    public static void Each<T>(IEnumerable<T> enumerable, Action<T> method)
+    {
+        foreach (T value in enumerable)
+            method(value);
     }
 }
