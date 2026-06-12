@@ -17,6 +17,13 @@ public class HediffComp_MoteBubble : HediffComp
 
     public MoteBubble mote;
 
+    public override void CompExposeData()
+    {
+        base.CompExposeData();
+
+        Scribe_References.Look(ref mote, nameof(mote));
+    }
+
     public override void CompPostPostAdd(DamageInfo? dinfo)
     {
         mote = MoteMaker.MakeThoughtBubble(parent.pawn, Props.iconPath, maintain: true);
