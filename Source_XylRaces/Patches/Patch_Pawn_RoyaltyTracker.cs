@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(Pawn_RoyaltyTracker))]
 public static class Patch_Pawn_RoyaltyTracker
 {
-    [Feature(Config.Feature.MiscBugfix)]
+    [Feature(Config.Feature.Bugfix_Misc)]
     [InfixPrefix(typeof(LetterStack), nameof(LetterStack.ReceiveLetter),
     [
         typeof(TaggedString), typeof(TaggedString), typeof(LetterDef), typeof(LookTargets), typeof(Faction), typeof(Quest),

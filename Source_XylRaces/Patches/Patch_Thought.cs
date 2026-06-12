@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(Thought))]
 public static class Patch_Thought
 {
-    [Feature(Config.Feature.UIChange)]
+    [Feature(Config.Feature.UI_Misc)]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Thought.Description), MethodType.Getter)]
     public static void Description_Postfix(Thought __instance, ref string __result)

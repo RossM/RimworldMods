@@ -4,11 +4,11 @@ public class Config : Def
 {
     public enum Feature
     {
-        FixLactationBugs,
+        Bugfix_Lactation,
+        Bugfix_Misc,
+        UI_Misc,
         Joyless,
-        UIChange,
         Parthenogenesis,
-        MiscBugfix
     }
 
     public static Config Instance => field ??= DefDatabase<Config>.AllDefs.Single();
