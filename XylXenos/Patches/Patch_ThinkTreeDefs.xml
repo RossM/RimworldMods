@@ -16,7 +16,6 @@
     <order>Append</order>
     <value>
       <li Class="XylXenos.JobGiver_GetWetness">
-        <showerJobDef>XylTakeShower</showerJobDef>
         <soakJobDef>XylSoak</soakJobDef>
       </li>
     </value>

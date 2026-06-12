@@ -39,7 +39,7 @@
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Thing_WetnessSource">
-        <effecter>XylShowerSplash</effecter>
+        <job>XylTakeShower</job>
       </li>
     </modExtensions>
   </ThingDef>

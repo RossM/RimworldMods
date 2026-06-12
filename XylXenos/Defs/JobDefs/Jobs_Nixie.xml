@@ -7,6 +7,11 @@
     <driverClass>XylXenos.JobDriver_TakeShower</driverClass>
     <reportString>taking a shower.</reportString>
     <joyDuration>3000</joyDuration>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Job_TakeShower">
+        <effecter>XylShowerSplash</effecter>
+      </li>
+    </modExtensions>
   </JobDef>
 
   <JobDef>

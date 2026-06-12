@@ -3,7 +3,6 @@
 [UsedFromXml]
 public class JobGiver_GetWetness : ThinkNode_JobGiver
 {
-    public JobDef showerJobDef;
     public JobDef soakJobDef;
 
     public static List<ThingDef> WetnessGivingThings
@@ -27,12 +26,11 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
     public override ThinkNode DeepCopy(bool resolve = true)
     {
         var obj = (JobGiver_GetWetness)base.DeepCopy(resolve);
-        obj.showerJobDef = showerJobDef;
         obj.soakJobDef = soakJobDef;
         return obj;
     }
 
-    private Thing FindBestShower(Pawn pawn)
+    private Thing FindBestWetnessSource(Pawn pawn)
     {
         var candidates = new List<Thing>();
         GetSearchSet(pawn, candidates);
@@ -120,10 +118,10 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
             return JobMaker.MakeJob(soakJobDef, pawn.Position);
         }
 
-        Thing bestThing = FindBestShower(pawn);
+        Thing bestThing = FindBestWetnessSource(pawn);
         if (bestThing != null)
         {
-            return JobMaker.MakeJob(showerJobDef, bestThing);
+            return JobMaker.MakeJob(bestThing.def.GetModExtension<DefModExtension_Thing_WetnessSource>().job, bestThing);
         }
 
         if (TryFindWaterTile(pawn, out IntVec3 foundTile))

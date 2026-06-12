@@ -1,6 +1,12 @@
 ﻿namespace XylXenos;
 
 [UsedFromXml]
+public class DefModExtension_Job_TakeShower : DefModExtension
+{
+    public EffecterDef effecter;
+}
+
+[UsedFromXml]
 public class JobDriver_TakeShower : JobDriver
 {
     public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -36,10 +42,10 @@ public class JobDriver_TakeShower : JobDriver
                 actor.Rotation = Rot4.Random;
         };
 
-        var wetnessSource = job.targetA.Thing?.def.GetModExtension<DefModExtension_Thing_WetnessSource>();
-        if (wetnessSource is { effecter: not null })
+        var modExtension = job.def.GetModExtension<DefModExtension_Job_TakeShower>();
+        if (modExtension is { effecter: not null })
         {
-            toil.WithEffect(wetnessSource.effecter, TargetIndex.A);
+            toil.WithEffect(modExtension.effecter, TargetIndex.A);
         }
 
         toil.handlingFacing = true;
