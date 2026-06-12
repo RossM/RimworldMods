@@ -8,12 +8,6 @@ public static class Patch_Pawn_FlightTracker
     [HarmonyPatch(nameof(Pawn_FlightTracker.Notify_JobStarted))]
     public static bool Notify_JobStarted_Prefix(Pawn_FlightTracker __instance, Job job)
     {
-        var pawn = __instance?.pawn;
-        if (pawn is { IsPlayerControlled: true } && pawn.HasActiveGeneOfType<Gene_Flight>())
-        {
-            return false;
-        }
-
-        return true;
+        return !__instance.pawn.HasActiveGeneOfType<Gene_Flight>();
     }
 }

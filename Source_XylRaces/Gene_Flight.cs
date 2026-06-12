@@ -116,12 +116,22 @@ public class Gene_Flight : GeneExt
         if (!CanFlyNow)
             return;
 
-        if ((pawn.Drafted ? autoFlyDrafted : autoFly) &&
-            pawn.pather.Moving &&
-            pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= FlightInfo.autoFlyMinDistance &&
-            pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
+        if (pawn.IsPlayerControlled)
         {
-            flight.StartFlying();
+            if ((pawn.Drafted ? autoFlyDrafted : autoFly) &&
+                pawn.pather.Moving &&
+                pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= FlightInfo.autoFlyMinDistance &&
+                pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
+            {
+                flight.StartFlying();
+            }
+        }
+        else
+        {
+            if (pawn.pather.Moving && pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
+            {
+                flight.StartFlying();
+            }
         }
     }
 
