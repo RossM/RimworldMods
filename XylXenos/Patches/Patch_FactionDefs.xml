@@ -97,4 +97,12 @@
     <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet/xenotypeChances/Waster</xpath>
   </Operation>
 
+  <!-- Fix empire to not gank the nixies -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/FactionDef[defName="Empire"]/permanentEnemyToEveryoneExcept</xpath>
+    <value>
+      <li>XylTribeGentleNixie</li>
+    </value>
+  </Operation>
+  
 </Patch>
