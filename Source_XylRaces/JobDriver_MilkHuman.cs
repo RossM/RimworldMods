@@ -65,7 +65,6 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
     protected override IEnumerable<Toil> MakeNewToils()
     {
         this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
-        this.FailOnDowned(TargetIndex.A);
         this.FailOnNotCasualInterruptible(TargetIndex.A);
         this.FailOnSomeonePhysicallyInteracting(TargetIndex.A);
         yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
