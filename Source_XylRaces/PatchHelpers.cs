@@ -369,22 +369,11 @@ public static class PatchHelpers
                     continue;
                 }
 
-                var addImpliedDefMethodInfo = typeof(DefGenerator).GetMethod(nameof(DefGenerator.AddImpliedDef))!.MakeGenericMethod(defType);
-                var eachMethodInfo = typeof(PatchHelpers).GetMethod(nameof(Each))!.MakeGenericMethod(defType);
+                var addDefsFn = (Action<IEnumerable<Def>, bool>)typeof(PatchHelpers).GetMethod(nameof(AddDefs))!.MakeGenericMethod(defType)
+                    .CreateDelegate(typeof(Action<IEnumerable<Def>, bool>));
+                var impliedDefsFn = (Func<bool, IEnumerable<Def>>)impliedDefsMethodInfo.CreateDelegate(typeof(Func<bool, IEnumerable<Def>>));
 
-                // Build a lambda that will call Each(ImpliedDefs(hotReload), def => AddImpliedDef(def, hotReload))
-                ParameterExpression defParameter = Expression.Parameter(typeof(Def), "def");
-                var addDefsFn = Expression.Lambda<Action>(
-                    Expression.Call(eachMethodInfo,
-                        Expression.Call(impliedDefsMethodInfo,
-                            Expression.Constant(hotReload)),
-                        Expression.Lambda(
-                            Expression.Call(addImpliedDefMethodInfo,
-                                Expression.Convert(defParameter, defType),
-                                Expression.Constant(hotReload)), 
-                            defParameter))).Compile();
-
-                addDefsFn();
+                addDefsFn(impliedDefsFn(hotReload), hotReload);
             }
             catch (Exception e)
             {
@@ -393,9 +382,11 @@ public static class PatchHelpers
         }
     }
 
-    public static void Each<T>(IEnumerable<T> enumerable, Action<T> method)
+    public static void AddDefs<T>(IEnumerable<Def> defs, bool hotReload) where T : Def, new()
     {
-        foreach (T value in enumerable)
-            method(value);
+        foreach (var def in defs)
+        {
+            DefGenerator.AddImpliedDef((T)def, hotReload);
+        }
     }
 }
