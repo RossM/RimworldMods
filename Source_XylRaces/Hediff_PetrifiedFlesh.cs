@@ -5,8 +5,6 @@ public class Hediff_PetrifiedFlesh : HediffWithCompsExt
 {
     public virtual float RelativeSeverity => Severity / Part.def.GetMaxHealth(pawn);
 
-    public override float PartEfficiencyOffset => CurStage.partEfficiencyOffset * RelativeSeverity;
-
     public override int CurStageIndex => def.StageAtSeverity(RelativeSeverity);
 
     public override Color LabelColor => RelativeSeverity >= 1.0f ? FullyPetrifiedColor : base.LabelColor;
@@ -19,5 +17,10 @@ public class Hediff_PetrifiedFlesh : HediffWithCompsExt
     {
         get => base.Severity;
         set => base.Severity = Mathf.Min(value, Part.def.GetMaxHealth(pawn));
+    }
+
+    protected override void UpdateCurStage(HediffStage stage)
+    {
+        stage.partEfficiencyOffset *= RelativeSeverity;
     }
 }

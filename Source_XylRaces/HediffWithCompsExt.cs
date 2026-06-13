@@ -2,10 +2,39 @@
 
 public class HediffWithCompsExt : HediffWithComps
 {
-    public virtual float PartEfficiencyOffset => CurStage.partEfficiencyOffset;
+    protected HediffStage curStage;
+
+    public override HediffStage CurStage
+    {
+        get
+        {
+            if (curStage == null)
+            {
+                curStage = Gen.MemberwiseClone(def.stages[CurStageIndex]);
+                UpdateCurStage(curStage);
+            }
+
+            return curStage;
+        }
+
+    }
+
+    protected virtual void UpdateCurStage(HediffStage stage)
+    {
+    }
 
     private static readonly StringBuilder tipSb = new();
     public Pawn sourcePawn;
+
+    public override float Severity
+    {
+        get => base.Severity;
+        set
+        {
+            base.Severity = value;
+            curStage = null;
+        }
+    }
 
     public override bool TendableNow(bool ignoreTimer = false)
     {
