@@ -1,3 +1,6 @@
+using System.Linq.Expressions;
+using System.Reflection;
+
 namespace XylXenos;
 
 public readonly struct ProfileBlock : IDisposable
@@ -23,4 +26,22 @@ public readonly struct ProfileBlock : IDisposable
             return;
         DeepProfiler.End();
     }
+}
+
+public static class Helpers
+{
+    private static Func<object, object> memberwiseCloneFn;
+
+    public static T MemberwiseClone<T>(T obj)
+    {
+        if (memberwiseCloneFn == null)
+        {
+            var method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic)!;
+            var param = Expression.Parameter(typeof(object), "obj");
+            memberwiseCloneFn = Expression.Lambda<Func<object, object>>(Expression.Call(param, method), param).Compile();
+        }
+
+        return (T)memberwiseCloneFn(obj);
+    }
+
 }

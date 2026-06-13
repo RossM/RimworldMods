@@ -185,7 +185,7 @@ public static class DebugArena
         if (!xenotypeSuffixes.TryGetValue(xenotype.defName, out string xenotypeSuffix))
             xenotypeSuffix = "";
 
-        PawnKindDef newPawnKindDef = Gen.MemberwiseClone(pawnKindDef);
+        PawnKindDef newPawnKindDef = Helpers.MemberwiseClone(pawnKindDef);
         newPawnKindDef.useFactionXenotypes = false;
         newPawnKindDef.xenotypeSet = new XenotypeSet
         {
