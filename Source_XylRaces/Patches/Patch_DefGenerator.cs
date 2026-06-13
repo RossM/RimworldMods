@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace XylXenos.Patches;
+﻿namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(DefGenerator))]
 public static class Patch_DefGenerator

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.IO;
 using RimWorld.Planet;
 using Verse.AI.Group;
@@ -14,7 +13,7 @@ public static class DebugArena
     {
     };
 
-    static readonly Dictionary<string, float> combatPowerTmp = new();
+    private static readonly Dictionary<string, float> combatPowerTmp = new();
 
     [DebugAction("Autotests")]
     public static void BattleRoyaleByXenotype()
@@ -126,7 +125,8 @@ public static class DebugArena
         {
             if (pawnKindDef.RaceProps.Animal)
                 pawnKindsForBattleRoyale.Add(pawnKindDef);
-            else if (pawnKindDef.RaceProps.Humanlike && pawnKindDef.defaultFactionDef?.isPlayer == false && pawnKindDef.titleRequired == null)
+            else if (pawnKindDef.RaceProps.Humanlike && pawnKindDef.defaultFactionDef?.isPlayer == false &&
+                     pawnKindDef.titleRequired == null)
             {
                 var xenotypeSet = pawnKindDef.xenotypeSet ?? pawnKindDef.defaultFactionDef?.xenotypeSet;
                 var xenotype = XenotypeDefOf.Baseliner;

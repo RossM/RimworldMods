@@ -235,7 +235,7 @@ public class GeneExt : Gene, INotificationListener
         if (ignoreRestrictions)
             return true;
 
-        if (!pawn.kindDef.apparelTags.NullOrEmpty() && 
+        if (!pawn.kindDef.apparelTags.NullOrEmpty() &&
             !pawn.kindDef.apparelTags.Any(tag => thing.apparel.tags.Contains(tag)))
         {
             return false;

@@ -2,7 +2,9 @@
 
 public class HediffWithCompsExt : HediffWithComps
 {
+    private static readonly StringBuilder tipSb = new();
     protected HediffStage curStage;
+    public Pawn sourcePawn;
 
     public override HediffStage CurStage
     {
@@ -16,15 +18,7 @@ public class HediffWithCompsExt : HediffWithComps
 
             return curStage;
         }
-
     }
-
-    protected virtual void UpdateCurStage(HediffStage stage)
-    {
-    }
-
-    private static readonly StringBuilder tipSb = new();
-    public Pawn sourcePawn;
 
     public override float Severity
     {
@@ -34,6 +28,10 @@ public class HediffWithCompsExt : HediffWithComps
             base.Severity = value;
             curStage = null;
         }
+    }
+
+    protected virtual void UpdateCurStage(HediffStage stage)
+    {
     }
 
     public override bool TendableNow(bool ignoreTimer = false)

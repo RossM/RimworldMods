@@ -24,12 +24,6 @@ public static class PatchLate
 [StaticConstructorOnStartup]
 public class Main : Mod
 {
-    [DebugAction(allowedGameStates = AllowedGameStates.Entry)]
-    public static void DebuggerBreak()
-    {
-        Debugger.Break();
-    }
-
     public Main(ModContentPack content) : base(content)
     {
         using (new ProfileBlock("Load settings"))
@@ -48,6 +42,12 @@ public class Main : Mod
 
         using (new ProfileBlock("Register XML loaders"))
             RegisterXmlLoaders();
+    }
+
+    [DebugAction(allowedGameStates = AllowedGameStates.Entry)]
+    public static void DebuggerBreak()
+    {
+        Debugger.Break();
     }
 
     // This a stupid trick to add a custom XML parser to a type that should have one but doesn't.

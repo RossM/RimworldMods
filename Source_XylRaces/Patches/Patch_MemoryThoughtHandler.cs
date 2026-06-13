@@ -5,21 +5,6 @@ public static class Patch_MemoryThoughtHandler
 {
     [Feature(typeof(DefModExtension_Thought))]
     [HarmonyPostfix]
-    [HarmonyPatch(nameof(MemoryThoughtHandler.TryGainMemory), typeof(Thought_Memory), typeof(Pawn))]
-    public static void TryGainMemory_Postfix(MemoryThoughtHandler __instance, Thought_Memory newThought, Pawn otherPawn)
-    {
-        var extension = newThought.def.GetModExtension<DefModExtension_Thought>();
-        if (extension?.extraThoughts == null)
-            return;
-        foreach (var extraDef in extension.extraThoughts)
-        {
-            if (extraDef.stages[newThought.CurStageIndex] != null)
-                __instance.TryGainMemory(ThoughtMaker.MakeThought(extraDef, newThought.CurStageIndex), otherPawn);
-        }
-    }
-
-    [Feature(typeof(DefModExtension_Thought))]
-    [HarmonyPostfix]
     [HarmonyPatch(nameof(MemoryThoughtHandler.RemoveMemoriesOfDef))]
     public static void RemoveMemoriesOfDef_Postfix(MemoryThoughtHandler __instance, ThoughtDef def)
     {
@@ -60,4 +45,18 @@ public static class Patch_MemoryThoughtHandler
         }
     }
 
+    [Feature(typeof(DefModExtension_Thought))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(MemoryThoughtHandler.TryGainMemory), typeof(Thought_Memory), typeof(Pawn))]
+    public static void TryGainMemory_Postfix(MemoryThoughtHandler __instance, Thought_Memory newThought, Pawn otherPawn)
+    {
+        var extension = newThought.def.GetModExtension<DefModExtension_Thought>();
+        if (extension?.extraThoughts == null)
+            return;
+        foreach (var extraDef in extension.extraThoughts)
+        {
+            if (extraDef.stages[newThought.CurStageIndex] != null)
+                __instance.TryGainMemory(ThoughtMaker.MakeThought(extraDef, newThought.CurStageIndex), otherPawn);
+        }
+    }
 }

@@ -37,7 +37,7 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
             targets.AddRange(caster.Map.attackTargetsCache.GetPotentialTargetsFor(caster));
         if (targetSelf)
             targets.Add(caster);
-        
+
         if (targets.Count == 0)
             return LocalTargetInfo.Invalid;
 

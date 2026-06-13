@@ -12,9 +12,7 @@ public interface IPawnData
 /// </summary>
 public static class PawnDataManager<T> where T : IPawnData, new()
 {
-    private static readonly Dictionary<int, T> data = new();
-
-    class Listener : INotificationListener
+    private class Listener : INotificationListener
     {
         private void Notify_PawnDiscarded(Thing thing)
         {
@@ -36,6 +34,8 @@ public static class PawnDataManager<T> where T : IPawnData, new()
         {
         }
     }
+
+    private static readonly Dictionary<int, T> data = new();
 
     private static readonly Listener listener = new();
 
