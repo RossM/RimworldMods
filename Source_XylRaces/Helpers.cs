@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace XylXenos;
@@ -37,11 +36,9 @@ public static class Helpers
         if (memberwiseCloneFn == null)
         {
             var method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic)!;
-            var param = Expression.Parameter(typeof(object), "obj");
-            memberwiseCloneFn = Expression.Lambda<Func<object, object>>(Expression.Call(param, method), param).Compile();
+            memberwiseCloneFn = (Func<object, object>)method.CreateDelegate(typeof(Func<object, object>));
         }
 
         return (T)memberwiseCloneFn(obj);
     }
-
 }
