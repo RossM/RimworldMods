@@ -91,7 +91,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
         if (bill is not Bill_Medical bill_medical)
             return;
 
-        var medicine = bill_medical.consumedMedicine.Keys
+        var medicine = bill_medical.consumedMedicine?.Keys
             .OrderByDescending(medicine => medicine.GetStatValueAbstract(StatDefOf.MedicalPotency)).FirstOrDefault();
 
         var quality = TendUtility.CalculateBaseTendQuality(billDoer, pawn, medicine);
