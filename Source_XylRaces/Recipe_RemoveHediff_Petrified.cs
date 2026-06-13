@@ -88,7 +88,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
         if (injury == null)
             return;
 
-        if (bill is not Bill_Medical { consumedMedicine: not null } bill_medical)
+        if (bill is not Bill_Medical bill_medical)
             return;
 
         var medicine = bill_medical.consumedMedicine.Keys
