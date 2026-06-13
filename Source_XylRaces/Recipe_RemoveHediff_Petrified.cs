@@ -57,11 +57,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
                 hediff.def == recipe.removesHediff && hediff.Part == part && hediff.Visible);
             if (hediff != null)
             {
-                pawn.health.RemoveHediff(hediff);
-                if (hediff.def.spawnThingOnRemoved != null && billDoer != null)
-                {
-                    GenSpawn.Spawn(hediff.def.spawnThingOnRemoved, billDoer.Position, billDoer.Map);
-                }
+                RemoveHediff(pawn, billDoer, hediff, bill);
             }
 
             return;
@@ -72,12 +68,34 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
             Hediff hediff = pawn.health.hediffSet.hediffs[num];
             if (hediff.def == recipe.removesHediff && hediff.Visible)
             {
-                pawn.health.RemoveHediff(hediff);
-                if (hediff.def.spawnThingOnRemoved != null && billDoer != null)
-                {
-                    GenSpawn.Spawn(hediff.def.spawnThingOnRemoved, billDoer.Position, billDoer.Map);
-                }
+                RemoveHediff(pawn, billDoer, hediff, bill);
             }
         }
+    }
+
+    private static void RemoveHediff(Pawn pawn, Pawn billDoer, Hediff hediff, Bill bill)
+    {
+        var part = hediff.Part;
+        pawn.health.RemoveHediff(hediff);
+        if (hediff.def.spawnThingOnRemoved != null && billDoer != null)
+        {
+            GenSpawn.Spawn(hediff.def.spawnThingOnRemoved, billDoer.Position, billDoer.Map);
+        }
+
+        // Removing petrification causes an injury. Tend the injury.
+
+        var injury = pawn.health.hediffSet.hediffs.LastOrDefault(h => h is Hediff_Injury && h.Part == part && !h.IsTended());
+        if (injury == null)
+            return;
+
+        if (bill is not Bill_Medical { consumedMedicine: not null } bill_medical)
+            return;
+
+        var medicine = bill_medical.consumedMedicine.Keys
+            .OrderByDescending(medicine => medicine.GetStatValueAbstract(StatDefOf.MedicalPotency)).FirstOrDefault();
+
+        var quality = TendUtility.CalculateBaseTendQuality(billDoer, pawn, medicine);
+        var maxQuality = medicine?.GetStatValueAbstract(StatDefOf.MedicalPotency) ?? 0.7f;
+        injury.Tended(quality, maxQuality);
     }
 }

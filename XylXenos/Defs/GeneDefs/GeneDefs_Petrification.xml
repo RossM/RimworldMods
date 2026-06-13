@@ -176,7 +176,7 @@
     <description>Excise petrified flesh.</description>
     <workerClass>XylXenos.Recipe_RemoveHediff_Petrified</workerClass>
     <jobString>Excising petrified flesh.</jobString>
-    <workAmount>3000</workAmount>
+    <workAmount>1500</workAmount>
     <removesHediff>XylPetrifiedFlesh</removesHediff>
     <successfullyRemovedHediffMessage>{0} has successfully excised {1}'s petrified flesh.</successfullyRemovedHediffMessage>
     <ingredients>
