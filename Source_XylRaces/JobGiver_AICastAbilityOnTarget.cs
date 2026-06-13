@@ -29,15 +29,16 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
         if (!ability.CanCast)
             return LocalTargetInfo.Invalid;
 
-        IEnumerable<IAttackTarget> targets;
+        HashSet<IAttackTarget> targets = new();
 
         if (targetAllies)
-            targets = caster.Map.mapPawns.PawnsInFaction(caster.Faction);
-        else if (targetEnemies)
-            targets = caster.Map.attackTargetsCache.GetPotentialTargetsFor(caster);
-        else if (targetSelf)
-            targets = [caster];
-        else
+            targets.AddRange(caster.Map.mapPawns.PawnsInFaction(caster.Faction));
+        if (targetEnemies)
+            targets.AddRange(caster.Map.attackTargetsCache.GetPotentialTargetsFor(caster));
+        if (targetSelf)
+            targets.Add(caster);
+        
+        if (targets.Count == 0)
             return LocalTargetInfo.Invalid;
 
         foreach (var target in targets)
@@ -118,5 +119,13 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
         copy.avoidHittingNonEnemies = avoidHittingNonEnemies;
         copy.minDistance = minDistance;
         return copy;
+    }
+
+    public override void ResolveReferences()
+    {
+        base.ResolveReferences();
+
+        if (!targetEnemies && !targetAllies && !targetSelf)
+            Log.Warning($"{GetType().Name} has no targets set");
     }
 }
