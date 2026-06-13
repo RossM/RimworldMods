@@ -10,7 +10,7 @@ public class HediffWithCompsExt : HediffWithComps
         {
             if (curStage == null)
             {
-                curStage = Helpers.MemberwiseClone(def.stages[CurStageIndex]);
+                curStage = def.stages[CurStageIndex].MemberwiseClone();
                 UpdateCurStage(curStage);
             }
 

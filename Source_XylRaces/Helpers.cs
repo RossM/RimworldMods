@@ -26,19 +26,3 @@ public readonly struct ProfileBlock : IDisposable
         DeepProfiler.End();
     }
 }
-
-public static class Helpers
-{
-    private static Func<object, object> memberwiseCloneFn;
-
-    public static T MemberwiseClone<T>(T obj)
-    {
-        if (memberwiseCloneFn == null)
-        {
-            var method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic)!;
-            memberwiseCloneFn = method.CreateDelegate<Func<object, object>>();
-        }
-
-        return (T)memberwiseCloneFn(obj);
-    }
-}
