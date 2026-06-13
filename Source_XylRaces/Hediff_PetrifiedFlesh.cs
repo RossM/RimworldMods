@@ -14,4 +14,10 @@ public class Hediff_PetrifiedFlesh : HediffWithCompsExt
     public override string SeverityLabel => Severity == 0f ? null : Severity.ToString("F1");
 
     private static readonly Color FullyPetrifiedColor = new(0.5f, 0.5f, 0.5f);
+
+    public override float Severity
+    {
+        get => base.Severity;
+        set => base.Severity = Mathf.Clamp(value, 0f, Part.def.GetMaxHealth(pawn));
+    }
 }

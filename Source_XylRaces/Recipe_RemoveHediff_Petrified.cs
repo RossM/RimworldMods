@@ -3,13 +3,18 @@
 [UsedFromXml]
 public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
 {
+    private static bool ValidHediff(Pawn pawn, RecipeDef recipe, Hediff hediff)
+    {
+        return hediff.def == recipe.removesHediff &&
+               hediff.Visible &&
+               hediff.Severity < pawn.health.hediffSet.GetPartHealth(hediff.Part);
+    }
+
     // ReSharper disable once ParameterHidesMember
     public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
     {
         List<Hediff> allHediffs = pawn.health.hediffSet.hediffs;
-        return allHediffs.Where(hediff =>
-                hediff.Part != null && hediff.def == recipe.removesHediff && hediff.Severity < 1.0f && hediff.Visible)
-            .Select(hediff => hediff.Part);
+        return allHediffs.Where(hediff => hediff.Part != null && ValidHediff(pawn, recipe, hediff)).Select(hediff => hediff.Part);
     }
 
     public override bool AvailableOnNow(Thing thing, BodyPartRecord part = null)
@@ -19,7 +24,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
             return false;
         }
 
-        if (!(thing is Pawn pawn))
+        if (thing is not Pawn pawn)
         {
             return false;
         }
@@ -27,8 +32,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
         if (recipe.targetsBodyPart)
             return GetPartsToApplyOn(pawn, recipe).Any();
         else
-            return pawn.health.hediffSet.hediffs.Any(hediff =>
-                hediff.def == recipe.removesHediff && hediff.Severity < 1.0f && hediff.Visible);
+            return pawn.health.hediffSet.hediffs.Any(hediff => ValidHediff(pawn, recipe, hediff));
     }
 
     public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
@@ -76,22 +80,23 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
     private static void RemoveHediff(Pawn pawn, Pawn billDoer, Hediff hediff, Bill bill)
     {
         var part = hediff.Part;
+        var severity = hediff.Severity;
         pawn.health.RemoveHediff(hediff);
         if (hediff.def.spawnThingOnRemoved != null && billDoer != null)
         {
             GenSpawn.Spawn(hediff.def.spawnThingOnRemoved, billDoer.Position, billDoer.Map);
         }
 
-        // Removing petrification causes an injury. Tend the injury.
+        // Give an injury and tend it immediately
+        var injury = HediffMaker.MakeHediff(HediffDefOf.SurgicalCut, pawn, part);
+        injury.Severity = severity;
+        pawn.health.AddHediff(injury);
 
-        var injury = pawn.health.hediffSet.hediffs.LastOrDefault(h => h is Hediff_Injury && h.Part == part && !h.IsTended());
-        if (injury == null)
+        // Adding the injury could have destroyed the body part. This should have been prevented by AvailableOnNow, but just in case, check again before tending.
+        if (pawn.health.hediffSet.PartIsMissing(part))
             return;
 
-        if (bill is not Bill_Medical bill_medical)
-            return;
-
-        var medicine = bill_medical.consumedMedicine?.Keys
+        var medicine = (bill as Bill_Medical)?.consumedMedicine?.Keys
             .OrderByDescending(medicine => medicine.GetStatValueAbstract(StatDefOf.MedicalPotency)).FirstOrDefault();
 
         var quality = TendUtility.CalculateBaseTendQuality(billDoer, pawn, medicine);

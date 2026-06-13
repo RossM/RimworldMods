@@ -39,6 +39,7 @@
     <maxSeverity>1.0</maxSeverity>
     <alwaysShowSeverity>true</alwaysShowSeverity>
     <everCurableByItem>false</everCurableByItem>
+    <chronic>true</chronic>
     <tendable>true</tendable>
     <comps>
       <li Class="XylXenos.HediffCompProperties_GrowthModeExt">
@@ -129,12 +130,7 @@
       <HediffDef>XylPetrification</HediffDef>
     </descriptionHyperlinks>
     <alwaysShowSeverity>true</alwaysShowSeverity>
-    <comps>
-      <li Class="XylXenos.HediffCompProperties_GiveHediffOnRemoval">
-        <hediff>SurgicalCut</hediff>
-        <inheritSeverity>true</inheritSeverity>
-      </li>
-    </comps>
+    <maxSeverity>100</maxSeverity> <!-- Shows the severity slider -->
     <onlyLifeThreateningTo>
       <li>Head</li>
       <li>Brain</li>
