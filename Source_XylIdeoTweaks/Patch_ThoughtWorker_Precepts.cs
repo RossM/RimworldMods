@@ -67,8 +67,7 @@ namespace Source_XylIdeoTweaks
                     continue;
                 if (p.apparel.ActiveRequirementsForReading.Any(requirement => requirement.ApparelMeetsRequirement(def)))
                     continue;
-                if (p.ideo.Ideo.GetAllPreceptsOfType<Precept_Apparel>()
-                    .Any(preceptApparel => ApparelRequiredBy(preceptApparel, def, p.gender)))
+                if (ApparelRequired(p, def))
                     continue;
 
                 return true;
@@ -77,7 +76,13 @@ namespace Source_XylIdeoTweaks
             return false;
         }
 
-        private static bool ApparelRequiredBy(Precept_Apparel preceptApparel, ThingDef def, Gender gender)
+        public static bool ApparelRequired(Pawn p, ThingDef def)
+        {
+            return p.ideo.Ideo.GetAllPreceptsOfType<Precept_Apparel>()
+                .Any(preceptApparel => ApparelRequiredBy(preceptApparel, def, p.gender));
+        }
+
+        public static bool ApparelRequiredBy(Precept_Apparel preceptApparel, ThingDef def, Gender gender)
         {
             return preceptApparel.apparelDef == def &&
                    (preceptApparel.TargetGender == Gender.None || preceptApparel.TargetGender == gender);

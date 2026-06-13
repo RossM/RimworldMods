@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 using JetBrains.Annotations;
+using System.Reflection;
+using TranspilerUtil;
 using Verse;
 
 namespace Source_ExposableChecker
@@ -12,6 +14,8 @@ namespace Source_ExposableChecker
         {
             var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
             harmony.PatchAll();
+
+            InfixPatcher.PatchInfix(harmony, Assembly.GetExecutingAssembly());
         }
     }
 }
