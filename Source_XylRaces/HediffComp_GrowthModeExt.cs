@@ -109,7 +109,7 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay
 
         yield return new Command_Action
         {
-            defaultLabel = "DEV: Toggle petrification growth state",
+            defaultLabel = $"DEV: Change {parent.LabelBase} growth mode",
             action = ChangeGrowthMode,
         };
     }
