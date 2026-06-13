@@ -6,7 +6,7 @@ public interface INeed
 }
 
 [UsedFromXml]
-public class ThoughtDefExtension_Need : DefModExtension
+public class DefModExtension_Thought_Need : DefModExtension
 {
     public NeedDef need;
     public List<float> stages;
@@ -15,7 +15,7 @@ public class ThoughtDefExtension_Need : DefModExtension
 [UsedFromXml]
 public class ThoughtWorker_Need : ThoughtWorker
 {
-    public ThoughtDefExtension_Need DefExt => def.GetModExtension<ThoughtDefExtension_Need>();
+    public DefModExtension_Thought_Need DefExt => def.GetModExtension<DefModExtension_Thought_Need>();
 
     protected override ThoughtState CurrentStateInternal(Pawn p)
     {

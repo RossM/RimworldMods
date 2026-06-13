@@ -70,7 +70,7 @@
       </li>
     </stages>
     <modExtensions>
-      <li Class="XylXenos.ThoughtDefExtension_Need">
+      <li Class="XylXenos.DefModExtension_Thought_Need">
         <need>XylWetness</need>
       </li>
     </modExtensions>
