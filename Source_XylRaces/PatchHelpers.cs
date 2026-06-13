@@ -358,6 +358,8 @@ public static class PatchHelpers
     {
         foreach (var type in GenTypes.AllTypesWithAttribute<DefGeneratorAttribute>())
         {
+            using var _ = new ProfileBlock(type.Name);
+
             try
             {
                 Type defType = type.TryGetAttribute<DefGeneratorAttribute>().defType;
@@ -377,7 +379,7 @@ public static class PatchHelpers
             }
             catch (Exception e)
             {
-                Log.Error($"Error running def generator {type.AssemblyQualifiedName}: {e}");
+                Log.Error($"Error running def generator {type.Name}: {e}");
             }
         }
     }

@@ -13,7 +13,7 @@ public readonly struct ProfileBlock : IDisposable
         _enabled = enabled;
         if (!_enabled)
             return;
-        string label = methodName ?? "<Unknown>";
+        string label = "[XylXenos] " + (methodName ?? "<Unknown>");
 
         DeepProfiler.Start(labelExtra != null ? $"{label} - {labelExtra}" : label);
     }

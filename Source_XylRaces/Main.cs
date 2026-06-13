@@ -11,10 +11,12 @@ public static class PatchLate
     {
         var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
 
-        harmony.PatchCategory("PostLoadDefs");
+        using (new ProfileBlock("Harmony patching"))
+            harmony.PatchCategory("PostLoadDefs");
 
         // TODO Split infix patching into early and late
-        InfixPatcher.PatchInfix(harmony, Assembly.GetExecutingAssembly());
+        using (new ProfileBlock("Infix patching"))
+            InfixPatcher.PatchInfix(harmony, Assembly.GetExecutingAssembly());
     }
 }
 
@@ -30,7 +32,8 @@ public class Main : Mod
 
     public Main(ModContentPack content) : base(content)
     {
-        Settings.instance = GetSettings<Settings>();
+        using (new ProfileBlock("Load settings"))
+            Settings.instance = GetSettings<Settings>();
 
         using (new ProfileBlock("Coding style checks"))
             CodingStyleChecks();
@@ -43,7 +46,8 @@ public class Main : Mod
             harmony.PatchCategory(null);
         }
 
-        RegisterXmlLoaders();
+        using (new ProfileBlock("Register XML loaders"))
+            RegisterXmlLoaders();
     }
 
     // This a stupid trick to add a custom XML parser to a type that should have one but doesn't.
