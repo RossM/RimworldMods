@@ -18,6 +18,6 @@ public class Hediff_PetrifiedFlesh : HediffWithCompsExt
     public override float Severity
     {
         get => base.Severity;
-        set => base.Severity = Mathf.Clamp(value, 0f, Part.def.GetMaxHealth(pawn));
+        set => base.Severity = Mathf.Min(value, Part.def.GetMaxHealth(pawn));
     }
 }
