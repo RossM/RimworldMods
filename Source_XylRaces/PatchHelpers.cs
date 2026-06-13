@@ -384,6 +384,7 @@ public static class PatchHelpers
         }
     }
 
+    [UsedFromReflection]
     public static void AddDefs<T>(IEnumerable<Def> defs, bool hotReload) where T : Def, new()
     {
         foreach (var def in defs)
