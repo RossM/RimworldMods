@@ -11,10 +11,53 @@ public static class Patch_MemoryThoughtHandler
         var extension = newThought.def.GetModExtension<DefModExtension_Thought>();
         if (extension?.extraThoughts == null)
             return;
-        foreach (var thoughtDef in extension.extraThoughts)
+        foreach (var extraDef in extension.extraThoughts)
         {
-            if (thoughtDef.stages[newThought.CurStageIndex] != null)
-                __instance.TryGainMemory(ThoughtMaker.MakeThought(thoughtDef, newThought.CurStageIndex), otherPawn);
+            if (extraDef.stages[newThought.CurStageIndex] != null)
+                __instance.TryGainMemory(ThoughtMaker.MakeThought(extraDef, newThought.CurStageIndex), otherPawn);
         }
     }
+
+    [Feature(typeof(DefModExtension_Thought))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(MemoryThoughtHandler.RemoveMemoriesOfDef))]
+    public static void RemoveMemoriesOfDef_Postfix(MemoryThoughtHandler __instance, ThoughtDef def)
+    {
+        var extension = def.GetModExtension<DefModExtension_Thought>();
+        if (extension?.extraThoughts == null)
+            return;
+        foreach (var extraDef in extension.extraThoughts)
+        {
+            __instance.RemoveMemoriesOfDef(extraDef);
+        }
+    }
+
+    [Feature(typeof(DefModExtension_Thought))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(MemoryThoughtHandler.RemoveMemoriesOfDefIf))]
+    public static void RemoveMemoriesOfDefIf_Postfix(MemoryThoughtHandler __instance, ThoughtDef def, Func<Thought_Memory, bool> predicate)
+    {
+        var extension = def.GetModExtension<DefModExtension_Thought>();
+        if (extension?.extraThoughts == null)
+            return;
+        foreach (var extraDef in extension.extraThoughts)
+        {
+            __instance.RemoveMemoriesOfDefIf(extraDef, predicate);
+        }
+    }
+
+    [Feature(typeof(DefModExtension_Thought))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(MemoryThoughtHandler.RemoveMemoriesOfDefWhereOtherPawnIs))]
+    public static void RemoveMemoriesOfDefWhereOtherPawnIs_Postfix(MemoryThoughtHandler __instance, ThoughtDef def, Pawn otherPawn)
+    {
+        var extension = def.GetModExtension<DefModExtension_Thought>();
+        if (extension?.extraThoughts == null)
+            return;
+        foreach (var extraDef in extension.extraThoughts)
+        {
+            __instance.RemoveMemoriesOfDefWhereOtherPawnIs(extraDef, otherPawn);
+        }
+    }
+
 }
