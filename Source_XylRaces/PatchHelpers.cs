@@ -371,9 +371,9 @@ public static class PatchHelpers
                     continue;
                 }
 
-                var addDefsFn = (Action<IEnumerable<Def>, bool>)typeof(PatchHelpers).GetMethod(nameof(AddDefs))!.MakeGenericMethod(defType)
-                    .CreateDelegate(typeof(Action<IEnumerable<Def>, bool>));
-                var impliedDefsFn = (Func<bool, IEnumerable<Def>>)impliedDefsMethodInfo.CreateDelegate(typeof(Func<bool, IEnumerable<Def>>));
+                var addDefsFn = typeof(PatchHelpers).GetMethod(nameof(AddDefs))!.MakeGenericMethod(defType)
+                    .CreateDelegate<Action<IEnumerable<Def>, bool>>();
+                var impliedDefsFn = impliedDefsMethodInfo.CreateDelegate<Func<bool, IEnumerable<Def>>>();
 
                 addDefsFn(impliedDefsFn(hotReload), hotReload);
             }

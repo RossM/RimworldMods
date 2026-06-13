@@ -36,7 +36,7 @@ public static class Helpers
         if (memberwiseCloneFn == null)
         {
             var method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic)!;
-            memberwiseCloneFn = (Func<object, object>)method.CreateDelegate(typeof(Func<object, object>));
+            memberwiseCloneFn = method.CreateDelegate<Func<object, object>>();
         }
 
         return (T)memberwiseCloneFn(obj);
