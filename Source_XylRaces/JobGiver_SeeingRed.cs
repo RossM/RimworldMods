@@ -20,7 +20,6 @@ public class JobGiver_SeeingRed : ThinkNode_JobGiver
         if (thing != null)
         {
             Job job = JobMaker.MakeJob(JobDefOf.AttackMelee, thing);
-            job.maxNumMeleeAttacks = 1;
             job.expiryInterval = Rand.Range(MinMeleeChaseTicks, MaxMeleeChaseTicks);
             job.canBashDoors = true;
             return job;

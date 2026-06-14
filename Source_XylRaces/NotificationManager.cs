@@ -154,6 +154,7 @@ public class NotificationManager : GameComponent
 {
     private class NotificationInfo
     {
+        public bool usesPriority = false;
         public readonly List<CallbackInfo> globalCallbacks = [];
         public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
     }
@@ -219,6 +220,8 @@ public class NotificationManager : GameComponent
         records.Add(new(notification, target));
 
         NotificationInfo notificationInfo = notifications[notification.index] ??= new();
+        if (priority != 0)
+            notificationInfo.usesPriority = true;
 
         CallbackInfo callbackInfo = new() { wrappedCallback = callback, listener = listener, name = name, priority = priority };
 
@@ -428,12 +431,33 @@ public class NotificationManager : GameComponent
         if (notificationInfo == null)
             return;
 
+        List<CallbackInfo> localCallbacks;
+
+        if (!notificationInfo.usesPriority)
+        {
+            foreach (CallbackInfo callbackInfo in notificationInfo.globalCallbacks)
+            {
+                DoNotify(notification, callbackInfo, target, data);
+            }
+
+            if (target == null || !notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
+                return;
+
+            foreach (CallbackInfo callbackInfo in localCallbacks)
+            {
+                DoNotify(notification, callbackInfo, target, data);
+            }
+
+            return;
+        }
+
         tempCallbacks.Clear();
         tempCallbacks.AddRange(notificationInfo.globalCallbacks);
-        if (target != null && notificationInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbackInfos))
-            tempCallbacks.AddRange(callbackInfos);
+        if (target != null && notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
+            tempCallbacks.AddRange(localCallbacks);
+        tempCallbacks.SortByDescending(callback => callback.priority);
 
-        foreach (CallbackInfo callbackInfo in tempCallbacks.OrderByDescending(callback => callback.priority))
+        foreach (CallbackInfo callbackInfo in tempCallbacks)
         {
             DoNotify(notification, callbackInfo, target, data);
         }
