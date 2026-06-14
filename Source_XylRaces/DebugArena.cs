@@ -204,7 +204,7 @@ public static class DebugArena
         try
         {
             using var streamReader = new StreamReader(resultsPath);
-            while (streamReader.ReadLine() is { } line)
+            while (streamReader.ReadLine() is string line)
             {
                 var parts = line.Split(',');
                 var lhsDef = kinds.FirstOrDefault(def => def.defName == parts[0]);
@@ -244,7 +244,7 @@ public static class DebugArena
             try
             {
                 using var streamReader = new StreamReader(ratingsPath);
-                while (streamReader.ReadLine() is { } line)
+                while (streamReader.ReadLine() is string line)
                 {
                     var parts = line.Split(',');
 
@@ -280,7 +280,7 @@ public static class DebugArena
             lhsPower = Mathf.Clamp(lhsPower, 20, 800);
             rhsPower = Mathf.Clamp(rhsPower, 20, 800);
 
-            lhsPower *= Mathf.Pow(2f, Rand.Range(-1f, 1f));
+            // lhsPower *= Mathf.Pow(2f, Rand.Range(-1f, 1f));
 
             int totalCombatants = RandRangeExponential(2, 40);
 

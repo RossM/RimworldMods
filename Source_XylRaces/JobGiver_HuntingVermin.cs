@@ -10,7 +10,7 @@ public class JobGiver_HuntingVermin : ThinkNode_JobGiver
         if (pawn.MentalState is not MentalState_HuntingVermin mentalState_huntingVermin)
             return null;
 
-        if (mentalState_huntingVermin.target.Corpse is { } corpse)
+        if (mentalState_huntingVermin.target.Corpse is Corpse corpse)
         {
             if (!pawn.CanReserveAndReach(corpse, PathEndMode.ClosestTouch, Danger.Some))
             {

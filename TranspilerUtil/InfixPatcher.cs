@@ -103,7 +103,7 @@ namespace TranspilerUtil
                     if (resultLocalIndex >= 0)
                         output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
 
-                    if (skipLabel is { } label)
+                    if (skipLabel is Label label)
                     {
                         var branchTarget = new CodeInstruction(OpCodes.Nop);
                         branchTarget.labels.Add(label);
