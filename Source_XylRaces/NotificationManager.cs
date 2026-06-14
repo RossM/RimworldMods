@@ -168,7 +168,7 @@ public class NotificationManager : GameComponent
 
     public struct CallbackInfo
     {
-        public Delegate wrappedCallback;
+        public Action<Thing, object> wrappedCallback;
         public INotificationListener listener;
         public string name;
         public int priority;
@@ -201,10 +201,10 @@ public class NotificationManager : GameComponent
         doDebug = !doDebug;
     }
 
-    private void RegisterInternal<T>(
+    private void RegisterInternal(
         NotificationDef notification,
         Thing target,
-        Action<Thing, T> callback,
+        Action<Thing, object> callback,
         object source,
         string name,
         int priority)
@@ -269,7 +269,7 @@ public class NotificationManager : GameComponent
                 Gen.HashCombineInt(0x467A56FF, notification.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
-        RegisterInternal(notification, target, callback, callback.Target, MethodName(callback), priority);
+        RegisterInternal(notification, target, (t, data) => callback(t, (T)data), callback.Target, MethodName(callback), priority);
     }
 
     public void Register<T>(NotificationDef notification, Thing target, [NotNull] Action<T> callback, int priority = 0)
@@ -291,7 +291,7 @@ public class NotificationManager : GameComponent
                 Gen.HashCombineInt(0x467A56FF, notification.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
-        RegisterInternal<T>(notification, target, (_, data) => callback(data), callback.Target, MethodName(callback), priority);
+        RegisterInternal(notification, target, (_, data) => callback((T)data), callback.Target, MethodName(callback), priority);
     }
 
     // ReSharper disable once UnusedMember.Global
@@ -307,7 +307,7 @@ public class NotificationManager : GameComponent
             return;
         }
 
-        RegisterInternal<object>(notification, target, (t, _) => callback(t), callback.Target, MethodName(callback), priority);
+        RegisterInternal(notification, target, (t, _) => callback(t), callback.Target, MethodName(callback), priority);
     }
 
     public void Register(NotificationDef notification, Thing target, [NotNull] Action callback, int priority = 0)
@@ -322,7 +322,7 @@ public class NotificationManager : GameComponent
             return;
         }
 
-        RegisterInternal<object>(notification, target, (_, _) => callback(), callback.Target, MethodName(callback), priority);
+        RegisterInternal(notification, target, (_, _) => callback(), callback.Target, MethodName(callback), priority);
     }
 
     private static string MethodName(Delegate fn)
@@ -356,7 +356,7 @@ public class NotificationManager : GameComponent
                 Gen.HashCombineInt(0x467A56FF, notification.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
-        RegisterInternal(notification, target, callback, listener, $"{listener.GetType().Name}.<{notification.defName}>", 0);
+        RegisterInternal(notification, target, (t, data) => callback(t, (T)data), listener, $"{listener.GetType().Name}.<{notification.defName}>", 0);
     }
 
     public void UnregisterAll(INotificationListener listener)
@@ -485,7 +485,7 @@ public class NotificationManager : GameComponent
 
         try
         {
-            callbackInfo.wrappedCallback.DynamicInvoke(target, data);
+            callbackInfo.wrappedCallback(target, data);
         }
         catch (Exception exception)
         {
