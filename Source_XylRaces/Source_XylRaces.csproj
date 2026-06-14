@@ -29,30 +29,21 @@
 
   <ItemGroup>
     <Publicize Include="Assembly-CSharp:RimWorld.Bullet.Impact" />
-    <Publicize Include="Assembly-CSharp:RimWorld.Dialog_CreateXenotype.inheritable" />
     <Publicize Include="Assembly-CSharp:RimWorld.GameConditionManager.AllowEnjoyableOutsideNow" />
-    <Publicize Include="Assembly-CSharp:RimWorld.GeneCreationDialogBase.ignoreRestrictions" />
     <Publicize Include="Assembly-CSharp:RimWorld.GenConstruct.tmpIdeoMemberNames" />
-    <Publicize Include="Assembly-CSharp:RimWorld.GenHostility.IsActivityDormant" />
-    <Publicize Include="Assembly-CSharp:RimWorld.InteractionWorker_RecruitAttempt.TameChanceFactorCurve_Wildness" />
-    <Publicize Include="Assembly-CSharp:RimWorld.MoteMaker.ExistingMoteBubbleOn" />
-    <Publicize Include="Assembly-CSharp:RimWorld.Need.pawn" />
     <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.flightCooldownTicks" />
-    <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.pawn" />
-    <Publicize Include="Assembly-CSharp:RimWorld.PawnGenerator.GenerateInitialHediffs" />
-    <Publicize Include="Assembly-CSharp:RimWorld.StatWorker.stat" />
-    <Publicize Include="Assembly-CSharp:RimWorld.WorkGiver_Warden.ShouldTakeCareOfPrisoner" />
     <Publicize Include="Assembly-CSharp:RimWorld.XenotypeSet.xenotypeChances" />
-    <Publicize Include="Assembly-CSharp:Verse.AI.Pawn_MindState.CheckStartMentalStateBecauseRecruitAttempted" />
-    <Publicize Include="Assembly-CSharp:Verse.DesignationCategoryDef.ideoBuildingDesignatorsCached" />
     <Publicize Include="Assembly-CSharp:Verse.Hediff.causesNoPain" />
     <Publicize Include="Assembly-CSharp:Verse.HediffComp_TendDuration.totalTendQuality" />
     <Publicize Include="Assembly-CSharp:Verse.IntRange.Includes" />
-    <Publicize Include="Assembly-CSharp:Verse.Pawn_HealthTracker.pawn" />
     <Publicize Include="Assembly-CSharp:Verse.PawnGenerator.tmpXenotypeChances" />
-    <Publicize Include="Assembly-CSharp:Verse.ShotReport.factorFromCoveringGas" />
-    <Publicize Include="Assembly-CSharp:Verse.ShotReport.target" />
+    <Publicize Include="Assembly-CSharp:RimWorld.WorkGiver_Warden.ShouldTakeCareOfPrisoner" />
     <Publicize Include="Assembly-CSharp:Verse.XmlToObjectUtils.customDataLoadMethodCache" />
+    <!-- The following are accessed in infix patches and can't use harmony's ___ syntax. They can be removed if the infix patcher
+    implements the ___ syntax. -->
+    <Publicize Include="Assembly-CSharp:RimWorld.Dialog_CreateXenotype.inheritable" />
+    <Publicize Include="Assembly-CSharp:RimWorld.GeneCreationDialogBase.ignoreRestrictions" />
+    <Publicize Include="Assembly-CSharp:RimWorld.StatWorker.stat" />
   </ItemGroup>
 
   <ItemGroup>

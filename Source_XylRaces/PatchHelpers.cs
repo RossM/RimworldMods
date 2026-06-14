@@ -128,7 +128,7 @@ public static class PatchHelpers
         }
     }
 
-    public static void AddDesignators(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
+    public static void AddDesignators(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result, Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ideoBuildingDesignatorsCached)
     {
         HashSet<Designator> geneDesignators = [];
 
@@ -147,10 +147,10 @@ public static class PatchHelpers
         Designator GetCachedDesignator(BuildableDef def)
         {
             DesignationCategoryDef.BuildablePreceptBuilding key = new DesignationCategoryDef.BuildablePreceptBuilding(def, null);
-            if (!__instance.ideoBuildingDesignatorsCached.TryGetValue(key, out var value))
+            if (!ideoBuildingDesignatorsCached.TryGetValue(key, out var value))
             {
                 value = new Designator_Build(def);
-                __instance.ideoBuildingDesignatorsCached[key] = value;
+                ideoBuildingDesignatorsCached[key] = value;
             }
 
             return value;
