@@ -147,33 +147,13 @@
     <specificApparelRequirements Inherit="False">
       <li>
         <stuff>Hyperweave</stuff>
-        <colorGenerator Class="ColorGenerator_Options">
-          <options>
-            <li>
-              <only>(0.2, 0.4, 0.8)</only>
-            </li>
-            <li>
-              <only>(0.3, 0.6, 0.85)</only>
-            </li>
-            <li>
-              <only>(0.4, 0.8, 0.9)</only>
-            </li>
-            <li>
-              <only>(0.5, 0.6, 0.9)</only>
-            </li>
-            <li>
-              <only>(0.6, 0.4, 0.9)</only>
-            </li>
-            <li>
-              <only>(0.45, 0.2, 0.75)</only>
-            </li>
-            <li>
-              <only>(0.3, 0.0, 0.6)</only>
-            </li>
-            <li>
-              <only>(0.24, 0.2, 0.7)</only>
-            </li>
-          </options>
+        <colorGenerator Class="XylXenos.ColorGenerator_Spectrum">
+          <colors>
+            <li>(0.2, 0.4, 0.8)</li>
+            <li>(0.4, 0.8, 0.9)</li>
+            <li>(0.6, 0.4, 0.9)</li>
+            <li>(0.3, 0.0, 0.6)</li>
+          </colors>
         </colorGenerator>
       </li>
     </specificApparelRequirements>
