@@ -15,6 +15,13 @@ public static class DebugArena
 
     private static readonly Dictionary<string, float> combatPowerTmp = new();
 
+    private static readonly HashSet<PawnKindDef> badKinds =
+    [
+        PawnKindDefOf.Nociosphere,
+        PawnKindDefOf.Revenant,
+        PawnKindDefOf.FleshmassNucleus,
+    ];
+
     [DebugAction("Autotests")]
     public static void BattleRoyaleByXenotype()
     {
@@ -104,11 +111,7 @@ public static class DebugArena
 
         foreach (var pawnKindDef in DefDatabase<PawnKindDef>.AllDefsListForReading)
         {
-            // Nociosphere starts inactive so nothing happens
-            if (pawnKindDef == PawnKindDefOf.Nociosphere)
-                continue;
-            // Revenants hide and cause the battle to time out
-            if (pawnKindDef == PawnKindDefOf.Revenant)
+            if (badKinds.Contains(pawnKindDef))
                 continue;
 
             if (pawnKindDef.RaceProps.Humanlike)
@@ -118,21 +121,6 @@ public static class DebugArena
             else
             {
                 pawnKindsForBattleRoyale.Add(pawnKindDef);
-            }
-        }
-
-        foreach (var pawnKindDef in DefDatabase<PawnKindDef>.AllDefsListForReading)
-        {
-            if (pawnKindDef.RaceProps.Animal)
-                pawnKindsForBattleRoyale.Add(pawnKindDef);
-            else if (pawnKindDef.RaceProps.Humanlike && pawnKindDef.defaultFactionDef?.isPlayer == false &&
-                     pawnKindDef.titleRequired == null)
-            {
-                var xenotypeSet = pawnKindDef.xenotypeSet ?? pawnKindDef.defaultFactionDef?.xenotypeSet;
-                var xenotype = XenotypeDefOf.Baseliner;
-                if (xenotypeSet != null)
-                    xenotype = xenotypeSet.Count == 1 && xenotypeSet[0].chance >= 1 ? xenotypeSet[0].xenotype : xenotypeSet.DefaultXenotype;
-                pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(pawnKindDef, xenotype));
             }
         }
 
@@ -149,11 +137,7 @@ public static class DebugArena
         List<PawnKindDef> pawnKindsForBattleRoyale = [];
         foreach (var pawnKindDef in DefDatabase<PawnKindDef>.AllDefsListForReading)
         {
-            // Nociosphere starts inactive so nothing happens
-            if (pawnKindDef == PawnKindDefOf.Nociosphere)
-                continue;
-            // Revenants hide and cause the battle to time out
-            if (pawnKindDef == PawnKindDefOf.Revenant)
+            if (badKinds.Contains(pawnKindDef))
                 continue;
 
             if (pawnKindDef.RaceProps.Humanlike)
