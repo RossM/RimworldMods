@@ -8,13 +8,14 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
     [Unsaved] private static Map lastMap;
     [Unsaved] private static HostilityOverrideManager lastManager;
 
+    public bool anyOverrides = false;
     public HashSet<(Faction, Faction)> activeOverrides = [];
     public Dictionary<Faction, int> lastHostileActionTick = new();
 
     public override void ExposeData()
     {
+        Scribe_Values.Look(ref anyOverrides, nameof(anyOverrides));
         Scribe_Ext.Look(ref activeOverrides, nameof(activeOverrides), LookMode.Reference);
-
         Scribe_Collections.Look(ref lastHostileActionTick, nameof(lastHostileActionTick), keyLookMode: LookMode.Deep,
             valueLookMode: LookMode.Value);
     }
@@ -34,6 +35,9 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
 
     public bool HostilityDisabled(Thing source, Thing target)
     {
+        if (!anyOverrides)
+            return false;
+
         if (target is not Pawn targetPawn)
             return false;
 
@@ -43,12 +47,12 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
         return targetPawn.IsColonyAnimal || targetPawn.GeneTracker?.disableHostilityFromFactions?.Contains(source.Faction.def) == true;
     }
 
-    public bool HasAnyOverride(Faction from, Faction to)
+    private bool HasAnyOverride(Faction from, Faction to)
     {
-        if (activeOverrides == null || !activeOverrides.Contains((from, to)))
+        if (!activeOverrides.Contains((from, to)))
             return false;
 
-        if (lastHostileActionTick == null || !lastHostileActionTick.TryGetValue(from, out int hostileActionTick))
+        if (!lastHostileActionTick.TryGetValue(from, out int hostileActionTick))
             return true;
 
         return hostileActionTick + violationDisableTicks < Find.TickManager.TicksGame;
@@ -59,17 +63,27 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
         if (Find.TickManager.TicksGame % updateFrequency != 0)
             return;
 
+        anyOverrides = false;
         activeOverrides.Clear();
+
+        HashSet<Faction> mapFactions = new();
+        foreach (var pawn in map.mapPawns.AllPawns)
+        {
+            if (pawn.Faction is Faction faction)
+                mapFactions.Add(faction);
+        }
+
         foreach (var pawn in map.mapPawns.AllPawns)
         {
             List<FactionDef> factions = pawn.GeneTracker?.disableHostilityFromFactions;
-            if (factions == null)
+            if (factions.NullOrEmpty())
                 continue;
 
             foreach (var factionDef in factions)
             {
-                foreach (var targetFaction in Find.FactionManager.AllFactions.Where(faction => faction.def == factionDef))
+                foreach (var targetFaction in mapFactions.Where(faction => faction.def == factionDef))
                 {
+                    anyOverrides = true;
                     activeOverrides.Add((pawn.Faction, targetFaction));
                 }
             }
