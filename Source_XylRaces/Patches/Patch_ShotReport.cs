@@ -6,9 +6,9 @@ public static class Patch_ShotReport
     [Feature(nameof(DefOf.XylRangedDodgeChance))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ShotReport.GetTextReadout))]
-    public static void GetTextReadout_Postfix(ShotReport __instance, ref string __result)
+    public static void GetTextReadout_Postfix(TargetInfo ___target, ref string __result)
     {
-        if (__instance.target.Thing is Pawn targetPawn)
+        if (___target.Thing is Pawn targetPawn)
         {
             float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(targetPawn);
             if (rangedDodgeChance > 0)
