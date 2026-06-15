@@ -238,31 +238,7 @@ public static class DebugArena
             if (currentFights >= maxFights)
                 return false;
 
-            combatPowerTmp.Clear();
-
-            // We read the ratings every time in case they have changed
-            try
-            {
-                using var streamReader = new StreamReader(ratingsPath);
-                while (streamReader.ReadLine() is string line)
-                {
-                    var parts = line.Split(',');
-
-                    if (parts[0] == "unit_type")
-                        continue;
-
-                    string unit_type = parts[0];
-                    int samples = int.Parse(parts[1]);
-                    float combat_power = float.Parse(parts[3]);
-
-                    if (samples >= Rand.Range(1, 30))
-                        combatPowerTmp[unit_type] = combat_power;
-                }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
+            ReadEstimatedCombatPower(ratingsPath);
 
             float PawnKindWeight(PawnKindDef def) => Mathf.Pow(0.98f, total[def]);
             float CombatPower(PawnKindDef def) => combatPowerTmp.TryGetValue(def.defName, out float value) ? value : def.combatPower;
@@ -326,7 +302,36 @@ public static class DebugArena
         });
     }
 
-    private static int RandRangeExponential(float min, float max)
+    private static void ReadEstimatedCombatPower(string ratingsPath)
+    {
+        combatPowerTmp.Clear();
+
+        // We read the ratings every time in case they have changed
+        try
+        {
+            using var streamReader = new StreamReader(ratingsPath);
+            while (streamReader.ReadLine() is string line)
+            {
+                var parts = line.Split(',');
+
+                if (parts[0] == "unit_type")
+                    continue;
+
+                string unit_type = parts[0];
+                int samples = int.Parse(parts[1]);
+                float combat_power = float.Parse(parts[3]);
+
+                if (samples >= Rand.Range(1, 30))
+                    combatPowerTmp[unit_type] = combat_power;
+            }
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+    }
+
+    private static int RandRangeExponential(int min, int max)
     {
         return GenMath.RoundRandom(Mathf.Exp(Rand.Range(Mathf.Log(min), Mathf.Log(max))));
     }
