@@ -7,7 +7,7 @@
     <label>succuboid</label>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon3</iconPath>
     <displayPriority>-201</displayPriority>
-    <combatPowerFactor>1.0</combatPowerFactor>
+    <combatPowerFactor>0.75</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
       <li>XylPsycast_WordOfLove</li>
