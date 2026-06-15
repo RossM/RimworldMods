@@ -6,22 +6,16 @@ public static class Patch_DesignationCategoryDef
     [Feature(nameof(DefModExtension_Gene.addDesignators))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(DesignationCategoryDef.AllResolvedAndIdeoDesignators), MethodType.Getter)]
-    public static void AllResolvedAndIdeoDesignators_Postfix(
-        DesignationCategoryDef __instance,
-        Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ___ideoBuildingDesignatorsCached,
-        ref IEnumerable<Designator> __result)
+    public static void AllResolvedAndIdeoDesignators_Postfix(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
     {
-        PatchHelpers.AddDesignators(__instance, ref __result, ___ideoBuildingDesignatorsCached);
+        PatchHelpers.AddDesignators(__instance, ref __result);
     }
 
     [Feature(nameof(DefModExtension_Gene.addDesignators))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(DesignationCategoryDef.ResolvedAllowedDesignators), MethodType.Getter)]
-    public static void ResolvedAllowedDesignators_Postfix(
-        DesignationCategoryDef __instance,
-        Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ___ideoBuildingDesignatorsCached,
-        ref IEnumerable<Designator> __result)
+    public static void ResolvedAllowedDesignators_Postfix(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result)
     {
-        PatchHelpers.AddDesignators(__instance, ref __result, ___ideoBuildingDesignatorsCached);
+        PatchHelpers.AddDesignators(__instance, ref __result);
     }
 }

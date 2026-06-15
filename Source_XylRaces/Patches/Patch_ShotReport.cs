@@ -6,9 +6,9 @@ public static class Patch_ShotReport
     [Feature(nameof(DefOf.XylRangedDodgeChance))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ShotReport.GetTextReadout))]
-    public static void GetTextReadout_Postfix(TargetInfo ___target, ref string __result)
+    public static void GetTextReadout_Postfix(ShotReport __instance, ref string __result)
     {
-        if (___target.Thing is Pawn targetPawn)
+        if (__instance.target.Thing is Pawn targetPawn)
         {
             float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(targetPawn);
             if (rangedDodgeChance > 0)
@@ -46,11 +46,11 @@ public static class Patch_ShotReport
     [Feature(nameof(DefOf.XylEcholocation))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ShotReport.HitReportFor))]
-    public static void HitReportFor_Postfix(Thing caster, ref float ___factorFromCoveringGas, ref ShotReport __result)
+    public static void HitReportFor_Postfix(Thing caster, Verb verb, LocalTargetInfo target, ref ShotReport __result)
     {
         if (IsUsingEcholocation(caster))
         {
-            ___factorFromCoveringGas = 1f;
+            __result.factorFromCoveringGas = 1f;
         }
     }
 
