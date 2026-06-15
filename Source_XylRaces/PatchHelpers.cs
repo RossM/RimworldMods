@@ -390,4 +390,10 @@ public static class PatchHelpers
             DefGenerator.AddImpliedDef((T)def, hotReload);
         }
     }
+
+    public static bool IsUsingEcholocation(Thing caster)
+    {
+        return caster is Pawn pawn && pawn.HasActiveGene(DefOf.XylEcholocation) && PawnUtility.IsBiologicallyOrArtificiallyBlind(pawn)
+               && pawn.health.capacities.GetLevel(PawnCapacityDefOf.Hearing) >= 0.2f;
+    }
 }

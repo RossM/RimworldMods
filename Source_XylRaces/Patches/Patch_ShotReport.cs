@@ -27,7 +27,7 @@ public static class Patch_ShotReport
     {
         __result = 0f;
 
-        if (IsUsingEcholocation(caster))
+        if (PatchHelpers.IsUsingEcholocation(caster))
         {
             float shootingAccuracy = caster switch
             {
@@ -46,17 +46,11 @@ public static class Patch_ShotReport
     [Feature(nameof(DefOf.XylEcholocation))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ShotReport.HitReportFor))]
-    public static void HitReportFor_Postfix(Thing caster, Verb verb, LocalTargetInfo target, ref ShotReport __result)
+    public static void HitReportFor_Postfix(Thing caster, ref ShotReport __result)
     {
-        if (IsUsingEcholocation(caster))
+        if (PatchHelpers.IsUsingEcholocation(caster))
         {
             __result.factorFromCoveringGas = 1f;
         }
-    }
-
-    private static bool IsUsingEcholocation(Thing caster)
-    {
-        return caster is Pawn pawn && pawn.HasActiveGene(DefOf.XylEcholocation) && PawnUtility.IsBiologicallyOrArtificiallyBlind(pawn)
-               && pawn.health.capacities.GetLevel(PawnCapacityDefOf.Hearing) >= 0.2f;
     }
 }
