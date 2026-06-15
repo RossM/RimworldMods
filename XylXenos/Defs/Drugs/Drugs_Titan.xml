@@ -98,8 +98,9 @@
       <HediffDef>XylAtlasiteHigh</HediffDef>
     </descriptionHyperlinks>
     <graphicData>
-      <texPath>Things/Item/Drug/Penoxycyline</texPath>
+      <texPath>Xyl/Things/Item/Drug/Atlasite</texPath>
       <graphicClass>Graphic_StackCount</graphicClass>
+      <drawSize>0.75</drawSize>
     </graphicData>
     <rotatable>false</rotatable>
     <statBases>
