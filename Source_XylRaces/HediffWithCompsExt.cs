@@ -3,20 +3,20 @@
 public class HediffWithCompsExt : HediffWithComps
 {
     private static readonly StringBuilder tipSb = new();
-    protected HediffStage curStage;
+    protected HediffStage curStageInternal;
     public Pawn sourcePawn;
 
     public override HediffStage CurStage
     {
         get
         {
-            if (curStage == null)
+            if (curStageInternal == null)
             {
-                curStage = def.stages[CurStageIndex].MemberwiseClone();
-                UpdateCurStage(curStage);
+                curStageInternal = def.stages[CurStageIndex].MemberwiseClone();
+                UpdateCurStage(curStageInternal);
             }
 
-            return curStage;
+            return curStageInternal;
         }
     }
 
@@ -26,7 +26,7 @@ public class HediffWithCompsExt : HediffWithComps
         set
         {
             base.Severity = value;
-            curStage = null;
+            curStageInternal = null;
         }
     }
 

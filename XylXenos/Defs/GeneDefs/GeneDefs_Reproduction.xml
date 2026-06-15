@@ -163,7 +163,7 @@
     <defName>XylLoveEuphoria</defName>
     <geneClass>XylXenos.Gene_LoveEuphoria</geneClass>
     <label>love euphoria</label>
-    <description>Carriers of this gene secrete chemicals that cause a euphoric, drug-like high in any partner they do lovin' with. The chemicals grant a long-lasting mood bonus, but are highly addictive.</description>
+    <description>Carriers of this gene secrete chemicals that cause a euphoric, drug-like high in their partner after lovin'. The chemicals grant a long-lasting mood bonus, but are highly addictive.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Reproduction</displayCategory>
@@ -281,7 +281,7 @@
     <stages>
       <li IsNull="True" />
       <li>
-        <label>lovin' withdrawal</label>
+        <label>lovin' withdrawal ({PARTNER_nameDef})</label>
         <description>I can't forget the feel of {PARTNER_possessive} touch...</description>
         <baseMoodEffect>-6</baseMoodEffect>
       </li>
