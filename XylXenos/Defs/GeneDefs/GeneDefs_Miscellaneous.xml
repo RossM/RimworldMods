@@ -517,36 +517,15 @@
     <displayOrderInCategory>0</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <biostatCpx>4</biostatCpx>
-    <biostatArc>1</biostatArc>
+    <biostatArc>2</biostatArc>
     <exclusionTags>
       <li>WoundHealingRate</li>
     </exclusionTags>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
         <regeneration>
-          <healthPerHour>40</healthPerHour>
+          <healthPerHour>20</healthPerHour>
         </regeneration>
-      </li>
-    </modExtensions>
-  </GeneDef>
-
-  <GeneDef>
-    <defName>XylUnnaturalToughness</defName>
-    <label>unnatural toughness</label>
-    <description>Carriers of this gene take much less injuries than others from the same damage. Archites in their bones and flesh toughen every part of their body.</description>
-    <displayCategory>Archite</displayCategory>
-    <displayOrderInCategory>0</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
-    <biostatCpx>3</biostatCpx>
-    <biostatArc>1</biostatArc>
-    <statFactors>
-      <IncomingDamageFactor>0.5</IncomingDamageFactor>
-    </statFactors>
-    <exclusionTags>
-      <li>Toughness</li>
-    </exclusionTags>
-    <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>
