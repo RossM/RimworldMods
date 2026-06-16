@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Analyzer>
+  <XylXenos>
+    <types>
+      <li>XylXenos.PatchHelpers</li>
+    </types>
+    <methods>
+      <li>XylXenos.NotificationManager:Notify</li>
+      <li>XylXenos.GeneExt:get_Active</li>
+    </methods>
+  </XylXenos>
+</Analyzer>
