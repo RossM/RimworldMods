@@ -66,7 +66,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
         anyOverrides = false;
         activeOverrides.Clear();
 
-        HashSet<Faction> mapFactions = new();
+        HashSet<Faction> mapFactions = [];
         foreach (var pawn in map.mapPawns.AllPawns)
         {
             if (pawn.Faction is Faction faction)

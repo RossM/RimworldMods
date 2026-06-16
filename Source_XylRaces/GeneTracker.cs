@@ -73,6 +73,7 @@ public class GeneTracker : INotificationListener, IPawnData
     /// </summary>
     [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
 
+    // ReSharper disable once ParameterHidesMember
     public void Init(Pawn pawn)
     {
         this.pawn = pawn;

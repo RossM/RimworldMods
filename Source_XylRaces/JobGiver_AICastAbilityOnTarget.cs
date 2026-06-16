@@ -29,7 +29,7 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
         if (!ability.CanCast)
             return LocalTargetInfo.Invalid;
 
-        HashSet<IAttackTarget> targets = new();
+        HashSet<IAttackTarget> targets = [];
 
         if (targetAllies)
             targets.AddRange(caster.Map.mapPawns.PawnsInFaction(caster.Faction));

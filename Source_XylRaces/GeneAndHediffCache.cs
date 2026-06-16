@@ -14,6 +14,7 @@ public class GeneAndHediffCache : INotificationListener, IPawnData
     private readonly Dictionary<Type, List<Hediff>> hediffsByModExt = new();
     private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
 
+    // ReSharper disable once ParameterHidesMember
     public void Init(Pawn pawn)
     {
         this.pawn = pawn;
