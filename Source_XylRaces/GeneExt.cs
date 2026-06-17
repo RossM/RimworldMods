@@ -3,30 +3,36 @@
 public class GeneExt : Gene, INotificationListener
 {
     [NotNull]
-    public DefModExtension_Gene DefExt => def.DefExt!;
+    public DefModExtension_Gene DefExt => field ??= def.DefExt!;
 
     public GeneType GeneType => geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 
-    public bool Removed => removed;
+    public bool Removed { get; private set; } = false;
 
     [Unsaved] private GeneType? geneTypeInternal;
-    [Unsaved] private bool removed = false;
+    [Unsaved] private bool activeFilled;
 
+    [field: Unsaved]
     public override bool Active
     {
         get
         {
             if (!base.Active)
                 return false;
-            if (removed)
+            if (Removed)
                 return false;
-            if (DefExt.gender != null && DefExt.gender != pawn.gender)
-                return false;
-            if (DefExt.geneType != null && DefExt.geneType != GeneType)
-                return false;
-            return true;
+            if (!activeFilled)
+            {
+                field = CheckActive();
+                activeFilled = true;
+            }
+            return field;
         }
     }
+
+    private bool CheckActive() =>
+        (DefExt.gender == null || DefExt.gender == pawn.gender) && 
+        (DefExt.geneType == null || DefExt.geneType == GeneType);
 
     public virtual IEnumerable<ThingDefCount> GetStartingItems()
     {
@@ -104,7 +110,7 @@ public class GeneExt : Gene, INotificationListener
 
     public override void PostRemove()
     {
-        removed = true;
+        Removed = true;
         NotificationManager.Instance.UnregisterAll(this);
 
         if (!DefExt.permanentHediffs.NullOrEmpty())
