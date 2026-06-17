@@ -102,7 +102,7 @@ public static class Patch_SlaveRebellionUtility
             if (def is { slaveRebellionThresholdDays: < float.MaxValue })
             {
                 stringBuilder.AppendLine(
-                    $"{def.parent?.LabelCap ?? "Genes".Translate().CapitalizeFirst()}: {"XylDocileThresholdReached".Translate(def.slaveRebellionThresholdDays)}");
+                    $"{def.ParentLabelCap ?? "Genes".Translate().CapitalizeFirst()}: {"XylDocileThresholdReached".Translate(def.slaveRebellionThresholdDays)}");
             }
         }
 

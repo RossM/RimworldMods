@@ -52,6 +52,8 @@ public class StartingItemOption
     public bool ignoreRestrictions;
 }
 
+public union GeneOrGeneTemplateDef(GeneDef, GeneTemplateDef);
+
 [NoReorder]
 public class DefModExtension_Gene : DefModExtension
 {
@@ -59,8 +61,8 @@ public class DefModExtension_Gene : DefModExtension
 
     public Texture2D ExtraIcon =>
         field ??= extraIconPath.NullOrEmpty()
-            ? (parent as GeneDef)?.Icon
-            : ContentFinder<Texture2D>.Get(extraIconPath) ?? (parent as GeneDef)?.Icon;
+            ? (parent.Value as GeneDef)?.Icon
+            : ContentFinder<Texture2D>.Get(extraIconPath) ?? (parent.Value as GeneDef)?.Icon;
 
     public string GenderRatioDescription =>
         femaleChance switch
@@ -70,6 +72,20 @@ public class DefModExtension_Gene : DefModExtension
             { } chance => "XylGenderRatioValue".Translate(chance.ToStringPercent(),
                 (1 - chance).ToStringPercent())
         };
+
+    private Type ParentGeneClass => parent switch
+    {
+        GeneDef geneDef => geneDef.geneClass,
+        GeneTemplateDef templateDef => templateDef.geneClass,
+        _ => null,
+    };
+
+    public TaggedString? ParentLabelCap => parent switch
+    {
+        GeneDef geneDef => geneDef.LabelCap,
+        GeneTemplateDef templateDef => templateDef.LabelCap,
+        _ => null,
+    };
 
     #region Properties of the gene itself
 
@@ -272,7 +288,7 @@ public class DefModExtension_Gene : DefModExtension
     /// <summary>
     ///     The <see cref="GeneDef" /> or <see cref="GeneTemplateDef" /> this object is attached to.
     /// </summary>
-    [CanBeNull] public Def parent;
+    [CanBeNull] public GeneOrGeneTemplateDef parent;
 
     #endregion
 
@@ -359,7 +375,8 @@ public class DefModExtension_Gene : DefModExtension
         foreach (var configError in base.ConfigErrors())
             yield return configError;
 
-        var geneClass = (parent as GeneDef)?.geneClass ?? (parent as GeneTemplateDef)?.geneClass;
+        Type geneClass = ParentGeneClass;
+
         if (geneClass == null)
         {
             yield return $"{GetType().Name} may only be applied to GeneDef or GeneTemplateDef";
@@ -386,7 +403,7 @@ public class DefModExtension_Gene : DefModExtension
         Type expectedClass,
         [CallerArgumentExpression("field")] string fieldName = null)
     {
-        var geneClass = (parent as GeneDef)?.geneClass ?? (parent as GeneTemplateDef)?.geneClass;
+        var geneClass = ParentGeneClass;
 
         if (field != null && !expectedClass.IsAssignableFrom(geneClass))
             return $"{fieldName} set but geneClass is not {expectedClass.Name} or subclass thereof";
@@ -400,20 +417,20 @@ public class DefModExtension_Gene : DefModExtension
     {
         base.ResolveReferences(parentDef);
 
-        parent = parentDef;
-
         GeneDefExtensions.defExtCache.Clear();
 
         switch (parentDef)
         {
             case GeneDef geneDef:
             {
+                parent = geneDef;
                 if (geneDef.geneClass == typeof(Gene))
                     geneDef.geneClass = typeof(GeneExt);
                 break;
             }
             case GeneTemplateDef templateDef:
             {
+                parent = templateDef;
                 if (templateDef.geneClass == typeof(Gene))
                     templateDef.geneClass = typeof(GeneExt);
                 break;
