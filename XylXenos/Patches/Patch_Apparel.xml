@@ -3,28 +3,6 @@
 <Patch>
 
   <!-- 
-  The blindfold is useful for Chyrr as it gives various effects (increased psychic sensitivity, 
-  no effect from ugly surroundings, etc), so allow them to make it.
-  -->
-  <Operation Class="PatchOperationFindMod">
-    <mods>
-      <li>Ideology</li>
-    </mods>
-    <match Class="XylXenos.PatchOperationAddOrMerge">
-      <xpath>Defs/ThingDef[defName="Apparel_Blindfold"]</xpath>
-      <value>
-        <modExtensions>
-          <li Class="XylXenos.DefModExtension_ThingOrRecipe_GeneDependent">
-            <genePrerequisitesAny>
-              <li>XylEcholocation</li>
-            </genePrerequisitesAny>
-          </li>
-        </modExtensions>
-      </value>
-    </match>
-  </Operation>
-
-  <!-- 
   Most outer-layer apparel that covers the torso disables flight.
   -->
   <Operation Class="XylXenos.PatchOperationAddOrMerge">

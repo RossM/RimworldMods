@@ -2,49 +2,6 @@
 
 <Patch>
 
-  <Operation Class="PatchOperationFindMod">
-    <mods>
-      <li>Ideology</li>
-    </mods>
-    <match Class="XylXenos.PatchOperationAddOrMerge">
-      <xpath>Defs/ThoughtDef[starts-with(defName,"AteNonMeat_")]</xpath>
-      <value>
-        <nullifyingGenes>
-          <li>XylHerbivoreStomach</li>
-        </nullifyingGenes>
-      </value>
-    </match>
-  </Operation>
-
-  <Operation Class="PatchOperationFindMod">
-    <mods>
-      <li>Ideology</li>
-    </mods>
-    <match Class="XylXenos.PatchOperationAddOrMerge">
-      <xpath>Defs/ThoughtDef[starts-with(defName,"AteMeat_") and stages/li/baseMoodEffect &lt; 0]</xpath>
-      <value>
-        <nullifyingGenes>
-          <li>XylMeatDependence</li>
-          <li>XylCarnivoreStomach</li>
-        </nullifyingGenes>
-      </value>
-    </match>
-  </Operation>
-
-  <Operation Class="PatchOperationFindMod">
-    <mods>
-      <li>Ideology</li>
-    </mods>
-    <match Class="XylXenos.PatchOperationAddOrMerge">
-      <xpath>Defs/ThoughtDef[starts-with(defName,"AteHumanMeat_") and stages/li/baseMoodEffect &lt; 0]</xpath>
-      <value>
-        <nullifyingGenes>
-          <li>XylCarnivoreStomach</li>
-        </nullifyingGenes>
-      </value>
-    </match>
-  </Operation>
-
   <Operation Class="XylXenos.PatchOperationAddOrMerge">
     <xpath>
       Defs/ThoughtDef[
