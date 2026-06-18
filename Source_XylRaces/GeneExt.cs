@@ -49,7 +49,7 @@ public class GeneExt : Gene, INotificationListener
             if (itemDef == null)
                 continue;
 
-            var itemNutrition = itemDef.GetStatBase(StatDefOf.Nutrition);
+            var itemNutrition = itemDef.GetStatValueAbstract(StatDefOf.Nutrition);
             int count;
             if (startingItem.nutritionAmount != FloatRange.Zero && itemNutrition > 0)
                 count = Mathf.FloorToInt(startingItem.nutritionAmount.RandomInRange / itemNutrition);
