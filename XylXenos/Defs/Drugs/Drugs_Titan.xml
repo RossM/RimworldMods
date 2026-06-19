@@ -470,7 +470,7 @@
   <HediffDef ParentName="DrugToleranceBase">
     <defName>XylCrystalTolerance</defName>
     <label>crystal tolerance</label>
-    <description>A built-up crystal to psychite. The more severe this tolerance is, the more psychite-based drugs like yayo or flake it takes to get the same effect.</description>
+    <description>A built-up tolerance to crystal. The more severe this tolerance is, the more crystal it takes to get the same effect.</description>
     <comps>
       <li Class="HediffCompProperties_SeverityPerDay">
         <severityPerDay>-0.015</severityPerDay>
