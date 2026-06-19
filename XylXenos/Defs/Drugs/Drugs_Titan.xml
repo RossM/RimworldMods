@@ -307,6 +307,9 @@
     <description>A lithoid-specific drug that causes euphoria, heightens performance, and deadens pain. It's highly addictive.</description>
     <descriptionHyperlinks>
       <HediffDef>XylCrystalHigh</HediffDef>
+      <HediffDef>XylCrystalTolerance</HediffDef>
+      <HediffDef>XylCrystalAddiction</HediffDef>
+      <HediffDef>XylChemicalDamageMild</HediffDef>
     </descriptionHyperlinks>
     <graphicData>
       <texPath>Xyl/Things/Item/Drug/Crystal</texPath>
@@ -481,12 +484,12 @@
     </comps>
     <hediffGivers>
       <li Class="HediffGiver_RandomDrugEffect">
-        <hediff>ChemicalDamageModerate</hediff>
+        <hediff>XylChemicalDamageMild</hediff>
         <severityToMtbDaysCurve>
           <points>
             <li>(0.45, 99999)</li>
-            <li>(0.5, 180)</li>
-            <li>(1, 135)</li>
+            <li>(0.5, 360)</li>
+            <li>(1, 180)</li>
           </points>
         </severityToMtbDaysCurve>
         <partsToAffect>
@@ -579,13 +582,45 @@
         <mentalStateGivers>
           <li>
             <mentalState>Binging_DrugExtreme</mentalState>
-            <mtbDays>40</mtbDays>
-          </li>
-          <li>
-            <mentalState>Wander_Psychotic</mentalState>
-            <mtbDays>10</mtbDays>
+            <mtbDays>30</mtbDays>
           </li>
         </mentalStateGivers>
+        <hediffGivers>
+          <li Class="HediffGiver_Random">
+            <hediff>CatatonicBreakdown</hediff>
+            <mtbDays>15</mtbDays>
+          </li>
+        </hediffGivers>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <ThoughtDef>
+    <defName>XylCrystalWithdrawal</defName>
+    <workerClass>ThoughtWorker_Hediff</workerClass>
+    <hediff>XylCrystalAddiction</hediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <developmentalStageFilter>Baby, Child, Adult</developmentalStageFilter>
+    <stages>
+      <li>
+        <visible>false</visible>
+      </li>
+      <li>
+        <label>crystal withdrawal</label>
+        <description>My body feels like it's made of red-hot lead.</description>
+        <baseMoodEffect>-35</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <HediffDef ParentName="DiseaseBase">
+    <defName>XylChemicalDamageMild</defName>
+    <label>chemical damage</label>
+    <description>Chemical damage at the cellular level.</description>
+    <debugLabelExtra>mild</debugLabelExtra>
+    <stages>
+      <li>
+        <partEfficiencyOffset>-0.2</partEfficiencyOffset>
       </li>
     </stages>
   </HediffDef>
