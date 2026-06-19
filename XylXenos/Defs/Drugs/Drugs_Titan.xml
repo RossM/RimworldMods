@@ -41,7 +41,7 @@
     <rotatable>false</rotatable>
     <statBases>
       <WorkToMake>1200</WorkToMake>
-      <MarketValue>36</MarketValue>
+      <MarketValue>55</MarketValue>
       <Mass>0.005</Mass>
       <Flammability>0.7</Flammability>
     </statBases>
@@ -128,7 +128,7 @@
     </graphicData>
     <rotatable>false</rotatable>
     <statBases>
-      <MarketValue>50</MarketValue>
+      <MarketValue>70</MarketValue>
       <Mass>0.01</Mass>
     </statBases>
     <techLevel>Ultra</techLevel>
@@ -301,7 +301,7 @@
     </stages>
   </HediffDef>
 
-  <ThingDef ParentName="MakeableDrugPillBase">
+  <ThingDef ParentName="MakeableDrugBase">
     <defName>XylCrystal</defName>
     <label>crystal</label>
     <description>A lithoid-specific drug that causes euphoria, heightens performance, and deadens pain. It's highly addictive.</description>
@@ -316,18 +316,29 @@
     <socialPropernessMatters>false</socialPropernessMatters>
     <rotatable>false</rotatable>
     <statBases>
-      <WorkToMake>1200</WorkToMake>
-      <MarketValue>36</MarketValue>
+      <WorkToMake>550</WorkToMake>
+      <MarketValue>26</MarketValue>
       <Mass>0.005</Mass>
       <Flammability>0.7</Flammability>
     </statBases>
     <techLevel>Industrial</techLevel>
     <ingestible>
+      <foodType>Processed</foodType>
+      <joyKind>Chemical</joyKind>
+      <joy>0.80</joy>
       <drugCategory>Hard</drugCategory>
       <outcomeDoers>
         <li Class="IngestionOutcomeDoer_GiveHediff">
           <hediffDef>XylCrystalHigh</hediffDef>
           <severity>0.75</severity>
+          <toleranceChemical>XylCrystal</toleranceChemical>
+        </li>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>XylCrystalTolerance</hediffDef>
+          <toleranceChemical>XylCrystal</toleranceChemical>
+          <severity>0.040</severity>
+          <divideByBodySize>true</divideByBodySize>
+          <multiplyByGeneToleranceFactors>true</multiplyByGeneToleranceFactors>
         </li>
       </outcomeDoers>
     </ingestible>
@@ -335,6 +346,9 @@
     <comps>
       <li Class="CompProperties_Drug">
         <chemical>XylCrystal</chemical>
+        <addictiveness>0.02</addictiveness>
+        <existingAddictionSeverityOffset>0.40</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
         <listOrder>2100</listOrder>
         <overdoseSeverityOffset>0.08~0.14</overdoseSeverityOffset>
       </li>
@@ -431,6 +445,7 @@
     <defName>XylCrystal</defName>
     <label>crystal</label>
     <addictionHediff>XylCrystalAddiction</addictionHediff>
+    <toleranceHediff>XylCrystalTolerance</toleranceHediff>
     <geneToleranceBuildupFactorResist>0.5</geneToleranceBuildupFactorResist>
     <geneToleranceBuildupFactorImmune>0</geneToleranceBuildupFactorImmune>
     <geneOverdoseChanceFactorResist>0.5</geneOverdoseChanceFactorResist>
@@ -452,6 +467,35 @@
     <listPriority>50</listPriority>
   </NeedDef>
 
+  <HediffDef ParentName="DrugToleranceBase">
+    <defName>XylCrystalTolerance</defName>
+    <label>crystal tolerance</label>
+    <description>A built-up crystal to psychite. The more severe this tolerance is, the more psychite-based drugs like yayo or flake it takes to get the same effect.</description>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-0.015</severityPerDay>
+      </li>
+      <li Class="HediffCompProperties_DrugEffectFactor">
+        <chemical>XylCrystal</chemical>
+      </li>
+    </comps>
+    <hediffGivers>
+      <li Class="HediffGiver_RandomDrugEffect">
+        <hediff>ChemicalDamageModerate</hediff>
+        <severityToMtbDaysCurve>
+          <points>
+            <li>(0.45, 99999)</li>
+            <li>(0.5, 180)</li>
+            <li>(1, 135)</li>
+          </points>
+        </severityToMtbDaysCurve>
+        <partsToAffect>
+          <li>Brain</li>
+        </partsToAffect>
+      </li>
+    </hediffGivers>
+  </HediffDef>
+  
   <HediffDef>
     <defName>XylCrystalHigh</defName>
     <label>crystal high</label>
