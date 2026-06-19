@@ -303,16 +303,7 @@
         </li>-->
       </outcomeDoers>
     </ingestible>
-    <recipeMaker>
-      <!--<researchPrerequisite>PenoxycylineProduction</researchPrerequisite>-->
-      <recipeUsers>
-        <li>DrugLab</li>
-      </recipeUsers>
-      <displayPriority>3000</displayPriority>
-    </recipeMaker>
-    <costList>
-      <Neutroamine>4</Neutroamine>
-    </costList>
+    <recipeMaker IsNull="true" />
     <comps>
       <li Class="CompProperties_Drug">
         <chemical>XylCrystal</chemical>
@@ -321,6 +312,90 @@
       </li>
     </comps>
   </ThingDef>
+  
+  <RecipeDef>
+    <defName>Make_XylCrystal</defName>
+    <label>make crystal</label>
+    <jobString>Making crystal.</jobString>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <workSkill>Intellectual</workSkill>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_CookMeal</soundWorking>
+    <products>
+      <XylCrystal>1</XylCrystal>
+    </products>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Chemfuel</li>
+          </thingDefs>
+        </filter>
+        <count>2</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <categories>
+            <li>StoneBlocks</li>
+          </categories>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <recipeUsers>
+      <li>DrugLab</li>
+    </recipeUsers>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>Make_XylCrystalBulk</defName>
+    <label>make crystal x4</label>
+    <jobString>Making crystal x4.</jobString>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <workSkill>Intellectual</workSkill>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_CookMeal</soundWorking>
+    <products>
+      <XylCrystal>4</XylCrystal>
+    </products>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Chemfuel</li>
+          </thingDefs>
+        </filter>
+        <count>8</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>4</count>
+      </li>
+      <li>
+        <filter>
+          <categories>
+            <li>StoneBlocks</li>
+          </categories>
+        </filter>
+        <count>4</count>
+      </li>
+    </ingredients>
+    <recipeUsers>
+      <li>DrugLab</li>
+    </recipeUsers>
+  </RecipeDef>
 
   <ChemicalDef>
     <defName>XylCrystal</defName>

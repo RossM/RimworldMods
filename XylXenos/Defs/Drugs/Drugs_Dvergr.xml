@@ -32,6 +32,9 @@
     <products>
       <Wort>5</Wort>
     </products>
+    <recipeUsers>
+      <li>Brewery</li>
+    </recipeUsers>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_ThingOrRecipe_GeneDependent">
         <genePrerequisitesAny>
