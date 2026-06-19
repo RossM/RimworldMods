@@ -134,6 +134,11 @@
   <PawnKindDef ParentName="BasePlayerPawnKind">
     <defName>XylNixie_Siren</defName>
     <label>colonist</label>
+    <xenotypeSet>
+      <xenotypeChances>
+        <XylNixie>999</XylNixie>
+      </xenotypeChances>
+    </xenotypeSet>
     <chemicalAddictionChance>0.06</chemicalAddictionChance>
     <apparelTags>
       <li>IndustrialBasic</li>
@@ -159,6 +164,20 @@
     </specificApparelRequirements>
     <apparelAllowHeadgearChance>1</apparelAllowHeadgearChance>
     <apparelMoney>0</apparelMoney>
+    <fixedAdultBackstories>
+      <!-- Selected for flavor, not balance :) -->
+      <li>Inventor6</li>
+      <li>Teacher20</li>
+      <li>GlitterworldEmpath26</li>
+      <li>Evangelist39</li>
+      <li>UrbworldRebel56</li>
+      <li>Drifter67</li>
+      <li>CorporateManager76</li>
+      <li>Defector78</li>
+      <li>ConArtist80</li>
+      <li>AsceticPriest84</li>
+      <li>EscapedConvict90</li>
+    </fixedAdultBackstories>
     <backstoryCryptosleepCommonality>1</backstoryCryptosleepCommonality>
     <techHediffsChance>0.25</techHediffsChance>
     <techHediffsMoney>800~1200</techHediffsMoney>
