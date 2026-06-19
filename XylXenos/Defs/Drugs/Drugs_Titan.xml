@@ -273,4 +273,127 @@
     </stages>
   </HediffDef>
 
+  <ThingDef ParentName="MakeableDrugPillBase">
+    <defName>XylCrystal</defName>
+    <label>crystal</label>
+    <description>TODO</description>
+    <descriptionHyperlinks>
+      <!--<HediffDef>XylCrytalHigh</HediffDef>-->
+    </descriptionHyperlinks>
+    <graphicData>
+      <texPath>Xyl/Things/Item/Drug/Crystal</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.6,0.55,1.0)</color>
+    </graphicData>
+    <socialPropernessMatters>false</socialPropernessMatters>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>1200</WorkToMake>
+      <MarketValue>36</MarketValue>
+      <Mass>0.005</Mass>
+      <Flammability>0.7</Flammability>
+    </statBases>
+    <techLevel>Industrial</techLevel>
+    <ingestible>
+      <drugCategory>Hard</drugCategory>
+      <outcomeDoers>
+        <!--<li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>XylSoftenerHigh</hediffDef>
+          <severity>1.0</severity>
+        </li>-->
+      </outcomeDoers>
+    </ingestible>
+    <recipeMaker>
+      <!--<researchPrerequisite>PenoxycylineProduction</researchPrerequisite>-->
+      <recipeUsers>
+        <li>DrugLab</li>
+      </recipeUsers>
+      <displayPriority>3000</displayPriority>
+    </recipeMaker>
+    <costList>
+      <Neutroamine>4</Neutroamine>
+    </costList>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <chemical>XylCrystal</chemical>
+        <listOrder>2100</listOrder>
+        <overdoseSeverityOffset>0.08~0.14</overdoseSeverityOffset>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ChemicalDef>
+    <defName>XylCrystal</defName>
+    <label>crystal</label>
+    <addictionHediff>XylCrystalAddiction</addictionHediff>
+    <geneToleranceBuildupFactorResist>0.5</geneToleranceBuildupFactorResist>
+    <geneToleranceBuildupFactorImmune>0</geneToleranceBuildupFactorImmune>
+    <geneOverdoseChanceFactorResist>0.5</geneOverdoseChanceFactorResist>
+    <geneOverdoseChanceFactorImmune>0</geneOverdoseChanceFactorImmune>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Chemical">
+        <requiredGenesAll>
+          <li>XylLithoid</li>
+        </requiredGenesAll>
+      </li>
+    </modExtensions>
+  </ChemicalDef>
+
+  <NeedDef ParentName="DrugAddictionNeedBase">
+    <defName>Chemical_XylCrystal</defName>
+    <needClass>Need_Chemical</needClass>
+    <label>crystal</label>
+    <description>Because of a crystal addiction, this person needs to regularly consume the drug to avoid withdrawal symptoms.</description>
+    <listPriority>50</listPriority>
+  </NeedDef>
+
+  <HediffDef ParentName="AddictionBase">
+    <defName>XylCrystalAddiction</defName>
+    <label>crystal addiction</label>
+    <description>TODO</description>
+    <hediffClass>Hediff_Addiction</hediffClass>
+    <chemicalNeed>Chemical_XylCrystal</chemicalNeed>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-0.0333</severityPerDay>
+        <showDaysToRecover>true</showDaysToRecover>
+      </li>
+    </comps>
+    <stages>
+      <li>
+      </li>
+      <li>
+        <label>withdrawal</label>
+        <socialFightChanceFactor>3.0</socialFightChanceFactor>
+        <statOffsets>
+          <RestFallRateFactor>0.3</RestFallRateFactor>
+        </statOffsets>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <offset>-0.20</offset>
+          </li>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>-0.20</offset>
+          </li>
+          <li>
+            <capacity>Manipulation</capacity>
+            <offset>-0.20</offset>
+          </li>
+        </capMods>
+        <mentalStateGivers>
+          <li>
+            <mentalState>Binging_DrugExtreme</mentalState>
+            <mtbDays>40</mtbDays>
+          </li>
+          <li>
+            <mentalState>Wander_Psychotic</mentalState>
+            <mtbDays>10</mtbDays>
+          </li>
+        </mentalStateGivers>
+      </li>
+    </stages>
+  </HediffDef>
+
 </Defs>
