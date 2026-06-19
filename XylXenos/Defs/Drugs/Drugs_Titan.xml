@@ -174,7 +174,11 @@
       <li>
         <capMods>
           <li>
-            <capacity>Consciousness</capacity>
+            <capacity>Moving</capacity>
+            <offset>0.1</offset>
+          </li>
+          <li>
+            <capacity>Manipulation</capacity>
             <offset>0.1</offset>
           </li>
         </capMods>
@@ -276,9 +280,9 @@
   <ThingDef ParentName="MakeableDrugPillBase">
     <defName>XylCrystal</defName>
     <label>crystal</label>
-    <description>TODO</description>
+    <description>A lithoid-specific drug that causes euphoria, heightens performance, and deadens pain. It's highly addictive.</description>
     <descriptionHyperlinks>
-      <!--<HediffDef>XylCrytalHigh</HediffDef>-->
+      <HediffDef>XylCrystalHigh</HediffDef>
     </descriptionHyperlinks>
     <graphicData>
       <texPath>Xyl/Things/Item/Drug/Crystal</texPath>
@@ -297,10 +301,10 @@
     <ingestible>
       <drugCategory>Hard</drugCategory>
       <outcomeDoers>
-        <!--<li Class="IngestionOutcomeDoer_GiveHediff">
-          <hediffDef>XylSoftenerHigh</hediffDef>
-          <severity>1.0</severity>
-        </li>-->
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>XylCrystalHigh</hediffDef>
+          <severity>0.75</severity>
+        </li>
       </outcomeDoers>
     </ingestible>
     <recipeMaker IsNull="true" />
@@ -421,6 +425,51 @@
     <description>Because of a crystal addiction, this person needs to regularly consume the drug to avoid withdrawal symptoms.</description>
     <listPriority>50</listPriority>
   </NeedDef>
+
+  <HediffDef>
+    <defName>XylCrystalHigh</defName>
+    <label>crystal high</label>
+    <labelNoun>crystal</labelNoun>
+    <description>TODO.</description>
+    <hediffClass>Hediff_High</hediffClass>
+    <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
+    <scenarioCanAdd>true</scenarioCanAdd>
+    <initialSeverity>0.5</initialSeverity>
+    <maxSeverity>1.0</maxSeverity>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-1.5</severityPerDay>
+        <showHoursToRecover>true</showHoursToRecover>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <offset>0.2</offset>
+          </li>
+        </capMods>
+        <painFactor>0.5</painFactor>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <ThoughtDef>
+    <defName>XylCrystalHigh</defName>
+    <workerClass>ThoughtWorker_Hediff</workerClass>
+    <hediff>XylCrystalHigh</hediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <developmentalStageFilter>Baby, Child, Adult</developmentalStageFilter>
+    <stages>
+      <li>
+        <label>crystal high</label>
+        <description>I'm ready to rock!</description>
+        <baseMoodEffect>35</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
 
   <HediffDef ParentName="AddictionBase">
     <defName>XylCrystalAddiction</defName>

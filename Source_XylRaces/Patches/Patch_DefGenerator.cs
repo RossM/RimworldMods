@@ -9,5 +9,7 @@ public static class Patch_DefGenerator
     public static void GenerateImpliedDefs_PreResolve_Postfix(bool hotReload)
     {
         PatchHelpers.RunDefGenerators(hotReload);
+
+        GeneDefGenerator.FixupChemicalGenes();
     }
 }

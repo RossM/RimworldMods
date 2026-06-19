@@ -62,4 +62,20 @@ public static class GeneDefGenerator
 
         return geneDef;
     }
+
+    public static void FixupChemicalGenes()
+    {
+        foreach (var geneDef in DefDatabase<GeneDef>.AllDefs)
+        {
+            if (geneDef.chemical is not { } chemical)
+                continue;
+            if (chemical.GetModExtension<DefModExtension_Chemical>() is not { } defExtension)
+                continue;
+
+            if (!defExtension.requiredGenesAll.NullOrEmpty())
+                geneDef.prerequisite = defExtension.requiredGenesAll[0];
+            else if (defExtension.requiredGenesAny is { Count: 1 })
+                geneDef.prerequisite = defExtension.requiredGenesAny[0];
+        }
+    }
 }
