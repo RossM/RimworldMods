@@ -17,14 +17,14 @@ public static class PawnExtensions
         public GeneAndHediffCache GeneAndHediffCache
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => PawnDataManager<GeneAndHediffCache>.Get(pawn);
+            get => PawnExtraData<GeneAndHediffCache>.Get(pawn);
         }
 
         [CanBeNull]
         public GeneTracker GeneTracker
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => pawn.genes == null ? null : PawnDataManager<GeneTracker>.Get(pawn);
+            get => pawn.genes == null ? null : PawnExtraData<GeneTracker>.Get(pawn);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

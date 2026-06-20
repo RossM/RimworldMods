@@ -10,7 +10,7 @@ public interface IPawnData
 ///     a pawn ThingComp, such as lookup caches or gene-derived aggregate values. Use <see cref="Get" /> to retrieve a
 ///     pawn's instance.
 /// </summary>
-public static class PawnDataManager<T> where T : IPawnData, new()
+public static class PawnExtraData<T> where T : IPawnData, new()
 {
     private class Listener : INotificationListener
     {
@@ -39,7 +39,7 @@ public static class PawnDataManager<T> where T : IPawnData, new()
 
     private static readonly Listener listener = new();
 
-    static PawnDataManager()
+    static PawnExtraData()
     {
         NotificationManager.staticListeners.Add(listener);
     }

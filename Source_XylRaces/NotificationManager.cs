@@ -533,14 +533,19 @@ public class NotificationManager : GameComponent
 
         foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
             CallRegistrationHandlers(pawn);
-        foreach (var listener in staticListeners)
-            listener.RegisterWith(this);
+        
+        RegisterStaticListeners();
 
         foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
             Notify(NotificationDefOf.PostLoadedGame, pawn);
     }
 
     public override void FinalizeInit()
+    {
+        RegisterStaticListeners();
+    }
+
+    private void RegisterStaticListeners()
     {
         foreach (var listener in staticListeners)
         {
