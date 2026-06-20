@@ -12,7 +12,7 @@
       <MarketValue>500</MarketValue>
       <LeatherAmount>0</LeatherAmount>
       <ArmorRating_Blunt>0.32</ArmorRating_Blunt>
-      <ArmorRating_Sharp>0.65</ArmorRating_Sharp>
+      <ArmorRating_Sharp>0.78</ArmorRating_Sharp>
       <Wildness>0.4</Wildness>
     </statBases>
     <uiIconScale>1.15</uiIconScale>
@@ -50,8 +50,8 @@
     <race>
       <body>XylBeetleLikeWithHorn</body>
       <baseHungerRate>0.5</baseHungerRate>
-      <baseBodySize>1.5</baseBodySize>
-      <baseHealthScale>4.0</baseHealthScale>
+      <baseBodySize>1.8</baseBodySize>
+      <baseHealthScale>4.8</baseHealthScale>
       <meatLabel>insect meat</meatLabel>
       <lifeExpectancy>6</lifeExpectancy>
       <trainability>Advanced</trainability>
@@ -86,7 +86,7 @@
   </ThingDef>
 
   <PawnKindDef ParentName="InsectKindBase">
-    <defName>XylShellback_Test3</defName>
+    <defName>XylShellback_Test4</defName>
     <label>shellback</label>
     <race>XylShellback</race>
     <combatPower>130</combatPower>
@@ -95,29 +95,29 @@
       <li>
         <bodyGraphicData>
           <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
-          <drawSize>1.3</drawSize>
+          <drawSize>1.7</drawSize>
           <color>(100,84,58)</color>
         </bodyGraphicData>
         <dessicatedBodyGraphicData>
           <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
-          <drawSize>1.3</drawSize>
+          <drawSize>1.7</drawSize>
         </dessicatedBodyGraphicData>
       </li>
       <li>
         <bodyGraphicData>
           <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
-          <drawSize>1.8</drawSize>
+          <drawSize>2.5</drawSize>
           <color>(100,84,58)</color>
         </bodyGraphicData>
         <dessicatedBodyGraphicData>
           <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
-          <drawSize>1.8</drawSize>
+          <drawSize>2.5</drawSize>
         </dessicatedBodyGraphicData>
       </li>
       <li>
         <bodyGraphicData>
           <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
-          <drawSize>2.2</drawSize>
+          <drawSize>3.3</drawSize>
           <color>(100,84,58)</color>
           <shadowData>
             <volume>(0.5, 0.7, 0.43)</volume>
@@ -126,7 +126,7 @@
         </bodyGraphicData>
         <dessicatedBodyGraphicData>
           <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
-          <drawSize>2.2</drawSize>
+          <drawSize>3.3</drawSize>
         </dessicatedBodyGraphicData>
       </li>
     </lifeStages>
