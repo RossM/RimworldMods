@@ -57,6 +57,7 @@
       <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>
       <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
     </allowedMemes>
+    <raidLootMaker>XylTrogRaidLootMaker</raidLootMaker>
     <pawnGroupMakers Inherit="False">
       <li>
         <!-- Normal fights, ranged with melee mix-ins -->
@@ -205,5 +206,25 @@
       </li>
     </modExtensions>
   </FactionDef>
+
+  <ThingSetMakerDef>
+    <defName>XylTrogRaidLootMaker</defName>
+    <debugParams>
+      <totalMarketValueRange>250</totalMarketValueRange>
+    </debugParams>
+    <root Class="ThingSetMaker_MarketValue">
+      <fixedParams>
+        <filter>
+          <thingDefs>
+            <li>Silver</li>
+            <li>Jade</li>
+            <li MayRequire="Ludeon.RimWorld.Odyssey">Obsidian</li>
+            <li>InsectJelly</li>
+            <li>Flake</li>
+          </thingDefs>
+        </filter>
+      </fixedParams>
+    </root>
+  </ThingSetMakerDef>
 
 </Defs>

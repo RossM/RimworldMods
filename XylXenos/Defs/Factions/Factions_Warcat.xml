@@ -34,6 +34,47 @@
       <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>
     </allowedMemes>
     <disallowedMemes IsNull="true"/>
+    <raidLootMaker>XylWarcatRaidLootMaker</raidLootMaker>
   </FactionDef>
+
+  <ThingSetMakerDef>
+    <defName>XylWarcatRaidLootMaker</defName>
+    <debugParams>
+      <totalMarketValueRange>250</totalMarketValueRange>
+    </debugParams>
+    <root Class="ThingSetMaker_Sum">
+      <resolveInOrder>true</resolveInOrder>
+      <options>
+        <li>
+          <chance>0.2</chance>
+          <thingSetMaker Class="ThingSetMaker_Count">
+            <fixedParams>
+              <countRange>1~3</countRange>
+              <filter>
+                <thingDefs>
+                  <li>Skull</li>
+                </thingDefs>
+              </filter>
+            </fixedParams>
+          </thingSetMaker>
+        </li>
+        <li>
+          <thingSetMaker Class="ThingSetMaker_MarketValue">
+            <fixedParams>
+              <filter>
+                <thingDefs>
+                  <li>Silver</li>
+                  <li>Jade</li>
+                  <li>MedicineHerbal</li>
+                  <li>Pemmican</li>
+                  <li>Leather_Human</li>
+                </thingDefs>
+              </filter>
+            </fixedParams>
+          </thingSetMaker>
+        </li>
+      </options>
+    </root>
+  </ThingSetMakerDef>
 
 </Defs>
