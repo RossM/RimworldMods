@@ -32,7 +32,7 @@ public class JobGiver_SatisfyDietDependency : ThinkNode_JobGiver
                     continue;
 
                 float nutritionPer = FoodUtility.NutritionForEater(pawn, food);
-                float nutritionNeeded = dietDependency.Severity / dietDependency.DietDependencyInfo.severityReductionPerNutrition;
+                float nutritionNeeded = dietDependency.Severity / dietDependency.DefExt.severityReductionPerNutrition;
                 int count = Mathf.CeilToInt(nutritionNeeded / nutritionPer);
 
                 Pawn pawn2 = (food.ParentHolder as Pawn_InventoryTracker)?.pawn;

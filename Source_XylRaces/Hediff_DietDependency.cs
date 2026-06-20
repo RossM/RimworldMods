@@ -2,6 +2,14 @@
 // TODO: Need to handle satisfying the dependency for pawns in caravans. See Caravan_NeedsTracker.TrySatisfyChemicalNeed
 // and CaravanInventoryUtility.TryGetBestFood.
 
+public class DefModExtension_Hediff_DietDependency : DefModExtension
+{
+    public FoodKind foodKind = FoodKind.Any;
+    public bool rawOnly = false;
+    public float severityReductionPerNutrition = 1f;
+    [MustTranslate] public string foodLabel;
+}
+
 [UsedFromXml]
 public class Hediff_DietDependency : HediffWithComps, INotificationListener
 {
@@ -16,10 +24,9 @@ public class Hediff_DietDependency : HediffWithComps, INotificationListener
         // ReSharper restore UnusedMember.Local
     }
 
-    public GeneExt Gene => field ??= (GeneExt)pawn.genes.GetGene(GetComp<HediffComp_Genetic>().Props.gene);
-    public DietDependencyInfo DietDependencyInfo => Gene.DefExt.dietDependency!;
+    public DefModExtension_Hediff_DietDependency DefExt => field ??= def.GetModExtension<DefModExtension_Hediff_DietDependency>();
 
-    public bool ShouldSatisfy => Severity >= def.stages[(int)Stages.Craving].minSeverity;
+    public bool ShouldSatisfy => CurStageIndex >= (int)Stages.Craving;
 
     public override bool ShouldRemove => false;
 
@@ -38,7 +45,7 @@ public class Hediff_DietDependency : HediffWithComps, INotificationListener
             var deficiencyDays = def.stages[(int)Stages.MildDeficiency].minSeverity / severityPerDay;
             var comaDays = def.stages[(int)Stages.Coma].minSeverity / severityPerDay;
             var deathDays = def.lethalSeverity / severityPerDay;
-            text += "GeneDefChemicalNeedDurationDesc".Translate(DietDependencyInfo.foodLabel,
+            text += "GeneDefChemicalNeedDurationDesc".Translate(DefExt.foodLabel,
                 pawn.Named("PAWN"),
                 // ReSharper disable StringLiteralTypo
                 "PeriodDays".Translate(deficiencyDays).Named("DEFICIENCYDURATION"),
@@ -46,8 +53,8 @@ public class Hediff_DietDependency : HediffWithComps, INotificationListener
                 "PeriodDays".Translate(deathDays).Named("DEATHDURATION")).Resolve();
             // ReSharper restore StringLiteralTypo
             float daysBehind = Severity / severityPerDay;
-            float nutritionPerDay = severityPerDay * DietDependencyInfo.severityReductionPerNutrition;
-            text += "\n\n" + "XylIngestedBehind".Translate(DietDependencyInfo.foodLabel,
+            float nutritionPerDay = severityPerDay * DefExt.severityReductionPerNutrition;
+            text += "\n\n" + "XylIngestedBehind".Translate(DefExt.foodLabel,
                 pawn.Named("PAWN"),
                 nutritionPerDay.ToStringDecimalIfSmall().Named("NUTRITION"),
                 "PeriodDays".Translate(daysBehind).Named("DURATION"));
@@ -104,7 +111,7 @@ public class Hediff_DietDependency : HediffWithComps, INotificationListener
 
     public float NutritionWantedToSatisfy()
     {
-        return Severity / DietDependencyInfo.severityReductionPerNutrition;
+        return Severity / DefExt.severityReductionPerNutrition;
     }
 
     public int ItemsWantedToSatisfy(Thing foodSource, ThingDef foodDef)
@@ -125,17 +132,17 @@ public class Hediff_DietDependency : HediffWithComps, INotificationListener
         if (nutrition <= 0.0f)
             return false;
 
-        if (!food.def.IsRawFoodOrCorpse && DietDependencyInfo.rawOnly)
+        if (!food.def.IsRawFoodOrCorpse && DefExt.rawOnly)
             return false;
 
-        if (DietDependencyInfo.foodKind == FoodUtility.GetFoodKind(food))
+        if (DefExt.foodKind == FoodUtility.GetFoodKind(food))
             return true;
 
         var compIngredients = food.TryGetComp<CompIngredients>();
         if (compIngredients == null)
             return false;
         if (Enumerable.Any(compIngredients.ingredients,
-                ingredient => DietDependencyInfo.foodKind == FoodUtility.GetFoodKind(ingredient)))
+                ingredient => DefExt.foodKind == FoodUtility.GetFoodKind(ingredient)))
             return true;
 
         return false;
@@ -155,7 +162,7 @@ public class Hediff_DietDependency : HediffWithComps, INotificationListener
         }
 
         if (ValidateFood(food))
-            Severity -= nutrition * DietDependencyInfo.severityReductionPerNutrition;
+            Severity -= nutrition * DefExt.severityReductionPerNutrition;
     }
 
     public void Notify_PostSatisfyGenes()

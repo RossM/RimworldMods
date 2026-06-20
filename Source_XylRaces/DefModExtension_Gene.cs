@@ -2,14 +2,6 @@
 
 namespace XylXenos;
 
-public class DietDependencyInfo
-{
-    public FoodKind foodKind = FoodKind.Any;
-    public bool rawOnly = false;
-    public float severityReductionPerNutrition = 1f;
-    [MustTranslate] public string foodLabel;
-}
-
 public class GeneIngestionThoughtOverride
 {
     public ThingDef thing;
@@ -229,11 +221,6 @@ public class DefModExtension_Gene : DefModExtension
     /// </summary>
     [CanBeNull] [GeneClass(typeof(Gene_BonusGenes))]
     public BonusGenesInfo bonusGenes;
-
-    /// <summary>
-    ///     Properties for <see cref="Hediff_DietDependency" />.
-    /// </summary>
-    [CanBeNull] public DietDependencyInfo dietDependency;
 
     /// <summary>
     ///     Properties for <see cref="Gene_Flight" />.

@@ -139,16 +139,6 @@
             <nutritionAmount>1~2</nutritionAmount>
           </li>
         </startingItems>
-        <dietDependency>
-          <foodLabel>raw meat</foodLabel>
-          <foodKind>Meat</foodKind>
-          <rawOnly>true</rawOnly>
-          <!-- 
-          This requires that the warcat eat 0.5 nutrition per day in raw meat out of a total
-          nutrition requirement of 1.44, or 35% of their diet.
-          -->
-          <severityReductionPerNutrition>1.0</severityReductionPerNutrition>
-        </dietDependency>
       </li>
     </modExtensions>
   </GeneDef>
@@ -233,6 +223,18 @@
         </capMods>
       </li>
     </stages>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Hediff_DietDependency">
+        <foodLabel>raw meat</foodLabel>
+        <foodKind>Meat</foodKind>
+        <rawOnly>true</rawOnly>
+        <!-- 
+        This requires that the warcat eat 0.5 nutrition per day in raw meat out of a total
+        nutrition requirement of 1.44, or 35% of their diet.
+        -->
+        <severityReductionPerNutrition>1.0</severityReductionPerNutrition>
+      </li>
+    </modExtensions>
   </HediffDef>
 
   <MentalBreakDef>
