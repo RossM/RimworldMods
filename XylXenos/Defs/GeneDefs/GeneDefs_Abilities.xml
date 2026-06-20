@@ -104,7 +104,7 @@
   <HediffDef>
     <defName>XylFeralRageBacklash</defName>
     <hediffClass>HediffWithComps</hediffClass>
-    <label>feral rage (backlash)</label>
+    <label>feral rage</label>
     <description>Recovering from a frenzy state. Causes pain and decreases movement speed.</description>
     <descriptionHyperlinks>
       <GeneDef>XylFeralRage</GeneDef>
@@ -121,6 +121,7 @@
     </comps>
     <stages>
       <li>
+        <label>backlash</label>
         <capMods>
           <li>
             <capacity>Moving</capacity>

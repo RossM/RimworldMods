@@ -21,6 +21,8 @@ public class Hediff_DietDependency : HediffWithComps, INotificationListener
 
     public bool ShouldSatisfy => Severity >= def.stages[(int)Stages.Craving].minSeverity;
 
+    public override bool ShouldRemove => false;
+
     public override string TipStringExtra
     {
         get
