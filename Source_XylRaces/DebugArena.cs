@@ -164,7 +164,12 @@ public static class DebugArena
                     var localKindDef = PawnKindWithXenotype(pawnKindDef, xenotype);
                     node.AddChild(new(xenotype.defName)
                     {
-                        action = () => PerformBattleRoyale(pawnKindsForBattleRoyale, forcedPawnKind: localKindDef),
+                        action = () =>
+                        {
+                            if (!pawnKindsForBattleRoyale.Contains(localKindDef))
+                                pawnKindsForBattleRoyale.Add(localKindDef);
+                            PerformBattleRoyale(pawnKindsForBattleRoyale, forcedPawnKind: localKindDef);
+                        },
                     });
                 }
 
@@ -176,7 +181,12 @@ public static class DebugArena
                 actions.Add(new(pawnKindDef.defName)
                 {
                     category = DebugToolsSpawning.GetCategoryForPawnKind(pawnKindDef),
-                    action = () => PerformBattleRoyale(pawnKindsForBattleRoyale, forcedPawnKind: localKindDef),
+                    action = () =>
+                    {
+                        if (!pawnKindsForBattleRoyale.Contains(localKindDef))
+                            pawnKindsForBattleRoyale.Add(localKindDef);
+                        PerformBattleRoyale(pawnKindsForBattleRoyale, forcedPawnKind: localKindDef);
+                    },
                 });
             }
         }
