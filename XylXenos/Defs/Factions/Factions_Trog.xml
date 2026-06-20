@@ -72,6 +72,7 @@
           <Tribal_Berserker>5</Tribal_Berserker>
           <Megascarab>10</Megascarab>
           <Spelopede>10</Spelopede>
+          <Locust MayRequire="Ludeon.RimWorld.Odyssey">10</Locust>
           <Megaspider>5</Megaspider>
           <XylShellback>5</XylShellback>
         </options>
@@ -86,6 +87,7 @@
           <Tribal_Berserker>10</Tribal_Berserker>
           <Megascarab>10</Megascarab>
           <Spelopede>10</Spelopede>
+          <Locust MayRequire="Ludeon.RimWorld.Odyssey">10</Locust>
           <Megaspider>5</Megaspider>
           <XylShellback>5</XylShellback>
         </options>
@@ -104,6 +106,7 @@
           <Tribal_Berserker>5</Tribal_Berserker>
           <Megascarab>10</Megascarab>
           <Spelopede>10</Spelopede>
+          <Locust MayRequire="Ludeon.RimWorld.Odyssey">10</Locust>
           <Megaspider>5</Megaspider>
           <XylShellback>5</XylShellback>
         </options>
@@ -118,8 +121,6 @@
           <Tribal_Hunter>10</Tribal_Hunter>
           <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
           <Tribal_Berserker>5</Tribal_Berserker>
-          <Tribal_ChiefRanged>1.5</Tribal_ChiefRanged>
-          <Tribal_ChiefMelee>1.5</Tribal_ChiefMelee>
           <Megascarab>5</Megascarab>
           <Spelopede>1</Spelopede>
         </options>
@@ -153,11 +154,11 @@
           <Tribal_Hunter>5</Tribal_Hunter>
           <Tribal_HeavyArcher>5</Tribal_HeavyArcher>
           <Tribal_Berserker>10</Tribal_Berserker>
-          <Tribal_ChiefRanged>5</Tribal_ChiefRanged>
-          <Tribal_ChiefMelee>5</Tribal_ChiefMelee>
           <Megascarab>10</Megascarab>
           <Spelopede>10</Spelopede>
+          <Locust MayRequire="Ludeon.RimWorld.Odyssey">10</Locust>
           <Megaspider>5</Megaspider>
+          <XylShellback>5</XylShellback>
         </options>
       </li>
       <li>
@@ -166,7 +167,11 @@
           <Tribal_Archer>10</Tribal_Archer>
           <Tribal_Hunter>10</Tribal_Hunter>
           <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
-          <Tribal_ChiefRanged>10</Tribal_ChiefRanged>
+          <Megascarab>10</Megascarab>
+          <Spelopede>10</Spelopede>
+          <Locust MayRequire="Ludeon.RimWorld.Odyssey">10</Locust>
+          <Megaspider>5</Megaspider>
+          <XylShellback>5</XylShellback>
         </options>
       </li>
       <li MayRequire="Ludeon.RimWorld.Ideology">
