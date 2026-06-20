@@ -50,8 +50,8 @@
     <race>
       <body>XylBeetleLikeWithHorn</body>
       <baseHungerRate>0.5</baseHungerRate>
-      <baseBodySize>1.8</baseBodySize>
-      <baseHealthScale>4.8</baseHealthScale>
+      <baseBodySize>1.5</baseBodySize>
+      <baseHealthScale>3.6</baseHealthScale>
       <meatLabel>insect meat</meatLabel>
       <lifeExpectancy>6</lifeExpectancy>
       <trainability>Advanced</trainability>
@@ -86,10 +86,10 @@
   </ThingDef>
 
   <PawnKindDef ParentName="InsectKindBase">
-    <defName>XylShellback_Test4</defName>
+    <defName>XylShellback_Test5</defName>
     <label>shellback</label>
     <race>XylShellback</race>
-    <combatPower>130</combatPower>
+    <combatPower>200</combatPower>
     <ecoSystemWeight>0.50</ecoSystemWeight>
     <lifeStages>
       <li>
