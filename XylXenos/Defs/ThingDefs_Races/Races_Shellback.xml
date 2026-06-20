@@ -49,9 +49,9 @@
     </tools>
     <race>
       <body>XylBeetleLikeWithHorn</body>
-      <baseHungerRate>0.35</baseHungerRate>
-      <baseBodySize>1</baseBodySize>
-      <baseHealthScale>3.0</baseHealthScale>
+      <baseHungerRate>0.5</baseHungerRate>
+      <baseBodySize>1.5</baseBodySize>
+      <baseHealthScale>4.0</baseHealthScale>
       <meatLabel>insect meat</meatLabel>
       <lifeExpectancy>6</lifeExpectancy>
       <trainability>Advanced</trainability>
@@ -86,7 +86,7 @@
   </ThingDef>
 
   <PawnKindDef ParentName="InsectKindBase">
-    <defName>XylShellback_Test2</defName>
+    <defName>XylShellback_Test3</defName>
     <label>shellback</label>
     <race>XylShellback</race>
     <combatPower>130</combatPower>
@@ -95,17 +95,6 @@
       <li>
         <bodyGraphicData>
           <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
-          <drawSize>0.8</drawSize>
-          <color>(100,84,58)</color>
-        </bodyGraphicData>
-        <dessicatedBodyGraphicData>
-          <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
-          <drawSize>0.8</drawSize>
-        </dessicatedBodyGraphicData>
-      </li>
-      <li>
-        <bodyGraphicData>
-          <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
           <drawSize>1.3</drawSize>
           <color>(100,84,58)</color>
         </bodyGraphicData>
@@ -117,7 +106,18 @@
       <li>
         <bodyGraphicData>
           <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
-          <drawSize>1.5</drawSize>
+          <drawSize>1.8</drawSize>
+          <color>(100,84,58)</color>
+        </bodyGraphicData>
+        <dessicatedBodyGraphicData>
+          <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
+          <drawSize>1.8</drawSize>
+        </dessicatedBodyGraphicData>
+      </li>
+      <li>
+        <bodyGraphicData>
+          <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
+          <drawSize>2.2</drawSize>
           <color>(100,84,58)</color>
           <shadowData>
             <volume>(0.5, 0.7, 0.43)</volume>
@@ -126,7 +126,7 @@
         </bodyGraphicData>
         <dessicatedBodyGraphicData>
           <texPath>Xyl/Things/Pawn/Animal/Shellback/Shellback</texPath>
-          <drawSize>1.5</drawSize>
+          <drawSize>2.2</drawSize>
         </dessicatedBodyGraphicData>
       </li>
     </lifeStages>
