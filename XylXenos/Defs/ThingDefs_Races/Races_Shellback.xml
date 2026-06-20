@@ -11,8 +11,8 @@
       <ComfyTemperatureMin>-40</ComfyTemperatureMin>
       <MarketValue>500</MarketValue>
       <LeatherAmount>0</LeatherAmount>
-      <ArmorRating_Blunt>0.27</ArmorRating_Blunt>
-      <ArmorRating_Sharp>0.54</ArmorRating_Sharp>
+      <ArmorRating_Blunt>0.32</ArmorRating_Blunt>
+      <ArmorRating_Sharp>0.65</ArmorRating_Sharp>
       <Wildness>0.4</Wildness>
     </statBases>
     <uiIconScale>1.15</uiIconScale>
@@ -23,7 +23,7 @@
           <li>Scratch</li>
         </capacities>
         <power>11</power>
-        <cooldownTime>2.6</cooldownTime>
+        <cooldownTime>3.2</cooldownTime>
         <linkedBodyPartsGroup>HornAttackTool</linkedBodyPartsGroup>
       </li>
       <li>
@@ -32,7 +32,7 @@
           <li>Blunt</li>
         </capacities>
         <power>11</power>
-        <cooldownTime>2.6</cooldownTime>
+        <cooldownTime>3.2</cooldownTime>
         <linkedBodyPartsGroup>HornAttackTool</linkedBodyPartsGroup>
       </li>
       <li>
@@ -40,7 +40,7 @@
         <capacities>
           <li>Blunt</li>
         </capacities>
-        <power>7</power>
+        <power>6</power>
         <cooldownTime>2</cooldownTime>
         <linkedBodyPartsGroup>HeadAttackTool</linkedBodyPartsGroup>
         <ensureLinkedBodyPartsGroupAlwaysUsable>true</ensureLinkedBodyPartsGroupAlwaysUsable>
