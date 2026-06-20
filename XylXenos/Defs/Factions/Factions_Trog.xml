@@ -37,7 +37,7 @@
     <permanentEnemy>true</permanentEnemy>
     <apparelStuffFilter Inherit="false">
       <stuffCategoriesToAllow>
-        <li>Metallic</li>
+        <li>Stony</li>
         <li>Leathery</li>
         <li>Woody</li>
       </stuffCategoriesToAllow>
