@@ -101,12 +101,15 @@ public static class PawnExtensions
             return false;
         }
 
-        public int GetGeneticPsylinkLevelFor(AbilityDef def)
+        public int GetGeneticPsylinkLevelFor(AbilityDef ability)
         {
-            if (pawn.genes != null && pawn.genes.GenesListForReading.Any(gene =>
-                    gene.Active && gene.def.DefExt?.hasPsycast == true && gene.def.abilities?.Any(abilityDef => abilityDef == def) == true))
+            if (pawn.GeneTracker?.hasPsycast != true)
+                return 0;
+
+            if (pawn.GenesOfType<GeneExt>().Any(gene =>
+                    gene.Active && gene.DefExt.hasPsycast && gene.def.abilities?.Any(abilityDef => abilityDef == ability) == true))
             {
-                return def.level;
+                return ability.level;
             }
 
             return 0;
