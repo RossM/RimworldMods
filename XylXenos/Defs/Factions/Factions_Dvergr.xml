@@ -104,7 +104,7 @@
     </allowedPlaceTags>
     <!-- TODO custom icon -->
     <iconPath>UI/Cultures/Astropolitan</iconPath>
-    <thingStyleCategories>
+    <!--<thingStyleCategories>
       <li MayRequire="Ludeon.RimWorld.Ideology">
         <category>Spikecore</category>
         <priority>2</priority>
@@ -113,7 +113,7 @@
         <category>Rustic</category>
         <priority>1</priority>
       </li>
-    </thingStyleCategories>
+    </thingStyleCategories>-->
     <styleItemTags>
       <li>
         <tag>Rural</tag>
