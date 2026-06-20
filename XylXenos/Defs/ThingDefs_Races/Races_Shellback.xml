@@ -86,10 +86,10 @@
   </ThingDef>
 
   <PawnKindDef ParentName="InsectKindBase">
-    <defName>XylShellback_Test5</defName>
+    <defName>XylShellback</defName>
     <label>shellback</label>
     <race>XylShellback</race>
-    <combatPower>200</combatPower>
+    <combatPower>190</combatPower>
     <ecoSystemWeight>0.50</ecoSystemWeight>
     <lifeStages>
       <li>

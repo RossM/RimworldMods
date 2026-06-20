@@ -300,6 +300,11 @@ public static class DebugArena
             PawnKindDef lhsDef = forcedPawnKind ?? filteredKinds.RandomElementByWeight(PawnKindWeight);
             PawnKindDef rhsDef = filteredKinds.Where(def => def != lhsDef).RandomElementByWeight(PawnKindWeight);
 
+            if (forcedPawnKind != null && Rand.Chance(0.5f))
+            {
+                (lhsDef, rhsDef) = (rhsDef, lhsDef);
+            }
+
             float lhsPower = CombatPower(lhsDef);
             float rhsPower = CombatPower(rhsDef);
 
