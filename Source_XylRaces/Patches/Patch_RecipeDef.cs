@@ -24,8 +24,7 @@ public static class Patch_RecipeDef
         if (extension != null && extension.Validate())
             return;
 
-        if (__instance.memePrerequisitesAny != null
-            && __instance.memePrerequisitesAny.Any(memeDef => Faction.OfPlayer.ideos.HasAnyIdeoWithMeme(memeDef)))
+        if (__instance.memePrerequisitesAny != null && __instance.memePrerequisitesAny.Any(memeDef => Faction.OfPlayer.ideos.HasAnyIdeoWithMeme(memeDef)))
             return;
 
         __result = false;

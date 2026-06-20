@@ -218,8 +218,7 @@ public static class DebugArena
 
     private static XenotypeDef GetDefaultXenotype(PawnKindDef pawnKindDef)
     {
-        var xenotypeSet = pawnKindDef.xenotypeSet ?? pawnKindDef.defaultFactionDef?.xenotypeSet;
-        if (xenotypeSet != null)
+        if ((pawnKindDef.xenotypeSet ?? pawnKindDef.defaultFactionDef?.xenotypeSet) is { } xenotypeSet)
             return xenotypeSet.Count == 1 && xenotypeSet[0].chance >= 1 ? xenotypeSet[0].xenotype : xenotypeSet.DefaultXenotype;
         return XenotypeDefOf.Baseliner;
     }

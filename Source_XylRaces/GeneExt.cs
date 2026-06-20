@@ -220,8 +220,7 @@ public class GeneExt : Gene, INotificationListener
             if (!Rand.Chance(item.chance))
                 continue;
 
-            var apparel = PawnApparelGenerator.GenerateApparelOfDefFor(pawn, item.item);
-            if (apparel != null && apparel.PawnCanWear(pawn))
+            if (PawnApparelGenerator.GenerateApparelOfDefFor(pawn, item.item) is { } apparel && apparel.PawnCanWear(pawn))
             {
                 PawnApparelGenerator.PostProcessApparel(apparel, pawn);
                 PawnGenerator.PostProcessGeneratedGear(apparel, pawn);

@@ -16,8 +16,7 @@ public class JobGiver_SeeingRed : ThinkNode_JobGiver
             return null;
         }
 
-        Thing thing = FindAttackTarget(pawn);
-        if (thing != null)
+        if (FindAttackTarget(pawn) is { } thing)
         {
             Job job = JobMaker.MakeJob(JobDefOf.AttackMelee, thing);
             job.expiryInterval = Rand.Range(MinMeleeChaseTicks, MaxMeleeChaseTicks);

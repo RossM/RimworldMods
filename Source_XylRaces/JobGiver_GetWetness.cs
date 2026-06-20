@@ -118,8 +118,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
             return JobMaker.MakeJob(soakJobDef, pawn.Position);
         }
 
-        Thing bestThing = FindBestWetnessSource(pawn);
-        if (bestThing != null)
+        if (FindBestWetnessSource(pawn) is { } bestThing)
         {
             return JobMaker.MakeJob(bestThing.def.GetModExtension<DefModExtension_Thing_WetnessSource>().job, bestThing);
         }

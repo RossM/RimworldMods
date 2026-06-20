@@ -38,8 +38,7 @@ public class ScenPart_StartingSlaves : ScenPart_PawnModifier
         // If the scenario is set up by xenotype, sort the pawn list so that they are ordered
         // the way they were in the scenario. This is used by the Warcat Tribe scenario
         // to ensure that the non-warcats are the slaves.
-        var xenotypeConfig = Find.Scenario.AllParts.OfType<ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes>().FirstOrDefault();
-        if (xenotypeConfig != null)
+        if (Find.Scenario.AllParts.OfType<ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes>().FirstOrDefault() is { } xenotypeConfig)
         {
             pawns = pawns.OrderBy(p =>
             {

@@ -63,8 +63,7 @@ public class Main : Mod
         {
             DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(data, "def",
                 xmlRoot.ChildNodes.OfType<XmlNode>().Single(node => node.Name == "def").InnerText);
-            XmlNode degreeNode = xmlRoot.ChildNodes.OfType<XmlNode>().SingleOrDefault(node => node.Name == "degree");
-            if (degreeNode != null)
+            if (xmlRoot.ChildNodes.OfType<XmlNode>().SingleOrDefault(node => node.Name == "degree") is { } degreeNode)
                 data.degree = ParseHelper.FromString<int>(degreeNode.InnerText);
         }
         else

@@ -27,8 +27,7 @@ public static class PatchHelpers
 
     public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef geneDef)
     {
-        var defExt = geneDef.DefExt;
-        if (defExt != null)
+        if (geneDef.DefExt is { } defExt)
         {
             foreach (var customEffectDescription in defExt.CustomEffectDescriptions)
                 yield return customEffectDescription;

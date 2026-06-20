@@ -161,9 +161,7 @@ public static class Patch_StatWorker
         StatRequest req,
         ref PawnCapacityDef __result)
     {
-        Hediff_SubstituteCapacity foundHediff
-            = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
-        if (foundHediff != null)
+        if (Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat) is { } foundHediff)
             __result = foundHediff.DefExt.substituteCapacity;
     }
 
@@ -178,9 +176,7 @@ public static class Patch_StatWorker
         StatRequest req,
         ref PawnCapacityDef __result)
     {
-        Hediff_SubstituteCapacity foundHediff
-            = Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat);
-        if (foundHediff != null)
+        if (Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat) is { } foundHediff)
             __result = foundHediff.DefExt.substituteCapacity;
     }
 

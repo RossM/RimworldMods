@@ -72,10 +72,9 @@ public class Hediff_DietDependency : HediffWithComps, INotificationListener
                 return item;
         }
 
-        Thing thing = GenClosest.ClosestThingReachable(pawnGettingFood.Position, pawnGettingFood.Map,
-            ThingRequest.ForGroup(ThingRequestGroup.FoodSource),
-            PathEndMode.ClosestTouch, TraverseParms.For(pawnGettingFood), 9999f, x => FoodValidator(pawnGettingFood, this, x));
-        if (thing != null)
+        if (GenClosest.ClosestThingReachable(pawnGettingFood.Position, pawnGettingFood.Map,
+                ThingRequest.ForGroup(ThingRequestGroup.FoodSource),
+                PathEndMode.ClosestTouch, TraverseParms.For(pawnGettingFood), 9999f, x => FoodValidator(pawnGettingFood, this, x)) is { } thing)
             return thing;
 
         if (!pawnGettingFood.IsColonist || pawnGettingFood.Map == null)

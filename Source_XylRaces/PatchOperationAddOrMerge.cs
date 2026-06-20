@@ -63,9 +63,8 @@ public class PatchOperationAddOrMerge : PatchOperationPathed
             {
                 foreach (XmlNode childNode in node.ChildNodes)
                 {
-                    var existingNode = xmlNode.ChildNodes.OfType<XmlNode>()
-                        .FirstOrDefault(xn => xn.Name == childNode.Name);
-                    if (existingNode != null)
+                    if (xmlNode.ChildNodes.OfType<XmlNode>()
+                            .FirstOrDefault(xn => xn.Name == childNode.Name) is { } existingNode)
                     {
                         foreach (XmlNode grandchildNode in childNode.ChildNodes)
                             existingNode.AppendChild(
@@ -80,9 +79,8 @@ public class PatchOperationAddOrMerge : PatchOperationPathed
                 for (int num = node.ChildNodes.Count - 1; num >= 0; num--)
                 {
                     var childNode = node.ChildNodes[num];
-                    var existingNode = xmlNode.ChildNodes.OfType<XmlNode>()
-                        .FirstOrDefault(xn => xn.Name == childNode.Name);
-                    if (existingNode != null)
+                    if (xmlNode.ChildNodes.OfType<XmlNode>()
+                            .FirstOrDefault(xn => xn.Name == childNode.Name) is { } existingNode)
                     {
                         foreach (XmlNode grandchildNode in childNode.ChildNodes)
                             existingNode.PrependChild(

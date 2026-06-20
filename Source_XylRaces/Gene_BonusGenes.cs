@@ -83,8 +83,7 @@ public class Gene_BonusGenes : GeneExt
         if (!BonusGenesInfo.biostatMet.Includes(geneDef.biostatMet))
             return 0.0f;
 
-        var defExt = geneDef.DefExt;
-        if (defExt != null)
+        if (geneDef.DefExt is { } defExt)
         {
             if (defExt.gender != null && defExt.gender != pawn.gender)
                 return 0.0f;

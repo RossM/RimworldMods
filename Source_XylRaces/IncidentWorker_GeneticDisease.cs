@@ -57,8 +57,7 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
                 Pawn pawn = list[0];
                 Hediff mostRecentHediff = pawn.health.hediffSet.GetMostRecentHediff(def.diseaseIncident);
                 baseLetterLabel = def.letterLabel.Formatted(pawn.Named("PAWN"));
-                HediffComp_SeverityPerDay hediffComp_SeverityPerDay = mostRecentHediff.TryGetComp<HediffComp_SeverityPerDay>();
-                if (hediffComp_SeverityPerDay != null)
+                if (mostRecentHediff.TryGetComp<HediffComp_SeverityPerDay>() is { } hediffComp_SeverityPerDay)
                 {
                     float num = hediffComp_SeverityPerDay.SeverityChangePerDay();
                     int num2 = Mathf.RoundToInt(mostRecentHediff.def.maxSeverity / num);

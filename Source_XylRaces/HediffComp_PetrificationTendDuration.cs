@@ -39,13 +39,7 @@ public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
             {
                 if (TProps.showTendQuality)
                 {
-                    var tendedLabel = parent.Part != null && parent.Part.def.IsSolid(parent.Part, Pawn.health.hediffSet.hediffs)
-                        ? TProps.labelSolidTendedWell
-                        : parent.Part is not { depth: BodyPartDepth.Inside }
-                            ? TProps.labelTendedWell
-                            : TProps.labelTendedWellInner;
-
-                    if (tendedLabel != null)
+                    if (parent.Part != null && GetTendedLabel(parent.Part) is { } tendedLabel)
                     {
                         stringBuilder.AppendLine(tendedLabel.CapitalizeFirst() + " (" + "quality".Translate() + " " +
                                                  tendQuality.ToStringPercent("F0") + ")");
@@ -91,6 +85,13 @@ public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
             }
 
             return stringBuilder.ToString().TrimEndNewlines();
+
+            string GetTendedLabel(BodyPartRecord bodyPartRecord) =>
+                (bodyPartRecord.def.IsSolid(bodyPartRecord, Pawn.health.hediffSet.hediffs)
+                    ? TProps.labelSolidTendedWell
+                    : bodyPartRecord is not { depth: BodyPartDepth.Inside }
+                        ? TProps.labelTendedWell
+                        : TProps.labelTendedWellInner);
         }
     }
 

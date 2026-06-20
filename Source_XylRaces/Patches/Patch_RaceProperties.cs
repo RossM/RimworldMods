@@ -81,8 +81,7 @@ public static class Patch_RaceProperties
         if (!Settings.instance.ShouldFixLactationBugsFor(pawn))
             return;
 
-        var hediffComp_Lactating = pawn.LactationHediff?.TryGetComp<HediffComp_Lactating>();
-        if (hediffComp_Lactating != null)
+        if (pawn.LactationHediff?.TryGetComp<HediffComp_Lactating>() is { } hediffComp_Lactating)
         {
             stringBuilder.AppendLine(
                 $"{pawn.LactationHediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");

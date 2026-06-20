@@ -42,8 +42,7 @@ public class JobDriver_TakeShower : JobDriver
                 actor.Rotation = Rot4.Random;
         };
 
-        var modExtension = job.def.GetModExtension<DefModExtension_Job_TakeShower>();
-        if (modExtension is { effecter: not null })
+        if (job.def.GetModExtension<DefModExtension_Job_TakeShower>() is { effecter: not null } modExtension)
         {
             toil.WithEffect(modExtension.effecter, TargetIndex.A);
         }

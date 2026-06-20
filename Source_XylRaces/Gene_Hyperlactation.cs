@@ -103,8 +103,7 @@ public class Gene_Hyperlactation : GeneExt
         if (pawn.health.hediffSet.HasHediff(HediffDefOf.Malnutrition))
             return;
 
-        var lactatingHediff = pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.Lactating);
-        if (lactatingHediff != null)
+        if (pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.Lactating) is { } lactatingHediff)
             pawn.health.RemoveHediff(lactatingHediff);
 
         Hediff hediff = pawn.health.GetOrAddHediff(HyperlactationInfo.hediff);

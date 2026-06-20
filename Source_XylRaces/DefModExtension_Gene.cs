@@ -362,8 +362,7 @@ public class DefModExtension_Gene : DefModExtension
             if (expectedClass == null)
                 continue;
 
-            string error = CheckCorrectClass(fieldInfo.GetValue(this), expectedClass, fieldInfo.Name);
-            if (error != null)
+            if (CheckCorrectClass(fieldInfo.GetValue(this), expectedClass, fieldInfo.Name) is { } error)
                 yield return error;
         }
     }

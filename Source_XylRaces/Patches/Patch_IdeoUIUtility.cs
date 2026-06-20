@@ -15,8 +15,7 @@ public static class Patch_IdeoUIUtility
 
         foreach (XenotypeDef def in DefDatabase<XenotypeDef>.AllDefs)
         {
-            var modExt = def.GetModExtension<DefModExtension_Xenotype>();
-            if (modExt != null)
+            if (def.GetModExtension<DefModExtension_Xenotype>() is { } modExt)
             {
                 if (modExt.agreeingMemes?.Contains(meme) == true)
                     agreeingXenotypes.Add(def);

@@ -34,8 +34,7 @@ public static class Patch_FloatMenuOptionProvider_Ingest
 
             if (!defExtension.prohibitedGenes.NullOrEmpty())
             {
-                GeneDef gene = defExtension.prohibitedGenes.FirstOrDefault(gene => context.FirstSelectedPawn.HasActiveGene(gene));
-                if (gene != null)
+                if (defExtension.prohibitedGenes.FirstOrDefault(gene => context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene)
                 {
                     __result = new FloatMenuOption($"{text}: {"XylBlockedByGene".Translate(gene.label)}", null);
                     return false;
@@ -44,8 +43,7 @@ public static class Patch_FloatMenuOptionProvider_Ingest
 
             if (!defExtension.requiredGenesAll.NullOrEmpty())
             {
-                GeneDef gene = defExtension.requiredGenesAll.FirstOrDefault(gene => !context.FirstSelectedPawn.HasActiveGene(gene));
-                if (gene != null)
+                if (defExtension.requiredGenesAll.FirstOrDefault(gene => !context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene)
                 {
                     __result = new FloatMenuOption($"{text}: {"XylRequiresGene".Translate(gene.label)}", null);
                     return false;

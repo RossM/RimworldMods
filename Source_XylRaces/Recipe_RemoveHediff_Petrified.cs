@@ -57,9 +57,8 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
 
         if (recipe.targetsBodyPart)
         {
-            Hediff hediff = pawn.health.hediffSet.hediffs.Find(hediff =>
-                hediff.def == recipe.removesHediff && hediff.Part == part && hediff.Visible);
-            if (hediff != null)
+            if (pawn.health.hediffSet.hediffs.Find(hediff =>
+                    hediff.def == recipe.removesHediff && hediff.Part == part && hediff.Visible) is { } hediff)
             {
                 RemoveHediff(pawn, billDoer, hediff, bill);
             }
