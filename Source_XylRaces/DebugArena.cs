@@ -20,6 +20,14 @@ public static class DebugArena
         PawnKindDefOf.Nociosphere,
         PawnKindDefOf.Revenant,
         PawnKindDefOf.FleshmassNucleus,
+        DefDatabase<PawnKindDef>.GetNamed("Dryad_Basic"),
+        DefDatabase<PawnKindDef>.GetNamed("Dryad_Carrier"),
+        DefDatabase<PawnKindDef>.GetNamed("Dryad_Clawer"),
+        DefDatabase<PawnKindDef>.GetNamed("Dryad_Barkskin"),
+        DefDatabase<PawnKindDef>.GetNamed("Dryad_Woodmaker"),
+        DefDatabase<PawnKindDef>.GetNamed("Dryad_Medicinemaker"),
+        DefDatabase<PawnKindDef>.GetNamed("Dryad_Berrymaker"),
+        DefDatabase<PawnKindDef>.GetNamed("Dryad_Gaumaker"),
     ];
 
     [DebugAction("Autotests")]
