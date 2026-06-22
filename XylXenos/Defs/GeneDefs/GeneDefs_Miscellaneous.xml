@@ -441,7 +441,7 @@
     </stages>
   </HediffDef>
 
-  <GeneDef>
+  <!--<GeneDef>
     <defName>XylEmergencyReserves</defName>
     <label>emergency reserves</label>
     <description>Carriers of this gene store extra oxygen and special proteins in their bone marrow. When the carrier is exposed to extreme heat, cold, toxins, or vacuum, these reserves temporarily flood the body, protecting tissues from damage.</description>
@@ -487,7 +487,7 @@
       <li Class="XylXenos.DefModExtension_Gene">
       </li>
     </modExtensions>
-  </GeneDef>
+  </GeneDef>-->
 
   <GeneDef>
     <defName>XylLearning_Focused</defName>
