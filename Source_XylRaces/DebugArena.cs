@@ -121,7 +121,7 @@ public static class DebugArena
     }
 
     [DebugAction("Autotests")]
-    public static void BattleRoyaleTop50()
+    public static List<DebugActionNode> BattleRoyaleTopN()
     {
         bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
 
@@ -146,7 +146,17 @@ public static class DebugArena
             }
         }
 
-        PerformBattleRoyale(pawnKindsForBattleRoyale, scoreRankLimit: 50);
+        List<DebugActionNode> actions = [];
+        for (int n = 25; n <= 500; n += 25)
+        {
+            var localN = n;
+            actions.Add(new($"Top {n}")
+            {
+                action = () => PerformBattleRoyale(pawnKindsForBattleRoyale, scoreRankLimit: localN),
+            });
+        }
+
+        return actions;
     }
 
     [DebugAction("Autotests")]
