@@ -74,16 +74,12 @@ public class GeneWithComps : Gene, IEventListener
 
     [CanBeNull] public List<GeneComp> comps;
 
-    public bool Removed { get; private set; } = false;
-
     [field: Unsaved]
     public override bool Active
     {
         get
         {
             if (!base.Active)
-                return false;
-            if (Removed)
                 return false;
             if (!activeFilled)
             {
@@ -199,7 +195,6 @@ public class GeneWithComps : Gene, IEventListener
 
     public override void PostRemove()
     {
-        Removed = true;
         EventManager.Instance.UnregisterAll(this);
 
         RemoveInvalidChemicalHediffs();
