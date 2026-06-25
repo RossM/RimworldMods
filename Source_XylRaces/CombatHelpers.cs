@@ -9,6 +9,6 @@ public static class CombatHelpers
         if (target.GetPosture() != PawnPosture.Standing)
             return 0;
 
-        return target.GetStatValue(DefOf.XylRangedDodgeChance);
+        return target.GetStatValue(XStatDefOf.XylRangedDodgeChance);
     }
 }

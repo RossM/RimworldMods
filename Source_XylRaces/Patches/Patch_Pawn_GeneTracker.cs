@@ -4,7 +4,7 @@
 public static class Patch_Pawn_GeneTracker
 {
     [Feature(typeof(DefModExtension_Chemical))]
-    [Feature(nameof(DefOf.XylGlobalAddictionChanceFactor))]
+    [Feature(nameof(XStatDefOf.XylGlobalAddictionChanceFactor))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
     public static void AddictionChanceFactor_Postfix(Pawn_GeneTracker __instance, ChemicalDef chemical, ref float __result)
@@ -12,6 +12,6 @@ public static class Patch_Pawn_GeneTracker
         if (!__instance.pawn.ChemicalIsAllowedByGenes(chemical))
             __result = 0f;
         else
-            __result *= __instance.pawn.GetStatValue(DefOf.XylGlobalAddictionChanceFactor);
+            __result *= __instance.pawn.GetStatValue(XStatDefOf.XylGlobalAddictionChanceFactor);
     }
 }

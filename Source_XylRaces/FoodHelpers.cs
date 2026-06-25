@@ -63,13 +63,13 @@ public static class FoodHelpers
     {
         float result = 1f;
         if (foodType.HasFlag(FoodType.Meat))
-            result *= eater.GetStatValue(DefOf.XylRawMeatNutritionFactor);
+            result *= eater.GetStatValue(XStatDefOf.XylRawMeatNutritionFactor);
         if (foodType.HasFlag(FoodType.NonMeat))
-            result *= eater.GetStatValue(DefOf.XylRawNonMeatNutritionFactor);
+            result *= eater.GetStatValue(XStatDefOf.XylRawNonMeatNutritionFactor);
         if (foodType.HasFlag(FoodType.AnimalProduct))
-            result *= eater.GetStatValue(DefOf.XylRawAnimalProductNutritionFactor);
+            result *= eater.GetStatValue(XStatDefOf.XylRawAnimalProductNutritionFactor);
         if (foodType.HasFlag(FoodType.Fungus))
-            result *= eater.GetStatValue(DefOf.XylRawFungusNutritionFactor);
+            result *= eater.GetStatValue(XStatDefOf.XylRawFungusNutritionFactor);
         return result;
     }
 
@@ -77,11 +77,11 @@ public static class FoodHelpers
     {
         float result = 1f;
         if (foodType.HasFlag(FoodType.Meat))
-            result *= eater.GetStatValue(DefOf.XylCookedMeatNutritionFactor);
+            result *= eater.GetStatValue(XStatDefOf.XylCookedMeatNutritionFactor);
         if (foodType.HasFlag(FoodType.NonMeat))
-            result *= eater.GetStatValue(DefOf.XylCookedNonMeatNutritionFactor);
+            result *= eater.GetStatValue(XStatDefOf.XylCookedNonMeatNutritionFactor);
         if (foodType.HasFlag(FoodType.AnimalProduct))
-            result *= eater.GetStatValue(DefOf.XylCookedAnimalProductNutritionFactor);
+            result *= eater.GetStatValue(XStatDefOf.XylCookedAnimalProductNutritionFactor);
         //if (foodType.HasFlag(FoodType.Fungus))
         //    result *= eater.GetStatValue(DefOf.XylCookedFungusNutritionFactor);
         return result;
@@ -97,13 +97,13 @@ public static class FoodHelpers
         FoodType foodType = GetFoodType(foodSource.def);
         float result = 1f;
         if (foodType.HasFlag(FoodType.Meat))
-            result *= eater.GetStatValue(DefOf.XylRawMeatFoodPoisonChanceFactor);
+            result *= eater.GetStatValue(XStatDefOf.XylRawMeatFoodPoisonChanceFactor);
         if (foodType.HasFlag(FoodType.NonMeat))
-            result *= eater.GetStatValue(DefOf.XylRawNonMeatFoodPoisonChanceFactor);
+            result *= eater.GetStatValue(XStatDefOf.XylRawNonMeatFoodPoisonChanceFactor);
         if (foodType.HasFlag(FoodType.AnimalProduct))
-            result *= eater.GetStatValue(DefOf.XylRawAnimalProductFoodPoisonChanceFactor);
+            result *= eater.GetStatValue(XStatDefOf.XylRawAnimalProductFoodPoisonChanceFactor);
         if (foodType.HasFlag(FoodType.Fungus))
-            result *= eater.GetStatValue(DefOf.XylRawFungusFoodPoisonChanceFactor);
+            result *= eater.GetStatValue(XStatDefOf.XylRawFungusFoodPoisonChanceFactor);
         return result;
     }
 

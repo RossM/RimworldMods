@@ -3,12 +3,12 @@
 [HarmonyPatch(typeof(InteractionWorker_RecruitAttempt))]
 public static class Patch_InteractionWorker_RecruitAttempt
 {
-    [Feature(nameof(DefOf.XylResistanceFallRate))]
+    [Feature(nameof(XStatDefOf.XylResistanceFallRate))]
     [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
     [InfixPatch(nameof(InteractionWorker_RecruitAttempt.Interacted))]
     public static void GetStatValue_Postfix(StatDef stat, Pawn recipient, ref float __result)
     {
         if (stat == StatDefOf.NegotiationAbility)
-            __result *= recipient.GetStatValue(DefOf.XylResistanceFallRate);
+            __result *= recipient.GetStatValue(XStatDefOf.XylResistanceFallRate);
     }
 }

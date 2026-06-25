@@ -49,7 +49,7 @@ public static class Patch_SlaveRebellionUtility
         }
     };
 
-    [Feature(nameof(DefOf.XylSlaveRebellionMtbFactor))]
+    [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
     [Feature(nameof(DefModExtension_Gene.slaveRebellionThresholdDays))]
     [HarmonyTranspiler]
     [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
@@ -63,7 +63,7 @@ public static class Patch_SlaveRebellionUtility
         return instructionsList;
     }
 
-    [Feature(nameof(DefOf.XylSlaveRebellionMtbFactor))]
+    [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
     [Feature(nameof(DefModExtension_Gene.slaveRebellionThresholdDays))]
     [HarmonyPostfix]
     [HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
@@ -76,7 +76,7 @@ public static class Patch_SlaveRebellionUtility
         if (geneTracker == null)
             return;
 
-        __result *= pawn.GetStatValue(DefOf.XylSlaveRebellionMtbFactor);
+        __result *= pawn.GetStatValue(XStatDefOf.XylSlaveRebellionMtbFactor);
         if (__result >= geneTracker.slaveRebellionThresholdDays)
             __result = -1;
     }
@@ -89,10 +89,10 @@ public static class Patch_SlaveRebellionUtility
         float initiateSlaveRebellionMtbDays = SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn);
 
         StatRequest statRequest = StatRequest.For(pawn);
-        float baseValueFor = DefOf.XylSlaveRebellionMtbFactor.Worker.GetBaseValueFor(statRequest);
-        ToStringNumberSense toStringNumberSense = DefOf.XylSlaveRebellionMtbFactor.toStringNumberSense;
-        DefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor);
-        DefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense,
+        float baseValueFor = XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetBaseValueFor(statRequest);
+        ToStringNumberSense toStringNumberSense = XStatDefOf.XylSlaveRebellionMtbFactor.toStringNumberSense;
+        XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor);
+        XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense,
             stringBuilder);
 
         if (initiateSlaveRebellionMtbDays < 0)

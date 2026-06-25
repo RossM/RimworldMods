@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(ShotReport))]
 public static class Patch_ShotReport
 {
-    [Feature(nameof(DefOf.XylRangedDodgeChance))]
+    [Feature(nameof(XStatDefOf.XylRangedDodgeChance))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ShotReport.GetTextReadout))]
     public static void GetTextReadout_Postfix(TargetInfo ___target, ref string __result)
@@ -14,7 +14,7 @@ public static class Patch_ShotReport
             if (rangedDodgeChance > 0)
             {
                 StringBuilder sb = new StringBuilder(__result);
-                sb.AppendLine($"   {DefOf.XylRangedDodgeChance.LabelCap}: {rangedDodgeChance.ToStringPercent()}");
+                sb.AppendLine($"   {XStatDefOf.XylRangedDodgeChance.LabelCap}: {rangedDodgeChance.ToStringPercent()}");
                 __result = sb.ToString();
             }
         }

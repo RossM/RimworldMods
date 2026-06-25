@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(Bullet))]
 public static class Patch_Bullet
 {
-    [Feature(nameof(DefOf.XylRangedDodgeChance))]
+    [Feature(nameof(XStatDefOf.XylRangedDodgeChance))]
     [HarmonyPrefix]
     [HarmonyPatch(nameof(Bullet.Impact))]
     public static void Impact_Prefix(ref Thing hitThing, bool blockedByShield)

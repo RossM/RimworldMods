@@ -3,18 +3,18 @@
 [HarmonyPatch(typeof(SkillUI))]
 public static class Patch_SkillUI
 {
-    [Feature(nameof(DefOf.XylLearnFactorPassionNone))]
-    [Feature(nameof(DefOf.XylLearnFactorPassionMinor))]
-    [Feature(nameof(DefOf.XylLearnFactorPassionMajor))]
+    [Feature(nameof(XStatDefOf.XylLearnFactorPassionNone))]
+    [Feature(nameof(XStatDefOf.XylLearnFactorPassionMinor))]
+    [Feature(nameof(XStatDefOf.XylLearnFactorPassionMajor))]
     [InfixPostfix(typeof(SkillUI), nameof(SkillUI.GetLearningFactor))]
     [InfixPatch("GetSkillDescription")]
     public static void GetLearningFactor_Postfix(Passion passion, SkillRecord sk, ref float __result)
     {
         __result = passion switch
         {
-            Passion.None => sk.Pawn.GetStatValue(DefOf.XylLearnFactorPassionNone),
-            Passion.Minor => sk.Pawn.GetStatValue(DefOf.XylLearnFactorPassionMinor),
-            Passion.Major => sk.Pawn.GetStatValue(DefOf.XylLearnFactorPassionMajor),
+            Passion.None => sk.Pawn.GetStatValue(XStatDefOf.XylLearnFactorPassionNone),
+            Passion.Minor => sk.Pawn.GetStatValue(XStatDefOf.XylLearnFactorPassionMinor),
+            Passion.Major => sk.Pawn.GetStatValue(XStatDefOf.XylLearnFactorPassionMajor),
             _ => throw new ArgumentOutOfRangeException(nameof(passion), passion, null)
         };
     }

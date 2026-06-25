@@ -16,7 +16,7 @@ public static class Patch_AddictionUtility
     }
 
     [Feature(typeof(DefModExtension_Chemical))]
-    [Feature(nameof(DefOf.XylDrugEffectMultiplier))]
+    [Feature(nameof(XStatDefOf.XylDrugEffectMultiplier))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(AddictionUtility.ModifyChemicalEffectForToleranceAndBodySize))]
     public static void ModifyChemicalEffectForToleranceAndBodySize_Postfix(
@@ -27,6 +27,6 @@ public static class Patch_AddictionUtility
         if (!pawn.ChemicalIsAllowedByGenes(chemicalDef))
             effect = 0f;
         else
-            effect *= pawn.GetStatValue(DefOf.XylDrugEffectMultiplier);
+            effect *= pawn.GetStatValue(XStatDefOf.XylDrugEffectMultiplier);
     }
 }
