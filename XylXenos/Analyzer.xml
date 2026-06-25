@@ -6,10 +6,10 @@
       <li>XylXenos.PatchHelpers</li>
     </types>
     <methods>
-      <li>XylXenos.NotificationManager:Notify</li>
-      <li>XylXenos.GeneWithComps:get_Active</li>
-      <li>XylXenos.GeneWithComps:Tick</li>
-      <li>XylXenos.GeneWithComps:TickInterval</li>
+      <li>Xylib.NotificationManager:Notify</li>
+      <li>Xylib.GeneWithComps:get_Active</li>
+      <li>Xylib.GeneWithComps:Tick</li>
+      <li>Xylib.GeneWithComps:TickInterval</li>
     </methods>
   </XylXenos>
 </Analyzer>
