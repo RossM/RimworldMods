@@ -43,7 +43,7 @@ public class GeneComp_Hyperlactation : GeneComp
 
     public override IEnumerable<Gizmo> CompGetGizmos()
     {
-        if (!parent.Active)
+        if (!Active)
             yield break;
         if (!Pawn.Spawned)
             yield break;
@@ -81,7 +81,7 @@ public class GeneComp_Hyperlactation : GeneComp
 
     public override void CompTickInterval(int delta)
     {
-        if (!parent.Active)
+        if (!Active)
             return;
 
         if (!Pawn.IsHashIntervalTick(checkInterval, delta))
@@ -97,7 +97,7 @@ public class GeneComp_Hyperlactation : GeneComp
 
     private void AddHediff()
     {
-        if (!parent.Active)
+        if (!Active)
             return;
 
         if (Pawn.health.hediffSet.HasHediff(HediffDefOf.Malnutrition))
@@ -115,7 +115,7 @@ public class GeneComp_Hyperlactation : GeneComp
 
     public bool ReadyToMilk()
     {
-        if (!parent.Active)
+        if (!Active)
             return false;
         if (!allowMilking)
             return false;
@@ -139,7 +139,7 @@ public class GeneComp_Hyperlactation : GeneComp
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
-        if (!parent.Active)
+        if (!Active)
             yield break;
         float milkPerDay = Lactating.Props.fullChargeAmount * GenDate.TicksPerDay /
                            (Lactating.Props.ticksToFullCharge * Props.chargePerItem);

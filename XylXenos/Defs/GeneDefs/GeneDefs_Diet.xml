@@ -128,17 +128,21 @@
             </thoughts>
           </li>
         </ingestionThoughtOverrides>
-        <permanentHediffs>
-          <li>
-            <hediff>XylGeneticMeatNeed</hediff>
-          </li>
-        </permanentHediffs>
         <startingItems>
           <li>
             <foodType>Meat</foodType>
             <nutritionAmount>1~2</nutritionAmount>
           </li>
         </startingItems>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_PermanentHediffs">
+            <hediffs>
+              <li>
+                <hediff>XylGeneticMeatNeed</hediff>
+              </li>
+            </hediffs>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

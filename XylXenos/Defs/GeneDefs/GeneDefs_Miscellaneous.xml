@@ -169,14 +169,18 @@
     </customEffectDescriptions>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <permanentHediffs>
-          <li Class="HediffGiver_Event">
-            <hediff>XylPrecognition</hediff>
-            <partsToAffect>
-              <li>Head</li>
-            </partsToAffect>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_PermanentHediffs">
+            <hediffs>
+              <li>
+                <hediff>XylPrecognition</hediff>
+                <partsToAffect>
+                  <li>Head</li>
+                </partsToAffect>
+              </li>
+            </hediffs>
           </li>
-        </permanentHediffs>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -405,11 +409,15 @@
     </suppressedTraits>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <permanentHediffs>
-          <li>
-            <hediff>XylBioRejection</hediff>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_PermanentHediffs">
+            <hediffs>
+              <li>
+                <hediff>XylBioRejection</hediff>
+              </li>
+            </hediffs>
           </li>
-        </permanentHediffs>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

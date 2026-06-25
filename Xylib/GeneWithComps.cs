@@ -2,10 +2,10 @@
 
 public class GeneComp
 {
+    public Pawn Pawn => parent.pawn;
+    public bool Active => parent.Active;
     [Unsaved] public GeneWithComps parent;
     [Unsaved] public GeneCompProperties props;
-
-    public Pawn Pawn => parent.pawn;
 
     public virtual void CompPostMake()
     {
@@ -39,6 +39,10 @@ public class GeneComp
     public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
         return [];
+    }
+
+    public virtual void CompReset()
+    {
     }
 }
 
@@ -198,12 +202,6 @@ public class GeneWithComps : Gene, IEventListener
 
     public override void PostAdd()
     {
-        if (Active && !DefExt.permanentHediffs.NullOrEmpty())
-        {
-            foreach (var hediffGiver in DefExt.permanentHediffs)
-                hediffGiver.EventOccurred(pawn);
-        }
-
         RemoveInvalidChemicalHediffs();
 
         if (DefExt.hasPsycast)
@@ -223,12 +221,6 @@ public class GeneWithComps : Gene, IEventListener
         Removed = true;
         EventManager.Instance.UnregisterAll(this);
 
-        if (!DefExt.permanentHediffs.NullOrEmpty())
-        {
-            foreach (var hediff in GetLinkedHediffs())
-                pawn.health.RemoveHediff(hediff);
-        }
-
         RemoveInvalidChemicalHediffs();
 
         base.PostRemove();
@@ -244,46 +236,15 @@ public class GeneWithComps : Gene, IEventListener
     {
         base.Reset();
 
-        if (!DefExt.permanentHediffs.NullOrEmpty())
+        if (comps != null)
         {
-            foreach (var hediff in GetLinkedHediffs())
-                hediff.Severity = hediff.def.initialSeverity;
+            foreach (var comp in comps)
+                comp.CompReset();
         }
-    }
-
-    private IEnumerable<Hediff> GetLinkedHediffs()
-    {
-        if (DefExt.permanentHediffs.NullOrEmpty())
-            return [];
-
-        HashSet<HediffDef> defs = [.. DefExt.permanentHediffs.Select(hediffGiver => hediffGiver.hediff)];
-        return pawn.health.hediffSet.hediffs.Where(hediff => defs.Contains(hediff.def)).ToList();
     }
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
-        if (!DefExt.permanentHediffs.NullOrEmpty())
-        {
-            foreach (Tool tool in DefExt.permanentHediffs
-                         .Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
-                         .Where(verbGiver => verbGiver != null).SelectMany(verbGiver => verbGiver.tools))
-            {
-                float armorPenetration = tool.armorPenetration;
-                if (armorPenetration < 0f)
-                {
-                    armorPenetration = tool.power * 0.015f;
-                }
-
-                // TODO: Calculate DPS
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_MeleeDamage".Translate(),
-                    tool.power.ToStringByStyle(ToStringStyle.FloatTwo), "", 4102);
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "ArmorPenetration".Translate(),
-                    armorPenetration.ToStringPercent(), "ArmorPenetrationExplanation".Translate(), 4101);
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_Cooldown".Translate(),
-                    "StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall()), "", 4100);
-            }
-        }
-
         if (DefExt.femaleChance != null)
         {
             yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
@@ -402,72 +363,17 @@ public class GeneWithComps : Gene, IEventListener
         return true;
     }
 
-    private void UpdatePermanentHediffs()
+    public T GetComp<T>() where T : GeneComp
     {
-        foreach (var hediffGiver in DefExt.permanentHediffs!)
+        if (comps == null)
+            return null;
+        foreach (var comp in comps)
         {
-            if (hediffGiver.partsToAffect.NullOrEmpty())
-                continue;
-
-            List<BodyPartRecord> partsToAdd = [];
-            List<BodyPartRecord> partsToRemove = [];
-            HediffDef hediffDef = hediffGiver.hediff;
-            int partCount = 0;
-
-            foreach (BodyPartRecord part in pawn.def.race.body.AllParts)
-            {
-                if (!hediffGiver.partsToAffect.Contains(part.def))
-                    continue;
-
-                bool alreadyHasHediff = false;
-                bool missingPart = false;
-                foreach (Hediff hediff in pawn.health.hediffSet.hediffs)
-                {
-                    if (hediff.Part != part)
-                        continue;
-
-                    if (hediff.def == hediffDef)
-                        alreadyHasHediff = true;
-                    else if (typeof(Hediff_AddedPart).IsAssignableFrom(hediff.def.hediffClass))
-                        missingPart = true;
-                    else if (typeof(Hediff_MissingPart).IsAssignableFrom(hediff.def.hediffClass))
-                        missingPart = true;
-                }
-
-                if (alreadyHasHediff)
-                    partCount++;
-
-                if (missingPart && alreadyHasHediff)
-                    partsToRemove.Add(part);
-                else if (!missingPart && !alreadyHasHediff)
-                    partsToAdd.Add(part);
-            }
-
-            int maxToAdd = hediffGiver.countToAffect - partCount;
-            partsToAdd.Shuffle();
-
-            foreach (BodyPartRecord part in partsToAdd.Take(maxToAdd))
-            {
-                Hediff hediff = HediffMaker.MakeHediff(hediffDef, pawn, part);
-                pawn.health.AddHediff(hediff);
-            }
-
-            foreach (BodyPartRecord part in partsToRemove)
-            {
-                Hediff hediff = pawn.health.hediffSet.hediffs.First(h => h.def == hediffDef && h.Part == part);
-                pawn.health.RemoveHediff(hediff);
-            }
+            if (comp is T t)
+                return t;
         }
-    }
 
-    public void Notify_HediffStateChange()
-    {
-        if (!Active)
-            return;
-        if (DefExt.permanentHediffs.NullOrEmpty())
-            return;
-
-        UpdatePermanentHediffs();
+        return null;
     }
 
     public void Notify_PostGenerateNewPawn(PawnGenerationRequest request)
@@ -484,9 +390,6 @@ public class GeneWithComps : Gene, IEventListener
 
     public virtual void RegisterWith(EventManager manager)
     {
-        if (!DefExt.permanentHediffs.NullOrEmpty())
-            manager.Register(EventDefOf.PostCheckForStateChange, pawn, Notify_HediffStateChange);
-
         if (!DefExt.extraApparel.NullOrEmpty())
         {
             manager.Register<PawnGenerationRequest>(EventDefOf.PostGenerateNewPawn, pawn, Notify_PostGenerateNewPawn);
@@ -507,18 +410,5 @@ public class GeneWithComps : Gene, IEventListener
             foreach (var comp in comps.OfType<IEventListener>())
                 manager.UnregisterAll(comp);
         }
-    }
-
-    public T GetComp<T>() where T : GeneComp
-    {
-        if (comps == null)
-            return null;
-        foreach (var comp in comps)
-        {
-            if (comp is T t)
-                return t;
-        }
-
-        return null;
     }
 }

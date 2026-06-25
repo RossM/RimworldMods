@@ -22,14 +22,6 @@
     </customEffectDescriptions>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <permanentHediffs>
-          <li>
-            <hediff>XylEcholocation</hediff>
-            <partsToAffect>
-              <li>Head</li>
-            </partsToAffect>
-          </li>
-        </permanentHediffs>
         <congenitalHediffs>
           <li>
             <chance>0.15</chance>
@@ -47,6 +39,18 @@
             <ignoreRestrictions>true</ignoreRestrictions>
           </li>
         </extraApparel>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_PermanentHediffs">
+            <hediffs>
+              <li>
+                <hediff>XylEcholocation</hediff>
+                <partsToAffect>
+                  <li>Head</li>
+                </partsToAffect>
+              </li>
+            </hediffs>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

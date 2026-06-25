@@ -50,11 +50,21 @@ public abstract class GeneCompProperties
 
     public virtual IEnumerable<string> ConfigErrors()
     {
-        yield break;
+        return [];
     }
 
     public virtual void ResolveReferences(Def parentDef)
     {
+    }
+
+    public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+    {
+        return [];
+    }
+
+    public virtual IEnumerable<string> CustomEffectDescriptions()
+    {
+        return [];
     }
 }
 
@@ -199,14 +209,6 @@ public class DefModExtension_Gene : DefModExtension
     [CanBeNull] public List<HediffGiver> hediffGivers;
 
     /// <summary>
-    ///     Hediff givers which are triggered when the gene is added. The corresponding hediffs are
-    ///     automatically removed when the gene is removed. If the hediff is on a body part, it will
-    ///     be removed if the part is lost or replaced with an artificial replacement, and readded if
-    ///     the part is regrown.
-    /// </summary>
-    [CanBeNull] public List<HediffGiver_Event> permanentHediffs;
-
-    /// <summary>
     ///     Hediff givers which are triggered when the pawn is created, either as a new adult or as a
     ///     baby. These are not removed if the gene is lost, and are not added if the gene is added
     ///     to an existing pawn.
@@ -257,31 +259,17 @@ public class DefModExtension_Gene : DefModExtension
                 "XylHitPointsDesc".Translate(), 4194);
         }
 
-        if (!permanentHediffs.NullOrEmpty())
-        {
-            foreach (Tool tool in permanentHediffs.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
-                         .Where(verbGiver => verbGiver != null).SelectMany(verbGiver => verbGiver.tools))
-            {
-                float armorPenetration = tool.armorPenetration;
-                if (armorPenetration < 0f)
-                {
-                    armorPenetration = tool.power * 0.015f;
-                }
-
-                // TODO: Calculate DPS
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_MeleeDamage".Translate(),
-                    tool.power.ToStringByStyle(ToStringStyle.FloatTwo), "", 4102);
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "ArmorPenetration".Translate(),
-                    armorPenetration.ToStringPercent(), "ArmorPenetrationExplanation".Translate(), 4101);
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_Cooldown".Translate(),
-                    "StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall()), "", 4100);
-            }
-        }
-
         if (femaleChance != null)
         {
             yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
                 GenderRatioDescription, "XylGenderRatioDesc".TranslateSimple(), 1);
+        }
+
+        if (comps != null)
+        {
+            foreach (var comp in comps)
+            foreach (var result in comp.SpecialDisplayStats(req))
+                yield return result;
         }
     }
 
@@ -292,25 +280,6 @@ public class DefModExtension_Gene : DefModExtension
         if (healthScaleFactor != 1.0f)
             yield return $"{"HitPointsBasic".Translate().CapitalizeFirst()}: {healthScaleFactor.ToStringPercent()}";
 
-        if (!permanentHediffs.NullOrEmpty())
-        {
-            foreach (Tool tool in permanentHediffs.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
-                         .Where(verbGiver => verbGiver != null).SelectMany(verbGiver => verbGiver.tools))
-            {
-                float armorPenetration = tool.armorPenetration;
-                if (armorPenetration < 0f)
-                {
-                    armorPenetration = tool.power * 0.015f;
-                }
-
-                // TODO: Calculate DPS
-                yield return $"{"StatsReport_MeleeDamage".Translate()}: {tool.power.ToStringByStyle(ToStringStyle.FloatTwo)}";
-                yield return $"{"ArmorPenetration".Translate()}: {armorPenetration.ToStringPercent()}";
-                yield return
-                    $"{"StatsReport_Cooldown".Translate()}: {"StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall())}";
-            }
-        }
-
         if (femaleChance != null)
             yield return $"{"XylGenderRatioLabel".TranslateSimple()}: {GenderRatioDescription}";
 
@@ -318,6 +287,13 @@ public class DefModExtension_Gene : DefModExtension
         {
             yield return
                 $"{"XylNewBuildings".Translate()}: {addDesignators.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
+        }
+
+        if (comps != null)
+        {
+            foreach (var comp in comps)
+            foreach (var result in comp.CustomEffectDescriptions())
+                yield return result;
         }
     }
 

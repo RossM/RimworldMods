@@ -37,14 +37,18 @@
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <permanentHediffs>
-          <li>
-            <hediff>XylLargeHorns</hediff>
-            <partsToAffect>
-              <li>Head</li>
-            </partsToAffect>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_PermanentHediffs">
+            <hediffs>
+              <li>
+                <hediff>XylLargeHorns</hediff>
+                <partsToAffect>
+                  <li>Head</li>
+                </partsToAffect>
+              </li>
+            </hediffs>
           </li>
-        </permanentHediffs>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -100,15 +104,19 @@
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <permanentHediffs>
-          <li>
-            <hediff>XylRetractableClaws</hediff>
-            <partsToAffect>
-              <li>Hand</li>
-            </partsToAffect>
-            <countToAffect>2</countToAffect>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_PermanentHediffs">
+            <hediffs>
+              <li>
+                <hediff>XylRetractableClaws</hediff>
+                <partsToAffect>
+                  <li>Hand</li>
+                </partsToAffect>
+                <countToAffect>2</countToAffect>
+              </li>
+            </hediffs>
           </li>
-        </permanentHediffs>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
