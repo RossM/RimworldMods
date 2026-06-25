@@ -45,7 +45,7 @@ namespace XylExposableChecker
 
             foreach (var field in fields.Except(usedFields))
             {
-                Log.Warning($"Possibly unsaved field: {type.Namespace}.{type.Name}.{field.Name}. Either save this field in {exposeDataFunc}, mark it [Unsaved], or make it const or readonly.");
+                Log.Warning($"Possibly unsaved field: {type.FullName}.{field.Name}. Either save this field in {exposeDataFunc}, mark it [Unsaved], or make it const or readonly.");
             }
         }
 

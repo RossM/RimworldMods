@@ -93,35 +93,35 @@ public class Main : Mod
                 var hasInfixPostfix = method.HasAttribute<InfixPostfixAttribute>();
 
                 if ((hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && !hasFeature)
-                    Log.Warning($"{type.Name}::{method.Name} is missing a [Feature] attribute");
+                    Log.Warning($"{type.FullName}::{method.Name} is missing a [Feature] attribute");
                 if (!(hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && hasFeature)
-                    Log.Warning($"{type.Name}::{method.Name} has [Feature] but no Harmony attribute");
+                    Log.Warning($"{type.FullName}::{method.Name} has [Feature] but no Harmony attribute");
 
                 if (hasInfixPatch != (hasInfixPrefix || hasInfixPostfix))
                     Log.Warning(
-                        $"{type.Name}::{method.Name} has should have both [InfixPatch] and one of [InfixPrefix] or [InfixPostfix]");
+                        $"{type.FullName}::{method.Name} has should have both [InfixPatch] and one of [InfixPrefix] or [InfixPostfix]");
 
                 if ((hasPrefix || hasInfixPrefix) && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
-                    Log.Warning($"{type.Name}::{method.Name} should be named with _Prefix");
+                    Log.Warning($"{type.FullName}::{method.Name} should be named with _Prefix");
                 if ((hasPostfix || hasInfixPostfix) && !(method.Name == "Postfix" || method.Name.EndsWith("_Postfix")))
-                    Log.Warning($"{type.Name}::{method.Name} should be named with _Postfix");
+                    Log.Warning($"{type.FullName}::{method.Name} should be named with _Postfix");
                 if (hasTranspiler && !(method.Name == "Transpiler" || method.Name.EndsWith("_Transpiler")))
-                    Log.Warning($"{type.Name}::{method.Name} should be named with _Transpiler");
+                    Log.Warning($"{type.FullName}::{method.Name} should be named with _Transpiler");
 
                 var parameters = method.GetParameters();
                 ParameterInfo resultParameter = parameters.SingleOrDefault(p => p.Name == "__result");
                 if (hasPrefix || hasInfixPrefix)
                 {
                     if (resultParameter?.IsOut == false)
-                        Log.Warning($"{type.Name}::{method.Name} should use 'out' for __result");
+                        Log.Warning($"{type.FullName}::{method.Name} should use 'out' for __result");
                     if (method.ReturnType.IsVoid() && resultParameter != null)
-                        Log.Warning($"{type.Name}::{method.Name} returns void but uses __result");
+                        Log.Warning($"{type.FullName}::{method.Name} returns void but uses __result");
                 }
 
                 if (hasPostfix || hasInfixPostfix)
                 {
                     if (resultParameter is { ParameterType.IsByRef: false })
-                        Log.Warning($"{type.Name}::{method.Name} has a non-ref __result");
+                        Log.Warning($"{type.FullName}::{method.Name} has a non-ref __result");
                 }
             }
         }

@@ -276,7 +276,7 @@ public static class PatchHelpers
     {
         foreach (var type in GenTypes.AllTypesWithAttribute<DefGeneratorAttribute>())
         {
-            using var _ = new ProfileBlock(type.Name);
+            using var _ = new ProfileBlock(type.FullName);
 
             try
             {
@@ -285,7 +285,7 @@ public static class PatchHelpers
                 var impliedDefsMethodInfo = type.GetMethod("ImpliedDefs");
                 if (impliedDefsMethodInfo == null)
                 {
-                    Log.Error($"{type.Name} is marked as DefGenerator but doesn't have ImpliedDefs method");
+                    Log.Error($"{type.FullName} is marked as DefGenerator but doesn't have ImpliedDefs method");
                     continue;
                 }
 
@@ -297,7 +297,7 @@ public static class PatchHelpers
             }
             catch (Exception e)
             {
-                Log.Error($"Error running def generator {type.Name}: {e}");
+                Log.Error($"Error running def generator {type.FullName}: {e}");
             }
         }
     }
