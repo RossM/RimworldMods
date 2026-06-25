@@ -36,7 +36,7 @@
       <li>Headbone</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="Xylib.GeneCompProperties_PermanentHediffs">
             <hediffs>
@@ -103,7 +103,7 @@
       <li>Hands</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="Xylib.GeneCompProperties_PermanentHediffs">
             <hediffs>

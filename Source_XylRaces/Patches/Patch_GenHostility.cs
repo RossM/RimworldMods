@@ -4,7 +4,7 @@
 public static class Patch_GenHostility
 {
     // Note: This patch is performance-sensitive
-    [Feature(nameof(DefModExtension_Gene.disableHostilityFromFactions))]
+    [Feature(nameof(DefModExtension_GeneWithComps.disableHostilityFromFactions))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(GenHostility.HostileTo), typeof(Thing), typeof(Thing))]
     public static void HostileTo_Postfix(Thing a, Thing b, ref bool __result)

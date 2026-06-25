@@ -13,7 +13,7 @@
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <prerequisite>XylLithoid</prerequisite>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <startingItems>
           <li>
             <item>XylSoftener</item>

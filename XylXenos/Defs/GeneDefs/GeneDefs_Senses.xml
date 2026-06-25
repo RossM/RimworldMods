@@ -21,7 +21,7 @@
       <li>Sight: use hearing if higher</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="Xylib.GeneCompProperties_PermanentHediffs">
             <hediffs>
@@ -109,7 +109,7 @@
       </li>
     </capMods>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
       </li>
     </modExtensions>
   </GeneDef>

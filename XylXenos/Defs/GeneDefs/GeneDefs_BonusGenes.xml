@@ -21,7 +21,7 @@
       <li>Extra gene chance: 50%</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="XylXenos.GeneCompProperties_BonusGenes">
             <biostatArc>0~0</biostatArc>
@@ -51,7 +51,7 @@
     <displayOrderInCategory>201</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <geneType>Xenogene</geneType>
         <comps>
           <li Class="XylXenos.GeneCompProperties_BonusGenes">
@@ -86,7 +86,7 @@
     <displayOrderInCategory>202</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <geneType>Xenogene</geneType>
         <comps>
           <li Class="XylXenos.GeneCompProperties_BonusGenes">

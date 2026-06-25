@@ -35,7 +35,7 @@ public class Patch_StartingPawnUtility
         }
     };
 
-    [Feature(nameof(DefModExtension_Gene.startingItems))]
+    [Feature(nameof(DefModExtension_GeneWithComps.startingItems))]
     [HarmonyTranspiler]
     [HarmonyPatch("GeneratePossessions")]
     public static IEnumerable<CodeInstruction> GeneratePossessions_Transpiler(

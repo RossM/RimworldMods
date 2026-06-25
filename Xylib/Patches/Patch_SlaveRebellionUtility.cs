@@ -50,7 +50,7 @@ public static class Patch_SlaveRebellionUtility
     };
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
-    [Feature(nameof(DefModExtension_Gene.slaveRebellionThresholdDays))]
+    [Feature(nameof(DefModExtension_GeneWithComps.slaveRebellionThresholdDays))]
     [HarmonyTranspiler]
     [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
     public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(
@@ -64,7 +64,7 @@ public static class Patch_SlaveRebellionUtility
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
-    [Feature(nameof(DefModExtension_Gene.slaveRebellionThresholdDays))]
+    [Feature(nameof(DefModExtension_GeneWithComps.slaveRebellionThresholdDays))]
     [HarmonyPostfix]
     [HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
     public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)

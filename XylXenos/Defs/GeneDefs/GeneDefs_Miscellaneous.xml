@@ -21,7 +21,7 @@
       <Bloodlust />
     </suppressedTraits>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <slaveRebellionThresholdDays>120</slaveRebellionThresholdDays>
         <manhunterOnTameFailChanceFactor>0</manhunterOnTameFailChanceFactor>
         <comps>
@@ -91,7 +91,7 @@
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <manhunterOnDamageChanceFactor>2</manhunterOnDamageChanceFactor>
         <comps>
           <li Class="XylXenos.GeneCompProperties_SeeingRed">
@@ -172,7 +172,7 @@
       <li>Ranged dodge chance: +15</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="Xylib.GeneCompProperties_PermanentHediffs">
             <hediffs>
@@ -265,7 +265,7 @@
       <FlightCooldown>45</FlightCooldown>
     </statOffsets>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="XylXenos.GeneCompProperties_Flight"/>
         </comps>
@@ -283,7 +283,7 @@
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <hediffGivers>
           <li Class="XylXenos.HediffGiver_Torpor">
             <hediff>XylTorpor</hediff>
@@ -391,7 +391,7 @@
     <displayOrderInCategory>501</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_InsectPheromones</iconPath>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <disableHostilityFromFactions>
           <li>Insect</li>
         </disableHostilityFromFactions>
@@ -412,7 +412,7 @@
       <Transhumanist />
     </suppressedTraits>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="Xylib.GeneCompProperties_PermanentHediffs">
             <hediffs>
@@ -465,7 +465,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
       </li>
     </modExtensions>
   </GeneDef>
@@ -480,7 +480,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>5</biostatMet>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
       </li>
     </modExtensions>
   </GeneDef>
@@ -498,7 +498,7 @@
       <MechBandwidth>3</MechBandwidth>
     </statOffsets>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
       </li>
     </modExtensions>
   </GeneDef>-->
@@ -517,7 +517,7 @@
     <biostatCpx>2</biostatCpx>
     <biostatMet>1</biostatMet>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
       </li>
     </modExtensions>
   </GeneDef>
@@ -535,7 +535,7 @@
       <li>WoundHealingRate</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="XylXenos.GeneCompProperties_Regeneration">
             <healthPerHour>20</healthPerHour>

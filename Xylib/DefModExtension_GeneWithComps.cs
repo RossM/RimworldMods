@@ -69,7 +69,7 @@ public abstract class GeneCompProperties
 }
 
 [NoReorder]
-public class DefModExtension_Gene : DefModExtension
+public class DefModExtension_GeneWithComps : DefModExtension
 {
     public IEnumerable<string> CustomEffectDescriptions => field ??= GetCustomEffectDescriptions().ToList();
 

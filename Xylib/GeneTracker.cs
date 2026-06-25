@@ -8,68 +8,68 @@ public class GeneTracker : IEventListener, IPawnData
     public Pawn pawn;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_Gene.bodySizeFactor" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_Gene.bodySizeFactor" />
+    ///     Aggregates <see cref="DefModExtension_GeneWithComps.bodySizeFactor" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="DefModExtension_GeneWithComps.bodySizeFactor" />
     /// </summary>
     public float bodySizeFactor = 1f;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_Gene.healthScaleFactor" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_Gene.healthScaleFactor" />
+    ///     Aggregates <see cref="DefModExtension_GeneWithComps.healthScaleFactor" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="DefModExtension_GeneWithComps.healthScaleFactor" />
     /// </summary>
     public float healthScaleFactor = 1f;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_Gene.slaveRebellionThresholdDays" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_Gene.slaveRebellionThresholdDays" />
+    ///     Aggregates <see cref="DefModExtension_GeneWithComps.slaveRebellionThresholdDays" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="DefModExtension_GeneWithComps.slaveRebellionThresholdDays" />
     /// </summary>
     public float slaveRebellionThresholdDays = float.MaxValue;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_Gene.manhunterOnDamageChanceFactor" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_Gene.manhunterOnDamageChanceFactor" />
+    ///     Aggregates <see cref="DefModExtension_GeneWithComps.manhunterOnDamageChanceFactor" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="DefModExtension_GeneWithComps.manhunterOnDamageChanceFactor" />
     /// </summary>
     public float manhunterOnDamageChanceFactor = 1f;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_Gene.manhunterOnTameFailChanceFactor" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_Gene.manhunterOnTameFailChanceFactor" />
+    ///     Aggregates <see cref="DefModExtension_GeneWithComps.manhunterOnTameFailChanceFactor" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="DefModExtension_GeneWithComps.manhunterOnTameFailChanceFactor" />
     /// </summary>
     public float manhunterOnTameFailChanceFactor = 1f;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_Gene.hasPsycast" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_Gene.hasPsycast" />
+    ///     Aggregates <see cref="DefModExtension_GeneWithComps.hasPsycast" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="DefModExtension_GeneWithComps.hasPsycast" />
     /// </summary>
     public bool hasPsycast = false;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_Gene.joyGiverChanceFactors" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_Gene.joyGiverChanceFactors" />
+    ///     Aggregates <see cref="DefModExtension_GeneWithComps.joyGiverChanceFactors" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="DefModExtension_GeneWithComps.joyGiverChanceFactors" />
     /// </summary>
     [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_Gene.addDesignators" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_Gene.addDesignators" />
+    ///     Aggregates <see cref="DefModExtension_GeneWithComps.addDesignators" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="DefModExtension_GeneWithComps.addDesignators" />
     /// </summary>
     [CanBeNull] public List<BuildableDef> addDesignators;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_Gene.renderNodeModifiers" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_Gene.renderNodeModifiers" />
+    ///     Aggregates <see cref="DefModExtension_GeneWithComps.renderNodeModifiers" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="DefModExtension_GeneWithComps.renderNodeModifiers" />
     /// </summary>
     [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_Gene.disableHostilityFromFactions" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_Gene.disableHostilityFromFactions" />
+    ///     Aggregates <see cref="DefModExtension_GeneWithComps.disableHostilityFromFactions" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="DefModExtension_GeneWithComps.disableHostilityFromFactions" />
     /// </summary>
     [CanBeNull] public List<FactionDef> disableHostilityFromFactions;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_Gene.ingestionThoughtOverrides" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_Gene.ingestionThoughtOverrides" />
+    ///     Aggregates <see cref="DefModExtension_GeneWithComps.ingestionThoughtOverrides" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="DefModExtension_GeneWithComps.ingestionThoughtOverrides" />
     /// </summary>
     [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
 

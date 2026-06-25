@@ -7,7 +7,7 @@
 [HarmonyPatchCategory("PostLoadDefs")]
 public class Patch_PregnancyUtility
 {
-    [Feature(nameof(DefModExtension_Gene.xenotypeStrength))]
+    [Feature(nameof(DefModExtension_GeneWithComps.xenotypeStrength))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(PregnancyUtility.GetInheritedGenes),
         [typeof(Pawn), typeof(Pawn), typeof(bool)],
@@ -32,7 +32,7 @@ public class Patch_PregnancyUtility
         }
     }
 
-    [Feature(nameof(DefModExtension_Gene.xenotypeStrength))]
+    [Feature(nameof(DefModExtension_GeneWithComps.xenotypeStrength))]
     [InfixPostfix(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn), [typeof(PawnGenerationRequest)])]
     [InfixPatch(nameof(PregnancyUtility.ApplyBirthOutcome))]
     public static void GeneratePawn_Postfix(Pawn geneticMother, Pawn father, ref Pawn __result)
@@ -52,7 +52,7 @@ public class Patch_PregnancyUtility
         }
     }
 
-    [Feature(nameof(DefModExtension_Gene.xenotypeStrength))]
+    [Feature(nameof(DefModExtension_GeneWithComps.xenotypeStrength))]
     [InfixPostfix(typeof(PregnancyUtility), "ShouldByHybrid")]
     [InfixPatch(nameof(PregnancyUtility.ApplyBirthOutcome))]
     public static void ShouldBeHybrid_Postfix(Pawn mother, Pawn father, ref bool __result)

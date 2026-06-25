@@ -49,7 +49,7 @@ public class GeneComp
 public class GeneWithComps : Gene, IEventListener
 {
     [NotNull]
-    public DefModExtension_Gene DefExt => field ??= def.DefExt!;
+    public DefModExtension_GeneWithComps DefExt => field ??= def.DefExt!;
 
     public GeneType GeneType => geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 

@@ -16,7 +16,7 @@
       <li>Enables being milked</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <extraIconPath>Things/Item/Resource/Milk</extraIconPath>
         <gender>Female</gender>
         <startingItems>

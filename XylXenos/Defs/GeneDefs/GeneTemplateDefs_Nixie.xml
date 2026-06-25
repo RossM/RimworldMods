@@ -39,7 +39,7 @@
       </li>
     </biostats>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_GeneWithComps">
         <hasPsycast>true</hasPsycast>
       </li>
     </modExtensions>

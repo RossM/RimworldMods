@@ -12,14 +12,14 @@ public static class Extensions
     extension(GeneDef gene)
     {
         [CanBeNull]
-        public DefModExtension_Gene DefExt
+        public DefModExtension_GeneWithComps DefExt
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (!defExtCache.TryGetValue(gene.index, out DefModExtension_Gene defExt))
+                if (!defExtCache.TryGetValue(gene.index, out DefModExtension_GeneWithComps defExt))
                 {
-                    defExt = gene.GetModExtension<DefModExtension_Gene>();
+                    defExt = gene.GetModExtension<DefModExtension_GeneWithComps>();
                     defExtCache.Add(gene.index, defExt);
                 }
 
@@ -232,5 +232,5 @@ public static class Extensions
         public bool IsRawFoodOrCorpse => thingDef.IsRawHumanFood() || thingDef.IsCorpse;
     }
 
-    public static readonly Dictionary<int, DefModExtension_Gene> defExtCache = new();
+    public static readonly Dictionary<int, DefModExtension_GeneWithComps> defExtCache = new();
 }

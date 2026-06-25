@@ -4,7 +4,7 @@
 public static class Patch_Pawn
 {
     // Note: This patch is performance-sensitive
-    [Feature(nameof(DefModExtension_Gene.bodySizeFactor))]
+    [Feature(nameof(DefModExtension_GeneWithComps.bodySizeFactor))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
     public static void BodySize_Postfix(Pawn __instance, ref float __result)
@@ -13,7 +13,7 @@ public static class Patch_Pawn
             __result *= geneTracker.bodySizeFactor;
     }
 
-    [Feature(nameof(DefModExtension_Gene.hasPsycast))]
+    [Feature(nameof(DefModExtension_GeneWithComps.hasPsycast))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.HasPsylink), MethodType.Getter)]
     public static void HasPsylink_Postfix(Pawn __instance, ref bool __result)
@@ -23,7 +23,7 @@ public static class Patch_Pawn
     }
 
     // Note: This patch is performance-sensitive
-    [Feature(nameof(DefModExtension_Gene.healthScaleFactor))]
+    [Feature(nameof(DefModExtension_GeneWithComps.healthScaleFactor))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
     public static void HealthScale_Postfix(Pawn __instance, ref float __result)
