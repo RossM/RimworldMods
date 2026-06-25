@@ -48,6 +48,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TranspilerUtil\TranspilerUtil.csproj" />
+    <ProjectReference Include="..\Xylib\Xylib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

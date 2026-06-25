@@ -149,7 +149,7 @@ public static class NotificationDefOf
 ///     <see cref="INotificationListener" />
 ///     and register for the needed callbacks in <see cref="INotificationListener.RegisterWith" />.
 /// </summary>
-[UsedFromReflection]
+[UsedImplicitly]
 public class NotificationManager : GameComponent
 {
     private class NotificationInfo
@@ -474,7 +474,6 @@ public class NotificationManager : GameComponent
             case ThingComp t when t.parent.Destroyed:
             // ReSharper restore SuspiciousTypeConversion.Global
             case MapComponent m when m.map.Disposed:
-            case GeneExt { Removed: true }:
                 Log.Warning(
                     $"NotificationManager: A destroyed thing got an event: {callbackInfo} ({notification.defName} on {target})");
                 return;

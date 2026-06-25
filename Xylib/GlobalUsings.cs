@@ -1,0 +1,13 @@
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Runtime.CompilerServices;
+global using System.Text;
+global using HarmonyLib;
+global using JetBrains.Annotations;
+global using LudeonTK;
+global using RimWorld;
+global using TranspilerUtil;
+global using UnityEngine;
+global using Verse;
+global using Verse.AI;
