@@ -319,50 +319,6 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
-    public void GenerateExtraApparel()
-    {
-        foreach (var item in DefExt.extraApparel!)
-        {
-            if (!ValidApparel(pawn, item.item, item.ignoreRestrictions))
-                continue;
-            if (!Rand.Chance(item.chance))
-                continue;
-
-            if (PawnApparelGenerator.GenerateApparelOfDefFor(pawn, item.item) is { } apparel && apparel.PawnCanWear(pawn))
-            {
-                PawnApparelGenerator.PostProcessApparel(apparel, pawn);
-                PawnGenerator.PostProcessGeneratedGear(apparel, pawn);
-                pawn.apparel.Wear(apparel, dropReplacedApparel: false);
-            }
-        }
-    }
-
-    public static bool ValidApparel(Pawn pawn, ThingDef thing, bool ignoreRestrictions = false)
-    {
-        if (thing == null)
-            return false;
-
-        if (!thing.apparel.PawnCanWear(pawn))
-            return false;
-
-        if (ignoreRestrictions)
-            return true;
-
-        if (!pawn.kindDef.apparelTags.NullOrEmpty() &&
-            !pawn.kindDef.apparelTags.Any(tag => thing.apparel.tags.Contains(tag)))
-        {
-            return false;
-        }
-
-        if (!pawn.kindDef.apparelDisallowTags.NullOrEmpty() &&
-            pawn.kindDef.apparelDisallowTags.Any(tag => thing.apparel.tags.Contains(tag)))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     public T GetComp<T>() where T : GeneComp
     {
         if (comps == null)
@@ -376,39 +332,21 @@ public class GeneWithComps : Gene, IEventListener
         return null;
     }
 
-    public void Notify_PostGenerateNewPawn(PawnGenerationRequest request)
-    {
-        if (!request.ForceNoGear && !request.AllowedDevelopmentalStages.Newborn())
-            GenerateExtraApparel();
-    }
-
-    public void Notify_PostRedressPawn(PawnGenerationRequest request)
-    {
-        if (!request.ForceNoGear && !request.AllowedDevelopmentalStages.Newborn())
-            GenerateExtraApparel();
-    }
-
     public virtual void RegisterWith(EventManager manager)
     {
-        if (!DefExt.extraApparel.NullOrEmpty())
-        {
-            manager.Register<PawnGenerationRequest>(EventDefOf.PostGenerateNewPawn, pawn, Notify_PostGenerateNewPawn);
-            manager.Register<PawnGenerationRequest>(EventDefOf.PostRedressPawn, pawn, Notify_PostRedressPawn);
-        }
+        if (comps == null)
+            return;
 
-        if (comps != null)
-        {
-            foreach (var comp in comps.OfType<IEventListener>())
-                comp.RegisterWith(manager);
-        }
+        foreach (var comp in comps.OfType<IEventListener>())
+            comp.RegisterWith(manager);
     }
 
     public void PreUnregister(EventManager manager)
     {
-        if (comps != null)
-        {
-            foreach (var comp in comps.OfType<IEventListener>())
-                manager.UnregisterAll(comp);
-        }
+        if (comps == null)
+            return;
+
+        foreach (var comp in comps.OfType<IEventListener>())
+            manager.UnregisterAll(comp);
     }
 }

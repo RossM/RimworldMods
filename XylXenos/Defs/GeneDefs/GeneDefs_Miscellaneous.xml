@@ -24,13 +24,17 @@
       <li Class="Xylib.DefModExtension_Gene">
         <slaveRebellionThresholdDays>120</slaveRebellionThresholdDays>
         <manhunterOnTameFailChanceFactor>0</manhunterOnTameFailChanceFactor>
-        <extraApparel>
-          <li>
-            <item>Apparel_Collar</item>
-            <chance>0.25</chance>
-            <ignoreRestrictions>true</ignoreRestrictions>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_ExtraApparel">
+            <items>              
+              <li>
+                <item>Apparel_Collar</item>
+                <chance>0.25</chance>
+                <ignoreRestrictions>true</ignoreRestrictions>
+              </li>
+            </items>
           </li>
-        </extraApparel>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

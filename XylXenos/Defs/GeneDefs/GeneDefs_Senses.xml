@@ -22,13 +22,6 @@
     </customEffectDescriptions>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <extraApparel>
-          <li>
-            <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
-            <chance>0.2</chance>
-            <ignoreRestrictions>true</ignoreRestrictions>
-          </li>
-        </extraApparel>
         <comps>
           <li Class="Xylib.GeneCompProperties_PermanentHediffs">
             <hediffs>
@@ -51,6 +44,15 @@
                 <countToAffect>2</countToAffect>
               </li>
             </hediffs>
+          </li>
+          <li Class="Xylib.GeneCompProperties_ExtraApparel">
+            <items>
+              <li>
+                <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
+                <chance>0.2</chance>
+                <ignoreRestrictions>true</ignoreRestrictions>
+              </li>
+            </items>
           </li>
         </comps>
       </li>

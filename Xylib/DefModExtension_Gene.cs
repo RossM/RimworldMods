@@ -215,12 +215,6 @@ public class DefModExtension_Gene : DefModExtension
     /// </summary>
     [CanBeNull] public List<StartingItemOption> startingItems;
 
-    /// <summary>
-    ///     Items which have a chance of being generated as extra apparel on a pawn. This
-    ///     includes both player and non-player pawns.
-    /// </summary>
-    [CanBeNull] public List<StartingItemOption> extraApparel;
-
     #endregion
 
     #region Comps

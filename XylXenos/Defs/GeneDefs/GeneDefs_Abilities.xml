@@ -305,12 +305,16 @@
     <biostatMet>-2</biostatMet>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <extraApparel>
-          <li>
-            <item>Apparel_GasMask</item>
-            <chance>0.5</chance>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_ExtraApparel">
+            <items>              
+              <li>
+                <item>Apparel_GasMask</item>
+                <chance>0.5</chance>
+              </li>
+            </items>
           </li>
-        </extraApparel>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
