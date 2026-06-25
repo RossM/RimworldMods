@@ -60,6 +60,11 @@ public class GeneComp
     public virtual void CompReset()
     {
     }
+
+    public bool CompAllowActive()
+    {
+        return true;
+    }
 }
 
 public class GeneWithComps : Gene, IEventListener
@@ -70,7 +75,7 @@ public class GeneWithComps : Gene, IEventListener
     public GeneType GeneType => geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 
     [Unsaved] private GeneType? geneTypeInternal;
-    [Unsaved] private bool activeFilled;
+    [Unsaved] private bool activeStateNeedsUpdating = true;
 
     [CanBeNull] public List<GeneComp> comps;
 
@@ -79,21 +84,37 @@ public class GeneWithComps : Gene, IEventListener
     {
         get
         {
-            if (!base.Active)
-                return false;
-            if (!activeFilled)
+            if (activeStateNeedsUpdating)
             {
                 field = CheckActive();
-                activeFilled = true;
+                activeStateNeedsUpdating = false;
             }
 
             return field;
         }
     }
 
-    private bool CheckActive() =>
-        (DefExt.gender == null || DefExt.gender == pawn.gender) &&
-        (DefExt.geneType == null || DefExt.geneType == GeneType);
+    private bool CheckActive()
+    {
+        if (!base.Active)
+            return false;
+
+        if (DefExt.gender != null && DefExt.gender != pawn.gender)
+            return false;
+        if (DefExt.geneType != null && DefExt.geneType != GeneType)
+            return false;
+
+        if (comps != null)
+        {
+            foreach (var comp in comps)
+            {
+                if (!comp.CompAllowActive())
+                    return false;
+            }
+        }
+
+        return true;
+    }
 
     public override void ExposeData()
     {
@@ -312,8 +333,23 @@ public class GeneWithComps : Gene, IEventListener
         return null;
     }
 
+    public void SetActiveStateNeedsUpdating()
+    {
+        activeStateNeedsUpdating = true;
+    }
+
     public virtual void RegisterWith(EventManager manager)
     {
+        // The only things that can change when a gene is active in the base game are:
+        // * The pawn's age changes
+        // * The pawn's mutant status changes, which can only happen when the pawn's hediffs change or the pawn dies
+        // * An overriding gene is added or removed
+        // These cover all of those possibilities.
+        manager.Register(EventDefOf.PostGenesChanged, pawn, SetActiveStateNeedsUpdating);
+        manager.Register(EventDefOf.PostHediffsChanged, pawn, SetActiveStateNeedsUpdating);
+        manager.Register(EventDefOf.PostPawnKilled, pawn, SetActiveStateNeedsUpdating);
+        manager.Register(EventDefOf.PostBirthday, pawn, SetActiveStateNeedsUpdating);
+
         if (comps == null)
             return;
 

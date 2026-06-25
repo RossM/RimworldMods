@@ -84,4 +84,8 @@
     </dataTypeArguments>
   </Xylib.EventDef>    
 
+  <Xylib.EventDef>
+    <defName>PostBirthday</defName>
+  </Xylib.EventDef>
+
 </Defs>

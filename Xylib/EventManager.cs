@@ -34,11 +34,12 @@ public interface IEventListener
 
 public class EventDef : Def
 {
+    public Type DataType =>
+        field ??= dataType is { IsGenericType: true } ? dataType.MakeGenericType(dataTypeArguments.ToArray()) : dataType;
+
     public bool global = false;
     public Type dataType = null;
     public List<Type> dataTypeArguments = null;
-
-    public Type DataType => field ??= dataType is { IsGenericType: true } ? dataType.MakeGenericType(dataTypeArguments.ToArray()) : dataType;
 }
 
 [DefOf]
@@ -51,9 +52,20 @@ public static class EventDefOf
     public static EventDef GlobalPostGameDispose;
 
     /// <summary>
+    ///     Called inside <see cref="StartingPawnUtility.GeneratePossessions" />.
+    ///     This hook passes a <see cref="List&lt;ThingDefCount&gt;" /> as the "data" parameter.
+    /// </summary>
+    public static EventDef InGeneratePossessions;
+
+    /// <summary>
     ///     Called after <see cref="Pawn_ApparelTracker.Notify_ApparelChanged" />.
     /// </summary>
     public static EventDef PostApparelChanged;
+
+    /// <summary>
+    ///     Called after <see cref="Pawn_AgeTracker.BirthdayBiological" />.
+    /// </summary>
+    public static EventDef PostBirthday;
 
     /// <summary>
     ///     Called after <see cref="Pawn_HealthTracker.CheckForStateChange" />.
@@ -139,12 +151,6 @@ public static class EventDefOf
     public static EventDef PreGeneratePawnBioAndName;
 
     /// <summary>
-    ///     Called inside <see cref="StartingPawnUtility.GeneratePossessions" />.
-    ///     This hook passes a <see cref="List&lt;ThingDefCount&gt;"/> as the "data" parameter.
-    /// </summary>
-    public static EventDef InGeneratePossessions;
-
-    /// <summary>
     ///     Called before <see cref="Thing.TakeDamage" />.
     ///     This hook passes a <see cref="DamageInfo" /> as its "data" parameter.
     /// </summary>
@@ -197,7 +203,7 @@ public class EventManager : GameComponent
     private static bool doDebug = false;
 
     private static readonly List<IEventListener> staticListeners = [];
-    [Unsaved] public HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
+    [Unsaved] private HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
 
     private readonly NotificationInfo[] notifications = new NotificationInfo[DefDatabase<EventDef>.DefCount];
 
