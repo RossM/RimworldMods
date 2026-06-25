@@ -4,8 +4,24 @@ public class GeneComp
 {
     public Pawn Pawn => parent.pawn;
     public bool Active => parent.Active;
+
+    private static readonly Dictionary<Type, bool> hasTickCache = new();
+    private static readonly Dictionary<Type, bool> hasTickIntervalCache = new();
+
     [Unsaved] public GeneWithComps parent;
     [Unsaved] public GeneCompProperties props;
+
+    [Unsaved] public readonly bool hasTick;
+    [Unsaved] public readonly bool hasTickInterval;
+
+    public GeneComp()
+    {
+        var type = GetType();
+        if (!hasTickCache.TryGetValue(type, out hasTick))
+            hasTickCache[type] = hasTick = type.GetMethod("CompTick")!.DeclaringType != typeof(GeneComp);
+        if (!hasTickIntervalCache.TryGetValue(type, out hasTickInterval))
+            hasTickIntervalCache[type] = hasTickInterval = type.GetMethod("CompTickInterval")!.DeclaringType != typeof(GeneComp);
+    }
 
     public virtual void CompPostMake()
     {
@@ -222,14 +238,18 @@ public class GeneWithComps : Gene, IEventListener
     {
         base.TickInterval(delta);
 
+        if (!Active)
+            return;
+
         if (comps != null)
         {
             foreach (var comp in comps)
-                comp.CompTickInterval(delta);
+            {
+                if (comp.hasTickInterval)
+                    comp.CompTickInterval(delta);
+            }
         }
 
-        if (!Active)
-            return;
         if (DefExt.hediffGivers.NullOrEmpty())
             return;
         if (!pawn.IsHashIntervalTick(60, delta))
@@ -245,10 +265,16 @@ public class GeneWithComps : Gene, IEventListener
     {
         base.Tick();
 
+        if (!Active)
+            return;
+
         if (comps != null)
         {
             foreach (var comp in comps)
-                comp.CompTick();
+            {
+                if (comp.hasTick)
+                    comp.CompTick();
+            }
         }
     }
 

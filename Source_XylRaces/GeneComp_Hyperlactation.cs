@@ -81,9 +81,6 @@ public class GeneComp_Hyperlactation : GeneComp
 
     public override void CompTickInterval(int delta)
     {
-        if (!Active)
-            return;
-
         if (!Pawn.IsHashIntervalTick(checkInterval, delta))
             return;
 
