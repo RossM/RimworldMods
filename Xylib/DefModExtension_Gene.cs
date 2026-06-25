@@ -230,7 +230,7 @@ public class DefModExtension_Gene : DefModExtension
 
     #region Comps
 
-    public List<GeneCompProperties> comps;
+    [CanBeNull] public List<GeneCompProperties> comps;
 
     #endregion
 

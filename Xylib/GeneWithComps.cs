@@ -52,7 +52,7 @@ public class GeneWithComps : Gene, IEventListener
     [Unsaved] private GeneType? geneTypeInternal;
     [Unsaved] private bool activeFilled;
 
-    public List<GeneComp> comps;
+    [CanBeNull] public List<GeneComp> comps;
 
     public bool Removed { get; private set; } = false;
 
@@ -95,6 +95,9 @@ public class GeneWithComps : Gene, IEventListener
     {
         base.PostMake();
         InitializeComps();
+
+        if (comps == null)
+            return;
 
         for (int num = comps.Count - 1; num >= 0; num--)
         {

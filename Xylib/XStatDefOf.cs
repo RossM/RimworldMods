@@ -1,5 +1,6 @@
 namespace Xylib;
 
+[DefOf]
 public static class XStatDefOf
 {
     public static StatDef XylCookedAnimalProductNutritionFactor;
