@@ -1,4 +1,4 @@
-﻿namespace XylXenos;
+﻿namespace Xylib;
 
 public class PawnGenerationEarlyData(PawnGenerationRequest request, XenotypeDef xenotype)
 {
@@ -10,7 +10,7 @@ public interface INotificationListener
 {
     /// <summary>
     ///     Called when a listener is created or loaded. The listener should call
-    ///     <see cref="O:XylXenos.NotificationManager.Register" />
+    ///     <see cref="O:NotificationManager.Register" />
     ///     to register for any notifications they want to receive.
     /// </summary>
     /// <param name="manager">
@@ -38,7 +38,7 @@ public class NotificationDef : Def
     public Type dataType = null;
 }
 
-[RimWorld.DefOf]
+[DefOf]
 public static class NotificationDefOf
 {
     /// <summary>
@@ -356,7 +356,8 @@ public class NotificationManager : GameComponent
                 Gen.HashCombineInt(0x467A56FF, notification.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
-        RegisterInternal(notification, target, (t, data) => callback(t, (T)data), listener, $"{listener.GetType().Name}.<{notification.defName}>", 0);
+        RegisterInternal(notification, target, (t, data) => callback(t, (T)data), listener,
+            $"{listener.GetType().Name}.<{notification.defName}>", 0);
     }
 
     public void UnregisterAll(INotificationListener listener)
@@ -532,7 +533,7 @@ public class NotificationManager : GameComponent
 
         foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
             CallRegistrationHandlers(pawn);
-        
+
         RegisterStaticListeners();
 
         foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
