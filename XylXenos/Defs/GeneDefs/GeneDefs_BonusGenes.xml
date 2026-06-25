@@ -22,7 +22,7 @@
       <li>Extra gene chance: 50%</li>
     </customEffectDescriptions>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <props Class="XylXenos.BonusGenesProperties">
           <biostatArc>0~0</biostatArc>
           <biostatCpx>1~99</biostatCpx>
@@ -51,7 +51,7 @@
     <displayOrderInCategory>201</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <geneType>Xenogene</geneType>
         <props Class="XylXenos.BonusGenesProperties">
           <removeAfterAdding>true</removeAfterAdding>
@@ -84,7 +84,7 @@
     <displayOrderInCategory>202</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <geneType>Xenogene</geneType>
         <props Class="XylXenos.BonusGenesProperties">
           <removeAfterAdding>true</removeAfterAdding>
@@ -121,7 +121,7 @@
     <canGenerateInGeneSet>false</canGenerateInGeneSet>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <showInXenotypeCreation>false</showInXenotypeCreation>
         <props Class="XylXenos.BonusGenesProperties">
           <removeAfterAdding>true</removeAfterAdding>

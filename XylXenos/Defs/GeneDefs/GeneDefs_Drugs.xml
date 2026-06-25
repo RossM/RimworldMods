@@ -21,7 +21,7 @@
       <XylGlobalAddictionChanceFactor>2.0</XylGlobalAddictionChanceFactor>
     </statFactors>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <showInDrugPolicies>true</showInDrugPolicies>
       </li>
     </modExtensions>
@@ -46,7 +46,7 @@
       <XylGlobalAddictionChanceFactor>0.7</XylGlobalAddictionChanceFactor>
     </statFactors>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <showInDrugPolicies>true</showInDrugPolicies>
       </li>
     </modExtensions>
@@ -74,7 +74,7 @@
       <DrugDesire>2</DrugDesire>
     </suppressedTraits>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <showInDrugPolicies>true</showInDrugPolicies>
         <startingItems>
           <li>

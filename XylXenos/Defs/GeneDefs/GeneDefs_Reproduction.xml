@@ -34,7 +34,7 @@
       </suffixSymbols>
     </symbolPack>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <femaleChance>1.0</femaleChance>
         <geneType>Endogene</geneType>
       </li>
@@ -48,7 +48,7 @@
     <displayOrderInCategory>301</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyFemale</iconPath>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <femaleChance>0.75</femaleChance>
         <geneType>Endogene</geneType>
       </li>
@@ -62,7 +62,7 @@
     <displayOrderInCategory>302</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyMale</iconPath>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <femaleChance>0.25</femaleChance>
         <geneType>Endogene</geneType>
       </li>
@@ -91,7 +91,7 @@
       </suffixSymbols>
     </symbolPack>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <femaleChance>0.0</femaleChance>
         <geneType>Endogene</geneType>
       </li>
@@ -111,7 +111,7 @@
       <li>XenotypeStrength</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <xenotypeStrength>1</xenotypeStrength>
       </li>
     </modExtensions>
@@ -130,7 +130,7 @@
       <li>XenotypeStrength</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <xenotypeStrength>-1</xenotypeStrength>
       </li>
     </modExtensions>
@@ -147,7 +147,7 @@
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <minAgeActive>16</minAgeActive>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <gender>Female</gender>
         <hediffGivers>
           <li Class="HediffGiver_Random">
@@ -171,7 +171,7 @@
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <minAgeActive>16</minAgeActive>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <props Class="XylXenos.LoveEuphoriaProperties">
           <need>XylLovin</need>
           <hediffs>

@@ -16,7 +16,7 @@
       <Recluse />
     </suppressedTraits>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>
@@ -119,7 +119,7 @@
     <displayOrderInCategory>101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Moody</iconPath>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <hediffGivers>
           <li Class="XylXenos.HediffGiver_RandomExt">
             <hediff>XylMoody</hediff>

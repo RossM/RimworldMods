@@ -19,7 +19,7 @@
       <li>HairStyleMale</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <gender>Male</gender>
       </li>
     </modExtensions>
@@ -42,7 +42,7 @@
       <li>HairStyleMale</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <gender>Male</gender>
       </li>
     </modExtensions>
@@ -65,7 +65,7 @@
       <li>HairStyleMale</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <gender>Male</gender>
       </li>
     </modExtensions>
@@ -88,7 +88,7 @@
       <li>HairStyleFemale</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <gender>Female</gender>
       </li>
     </modExtensions>
@@ -111,7 +111,7 @@
       <li>HairStyleFemale</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <gender>Female</gender>
       </li>
     </modExtensions>
@@ -134,7 +134,7 @@
       <li>HairStyleFemale</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <gender>Female</gender>
       </li>
     </modExtensions>

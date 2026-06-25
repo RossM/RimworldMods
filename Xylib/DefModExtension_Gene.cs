@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace XylXenos;
+namespace Xylib;
 
 public class GeneIngestionThoughtOverride
 {
@@ -14,7 +14,7 @@ public class JoyGiverFactor
     public JoyGiverDef joyGiver;
     public float factor = 1.0f;
 
-    [UsedFromReflection]
+    [UsedImplicitly]
     public void LoadDataFromXmlCustom(XmlNode xmlRoot)
     {
         DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "joyGiver", xmlRoot.Name);
@@ -324,14 +324,10 @@ public class DefModExtension_Gene : DefModExtension
         foreach (var configError in base.ConfigErrors())
             yield return configError;
 
-        var geneClass = (parent as GeneDef)?.geneClass ?? (parent as GeneTemplateDef)?.geneClass;
-        if (geneClass == null)
-        {
-            yield return $"{GetType().Name} may only be applied to GeneDef or GeneTemplateDef";
-            yield break;
-        }
-
-        if (!typeof(GeneExt).IsAssignableFrom(geneClass))
+        var fieldDef = parent?.GetType().GetField("geneClass");
+        if (fieldDef == null || fieldDef.FieldType != typeof(Type))
+            yield return "parent is not GeneDef or GeneTemplateDef";
+        else if (!typeof(GeneExt).IsAssignableFrom((Type)fieldDef.GetValue(parent)))
             yield return "geneClass is not GeneExt or subclass thereof";
 
         if (props != null)
@@ -347,29 +343,11 @@ public class DefModExtension_Gene : DefModExtension
 
         parent = parentDef;
 
-        GeneDefExtensions.defExtCache.Clear();
+        Extensions.defExtCache.Clear();
 
-        switch (parentDef)
-        {
-            case GeneDef geneDef:
-            {
-                if (geneDef.geneClass == typeof(Gene))
-                    geneDef.geneClass = typeof(GeneExt);
-                break;
-            }
-            case GeneTemplateDef templateDef:
-            {
-                if (templateDef.geneClass == typeof(Gene))
-                    templateDef.geneClass = typeof(GeneExt);
-                break;
-            }
-            default:
-            {
-                Log.Warning(
-                    $"XylXenos DefExt is applied to def other than GeneDef or GeneTemplateDef: {parentDef.GetType().Name} {parentDef.defName}");
-                break;
-            }
-        }
+        var fieldDef = parentDef.GetType().GetField("geneClass");
+        if (fieldDef != null && fieldDef.FieldType == typeof(Type) && (Type)fieldDef.GetValue(parentDef) == typeof(Gene))
+            fieldDef.SetValue(parentDef, typeof(GeneExt));
 
         props?.ResolveReferences(parentDef);
     }

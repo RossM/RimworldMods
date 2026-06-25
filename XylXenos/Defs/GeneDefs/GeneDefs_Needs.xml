@@ -19,7 +19,7 @@
       <li>XylWetness</li>
     </enablesNeeds>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <joyGiverChanceFactors>
           <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
         </joyGiverChanceFactors>
@@ -89,7 +89,7 @@
       <li>Joy</li>
     </disablesNeeds>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
       </li>
     </modExtensions>
   </GeneDef>

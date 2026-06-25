@@ -81,7 +81,7 @@
     <canBeAddicted>false</canBeAddicted>
     <generateAddictionGenes>false</generateAddictionGenes>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Chemical">
+      <li Class="Xylib.DefModExtension_Chemical">
         <requiredGenesAll>
           <li>XylLithoid</li>
           <li>XylPetrification</li>
@@ -169,7 +169,7 @@
     <canBeAddicted>false</canBeAddicted>
     <generateAddictionGenes>false</generateAddictionGenes>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Chemical">
+      <li Class="Xylib.DefModExtension_Chemical">
         <requiredGenesAll>
           <li>XylLithoid</li>
         </requiredGenesAll>
@@ -454,7 +454,7 @@
     <geneOverdoseChanceFactorResist>0.5</geneOverdoseChanceFactorResist>
     <geneOverdoseChanceFactorImmune>0</geneOverdoseChanceFactorImmune>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Chemical">
+      <li Class="Xylib.DefModExtension_Chemical">
         <requiredGenesAll>
           <li>XylLithoid</li>
         </requiredGenesAll>

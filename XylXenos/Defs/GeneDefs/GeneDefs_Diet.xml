@@ -28,7 +28,7 @@
       <XylRawMeatFoodPoisonChanceFactor>0</XylRawMeatFoodPoisonChanceFactor>
     </statFactors>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <ingestionThoughtOverrides>
           <li>
             <meatSources>
@@ -65,7 +65,7 @@
       <XylRawNonMeatFoodPoisonChanceFactor>0</XylRawNonMeatFoodPoisonChanceFactor>
     </statFactors>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <ingestionThoughtOverrides>
           <li>
             <meatSources>
@@ -97,7 +97,7 @@
       <XylRawFungusNutritionFactor>1.8</XylRawFungusNutritionFactor>
     </statFactors>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <addDesignators>
           <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
         </addDesignators>
@@ -117,7 +117,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_MeatDependence</iconPath>
     <minAgeActive>13</minAgeActive>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_Gene">
+      <li Class="Xylib.DefModExtension_Gene">
         <ingestionThoughtOverrides>
           <li>
             <meatSources>
