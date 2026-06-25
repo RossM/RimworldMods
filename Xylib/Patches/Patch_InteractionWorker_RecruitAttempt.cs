@@ -1,4 +1,4 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(InteractionWorker_RecruitAttempt))]
 public static class Patch_InteractionWorker_RecruitAttempt

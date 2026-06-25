@@ -1,4 +1,4 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(SkillUI))]
 public static class Patch_SkillUI

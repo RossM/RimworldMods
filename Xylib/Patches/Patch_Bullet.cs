@@ -1,11 +1,11 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Bullet))]
 public static class Patch_Bullet
 {
     [Feature(nameof(XStatDefOf.XylRangedDodgeChance))]
     [HarmonyPrefix]
-    [HarmonyPatch(nameof(Bullet.Impact))]
+    [HarmonyPatch("Impact")]
     public static void Impact_Prefix(ref Thing hitThing, bool blockedByShield)
     {
         if (hitThing is Pawn pawn && !blockedByShield)

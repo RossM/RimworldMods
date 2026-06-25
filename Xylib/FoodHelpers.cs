@@ -1,4 +1,4 @@
-namespace XylXenos;
+namespace Xylib;
 
 public static class FoodHelpers
 {
@@ -141,18 +141,5 @@ public static class FoodHelpers
         }
 
         return false;
-    }
-
-    public static float FoodOptimalityBonus(Pawn eater, Thing foodSource)
-    {
-        // Check if this food satisfies a diet dependency
-        float extra = 0f;
-        foreach (var hediff in eater.HediffsOfType<Hediff_DietDependency>())
-        {
-            if (hediff.ValidateFood(foodSource) && hediff.ShouldSatisfy)
-                extra += 100f;
-        }
-
-        return extra;
     }
 }

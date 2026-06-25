@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
 
-namespace XylXenos.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(SlaveRebellionUtility))]
 public static class Patch_SlaveRebellionUtility

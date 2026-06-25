@@ -1,4 +1,4 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(InteractionWorker_EnslaveAttempt))]
 public static class Patch_InteractionWorker_EnslaveAttempt

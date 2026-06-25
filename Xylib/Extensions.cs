@@ -172,5 +172,10 @@ public static class Extensions
         }
     }
 
+    extension(ThingDef thingDef)
+    {
+        public bool IsRawFoodOrCorpse => thingDef.IsRawHumanFood() || thingDef.IsCorpse;
+    }
+
     public static readonly Dictionary<int, DefModExtension_Gene> defExtCache = new();
 }

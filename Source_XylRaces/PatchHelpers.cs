@@ -378,4 +378,17 @@ public static class PatchHelpers
         return caster is Pawn pawn && pawn.HasActiveGene(DefOf.XylEcholocation) && PawnUtility.IsBiologicallyOrArtificiallyBlind(pawn)
                && pawn.health.capacities.GetLevel(PawnCapacityDefOf.Hearing) >= 0.2f;
     }
+
+    public static float FoodOptimalityBonus(Pawn eater, Thing foodSource)
+    {
+        // Check if this food satisfies a diet dependency
+        float extra = 0f;
+        foreach (var hediff in eater.HediffsOfType<Hediff_DietDependency>())
+        {
+            if (hediff.ValidateFood(foodSource) && hediff.ShouldSatisfy)
+                extra += 100f;
+        }
+
+        return extra;
+    }
 }
