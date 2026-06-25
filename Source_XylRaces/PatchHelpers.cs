@@ -127,7 +127,10 @@ public static class PatchHelpers
         }
     }
 
-    public static void AddDesignators(DesignationCategoryDef __instance, ref IEnumerable<Designator> __result, Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ideoBuildingDesignatorsCached)
+    public static void AddDesignators(
+        DesignationCategoryDef __instance,
+        ref IEnumerable<Designator> __result,
+        Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ideoBuildingDesignatorsCached)
     {
         HashSet<Designator> geneDesignators = [];
 
@@ -190,26 +193,6 @@ public static class PatchHelpers
         }
 
         return factor;
-    }
-
-    public static void ModifyGenderByGenes(Pawn pawn, PawnGenerationRequest request, XenotypeDef xenotype)
-    {
-        if (request.FixedGender != null)
-            return;
-
-        GeneDef gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
-                       request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
-                       request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
-                       xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
-        if (gene?.DefExt?.femaleChance is not { } chance)
-            return;
-
-        pawn.gender = Rand.Chance(chance) ? Gender.Female : Gender.Male;
-    }
-
-    public static bool HasGenderRatio(GeneDef geneDef)
-    {
-        return geneDef.DefExt?.femaleChance != null;
     }
 
     public static void GenerateCongenitalHediffs(Pawn pawn)

@@ -1,12 +1,12 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(MapComponent))]
-public static class Patch_MapComponent
+[HarmonyPatch(typeof(Hediff))]
+public static class Patch_Hediff
 {
     [Feature(typeof(EventManager))]
     [HarmonyPostfix]
-    [HarmonyPatch(nameof(MapComponent.FinalizeInit))]
-    public static void FinalizeInit_Postfix(MapComponent __instance)
+    [HarmonyPatch(nameof(Hediff.PostAdd))]
+    public static void PostAdd_Postfix(Hediff __instance)
     {
         if (__instance is IEventListener target)
             target.RegisterWith(EventManager.Instance);
@@ -14,8 +14,8 @@ public static class Patch_MapComponent
 
     [Feature(typeof(EventManager))]
     [HarmonyPostfix]
-    [HarmonyPatch(nameof(MapComponent.MapRemoved))]
-    public static void MapRemoved_Postfix(MapComponent __instance)
+    [HarmonyPatch(nameof(Hediff.PostRemoved))]
+    public static void PostRemoved_Postfix(Hediff __instance)
     {
         if (__instance is IEventListener target)
             EventManager.Instance.UnregisterAll(target);

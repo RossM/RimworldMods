@@ -1,12 +1,12 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(HediffComp))]
-public static class Patch_HediffComp
+[HarmonyPatch(typeof(ThingComp))]
+public static class Patch_ThingComp
 {
     [Feature(typeof(EventManager))]
     [HarmonyPostfix]
-    [HarmonyPatch(nameof(HediffComp.CompPostPostAdd))]
-    public static void CompPostPostAdd_Postfix(HediffComp __instance)
+    [HarmonyPatch(nameof(ThingComp.Initialize))]
+    public static void Initialize_Postfix(ThingComp __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (__instance is IEventListener target)
@@ -15,8 +15,8 @@ public static class Patch_HediffComp
 
     [Feature(typeof(EventManager))]
     [HarmonyPostfix]
-    [HarmonyPatch(nameof(HediffComp.CompPostPostRemoved))]
-    public static void CompPostPostRemoved_Postfix(HediffComp __instance)
+    [HarmonyPatch(nameof(ThingComp.PostDestroy))]
+    public static void PostDestroy_Postfix(ThingComp __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (__instance is IEventListener target)
