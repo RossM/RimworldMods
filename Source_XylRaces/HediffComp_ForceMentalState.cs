@@ -16,6 +16,8 @@ public class HediffComp_ForceMentalState : HediffComp
 {
     public HediffCompProperties_ForceMentalState Props => (HediffCompProperties_ForceMentalState)props;
 
+    public override bool CompShouldRemove => Pawn.mindState.mentalStateHandler.CurStateDef != Props.mentalState;
+
     public override void CompPostPostAdd(DamageInfo? dinfo)
     {
         Pawn.mindState.mentalStateHandler.TryStartMentalState(Props.mentalState, forced: true, forceWake: true, causedByDamage: true);
