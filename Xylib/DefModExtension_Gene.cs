@@ -209,13 +209,6 @@ public class DefModExtension_Gene : DefModExtension
     [CanBeNull] public List<HediffGiver> hediffGivers;
 
     /// <summary>
-    ///     Hediff givers which are triggered when the pawn is created, either as a new adult or as a
-    ///     baby. These are not removed if the gene is lost, and are not added if the gene is added
-    ///     to an existing pawn.
-    /// </summary>
-    [CanBeNull] public List<HediffGiver_Event> congenitalHediffs;
-
-    /// <summary>
     ///     Starting items which have a chance of being generated on the pawn as one of the player's
     ///     starting colonists. A colonist can only have two starting items so these might not be
     ///     added even if the chance is 100%.

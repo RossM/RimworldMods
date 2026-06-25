@@ -22,16 +22,6 @@
     </customEffectDescriptions>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <congenitalHediffs>
-          <li>
-            <chance>0.15</chance>
-            <hediff>Blindness</hediff>
-            <partsToAffect>
-              <li>Eye</li>
-            </partsToAffect>
-            <countToAffect>2</countToAffect>
-          </li>
-        </congenitalHediffs>
         <extraApparel>
           <li>
             <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
@@ -47,6 +37,18 @@
                 <partsToAffect>
                   <li>Head</li>
                 </partsToAffect>
+              </li>
+            </hediffs>
+          </li>
+          <li Class="Xylib.GeneCompProperties_CongenitalHediffs">
+            <hediffs>
+              <li>
+                <chance>0.15</chance>
+                <hediff>Blindness</hediff>
+                <partsToAffect>
+                  <li>Eye</li>
+                </partsToAffect>
+                <countToAffect>2</countToAffect>
               </li>
             </hediffs>
           </li>

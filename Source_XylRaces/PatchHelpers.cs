@@ -147,20 +147,6 @@ public static class PatchHelpers
         return outGene != null;
     }
 
-    public static void GenerateCongenitalHediffs(Pawn pawn)
-    {
-        foreach (GeneWithComps gene in pawn.ActiveGenesOfType<GeneWithComps>())
-        {
-            if (!gene.DefExt.congenitalHediffs.NullOrEmpty())
-            {
-                foreach (var congenitalHediff in gene.DefExt.congenitalHediffs)
-                {
-                    congenitalHediff.EventOccurred(pawn);
-                }
-            }
-        }
-    }
-
     public static float GenerateDistinctiveFactionColor(Faction faction, IEnumerable<Faction> allFactions)
     {
         const int candidateCount = 21;

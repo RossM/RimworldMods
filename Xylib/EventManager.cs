@@ -76,6 +76,11 @@ public static class EventDefOf
     public static EventDef PostDowned;
 
     /// <summary>
+    ///     Called after <see cref="PawnGenerator.GenerateInitialHediffs" />.
+    /// </summary>
+    public static EventDef PostGenerateInitialHediffs;
+
+    /// <summary>
     ///     Called after <see cref="PawnGenerator.GenerateNewPawnInternal" />.
     ///     This hook passes a <see cref="PawnGenerationRequest" /> as its "data" parameter.
     /// </summary>

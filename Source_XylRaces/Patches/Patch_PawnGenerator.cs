@@ -23,12 +23,12 @@ public static class Patch_PawnGenerator
         return false;
     }
 
-    [Feature(nameof(DefModExtension_Gene.congenitalHediffs))]
+    [Feature(nameof(EventDefOf.PostGenerateInitialHediffs))]
     [HarmonyPostfix]
     [HarmonyPatch("GenerateInitialHediffs")]
     public static void GenerateInitialHediffs_Postfix(Pawn pawn)
     {
-        PatchHelpers.GenerateCongenitalHediffs(pawn);
+        EventManager.Instance.Notify(EventDefOf.PostGenerateInitialHediffs, pawn);
     }
 
     [Feature(typeof(XenotypeSetWithDefault))]

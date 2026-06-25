@@ -2,74 +2,78 @@
 
 <Defs>
 
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PreTakeDamage</defName>
     <dataType>DamageInfo</dataType>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
   
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostGenesChanged</defName>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
   
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostHediffsChanged</defName>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
   
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostCheckForStateChange</defName>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
   
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostApparelChanged</defName>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
   
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostSatisfyChemicalGenes</defName>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
   
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostDiscard</defName>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
   
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostPostMake</defName>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
   
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostLoadedGame</defName>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
   
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>GlobalPostGameDispose</defName>
     <global>true</global>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
   
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PawnGenerationEarly</defName>
     <dataType>Xylib.PawnGenerationEarlyData</dataType>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
 
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostDowned</defName>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
 
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostPawnKilled</defName>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
 
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostLovin</defName>
     <dataType>Pawn</dataType>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
 
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostRedressPawn</defName>
     <dataType>PawnGenerationRequest</dataType>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
 
-  <Xylib.Eventdef>
+  <Xylib.EventDef>
     <defName>PostGenerateNewPawn</defName>
     <dataType>PawnGenerationRequest</dataType>
-  </Xylib.Eventdef>
+  </Xylib.EventDef>
+
+  <Xylib.EventDef>
+    <defName>PostGenerateInitialHediffs</defName>
+  </Xylib.EventDef>
 
 </Defs>
