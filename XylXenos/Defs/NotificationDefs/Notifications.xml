@@ -45,8 +45,8 @@
   </Xylib.EventDef>
   
   <Xylib.EventDef>
-    <defName>PawnGenerationEarly</defName>
-    <dataType>Xylib.PawnGenerationEarlyData</dataType>
+    <defName>PreGeneratePawnBioAndName</defName>
+    <dataType>Xylib.PawnGenerationData</dataType>
   </Xylib.EventDef>
 
   <Xylib.EventDef>

@@ -5,7 +5,7 @@ public class Patch_PawnGenerator
 {
     private static XenotypeDef xenotypeOverride;
 
-    [Feature(nameof(EventDefOf.PawnGenerationEarly))]
+    [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
     [InfixPrefix(typeof(PawnGenerator), "GenerateGenes")]
     [InfixPatch("TryGenerateNewPawnInternal")]
     public static void GenerateGenes_Prefix(ref XenotypeDef xenotype)
@@ -13,7 +13,7 @@ public class Patch_PawnGenerator
         xenotype = xenotypeOverride;
     }
 
-    [Feature(nameof(EventDefOf.PawnGenerationEarly))]
+    [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
     [InfixPrefix(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
     [InfixPatch("TryGenerateNewPawnInternal")]
     public static void GiveAppropriateBioAndNameTo_Prefix(
@@ -21,8 +21,8 @@ public class Patch_PawnGenerator
         PawnGenerationRequest request,
         ref XenotypeDef xenotype)
     {
-        var data = new PawnGenerationEarlyData(request, xenotype);
-        EventManager.Instance.Notify(EventDefOf.PawnGenerationEarly, pawn, data);
+        var data = new PawnGenerationData(request, xenotype);
+        EventManager.Instance.Notify(EventDefOf.PreGeneratePawnBioAndName, pawn, data);
 
         xenotypeOverride = xenotype = data.xenotype;
     }

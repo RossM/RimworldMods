@@ -5,7 +5,7 @@ public static class StaticEventHandlers
 {
     public class Listener : IEventListener
     {
-        public void Notify_PawnGenerationEarly(Thing thing, PawnGenerationEarlyData data)
+        public void Notify_PawnGenerationEarly(Thing thing, PawnGenerationData data)
         {
             if (thing is not Pawn pawn)
                 return;
@@ -15,7 +15,7 @@ public static class StaticEventHandlers
         public void RegisterWith(EventManager manager)
         {
             Log.Message("StaticEventHandlers.Listener.RegisterWith");
-            manager.Register<PawnGenerationEarlyData>(EventDefOf.PawnGenerationEarly, null, Notify_PawnGenerationEarly,
+            manager.Register<PawnGenerationData>(EventDefOf.PreGeneratePawnBioAndName, null, Notify_PawnGenerationEarly,
                 priority: -100);
         }
 

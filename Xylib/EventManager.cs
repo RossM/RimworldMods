@@ -1,6 +1,6 @@
 ﻿namespace Xylib;
 
-public class PawnGenerationEarlyData(PawnGenerationRequest request, XenotypeDef xenotype)
+public class PawnGenerationData(PawnGenerationRequest request, XenotypeDef xenotype)
 {
     public PawnGenerationRequest request = request;
     public XenotypeDef xenotype = xenotype;
@@ -46,14 +46,6 @@ public static class EventDefOf
     ///     This hook passes null as its "pawn" parameter, so can only be used as a global hook.
     /// </summary>
     public static EventDef GlobalPostGameDispose;
-
-    /// <summary>
-    ///     Called inside <see cref="PawnGenerator.TryGenerateNewPawnInternal" /> before the <see cref="Pawn" />'s bio and name
-    ///     are generated.
-    ///     This hook can be used to modify the pawn's <see cref="Gender" /> and <see cref="XenotypeDef" /> during generation.
-    ///     This hook passes a <see cref="PawnGenerationEarlyData" /> as the "data" parameter.
-    /// </summary>
-    public static EventDef PawnGenerationEarly;
 
     /// <summary>
     ///     Called after <see cref="Pawn_ApparelTracker.Notify_ApparelChanged" />.
@@ -134,6 +126,14 @@ public static class EventDefOf
     ///     Called after <see cref="GeneUtility.SatisfyChemicalGenes" />.
     /// </summary>
     public static EventDef PostSatisfyChemicalGenes;
+
+    /// <summary>
+    ///     Called inside <see cref="PawnGenerator.TryGenerateNewPawnInternal" /> before the <see cref="Pawn" />'s bio and name
+    ///     are generated.
+    ///     This hook can be used to modify the pawn's <see cref="Gender" /> and <see cref="XenotypeDef" /> during generation.
+    ///     This hook passes a <see cref="PawnGenerationData" /> as the "data" parameter.
+    /// </summary>
+    public static EventDef PreGeneratePawnBioAndName;
 
     /// <summary>
     ///     Called before <see cref="Thing.TakeDamage" />.

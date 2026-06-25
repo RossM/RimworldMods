@@ -28,7 +28,7 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, IEventListener
         RegisterWith(EventManager.Instance);
     }
 
-    public void Notify_PawnGenerationEarly(Thing thing, PawnGenerationEarlyData data)
+    public void Notify_PawnGenerationEarly(Thing thing, PawnGenerationData data)
     {
         var pawn = thing as Pawn;
         if (pawn == null)
@@ -49,7 +49,7 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, IEventListener
 
     public void RegisterWith(EventManager manager)
     {
-        manager.Register<PawnGenerationEarlyData>(EventDefOf.PawnGenerationEarly, null, Notify_PawnGenerationEarly);
+        manager.Register<PawnGenerationData>(EventDefOf.PreGeneratePawnBioAndName, null, Notify_PawnGenerationEarly);
     }
 
     public void PreUnregister(EventManager manager)
