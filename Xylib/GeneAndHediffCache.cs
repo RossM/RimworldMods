@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace XylXenos;
+namespace Xylib;
 
 public class GeneAndHediffCache : INotificationListener, IPawnData
 {
