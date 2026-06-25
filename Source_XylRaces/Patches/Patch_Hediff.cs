@@ -3,21 +3,21 @@
 [HarmonyPatch(typeof(Hediff))]
 public static class Patch_Hediff
 {
-    [Feature(typeof(NotificationManager))]
+    [Feature(typeof(EventManager))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Hediff.PostAdd))]
     public static void PostAdd_Postfix(Hediff __instance)
     {
-        if (__instance is INotificationListener target)
-            target.RegisterWith(NotificationManager.Instance);
+        if (__instance is IEventListener target)
+            target.RegisterWith(EventManager.Instance);
     }
 
-    [Feature(typeof(NotificationManager))]
+    [Feature(typeof(EventManager))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Hediff.PostRemoved))]
     public static void PostRemoved_Postfix(Hediff __instance)
     {
-        if (__instance is INotificationListener target)
-            NotificationManager.Instance.UnregisterAll(target);
+        if (__instance is IEventListener target)
+            EventManager.Instance.UnregisterAll(target);
     }
 }

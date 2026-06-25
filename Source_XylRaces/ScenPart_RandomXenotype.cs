@@ -1,7 +1,7 @@
 ﻿namespace XylXenos;
 
 [UsedFromXml]
-public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListener
+public class ScenPart_RandomXenotype : ScenPart_PawnModifier, IEventListener
 {
     public bool allowArchite;
 
@@ -25,7 +25,7 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListe
 
     public override void PreConfigure()
     {
-        RegisterWith(NotificationManager.Instance);
+        RegisterWith(EventManager.Instance);
     }
 
     public void Notify_PawnGenerationEarly(Thing thing, PawnGenerationEarlyData data)
@@ -47,12 +47,12 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, INotificationListe
         }
     }
 
-    public void RegisterWith(NotificationManager manager)
+    public void RegisterWith(EventManager manager)
     {
-        manager.Register<PawnGenerationEarlyData>(NotificationDefOf.PawnGenerationEarly, null, Notify_PawnGenerationEarly);
+        manager.Register<PawnGenerationEarlyData>(EventDefOf.PawnGenerationEarly, null, Notify_PawnGenerationEarly);
     }
 
-    public void PreUnregister(NotificationManager manager)
+    public void PreUnregister(EventManager manager)
     {
     }
 }

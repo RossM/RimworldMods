@@ -25,7 +25,7 @@ public static class Patch_PawnGenerator
         return false;
     }
 
-    [Feature(nameof(NotificationDefOf.PawnGenerationEarly))]
+    [Feature(nameof(EventDefOf.PawnGenerationEarly))]
     [InfixPrefix(typeof(PawnGenerator), "GenerateGenes")]
     [InfixPatch("TryGenerateNewPawnInternal")]
     public static void GenerateGenes_Prefix(ref XenotypeDef xenotype)
@@ -42,7 +42,7 @@ public static class Patch_PawnGenerator
     }
 
     [Feature(nameof(DefModExtension_Gene.femaleChance))]
-    [Feature(nameof(NotificationDefOf.PawnGenerationEarly))]
+    [Feature(nameof(EventDefOf.PawnGenerationEarly))]
     [InfixPrefix(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
     [InfixPatch("TryGenerateNewPawnInternal")]
     public static void GiveAppropriateBioAndNameTo_Prefix(
@@ -51,29 +51,29 @@ public static class Patch_PawnGenerator
         XenotypeDef xenotype)
     {
         var data = new PawnGenerationEarlyData(request, xenotype);
-        NotificationManager.Instance.Notify(NotificationDefOf.PawnGenerationEarly, pawn, data);
+        EventManager.Instance.Notify(EventDefOf.PawnGenerationEarly, pawn, data);
 
         xenotypeOverride = data.xenotype;
 
         PatchHelpers.ModifyGenderByGenes(pawn, request, data.xenotype);
     }
 
-    [Feature(nameof(NotificationDefOf.PostGenerateNewPawn))]
+    [Feature(nameof(EventDefOf.PostGenerateNewPawn))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(PawnGenerator.RedressPawn))]
     public static void RedressPawn_Postfix(Pawn pawn, PawnGenerationRequest request)
     {
-        NotificationManager.Instance.Notify(NotificationDefOf.PostRedressPawn, pawn, request);
+        EventManager.Instance.Notify(EventDefOf.PostRedressPawn, pawn, request);
     }
 
-    [Feature(nameof(NotificationDefOf.PostGenerateNewPawn))]
+    [Feature(nameof(EventDefOf.PostGenerateNewPawn))]
     [HarmonyPostfix]
     [HarmonyPatch("TryGenerateNewPawnInternal")]
     public static void TryGenerateNewPawnInternal_Postfix(ref Pawn __result, ref PawnGenerationRequest request)
     {
         if (__result == null)
             return;
-        NotificationManager.Instance.Notify(NotificationDefOf.PostGenerateNewPawn, __result, request);
+        EventManager.Instance.Notify(EventDefOf.PostGenerateNewPawn, __result, request);
     }
 
     [Feature(typeof(XenotypeSetWithDefault))]

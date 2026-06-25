@@ -27,9 +27,9 @@ public class Gene_LoveEuphoria : GeneExt
         partner.needs.TryGetNeed(Props.need)?.CurLevel = 1f;
     }
 
-    public override void RegisterWith(NotificationManager manager)
+    public override void RegisterWith(EventManager manager)
     {
         base.RegisterWith(manager);
-        manager.Register<Pawn>(NotificationDefOf.PostLovin, pawn, Notify_PostLovin);
+        manager.Register<Pawn>(EventDefOf.PostLovin, pawn, Notify_PostLovin);
     }
 }

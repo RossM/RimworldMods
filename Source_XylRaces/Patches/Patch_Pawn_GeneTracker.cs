@@ -15,11 +15,11 @@ public static class Patch_Pawn_GeneTracker
             __result *= __instance.pawn.GetStatValue(DefOf.XylGlobalAddictionChanceFactor);
     }
 
-    [Feature(nameof(NotificationDefOf.PostGenesChanged))]
+    [Feature(nameof(EventDefOf.PostGenesChanged))]
     [HarmonyPostfix]
     [HarmonyPatch("Notify_GenesChanged")]
     public static void Notify_GenesChanged_Postfix(Pawn_GeneTracker __instance)
     {
-        NotificationManager.Instance.Notify(NotificationDefOf.PostGenesChanged, __instance.pawn);
+        EventManager.Instance.Notify(EventDefOf.PostGenesChanged, __instance.pawn);
     }
 }

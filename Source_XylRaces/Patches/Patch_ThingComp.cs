@@ -3,23 +3,23 @@
 [HarmonyPatch(typeof(ThingComp))]
 public static class Patch_ThingComp
 {
-    [Feature(typeof(NotificationManager))]
+    [Feature(typeof(EventManager))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ThingComp.Initialize))]
     public static void Initialize_Postfix(ThingComp __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (__instance is INotificationListener target)
-            target.RegisterWith(NotificationManager.Instance);
+        if (__instance is IEventListener target)
+            target.RegisterWith(EventManager.Instance);
     }
 
-    [Feature(typeof(NotificationManager))]
+    [Feature(typeof(EventManager))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ThingComp.PostDestroy))]
     public static void PostDestroy_Postfix(ThingComp __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (__instance is INotificationListener target)
-            NotificationManager.Instance.UnregisterAll(target);
+        if (__instance is IEventListener target)
+            EventManager.Instance.UnregisterAll(target);
     }
 }

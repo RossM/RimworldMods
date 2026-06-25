@@ -11,7 +11,7 @@ public class DefModExtension_Hediff_DietDependency : DefModExtension
 }
 
 [UsedFromXml]
-public class Hediff_DietDependency : HediffWithComps, INotificationListener
+public class Hediff_DietDependency : HediffWithComps, IEventListener
 {
     private enum Stages
     {
@@ -169,12 +169,12 @@ public class Hediff_DietDependency : HediffWithComps, INotificationListener
         Severity = 0;
     }
 
-    public void RegisterWith(NotificationManager manager)
+    public void RegisterWith(EventManager manager)
     {
-        manager.Register(NotificationDefOf.PostSatisfyChemicalGenes, pawn, Notify_PostSatisfyGenes);
+        manager.Register(EventDefOf.PostSatisfyChemicalGenes, pawn, Notify_PostSatisfyGenes);
     }
 
-    public void PreUnregister(NotificationManager manager)
+    public void PreUnregister(EventManager manager)
     {
     }
 }

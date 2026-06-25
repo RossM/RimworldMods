@@ -12,7 +12,7 @@ public interface IPawnData
 /// </summary>
 public static class PawnExtraData<T> where T : IPawnData, new()
 {
-    private class Listener : INotificationListener
+    private class Listener : IEventListener
     {
         private void Notify_PawnDiscarded(Thing thing)
         {
@@ -24,13 +24,13 @@ public static class PawnExtraData<T> where T : IPawnData, new()
             data.Clear();
         }
 
-        public void RegisterWith(NotificationManager manager)
+        public void RegisterWith(EventManager manager)
         {
-            manager.Register(NotificationDefOf.PostDiscard, null, Notify_PawnDiscarded);
-            manager.Register(NotificationDefOf.GlobalPostGameDispose, null, Notify_PostGameDispose);
+            manager.Register(EventDefOf.PostDiscard, null, Notify_PawnDiscarded);
+            manager.Register(EventDefOf.GlobalPostGameDispose, null, Notify_PostGameDispose);
         }
 
-        public void PreUnregister(NotificationManager manager)
+        public void PreUnregister(EventManager manager)
         {
         }
     }
@@ -41,7 +41,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
 
     static PawnExtraData()
     {
-        NotificationManager.staticListeners.Add(listener);
+        EventManager.staticListeners.Add(listener);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -2,74 +2,74 @@
 
 <Defs>
 
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PreTakeDamage</defName>
     <dataType>DamageInfo</dataType>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
   
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostGenesChanged</defName>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
   
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostHediffsChanged</defName>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
   
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostCheckForStateChange</defName>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
   
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostApparelChanged</defName>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
   
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostSatisfyChemicalGenes</defName>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
   
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostDiscard</defName>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
   
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostPostMake</defName>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
   
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostLoadedGame</defName>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
   
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>GlobalPostGameDispose</defName>
     <global>true</global>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
   
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PawnGenerationEarly</defName>
     <dataType>Xylib.PawnGenerationEarlyData</dataType>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
 
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostDowned</defName>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
 
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostPawnKilled</defName>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
 
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostLovin</defName>
     <dataType>Pawn</dataType>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
 
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostRedressPawn</defName>
     <dataType>PawnGenerationRequest</dataType>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
 
-  <Xylib.NotificationDef>
+  <Xylib.Eventdef>
     <defName>PostGenerateNewPawn</defName>
     <dataType>PawnGenerationRequest</dataType>
-  </Xylib.NotificationDef>
+  </Xylib.Eventdef>
 
 </Defs>

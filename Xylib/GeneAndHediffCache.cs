@@ -2,7 +2,7 @@
 
 namespace Xylib;
 
-public class GeneAndHediffCache : INotificationListener, IPawnData
+public class GeneAndHediffCache : IEventListener, IPawnData
 {
     public Pawn pawn;
 
@@ -18,7 +18,7 @@ public class GeneAndHediffCache : INotificationListener, IPawnData
     public void Init(Pawn pawn)
     {
         this.pawn = pawn;
-        RegisterWith(NotificationManager.Instance);
+        RegisterWith(EventManager.Instance);
     }
 
     [NotNull]
@@ -102,13 +102,13 @@ public class GeneAndHediffCache : INotificationListener, IPawnData
         hediffsByType.Clear();
     }
 
-    public void RegisterWith(NotificationManager manager)
+    public void RegisterWith(EventManager manager)
     {
-        manager.Register(NotificationDefOf.PostGenesChanged, pawn, Notify_PostGenesChanged);
-        manager.Register(NotificationDefOf.PostHediffsChanged, pawn, Notify_PostHediffsChanged);
+        manager.Register(EventDefOf.PostGenesChanged, pawn, Notify_PostGenesChanged);
+        manager.Register(EventDefOf.PostHediffsChanged, pawn, Notify_PostHediffsChanged);
     }
 
-    public void PreUnregister(NotificationManager manager)
+    public void PreUnregister(EventManager manager)
     {
     }
 }

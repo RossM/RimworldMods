@@ -1,6 +1,6 @@
 ﻿namespace Xylib;
 
-public class GeneTracker : INotificationListener, IPawnData
+public class GeneTracker : IEventListener, IPawnData
 {
     /// <summary>
     ///     The <see cref="Pawn" /> this object applies to.
@@ -77,7 +77,7 @@ public class GeneTracker : INotificationListener, IPawnData
     public void Init(Pawn pawn)
     {
         this.pawn = pawn;
-        RegisterWith(NotificationManager.Instance);
+        RegisterWith(EventManager.Instance);
         Update();
     }
 
@@ -138,13 +138,13 @@ public class GeneTracker : INotificationListener, IPawnData
         Update();
     }
 
-    public void RegisterWith(NotificationManager manager)
+    public void RegisterWith(EventManager manager)
     {
-        manager.Register(NotificationDefOf.PostGenesChanged, pawn, Notify_PostGenesChanged);
-        manager.Register(NotificationDefOf.PostLoadedGame, pawn, Notify_PostLoadedGame);
+        manager.Register(EventDefOf.PostGenesChanged, pawn, Notify_PostGenesChanged);
+        manager.Register(EventDefOf.PostLoadedGame, pawn, Notify_PostLoadedGame);
     }
 
-    public void PreUnregister(NotificationManager manager)
+    public void PreUnregister(EventManager manager)
     {
     }
 }

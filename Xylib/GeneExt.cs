@@ -1,6 +1,6 @@
 ﻿namespace Xylib;
 
-public class GeneExt : Gene, INotificationListener
+public class GeneExt : Gene, IEventListener
 {
     [NotNull]
     public DefModExtension_Gene DefExt => field ??= def.DefExt!;
@@ -111,7 +111,7 @@ public class GeneExt : Gene, INotificationListener
     public override void PostRemove()
     {
         Removed = true;
-        NotificationManager.Instance.UnregisterAll(this);
+        EventManager.Instance.UnregisterAll(this);
 
         if (!DefExt.permanentHediffs.NullOrEmpty())
         {
@@ -335,19 +335,19 @@ public class GeneExt : Gene, INotificationListener
             GenerateExtraApparel();
     }
 
-    public virtual void RegisterWith(NotificationManager manager)
+    public virtual void RegisterWith(EventManager manager)
     {
         if (!DefExt.permanentHediffs.NullOrEmpty())
-            manager.Register(NotificationDefOf.PostCheckForStateChange, pawn, Notify_HediffStateChange);
+            manager.Register(EventDefOf.PostCheckForStateChange, pawn, Notify_HediffStateChange);
 
         if (!DefExt.extraApparel.NullOrEmpty())
         {
-            manager.Register<PawnGenerationRequest>(NotificationDefOf.PostGenerateNewPawn, pawn, Notify_PostGenerateNewPawn);
-            manager.Register<PawnGenerationRequest>(NotificationDefOf.PostRedressPawn, pawn, Notify_PostRedressPawn);
+            manager.Register<PawnGenerationRequest>(EventDefOf.PostGenerateNewPawn, pawn, Notify_PostGenerateNewPawn);
+            manager.Register<PawnGenerationRequest>(EventDefOf.PostRedressPawn, pawn, Notify_PostRedressPawn);
         }
     }
 
-    public void PreUnregister(NotificationManager manager)
+    public void PreUnregister(EventManager manager)
     {
     }
 }

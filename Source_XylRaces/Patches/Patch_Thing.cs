@@ -3,17 +3,17 @@
 [HarmonyPatch(typeof(Thing))]
 public static class Patch_Thing
 {
-    [Feature(typeof(NotificationManager))]
+    [Feature(typeof(EventManager))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Thing.Destroy))]
     public static void Destroy_Postfix(Thing __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (__instance is INotificationListener target)
-            NotificationManager.Instance.UnregisterAll(target);
+        if (__instance is IEventListener target)
+            EventManager.Instance.UnregisterAll(target);
     }
 
-    [Feature(nameof(NotificationDefOf.PostDiscard))]
+    [Feature(nameof(EventDefOf.PostDiscard))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Thing.Discard))]
     public static void Discard_Postfix(Thing __instance)
@@ -21,7 +21,7 @@ public static class Patch_Thing
         if (!IsInteresting(__instance))
             return;
 
-        NotificationManager.Instance.Notify(NotificationDefOf.PostDiscard, __instance);
+        EventManager.Instance.Notify(EventDefOf.PostDiscard, __instance);
     }
 
     [Feature(nameof(FoodHelpers.GetFoodPoisonChanceFactor))]
@@ -49,22 +49,22 @@ public static class Patch_Thing
         }
     }
 
-    [Feature(typeof(NotificationManager))]
+    [Feature(typeof(EventManager))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Thing.PostMake))]
     public static void PostMake_Postfix(Thing __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (__instance is INotificationListener target)
-            target.RegisterWith(NotificationManager.Instance);
+        if (__instance is IEventListener target)
+            target.RegisterWith(EventManager.Instance);
 
         if (!IsInteresting(__instance))
             return;
 
-        NotificationManager.Instance.Notify(NotificationDefOf.PostPostMake, __instance);
+        EventManager.Instance.Notify(EventDefOf.PostPostMake, __instance);
     }
 
-    [Feature(nameof(NotificationDefOf.PreTakeDamage))]
+    [Feature(nameof(EventDefOf.PreTakeDamage))]
     [HarmonyPrefix]
     [HarmonyPatch("TakeDamage")]
     public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo)
@@ -72,7 +72,7 @@ public static class Patch_Thing
         if (!IsInteresting(__instance))
             return;
 
-        NotificationManager.Instance.Notify(NotificationDefOf.PreTakeDamage, __instance, dinfo);
+        EventManager.Instance.Notify(EventDefOf.PreTakeDamage, __instance, dinfo);
     }
 
     private static bool IsInteresting(Thing thing) => thing is ThingWithComps and not (Projectile or Plant);

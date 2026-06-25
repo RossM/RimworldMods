@@ -3,11 +3,11 @@
 [HarmonyPatch(typeof(GeneUtility))]
 public static class Patch_GeneUtility
 {
-    [Feature(nameof(NotificationDefOf.PostSatisfyChemicalGenes))]
+    [Feature(nameof(EventDefOf.PostSatisfyChemicalGenes))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(GeneUtility.SatisfyChemicalGenes))]
     public static void SatisfyChemicalGenes_Postfix(Pawn pawn)
     {
-        NotificationManager.Instance.Notify(NotificationDefOf.PostSatisfyChemicalGenes, pawn);
+        EventManager.Instance.Notify(EventDefOf.PostSatisfyChemicalGenes, pawn);
     }
 }

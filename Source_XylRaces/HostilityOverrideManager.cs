@@ -1,6 +1,6 @@
 ﻿namespace XylXenos;
 
-public class HostilityOverrideManager(Map map) : MapComponent(map), INotificationListener
+public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListener
 {
     public const int violationDisableTicks = 2500;
     public const int updateFrequency = 60;
@@ -104,12 +104,12 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), INotificatio
             lastHostileActionTick[source.Faction] = Find.TickManager.TicksGame;
     }
 
-    public void RegisterWith(NotificationManager manager)
+    public void RegisterWith(EventManager manager)
     {
-        manager.Register<DamageInfo>(NotificationDefOf.PreTakeDamage, null, Notify_DamageTaken);
+        manager.Register<DamageInfo>(EventDefOf.PreTakeDamage, null, Notify_DamageTaken);
     }
 
-    public void PreUnregister(NotificationManager manager)
+    public void PreUnregister(EventManager manager)
     {
     }
 }

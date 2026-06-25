@@ -32,11 +32,11 @@ public static class Patch_Pawn
             __result *= geneTracker.healthScaleFactor;
     }
 
-    [Feature(nameof(NotificationDefOf.PostPawnKilled))]
+    [Feature(nameof(EventDefOf.PostPawnKilled))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.Kill))]
     public static void Kill_Postfix(Pawn __instance)
     {
-        NotificationManager.Instance.Notify(NotificationDefOf.PostPawnKilled, __instance);
+        EventManager.Instance.Notify(EventDefOf.PostPawnKilled, __instance);
     }
 }

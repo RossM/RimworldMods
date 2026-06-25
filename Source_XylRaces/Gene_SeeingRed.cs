@@ -65,10 +65,10 @@ public class Gene_SeeingRed : GeneExt
         comp.ticksToDisappear = comp.disappearsAfterTicks;
     }
 
-    public override void RegisterWith(NotificationManager manager)
+    public override void RegisterWith(EventManager manager)
     {
         base.RegisterWith(manager);
 
-        manager.Register<DamageInfo>(NotificationDefOf.PreTakeDamage, pawn, Notify_DamageTaken);
+        manager.Register<DamageInfo>(EventDefOf.PreTakeDamage, pawn, Notify_DamageTaken);
     }
 }

@@ -184,11 +184,11 @@ public class Gene_Flight : GeneExt
         }
     }
 
-    public override void RegisterWith(NotificationManager manager)
+    public override void RegisterWith(EventManager manager)
     {
         base.RegisterWith(manager);
 
-        manager.Register(NotificationDefOf.PostApparelChanged, pawn, Notify_ApparelChanged);
-        manager.Register(NotificationDefOf.PostDowned, pawn, Notify_Downed);
+        manager.Register(EventDefOf.PostApparelChanged, pawn, Notify_ApparelChanged);
+        manager.Register(EventDefOf.PostDowned, pawn, Notify_Downed);
     }
 }
