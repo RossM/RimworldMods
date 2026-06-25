@@ -1,4 +1,4 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(JoyGiver))]
 public class Patch_JoyGiver
@@ -8,7 +8,7 @@ public class Patch_JoyGiver
     [HarmonyPatch(nameof(JoyGiver.GetChance))]
     public static void GetChance_Postfix(JoyGiver __instance, Pawn pawn, ref float __result)
     {
-        var factor = PatchHelpers.GetJoyFactor(pawn, __instance);
+        var factor = Xylib.PatchHelpers.GetJoyFactor(pawn, __instance);
         __result *= factor;
     }
 }

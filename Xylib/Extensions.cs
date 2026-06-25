@@ -4,6 +4,11 @@ namespace Xylib;
 
 public static class Extensions
 {
+    extension(Faction faction)
+    {
+        public IEnumerable<Pawn> AllPawns => Find.Maps.SelectMany(map => map.mapPawns.PawnsInFaction(faction));
+    }
+
     extension(GeneDef gene)
     {
         [CanBeNull]
