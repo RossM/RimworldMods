@@ -182,13 +182,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
     public int xenotypeStrength;
 
     /// <summary>
-    ///     If non-null, determines the gender ratio of children. Note that it is the baby's genes that
-    ///     determine the baby's gender, not the parents'. Also note that only the first gene with this
-    ///     set will have an effect.
-    /// </summary>
-    public float? femaleChance;
-
-    /// <summary>
     ///     If true, this gene will show up in the policies tab next to the selected drug policy, e.g.
     ///     "Social drugs (drug resistant)".
     /// </summary>

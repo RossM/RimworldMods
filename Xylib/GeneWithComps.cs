@@ -245,10 +245,6 @@ public class GeneWithComps : Gene, IEventListener
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
-        if (DefExt.femaleChance != null)
-        {
-        }
-
         if (comps != null)
         {
             foreach (var comp in comps)
