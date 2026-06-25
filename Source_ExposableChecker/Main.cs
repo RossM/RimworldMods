@@ -15,6 +15,16 @@ namespace XylExposableChecker
     {
         public static void Check(Type type)
         {
+            string exposeDataFunc;
+            if (typeof(IExposable).IsAssignableFrom(type))
+                exposeDataFunc = "ExposeData";
+            else if (typeof(ThingComp).IsAssignableFrom(type))
+                exposeDataFunc = "PostExposeData";
+            else if (typeof(HediffComp).IsAssignableFrom(type) || type.Name.EndsWith("Comp"))
+                exposeDataFunc = "CompExposeData";
+            else
+                return;
+
             var fields = type.GetFields().Where(
                 field => field.GetCustomAttribute<UnsavedAttribute>() == null &&
                          !field.Attributes.HasFlag(FieldAttributes.Literal) &&
@@ -24,16 +34,6 @@ namespace XylExposableChecker
             if (fields.Count == 0)
                 return;
 
-            string exposeDataFunc;
-            if (typeof(IExposable).IsAssignableFrom(type))
-                exposeDataFunc = "ExposeData";
-            else if (typeof(ThingComp).IsAssignableFrom(type))
-                exposeDataFunc = "PostExposeData";
-            else if (typeof(HediffComp).IsAssignableFrom(type))
-                exposeDataFunc = "CompExposeData";
-            else
-                throw new NotSupportedException();
- 
             HashSet<FieldInfo> usedFields = [];
 
             MethodInfo curMethod = type.GetMethod(exposeDataFunc);
@@ -54,7 +54,7 @@ namespace XylExposableChecker
         {
             HashSet<Assembly> checkedAssemblies = [];
 
-            foreach (Type type in GenTypes.AllTypes.Where(ShouldCheck))
+            foreach (Type type in GenTypes.AllTypes)
             {
                 string assemblyName = type.Assembly.GetName().Name;
                 bool skipAssembly = assemblyName == "Assembly-CSharp";
@@ -69,11 +69,6 @@ namespace XylExposableChecker
                 if (!skipAssembly) 
                     Check(type);
             }
-        }
-
-        private static bool ShouldCheck(Type t)
-        {
-            return typeof(ThingComp).IsAssignableFrom(t) || typeof(IExposable).IsAssignableFrom(t) || typeof(HediffComp).IsAssignableFrom(t);
         }
     }
 }

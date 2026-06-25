@@ -2,8 +2,8 @@
 
 public class GeneComp
 {
-    public GeneWithComps parent;
-    public GeneCompProperties props;
+    [Unsaved] public GeneWithComps parent;
+    [Unsaved] public GeneCompProperties props;
 
     public Pawn Pawn => parent.pawn;
 
