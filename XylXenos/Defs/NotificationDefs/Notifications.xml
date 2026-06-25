@@ -76,4 +76,12 @@
     <defName>PostGenerateInitialHediffs</defName>
   </Xylib.EventDef>
 
+  <Xylib.EventDef>
+    <defName>InGeneratePossessions</defName>
+    <dataType>System.Collections.Generic.List`1</dataType>
+    <dataTypeArguments>
+      <li>ThingDefCount</li>    
+    </dataTypeArguments>
+  </Xylib.EventDef>    
+
 </Defs>

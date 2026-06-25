@@ -14,13 +14,17 @@
     <prerequisite>XylLithoid</prerequisite>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <startingItems>
-          <li>
-            <item>XylSoftener</item>
-            <chance>0.05</chance>
-            <count>5~10</count>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_StartingItems">
+            <items>
+              <li>
+                <item>XylSoftener</item>
+                <chance>0.05</chance>
+                <count>5~10</count>
+              </li>
+            </items>
           </li>
-        </startingItems>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

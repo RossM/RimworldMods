@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
 
-namespace XylXenos.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(StartingPawnUtility))]
 public class Patch_StartingPawnUtility
@@ -22,12 +22,6 @@ public class Patch_StartingPawnUtility
                 [
                     // Load pawn
                     CodeInstruction.LoadArgument(0),
-                    // Load StartingPawnUtility.StartingPossessions
-                    CodeInstruction.Call(typeof(StartingPawnUtility), "get_StartingPossessions"),
-                    // Load pawn
-                    CodeInstruction.LoadArgument(0),
-                    // Get StartingPawnUtility.StartingPossessions[pawn]
-                    CodeInstruction.Call(typeof(Dictionary<Pawn, List<ThingDefCount>>), "get_Item"),
                     // Call GetExtraStartingItems
                     CodeInstruction.Call(() => GetExtraStartingItems),
                 ]
@@ -35,7 +29,7 @@ public class Patch_StartingPawnUtility
         }
     };
 
-    [Feature(nameof(DefModExtension_GeneWithComps.startingItems))]
+    [Feature(nameof(EventDefOf.InGeneratePossessions))]
     [HarmonyTranspiler]
     [HarmonyPatch("GeneratePossessions")]
     public static IEnumerable<CodeInstruction> GeneratePossessions_Transpiler(
@@ -48,16 +42,10 @@ public class Patch_StartingPawnUtility
         return instructionsList;
     }
 
-    public static void GetExtraStartingItems(Pawn pawn, List<ThingDefCount> items)
+    public static void GetExtraStartingItems(Pawn pawn)
     {
-        foreach (var item in pawn.genes.GenesListForReading.Where(gene => gene.Active).OfType<GeneWithComps>()
-                     .SelectMany(gene => gene.GetStartingItems()))
-        {
-            items.Add(item);
-
-            if (items.Count >= 2)
-                return;
-        }
+        var items = Find.GameInitData.startingPossessions[pawn];
+        EventManager.Instance.Notify(EventDefOf.InGeneratePossessions, pawn, items);
     }
 
     [Feature(typeof(CompProperties_Drug))]

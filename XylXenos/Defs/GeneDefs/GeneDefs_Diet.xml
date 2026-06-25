@@ -128,12 +128,6 @@
             </thoughts>
           </li>
         </ingestionThoughtOverrides>
-        <startingItems>
-          <li>
-            <foodType>Meat</foodType>
-            <nutritionAmount>1~2</nutritionAmount>
-          </li>
-        </startingItems>
         <comps>
           <li Class="Xylib.GeneCompProperties_PermanentHediffs">
             <hediffs>
@@ -141,6 +135,14 @@
                 <hediff>XylGeneticMeatNeed</hediff>
               </li>
             </hediffs>
+          </li>
+          <li Class="Xylib.GeneCompProperties_StartingItems">
+            <items>
+              <li>
+                <foodType>Meat</foodType>
+                <nutritionAmount>1~2</nutritionAmount>
+              </li>
+            </items>
           </li>
         </comps>
       </li>

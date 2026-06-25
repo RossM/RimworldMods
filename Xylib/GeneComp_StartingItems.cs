@@ -1,0 +1,83 @@
+﻿namespace Xylib;
+
+public class StartingItemOption
+{
+    public ThingDef item;
+    public FoodTypeFlags foodType;
+    public float chance = 1.0f;
+    public IntRange count = IntRange.Zero;
+    public FloatRange nutritionAmount = FloatRange.Zero;
+}
+
+[UsedFromXml]
+public class GeneCompProperties_StartingItems : GeneCompProperties
+{
+    public List<StartingItemOption> items;
+
+    public GeneCompProperties_StartingItems()
+    {
+        compClass = typeof(GeneComp_StartingItems);
+    }
+}
+
+public class GeneComp_StartingItems : GeneComp, IEventListener
+{
+    public GeneCompProperties_StartingItems Props => (GeneCompProperties_StartingItems)props;
+
+    public virtual IEnumerable<ThingDefCount> GetStartingItems()
+    {
+        if (Props.items.NullOrEmpty())
+            yield break;
+
+        foreach (var startingItem in Props.items)
+        {
+            if (!Rand.Chance(startingItem.chance))
+                continue;
+
+            var itemDef = startingItem.item ?? DefDatabase<ThingDef>.AllDefsListForReading
+                .Where(thingDef => Validate(thingDef, startingItem)).RandomElement();
+            if (itemDef == null)
+                continue;
+
+            var itemNutrition = itemDef.GetStatValueAbstract(StatDefOf.Nutrition);
+            int count;
+            if (startingItem.nutritionAmount != FloatRange.Zero && itemNutrition > 0)
+                count = GenMath.RoundRandom(startingItem.nutritionAmount.RandomInRange / itemNutrition);
+            else if (startingItem.count != IntRange.Zero)
+                count = startingItem.count.RandomInRange;
+            else if (itemDef.possessionCount > 0)
+                count = itemDef.possessionCount;
+            else
+                count = 1;
+
+            yield return new(itemDef, Mathf.Clamp(count, 1, itemDef.stackLimit));
+        }
+
+        bool Validate(ThingDef thingDef, StartingItemOption startingItem)
+        {
+            return thingDef.ingestible?.foodType.HasFlag(startingItem.foodType) == true;
+        }
+    }
+
+    public void Notify_InGeneratePossessions(List<ThingDefCount> items)
+    {
+        if (items.Count >= 2)
+            return;
+
+        foreach (var item in GetStartingItems())
+        {
+            items.Add(item);
+            if (items.Count >= 2)
+                return;
+        }
+    }
+
+    public void RegisterWith(EventManager manager)
+    {
+        manager.Register<List<ThingDefCount>>(EventDefOf.InGeneratePossessions, Pawn, Notify_InGeneratePossessions);
+    }
+
+    public void PreUnregister(EventManager manager)
+    {
+    }
+}

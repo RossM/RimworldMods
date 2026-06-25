@@ -19,13 +19,6 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <extraIconPath>Things/Item/Resource/Milk</extraIconPath>
         <gender>Female</gender>
-        <startingItems>
-          <li>
-            <item>Milk</item>
-            <chance>0.2</chance>
-            <count>5~10</count>
-          </li>
-        </startingItems>
         <comps>
           <li Class="XylXenos.GeneCompProperties_Hyperlactation">
             <item>Milk</item>
@@ -37,6 +30,15 @@
               <li>XylMilked_Masochist</li>
               <li>XylMilkedMood_Masochist</li>
             </milkedThoughts>
+          </li>
+          <li Class="Xylib.GeneCompProperties_StartingItems">
+            <items>
+              <li>
+                <item>Milk</item>
+                <chance>0.2</chance>
+                <count>5~10</count>
+              </li>
+            </items>
           </li>
         </comps>
       </li>

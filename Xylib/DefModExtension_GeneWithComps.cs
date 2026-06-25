@@ -34,16 +34,6 @@ public class RenderNodeModifier
     }
 }
 
-public class StartingItemOption
-{
-    public ThingDef item;
-    public FoodTypeFlags foodType;
-    public float chance = 1.0f;
-    public IntRange count = IntRange.Zero;
-    public FloatRange nutritionAmount = FloatRange.Zero;
-    public bool ignoreRestrictions;
-}
-
 public abstract class GeneCompProperties
 {
     public Type compClass = typeof(GeneWithComps);
@@ -184,13 +174,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
     ///     Hediff givers which will trigger randomly over time.
     /// </summary>
     [CanBeNull] public List<HediffGiver> hediffGivers;
-
-    /// <summary>
-    ///     Starting items which have a chance of being generated on the pawn as one of the player's
-    ///     starting colonists. A colonist can only have two starting items so these might not be
-    ///     added even if the chance is 100%.
-    /// </summary>
-    [CanBeNull] public List<StartingItemOption> startingItems;
 
     #endregion
 

@@ -76,13 +76,17 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <showInDrugPolicies>true</showInDrugPolicies>
-        <startingItems>
-          <li>
-            <item>XylAtlasite</item>
-            <chance>0.02</chance>
-            <count>2~5</count>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_StartingItems">
+            <items>
+              <li>
+                <item>XylAtlasite</item>
+                <chance>0.02</chance>
+                <count>2~5</count>
+              </li>
+            </items>
           </li>
-        </startingItems>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

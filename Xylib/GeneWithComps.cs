@@ -142,41 +142,6 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
-    public virtual IEnumerable<ThingDefCount> GetStartingItems()
-    {
-        if (DefExt.startingItems.NullOrEmpty())
-            yield break;
-
-        foreach (var startingItem in DefExt.startingItems)
-        {
-            if (!Rand.Chance(startingItem.chance))
-                continue;
-
-            var itemDef = startingItem.item ?? DefDatabase<ThingDef>.AllDefsListForReading
-                .Where(thingDef => Validate(thingDef, startingItem)).RandomElement();
-            if (itemDef == null)
-                continue;
-
-            var itemNutrition = itemDef.GetStatValueAbstract(StatDefOf.Nutrition);
-            int count;
-            if (startingItem.nutritionAmount != FloatRange.Zero && itemNutrition > 0)
-                count = Mathf.FloorToInt(startingItem.nutritionAmount.RandomInRange / itemNutrition);
-            else if (startingItem.count != IntRange.Zero)
-                count = startingItem.count.RandomInRange;
-            else if (itemDef.possessionCount > 0)
-                count = itemDef.possessionCount;
-            else
-                count = 1;
-
-            yield return new(itemDef, Mathf.Clamp(count, 1, itemDef.stackLimit));
-        }
-
-        bool Validate(ThingDef thingDef, StartingItemOption startingItem)
-        {
-            return thingDef.ingestible?.foodType.HasFlag(startingItem.foodType) == true;
-        }
-    }
-
     public void RemoveInvalidChemicalHediffs()
     {
         HashSet<HediffDef> hediffDefsToRemove = [];
