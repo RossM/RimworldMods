@@ -44,6 +44,18 @@ public class StartingItemOption
     public bool ignoreRestrictions;
 }
 
+public abstract class GeneProperties
+{
+    public virtual IEnumerable<string> ConfigErrors()
+    {
+        yield break;
+    }
+
+    public virtual void ResolveReferences(Def parentDef)
+    {
+    }
+}
+
 [NoReorder]
 public class DefModExtension_Gene : DefModExtension
 {
@@ -216,41 +228,7 @@ public class DefModExtension_Gene : DefModExtension
 
     #region Properties for specific GeneExt subclasses
 
-    /// <summary>
-    ///     Properties for <see cref="Gene_BonusGenes" />.
-    /// </summary>
-    [CanBeNull] [GeneClass(typeof(Gene_BonusGenes))]
-    public BonusGenesInfo bonusGenes;
-
-    /// <summary>
-    ///     Properties for <see cref="Gene_Flight" />.
-    /// </summary>
-    [CanBeNull] [GeneClass(typeof(Gene_Flight))]
-    public FlightInfo flight;
-
-    /// <summary>
-    ///     Properties for <see cref="Gene_Hyperlactation" />.
-    /// </summary>
-    [CanBeNull] [GeneClass(typeof(Gene_Hyperlactation))]
-    public HyperlactationInfo hyperlactation;
-
-    /// <summary>
-    ///     Properties for <see cref="Gene_SeeingRed" />.
-    /// </summary>
-    [CanBeNull] [GeneClass(typeof(Gene_SeeingRed))]
-    public SeeingRedInfo seeingRed;
-
-    /// <summary>
-    ///     Properties for <see cref="Gene_Regeneration" />.
-    /// </summary>
-    [CanBeNull] [GeneClass(typeof(Gene_Regeneration))]
-    public RegenerationInfo regeneration;
-
-    /// <summary>
-    ///     Properties for <see cref="Gene_LoveEuphoria" />.
-    /// </summary>
-    [CanBeNull] [GeneClass(typeof(Gene_LoveEuphoria))]
-    public LoveEuphoriaInfo loveEuphoria;
+    public GeneProperties props;
 
     #endregion
 
@@ -356,30 +334,11 @@ public class DefModExtension_Gene : DefModExtension
         if (!typeof(GeneExt).IsAssignableFrom(geneClass))
             yield return "geneClass is not GeneExt or subclass thereof";
 
-        foreach (var fieldInfo in GetType().GetFields())
+        if (props != null)
         {
-            var expectedClass = fieldInfo.TryGetAttribute<GeneClassAttribute>()?.geneClass;
-            if (expectedClass == null)
-                continue;
-
-            if (CheckCorrectClass(fieldInfo.GetValue(this), expectedClass, fieldInfo.Name) is { } error)
-                yield return error;
+            foreach (var configError in props.ConfigErrors())
+                yield return configError;
         }
-    }
-
-    private string CheckCorrectClass(
-        object field,
-        Type expectedClass,
-        [CallerArgumentExpression("field")] string fieldName = null)
-    {
-        var geneClass = (parent as GeneDef)?.geneClass ?? (parent as GeneTemplateDef)?.geneClass;
-
-        if (field != null && !expectedClass.IsAssignableFrom(geneClass))
-            return $"{fieldName} set but geneClass is not {expectedClass.Name} or subclass thereof";
-        if (field == null && expectedClass.IsAssignableFrom(geneClass))
-            return $"{fieldName} not set but geneClass is {expectedClass.Name} or subclass thereof";
-
-        return null;
     }
 
     public override void ResolveReferences(Def parentDef)
@@ -411,5 +370,7 @@ public class DefModExtension_Gene : DefModExtension
                 break;
             }
         }
+
+        props?.ResolveReferences(parentDef);
     }
 }

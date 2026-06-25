@@ -1,6 +1,6 @@
 ﻿namespace XylXenos;
 
-public class LoveEuphoriaInfo
+public class LoveEuphoriaProperties : GeneProperties
 {
     public NeedDef need;
     public List<HediffDef> hediffs;
@@ -9,13 +9,13 @@ public class LoveEuphoriaInfo
 [UsedFromXml]
 public class Gene_LoveEuphoria : GeneExt
 {
-    public LoveEuphoriaInfo Info => DefExt.loveEuphoria;
+    public LoveEuphoriaProperties Props => (LoveEuphoriaProperties)DefExt.props;
 
     public void Notify_PostLovin(Pawn partner)
     {
-        if (!Info.hediffs.NullOrEmpty())
+        if (!Props.hediffs.NullOrEmpty())
         {
-            foreach (var hediffDef in Info.hediffs)
+            foreach (var hediffDef in Props.hediffs)
             {
                 var hediff = partner.health.GetOrAddHediff(hediffDef);
                 hediff.Severity = hediff.def.initialSeverity;
@@ -24,7 +24,7 @@ public class Gene_LoveEuphoria : GeneExt
             }
         }
 
-        partner.needs.TryGetNeed(Info.need)?.CurLevel = 1f;
+        partner.needs.TryGetNeed(Props.need)?.CurLevel = 1f;
     }
 
     public override void RegisterWith(NotificationManager manager)

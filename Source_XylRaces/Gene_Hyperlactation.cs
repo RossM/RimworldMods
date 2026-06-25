@@ -1,6 +1,6 @@
 ﻿namespace XylXenos;
 
-public class HyperlactationInfo
+public class HyperlactationProperties : GeneProperties
 {
     public ThingDef item;
     public float chargePerItem = 0.1f;
@@ -12,14 +12,14 @@ public class HyperlactationInfo
 public class Gene_Hyperlactation : GeneExt
 {
     [NotNull]
-    public HyperlactationInfo HyperlactationInfo => DefExt.hyperlactation!;
+    public HyperlactationProperties Props => (HyperlactationProperties)DefExt.props;
 
     public Texture2D ExtraIcon => DefExt.ExtraIcon;
 
     public HediffComp_Lactating Lactating =>
         lactatingInternal ??= pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
 
-    public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / HyperlactationInfo.chargePerItem);
+    public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / Props.chargePerItem);
 
     private const int checkInterval = 60;
     public bool allowMilking = true;
@@ -106,7 +106,7 @@ public class Gene_Hyperlactation : GeneExt
         if (pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.Lactating) is { } lactatingHediff)
             pawn.health.RemoveHediff(lactatingHediff);
 
-        Hediff hediff = pawn.health.GetOrAddHediff(HyperlactationInfo.hediff);
+        Hediff hediff = pawn.health.GetOrAddHediff(Props.hediff);
         hediff.Severity = 1.0f;
 
         if (Lactating?.parent != hediff)
@@ -122,7 +122,7 @@ public class Gene_Hyperlactation : GeneExt
 
         var requiredCount = 1;
         if (onlyMilkWhenFull)
-            requiredCount = Mathf.FloorToInt(Lactating.Props.fullChargeAmount / HyperlactationInfo.chargePerItem);
+            requiredCount = Mathf.FloorToInt(Lactating.Props.fullChargeAmount / Props.chargePerItem);
 
         return MilkCount >= requiredCount;
     }
@@ -133,7 +133,7 @@ public class Gene_Hyperlactation : GeneExt
         if (fullSinceTick == null)
             return false;
         soreness = Mathf.FloorToInt(
-            (float)(Find.TickManager.TicksGame - fullSinceTick.Value) / HyperlactationInfo.ticksPerSorenessStage);
+            (float)(Find.TickManager.TicksGame - fullSinceTick.Value) / Props.ticksPerSorenessStage);
         return true;
     }
 
@@ -142,7 +142,7 @@ public class Gene_Hyperlactation : GeneExt
         if (!Active)
             yield break;
         float milkPerDay = Lactating.Props.fullChargeAmount * GenDate.TicksPerDay /
-                           (Lactating.Props.ticksToFullCharge * HyperlactationInfo.chargePerItem);
+                           (Lactating.Props.ticksToFullCharge * Props.chargePerItem);
         yield return new StatDrawEntry(StatCategoryDefOf.PawnFood, "XylMilkProductionLabel".TranslateSimple(),
             "PerDay".Translate(milkPerDay.ToStringByStyle(ToStringStyle.FloatOne)),
             "XylMilkProductionDesc".TranslateSimple(), 1);

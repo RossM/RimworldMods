@@ -90,10 +90,10 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
         <manhunterOnDamageChanceFactor>2</manhunterOnDamageChanceFactor>
-        <seeingRed>
+        <props Class="XylXenos.SeeingRedProperties">
           <chance>0.15</chance>
           <hediffDef>XylSeeingRed</hediffDef>
-        </seeingRed>
+        </props>
       </li>
     </modExtensions>
   </GeneDef>
@@ -258,7 +258,7 @@
     </statOffsets>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
-        <flight/>
+        <props Class="XylXenos.FlightProperties"/>
       </li>
     </modExtensions>
   </GeneDef>
@@ -523,9 +523,9 @@
     </exclusionTags>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
-        <regeneration>
+        <props Class="XylXenos.RegenerationProperties">
           <healthPerHour>20</healthPerHour>
-        </regeneration>
+        </props>
       </li>
     </modExtensions>
   </GeneDef>

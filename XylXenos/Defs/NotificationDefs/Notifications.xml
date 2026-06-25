@@ -2,74 +2,74 @@
 
 <Defs>
 
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PreTakeDamage</defName>
     <dataType>DamageInfo</dataType>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
   
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostGenesChanged</defName>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
   
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostHediffsChanged</defName>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
   
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostCheckForStateChange</defName>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
   
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostApparelChanged</defName>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
   
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostSatisfyChemicalGenes</defName>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
   
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostDiscard</defName>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
   
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostPostMake</defName>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
   
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostLoadedGame</defName>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
   
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>GlobalPostGameDispose</defName>
     <global>true</global>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
   
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PawnGenerationEarly</defName>
-    <dataType>XylXenos.PawnGenerationEarlyData</dataType>
-  </XylXenos.NotificationDef>
+    <dataType>Xylib.PawnGenerationEarlyData</dataType>
+  </Xylib.NotificationDef>
 
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostDowned</defName>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
 
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostPawnKilled</defName>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
 
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostLovin</defName>
     <dataType>Pawn</dataType>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
 
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostRedressPawn</defName>
     <dataType>PawnGenerationRequest</dataType>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
 
-  <XylXenos.NotificationDef>
+  <Xylib.NotificationDef>
     <defName>PostGenerateNewPawn</defName>
     <dataType>PawnGenerationRequest</dataType>
-  </XylXenos.NotificationDef>
+  </Xylib.NotificationDef>
 
 </Defs>

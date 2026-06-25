@@ -172,13 +172,13 @@
     <minAgeActive>16</minAgeActive>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
-        <loveEuphoria>
+        <props Class="XylXenos.LoveEuphoriaProperties">
           <need>XylLovin</need>
           <hediffs>
             <li>XylLoveEuphoria</li>
             <li>XylLovinAddiction</li>
           </hediffs>
-        </loveEuphoria>
+        </props>
       </li>
     </modExtensions>
   </GeneDef>

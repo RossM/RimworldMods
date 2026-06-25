@@ -25,11 +25,6 @@ public class UsedFromXmlAttribute : Attribute;
 [MeansImplicitUse]
 public class UsedFromReflectionAttribute : Attribute;
 
-public class GeneClassAttribute(Type geneClass) : Attribute
-{
-    public readonly Type geneClass = geneClass;
-}
-
 [MeansImplicitUse]
 public class DefGeneratorAttribute(Type defType) : Attribute
 {

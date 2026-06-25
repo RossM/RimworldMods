@@ -1,6 +1,6 @@
 ﻿namespace XylXenos;
 
-public class FlightInfo
+public class FlightProperties : GeneProperties
 {
     public float autoFlyMinDistance = 25f;
 }
@@ -13,7 +13,7 @@ public class DefModExtension_Thing_Flight : DefModExtension
 public class Gene_Flight : GeneExt
 {
     [NotNull]
-    public FlightInfo FlightInfo => DefExt.flight!;
+    public FlightProperties Props => (FlightProperties)DefExt.props;
 
     public Texture2D ExtraIcon => DefExt.ExtraIcon;
 
@@ -120,7 +120,7 @@ public class Gene_Flight : GeneExt
         {
             if ((pawn.Drafted ? autoFlyDrafted : autoFly) &&
                 pawn.pather.Moving &&
-                pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= FlightInfo.autoFlyMinDistance &&
+                pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= Props.autoFlyMinDistance &&
                 pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
             {
                 flight.StartFlying();

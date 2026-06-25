@@ -27,7 +27,7 @@
             <count>5~10</count>
           </li>
         </startingItems>
-        <hyperlactation>
+        <props Class="XylXenos.HyperlactationProperties">
           <item>Milk</item>
           <chargePerItem>0.1</chargePerItem>
           <hediff>XylHyperlactating</hediff>
@@ -37,7 +37,7 @@
             <li>XylMilked_Masochist</li>
             <li>XylMilkedMood_Masochist</li>
           </milkedThoughts>
-        </hyperlactation>
+        </props>
       </li>
     </modExtensions>
   </GeneDef>

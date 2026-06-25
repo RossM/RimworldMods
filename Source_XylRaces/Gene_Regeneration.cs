@@ -1,6 +1,6 @@
 ﻿namespace XylXenos;
 
-public class RegenerationInfo
+public class RegenerationProperties : GeneProperties
 {
     public float healthPerHour;
 }
@@ -8,7 +8,7 @@ public class RegenerationInfo
 [UsedFromXml]
 public class Gene_Regeneration : GeneExt
 {
-    public RegenerationInfo RegenerationInfo => DefExt.regeneration;
+    public RegenerationProperties Props => (RegenerationProperties)DefExt.props;
     private const int updateInterval = GenTicks.TicksPerRealSecond;
 
     [Unsaved] private List<Hediff_Injury> tmpHediffInjuries = [];
@@ -23,7 +23,7 @@ public class Gene_Regeneration : GeneExt
 
         pawn.health.hediffSet.GetHediffs(ref tmpHediffInjuries, hediff => hediff.CanHealNaturally());
 
-        float healingAmount = RegenerationInfo.healthPerHour * pawn.HealthScale * updateInterval / GenDate.TicksPerHour /
+        float healingAmount = Props.healthPerHour * pawn.HealthScale * updateInterval / GenDate.TicksPerHour /
                               tmpHediffInjuries.Count;
         foreach (var hediff in tmpHediffInjuries)
             hediff.Heal(healingAmount);

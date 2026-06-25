@@ -1,6 +1,6 @@
 ﻿namespace XylXenos;
 
-public class BonusGenesInfo
+public class BonusGenesProperties : GeneProperties
 {
     public IntRange biostatArc = IntRange.Zero;
     public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
@@ -18,7 +18,7 @@ public class BonusGenesInfo
 public class Gene_BonusGenes : GeneExt
 {
     [NotNull]
-    public BonusGenesInfo BonusGenesInfo => DefExt.bonusGenes!;
+    public BonusGenesProperties Props => (BonusGenesProperties)DefExt.props;
 
     public List<Gene> addedGenes = [];
 
@@ -32,21 +32,21 @@ public class Gene_BonusGenes : GeneExt
     {
         base.PostAdd();
 
-        if (!Rand.Chance(BonusGenesInfo.geneChance))
+        if (!Rand.Chance(Props.geneChance))
             return;
 
-        int count = BonusGenesInfo.count.RandomInRange;
+        int count = Props.count.RandomInRange;
 
         for (int i = 0; i < count; i++)
         {
-            List<GeneDef> genes = !BonusGenesInfo.allowedGenes.NullOrEmpty()
-                ? BonusGenesInfo.allowedGenes
+            List<GeneDef> genes = !Props.allowedGenes.NullOrEmpty()
+                ? Props.allowedGenes
                 : DefDatabase<GeneDef>.AllDefsListForReading;
             if (genes.TryRandomElementByWeight(GeneWeight, out GeneDef geneDef))
                 AddGene(geneDef);
         }
 
-        if (BonusGenesInfo.removeAfterAdding)
+        if (Props.removeAfterAdding)
             pawn.genes.RemoveGene(this);
     }
 
@@ -61,7 +61,7 @@ public class Gene_BonusGenes : GeneExt
                                               pawn.genes.GenesListForReading.Sum(g => g.Active ? g.def.biostatMet : 0)))
             return;
 
-        var geneType = BonusGenesInfo.addedGeneType ?? GeneType;
+        var geneType = Props.addedGeneType ?? GeneType;
         addedGenes.Add(pawn.genes.AddGene(geneDef, geneType == GeneType.Xenogene));
     }
 
@@ -73,14 +73,14 @@ public class Gene_BonusGenes : GeneExt
         if (geneDef.modContentPack != null && Config.Instance.ignoreGenesFromMods.Contains(geneDef.modContentPack.PackageId))
             return 0.0f;
 
-        if (!BonusGenesInfo.prohibitedGenes.NullOrEmpty() && BonusGenesInfo.prohibitedGenes.Contains(geneDef))
+        if (!Props.prohibitedGenes.NullOrEmpty() && Props.prohibitedGenes.Contains(geneDef))
             return 0.0f;
 
-        if (!BonusGenesInfo.biostatArc.Includes(geneDef.biostatArc))
+        if (!Props.biostatArc.Includes(geneDef.biostatArc))
             return 0.0f;
-        if (!BonusGenesInfo.biostatCpx.Includes(geneDef.biostatCpx))
+        if (!Props.biostatCpx.Includes(geneDef.biostatCpx))
             return 0.0f;
-        if (!BonusGenesInfo.biostatMet.Includes(geneDef.biostatMet))
+        if (!Props.biostatMet.Includes(geneDef.biostatMet))
             return 0.0f;
 
         if (geneDef.DefExt is { } defExt)
@@ -127,14 +127,14 @@ public class Gene_BonusGenes : GeneExt
             }
         }
 
-        return BonusGenesInfo.ignoreSelectionWeight ? 1.0f : geneDef.selectionWeight;
+        return Props.ignoreSelectionWeight ? 1.0f : geneDef.selectionWeight;
     }
 
     public override void PostRemove()
     {
         base.PostRemove();
 
-        if (BonusGenesInfo.removeAfterAdding)
+        if (Props.removeAfterAdding)
             return;
         if (addedGenes == null)
             return;
@@ -146,7 +146,7 @@ public class Gene_BonusGenes : GeneExt
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
         yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylAtavismChanceLabel".TranslateSimple(),
-            BonusGenesInfo.geneChance.ToStringPercent(), "XylAtavismChanceDesc".TranslateSimple(), 1002);
+            Props.geneChance.ToStringPercent(), "XylAtavismChanceDesc".TranslateSimple(), 1002);
         if (addedGenes == null)
             yield break;
         string text = string.Join(", ", addedGenes.Select(g => g.Label)).CapitalizeFirst();

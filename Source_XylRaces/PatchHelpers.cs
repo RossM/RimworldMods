@@ -13,7 +13,7 @@ public static class PatchHelpers
 
     public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
-        var bonusGenes = geneDef.DefExt?.bonusGenes;
+        var bonusGenes = geneDef.DefExt?.props as BonusGenesProperties;
         if (bonusGenes == null)
             return 0;
         if (bonusGenes.geneChance < 1.0f)
@@ -344,7 +344,7 @@ public static class PatchHelpers
             return false;
         foreach (Pawn owner in r.Owners)
         {
-            if (owner.FirstActiveGeneOfType<Gene_Hyperlactation>()?.def.DefExt?.hyperlactation?.item == thingDef)
+            if ((owner.FirstActiveGeneOfType<Gene_Hyperlactation>()?.def.DefExt?.props as HyperlactationProperties)?.item == thingDef)
                 return true;
         }
 

@@ -23,13 +23,13 @@
     </customEffectDescriptions>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
-        <bonusGenes>
+        <props Class="XylXenos.BonusGenesProperties">
           <biostatArc>0~0</biostatArc>
           <biostatCpx>1~99</biostatCpx>
           <biostatMet>-2~2</biostatMet>
           <geneChance>0.5</geneChance>
           <addedGeneType>Xenogene</addedGeneType>
-        </bonusGenes>
+        </props>
       </li>
     </modExtensions>
   </GeneDef>
@@ -53,7 +53,7 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
         <geneType>Xenogene</geneType>
-        <bonusGenes>
+        <props Class="XylXenos.BonusGenesProperties">
           <removeAfterAdding>true</removeAfterAdding>
           <ignoreSelectionWeight>true</ignoreSelectionWeight>
           <allowedGenes>
@@ -70,7 +70,7 @@
             <li>AptitudeStrong_Social</li>
             <li>AptitudeStrong_Intellectual</li>
           </allowedGenes>
-        </bonusGenes>
+        </props>
       </li>
     </modExtensions>
   </GeneDef>
@@ -86,7 +86,7 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
         <geneType>Xenogene</geneType>
-        <bonusGenes>
+        <props Class="XylXenos.BonusGenesProperties">
           <removeAfterAdding>true</removeAfterAdding>
           <ignoreSelectionWeight>true</ignoreSelectionWeight>
           <allowedGenes>
@@ -103,7 +103,7 @@
             <li>AptitudeRemarkable_Social</li>
             <li>AptitudeRemarkable_Intellectual</li>
           </allowedGenes>
-        </bonusGenes>
+        </props>
       </li>
     </modExtensions>
   </GeneDef>
@@ -123,7 +123,7 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Gene">
         <showInXenotypeCreation>false</showInXenotypeCreation>
-        <bonusGenes>
+        <props Class="XylXenos.BonusGenesProperties">
           <removeAfterAdding>true</removeAfterAdding>
           <count>14 ~ 21</count>
           <prohibitedGenes>
@@ -131,7 +131,7 @@
             <li>Inbred</li>
             <li>XylGeneticAtavism</li>
           </prohibitedGenes>
-        </bonusGenes>
+        </props>
       </li>
     </modExtensions>
   </GeneDef>
