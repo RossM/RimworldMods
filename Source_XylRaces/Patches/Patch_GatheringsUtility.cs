@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(GatheringsUtility))]
 public static class Patch_GatheringsUtility
 {
-    [Feature(Config.Feature.Joyless)]
+    [Feature(nameof(Config.Feature.Joyless))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(GatheringsUtility.ShouldPawnKeepGathering))]
     public static void ShouldPawnKeepGathering_Postfix(Pawn p, GatheringDef gatheringDef, ref bool __result)

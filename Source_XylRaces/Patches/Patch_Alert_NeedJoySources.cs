@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(Alert_NeedJoySources))]
 public static class Patch_Alert_NeedJoySources
 {
-    [Feature(Config.Feature.Joyless)]
+    [Feature(nameof(Config.Feature.Joyless))]
     [HarmonyPostfix]
     [HarmonyPatch("NeedJoySource")]
     public static void NeedJoySource_Postfix(Map map, ref bool __result)

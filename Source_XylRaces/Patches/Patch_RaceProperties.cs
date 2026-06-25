@@ -31,7 +31,7 @@ public static class Patch_RaceProperties
         }
     };
 
-    [Feature(Config.Feature.Bugfix_Lactation)]
+    [Feature(nameof(Config.Feature.Bugfix_Lactation))]
     [HarmonyTranspiler]
     [HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
     public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(
@@ -44,7 +44,7 @@ public static class Patch_RaceProperties
         return instructionsList;
     }
 
-    [Feature(Config.Feature.Bugfix_Lactation)]
+    [Feature(nameof(Config.Feature.Bugfix_Lactation))]
     [InfixPrefix(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
     [InfixPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
     public static bool GetFirstHediffOfDef_Prefix(HediffSet __instance, out Hediff __result)
@@ -56,7 +56,7 @@ public static class Patch_RaceProperties
         return !Settings.instance.ShouldFixLactationBugsFor(__instance.pawn);
     }
 
-    [Feature(Config.Feature.Bugfix_Lactation)]
+    [Feature(nameof(Config.Feature.Bugfix_Lactation))]
     [HarmonyPrefix]
     [HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]
     private static bool NutritionEatenPerDay_Prefix(Pawn p, out string __result)

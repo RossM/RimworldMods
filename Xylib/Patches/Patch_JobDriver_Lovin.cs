@@ -1,4 +1,4 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(JobDriver_Lovin))]
 public static class Patch_JobDriver_Lovin

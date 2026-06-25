@@ -1,6 +1,6 @@
 ﻿// ReSharper disable UnusedParameter.Local
 
-namespace XylXenos;
+namespace Xylib;
 // This attribute serves as documentation of which patches are to support which parts of the mod. It
 // has no actual effect.
 
@@ -9,10 +9,6 @@ public class FeatureAttribute(string featureName) : Attribute
 {
     // ReSharper disable once UnusedMember.Global
     public readonly string featureName = featureName;
-
-    public FeatureAttribute(Config.Feature feature) : this(feature.ToString())
-    {
-    }
 
     public FeatureAttribute(Type feature) : this(feature.Name)
     {

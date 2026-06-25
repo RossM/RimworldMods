@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(Hediff_Pregnant))]
 public static class Patch_Hediff_Pregnant
 {
-    [Feature(Config.Feature.Parthenogenesis)]
+    [Feature(nameof(Config.Feature.Parthenogenesis))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Hediff_Pregnant.PostAdd))]
     public static void PostAdd_Postfix(ref Hediff_Pregnant __instance)
