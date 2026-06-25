@@ -68,11 +68,11 @@ public static class Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<T> GenesOfType<T>() where T : class => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>();
+        public IEnumerable<T> GenesOfType<T>() where T : Gene => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once UnusedMember.Global
-        public IEnumerable<T> ActiveGenesOfType<T>() where T : class
+        public IEnumerable<T> ActiveGenesOfType<T>() where T : Gene
         {
             foreach (T g in pawn.GenesOfType<T>())
             {
@@ -82,7 +82,7 @@ public static class Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T FirstActiveGeneOfType<T>() where T : class
+        public T FirstActiveGeneOfType<T>() where T : Gene
         {
             foreach (T g in pawn.GenesOfType<T>())
             {
@@ -94,7 +94,7 @@ public static class Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool HasActiveGeneOfType<T>() where T : class
+        public bool HasActiveGeneOfType<T>() where T : Gene
         {
             if (pawn.genes == null)
                 return false;
@@ -109,7 +109,7 @@ public static class Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool HasActiveGeneOfType<T>(Func<T, bool> predicate) where T : class
+        public bool HasActiveGeneOfType<T>(Func<T, bool> predicate) where T : Gene
         {
             if (pawn.genes == null)
                 return false;
@@ -123,12 +123,62 @@ public static class Extensions
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IEnumerable<GeneWithComps> GenesWithComp<T>() where T : GeneComp => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public GeneWithComps FirstActiveGeneWithComp<T>() where T : GeneComp
+        {
+            if (pawn.genes == null)
+                return null;
+
+            foreach (var g in pawn.GenesWithComp<T>())
+            {
+                if (g.Active)
+                    return g;
+            }
+
+            return null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool HasActiveGeneWithComp<T>() where T : GeneComp
+        {
+            if (pawn.genes == null)
+                return false;
+
+            foreach (var g in pawn.GenesWithComp<T>())
+            {
+                if (g.Active)
+                    return true;
+            }
+
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool HasActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp
+        {
+            if (pawn.genes == null)
+                return false;
+
+            foreach (var g in pawn.GenesWithComp<T>())
+            {
+                if (g.Active && predicate(g.GetComp<T>()))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public T FirstActiveGeneCompOfType<T>() where T : GeneComp => pawn.FirstActiveGeneWithComp<T>()?.GetComp<T>();
+        
         public int GetGeneticPsylinkLevelFor(AbilityDef ability)
         {
             if (pawn.GeneTracker?.hasPsycast != true)
                 return 0;
 
-            if (pawn.GenesOfType<GeneExt>().Any(gene =>
+            if (pawn.GenesOfType<GeneWithComps>().Any(gene =>
                     gene.Active && gene.DefExt.hasPsycast && gene.def.abilities?.Any(abilityDef => abilityDef == ability) == true))
             {
                 return ability.level;
@@ -138,10 +188,10 @@ public static class Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<T> HediffsOfType<T>() where T : class => pawn.GeneAndHediffCache.GetHediffsOfType<T>();
+        public IEnumerable<T> HediffsOfType<T>() where T : Hediff => pawn.GeneAndHediffCache.GetHediffsOfType<T>();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<HediffWithComps> HediffsWithComp<T>() where T : class => pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
+        public IEnumerable<HediffWithComps> HediffsWithComp<T>() where T : HediffComp => pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once UnusedMember.Global
@@ -149,7 +199,7 @@ public static class Extensions
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once UnusedMember.Global
-        public IEnumerable<Hediff> HediffsWithModExtension<T>() where T : class => pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
+        public IEnumerable<Hediff> HediffsWithModExtension<T>() where T : DefModExtension => pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
 
         public bool ChemicalIsAllowedByGenes(ChemicalDef chemicalDef)
         {

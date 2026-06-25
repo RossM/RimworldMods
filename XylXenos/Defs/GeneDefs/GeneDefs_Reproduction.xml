@@ -161,7 +161,6 @@
 
   <GeneDef>
     <defName>XylLoveEuphoria</defName>
-    <geneClass>XylXenos.Gene_LoveEuphoria</geneClass>
     <label>love euphoria</label>
     <description>Carriers of this gene secrete chemicals that cause a euphoric, drug-like high in their partner after lovin'. The chemicals grant a long-lasting mood bonus, but are highly addictive.</description>
     <biostatCpx>1</biostatCpx>
@@ -172,13 +171,15 @@
     <minAgeActive>16</minAgeActive>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <props Class="XylXenos.LoveEuphoriaProperties">
-          <need>XylLovin</need>
-          <hediffs>
-            <li>XylLoveEuphoria</li>
-            <li>XylLovinAddiction</li>
-          </hediffs>
-        </props>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_LoveEuphoria">
+            <need>XylLovin</need>
+            <hediffs>
+              <li>XylLoveEuphoria</li>
+              <li>XylLovinAddiction</li>
+            </hediffs>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

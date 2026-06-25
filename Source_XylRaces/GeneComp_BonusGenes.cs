@@ -1,6 +1,6 @@
 ﻿namespace XylXenos;
 
-public class BonusGenesProperties : GeneProperties
+public class GeneCompProperties_BonusGenes : GeneCompProperties
 {
     public IntRange biostatArc = IntRange.Zero;
     public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
@@ -12,26 +12,28 @@ public class BonusGenesProperties : GeneProperties
     public bool removeAfterAdding = false;
     public bool ignoreSelectionWeight = false;
     public IntRange count = IntRange.One;
+
+    public GeneCompProperties_BonusGenes()
+    {
+        compClass = typeof(GeneComp_BonusGenes);
+    }
 }
 
 [UsedFromXml]
-public class Gene_BonusGenes : GeneExt
+public class GeneComp_BonusGenes : GeneComp
 {
     [NotNull]
-    public BonusGenesProperties Props => (BonusGenesProperties)DefExt.props;
+    public GeneCompProperties_BonusGenes Props => (GeneCompProperties_BonusGenes)props;
 
     public List<Gene> addedGenes = [];
 
-    public override void ExposeData()
+    public override void CompExposeData()
     {
-        base.ExposeData();
         Scribe_Collections.Look(ref addedGenes, nameof(addedGenes), LookMode.Reference);
     }
 
-    public override void PostAdd()
+    public override void CompPostPostAdd()
     {
-        base.PostAdd();
-
         if (!Rand.Chance(Props.geneChance))
             return;
 
@@ -47,22 +49,22 @@ public class Gene_BonusGenes : GeneExt
         }
 
         if (Props.removeAfterAdding)
-            pawn.genes.RemoveGene(this);
+            Pawn.genes.RemoveGene(parent);
     }
 
     private void AddGene(GeneDef geneDef)
     {
         if (geneDef == null)
             return;
-        if (pawn.genes.GenesListForReading.Any(g => g.def == geneDef))
+        if (Pawn.genes.GenesListForReading.Any(g => g.def == geneDef))
             return;
 
         if (!GeneTuning.BiostatRange.Includes(geneDef.biostatMet +
-                                              pawn.genes.GenesListForReading.Sum(g => g.Active ? g.def.biostatMet : 0)))
+                                              Pawn.genes.GenesListForReading.Sum(g => g.Active ? g.def.biostatMet : 0)))
             return;
 
-        var geneType = Props.addedGeneType ?? GeneType;
-        addedGenes.Add(pawn.genes.AddGene(geneDef, geneType == GeneType.Xenogene));
+        var geneType = Props.addedGeneType ?? parent.GeneType;
+        addedGenes.Add(Pawn.genes.AddGene(geneDef, geneType == GeneType.Xenogene));
     }
 
     private float GeneWeight(GeneDef geneDef)
@@ -85,25 +87,25 @@ public class Gene_BonusGenes : GeneExt
 
         if (geneDef.DefExt is { } defExt)
         {
-            if (defExt.gender != null && defExt.gender != pawn.gender)
+            if (defExt.gender != null && defExt.gender != Pawn.gender)
                 return 0.0f;
-            if (defExt.geneType != null && defExt.geneType != GeneType)
+            if (defExt.geneType != null && defExt.geneType != parent.GeneType)
                 return 0.0f;
         }
 
         // Aptitude-giving genes must not apply to only disabled skills
-        if (!geneDef.aptitudes.NullOrEmpty() && geneDef.aptitudes.All(aptitude => pawn.skills.GetSkill(aptitude.skill).TotallyDisabled))
+        if (!geneDef.aptitudes.NullOrEmpty() && geneDef.aptitudes.All(aptitude => Pawn.skills.GetSkill(aptitude.skill).TotallyDisabled))
             return 0.0f;
 
         // No genes with requirements, unless they are met by the pawn's xenotype or already added genes
-        if (geneDef.prerequisite != null && !pawn.genes.Xenotype.AllGenes.Contains(geneDef.prerequisite) &&
+        if (geneDef.prerequisite != null && !Pawn.genes.Xenotype.AllGenes.Contains(geneDef.prerequisite) &&
             !addedGenes.Any(g => g.def == geneDef.prerequisite))
         {
             return 0.0f;
         }
 
         // No genes that conflict with genes in the pawn's xenotype or already added genes
-        foreach (var gene in pawn.genes.Xenotype.AllGenes)
+        foreach (var gene in Pawn.genes.Xenotype.AllGenes)
         {
             if (geneDef == gene)
                 return 0.0f;
@@ -130,17 +132,15 @@ public class Gene_BonusGenes : GeneExt
         return Props.ignoreSelectionWeight ? 1.0f : geneDef.selectionWeight;
     }
 
-    public override void PostRemove()
+    public override void CompPostPostRemove()
     {
-        base.PostRemove();
-
         if (Props.removeAfterAdding)
             return;
         if (addedGenes == null)
             return;
 
         foreach (var gene in addedGenes)
-            pawn.genes.RemoveGene(gene);
+            Pawn.genes.RemoveGene(gene);
     }
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()

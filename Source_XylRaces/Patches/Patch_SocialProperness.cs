@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(SocialProperness))]
 public class Patch_SocialProperness
 {
-    [Feature(typeof(Gene_Hyperlactation))]
+    [Feature(typeof(GeneComp_Hyperlactation))]
     [InfixPostfix(typeof(GridsUtility), nameof(GridsUtility.IsInPrisonCell))]
     [InfixPatch(nameof(SocialProperness.IsSociallyProper), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool)])]
     public static void IsInPrisonCell_Postfix(Thing t, ref bool __result)

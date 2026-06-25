@@ -13,7 +13,7 @@ public static class PatchHelpers
 
     public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
-        var bonusGenes = geneDef.DefExt?.props as BonusGenesProperties;
+        var bonusGenes = geneDef.DefExt?.CompProps<GeneCompProperties_BonusGenes>();
         if (bonusGenes == null)
             return 0;
         if (bonusGenes.geneChance < 1.0f)
@@ -149,7 +149,7 @@ public static class PatchHelpers
 
     public static void GenerateCongenitalHediffs(Pawn pawn)
     {
-        foreach (GeneExt gene in pawn.ActiveGenesOfType<GeneExt>())
+        foreach (GeneWithComps gene in pawn.ActiveGenesOfType<GeneWithComps>())
         {
             if (!gene.DefExt.congenitalHediffs.NullOrEmpty())
             {
@@ -270,7 +270,7 @@ public static class PatchHelpers
         if (pawn?.genes == null)
             return int.MinValue;
 
-        return pawn.ActiveGenesOfType<GeneExt>().Sum(gene => gene.DefExt.xenotypeStrength);
+        return pawn.ActiveGenesOfType<GeneWithComps>().Sum(gene => gene.DefExt.xenotypeStrength);
     }
 
     public static bool HyperlactatingPrisonerInRoomCanProduce(Room r, ThingDef thingDef)
@@ -279,7 +279,7 @@ public static class PatchHelpers
             return false;
         foreach (Pawn owner in r.Owners)
         {
-            if ((owner.FirstActiveGeneOfType<Gene_Hyperlactation>()?.def.DefExt?.props as HyperlactationProperties)?.item == thingDef)
+            if (owner.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>()?.Props.item == thingDef)
                 return true;
         }
 

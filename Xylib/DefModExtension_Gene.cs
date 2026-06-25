@@ -44,8 +44,10 @@ public class StartingItemOption
     public bool ignoreRestrictions;
 }
 
-public abstract class GeneProperties
+public abstract class GeneCompProperties
 {
+    public Type compClass;
+
     public virtual IEnumerable<string> ConfigErrors()
     {
         yield break;
@@ -226,9 +228,9 @@ public class DefModExtension_Gene : DefModExtension
 
     #endregion
 
-    #region Properties for specific GeneExt subclasses
+    #region Comps
 
-    public GeneProperties props;
+    public List<GeneCompProperties> comps;
 
     #endregion
 
@@ -327,12 +329,13 @@ public class DefModExtension_Gene : DefModExtension
         var fieldDef = parent?.GetType().GetField("geneClass");
         if (fieldDef == null || fieldDef.FieldType != typeof(Type))
             yield return "parent is not GeneDef or GeneTemplateDef";
-        else if (!typeof(GeneExt).IsAssignableFrom((Type)fieldDef.GetValue(parent)))
+        else if (!typeof(GeneWithComps).IsAssignableFrom((Type)fieldDef.GetValue(parent)))
             yield return "geneClass is not GeneExt or subclass thereof";
 
-        if (props != null)
+        if (comps != null)
         {
-            foreach (var configError in props.ConfigErrors())
+            foreach (var comp in comps)
+            foreach (var configError in comp.ConfigErrors())
                 yield return configError;
         }
     }
@@ -347,8 +350,25 @@ public class DefModExtension_Gene : DefModExtension
 
         var fieldDef = parentDef.GetType().GetField("geneClass");
         if (fieldDef != null && fieldDef.FieldType == typeof(Type) && (Type)fieldDef.GetValue(parentDef) == typeof(Gene))
-            fieldDef.SetValue(parentDef, typeof(GeneExt));
+            fieldDef.SetValue(parentDef, typeof(GeneWithComps));
 
-        props?.ResolveReferences(parentDef);
+        if (comps != null)
+        {
+            foreach (var comp in comps)
+                comp.ResolveReferences(parentDef);
+        }
+    }
+
+    public T CompProps<T>() where T : GeneCompProperties
+    {
+        if (comps == null)
+            return null;
+        foreach (var comp in comps)
+        {
+            if (comp is T t)
+                return t;
+        }
+
+        return null;
     }
 }

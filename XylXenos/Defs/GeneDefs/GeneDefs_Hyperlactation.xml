@@ -4,7 +4,6 @@
 
   <GeneDef>
     <defName>XylHyperlactation</defName>
-    <geneClass>XylXenos.Gene_Hyperlactation</geneClass>
     <label>hyperlactation</label>
     <description>Female carriers of this gene produce large amounts of breast milk, and lactate even when not pregnant or breastfeeding. This gene is inactive on males.</description>
     <biostatCpx>1</biostatCpx>
@@ -27,17 +26,19 @@
             <count>5~10</count>
           </li>
         </startingItems>
-        <props Class="XylXenos.HyperlactationProperties">
-          <item>Milk</item>
-          <chargePerItem>0.1</chargePerItem>
-          <hediff>XylHyperlactating</hediff>
-          <milkedThoughts>
-            <li>XylMilked</li>
-            <li>XylMilkedMood</li>
-            <li>XylMilked_Masochist</li>
-            <li>XylMilkedMood_Masochist</li>
-          </milkedThoughts>
-        </props>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Hyperlactation">
+            <item>Milk</item>
+            <chargePerItem>0.1</chargePerItem>
+            <hediff>XylHyperlactating</hediff>
+            <milkedThoughts>
+              <li>XylMilked</li>
+              <li>XylMilkedMood</li>
+              <li>XylMilked_Masochist</li>
+              <li>XylMilkedMood_Masochist</li>
+            </milkedThoughts>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

@@ -5,7 +5,7 @@ public class MentalState_SeeingRed : MentalState
 {
     public override bool ForceHostileTo(Thing t)
     {
-        return pawn.HasActiveGeneOfType<Gene_SeeingRed>(g => g.ForceHostility(t));
+        return pawn.HasActiveGeneWithComp<GeneComp_SeeingRed>(g => g.ForceHostility(t));
     }
 
     public override RandomSocialMode SocialModeMax()

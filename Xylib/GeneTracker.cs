@@ -97,7 +97,7 @@ public class GeneTracker : IEventListener, IPawnData
 
         if (pawn.genes != null)
         {
-            foreach (var gene in pawn.ActiveGenesOfType<GeneExt>())
+            foreach (var gene in pawn.ActiveGenesOfType<GeneWithComps>())
             {
                 var def = gene.DefExt;
 

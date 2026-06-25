@@ -9,7 +9,6 @@
   </GeneCategoryDef>
 
   <GeneDef>
-    <geneClass>XylXenos.Gene_BonusGenes</geneClass>
     <defName>XylGeneticAtavism</defName>
     <label>genetic atavism</label>
     <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
@@ -23,19 +22,20 @@
     </customEffectDescriptions>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <props Class="XylXenos.BonusGenesProperties">
-          <biostatArc>0~0</biostatArc>
-          <biostatCpx>1~99</biostatCpx>
-          <biostatMet>-2~2</biostatMet>
-          <geneChance>0.5</geneChance>
-          <addedGeneType>Xenogene</addedGeneType>
-        </props>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_BonusGenes">
+            <biostatArc>0~0</biostatArc>
+            <biostatCpx>1~99</biostatCpx>
+            <biostatMet>-2~2</biostatMet>
+            <geneChance>0.5</geneChance>
+            <addedGeneType>Xenogene</addedGeneType>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
 
   <GeneDef Name="XylSpecialistBase" Abstract="true">
-    <geneClass>XylXenos.Gene_BonusGenes</geneClass>
     <displayCategory>XylRandom</displayCategory>
     <exclusionTags>
       <li>XylSpecialist</li>
@@ -53,24 +53,26 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
         <geneType>Xenogene</geneType>
-        <props Class="XylXenos.BonusGenesProperties">
-          <removeAfterAdding>true</removeAfterAdding>
-          <ignoreSelectionWeight>true</ignoreSelectionWeight>
-          <allowedGenes>
-            <!--<li>AptitudeStrong_Shooting</li>-->
-            <!--<li>AptitudeStrong_Melee</li>-->
-            <li>AptitudeStrong_Construction</li>
-            <li>AptitudeStrong_Mining</li>
-            <li>AptitudeStrong_Cooking</li>
-            <li>AptitudeStrong_Plants</li>
-            <li>AptitudeStrong_Animals</li>
-            <li>AptitudeStrong_Crafting</li>
-            <li>AptitudeStrong_Artistic</li>
-            <li>AptitudeStrong_Medicine</li>
-            <li>AptitudeStrong_Social</li>
-            <li>AptitudeStrong_Intellectual</li>
-          </allowedGenes>
-        </props>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_BonusGenes">
+            <removeAfterAdding>true</removeAfterAdding>
+            <ignoreSelectionWeight>true</ignoreSelectionWeight>
+            <allowedGenes>
+              <!--<li>AptitudeStrong_Shooting</li>-->
+              <!--<li>AptitudeStrong_Melee</li>-->
+              <li>AptitudeStrong_Construction</li>
+              <li>AptitudeStrong_Mining</li>
+              <li>AptitudeStrong_Cooking</li>
+              <li>AptitudeStrong_Plants</li>
+              <li>AptitudeStrong_Animals</li>
+              <li>AptitudeStrong_Crafting</li>
+              <li>AptitudeStrong_Artistic</li>
+              <li>AptitudeStrong_Medicine</li>
+              <li>AptitudeStrong_Social</li>
+              <li>AptitudeStrong_Intellectual</li>
+            </allowedGenes>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -86,52 +88,26 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
         <geneType>Xenogene</geneType>
-        <props Class="XylXenos.BonusGenesProperties">
-          <removeAfterAdding>true</removeAfterAdding>
-          <ignoreSelectionWeight>true</ignoreSelectionWeight>
-          <allowedGenes>
-            <!--<li>AptitudeRemarkable_Shooting</li>-->
-            <!--<li>AptitudeRemarkable_Melee</li>-->
-            <li>AptitudeRemarkable_Construction</li>
-            <li>AptitudeRemarkable_Mining</li>
-            <li>AptitudeRemarkable_Cooking</li>
-            <li>AptitudeRemarkable_Plants</li>
-            <li>AptitudeRemarkable_Animals</li>
-            <li>AptitudeRemarkable_Crafting</li>
-            <li>AptitudeRemarkable_Artistic</li>
-            <li>AptitudeRemarkable_Medicine</li>
-            <li>AptitudeRemarkable_Social</li>
-            <li>AptitudeRemarkable_Intellectual</li>
-          </allowedGenes>
-        </props>
-      </li>
-    </modExtensions>
-  </GeneDef>
-
-  <GeneDef>
-    <defName>XylSplicer</defName>
-    <geneClass>XylXenos.Gene_BonusGenes</geneClass>
-    <label>splicer</label>
-    <description>TODO</description>
-    <biostatArc>1</biostatArc>
-    <biostatCpx>14</biostatCpx>
-    <biostatMet>0</biostatMet>
-    <displayCategory>Archite</displayCategory>
-    <displayOrderInCategory>0</displayOrderInCategory>
-    <canGenerateInGeneSet>false</canGenerateInGeneSet>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
-    <modExtensions>
-      <li Class="Xylib.DefModExtension_Gene">
-        <showInXenotypeCreation>false</showInXenotypeCreation>
-        <props Class="XylXenos.BonusGenesProperties">
-          <removeAfterAdding>true</removeAfterAdding>
-          <count>14 ~ 21</count>
-          <prohibitedGenes>
-            <li>ViolenceDisabled</li>
-            <li>Inbred</li>
-            <li>XylGeneticAtavism</li>
-          </prohibitedGenes>
-        </props>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_BonusGenes">
+            <removeAfterAdding>true</removeAfterAdding>
+            <ignoreSelectionWeight>true</ignoreSelectionWeight>
+            <allowedGenes>
+              <!--<li>AptitudeRemarkable_Shooting</li>-->
+              <!--<li>AptitudeRemarkable_Melee</li>-->
+              <li>AptitudeRemarkable_Construction</li>
+              <li>AptitudeRemarkable_Mining</li>
+              <li>AptitudeRemarkable_Cooking</li>
+              <li>AptitudeRemarkable_Plants</li>
+              <li>AptitudeRemarkable_Animals</li>
+              <li>AptitudeRemarkable_Crafting</li>
+              <li>AptitudeRemarkable_Artistic</li>
+              <li>AptitudeRemarkable_Medicine</li>
+              <li>AptitudeRemarkable_Social</li>
+              <li>AptitudeRemarkable_Intellectual</li>
+            </allowedGenes>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

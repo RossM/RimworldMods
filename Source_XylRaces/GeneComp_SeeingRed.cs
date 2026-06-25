@@ -1,33 +1,36 @@
 ﻿namespace XylXenos;
 
-public class SeeingRedProperties : GeneProperties
+public class GeneCompProperties_SeeingRed : GeneCompProperties
 {
     public float chance = 1.0f;
     public HediffDef hediffDef;
+
+    public GeneCompProperties_SeeingRed()
+    {
+        compClass = typeof(GeneComp_SeeingRed);
+    }
 }
 
-public class Gene_SeeingRed : GeneExt
+public class GeneComp_SeeingRed : GeneComp, IEventListener
 {
     [NotNull]
-    public SeeingRedProperties Props => (SeeingRedProperties)DefExt.props;
+    public GeneCompProperties_SeeingRed Props => (GeneCompProperties_SeeingRed)props;
 
     private const int checkInterval = 60;
     public HashSet<Thing> extraEnemies;
 
-    public override void ExposeData()
+    public override void CompExposeData()
     {
-        base.ExposeData();
         Scribe_Collections.Look(ref extraEnemies, nameof(extraEnemies), LookMode.Reference);
     }
 
-    public override void TickInterval(int delta)
+    public override void CompTickInterval(int delta)
     {
-        base.TickInterval(delta);
-        if (!pawn.IsHashIntervalTick(checkInterval, delta))
+        if (!Pawn.IsHashIntervalTick(checkInterval, delta))
             return;
         if (extraEnemies != null)
         {
-            Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
+            Hediff hediff = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
             if (hediff == null)
                 extraEnemies.Clear();
         }
@@ -46,14 +49,14 @@ public class Gene_SeeingRed : GeneExt
 
     public void Notify_DamageTaken(DamageInfo damageInfo)
     {
-        Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
+        Hediff hediff = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
 
         if (hediff == null && !Rand.Chance(Props.chance))
             return;
-        if (pawn.Downed)
+        if (Pawn.Downed)
             return;
 
-        hediff ??= pawn.health.AddHediff(Props.hediffDef);
+        hediff ??= Pawn.health.AddHediff(Props.hediffDef);
         if (hediff == null)
             return;
 
@@ -65,10 +68,12 @@ public class Gene_SeeingRed : GeneExt
         comp.ticksToDisappear = comp.disappearsAfterTicks;
     }
 
-    public override void RegisterWith(EventManager manager)
+    public void RegisterWith(EventManager manager)
     {
-        base.RegisterWith(manager);
+        manager.Register<DamageInfo>(EventDefOf.PreTakeDamage, Pawn, Notify_DamageTaken);
+    }
 
-        manager.Register<DamageInfo>(EventDefOf.PreTakeDamage, pawn, Notify_DamageTaken);
+    public void PreUnregister(EventManager manager)
+    {
     }
 }

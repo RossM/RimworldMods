@@ -80,7 +80,7 @@ public class Settings : ModSettings
         {
             ThreeStateMode.Always => true,
             ThreeStateMode.Never => false,
-            ThreeStateMode.Sometimes => pawn.HasActiveGeneOfType<Gene_Hyperlactation>(),
+            ThreeStateMode.Sometimes => pawn.FirstActiveGeneWithComp<GeneComp_Hyperlactation>() != null,
             _ => throw new ArgumentOutOfRangeException()
         };
     }

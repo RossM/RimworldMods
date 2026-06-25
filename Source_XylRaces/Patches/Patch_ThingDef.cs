@@ -3,14 +3,14 @@
 [HarmonyPatch(typeof(ThingDef))]
 public static class Patch_ThingDef
 {
-    [Feature(typeof(Gene_Flight))]
+    [Feature(typeof(GeneComp_Flight))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(ThingDef.SpecialDisplayStats))]
     public static void SpecialDisplayStats_Postfix(ThingDef __instance, ref IEnumerable<StatDrawEntry> __result)
     {
         if (__instance.apparel != null)
         {
-            bool allowsFlight = Gene_Flight.ApparelAllowsFlight(__instance);
+            bool allowsFlight = GeneComp_Flight.ApparelAllowsFlight(__instance);
 
             __result = __result.AddItem(
                 new StatDrawEntry(StatCategoryDefOf.Apparel,

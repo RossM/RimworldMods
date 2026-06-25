@@ -1,15 +1,20 @@
 ﻿namespace XylXenos;
 
-public class LoveEuphoriaProperties : GeneProperties
+public class GeneCompProperties_LoveEuphoria : GeneCompProperties
 {
     public NeedDef need;
     public List<HediffDef> hediffs;
+
+    public GeneCompProperties_LoveEuphoria()
+    {
+        compClass = typeof(GeneComp_LoveEuphoria);
+    }
 }
 
 [UsedFromXml]
-public class Gene_LoveEuphoria : GeneExt
+public class GeneComp_LoveEuphoria : GeneComp, IEventListener
 {
-    public LoveEuphoriaProperties Props => (LoveEuphoriaProperties)DefExt.props;
+    public GeneCompProperties_LoveEuphoria Props => (GeneCompProperties_LoveEuphoria)props;
 
     public void Notify_PostLovin(Pawn partner)
     {
@@ -20,16 +25,19 @@ public class Gene_LoveEuphoria : GeneExt
                 var hediff = partner.health.GetOrAddHediff(hediffDef);
                 hediff.Severity = hediff.def.initialSeverity;
                 if (hediff is HediffWithCompsExt hediffWithCompsExt)
-                    hediffWithCompsExt.sourcePawn = pawn;
+                    hediffWithCompsExt.sourcePawn = Pawn;
             }
         }
 
         partner.needs.TryGetNeed(Props.need)?.CurLevel = 1f;
     }
 
-    public override void RegisterWith(EventManager manager)
+    public void RegisterWith(EventManager manager)
     {
-        base.RegisterWith(manager);
-        manager.Register<Pawn>(EventDefOf.PostLovin, pawn, Notify_PostLovin);
+        manager.Register<Pawn>(EventDefOf.PostLovin, Pawn, Notify_PostLovin);
+    }
+
+    public void PreUnregister(EventManager manager)
+    {
     }
 }

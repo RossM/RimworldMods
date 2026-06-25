@@ -7,7 +7,9 @@
     </types>
     <methods>
       <li>XylXenos.NotificationManager:Notify</li>
-      <li>XylXenos.GeneExt:get_Active</li>
+      <li>XylXenos.GeneWithComps:get_Active</li>
+      <li>XylXenos.GeneWithComps:Tick</li>
+      <li>XylXenos.GeneWithComps:TickInterval</li>
     </methods>
   </XylXenos>
 </Analyzer>

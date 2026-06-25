@@ -3,7 +3,7 @@
 [HarmonyPatch]
 public static class PatchLactation
 {
-    [Feature(typeof(Gene_Hyperlactation))]
+    [Feature(typeof(GeneComp_Hyperlactation))]
     [InfixPostfix(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef), [typeof(HediffDef), typeof(bool)])]
     [InfixPatch(typeof(ChildcareUtility), "CanBreastfeedNow")]
     [InfixPatch(typeof(ChildcareUtility), "SuckleFromLactatingPawn")]
@@ -16,7 +16,7 @@ public static class PatchLactation
             __result = __instance.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
     }
 
-    [Feature(typeof(Gene_Hyperlactation))]
+    [Feature(typeof(GeneComp_Hyperlactation))]
     [InfixPostfix(typeof(HediffSet), nameof(HediffSet.HasHediff), [typeof(HediffDef), typeof(bool)])]
     [InfixPatch(typeof(ChildcareUtility), "CanBreastfeed")]
     public static void HasHediff_Postfix(HediffSet __instance, HediffDef def, bool mustBeVisible, ref bool __result)

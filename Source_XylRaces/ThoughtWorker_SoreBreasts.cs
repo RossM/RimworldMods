@@ -10,11 +10,11 @@ public class ThoughtWorker_SoreBreasts : ThoughtWorker
         if (ThoughtUtility.ThoughtNullified(p, def))
             return ThoughtState.Inactive;
 
-        var gene = p.FirstActiveGeneOfType<Gene_Hyperlactation>();
-        if (gene == null)
+        var comp = p.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>();
+        if (comp == null)
             return ThoughtState.Inactive;
 
-        if (!gene.TryGetSoreness(out int soreness))
+        if (!comp.TryGetSoreness(out int soreness))
             return ThoughtState.Inactive;
         return ThoughtState.ActiveAtStage(Math.Min(soreness, MaxSorenessLevel));
     }

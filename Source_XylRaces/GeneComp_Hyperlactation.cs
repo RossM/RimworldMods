@@ -1,23 +1,28 @@
 ﻿namespace XylXenos;
 
-public class HyperlactationProperties : GeneProperties
+public class GeneCompProperties_Hyperlactation : GeneCompProperties
 {
     public ThingDef item;
     public float chargePerItem = 0.1f;
     public HediffDef hediff;
     [CanBeNull] public List<ThoughtDef> milkedThoughts;
     public int ticksPerSorenessStage = 60000;
+
+    public GeneCompProperties_Hyperlactation()
+    {
+        compClass = typeof(GeneComp_Hyperlactation);
+    }
 }
 
-public class Gene_Hyperlactation : GeneExt
+public class GeneComp_Hyperlactation : GeneComp
 {
     [NotNull]
-    public HyperlactationProperties Props => (HyperlactationProperties)DefExt.props;
+    public GeneCompProperties_Hyperlactation Props => (GeneCompProperties_Hyperlactation)props;
 
-    public Texture2D ExtraIcon => DefExt.ExtraIcon;
+    public Texture2D ExtraIcon => parent.DefExt.ExtraIcon;
 
     public HediffComp_Lactating Lactating =>
-        lactatingInternal ??= pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
+        lactatingInternal ??= Pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
 
     public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / Props.chargePerItem);
 
@@ -29,23 +34,22 @@ public class Gene_Hyperlactation : GeneExt
 
     private HediffComp_Lactating lactatingInternal;
 
-    public override void ExposeData()
+    public override void CompExposeData()
     {
-        base.ExposeData();
         Scribe_Values.Look(ref fullSinceTick, nameof(fullSinceTick));
         Scribe_Values.Look(ref allowMilking, nameof(allowMilking));
         Scribe_Values.Look(ref onlyMilkWhenFull, nameof(onlyMilkWhenFull), true);
     }
 
-    public override IEnumerable<Gizmo> GetGizmos()
+    public override IEnumerable<Gizmo> CompGetGizmos()
     {
-        if (!Active)
+        if (!parent.Active)
             yield break;
-        if (!pawn.Spawned)
+        if (!Pawn.Spawned)
             yield break;
-        if (!pawn.IsColonistPlayerControlled && !pawn.IsPrisonerOfColony)
+        if (!Pawn.IsColonistPlayerControlled && !Pawn.IsPrisonerOfColony)
             yield break;
-        if (pawn.Drafted)
+        if (Pawn.Drafted)
             yield break;
 
         yield return new Command_Toggle
@@ -70,21 +74,17 @@ public class Gene_Hyperlactation : GeneExt
         }
     }
 
-    public override void PostAdd()
+    public override void CompPostPostAdd()
     {
-        base.PostAdd();
-
         AddHediff();
     }
 
-    public override void TickInterval(int delta)
+    public override void CompTickInterval(int delta)
     {
-        if (!Active)
+        if (!parent.Active)
             return;
 
-        base.TickInterval(delta);
-
-        if (!pawn.IsHashIntervalTick(checkInterval, delta))
+        if (!Pawn.IsHashIntervalTick(checkInterval, delta))
             return;
 
         AddHediff();
@@ -97,16 +97,16 @@ public class Gene_Hyperlactation : GeneExt
 
     private void AddHediff()
     {
-        if (!Active)
+        if (!parent.Active)
             return;
 
-        if (pawn.health.hediffSet.HasHediff(HediffDefOf.Malnutrition))
+        if (Pawn.health.hediffSet.HasHediff(HediffDefOf.Malnutrition))
             return;
 
-        if (pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.Lactating) is { } lactatingHediff)
-            pawn.health.RemoveHediff(lactatingHediff);
+        if (Pawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.Lactating) is { } lactatingHediff)
+            Pawn.health.RemoveHediff(lactatingHediff);
 
-        Hediff hediff = pawn.health.GetOrAddHediff(Props.hediff);
+        Hediff hediff = Pawn.health.GetOrAddHediff(Props.hediff);
         hediff.Severity = 1.0f;
 
         if (Lactating?.parent != hediff)
@@ -115,7 +115,7 @@ public class Gene_Hyperlactation : GeneExt
 
     public bool ReadyToMilk()
     {
-        if (!Active)
+        if (!parent.Active)
             return false;
         if (!allowMilking)
             return false;
@@ -139,7 +139,7 @@ public class Gene_Hyperlactation : GeneExt
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
-        if (!Active)
+        if (!parent.Active)
             yield break;
         float milkPerDay = Lactating.Props.fullChargeAmount * GenDate.TicksPerDay /
                            (Lactating.Props.ticksToFullCharge * Props.chargePerItem);

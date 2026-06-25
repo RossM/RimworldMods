@@ -1,8 +1,13 @@
 ﻿namespace XylXenos;
 
-public class FlightProperties : GeneProperties
+public class GeneCompProperties_Flight : GeneCompProperties
 {
     public float autoFlyMinDistance = 25f;
+
+    public GeneCompProperties_Flight()
+    {
+        compClass = typeof(GeneComp_Flight);
+    }
 }
 
 public class DefModExtension_Thing_Flight : DefModExtension
@@ -10,14 +15,14 @@ public class DefModExtension_Thing_Flight : DefModExtension
     public bool allowsFlight = true;
 }
 
-public class Gene_Flight : GeneExt
+public class GeneComp_Flight : GeneComp, IEventListener
 {
     [NotNull]
-    public FlightProperties Props => (FlightProperties)DefExt.props;
+    public GeneCompProperties_Flight Props => (GeneCompProperties_Flight)props;
 
-    public Texture2D ExtraIcon => DefExt.ExtraIcon;
+    public Texture2D ExtraIcon => parent.DefExt.ExtraIcon;
 
-    public bool CanFlyNow => pawn.flight is { CanFlyNow: true } && !pawn.Downed && flightAllowedByApparel;
+    public bool CanFlyNow => Pawn.flight is { CanFlyNow: true } && !Pawn.Downed && flightAllowedByApparel;
 
     public bool autoFly = true;
     public bool autoFlyDrafted = true;
@@ -26,29 +31,28 @@ public class Gene_Flight : GeneExt
 
     public bool flightAllowedByApparel = true;
 
-    public override void ExposeData()
+    public override void CompExposeData()
     {
-        base.ExposeData();
         Scribe_Values.Look(ref autoFly, nameof(autoFly));
         Scribe_Values.Look(ref autoFlyDrafted, nameof(autoFlyDrafted));
         Scribe_Values.Look(ref flightAllowedByApparel, nameof(flightAllowedByApparel));
     }
 
 
-    public override IEnumerable<Gizmo> GetGizmos()
+    public override IEnumerable<Gizmo> CompGetGizmos()
     {
-        if (!Active)
+        if (!parent.Active)
             yield break;
-        if (!pawn.Spawned)
+        if (!Pawn.Spawned)
             yield break;
-        if (!pawn.IsColonistPlayerControlled)
+        if (!Pawn.IsColonistPlayerControlled)
             yield break;
 
         string flyingDisabledBy = "";
         if (!flightAllowedByApparel)
         {
             List<string> items = [];
-            foreach (var item in pawn.apparel.WornApparel)
+            foreach (var item in Pawn.apparel.WornApparel)
             {
                 if (!ApparelAllowsFlight(item.def))
                     items.Add(item.Label);
@@ -60,21 +64,21 @@ public class Gene_Flight : GeneExt
 
         yield return new Command_ActionWithCooldown
         {
-            action = () => { pawn.flight.StartFlying(); },
+            action = () => { Pawn.flight.StartFlying(); },
             defaultLabel = "XylCommandFlyLabel".TranslateSimple(),
             defaultDesc = "XylCommandFlyDesc".TranslateSimple(),
             Disabled = !CanFlyNow,
-            cooldownPercentGetter = () => 1.0f - pawn.flight.flightCooldownTicks / (pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
+            cooldownPercentGetter = () => 1.0f - Pawn.flight.flightCooldownTicks / (Pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
             icon = ExtraIcon,
             defaultDescPostfix = "\n\n" + $"""
-                    {flyingDisabledBy}{"CooldownTime".TranslateSimple()}: {pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall()}{"LetterSecond".TranslateSimple()}
-                    {"AbilityDuration".TranslateSimple()}: {pawn.GetStatValue(StatDefOf.MaxFlightTime).ToStringDecimalIfSmall()}{"LetterSecond".TranslateSimple()}
+                    {flyingDisabledBy}{"CooldownTime".TranslateSimple()}: {Pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall()}{"LetterSecond".TranslateSimple()}
+                    {"AbilityDuration".TranslateSimple()}: {Pawn.GetStatValue(StatDefOf.MaxFlightTime).ToStringDecimalIfSmall()}{"LetterSecond".TranslateSimple()}
                     """,
         };
 
         if (flightAllowedByApparel)
         {
-            if (pawn.Drafted)
+            if (Pawn.Drafted)
             {
                 yield return new Command_Toggle
                 {
@@ -99,36 +103,34 @@ public class Gene_Flight : GeneExt
         }
     }
 
-    public override void Tick()
+    public override void CompTick()
     {
-        base.Tick();
-
-        Pawn_FlightTracker flight = pawn.flight;
+        Pawn_FlightTracker flight = Pawn.flight;
         if (flight == null)
             return;
 
         if (flight.Flying != wasFlying)
         {
-            pawn.Drawer.renderer.SetAllGraphicsDirty();
+            Pawn.Drawer.renderer.SetAllGraphicsDirty();
             wasFlying = flight.Flying;
         }
 
         if (!CanFlyNow)
             return;
 
-        if (pawn.IsPlayerControlled)
+        if (Pawn.IsPlayerControlled)
         {
-            if ((pawn.Drafted ? autoFlyDrafted : autoFly) &&
-                pawn.pather.Moving &&
-                pawn.Position.DistanceTo(pawn.pather.Destination.Cell) >= Props.autoFlyMinDistance &&
-                pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
+            if ((Pawn.Drafted ? autoFlyDrafted : autoFly) &&
+                Pawn.pather.Moving &&
+                Pawn.Position.DistanceTo(Pawn.pather.Destination.Cell) >= Props.autoFlyMinDistance &&
+                Pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
             {
                 flight.StartFlying();
             }
         }
         else
         {
-            if (pawn.pather.Moving && pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
+            if (Pawn.pather.Moving && Pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
             {
                 flight.StartFlying();
             }
@@ -143,14 +145,12 @@ public class Gene_Flight : GeneExt
     private void CheckApparel()
     {
         flightAllowedByApparel = true;
-        foreach (var item in pawn.apparel.WornApparel)
+        foreach (var item in Pawn.apparel.WornApparel)
             flightAllowedByApparel &= ApparelAllowsFlight(item.def);
     }
 
-    public override void PostAdd()
+    public override void CompPostPostAdd()
     {
-        base.PostAdd();
-
         CheckApparel();
     }
 
@@ -176,19 +176,21 @@ public class Gene_Flight : GeneExt
     // This would be unfortunate, so try to move the pawn to a better position.
     public void Notify_Downed()
     {
-        if (pawn.Flying && pawn.Downed && !pawn.Position.WalkableBy(pawn.Map, pawn))
+        if (Pawn.Flying && Pawn.Downed && !Pawn.Position.WalkableBy(Pawn.Map, Pawn))
         {
-            var newCell = CellFinder.StandableCellNear(pawn.Position, pawn.Map, 5f);
+            var newCell = CellFinder.StandableCellNear(Pawn.Position, Pawn.Map, 5f);
             if (newCell != IntVec3.Invalid)
-                pawn.Position = newCell;
+                Pawn.Position = newCell;
         }
     }
 
-    public override void RegisterWith(EventManager manager)
+    public void RegisterWith(EventManager manager)
     {
-        base.RegisterWith(manager);
+        manager.Register(EventDefOf.PostApparelChanged, Pawn, Notify_ApparelChanged);
+        manager.Register(EventDefOf.PostDowned, Pawn, Notify_Downed);
+    }
 
-        manager.Register(EventDefOf.PostApparelChanged, pawn, Notify_ApparelChanged);
-        manager.Register(EventDefOf.PostDowned, pawn, Notify_Downed);
+    public void PreUnregister(EventManager manager)
+    {
     }
 }

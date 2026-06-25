@@ -79,7 +79,6 @@
 
   <GeneDef>
     <defName>XylSeeingRed</defName>
-    <geneClass>XylXenos.Gene_SeeingRed</geneClass>
     <label>seeing red</label>
     <description>Carriers of this gene have a chance of going into a blind range when they are damaged in combat, charging the nearest enemy and fighting in melee until all enemies are dead. During this state they are faster, stronger, and nearly immune to pain. This ability can't be controlled.</description>
     <biostatCpx>1</biostatCpx>
@@ -90,10 +89,12 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
         <manhunterOnDamageChanceFactor>2</manhunterOnDamageChanceFactor>
-        <props Class="XylXenos.SeeingRedProperties">
-          <chance>0.15</chance>
-          <hediffDef>XylSeeingRed</hediffDef>
-        </props>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_SeeingRed">
+            <chance>0.15</chance>
+            <hediffDef>XylSeeingRed</hediffDef>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -211,7 +212,6 @@
 
   <GeneDef>
     <defName>XylBatWings</defName>
-    <geneClass>XylXenos.Gene_Flight</geneClass>
     <label>bat wings</label>
     <description>Carriers of this gene have bat-like wings, allowing them to fly for short periods. Wearing some heavy torso-covering items will prevent flight.</description>
     <biostatCpx>2</biostatCpx>
@@ -258,7 +258,9 @@
     </statOffsets>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <props Class="XylXenos.FlightProperties"/>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Flight"/>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -510,7 +512,6 @@
 
   <GeneDef>
     <defName>XylWoundHealing_UltraFast</defName>
-    <geneClass>XylXenos.Gene_Regeneration</geneClass>
     <label>ultra-fast wound healing</label>
     <description>Carriers of this gene heal wounds unnaturally quickly, often recovering from even the most serious injuries in mere hours. It won't fix permanent scars or blood loss.</description>
     <displayCategory>Archite</displayCategory>
@@ -523,9 +524,11 @@
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <props Class="XylXenos.RegenerationProperties">
-          <healthPerHour>20</healthPerHour>
-        </props>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Regeneration">
+            <healthPerHour>20</healthPerHour>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

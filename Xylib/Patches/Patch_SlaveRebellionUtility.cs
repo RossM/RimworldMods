@@ -97,7 +97,7 @@ public static class Patch_SlaveRebellionUtility
 
         if (initiateSlaveRebellionMtbDays < 0)
         {
-            if (pawn.ActiveGenesOfType<GeneExt>().Select(gene => gene.DefExt).OrderBy(def => def.slaveRebellionThresholdDays)
+            if (pawn.ActiveGenesOfType<GeneWithComps>().Select(gene => gene.DefExt).OrderBy(def => def.slaveRebellionThresholdDays)
                     .FirstOrDefault() is { slaveRebellionThresholdDays: < float.MaxValue } def)
             {
                 stringBuilder.AppendLine(
