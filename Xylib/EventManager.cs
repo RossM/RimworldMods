@@ -184,10 +184,10 @@ public class EventManager : GameComponent
         }
     }
 
-    public static EventManager Instance => Current.Game.GetComponent<EventManager>();
+    public static EventManager Instance => Current.Game?.GetComponent<EventManager>();
     private static bool doDebug = false;
 
-    public static List<IEventListener> staticListeners = [];
+    private static readonly List<IEventListener> staticListeners = [];
     [Unsaved] public HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
 
     private readonly NotificationInfo[] notifications = new NotificationInfo[DefDatabase<EventDef>.DefCount];
@@ -550,15 +550,20 @@ public class EventManager : GameComponent
         RegisterStaticListeners();
     }
 
+    public static void AddStaticListener(IEventListener listener)
+    {
+        staticListeners.Add(listener);
+        Instance?.RegisterStaticListeners();
+    }
+
     private void RegisterStaticListeners()
     {
         foreach (var listener in staticListeners)
         {
-            if (alreadyRegisteredStaticListeners.Contains(listener))
+            if (!alreadyRegisteredStaticListeners.Add(listener))
                 continue;
 
             listener.RegisterWith(this);
-            alreadyRegisteredStaticListeners.Add(listener);
         }
     }
 

@@ -35,8 +35,12 @@
     </symbolPack>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <femaleChance>1.0</femaleChance>
         <geneType>Endogene</geneType>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_GenderRatio">
+            <femaleChance>1.0</femaleChance>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -49,8 +53,12 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyFemale</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <femaleChance>0.75</femaleChance>
         <geneType>Endogene</geneType>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_GenderRatio">
+            <femaleChance>0.75</femaleChance>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -63,8 +71,12 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyMale</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <femaleChance>0.25</femaleChance>
         <geneType>Endogene</geneType>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_GenderRatio">
+            <femaleChance>0.25</femaleChance>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -92,8 +104,12 @@
     </symbolPack>
     <modExtensions>
       <li Class="Xylib.DefModExtension_Gene">
-        <femaleChance>0.0</femaleChance>
         <geneType>Endogene</geneType>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_GenderRatio">
+            <femaleChance>0.0</femaleChance>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

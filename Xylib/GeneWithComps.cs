@@ -247,8 +247,6 @@ public class GeneWithComps : Gene, IEventListener
     {
         if (DefExt.femaleChance != null)
         {
-            yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
-                DefExt.GenderRatioDescription, "XylGenderRatioDesc".TranslateSimple(), 1);
         }
 
         if (comps != null)

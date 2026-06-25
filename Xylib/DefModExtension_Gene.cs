@@ -78,15 +78,6 @@ public class DefModExtension_Gene : DefModExtension
             ? (parent as GeneDef)?.Icon
             : ContentFinder<Texture2D>.Get(extraIconPath) ?? (parent as GeneDef)?.Icon;
 
-    public string GenderRatioDescription =>
-        femaleChance switch
-        {
-            >= 1.0f => "XylGenderRatioAlwaysFemale".Translate(),
-            <= 0.0f => "XylGenderRatioAlwaysMale".Translate(),
-            { } chance => "XylGenderRatioValue".Translate(chance.ToStringPercent(),
-                (1 - chance).ToStringPercent())
-        };
-
     #region Properties of the gene itself
 
     /// <summary>
@@ -246,12 +237,6 @@ public class DefModExtension_Gene : DefModExtension
                 "XylHitPointsDesc".Translate(), 4194);
         }
 
-        if (femaleChance != null)
-        {
-            yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
-                GenderRatioDescription, "XylGenderRatioDesc".TranslateSimple(), 1);
-        }
-
         if (comps != null)
         {
             foreach (var comp in comps)
@@ -266,9 +251,6 @@ public class DefModExtension_Gene : DefModExtension
             yield return $"{"BodySize".Translate().CapitalizeFirst()}: {bodySizeFactor.ToStringPercent()}";
         if (healthScaleFactor != 1.0f)
             yield return $"{"HitPointsBasic".Translate().CapitalizeFirst()}: {healthScaleFactor.ToStringPercent()}";
-
-        if (femaleChance != null)
-            yield return $"{"XylGenderRatioLabel".TranslateSimple()}: {GenderRatioDescription}";
 
         if (!addDesignators.NullOrEmpty())
         {

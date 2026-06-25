@@ -41,7 +41,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
 
     static PawnExtraData()
     {
-        EventManager.staticListeners.Add(listener);
+        EventManager.AddStaticListener(listener);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

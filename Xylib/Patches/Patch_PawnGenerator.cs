@@ -13,7 +13,6 @@ public class Patch_PawnGenerator
         xenotype = xenotypeOverride;
     }
 
-    [Feature(nameof(DefModExtension_Gene.femaleChance))]
     [Feature(nameof(EventDefOf.PawnGenerationEarly))]
     [InfixPrefix(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
     [InfixPatch("TryGenerateNewPawnInternal")]
@@ -26,8 +25,6 @@ public class Patch_PawnGenerator
         EventManager.Instance.Notify(EventDefOf.PawnGenerationEarly, pawn, data);
 
         xenotypeOverride = xenotype = data.xenotype;
-
-        PatchHelpers.ModifyGenderByGenes(pawn, request, data.xenotype);
     }
 
     [Feature(nameof(EventDefOf.PostGenerateNewPawn))]
