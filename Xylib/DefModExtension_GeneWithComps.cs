@@ -46,7 +46,7 @@ public class StartingItemOption
 
 public abstract class GeneCompProperties
 {
-    public Type compClass;
+    public Type compClass = typeof(GeneWithComps);
 
     public virtual IEnumerable<string> ConfigErrors()
     {
@@ -173,13 +173,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
     #endregion
 
     #region Properties which are not aggregated in GeneSet
-
-    /// <summary>
-    ///     Affects how genes are inherited. If one parent has a higher total xenotype strength than the other,
-    ///     the baby will inherit all the endogenes from that parent and none of the endogenes from the other
-    ///     parent.
-    /// </summary>
-    public int xenotypeStrength;
 
     /// <summary>
     ///     If true, this gene will show up in the policies tab next to the selected drug policy, e.g.

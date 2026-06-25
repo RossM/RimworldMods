@@ -172,7 +172,7 @@ public static class Extensions
         }
 
         public T FirstActiveGeneCompOfType<T>() where T : GeneComp => pawn.FirstActiveGeneWithComp<T>()?.GetComp<T>();
-        
+
         public int GetGeneticPsylinkLevelFor(AbilityDef ability)
         {
             if (pawn.GeneTracker?.hasPsycast != true)

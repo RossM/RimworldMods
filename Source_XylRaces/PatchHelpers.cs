@@ -256,7 +256,7 @@ public static class PatchHelpers
         if (pawn?.genes == null)
             return int.MinValue;
 
-        return pawn.ActiveGenesOfType<GeneWithComps>().Sum(gene => gene.DefExt.xenotypeStrength);
+        return pawn.ActiveGenesOfType<GeneWithComps>().Sum(gene => gene.DefExt.CompProps<GeneCompProperties_XenotypeStrength>()?.strength ?? 0);
     }
 
     public static bool HyperlactatingPrisonerInRoomCanProduce(Room r, ThingDef thingDef)
