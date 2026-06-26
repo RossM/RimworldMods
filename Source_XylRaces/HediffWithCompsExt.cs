@@ -39,7 +39,7 @@ public class HediffWithCompsExt : HediffWithComps
     {
         foreach (var comp in comps)
         {
-            if (comp is HediffComp_GrowthModeExt { CausesNoPain: true })
+            if (comp is IHediffCompExt { CausesNoPain: true })
                 stage.painOffset = 0f;
         }
     }
@@ -51,7 +51,7 @@ public class HediffWithCompsExt : HediffWithComps
 
         foreach (var comp in comps)
         {
-            if (comp is HediffComp_GrowthModeExt { AllowTend: false })
+            if (comp is IHediffCompExt { AllowTend: false })
                 return false;
         }
 

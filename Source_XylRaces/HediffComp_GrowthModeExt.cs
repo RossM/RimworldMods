@@ -41,7 +41,7 @@ public class HediffCompProperties_GrowthModeExt : HediffCompProperties_SeverityP
     }
 }
 
-public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay
+public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompExt
 {
     public HediffCompProperties_GrowthModeExt TProps => (HediffCompProperties_GrowthModeExt)props;
 
