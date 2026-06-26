@@ -11,11 +11,11 @@ public static class PatchLate
     {
         var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
 
-        using (new ProfileBlock("Harmony patching"))
+        using (new ProfileBlock("XylXenos Harmony patching"))
             harmony.PatchCategory("PostLoadDefs");
 
         // TODO Split infix patching into early and late
-        using (new ProfileBlock("Infix patching"))
+        using (new ProfileBlock("XylXenos Infix patching"))
             InfixPatcher.PatchInfix(harmony, Assembly.GetExecutingAssembly());
     }
 }
@@ -26,21 +26,21 @@ public class Main : Mod
 {
     public Main(ModContentPack content) : base(content)
     {
-        using (new ProfileBlock("Load settings"))
+        using (new ProfileBlock("XylXenos Load settings"))
             Settings.instance = GetSettings<Settings>();
 
-        using (new ProfileBlock("Coding style checks"))
+        using (new ProfileBlock("XylXenos Coding style checks"))
             CodingStyleChecks();
 
-        var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
+        var harmony = new Harmony("Xylthixlm.Races.Core");
 
-        using (new ProfileBlock("Harmony patching"))
+        using (new ProfileBlock("XylXenos Harmony patching"))
         {
             harmony.PatchCategory("PreLoadDefs");
             harmony.PatchCategory(null);
         }
 
-        using (new ProfileBlock("Register XML loaders"))
+        using (new ProfileBlock("XylXenos Register XML loaders"))
             RegisterXmlLoaders();
     }
 

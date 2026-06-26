@@ -7,12 +7,12 @@ public class XylibMod : Mod
 {
     public XylibMod(ModContentPack content) : base(content)
     {
-        var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
+        var harmony = new Harmony("Xylthixlm.Xylib");
 
-        using (new ProfileBlock("Harmony patching"))
+        using (new ProfileBlock("Xylib Harmony patching"))
             harmony.PatchCategory(null);
 
-        using (new ProfileBlock("Infix patching"))
+        using (new ProfileBlock("Xylib Infix patching"))
             InfixPatcher.PatchInfix(harmony, Assembly.GetExecutingAssembly());
     }
 }

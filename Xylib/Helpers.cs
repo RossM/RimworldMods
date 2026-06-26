@@ -6,14 +6,13 @@ public readonly struct ProfileBlock : IDisposable
     private readonly bool _enabled;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ProfileBlock(string labelExtra = null, bool enabled = GlobalEnabled, [CallerMemberName] string methodName = null)
+    public ProfileBlock(string label, bool enabled = GlobalEnabled, [CallerMemberName] string methodName = "unknown")
     {
         _enabled = enabled;
         if (!_enabled)
             return;
-        string label = "[XylXenos] " + (methodName ?? "<Unknown>");
 
-        DeepProfiler.Start(labelExtra != null ? $"{label} - {labelExtra}" : label);
+        DeepProfiler.Start($"[{methodName}] {label}");
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
