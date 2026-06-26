@@ -2,6 +2,9 @@
 
 namespace Xylib;
 
+/// <summary>
+/// This class provides fast access to a pawn's genes and hediffs, caching the results of queries for performance.
+/// </summary>
 public class GeneAndHediffCache : IEventListener, IPawnData
 {
     public Pawn pawn;
@@ -16,12 +19,17 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
 
     // ReSharper disable once ParameterHidesMember
-    public void Init(Pawn pawn)
+    void IPawnData.Init(Pawn pawn)
     {
         this.pawn = pawn;
         EventManager.Instance.AddListener(this);
     }
 
+    /// <summary>
+    /// Gets all of a pawn's genes of a specific type.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="Gene"/> subclass to find.</typeparam>
+    /// <returns>The genes.</returns>
     [NotNull]
     public IEnumerable<T> GetGenesOfType<T>() where T : Gene
     {
@@ -33,6 +41,12 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         return (List<T>)value;
     }
 
+    /// <summary>
+    /// Gets all of a pawn's genes with a specific def. Ordinarily a pawn only has one gene
+    /// of a given def, so this will return a single value.
+    /// </summary>
+    /// <param name="def">The def to find.</param>
+    /// <returns>The genes.</returns>
     [NotNull]
     public IEnumerable<Gene> GetGenesWithDef(GeneDef def)
     {
@@ -44,6 +58,12 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         return value;
     }
 
+    /// <summary>
+    /// Gets all of a pawn's genes that derive from <see cref="GeneWithComps"/> and have a <see cref="GeneComp"/> of
+    /// the given type.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="GeneComp"/> subclass to find.</typeparam>
+    /// <returns>The genes.</returns>
     [NotNull]
     public IEnumerable<GeneWithComps> GetGenesWithComp<T>() where T : GeneComp
     {
@@ -55,6 +75,11 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         return value;
     }
 
+    /// <summary>
+    /// Gets all of a pawn's hediffs of a specific type.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="Hediff"/> subclass to find.</typeparam>
+    /// <returns>The hediffs.</returns>
     [NotNull]
     public IEnumerable<T> GetHediffsOfType<T>() where T : Hediff
     {
@@ -66,6 +91,11 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         return (List<T>)value;
     }
 
+    /// <summary>
+    /// Gets all of a pawn's hediffs with a specific def.
+    /// </summary>
+    /// <param name="def">The def to find.</param>
+    /// <returns>The hediffs.</returns>
     [NotNull]
     public IEnumerable<Hediff> GetHediffsWithDef(HediffDef def)
     {
@@ -77,6 +107,11 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         return value;
     }
 
+    /// <summary>
+    /// Gets all of a pawn's hediffs where the def has a specific <see cref="DefModExtension"/>.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="DefModExtension"/> to find.</typeparam>
+    /// <returns>The hediffs.</returns>
     [NotNull]
     public IEnumerable<Hediff> GetHediffsWithModExtension<T>() where T : DefModExtension
     {
@@ -88,6 +123,11 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         return value;
     }
 
+    /// <summary>
+    /// Gets all of pawn's hediffs that are <see cref="HediffWithComps"/> with a comp of the given type.
+    /// </summary>
+    /// <typeparam name="T">The <see cref="HediffComp"/> subclass to find.</typeparam>
+    /// <returns>The hediffs.</returns>
     [NotNull]
     public IEnumerable<HediffWithComps> GetHediffsWithComp<T>() where T : HediffComp
     {
@@ -115,13 +155,13 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         hediffsByType.Clear();
     }
 
-    public void RegisterWith(EventManager manager)
+    void IEventListener.RegisterWith(EventManager manager)
     {
         manager.Register(EventDefOf.PostGenesChanged, pawn, Notify_PostGenesChanged);
         manager.Register(EventDefOf.PostHediffsChanged, pawn, Notify_PostHediffsChanged);
     }
 
-    public void PreUnregister(EventManager manager)
+    void IEventListener.PreUnregister(EventManager manager)
     {
     }
 }

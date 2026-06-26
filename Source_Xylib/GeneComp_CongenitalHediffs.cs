@@ -21,12 +21,12 @@ public class GeneComp_CongenitalHediffs : GeneComp, IEventListener
             hediff.EventOccurred(Pawn);
     }
 
-    public void RegisterWith(EventManager manager)
+    void IEventListener.RegisterWith(EventManager manager)
     {
         manager.Register(EventDefOf.PostGenerateInitialHediffs, Pawn, Notify_PostGeneratedInitialHediffs);
     }
 
-    public void PreUnregister(EventManager manager)
+    void IEventListener.PreUnregister(EventManager manager)
     {
     }
 }

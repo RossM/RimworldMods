@@ -79,13 +79,13 @@ public class GeneComp_ExtraApparel : GeneComp, IEventListener
             GenerateExtraApparel();
     }
 
-    public void RegisterWith(EventManager manager)
+    void IEventListener.RegisterWith(EventManager manager)
     {
         manager.Register<PawnGenerationRequest>(EventDefOf.PostGenerateNewPawn, Pawn, Notify_PostGenerateNewPawn);
         manager.Register<PawnGenerationRequest>(EventDefOf.PostRedressPawn, Pawn, Notify_PostRedressPawn);
     }
 
-    public void PreUnregister(EventManager manager)
+    void IEventListener.PreUnregister(EventManager manager)
     {
     }
 }

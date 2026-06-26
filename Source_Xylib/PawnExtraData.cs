@@ -24,13 +24,13 @@ public static class PawnExtraData<T> where T : IPawnData, new()
             data.Clear();
         }
 
-        public void RegisterWith(EventManager manager)
+        void IEventListener.RegisterWith(EventManager manager)
         {
             manager.Register(EventDefOf.PostDiscard, null, Notify_PawnDiscarded);
             manager.Register(EventDefOf.GlobalPostGameDispose, null, Notify_PostGameDispose);
         }
 
-        public void PreUnregister(EventManager manager)
+        void IEventListener.PreUnregister(EventManager manager)
         {
         }
     }

@@ -32,7 +32,7 @@ public class GeneTracker : IEventListener, IPawnData
     [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
 
     // ReSharper disable once ParameterHidesMember
-    public void Init(Pawn pawn)
+    void IPawnData.Init(Pawn pawn)
     {
         this.pawn = pawn;
         EventManager.Instance.AddListener(this);
@@ -81,13 +81,13 @@ public class GeneTracker : IEventListener, IPawnData
         Update();
     }
 
-    public void RegisterWith(EventManager manager)
+    void IEventListener.RegisterWith(EventManager manager)
     {
         manager.Register(EventDefOf.PostGenesChanged, pawn, Notify_PostGenesChanged);
         manager.Register(EventDefOf.PostLoadedGame, pawn, Notify_PostLoadedGame);
     }
 
-    public void PreUnregister(EventManager manager)
+    void IEventListener.PreUnregister(EventManager manager)
     {
     }
 }

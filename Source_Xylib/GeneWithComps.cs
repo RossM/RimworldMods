@@ -360,7 +360,7 @@ public class GeneWithComps : Gene, IEventListener
             manager.AddListener(comp);
     }
 
-    public void PreUnregister(EventManager manager)
+    void IEventListener.PreUnregister(EventManager manager)
     {
         if (comps == null)
             return;

@@ -16,7 +16,7 @@ public readonly struct ProfileBlock : IDisposable
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Dispose()
+    void IDisposable.Dispose()
     {
         if (!_enabled)
             return;
