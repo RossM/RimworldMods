@@ -14,8 +14,8 @@ public class GeneTracker : IEventListener, IPawnData
     [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.addDesignators" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.addDesignators" />
+    ///     Aggregates <see cref="GeneCompProperties_AddDesignators.buildables" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="GeneCompProperties_AddDesignators.buildables" />
     /// </summary>
     [CanBeNull] public List<BuildableDef> addDesignators;
 
@@ -52,7 +52,7 @@ public class GeneTracker : IEventListener, IPawnData
                 var def = gene.DefExt;
 
                 AddList(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors);
-                AddList(ref addDesignators, def.addDesignators);
+                AddList(ref addDesignators, def.CompProps<GeneCompProperties_AddDesignators>()?.buildables);
                 AddList(ref disableHostilityFromFactions, def.disableHostilityFromFactions);
                 AddList(ref ingestionThoughtOverrides, def.ingestionThoughtOverrides);
             }

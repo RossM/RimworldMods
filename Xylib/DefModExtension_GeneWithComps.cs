@@ -103,11 +103,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
     public bool hasPsycast;
 
     /// <summary>
-    ///     Additional buildables (e.g. fungal gravel) which this gene enables.
-    /// </summary>
-    [CanBeNull] public List<BuildableDef> addDesignators;
-
-    /// <summary>
     ///     Modifiers to the scale and offset to specific nodes in the pawn's render tree, used to
     ///     change the pawn's visual in a different way than just adding additional nodes.
     /// </summary>
@@ -188,12 +183,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
             yield return $"{"BodySize".Translate().CapitalizeFirst()}: {bodySizeFactor.ToStringPercent()}";
         if (healthScaleFactor != 1.0f)
             yield return $"{"HitPointsBasic".Translate().CapitalizeFirst()}: {healthScaleFactor.ToStringPercent()}";
-
-        if (!addDesignators.NullOrEmpty())
-        {
-            yield return
-                $"{"XylNewBuildings".Translate()}: {addDesignators.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
-        }
 
         if (comps != null)
         {

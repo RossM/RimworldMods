@@ -96,9 +96,13 @@
     </statFactors>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <addDesignators>
-          <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
-        </addDesignators>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_AddDesignators">
+            <buildables>
+              <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
+            </buildables>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

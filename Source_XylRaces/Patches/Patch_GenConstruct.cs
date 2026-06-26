@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(GenConstruct))]
 public static class Patch_GenConstruct
 {
-    [Feature(nameof(DefModExtension_GeneWithComps.addDesignators))]
+    [Feature(typeof(GeneComp_AddDesignators))]
     [InfixPostfix(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
     [InfixPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
     public static void MembersCanBuild_Postfix(Ideo __instance, Thing thing, Pawn p, ref bool __result)
@@ -24,7 +24,7 @@ public static class Patch_GenConstruct
                 var defExt = gene.DefExt;
                 if (defExt == null)
                     continue;
-                if (defExt.addDesignators?.Contains(def) ?? false)
+                if (defExt.CompProps<GeneCompProperties_AddDesignators>()?.buildables.Contains(def) ?? false)
                     GenConstruct.tmpIdeoMemberNames.Add("XylCharactersWithGene".Translate(gene.LabelCap));
             }
         }
