@@ -51,7 +51,7 @@ public class GeneTracker : IEventListener, IPawnData
             {
                 var def = gene.DefExt;
 
-                AddList(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>().factors);
+                AddList(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors);
                 AddList(ref addDesignators, def.addDesignators);
                 AddList(ref disableHostilityFromFactions, def.disableHostilityFromFactions);
                 AddList(ref ingestionThoughtOverrides, def.ingestionThoughtOverrides);
