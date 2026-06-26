@@ -51,6 +51,8 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay
 
     public bool AllowTend => growthMode.allowTend;
 
+    public bool CausesNoPain => growthMode.causesNoPain;
+
     public GrowthMode growthMode;
 
     public override void CompExposeData()
@@ -99,7 +101,6 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay
     {
         growthMode = mode;
         severityPerDay = growthMode.severityPerDay + growthMode.severityPerDayRange.RandomInRange;
-        parent.causesNoPain = growthMode.causesNoPain;
     }
 
     public override IEnumerable<Gizmo> CompGetGizmos()

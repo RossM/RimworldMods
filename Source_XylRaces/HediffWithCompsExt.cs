@@ -32,6 +32,11 @@ public class HediffWithCompsExt : HediffWithComps
 
     protected virtual void UpdateCurStage(HediffStage stage)
     {
+        foreach (var comp in comps)
+        {
+            if (comp is HediffComp_GrowthModeExt { CausesNoPain: true })
+                stage.painOffset = 0f;
+        }
     }
 
     public override bool TendableNow(bool ignoreTimer = false)

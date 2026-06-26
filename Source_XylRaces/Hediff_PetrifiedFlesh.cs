@@ -21,6 +21,8 @@ public class Hediff_PetrifiedFlesh : HediffWithCompsExt
 
     protected override void UpdateCurStage(HediffStage stage)
     {
+        base.UpdateCurStage(stage);
+
         stage.partEfficiencyOffset *= RelativeSeverity;
     }
 }
