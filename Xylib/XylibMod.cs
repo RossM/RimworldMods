@@ -2,7 +2,7 @@
 
 namespace Xylib;
 
-[UsedImplicitly]
+[UsedFromReflection]
 public class XylibMod : Mod
 {
     public XylibMod(ModContentPack content) : base(content)

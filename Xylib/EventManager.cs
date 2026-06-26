@@ -165,7 +165,7 @@ public static class EventDefOf
 ///     <see cref="IEventListener" />
 ///     and register for the needed callbacks in <see cref="IEventListener.RegisterWith" />.
 /// </summary>
-[UsedImplicitly]
+[UsedFromReflection]
 public class EventManager : GameComponent
 {
     private class NotificationInfo

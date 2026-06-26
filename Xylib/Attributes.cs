@@ -16,12 +16,15 @@ public class FeatureAttribute(string featureName) : Attribute
 }
 
 [MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Class)]
 public class UsedFromXmlAttribute : Attribute;
 
 [MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field)]
 public class UsedFromReflectionAttribute : Attribute;
 
 [MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Class)]
 public class DefGeneratorAttribute(Type defType) : Attribute
 {
     public readonly Type defType = defType;
