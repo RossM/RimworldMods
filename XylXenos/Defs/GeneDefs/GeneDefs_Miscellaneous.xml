@@ -117,7 +117,7 @@
         <disappearsAfterTicks>900</disappearsAfterTicks>
         <showRemainingTime>true</showRemainingTime>
       </li>
-      <li Class="XylXenos.HediffCompProperties_ForceMentalState">
+      <li Class="Xylib.HediffCompProperties_ForceMentalState">
         <mentalState>XylSeeingRed</mentalState>
       </li>
       <li Class="Xylib.HediffCompProperties_Genetic">
@@ -312,7 +312,7 @@
         <message>{0} is beginning to enter torpor.</message>
         <messageType>NegativeHealthEvent</messageType>
       </li>
-      <li Class="XylXenos.HediffCompProperties_SetNeed">
+      <li Class="Xylib.HediffCompProperties_SetNeed">
         <need>Rest</need>
         <levelPercentage>0~0.1</levelPercentage>
         <severityRange>0.5~999</severityRange>
