@@ -11,7 +11,7 @@ public static class Patch_DesignationCategoryDef
         Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ___ideoBuildingDesignatorsCached,
         ref IEnumerable<Designator> __result)
     {
-        Xylib.PatchHelpers.AddDesignators(__instance, ref __result, ___ideoBuildingDesignatorsCached);
+        PatchHelpers.AddDesignators(__instance, ref __result, ___ideoBuildingDesignatorsCached);
     }
 
     [Feature(nameof(DefModExtension_GeneWithComps.addDesignators))]
@@ -22,6 +22,6 @@ public static class Patch_DesignationCategoryDef
         Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ___ideoBuildingDesignatorsCached,
         ref IEnumerable<Designator> __result)
     {
-        Xylib.PatchHelpers.AddDesignators(__instance, ref __result, ___ideoBuildingDesignatorsCached);
+        PatchHelpers.AddDesignators(__instance, ref __result, ___ideoBuildingDesignatorsCached);
     }
 }

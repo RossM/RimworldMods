@@ -6,8 +6,8 @@ public static class Patch_Pawn_ApparelTracker
     [Feature(nameof(EventDefOf.PostApparelChanged))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn_ApparelTracker.Notify_ApparelChanged))]
-    public static void Notify_ApparelChanged_Postfix(Pawn_ApparelTracker __instance)
+    public static void Notify_ApparelChanged_Postfix(Pawn ___pawn)
     {
-        EventManager.Instance.Notify(EventDefOf.PostApparelChanged, __instance.pawn);
+        EventManager.Instance.Notify(EventDefOf.PostApparelChanged, ___pawn);
     }
 }

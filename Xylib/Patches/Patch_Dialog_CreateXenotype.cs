@@ -16,6 +16,6 @@ public class Patch_Dialog_CreateXenotype
     {
         if (ignoreRestrictions)
             return genes;
-        return genes.Where(g => Xylib.PatchHelpers.GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene)).ToList();
+        return genes.Where(g => PatchHelpers.GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene)).ToList();
     }
 }

@@ -7,19 +7,19 @@ public static class Patch_Pawn_GeneTracker
     [Feature(nameof(XStatDefOf.XylGlobalAddictionChanceFactor))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
-    public static void AddictionChanceFactor_Postfix(Pawn_GeneTracker __instance, ChemicalDef chemical, ref float __result)
+    public static void AddictionChanceFactor_Postfix(ChemicalDef chemical, ref float __result, Pawn ___pawn)
     {
-        if (!__instance.pawn.ChemicalIsAllowedByGenes(chemical))
+        if (!___pawn.ChemicalIsAllowedByGenes(chemical))
             __result = 0f;
         else
-            __result *= __instance.pawn.GetStatValue(XStatDefOf.XylGlobalAddictionChanceFactor);
+            __result *= ___pawn.GetStatValue(XStatDefOf.XylGlobalAddictionChanceFactor);
     }
 
     [Feature(nameof(EventDefOf.PostGenesChanged))]
     [HarmonyPostfix]
     [HarmonyPatch("Notify_GenesChanged")]
-    public static void Notify_GenesChanged_Postfix(Pawn_GeneTracker __instance)
+    public static void Notify_GenesChanged_Postfix(Pawn ___pawn)
     {
-        EventManager.Instance.Notify(EventDefOf.PostGenesChanged, __instance.pawn);
+        EventManager.Instance.Notify(EventDefOf.PostGenesChanged, ___pawn);
     }
 }
