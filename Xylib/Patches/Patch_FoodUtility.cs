@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Xylib.Patches
+﻿namespace Xylib.Patches
 {
     [HarmonyPatch(typeof(FoodUtility))]
     public static class Patch_FoodUtility

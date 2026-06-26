@@ -1,6 +1,4 @@
-﻿using static UnityEngine.GraphicsBuffer;
-
-namespace Xylib.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Pawn_NeedsTracker))]
 public static class Patch_Pawn_NeedsTracker

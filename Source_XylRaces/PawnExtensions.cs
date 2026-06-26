@@ -1,5 +1,3 @@
-using RimWorld.Planet;
-
 namespace XylXenos;
 
 public static class PawnExtensions
