@@ -25,6 +25,7 @@ public static class PatchHelpers
         return bonusGenes.biostatMet.min;
     }
 
+    // TODO This contains a mix of XylXenos and Xylib stuff, need to break it apart
     public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef geneDef)
     {
         if (geneDef.DefExt is { } defExt)

@@ -1,4 +1,4 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(FloatMenuOptionProvider_Ingest))]
 public static class Patch_FloatMenuOptionProvider_Ingest

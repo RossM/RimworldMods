@@ -44,4 +44,12 @@ public class Patch_PawnGenerator
             return;
         EventManager.Instance.Notify(EventDefOf.PostGenerateNewPawn, __result, request);
     }
+
+    [Feature(nameof(EventDefOf.PostGenerateInitialHediffs))]
+    [HarmonyPostfix]
+    [HarmonyPatch("GenerateInitialHediffs")]
+    public static void GenerateInitialHediffs_Postfix(Pawn pawn)
+    {
+        EventManager.Instance.Notify(EventDefOf.PostGenerateInitialHediffs, pawn);
+    }
 }

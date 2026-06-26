@@ -23,14 +23,6 @@ public static class Patch_PawnGenerator
         return false;
     }
 
-    [Feature(nameof(EventDefOf.PostGenerateInitialHediffs))]
-    [HarmonyPostfix]
-    [HarmonyPatch("GenerateInitialHediffs")]
-    public static void GenerateInitialHediffs_Postfix(Pawn pawn)
-    {
-        EventManager.Instance.Notify(EventDefOf.PostGenerateInitialHediffs, pawn);
-    }
-
     [Feature(typeof(XenotypeSetWithDefault))]
     [InfixPostfix(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
     [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]

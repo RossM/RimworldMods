@@ -1,4 +1,4 @@
-namespace XylXenos.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch]
 public static class PatchPsycast

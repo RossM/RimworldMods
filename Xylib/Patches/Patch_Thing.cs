@@ -24,6 +24,17 @@ public static class Patch_Thing
         EventManager.Instance.Notify(EventDefOf.PostDiscard, __instance);
     }
 
+    [Feature(nameof(FoodHelpers.GetFoodPoisonChanceFactor))]
+    [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+    [InfixPatch("Ingested")]
+    public static void GetStatValue_Postfix(Pawn ingester, Thing thing, StatDef stat, ref float __result)
+    {
+        if (stat == StatDefOf.FoodPoisonChanceFixedHuman)
+        {
+            __result *= FoodHelpers.GetFoodPoisonChanceFactor(ingester, thing);
+        }
+    }
+
     [Feature(typeof(EventManager))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Thing.PostMake))]
