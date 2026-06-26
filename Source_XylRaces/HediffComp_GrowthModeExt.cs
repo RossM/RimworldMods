@@ -101,11 +101,13 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay
     {
         growthMode = mode;
         severityPerDay = growthMode.severityPerDay + growthMode.severityPerDayRange.RandomInRange;
+        if (parent is HediffWithCompsExt ext)
+            ext.Notify_CompChanged();
     }
 
     public override IEnumerable<Gizmo> CompGetGizmos()
     {
-        if (!DebugSettings.godMode)
+        if (!DebugSettings.ShowDevGizmos)
             yield break;
 
         yield return new Command_Action

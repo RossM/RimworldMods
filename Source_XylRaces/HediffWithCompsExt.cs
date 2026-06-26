@@ -30,6 +30,11 @@ public class HediffWithCompsExt : HediffWithComps
         }
     }
 
+    public void Notify_CompChanged()
+    {
+        curStageInternal = null;
+    }
+
     protected virtual void UpdateCurStage(HediffStage stage)
     {
         foreach (var comp in comps)
