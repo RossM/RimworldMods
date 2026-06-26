@@ -1,6 +1,6 @@
 ﻿namespace Xylib;
 
-public static class CombatHelpers
+internal static class CombatHelpers
 {
     public static float GetRangedDodgeChance(Pawn target)
     {

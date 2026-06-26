@@ -21,16 +21,8 @@ public class GeneTracker : IEventListener, IPawnData
 
     [CanBeNull] public List<RecipeDef> unlockedRecipes;
 
-    /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.disableHostilityFromFactions" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.disableHostilityFromFactions" />
-    /// </summary>
     [CanBeNull] public List<FactionDef> disableHostilityFromFactions;
 
-    /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.ingestionThoughtOverrides" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.ingestionThoughtOverrides" />
-    /// </summary>
     [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
 
     // ReSharper disable once ParameterHidesMember
@@ -56,8 +48,8 @@ public class GeneTracker : IEventListener, IPawnData
                 AddList(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors);
                 AddList(ref unlockedBuildables, def.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables);
                 AddList(ref unlockedRecipes, def.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes);
-                AddList(ref disableHostilityFromFactions, def.disableHostilityFromFactions);
-                AddList(ref ingestionThoughtOverrides, def.ingestionThoughtOverrides);
+                AddList(ref disableHostilityFromFactions, def.CompProps<GeneCompProperties_DisableHostility>()?.factions);
+                AddList(ref ingestionThoughtOverrides, def.CompProps<GeneCompProperties_IngestionThoughtOverrides>()?.overrides);
             }
         }
     }

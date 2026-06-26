@@ -1,14 +1,4 @@
-﻿using System.Xml;
-
-namespace Xylib;
-
-public class GeneIngestionThoughtOverride
-{
-    public ThingDef thing;
-    public List<ThoughtDef> thoughts;
-    public FoodType allowedFoodTypes;
-    public FoodType disallowedFoodTypes;
-}
+﻿namespace Xylib;
 
 public class RenderNodeModifier
 {
@@ -107,21 +97,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
     ///     change the pawn's visual in a different way than just adding additional nodes.
     /// </summary>
     [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
-
-    /// <summary>
-    ///     If set, the pawn won't be attacked by pawns of a specific other faction type even if
-    ///     those pawns are normally hostile. If any pawn from the carrier's faction attacks a
-    ///     pawn or building from the enemy faction, the effect is lost for 2500 ticks (1 in-game
-    ///     hour). Tame animals from the pawn's action also benefit from the effect.
-    /// </summary>
-    [CanBeNull] public List<FactionDef> disableHostilityFromFactions;
-
-    /// <summary>
-    ///     Disables thoughts from ingesting foods on a more granular level than just disabling an
-    ///     entire thought, for example it can disable the negative thought from eating raw food
-    ///     but only for raw meat.
-    /// </summary>
-    [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
 
     #endregion
 

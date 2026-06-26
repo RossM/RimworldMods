@@ -1,6 +1,6 @@
 ﻿namespace Xylib;
 
-public static class PatchHelpers
+internal static class PatchHelpers
 {
     public static void RunDefGenerators(bool hotReload)
     {

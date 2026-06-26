@@ -29,16 +29,20 @@
     </statFactors>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <ingestionThoughtOverrides>
-          <li>
-            <allowedFoodTypes>
-              <li>Meat</li>
-            </allowedFoodTypes>
-            <thoughts>
-              <li>AteRawFood</li>
-            </thoughts>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_IngestionThoughtOverrides">
+            <overrides>
+              <li>
+                <allowedFoodTypes>
+                  <li>Meat</li>
+                </allowedFoodTypes>
+                <thoughts>
+                  <li>AteRawFood</li>
+                </thoughts>
+              </li>
+            </overrides>
           </li>
-        </ingestionThoughtOverrides>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -64,16 +68,20 @@
     </statFactors>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <ingestionThoughtOverrides>
-          <li>
-            <allowedFoodTypes>
-              <li>NonMeat</li>
-            </allowedFoodTypes>
-            <thoughts>
-              <li>AteRawFood</li>
-            </thoughts>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_IngestionThoughtOverrides">
+            <overrides>
+              <li>
+                <allowedFoodTypes>
+                  <li>NonMeat</li>
+                </allowedFoodTypes>
+                <thoughts>
+                  <li>AteRawFood</li>
+                </thoughts>
+              </li>
+            </overrides>
           </li>
-        </ingestionThoughtOverrides>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -125,20 +133,6 @@
     <minAgeActive>13</minAgeActive>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <ingestionThoughtOverrides>
-          <li>
-            <allowedFoodTypes>
-              <li>Meat</li>
-            </allowedFoodTypes>
-            <disallowedFoodTypes>
-              <li>Humanlike</li>
-              <li>Insect</li>
-            </disallowedFoodTypes>
-            <thoughts>
-              <li>AteRawFood</li>
-            </thoughts>
-          </li>
-        </ingestionThoughtOverrides>
         <comps>
           <li Class="Xylib.GeneCompProperties_PermanentHediffs">
             <hediffs>
@@ -154,6 +148,22 @@
                 <nutritionAmount>1~2</nutritionAmount>
               </li>
             </items>
+          </li>
+          <li Class="XylXenos.GeneCompProperties_IngestionThoughtOverrides">
+            <overrides>
+              <li>
+                <allowedFoodTypes>
+                  <li>Meat</li>
+                </allowedFoodTypes>
+                <disallowedFoodTypes>
+                  <li>Humanlike</li>
+                  <li>Insect</li>
+                </disallowedFoodTypes>
+                <thoughts>
+                  <li>AteRawFood</li>
+                </thoughts>
+              </li>
+            </overrides>
           </li>
         </comps>
       </li>

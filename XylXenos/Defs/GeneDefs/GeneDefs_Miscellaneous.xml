@@ -389,9 +389,13 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_InsectPheromones</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <disableHostilityFromFactions>
-          <li>Insect</li>
-        </disableHostilityFromFactions>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_DisableHostility">
+            <factions>
+              <li>Insect</li>
+            </factions>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

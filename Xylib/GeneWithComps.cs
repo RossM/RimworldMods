@@ -94,7 +94,7 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
-    private bool CheckActive()
+    protected virtual bool CheckActive()
     {
         if (!base.Active)
             return false;
