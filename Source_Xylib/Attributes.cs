@@ -39,7 +39,6 @@ public class UsedFromXmlAttribute : Attribute;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field)]
 public class UsedFromReflectionAttribute : Attribute;
 
-// TODO This should be replaced with an interface
 /// <summary>
 /// When applied to a class, this causes the class to be treated as a def generator. The library will look for a static method
 /// named <c>ImpliedDefs</c> that takes a <see cref="bool"/> and returns a value convertible to <see cref="IEnumerable{T}"/> where
