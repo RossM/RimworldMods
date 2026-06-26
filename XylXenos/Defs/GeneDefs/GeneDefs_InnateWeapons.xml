@@ -82,7 +82,7 @@
           </li>
         </tools>
       </li>
-      <li Class="XylXenos.HediffCompProperties_Genetic">
+      <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylLargeHorns</gene>
       </li>
     </comps>
@@ -151,7 +151,7 @@
           </li>
         </tools>
       </li>
-      <li Class="XylXenos.HediffCompProperties_Genetic">
+      <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylRetractableClaws</gene>
       </li>
     </comps>

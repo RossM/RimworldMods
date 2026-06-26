@@ -81,7 +81,7 @@
         <messageType>SilentInput</messageType>
         <onlyMessageForColonistsOrPrisoners>true</onlyMessageForColonistsOrPrisoners>
       </li>
-      <li Class="XylXenos.HediffCompProperties_Genetic">
+      <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylHyperlactation</gene>
       </li>
     </comps>

@@ -120,7 +120,7 @@
       <li Class="XylXenos.HediffCompProperties_ForceMentalState">
         <mentalState>XylSeeingRed</mentalState>
       </li>
-      <li Class="XylXenos.HediffCompProperties_Genetic">
+      <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylSeeingRed</gene>
       </li>
       <li Class="XylXenos.HediffCompProperties_MoteBubble">
@@ -199,7 +199,7 @@
     <keepOnBodyPartRestoration>true</keepOnBodyPartRestoration>
     <isBad>false</isBad>
     <comps>
-      <li Class="XylXenos.HediffCompProperties_Genetic">
+      <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylPrecognition</gene>
       </li>
     </comps>
@@ -317,7 +317,7 @@
         <levelPercentage>0~0.1</levelPercentage>
         <severityRange>0.5~999</severityRange>
       </li>
-      <li Class="XylXenos.HediffCompProperties_Genetic">
+      <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylTorpor</gene>
       </li>
     </comps>
@@ -436,7 +436,7 @@
     <keepOnBodyPartRestoration>true</keepOnBodyPartRestoration>
     <isBad>true</isBad>
     <comps>
-      <li Class="XylXenos.HediffCompProperties_Genetic">
+      <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylBioRejection</gene>
       </li>
     </comps>

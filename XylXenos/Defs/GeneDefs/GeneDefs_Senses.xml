@@ -77,7 +77,7 @@
     <keepOnBodyPartRestoration>true</keepOnBodyPartRestoration>
     <isBad>false</isBad>
     <comps>
-      <li Class="XylXenos.HediffCompProperties_Genetic">
+      <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylEcholocation</gene>
       </li>
     </comps>

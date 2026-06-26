@@ -178,7 +178,7 @@
         <severityPerDay>0.5</severityPerDay>
         <minAge>13</minAge>
       </li>
-      <li Class="XylXenos.HediffCompProperties_Genetic">
+      <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylMeatDependence</gene>
       </li>
     </comps>

@@ -1,4 +1,4 @@
-﻿namespace XylXenos;
+﻿namespace Xylib;
 
 [UsedFromXml]
 public class HediffCompProperties_Genetic : HediffCompProperties
