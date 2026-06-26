@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(DesignationCategoryDef))]
 public static class Patch_DesignationCategoryDef
 {
-    [Feature(typeof(GeneComp_AddDesignators))]
+    [Feature(typeof(GeneCompProperties_UnlockBuildables))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(DesignationCategoryDef.AllResolvedAndIdeoDesignators), MethodType.Getter)]
     public static void AllResolvedAndIdeoDesignators_Postfix(
@@ -14,7 +14,7 @@ public static class Patch_DesignationCategoryDef
         PatchHelpers.AddDesignators(__instance, ref __result, ___ideoBuildingDesignatorsCached);
     }
 
-    [Feature(typeof(GeneComp_AddDesignators))]
+    [Feature(typeof(GeneCompProperties_UnlockBuildables))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(DesignationCategoryDef.ResolvedAllowedDesignators), MethodType.Getter)]
     public static void ResolvedAllowedDesignators_Postfix(

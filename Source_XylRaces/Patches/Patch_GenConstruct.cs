@@ -3,7 +3,7 @@
 [HarmonyPatch(typeof(GenConstruct))]
 public static class Patch_GenConstruct
 {
-    [Feature(typeof(GeneComp_AddDesignators))]
+    [Feature(typeof(GeneCompProperties_UnlockBuildables))]
     [InfixPostfix(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
     [InfixPatch(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
     public static void MembersCanBuild_Postfix(Ideo __instance, Thing thing, Pawn p, ref bool __result)
@@ -16,7 +16,7 @@ public static class Patch_GenConstruct
 
         BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
 
-        bool hasGeneDesignator = p.GeneTracker?.addDesignators?.Contains(def) ?? false;
+        bool hasGeneDesignator = p.GeneTracker?.unlockedBuildables?.Contains(def) ?? false;
         if (!hasGeneDesignator && GenConstruct.tmpIdeoMemberNames.Count == 0)
         {
             foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)
@@ -24,7 +24,7 @@ public static class Patch_GenConstruct
                 var defExt = gene.DefExt;
                 if (defExt == null)
                     continue;
-                if (defExt.CompProps<GeneCompProperties_AddDesignators>()?.buildables.Contains(def) ?? false)
+                if (defExt.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables.Contains(def) ?? false)
                     GenConstruct.tmpIdeoMemberNames.Add("XylCharactersWithGene".Translate(gene.LabelCap));
             }
         }

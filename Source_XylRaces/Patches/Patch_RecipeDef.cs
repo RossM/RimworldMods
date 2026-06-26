@@ -3,38 +3,24 @@
 [HarmonyPatch(typeof(RecipeDef))]
 public static class Patch_RecipeDef
 {
-    [Feature(typeof(DefModExtension_ThingOrRecipe_GeneDependent))]
+    [Feature(typeof(GeneCompProperties_UnlockRecipes))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
     public static void AvailableNow_Postfix(RecipeDef __instance, ref bool __result)
     {
-        if (DebugSettings.godMode)
-            return;
-        if (!__result)
+        if (!PatchHelpers.RecipesUnlockedByGenes.Contains(__instance))
             return;
 
-        DefModExtension_ThingOrRecipe_GeneDependent extension =
-            __instance.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>() ??
-            __instance.products.Select(t => t.thingDef.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>())
-                .FirstOrDefault(e => e != null);
-
-        if (extension == null && __instance.memePrerequisitesAny == null)
+        // If the recipe is available, and there was some non-research prerequisite that was met, it's available
+        if (__result && (__instance.memePrerequisitesAny != null || __instance.factionPrerequisiteTags != null || __instance.fromIdeoBuildingPreceptOnly))
             return;
 
-        if (extension != null && extension.Validate())
+        // If the recipe has unmet research prerequisites, it's not available
+        if (__instance.researchPrerequisite is { IsFinished: false })
+            return;
+        if (__instance.researchPrerequisites != null && __instance.researchPrerequisites.Any(r => !r.IsFinished))
             return;
 
-        if (__instance.memePrerequisitesAny != null && __instance.memePrerequisitesAny.Any(memeDef => Faction.OfPlayer.ideos.HasAnyIdeoWithMeme(memeDef)))
-            return;
-
-        __result = false;
-    }
-
-    [Feature(typeof(DefModExtension_ThingOrRecipe_GeneDependent))]
-    [InfixPostfix(typeof(RecipeDef), "memePrerequisitesAny")]
-    [InfixPatch(nameof(RecipeDef.AvailableNow))]
-    public static void RecipeDef_memePrerequisitesAny_Postfix(ref List<MemeDef> __result)
-    {
-        __result = null;
+        __result = PatchHelpers.IsRecipeUnlockedByGenes(__instance);
     }
 }

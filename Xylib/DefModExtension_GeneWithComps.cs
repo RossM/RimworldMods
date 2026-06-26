@@ -24,7 +24,7 @@ public class RenderNodeModifier
 
 public abstract class GeneCompProperties
 {
-    public Type compClass = typeof(GeneWithComps);
+    public Type compClass;
 
     public virtual IEnumerable<string> ConfigErrors()
     {

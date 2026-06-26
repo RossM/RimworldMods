@@ -54,6 +54,11 @@
               </li>
             </items>
           </li>
+          <li Class="XylXenos.GeneCompProperties_UnlockRecipes">
+            <recipes>
+              <li MayRequire="Ludeon.RimWorld.Ideology">Make_Apparel_Blindfold</li>
+            </recipes>
+          </li>
         </comps>
       </li>
     </modExtensions>

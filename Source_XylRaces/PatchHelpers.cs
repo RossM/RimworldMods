@@ -11,6 +11,8 @@ public static class PatchHelpers
         Father,
     }
 
+    public static HashSet<RecipeDef> RecipesUnlockedByGenes => field ??= GetRecipesUnlockedByGenes();
+
     public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
         var bonusGenes = geneDef.DefExt?.CompProps<GeneCompProperties_BonusGenes>();
@@ -37,27 +39,6 @@ public static class PatchHelpers
         // Official content doesn't need our help
         if (geneDef.modContentPack?.IsOfficialMod == true)
             yield break;
-
-        IEnumerable<RecipeDef> recipeDefs = DefDatabase<RecipeDef>.AllDefsListForReading.Where(def =>
-        {
-            var modExtension = def.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>();
-            return modExtension != null && (modExtension.genePrerequisitesAny ?? Enumerable.Empty<GeneDef>()).Contains(geneDef);
-        }).ToList();
-        if (recipeDefs.Any())
-        {
-            yield return
-                $"{"XylNewRecipes".Translate()}: {recipeDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
-        }
-
-        IEnumerable<ThingDef> thingDefs = DefDatabase<RecipeDef>.AllDefsListForReading
-            .SelectMany(def => def.products ?? Enumerable.Empty<ThingDefCountClass>(), (_, c) => c.thingDef)
-            .Where(def => def.GetModExtension<DefModExtension_ThingOrRecipe_GeneDependent>()?.genePrerequisitesAny?.Contains(geneDef) ==
-                          true)
-            .ToList();
-        if (thingDefs.Any())
-        {
-            yield return $"{"XylNewRecipes".Translate()}: {thingDefs.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
-        }
 
         IEnumerable<MentalBreakDef> mentalBreakDefs
             = DefDatabase<MentalBreakDef>.AllDefsListForReading.Where(def => def.requiredGene == geneDef).ToList();
@@ -237,7 +218,8 @@ public static class PatchHelpers
         if (pawn?.genes == null)
             return int.MinValue;
 
-        return pawn.ActiveGenesOfType<GeneWithComps>().Sum(gene => gene.DefExt.CompProps<GeneCompProperties_XenotypeStrength>()?.strength ?? 0);
+        return pawn.ActiveGenesOfType<GeneWithComps>()
+            .Sum(gene => gene.DefExt.CompProps<GeneCompProperties_XenotypeStrength>()?.strength ?? 0);
     }
 
     public static bool HyperlactatingPrisonerInRoomCanProduce(Room r, ThingDef thingDef)
@@ -329,7 +311,7 @@ public static class PatchHelpers
     {
         HashSet<Designator> geneDesignators = [];
 
-        foreach (var designators in Enumerable.Select<Pawn, List<BuildableDef>>(Faction.OfPlayer.AllPawns, pawn => pawn.GeneTracker?.addDesignators))
+        foreach (var designators in Faction.OfPlayer.AllPawns.Select(pawn => pawn.GeneTracker?.unlockedBuildables))
         {
             if (designators == null)
                 continue;
@@ -368,5 +350,29 @@ public static class PatchHelpers
         }
 
         return factor;
+    }
+
+    public static HashSet<RecipeDef> GetRecipesUnlockedByGenes()
+    {
+        HashSet<RecipeDef> result = [];
+        foreach (var geneDef in DefDatabase<GeneDef>.AllDefs)
+        {
+            var recipes = geneDef.DefExt?.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes;
+            if (recipes != null)
+                result.AddRange(recipes);
+        }
+
+        return result;
+    }
+
+    public static bool IsRecipeUnlockedByGenes(RecipeDef recipe)
+    {
+        foreach (var pawn in Faction.OfPlayer.AllPawns)
+        {
+            if (pawn.GeneTracker?.unlockedRecipes?.Contains(recipe) == true)
+                return true;
+        }
+
+        return false;
     }
 }

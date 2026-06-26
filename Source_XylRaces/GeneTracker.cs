@@ -14,10 +14,12 @@ public class GeneTracker : IEventListener, IPawnData
     [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
 
     /// <summary>
-    ///     Aggregates <see cref="GeneCompProperties_AddDesignators.buildables" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="GeneCompProperties_AddDesignators.buildables" />
+    ///     Aggregates <see cref="GeneCompProperties_UnlockBuildables.buildables" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="GeneCompProperties_UnlockBuildables.buildables" />
     /// </summary>
-    [CanBeNull] public List<BuildableDef> addDesignators;
+    [CanBeNull] public List<BuildableDef> unlockedBuildables;
+
+    [CanBeNull] public List<RecipeDef> unlockedRecipes;
 
     /// <summary>
     ///     Aggregates <see cref="DefModExtension_GeneWithComps.disableHostilityFromFactions" /> from all genes.<br /><br />
@@ -41,7 +43,7 @@ public class GeneTracker : IEventListener, IPawnData
 
     public void Update()
     {
-        addDesignators?.Clear();
+        unlockedBuildables?.Clear();
         disableHostilityFromFactions?.Clear();
         ingestionThoughtOverrides?.Clear();
 
@@ -52,7 +54,8 @@ public class GeneTracker : IEventListener, IPawnData
                 var def = gene.DefExt;
 
                 AddList(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors);
-                AddList(ref addDesignators, def.CompProps<GeneCompProperties_AddDesignators>()?.buildables);
+                AddList(ref unlockedBuildables, def.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables);
+                AddList(ref unlockedRecipes, def.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes);
                 AddList(ref disableHostilityFromFactions, def.disableHostilityFromFactions);
                 AddList(ref ingestionThoughtOverrides, def.ingestionThoughtOverrides);
             }

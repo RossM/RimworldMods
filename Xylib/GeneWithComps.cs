@@ -159,6 +159,9 @@ public class GeneWithComps : Gene, IEventListener
         comps = new();
         foreach (GeneCompProperties compProps in compProperties)
         {
+            if (compProps.compClass == null)
+                continue;
+
             GeneComp comp = null;
             try
             {
