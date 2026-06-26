@@ -287,4 +287,86 @@ public static class PatchHelpers
                 geneDef.prerequisite = defExtension.requiredGenesAny[0];
         }
     }
+
+    public static bool IsThoughtFromIngestionDisallowedByGenes(
+        Pawn eater,
+        ThoughtDef thought,
+        ThingDef ingestible)
+    {
+        if (thought == null || ingestible == null)
+        {
+            return false;
+        }
+
+        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.GeneTracker?.ingestionThoughtOverrides;
+        if (thoughtOverrides == null)
+            return false;
+
+        foreach (var thoughtOverride in thoughtOverrides)
+        {
+            if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
+                continue;
+
+            var foodType = FoodHelpers.GetFoodType(ingestible);
+            if (thoughtOverride.allowedFoodTypes != FoodType.None && (foodType & thoughtOverride.allowedFoodTypes) == 0)
+                continue;
+            if (thoughtOverride.disallowedFoodTypes != FoodType.None && (foodType & thoughtOverride.disallowedFoodTypes) != 0)
+                continue;
+
+            if (!thoughtOverride.thoughts.NullOrEmpty() && !thoughtOverride.thoughts.Contains(thought))
+                continue;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static void AddDesignators(
+        DesignationCategoryDef __instance,
+        ref IEnumerable<Designator> __result,
+        Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ideoBuildingDesignatorsCached)
+    {
+        HashSet<Designator> geneDesignators = [];
+
+        foreach (var designators in Enumerable.Select<Pawn, List<BuildableDef>>(Faction.OfPlayer.AllPawns, pawn => pawn.GeneTracker?.addDesignators))
+        {
+            if (designators == null)
+                continue;
+
+            geneDesignators.AddRange(designators.Where(def => def.designationCategory == __instance)
+                .Select(GetCachedDesignator));
+        }
+
+        if (geneDesignators.Any())
+            __result = __result.Concat(geneDesignators);
+
+        Designator GetCachedDesignator(BuildableDef def)
+        {
+            DesignationCategoryDef.BuildablePreceptBuilding key = new DesignationCategoryDef.BuildablePreceptBuilding(def, null);
+            if (!ideoBuildingDesignatorsCached.TryGetValue(key, out var value))
+            {
+                value = new Designator_Build(def);
+                ideoBuildingDesignatorsCached[key] = value;
+            }
+
+            return value;
+        }
+    }
+
+    public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
+    {
+        List<JoyGiverFactor> joyGiverChanceFactors = pawn.GeneTracker?.joyGiverChanceFactors;
+        if (joyGiverChanceFactors == null)
+            return 1f;
+
+        float factor = 1f;
+        foreach (var joyGiverFactor in joyGiverChanceFactors)
+        {
+            if (joyGiverFactor.joyGiver == joyGiver.def)
+                factor *= joyGiverFactor.factor;
+        }
+
+        return factor;
+    }
 }

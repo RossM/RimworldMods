@@ -20,58 +20,16 @@ public class GeneTracker : IEventListener, IPawnData
     public float healthScaleFactor = 1f;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.slaveRebellionThresholdDays" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.slaveRebellionThresholdDays" />
-    /// </summary>
-    public float slaveRebellionThresholdDays = float.MaxValue;
-
-    /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.manhunterOnDamageChanceFactor" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.manhunterOnDamageChanceFactor" />
-    /// </summary>
-    public float manhunterOnDamageChanceFactor = 1f;
-
-    /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.manhunterOnTameFailChanceFactor" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.manhunterOnTameFailChanceFactor" />
-    /// </summary>
-    public float manhunterOnTameFailChanceFactor = 1f;
-
-    /// <summary>
     ///     Aggregates <see cref="DefModExtension_GeneWithComps.hasPsycast" /> from all genes.<br /><br />
     ///     <inheritdoc cref="DefModExtension_GeneWithComps.hasPsycast" />
     /// </summary>
     public bool hasPsycast = false;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.joyGiverChanceFactors" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.joyGiverChanceFactors" />
-    /// </summary>
-    [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
-
-    /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.addDesignators" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.addDesignators" />
-    /// </summary>
-    [CanBeNull] public List<BuildableDef> addDesignators;
-
-    /// <summary>
     ///     Aggregates <see cref="DefModExtension_GeneWithComps.renderNodeModifiers" /> from all genes.<br /><br />
     ///     <inheritdoc cref="DefModExtension_GeneWithComps.renderNodeModifiers" />
     /// </summary>
     [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
-
-    /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.disableHostilityFromFactions" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.disableHostilityFromFactions" />
-    /// </summary>
-    [CanBeNull] public List<FactionDef> disableHostilityFromFactions;
-
-    /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.ingestionThoughtOverrides" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.ingestionThoughtOverrides" />
-    /// </summary>
-    [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
 
     // ReSharper disable once ParameterHidesMember
     public void Init(Pawn pawn)
@@ -85,14 +43,7 @@ public class GeneTracker : IEventListener, IPawnData
     {
         bodySizeFactor = 1f;
         healthScaleFactor = 1f;
-        slaveRebellionThresholdDays = float.MaxValue;
-        manhunterOnDamageChanceFactor = 1f;
-        manhunterOnTameFailChanceFactor = 1f;
-        joyGiverChanceFactors?.Clear();
-        addDesignators?.Clear();
         renderNodeModifiers?.Clear();
-        disableHostilityFromFactions?.Clear();
-        ingestionThoughtOverrides?.Clear();
         hasPsycast = false;
 
         if (pawn.genes != null)
@@ -103,17 +54,9 @@ public class GeneTracker : IEventListener, IPawnData
 
                 bodySizeFactor *= def.bodySizeFactor;
                 healthScaleFactor *= def.healthScaleFactor;
-                slaveRebellionThresholdDays = Mathf.Min(slaveRebellionThresholdDays, def.slaveRebellionThresholdDays);
-                manhunterOnDamageChanceFactor *= def.manhunterOnDamageChanceFactor;
-                manhunterOnTameFailChanceFactor *= def.manhunterOnTameFailChanceFactor;
-
-                AddList(ref joyGiverChanceFactors, def.joyGiverChanceFactors);
-                AddList(ref addDesignators, def.addDesignators);
-                AddList(ref renderNodeModifiers, def.renderNodeModifiers);
-                AddList(ref disableHostilityFromFactions, def.disableHostilityFromFactions);
-                AddList(ref ingestionThoughtOverrides, def.ingestionThoughtOverrides);
-
                 hasPsycast |= def.hasPsycast;
+
+                AddList(ref renderNodeModifiers, def.renderNodeModifiers);
             }
         }
     }

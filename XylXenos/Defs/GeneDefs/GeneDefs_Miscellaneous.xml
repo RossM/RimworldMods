@@ -23,7 +23,6 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <slaveRebellionThresholdDays>120</slaveRebellionThresholdDays>
-        <manhunterOnTameFailChanceFactor>0</manhunterOnTameFailChanceFactor>
         <comps>
           <li Class="Xylib.GeneCompProperties_ExtraApparel">
             <items>              
@@ -92,7 +91,6 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <manhunterOnDamageChanceFactor>2</manhunterOnDamageChanceFactor>
         <comps>
           <li Class="XylXenos.GeneCompProperties_SeeingRed">
             <chance>0.15</chance>

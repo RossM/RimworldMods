@@ -1,4 +1,4 @@
-﻿namespace Xylib.Patches;
+﻿namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(JoyGiver))]
 public class Patch_JoyGiver

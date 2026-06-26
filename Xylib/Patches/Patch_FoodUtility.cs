@@ -26,16 +26,5 @@
         {
             __result *= FoodHelpers.GetExtraNutritionFactor(eater, food, food.def);
         }
-
-        [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
-        [HarmonyPrefix]
-        [HarmonyPatch("TryAddIngestThought")]
-        public static bool TryAddIngestThought_Prefix(
-            Pawn ingester,
-            ThoughtDef def,
-            ThingDef foodDef)
-        {
-            return !FoodHelpers.IsThoughtFromIngestionDisallowedByGenes(ingester, def, foodDef);
-        }
     }
 }

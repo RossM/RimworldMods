@@ -107,37 +107,4 @@ public static class FoodHelpers
         return result;
     }
 
-    public static bool IsThoughtFromIngestionDisallowedByGenes(
-        Pawn eater,
-        ThoughtDef thought,
-        ThingDef ingestible)
-    {
-        if (thought == null || ingestible == null)
-        {
-            return false;
-        }
-
-        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.GeneTracker?.ingestionThoughtOverrides;
-        if (thoughtOverrides == null)
-            return false;
-
-        foreach (var thoughtOverride in thoughtOverrides)
-        {
-            if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
-                continue;
-
-            var foodType = GetFoodType(ingestible);
-            if (thoughtOverride.allowedFoodTypes != FoodType.None && (foodType & thoughtOverride.allowedFoodTypes) == 0)
-                continue;
-            if (thoughtOverride.disallowedFoodTypes != FoodType.None && (foodType & thoughtOverride.disallowedFoodTypes) != 0)
-                continue;
-
-            if (!thoughtOverride.thoughts.NullOrEmpty() && !thoughtOverride.thoughts.Contains(thought))
-                continue;
-
-            return true;
-        }
-
-        return false;
-    }
 }

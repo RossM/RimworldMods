@@ -114,16 +114,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
     public float slaveRebellionThresholdDays = float.MaxValue;
 
     /// <summary>
-    ///     A multiplier on the chance of this pawn going manhunter when damaged as a wild man.
-    /// </summary>
-    public float manhunterOnDamageChanceFactor = 1.0f;
-
-    /// <summary>
-    ///     A multiplier on the chance of this pawn going manhunter when a tame attempt fails as a wild man.
-    /// </summary>
-    public float manhunterOnTameFailChanceFactor = 1.0f;
-
-    /// <summary>
     ///     If true, the pawn will have psychic entropy with or without a psylink, and any psycast
     ///     abilities added by this gene in <see cref="GeneDef.abilities" /> will be usable without
     ///     a psylink.

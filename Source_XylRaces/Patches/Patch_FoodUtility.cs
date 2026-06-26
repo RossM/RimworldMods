@@ -15,4 +15,15 @@ public static class Patch_FoodUtility
     {
         __result += PatchHelpers.FoodOptimalityBonus(eater, foodSource);
     }
+
+    [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
+    [HarmonyPrefix]
+    [HarmonyPatch("TryAddIngestThought")]
+    public static bool TryAddIngestThought_Prefix(
+        Pawn ingester,
+        ThoughtDef def,
+        ThingDef foodDef)
+    {
+        return !PatchHelpers.IsThoughtFromIngestionDisallowedByGenes(ingester, def, foodDef);
+    }
 }

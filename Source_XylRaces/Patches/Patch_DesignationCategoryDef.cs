@@ -1,4 +1,4 @@
-﻿namespace Xylib.Patches;
+﻿namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(DesignationCategoryDef))]
 public static class Patch_DesignationCategoryDef

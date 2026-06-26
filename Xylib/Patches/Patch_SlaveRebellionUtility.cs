@@ -77,8 +77,8 @@ public static class Patch_SlaveRebellionUtility
             return;
 
         __result *= pawn.GetStatValue(XStatDefOf.XylSlaveRebellionMtbFactor);
-        if (__result >= geneTracker.slaveRebellionThresholdDays)
-            __result = -1;
+        //if (__result >= geneTracker.slaveRebellionThresholdDays)
+        //    __result = -1;
     }
 
     private static void FinishExplanation(StringBuilder stringBuilder, Pawn pawn)
