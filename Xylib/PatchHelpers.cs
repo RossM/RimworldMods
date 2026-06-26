@@ -60,4 +60,13 @@ public static class PatchHelpers
 
         return true;
     }
+
+    public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef geneDef)
+    {
+        if (geneDef.DefExt is { } defExt)
+        {
+            foreach (var customEffectDescription in defExt.CustomEffectDescriptions)
+                yield return customEffectDescription;
+        }
+    }
 }

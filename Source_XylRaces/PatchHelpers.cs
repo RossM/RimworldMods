@@ -27,27 +27,6 @@ public static class PatchHelpers
         return bonusGenes.biostatMet.min;
     }
 
-    // TODO This contains a mix of XylXenos and Xylib stuff, need to break it apart
-    public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef geneDef)
-    {
-        if (geneDef.DefExt is { } defExt)
-        {
-            foreach (var customEffectDescription in defExt.CustomEffectDescriptions)
-                yield return customEffectDescription;
-        }
-
-        // Official content doesn't need our help
-        if (geneDef.modContentPack?.IsOfficialMod == true)
-            yield break;
-
-        IEnumerable<MentalBreakDef> mentalBreakDefs
-            = DefDatabase<MentalBreakDef>.AllDefsListForReading.Where(def => def.requiredGene == geneDef).ToList();
-        foreach (var mentalBreakDef in mentalBreakDefs)
-        {
-            yield return $"{"XylPossibleMentalBreak".Translate()}: {mentalBreakDef.mentalState.LabelCap}";
-        }
-    }
-
     public static float ConversionPowerFactor_OffsetFromXenotype(Pawn pawn, bool invert, StringBuilder sb, Pawn recipient)
     {
         float result = 0f;
