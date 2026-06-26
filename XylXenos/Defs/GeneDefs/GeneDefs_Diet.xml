@@ -31,11 +31,9 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <ingestionThoughtOverrides>
           <li>
-            <meatSources>
-              <li>Undefined</li>
-              <li>Insect</li>
-              <li>Humanlike</li>
-            </meatSources>
+            <allowedFoodTypes>
+              <li>Meat</li>
+            </allowedFoodTypes>
             <thoughts>
               <li>AteRawFood</li>
             </thoughts>
@@ -68,9 +66,9 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <ingestionThoughtOverrides>
           <li>
-            <meatSources>
-              <li>NotMeat</li>
-            </meatSources>
+            <allowedFoodTypes>
+              <li>NonMeat</li>
+            </allowedFoodTypes>
             <thoughts>
               <li>AteRawFood</li>
             </thoughts>
@@ -120,9 +118,13 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <ingestionThoughtOverrides>
           <li>
-            <meatSources>
-              <li>Undefined</li>
-            </meatSources>
+            <allowedFoodTypes>
+              <li>Meat</li>
+            </allowedFoodTypes>
+            <disallowedFoodTypes>
+              <li>Humanlike</li>
+              <li>Insect</li>
+            </disallowedFoodTypes>
             <thoughts>
               <li>AteRawFood</li>
             </thoughts>

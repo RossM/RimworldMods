@@ -1,19 +1,19 @@
 namespace Xylib;
 
+[Flags]
+public enum FoodType
+{
+    None = 0x0,
+    Meat = 0x1,
+    NonMeat = 0x2,
+    AnimalProduct = 0x4,
+    Fungus = 0x8,
+    Humanlike = 0x10,
+    Insect = 0x20,
+}
+
 public static class FoodHelpers
 {
-    [Flags]
-    public enum FoodType
-    {
-        None = 0x0,
-        Meat = 0x1,
-        NonMeat = 0x2,
-        AnimalProduct = 0x4,
-        Fungus = 0x8,
-        Humanlike = 0x10,
-        Insect = 0x20,
-    }
-
     public static FoodType GetFoodType(ThingDef foodDef)
     {
         FoodTypeFlags flags = foodDef.ingestible?.foodType ?? 0;
@@ -110,8 +110,7 @@ public static class FoodHelpers
     public static bool IsThoughtFromIngestionDisallowedByGenes(
         Pawn eater,
         ThoughtDef thought,
-        ThingDef ingestible,
-        MeatSourceCategory meatSourceCategory)
+        ThingDef ingestible)
     {
         if (thought == null || ingestible == null)
         {
@@ -124,20 +123,19 @@ public static class FoodHelpers
 
         foreach (var thoughtOverride in thoughtOverrides)
         {
-            if (thoughtOverride.thoughts.NullOrEmpty())
-                continue;
-
             if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
                 continue;
 
-            if (!thoughtOverride.meatSources.NullOrEmpty() &&
-                !thoughtOverride.meatSources.Contains(meatSourceCategory))
+            var foodType = GetFoodType(ingestible);
+            if (thoughtOverride.allowedFoodTypes != FoodType.None && (foodType & thoughtOverride.allowedFoodTypes) == 0)
+                continue;
+            if (thoughtOverride.disallowedFoodTypes != FoodType.None && (foodType & thoughtOverride.disallowedFoodTypes) != 0)
                 continue;
 
-            if (thoughtOverride.thoughts.Any(t => t == thought))
-            {
-                return true;
-            }
+            if (!thoughtOverride.thoughts.NullOrEmpty() && !thoughtOverride.thoughts.Contains(thought))
+                continue;
+
+            return true;
         }
 
         return false;

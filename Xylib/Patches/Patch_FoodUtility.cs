@@ -39,10 +39,9 @@ namespace Xylib.Patches
         public static bool TryAddIngestThought_Prefix(
             Pawn ingester,
             ThoughtDef def,
-            ThingDef foodDef,
-            MeatSourceCategory meatSourceCategory)
+            ThingDef foodDef)
         {
-            return !FoodHelpers.IsThoughtFromIngestionDisallowedByGenes(ingester, def, foodDef, meatSourceCategory);
+            return !FoodHelpers.IsThoughtFromIngestionDisallowedByGenes(ingester, def, foodDef);
         }
     }
 }

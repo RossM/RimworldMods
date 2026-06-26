@@ -5,8 +5,9 @@ namespace Xylib;
 public class GeneIngestionThoughtOverride
 {
     public ThingDef thing;
-    public List<MeatSourceCategory> meatSources;
     public List<ThoughtDef> thoughts;
+    public FoodType allowedFoodTypes;
+    public FoodType disallowedFoodTypes;
 }
 
 public class JoyGiverFactor
