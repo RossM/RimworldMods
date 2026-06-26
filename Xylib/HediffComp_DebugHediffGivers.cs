@@ -1,11 +1,11 @@
-﻿namespace XylXenos;
+﻿namespace Xylib;
 
 [UsedFromXml]
 public class HediffComp_DebugHediffGivers : HediffComp
 {
     public override IEnumerable<Gizmo> CompGetGizmos()
     {
-        if (!DebugSettings.godMode)
+        if (!DebugSettings.ShowDevGizmos)
             yield break;
 
         var stage = parent.CurStage;

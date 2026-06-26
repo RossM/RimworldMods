@@ -1,6 +1,6 @@
 ﻿using RimWorld.Planet;
 
-namespace XylXenos;
+namespace Xylib;
 
 [UsedFromXml]
 public class HediffGiver_RandomExt : HediffGiver
@@ -13,9 +13,8 @@ public class HediffGiver_RandomExt : HediffGiver
 
     public override void OnIntervalPassed(Pawn pawn, Hediff cause)
     {
-        float num = mtbDays;
-        float num2 = ChanceFactor(pawn);
-        if (num2 != 0f && Rand.MTBEventOccurs(num / num2, GenDate.TicksPerDay, 60f) && TryApply(pawn, cause))
+        float chanceFactor = ChanceFactor(pawn);
+        if (chanceFactor != 0f && Rand.MTBEventOccurs(mtbDays / chanceFactor, GenDate.TicksPerDay, 60f) && TryApply(pawn, cause))
         {
             if (sendLetter)
                 SendLetter(pawn, cause);

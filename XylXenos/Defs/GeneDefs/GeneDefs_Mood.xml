@@ -121,7 +121,7 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <hediffGivers>
-          <li Class="XylXenos.HediffGiver_RandomExt">
+          <li Class="Xylib.HediffGiver_RandomExt">
             <hediff>XylMoody</hediff>
             <mtbDays>2</mtbDays>
             <sendLetter>false</sendLetter>

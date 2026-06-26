@@ -71,7 +71,7 @@
         <changeModeAtTotalTendQuality>3</changeModeAtTotalTendQuality>
       </li>
       <li>
-        <compClass>XylXenos.HediffComp_DebugHediffGivers</compClass>
+        <compClass>Xylib.HediffComp_DebugHediffGivers</compClass>
       </li>
     </comps>
     <stages>
@@ -79,7 +79,7 @@
         <label>minor</label>
         <painOffset>0.1</painOffset>
         <hediffGivers>
-          <li Class="XylXenos.HediffGiver_RandomExt">
+          <li Class="Xylib.HediffGiver_RandomExt">
             <mtbDays>15</mtbDays>
             <hediff>XylPetrifiedFlesh</hediff>
             <severityRange>2~5</severityRange>
@@ -94,7 +94,7 @@
         <label>major</label>
         <painOffset>0.2</painOffset>
         <hediffGivers>
-          <li Class="XylXenos.HediffGiver_RandomExt">
+          <li Class="Xylib.HediffGiver_RandomExt">
             <mtbDays>5</mtbDays>
             <hediff>XylPetrifiedFlesh</hediff>
             <severityRange>5~10</severityRange>
@@ -110,7 +110,7 @@
         <painOffset>0.4</painOffset>
         <lifeThreatening>true</lifeThreatening>
         <hediffGivers>
-          <li Class="XylXenos.HediffGiver_RandomExt">
+          <li Class="Xylib.HediffGiver_RandomExt">
             <mtbDays>5</mtbDays>
             <hediff>XylPetrifiedFlesh</hediff>
             <severityRange>5~10</severityRange>
