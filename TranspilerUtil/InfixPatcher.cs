@@ -176,6 +176,39 @@ namespace TranspilerUtil
                     return;
                 }
 
+                if (parameterName.StartsWith("___"))
+                {
+                    string fieldName = parameterName[3 ..];
+
+                    if (target is FieldInfo { IsStatic: false } or MethodInfo { IsStatic: false })
+                    {
+                        var fieldInfo = target.DeclaringType!.GetField(fieldName, AccessTools.all);
+                        if (fieldInfo is { IsStatic: false })
+                        {
+                            EmitTargetParameter(target.DeclaringType, 0);
+                            if (parameterType.IsByRef)
+                                output.Add(new(OpCodes.Ldflda, fieldInfo));
+                            else
+                                output.Add(new(OpCodes.Ldfld, fieldInfo));
+                            return;
+                        }
+                    }
+
+                    if (caller is MethodInfo { IsStatic: false })
+                    {
+                        var fieldInfo = caller.DeclaringType!.GetField(fieldName, AccessTools.all);
+                        if (fieldInfo is { IsStatic: false })
+                        {
+                            EmitCallerParameter(caller.DeclaringType, 0);
+                            if (parameterType.IsByRef)
+                                output.Add(new(OpCodes.Ldflda, fieldInfo));
+                            else
+                                output.Add(new(OpCodes.Ldfld, fieldInfo));
+                            return;
+                        }
+                    }
+                }
+
                 int targetIndex = targetParameterNames.FirstIndexOf(name => name == parameterName);
                 if (targetIndex >= 0)
                 {
