@@ -30,7 +30,10 @@ public class Main : Mod
             Settings.instance = GetSettings<Settings>();
 
         using (new ProfileBlock("XylXenos Coding style checks"))
-            CodingStyleChecks();
+        {
+            CodingStyleChecks(Assembly.GetExecutingAssembly());
+            CodingStyleChecks(typeof(GeneWithComps).Assembly);
+        }
 
         var harmony = new Harmony("Xylthixlm.Races.Core");
 
@@ -74,9 +77,8 @@ public class Main : Mod
         }
     }
 
-    private static void CodingStyleChecks()
+    private static void CodingStyleChecks(Assembly assembly)
     {
-        Assembly assembly = Assembly.GetExecutingAssembly();
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
             if (!Attribute.IsDefined(type, typeof(HarmonyPatch)))
