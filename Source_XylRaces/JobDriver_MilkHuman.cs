@@ -19,9 +19,6 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
     public override bool ValidateTarget(Pawn target)
     {
-        if (target.Downed)
-            return false;
-
         var comp = target.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>();
         return comp is { allowMilking: true } && comp.ReadyToMilk();
     }
