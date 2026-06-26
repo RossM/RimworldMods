@@ -23,7 +23,7 @@ public interface IEventListener
     ///     Called when a listener is about to be removed from the notification manager. Notifications registered by the
     ///     listener directly
     ///     will be removed automatically, but if there are any child objects such as Comps that need to be unregistered, call
-    ///     <see cref="EventManager.UnregisterAll" /> for each one.
+    ///     <see cref="EventManager.RemoveListener" /> for each one.
     /// </summary>
     /// <param name="manager">
     ///     The <see cref="EventManager" /> that should be unregistered with. This is always
@@ -376,7 +376,7 @@ public class EventManager : GameComponent
             $"{listener.GetType().FullName}.<{eventDef.defName}>", 0);
     }
 
-    public void UnregisterAll(IEventListener listener)
+    public void RemoveListener(IEventListener listener)
     {
         listener.PreUnregister(this);
 
@@ -522,7 +522,7 @@ public class EventManager : GameComponent
     private void CallRegistrationHandlers(object thing)
     {
         if (thing is IEventListener target)
-            target.RegisterWith(this);
+            AddListener(target);
 
         switch (thing)
         {
@@ -584,5 +584,10 @@ public class EventManager : GameComponent
         for (int i = 0; i < notifications.Length; i++)
             notifications[i] = null;
         alreadyRegisteredStaticListeners.Clear();
+    }
+
+    public void AddListener(IEventListener listener)
+    {
+        listener.RegisterWith(this);
     }
 }

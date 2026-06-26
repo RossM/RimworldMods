@@ -1,4 +1,6 @@
-﻿namespace Xylib.Patches;
+﻿using static UnityEngine.GraphicsBuffer;
+
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Pawn_NeedsTracker))]
 public static class Patch_Pawn_NeedsTracker
@@ -9,8 +11,8 @@ public static class Patch_Pawn_NeedsTracker
     public static void OnNeedRemoved_Postfix(Need __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (__instance is IEventListener listener)
-            EventManager.Instance.UnregisterAll(listener);
+        if (__instance is IEventListener target)
+            EventManager.Instance.RemoveListener(target);
     }
 
     [Feature(typeof(EventManager))]
@@ -19,7 +21,7 @@ public static class Patch_Pawn_NeedsTracker
     public static void SetInitialLevel_Postfix(Need __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
-        if (__instance is IEventListener listener)
-            listener.RegisterWith(EventManager.Instance);
+        if (__instance is IEventListener target)
+            EventManager.Instance.AddListener(target);
     }
 }

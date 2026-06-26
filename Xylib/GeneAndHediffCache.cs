@@ -19,7 +19,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     public void Init(Pawn pawn)
     {
         this.pawn = pawn;
-        RegisterWith(EventManager.Instance);
+        EventManager.Instance.AddListener(this);
     }
 
     [NotNull]

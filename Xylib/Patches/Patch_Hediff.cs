@@ -9,7 +9,7 @@ public static class Patch_Hediff
     public static void PostAdd_Postfix(Hediff __instance)
     {
         if (__instance is IEventListener target)
-            target.RegisterWith(EventManager.Instance);
+            EventManager.Instance.AddListener(target);
     }
 
     [Feature(typeof(EventManager))]
@@ -18,6 +18,6 @@ public static class Patch_Hediff
     public static void PostRemoved_Postfix(Hediff __instance)
     {
         if (__instance is IEventListener target)
-            EventManager.Instance.UnregisterAll(target);
+            EventManager.Instance.RemoveListener(target);
     }
 }

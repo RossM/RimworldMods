@@ -10,7 +10,7 @@ public static class Patch_ThingComp
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (__instance is IEventListener target)
-            target.RegisterWith(EventManager.Instance);
+            EventManager.Instance.AddListener(target);
     }
 
     [Feature(typeof(EventManager))]
@@ -20,6 +20,6 @@ public static class Patch_ThingComp
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
         if (__instance is IEventListener target)
-            EventManager.Instance.UnregisterAll(target);
+            EventManager.Instance.RemoveListener(target);
     }
 }

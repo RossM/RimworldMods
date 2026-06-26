@@ -216,7 +216,7 @@ public class GeneWithComps : Gene, IEventListener
 
     public override void PostRemove()
     {
-        EventManager.Instance.UnregisterAll(this);
+        EventManager.Instance.RemoveListener(this);
 
         RemoveInvalidChemicalHediffs();
 
@@ -354,7 +354,7 @@ public class GeneWithComps : Gene, IEventListener
             return;
 
         foreach (var comp in comps.OfType<IEventListener>())
-            comp.RegisterWith(manager);
+            manager.AddListener(comp);
     }
 
     public void PreUnregister(EventManager manager)
@@ -363,6 +363,6 @@ public class GeneWithComps : Gene, IEventListener
             return;
 
         foreach (var comp in comps.OfType<IEventListener>())
-            manager.UnregisterAll(comp);
+            manager.RemoveListener(comp);
     }
 }

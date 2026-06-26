@@ -25,7 +25,7 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, IEventListener
 
     public override void PreConfigure()
     {
-        RegisterWith(EventManager.Instance);
+        EventManager.Instance.AddListener(this);
     }
 
     public void Notify_PawnGenerationEarly(Thing thing, PawnGenerationData data)
