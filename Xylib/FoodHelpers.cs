@@ -106,5 +106,4 @@ public static class FoodHelpers
             result *= eater.GetStatValue(XStatDefOf.XylRawFungusFoodPoisonChanceFactor);
         return result;
     }
-
 }
