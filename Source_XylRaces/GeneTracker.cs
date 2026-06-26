@@ -8,8 +8,8 @@ public class GeneTracker : IEventListener, IPawnData
     public Pawn pawn;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.joyGiverChanceFactors" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.joyGiverChanceFactors" />
+    ///     Aggregates <see cref="GeneCompProperties_JoyGiverChances.factors" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="GeneCompProperties_JoyGiverChances.factors" />
     /// </summary>
     [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
 
@@ -51,7 +51,7 @@ public class GeneTracker : IEventListener, IPawnData
             {
                 var def = gene.DefExt;
 
-                AddList(ref joyGiverChanceFactors, def.joyGiverChanceFactors);
+                AddList(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>().factors);
                 AddList(ref addDesignators, def.addDesignators);
                 AddList(ref disableHostilityFromFactions, def.disableHostilityFromFactions);
                 AddList(ref ingestionThoughtOverrides, def.ingestionThoughtOverrides);

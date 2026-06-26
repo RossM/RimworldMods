@@ -20,12 +20,16 @@
     </enablesNeeds>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <joyGiverChanceFactors>
-          <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
-        </joyGiverChanceFactors>
         <addDesignators>
           <li>XylShower</li>
         </addDesignators>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_JoyGiverChances">
+            <factors>
+              <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
+            </factors>
+          </li>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

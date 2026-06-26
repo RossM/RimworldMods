@@ -10,19 +10,6 @@ public class GeneIngestionThoughtOverride
     public FoodType disallowedFoodTypes;
 }
 
-public class JoyGiverFactor
-{
-    public JoyGiverDef joyGiver;
-    public float factor = 1.0f;
-
-    [UsedImplicitly]
-    public void LoadDataFromXmlCustom(XmlNode xmlRoot)
-    {
-        DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "joyGiver", xmlRoot.Name);
-        factor = ParseHelper.FromString<float>(xmlRoot.FirstChild.Value);
-    }
-}
-
 public class RenderNodeModifier
 {
     public PawnRenderNodeTagDef tag;
@@ -114,11 +101,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
     ///     a psylink.
     /// </summary>
     public bool hasPsycast;
-
-    /// <summary>
-    ///     Modifiers to the chances of the pawn selecting certain joy sources.
-    /// </summary>
-    [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
 
     /// <summary>
     ///     Additional buildables (e.g. fungal gravel) which this gene enables.
