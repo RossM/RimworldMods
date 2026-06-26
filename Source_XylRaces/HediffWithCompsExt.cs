@@ -30,7 +30,7 @@ public class HediffWithCompsExt : HediffWithComps
         }
     }
 
-    public void Notify_CompChanged()
+    public void Notify_CompStateChange()
     {
         curStageInternal = null;
     }
