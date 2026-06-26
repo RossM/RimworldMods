@@ -25,20 +25,9 @@ public class GeneCompProperties_GenderRatio : GeneCompProperties
         yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
             GenderRatioDescription, "XylGenderRatioDesc".TranslateSimple(), 1);
     }
-
-    public override IEnumerable<string> CustomEffectDescriptions()
-    {
-        yield return $"{"XylGenderRatioLabel".TranslateSimple()}: {GenderRatioDescription}";
-    }
 }
 
 public class GeneComp_GenderRatio : GeneComp
 {
     public GeneCompProperties_GenderRatio Props => (GeneCompProperties_GenderRatio)props;
-
-    public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
-    {
-        yield return new(StatCategoryDefOf.Genetics, "XylGenderRatioLabel".TranslateSimple(),
-            Props.GenderRatioDescription, "XylGenderRatioDesc".TranslateSimple(), 1);
-    }
 }

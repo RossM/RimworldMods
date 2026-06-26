@@ -30,25 +30,6 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
                 "StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall()), "", 4100);
         }
     }
-
-    public override IEnumerable<string> CustomEffectDescriptions()
-    {
-        foreach (Tool tool in hediffs.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
-                     .Where(verbGiver => verbGiver != null).SelectMany(verbGiver => verbGiver.tools))
-        {
-            float armorPenetration = tool.armorPenetration;
-            if (armorPenetration < 0f)
-            {
-                armorPenetration = tool.power * 0.015f;
-            }
-
-            // TODO: Calculate DPS
-            yield return $"{"StatsReport_MeleeDamage".Translate()}: {tool.power.ToStringByStyle(ToStringStyle.FloatTwo)}";
-            yield return $"{"ArmorPenetration".Translate()}: {armorPenetration.ToStringPercent()}";
-            yield return
-                $"{"StatsReport_Cooldown".Translate()}: {"StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall())}";
-        }
-    }
 }
 
 public class GeneComp_PermanentHediffs : GeneComp, IEventListener
@@ -74,28 +55,6 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
     {
         foreach (var hediff in GetLinkedHediffs())
             hediff.Severity = hediff.def.initialSeverity;
-    }
-
-    public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
-    {
-        foreach (Tool tool in Props.hediffs
-                     .Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
-                     .Where(verbGiver => verbGiver != null).SelectMany(verbGiver => verbGiver.tools))
-        {
-            float armorPenetration = tool.armorPenetration;
-            if (armorPenetration < 0f)
-            {
-                armorPenetration = tool.power * 0.015f;
-            }
-
-            // TODO: Calculate DPS
-            yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_MeleeDamage".Translate(),
-                tool.power.ToStringByStyle(ToStringStyle.FloatTwo), "", 4102);
-            yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "ArmorPenetration".Translate(),
-                armorPenetration.ToStringPercent(), "ArmorPenetrationExplanation".Translate(), 4101);
-            yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_Cooldown".Translate(),
-                "StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall()), "", 4100);
-        }
     }
 
     private void UpdatePermanentHediffs()

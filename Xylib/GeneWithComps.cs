@@ -54,7 +54,7 @@ public class GeneComp
 
     public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
-        return [];
+        return props.SpecialDisplayStats(StatRequest.ForEmpty());
     }
 
     public virtual void CompReset()

@@ -32,7 +32,10 @@ public abstract class GeneCompProperties
 
     public virtual IEnumerable<string> CustomEffectDescriptions()
     {
-        return [];
+        foreach (var entry in SpecialDisplayStats(StatRequest.ForEmpty()))
+        {
+            yield return $"{entry.LabelCap}: {entry.ValueString}";
+        }
     }
 }
 
