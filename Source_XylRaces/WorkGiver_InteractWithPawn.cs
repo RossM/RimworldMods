@@ -1,5 +1,6 @@
 ﻿namespace XylXenos;
 
+[UsedFromXml]
 public class DefModExtension_WorkGiver_InteractWithPawn : DefModExtension
 {
     public JobDef job;
