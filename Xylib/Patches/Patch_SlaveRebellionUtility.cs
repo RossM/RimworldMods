@@ -50,7 +50,6 @@ public static class Patch_SlaveRebellionUtility
     };
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
-    [Feature(nameof(DefModExtension_GeneWithComps.slaveRebellionThresholdDays))]
     [HarmonyTranspiler]
     [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
     public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(
@@ -64,7 +63,6 @@ public static class Patch_SlaveRebellionUtility
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
-    [Feature(nameof(DefModExtension_GeneWithComps.slaveRebellionThresholdDays))]
     [HarmonyPostfix]
     [HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
     public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)
@@ -77,8 +75,6 @@ public static class Patch_SlaveRebellionUtility
             return;
 
         __result *= pawn.GetStatValue(XStatDefOf.XylSlaveRebellionMtbFactor);
-        //if (__result >= geneTracker.slaveRebellionThresholdDays)
-        //    __result = -1;
     }
 
     private static void FinishExplanation(StringBuilder stringBuilder, Pawn pawn)
@@ -94,16 +90,6 @@ public static class Patch_SlaveRebellionUtility
         XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor);
         XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense,
             stringBuilder);
-
-        if (initiateSlaveRebellionMtbDays < 0)
-        {
-            if (pawn.ActiveGenesOfType<GeneWithComps>().Select(gene => gene.DefExt).OrderBy(def => def.slaveRebellionThresholdDays)
-                    .FirstOrDefault() is { slaveRebellionThresholdDays: < float.MaxValue } def)
-            {
-                stringBuilder.AppendLine(
-                    $"{def.parent?.LabelCap ?? "Genes".Translate().CapitalizeFirst()}: {"XylDocileThresholdReached".Translate(def.slaveRebellionThresholdDays)}");
-            }
-        }
 
         string period = initiateSlaveRebellionMtbDays < 0
             ? "Never".TranslateSimple()

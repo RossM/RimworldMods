@@ -8,12 +8,6 @@ public class GeneTracker : IEventListener, IPawnData
     public Pawn pawn;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.slaveRebellionThresholdDays" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.slaveRebellionThresholdDays" />
-    /// </summary>
-    public float slaveRebellionThresholdDays = float.MaxValue;
-
-    /// <summary>
     ///     Aggregates <see cref="DefModExtension_GeneWithComps.joyGiverChanceFactors" /> from all genes.<br /><br />
     ///     <inheritdoc cref="DefModExtension_GeneWithComps.joyGiverChanceFactors" />
     /// </summary>
@@ -47,7 +41,6 @@ public class GeneTracker : IEventListener, IPawnData
 
     public void Update()
     {
-        slaveRebellionThresholdDays = float.MaxValue;
         addDesignators?.Clear();
         disableHostilityFromFactions?.Clear();
         ingestionThoughtOverrides?.Clear();
@@ -57,8 +50,6 @@ public class GeneTracker : IEventListener, IPawnData
             foreach (var gene in pawn.ActiveGenesOfType<GeneWithComps>())
             {
                 var def = gene.DefExt;
-
-                slaveRebellionThresholdDays = Mathf.Min(slaveRebellionThresholdDays, def.slaveRebellionThresholdDays);
 
                 AddList(ref joyGiverChanceFactors, def.joyGiverChanceFactors);
                 AddList(ref addDesignators, def.addDesignators);

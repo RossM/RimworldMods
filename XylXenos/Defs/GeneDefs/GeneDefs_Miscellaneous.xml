@@ -22,7 +22,6 @@
     </suppressedTraits>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <slaveRebellionThresholdDays>120</slaveRebellionThresholdDays>
         <comps>
           <li Class="Xylib.GeneCompProperties_ExtraApparel">
             <items>              

@@ -109,11 +109,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
     public float healthScaleFactor = 1.0f;
 
     /// <summary>
-    ///     If set, any slave rebellion MTB days higher than this value will be changed to "never".
-    /// </summary>
-    public float slaveRebellionThresholdDays = float.MaxValue;
-
-    /// <summary>
     ///     If true, the pawn will have psychic entropy with or without a psylink, and any psycast
     ///     abilities added by this gene in <see cref="GeneDef.abilities" /> will be usable without
     ///     a psylink.
