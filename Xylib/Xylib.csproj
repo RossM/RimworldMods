@@ -5,6 +5,8 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <LangVersion>latest</LangVersion>
+    <AssemblyName>Xylib</AssemblyName>
+    <RootNamespace>Xylib</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
