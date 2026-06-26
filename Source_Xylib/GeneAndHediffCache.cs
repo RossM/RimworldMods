@@ -7,7 +7,7 @@ namespace Xylib;
 /// </summary>
 public class GeneAndHediffCache : IEventListener, IPawnData
 {
-    public Pawn pawn;
+    public Pawn Pawn { get; private set; }
 
     private readonly Dictionary<Type, IList> genesByType = new();
     private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
@@ -21,7 +21,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     // ReSharper disable once ParameterHidesMember
     void IPawnData.Init(Pawn pawn)
     {
-        this.pawn = pawn;
+        Pawn = pawn;
         EventManager.Instance.AddListener(this);
     }
 
@@ -36,7 +36,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (genesByType.TryGetValue(typeof(T), out IList value))
             return (List<T>)value;
 
-        value = pawn.genes?.GenesListForReading.OfType<T>().ToList() ?? [];
+        value = Pawn.genes?.GenesListForReading.OfType<T>().ToList() ?? [];
         genesByType.Add(typeof(T), value);
         return (List<T>)value;
     }
@@ -53,7 +53,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (genesByDef.TryGetValue(def, out List<Gene> value))
             return value;
 
-        value = pawn.genes?.GenesListForReading.Where(g => g.def == def).OrderByDescending(g => g.Active).ToList() ?? [];
+        value = Pawn.genes?.GenesListForReading.Where(g => g.def == def).OrderByDescending(g => g.Active).ToList() ?? [];
         genesByDef.Add(def, value);
         return value;
     }
@@ -70,7 +70,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (genesByComp.TryGetValue(typeof(T), out List<GeneWithComps> value))
             return value;
 
-        value = pawn.genes?.GenesListForReading.OfType<GeneWithComps>().Where(g => g.GetComp<T>() != null).ToList() ?? [];
+        value = Pawn.genes?.GenesListForReading.OfType<GeneWithComps>().Where(g => g.GetComp<T>() != null).ToList() ?? [];
         genesByComp.Add(typeof(T), value);
         return value;
     }
@@ -86,7 +86,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (hediffsByType.TryGetValue(typeof(T), out IList value))
             return (List<T>)value;
 
-        value = pawn.health.hediffSet.hediffs.OfType<T>().ToList();
+        value = Pawn.health.hediffSet.hediffs.OfType<T>().ToList();
         hediffsByType.Add(typeof(T), value);
         return (List<T>)value;
     }
@@ -102,7 +102,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (hediffsByDef.TryGetValue(def, out List<Hediff> value))
             return value;
 
-        value = pawn.health.hediffSet.hediffs.Where(g => g.def == def).ToList();
+        value = Pawn.health.hediffSet.hediffs.Where(g => g.def == def).ToList();
         hediffsByDef.Add(def, value);
         return value;
     }
@@ -118,7 +118,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (hediffsByModExt.TryGetValue(typeof(T), out List<Hediff> value))
             return value;
 
-        value = pawn.health.hediffSet.hediffs.Where(g => g.def.modExtensions?.OfType<T>().Any() == true).ToList();
+        value = Pawn.health.hediffSet.hediffs.Where(g => g.def.modExtensions?.OfType<T>().Any() == true).ToList();
         hediffsByModExt.Add(typeof(T), value);
         return value;
     }
@@ -134,7 +134,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))
             return value;
 
-        value = pawn.health.hediffSet.hediffs.OfType<HediffWithComps>().Where(hediff => hediff.comps?.OfType<T>().Any() == true)
+        value = Pawn.health.hediffSet.hediffs.OfType<HediffWithComps>().Where(hediff => hediff.comps?.OfType<T>().Any() == true)
             .ToList();
         hediffsByComp.Add(typeof(T), value);
         return value;
@@ -157,8 +157,8 @@ public class GeneAndHediffCache : IEventListener, IPawnData
 
     void IEventListener.RegisterWith(EventManager manager)
     {
-        manager.Register(EventDefOf.PostGenesChanged, pawn, Notify_PostGenesChanged);
-        manager.Register(EventDefOf.PostHediffsChanged, pawn, Notify_PostHediffsChanged);
+        manager.Register(EventDefOf.PostGenesChanged, Pawn, Notify_PostGenesChanged);
+        manager.Register(EventDefOf.PostHediffsChanged, Pawn, Notify_PostHediffsChanged);
     }
 
     void IEventListener.PreUnregister(EventManager manager)
