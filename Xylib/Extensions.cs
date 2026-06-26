@@ -1,3 +1,4 @@
+using System.Reflection;
 using RimWorld.Planet;
 
 namespace Xylib;
@@ -124,7 +125,8 @@ public static class Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<GeneWithComps> GenesWithComp<T>() where T : GeneComp => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+        public IEnumerable<GeneWithComps> GenesWithComp<T>() where T : GeneComp =>
+            pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithComp<T>();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public GeneWithComps FirstActiveGeneWithComp<T>() where T : GeneComp
@@ -199,7 +201,8 @@ public static class Extensions
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once UnusedMember.Global
-        public IEnumerable<Hediff> HediffsWithModExtension<T>() where T : DefModExtension => pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
+        public IEnumerable<Hediff> HediffsWithModExtension<T>() where T : DefModExtension =>
+            pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
 
         public bool ChemicalIsAllowedByGenes(ChemicalDef chemicalDef)
         {
@@ -232,5 +235,28 @@ public static class Extensions
         public bool IsRawFoodOrCorpse => thingDef.IsRawHumanFood() || thingDef.IsCorpse;
     }
 
+    extension(MethodInfo method)
+    {
+        public T CreateDelegate<T>() where T : Delegate
+        {
+            return (T)method.CreateDelegate(typeof(T));
+        }
+    }
+
+    extension<T>(T obj)
+    {
+        public T MemberwiseClone()
+        {
+            if (memberwiseCloneFn == null)
+            {
+                var method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic)!;
+                memberwiseCloneFn = method.CreateDelegate<Func<object, object>>();
+            }
+
+            return (T)memberwiseCloneFn(obj);
+        }
+    }
+
+    private static Func<object, object> memberwiseCloneFn;
     public static readonly Dictionary<int, DefModExtension_GeneWithComps> defExtCache = new();
 }

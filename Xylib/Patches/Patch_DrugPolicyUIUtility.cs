@@ -1,4 +1,4 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(DrugPolicyUIUtility))]
 public static class Patch_DrugPolicyUIUtility

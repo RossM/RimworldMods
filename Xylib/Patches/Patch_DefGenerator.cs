@@ -1,4 +1,4 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(DefGenerator))]
 public static class Patch_DefGenerator
@@ -8,6 +8,6 @@ public static class Patch_DefGenerator
     [HarmonyPatch(nameof(DefGenerator.GenerateImpliedDefs_PreResolve))]
     public static void GenerateImpliedDefs_PreResolve_Postfix(bool hotReload)
     {
-        PatchHelpers.FixupChemicalGenes();
+        PatchHelpers.RunDefGenerators(hotReload);
     }
 }
