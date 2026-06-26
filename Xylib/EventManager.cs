@@ -34,12 +34,8 @@ public interface IEventListener
 
 public class EventDef : Def
 {
-    public Type DataType =>
-        field ??= dataType is { IsGenericType: true } ? dataType.MakeGenericType(dataTypeArguments.ToArray()) : dataType;
-
     public bool global = false;
     public Type dataType = null;
-    public List<Type> dataTypeArguments = null;
 }
 
 [DefOf]
@@ -282,10 +278,10 @@ public class EventManager : GameComponent
             return;
         }
 
-        if (!typeof(T).IsAssignableFrom(eventDef.DataType))
+        if (!typeof(T).IsAssignableFrom(eventDef.dataType))
         {
             Log.ErrorOnce(
-                $"[EventManager] Registered callback for {callback.Target.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.DataType}",
+                $"[EventManager] Registered callback for {callback.Target.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
@@ -304,10 +300,10 @@ public class EventManager : GameComponent
             return;
         }
 
-        if (!typeof(T).IsAssignableFrom(eventDef.DataType))
+        if (!typeof(T).IsAssignableFrom(eventDef.dataType))
         {
             Log.ErrorOnce(
-                $"[EventManager] Registered callback for {callback.Target.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.DataType}",
+                $"[EventManager] Registered callback for {callback.Target.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
@@ -369,10 +365,10 @@ public class EventManager : GameComponent
             return;
         }
 
-        if (!typeof(T).IsAssignableFrom(eventDef.DataType))
+        if (!typeof(T).IsAssignableFrom(eventDef.dataType))
         {
             Log.ErrorOnce(
-                $"[EventManager] Registered callback for {callback.Target.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.DataType}",
+                $"[EventManager] Registered callback for {callback.Target.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target.GetType().GetHashCode(), 0));
         }
 
@@ -426,21 +422,21 @@ public class EventManager : GameComponent
                     Gen.HashCombineInt(0x140A0CA2, eventDef.index));
             }
 
-            if (eventDef.DataType != null && data == null)
+            if (eventDef.dataType != null && data == null)
             {
                 Log.ErrorOnce(
-                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.DataType} but was given null",
+                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given null",
                     Gen.HashCombineInt(0xEEB8AC2, eventDef.index));
             }
 
-            if (eventDef.DataType != null && data != null && !eventDef.DataType.IsAssignableFrom(data.GetType()))
+            if (eventDef.dataType != null && data != null && !eventDef.dataType.IsAssignableFrom(data.GetType()))
             {
                 Log.ErrorOnce(
-                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.DataType} but was given {data.GetType()}",
+                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given {data.GetType()}",
                     Gen.HashCombineInt(0x4D53041B, eventDef.index));
             }
 
-            if (eventDef.DataType == null && data != null)
+            if (eventDef.dataType == null && data != null)
             {
                 Log.ErrorOnce(
                     $"[EventManager] Notification {eventDef.defName} shouldn't take data but was given {data.GetType()}",

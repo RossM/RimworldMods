@@ -78,10 +78,7 @@
 
   <Xylib.EventDef>
     <defName>InGeneratePossessions</defName>
-    <dataType>System.Collections.Generic.List`1</dataType>
-    <dataTypeArguments>
-      <li>ThingDefCount</li>    
-    </dataTypeArguments>
+    <dataType>System.Collections.Generic.List`1[Verse.ThingDefCount]</dataType>
   </Xylib.EventDef>    
 
   <Xylib.EventDef>
