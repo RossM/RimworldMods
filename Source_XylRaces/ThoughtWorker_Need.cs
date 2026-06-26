@@ -1,21 +1,36 @@
-﻿namespace XylXenos;
+﻿using System.Linq.Expressions;
 
-public interface INeed
-{
-    public int CurStage { get; }
-}
+namespace XylXenos;
 
 [UsedFromXml]
 public class DefModExtension_Thought_Need : DefModExtension
 {
     public NeedDef need;
-    public List<float> stages;
 }
 
 [UsedFromXml]
 public class ThoughtWorker_Need : ThoughtWorker
 {
     public DefModExtension_Thought_Need DefExt => def.GetModExtension<DefModExtension_Thought_Need>();
+
+    public Func<Need, int> CurStageGetter => field ??= MakeGetter(DefExt.need.needClass);
+
+    private static readonly Dictionary<Type, Func<Need, int>> getterCache = new();
+
+    private static Func<Need, int> MakeGetter(Type needType)
+    {
+        if (getterCache.TryGetValue(needType, out var func))
+            return func;
+
+        // Creates a method that does:
+        //   Need need => (int)((Need_Foo)need).CurCategory
+        ParameterExpression need = Expression.Parameter(typeof(Need), "need");
+        Expression curCategory = Expression.Property(Expression.Convert(need, needType), "CurCategory");
+        Expression result = Expression.Convert(curCategory, typeof(int));
+        getterCache[needType] = func = Expression.Lambda<Func<Need, int>>(result, need).Compile();
+
+        return func;
+    }
 
     protected override ThoughtState CurrentStateInternal(Pawn p)
     {
@@ -26,23 +41,9 @@ public class ThoughtWorker_Need : ThoughtWorker
         if (need == null)
             return ThoughtState.Inactive;
 
-        int stage;
+        int stage = CurStageGetter(need);
 
-        if (need is INeed iNeed)
-            stage = iNeed.CurStage;
-        else
-        {
-            float needLevel = need.CurLevel;
-
-            for (stage = DefExt.stages.Count - 1; stage >= 0; stage--)
-            {
-                var minLevel = DefExt.stages[stage];
-                if (minLevel <= needLevel)
-                    break;
-            }
-        }
-
-        if (stage < 0 || stage >= def.stages.Count || def.stages[stage] == null)
+        if (stage < 0 || stage >= def.stages.Count)
             return ThoughtState.Inactive;
         return ThoughtState.ActiveAtStage(stage);
     }

@@ -11,14 +11,12 @@ public enum WetnessCategory : byte
     Wet,
 }
 
-public class Need_Wetness : Need_Seeker, INeed
+public class Need_Wetness : Need_Seeker
 {
     public float TemperatureFactor => TemperatureWetnessFallFactorCurve.Evaluate(pawn.AmbientTemperature);
 
     public float RisePerHour => def.seekerRisePerHour;
     public float FallPerHour => def.seekerFallPerHour * TemperatureFactor;
-
-    public int CurStage => (int)CurCategory;
 
     public const float thresholdWet = 0.90f;
     public const float thresholdNeutral = 0.50f;
