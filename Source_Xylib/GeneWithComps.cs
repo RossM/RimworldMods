@@ -1,4 +1,5 @@
-﻿namespace Xylib;
+﻿// ReSharper disable ForCanBeConvertedToForeach
+namespace Xylib;
 
 public class GeneComp
 {
@@ -78,6 +79,9 @@ public class GeneWithComps : Gene, IEventListener
     [Unsaved] private bool activeStateNeedsUpdating = true;
 
     [CanBeNull] public List<GeneComp> comps;
+
+    [Unsaved] private bool compHasTick;
+    [Unsaved] private bool compHasTickInterval;
 
     [field: Unsaved]
     public override bool Active
@@ -169,6 +173,8 @@ public class GeneWithComps : Gene, IEventListener
                 comp.props = compProps;
                 comp.parent = this;
                 comps.Add(comp);
+                compHasTick |= comp.hasTick;
+                compHasTickInterval |= comp.hasTickInterval;
             }
             catch (Exception ex)
             {
@@ -260,23 +266,23 @@ public class GeneWithComps : Gene, IEventListener
         if (!Active)
             return;
 
-        if (comps != null)
+        if (compHasTickInterval)
         {
-            foreach (var comp in comps)
+            for (var index = 0; index < comps!.Count; index++)
             {
+                GeneComp comp = comps[index];
                 if (comp.hasTickInterval)
                     comp.CompTickInterval(delta);
             }
         }
 
-        if (DefExt.hediffGivers.NullOrEmpty())
-            return;
-        if (!pawn.IsHashIntervalTick(60, delta))
-            return;
-
-        foreach (var hediffGiver in DefExt.hediffGivers)
+        if (!DefExt.hediffGivers.NullOrEmpty() && pawn.IsHashIntervalTick(60, delta))
         {
-            hediffGiver.OnIntervalPassed(pawn, null);
+            for (var index = 0; index < DefExt.hediffGivers.Count; index++)
+            {
+                HediffGiver hediffGiver = DefExt.hediffGivers[index];
+                hediffGiver.OnIntervalPassed(pawn, null);
+            }
         }
     }
 
@@ -287,10 +293,11 @@ public class GeneWithComps : Gene, IEventListener
         if (!Active)
             return;
 
-        if (comps != null)
+        if (compHasTick)
         {
-            foreach (var comp in comps)
+            for (var index = 0; index < comps!.Count; index++)
             {
+                GeneComp comp = comps[index];
                 if (comp.hasTick)
                     comp.CompTick();
             }
