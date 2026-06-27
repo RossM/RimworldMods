@@ -70,6 +70,7 @@
           <Tribal_Hunter>10</Tribal_Hunter>
           <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
           <Tribal_Berserker>5</Tribal_Berserker>
+          <XylTribal_ChiefTrog>1.5</XylTribal_ChiefTrog>
           <Megascarab>10</Megascarab>
           <Spelopede>10</Spelopede>
           <Locust MayRequire="Ludeon.RimWorld.Odyssey">10</Locust>
@@ -85,6 +86,7 @@
           <Tribal_Penitent>10</Tribal_Penitent>
           <Tribal_Warrior>10</Tribal_Warrior>
           <Tribal_Berserker>10</Tribal_Berserker>
+          <XylTribal_ChiefTrog>1.5</XylTribal_ChiefTrog>
           <Megascarab>10</Megascarab>
           <Spelopede>10</Spelopede>
           <Locust MayRequire="Ludeon.RimWorld.Odyssey">10</Locust>
@@ -104,6 +106,7 @@
           <Tribal_Hunter>5</Tribal_Hunter>
           <Tribal_HeavyArcher>5</Tribal_HeavyArcher>
           <Tribal_Berserker>5</Tribal_Berserker>
+          <XylTribal_ChiefTrog>1.5</XylTribal_ChiefTrog>
           <Megascarab>10</Megascarab>
           <Spelopede>10</Spelopede>
           <Locust MayRequire="Ludeon.RimWorld.Odyssey">10</Locust>
@@ -154,6 +157,7 @@
           <Tribal_Hunter>5</Tribal_Hunter>
           <Tribal_HeavyArcher>5</Tribal_HeavyArcher>
           <Tribal_Berserker>10</Tribal_Berserker>
+          <XylTribal_ChiefTrog>1.5</XylTribal_ChiefTrog>
           <Megascarab>10</Megascarab>
           <Spelopede>10</Spelopede>
           <Locust MayRequire="Ludeon.RimWorld.Odyssey">10</Locust>
@@ -229,5 +233,27 @@
       </fixedParams>
     </root>
   </ThingSetMakerDef>
+
+  <PawnKindDef ParentName="TribalChiefBase">
+    <defName>XylTribal_ChiefTrog</defName>
+    <label>trog chief</label>
+    <defaultFactionDef>XylTribeSavageTrog</defaultFactionDef>
+    <weaponTags>
+      <li>NeolithicMeleeAdvanced</li>
+      <li>MedievalMeleeAdvanced</li>
+    </weaponTags>
+    <weaponStuffOverride MayRequire="Ludeon.RimWorld.Odyssey">Obsidian</weaponStuffOverride>
+    <apparelRequired Inherit="False">
+      <li>Apparel_GasMask</li>
+      <li>Apparel_PlateArmor</li>
+    </apparelRequired>
+    <specificApparelRequirements Inherit="False">
+      <li MayRequire="Ludeon.RimWorld.Odyssey">
+        <apparelDef>Apparel_PlateArmor</apparelDef>
+        <stuff>Obsidian</stuff>
+      </li>
+    </specificApparelRequirements>
+    <initialResistanceRange>38~58</initialResistanceRange>
+  </PawnKindDef>
 
 </Defs>
