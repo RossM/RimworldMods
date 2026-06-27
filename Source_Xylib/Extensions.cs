@@ -11,10 +11,10 @@ public static class Extensions
 {
     extension(Faction faction)
     {
-        public IEnumerable<Pawn> AllPawns => 
+        public IEnumerable<Pawn> AllAlivePawns => 
             faction == Faction.OfPlayer ?
                 PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction :
-                PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive.Where(pawn => pawn.Faction == faction);
+                PawnsFinder.AllMapsAndWorld_Alive.Where(pawn => pawn.Faction == faction);
     }
 
     extension(GeneDef gene)

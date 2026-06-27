@@ -4,7 +4,7 @@ public static class XenotypeHelpers
 {
     public static XenotypeDef GetRandomXenotypeNotInColony()
     {
-        HashSet<XenotypeDef> playerXenotypes = Faction.OfPlayer.AllPawns.Where(pawn => pawn.genes != null)
+        HashSet<XenotypeDef> playerXenotypes = Faction.OfPlayer.AllAlivePawns.Where(pawn => pawn.genes != null)
             .Select(pawn => pawn.genes.Xenotype).ToHashSet();
         Dictionary<XenotypeDef, float> weights = new();
         foreach (var faction in Find.FactionManager.AllFactionsListForReading)

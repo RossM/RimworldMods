@@ -290,7 +290,7 @@ public static class PatchHelpers
     {
         HashSet<Designator> geneDesignators = [];
 
-        foreach (var designators in Faction.OfPlayer.AllPawns.Select(pawn => pawn.GeneTracker_XylXenos?.unlockedBuildables))
+        foreach (var designators in Faction.OfPlayer.AllAlivePawns.Select(pawn => pawn.GeneTracker_XylXenos?.unlockedBuildables))
         {
             if (designators == null)
                 continue;
@@ -346,7 +346,7 @@ public static class PatchHelpers
 
     public static bool IsRecipeUnlockedByGenes(RecipeDef recipe)
     {
-        foreach (var pawn in Faction.OfPlayer.AllPawns)
+        foreach (var pawn in Faction.OfPlayer.AllAlivePawns)
         {
             if (pawn.GeneTracker_XylXenos?.unlockedRecipes?.Contains(recipe) == true)
                 return true;
