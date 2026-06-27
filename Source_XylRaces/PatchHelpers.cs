@@ -259,7 +259,7 @@ public static class PatchHelpers
             return false;
         }
 
-        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.GeneTracker?.ingestionThoughtOverrides;
+        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.XGeneTracker?.ingestionThoughtOverrides;
         if (thoughtOverrides == null)
             return false;
 
@@ -290,7 +290,7 @@ public static class PatchHelpers
     {
         HashSet<Designator> geneDesignators = [];
 
-        foreach (var designators in Faction.OfPlayer.AllPawns.Select(pawn => pawn.GeneTracker?.unlockedBuildables))
+        foreach (var designators in Faction.OfPlayer.AllPawns.Select(pawn => pawn.XGeneTracker?.unlockedBuildables))
         {
             if (designators == null)
                 continue;
@@ -317,7 +317,7 @@ public static class PatchHelpers
 
     public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
     {
-        List<JoyGiverFactor> joyGiverChanceFactors = pawn.GeneTracker?.joyGiverChanceFactors;
+        List<JoyGiverFactor> joyGiverChanceFactors = pawn.XGeneTracker?.joyGiverChanceFactors;
         if (joyGiverChanceFactors == null)
             return 1f;
 
@@ -348,7 +348,7 @@ public static class PatchHelpers
     {
         foreach (var pawn in Faction.OfPlayer.AllPawns)
         {
-            if (pawn.GeneTracker?.unlockedRecipes?.Contains(recipe) == true)
+            if (pawn.XGeneTracker?.unlockedRecipes?.Contains(recipe) == true)
                 return true;
         }
 

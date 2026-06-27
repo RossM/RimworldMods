@@ -7,10 +7,10 @@ public static class PawnExtensions
         public Hediff LactationHediff => pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
 
         [CanBeNull]
-        public GeneTracker GeneTracker
+        public GeneTracker_XylXenos XGeneTracker
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => pawn.genes == null ? null : PawnExtraData<GeneTracker>.Get(pawn);
+            get => pawn.genes == null ? null : PawnExtraData<GeneTracker_XylXenos>.Get(pawn);
         }
     }
 }

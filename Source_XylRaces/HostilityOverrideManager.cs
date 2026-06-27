@@ -44,7 +44,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
         if (!HasAnyOverride(target.Faction, source.Faction))
             return false;
 
-        return targetPawn.IsColonyAnimal || targetPawn.GeneTracker?.disableHostilityFromFactions?.Contains(source.Faction.def) == true;
+        return targetPawn.IsColonyAnimal || targetPawn.XGeneTracker?.disableHostilityFromFactions?.Contains(source.Faction.def) == true;
     }
 
     private bool HasAnyOverride(Faction from, Faction to)
@@ -75,7 +75,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
 
         foreach (var pawn in map.mapPawns.AllPawns)
         {
-            List<FactionDef> factions = pawn.GeneTracker?.disableHostilityFromFactions;
+            List<FactionDef> factions = pawn.XGeneTracker?.disableHostilityFromFactions;
             if (factions.NullOrEmpty())
                 continue;
 

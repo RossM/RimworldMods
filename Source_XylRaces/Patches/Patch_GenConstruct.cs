@@ -16,7 +16,7 @@ public static class Patch_GenConstruct
 
         BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
 
-        bool hasGeneDesignator = p.GeneTracker?.unlockedBuildables?.Contains(def) ?? false;
+        bool hasGeneDesignator = p.XGeneTracker?.unlockedBuildables?.Contains(def) ?? false;
         if (!hasGeneDesignator && GenConstruct.tmpIdeoMemberNames.Count == 0)
         {
             foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)

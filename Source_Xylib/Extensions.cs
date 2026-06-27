@@ -47,10 +47,10 @@ public static class Extensions
         }
 
         [CanBeNull]
-        public GeneTracker GeneTracker
+        public GeneTracker_GeneWithComps GeneTracker
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => pawn.genes == null ? null : PawnExtraData<GeneTracker>.Get(pawn);
+            get => pawn.genes == null ? null : PawnExtraData<GeneTracker_GeneWithComps>.Get(pawn);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
