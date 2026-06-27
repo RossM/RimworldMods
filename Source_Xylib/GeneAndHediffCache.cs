@@ -42,7 +42,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     ///     The matching genes.
     /// </returns>
     [NotNull]
-    public IEnumerable<T> GetGenesOfType<T>() where T : Gene
+    public IReadOnlyList<T> GetGenesOfType<T>() where T : Gene
     {
         if (genesByType.TryGetValue(typeof(T), out IList value))
             return (List<T>)value;
@@ -65,7 +65,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     ///     The matching genes.
     /// </returns>
     [NotNull]
-    public IEnumerable<Gene> GetGenesWithDef(GeneDef def)
+    public IReadOnlyList<Gene> GetGenesWithDef(GeneDef def)
     {
         if (genesByDef.TryGetValue(def, out List<Gene> value))
             return value;
@@ -85,7 +85,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     ///     Matching <see cref="GeneWithComps" /> instances.
     /// </returns>
     [NotNull]
-    public IEnumerable<GeneWithComps> GetGenesWithComp<T>() where T : GeneComp
+    public IReadOnlyList<GeneWithComps> GetGenesWithComp<T>() where T : GeneComp
     {
         if (genesByComp.TryGetValue(typeof(T), out List<GeneWithComps> value))
             return value;
@@ -105,7 +105,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     ///     The matching hediffs.
     /// </returns>
     [NotNull]
-    public IEnumerable<T> GetHediffsOfType<T>() where T : Hediff
+    public IReadOnlyList<T> GetHediffsOfType<T>() where T : Hediff
     {
         if (hediffsByType.TryGetValue(typeof(T), out IList value))
             return (List<T>)value;
@@ -125,7 +125,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     ///     The matching hediffs.
     /// </returns>
     [NotNull]
-    public IEnumerable<Hediff> GetHediffsWithDef(HediffDef def)
+    public IReadOnlyList<Hediff> GetHediffsWithDef(HediffDef def)
     {
         if (hediffsByDef.TryGetValue(def, out List<Hediff> value))
             return value;
@@ -145,7 +145,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     ///     The matching hediffs.
     /// </returns>
     [NotNull]
-    public IEnumerable<Hediff> GetHediffsWithModExtension<T>() where T : DefModExtension
+    public IReadOnlyList<Hediff> GetHediffsWithModExtension<T>() where T : DefModExtension
     {
         if (hediffsByModExt.TryGetValue(typeof(T), out List<Hediff> value))
             return value;
@@ -165,7 +165,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     ///     Matching <see cref="HediffWithComps" /> instances.
     /// </returns>
     [NotNull]
-    public IEnumerable<HediffWithComps> GetHediffsWithComp<T>() where T : HediffComp
+    public IReadOnlyList<HediffWithComps> GetHediffsWithComp<T>() where T : HediffComp
     {
         if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))
             return value;

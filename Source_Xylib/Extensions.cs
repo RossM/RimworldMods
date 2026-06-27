@@ -1,5 +1,6 @@
 using System.Reflection;
 using RimWorld.Planet;
+// ReSharper disable ForCanBeConvertedToForeach
 
 // ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable UnusedMember.Global
@@ -10,7 +11,10 @@ public static class Extensions
 {
     extension(Faction faction)
     {
-        public IEnumerable<Pawn> AllPawns => Find.Maps.SelectMany(map => map.mapPawns.PawnsInFaction(faction));
+        public IEnumerable<Pawn> AllPawns => 
+            faction == Faction.OfPlayer ?
+                PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction :
+                PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive.Where(pawn => pawn.Faction == faction);
     }
 
     extension(GeneDef gene)
@@ -60,11 +64,13 @@ public static class Extensions
 
         public bool HasActiveGene(GeneDef def)
         {
-            if (def == null)
+            if (def == null || pawn.genes == null)
                 return false;
 
-            foreach (Gene gene in pawn.AllGenesOfDef(def))
+            IReadOnlyList<Gene> genes = pawn.GeneAndHediffCache.GetGenesWithDef(def);
+            for (var index = 0; index < genes.Count; index++)
             {
+                Gene gene = genes[index];
                 if (gene.Active)
                     return true;
             }
@@ -77,26 +83,51 @@ public static class Extensions
 
         public IEnumerable<T> ActiveGenesOfType<T>() where T : Gene
         {
-            foreach (T gene in pawn.AllGenesOfType<T>())
+            if (pawn.genes == null)
+                return [];
+
+            return Iterator();
+
+            IEnumerable<T> Iterator()
             {
-                if (gene.Active)
-                    yield return gene;
+                IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
+                for (var index = 0; index < genes.Count; index++)
+                {
+                    T gene = genes[index];
+                    if (gene.Active)
+                        yield return gene;
+                }
             }
         }
 
         public IEnumerable<T> ActiveGenesOfType<T>(Func<T, bool> predicate) where T : Gene
         {
-            foreach (T gene in pawn.AllGenesOfType<T>())
+            if (pawn.genes == null)
+                return [];
+
+            return Iterator();
+
+            IEnumerable<T> Iterator()
             {
-                if (gene.Active && predicate(gene))
-                    yield return gene;
+                IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
+                for (var index = 0; index < genes.Count; index++)
+                {
+                    T gene = genes[index];
+                    if (gene.Active && predicate(gene))
+                        yield return gene;
+                }
             }
         }
 
         public T FirstActiveGeneOfType<T>() where T : Gene
         {
-            foreach (T gene in pawn.AllGenesOfType<T>())
+            if (pawn.genes == null)
+                return null;
+
+            IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
+            for (var index = 0; index < genes.Count; index++)
             {
+                T gene = genes[index];
                 if (gene.Active)
                     return gene;
             }
@@ -106,8 +137,13 @@ public static class Extensions
 
         public T FirstActiveGeneOfType<T>(Func<T, bool> predicate) where T : Gene
         {
-            foreach (T gene in pawn.AllGenesOfType<T>())
+            if (pawn.genes == null)
+                return null;
+
+            IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
+            for (var index = 0; index < genes.Count; index++)
             {
+                T gene = genes[index];
                 if (gene.Active && predicate(gene))
                     return gene;
             }
@@ -117,8 +153,13 @@ public static class Extensions
 
         public bool HasActiveGeneOfType<T>() where T : Gene
         {
-            foreach (T gene in pawn.AllGenesOfType<T>())
+            if (pawn.genes == null)
+                return false;
+
+            IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
+            for (var index = 0; index < genes.Count; index++)
             {
+                T gene = genes[index];
                 if (gene.Active)
                     return true;
             }
@@ -128,8 +169,13 @@ public static class Extensions
 
         public bool HasActiveGeneOfType<T>(Func<T, bool> predicate) where T : Gene
         {
-            foreach (T gene in pawn.AllGenesOfType<T>())
+            if (pawn.genes == null)
+                return false;
+
+            IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
+            for (var index = 0; index < genes.Count; index++)
             {
+                T gene = genes[index];
                 if (gene.Active && predicate(gene))
                     return true;
             }
@@ -143,26 +189,51 @@ public static class Extensions
 
         public IEnumerable<GeneWithComps> ActiveGenesWithComp<T>() where T : GeneComp
         {
-            foreach (GeneWithComps gene in pawn.AllGenesWithComp<T>())
+            if (pawn.genes == null)
+                return [];
+
+            return Iterator();
+
+            IEnumerable<GeneWithComps> Iterator()
             {
-                if (gene.Active)
-                    yield return gene;
+                IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+                for (var index = 0; index < genes.Count; index++)
+                {
+                    GeneWithComps gene = genes[index];
+                    if (gene.Active)
+                        yield return gene;
+                }
             }
         }
 
         public IEnumerable<GeneWithComps> ActiveGenesWithComp<T>(Func<T, bool> predicate) where T : GeneComp
         {
-            foreach (GeneWithComps gene in pawn.AllGenesWithComp<T>())
+            if (pawn.genes == null)
+                return [];
+
+            return Iterator();
+
+            IEnumerable<GeneWithComps> Iterator()
             {
-                if (gene.Active && predicate(gene.GetComp<T>()))
-                    yield return gene;
+                IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+                for (var index = 0; index < genes.Count; index++)
+                {
+                    GeneWithComps gene = genes[index];
+                    if (gene.Active && predicate(gene.GetComp<T>()))
+                        yield return gene;
+                }
             }
         }
 
         public GeneWithComps FirstActiveGeneWithComp<T>() where T : GeneComp
         {
-            foreach (GeneWithComps gene in pawn.AllGenesWithComp<T>())
+            if (pawn.genes == null)
+                return null;
+
+            IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+            for (var index = 0; index < genes.Count; index++)
             {
+                GeneWithComps gene = genes[index];
                 if (gene.Active)
                     return gene;
             }
@@ -172,8 +243,13 @@ public static class Extensions
 
         public GeneWithComps FirstActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp
         {
-            foreach (GeneWithComps gene in pawn.AllGenesWithComp<T>())
+            if (pawn.genes == null)
+                return null;
+
+            IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+            for (var index = 0; index < genes.Count; index++)
             {
+                GeneWithComps gene = genes[index];
                 if (gene.Active && predicate(gene.GetComp<T>()))
                     return gene;
             }
@@ -186,8 +262,10 @@ public static class Extensions
             if (pawn.genes == null)
                 return false;
 
-            foreach (GeneWithComps gene in pawn.AllGenesWithComp<T>())
+            IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+            for (var index = 0; index < genes.Count; index++)
             {
+                GeneWithComps gene = genes[index];
                 if (gene.Active)
                     return true;
             }
@@ -200,8 +278,10 @@ public static class Extensions
             if (pawn.genes == null)
                 return false;
 
-            foreach (GeneWithComps gene in pawn.AllGenesWithComp<T>())
+            IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+            for (var index = 0; index < genes.Count; index++)
             {
+                GeneWithComps gene = genes[index];
                 if (gene.Active && predicate(gene.GetComp<T>()))
                     return true;
             }
@@ -211,30 +291,55 @@ public static class Extensions
 
         public IEnumerable<T> ActiveGeneCompsOfType<T>() where T : GeneComp
         {
-            foreach (GeneWithComps gene in pawn.AllGenesWithComp<T>())
+            if (pawn.genes == null)
+                return [];
+
+            return Iterator();
+
+            IEnumerable<T> Iterator()
             {
-                if (gene.Active)
-                    yield return gene.GetComp<T>();
+                IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+                for (var index = 0; index < genes.Count; index++)
+                {
+                    GeneWithComps gene = genes[index];
+                    if (gene.Active)
+                        yield return gene.GetComp<T>();
+                }
             }
         }
 
         public IEnumerable<T> ActiveGeneCompsOfType<T>(Func<T, bool> predicate) where T : GeneComp
         {
-            foreach (GeneWithComps gene in pawn.AllGenesWithComp<T>())
-            {
-                if (!gene.Active)
-                    continue;
+            if (pawn.genes == null)
+                return [];
 
-                var comp = gene.GetComp<T>();
-                if (predicate(comp))
-                    yield return comp;
+            return Iterator();
+
+            IEnumerable<T> Iterator()
+            {
+                IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+                for (var index = 0; index < genes.Count; index++)
+                {
+                    GeneWithComps gene = genes[index];
+                    if (!gene.Active)
+                        continue;
+
+                    var comp = gene.GetComp<T>();
+                    if (predicate(comp))
+                        yield return comp;
+                }
             }
         }
 
         public T FirstActiveGeneCompOfType<T>() where T : GeneComp
         {
-            foreach (GeneWithComps gene in pawn.AllGenesWithComp<T>())
+            if (pawn.genes == null)
+                return null;
+
+            IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+            for (var index = 0; index < genes.Count; index++)
             {
+                GeneWithComps gene = genes[index];
                 if (gene.Active)
                     return gene.GetComp<T>();
             }
@@ -244,8 +349,13 @@ public static class Extensions
 
         public T FirstActiveGeneCompOfType<T>(Func<T, bool> predicate) where T : GeneComp
         {
-            foreach (GeneWithComps gene in pawn.AllGenesWithComp<T>())
+            if (pawn.genes == null)
+                return null;
+
+            IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+            for (var index = 0; index < genes.Count; index++)
             {
+                GeneWithComps gene = genes[index];
                 if (!gene.Active)
                     continue;
 
@@ -267,8 +377,10 @@ public static class Extensions
 
         public IEnumerable<HediffWithComps> HediffsWithComp<T>(Func<T, bool> predicate) where T : HediffComp
         {
-            foreach (HediffWithComps hediff in pawn.HediffsWithComp<T>())
+            IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
+            for (var index = 0; index < hediffs.Count; index++)
             {
+                HediffWithComps hediff = hediffs[index];
                 if (predicate(hediff.GetComp<T>()))
                     yield return hediff;
             }
@@ -278,8 +390,10 @@ public static class Extensions
 
         public HediffWithComps FirstHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp
         {
-            foreach (HediffWithComps hediff in pawn.HediffsWithComp<T>())
+            IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
+            for (var index = 0; index < hediffs.Count; index++)
             {
+                HediffWithComps hediff = hediffs[index];
                 if (predicate(hediff.GetComp<T>()))
                     return hediff;
             }
@@ -291,8 +405,10 @@ public static class Extensions
 
         public bool HasHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp
         {
-            foreach (HediffWithComps hediff in pawn.HediffsWithComp<T>())
+            IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
+            for (var index = 0; index < hediffs.Count; index++)
             {
+                HediffWithComps hediff = hediffs[index];
                 if (predicate(hediff.GetComp<T>()))
                     return true;
             }
@@ -303,7 +419,6 @@ public static class Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<Hediff> HediffsWithDef(HediffDef def) => pawn.GeneAndHediffCache.GetHediffsWithDef(def);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<Hediff> HediffsWithDef(HediffDef def, Func<Hediff, bool> predicate) =>
             pawn.HediffsWithDef(def).Where(predicate);
 
@@ -314,8 +429,10 @@ public static class Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<Hediff> HediffsWithModExtension<T>(Func<T, bool> predicate) where T : DefModExtension
         {
-            foreach (Hediff hediff in pawn.HediffsWithModExtension<T>())
+            IReadOnlyList<Hediff> hediffs = pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
+            for (var index = 0; index < hediffs.Count; index++)
             {
+                Hediff hediff = hediffs[index];
                 if (predicate(hediff.def.GetModExtension<T>()))
                     yield return hediff;
             }
