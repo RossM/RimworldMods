@@ -7,7 +7,7 @@ public interface IPawnData
 
 /// <summary>
 ///     Provides one shared helper object per pawn for state that is important for the mod but not appropriate to keep in
-///     a pawn ThingComp, such as lookup caches or gene-derived aggregate values. Use <see cref="Get" /> to retrieve a
+///     a pawn <see cref="ThingComp"/>, such as lookup caches or gene-derived aggregate values. Use <see cref="Get" /> to retrieve a
 ///     pawn's instance.
 /// </summary>
 public static class PawnExtraData<T> where T : IPawnData, new()
@@ -44,6 +44,11 @@ public static class PawnExtraData<T> where T : IPawnData, new()
         EventManager.AddStaticListener(listener);
     }
 
+    /// <summary>
+    /// Retrieves the data associated with a <see cref="Pawn"/>, or creates it if it doesn't exist.
+    /// </summary>
+    /// <param name="pawn">The pawn to get the data for.</param>
+    /// <returns>The data for the pawn.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T Get(Pawn pawn)
     {

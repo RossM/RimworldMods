@@ -165,9 +165,60 @@ public static class EventDefOf
 ///     <see cref="IEventListener" />
 ///     and register for the needed callbacks in <see cref="IEventListener.RegisterWith" />.
 /// </summary>
+/// <para>
+///     Subtypes of the following classes that implement <see cref="IEventListener" /> will have
+///     <see cref="IEventListener.RegisterWith" /> called automatically:
+///     <list type="bullet">
+///         <item>
+///             <description>
+///                 <see cref="Gene" />
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 <see cref="Hediff" />
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 <see cref="HediffComp" />
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 <see cref="MapComponent" />
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 <see cref="Need" />
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 <see cref="Thing" />
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 <see cref="ThingComp" />
+///             </description>
+///         </item>
+///         <item>
+///             <description>
+///                 <see cref="GeneComp" />
+///             </description>
+///         </item>
+///     </list>
+///     For other types, you should call <see cref="AddListener" /> when the listener should start receiving events, and
+///     <see cref="RemoveListener" /> when the listener should stop receiving events.
+/// </para>
 [UsedFromReflection]
 public class EventManager : GameComponent
 {
+    /// <summary>
+    ///     Holds data about all the callbacks for a specific <see cref="EventDef" />.
+    /// </summary>
     private class NotificationInfo
     {
         public bool usesPriority = false;
@@ -175,6 +226,11 @@ public class EventManager : GameComponent
         public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
     }
 
+    /// <summary>
+    ///     Holds data about a registered callback, used when unregistering a listener.
+    /// </summary>
+    /// <param name="eventDef"></param>
+    /// <param name="target"></param>
     private class RegistrationInfo(EventDef eventDef, Thing target)
     {
         public readonly EventDef eventDef = eventDef;
@@ -182,7 +238,10 @@ public class EventManager : GameComponent
         public readonly System.WeakReference<Thing> target = target == null ? null : new(target);
     }
 
-    public struct CallbackInfo
+    /// <summary>
+    ///     Holds data about a specific callback that should be called when an event is triggered.
+    /// </summary>
+    private struct CallbackInfo
     {
         public Action<Thing, object> wrappedCallback;
         public IEventListener listener;
@@ -195,16 +254,37 @@ public class EventManager : GameComponent
         }
     }
 
+    /// <summary>
+    ///     Gets the event manager for the currently running game.
+    /// </summary>
     public static EventManager Instance => Current.Game?.GetComponent<EventManager>();
+
     private static bool doDebug = false;
 
+    /// <summary>
+    ///     A list of listeners that are automatically registered when a game is started or loaded. Used to
+    ///     implement global listeners that aren't tied to any particular object.
+    /// </summary>
     private static readonly List<IEventListener> staticListeners = [];
-    [Unsaved] private HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
 
+    /// <summary>
+    ///     Static listeners which are already registered, to avoid double registration.
+    /// </summary>
+    [Unsaved] private readonly HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
+
+    /// <summary>
+    ///     Information about the listeners registered for each event, indexed by <see cref="EventDef.index" />.
+    /// </summary>
     private readonly NotificationInfo[] notifications = new NotificationInfo[DefDatabase<EventDef>.DefCount];
 
+    /// <summary>
+    ///     A list of events that each listener has registered for, used for unregistering the listener.
+    /// </summary>
     private ConditionalWeakTable<IEventListener, List<RegistrationInfo>> registrations = new();
 
+    /// <summary>
+    ///     A scratch list used during event handling.
+    /// </summary>
     private readonly List<CallbackInfo> tempCallbacks = [];
 
     public EventManager(Game _)
@@ -229,8 +309,10 @@ public class EventManager : GameComponent
             throw new InvalidOperationException("Only an INotificationListener can register for notifications");
 
         if (doDebug)
+        {
             Debug.Log(
                 $"[EventManager] Register eventDef={eventDef} {(target == null ? "global" : $"target=[{target}]")} listener={listener} name={name} priority={priority}");
+        }
 
         var records = registrations.GetOrCreateValue(listener);
         records.Add(new(eventDef, target));
