@@ -328,7 +328,7 @@ public class EventManager : GameComponent
             if (notificationInfo.globalCallbacks.Any(c => c.listener == listener && c.name == name))
             {
                 Log.Warning(
-                    $"[EventManager] Adding a duplicate callback: type={eventDef} global listener={listener} name={name}");
+                    $"[EventManager] Adding a duplicate callback: eventDef={eventDef} global listener={listener} name={name}");
                 return;
             }
 
@@ -340,7 +340,7 @@ public class EventManager : GameComponent
             if (localCallbacks.Any(c => c.listener == listener && c.name == name))
             {
                 Log.Warning(
-                    $"[EventManager] Adding a duplicate callback: type={eventDef} target={target} listener={listener} name={name}");
+                    $"[EventManager] Adding a duplicate callback: eventDef={eventDef} target=[{target}] listener={listener} name={name}");
                 return;
             }
 
