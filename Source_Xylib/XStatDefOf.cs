@@ -5,7 +5,7 @@ public static class XStatDefOf
 {
     public static StatDef XylCookedAnimalProductNutritionFactor;
     public static StatDef XylCookedMeatNutritionFactor;
-    public static StatDef XylCookedNonMeatNutritionFactor;
+    public static StatDef XylCookedVegetableNutritionFactor;
     public static StatDef XylDrugEffectMultiplier;
     public static StatDef XylGlobalAddictionChanceFactor;
     public static StatDef XylHypothermiaProgressionFactor;
@@ -20,8 +20,8 @@ public static class XStatDefOf
     public static StatDef XylRawFungusNutritionFactor;
     public static StatDef XylRawMeatFoodPoisonChanceFactor;
     public static StatDef XylRawMeatNutritionFactor;
-    public static StatDef XylRawNonMeatFoodPoisonChanceFactor;
-    public static StatDef XylRawNonMeatNutritionFactor;
+    public static StatDef XylRawVegetableFoodPoisonChanceFactor;
+    public static StatDef XylRawVegetableNutritionFactor;
     public static StatDef XylResistanceFallRate;
     public static StatDef XylSlaveRebellionMtbFactor;
     public static StatDef XylWillFallRate;

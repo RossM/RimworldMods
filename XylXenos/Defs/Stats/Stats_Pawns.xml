@@ -27,8 +27,8 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>XylRawNonMeatNutritionFactor</defName>
-    <label>raw plant nutrition multiplier</label>
+    <defName>XylRawVegetableNutritionFactor</defName>
+    <label>raw vegetable nutrition multiplier</label>
     <description>A multiplier on how nutritious raw plant-based food is for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
     <category>PawnFood</category>
     <toStringStyle>PercentZero</toStringStyle>
@@ -63,8 +63,8 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>XylCookedNonMeatNutritionFactor</defName>
-    <label>cooked plant nutrition multiplier</label>
+    <defName>XylCookedVegetableNutritionFactor</defName>
+    <label>cooked vegetable nutrition multiplier</label>
     <description>A multiplier on how nutritious cooked plant-based food is for this person.</description>
     <category>PawnFood</category>
     <toStringStyle>PercentZero</toStringStyle>
@@ -121,8 +121,8 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>XylRawNonMeatFoodPoisonChanceFactor</defName>
-    <label>raw plant food poisoning chance</label>
+    <defName>XylRawVegetableFoodPoisonChanceFactor</defName>
+    <label>raw vegetable food poisoning chance</label>
     <description>A multiplier to the chance of getting food poisoning from eating raw plant-based foods.</description>
     <category>PawnFood</category>
     <toStringStyle>PercentZero</toStringStyle>

@@ -23,8 +23,8 @@
     </exclusionTags>
     <statFactors>
       <XylRawMeatNutritionFactor>1.8</XylRawMeatNutritionFactor>
-      <XylRawNonMeatNutritionFactor>0.5</XylRawNonMeatNutritionFactor>
-      <XylCookedNonMeatNutritionFactor>0.8</XylCookedNonMeatNutritionFactor>
+      <XylRawVegetableNutritionFactor>0.5</XylRawVegetableNutritionFactor>
+      <XylCookedVegetableNutritionFactor>0.8</XylCookedVegetableNutritionFactor>
       <XylRawMeatFoodPoisonChanceFactor>0</XylRawMeatFoodPoisonChanceFactor>
     </statFactors>
     <modExtensions>
@@ -61,10 +61,10 @@
       <li>Digestion</li>
     </exclusionTags>
     <statFactors>
-      <XylRawNonMeatNutritionFactor>1.8</XylRawNonMeatNutritionFactor>
+      <XylRawVegetableNutritionFactor>1.8</XylRawVegetableNutritionFactor>
       <XylRawMeatNutritionFactor>0.5</XylRawMeatNutritionFactor>
       <XylCookedMeatNutritionFactor>0.8</XylCookedMeatNutritionFactor>
-      <XylRawNonMeatFoodPoisonChanceFactor>0</XylRawNonMeatFoodPoisonChanceFactor>
+      <XylRawVegetableFoodPoisonChanceFactor>0</XylRawVegetableFoodPoisonChanceFactor>
     </statFactors>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -73,7 +73,7 @@
             <overrides>
               <li>
                 <allowedFoodTypes>
-                  <li>NonMeat</li>
+                  <li>Vegetable</li>
                 </allowedFoodTypes>
                 <thoughts>
                   <li>AteRawFood</li>

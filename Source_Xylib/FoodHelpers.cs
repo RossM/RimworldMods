@@ -5,7 +5,7 @@ public enum FoodType
 {
     None = 0x0,
     Meat = 0x1,
-    NonMeat = 0x2,
+    Vegetable = 0x2,
     AnimalProduct = 0x4,
     Fungus = 0x8,
     Humanlike = 0x10,
@@ -19,11 +19,11 @@ public static class FoodHelpers
         FoodTypeFlags flags = foodDef.ingestible?.foodType ?? 0;
 
         if (flags == FoodTypeFlags.Fungus)
-            return FoodType.Fungus | FoodType.NonMeat;
+            return FoodType.Fungus | FoodType.Vegetable;
         if ((flags & FoodTypeFlags.AnimalProduct) != 0)
             return FoodType.AnimalProduct;
         if ((flags & (FoodTypeFlags.VegetableOrFruit | FoodTypeFlags.Plant | FoodTypeFlags.Seed)) != 0)
-            return FoodType.NonMeat;
+            return FoodType.Vegetable;
         if ((flags & (FoodTypeFlags.Meat | FoodTypeFlags.Corpse)) != 0)
         {
             var foodType = FoodType.Meat;
@@ -64,8 +64,8 @@ public static class FoodHelpers
         float result = 1f;
         if (foodType.HasFlag(FoodType.Meat))
             result *= eater.GetStatValue(XStatDefOf.XylRawMeatNutritionFactor);
-        if (foodType.HasFlag(FoodType.NonMeat))
-            result *= eater.GetStatValue(XStatDefOf.XylRawNonMeatNutritionFactor);
+        if (foodType.HasFlag(FoodType.Vegetable))
+            result *= eater.GetStatValue(XStatDefOf.XylRawVegetableNutritionFactor);
         if (foodType.HasFlag(FoodType.AnimalProduct))
             result *= eater.GetStatValue(XStatDefOf.XylRawAnimalProductNutritionFactor);
         if (foodType.HasFlag(FoodType.Fungus))
@@ -78,8 +78,8 @@ public static class FoodHelpers
         float result = 1f;
         if (foodType.HasFlag(FoodType.Meat))
             result *= eater.GetStatValue(XStatDefOf.XylCookedMeatNutritionFactor);
-        if (foodType.HasFlag(FoodType.NonMeat))
-            result *= eater.GetStatValue(XStatDefOf.XylCookedNonMeatNutritionFactor);
+        if (foodType.HasFlag(FoodType.Vegetable))
+            result *= eater.GetStatValue(XStatDefOf.XylCookedVegetableNutritionFactor);
         if (foodType.HasFlag(FoodType.AnimalProduct))
             result *= eater.GetStatValue(XStatDefOf.XylCookedAnimalProductNutritionFactor);
         //if (foodType.HasFlag(FoodType.Fungus))
@@ -98,8 +98,8 @@ public static class FoodHelpers
         float result = 1f;
         if (foodType.HasFlag(FoodType.Meat))
             result *= eater.GetStatValue(XStatDefOf.XylRawMeatFoodPoisonChanceFactor);
-        if (foodType.HasFlag(FoodType.NonMeat))
-            result *= eater.GetStatValue(XStatDefOf.XylRawNonMeatFoodPoisonChanceFactor);
+        if (foodType.HasFlag(FoodType.Vegetable))
+            result *= eater.GetStatValue(XStatDefOf.XylRawVegetableFoodPoisonChanceFactor);
         if (foodType.HasFlag(FoodType.AnimalProduct))
             result *= eater.GetStatValue(XStatDefOf.XylRawAnimalProductFoodPoisonChanceFactor);
         if (foodType.HasFlag(FoodType.Fungus))
