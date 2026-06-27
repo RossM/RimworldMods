@@ -334,9 +334,10 @@ public class GeneWithComps : Gene, IEventListener
     {
         if (comps == null)
             return null;
-        foreach (var comp in comps)
+
+        for (var index = 0; index < comps.Count; index++)
         {
-            if (comp is T t)
+            if (comps[index] is T t)
                 return t;
         }
 
