@@ -491,40 +491,7 @@ public class EventManager : GameComponent
             Debug.Log($"[EventManager] Notify eventDef={eventDef} target=[{target}] data={data}");
 
         if (Prefs.DevMode)
-        {
-            if (eventDef.global && target != null)
-            {
-                Log.ErrorOnce($"[EventManager] Notification {eventDef.defName} is global but was called with target {target}",
-                    Gen.HashCombineInt(0x34330AEF, eventDef.index));
-            }
-
-            if (!eventDef.global && target == null)
-            {
-                Log.ErrorOnce($"[EventManager] Notification {eventDef.defName} is not global but was called with null target",
-                    Gen.HashCombineInt(0x140A0CA2, eventDef.index));
-            }
-
-            if (eventDef.dataType != null && data == null)
-            {
-                Log.ErrorOnce(
-                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given null",
-                    Gen.HashCombineInt(0xEEB8AC2, eventDef.index));
-            }
-
-            if (eventDef.dataType != null && data != null && !eventDef.dataType.IsAssignableFrom(data.GetType()))
-            {
-                Log.ErrorOnce(
-                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given {data.GetType()}",
-                    Gen.HashCombineInt(0x4D53041B, eventDef.index));
-            }
-
-            if (eventDef.dataType == null && data != null)
-            {
-                Log.ErrorOnce(
-                    $"[EventManager] Notification {eventDef.defName} shouldn't take data but was given {data.GetType()}",
-                    Gen.HashCombineInt(0x7A213146, eventDef.index));
-            }
-        }
+            ValidateNotifyArgs(eventDef, target, data);
 
         NotificationInfo notificationInfo = notifications[eventDef.index];
         if (notificationInfo == null)
@@ -562,6 +529,51 @@ public class EventManager : GameComponent
         }
 
         tempCallbacks.Clear();
+    }
+
+    private static void ValidateNotifyArgs(EventDef eventDef, Thing target, object data)
+    {
+        if (eventDef.global)
+        {
+            if (target != null)
+            {
+                Log.ErrorOnce($"[EventManager] Notification {eventDef.defName} is global but was called with target {target}",
+                    Gen.HashCombineInt(0x34330AEF, eventDef.index));
+            }
+        }
+        else
+        {
+            if (target == null)
+            {
+                Log.ErrorOnce($"[EventManager] Notification {eventDef.defName} is not global but was called with null target",
+                    Gen.HashCombineInt(0x140A0CA2, eventDef.index));
+            }
+        }
+
+        if (eventDef.dataType != null)
+        {
+            if (data == null)
+            {
+                Log.ErrorOnce(
+                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given null",
+                    Gen.HashCombineInt(0xEEB8AC2, eventDef.index));
+            }
+            else if (!eventDef.dataType.IsAssignableFrom(data.GetType()))
+            {
+                Log.ErrorOnce(
+                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given {data.GetType()}",
+                    Gen.HashCombineInt(0x4D53041B, eventDef.index));
+            }
+        }
+        else
+        {
+            if (data != null)
+            {
+                Log.ErrorOnce(
+                    $"[EventManager] Notification {eventDef.defName} shouldn't take data but was given {data.GetType()}",
+                    Gen.HashCombineInt(0x7A213146, eventDef.index));
+            }
+        }
     }
 
     private static void DoNotify(EventDef eventDef, CallbackInfo callbackInfo, Thing target, object data)
