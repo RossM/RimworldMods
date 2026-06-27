@@ -13,8 +13,7 @@ public static class Analyzer
     {
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
-            if (!Attribute.IsDefined(type, typeof(HarmonyPatch)))
-                continue;
+            bool typeHasHarmony = type.HasAttribute<HarmonyPatch>();
 
             foreach (MethodInfo method in type.DeclaredMethods)
             {
@@ -25,6 +24,12 @@ public static class Analyzer
                 var hasInfixPatch = method.HasAttribute<InfixPatchAttribute>();
                 var hasInfixPrefix = method.HasAttribute<InfixPrefixAttribute>();
                 var hasInfixPostfix = method.HasAttribute<InfixPostfixAttribute>();
+
+                if ((hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && !typeHasHarmony)
+                    Log.Warning($"{type.FullName}::{method.Name} appears to be a patch but is in a type with no [HarmonyPatch] attribute");
+
+                if (!typeHasHarmony)
+                    continue;
 
                 if ((hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && !hasFeature)
                     Log.Warning($"{type.FullName}::{method.Name} is missing a [Feature] attribute");
