@@ -29,11 +29,8 @@ public class Main : Mod
         using (new ProfileBlock("XylXenos Load settings"))
             Settings.instance = GetSettings<Settings>();
 
-        using (new ProfileBlock("XylXenos Coding style checks"))
-        {
-            CodingStyleChecks(Assembly.GetExecutingAssembly());
-            CodingStyleChecks(typeof(GeneWithComps).Assembly);
-        }
+        using (new ProfileBlock("XylXenos CheckPatches"))
+            Analyzer.CheckCodingStyle_Patches(typeof(Main).Assembly);
 
         var harmony = new Harmony("Xylthixlm.Races.Core");
 
@@ -74,58 +71,6 @@ public class Main : Mod
             DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(data, "def", xmlRoot.Name);
             if (xmlRoot.HasChildNodes)
                 data.degree = ParseHelper.FromString<int>(xmlRoot.FirstChild.Value);
-        }
-    }
-
-    private static void CodingStyleChecks(Assembly assembly)
-    {
-        foreach (TypeInfo type in assembly.DefinedTypes)
-        {
-            if (!Attribute.IsDefined(type, typeof(HarmonyPatch)))
-                continue;
-
-            foreach (MethodInfo method in type.DeclaredMethods)
-            {
-                var hasFeature = method.HasAttribute<FeatureAttribute>();
-                var hasPrefix = method.HasAttribute<HarmonyPrefix>();
-                var hasPostfix = method.HasAttribute<HarmonyPostfix>();
-                var hasTranspiler = method.HasAttribute<HarmonyTranspiler>();
-                var hasInfixPatch = method.HasAttribute<InfixPatchAttribute>();
-                var hasInfixPrefix = method.HasAttribute<InfixPrefixAttribute>();
-                var hasInfixPostfix = method.HasAttribute<InfixPostfixAttribute>();
-
-                if ((hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && !hasFeature)
-                    Log.Warning($"{type.FullName}::{method.Name} is missing a [Feature] attribute");
-                if (!(hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && hasFeature)
-                    Log.Warning($"{type.FullName}::{method.Name} has [Feature] but no Harmony attribute");
-
-                if (hasInfixPatch != (hasInfixPrefix || hasInfixPostfix))
-                    Log.Warning(
-                        $"{type.FullName}::{method.Name} has should have both [InfixPatch] and one of [InfixPrefix] or [InfixPostfix]");
-
-                if ((hasPrefix || hasInfixPrefix) && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
-                    Log.Warning($"{type.FullName}::{method.Name} should be named with _Prefix");
-                if ((hasPostfix || hasInfixPostfix) && !(method.Name == "Postfix" || method.Name.EndsWith("_Postfix")))
-                    Log.Warning($"{type.FullName}::{method.Name} should be named with _Postfix");
-                if (hasTranspiler && !(method.Name == "Transpiler" || method.Name.EndsWith("_Transpiler")))
-                    Log.Warning($"{type.FullName}::{method.Name} should be named with _Transpiler");
-
-                var parameters = method.GetParameters();
-                ParameterInfo resultParameter = parameters.SingleOrDefault(p => p.Name == "__result");
-                if (hasPrefix || hasInfixPrefix)
-                {
-                    if (resultParameter?.IsOut == false)
-                        Log.Warning($"{type.FullName}::{method.Name} should use 'out' for __result");
-                    if (method.ReturnType.IsVoid() && resultParameter != null)
-                        Log.Warning($"{type.FullName}::{method.Name} returns void but uses __result");
-                }
-
-                if (hasPostfix || hasInfixPostfix)
-                {
-                    if (resultParameter is { ParameterType.IsByRef: false })
-                        Log.Warning($"{type.FullName}::{method.Name} has a non-ref __result");
-                }
-            }
         }
     }
 
