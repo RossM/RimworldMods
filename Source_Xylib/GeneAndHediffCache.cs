@@ -3,10 +3,17 @@
 namespace Xylib;
 
 /// <summary>
-/// This class provides fast access to a pawn's genes and hediffs, caching the results of queries for performance.
+///     Caches common gene and hediff queries for a pawn.
 /// </summary>
+/// <remarks>
+///     Cached gene results are cleared when the pawn's genes change, and cached hediff results are cleared when the pawn's hediffs
+///     change.
+/// </remarks>
 public class GeneAndHediffCache : IEventListener, IPawnData
 {
+    /// <summary>
+    ///     Gets the pawn whose genes and hediffs are cached.
+    /// </summary>
     public Pawn Pawn { get; private set; }
 
     private readonly Dictionary<Type, IList> genesByType = new();
@@ -26,10 +33,14 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     }
 
     /// <summary>
-    /// Gets all of a pawn's genes of a specific type.
+    ///     Gets the pawn's genes of the specified type.
     /// </summary>
-    /// <typeparam name="T">The <see cref="Gene"/> subclass to find.</typeparam>
-    /// <returns>The genes.</returns>
+    /// <typeparam name="T">
+    ///     The <see cref="Gene" /> subclass to return.
+    /// </typeparam>
+    /// <returns>
+    ///     The matching genes.
+    /// </returns>
     [NotNull]
     public IEnumerable<T> GetGenesOfType<T>() where T : Gene
     {
@@ -42,11 +53,17 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     }
 
     /// <summary>
-    /// Gets all of a pawn's genes with a specific def. Ordinarily a pawn only has one gene
-    /// of a given def, so this will return a single value.
+    ///     Gets the pawn's genes with the specified def.
     /// </summary>
-    /// <param name="def">The def to find.</param>
-    /// <returns>The genes.</returns>
+    /// <remarks>
+    ///     Pawns usually have only one gene for a given def. When multiple genes match, active genes are returned first.
+    /// </remarks>
+    /// <param name="def">
+    ///     The gene def to match.
+    /// </param>
+    /// <returns>
+    ///     The matching genes.
+    /// </returns>
     [NotNull]
     public IEnumerable<Gene> GetGenesWithDef(GeneDef def)
     {
@@ -59,11 +76,14 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     }
 
     /// <summary>
-    /// Gets all of a pawn's genes that derive from <see cref="GeneWithComps"/> and have a <see cref="GeneComp"/> of
-    /// the given type.
+    ///     Gets the pawn's genes that have a comp of the specified type.
     /// </summary>
-    /// <typeparam name="T">The <see cref="GeneComp"/> subclass to find.</typeparam>
-    /// <returns>The genes.</returns>
+    /// <typeparam name="T">
+    ///     The <see cref="GeneComp" /> subclass to match.
+    /// </typeparam>
+    /// <returns>
+    ///     Matching <see cref="GeneWithComps" /> instances.
+    /// </returns>
     [NotNull]
     public IEnumerable<GeneWithComps> GetGenesWithComp<T>() where T : GeneComp
     {
@@ -76,10 +96,14 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     }
 
     /// <summary>
-    /// Gets all of a pawn's hediffs of a specific type.
+    ///     Gets the pawn's hediffs of the specified type.
     /// </summary>
-    /// <typeparam name="T">The <see cref="Hediff"/> subclass to find.</typeparam>
-    /// <returns>The hediffs.</returns>
+    /// <typeparam name="T">
+    ///     The <see cref="Hediff" /> subclass to return.
+    /// </typeparam>
+    /// <returns>
+    ///     The matching hediffs.
+    /// </returns>
     [NotNull]
     public IEnumerable<T> GetHediffsOfType<T>() where T : Hediff
     {
@@ -92,10 +116,14 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     }
 
     /// <summary>
-    /// Gets all of a pawn's hediffs with a specific def.
+    ///     Gets the pawn's hediffs with the specified def.
     /// </summary>
-    /// <param name="def">The def to find.</param>
-    /// <returns>The hediffs.</returns>
+    /// <param name="def">
+    ///     The hediff def to match.
+    /// </param>
+    /// <returns>
+    ///     The matching hediffs.
+    /// </returns>
     [NotNull]
     public IEnumerable<Hediff> GetHediffsWithDef(HediffDef def)
     {
@@ -108,10 +136,14 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     }
 
     /// <summary>
-    /// Gets all of a pawn's hediffs where the def has a specific <see cref="DefModExtension"/>.
+    ///     Gets the pawn's hediffs whose defs have the specified mod extension.
     /// </summary>
-    /// <typeparam name="T">The <see cref="DefModExtension"/> to find.</typeparam>
-    /// <returns>The hediffs.</returns>
+    /// <typeparam name="T">
+    ///     The <see cref="DefModExtension" /> subclass to match.
+    /// </typeparam>
+    /// <returns>
+    ///     The matching hediffs.
+    /// </returns>
     [NotNull]
     public IEnumerable<Hediff> GetHediffsWithModExtension<T>() where T : DefModExtension
     {
@@ -124,10 +156,14 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     }
 
     /// <summary>
-    /// Gets all of pawn's hediffs that are <see cref="HediffWithComps"/> with a comp of the given type.
+    ///     Gets the pawn's hediffs that have a comp of the specified type.
     /// </summary>
-    /// <typeparam name="T">The <see cref="HediffComp"/> subclass to find.</typeparam>
-    /// <returns>The hediffs.</returns>
+    /// <typeparam name="T">
+    ///     The <see cref="HediffComp" /> subclass to match.
+    /// </typeparam>
+    /// <returns>
+    ///     Matching <see cref="HediffWithComps" /> instances.
+    /// </returns>
     [NotNull]
     public IEnumerable<HediffWithComps> GetHediffsWithComp<T>() where T : HediffComp
     {
@@ -140,6 +176,9 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         return value;
     }
 
+    /// <summary>
+    ///     Clears cached gene query results after the pawn's genes change.
+    /// </summary>
     public void Notify_PostGenesChanged()
     {
         genesByDef.Clear();
@@ -147,6 +186,9 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         genesByComp.Clear();
     }
 
+    /// <summary>
+    ///     Clears cached hediff query results after the pawn's hediffs change.
+    /// </summary>
     public void Notify_PostHediffsChanged()
     {
         hediffsByComp.Clear();
