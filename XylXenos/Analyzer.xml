@@ -4,12 +4,11 @@
   <XylXenos>
     <types>
       <li>XylXenos.PatchHelpers</li>
+      <li>Xylib.PatchHelpers</li>
+      <li>Xylib.GeneWithComps</li>
+      <li>Xylib.EventManager</li>
     </types>
     <methods>
-      <li>Xylib.NotificationManager:Notify</li>
-      <li>Xylib.GeneWithComps:get_Active</li>
-      <li>Xylib.GeneWithComps:Tick</li>
-      <li>Xylib.GeneWithComps:TickInterval</li>
     </methods>
   </XylXenos>
 </Analyzer>

@@ -10,7 +10,7 @@ public static class Patch_ShotReport
     {
         if (___target.Thing is Pawn targetPawn)
         {
-            float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(targetPawn);
+            float rangedDodgeChance = PatchHelpers.GetRangedDodgeChance(targetPawn);
             if (rangedDodgeChance > 0)
             {
                 StringBuilder sb = new StringBuilder(__result);

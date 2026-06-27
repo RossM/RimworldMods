@@ -10,7 +10,7 @@ public static class Patch_Bullet
     {
         if (hitThing is Pawn pawn && !blockedByShield)
         {
-            float rangedDodgeChance = CombatHelpers.GetRangedDodgeChance(pawn);
+            float rangedDodgeChance = PatchHelpers.GetRangedDodgeChance(pawn);
             if (Rand.Chance(rangedDodgeChance))
             {
                 MoteMaker.ThrowText(pawn.DrawPos, pawn.Map, "TextMote_Dodge".Translate(), 1.9f);
