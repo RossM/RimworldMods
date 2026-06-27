@@ -29,7 +29,19 @@
   <StatDef>
     <defName>XylRawVegetableNutritionFactor</defName>
     <label>raw vegetable nutrition multiplier</label>
-    <description>A multiplier on how nutritious raw plant-based food is for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
+    <description>A multiplier on how nutritious raw vegetables are for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylRawFungusNutritionFactor</defName>
+    <label>raw fungus nutrition multiplier</label>
+    <description>A multiplier on how nutritious raw fungus is for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
     <category>PawnFood</category>
     <toStringStyle>PercentZero</toStringStyle>
     <defaultBaseValue>1</defaultBaseValue>
@@ -52,7 +64,7 @@
   </StatDef>
   <StatDef>
     <defName>XylCookedAnimalProductNutritionFactor</defName>
-    <label>cooked meat nutrition multiplier</label>
+    <label>cooked animal product nutrition multiplier</label>
     <description>A multiplier on how nutritious cooked animal products are for this person.</description>
     <category>PawnFood</category>
     <toStringStyle>PercentZero</toStringStyle>
@@ -65,7 +77,7 @@
   <StatDef>
     <defName>XylCookedVegetableNutritionFactor</defName>
     <label>cooked vegetable nutrition multiplier</label>
-    <description>A multiplier on how nutritious cooked plant-based food is for this person.</description>
+    <description>A multiplier on how nutritious cooked vegetables are for this person.</description>
     <category>PawnFood</category>
     <toStringStyle>PercentZero</toStringStyle>
     <defaultBaseValue>1</defaultBaseValue>
@@ -75,9 +87,9 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
   <StatDef>
-    <defName>XylRawFungusNutritionFactor</defName>
-    <label>raw fungus nutrition multiplier</label>
-    <description>A multiplier on how nutritious raw fungus is for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
+    <defName>XylCookedFungusNutritionFactor</defName>
+    <label>cooked fungus nutrition multiplier</label>
+    <description>A multiplier on how nutritious cooked fungus is for this person.</description>
     <category>PawnFood</category>
     <toStringStyle>PercentZero</toStringStyle>
     <defaultBaseValue>1</defaultBaseValue>
@@ -87,17 +99,6 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
 
-  <StatDef>
-    <defName>XylRawFungusFoodPoisonChanceFactor</defName>
-    <label>raw fungus food poisoning chance</label>
-    <description>A multiplier to the chance of getting food poisoning from eating raw fungus.</description>
-    <category>PawnFood</category>
-    <toStringStyle>PercentZero</toStringStyle>
-    <defaultBaseValue>1</defaultBaseValue>
-    <hideAtValue>1</hideAtValue>
-    <displayPriorityInCategory>1001</displayPriorityInCategory>
-    <showOnDrones>false</showOnDrones>
-  </StatDef>
   <StatDef>
     <defName>XylRawMeatFoodPoisonChanceFactor</defName>
     <label>raw meat food poisoning chance</label>
@@ -123,7 +124,18 @@
   <StatDef>
     <defName>XylRawVegetableFoodPoisonChanceFactor</defName>
     <label>raw vegetable food poisoning chance</label>
-    <description>A multiplier to the chance of getting food poisoning from eating raw plant-based foods.</description>
+    <description>A multiplier to the chance of getting food poisoning from eating raw vegetables.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylRawFungusFoodPoisonChanceFactor</defName>
+    <label>raw fungus food poisoning chance</label>
+    <description>A multiplier to the chance of getting food poisoning from eating raw fungus.</description>
     <category>PawnFood</category>
     <toStringStyle>PercentZero</toStringStyle>
     <defaultBaseValue>1</defaultBaseValue>

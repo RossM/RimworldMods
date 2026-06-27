@@ -82,8 +82,8 @@ public static class FoodHelpers
             result *= eater.GetStatValue(XStatDefOf.XylCookedVegetableNutritionFactor);
         if (foodType.HasFlag(FoodType.AnimalProduct))
             result *= eater.GetStatValue(XStatDefOf.XylCookedAnimalProductNutritionFactor);
-        //if (foodType.HasFlag(FoodType.Fungus))
-        //    result *= eater.GetStatValue(DefOf.XylCookedFungusNutritionFactor);
+        if (foodType.HasFlag(FoodType.Fungus))
+            result *= eater.GetStatValue(XStatDefOf.XylCookedFungusNutritionFactor);
         return result;
     }
 

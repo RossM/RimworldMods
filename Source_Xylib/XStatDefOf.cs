@@ -4,6 +4,7 @@ namespace Xylib;
 public static class XStatDefOf
 {
     public static StatDef XylCookedAnimalProductNutritionFactor;
+    public static StatDef XylCookedFungusNutritionFactor;
     public static StatDef XylCookedMeatNutritionFactor;
     public static StatDef XylCookedVegetableNutritionFactor;
     public static StatDef XylDrugEffectMultiplier;
