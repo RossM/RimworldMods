@@ -47,6 +47,15 @@ public class UsedFromReflectionAttribute : Attribute;
 /// </summary>
 /// <param name="defType">The subclass of <see cref="Def"/> that the <c>ImpliedDefs</c> function generates, such as <see cref="ThingDef"/>
 /// or <see cref="GeneDef"/>.</param>
+/// <example>
+/// <code>
+/// [DefGenerator(typeof(GeneDef))]
+/// public static class GeneDefGenerator
+/// {
+///     IEnumerable&gt;GeneDef&lt; ImpliedDefs => [];
+/// }
+/// </code>
+/// </example>
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Class)]
 public class DefGeneratorAttribute(Type defType) : Attribute
