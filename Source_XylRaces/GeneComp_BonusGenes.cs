@@ -85,7 +85,7 @@ public class GeneComp_BonusGenes : GeneComp
         if (!Props.biostatMet.Includes(geneDef.biostatMet))
             return 0.0f;
 
-        if (geneDef.DefExt is { } defExt)
+        if (geneDef.Extension_GeneWithComps is { } defExt)
         {
             if (defExt.gender != null && defExt.gender != Pawn.gender)
                 return 0.0f;

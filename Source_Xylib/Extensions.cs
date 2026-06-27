@@ -16,7 +16,7 @@ public static class Extensions
     extension(GeneDef gene)
     {
         [CanBeNull]
-        public DefModExtension_GeneWithComps DefExt
+        public DefModExtension_GeneWithComps Extension_GeneWithComps
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
@@ -30,11 +30,13 @@ public static class Extensions
                 return defExt;
             }
         }
+
+        public T CompProps<T>() where T : GeneCompProperties => gene.Extension_GeneWithComps?.CompProps<T>();
     }
 
     extension(Pawn pawn)
     {
-        public bool HasActivePsycastGene => pawn.GeneTracker?.hasPsycast == true;
+        public bool HasActivePsycastGene => pawn.GeneTracker_GeneWithComps?.hasPsycast == true;
 
         public bool NeedsPsyfocus =>
             // HasPsylink is patched to respect psycast genes
@@ -47,7 +49,7 @@ public static class Extensions
         }
 
         [CanBeNull]
-        public GeneTracker_GeneWithComps GeneTracker
+        public GeneTracker_GeneWithComps GeneTracker_GeneWithComps
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => pawn.genes == null ? null : PawnExtraData<GeneTracker_GeneWithComps>.Get(pawn);
@@ -321,7 +323,7 @@ public static class Extensions
 
         public int GetGeneticPsylinkLevelFor(AbilityDef ability)
         {
-            if (pawn.GeneTracker?.hasPsycast != true)
+            if (pawn.GeneTracker_GeneWithComps?.hasPsycast != true)
                 return 0;
 
             if (pawn.AllGenesOfType<GeneWithComps>().Any(gene =>

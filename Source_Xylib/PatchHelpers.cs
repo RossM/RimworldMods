@@ -43,13 +43,13 @@ internal static class PatchHelpers
 
     public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene outGene)
     {
-        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene => gene.Active && gene.def.DefExt?.showInDrugPolicies == true);
+        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene => gene.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies == true);
         return outGene != null;
     }
 
     public static bool GeneShouldBeVisible(GeneDef geneDef, GeneType geneType)
     {
-        var defExt = geneDef.DefExt;
+        var defExt = geneDef.Extension_GeneWithComps;
         if (defExt == null)
             return true;
 
@@ -63,7 +63,7 @@ internal static class PatchHelpers
 
     public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef geneDef)
     {
-        if (geneDef.DefExt is { } defExt)
+        if (geneDef.Extension_GeneWithComps is { } defExt)
         {
             foreach (var customEffectDescription in defExt.CustomEffectDescriptions)
                 yield return customEffectDescription;

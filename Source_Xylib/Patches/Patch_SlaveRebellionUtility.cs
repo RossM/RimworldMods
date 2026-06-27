@@ -70,7 +70,7 @@ public static class Patch_SlaveRebellionUtility
         if (__result < 0)
             return;
 
-        var geneTracker = pawn.GeneTracker;
+        var geneTracker = pawn.GeneTracker_GeneWithComps;
         if (geneTracker == null)
             return;
 

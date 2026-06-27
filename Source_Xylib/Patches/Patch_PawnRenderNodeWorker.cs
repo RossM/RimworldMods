@@ -11,7 +11,7 @@ public static class Patch_PawnRenderNodeWorker
         if (parms.pawn == null)
             return;
 
-        List<RenderNodeModifier> renderNodeModifiers = parms.pawn.GeneTracker?.renderNodeModifiers;
+        List<RenderNodeModifier> renderNodeModifiers = parms.pawn.GeneTracker_GeneWithComps?.renderNodeModifiers;
         if (renderNodeModifiers == null)
             return;
 
@@ -30,7 +30,7 @@ public static class Patch_PawnRenderNodeWorker
         if (parms.pawn == null)
             return;
 
-        List<RenderNodeModifier> renderNodeModifiers = parms.pawn.GeneTracker?.renderNodeModifiers;
+        List<RenderNodeModifier> renderNodeModifiers = parms.pawn.GeneTracker_GeneWithComps?.renderNodeModifiers;
         if (renderNodeModifiers == null)
             return;
 

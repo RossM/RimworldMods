@@ -16,15 +16,12 @@ public static class Patch_GenConstruct
 
         BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
 
-        bool hasGeneDesignator = p.XGeneTracker?.unlockedBuildables?.Contains(def) ?? false;
+        bool hasGeneDesignator = p.GeneTracker_XylXenos?.unlockedBuildables?.Contains(def) ?? false;
         if (!hasGeneDesignator && GenConstruct.tmpIdeoMemberNames.Count == 0)
         {
             foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)
             {
-                var defExt = gene.DefExt;
-                if (defExt == null)
-                    continue;
-                if (defExt.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables.Contains(def) ?? false)
+                if (gene.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables.Contains(def) == true)
                     GenConstruct.tmpIdeoMemberNames.Add("XylCharactersWithGene".Translate(gene.LabelCap));
             }
         }

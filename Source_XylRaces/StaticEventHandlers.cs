@@ -36,13 +36,13 @@ public static class StaticEventHandlers
         if (request.FixedGender != null)
             return;
 
-        static bool HasGenderRatio(GeneDef geneDef) => geneDef.DefExt?.CompProps<GeneCompProperties_GenderRatio>() != null;
+        static bool HasGenderRatio(GeneDef geneDef) => geneDef.CompProps<GeneCompProperties_GenderRatio>() != null;
 
         GeneDef gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
                        request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
                        request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
                        xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
-        var comp = gene?.DefExt!.CompProps<GeneCompProperties_GenderRatio>();
+        var comp = gene?.CompProps<GeneCompProperties_GenderRatio>();
         if (comp == null)
             return;
 

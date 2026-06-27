@@ -15,7 +15,7 @@ public static class PatchHelpers
 
     public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
-        var bonusGenes = geneDef.DefExt?.CompProps<GeneCompProperties_BonusGenes>();
+        var bonusGenes = geneDef.CompProps<GeneCompProperties_BonusGenes>();
         if (bonusGenes == null)
             return 0;
         if (bonusGenes.geneChance < 1.0f)
@@ -259,7 +259,7 @@ public static class PatchHelpers
             return false;
         }
 
-        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.XGeneTracker?.ingestionThoughtOverrides;
+        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.GeneTracker_XylXenos?.ingestionThoughtOverrides;
         if (thoughtOverrides == null)
             return false;
 
@@ -290,7 +290,7 @@ public static class PatchHelpers
     {
         HashSet<Designator> geneDesignators = [];
 
-        foreach (var designators in Faction.OfPlayer.AllPawns.Select(pawn => pawn.XGeneTracker?.unlockedBuildables))
+        foreach (var designators in Faction.OfPlayer.AllPawns.Select(pawn => pawn.GeneTracker_XylXenos?.unlockedBuildables))
         {
             if (designators == null)
                 continue;
@@ -317,7 +317,7 @@ public static class PatchHelpers
 
     public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
     {
-        List<JoyGiverFactor> joyGiverChanceFactors = pawn.XGeneTracker?.joyGiverChanceFactors;
+        List<JoyGiverFactor> joyGiverChanceFactors = pawn.GeneTracker_XylXenos?.joyGiverChanceFactors;
         if (joyGiverChanceFactors == null)
             return 1f;
 
@@ -336,7 +336,7 @@ public static class PatchHelpers
         HashSet<RecipeDef> result = [];
         foreach (var geneDef in DefDatabase<GeneDef>.AllDefs)
         {
-            var recipes = geneDef.DefExt?.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes;
+            var recipes = geneDef.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes;
             if (recipes != null)
                 result.AddRange(recipes);
         }
@@ -348,7 +348,7 @@ public static class PatchHelpers
     {
         foreach (var pawn in Faction.OfPlayer.AllPawns)
         {
-            if (pawn.XGeneTracker?.unlockedRecipes?.Contains(recipe) == true)
+            if (pawn.GeneTracker_XylXenos?.unlockedRecipes?.Contains(recipe) == true)
                 return true;
         }
 
