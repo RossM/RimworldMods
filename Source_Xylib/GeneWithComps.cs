@@ -18,10 +18,17 @@ public class GeneComp
     public GeneComp()
     {
         var type = GetType();
+
         if (!hasTickCache.TryGetValue(type, out hasTick))
-            hasTickCache[type] = hasTick = type.GetMethod("CompTick")!.DeclaringType != typeof(GeneComp);
+        {
+            hasTickCache[type] = hasTick = ReflectionHelpers.HasOverridingMethod(type, typeof(GeneComp), nameof(CompTick));
+        }
+
         if (!hasTickIntervalCache.TryGetValue(type, out hasTickInterval))
-            hasTickIntervalCache[type] = hasTickInterval = type.GetMethod("CompTickInterval")!.DeclaringType != typeof(GeneComp);
+        {
+            hasTickIntervalCache[type]
+                = hasTickInterval = ReflectionHelpers.HasOverridingMethod(type, typeof(GeneComp), nameof(CompTickInterval));
+        }
     }
 
     public virtual void CompPostMake()
@@ -80,8 +87,8 @@ public class GeneWithComps : Gene, IEventListener
 
     [CanBeNull] public List<GeneComp> comps;
 
-    [Unsaved] private bool compHasTick;
-    [Unsaved] private bool compHasTickInterval;
+    private event Action CompTick;
+    private event Action<int> CompTickInterval;
 
     [field: Unsaved]
     public override bool Active
@@ -149,7 +156,6 @@ public class GeneWithComps : Gene, IEventListener
             catch (Exception ex)
             {
                 Log.Error("Error in GeneComp.CompPostMake(): " + ex);
-                comps.RemoveAt(num);
             }
         }
     }
@@ -173,8 +179,10 @@ public class GeneWithComps : Gene, IEventListener
                 comp.props = compProps;
                 comp.parent = this;
                 comps.Add(comp);
-                compHasTick |= comp.hasTick;
-                compHasTickInterval |= comp.hasTickInterval;
+                if (comp.hasTick)
+                    CompTick += comp.CompTick;
+                if (comp.hasTickInterval)
+                    CompTickInterval += comp.CompTickInterval;
             }
             catch (Exception ex)
             {
@@ -266,15 +274,7 @@ public class GeneWithComps : Gene, IEventListener
         if (!Active)
             return;
 
-        if (compHasTickInterval)
-        {
-            for (var index = 0; index < comps!.Count; index++)
-            {
-                GeneComp comp = comps[index];
-                if (comp.hasTickInterval)
-                    comp.CompTickInterval(delta);
-            }
-        }
+        CompTickInterval?.Invoke(delta);
 
         if (!DefExt.hediffGivers.NullOrEmpty() && pawn.IsHashIntervalTick(60, delta))
         {
@@ -293,15 +293,7 @@ public class GeneWithComps : Gene, IEventListener
         if (!Active)
             return;
 
-        if (compHasTick)
-        {
-            for (var index = 0; index < comps!.Count; index++)
-            {
-                GeneComp comp = comps[index];
-                if (comp.hasTick)
-                    comp.CompTick();
-            }
-        }
+        CompTick?.Invoke();
     }
 
     public override IEnumerable<Gizmo> GetGizmos()
