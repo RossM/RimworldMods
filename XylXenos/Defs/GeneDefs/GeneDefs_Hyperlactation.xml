@@ -114,7 +114,7 @@
   <ThoughtDef>
     <defName>XylMilked</defName>
     <thoughtClass>Thought_MemorySocial</thoughtClass>
-    <durationDays>10</durationDays>
+    <durationDays>4</durationDays>
     <stackLimit>3</stackLimit>
     <nullifyingTraits>
       <li>Masochist</li>
@@ -130,7 +130,7 @@
   </ThoughtDef>
   <ThoughtDef>
     <defName>XylMilkedMood</defName>
-    <durationDays>10</durationDays>
+    <durationDays>4</durationDays>
     <stackLimit>3</stackLimit>
     <nullifyingTraits>
       <li>Masochist</li>
@@ -146,7 +146,7 @@
   <ThoughtDef>
     <defName>XylMilked_Masochist</defName>
     <thoughtClass>Thought_MemorySocial</thoughtClass>
-    <durationDays>10</durationDays>
+    <durationDays>4</durationDays>
     <stackLimit>3</stackLimit>
     <requiredTraits>
       <li>Masochist</li>
@@ -165,7 +165,7 @@
   </ThoughtDef>
   <ThoughtDef>
     <defName>XylMilkedMood_Masochist</defName>
-    <durationDays>10</durationDays>
+    <durationDays>4</durationDays>
     <stackLimit>3</stackLimit>
     <requiredTraits>
       <li>Masochist</li>
