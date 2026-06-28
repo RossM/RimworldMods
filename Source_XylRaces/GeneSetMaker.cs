@@ -2,10 +2,10 @@
 
 public abstract class GeneSetMaker
 {
+    public virtual int BiostatMetForDisplay => 0;
+
     public IntRange count = IntRange.One;
     public List<GeneDef> prohibitedGenes;
-
-    public virtual int BiostatMetForDisplayBonus => 0;
 
     public virtual GeneSet Generate(Pawn pawn, GeneType geneType = GeneType.Xenogene)
     {
@@ -84,6 +84,10 @@ public struct GeneSetMakerWeight
 [UsedFromXml]
 public class GeneSetMaker_Option : GeneSetMaker
 {
+    public override int BiostatMetForDisplay => Mathf.Clamp(0,
+        options.Min(o => o.maker.BiostatMetForDisplay),
+        options.Max(o => o.maker.BiostatMetForDisplay));
+
     public List<GeneSetMakerWeight> options;
 
     public override void AddGenes(GeneSet geneSet, GeneType geneType, Pawn pawn)
@@ -95,6 +99,8 @@ public class GeneSetMaker_Option : GeneSetMaker
 [UsedFromXml]
 public class GeneSetMaker_Biostats : GeneSetMaker
 {
+    public override int BiostatMetForDisplay => Mathf.Clamp(0, biostatMet.min, biostatMet.max);
+
     public IntRange biostatArc = IntRange.Zero;
     public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
     public IntRange biostatMet = new(int.MinValue, int.MaxValue);
@@ -115,9 +121,10 @@ public class GeneSetMaker_Biostats : GeneSetMaker
 [UsedFromXml]
 public class GeneSetMaker_List : GeneSetMaker
 {
-    public List<GeneDef> genes;
+    public override int BiostatMetForDisplay =>
+        Mathf.Clamp(0, genes.Min(g => g.biostatMet), genes.Max(g => g.biostatMet)) * count.min;
 
-    public override int BiostatMetForDisplayBonus => genes.Min(g => g.biostatMet);
+    public List<GeneDef> genes;
 
     public override void AddGenes(GeneSet geneSet, GeneType geneType, Pawn pawn)
     {
