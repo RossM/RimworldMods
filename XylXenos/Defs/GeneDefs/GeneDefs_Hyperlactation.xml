@@ -97,15 +97,11 @@
       <li>XylHyperlactation</li>
     </requiredGenes>
     <stages>
-      <li>
-        <label>full breasts</label>
-        <description>My breasts are getting full and heavy. This is slightly uncomfortable.</description>
-        <baseMoodEffect>-2</baseMoodEffect>
-      </li>
+      <li IsNull="true" />
       <li>
         <label>sore breasts</label>
-        <description>My breasts are full, heavy, and sore. This is very uncomfortable.</description>
-        <baseMoodEffect>-4</baseMoodEffect>
+        <description>My breasts are full, heavy, and sore. This is uncomfortable.</description>
+        <baseMoodEffect>-3</baseMoodEffect>
       </li>
       <li>
         <label>very sore breasts</label>
