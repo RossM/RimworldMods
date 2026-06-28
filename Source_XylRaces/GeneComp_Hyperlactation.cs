@@ -41,6 +41,12 @@ public class GeneComp_Hyperlactation : GeneComp
 
     private HediffComp_Lactating lactatingInternal;
 
+    public bool ReadyToMilk =>
+        Active &&
+        allowMilking && 
+        Find.TickManager.TicksGame > lastMilkedTick + milkingCooldownDays * GenDate.TicksPerDay &&
+        MilkCount >= 1;
+
     public override void CompExposeData()
     {
         Scribe_Values.Look(ref fullSinceTick, nameof(fullSinceTick));
@@ -122,18 +128,6 @@ public class GeneComp_Hyperlactation : GeneComp
 
         if (Lactating?.parent != hediff)
             lactatingInternal = null;
-    }
-
-    public bool ReadyToMilk()
-    {
-        if (!Active)
-            return false;
-        if (!allowMilking)
-            return false;
-        if (Find.TickManager.TicksGame <= lastMilkedTick + milkingCooldownDays * GenDate.TicksPerDay)
-            return false;
-
-        return MilkCount >= 1;
     }
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()

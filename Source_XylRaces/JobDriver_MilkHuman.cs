@@ -19,8 +19,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
     public override bool ValidateTarget(Pawn target)
     {
-        var comp = target.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>();
-        return comp is { allowMilking: true } && comp.ReadyToMilk();
+        return target.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>() is { ReadyToMilk: true };
     }
 
     private void Gather(Pawn doer)
@@ -91,8 +90,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
         });
         toil.FailOnDespawnedOrNull(TargetIndex.A);
         toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
-        toil.AddEndCondition(() =>
-            Target.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>()?.MilkCount is > 0 ? JobCondition.Ongoing : JobCondition.Incompletable);
+        toil.AddEndCondition(() => ValidateTarget(Target) ? JobCondition.Ongoing : JobCondition.Incompletable);
         toil.defaultCompleteMode = ToilCompleteMode.Never;
         toil.WithProgressBar(TargetIndex.A, () => gatherProgress / WorkTotal);
         toil.activeSkill = () => SkillDefOf.Animals;
