@@ -756,7 +756,6 @@ public static class Extensions
         /// <returns>
         ///     The matching hediffs.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<Hediff> HediffsWithModExtension<T>(Func<T, bool> predicate) where T : DefModExtension
         {
             IReadOnlyList<Hediff> hediffs = pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
