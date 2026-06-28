@@ -25,22 +25,22 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
     private void Gather(Pawn doer)
     {
-        var gene = Target.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>();
-        if (gene == null)
+        var comp = Target.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>();
+        if (comp == null)
             return;
 
-        if (!gene.Props.milkedThoughts.NullOrEmpty())
+        if (!comp.Props.milkedThoughts.NullOrEmpty())
         {
-            foreach (var thoughtDef in gene.Props.milkedThoughts)
+            foreach (var thoughtDef in comp.Props.milkedThoughts)
                 Target.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);
         }
 
-        var lactationCharge = gene.Lactating;
+        var lactationCharge = comp.Lactating;
         if (lactationCharge == null)
             return;
 
-        int qty = gene.MilkCount;
-        lactationCharge.GreedyConsume(gene.Props.chargePerItem * qty);
+        int qty = comp.MilkCount;
+        lactationCharge.GreedyConsume(comp.Props.chargePerItem * qty);
 
         if (!Rand.Chance(doer.GetStatValue(StatDefOf.AnimalGatherYield)))
         {
@@ -50,8 +50,8 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
         while (qty > 0)
         {
-            int stackQty = Math.Min(qty, gene.Props.item.stackLimit);
-            Thing thing = ThingMaker.MakeThing(gene.Props.item);
+            int stackQty = Math.Min(qty, comp.Props.item.stackLimit);
+            Thing thing = ThingMaker.MakeThing(comp.Props.item);
             thing.stackCount = stackQty;
             qty -= stackQty;
             if (!GenPlace.TryPlaceThing(thing, doer.Position, doer.Map, ThingPlaceMode.Near))
