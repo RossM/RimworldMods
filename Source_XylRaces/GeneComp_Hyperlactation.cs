@@ -6,7 +6,7 @@ public class GeneCompProperties_Hyperlactation : GeneCompProperties
     public float chargePerItem = 0.1f;
     public HediffDef hediff;
     [CanBeNull] public List<ThoughtDef> milkedThoughts;
-    public int ticksPerSorenessStage = 60000;
+    public int ticksPerSorenessStage = GenDate.TicksPerDay;
 
     public GeneCompProperties_Hyperlactation()
     {
@@ -25,6 +25,12 @@ public class GeneComp_Hyperlactation : GeneComp
         lactatingInternal ??= Pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
 
     public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / Props.chargePerItem);
+
+    public bool MilkFull => Lactating != null && Lactating.Charge >= Lactating.Props.fullChargeAmount;
+
+    public int SorenessStage => fullSinceTick.HasValue
+        ? Mathf.FloorToInt((float)(Find.TickManager.TicksGame - fullSinceTick.Value) / Props.ticksPerSorenessStage)
+        : -1;
 
     private const int checkInterval = 60;
     public bool allowMilking = true;
@@ -71,7 +77,7 @@ public class GeneComp_Hyperlactation : GeneComp
             rightClickFloatMenuOptions.Add(new(LabelForFrequency(i), () => { milkingCooldownDays = value; }));
         }
 
-        yield return new Command_ToggleWithRightClickOptions()
+        yield return new Command_ToggleWithRightClickOptions
         {
             defaultLabel = $"{"XylCommandMilkLabel".TranslateSimple()} ({LabelForFrequency(milkingCooldownDays)})",
             defaultDesc = "XylCommandMilkDesc".TranslateSimple(),
@@ -94,7 +100,7 @@ public class GeneComp_Hyperlactation : GeneComp
 
         AddHediff();
 
-        if (Lactating != null && Lactating.Charge >= Lactating.Props.fullChargeAmount)
+        if (MilkFull)
             fullSinceTick ??= Find.TickManager.TicksGame;
         else
             fullSinceTick = null;
@@ -130,27 +136,6 @@ public class GeneComp_Hyperlactation : GeneComp
         return MilkCount >= 1;
     }
 
-    public void Notify_Milked(Pawn doer)
-    {
-        lastMilkedTick = Find.TickManager.TicksGame;
-
-        if (!Props.milkedThoughts.NullOrEmpty())
-        {
-            foreach (var thoughtDef in Props.milkedThoughts)
-                Pawn.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);
-        }
-    }
-
-    public bool TryGetSoreness(out int soreness)
-    {
-        soreness = -1;
-        if (fullSinceTick == null)
-            return false;
-        soreness = Mathf.FloorToInt(
-            (float)(Find.TickManager.TicksGame - fullSinceTick.Value) / Props.ticksPerSorenessStage);
-        return true;
-    }
-
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
         if (!Active)
@@ -160,5 +145,16 @@ public class GeneComp_Hyperlactation : GeneComp
         yield return new StatDrawEntry(StatCategoryDefOf.PawnFood, "XylMilkProductionLabel".TranslateSimple(),
             "PerDay".Translate(milkPerDay.ToStringByStyle(ToStringStyle.FloatOne)),
             "XylMilkProductionDesc".TranslateSimple(), 1);
+    }
+
+    public void Notify_Milked(Pawn doer)
+    {
+        lastMilkedTick = Find.TickManager.TicksGame;
+
+        if (!Props.milkedThoughts.NullOrEmpty())
+        {
+            foreach (var thoughtDef in Props.milkedThoughts)
+                Pawn.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);
+        }
     }
 }
