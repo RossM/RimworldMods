@@ -99,13 +99,13 @@
     <stages>
       <li IsNull="true" />
       <li>
-        <label>sore breasts</label>
+        <label>full milk (sore)</label>
         <description>My breasts are full, heavy, and sore. This is uncomfortable.</description>
         <baseMoodEffect>-3</baseMoodEffect>
       </li>
       <li>
-        <label>very sore breasts</label>
-        <description>My breasts are very full, heavy, and sore. This very uncomfortable.</description>
+        <label>full milk (painful)</label>
+        <description>My breasts are very full, heavy, and sore. This painful.</description>
         <baseMoodEffect>-6</baseMoodEffect>
       </li>
     </stages>
