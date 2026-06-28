@@ -121,8 +121,20 @@ public class GeneSetMaker_Biostats : GeneSetMaker
 [UsedFromXml]
 public class GeneSetMaker_List : GeneSetMaker
 {
-    public override int BiostatMetForDisplay =>
-        Mathf.Clamp(0, genes.Min(g => g.biostatMet), genes.Max(g => g.biostatMet)) * count.min;
+    public override int BiostatMetForDisplay => biostatMetInternal ??= CalculateBiostatMet();
+
+    private int? biostatMetInternal;
+
+    private int CalculateBiostatMet()
+    {
+        if (count.min <= 0)
+            return 0;
+
+        List<int> metList = genes.Select(g => g.biostatMet).ToList();
+        int minTotal = metList.OrderBy(m => m).Take(count.min).Sum();
+        int maxTotal = metList.OrderByDescending(m => m).Take(count.min).Sum();
+        return Mathf.Clamp(0, minTotal, maxTotal);
+    }
 
     public List<GeneDef> genes;
 
