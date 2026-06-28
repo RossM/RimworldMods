@@ -29,11 +29,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
         if (comp == null)
             return;
 
-        if (!comp.Props.milkedThoughts.NullOrEmpty())
-        {
-            foreach (var thoughtDef in comp.Props.milkedThoughts)
-                Target.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);
-        }
+        comp.Notify_Milked(doer);
 
         var lactationCharge = comp.Lactating;
         if (lactationCharge == null)
@@ -41,6 +37,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
         int qty = comp.MilkCount;
         lactationCharge.GreedyConsume(comp.Props.chargePerItem * qty);
+
 
         if (!Rand.Chance(doer.GetStatValue(StatDefOf.AnimalGatherYield)))
         {

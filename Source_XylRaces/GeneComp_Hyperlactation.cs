@@ -28,17 +28,29 @@ public class GeneComp_Hyperlactation : GeneComp
 
     private const int checkInterval = 60;
     public bool allowMilking = true;
-    public bool onlyMilkWhenFull = true;
+    public int milkingCooldownDays = 1;
 
     public int? fullSinceTick;
+    public int lastMilkedTick = int.MinValue;
 
     private HediffComp_Lactating lactatingInternal;
 
     public override void CompExposeData()
     {
         Scribe_Values.Look(ref fullSinceTick, nameof(fullSinceTick));
-        Scribe_Values.Look(ref allowMilking, nameof(allowMilking));
-        Scribe_Values.Look(ref onlyMilkWhenFull, nameof(onlyMilkWhenFull), true);
+        Scribe_Values.Look(ref lastMilkedTick, nameof(lastMilkedTick));
+        Scribe_Values.Look(ref allowMilking, nameof(allowMilking), defaultValue: true);
+        Scribe_Values.Look(ref milkingCooldownDays, nameof(milkingCooldownDays), defaultValue: 1);
+    }
+
+    public TaggedString LabelForFrequency(int days)
+    {
+        return days switch
+        {
+            0 => "XylAnyTime".Translate(),
+            1 => "EveryDay".Translate(),
+            _ => "EveryDays".Translate(days),
+        };
     }
 
     public override IEnumerable<Gizmo> CompGetGizmos()
@@ -52,26 +64,22 @@ public class GeneComp_Hyperlactation : GeneComp
         if (Pawn.Drafted)
             yield break;
 
-        yield return new Command_Toggle
+        List<FloatMenuOption> rightClickFloatMenuOptions = [];
+        for (int i = 0; i <= 3; i++)
         {
-            defaultLabel = "XylCommandMilkLabel".TranslateSimple(),
+            int value = i;
+            rightClickFloatMenuOptions.Add(new(LabelForFrequency(i), () => { milkingCooldownDays = value; }));
+        }
+
+        yield return new Command_ToggleWithRightClickOptions()
+        {
+            defaultLabel = $"{"XylCommandMilkLabel".TranslateSimple()} ({LabelForFrequency(milkingCooldownDays)})",
             defaultDesc = "XylCommandMilkDesc".TranslateSimple(),
             isActive = () => allowMilking,
             toggleAction = () => { allowMilking = !allowMilking; },
             icon = ExtraIcon,
+            rightClickFloatMenuOptions = rightClickFloatMenuOptions,
         };
-
-        if (allowMilking)
-        {
-            yield return new Command_Toggle
-            {
-                defaultLabel = "XylCommandMilkOnlyWhenFullLabel".TranslateSimple(),
-                defaultDesc = "XylCommandMilkOnlyWhenFullDesc".TranslateSimple(),
-                isActive = () => onlyMilkWhenFull,
-                toggleAction = () => { onlyMilkWhenFull = !onlyMilkWhenFull; },
-                icon = ExtraIcon,
-            };
-        }
     }
 
     public override void CompPostPostAdd()
@@ -116,12 +124,21 @@ public class GeneComp_Hyperlactation : GeneComp
             return false;
         if (!allowMilking)
             return false;
+        if (Find.TickManager.TicksGame <= lastMilkedTick + milkingCooldownDays * GenDate.TicksPerDay)
+            return false;
 
-        var requiredCount = 1;
-        if (onlyMilkWhenFull)
-            requiredCount = Mathf.FloorToInt(Lactating.Props.fullChargeAmount / Props.chargePerItem);
+        return MilkCount >= 1;
+    }
 
-        return MilkCount >= requiredCount;
+    public void Notify_Milked(Pawn doer)
+    {
+        lastMilkedTick = Find.TickManager.TicksGame;
+
+        if (!Props.milkedThoughts.NullOrEmpty())
+        {
+            foreach (var thoughtDef in Props.milkedThoughts)
+                Pawn.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);
+        }
     }
 
     public bool TryGetSoreness(out int soreness)
