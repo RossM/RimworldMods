@@ -99,7 +99,7 @@ public class GeneSetMaker_Option : GeneSetMaker
 [UsedFromXml]
 public class GeneSetMaker_Biostats : GeneSetMaker
 {
-    public override int BiostatMetForDisplay => Mathf.Clamp(0, biostatMet.min, biostatMet.max);
+    public override int BiostatMetForDisplay => Mathf.Clamp(0, biostatMet.min, biostatMet.max) * count.min;
 
     public IntRange biostatArc = IntRange.Zero;
     public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
