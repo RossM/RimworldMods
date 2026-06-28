@@ -16,15 +16,7 @@ public static class PatchHelpers
     public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
         var bonusGenes = geneDef.CompProps<GeneCompProperties_BonusGenes>();
-        if (bonusGenes == null)
-            return 0;
-        if (bonusGenes.geneChance < 1.0f)
-            return 0;
-        if (!bonusGenes.allowedGenes.NullOrEmpty())
-            return bonusGenes.allowedGenes.Min(g => g.biostatMet);
-        if (bonusGenes.biostatMet.Includes(0))
-            return 0;
-        return bonusGenes.biostatMet.min;
+        return bonusGenes?.maker?.BiostatMetForDisplayBonus ?? 0;
     }
 
     public static float ConversionPowerFactor_OffsetFromXenotype(Pawn pawn, bool invert, StringBuilder sb, Pawn recipient)
