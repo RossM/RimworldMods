@@ -157,7 +157,7 @@
     <biostatCpx>0</biostatCpx>
     <renderNodeProperties>
       <li>
-        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <nodeClass>PawnRenderNode_HeadPattern</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <parentTagDef>Head</parentTagDef>
         <colorType>Skin</colorType>

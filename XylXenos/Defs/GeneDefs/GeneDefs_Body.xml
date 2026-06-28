@@ -117,7 +117,6 @@
           <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Thin</Thin>
           <Child>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Child>
           <Baby>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Baby>
-          <!-- Child: Always covered by swaddled graphic -->
         </bodyTypeGraphicPaths>
       </li>
     </renderNodeProperties>
