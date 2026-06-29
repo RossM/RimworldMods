@@ -37,4 +37,13 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
 
+  <member name="M:Verse.GenCollection.RandomElementByWeight``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Single})">
+    <parameter name="source">
+      <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute﻿.#ctor"/>
+    </parameter>
+    <parameter name="weightSelector">
+      <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute﻿.#ctor"/>
+    </parameter>
+  </member>
+  
 </assembly>

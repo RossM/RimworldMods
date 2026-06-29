@@ -338,8 +338,6 @@ public static class DebugArena
             lhsPower = Mathf.Clamp(lhsPower, 20, 800);
             rhsPower = Mathf.Clamp(rhsPower, 20, 800);
 
-            // lhsPower *= Mathf.Pow(2f, Rand.Range(-1f, 1f));
-
             int totalCombatants = RandRangeExponential(2, 40);
 
             int lhsCount = GenMath.RoundRandom(totalCombatants * rhsPower / (lhsPower + rhsPower));
