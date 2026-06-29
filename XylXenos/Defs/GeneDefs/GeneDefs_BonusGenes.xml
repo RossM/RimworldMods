@@ -116,4 +116,58 @@
     </modExtensions>
   </GeneDef>
 
+  <GeneDef>
+    <defName>XylScalebornLineage</defName>
+    <label>scaleborn lineage</label>
+    <description>TODO</description>
+    <biostatCpx>5</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>XylRandom</displayCategory>
+    <displayOrderInCategory>300</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_BonusGenes">
+            <removeAfterAdding>true</removeAfterAdding>
+            <maker Class="XylXenos.GeneSetMaker_Option">
+              <options>
+                <li>
+                  <maker Class="XylXenos.GeneSetMaker_List">
+                    <count>3</count>
+                    <genes>
+                      <li>FireSpew</li>
+                      <li>FireResistant</li>
+                      <li>Skin_DeepRed</li>                      
+                    </genes>
+                  </maker>
+                </li>
+                <li>
+                  <maker Class="XylXenos.GeneSetMaker_List">
+                    <count>3</count>
+                    <genes>
+                      <li>AcidSpray</li>
+                      <li>ToxResist_Partial</li>
+                      <li>XylSkin_DarkGreen</li>                      
+                    </genes>
+                  </maker>
+                </li>
+                <li>
+                  <maker Class="XylXenos.GeneSetMaker_List">
+                    <count>3</count>
+                    <genes>
+                      <li>FoamSpray</li>
+                      <li>FireResistant</li>
+                      <li>Skin_SheerWhite</li>                      
+                    </genes>
+                  </maker>
+                </li>
+              </options>
+            </maker>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
 </Defs>

@@ -19,7 +19,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
     public override bool ValidateTarget(Pawn target)
     {
-        return target.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>() is { ReadyToMilk: true };
+        return target?.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>() is { ReadyToMilk: true };
     }
 
     private void Gather(Pawn doer)

@@ -97,6 +97,7 @@ public class GeneComp_Hyperlactation : GeneComp
     public override void CompPostPostAdd()
     {
         AddHediff();
+        lastMilkedTick = Find.TickManager.TicksGame;
     }
 
     public override void CompTickInterval(int delta)

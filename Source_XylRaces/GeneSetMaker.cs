@@ -75,10 +75,10 @@ public abstract class GeneSetMaker
     }
 }
 
-public struct GeneSetMakerWeight
+public class GeneSetMakerWeight
 {
     public GeneSetMaker maker;
-    public float weight;
+    public float weight = 1f;
 }
 
 [UsedFromXml]

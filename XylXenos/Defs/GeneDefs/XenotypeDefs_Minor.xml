@@ -6,7 +6,7 @@
     <defName>XylSuccuboid</defName>
     <label>succuboid</label>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon3</iconPath>
-    <displayPriority>-201</displayPriority>
+    <displayPriority>-202</displayPriority>
     <combatPowerFactor>0.75</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
@@ -35,5 +35,32 @@
       <li>AptitudeStrong_Social</li>
     </genes>
   </XenotypeDef>
-  
+
+  <XenotypeDef>
+    <defName>XylScaleborn</defName>
+    <label>scaleborn</label>
+    <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon7</iconPath>
+    <displayPriority>-201</displayPriority>
+    <inheritable>true</inheritable>
+    <genes>
+      <li>XylScalebornLineage</li>
+      <li>PsychicAbility_Dull</li>
+      <li>MoveSpeed_Slow</li>
+      <li>XylMoody</li>
+      <li>MinTemp_SmallDecrease</li>
+      <li>MaxTemp_SmallIncrease</li>
+      <li>XylTorpor</li>
+      <li>Aggression_Aggressive</li>
+      <li>MeleeDamage_Strong</li>
+      <li>XylLargeHorns</li>
+      <li>XylRetractableClaws</li>
+      <li>Sleepy</li>
+      <li>Hair_BaldOnly</li>
+      <li>Beard_NoBeardOnly</li>
+      <li>XylCarnivoreStomach</li>
+      <li>XylScaleskin</li>
+      <li>AptitudePoor_Cooking</li>
+    </genes>
+  </XenotypeDef>
+
 </Defs>
