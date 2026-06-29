@@ -65,4 +65,13 @@
     </value>
   </Operation>
 
+  <Operation Class="PatchOperationInsert">
+    <success>Always</success>
+    <xpath>Defs/PawnKindDef[contains(defName, "Slave")]/xenotypeSet/xenotypeChances/Highmate[text()>0]</xpath>
+    <value>
+      <XylBossaps>0.025</XylBossaps>
+      <XylSuccuboid>0.01</XylSuccuboid>
+    </value>
+  </Operation>
+
 </Patch>

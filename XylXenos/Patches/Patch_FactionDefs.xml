@@ -12,6 +12,7 @@
       <XylDvergr>0.05</XylDvergr>
       <XylNixie>0.025</XylNixie>
       <XylTitan>0.025</XylTitan>
+      <XylScaleborn>0.005</XylScaleborn>
     </value>
   </Operation>
 
@@ -27,6 +28,7 @@
       <XylTitan>0.025</XylTitan>
       <XylTrog>0.025</XylTrog>
       <XylWarcat>0.025</XylWarcat>
+      <XylScaleborn>0.01</XylScaleborn>
     </value>
   </Operation>
 
@@ -42,6 +44,7 @@
       <XylTitan>0.025</XylTitan>
       <XylTrog>0.05</XylTrog>
       <XylWarcat>0.05</XylWarcat>
+      <XylScaleborn>0.01</XylScaleborn>
     </value>
   </Operation>
 
@@ -78,6 +81,7 @@
       <XylNixie>0.05</XylNixie>
       <XylTitan>0.025</XylTitan>
       <XylSuccuboid>0.01</XylSuccuboid>
+      <XylScaleborn>0.01</XylScaleborn>
     </value>
   </Operation>
 
