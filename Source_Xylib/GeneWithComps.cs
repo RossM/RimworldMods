@@ -166,7 +166,7 @@ public class GeneWithComps : Gene, IEventListener
         if (compProperties == null)
             return;
 
-        comps = new();
+        comps = [];
         foreach (GeneCompProperties compProps in compProperties)
         {
             if (compProps.compClass == null)

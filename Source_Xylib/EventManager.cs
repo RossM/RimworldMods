@@ -392,7 +392,6 @@ public class EventManager : GameComponent
         RegisterInternal(eventDef, target, (_, data) => callback((T)data), callback.Target, MethodName(callback), priority);
     }
 
-    // ReSharper disable once UnusedMember.Global
     public void Register(EventDef eventDef, Thing target, [NotNull] Action<Thing> callback, int priority = 0)
     {
         if (callback == null)
@@ -428,7 +427,6 @@ public class EventManager : GameComponent
         return $"{fn.Method.DeclaringType?.FullName ?? "<global>"}.{fn.Method.Name}";
     }
 
-    // ReSharper disable once UnusedMember.Global
     public void Register<T>(
         [NotNull] IEventListener listener,
         EventDef eventDef,

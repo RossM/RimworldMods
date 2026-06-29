@@ -7,6 +7,7 @@ public abstract class GeneTracker : IEventListener, IPawnData
     /// </summary>
     public Pawn pawn;
 
+    // ReSharper disable once ParameterHidesMember
     void IPawnData.Init(Pawn pawn)
     {
         this.pawn = pawn;
