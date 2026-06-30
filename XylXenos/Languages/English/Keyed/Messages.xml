@@ -49,6 +49,8 @@
   <XylSettingOption_fixLactationBugs_Never>Never (not recommended)</XylSettingOption_fixLactationBugs_Never>
   <XylSettingDescription_useDistinctiveFactionColors>More distinctive faction colors</XylSettingDescription_useDistinctiveFactionColors>
   <XylSettingTooltip_useDistinctiveFactionColors>The way the game generates faction colors can sometimes assign very similar colors to different factions. This setting uses a different algorithm that tries to make the colors of all the factions more visually distinctive.</XylSettingTooltip_useDistinctiveFactionColors>
+  <XylSettingDescription_fixGeneticPassions>Fix genetic passions</XylSettingDescription_fixGeneticPassions>
+  <XylSettingtooltip_fixGeneticPassions>The game has a bug that causes passion increases from genes to not stack with randomly generated skill passions on newly generated pawns. This setting controls fixing that bug.</XylSettingtooltip_fixGeneticPassions>
 
   <!-- Misc -->
   <XylWildPeople>wild people</XylWildPeople>

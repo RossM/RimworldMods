@@ -1,10 +1,10 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using HarmonyLib;
 using Verse;
 
 namespace TranspilerUtil
@@ -182,28 +182,28 @@ namespace TranspilerUtil
 
                     if (target is FieldInfo { IsStatic: false } or MethodInfo { IsStatic: false })
                     {
-                        var fieldInfo = target.DeclaringType!.GetField(fieldName, AccessTools.all);
-                        if (fieldInfo is { IsStatic: false })
+                        var field = target.DeclaringType!.GetField(fieldName, AccessTools.all);
+                        if (field is { IsStatic: false })
                         {
                             EmitTargetParameter(target.DeclaringType, 0);
                             if (parameterType.IsByRef)
-                                output.Add(new(OpCodes.Ldflda, fieldInfo));
+                                output.Add(new(OpCodes.Ldflda, field));
                             else
-                                output.Add(new(OpCodes.Ldfld, fieldInfo));
+                                output.Add(new(OpCodes.Ldfld, field));
                             return;
                         }
                     }
 
                     if (caller is MethodInfo { IsStatic: false })
                     {
-                        var fieldInfo = caller.DeclaringType!.GetField(fieldName, AccessTools.all);
-                        if (fieldInfo is { IsStatic: false })
+                        var field = caller.DeclaringType!.GetField(fieldName, AccessTools.all);
+                        if (field is { IsStatic: false })
                         {
                             EmitCallerParameter(caller.DeclaringType, 0);
                             if (parameterType.IsByRef)
-                                output.Add(new(OpCodes.Ldflda, fieldInfo));
+                                output.Add(new(OpCodes.Ldflda, field));
                             else
-                                output.Add(new(OpCodes.Ldfld, fieldInfo));
+                                output.Add(new(OpCodes.Ldfld, field));
                             return;
                         }
                     }
@@ -225,29 +225,19 @@ namespace TranspilerUtil
 
                 for (int j = 0; j < targetParameterTypes.Length; j++)
                 {
-                    if (targetParameterTypes[j].Name.StartsWith("<") &&
-                        Attribute.IsDefined(targetParameterTypes[j], typeof(CompilerGeneratedAttribute)))
+                    Type targetParameterType = targetParameterTypes[j];
+                    Type type = targetParameterType.IsByRef ? targetParameterType.GetElementType() : targetParameterType;
+                    if (type!.Name.StartsWith("<") &&
+                        Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute)))
                     {
-                        var field = targetParameterTypes[j].GetField(parameterName, AccessTools.all);
+                        var field = type.GetField(parameterName, AccessTools.all);
                         if (field != null)
                         {
-                            EmitTargetParameter(targetParameterTypes[j], j);
-                            output.Add(new(OpCodes.Ldfld, field));
-                            return;
-                        }
-                    }
-                }
-
-                for (int j = 0; j < callerParameterTypes.Length; j++)
-                {
-                    if (callerParameterTypes[j].Name.StartsWith("<") &&
-                        Attribute.IsDefined(callerParameterTypes[j], typeof(CompilerGeneratedAttribute)))
-                    {
-                        var field = callerParameterTypes[j].GetField(parameterName, AccessTools.all);
-                        if (field != null)
-                        {
-                            EmitCallerParameter(callerParameterTypes[j], j);
-                            output.Add(new(OpCodes.Ldfld, field));
+                            EmitTargetParameter(targetParameterType, j);
+                            if (parameterType.IsByRef)
+                                output.Add(new(OpCodes.Ldflda, field));
+                            else
+                                output.Add(new(OpCodes.Ldfld, field));
                             return;
                         }
                     }
@@ -267,24 +257,24 @@ namespace TranspilerUtil
                     output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
             }
 
-            private void EmitCallerParameter(Type parameterType, int callerIndex)
+            private void EmitCallerParameter(Type type, int index)
             {
-                if (parameterType.IsByRef && !callerParameterTypes[callerIndex].IsByRef)
-                    output.Add(new(OpCodes.Ldarga, callerIndex));
+                if (type.IsByRef && !callerParameterTypes[index].IsByRef)
+                    output.Add(new(OpCodes.Ldarga, index));
                 else
-                    output.Add(CodeInstruction.LoadArgument(callerIndex));
+                    output.Add(CodeInstruction.LoadArgument(index));
+                if (!type.IsByRef && callerParameterTypes[index].IsByRef)
+                    output.Add(new(OpCodes.Ldobj, type));
             }
 
-            private void EmitTargetParameter(Type parameterType, int targetIndex)
+            private void EmitTargetParameter(Type type, int index)
             {
-                if (targetIndex < 0)
-                    throw new InvalidOperationException(
-                        $"Can't reuse parameter named '{targetParameterNames[targetIndex]}' of type {parameterType.FullName}");
-
-                if (parameterType.IsByRef && !targetParameterTypes[targetIndex].IsByRef)
-                    output.Add(CodeInstructionUtil.LoadLocalAddress(parameterToLocalIndex[targetIndex]));
+                if (type.IsByRef && !targetParameterTypes[index].IsByRef)
+                    output.Add(CodeInstructionUtil.LoadLocalAddress(parameterToLocalIndex[index]));
                 else
-                    output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[targetIndex]));
+                    output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[index]));
+                if (!type.IsByRef && targetParameterTypes[index].IsByRef)
+                    output.Add(new(OpCodes.Ldobj, type));
             }
 
             private void EmitPrelude()

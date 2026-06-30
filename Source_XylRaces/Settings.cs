@@ -13,6 +13,7 @@ public class Settings : ModSettings
 
     public ThreeStateMode allowBackerBackstories = ThreeStateMode.Sometimes;
     public ThreeStateMode fixLactationBugs = ThreeStateMode.Always;
+    public bool fixGeneticPassions = true;
 
     public bool useDistinctiveFactionColors;
 
@@ -22,6 +23,7 @@ public class Settings : ModSettings
         Scribe_Values.Look(ref allowBackerBackstories, nameof(allowBackerBackstories), ThreeStateMode.Sometimes);
         Scribe_Values.Look(ref fixLactationBugs, nameof(fixLactationBugs), ThreeStateMode.Always);
         Scribe_Values.Look(ref useDistinctiveFactionColors, nameof(useDistinctiveFactionColors), true);
+        Scribe_Values.Look(ref fixGeneticPassions, nameof(fixGeneticPassions), defaultValue: true);
         // ReSharper restore RedundantArgumentDefaultValue
     }
 
@@ -34,6 +36,7 @@ public class Settings : ModSettings
         EnumSetting<ThreeStateMode>(listing, nameof(allowBackerBackstories));
         EnumSetting<ThreeStateMode>(listing, nameof(fixLactationBugs));
         BoolSetting(listing, nameof(useDistinctiveFactionColors));
+        BoolSetting(listing, nameof(fixGeneticPassions));
 
         listing.End();
     }

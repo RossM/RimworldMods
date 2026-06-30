@@ -28,8 +28,7 @@ namespace XylXenos.Patches
 
         [Feature(nameof(Config.Feature.Bugfix_Misc))]
         [HarmonyTranspiler]
-        [HarmonyDebug]
-        public static IEnumerable<CodeInstruction> ParallelGetPreRenderResults_Transpiler(
+        public static IEnumerable<CodeInstruction> Transpiler(
             IEnumerable<CodeInstruction> instructions,
             ILGenerator generator,
             MethodBase method)

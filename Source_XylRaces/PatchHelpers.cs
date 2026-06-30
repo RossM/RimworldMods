@@ -346,4 +346,21 @@ public static class PatchHelpers
 
         return false;
     }
+
+    public static bool ShouldGetGeneticPassion(Pawn pawn, SkillRecord record, int minorPassions)
+    {
+        if (minorPassions <= 0)
+            return false;
+
+        if (ModsConfig.BiotechActive && pawn.genes != null)
+        {
+            foreach (Gene item2 in pawn.genes.GenesListForReading)
+            {
+                if (item2.Active && item2.def.passionMod is { modType: PassionMod.PassionModType.AddOneLevel } && item2.def.passionMod.skill == record.def)
+                    return true;
+            }
+        }
+
+        return false;
+    }
 }
