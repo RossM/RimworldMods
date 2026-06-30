@@ -10,21 +10,34 @@ public abstract class GeneSetMaker
     public virtual GeneSet Generate(Pawn pawn, GeneType geneType = GeneType.Xenogene)
     {
         var geneSet = new GeneSet();
+        List<GeneDef> genes = geneSet.GenesListForReading;
+
+        if (pawn.genes.Xenotype != null)
+        {
+            foreach (var gene in pawn.genes.Xenotype.genes)
+                geneSet.AddGene(gene);
+        }
+
+        if (pawn.genes.CustomXenotype != null)
+        {
+            foreach (var gene in pawn.genes.CustomXenotype.genes)
+                geneSet.AddGene(gene);
+        }
 
         foreach (var gene in pawn.genes.GenesListForReading.Where(g => g.Active))
             geneSet.AddGene(gene.def);
 
-        int existingGeneCount = geneSet.GenesListForReading.Count;
+        int existingGeneCount = genes.Count;
 
-        Log.Message($"Before AddGenes: {geneSet.GenesListForReading.Select(g => g.label).ToCommaList()}");
+        Log.Message($"Before AddGenes: {genes.Select(g => g.label).ToCommaList()}");
 
         AddGenes(geneSet, geneType, pawn);
 
-        Log.Message($"After AddGenes: {geneSet.GenesListForReading.Select(g => g.label).ToCommaList()}");
+        Log.Message($"After AddGenes: {genes.Select(g => g.label).ToCommaList()}");
 
         var newGenes = new GeneSet();
-        for (int i = existingGeneCount; i < geneSet.GenesListForReading.Count; i++)
-            newGenes.AddGene(geneSet.GenesListForReading[i]);
+        for (int i = existingGeneCount; i < genes.Count; i++)
+            newGenes.AddGene(genes[i]);
 
         return newGenes;
     }
