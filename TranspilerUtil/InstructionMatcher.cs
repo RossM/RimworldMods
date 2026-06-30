@@ -49,6 +49,15 @@ public class InstructionMatcher
     readonly List<Label> extraLabels = [];
     private readonly List<ExceptionBlock> extraBlocks = [];
 
+    public InstructionMatcher()
+    {
+    }
+
+    public InstructionMatcher(params List<Rule> rules)
+    {
+        Rules = rules;
+    }
+
     public bool TryMatchAndReplace(
         MethodBase method,
         ref List<CodeInstruction> instructions,
@@ -406,7 +415,7 @@ public class InstructionMatcher
         bool debug)
     {
         var instructionsList = new List<CodeInstruction>(instructions);
-        new InstructionMatcher() { Rules = rules }.MatchAndReplace(method, ref instructionsList, generator, debug: debug);
+        new InstructionMatcher(rules).MatchAndReplace(method, ref instructionsList, generator, debug: debug);
         return instructionsList;
     }
 }

@@ -6,27 +6,21 @@ namespace Xylib.Patches;
 [HarmonyPatch(typeof(StartingPawnUtility))]
 public class Patch_StartingPawnUtility
 {
-    private static readonly InstructionMatcher Fixup_GeneratePossessions = new()
+    private static readonly InstructionMatcher.Rule Rule_GetExtraStartingItems = new()
     {
-        Rules =
-        {
-            new()
-            {
-                Min = 1, Max = 1,
-                Mode = InstructionMatcher.OutputMode.InsertAfter,
-                Pattern =
-                [
-                    CodeInstruction.Call(typeof(Rand), $"get_{nameof(Rand.Value)}"),
-                ],
-                Output =
-                [
-                    // Load pawn
-                    CodeInstruction.LoadArgument(0),
-                    // Call GetExtraStartingItems
-                    CodeInstruction.Call(() => GetExtraStartingItems),
-                ]
-            },
-        }
+        Min = 1, Max = 1,
+        Mode = InstructionMatcher.OutputMode.InsertAfter,
+        Pattern =
+        [
+            CodeInstruction.Call(typeof(Rand), $"get_{nameof(Rand.Value)}"),
+        ],
+        Output =
+        [
+            // Load pawn
+            CodeInstruction.LoadArgument(0),
+            // Call GetExtraStartingItems
+            CodeInstruction.Call(() => GetExtraStartingItems),
+        ]
     };
 
     [Feature(nameof(EventDefOf.InGeneratePossessions))]
@@ -38,7 +32,7 @@ public class Patch_StartingPawnUtility
         MethodBase method)
     {
         var instructionsList = new List<CodeInstruction>(instructions);
-        Fixup_GeneratePossessions.MatchAndReplace(method, ref instructionsList, generator);
+        new InstructionMatcher(Rule_GetExtraStartingItems).MatchAndReplace(method, ref instructionsList, generator);
         return instructionsList;
     }
 

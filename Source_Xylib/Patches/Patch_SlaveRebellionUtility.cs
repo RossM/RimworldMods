@@ -36,13 +36,7 @@ public static class Patch_SlaveRebellionUtility
         MethodBase method)
     {
         var instructionsList = new List<CodeInstruction>(instructions);
-        new InstructionMatcher()
-        {
-            Rules =
-            {
-                Rule_AddSlaveRebellionMtbFactorExplanation
-            }
-        }.MatchAndReplace(method, ref instructionsList, generator);
+        new InstructionMatcher(Rule_AddSlaveRebellionMtbFactorExplanation).MatchAndReplace(method, ref instructionsList, generator);
         return instructionsList;
     }
 

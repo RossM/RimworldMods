@@ -6,29 +6,23 @@ namespace XylXenos.Patches;
 [HarmonyPatch(typeof(RaceProperties))]
 public static class Patch_RaceProperties
 {
-    private static readonly InstructionMatcher Fixup_NutritionEatenPerDayExplanation = new()
+    private static readonly InstructionMatcher.Rule Rule_AddLactationExplanation = new()
     {
-        Rules =
-        {
-            new()
-            {
-                Min = 1, Max = 0,
-                Mode = InstructionMatcher.OutputMode.InsertBefore,
-                Pattern =
-                [
-                    // stringBuilder.AppendLine("StatsReport_FinalValue" ...
-                    CodeInstruction.LoadLocal(0),
-                    new CodeInstruction(OpCodes.Ldstr, "StatsReport_FinalValue"),
-                ],
-                Output =
-                [
-                    // LactationExplanation(stringBuilder, pawn);
-                    CodeInstruction.LoadLocal(0),
-                    CodeInstruction.LoadArgument(0),
-                    CodeInstruction.Call(() => AddLactationExplanation),
-                ]
-            },
-        }
+        Min = 1, Max = 0,
+        Mode = InstructionMatcher.OutputMode.InsertBefore,
+        Pattern =
+        [
+            // stringBuilder.AppendLine("StatsReport_FinalValue" ...
+            CodeInstruction.LoadLocal(0),
+            new CodeInstruction(OpCodes.Ldstr, "StatsReport_FinalValue"),
+        ],
+        Output =
+        [
+            // LactationExplanation(stringBuilder, pawn);
+            CodeInstruction.LoadLocal(0),
+            CodeInstruction.LoadArgument(0),
+            CodeInstruction.Call(() => AddLactationExplanation),
+        ]
     };
 
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]
@@ -40,7 +34,7 @@ public static class Patch_RaceProperties
         MethodBase method)
     {
         var instructionsList = new List<CodeInstruction>(instructions);
-        Fixup_NutritionEatenPerDayExplanation.MatchAndReplace(method, ref instructionsList, generator);
+        new InstructionMatcher(Rule_AddLactationExplanation).MatchAndReplace(method, ref instructionsList, generator);
         return instructionsList;
     }
 
