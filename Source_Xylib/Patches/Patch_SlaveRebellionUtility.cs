@@ -6,31 +6,25 @@ namespace Xylib.Patches;
 [HarmonyPatch(typeof(SlaveRebellionUtility))]
 public static class Patch_SlaveRebellionUtility
 {
-    private static readonly InstructionMatcher Fixup_GetSlaveRebellionMtbCalculationExplanation = new()
+    private static readonly InstructionMatcher.Rule Rule_AddSlaveRebellionMtbFactorExplanation = new()
     {
-        Rules =
-        {
-            new()
-            {
-                Min = 1, Max = 0,
-                Mode = InstructionMatcher.OutputMode.InsertBefore,
-                Pattern =
-                [
-                    CodeInstruction.LoadLocal(0),
-                    new CodeInstruction(OpCodes.Ldstr, "{0}: {1}"),
-                    new CodeInstruction(OpCodes.Ldstr, "SuppressionFinalInterval"),
-                ],
-                Output =
-                [
-                    // Load stringBuilder
-                    CodeInstruction.LoadLocal(0),
-                    // Load pawn
-                    CodeInstruction.LoadArgument(0),
-                    // Call FinishExplanation
-                    CodeInstruction.Call(() => InsertExplanation),
-                ]
-            }
-        }
+        Min = 1, Max = 0,
+        Mode = InstructionMatcher.OutputMode.InsertBefore,
+        Pattern =
+        [
+            CodeInstruction.LoadLocal(0),
+            new CodeInstruction(OpCodes.Ldstr, "{0}: {1}"),
+            new CodeInstruction(OpCodes.Ldstr, "SuppressionFinalInterval"),
+        ],
+        Output =
+        [
+            // Load stringBuilder
+            CodeInstruction.LoadLocal(0),
+            // Load pawn
+            CodeInstruction.LoadArgument(0),
+            // Call FinishExplanation
+            CodeInstruction.Call(() => PatchHelpers.AddSlaveRebellionMtbFactorExplanation),
+        ]
     };
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
@@ -42,7 +36,13 @@ public static class Patch_SlaveRebellionUtility
         MethodBase method)
     {
         var instructionsList = new List<CodeInstruction>(instructions);
-        Fixup_GetSlaveRebellionMtbCalculationExplanation.MatchAndReplace(method, ref instructionsList, generator);
+        new InstructionMatcher()
+        {
+            Rules =
+            {
+                Rule_AddSlaveRebellionMtbFactorExplanation
+            }
+        }.MatchAndReplace(method, ref instructionsList, generator);
         return instructionsList;
     }
 
@@ -68,18 +68,5 @@ public static class Patch_SlaveRebellionUtility
     {
         if (numTicks < 0)
             __result = "Never".Translate();
-    }
-
-    private static void InsertExplanation(StringBuilder stringBuilder, Pawn pawn)
-    {
-        if (pawn == null)
-            return;
-
-        StatRequest statRequest = StatRequest.For(pawn);
-        float baseValueFor = XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetBaseValueFor(statRequest);
-        ToStringNumberSense toStringNumberSense = XStatDefOf.XylSlaveRebellionMtbFactor.toStringNumberSense;
-        XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor);
-        XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense,
-            stringBuilder);
     }
 }

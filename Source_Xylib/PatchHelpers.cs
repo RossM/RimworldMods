@@ -79,4 +79,17 @@ internal static class PatchHelpers
 
         return target.GetStatValue(XStatDefOf.XylRangedDodgeChance);
     }
+
+    public static void AddSlaveRebellionMtbFactorExplanation(StringBuilder stringBuilder, Pawn pawn)
+    {
+        if (pawn == null)
+            return;
+
+        StatRequest statRequest = StatRequest.For(pawn);
+        float baseValueFor = XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetBaseValueFor(statRequest);
+        ToStringNumberSense toStringNumberSense = XStatDefOf.XylSlaveRebellionMtbFactor.toStringNumberSense;
+        XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor);
+        XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense,
+            stringBuilder);
+    }
 }
