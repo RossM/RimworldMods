@@ -32,7 +32,6 @@
       <li>Learning_Slow</li>
       <li>DarkVision</li>
       <li>XylBioRejection</li>
-      <li>XylGeneticAtavism</li>
       <li>XylInsectPheromones</li>
       <li>PollutionRush</li>
       <li>Instability_Mild</li>
@@ -40,6 +39,8 @@
       <li>AptitudeStrong_Animals</li>
       <li>AptitudeTerrible_Intellectual</li>
       <li>AddictionResistant_Psychite</li>
+      <!-- Bonus genes must come last -->
+      <li>XylGeneticAtavism</li>
     </genes>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Xenotype">

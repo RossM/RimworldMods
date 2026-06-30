@@ -16,7 +16,11 @@ public abstract class GeneSetMaker
 
         int existingGeneCount = geneSet.GenesListForReading.Count;
 
+        Log.Message($"Before AddGenes: {geneSet.GenesListForReading.Select(g => g.label).ToCommaList()}");
+
         AddGenes(geneSet, geneType, pawn);
+
+        Log.Message($"After AddGenes: {geneSet.GenesListForReading.Select(g => g.label).ToCommaList()}");
 
         var newGenes = new GeneSet();
         for (int i = existingGeneCount; i < geneSet.GenesListForReading.Count; i++)
@@ -61,15 +65,6 @@ public abstract class GeneSetMaker
         // Aptitude-giving genes must not apply to only disabled skills
         if (!gene.aptitudes.NullOrEmpty() && gene.aptitudes.All(aptitude => pawn.skills.GetSkill(aptitude.skill).TotallyDisabled))
             return false;
-
-        foreach (var otherGene in geneSet.GenesListForReading)
-        {
-            if (gene.exclusionTags != null && otherGene.exclusionTags != null &&
-                gene.exclusionTags.Intersect(otherGene.exclusionTags).Any())
-            {
-                return false;
-            }
-        }
 
         return true;
     }

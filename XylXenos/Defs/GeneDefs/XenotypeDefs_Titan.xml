@@ -30,9 +30,10 @@
       <li>XylLearning_Focused</li>
       <li>XylGiant</li>
       <li>XylJoyless</li>
-      <li>XylSuperSpecialist</li>
       <li>AptitudePoor_Social</li>
       <li>AptitudePoor_Intellectual</li>
+      <!-- Bonus genes must come last -->
+      <li>XylSuperSpecialist</li>
     </genes>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Xenotype">

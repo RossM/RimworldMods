@@ -43,7 +43,6 @@
     <displayPriority>-201</displayPriority>
     <inheritable>true</inheritable>
     <genes>
-      <li>XylScalebornLineage</li>
       <li>PsychicAbility_Dull</li>
       <li>MoveSpeed_Slow</li>
       <li>XylMoody</li>
@@ -60,6 +59,8 @@
       <li>XylCarnivoreStomach</li>
       <li>XylScaleskin</li>
       <li>AptitudePoor_Cooking</li>
+      <!-- Bonus genes must come last -->
+      <li>XylScalebornLineage</li>
     </genes>
   </XenotypeDef>
 
