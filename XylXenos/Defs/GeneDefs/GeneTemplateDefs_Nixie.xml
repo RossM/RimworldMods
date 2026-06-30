@@ -16,6 +16,7 @@
     <iconPath>{0}</iconPath>
     <description>The carrier automatically learns the {0} psycast, and can use it without a psylink.\n\n{DESCRIPTION}</description>
     <displayCategory>XylPsycasts</displayCategory>
+    <selectionWeight>0.25</selectionWeight>
     <biostats>
       <li>
         <levels>1~2</levels>
