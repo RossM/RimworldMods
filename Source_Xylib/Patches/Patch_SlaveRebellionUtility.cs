@@ -13,28 +13,12 @@ public static class Patch_SlaveRebellionUtility
             new()
             {
                 Min = 1, Max = 0,
-                Mode = InstructionMatcher.OutputMode.Replace,
+                Mode = InstructionMatcher.OutputMode.InsertBefore,
                 Pattern =
                 [
                     CodeInstruction.LoadLocal(0),
                     new CodeInstruction(OpCodes.Ldstr, "{0}: {1}"),
                     new CodeInstruction(OpCodes.Ldstr, "SuppressionFinalInterval"),
-                    CodeInstruction.Call(typeof(Translator), nameof(Translator.Translate), [typeof(string)]),
-                    new CodeInstruction(OpCodes.Box, typeof(TaggedString)),
-                    CodeInstruction.LoadArgument(0),
-                    CodeInstruction.Call(typeof(SlaveRebellionUtility), nameof(SlaveRebellionUtility.InitiateSlaveRebellionMtbDays)),
-                    new CodeInstruction(OpCodes.Ldc_R4, 60000),
-                    new CodeInstruction(OpCodes.Mul),
-                    new CodeInstruction(OpCodes.Conv_I4),
-                    new CodeInstruction(OpCodes.Ldc_I4_1),
-                    new CodeInstruction(OpCodes.Ldc_I4_0),
-                    new CodeInstruction(OpCodes.Ldc_I4_1),
-                    new CodeInstruction(OpCodes.Ldc_I4_1),
-                    new CodeInstruction(OpCodes.Ldc_I4_0),
-                    CodeInstruction.Call(typeof(GenDate), nameof(GenDate.ToStringTicksToPeriod)),
-                    CodeInstruction.Call(typeof(string), nameof(string.Format), [typeof(string), typeof(object), typeof(object)]),
-                    CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.Append), [typeof(string)]),
-                    new CodeInstruction(OpCodes.Pop),
                 ],
                 Output =
                 [
@@ -43,7 +27,7 @@ public static class Patch_SlaveRebellionUtility
                     // Load pawn
                     CodeInstruction.LoadArgument(0),
                     // Call FinishExplanation
-                    CodeInstruction.Call(() => FinishExplanation),
+                    CodeInstruction.Call(() => InsertExplanation),
                 ]
             }
         }
@@ -52,6 +36,7 @@ public static class Patch_SlaveRebellionUtility
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
     [HarmonyTranspiler]
     [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
+    [HarmonyDebug]
     public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(
         IEnumerable<CodeInstruction> instructions,
         ILGenerator generator,
@@ -77,12 +62,19 @@ public static class Patch_SlaveRebellionUtility
         __result *= pawn.GetStatValue(XStatDefOf.XylSlaveRebellionMtbFactor);
     }
 
-    private static void FinishExplanation(StringBuilder stringBuilder, Pawn pawn)
+    [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
+    [InfixPostfix(typeof(GenDate), nameof(GenDate.ToStringTicksToPeriod))]
+    [InfixPatch("GetSlaveRebellionMtbCalculationExplanation")]
+    public static void ToStringTicksToPeriod_Postfix(int numTicks, ref string __result)
+    {
+        if (numTicks < 0)
+            __result = "Never".Translate();
+    }
+
+    private static void InsertExplanation(StringBuilder stringBuilder, Pawn pawn)
     {
         if (pawn == null)
             return;
-
-        float initiateSlaveRebellionMtbDays = SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn);
 
         StatRequest statRequest = StatRequest.For(pawn);
         float baseValueFor = XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetBaseValueFor(statRequest);
@@ -90,10 +82,5 @@ public static class Patch_SlaveRebellionUtility
         XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor);
         XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense,
             stringBuilder);
-
-        string period = initiateSlaveRebellionMtbDays < 0
-            ? "Never".TranslateSimple()
-            : ((int)(initiateSlaveRebellionMtbDays * GenDate.TicksPerDay)).ToStringTicksToPeriod();
-        stringBuilder.Append($"{"SuppressionFinalInterval".Translate()}: {period}");
     }
 }
