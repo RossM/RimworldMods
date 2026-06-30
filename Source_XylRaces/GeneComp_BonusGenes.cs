@@ -62,15 +62,4 @@ public class GeneComp_BonusGenes : GeneComp
         foreach (var gene in addedGenes)
             Pawn.genes.RemoveGene(gene);
     }
-
-    public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
-    {
-        yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylAtavismChanceLabel".TranslateSimple(),
-            Props.geneChance.ToStringPercent(), "XylAtavismChanceDesc".TranslateSimple(), 1002);
-        if (addedGenes == null)
-            yield break;
-        string text = string.Join(", ", addedGenes.Select(g => g.Label)).CapitalizeFirst();
-        yield return new StatDrawEntry(StatCategoryDefOf.Genetics, "XylAtavismGenesLabel".TranslateSimple(),
-            text, "XylAtavismGenesDesc".TranslateSimple(), 1001);
-    }
 }
