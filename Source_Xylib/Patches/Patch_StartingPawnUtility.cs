@@ -31,9 +31,7 @@ public class Patch_StartingPawnUtility
         ILGenerator generator,
         MethodBase method)
     {
-        var instructionsList = new List<CodeInstruction>(instructions);
-        new InstructionMatcher(Rule_GetExtraStartingItems).MatchAndReplace(method, ref instructionsList, generator);
-        return instructionsList;
+        return InstructionMatcher.MatchAndReplace([Rule_GetExtraStartingItems], method, instructions, generator);
     }
 
     public static void GetExtraStartingItems(Pawn pawn)

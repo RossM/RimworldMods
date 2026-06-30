@@ -35,9 +35,7 @@ public static class Patch_SlaveRebellionUtility
         ILGenerator generator,
         MethodBase method)
     {
-        var instructionsList = new List<CodeInstruction>(instructions);
-        new InstructionMatcher(Rule_AddSlaveRebellionMtbFactorExplanation).MatchAndReplace(method, ref instructionsList, generator);
-        return instructionsList;
+        return InstructionMatcher.MatchAndReplace([Rule_AddSlaveRebellionMtbFactorExplanation], method, instructions, generator);
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]

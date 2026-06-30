@@ -412,7 +412,7 @@ public class InstructionMatcher
         MethodBase method,
         IEnumerable<CodeInstruction> instructions,
         ILGenerator generator,
-        bool debug)
+        bool debug = false)
     {
         var instructionsList = new List<CodeInstruction>(instructions);
         new InstructionMatcher(rules).MatchAndReplace(method, ref instructionsList, generator, debug: debug);

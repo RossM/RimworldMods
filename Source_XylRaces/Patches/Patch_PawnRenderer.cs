@@ -44,8 +44,6 @@ public static class Patch_PawnRenderer
         ILGenerator generator,
         MethodBase method)
     {
-        var instructionsList = new List<CodeInstruction>(instructions);
-        new InstructionMatcher(Rule_ModifyRenderFlags).MatchAndReplace(method, ref instructionsList, generator);
-        return instructionsList;
+        return InstructionMatcher.MatchAndReplace([Rule_ModifyRenderFlags], method, instructions, generator);
     }
 }

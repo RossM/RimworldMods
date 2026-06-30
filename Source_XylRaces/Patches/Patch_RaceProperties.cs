@@ -33,9 +33,7 @@ public static class Patch_RaceProperties
         ILGenerator generator,
         MethodBase method)
     {
-        var instructionsList = new List<CodeInstruction>(instructions);
-        new InstructionMatcher(Rule_AddLactationExplanation).MatchAndReplace(method, ref instructionsList, generator);
-        return instructionsList;
+        return InstructionMatcher.MatchAndReplace([Rule_AddLactationExplanation], method, instructions, generator);
     }
 
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]
