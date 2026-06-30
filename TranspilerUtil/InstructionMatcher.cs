@@ -78,7 +78,7 @@ public class InstructionMatcher
                 rule = rule.LateGenerator(method, instructions, generator);
             var matchCount = 0;
 
-            for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[matches.Count - 1].end + 1 : 0;
+            for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[^1].end + 1 : 0;
                  instructionIndex <= instructions.Count - rule.Pattern.Length;
                  instructionIndex++)
             {
@@ -222,17 +222,18 @@ public class InstructionMatcher
                     {
                         Emit(outInstructions, instructions[i]);
                         if (debug)
-                            Debug.Log($"COPY MATCH {outInstructions[outInstructions.Count - 1]}");
+                            Debug.Log($"COPY MATCH {outInstructions[^1]}");
                     }
                 }
 
                 instructionIndex = match.end;
 
-                if (match.rule.Mode == OutputMode.Replace)
+                if (match.rule.Mode is OutputMode.Replace or OutputMode.InsertBefore)
                 {
                     extraLabels.AddRange(instructions[match.start].labels);
-                    extraBlocks.AddRange(instructions[match.start].blocks);
                 }
+
+                extraBlocks.AddRange(instructions[match.start].blocks);
 
                 foreach (CodeInstruction replaceInst in match.rule.Output)
                 {
@@ -275,11 +276,11 @@ public class InstructionMatcher
                     else
                         Emit(outInstructions, replaceInst.opcode, replaceInst.operand);
 
-                    outInstructions[outInstructions.Count - 1].labels.AddRange(replaceInst.labels
+                    outInstructions[^1].labels.AddRange(replaceInst.labels
                         .Select(label => GetReplacementLabel(generator, match, label)));
 
                     if (debug)
-                        Debug.Log($"EMIT {outInstructions[outInstructions.Count - 1]}");
+                        Debug.Log($"EMIT {outInstructions[^1]}");
                 }
 
                 extraBlocks.Clear();
@@ -289,8 +290,12 @@ public class InstructionMatcher
                     for (int i = match.start; i <= match.end; i++)
                     {
                         Emit(outInstructions, instructions[i]);
+
+                        if (i == match.start)
+                            outInstructions[^1].labels.Clear();
+
                         if (debug)
-                            Debug.Log($"COPY MATCH {outInstructions[outInstructions.Count - 1]}");
+                            Debug.Log($"COPY MATCH {outInstructions[^1]}");
                     }
                 }
             }
@@ -298,7 +303,7 @@ public class InstructionMatcher
             {
                 Emit(outInstructions, instructions[instructionIndex]);
                 if (debug)
-                    Debug.Log($"COPY {outInstructions[outInstructions.Count - 1]}");
+                    Debug.Log($"COPY {outInstructions[^1]}");
             }
         }
 
