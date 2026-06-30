@@ -4,10 +4,11 @@ public abstract class GeneSetMaker
 {
     public virtual int BiostatMetForDisplay => 0;
 
+    public float chance = 1f;
     public IntRange count = IntRange.One;
     public List<GeneDef> prohibitedGenes;
 
-    public virtual GeneSet Generate(Pawn pawn, GeneType geneType = GeneType.Xenogene)
+    public GeneSet Generate(Pawn pawn, GeneType geneType = GeneType.Xenogene)
     {
         var geneSet = new GeneSet();
         List<GeneDef> genes = geneSet.GenesListForReading;
@@ -42,7 +43,15 @@ public abstract class GeneSetMaker
         return newGenes;
     }
 
-    public virtual void AddGenes(GeneSet geneSet, GeneType geneType, Pawn pawn)
+    public void AddGenes(GeneSet geneSet, GeneType geneType, Pawn pawn)
+    {
+        if (!Rand.Chance(chance))
+            return;
+
+        AddGenesInt(geneSet, geneType, pawn);
+    }
+
+    protected virtual void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn)
     {
         int countValue = count.RandomInRange;
 
@@ -98,7 +107,7 @@ public class GeneSetMaker_Option : GeneSetMaker
 
     public List<GeneSetMakerWeight> options;
 
-    public override void AddGenes(GeneSet geneSet, GeneType geneType, Pawn pawn)
+    protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn)
     {
         options.RandomElementByWeight(o => o.weight).maker.AddGenes(geneSet, geneType, pawn);
     }
@@ -148,7 +157,7 @@ public class GeneSetMaker_List : GeneSetMaker
 
     public static readonly List<GeneDef> genesTemp = [];
 
-    public override void AddGenes(GeneSet geneSet, GeneType geneType, Pawn pawn)
+    protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn)
     {
         int countValue = count.RandomInRange;
 

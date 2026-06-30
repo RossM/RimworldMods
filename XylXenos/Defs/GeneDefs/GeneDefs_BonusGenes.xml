@@ -24,9 +24,9 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="XylXenos.GeneCompProperties_BonusGenes">
-            <geneChance>0.5</geneChance>
             <addedGeneType>Xenogene</addedGeneType>
             <maker Class="XylXenos.GeneSetMaker_Biostats">
+              <chance>0.5</chance>
               <biostatArc>0~0</biostatArc>
               <biostatCpx>1~99</biostatCpx>
               <biostatMet>-2~2</biostatMet>

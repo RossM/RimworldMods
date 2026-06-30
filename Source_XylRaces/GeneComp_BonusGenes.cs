@@ -3,7 +3,6 @@
 public class GeneCompProperties_BonusGenes : GeneCompProperties
 {
     public GeneSetMaker maker;
-    public float geneChance = 1.0f;
     public GeneType? addedGeneType;
     public bool removeAfterAdding = false;
 
@@ -30,9 +29,6 @@ public class GeneComp_BonusGenes : GeneComp
 
     public override void CompPostPostAdd()
     {
-        if (!Rand.Chance(Props.geneChance))
-            return;
-
         var geneSet = Props.maker.Generate(Pawn, AddedGeneType);
 
         foreach (var gene in geneSet.GenesListForReading)
