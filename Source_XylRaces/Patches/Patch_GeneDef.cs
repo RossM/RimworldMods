@@ -1,0 +1,48 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace XylXenos.Patches
+{
+    // GeneDef.GetDescriptionFull doesn't check whether thought stages are null, resulting in a NullReferenceException
+    // when processing XylHyperlactation and XylSoreBreasts.
+    [HarmonyPatch(typeof(GeneDef))]
+    public static class Patch_GeneDef_GetDescriptionFull
+    {
+        [HarmonyTargetMethods]
+        public static IEnumerable<MethodInfo> TargetMethods()
+        {
+            var type = AccessTools.TypeByName("Verse.GeneDef");
+            type = type.GetNestedType("<>c", AccessTools.all);
+            foreach (var method in type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
+            {
+                var parameters = method.GetParameters();
+                if (method.ReturnType == typeof(bool) && parameters.Length == 1 && parameters[0].ParameterType == typeof(ThoughtStage))
+                    yield return method;
+            }
+        }
+
+        [Feature(nameof(Config.Feature.Bugfix_Misc))]
+        [HarmonyTranspiler]
+        [HarmonyDebug]
+        public static IEnumerable<CodeInstruction> ParallelGetPreRenderResults_Transpiler(
+            IEnumerable<CodeInstruction> instructions,
+            ILGenerator generator,
+            MethodBase method)
+        {
+            var label = generator.DefineLabel();
+
+            yield return new(OpCodes.Ldarg_1);
+            yield return new(OpCodes.Brtrue_S, label);
+            yield return new(OpCodes.Ldc_I4_0);
+            yield return new(OpCodes.Ret);
+            yield return new(OpCodes.Nop) { labels = [label] };
+            foreach (var instruction in instructions)
+                yield return instruction;
+        }
+    }
+}
