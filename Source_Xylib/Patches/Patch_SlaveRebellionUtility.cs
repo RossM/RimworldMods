@@ -36,7 +36,6 @@ public static class Patch_SlaveRebellionUtility
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
     [HarmonyTranspiler]
     [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
-    [HarmonyDebug]
     public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(
         IEnumerable<CodeInstruction> instructions,
         ILGenerator generator,
