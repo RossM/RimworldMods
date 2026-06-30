@@ -138,16 +138,26 @@ public class GeneSetMaker_List : GeneSetMaker
 
     public List<GeneDef> genes;
 
+    public static readonly List<GeneDef> genesTemp = [];
+
     public override void AddGenes(GeneSet geneSet, GeneType geneType, Pawn pawn)
     {
         int countValue = count.RandomInRange;
 
-        for (int i = 0; i < countValue; i++)
-        {
-            if (!genes.Where(g => Validate(g, geneSet, geneType, pawn)).TryRandomElement(out var gene))
-                return;
+        genesTemp.Clear();
+        genesTemp.AddRange(genes);
+        genesTemp.Shuffle();
 
-            geneSet.AddGene(gene);
+        int added = 0;
+        foreach (var gene in genesTemp)
+        {
+            if (Validate(gene, geneSet, geneType, pawn))
+            {
+                geneSet.AddGene(gene);
+                added++;
+                if (added >= countValue)
+                    return;
+            }
         }
     }
 }
