@@ -60,9 +60,13 @@ public class GeneComp
         return [];
     }
 
+    /// <summary>
+    ///     Get stats which are displayed on the pawn having this gene.
+    /// </summary>
+    /// <returns></returns>
     public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
-        return props.SpecialDisplayStats(StatRequest.ForEmpty());
+        return [];
     }
 
     public virtual void CompReset()
