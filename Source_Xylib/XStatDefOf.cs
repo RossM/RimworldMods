@@ -3,6 +3,8 @@ namespace Xylib;
 [DefOf]
 public static class XStatDefOf
 {
+    public static StatDef MeleeWeapon_AverageArmorPenetration;
+
     public static StatDef XylCookedAnimalProductNutritionFactor;
     public static StatDef XylCookedFungusNutritionFactor;
     public static StatDef XylCookedMeatNutritionFactor;

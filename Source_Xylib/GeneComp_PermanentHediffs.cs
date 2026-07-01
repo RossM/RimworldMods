@@ -12,22 +12,79 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
     {
-        foreach (Tool tool in hediffs.Select(hediffGiver => hediffGiver.hediff.CompProps<HediffCompProperties_VerbGiver>())
-                     .Where(verbGiver => verbGiver != null).SelectMany(verbGiver => verbGiver.tools))
+        GetVerbsAndTools(out var verbs, out var tools);
+        Pawn pawn = req.Pawn;
+
+        // Melee DPS & armor penetration
         {
-            float armorPenetration = tool.armorPenetration;
-            if (armorPenetration < 0f)
+            StringBuilder sbDps = new();
+            StringBuilder sbArmorPenetration = new();
+
+            float totalMeleeDamage = 0f;
+            float totalCooldown = 0f;
+            float totalArmorPenetration = 0f;
+            float totalWeight = 0f;
+
+            foreach (var verb in VerbUtility.GetAllVerbProperties(verbs, tools).Where(v => v.verbProps.IsMeleeAttack))
             {
-                armorPenetration = tool.power * 0.015f;
+                float meleeDamage = verb.verbProps.AdjustedMeleeDamageAmount(verb.tool, pawn, null, null);
+                float cooldown = verb.verbProps.AdjustedCooldown(verb.tool, pawn, null, null);
+                float armorPenetration = verb.verbProps.AdjustedArmorPenetration(verb.tool, pawn, null, null);
+                float weight = verb.verbProps.AdjustedMeleeSelectionWeight(verb.tool, pawn, null, null, false);
+
+                totalMeleeDamage += meleeDamage * weight;
+                totalCooldown += cooldown * weight;
+                totalArmorPenetration += armorPenetration * weight;
+                totalWeight += weight;
+
+                if (verb.tool != null)
+                {
+                    sbDps.AppendLine($"  {verb.tool.LabelCap} ({verb.ToolCapacity.label})");
+                    sbArmorPenetration.AppendLine($"  {verb.tool.LabelCap} ({verb.ToolCapacity.label})");
+                }
+                else
+                {
+                    sbDps.AppendLine($"  {"StatsReport_NonToolAttack".Translate()}:");
+                    sbArmorPenetration.AppendLine($"  {"StatsReport_NonToolAttack".Translate()}:");
+                }
+
+                sbDps.AppendLine($"    {meleeDamage:F1} {"DamageLower".Translate()}");
+                sbDps.AppendLine($"    {cooldown:F2} {"SecondsPerAttackLower".Translate()}");
+
+                sbArmorPenetration.AppendLine($"    {armorPenetration.ToStringPercent()}");
             }
 
-            // TODO: Calculate DPS
-            yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_MeleeDamage".Translate(),
-                tool.power.ToStringByStyle(ToStringStyle.FloatTwo), "", 4102);
-            yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "ArmorPenetration".Translate(),
-                armorPenetration.ToStringPercent(), "ArmorPenetrationExplanation".Translate(), 4101);
-            yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, "StatsReport_Cooldown".Translate(),
-                "StatsReport_CooldownFormat".Translate(tool.cooldownTime.ToStringDecimalIfSmall()), "", 4100);
+            if (totalWeight > 0f)
+            {
+                float dps = totalCooldown > 0f ? totalMeleeDamage / totalCooldown : 0f;
+                float armorPenetration = totalArmorPenetration / totalWeight;
+
+                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, 
+                    StatDefOf.MeleeWeapon_AverageDPS.LabelCap,
+                    dps.ToStringByStyle(StatDefOf.MeleeWeapon_AverageDPS.toStringStyle), 
+                    sbDps.ToString(),
+                    StatDefOf.MeleeWeapon_AverageDPS.displayPriorityInCategory);
+                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, 
+                    XStatDefOf.MeleeWeapon_AverageArmorPenetration.LabelCap,
+                    armorPenetration.ToStringByStyle(XStatDefOf.MeleeWeapon_AverageArmorPenetration.toStringStyle), 
+                    sbArmorPenetration.ToString(),
+                    XStatDefOf.MeleeWeapon_AverageArmorPenetration.displayPriorityInCategory);
+            }
+        }
+    }
+
+    private void GetVerbsAndTools(out List<VerbProperties> verbs, out List<Tool> tools)
+    {
+        verbs = [];
+        tools = [];
+
+        foreach (var hediff in hediffs)
+        {
+            var props = hediff.hediff.CompProps<HediffCompProperties_VerbGiver>();
+            if (props?.verbs != null)
+                verbs.AddRange(props.verbs);
+            if (props?.tools != null)
+                tools.AddRange(props.tools);
         }
     }
 }
