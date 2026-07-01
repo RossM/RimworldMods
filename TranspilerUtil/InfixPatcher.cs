@@ -363,7 +363,7 @@ namespace TranspilerUtil
                             continue;
 
                         MemberInfo target = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
-                            infixTargetAttribute.parameterTypes);
+                            infixTargetAttribute.parameterTypes, infixTargetAttribute.genericTypes);
                         if (target == null)
                             throw new InvalidOperationException("null wrapped member");
 
@@ -372,7 +372,7 @@ namespace TranspilerUtil
                             var patchedType = infixPatchAttribute.type ?? harmonyAttribute.info.declaringType;
 
                             MethodInfo caller = (MethodInfo)GetMember(patchedType, infixPatchAttribute.methodName,
-                                infixPatchAttribute.parameterTypes);
+                                infixPatchAttribute.parameterTypes, infixPatchAttribute.genericTypes);
                             if (caller == null)
                                 throw new InvalidOperationException("null target method");
 
@@ -451,17 +451,29 @@ namespace TranspilerUtil
             }
         }
 
-        private static MemberInfo GetMember(Type type, string memberName, Type[] parameterTypes)
+        private static MemberInfo GetMember(Type type, string memberName, Type[] parameterTypes, Type[] genericTypes)
         {
             string[] nameParts = memberName.Split([':']);
             for (int i = 0; i < nameParts.Length - 1; i++)
                 type = AccessTools.InnerTypes(type).First(type1 => type1.Name.Contains(nameParts[i]));
             memberName = nameParts[^1];
 
-            MemberInfo wrappedMember = parameterTypes == null
-                ? type.GetMember(memberName, AccessTools.all).Single()
-                : type.GetMethod(memberName, AccessTools.all, null,
+            MemberInfo wrappedMember;
+            if (genericTypes != null)
+            {
+                wrappedMember = type
+                    .GetMethods().Single(m => m.Name == memberName && m.IsGenericMethod && m.GetGenericArguments().Length == genericTypes.Length)
+                    .MakeGenericMethod(genericTypes);
+            }
+            else if (parameterTypes != null)
+            {
+                wrappedMember = type.GetMethod(memberName, AccessTools.all, null,
                     parameterTypes, []);
+            }
+            else
+            {
+                wrappedMember = type.GetMember(memberName, AccessTools.all).Single();
+            }
 
             if (wrappedMember is PropertyInfo propertyInfo)
                 wrappedMember = propertyInfo.GetMethod;
