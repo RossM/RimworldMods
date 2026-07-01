@@ -6,6 +6,10 @@
     <defName>XylPetrification</defName>
     <label>petrification</label>
     <description>Carriers of this gene have a chance to develop a disease named petrification. Petrification slowly replaces tissues throughout the body with stone. The disease is incurable, but progress can be slowed with medical treatment, and the affected tissues can be removed surgically.</description>
+    <descriptionHyperlinks>
+      <HediffDef>XylPetrification</HediffDef>
+      <HediffDef>XylPetrifiedFlesh</HediffDef>
+    </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>4</biostatMet>
     <displayCategory>Healing</displayCategory>
@@ -36,6 +40,7 @@
     <description>An incurable, progressive genetic disease that affects titans. Tissues throughout the body are gradually replaced with hard, rocky growths. If untreated, it will eventually become fatal.</description>
     <descriptionHyperlinks>
       <GeneDef>XylPetrification</GeneDef>
+      <HediffDef>XylPetrifiedFlesh</HediffDef>
     </descriptionHyperlinks>
     <initialSeverity>0.1</initialSeverity>
     <lethalSeverity>1.0</lethalSeverity>
@@ -174,6 +179,9 @@
     <defName>XylExcisePetrifiedFlesh</defName>
     <label>excise petrified flesh</label>
     <description>Excise petrified flesh.</description>
+    <descriptionHyperlinks>
+      <HediffDef>XylPetrifiedFlesh</HediffDef>      
+    </descriptionHyperlinks>
     <workerClass>XylXenos.Recipe_RemoveHediff_Petrified</workerClass>
     <jobString>Excising petrified flesh.</jobString>
     <workAmount>2000</workAmount>

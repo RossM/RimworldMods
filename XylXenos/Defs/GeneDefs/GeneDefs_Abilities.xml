@@ -6,6 +6,11 @@
     <defName>XylFeralRage</defName>
     <label>feral rage</label>
     <description>Carriers have the ability to enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%).</description>
+    <descriptionHyperlinks>
+      <AbilityDef>XylFeralRage</AbilityDef>
+      <HediffDef>XylFeralRage</HediffDef>
+      <HediffDef>XylFeralRageBacklash</HediffDef>
+    </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Ability</displayCategory>
@@ -27,6 +32,11 @@
     <defName>XylFeralRage</defName>
     <label>feral rage</label>
     <description>Enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%) for a short time. After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%).</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylFeralRage</GeneDef>
+      <HediffDef>XylFeralRage</HediffDef>
+      <HediffDef>XylFeralRageBacklash</HediffDef>
+    </descriptionHyperlinks>
     <iconPath>Xyl/UI/Icons/Genes/Gene_FeralRage</iconPath>
     <!-- 1 day -->
     <cooldownTicksRange>60000</cooldownTicksRange>
@@ -72,6 +82,7 @@
     <description>A temporary frenzy state. It increases movement and melee attack speed.</description>
     <descriptionHyperlinks>
       <GeneDef>XylFeralRage</GeneDef>
+      <AbilityDef>XylFeralRage</AbilityDef>
     </descriptionHyperlinks>
     <initialSeverity>1.0</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
@@ -108,6 +119,7 @@
     <description>Recovering from a frenzy state. Causes pain and decreases movement speed.</description>
     <descriptionHyperlinks>
       <GeneDef>XylFeralRage</GeneDef>
+      <AbilityDef>XylFeralRage</AbilityDef>
     </descriptionHyperlinks>
     <initialSeverity>1.0</initialSeverity>
     <maxSeverity>1.0</maxSeverity>
@@ -137,6 +149,9 @@
     <defName>XylRockToss</defName>
     <label>rock toss</label>
     <description>The carrier can pick up a rock chunk in combat and toss it. It will land near a targeted location, damaging everything in a radius around where it lands.</description>
+    <descriptionHyperlinks>
+      <AbilityDef>XylRockToss</AbilityDef>
+    </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <displayCategory>Ability</displayCategory>
@@ -158,6 +173,9 @@
     <defName>XylRockToss</defName>
     <label>rock toss</label>
     <description>Pick up a rock chunk and toss it. It will land near the targeted location, damaging everything in a radius around where it lands.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylRockToss</GeneDef>
+    </descriptionHyperlinks>
     <iconPath>Xyl/UI/Icons/Genes/Gene_RockToss</iconPath>
     <!-- 8 hours -->
     <cooldownTicksRange>20000</cooldownTicksRange>
@@ -238,6 +256,9 @@
     <defName>XylSonicWave</defName>
     <label>sonic wave</label>
     <description>Carriers of this gene are able to release a wave of high-intensity ultrasonic noise and psychic energy at a target. The noise will stun any non-mechanoid creature nearby.</description>
+    <descriptionHyperlinks>
+      <AbilityDef>XylSonicWave</AbilityDef>
+    </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-3</biostatMet>
     <displayCategory>Ability</displayCategory>
@@ -259,6 +280,9 @@
     <defName>XylSonicWave</defName>
     <label>sonic wave</label>
     <description>Releases a wave of high-intensity ultrasonic noise and psychic energy at a target that stuns nearby organic creatures. Mechanoids and drones are immune.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylSonicWave</GeneDef>
+    </descriptionHyperlinks>
     <iconPath>Xyl/UI/Icons/Genes/Gene_SonicWave</iconPath>
     <cooldownTicksRange>120000</cooldownTicksRange>
     <aiCanUse>true</aiCanUse>
@@ -292,6 +316,9 @@
     <defName>XylToxicBurst</defName>
     <label>toxic burst</label>
     <description>Carriers have the ability to release a cloud of tox gas around them from a special gland located near their anus. The gas affects the user normally.</description>
+    <descriptionHyperlinks>
+      <AbilityDef>XylToxicBurst</AbilityDef>
+    </descriptionHyperlinks>
     <displayCategory>Ability</displayCategory>
     <displayOrderInCategory>202</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_ToxicBurst</iconPath>
@@ -323,6 +350,9 @@
     <defName>XylToxicBurst</defName>
     <label>toxic burst</label>
     <description>Releases a cloud of tox gas in an area around the user. The user is affected by the gas normally.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylToxicBurst</GeneDef>
+    </descriptionHyperlinks>
     <iconPath>Xyl/UI/Icons/Genes/Gene_ToxicBurst</iconPath>
     <cooldownTicksRange>300000</cooldownTicksRange>
     <!-- 5 days -->

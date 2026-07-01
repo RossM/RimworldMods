@@ -56,6 +56,11 @@
     <defName>XylLithoid</defName>
     <label>lithoid</label>
     <description>Carriers of this gene have a unique biochemistry that incorporates carbon-silicates. They are completely unaffected by most drugs that work on normal humans, and instead must use specialized drugs designed for lithoids.</description>
+    <descriptionHyperlinks>
+      <ThingDef>XylSoftener</ThingDef>
+      <ThingDef>XylAtlasite</ThingDef>
+      <ThingDef>XylCrystal</ThingDef>
+    </descriptionHyperlinks>
     <biostatCpx>2</biostatCpx>
     <biostatMet>1</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
