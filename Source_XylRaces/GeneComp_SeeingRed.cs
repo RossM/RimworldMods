@@ -47,7 +47,7 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
         return extraEnemies != null && extraEnemies.Contains(thing);
     }
 
-    public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest request)
+    public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
         yield return new StatDrawEntry(StatCategoryDefOf.PawnCombat, "XylRageChanceLabel".TranslateSimple(),
             Props.chance.ToStringPercent(), "XylRageChanceDesc".TranslateSimple(), 1);

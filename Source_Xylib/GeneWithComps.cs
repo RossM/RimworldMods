@@ -63,9 +63,8 @@ public class GeneComp
     /// <summary>
     ///     Get stats which are displayed on the pawn having this gene.
     /// </summary>
-    /// <param name="request"></param>
     /// <returns></returns>
-    public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest request)
+    public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
         return [];
     }
@@ -264,15 +263,10 @@ public class GeneWithComps : Gene, IEventListener
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
-        return SpecialDisplayStats(StatRequest.ForEmpty());
-    }
-
-    public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest request)
-    {
         if (comps != null)
         {
             foreach (var comp in comps)
-            foreach (var result in comp.SpecialDisplayStats(request))
+            foreach (var result in comp.SpecialDisplayStats())
                 yield return result;
         }
     }
