@@ -59,16 +59,10 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
                 float dps = totalCooldown > 0f ? totalMeleeDamage / totalCooldown : 0f;
                 float armorPenetration = totalArmorPenetration / totalWeight;
 
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, 
-                    StatDefOf.MeleeWeapon_AverageDPS.LabelCap,
-                    dps.ToStringByStyle(StatDefOf.MeleeWeapon_AverageDPS.toStringStyle), 
-                    sbDps.ToString(),
-                    StatDefOf.MeleeWeapon_AverageDPS.displayPriorityInCategory);
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, 
-                    XStatDefOf.MeleeWeapon_AverageArmorPenetration.LabelCap,
-                    armorPenetration.ToStringByStyle(XStatDefOf.MeleeWeapon_AverageArmorPenetration.toStringStyle), 
-                    sbArmorPenetration.ToString(),
-                    XStatDefOf.MeleeWeapon_AverageArmorPenetration.displayPriorityInCategory);
+                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, StatDefOf.MeleeWeapon_AverageDPS, 
+                    dps, req).SetReportText(sbDps.ToString());
+                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, XStatDefOf.MeleeWeapon_AverageArmorPenetration,
+                    armorPenetration, req).SetReportText(sbArmorPenetration.ToString());
             }
         }
     }
