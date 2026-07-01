@@ -9,6 +9,12 @@ public class GeneCompProperties_SeeingRed : GeneCompProperties
     {
         compClass = typeof(GeneComp_SeeingRed);
     }
+
+    public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest request)
+    {
+        yield return new StatDrawEntry(StatCategoryDefOf.PawnCombat, "XylRageChanceLabel".TranslateSimple(),
+            chance.ToStringPercent(), "XylRageChanceDesc".TranslateSimple(), 1);
+    }
 }
 
 public class GeneComp_SeeingRed : GeneComp, IEventListener
