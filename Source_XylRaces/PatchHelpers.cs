@@ -363,4 +363,35 @@ public static class PatchHelpers
 
         return false;
     }
+
+    public static void SortColorGenes(List<GeneDef> list)
+    {
+        bool IsSkinColor(GeneDef g) => g.displayCategory == DefOf.Cosmetic_Skin && g.skinColorOverride.HasValue;
+
+        var colorGenes = list.Where(IsSkinColor).ToList();
+        SortByColor(colorGenes, g => g.skinColorOverride.Value);
+
+        int i = 0;
+        for (int j = 0; j < list.Count; j++)
+        {
+            if (IsSkinColor(list[j]))
+            {
+                list[j] = colorGenes[i];
+                i++;
+            }
+        }
+    }
+
+    public static void SortByColor<T>(List<T> colorDefs, Func<T, Color> getColor)
+    {
+        colorDefs.SortBy(x =>
+        {
+            Color.RGBToHSV(getColor(x), out var H, out var S, out _);
+            return S >= 0.05f ? Mathf.RoundToInt(H * 100f) : (200f);
+        }, x =>
+        {
+            Color.RGBToHSV(getColor(x), out _, out _, out var V);
+            return Mathf.RoundToInt(V * 100f);
+        });
+    }
 }

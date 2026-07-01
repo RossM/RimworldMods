@@ -7,6 +7,8 @@ public static class DefOf
 
     public static FactionDef XylTribeGentleNixie;
 
+    public static GeneCategoryDef Cosmetic_Skin;
+
     public static GeneDef XylEcholocation;
 
     public static HediffDef XylCultistSong;
