@@ -1,13 +1,19 @@
 ﻿namespace Xylib;
 
 [UsedFromXml]
-public class HediffCompProperties_Genetic : HediffCompProperties
+public class HediffCompProperties_Genetic : HediffCompPropertiesExt
 {
     public GeneDef gene;
+    public bool showStats = true;
 
     public HediffCompProperties_Genetic()
     {
         compClass = typeof(HediffComp_Genetic);
+    }
+
+    public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest request)
+    {
+        return showStats && gene.Extension_GeneWithComps is { } geneWithComps ? geneWithComps.SpecialDisplayStats(request) : [];
     }
 }
 

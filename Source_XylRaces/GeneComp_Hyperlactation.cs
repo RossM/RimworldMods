@@ -131,7 +131,7 @@ public class GeneComp_Hyperlactation : GeneComp
             lactatingInternal = null;
     }
 
-    public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
+    public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest request)
     {
         if (!Active)
             yield break;
