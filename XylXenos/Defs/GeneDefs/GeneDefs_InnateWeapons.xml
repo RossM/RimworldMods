@@ -77,7 +77,7 @@
               <li>Stab</li>
             </capacities>
             <power>22</power>
-            <cooldownTime>3.0</cooldownTime>
+            <cooldownTime>3.5</cooldownTime>
             <alwaysTreatAsWeapon>true</alwaysTreatAsWeapon>
           </li>
         </tools>
