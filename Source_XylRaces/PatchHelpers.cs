@@ -369,7 +369,7 @@ public static class PatchHelpers
         bool IsSkinColor(GeneDef g) => g.displayCategory == DefOf.Cosmetic_Skin && g.skinColorOverride.HasValue;
 
         var colorGenes = list.Where(IsSkinColor).ToList();
-        SortByColor(colorGenes, g => g.skinColorOverride.Value);
+        SortByColor(colorGenes, g => g.skinColorOverride!.Value);
 
         int i = 0;
         for (int j = 0; j < list.Count; j++)
@@ -387,7 +387,7 @@ public static class PatchHelpers
         colorDefs.SortBy(x =>
         {
             Color.RGBToHSV(getColor(x), out var H, out var S, out _);
-            return S >= 0.05f ? Mathf.RoundToInt(H * 100f) : (200f);
+            return S >= 0.05f ? Mathf.RoundToInt(H * 100f) : 200f;
         }, x =>
         {
             Color.RGBToHSV(getColor(x), out _, out _, out var V);
