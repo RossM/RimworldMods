@@ -48,13 +48,11 @@ public abstract class GeneSetMaker
         if (!Rand.Chance(chance))
             return;
 
-        AddGenesInt(geneSet, geneType, pawn);
+        AddGenesInt(geneSet, geneType, pawn, count.RandomInRange);
     }
 
-    protected virtual void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn)
+    protected virtual void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
-        int countValue = count.RandomInRange;
-
         for (int i = 0; i < countValue; i++)
         {
             if (!DefDatabase<GeneDef>.AllDefsListForReading.Where(g => Validate(g, geneSet, geneType, pawn))
@@ -107,7 +105,7 @@ public class GeneSetMaker_Option : GeneSetMaker
 
     public List<GeneSetMakerWeight> options;
 
-    protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn)
+    protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
         options.RandomElementByWeight(o => o.weight).maker.AddGenes(geneSet, geneType, pawn);
     }
@@ -157,10 +155,8 @@ public class GeneSetMaker_List : GeneSetMaker
 
     public static readonly List<GeneDef> genesTemp = [];
 
-    protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn)
+    protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
-        int countValue = count.RandomInRange;
-
         genesTemp.Clear();
         genesTemp.AddRange(genes);
         genesTemp.Shuffle();
