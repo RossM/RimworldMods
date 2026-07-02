@@ -12,13 +12,15 @@
         <li>r_name->[firstName] '[nickName]' [lastName]</li>
 
         <li>firstName->[NameAnimalUnisex]</li>
-        <li>firstName->[WordTribal]</li>
-
-        <li>lastName->[WordTribal]</li>
-        <li>lastName->[SylE][SylE]</li>
 
         <li>nickName->[nickUnisex]</li>
       </rulesStrings>
+      <rulesRaw>
+        <li Class="XylXenos.Rule_NamePersonExt">
+          <keyword>lastName</keyword>
+          <slot>Last</slot>
+        </li>
+      </rulesRaw>
       <rulesFiles>
         <li>nickFemale->Xyl/Names/Bossaps/Nicks_Female</li>
         <li>nickMale->Xyl/Names/Bossaps/Nicks_Male</li>
@@ -31,11 +33,18 @@
     <defName>XylNamerPersonBossapsMale</defName>
     <rulePack>
       <rulesStrings>
+        <li>firstName(p=2)->[firstNameHumanMale]</li>
         <li>firstName->[NameAnimalMale]</li>
-        <li>firstName->[NameHumanMale]</li>
 
         <li>nickName->[nickMale]</li>
       </rulesStrings>
+      <rulesRaw>
+        <li Class="XylXenos.Rule_NamePersonExt">
+          <keyword>firstNameHumanMale</keyword>
+          <gender>Male</gender>
+          <slot>First</slot>
+        </li>
+      </rulesRaw>
     </rulePack>
   </RulePackDef>
 
@@ -43,11 +52,18 @@
     <defName>XylNamerPersonBossapsFemale</defName>
     <rulePack>
       <rulesStrings>
+        <li>firstName(p=2)->[firstNameHumanFemale]</li>
         <li>firstName->[NameAnimalFemale]</li>
-        <li>firstName->[NameHumanFemale]</li>
 
         <li>nickName->[nickFemale]</li>
       </rulesStrings>
+      <rulesRaw>
+        <li Class="XylXenos.Rule_NamePersonExt">
+          <keyword>firstNameHumanFemale</keyword>
+          <gender>Female</gender>
+          <slot>First</slot>
+        </li>
+      </rulesRaw>
     </rulePack>
   </RulePackDef>
 
