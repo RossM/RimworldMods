@@ -1,10 +1,4 @@
-﻿using System.Linq;
-using HarmonyLib;
-using RimWorld;
-using Verse;
-using Xylib;
-
-namespace Source_XylIdeoTweaks;
+﻿namespace Source_XylIdeoTweaks;
 
 [HarmonyPatch(typeof(Pawn_StyleTracker))]
 public class Patch_Pawn_StyleTracker

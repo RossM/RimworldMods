@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
-using RimWorld;
-using TranspilerUtil;
 using UnityEngine;
-using Verse;
-using Xylib;
 using Color = UnityEngine.Color;
 
 namespace Source_XylIdeoTweaks;

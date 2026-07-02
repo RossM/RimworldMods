@@ -1,10 +1,4 @@
-﻿using HarmonyLib;
-using RimWorld;
-using TranspilerUtil;
-using Verse;
-using Xylib;
-
-namespace Source_XylIdeoTweaks;
+﻿namespace Source_XylIdeoTweaks;
 
 [HarmonyPatch(typeof(ApparelUtility))]
 public class Patch_ApparelUtility

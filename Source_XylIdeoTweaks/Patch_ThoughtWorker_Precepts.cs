@@ -1,11 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
-using RimWorld;
-using Verse;
-using Xylib;
-
-namespace Source_XylIdeoTweaks;
+﻿namespace Source_XylIdeoTweaks;
 
 [HarmonyPatch]
 public class Patch_ThoughtWorker_Precepts

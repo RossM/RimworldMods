@@ -1,7 +1,4 @@
-﻿using Verse;
-using Xylib;
-
-namespace Source_XylIdeoTweaks;
+﻿namespace Source_XylIdeoTweaks;
 
 public enum AutoColorMode
 {

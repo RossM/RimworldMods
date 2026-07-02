@@ -1,10 +1,4 @@
-﻿using HarmonyLib;
-using JetBrains.Annotations;
-using TranspilerUtil;
-using Verse;
-using Xylib;
-
-namespace Source_ExposableChecker;
+﻿namespace Source_ExposableChecker;
 
 [UsedImplicitly]
 [StaticConstructorOnStartup]
