@@ -20,7 +20,7 @@ public static class Patch_JobGiver_OptimizeApparel
         if (!__result || pawn == null)
             return;
 
-        __result = !pawn.story.traits.HasTrait(MyTraitDefOf.Masochist) && !Patch_ThoughtWorker_Precepts.ApparelRequired(pawn, ap.def);
+        __result = !pawn.story.traits.HasTrait(MyTraitDefOf.Masochist) && !PatchHelpers.ApparelRequired(pawn, ap.def);
     }
 
     [Feature(Features.AutoColorApparel)]
