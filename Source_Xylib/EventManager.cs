@@ -263,7 +263,7 @@ public class EventManager
     /// <summary>
     ///     Gets the event manager for the currently running game.
     /// </summary>
-    public static EventManager Instance { get; } = new();
+    [NotNull] public static EventManager Instance { get; } = new();
 
     private static bool doDebug = false;
 
@@ -651,7 +651,7 @@ public class EventManager
     public static void AddStaticListener(IEventListener listener)
     {
         staticListeners.Add(listener);
-        Instance?.RegisterStaticListeners();
+        Instance.RegisterStaticListeners();
     }
 
     private void RegisterStaticListeners()
