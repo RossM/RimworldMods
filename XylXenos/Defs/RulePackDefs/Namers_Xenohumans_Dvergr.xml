@@ -17,9 +17,9 @@
       </rulesStrings>
       <rulesFiles>
         <li>syl->Xyl/WordParts/Dvergr/Syllables</li>
-        <li>nick1->Xyl/WordParts/Dvergr/Nicks_1</li>
-        <li>nick2->Xyl/WordParts/Dvergr/Nicks_2</li>
-        <li>nickFull->Xyl/WordParts/Dvergr/Nicks_Full</li>
+        <li>nick1->Xyl/Names/Dvergr/Nicks_1</li>
+        <li>nick2->Xyl/Names/Dvergr/Nicks_2</li>
+        <li>nickFull->Xyl/Names/Dvergr/Nicks_Full</li>
       </rulesFiles>
     </rulePack>
   </RulePackDef>
