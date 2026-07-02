@@ -3,7 +3,11 @@
 <Patch>
 
   <Operation Class="PatchOperationAdd">
-    <xpath>Defs/ThingSetMakerDef[defName="Reward_ItemsStandard"]/root/options/li[1]/thingSetMaker[@Class="ThingSetMaker_RandomOption"]/options</xpath>
+    <!--
+    The maxMarketValue and @Class checks here are just sanity checks to ensure that this patch will fail loudly if some other mod
+    patches the def in a weird way.
+    -->
+    <xpath>Defs/ThingSetMakerDef[defName="Reward_ItemsStandard"]/root/options/li[1][maxMarketValue&gt;=2000]/thingSetMaker[@Class="ThingSetMaker_RandomOption"]/options</xpath>
     <value>
       <li>
         <weight>0</weight>
