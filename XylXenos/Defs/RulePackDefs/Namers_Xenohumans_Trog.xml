@@ -7,101 +7,18 @@
       <rulesStrings>
         <li>r_name->[firstName] [lastName]</li>
 
-        <li>firstName->[first1][first2][first3]</li>
+        <li>firstName->[consonant1][vowel][consonant2]</li>
 
         <li>lastName(p=2)->[Color][BodyPart]</li>
-        <li>lastName->[primitiveWeapon][BodyPart]</li>
-        <li>lastName->[Color][primitiveWeapon]</li>
-
-        <li>primitiveWeapon->axe</li>
-        <li>primitiveWeapon->blade</li>
-        <li>primitiveWeapon->bow</li>
-        <li>primitiveWeapon->club</li>
-        <li>primitiveWeapon->dagger</li>
-        <li>primitiveWeapon->edge</li>
-        <li>primitiveWeapon->knife</li>
-        <li>primitiveWeapon->lance</li>
-        <li>primitiveWeapon->log</li>
-        <li>primitiveWeapon->saber</li>
-        <li>primitiveWeapon->scimitar</li>
-        <li>primitiveWeapon->scythe</li>
-        <li>primitiveWeapon->sling</li>
-        <li>primitiveWeapon->shiv</li>
-        <li>primitiveWeapon->spear</li>
-        <li>primitiveWeapon->staff</li>
-        <li>primitiveWeapon->sword</li>
-
-        <li>first1->b</li>
-        <li>first1->br</li>
-        <li>first1->d</li>
-        <li>first1->dr</li>
-        <li>first1->f</li>
-        <li>first1->fr</li>
-        <li>first1->g</li>
-        <li>first1->gh</li>
-        <li>first1->gr</li>
-        <li>first1->gw</li>
-        <li>first1->h</li>
-        <li>first1->k</li>
-        <li>first1->kh</li>
-        <li>first1->m</li>
-        <li>first1->n</li>
-        <li>first1->pr</li>
-        <li>first1->r</li>
-        <li>first1->s</li>
-        <li>first1->sk</li>
-        <li>first1->t</li>
-        <li>first1->tr</li>
-        <li>first1->tw</li>
-        <li>first1->v</li>
-        <li>first1->vr</li>
-        <li>first1->w</li>
-        <li>first1->wr</li>
-        <li>first1->z</li>
-
-        <li>first2->a</li>
-        <li>first2->e</li>
-        <li>first2->ee</li>
-        <li>first2->i</li>
-        <li>first2->o</li>
-        <li>first2->oo</li>
-        <li>first2->u</li>
-        <li>first2->uu</li>
-
-        <li>first3->b</li>
-        <li>first3->d</li>
-        <li>first3->f</li>
-        <li>first3->g</li>
-        <li>first3->h</li>
-        <li>first3->k</li>
-        <li>first3->ll</li>
-        <li>first3->m</li>
-        <li>first3->mb</li>
-        <li>first3->nk</li>
-        <li>first3->ng</li>
-        <li>first3->nt</li>
-        <li>first3->p</li>
-        <li>first3->rg</li>
-        <li>first3->rk</li>
-        <li>first3->rl</li>
-        <li>first3->rm</li>
-        <li>first3->rn</li>
-        <li>first3->rp</li>
-        <li>first3->rt</li>
-        <li>first3->rx</li>
-        <li>first3->rz</li>
-        <li>first3->sh</li>
-        <li>first3->sk</li>
-        <li>first3->ss</li>
-        <li>first3->t</li>
-        <li>first3->th</li>
-        <li>first3->w</li>
-        <li>first3->wl</li>
-        <li>first3->x</li>
-        <li>first3->z</li>
-        <li>first3->zz</li>
-
+        <li>lastName->[weapon][BodyPart]</li>
+        <li>lastName->[Color][weapon]</li>
       </rulesStrings>
+      <rulesFiles>
+        <li>weapon->Xyl/Words/Trog/Weapons</li>
+        <li>consonant1->Xyl/WordParts/Trog/Consonants_1</li>
+        <li>consonant2->Xyl/WordParts/Trog/Consonants_2</li>
+        <li>vowel->Xyl/WordParts/Trog/Vowels</li>
+      </rulesFiles>
     </rulePack>
   </RulePackDef>
 

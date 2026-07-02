@@ -13,7 +13,10 @@
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="Languages\English\Strings\Xyl\Names\Bossaps\" />
+    <Folder Include="Languages\English\Strings\Xyl\WordParts\Trog\" />
     <Folder Include="Languages\English\Strings\Xyl\WordParts\Nixie\" />
+    <Folder Include="Languages\English\Strings\Xyl\Words\Trog\" />
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">

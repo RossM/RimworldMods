@@ -17,53 +17,13 @@
         <li>lastName->[WordTribal]</li>
         <li>lastName->[SylE][SylE]</li>
 
-        <li>nickName->alpaca</li>
-        <li>nickName->angus</li>
-        <li>nickName->antelope</li>
-        <li>nickName->aurochs</li>
-        <li>nickName->bison</li>
-        <li>nickName->black</li>
-        <li>nickName->blue</li>
-        <li>nickName->boomalope</li>
-        <li>nickName->brown</li>
-        <li>nickName->buffalo</li>
-        <li>nickName->camel</li>
-        <li>nickName->caribou</li>
-        <li>nickName->deer</li>
-        <li>nickName->devon</li>
-        <li>nickName->eland</li>
-        <li>nickName->friesian</li>
-        <li>nickName->gaur</li>
-        <li>nickName->gazelle</li>
-        <li>nickName->gemsbok</li>
-        <li>nickName->giraffe</li>
-        <li>nickName->hereford</li>
-        <li>nickName->highland</li>
-        <li>nickName->holstein</li>
-        <li>nickName->impala</li>
-        <li>nickName->jersey</li>
-        <li>nickName->kudu</li>
-        <li>nickName->llama</li>
-        <li>nickName->longhorn</li>
-        <li>nickName->moose</li>
-        <li>nickName->muffalo</li>
-        <li>nickName->muskox</li>
-        <li>nickName->okapi</li>
-        <li>nickName->onager</li>
-        <li>nickName->oryx</li>
-        <li>nickName->pronghorn</li>
-        <li>nickName->red</li>
-        <li>nickName->rhino</li>
-        <li>nickName->shorthorn</li>
-        <li>nickName->springbok</li>
-        <li>nickName->tapir</li>
-        <li>nickName->toxalope</li>
-        <li>nickName->wildebeest</li>
-        <li>nickName->yak</li>
-        <li>nickName->zebra</li>
-        <li>nickName->zebu</li>
-
+        <li>nickName->[nickUnisex]</li>
       </rulesStrings>
+      <rulesFiles>
+        <li>nickFemale->Xyl/Names/Bossaps/Nicks_Female</li>
+        <li>nickMale->Xyl/Names/Bossaps/Nicks_Male</li>
+        <li>nickUnisex->Xyl/Names/Bossaps/Nicks_Unisex</li>
+      </rulesFiles>
     </rulePack>
   </RulePackDef>
 
@@ -74,12 +34,7 @@
         <li>firstName->[NameAnimalMale]</li>
         <li>firstName->[NameHumanMale]</li>
 
-        <li>nickName->apollo</li>
-        <li>nickName->clover</li>
-        <li>nickName->duke</li>
-        <li>nickName->herbie</li>
-        <li>nickName->maverick</li>
-        <li>nickName->orson</li>
+        <li>nickName->[nickMale]</li>
       </rulesStrings>
     </rulePack>
   </RulePackDef>
@@ -91,12 +46,7 @@
         <li>firstName->[NameAnimalFemale]</li>
         <li>firstName->[NameHumanFemale]</li>
 
-        <li>nickName->bessie</li>
-        <li>nickName->buttercup</li>
-        <li>nickName->clarabelle</li>
-        <li>nickName->daisy</li>
-        <li>nickName->henrietta</li>
-        <li>nickName->penelope</li>
+        <li>nickName->[nickFemale]</li>
       </rulesStrings>
     </rulePack>
   </RulePackDef>

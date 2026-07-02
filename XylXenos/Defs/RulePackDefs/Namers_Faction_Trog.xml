@@ -6,30 +6,13 @@
     <defName>XylNamerFactionTribalTrog</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name->[Animal] [killers]</li>
-        <li>r_name->[AdjectiveBadass] [killers]</li>
-        <li>r_name->[ColorBadass] [killers]</li>
-
-        <li>killers->bashers</li>
-        <li>killers->breakers</li>
-        <li>killers->bruisers</li>
-        <li>killers->butchers</li>
-        <li>killers->carvers</li>
-        <li>killers->crushers</li>
-        <li>killers->destroyers</li>
-        <li>killers->eradicators</li>
-        <li>killers->executioners</li>
-        <li>killers->exterminators</li>
-        <li>killers->killers</li>
-        <li>killers->manglers</li>
-        <li>killers->murderers</li>
-        <li>killers->poisoners</li>
-        <li>killers->slashers</li>
-        <li>killers->slaughterers</li>
-        <li>killers->slayers</li>
-        <li>killers->stranglers</li>
-        <li>killers->wreckers</li>
+        <li>r_name->[Animal] [groupName]</li>
+        <li>r_name->[AdjectiveBadass] [groupName]</li>
+        <li>r_name->[ColorBadass] [groupName]</li>
       </rulesStrings>
+      <rulesFiles>
+        <li>groupName->Xyl/Words/Trog/Group_Names</li>
+      </rulesFiles>
     </rulePack>
   </RulePackDef>
 

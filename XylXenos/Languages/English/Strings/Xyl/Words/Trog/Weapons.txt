@@ -1,0 +1,17 @@
+axe
+blade
+bow
+club
+dagger
+edge
+knife
+lance
+log
+saber
+scimitar
+scythe
+sling
+shiv
+spear
+staff
+sword
