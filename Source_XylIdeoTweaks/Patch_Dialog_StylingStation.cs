@@ -31,7 +31,9 @@ public static class Patch_Dialog_StylingStation
 
         var pawnData = PawnData.Get(___pawn);
 
-        if (Widgets.ButtonText(extraLine, TextForMode(pawnData.autoColorMode)))
+        Widgets.Label(extraLine.LeftHalf(), "Auto-color");
+
+        if (Widgets.ButtonText(extraLine.RightHalf(), TextForMode(pawnData.autoColorMode)))
         {
             List<FloatMenuOption> options = [];
 
@@ -78,7 +80,7 @@ public static class Patch_Dialog_StylingStation
 
         foreach (var item in pawn.apparel.WornApparel)
         {
-            if (item.TryGetComp<CompColorable>() != null)
+            if (item.TryGetComp<CompColorable>() != null && !pawn.apparel.IsLocked(item))
             {
                 Color oldColor = item.DesiredColor ?? item.GetColorIgnoringTainted();
                 apparelColors[item] = color.IndistinguishableFrom(oldColor) ? oldColor : color;
@@ -97,9 +99,9 @@ public static class Patch_Dialog_StylingStation
 
     public static string TextForMode(AutoColorMode mode) => mode switch
     {
-        AutoColorMode.NoAutoColor => "Auto-color off",
-        AutoColorMode.UseFavoriteColor => "Auto favorite color",
-        AutoColorMode.UseIdeoligeonColor => "Auto ideoligeon color",
+        AutoColorMode.NoAutoColor => "Off",
+        AutoColorMode.UseFavoriteColor => "Favorite color",
+        AutoColorMode.UseIdeoligeonColor => "Ideoligeon color",
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
     };
 }
