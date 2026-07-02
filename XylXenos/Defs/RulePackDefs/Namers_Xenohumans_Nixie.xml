@@ -11,26 +11,16 @@
         <li>firstName->[SylG]-[SylG]</li>
         <li>firstName->[SylG][SylG]-[SylG]</li>
 
-        <li>lastName->[SylG][nameEnd]</li>
-        <li>lastName->[SylG][SylG][nameEnd]</li>
+        <li>lastName->[SylG][suffix]</li>
+        <li>lastName->[SylG][SylG][suffix]</li>
 
-        <li>nickName->[aquaticAdjective]</li>
-        <li>nickName->[aquaticAnimal]</li>
-
-        <li>nameEnd->ash</li>
-        <li>nameEnd->ásh</li>
-        <li>nameEnd->áss</li>
-        <li>nameEnd->áth</li>
-        <li>nameEnd->eth</li>
-        <li>nameEnd->iss</li>
-        <li>nameEnd->ith</li>
-        <li>nameEnd->oss</li>
-        <li>nameEnd->óss</li>
-        <li>nameEnd->óth</li>
+        <li>nickName->[adjective]</li>
+        <li>nickName->[animal]</li>
       </rulesStrings>
       <rulesFiles>
-        <li>aquaticAdjective->Xyl/Words/Adjectives/AquaticAdjectives</li>
-        <li>aquaticAnimal->Xyl/Words/Nouns/AquaticAnimals</li>
+        <li>adjective->Xyl/Words/Nixie/Adjectives</li>
+        <li>animal->Xyl/Words/Nixie/Animals</li>
+        <li>suffix->Xyl/WordParts/Nixie/Name_Suffixes</li>
       </rulesFiles>
     </rulePack>
   </RulePackDef>

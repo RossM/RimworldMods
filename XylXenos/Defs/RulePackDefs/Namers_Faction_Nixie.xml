@@ -6,27 +6,21 @@
     <defName>XylNamerFactionTribalNixie</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name->[aquaticAdjective] [aquaticAnimal] of [nameCore]</li>
-        <li>r_name->[nameCore] [aquaticAnimal] [people]</li>
-        <li>r_name->[nameCore] [coastalFeature] [people]</li>
+        <li>r_name->[adjective] [animal] of [nameCore]</li>
+        <li>r_name->[nameCore] [animal] [groupName]</li>
+        <li>r_name->[nameCore] [locationFeature] [groupName]</li>
 
         <li>maybeHyphen(p=3)-></li>
         <li>maybeHyphen->-</li>
 
         <li>nameCore->[SylG][maybeHyphen][SylG]</li>
         <li>nameCore->[SylG][maybeHyphen][SylG][maybeHyphen][SylG]</li>
-
-        <li>people->alliance</li>
-        <li>people->clan</li>
-        <li>people->community</li>
-        <li>people->folk</li>
-        <li>people->people</li>
-        <li>people->tribe</li>
       </rulesStrings>
       <rulesFiles>
-        <li>aquaticAdjective->Xyl/Words/Adjectives/AquaticAdjectives</li>
-        <li>aquaticAnimal->Xyl/Words/Nouns/AquaticAnimals</li>
-        <li>coastalFeature->Xyl/Words/Nouns/CoastalFeatures</li>
+        <li>adjective->Xyl/Words/Nixie/Adjectives</li>
+        <li>animal->Xyl/Words/Nixie/Animals</li>
+        <li>locationFeature->Xyl/Words/Nixie/Location_Features</li>
+        <li>groupName->Xyl/Words/Nixie/Group_Names</li>
       </rulesFiles>
     </rulePack>
   </RulePackDef>
