@@ -39,6 +39,9 @@ public static class Patch_Dialog_StylingStation
 
             foreach (var value in (AutoColorMode[])Enum.GetValues(typeof(AutoColorMode)))
             {
+                if (value == AutoColorMode.UseIdeoligeonColor && (___pawn.ideo == null || Find.IdeoManager.classicMode))
+                    continue;
+
                 var localValue = value;
                 options.Add(new(TextForMode(value), () =>
                 {
