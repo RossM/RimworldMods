@@ -8,6 +8,7 @@ destroyers
 eradicators
 executioners
 exterminators
+flayers
 killers
 manglers
 murderers
