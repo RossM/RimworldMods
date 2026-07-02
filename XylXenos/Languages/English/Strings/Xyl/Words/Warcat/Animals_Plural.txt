@@ -1,0 +1,8 @@
+cheetahs
+leopards
+lions
+lynxes
+panthers
+pumas
+tigers
+wildcats

@@ -1,0 +1,6 @@
+alliance
+clan
+confederation
+kin
+league
+tribes

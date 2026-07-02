@@ -1,0 +1,8 @@
+ambusher
+chaser
+eater
+hunter
+ripper
+seeker
+slayer
+taker
