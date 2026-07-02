@@ -56,7 +56,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
         EventManager.AddStaticListener(listener);
     }
 
-    public static string TagName { get; } = typeof(T).FullName;
+    public static string ScribeLabel { get; } = typeof(T).TryGetAttribute<ScribeLabelAttribute>()?.label ?? typeof(T).FullName;
 
     /// <summary>
     ///     Retrieves the data associated with a <see cref="Pawn" />, or creates it if it doesn't exist.
@@ -86,7 +86,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
         if (!data.TryGetValue(pawn.thingIDNumber, out T value))
             value = default(T);
 
-        Scribe_Deep.Look(ref value, TagName);
+        Scribe_Deep.Look(ref value, ScribeLabel);
 
         if (Scribe.mode != LoadSaveMode.LoadingVars)
             return;

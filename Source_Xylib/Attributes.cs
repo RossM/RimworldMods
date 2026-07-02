@@ -79,3 +79,13 @@ public class DefGeneratorAttribute(Type defType) : Attribute
 {
     public readonly Type defType = defType;
 }
+
+/// <summary>
+///     Provides a custom XML tag to use when saving/loading this class in <see cref="PawnExtraData{T}" />.
+/// </summary>
+/// <param name="label"></param>
+[AttributeUsage(AttributeTargets.Class)]
+public class ScribeLabelAttribute(string label) : Attribute
+{
+    public readonly string label = label;
+}
