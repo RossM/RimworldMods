@@ -3,14 +3,15 @@ using System.Linq;
 using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
+using Xylib;
 
 namespace Source_XylIdeoTweaks
 {
     [HarmonyPatch(typeof(IdeoFoundation))]
     public class Patch_IdeoFoundation
     {
+        [Feature(Features.ApparelRequirementsOverrideNudity)]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch("FinalizeIdeo")]
         public static bool FinalizeIdeo_Prefix(Ideo ideo)
         {

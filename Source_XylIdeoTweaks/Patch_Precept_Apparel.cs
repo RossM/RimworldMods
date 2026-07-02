@@ -4,6 +4,7 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
+using Xylib;
 
 namespace Source_XylIdeoTweaks
 {
@@ -13,11 +14,13 @@ namespace Source_XylIdeoTweaks
         private static readonly IReadOnlyCollection<BodyPartGroupDef> ExcludedBodyParts =
             [BodyPartGroupDefOf.Torso, BodyPartGroupDefOf.Legs];
 
+        [Feature(Features.ApparelRequirementsOverrideNudity)]
         [HarmonyPrefix]
-        [UsedImplicitly]
         [HarmonyPatch(nameof(Precept_Apparel.CompatibleWith))]
-        public static bool CompatibleWith_Prefix(Precept_Apparel __instance, Precept other, ref bool __result)
+        public static bool CompatibleWith_Prefix(Precept_Apparel __instance, Precept other, out bool __result)
         {
+            __result = true;
+
             if (__instance.apparelDef.apparel.countsAsClothingForNudity &&
                 __instance.apparelDef.apparel.bodyPartGroups.Intersect(ExcludedBodyParts).Any())
                 return true;
@@ -26,7 +29,6 @@ namespace Source_XylIdeoTweaks
             if (other.def.prefersNudity &&
                 (__instance.TargetGender == Gender.None || __instance.TargetGender == other.def.genderPrefersNudity))
             {
-                __result = true;
                 return false;
             }
 

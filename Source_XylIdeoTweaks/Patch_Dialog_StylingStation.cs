@@ -6,6 +6,7 @@ using RimWorld;
 using TranspilerUtil;
 using UnityEngine;
 using Verse;
+using Xylib;
 using Color = UnityEngine.Color;
 
 namespace Source_XylIdeoTweaks;
@@ -13,6 +14,7 @@ namespace Source_XylIdeoTweaks;
 [HarmonyPatch(typeof(Dialog_StylingStation))]
 public static class Patch_Dialog_StylingStation
 {
+    [Feature(Features.AutoColorApparel)]
     [InfixPostfix(typeof(Widgets), nameof(Widgets.ColorSelector))]
     [InfixPatch("DrawApparelColor")]
     public static void ColorSelector_Postfix(Pawn ___pawn, ref bool __result)
@@ -21,6 +23,7 @@ public static class Patch_Dialog_StylingStation
             PawnData.Get(___pawn).autoColorMode = AutoColorMode.NoAutoColor;
     }
 
+    [Feature(Features.AutoColorApparel)]
     [HarmonyPrefix]
     [HarmonyPatch("DrawPawn")]
     public static void DrawPawn_Prefix(Pawn ___pawn, Dictionary<Apparel, Color> ___apparelColors, ref Rect rect)
@@ -57,6 +60,7 @@ public static class Patch_Dialog_StylingStation
         }
     }
 
+    [Feature(Features.AutoColorApparel)]
     [HarmonyPostfix]
     [HarmonyPatch("PostOpen")]
     public static void PostOpen_Postfix(Pawn ___pawn, Dictionary<Apparel, Color> ___apparelColors)
@@ -65,6 +69,7 @@ public static class Patch_Dialog_StylingStation
             ApplyColors(___pawn, ___apparelColors);
     }
 
+    [Feature(Features.AutoColorApparel)]
     [HarmonyPostfix]
     [HarmonyPatch("Reset")]
     public static void Reset_Postfix(Pawn ___pawn, Dictionary<Apparel, Color> ___apparelColors)

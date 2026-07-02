@@ -3,6 +3,7 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using RimWorld;
 using Verse;
+using Xylib;
 
 namespace Source_XylIdeoTweaks
 {
@@ -16,8 +17,8 @@ namespace Source_XylIdeoTweaks
             [UsedImplicitly] public static BodyPartGroupDef Neck;
         }
 
+        [Feature(Features.BetterDefaultOutfits)]
         [HarmonyPostfix]
-        [UsedImplicitly]
         [HarmonyPatch("GenerateStartingOutfits")]
         public static void GenerateStartingOutfits_Postfix(OutfitDatabase __instance)
         {

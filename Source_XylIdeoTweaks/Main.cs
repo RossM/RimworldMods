@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using TranspilerUtil;
 using Verse;
+using Xylib;
 
 namespace Source_ExposableChecker;
 
@@ -11,9 +12,11 @@ public class Main(ModContentPack content) : Mod(content)
 {
     static Main()
     {
-        var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
+        var harmony = new Harmony("xylthixlm.ideos");
         harmony.PatchAll();
 
         InfixPatcher.PatchInfix(harmony, typeof(Main).Assembly);
+
+        Analyzer.CheckCodingStyle_Patches(typeof(Main).Assembly);
     }
 }
