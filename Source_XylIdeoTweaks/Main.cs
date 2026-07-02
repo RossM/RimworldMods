@@ -1,4 +1,4 @@
-﻿namespace Source_ExposableChecker;
+﻿namespace XylIdeos;
 
 [UsedImplicitly]
 [StaticConstructorOnStartup]

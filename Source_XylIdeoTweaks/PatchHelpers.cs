@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Source_XylIdeoTweaks;
+namespace XylIdeos;
 
 public static class PatchHelpers
 {

@@ -1,4 +1,4 @@
-﻿namespace Source_XylIdeoTweaks;
+﻿namespace XylIdeos;
 
 public static class Features
 {

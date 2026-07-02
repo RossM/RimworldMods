@@ -5,11 +5,12 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <LangVersion>latest</LangVersion>
-    <AssemblyName>XylIdeoTweaks</AssemblyName>
+    <AssemblyName>XylIdeos</AssemblyName>
+    <RootNamespace>XylIdeos</RootNamespace>
   </PropertyGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\XylIdeoTweaks.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\XylIdeoTweaks.dll&quot;" />
+    <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\XylIdeos.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\XylIdeos.dll&quot;" />
   </Target>
 
   <ItemGroup>

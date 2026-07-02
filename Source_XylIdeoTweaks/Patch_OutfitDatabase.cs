@@ -1,4 +1,4 @@
-﻿namespace Source_XylIdeoTweaks;
+﻿namespace XylIdeos;
 
 [HarmonyPatch(typeof(OutfitDatabase))]
 public static class Patch_OutfitDatabase

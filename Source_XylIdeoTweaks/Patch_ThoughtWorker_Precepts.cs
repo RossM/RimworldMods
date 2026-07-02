@@ -1,4 +1,4 @@
-﻿namespace Source_XylIdeoTweaks;
+﻿namespace XylIdeos;
 
 [HarmonyPatch]
 public class Patch_ThoughtWorker_Precepts

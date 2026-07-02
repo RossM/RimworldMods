@@ -1,4 +1,4 @@
-﻿namespace Source_XylIdeoTweaks;
+﻿namespace XylIdeos;
 
 [HarmonyPatch(typeof(IdeoFoundation))]
 public class Patch_IdeoFoundation

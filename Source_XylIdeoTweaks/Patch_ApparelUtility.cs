@@ -1,4 +1,4 @@
-﻿namespace Source_XylIdeoTweaks;
+﻿namespace XylIdeos;
 
 [HarmonyPatch(typeof(ApparelUtility))]
 public class Patch_ApparelUtility

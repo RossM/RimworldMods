@@ -2,7 +2,7 @@
 using UnityEngine;
 using Color = UnityEngine.Color;
 
-namespace Source_XylIdeoTweaks;
+namespace XylIdeos;
 
 [HarmonyPatch(typeof(Dialog_StylingStation))]
 public static class Patch_Dialog_StylingStation

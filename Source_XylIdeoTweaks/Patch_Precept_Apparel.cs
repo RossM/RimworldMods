@@ -1,4 +1,4 @@
-﻿namespace Source_XylIdeoTweaks;
+﻿namespace XylIdeos;
 
 [HarmonyPatch(typeof(Precept_Apparel))]
 public class Patch_Precept_Apparel

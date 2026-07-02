@@ -1,4 +1,4 @@
-﻿namespace Source_XylIdeoTweaks;
+﻿namespace XylIdeos;
 
 public enum AutoColorMode
 {
@@ -7,6 +7,7 @@ public enum AutoColorMode
     UseIdeoligeonColor,
 }
 
+[ScribeLabel("Source_XylIdeoTweaks.PawnData")]
 public class PawnData : IPawnData, IExposable
 {
     [Unsaved] public Pawn pawn;

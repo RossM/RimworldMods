@@ -1,4 +1,4 @@
-﻿namespace Source_XylIdeoTweaks;
+﻿namespace XylIdeos;
 
 [HarmonyPatch(typeof(Pawn_StyleTracker))]
 public class Patch_Pawn_StyleTracker
