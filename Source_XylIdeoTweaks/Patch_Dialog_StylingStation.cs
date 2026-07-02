@@ -1,8 +1,7 @@
-﻿using HarmonyLib;
-using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using HarmonyLib;
+using RimWorld;
 using TranspilerUtil;
 using UnityEngine;
 using Verse;
@@ -13,13 +12,13 @@ namespace Source_XylIdeoTweaks;
 [HarmonyPatch(typeof(Dialog_StylingStation))]
 public static class Patch_Dialog_StylingStation
 {
-    public static string TextForMode(AutoColorMode mode) => mode switch
+    [InfixPostfix(typeof(Widgets), nameof(Widgets.ColorSelector))]
+    [InfixPatch("DrawApparelColor")]
+    public static void ColorSelector_Postfix(Pawn ___pawn, ref bool __result)
     {
-        AutoColorMode.NoAutoColor => "Auto-color off",
-        AutoColorMode.UseFavoriteColor => "Auto favorite color",
-        AutoColorMode.UseIdeoligeonColor => "Auto ideoligeon color",
-        _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
-    };
+        if (__result)
+            PawnData.Get(___pawn).autoColorMode = AutoColorMode.NoAutoColor;
+    }
 
     [HarmonyPrefix]
     [HarmonyPatch("DrawPawn")]
@@ -52,13 +51,6 @@ public static class Patch_Dialog_StylingStation
         }
     }
 
-    //[HarmonyPrefix]
-    //[HarmonyPatch("ApplyApparelColors")]
-    //public static void ApplyApparelColors_Prefix(Pawn ___pawn, Dictionary<Apparel, Color> ___apparelColors)
-    //{
-    //    ApplyColors(___pawn, ___apparelColors);
-    //}
-
     [HarmonyPostfix]
     [HarmonyPatch("PostOpen")]
     public static void PostOpen_Postfix(Pawn ___pawn, Dictionary<Apparel, Color> ___apparelColors)
@@ -67,17 +59,9 @@ public static class Patch_Dialog_StylingStation
             ApplyColors(___pawn, ___apparelColors);
     }
 
-    [InfixPostfix(typeof(Widgets), nameof(Widgets.ColorSelector))]
-    [InfixPatch("DrawApparelColor")]
-    public static void ColorSelector_Postfix(Pawn ___pawn, ref bool __result)
-    {
-        if (__result)
-            PawnData.Get(___pawn).autoColorMode = AutoColorMode.NoAutoColor;
-    }
-
     private static void ApplyColors(Pawn pawn, Dictionary<Apparel, Color> apparelColors)
     {
-        if (AutoColorColor(pawn) is not { } color)
+        if (PatchHelpers.AutoColorColor(pawn) is not { } color)
             return;
 
         foreach (var item in pawn.apparel.WornApparel)
@@ -87,14 +71,6 @@ public static class Patch_Dialog_StylingStation
         }
     }
 
-    private static Color? AutoColorColor(Pawn pawn) =>
-        PawnData.Get(pawn).autoColorMode switch
-        {
-            AutoColorMode.UseFavoriteColor => pawn.story?.favoriteColor.color,
-            AutoColorMode.UseIdeoligeonColor => pawn.Ideo?.ApparelColor,
-            _ => null
-        };
-
     private static void ResetColors(Pawn pawn, Dictionary<Apparel, Color> apparelColors)
     {
         foreach (var item in pawn.apparel.WornApparel)
@@ -103,4 +79,12 @@ public static class Patch_Dialog_StylingStation
                 apparelColors[item] = item.DesiredColor ?? item.GetColorIgnoringTainted();
         }
     }
+
+    public static string TextForMode(AutoColorMode mode) => mode switch
+    {
+        AutoColorMode.NoAutoColor => "Auto-color off",
+        AutoColorMode.UseFavoriteColor => "Auto favorite color",
+        AutoColorMode.UseIdeoligeonColor => "Auto ideoligeon color",
+        _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+    };
 }

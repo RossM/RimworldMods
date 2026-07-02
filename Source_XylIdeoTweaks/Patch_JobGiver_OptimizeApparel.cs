@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using RimWorld;
 using TranspilerUtil;
+using UnityEngine;
 using Verse;
 
 namespace Source_XylIdeoTweaks
@@ -24,6 +25,20 @@ namespace Source_XylIdeoTweaks
                 return;
 
             __result = !pawn.story.traits.HasTrait(MyTraitDefOf.Masochist) && !Patch_ThoughtWorker_Precepts.ApparelRequired(pawn, ap.def);
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(JobGiver_OptimizeApparel.TryCreateRecolorJob))]
+        public static void TryCreateRecolorJob_Prefix(Pawn pawn)
+        {
+            if (PatchHelpers.AutoColorColor(pawn) is not { } color)
+                return;
+
+            foreach (var item in pawn.apparel.WornApparel)
+            {
+                if (item.TryGetComp<CompColorable>() != null && item.GetColorIgnoringTainted() != color)
+                    item.DesiredColor = color;
+            }
         }
     }
 }
