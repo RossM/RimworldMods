@@ -1,0 +1,16 @@
+blasting
+cave
+cavern
+deep
+drilling
+excavation
+geology
+hill
+masonry
+mineral
+mining
+mountain
+rock
+spelunking
+stone
+tunneling

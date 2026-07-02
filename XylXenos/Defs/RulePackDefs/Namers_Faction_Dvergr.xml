@@ -6,40 +6,13 @@
     <defName>XylNamerFactionOutlanderDvergr</defName>
     <rulePack>
       <rulesStrings>
-        <li>r_name->[AdjectiveBadass] [adjective] [group]</li>
-        <li>r_name->[SylD][SylD] [adjective] [group]</li>
-
-        <li>adjective->blasting</li>
-        <li>adjective->cave</li>
-        <li>adjective->cavern</li>
-        <li>adjective->deep</li>
-        <li>adjective->drilling</li>
-        <li>adjective->excavation</li>
-        <li>adjective->geology</li>
-        <li>adjective->hill</li>
-        <li>adjective->masonry</li>
-        <li>adjective->mineral</li>
-        <li>adjective->mining</li>
-        <li>adjective->mountain</li>
-        <li>adjective->rock</li>
-        <li>adjective->spelunking</li>
-        <li>adjective->stone</li>
-        <li>adjective->tunneling</li>
-
-        <li>group->acquisitions</li>
-        <li>group->allied clans</li>
-        <li>group->association</li>
-        <li>group->collective</li>
-        <li>group->confederation</li>
-        <li>group->corporation</li>
-        <li>group->group</li>
-        <li>group->limited</li>
-        <li>group->pact</li>
-        <li>group->partners</li>
-        <li>group->team</li>
+        <li>r_name->[AdjectiveBadass] [adjective] [groupName]</li>
+        <li>r_name->[Syl][Syl] [adjective] [groupName]</li>
       </rulesStrings>
       <rulesFiles>
-        <li>SylD->Xyl/WordParts/Syllables_Dvergr</li>
+        <li>syl->Xyl/WordParts/Dvergr/Syllables</li>
+        <li>adjective->Xyl/Words/Dvergr/Adjectives</li>
+        <li>groupName->Xyl/Words/Dvergr/Group_Names</li>
       </rulesFiles>
     </rulePack>
   </RulePackDef>
@@ -49,62 +22,19 @@
     <rulePack>
       <rulesStrings>
         <li>r_name->fort [nameCore]</li>
-        <li>r_name->[nameCore] [location]</li>
+        <li>r_name->[nameCore] [locationFeature]</li>
 
         <li>maybeHyphen(p=3)-></li>
         <li>maybeHyphen->-</li>
 
-        <li>nameCore->[SylD][nameEnd]</li>
-        <li>nameCore->[SylD][SylD][maybeHyphen][nameEnd]</li>
+        <li>nameCore->[syl][suffix]</li>
+        <li>nameCore->[syl][syl][maybeHyphen][suffix]</li>
 
-        <li>nameEnd->bar</li>
-        <li>nameEnd->baz</li>
-        <li>nameEnd->bor</li>
-        <li>nameEnd->buk</li>
-        <li>nameEnd->daz</li>
-        <li>nameEnd->dem</li>
-        <li>nameEnd->dor</li>
-        <li>nameEnd->duk</li>
-        <li>nameEnd->dum</li>
-        <li>nameEnd->dur</li>
-        <li>nameEnd->kaz</li>
-        <li>nameEnd->kem</li>
-        <li>nameEnd->kor</li>
-        <li>nameEnd->mar</li>
-        <li>nameEnd->mok</li>
-        <li>nameEnd->muk</li>
-        <li>nameEnd->ten</li>
-        <li>nameEnd->tor</li>
-        <li>nameEnd->tun</li>
-        <li>nameEnd->zad</li>
-        <li>nameEnd->zar</li>
-        <li>nameEnd->zuk</li>
-        <li>nameEnd->zun</li>
-
-        <li>location->cairn</li>
-        <li>location->chasm</li>
-        <li>location->defile</li>
-        <li>location->delve</li>
-        <li>location->depths</li>
-        <li>location->excavation</li>
-        <li>location->gallery</li>
-        <li>location->gap</li>
-        <li>location->grotto</li>
-        <li>location->hall</li>
-        <li>location->hill</li>
-        <li>location->hollow</li>
-        <li>location->mine</li>
-        <li>location->mound</li>
-        <li>location->pass</li>
-        <li>location->pit</li>
-        <li>location->shaft</li>
-        <li>location->tor</li>
-        <li>location->tunnel</li>
-        <li>location->underground</li>
-        <li>location->valley</li>
       </rulesStrings>
       <rulesFiles>
-        <li>SylD->Xyl/WordParts/Syllables_Dvergr</li>
+        <li>syl->Xyl/WordParts/Dvergr/Syllables</li>
+        <li>suffix->Xyl/WordParts/Dvergr/Place_Suffixes</li>
+        <li>locationFeature->Xyl/Words/Dvergr/Location_Features</li>
       </rulesFiles>
     </rulePack>
   </RulePackDef>

@@ -9,49 +9,16 @@
 
         <li>firstName->[consonant]'[consonant][vowel]</li>
 
-        <li>lastName->[SylStart][SylEnd][nameEnd]</li>
-        <li>lastName(p=0.2)->[SylStart][SylStart][SylEnd][nameEnd]</li>
-
-        <li>consonant->b</li>
-        <li>consonant->ch</li>
-        <li>consonant->d</li>
-        <li>consonant->g</li>
-        <li>consonant->k</li>
-        <li>consonant->n</li>
-        <li>consonant->q</li>
-        <li>consonant->sk</li>
-        <li>consonant->t</li>
-        <li>consonant->z</li>
-        <li>vowel->ah</li>
-        <li>vowel->ee</li>
-        <li>vowel->eh</li>
-        <li>vowel->oh</li>
-        <li>vowel->u</li>
-        <li>vowel->ua</li>
-
-        <li>nameEnd->ops</li>
-        <li>nameEnd->us</li>
-        <li>nameEnd->a</li>
-        <li>nameEnd->yx</li>
-        <li>nameEnd->is</li>
-        <li>nameEnd->um</li>
-        <li>nameEnd->essa</li>
-        <li>nameEnd->sa</li>
-        <li>nameEnd->io</li>
-        <li>nameEnd->ia</li>
-        <li>nameEnd->or</li>
-        <li>nameEnd->ax</li>
-        <li>nameEnd->ens</li>
-        <li>nameEnd->lopex</li>
-        <li>nameEnd->os</li>
-        <li>nameEnd->on</li>
-        <li>nameEnd->ias</li>
-        <li>nameEnd->ugo</li>
-
+        <li>lastName->[syl1][syl2][suffix]</li>
+        <li>lastName(p=0.2)->[syl1][syl1][syl2][suffix]</li>
       </rulesStrings>
       <rulesFiles>
-        <li>SylStart->Xyl/WordParts/Syllables_Starts_Chyrr</li>
-        <li>SylEnd->Xyl/WordParts/Syllables_Ends_Chyrr</li>
+        <li>syl1->Xyl/WordParts/Chyrr/Syllables_1</li>
+        <li>syl2->Xyl/WordParts/Chyrr/Syllables_2</li>
+        <li>syl3->Xyl/WordParts/Chyrr/Syllables_2</li>
+        <li>consonant->Xyl/WordParts/Chyrr/Consonants</li>
+        <li>vowel->Xyl/WordParts/Chyrr/Vowels</li>
+        <li>suffix->Xyl/WordParts/Chyrr/Name_Suffixes</li>
       </rulesFiles>
     </rulePack>
   </RulePackDef>
