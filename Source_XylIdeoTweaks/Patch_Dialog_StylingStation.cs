@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using TranspilerUtil;
@@ -59,6 +60,17 @@ public static class Patch_Dialog_StylingStation
             ApplyColors(___pawn, ___apparelColors);
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch("Reset")]
+    public static void Reset_Postfix(Pawn ___pawn, Dictionary<Apparel, Color> ___apparelColors)
+    {
+        if (PatchHelpers.AutoColorColor(___pawn) is not { } color)
+            return;
+
+        if (___apparelColors.Values.Any(apparelColor => !color.IndistinguishableFrom(apparelColor)))
+            PawnData.Get(___pawn).autoColorMode = AutoColorMode.NoAutoColor;
+    }
+
     private static void ApplyColors(Pawn pawn, Dictionary<Apparel, Color> apparelColors)
     {
         if (PatchHelpers.AutoColorColor(pawn) is not { } color)
@@ -67,7 +79,10 @@ public static class Patch_Dialog_StylingStation
         foreach (var item in pawn.apparel.WornApparel)
         {
             if (item.TryGetComp<CompColorable>() != null)
-                apparelColors[item] = color;
+            {
+                Color oldColor = item.DesiredColor ?? item.GetColorIgnoringTainted();
+                apparelColors[item] = color.IndistinguishableFrom(oldColor) ? oldColor : color;
+            }
         }
     }
 

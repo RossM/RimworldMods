@@ -36,8 +36,11 @@ namespace Source_XylIdeoTweaks
 
             foreach (var item in pawn.apparel.WornApparel)
             {
-                if (item.TryGetComp<CompColorable>() != null && item.GetColorIgnoringTainted() != color)
-                    item.DesiredColor = color;
+                if (item.TryGetComp<CompColorable>() != null)
+                {
+                    Color oldColor = item.GetColorIgnoringTainted();
+                    item.DesiredColor = color.IndistinguishableFrom(oldColor) ? null : color;
+                }
             }
         }
     }
