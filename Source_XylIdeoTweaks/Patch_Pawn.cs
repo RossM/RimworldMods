@@ -15,7 +15,7 @@ public class Patch_Pawn
         
         Scribe_Deep.Look(ref pawnData, "XylIdeos_PawnData");
 
-        if (Scribe.mode == LoadSaveMode.LoadingVars)
+        if (Scribe.mode == LoadSaveMode.LoadingVars && pawnData != null)
         {
             pawnData.Init(__instance);
             PawnExtraData<PawnData>.Set(__instance, pawnData);
