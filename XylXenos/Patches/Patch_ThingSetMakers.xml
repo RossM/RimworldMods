@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/ThingSetMakerDef[defName="Reward_ItemsStandard"]/root/options/li[1]/thingSetMaker[@Class="ThingSetMaker_RandomOption"]/options</xpath>
+    <value>
+      <li>
+        <weight>0</weight>
+        <weightIfPlayerHasXenotype>7</weightIfPlayerHasXenotype>
+        <weightIfPlayerHasXenotypeXenotype>XylTitan</weightIfPlayerHasXenotypeXenotype>
+        <thingSetMaker Class="ThingSetMaker_Conditional_MakingFaction">
+          <makingFactionCategories>
+            <li>TradersGuild</li>
+            <li>Empire</li>
+          </makingFactionCategories>
+          <requireNonNull>true</requireNonNull>
+          <thingSetMaker Class="ThingSetMaker_MarketValue">
+            <fixedParams>
+              <qualityGenerator>Reward</qualityGenerator>
+              <allowNonStackableDuplicates>False</allowNonStackableDuplicates>
+              <filter>
+                <thingDefs>
+                  <li>XylAtlasite</li>
+                </thingDefs>
+              </filter>
+            </fixedParams>
+          </thingSetMaker>
+        </thingSetMaker>
+      </li>
+    </value>
+  </Operation>
+
+</Patch>
