@@ -61,4 +61,9 @@ public static class PawnExtraData<T> where T : IPawnData, new()
 
         return result;
     }
+
+    public static void Set(Pawn pawn, T value)
+    {
+        data[pawn.thingIDNumber] = value;
+    }
 }
