@@ -35,6 +35,12 @@
   <XylAllowsFlightLabel>Allows flight</XylAllowsFlightLabel>
   <XylAllowsFlightDesc>Whether winged characters can fly while wearing this item.</XylAllowsFlightDesc>
   <XylHitPointsDesc>A multiplier on the total hit points of each of the character's body parts.</XylHitPointsDesc>
+  <XylSaturationGain>Saturation gain</XylSaturationGain>
+  <XylSaturationGainDesc>The rate at which the drug's saturation increases while the user has the drug in their system.</XylSaturationGainDesc>
+  <XylDaysToFullSaturation>Time to maximum saturation</XylDaysToFullSaturation>
+  <XylDaysToFullSaturationDesc>The time for saturation to reach its maximum if the user has the drug in their system continuously.</XylDaysToFullSaturationDesc>
+  <XylSaturationLoss>Saturation loss</XylSaturationLoss>
+  <XylSaturationLossDesc>The rate at which the drug's saturation decreases while the user doesn't have the drug in their system.</XylSaturationLossDesc>
 
   <!-- Settings -->
   <XylSettingDescription_allowBackerBackstories>Allow backer backstories</XylSettingDescription_allowBackerBackstories>
