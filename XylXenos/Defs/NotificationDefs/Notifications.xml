@@ -84,5 +84,10 @@
   <Xylib.EventDef>
     <defName>PostBirthday</defName>
   </Xylib.EventDef>
+  
+  <Xylib.EventDef>
+    <defName>InPawnExposeData</defName>
+    <allowDuringScribe>true</allowDuringScribe>
+  </Xylib.EventDef>
 
 </Defs>

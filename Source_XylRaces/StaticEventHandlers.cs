@@ -14,7 +14,6 @@ public static class StaticEventHandlers
 
         public void RegisterWith(EventManager manager)
         {
-            Log.Message("StaticEventHandlers.Listener.RegisterWith");
             manager.Register<PawnGenerationData>(EventDefOf.PreGeneratePawnBioAndName, null, Notify_PawnGenerationEarly,
                 priority: -100);
         }

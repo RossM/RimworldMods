@@ -39,4 +39,14 @@ public static class Patch_Pawn
     {
         EventManager.Instance.Notify(EventDefOf.PostPawnKilled, __instance);
     }
+
+    [Feature(nameof(EventDefOf.InPawnExposeData))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Pawn.ExposeData))]
+    public static void ExposeData_Postfix(Pawn __instance)
+    {
+        Scribe.EnterNode("Xylib_PawnData");
+        EventManager.Instance.Notify(EventDefOf.InPawnExposeData, __instance);
+        Scribe.ExitNode();
+    }
 }

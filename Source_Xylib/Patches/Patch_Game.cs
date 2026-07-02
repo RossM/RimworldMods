@@ -11,4 +11,12 @@ public static class Patch_Game
         EventManager.Instance.Notify(EventDefOf.GlobalPostGameDispose, null);
         EventManager.Instance.Reset();
     }
+
+    [Feature(typeof(EventManager))]
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Game.LoadGame))]
+    public static void LoadGame_Postfix()
+    {
+        EventManager.Instance.LoadedGame();
+    }
 }

@@ -61,5 +61,5 @@ public static class Patch_Thing
         EventManager.Instance.Notify(EventDefOf.PreTakeDamage, __instance, dinfo);
     }
 
-    private static bool IsInteresting(Thing thing) => thing is ThingWithComps and not (Projectile or Plant);
+    private static bool IsInteresting(Thing thing) => thing is ThingWithComps and not (Projectile or Plant or Mineable);
 }

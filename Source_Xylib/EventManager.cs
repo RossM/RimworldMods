@@ -36,6 +36,7 @@ public class EventDef : Def
 {
     public bool global = false;
     public Type dataType = null;
+    public bool allowDuringScribe = false;
 }
 
 [DefOf]
@@ -52,6 +53,11 @@ public static class EventDefOf
     ///     This hook passes a <see cref="List&lt;ThingDefCount&gt;" /> as the "data" parameter.
     /// </summary>
     public static EventDef InGeneratePossessions;
+
+    /// <summary>
+    ///     Called in <see cref="Pawn.ExposeData" />.
+    /// </summary>
+    public static EventDef InPawnExposeData;
 
     /// <summary>
     ///     Called after <see cref="Pawn_ApparelTracker.Notify_ApparelChanged" />.
@@ -213,8 +219,8 @@ public static class EventDefOf
 ///     For other types, you should call <see cref="AddListener" /> when the listener should start receiving events, and
 ///     <see cref="RemoveListener" /> when the listener should stop receiving events.
 /// </para>
-[UsedFromReflection]
-public class EventManager : GameComponent
+[StaticConstructorOnStartup]
+public class EventManager
 {
     /// <summary>
     ///     Holds data about all the callbacks for a specific <see cref="EventDef" />.
@@ -257,7 +263,7 @@ public class EventManager : GameComponent
     /// <summary>
     ///     Gets the event manager for the currently running game.
     /// </summary>
-    public static EventManager Instance => Current.Game?.GetComponent<EventManager>();
+    public static EventManager Instance { get; } = new();
 
     private static bool doDebug = false;
 
@@ -286,10 +292,6 @@ public class EventManager : GameComponent
     ///     A scratch list used during event handling.
     /// </summary>
     private readonly List<CallbackInfo> tempCallbacks = [];
-
-    public EventManager(Game _)
-    {
-    }
 
     [DebugAction(allowedGameStates = 0)]
     public static void ToggleNotificationManagerLogging()
@@ -482,7 +484,7 @@ public class EventManager : GameComponent
 
     public void Notify(EventDef eventDef, Thing target, object data = null)
     {
-        if (Scribe.mode != LoadSaveMode.Inactive)
+        if (Scribe.mode != LoadSaveMode.Inactive && !eventDef.allowDuringScribe)
             return;
 
         if (doDebug)
@@ -635,22 +637,15 @@ public class EventManager : GameComponent
         }
     }
 
-    public override void LoadedGame()
+    public void LoadedGame()
     {
         using var _ = new ProfileBlock();
 
         foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
             CallRegistrationHandlers(pawn);
 
-        RegisterStaticListeners();
-
         foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
             Notify(EventDefOf.PostLoadedGame, pawn);
-    }
-
-    public override void FinalizeInit()
-    {
-        RegisterStaticListeners();
     }
 
     public static void AddStaticListener(IEventListener listener)
@@ -676,6 +671,7 @@ public class EventManager : GameComponent
         for (int i = 0; i < notifications.Length; i++)
             notifications[i] = null;
         alreadyRegisteredStaticListeners.Clear();
+        RegisterStaticListeners();
     }
 
     public void AddListener(IEventListener listener)
