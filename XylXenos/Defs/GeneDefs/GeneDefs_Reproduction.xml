@@ -279,7 +279,7 @@
         <showDaysToRecover>true</showDaysToRecover>
       </li>
       <li Class="HediffCompProperties_GiveLovinMTBFactor">
-        <lovinMTBFactor>0.5</lovinMTBFactor>
+        <lovinMTBFactor>0.1</lovinMTBFactor>
       </li>
     </comps>
     <stages>
