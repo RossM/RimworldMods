@@ -3,6 +3,7 @@
 public class GeneCompProperties_LoveEuphoria : GeneCompProperties
 {
     public NeedDef need;
+    public float needOffset = 1f;
     public List<HediffDef> hediffs;
 
     public GeneCompProperties_LoveEuphoria()
@@ -29,7 +30,7 @@ public class GeneComp_LoveEuphoria : GeneComp, IEventListener
             }
         }
 
-        partner.needs.TryGetNeed(Props.need)?.CurLevel = 1f;
+        partner.needs.TryGetNeed(Props.need)?.CurLevel += Props.needOffset;
     }
 
     public void RegisterWith(EventManager manager)

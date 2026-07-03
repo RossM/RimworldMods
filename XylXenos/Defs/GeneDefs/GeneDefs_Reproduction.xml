@@ -237,7 +237,7 @@
         <showHoursToRecover>true</showHoursToRecover>
       </li>
       <li Class="XylXenos.HediffCompProperties_RandomInspiration">
-        <mtbDays>5</mtbDays>
+        <mtbDays>10</mtbDays>
         <letter>Thanks to love euphoria from {PARTNER_nameIndef}, {PAWN_nameIndef} has experienced an inspiration!</letter>
       </li>
     </comps>
