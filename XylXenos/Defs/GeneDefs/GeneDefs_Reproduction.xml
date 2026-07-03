@@ -313,4 +313,23 @@
     </stages>
   </ThoughtDef>
 
+  <GeneDef>
+    <defName>XylYouthful</defName>
+    <label>youthful</label>
+    <description>Carriers of this gene stop aging externally at the age of 18, and retain a youthful appearance well into old age. This gene doesn't protect against age-related health issues, nor does it make a character live longer.</description>
+    <biostatCpx>1</biostatCpx>
+    <displayCategory>Reproduction</displayCategory>
+    <displayOrderInCategory>501</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Youthful">
+            <maxAge>18</maxAge>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
 </Defs>
