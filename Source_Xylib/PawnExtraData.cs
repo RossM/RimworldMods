@@ -2,6 +2,10 @@
 
 public interface IPawnData
 {
+    /// <summary>
+    ///     Called after the object is created or loaded to initialize it with the pawn it applies to.
+    /// </summary>
+    /// <param name="pawn"></param>
     void Init(Pawn pawn);
 }
 
