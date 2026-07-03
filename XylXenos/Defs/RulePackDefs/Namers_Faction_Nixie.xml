@@ -40,7 +40,7 @@
         <li>nameCore->[SylG][maybeHyphen][SylG][maybeHyphen][SylG]</li>
       </rulesStrings>
       <rulesFiles>
-        <li>coastalFeature->Xyl/Words/Nouns/CoastalFeatures</li>
+        <li>coastalFeature->Xyl/Words/Nixie/Location_Features</li>
       </rulesFiles>
     </rulePack>
   </RulePackDef>
