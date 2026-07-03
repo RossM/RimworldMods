@@ -9,6 +9,9 @@ public static class LateInit
     {
         using (new ProfileBlock("Xylib initialize PawnExtraData"))
         {
+            // Ensure that all PawnExtraData<T> static constructors are run, so that they register their event listeners in time
+            // to handle InPawnExposeData during loading. Without this the static constructor may not run until the first time Get<T>
+            // is called, which is after the game has already been loaded.
             foreach (var type in GenTypes.AllTypes.Where(t => t.IsClass && !t.IsAbstract && typeof(IPawnData).IsAssignableFrom(t)))
             {
                 try
