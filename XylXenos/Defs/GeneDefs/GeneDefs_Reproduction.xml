@@ -256,7 +256,7 @@
       <li>
         <label>love euphoria</label>
         <description>I can't get enough of {PARTNER_nameIndef}!</description>
-        <baseMoodEffect>12</baseMoodEffect>
+        <baseMoodEffect>14</baseMoodEffect>
       </li>
     </stages>
   </ThoughtDef>
@@ -308,7 +308,7 @@
       <li>
         <label>lovin' withdrawal ({PARTNER_nameDef})</label>
         <description>I can't forget the feel of {PARTNER_possessive} touch...</description>
-        <baseMoodEffect>-6</baseMoodEffect>
+        <baseMoodEffect>-10</baseMoodEffect>
       </li>
     </stages>
   </ThoughtDef>
