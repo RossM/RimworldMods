@@ -11,6 +11,9 @@ public interface IPawnData
 ///     retrieve a
 ///     pawn's instance.
 /// </summary>
+/// <remarks>
+///     If the type <typeparamref name="T"/> implements <see cref="IExposable" />, it will be automatically saved and loaded with the pawn.
+/// </remarks>
 public static class PawnExtraData<T> where T : IPawnData, new()
 {
     private class Listener : IEventListener

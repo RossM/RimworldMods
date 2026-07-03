@@ -83,7 +83,10 @@ public class DefGeneratorAttribute(Type defType) : Attribute
 /// <summary>
 ///     Provides a custom XML tag to use when saving/loading this class in <see cref="PawnExtraData{T}" />.
 /// </summary>
-/// <param name="label"></param>
+/// <remarks>
+///     Without this attribute, the XML tag is the class name including namespace.
+/// </remarks>
+/// <param name="label">The tag to use.</param>
 [AttributeUsage(AttributeTargets.Class)]
 public class ScribeLabelAttribute(string label) : Attribute
 {
