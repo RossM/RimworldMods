@@ -5,6 +5,7 @@ public class RenderNodeModifier
     public PawnRenderNodeTagDef tag;
     public float scale = 1.0f;
     public Vector3 offset = Vector3.zero;
+    public bool hidden = false;
 
     public bool Matches(PawnRenderNode node)
     {

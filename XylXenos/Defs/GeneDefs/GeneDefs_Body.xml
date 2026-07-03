@@ -122,6 +122,12 @@
     </renderNodeProperties>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
+        <renderNodeModifiers>
+          <li>
+            <tag>Body</tag>
+            <hidden>true</hidden>
+          </li>
+        </renderNodeModifiers>
       </li>
     </modExtensions>
   </GeneDef>
