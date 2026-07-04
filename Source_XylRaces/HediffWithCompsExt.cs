@@ -76,10 +76,10 @@ public class HediffWithCompsExt : HediffWithComps
             tipSb.Append(": ").Append(severityLabel);
         tipSb.AppendLine();
         if (!def.overrideTooltip.NullOrEmpty())
-            tipSb.AppendLine().AppendLineTagged(def.overrideTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("PARTNER")));
+            tipSb.AppendLine().AppendLineTagged(def.overrideTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
         else if (curStage != null && !curStage.overrideTooltip.NullOrEmpty())
         {
-            tipSb.AppendLine().AppendLineTagged(curStage.overrideTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("PARTNER")));
+            tipSb.AppendLine().AppendLineTagged(curStage.overrideTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
         }
         else
         {
@@ -89,9 +89,9 @@ public class HediffWithCompsExt : HediffWithComps
         }
 
         if (!def.extraTooltip.NullOrEmpty())
-            tipSb.AppendLine().AppendLineTagged(def.extraTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("PARTNER")));
+            tipSb.AppendLine().AppendLineTagged(def.extraTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
         if (curStage != null && !curStage.extraTooltip.NullOrEmpty())
-            tipSb.AppendLine().AppendLineTagged(curStage.extraTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("PARTNER")));
+            tipSb.AppendLine().AppendLineTagged(curStage.extraTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
         string tipStringExtra = TipStringExtra;
         if (!tipStringExtra.NullOrEmpty())
             tipSb.AppendLine().AppendLine(tipStringExtra.TrimEndNewlines());

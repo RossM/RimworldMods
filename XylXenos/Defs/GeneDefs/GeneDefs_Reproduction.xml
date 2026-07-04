@@ -224,7 +224,7 @@
     <hediffClass>XylXenos.HediffWithCompsExt</hediffClass>
     <label>love euphoria</label>
     <description>This character is experiencing elevated mood due to lovin' with a carrier of the love euphoria gene.</description>
-    <overrideTooltip>{PAWN_nameIndef} is experiencing elevated mood due to lovin' with {PARTNER_nameIndef}.</overrideTooltip>
+    <overrideTooltip>{PAWN_nameIndef} is experiencing elevated mood due to lovin' with {SOURCE_nameIndef}.</overrideTooltip>
     <descriptionHyperlinks>
       <GeneDef>XylLoveEuphoria</GeneDef>
     </descriptionHyperlinks>
@@ -238,7 +238,7 @@
       </li>
       <li Class="XylXenos.HediffCompProperties_RandomInspiration">
         <mtbDays>10</mtbDays>
-        <letter>Thanks to love euphoria from {PARTNER_nameIndef}, {PAWN_nameIndef} has experienced an inspiration!</letter>
+        <letter>Thanks to love euphoria from {SOURCE_nameIndef}, {PAWN_nameIndef} has experienced an inspiration!</letter>
       </li>
     </comps>
     <stages>
@@ -248,14 +248,14 @@
 
   <ThoughtDef>
     <defName>XylLoveEuphoria</defName>
-    <workerClass>XylXenos.ThoughtWorker_WithPartner</workerClass>
+    <workerClass>XylXenos.ThoughtWorker_WithSource</workerClass>
     <hediff>XylLoveEuphoria</hediff>
     <validWhileDespawned>true</validWhileDespawned>
     <developmentalStageFilter>Adult</developmentalStageFilter>
     <stages>
       <li>
         <label>love euphoria</label>
-        <description>I can't get enough of {PARTNER_nameIndef}!</description>
+        <description>I can't get enough of {SOURCE_nameIndef}!</description>
         <baseMoodEffect>14</baseMoodEffect>
       </li>
     </stages>
@@ -266,7 +266,7 @@
     <hediffClass>XylXenos.Hediff_LovinAddiction</hediffClass>
     <label>lovin' addiction</label>
     <description>This character has developed a neurochemical need for physical love with a carrier of the love euphoria gene.</description>
-    <overrideTooltip>{PAWN_nameIndef} has developed a neurochemical need for physical love with {PARTNER_nameIndef} or another carrier of the love euphoria gene.</overrideTooltip>
+    <overrideTooltip>{PAWN_nameIndef} has developed a neurochemical need for physical love with {SOURCE_nameIndef} or another carrier of the love euphoria gene.</overrideTooltip>
     <descriptionHyperlinks>
       <GeneDef>XylLoveEuphoria</GeneDef>
     </descriptionHyperlinks>
@@ -299,15 +299,15 @@
 
   <ThoughtDef>
     <defName>XylLovinWithdrawal</defName>
-    <workerClass>XylXenos.ThoughtWorker_WithPartner</workerClass>
+    <workerClass>XylXenos.ThoughtWorker_WithSource</workerClass>
     <hediff>XylLovinAddiction</hediff>
     <validWhileDespawned>true</validWhileDespawned>
     <developmentalStageFilter>Adult</developmentalStageFilter>
     <stages>
       <li IsNull="True" />
       <li>
-        <label>lovin' withdrawal ({PARTNER_nameDef})</label>
-        <description>I can't forget the feel of {PARTNER_possessive} touch...</description>
+        <label>lovin' withdrawal ({SOURCE_nameDef})</label>
+        <description>I can't forget the feel of {SOURCE_possessive} touch...</description>
         <baseMoodEffect>-10</baseMoodEffect>
       </li>
     </stages>
