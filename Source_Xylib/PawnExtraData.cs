@@ -1,5 +1,9 @@
 ﻿namespace Xylib;
 
+/// <summary>
+///     Represents a type of data that can be associated with a <see cref="Pawn" />. Implement this interface to create a
+///     class that can be stored in <see cref="PawnExtraData{T}" />.
+/// </summary>
 public interface IPawnData
 {
     /// <summary>
@@ -16,7 +20,8 @@ public interface IPawnData
 ///     pawn's instance.
 /// </summary>
 /// <remarks>
-///     If the type <typeparamref name="T"/> implements <see cref="IExposable" />, it will be automatically saved and loaded with the pawn.
+///     If the type <typeparamref name="T" /> implements <see cref="IExposable" />, it will be automatically saved and
+///     loaded with the pawn.
 /// </remarks>
 public static class PawnExtraData<T> where T : IPawnData, new()
 {
@@ -44,7 +49,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
         {
             manager.Register(EventDefOf.PostDiscard, null, Notify_PawnDiscarded);
             manager.Register(EventDefOf.GlobalPostGameDispose, null, Notify_PostGameDispose);
-    
+
             if (typeof(IExposable).IsAssignableFrom(typeof(T)))
                 manager.Register(EventDefOf.InPawnExposeData, null, Notify_InPawnExposeData);
         }
@@ -63,6 +68,11 @@ public static class PawnExtraData<T> where T : IPawnData, new()
         EventManager.AddStaticListener(listener);
     }
 
+    /// <summary>
+    ///     An XML tag to use when saving and loading this data. If the type <typeparamref name="T" /> has a
+    ///     <see cref="ScribeLabelAttribute" />, its label will be used; otherwise, the full name of the type including
+    ///     namespace will be used.
+    /// </summary>
     public static string ScribeLabel { get; } = typeof(T).TryGetAttribute<ScribeLabelAttribute>()?.label ?? typeof(T).FullName;
 
     /// <summary>
@@ -81,11 +91,6 @@ public static class PawnExtraData<T> where T : IPawnData, new()
         }
 
         return result;
-    }
-
-    public static void Set(Pawn pawn, T value)
-    {
-        data[pawn.thingIDNumber] = value;
     }
 
     private static void ExposeData(Pawn pawn)

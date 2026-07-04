@@ -2,15 +2,45 @@
 
 namespace Xylib;
 
+/// <summary>
+///     This is an enhanced version of <see cref="HediffGiver_Random" /> that adds additional features.
+/// </summary>
 [UsedFromXml]
 public class HediffGiver_RandomExt : HediffGiver
 {
+    /// <summary>
+    ///     The average number of days between consecutive triggers. The actual interval is random.
+    /// </summary>
     public float mtbDays;
+
+    /// <summary>
+    ///     Whether to send a letter when the hediff is applied. Defaults to true.
+    /// </summary>
     public bool sendLetter = true;
+
+    /// <summary>
+    ///     Whether to allow applying the same hediff multiple times to the same body part. Defaults to false.
+    /// </summary>
+    /// <remarks>
+    ///     Most hediffs will stack and combine severity if applied multiple times.
+    /// </remarks>
     public bool allowDuplicates = false;
+
+    /// <summary>
+    ///     When triggered from another hediff, whether to inherit the severity of the cause hediff. If false, the severity will be set to a random value in <see cref="severityRange" />.
+    /// </summary>
     public bool inheritSeverity = false;
+
+    /// <summary>
+    ///     The severity range to use when applying the hediff. The actual value will be a random value from the range.
+    /// </summary>
     public FloatRange severityRange = FloatRange.Zero;
 
+    /// <summary>
+    ///     Called every 60 ticks (1 real-time second).
+    /// </summary>
+    /// <param name="pawn">The pawn the hediff should be applied to, if triggered.</param>
+    /// <param name="cause">The hediff that is a parent to this object, if any.</param>
     public override void OnIntervalPassed(Pawn pawn, Hediff cause)
     {
         float chanceFactor = ChanceFactor(pawn);
@@ -21,6 +51,12 @@ public class HediffGiver_RandomExt : HediffGiver
         }
     }
 
+    /// <summary>
+    ///     Called when the hediff giver is triggered.
+    /// </summary>
+    /// <param name="pawn">The pawn the hediff should be applied to.</param>
+    /// <param name="cause">The hediff that is a parent to this object, if any.</param>
+    /// <returns></returns>
     public bool TryApply(Pawn pawn, Hediff cause)
     {
         if (!allowOnLodgers && pawn.IsQuestLodger())
