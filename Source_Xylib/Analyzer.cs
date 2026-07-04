@@ -2,9 +2,12 @@ using System.Reflection;
 
 namespace Xylib;
 
+/// <summary>
+///     Contains methods to check coding style and potential bugs or maintainability issues in Harmony patches.
+/// </summary>
 public static class Analyzer
 {
-    public static readonly string name = typeof(Analyzer).FullName;
+    private static readonly string name = typeof(Analyzer).FullName;
 
     /// <summary>
     ///     This checks the given assembly for Harmony patches annotated with <see cref="HarmonyPatch" /> and checks
