@@ -7,6 +7,7 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>Xylib</AssemblyName>
     <RootNamespace>Xylib</RootNamespace>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
