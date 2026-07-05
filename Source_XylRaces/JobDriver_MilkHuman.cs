@@ -12,11 +12,6 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
         Scribe_Values.Look(ref gatherProgress, nameof(gatherProgress));
     }
 
-    public override bool TryMakePreToilReservations(bool errorOnFailed)
-    {
-        return pawn.Reserve(Target, job, 1, -1, null, errorOnFailed);
-    }
-
     public override bool ValidateTarget(Pawn target)
     {
         return target?.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>() is { ReadyToMilk: true };
@@ -55,45 +50,21 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
         }
     }
 
-    protected override IEnumerable<Toil> MakeNewToils()
-    {
-        this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
-        this.FailOnNotCasualInterruptible(TargetIndex.A);
-        this.FailOnSomeonePhysicallyInteracting(TargetIndex.A);
-        yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
-        Toil toil = ToilMaker.MakeToil();
-        toil.initAction = delegate
-        {
-            Pawn actor = toil.actor;
-            actor.pather.StopDead();
-            PawnUtility.ForceWait(Target, 15000, maintainPosture: true);
+    protected override SkillDef ActiveSkill => SkillDefOf.Animals;
 
-            Target?.rotationTracker.FaceTarget(actor);
-        };
-        toil.tickIntervalAction = delegate(int delta)
+    protected override bool HasProgressBar => true;
+
+    protected override float Progress => gatherProgress / WorkTotal;
+
+    protected override void InteractionTickInterval(Toil toil, int delta)
+    {
+        Pawn actor = toil.actor;
+        actor.skills.Learn(SkillDefOf.Animals, 0.13f * delta);
+        gatherProgress += actor.GetStatValue(StatDefOf.AnimalGatherSpeed) * delta;
+        if (gatherProgress >= WorkTotal)
         {
-            Pawn actor = toil.actor;
-            actor.skills.Learn(SkillDefOf.Animals, 0.13f * delta);
-            gatherProgress += actor.GetStatValue(StatDefOf.AnimalGatherSpeed) * delta;
-            if (gatherProgress >= WorkTotal)
-            {
-                Gather(actor);
-                actor.jobs.EndCurrentJob(JobCondition.Succeeded);
-            }
-        };
-        toil.AddFinishAction(() =>
-        {
-            if (Target != null && Target.CurJobDef == JobDefOf.Wait_MaintainPosture)
-            {
-                Target.jobs.EndCurrentJob(JobCondition.InterruptForced);
-            }
-        });
-        toil.FailOnDespawnedOrNull(TargetIndex.A);
-        toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
-        toil.AddEndCondition(() => ValidateTarget(Target) ? JobCondition.Ongoing : JobCondition.Incompletable);
-        toil.defaultCompleteMode = ToilCompleteMode.Never;
-        toil.WithProgressBar(TargetIndex.A, () => gatherProgress / WorkTotal);
-        toil.activeSkill = () => SkillDefOf.Animals;
-        yield return toil;
+            Gather(actor);
+            actor.jobs.EndCurrentJob(JobCondition.Succeeded);
+        }
     }
 }
