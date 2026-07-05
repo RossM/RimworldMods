@@ -96,12 +96,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
     /// </summary>
     public bool hasPsycast;
 
-    /// <summary>
-    ///     Modifiers to the scale and offset to specific nodes in the pawn's render tree, used to
-    ///     change the pawn's visual in a different way than just adding additional nodes.
-    /// </summary>
-    [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
-
     #endregion
 
     #region Properties which are not aggregated in GeneSet

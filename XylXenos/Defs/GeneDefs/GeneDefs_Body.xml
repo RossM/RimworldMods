@@ -26,16 +26,20 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <bodySizeFactor>0.9</bodySizeFactor>
-        <renderNodeModifiers>
-          <li>
-            <tag>Root</tag>
-            <scale>0.85</scale>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_RenderNodeModifiers">
+            <renderNodeModifiers>
+              <li>
+                <tag>Root</tag>
+                <scale>0.85</scale>
+              </li>
+              <li>
+                <tag>Head</tag>
+                <scale>1.177</scale>
+              </li>
+            </renderNodeModifiers>
           </li>
-          <li>
-            <tag>Head</tag>
-            <scale>1.177</scale>
-          </li>
-        </renderNodeModifiers>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -56,17 +60,21 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <bodySizeFactor>1.5</bodySizeFactor>
         <healthScaleFactor>1.3</healthScaleFactor>
-        <renderNodeModifiers>
-          <li>
-            <tag>Root</tag>
-            <scale>1.2</scale>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_RenderNodeModifiers">
+            <renderNodeModifiers>
+              <li>
+                <tag>Root</tag>
+                <scale>1.2</scale>
+              </li>
+              <li>
+                <tag>Head</tag>
+                <scale>0.9</scale>
+                <offset>0,0,-0.05</offset>
+              </li>
+            </renderNodeModifiers>
           </li>
-          <li>
-            <tag>Head</tag>
-            <scale>0.9</scale>
-            <offset>0,0,-0.05</offset>
-          </li>
-        </renderNodeModifiers>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>
@@ -122,12 +130,16 @@
     </renderNodeProperties>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <renderNodeModifiers>
-          <li>
-            <tag>Body</tag>
-            <hidden>true</hidden>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_RenderNodeModifiers">
+            <renderNodeModifiers>
+              <li>
+                <tag>Body</tag>
+                <hidden>true</hidden>
+              </li>
+            </renderNodeModifiers>
           </li>
-        </renderNodeModifiers>
+        </comps>
       </li>
     </modExtensions>
   </GeneDef>

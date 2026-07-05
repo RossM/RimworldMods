@@ -21,8 +21,8 @@ public class GeneTracker_GeneWithComps : GeneTracker
     public bool hasPsycast = false;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.renderNodeModifiers" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.renderNodeModifiers" />
+    ///     Aggregates <see cref="GeneCompProperties_RenderNodeModifiers.renderNodeModifiers" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="GeneCompProperties_RenderNodeModifiers.renderNodeModifiers" />
     /// </summary>
     [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
 
@@ -53,7 +53,7 @@ public class GeneTracker_GeneWithComps : GeneTracker
                 healthScaleFactor *= def.healthScaleFactor;
                 hasPsycast |= def.hasPsycast;
 
-                Append(ref renderNodeModifiers, def.renderNodeModifiers);
+                Append(ref renderNodeModifiers, def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.renderNodeModifiers);
                 Append(ref unlockedBuildables, def.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables);
                 Append(ref unlockedRecipes, def.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes);
             }
