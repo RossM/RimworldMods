@@ -24,13 +24,17 @@ public static class FoodHelpers
             return FoodType.AnimalProduct;
         if ((flags & (FoodTypeFlags.VegetableOrFruit | FoodTypeFlags.Plant | FoodTypeFlags.Seed)) != 0)
             return FoodType.Vegetable;
+
         if ((flags & (FoodTypeFlags.Meat | FoodTypeFlags.Corpse)) != 0)
         {
             var foodType = FoodType.Meat;
-            if (foodDef.ingestible?.sourceDef?.race?.Humanlike == true)
+
+            RaceProperties race = foodDef.ingestible?.sourceDef?.race;
+            if (race?.Humanlike == true)
                 foodType |= FoodType.Humanlike;
-            if (foodDef.ingestible?.sourceDef?.race?.FleshType == FleshTypeDefOf.Insectoid)
+            if (race?.FleshType == FleshTypeDefOf.Insectoid)
                 foodType |= FoodType.Insect;
+            
             return foodType;
         }
 
