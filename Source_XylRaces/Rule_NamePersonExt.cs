@@ -25,6 +25,6 @@ public class Rule_NamePersonExt : Rule
 
     public override string ToString()
     {
-        return keyword + "->(personname)";
+        return $"{keyword}->(personname_{gender}_{slot})";
     }
 }
