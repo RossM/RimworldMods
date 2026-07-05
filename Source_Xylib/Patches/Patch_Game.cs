@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Game))]
-public static class Patch_Game
+internal static class Patch_Game
 {
     [Feature(nameof(EventDefOf.GlobalPostGameDispose))]
     [HarmonyPostfix]

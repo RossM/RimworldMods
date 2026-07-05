@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Pawn_HealthTracker))]
-public static class Patch_Pawn_HealthTracker
+internal static class Patch_Pawn_HealthTracker
 {
     [Feature(nameof(EventDefOf.PostCheckForStateChange))]
     [HarmonyPostfix]

@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(AddictionUtility))]
-public static class Patch_AddictionUtility
+internal static class Patch_AddictionUtility
 {
     [Feature(typeof(DefModExtension_Chemical))]
     [HarmonyPostfix]

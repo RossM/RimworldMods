@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(InteractionWorker_RecruitAttempt))]
-public static class Patch_InteractionWorker_RecruitAttempt
+internal static class Patch_InteractionWorker_RecruitAttempt
 {
     [Feature(nameof(XStatDefOf.XylResistanceFallRate))]
     [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]

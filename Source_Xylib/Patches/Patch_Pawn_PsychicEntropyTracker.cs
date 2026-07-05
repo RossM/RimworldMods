@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Pawn_PsychicEntropyTracker))]
-public static class Patch_Pawn_PsychicEntropyTracker
+internal static class Patch_Pawn_PsychicEntropyTracker
 {
     // Note: This patch is performance-sensitive
     [Feature(typeof(Psycast))]

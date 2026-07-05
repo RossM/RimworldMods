@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(FoodUtility))]
-public static class Patch_FoodUtility
+internal static class Patch_FoodUtility
 {
     [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
     [HarmonyPostfix]

@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(JobDriver_Lovin))]
-public static class Patch_JobDriver_Lovin
+internal static class Patch_JobDriver_Lovin
 {
     [Feature(nameof(EventDefOf.PostLovin))]
     [HarmonyPostfix]

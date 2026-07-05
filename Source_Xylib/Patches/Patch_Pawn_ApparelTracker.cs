@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Pawn_ApparelTracker))]
-public static class Patch_Pawn_ApparelTracker
+internal static class Patch_Pawn_ApparelTracker
 {
     [Feature(nameof(EventDefOf.PostApparelChanged))]
     [HarmonyPostfix]

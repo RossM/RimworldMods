@@ -1,7 +1,7 @@
 namespace Xylib.Patches;
 
 [HarmonyPatch]
-public static class PatchPsycast
+internal static class PatchPsycast
 {
     [Feature(nameof(DefModExtension_GeneWithComps.hasPsycast))]
     [InfixPostfix(typeof(PawnUtility), nameof(PawnUtility.GetPsylinkLevel))]

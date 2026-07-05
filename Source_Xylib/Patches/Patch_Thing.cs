@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Thing))]
-public static class Patch_Thing
+internal static class Patch_Thing
 {
     [Feature(typeof(EventManager))]
     [HarmonyPostfix]

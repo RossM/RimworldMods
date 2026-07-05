@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(HealthUtility))]
-public static class Patch_HealthUtility
+internal static class Patch_HealthUtility
 {
     [Feature(nameof(XStatDefOf.XylHypothermiaProgressionFactor))]
     [Feature(nameof(XStatDefOf.XylMalnutritionProgressionFactor))]

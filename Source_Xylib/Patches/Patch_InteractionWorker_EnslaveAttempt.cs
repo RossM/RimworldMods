@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(InteractionWorker_EnslaveAttempt))]
-public static class Patch_InteractionWorker_EnslaveAttempt
+internal static class Patch_InteractionWorker_EnslaveAttempt
 {
     [Feature(nameof(XStatDefOf.XylWillFallRate))]
     [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]

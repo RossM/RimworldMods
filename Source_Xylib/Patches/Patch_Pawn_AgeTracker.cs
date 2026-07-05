@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Pawn_AgeTracker))]
-public class Patch_Pawn_AgeTracker
+internal class Patch_Pawn_AgeTracker
 {
     [Feature(nameof(EventDefOf.PostBirthday))]
     [HarmonyPostfix]

@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(PawnGenerator))]
-public class Patch_PawnGenerator
+internal class Patch_PawnGenerator
 {
     private static XenotypeDef xenotypeOverride;
 

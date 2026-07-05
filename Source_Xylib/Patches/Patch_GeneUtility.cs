@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(GeneUtility))]
-public static class Patch_GeneUtility
+internal static class Patch_GeneUtility
 {
     [Feature(nameof(EventDefOf.PostSatisfyChemicalGenes))]
     [HarmonyPostfix]

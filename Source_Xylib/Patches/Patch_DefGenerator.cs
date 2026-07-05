@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(DefGenerator))]
-public static class Patch_DefGenerator
+internal static class Patch_DefGenerator
 {
     [Feature(typeof(GeneDefGenerator))]
     [HarmonyPostfix]

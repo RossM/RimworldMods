@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Pawn))]
-public static class Patch_Pawn
+internal static class Patch_Pawn
 {
     // Note: This patch is performance-sensitive
     [Feature(nameof(DefModExtension_GeneWithComps.bodySizeFactor))]

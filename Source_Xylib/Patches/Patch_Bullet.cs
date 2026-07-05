@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Bullet))]
-public static class Patch_Bullet
+internal static class Patch_Bullet
 {
     [Feature(nameof(XStatDefOf.XylRangedDodgeChance))]
     [HarmonyPrefix]

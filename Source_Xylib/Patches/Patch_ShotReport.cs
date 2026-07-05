@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(ShotReport))]
-public static class Patch_ShotReport
+internal static class Patch_ShotReport
 {
     [Feature(nameof(XStatDefOf.XylRangedDodgeChance))]
     [HarmonyPostfix]

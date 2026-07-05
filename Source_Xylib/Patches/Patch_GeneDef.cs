@@ -1,7 +1,7 @@
 namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(GeneDef))]
-public static class Patch_GeneDef
+internal static class Patch_GeneDef
 {
     [Feature(typeof(DefModExtension_GeneWithComps))]
     [InfixPostfix(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]

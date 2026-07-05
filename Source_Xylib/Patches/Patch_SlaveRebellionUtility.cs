@@ -1,10 +1,10 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(SlaveRebellionUtility))]
-public static class Patch_SlaveRebellionUtility
+internal static class Patch_SlaveRebellionUtility
 {
     private static readonly InstructionMatcher.Rule Rule_AddSlaveRebellionMtbFactorExplanation = new()
     {

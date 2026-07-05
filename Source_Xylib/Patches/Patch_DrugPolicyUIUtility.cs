@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(DrugPolicyUIUtility))]
-public static class Patch_DrugPolicyUIUtility
+internal static class Patch_DrugPolicyUIUtility
 {
     [Feature(nameof(DefModExtension_GeneWithComps.showInDrugPolicies))]
     [HarmonyPostfix]

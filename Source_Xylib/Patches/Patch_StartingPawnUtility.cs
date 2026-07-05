@@ -1,10 +1,10 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(StartingPawnUtility))]
-public class Patch_StartingPawnUtility
+internal class Patch_StartingPawnUtility
 {
     private static readonly InstructionMatcher.Rule Rule_GetExtraStartingItems = new()
     {

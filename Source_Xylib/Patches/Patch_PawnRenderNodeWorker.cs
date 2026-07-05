@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(PawnRenderNodeWorker))]
-public static class Patch_PawnRenderNodeWorker
+internal static class Patch_PawnRenderNodeWorker
 {
     [Feature(nameof(DefModExtension_GeneWithComps.renderNodeModifiers))]
     [HarmonyPostfix]

@@ -1,7 +1,7 @@
-﻿namespace Xylib.Patches;
+namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(HediffSet))]
-public class Patch_HediffSet
+internal class Patch_HediffSet
 {
     [Feature(nameof(EventDefOf.PostHediffsChanged))]
     [HarmonyPostfix]
