@@ -37,7 +37,7 @@
     <root Class="XylXenos.GeneSetMaker_Biostats">
       <chance>0.5</chance>
       <biostatArc>0~0</biostatArc>
-      <biostatCpx>1~99</biostatCpx>
+      <biostatCpx>1~</biostatCpx>
       <biostatMet>-2~2</biostatMet>
     </root>    
   </XylXenos.GeneSetMakerDef>
