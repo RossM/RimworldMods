@@ -63,7 +63,7 @@ public abstract class GeneSetMaker
         if (!geneSet.CanAddGeneDuringGeneration(gene))
             return false;
 
-        if (gene.Extension_GeneWithComps?.ValidFor(pawn, geneType) == false)
+        if (gene.Extension_GeneWithComps?.ValidFor(pawn, geneType) is false)
             return false;
 
         // Aptitude-giving genes must not apply to only disabled skills

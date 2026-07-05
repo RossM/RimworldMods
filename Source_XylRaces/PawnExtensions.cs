@@ -15,7 +15,7 @@ public static class PawnExtensions
             get => pawn.genes == null ? null : PawnExtraData<GeneTracker_XylXenos>.Get(pawn);
         }
 
-        public bool HasActivePsycastGene => pawn.GeneTracker_XylXenos?.hasPsycast == true;
+        public bool HasActivePsycastGene => pawn.GeneTracker_XylXenos?.hasPsycast is true;
 
         public bool NeedsPsyfocus =>
             // HasPsylink is patched to respect psycast genes
@@ -27,7 +27,7 @@ public static class PawnExtensions
                 return 0;
 
             if (pawn.AllGenesOfType<GeneWithComps>().Any(gene =>
-                    gene.Active && gene.GetComp<GeneComp_Psycast>() != null && gene.def.abilities?.Contains(ability) == true))
+                    gene.Active && gene.GetComp<GeneComp_Psycast>() != null && gene.def.abilities?.Contains(ability) is true))
             {
                 return ability.level;
             }

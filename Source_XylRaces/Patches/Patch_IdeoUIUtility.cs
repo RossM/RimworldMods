@@ -17,9 +17,9 @@ public static class Patch_IdeoUIUtility
         {
             if (def.GetModExtension<DefModExtension_Xenotype>() is { } modExt)
             {
-                if (modExt.agreeingMemes?.Contains(meme) == true)
+                if (modExt.agreeingMemes?.Contains(meme) is true)
                     agreeingXenotypes.Add(def);
-                if (modExt.disagreeingMemes?.Contains(meme) == true)
+                if (modExt.disagreeingMemes?.Contains(meme) is true)
                     disagreeingXenotypes.Add(def);
             }
         }

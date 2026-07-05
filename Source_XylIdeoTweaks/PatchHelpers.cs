@@ -27,7 +27,7 @@ public static class PatchHelpers
             ThingDef def = apparel.def;
             if (!def.apparel.countsAsClothingForNudity)
                 continue;
-            if (p.kindDef.apparelRequired?.Contains(def) == true)
+            if (p.kindDef.apparelRequired?.Contains(def) is true)
                 continue;
             if (excludedParts != null && !def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.Torso) &&
                 def.apparel.bodyPartGroups.Intersect(excludedParts).Any())

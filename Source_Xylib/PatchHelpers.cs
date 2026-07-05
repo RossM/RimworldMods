@@ -43,7 +43,7 @@ internal static class PatchHelpers
 
     public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene outGene)
     {
-        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene => gene.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies == true);
+        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene => gene.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies is true);
         return outGene != null;
     }
 
@@ -97,7 +97,7 @@ internal static class PatchHelpers
     {
         foreach (var pawn in Faction.OfPlayer.AllAlivePawns)
         {
-            if (pawn.GeneTracker_GeneWithComps?.unlockedRecipes?.Contains(recipe) == true)
+            if (pawn.GeneTracker_GeneWithComps?.unlockedRecipes?.Contains(recipe) is true)
                 return true;
         }
 

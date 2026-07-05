@@ -66,7 +66,7 @@ public static class Analyzer
                 {
                     // A prefix __result parameter without 'out' might not be initialized, which results in the default
                     // value being used if the prefix returns false. This is confusing and potentially indicates a bug.
-                    if (resultParameter?.IsOut == false)
+                    if (resultParameter?.IsOut is false)
                         Log.Warning($"[{name}] {type.FullName}::{method.Name} should use 'out' for __result");
 
                     // If a prefix patch returns void, it will always go on to the main method, and the value of

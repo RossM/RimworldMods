@@ -593,7 +593,7 @@ public class EventManager
                 if (!record.target.TryGetTarget(out Thing target))
                     continue;
 
-                if (notifications[record.eventDef.index]?.localCallbacks?.TryGetValue(target, out List<CallbackInfo> callbacks) == true)
+                if (notifications[record.eventDef.index]?.localCallbacks?.TryGetValue(target, out List<CallbackInfo> callbacks) is true)
                     callbacks.RemoveAll(callback => callback.listener == listener);
             }
         }

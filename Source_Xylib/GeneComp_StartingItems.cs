@@ -55,7 +55,7 @@ public class GeneComp_StartingItems : GeneComp, IEventListener
 
         bool Validate(ThingDef thingDef, StartingItemOption startingItem)
         {
-            return thingDef.ingestible?.foodType.HasFlag(startingItem.foodType) == true;
+            return thingDef.ingestible?.foodType.HasFlag(startingItem.foodType) is true;
         }
     }
 

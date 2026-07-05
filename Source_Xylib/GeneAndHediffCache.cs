@@ -150,7 +150,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (hediffsByModExt.TryGetValue(typeof(T), out List<Hediff> value))
             return value;
 
-        value = Pawn.health.hediffSet.hediffs.Where(g => g.def.modExtensions?.OfType<T>().Any() == true).ToList();
+        value = Pawn.health.hediffSet.hediffs.Where(g => g.def.modExtensions?.OfType<T>().Any() is true).ToList();
         hediffsByModExt.Add(typeof(T), value);
         return value;
     }
@@ -170,7 +170,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))
             return value;
 
-        value = Pawn.health.hediffSet.hediffs.OfType<HediffWithComps>().Where(hediff => hediff.comps?.OfType<T>().Any() == true)
+        value = Pawn.health.hediffSet.hediffs.OfType<HediffWithComps>().Where(hediff => hediff.comps?.OfType<T>().Any() is true)
             .ToList();
         hediffsByComp.Add(typeof(T), value);
         return value;

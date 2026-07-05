@@ -134,7 +134,7 @@ public static class DebugOutputs
 
             columns.Add(new(memeDef.LabelCap, factionDef =>
             {
-                if (factionDef.requiredMemes?.Contains(memeDef) == true)
+                if (factionDef.requiredMemes?.Contains(memeDef) is true)
                     return "Req";
                 if (!factionDef.allowedMemes.NullOrEmpty())
                     return factionDef.allowedMemes.Contains(memeDef) ? "\u2713" : "";

@@ -30,7 +30,7 @@ public static class FoodHelpers
             var foodType = FoodType.Meat;
 
             RaceProperties race = foodDef.ingestible?.sourceDef?.race;
-            if (race?.Humanlike == true)
+            if (race?.Humanlike is true)
                 foodType |= FoodType.Humanlike;
             if (race?.FleshType == FleshTypeDefOf.Insectoid)
                 foodType |= FoodType.Insect;
