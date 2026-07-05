@@ -92,4 +92,62 @@ internal static class PatchHelpers
         XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense,
             stringBuilder);
     }
+
+    public static bool IsRecipeUnlockedByGenes(RecipeDef recipe)
+    {
+        foreach (var pawn in Faction.OfPlayer.AllAlivePawns)
+        {
+            if (pawn.GeneTracker_GeneWithComps?.unlockedRecipes?.Contains(recipe) == true)
+                return true;
+        }
+
+        return false;
+    }
+
+    public static HashSet<RecipeDef> GetRecipesUnlockedByGenes()
+    {
+        HashSet<RecipeDef> result = [];
+        foreach (var geneDef in DefDatabase<GeneDef>.AllDefs)
+        {
+            var recipes = geneDef.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes;
+            if (recipes != null)
+                result.AddRange(recipes);
+        }
+
+        return result;
+    }
+
+    public static void AddDesignators(
+        DesignationCategoryDef __instance,
+        ref IEnumerable<Designator> __result,
+        Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ideoBuildingDesignatorsCached)
+    {
+        HashSet<Designator> geneDesignators = [];
+
+        foreach (var designators in Faction.OfPlayer.AllAlivePawns.Select(pawn => pawn.GeneTracker_GeneWithComps?.unlockedBuildables))
+        {
+            if (designators == null)
+                continue;
+
+            geneDesignators.AddRange(designators.Where(def => def.designationCategory == __instance)
+                .Select(GetCachedDesignator));
+        }
+
+        if (geneDesignators.Any())
+            __result = __result.Concat(geneDesignators);
+
+        Designator GetCachedDesignator(BuildableDef def)
+        {
+            DesignationCategoryDef.BuildablePreceptBuilding key = new DesignationCategoryDef.BuildablePreceptBuilding(def, null);
+            if (!ideoBuildingDesignatorsCached.TryGetValue(key, out var value))
+            {
+                value = new Designator_Build(def);
+                ideoBuildingDesignatorsCached[key] = value;
+            }
+
+            return value;
+        }
+    }
+
+    public static HashSet<RecipeDef> RecipesUnlockedByGenes => field ??= Xylib.PatchHelpers.GetRecipesUnlockedByGenes();
 }

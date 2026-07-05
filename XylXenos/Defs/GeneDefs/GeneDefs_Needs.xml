@@ -26,7 +26,7 @@
               <GoSwimming MayRequire="Ludeon.RimWorld.Odyssey">5</GoSwimming>
             </factors>
           </li>
-          <li Class="XylXenos.GeneCompProperties_UnlockBuildables">
+          <li Class="Xylib.GeneCompProperties_UnlockBuildables">
             <buildables>
               <li>XylShower</li>
             </buildables>

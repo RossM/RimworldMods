@@ -11,8 +11,6 @@ public static class PatchHelpers
         Father,
     }
 
-    public static HashSet<RecipeDef> RecipesUnlockedByGenes => field ??= GetRecipesUnlockedByGenes();
-
     public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
         var bonusGenes = geneDef.CompProps<GeneCompProperties_BonusGenes>();
@@ -275,38 +273,6 @@ public static class PatchHelpers
         return false;
     }
 
-    public static void AddDesignators(
-        DesignationCategoryDef __instance,
-        ref IEnumerable<Designator> __result,
-        Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ideoBuildingDesignatorsCached)
-    {
-        HashSet<Designator> geneDesignators = [];
-
-        foreach (var designators in Faction.OfPlayer.AllAlivePawns.Select(pawn => pawn.GeneTracker_XylXenos?.unlockedBuildables))
-        {
-            if (designators == null)
-                continue;
-
-            geneDesignators.AddRange(designators.Where(def => def.designationCategory == __instance)
-                .Select(GetCachedDesignator));
-        }
-
-        if (geneDesignators.Any())
-            __result = __result.Concat(geneDesignators);
-
-        Designator GetCachedDesignator(BuildableDef def)
-        {
-            DesignationCategoryDef.BuildablePreceptBuilding key = new DesignationCategoryDef.BuildablePreceptBuilding(def, null);
-            if (!ideoBuildingDesignatorsCached.TryGetValue(key, out var value))
-            {
-                value = new Designator_Build(def);
-                ideoBuildingDesignatorsCached[key] = value;
-            }
-
-            return value;
-        }
-    }
-
     public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
     {
         List<JoyGiverFactor> joyGiverChanceFactors = pawn.GeneTracker_XylXenos?.joyGiverChanceFactors;
@@ -321,30 +287,6 @@ public static class PatchHelpers
         }
 
         return factor;
-    }
-
-    public static HashSet<RecipeDef> GetRecipesUnlockedByGenes()
-    {
-        HashSet<RecipeDef> result = [];
-        foreach (var geneDef in DefDatabase<GeneDef>.AllDefs)
-        {
-            var recipes = geneDef.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes;
-            if (recipes != null)
-                result.AddRange(recipes);
-        }
-
-        return result;
-    }
-
-    public static bool IsRecipeUnlockedByGenes(RecipeDef recipe)
-    {
-        foreach (var pawn in Faction.OfPlayer.AllAlivePawns)
-        {
-            if (pawn.GeneTracker_XylXenos?.unlockedRecipes?.Contains(recipe) == true)
-                return true;
-        }
-
-        return false;
     }
 
     public static bool ShouldGetGeneticPassion(Pawn pawn, SkillRecord record, int minorPassions)

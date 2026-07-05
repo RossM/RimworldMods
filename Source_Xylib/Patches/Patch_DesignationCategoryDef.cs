@@ -1,7 +1,7 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(DesignationCategoryDef))]
-public static class Patch_DesignationCategoryDef
+internal static class Patch_DesignationCategoryDef
 {
     [Feature(typeof(GeneCompProperties_UnlockBuildables))]
     [HarmonyPostfix]
@@ -11,7 +11,7 @@ public static class Patch_DesignationCategoryDef
         Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ___ideoBuildingDesignatorsCached,
         ref IEnumerable<Designator> __result)
     {
-        PatchHelpers.AddDesignators(__instance, ref __result, ___ideoBuildingDesignatorsCached);
+        Xylib.PatchHelpers.AddDesignators(__instance, ref __result, ___ideoBuildingDesignatorsCached);
     }
 
     [Feature(typeof(GeneCompProperties_UnlockBuildables))]
@@ -22,6 +22,6 @@ public static class Patch_DesignationCategoryDef
         Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ___ideoBuildingDesignatorsCached,
         ref IEnumerable<Designator> __result)
     {
-        PatchHelpers.AddDesignators(__instance, ref __result, ___ideoBuildingDesignatorsCached);
+        Xylib.PatchHelpers.AddDesignators(__instance, ref __result, ___ideoBuildingDesignatorsCached);
     }
 }

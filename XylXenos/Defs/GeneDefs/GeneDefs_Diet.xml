@@ -105,12 +105,12 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
-          <li Class="XylXenos.GeneCompProperties_UnlockBuildables">
+          <li Class="Xylib.GeneCompProperties_UnlockBuildables">
             <buildables>
               <li MayRequire="Ludeon.RimWorld.Ideology">FungalGravel</li>
             </buildables>
           </li>
-          <li Class="XylXenos.GeneCompProperties_UnlockRecipes">
+          <li Class="Xylib.GeneCompProperties_UnlockRecipes">
             <recipes>
               <li>XylMake_Wort_Fungus</li>
             </recipes>

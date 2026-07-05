@@ -1,14 +1,14 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(RecipeDef))]
-public static class Patch_RecipeDef
+internal static class Patch_RecipeDef
 {
     [Feature(typeof(GeneCompProperties_UnlockRecipes))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
     public static void AvailableNow_Postfix(RecipeDef __instance, ref bool __result)
     {
-        if (!PatchHelpers.RecipesUnlockedByGenes.Contains(__instance))
+        if (!Xylib.PatchHelpers.RecipesUnlockedByGenes.Contains(__instance))
             return;
 
         // If the recipe is available, and there was some non-research prerequisite that was met, it's available
@@ -21,6 +21,6 @@ public static class Patch_RecipeDef
         if (__instance.researchPrerequisites != null && __instance.researchPrerequisites.Any(r => !r.IsFinished))
             return;
 
-        __result = PatchHelpers.IsRecipeUnlockedByGenes(__instance);
+        __result = Xylib.PatchHelpers.IsRecipeUnlockedByGenes(__instance);
     }
 }

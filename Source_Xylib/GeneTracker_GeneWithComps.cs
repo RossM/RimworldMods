@@ -26,11 +26,21 @@ public class GeneTracker_GeneWithComps : GeneTracker
     /// </summary>
     [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
 
+    /// <summary>
+    ///     Aggregates <see cref="GeneCompProperties_UnlockBuildables.buildables" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="GeneCompProperties_UnlockBuildables.buildables" />
+    /// </summary>
+    [CanBeNull] public List<BuildableDef> unlockedBuildables;
+
+    [CanBeNull] public List<RecipeDef> unlockedRecipes;
+
     public override void Update()
     {
         bodySizeFactor = 1f;
         healthScaleFactor = 1f;
         renderNodeModifiers?.Clear();
+        unlockedBuildables?.Clear();
+        unlockedRecipes?.Clear();
         hasPsycast = false;
 
         if (pawn.genes != null)
@@ -44,6 +54,8 @@ public class GeneTracker_GeneWithComps : GeneTracker
                 hasPsycast |= def.hasPsycast;
 
                 Append(ref renderNodeModifiers, def.renderNodeModifiers);
+                Append(ref unlockedBuildables, def.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables);
+                Append(ref unlockedRecipes, def.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes);
             }
         }
     }
