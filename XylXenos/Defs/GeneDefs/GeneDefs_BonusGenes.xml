@@ -8,15 +8,15 @@
     <displayPriorityInXenotype>210</displayPriorityInXenotype>
   </GeneCategoryDef>
   
-  <XylXenos.GeneSetMakerDef Name="GeneSetBiostatBase" Abstract="true">
-    <root Class="XylXenos.GeneSetMaker_Biostats">
+  <Xylib.GeneSetMakerDef Name="GeneSetBiostatBase" Abstract="true">
+    <root Class="Xylib.GeneSetMaker_Biostats">
       <prohibitedModContentPacks>
         <li IsNull="true" />
         <li>vanillaracesexpanded.android</li>
         <li>vanillaracesexpanded.starjack</li>
       </prohibitedModContentPacks>
     </root>    
-  </XylXenos.GeneSetMakerDef>
+  </Xylib.GeneSetMakerDef>
 
   <GeneDef>
     <defName>XylGeneticAtavism</defName>
@@ -33,7 +33,7 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
-          <li Class="XylXenos.GeneCompProperties_BonusGenes">
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
             <addedGeneType>Xenogene</addedGeneType>
             <maker>XylGeneticAtavism</maker>
           </li>
@@ -42,15 +42,15 @@
     </modExtensions>
   </GeneDef>
 
-  <XylXenos.GeneSetMakerDef ParentName="GeneSetBiostatBase">
+  <Xylib.GeneSetMakerDef ParentName="GeneSetBiostatBase">
     <defName>XylGeneticAtavism</defName>
-    <root Class="XylXenos.GeneSetMaker_Biostats">
+    <root Class="Xylib.GeneSetMaker_Biostats">
       <chance>0.5</chance>
       <biostatArc>0~0</biostatArc>
       <biostatCpx>1~</biostatCpx>
       <biostatMet>-2~2</biostatMet>
     </root>    
-  </XylXenos.GeneSetMakerDef>
+  </Xylib.GeneSetMakerDef>
 
   <GeneDef Name="XylSpecialistBase" Abstract="true">
     <displayCategory>XylRandom</displayCategory>
@@ -71,7 +71,7 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <geneType>Xenogene</geneType>
         <comps>
-          <li Class="XylXenos.GeneCompProperties_BonusGenes">
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
             <removeAfterAdding>true</removeAfterAdding>
             <maker>XylRandomAptitudeStrong</maker>
           </li>
@@ -80,9 +80,9 @@
     </modExtensions>
   </GeneDef>
 
-  <XylXenos.GeneSetMakerDef>
+  <Xylib.GeneSetMakerDef>
     <defName>XylRandomAptitudeStrong</defName>
-    <root Class="XylXenos.GeneSetMaker_List">
+    <root Class="Xylib.GeneSetMaker_List">
       <genes>
         <!--<li>AptitudeStrong_Shooting</li>-->
         <!--<li>AptitudeStrong_Melee</li>-->
@@ -98,7 +98,7 @@
         <li>AptitudeStrong_Intellectual</li>
       </genes>
     </root>
-  </XylXenos.GeneSetMakerDef>
+  </Xylib.GeneSetMakerDef>
 
   <GeneDef ParentName="XylSpecialistBase">
     <defName>XylSuperSpecialist</defName>
@@ -112,7 +112,7 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <geneType>Xenogene</geneType>
         <comps>
-          <li Class="XylXenos.GeneCompProperties_BonusGenes">
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
             <removeAfterAdding>true</removeAfterAdding>
             <maker>XylRandomAptitudeRemarkable</maker>
           </li>
@@ -121,9 +121,9 @@
     </modExtensions>
   </GeneDef>
   
-  <XylXenos.GeneSetMakerDef>
+  <Xylib.GeneSetMakerDef>
     <defName>XylRandomAptitudeRemarkable</defName>
-    <root Class="XylXenos.GeneSetMaker_List">
+    <root Class="Xylib.GeneSetMaker_List">
       <genes>
         <!--<li>AptitudeRemarkable_Shooting</li>-->
         <!--<li>AptitudeRemarkable_Melee</li>-->
@@ -139,7 +139,7 @@
         <li>AptitudeRemarkable_Intellectual</li>
       </genes>
     </root>
-  </XylXenos.GeneSetMakerDef>
+  </Xylib.GeneSetMakerDef>
 
   <GeneDef>
     <defName>XylScalebornLineage</defName>
@@ -153,7 +153,7 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
-          <li Class="XylXenos.GeneCompProperties_BonusGenes">
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
             <removeAfterAdding>true</removeAfterAdding>
             <maker>XylScalebornLineage</maker>
           </li>
@@ -162,12 +162,12 @@
     </modExtensions>
   </GeneDef>
   
-  <XylXenos.GeneSetMakerDef>
+  <Xylib.GeneSetMakerDef>
     <defName>XylScalebornLineage</defName>
-    <root Class="XylXenos.GeneSetMaker_Option">
+    <root Class="Xylib.GeneSetMaker_Option">
       <options>
         <li>
-          <maker Class="XylXenos.GeneSetMaker_List">
+          <maker Class="Xylib.GeneSetMaker_List">
             <count>3</count>
             <genes>
               <li>FireSpew</li>
@@ -177,7 +177,7 @@
           </maker>
         </li>
         <li>
-          <maker Class="XylXenos.GeneSetMaker_List">
+          <maker Class="Xylib.GeneSetMaker_List">
             <count>3</count>
             <genes>
               <li>AcidSpray</li>
@@ -187,7 +187,7 @@
           </maker>
         </li>
         <li>
-          <maker Class="XylXenos.GeneSetMaker_List">
+          <maker Class="Xylib.GeneSetMaker_List">
             <count>3</count>
             <genes>
               <li>FoamSpray</li>
@@ -198,6 +198,6 @@
         </li>
       </options>
     </root>
-  </XylXenos.GeneSetMakerDef>
+  </Xylib.GeneSetMakerDef>
 
 </Defs>

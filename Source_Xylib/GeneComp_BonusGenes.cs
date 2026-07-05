@@ -1,4 +1,4 @@
-﻿namespace XylXenos;
+﻿namespace Xylib;
 
 public class GeneCompProperties_BonusGenes : GeneCompProperties
 {

@@ -817,6 +817,14 @@ public static class Extensions
         }
     }
 
+    extension(IntRange range)
+    {
+        public bool Includes(int value)
+        {
+            return range.min <= value && value <= range.max;
+        }
+    }
+
     extension<T>(T obj)
     {
         public T MemberwiseClone()
