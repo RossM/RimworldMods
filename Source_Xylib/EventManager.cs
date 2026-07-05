@@ -301,7 +301,7 @@ public class EventManager
     [Unsaved] private readonly HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
 
     // Information about the listeners registered for each event.
-    private readonly NotificationInfo[] notifications = new NotificationInfo[DefDatabase<EventDef>.DefCount];
+    private NotificationInfo[] notifications;
 
     // Events that each listener has registered for, used for unregistering the listener.
     private ConditionalWeakTable<IEventListener, List<RegistrationInfo>> registrations = new();
@@ -316,6 +316,11 @@ public class EventManager
     public static void ToggleNotificationManagerLogging()
     {
         doDebug = !doDebug;
+    }
+
+    private void Init()
+    {
+        notifications ??= new NotificationInfo[DefDatabase<EventDef>.DefCount];
     }
 
     private void RegisterInternal(
@@ -334,6 +339,8 @@ public class EventManager
             Debug.Log(
                 $"[EventManager] Register eventDef={eventDef} {(target == null ? "global" : $"target=[{target}]")} listener={listener} name={name} priority={priority}");
         }
+
+        Init();
 
         var records = registrations.GetOrCreateValue(listener);
         records.Add(new(eventDef, target));
@@ -570,6 +577,8 @@ public class EventManager
     /// </param>
     public void RemoveListener(IEventListener listener)
     {
+        Init();
+
         listener.PreUnregister(this);
 
         if (!registrations.TryGetValue(listener, out List<RegistrationInfo> records))
@@ -614,6 +623,8 @@ public class EventManager
 
         if (Prefs.DevMode)
             ValidateNotifyArgs(eventDef, target, data);
+
+        Init();
 
         NotificationInfo notificationInfo = notifications[eventDef.index];
         if (notificationInfo == null)
@@ -801,6 +812,8 @@ public class EventManager
     /// </summary>
     public void Reset()
     {
+        Init();
+
         registrations = new();
         for (int i = 0; i < notifications.Length; i++)
             notifications[i] = null;
