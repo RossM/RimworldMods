@@ -282,7 +282,7 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
-    public void RemoveInvalidChemicalHediffs()
+    private void RemoveInvalidChemicalHediffs()
     {
         HashSet<HediffDef> hediffDefsToRemove = [];
 
@@ -370,6 +370,10 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
+    /// <summary>
+    ///     Called periodically on gameplay tick.
+    /// </summary>
+    /// <param name="delta"></param>
     public override void TickInterval(int delta)
     {
         base.TickInterval(delta);
@@ -389,6 +393,9 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
+    /// <summary>
+    ///     Called on gameplay tick.
+    /// </summary>
     public override void Tick()
     {
         base.Tick();
@@ -399,6 +406,10 @@ public class GeneWithComps : Gene, IEventListener
         CompTick?.Invoke();
     }
 
+    /// <summary>
+    ///     Gets UI gizmos added to the pawn when it is selected.
+    /// </summary>
+    /// <returns></returns>
     public override IEnumerable<Gizmo> GetGizmos()
     {
         if (comps != null)
@@ -425,6 +436,13 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
+    /// <summary>
+    ///     Gets the first component with type assignable to
+    ///     <typeparam name="T" />
+    ///     .
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns>The component, or null if there is no matching component</returns>
     public T GetComp<T>() where T : GeneComp
     {
         if (comps == null)
@@ -439,11 +457,18 @@ public class GeneWithComps : Gene, IEventListener
         return null;
     }
 
+    /// <summary>
+    ///     Marks the gene's <see cref="Active" /> property as stale.
+    /// </summary>
     public void SetActiveStateNeedsUpdating()
     {
         activeStateNeedsUpdating = true;
     }
 
+    /// <summary>
+    ///     Registers the gene and its components with the given <see cref="EventManager" />.
+    /// </summary>
+    /// <param name="manager">The event manager.</param>
     public virtual void RegisterWith(EventManager manager)
     {
         // The only things that can change when a gene is active in the base game are:
