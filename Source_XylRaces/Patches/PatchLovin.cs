@@ -1,4 +1,4 @@
-﻿namespace XylXenos;
+﻿namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(LovePartnerRelationUtility))]
 public static class PatchLovin
