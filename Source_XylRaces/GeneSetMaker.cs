@@ -68,9 +68,6 @@ public abstract class GeneSetMaker
         if (!geneSet.CanAddGeneDuringGeneration(gene))
             return false;
 
-        if (gene.modContentPack != null && Config.Instance.ignoreGenesFromMods.Contains(gene.modContentPack.PackageId))
-            return false;
-
         if (prohibitedGenes?.Contains(gene) is true)
             return false;
 
@@ -87,6 +84,15 @@ public abstract class GeneSetMaker
             return false;
 
         return true;
+    }
+
+    public IEnumerable<string> ConfigErrors()
+    {
+        return [];
+    }
+
+    public void ResolveReferences()
+    {
     }
 }
 
@@ -112,6 +118,17 @@ public class GeneSetMaker_Option : GeneSetMaker
 }
 
 [UsedFromXml]
+public class GeneSetMaker_Subtree : GeneSetMaker
+{
+    public GeneSetMakerDef def;
+
+    protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
+    {
+        def.root.AddGenes(geneSet, geneType, pawn);
+    }
+}
+
+[UsedFromXml]
 public class GeneSetMaker_Biostats : GeneSetMaker
 {
     public override int BiostatMetForDisplay => Mathf.Clamp(0, biostatMet.min, biostatMet.max) * count.min;
@@ -122,6 +139,9 @@ public class GeneSetMaker_Biostats : GeneSetMaker
 
     public override bool Validate(GeneDef gene, GeneSet geneSet, GeneType geneType, Pawn pawn)
     {
+        if (gene.modContentPack != null && Config.Instance.ignoreGenesFromMods.Contains(gene.modContentPack.PackageId))
+            return false;
+
         if (!biostatMet.Includes(gene.biostatMet))
             return false;
         if (!biostatArc.Includes(gene.biostatArc))

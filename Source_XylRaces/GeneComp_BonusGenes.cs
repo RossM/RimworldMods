@@ -2,7 +2,7 @@
 
 public class GeneCompProperties_BonusGenes : GeneCompProperties
 {
-    public GeneSetMaker maker;
+    public GeneSetMakerDef maker;
     public GeneType? addedGeneType;
     public bool removeAfterAdding = false;
 
@@ -29,7 +29,7 @@ public class GeneComp_BonusGenes : GeneComp
 
     public override void CompPostPostAdd()
     {
-        var geneSet = Props.maker.Generate(Pawn, AddedGeneType);
+        var geneSet = Props.maker.root.Generate(Pawn, AddedGeneType);
 
         foreach (var gene in geneSet.GenesListForReading)
             AddGene(gene);
