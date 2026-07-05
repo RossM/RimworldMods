@@ -12,20 +12,6 @@ public class JobDriver_Soak : JobDriver
     {
         var need_wetness = pawn.needs?.TryGetNeed<Need_Wetness>();
 
-        Toil toil = Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
-        toil.tickIntervalAction = _ =>
-        {
-            if (Find.TickManager.TicksGame > startTick + job.def.joyDuration ||
-                need_wetness is { CurLevel: > 0.9999f })
-            {
-                EndJobWith(JobCondition.Succeeded);
-            }
-            else
-            {
-                CheckForSwimmingPose();
-            }
-        };
-        yield return toil;
         Toil goToil = Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
         goToil.tickIntervalAction = _ =>
         {
@@ -40,6 +26,7 @@ public class JobDriver_Soak : JobDriver
             }
         };
         goToil.AddFinishAction(CheckForSwimmingPose);
+        goToil.FailOnCannotReach(TargetIndex.A, PathEndMode.OnCell);
         yield return goToil;
         Toil toil2 = Toils_General.Wait(240);
         toil2.tickIntervalAction = _ => { CheckForSwimmingPose(); };
