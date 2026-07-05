@@ -33,17 +33,50 @@ public class GeneCompProperties_RenderNodeModifiers : GeneCompProperties
 
     internal List<RenderNodeModifier> RenderNodeModifiersOfType(RenderNodeModifierType type)
     {
-        return type switch
+        if (renderNodeModifiers == null)
+            return null;
+
+        List<RenderNodeModifier> list = new List<RenderNodeModifier>();
+
+        switch (type)
         {
-            RenderNodeModifierType.PositionSelf => renderNodeModifiers?
-                .Where(m => m.offset != Vector3.zero || m.scale != 1f).ToList(),
-            RenderNodeModifierType.PositionChildren => renderNodeModifiers?
-                .Where(m => (m.offset != Vector3.zero || m.scale != 1f) && m.includeChildren).ToList(),
-            RenderNodeModifierType.VisibilitySelfOnly => renderNodeModifiers?
-                .Where(m => m.hidden && !m.includeChildren).ToList(),
-            RenderNodeModifierType.VisibilitySelfAndChildren => renderNodeModifiers?
-                .Where(m => m.hidden && m.includeChildren).ToList(),
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-        };
+            case RenderNodeModifierType.PositionSelf:
+                foreach (RenderNodeModifier m in renderNodeModifiers)
+                {
+                    if (m.offset != Vector3.zero || m.scale != 1f)
+                        list.Add(m);
+                }
+
+                return list;
+
+            case RenderNodeModifierType.PositionChildren:
+                foreach (RenderNodeModifier m in renderNodeModifiers)
+                {
+                    if ((m.offset != Vector3.zero || m.scale != 1f) && m.includeChildren)
+                        list.Add(m);
+                }
+
+                return list;
+
+            case RenderNodeModifierType.VisibilitySelfOnly:
+                foreach (RenderNodeModifier m in renderNodeModifiers)
+                {
+                    if (m.hidden && !m.includeChildren)
+                        list.Add(m);
+                }
+
+                return list;
+
+            case RenderNodeModifierType.VisibilitySelfAndChildren:
+                foreach (RenderNodeModifier m in renderNodeModifiers)
+                {
+                    if (m.hidden && m.includeChildren)
+                        list.Add(m);
+                }
+
+                return list;
+
+            default: throw new ArgumentOutOfRangeException(nameof(type), type, null);
+        }
     }
 }
