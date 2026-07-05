@@ -24,10 +24,10 @@ public class GeneTracker_GeneWithComps : GeneTracker
     ///     Aggregates <see cref="GeneCompProperties_RenderNodeModifiers.renderNodeModifiers" /> from all genes.<br /><br />
     ///     <inheritdoc cref="GeneCompProperties_RenderNodeModifiers.renderNodeModifiers" />
     /// </summary>
-    [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers_scale;
+    [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers;
 
-    [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers_offset;
-    [CanBeNull] public List<RenderNodeModifier> renderNodeModifiers_hidden;
+    internal readonly List<RenderNodeModifier>[] renderNodeModifiersByType
+        = new List<RenderNodeModifier>[Enum.GetValues(typeof(RenderNodeModifierType)).Length];
 
     /// <summary>
     ///     Aggregates <see cref="GeneCompProperties_UnlockBuildables.buildables" /> from all genes.<br /><br />
@@ -41,9 +41,9 @@ public class GeneTracker_GeneWithComps : GeneTracker
     {
         bodySizeFactor = 1f;
         healthScaleFactor = 1f;
-        renderNodeModifiers_scale?.Clear();
-        renderNodeModifiers_offset?.Clear();
-        renderNodeModifiers_hidden?.Clear();
+        renderNodeModifiers?.Clear();
+        for (int i = 0; i < renderNodeModifiersByType.Length; i++)
+            renderNodeModifiersByType[i]?.Clear();
         unlockedBuildables?.Clear();
         unlockedRecipes?.Clear();
         hasPsycast = false;
@@ -58,13 +58,13 @@ public class GeneTracker_GeneWithComps : GeneTracker
                 healthScaleFactor *= def.healthScaleFactor;
                 hasPsycast |= def.hasPsycast;
 
-                Append(ref renderNodeModifiers_scale,
-                    def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.renderNodeModifiers?.Where(m => m.scale != 1f).ToList());
-                Append(ref renderNodeModifiers_offset,
-                    def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.renderNodeModifiers?.Where(m => m.offset != Vector3.zero)
-                        .ToList());
-                Append(ref renderNodeModifiers_hidden,
-                    def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.renderNodeModifiers?.Where(m => m.hidden).ToList());
+                Append(ref renderNodeModifiers, def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.renderNodeModifiers);
+                for (int i = 0; i < renderNodeModifiersByType.Length; i++)
+                {
+                    Append(ref renderNodeModifiersByType[i],
+                        def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.RenderNodeModifiersOfType((RenderNodeModifierType)i));
+                }
+
                 Append(ref unlockedBuildables, def.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables);
                 Append(ref unlockedRecipes, def.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes);
             }

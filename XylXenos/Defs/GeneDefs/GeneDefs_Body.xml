@@ -136,6 +136,7 @@
               <li>
                 <tag>Body</tag>
                 <hidden>true</hidden>
+                <includeChildren>false</includeChildren>
               </li>
             </renderNodeModifiers>
           </li>
