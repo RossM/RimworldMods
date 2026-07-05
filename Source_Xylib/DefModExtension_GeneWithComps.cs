@@ -195,4 +195,13 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
         return null;
     }
+
+    public bool ValidFor(Pawn pawn, GeneType? pawnGeneType)
+    {
+        if (gender != null && gender != pawn.gender)
+            return false;
+        if (geneType != null && geneType != pawnGeneType)
+            return false;
+        return true;
+    }
 }

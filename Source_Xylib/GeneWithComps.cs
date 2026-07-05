@@ -211,9 +211,7 @@ public class GeneWithComps : Gene, IEventListener
         if (!base.Active)
             return false;
 
-        if (DefExt.gender != null && DefExt.gender != pawn.gender)
-            return false;
-        if (DefExt.geneType != null && DefExt.geneType != GeneType)
+        if (!DefExt.ValidFor(pawn, GeneType))
             return false;
 
         if (comps != null)

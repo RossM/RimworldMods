@@ -63,13 +63,8 @@ public abstract class GeneSetMaker
         if (!geneSet.CanAddGeneDuringGeneration(gene))
             return false;
 
-        if (gene.Extension_GeneWithComps is { } defExt)
-        {
-            if (defExt.gender != null && defExt.gender != pawn.gender)
-                return false;
-            if (defExt.geneType != null && defExt.geneType != geneType)
-                return false;
-        }
+        if (gene.Extension_GeneWithComps?.ValidFor(pawn, geneType) == false)
+            return false;
 
         // Aptitude-giving genes must not apply to only disabled skills
         if (!gene.aptitudes.NullOrEmpty() && gene.aptitudes.All(aptitude => pawn.skills.GetSkill(aptitude.skill).TotallyDisabled))
