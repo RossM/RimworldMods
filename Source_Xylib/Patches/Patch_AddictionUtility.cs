@@ -1,4 +1,4 @@
-namespace Xylib.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(AddictionUtility))]
 internal static class Patch_AddictionUtility
