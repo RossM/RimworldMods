@@ -7,6 +7,16 @@
     <label>random</label>
     <displayPriorityInXenotype>210</displayPriorityInXenotype>
   </GeneCategoryDef>
+  
+  <XylXenos.GeneSetMakerDef Name="GeneSetBiostatBase" Abstract="true">
+    <root Class="XylXenos.GeneSetMaker_Biostats">
+      <prohibitedModContentPacks>
+        <li>vanillaracesexpanded.android</li>
+        <li>vanillaracesexpanded.starjack</li>        
+      </prohibitedModContentPacks>
+    </root>    
+  </XylXenos.GeneSetMakerDef>
+
 
   <GeneDef>
     <defName>XylGeneticAtavism</defName>
@@ -32,7 +42,7 @@
     </modExtensions>
   </GeneDef>
 
-  <XylXenos.GeneSetMakerDef>
+  <XylXenos.GeneSetMakerDef ParentName="GeneSetBiostatBase">
     <defName>XylGeneticAtavism</defName>
     <root Class="XylXenos.GeneSetMaker_Biostats">
       <chance>0.5</chance>

@@ -166,13 +166,6 @@ public class GeneSetMaker_Biostats : GeneSetMaker
 
         return base.Validate(gene, geneSet, geneType, pawn);
     }
-
-    public override void ResolveReferences()
-    {
-        base.ResolveReferences();
-
-        prohibitedModContentPacks ??= Config.Instance.ignoreGenesFromMods.ToList();
-    }
 }
 
 [UsedFromXml]

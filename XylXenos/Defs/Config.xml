@@ -4,10 +4,6 @@
 
   <XylXenos.Config>
     <defName>XylXenosConfig_Core</defName>
-    <ignoreGenesFromMods>
-      <li>vanillaracesexpanded.android</li>
-      <li>vanillaracesexpanded.starjack</li>
-    </ignoreGenesFromMods>
     <wetnessGivingJobs>
       <li>XylTakeShower</li>
       <li MayRequire="Dubwise.DubsBadHygiene">useWashBucket</li>
