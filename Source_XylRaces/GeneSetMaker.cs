@@ -73,12 +73,12 @@ public abstract class GeneSetMaker
         return true;
     }
 
-    public IEnumerable<string> ConfigErrors()
+    public virtual IEnumerable<string> ConfigErrors()
     {
         return [];
     }
 
-    public void ResolveReferences()
+    public virtual void ResolveReferences()
     {
     }
 }
@@ -101,6 +101,29 @@ public class GeneSetMaker_Option : GeneSetMaker
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
         options.RandomElementByWeight(o => o.weight).maker.AddGenes(geneSet, geneType, pawn);
+    }
+
+    public override IEnumerable<string> ConfigErrors()
+    {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+        foreach (var option in options)
+        {
+            if (option.maker == null)
+                yield return "null maker in options";
+            else
+            {
+                foreach (var error in option.maker.ConfigErrors())
+                    yield return error;
+            }
+        }
+    }
+
+    public override void ResolveReferences()
+    {
+        base.ResolveReferences();
+        foreach (var option in options)
+            option.maker.ResolveReferences();
     }
 }
 
@@ -125,10 +148,11 @@ public class GeneSetMaker_Biostats : GeneSetMaker
     public IntRange biostatMet = new(int.MinValue, int.MaxValue);
 
     public List<GeneDef> prohibitedGenes;
+    [NoTranslate] public List<string> prohibitedModContentPacks;
 
     public override bool Validate(GeneDef gene, GeneSet geneSet, GeneType geneType, Pawn pawn)
     {
-        if (gene.modContentPack != null && Config.Instance.ignoreGenesFromMods.Contains(gene.modContentPack.PackageId))
+        if (gene.modContentPack != null && prohibitedModContentPacks?.Contains(gene.modContentPack.PackageId) is true)
             return false;
         if (prohibitedGenes?.Contains(gene) is true)
             return false;
@@ -141,6 +165,13 @@ public class GeneSetMaker_Biostats : GeneSetMaker
             return false;
 
         return base.Validate(gene, geneSet, geneType, pawn);
+    }
+
+    public override void ResolveReferences()
+    {
+        base.ResolveReferences();
+
+        prohibitedModContentPacks ??= Config.Instance.ignoreGenesFromMods.ToList();
     }
 }
 
