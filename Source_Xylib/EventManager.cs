@@ -1,17 +1,36 @@
 ﻿namespace Xylib;
 
+/// <summary>
+///     Provides pawn-generation context to early generation callbacks.
+/// </summary>
+/// <param name="request">
+///     The request being used to generate the pawn.
+/// </param>
+/// <param name="xenotype">
+///     The xenotype chosen for the pawn.
+/// </param>
 public class PawnGenerationData(PawnGenerationRequest request, XenotypeDef xenotype)
 {
+    /// <summary>
+    ///     The request being used to generate the pawn.
+    /// </summary>
     public PawnGenerationRequest request = request;
+
+    /// <summary>
+    ///     The xenotype chosen for the pawn.
+    /// </summary>
     public XenotypeDef xenotype = xenotype;
 }
 
+/// <summary>
+///     Implemented by objects that register callbacks with <see cref="EventManager" />.
+/// </summary>
 public interface IEventListener
 {
     /// <summary>
     ///     Called when a listener is created or loaded. The listener should call
     ///     <see cref="O:EventManager.Register" />
-    ///     to register for any notifications they want to receive.
+    ///     to register for any events it should receive.
     /// </summary>
     /// <param name="manager">
     ///     The <see cref="EventManager" /> that should be registered with. This is always
@@ -20,10 +39,9 @@ public interface IEventListener
     public void RegisterWith(EventManager manager);
 
     /// <summary>
-    ///     Called when a listener is about to be removed from the notification manager. Notifications registered by the
-    ///     listener directly
-    ///     will be removed automatically, but if there are any child objects such as Comps that need to be unregistered, call
-    ///     <see cref="EventManager.RemoveListener" /> for each one.
+    ///     Called before a listener is removed from the <see cref="EventManager" />. Events registered directly by the
+    ///     listener will be removed automatically, but child objects such as comps should be removed with
+    ///     <see cref="EventManager.RemoveListener" />.
     /// </summary>
     /// <param name="manager">
     ///     The <see cref="EventManager" /> that should be unregistered with. This is always
@@ -32,19 +50,36 @@ public interface IEventListener
     public void PreUnregister(EventManager manager);
 }
 
+/// <summary>
+///     Defines an event that can be raised with <see cref="EventManager.Notify" />.
+/// </summary>
 public class EventDef : Def
 {
+    /// <summary>
+    ///     Whether the event is raised without a target.
+    /// </summary>
     public bool global = false;
+
+    /// <summary>
+    ///     The type of data passed to callbacks, or null if the event does not pass data.
+    /// </summary>
     public Type dataType = null;
+
+    /// <summary>
+    ///     Whether the event can be raised while RimWorld is saving or loading data.
+    /// </summary>
     public bool allowDuringScribe = false;
 }
 
+/// <summary>
+///     Contains the built-in event definitions used by Xylib's Harmony patches.
+/// </summary>
 [DefOf]
 public static class EventDefOf
 {
     /// <summary>
-    ///     Called after <see cref="Game.Dispose" />, immediately before the notification manager unregisters all listeners.
-    ///     This hook passes null as its "pawn" parameter, so can only be used as a global hook.
+    ///     Called after <see cref="Game.Dispose" />, immediately before the event manager unregisters all listeners.
+    ///     This hook is raised without a target.
     /// </summary>
     public static EventDef GlobalPostGameDispose;
 
@@ -65,7 +100,7 @@ public static class EventDefOf
     public static EventDef PostApparelChanged;
 
     /// <summary>
-    ///     Called after <see cref="Pawn_AgeTracker.BirthdayBiological" />.
+    ///     Called after <c>Pawn_AgeTracker.BirthdayBiological</c>.
     /// </summary>
     public static EventDef PostBirthday;
 
@@ -80,23 +115,23 @@ public static class EventDefOf
     public static EventDef PostDiscard;
 
     /// <summary>
-    ///     Called after <see cref="Pawn_HealthTracker.MakeDowned" />.
+    ///     Called after <c>Pawn_HealthTracker.MakeDowned</c>.
     /// </summary>
     public static EventDef PostDowned;
 
     /// <summary>
-    ///     Called after <see cref="PawnGenerator.GenerateInitialHediffs" />.
+    ///     Called after <c>PawnGenerator.GenerateInitialHediffs</c>.
     /// </summary>
     public static EventDef PostGenerateInitialHediffs;
 
     /// <summary>
-    ///     Called after <see cref="PawnGenerator.GenerateNewPawnInternal" />.
+    ///     Called after <c>PawnGenerator.GenerateNewPawnInternal</c>.
     ///     This hook passes a <see cref="PawnGenerationRequest" /> as its "data" parameter.
     /// </summary>
     public static EventDef PostGenerateNewPawn;
 
     /// <summary>
-    ///     Called after <see cref="Pawn_GeneTracker.Notify_GenesChanged" />.
+    ///     Called after <c>Pawn_GeneTracker.Notify_GenesChanged</c>.
     /// </summary>
     public static EventDef PostGenesChanged;
 
@@ -111,7 +146,7 @@ public static class EventDefOf
     public static EventDef PostHediffsChanged;
 
     /// <summary>
-    ///     Called after <see cref="EventManager.LoadedGame" />, immediately after the notification manager
+    ///     Called after <see cref="EventManager.LoadedGame" />, immediately after the event manager
     ///     has called <see cref="IEventListener.RegisterWith" /> on all listeners.
     /// </summary>
     public static EventDef PostLoadedGame;
@@ -145,7 +180,7 @@ public static class EventDefOf
     public static EventDef PostSatisfyChemicalGenes;
 
     /// <summary>
-    ///     Called inside <see cref="PawnGenerator.TryGenerateNewPawnInternal" /> before the <see cref="Pawn" />'s bio and name
+    ///     Called inside <c>PawnGenerator.TryGenerateNewPawnInternal</c> before the <see cref="Pawn" />'s bio and name
     ///     are generated.
     ///     This hook can be used to modify the pawn's <see cref="Gender" /> and <see cref="XenotypeDef" /> during generation.
     ///     This hook passes a <see cref="PawnGenerationData" /> as the "data" parameter.
@@ -165,12 +200,12 @@ public static class EventDefOf
 }
 
 /// <summary>
-///     This enables listeners to register for global or pawn-specific callbacks which are triggered by patched
-///     hooks. This makes it easy to write genes, hediffs, ThingComps, and so on that react to events without
-///     needing specific patches to wire the correct events to each listener. Implement
-///     <see cref="IEventListener" />
-///     and register for the needed callbacks in <see cref="IEventListener.RegisterWith" />.
+///     Allows listeners to register for global or target-specific callbacks raised by patched game hooks.
 /// </summary>
+/// <para>
+///     Implement <see cref="IEventListener" /> and register for events in
+///     <see cref="IEventListener.RegisterWith" />.
+/// </para>
 /// <para>
 ///     Subtypes of the following classes that implement <see cref="IEventListener" /> will have
 ///     <see cref="IEventListener.RegisterWith" /> called automatically:
@@ -222,9 +257,7 @@ public static class EventDefOf
 [StaticConstructorOnStartup]
 public class EventManager
 {
-    /// <summary>
-    ///     Holds data about all the callbacks for a specific <see cref="EventDef" />.
-    /// </summary>
+    // Holds data about all the callbacks for a specific EventDef.
     private class NotificationInfo
     {
         public bool usesPriority = false;
@@ -232,11 +265,7 @@ public class EventManager
         public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
     }
 
-    /// <summary>
-    ///     Holds data about a registered callback, used when unregistering a listener.
-    /// </summary>
-    /// <param name="eventDef"></param>
-    /// <param name="target"></param>
+    // Holds data about a registered callback, used when unregistering a listener.
     private class RegistrationInfo(EventDef eventDef, Thing target)
     {
         public readonly EventDef eventDef = eventDef;
@@ -244,9 +273,7 @@ public class EventManager
         public readonly System.WeakReference<Thing> target = target == null ? null : new(target);
     }
 
-    /// <summary>
-    ///     Holds data about a specific callback that should be called when an event is triggered.
-    /// </summary>
+    // Holds data about a specific callback that should be called when an event is triggered.
     private struct CallbackInfo
     {
         public Action<Thing, object> wrappedCallback;
@@ -261,38 +288,30 @@ public class EventManager
     }
 
     /// <summary>
-    ///     Gets the event manager for the currently running game.
+    ///     Gets the shared event manager instance.
     /// </summary>
     [NotNull] public static EventManager Instance { get; } = new();
 
     private static bool doDebug = false;
 
-    /// <summary>
-    ///     A list of listeners that are automatically registered when a game is started or loaded. Used to
-    ///     implement global listeners that aren't tied to any particular object.
-    /// </summary>
+    // Listeners that are automatically registered when a game is started or loaded.
     private static readonly List<IEventListener> staticListeners = [];
 
-    /// <summary>
-    ///     Static listeners which are already registered, to avoid double registration.
-    /// </summary>
+    // Static listeners which are already registered, to avoid double registration.
     [Unsaved] private readonly HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
 
-    /// <summary>
-    ///     Information about the listeners registered for each event, indexed by <see cref="EventDef.index" />.
-    /// </summary>
+    // Information about the listeners registered for each event.
     private readonly NotificationInfo[] notifications = new NotificationInfo[DefDatabase<EventDef>.DefCount];
 
-    /// <summary>
-    ///     A list of events that each listener has registered for, used for unregistering the listener.
-    /// </summary>
+    // Events that each listener has registered for, used for unregistering the listener.
     private ConditionalWeakTable<IEventListener, List<RegistrationInfo>> registrations = new();
 
-    /// <summary>
-    ///     A scratch list used during event handling.
-    /// </summary>
+    // Scratch list used during event handling.
     private readonly List<CallbackInfo> tempCallbacks = [];
 
+    /// <summary>
+    ///     Toggles development logging for event registration and notification.
+    /// </summary>
     [DebugAction(allowedGameStates = 0)]
     public static void ToggleNotificationManagerLogging()
     {
@@ -350,6 +369,24 @@ public class EventManager
         }
     }
 
+    /// <summary>
+    ///     Registers a callback for an event, passing both the event target and typed event data to the callback.
+    /// </summary>
+    /// <param name="eventDef">
+    ///     The event to listen for.
+    /// </param>
+    /// <param name="target">
+    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked for all targets.
+    /// </param>
+    /// <param name="callback">
+    ///     The callback to invoke. Its target object must implement <see cref="IEventListener" />.
+    /// </param>
+    /// <param name="priority">
+    ///     Optional callback priority. Higher-priority callbacks run first.
+    /// </param>
+    /// <typeparam name="T">
+    ///     The expected type of the event data.
+    /// </typeparam>
     public void Register<T>(EventDef eventDef, Thing target, [NotNull] Action<Thing, T> callback, int priority = 0)
     {
         if (callback == null)
@@ -372,6 +409,24 @@ public class EventManager
         RegisterInternal(eventDef, target, (t, data) => callback(t, (T)data), callback.Target, MethodName(callback), priority);
     }
 
+    /// <summary>
+    ///     Registers a callback for an event, passing typed event data to the callback.
+    /// </summary>
+    /// <param name="eventDef">
+    ///     The event to listen for.
+    /// </param>
+    /// <param name="target">
+    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked for all targets.
+    /// </param>
+    /// <param name="callback">
+    ///     The callback to invoke. Its target object must implement <see cref="IEventListener" />.
+    /// </param>
+    /// <param name="priority">
+    ///     Optional callback priority. Higher-priority callbacks run first.
+    /// </param>
+    /// <typeparam name="T">
+    ///     The expected type of the event data.
+    /// </typeparam>
     public void Register<T>(EventDef eventDef, Thing target, [NotNull] Action<T> callback, int priority = 0)
     {
         if (callback == null)
@@ -394,6 +449,21 @@ public class EventManager
         RegisterInternal(eventDef, target, (_, data) => callback((T)data), callback.Target, MethodName(callback), priority);
     }
 
+    /// <summary>
+    ///     Registers a callback for an event, passing the event target to the callback.
+    /// </summary>
+    /// <param name="eventDef">
+    ///     The event to listen for.
+    /// </param>
+    /// <param name="target">
+    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked for all targets.
+    /// </param>
+    /// <param name="callback">
+    ///     The callback to invoke. Its target object must implement <see cref="IEventListener" />.
+    /// </param>
+    /// <param name="priority">
+    ///     Optional callback priority. Higher-priority callbacks run first.
+    /// </param>
     public void Register(EventDef eventDef, Thing target, [NotNull] Action<Thing> callback, int priority = 0)
     {
         if (callback == null)
@@ -409,6 +479,21 @@ public class EventManager
         RegisterInternal(eventDef, target, (t, _) => callback(t), callback.Target, MethodName(callback), priority);
     }
 
+    /// <summary>
+    ///     Registers a callback for an event without passing event target or data arguments to the callback.
+    /// </summary>
+    /// <param name="eventDef">
+    ///     The event to listen for.
+    /// </param>
+    /// <param name="target">
+    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked for all targets.
+    /// </param>
+    /// <param name="callback">
+    ///     The callback to invoke. Its target object must implement <see cref="IEventListener" />.
+    /// </param>
+    /// <param name="priority">
+    ///     Optional callback priority. Higher-priority callbacks run first.
+    /// </param>
     public void Register(EventDef eventDef, Thing target, [NotNull] Action callback, int priority = 0)
     {
         if (callback == null)
@@ -429,6 +514,25 @@ public class EventManager
         return $"{fn.Method.DeclaringType?.FullName ?? "<global>"}.{fn.Method.Name}";
     }
 
+    /// <summary>
+    ///     Registers a callback owned by the supplied listener, passing both the event target and typed event data to the
+    ///     callback.
+    /// </summary>
+    /// <param name="listener">
+    ///     The listener that owns the registration and will be used for later unregistration.
+    /// </param>
+    /// <param name="eventDef">
+    ///     The event to listen for.
+    /// </param>
+    /// <param name="target">
+    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked for all targets.
+    /// </param>
+    /// <param name="callback">
+    ///     The callback to invoke.
+    /// </param>
+    /// <typeparam name="T">
+    ///     The expected type of the event data.
+    /// </typeparam>
     public void Register<T>(
         [NotNull] IEventListener listener,
         EventDef eventDef,
@@ -458,6 +562,12 @@ public class EventManager
             $"{listener.GetType().FullName}.<{eventDef.defName}>", 0);
     }
 
+    /// <summary>
+    ///     Unregisters all callbacks owned by a listener.
+    /// </summary>
+    /// <param name="listener">
+    ///     The listener to remove.
+    /// </param>
     public void RemoveListener(IEventListener listener)
     {
         listener.PreUnregister(this);
@@ -482,6 +592,18 @@ public class EventManager
         registrations.Remove(listener);
     }
 
+    /// <summary>
+    ///     Raises an event for a target, invoking global callbacks and callbacks registered specifically for that target.
+    /// </summary>
+    /// <param name="eventDef">
+    ///     The event to raise.
+    /// </param>
+    /// <param name="target">
+    ///     The target object the event applies to, or null for a global event.
+    /// </param>
+    /// <param name="data">
+    ///     Optional event data. When supplied, its type should match <see cref="EventDef.dataType" />.
+    /// </param>
     public void Notify(EventDef eventDef, Thing target, object data = null)
     {
         if (Scribe.mode != LoadSaveMode.Inactive && !eventDef.allowDuringScribe)
@@ -637,6 +759,9 @@ public class EventManager
         }
     }
 
+    /// <summary>
+    ///     Called after a saved game is loaded.
+    /// </summary>
     public void LoadedGame()
     {
         using var _ = new ProfileBlock();
@@ -648,6 +773,12 @@ public class EventManager
             Notify(EventDefOf.PostLoadedGame, pawn);
     }
 
+    /// <summary>
+    ///     Adds a listener that is registered for every game load and reset.
+    /// </summary>
+    /// <param name="listener">
+    ///     The listener to add.
+    /// </param>
     public static void AddStaticListener(IEventListener listener)
     {
         staticListeners.Add(listener);
@@ -665,6 +796,9 @@ public class EventManager
         }
     }
 
+    /// <summary>
+    ///     Clears all current registrations and re-registers static listeners.
+    /// </summary>
     public void Reset()
     {
         registrations = new();
@@ -674,6 +808,12 @@ public class EventManager
         RegisterStaticListeners();
     }
 
+    /// <summary>
+    ///     Registers a listener by calling <see cref="IEventListener.RegisterWith" />.
+    /// </summary>
+    /// <param name="listener">
+    ///     The listener to register.
+    /// </param>
     public void AddListener(IEventListener listener)
     {
         listener.RegisterWith(this);
