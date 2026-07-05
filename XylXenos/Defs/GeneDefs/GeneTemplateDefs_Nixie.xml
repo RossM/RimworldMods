@@ -41,7 +41,9 @@
     </biostats>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <hasPsycast>true</hasPsycast>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Psycast" />
+        </comps>
       </li>
     </modExtensions>
   </XylXenos.GeneTemplateDef>

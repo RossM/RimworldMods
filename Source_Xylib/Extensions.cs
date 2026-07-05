@@ -40,12 +40,6 @@ public static class Extensions
 
     extension(Pawn pawn)
     {
-        public bool HasActivePsycastGene => pawn.GeneTracker_GeneWithComps?.hasPsycast == true;
-
-        public bool NeedsPsyfocus =>
-            // HasPsylink is patched to respect psycast genes
-            pawn.HasPsylink && !pawn.Suspended && (pawn.Spawned || pawn.IsCaravanMember());
-
         public GeneAndHediffCache GeneAndHediffCache
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -765,20 +759,6 @@ public static class Extensions
                 if (predicate(hediff.def.GetModExtension<T>()))
                     yield return hediff;
             }
-        }
-
-        public int GetGeneticPsylinkLevelFor(AbilityDef ability)
-        {
-            if (pawn.GeneTracker_GeneWithComps?.hasPsycast != true)
-                return 0;
-
-            if (pawn.AllGenesOfType<GeneWithComps>().Any(gene =>
-                    gene.Active && gene.DefExt.hasPsycast && gene.def.abilities?.Contains(ability) == true))
-            {
-                return ability.level;
-            }
-
-            return 0;
         }
 
         public bool ChemicalIsAllowedByGenes(ChemicalDef chemicalDef)

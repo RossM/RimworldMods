@@ -76,13 +76,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
     /// </summary>
     public float healthScaleFactor = 1.0f;
 
-    /// <summary>
-    ///     If true, the pawn will have psychic entropy with or without a psylink, and any psycast
-    ///     abilities added by this gene in <see cref="GeneDef.abilities" /> will be usable without
-    ///     a psylink.
-    /// </summary>
-    public bool hasPsycast;
-
     #endregion
 
     #region Properties which are not aggregated in GeneSet

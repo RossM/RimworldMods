@@ -13,11 +13,14 @@ public class GeneTracker_XylXenos : GeneTracker
 
     [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
 
+    public bool hasPsycast;
+
     public override void Update()
     {
         joyGiverChanceFactors?.Clear();
         disableHostilityFromFactions?.Clear();
         ingestionThoughtOverrides?.Clear();
+        hasPsycast = false;
 
         if (pawn.genes != null)
         {
@@ -28,6 +31,8 @@ public class GeneTracker_XylXenos : GeneTracker
                 Append(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors);
                 Append(ref disableHostilityFromFactions, def.CompProps<GeneCompProperties_DisableHostility>()?.factions);
                 Append(ref ingestionThoughtOverrides, def.CompProps<GeneCompProperties_IngestionThoughtOverrides>()?.overrides);
+
+                hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() != null;
             }
         }
     }

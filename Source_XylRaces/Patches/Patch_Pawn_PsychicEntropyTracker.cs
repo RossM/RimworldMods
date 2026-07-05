@@ -1,4 +1,4 @@
-namespace Xylib.Patches;
+namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(Pawn_PsychicEntropyTracker))]
 internal static class Patch_Pawn_PsychicEntropyTracker

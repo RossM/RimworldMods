@@ -312,9 +312,6 @@ public class GeneWithComps : Gene, IEventListener
     {
         RemoveInvalidChemicalHediffs();
 
-        if (DefExt.hasPsycast)
-            pawn.psychicEntropy.SetInitialPsyfocusLevel();
-
         base.PostAdd();
 
         if (comps != null)

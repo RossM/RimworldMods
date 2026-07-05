@@ -23,15 +23,6 @@ internal static class Patch_Pawn
         Scribe.ExitNode();
     }
 
-    [Feature(nameof(DefModExtension_GeneWithComps.hasPsycast))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Pawn.HasPsylink), MethodType.Getter)]
-    public static void HasPsylink_Postfix(Pawn __instance, ref bool __result)
-    {
-        if (__instance.GeneTracker_GeneWithComps is { } geneTracker)
-            __result |= geneTracker.hasPsycast;
-    }
-
     // Note: This patch is performance-sensitive
     [Feature(nameof(DefModExtension_GeneWithComps.healthScaleFactor))]
     [HarmonyPostfix]
