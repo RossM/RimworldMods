@@ -202,4 +202,27 @@ public static class DebugOutputs
         DebugTables.MakeTablesDialog(
             DefDatabase<ThingDef>.AllDefs.Where(thingDef => thingDef.IsDrug).OrderBy(thingDef => thingDef.BaseMarketValue), columns);
     }
+
+    [DebugOutput]
+    public static void DefsMissingModContentPack()
+    {
+        TableDataGetter<Def>[] columns =
+        [
+            new("defName", def => def.defName),
+            new("class", def => def.GetType().FullName),
+        ];
+
+        HashSet<Def> missingDefs = [];
+
+        foreach (var type in GenDefDatabase.AllDefTypesWithDatabases())
+        {
+            foreach (var def in GenDefDatabase.GetAllDefsInDatabaseForDef(type))
+            {
+                if (def.modContentPack == null)
+                    missingDefs.Add(def);
+            }
+        }
+
+        DebugTables.MakeTablesDialog(missingDefs.OrderBy(d => d.GetType().FullName).ThenBy(d => d.defName), columns);
+    }
 }

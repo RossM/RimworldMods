@@ -152,7 +152,7 @@ public class GeneSetMaker_Biostats : GeneSetMaker
 
     public override bool Validate(GeneDef gene, GeneSet geneSet, GeneType geneType, Pawn pawn)
     {
-        if (gene.modContentPack != null && prohibitedModContentPacks?.Contains(gene.modContentPack.PackageId) is true)
+        if (gene.modContentPack == null || prohibitedModContentPacks?.Contains(gene.modContentPack.PackageId) is true)
             return false;
         if (prohibitedGenes?.Contains(gene) is true)
             return false;
