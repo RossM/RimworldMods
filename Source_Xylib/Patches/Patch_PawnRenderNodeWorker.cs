@@ -8,7 +8,7 @@ internal static class Patch_PawnRenderNodeWorker
     [HarmonyPatch(nameof(PawnRenderNodeWorker.OffsetFor))]
     public static void OffsetFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref Vector3 __result)
     {
-        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_GeneWithComps?.renderNodeModifiers;
+        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_GeneWithComps?.renderNodeModifiers_offset;
         if (renderNodeModifiers == null)
             return;
 
@@ -24,7 +24,7 @@ internal static class Patch_PawnRenderNodeWorker
     [HarmonyPatch(nameof(PawnRenderNodeWorker.ScaleFor))]
     public static void ScaleFor_Postfix(PawnRenderNode node, PawnDrawParms parms, ref Vector3 __result)
     {
-        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_GeneWithComps?.renderNodeModifiers;
+        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_GeneWithComps?.renderNodeModifiers_scale;
         if (renderNodeModifiers == null)
             return;
 
