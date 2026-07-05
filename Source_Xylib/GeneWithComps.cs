@@ -437,9 +437,7 @@ public class GeneWithComps : Gene, IEventListener
     }
 
     /// <summary>
-    ///     Gets the first component with type assignable to
-    ///     <typeparam name="T" />
-    ///     .
+    ///     Gets the first component with type assignable to <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns>The component, or null if there is no matching component</returns>
