@@ -11,8 +11,9 @@
   <XylXenos.GeneSetMakerDef Name="GeneSetBiostatBase" Abstract="true">
     <root Class="XylXenos.GeneSetMaker_Biostats">
       <prohibitedModContentPacks>
+        <li IsNull="true" />
         <li>vanillaracesexpanded.android</li>
-        <li>vanillaracesexpanded.starjack</li>        
+        <li>vanillaracesexpanded.starjack</li>
       </prohibitedModContentPacks>
     </root>    
   </XylXenos.GeneSetMakerDef>
