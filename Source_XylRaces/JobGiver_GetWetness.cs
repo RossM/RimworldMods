@@ -5,6 +5,8 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
 {
     public JobDef soakJobDef;
 
+    public const Danger maxDanger = Danger.None;
+
     public static List<ThingDef> WetnessGivingThings
     {
         get
@@ -37,9 +39,11 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
         if (candidates.Count == 0)
             return null;
 
+        TraverseParms traverseParams = TraverseParms.For(pawn);
+        traverseParams.maxDanger = maxDanger;
+
         return GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, candidates,
-            PathEndMode.InteractionCell, TraverseParms.For(pawn),
-            validator: t => CanInteractWith(pawn, t));
+            PathEndMode.InteractionCell, traverseParams, validator: t => CanInteractWith(pawn, t));
     }
 
     public static bool IsValidWaterTileFor(Pawn pawn, IntVec3 x)
@@ -67,7 +71,9 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
 
     public static bool TryFindWaterTile(Pawn pawn, out IntVec3 result, int maxSearchRadius = int.MaxValue)
     {
-        return RCellFinder.TryFindRandomCellNearWith(pawn.Position, x => IsValidWaterTileFor(pawn, x), pawn.Map, out result,
+        bool Validator(IntVec3 x) => IsValidWaterTileFor(pawn, x) && pawn.CanReach(new LocalTargetInfo(x), PathEndMode.OnCell, maxDanger);
+
+        return RCellFinder.TryFindRandomCellNearWith(pawn.Position, Validator, pawn.Map, out result,
             maxSearchRadius: maxSearchRadius);
     }
 
