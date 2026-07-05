@@ -1,6 +1,21 @@
 ﻿// ReSharper disable ForCanBeConvertedToForeach
+
 namespace Xylib;
 
+/// <summary>
+///     Represents a component that adds functionality to a <see cref="GeneWithComps" />.
+/// </summary>
+/// <remarks>
+///     <para>
+///         Components for a gene are defined in XML. Define a <see cref="GeneCompProperties" /> subclass and add it to the
+///         gene's <see cref="DefModExtension_GeneWithComps.comps" /> list. The component will be instantiated
+///         automatically when the gene is instantiated.
+///     </para>
+///     <para>
+///         Components can add behavior by overriding callback methods, and can add additional data that saved with the
+///         gene by overriding <see cref="CompExposeData" />.
+///     </para>
+/// </remarks>
 public class GeneComp
 {
     public Pawn Pawn => parent.pawn;
@@ -12,8 +27,8 @@ public class GeneComp
     [Unsaved] public GeneWithComps parent;
     [Unsaved] public GeneCompProperties props;
 
-    [Unsaved] public readonly bool hasTick;
-    [Unsaved] public readonly bool hasTickInterval;
+    [Unsaved] internal readonly bool hasTick;
+    [Unsaved] internal readonly bool hasTickInterval;
 
     public GeneComp()
     {
@@ -31,30 +46,62 @@ public class GeneComp
         }
     }
 
+    /// <summary>
+    ///     Called after the gene is created and initialized, but before it is added to the pawn.
+    /// </summary>
     public virtual void CompPostMake()
     {
     }
 
+    /// <summary>
+    ///     Called when the game is saving or loading the gene. Override this method to save and load any data in the
+    ///     component.
+    /// </summary>
     public virtual void CompExposeData()
     {
     }
 
+    /// <summary>
+    ///     Called after the gene is added to a pawn.
+    /// </summary>
     public virtual void CompPostPostAdd()
     {
     }
 
+    /// <summary>
+    ///     Called after the gene is removed from a pawn.
+    /// </summary>
     public virtual void CompPostPostRemove()
     {
     }
 
+    /// <summary>
+    ///     Called periodically on gameplay tick. The exact tick rate is determined by the game, but is typically no more than
+    ///     once every 15 ticks.
+    /// </summary>
+    /// <remarks>
+    ///     It's recommended to use <see cref="Gen.IsHashIntervalTick(Thing, int)" /> to perform actions at a longer interval,
+    ///     to avoid performance issues.
+    /// </remarks>
+    /// <param name="delta"></param>
     public virtual void CompTickInterval(int delta)
     {
     }
 
+    /// <summary>
+    ///     Called every gameplay tick.
+    /// </summary>
+    /// <remarks>
+    ///     This can have a significant impact on performance. Prefer to use <see cref="CompTickInterval" /> if possible.
+    /// </remarks>
     public virtual void CompTick()
     {
     }
 
+    /// <summary>
+    ///     Gets UI gizmos that will be displayed when the pawn is selected.
+    /// </summary>
+    /// <returns></returns>
     public virtual IEnumerable<Gizmo> CompGetGizmos()
     {
         return [];
@@ -69,31 +116,57 @@ public class GeneComp
         return [];
     }
 
+    /// <summary>
+    ///     Called when the pawn's health state is being reset, such as when an old pawn is brought back in a new role.
+    ///     This should set the state of the gene component to its initial state.
+    /// </summary>
     public virtual void CompReset()
     {
     }
 
+    /// <summary>
+    ///     Determines whether this component allows the gene to be active. If any component returns false, the gene will be
+    ///     inactive.
+    /// </summary>
+    /// <returns></returns>
     public bool CompAllowActive()
     {
         return true;
     }
 }
 
+/// <summary>
+///     A gene whose behavior is defined by <see cref="GeneComp" /> instances.
+/// </summary>
 public class GeneWithComps : Gene, IEventListener
 {
+    /// <summary>
+    ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for this gene.
+    /// </summary>
     [NotNull]
     public DefModExtension_GeneWithComps DefExt => field ??= def.Extension_GeneWithComps!;
 
+    /// <summary>
+    ///     Whether this gene is an endogene or xenogene.
+    /// </summary>
     public GeneType GeneType => geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 
     [Unsaved] private GeneType? geneTypeInternal;
     [Unsaved] private bool activeStateNeedsUpdating = true;
 
+    /// <summary>
+    ///     The components for this gene.
+    /// </summary>
     [CanBeNull] public List<GeneComp> comps;
 
-    private event Action CompTick;
-    private event Action<int> CompTickInterval;
-
+    /// <summary>
+    ///     Whether the gene is currently active. Inactive genes shouldn't have any effect on the pawn.
+    /// </summary>
+    /// <remarks>
+    ///     For performance reasons, the value of <see cref="Active" /> is cached, and only updated when the pawn's genes or
+    ///     hediffs change, or when the pawn has a birthday.
+    ///     If you need to force an update of the active state, call <see cref="SetActiveStateNeedsUpdating" />.
+    /// </remarks>
     [field: Unsaved]
     public override bool Active
     {
@@ -109,6 +182,13 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
+    private event Action CompTick;
+    private event Action<int> CompTickInterval;
+
+    /// <summary>
+    ///     Called when updating <see cref="Active" />.
+    /// </summary>
+    /// <returns></returns>
     protected virtual bool CheckActive()
     {
         if (!base.Active)
@@ -131,6 +211,9 @@ public class GeneWithComps : Gene, IEventListener
         return true;
     }
 
+    /// <summary>
+    ///     Called when the game is being saved or loaded.
+    /// </summary>
     public override void ExposeData()
     {
         base.ExposeData();
@@ -143,6 +226,9 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
+    /// <summary>
+    ///     Called after the gene is created.
+    /// </summary>
     public override void PostMake()
     {
         base.PostMake();
@@ -219,6 +305,9 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
+    /// <summary>
+    ///     Called after the gene is added to a pawn.
+    /// </summary>
     public override void PostAdd()
     {
         RemoveInvalidChemicalHediffs();
@@ -235,6 +324,9 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
+    /// <summary>
+    ///     Called after the gene is removed from a pawn.
+    /// </summary>
     public override void PostRemove()
     {
         EventManager.Instance.RemoveListener(this);
@@ -250,6 +342,9 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
+    /// <summary>
+    ///     Called when the pawn's health is being reset.
+    /// </summary>
     public override void Reset()
     {
         base.Reset();
@@ -261,6 +356,10 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
+    /// <summary>
+    ///     Gets stats which are displayed on the pawn's description screen.
+    /// </summary>
+    /// <returns></returns>
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
         if (comps != null)
