@@ -11,6 +11,9 @@ public static class Extensions
 {
     extension(Faction faction)
     {
+        /// <summary>
+        ///     Gets all living pawns of the faction.
+        /// </summary>
         public IEnumerable<Pawn> AllAlivePawns => 
             faction == Faction.OfPlayer ?
                 PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction :
@@ -19,6 +22,9 @@ public static class Extensions
 
     extension(GeneDef gene)
     {
+        /// <summary>
+        ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for the gene def, if it exists.
+        /// </summary>
         [CanBeNull]
         public DefModExtension_GeneWithComps Extension_GeneWithComps
         {
@@ -35,17 +41,28 @@ public static class Extensions
             }
         }
 
+        /// <summary>
+        ///     Gets the first <see cref="GeneCompProperties" /> of the specified type for the gene def, if it exists.
+        /// </summary>
+        /// <typeparam name="T">The <see cref="GeneCompProperties"/> subclass to find.</typeparam>
+        /// <returns>The first matching properties object, or null if none exists.</returns>
         public T CompProps<T>() where T : GeneCompProperties => gene.Extension_GeneWithComps?.CompProps<T>();
     }
 
     extension(Pawn pawn)
     {
+        /// <summary>
+        ///     Gets the <see cref="GeneAndHediffCache" /> for the pawn.
+        /// </summary>
         public GeneAndHediffCache GeneAndHediffCache
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => PawnExtraData<GeneAndHediffCache>.Get(pawn);
         }
 
+        /// <summary>
+        ///     Gets the <see cref="GeneTracker_GeneWithComps" /> for the pawn, or null if the pawn has no genes.
+        /// </summary>
         [CanBeNull]
         public GeneTracker_GeneWithComps GeneTracker_GeneWithComps
         {

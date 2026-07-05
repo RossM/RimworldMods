@@ -18,18 +18,35 @@ namespace Xylib;
 /// </remarks>
 public class GeneComp
 {
+    /// <summary>
+    ///     The pawn this gene is attached to. This is a shortcut for <c>parent.pawn</c>.
+    /// </summary>
     public Pawn Pawn => parent.pawn;
+
+    /// <summary>
+    ///     Whether the gene is active. This is a shortcut for <c>parent.Active</c>.
+    /// </summary>
     public bool Active => parent.Active;
 
     private static readonly Dictionary<Type, bool> hasTickCache = new();
     private static readonly Dictionary<Type, bool> hasTickIntervalCache = new();
 
+    /// <summary>
+    ///     The gene this component is attached to.
+    /// </summary>
     [Unsaved] public GeneWithComps parent;
+
+    /// <summary>
+    ///     The properties for this component, as defined in XML.
+    /// </summary>
     [Unsaved] public GeneCompProperties props;
 
     [Unsaved] internal readonly bool hasTick;
     [Unsaved] internal readonly bool hasTickInterval;
 
+    /// <summary>
+    ///    Initializes a new instance of the <see cref="GeneComp" /> class.
+    /// </summary>
     public GeneComp()
     {
         var type = GetType();
@@ -460,10 +477,7 @@ public class GeneWithComps : Gene, IEventListener
         activeStateNeedsUpdating = true;
     }
 
-    /// <summary>
-    ///     Registers the gene and its components with the given <see cref="EventManager" />.
-    /// </summary>
-    /// <param name="manager">The event manager.</param>
+    /// <inheritdoc/>
     public virtual void RegisterWith(EventManager manager)
     {
         // The only things that can change when a gene is active in the base game are:
