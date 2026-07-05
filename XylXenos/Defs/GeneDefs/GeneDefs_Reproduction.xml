@@ -221,7 +221,7 @@
 
   <HediffDef>
     <defName>XylLoveEuphoria</defName>
-    <hediffClass>XylXenos.HediffWithCompsExt</hediffClass>
+    <hediffClass>Xylib.HediffWithCompsExt</hediffClass>
     <label>love euphoria</label>
     <description>This character is experiencing elevated mood due to lovin' with a carrier of the love euphoria gene.</description>
     <overrideTooltip>{PAWN_nameIndef} is experiencing elevated mood due to lovin' with {SOURCE_nameIndef}.</overrideTooltip>
