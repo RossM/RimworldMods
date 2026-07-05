@@ -9,7 +9,6 @@
     <description>Carriers of this gene produce a pigment that gives their skin a dark green color.</description>
     <!-- HSV (90,76,52) -->
     <skinColorOverride>(81,132,32)</skinColorOverride>
-    <displayOrderInCategory>1</displayOrderInCategory>
   </GeneDef>
 
   <GeneDef ParentName="GeneSkinColorOverride">
@@ -19,7 +18,6 @@
     <description>Carriers of this gene produce a pigment that gives their skin an olive color.</description>
     <!-- HSV (53,44,41) -->
     <skinColorOverride>(105,100,59)</skinColorOverride>
-    <displayOrderInCategory>2</displayOrderInCategory>
   </GeneDef>
 
   <GeneDef ParentName="GeneSkinColorOverride">
@@ -29,7 +27,6 @@
     <description>Carriers of this gene produce a pigment that gives their skin a pink color.</description>
     <!-- HSV (336,57,97) -->
     <skinColorOverride>(247,107,162)</skinColorOverride>
-    <displayOrderInCategory>82</displayOrderInCategory>
   </GeneDef>
 
   <GeneDef ParentName="GeneSkinColorOverride">
@@ -39,7 +36,6 @@
     <description>Carriers of this gene produce a pigment that gives their skin a dark purple color.</description>
     <!-- HSV (264,44,37) -->
     <skinColorOverride>(70,53,95)</skinColorOverride>
-    <displayOrderInCategory>86</displayOrderInCategory>
   </GeneDef>
 
   <GeneDef ParentName="GeneSkinColorOverride">
@@ -49,7 +45,6 @@
     <description>Carriers of this gene produce a pigment that gives their skin a dark blue color.</description>
     <!-- HSV (213,55,58) -->
     <skinColorOverride>(66,102,147)</skinColorOverride>
-    <displayOrderInCategory>87</displayOrderInCategory>
   </GeneDef>
 
   <GeneDef ParentName="GeneSkinColorOverride">
@@ -59,7 +54,6 @@
     <description>Carriers of this gene produce a pigment that gives their skin a dark silver color.</description>
     <!-- HSV (209,20,50) -->
     <skinColorOverride>(102,115,127)</skinColorOverride>
-    <displayOrderInCategory>90</displayOrderInCategory>
   </GeneDef>
 
   <GeneDef ParentName="GeneSkinColorOverride">
@@ -69,7 +63,6 @@
     <description>Carriers of this gene produce a pigment that gives their skin a light silver color.</description>
     <!-- HSV (210,20,78) -->
     <skinColorOverride>(160,180,200)</skinColorOverride>
-    <displayOrderInCategory>91</displayOrderInCategory>
   </GeneDef>
 
 </Defs>
