@@ -30,11 +30,7 @@ public abstract class GeneSetMaker
 
         int existingGeneCount = genes.Count;
 
-        Log.Message($"Before AddGenes: {genes.Select(g => g.label).ToCommaList()}");
-
         AddGenes(geneSet, geneType, pawn);
-
-        Log.Message($"After AddGenes: {genes.Select(g => g.label).ToCommaList()}");
 
         var newGenes = new GeneSet();
         for (int i = existingGeneCount; i < genes.Count; i++)
