@@ -6,7 +6,6 @@ public abstract class GeneSetMaker
 
     public float chance = 1f;
     public IntRange count = IntRange.One;
-    public List<GeneDef> prohibitedGenes;
 
     public GeneSet Generate(Pawn pawn, GeneType geneType = GeneType.Xenogene)
     {
@@ -62,9 +61,6 @@ public abstract class GeneSetMaker
     public virtual bool Validate(GeneDef gene, GeneSet geneSet, GeneType geneType, Pawn pawn)
     {
         if (!geneSet.CanAddGeneDuringGeneration(gene))
-            return false;
-
-        if (prohibitedGenes?.Contains(gene) is true)
             return false;
 
         if (gene.Extension_GeneWithComps is { } defExt)
@@ -133,9 +129,13 @@ public class GeneSetMaker_Biostats : GeneSetMaker
     public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
     public IntRange biostatMet = new(int.MinValue, int.MaxValue);
 
+    public List<GeneDef> prohibitedGenes;
+
     public override bool Validate(GeneDef gene, GeneSet geneSet, GeneType geneType, Pawn pawn)
     {
         if (gene.modContentPack != null && Config.Instance.ignoreGenesFromMods.Contains(gene.modContentPack.PackageId))
+            return false;
+        if (prohibitedGenes?.Contains(gene) is true)
             return false;
 
         if (!biostatMet.Includes(gene.biostatMet))
