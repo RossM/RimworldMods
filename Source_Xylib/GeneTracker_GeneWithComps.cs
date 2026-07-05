@@ -36,8 +36,8 @@ public class GeneTracker_GeneWithComps : GeneTracker
         bodySizeFactor = 1f;
         healthScaleFactor = 1f;
         renderNodeModifiers?.Clear();
-        for (int i = 0; i < renderNodeModifiersByType.Length; i++)
-            renderNodeModifiersByType[i]?.Clear();
+        foreach (List<RenderNodeModifier> list in renderNodeModifiersByType)
+            list?.Clear();
         unlockedBuildables?.Clear();
         unlockedRecipes?.Clear();
 
