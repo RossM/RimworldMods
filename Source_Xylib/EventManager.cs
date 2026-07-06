@@ -163,6 +163,10 @@ public static class EventDefOf
     /// </summary>
     public static EventDef PostLovin;
 
+    /// <summary>
+    ///     Called after a pawn's mutant status changes.
+    /// </summary>
+    public static EventDef PostMutated;
 
     /// <summary>
     ///     Called after <see cref="Pawn.Kill(Verse.DamageInfo?,Hediff)" />.

@@ -480,12 +480,11 @@ public class GeneWithComps : Gene, IEventListener
     {
         // The only things that can change when a gene is active in the base game are:
         // * The pawn's age changes
-        // * The pawn's mutant status changes, which can only happen when the pawn's hediffs change or the pawn dies
+        // * The pawn's mutant status changes
         // * An overriding gene is added or removed
         // These cover all of those possibilities.
         manager.Register(EventDefOf.PostGenesChanged, pawn, SetActiveStateNeedsUpdating);
-        manager.Register(EventDefOf.PostHediffsChanged, pawn, SetActiveStateNeedsUpdating);
-        manager.Register(EventDefOf.PostPawnKilled, pawn, SetActiveStateNeedsUpdating);
+        manager.Register(EventDefOf.PostMutated, pawn, SetActiveStateNeedsUpdating);
         manager.Register(EventDefOf.PostBirthday, pawn, SetActiveStateNeedsUpdating);
 
         if (comps == null)

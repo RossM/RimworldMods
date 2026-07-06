@@ -33,11 +33,24 @@ internal static class Patch_Pawn
             __result *= geneTracker.healthScaleFactor;
     }
 
+    private static bool dyingPawnIsMutant;
+
+    [Feature(nameof(EventDefOf.PostMutated))]
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(Pawn.Kill))]
+    public static void Kill_Prefix(Pawn __instance)
+    {
+        dyingPawnIsMutant = __instance.mutant != null;
+    }
+
     [Feature(nameof(EventDefOf.PostPawnKilled))]
+    [Feature(nameof(EventDefOf.PostMutated))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.Kill))]
     public static void Kill_Postfix(Pawn __instance)
     {
         EventManager.Instance.Notify(EventDefOf.PostPawnKilled, __instance);
+        if (dyingPawnIsMutant && __instance.mutant == null)
+            EventManager.Instance.Notify(EventDefOf.PostMutated, __instance);
     }
 }

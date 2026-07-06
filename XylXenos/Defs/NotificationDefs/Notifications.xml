@@ -95,4 +95,8 @@
     <dataType>JobDriver</dataType>
   </Xylib.EventDef>
 
+  <Xylib.EventDef>
+    <defName>PostMutated</defName>
+  </Xylib.EventDef>
+
 </Defs>

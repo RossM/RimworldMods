@@ -27,20 +27,12 @@ public abstract class GeneTracker : IEventListener, IPawnData
             dest.AddRange(source);
     }
 
-    public void Notify_PostGenesChanged()
-    {
-        Update();
-    }
-
-    public void Notify_PostLoadedGame()
-    {
-        Update();
-    }
-
     void IEventListener.RegisterWith(EventManager manager)
     {
-        manager.Register(EventDefOf.PostGenesChanged, pawn, Notify_PostGenesChanged);
-        manager.Register(EventDefOf.PostLoadedGame, pawn, Notify_PostLoadedGame);
+        manager.Register(EventDefOf.PostLoadedGame, pawn, Update);
+        manager.Register(EventDefOf.PostGenesChanged, pawn, Update);
+        manager.Register(EventDefOf.PostMutated, pawn, Update);
+        manager.Register(EventDefOf.PostBirthday, pawn, Update);
     }
 
     void IEventListener.PreUnregister(EventManager manager)
