@@ -6,7 +6,6 @@ public static class ReflectionHelpers
 {
     private const BindingFlags MethodBindingFlags = BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic;
 
-    // This is necessary because MethodInfo.GetBaseDefinition is broken for the version of Mono used in Unity
     public static bool HasOverridingMethod(Type childType, Type baseType, string methodName)
     {
         var baseMethodInfo = baseType.GetMethod(methodName, MethodBindingFlags);
