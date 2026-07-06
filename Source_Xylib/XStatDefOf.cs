@@ -4,6 +4,7 @@ namespace Xylib;
 public static class XStatDefOf
 {
     public static StatDef MeleeWeapon_AverageArmorPenetration;
+    public static StatDef XylBloodLossResistance;
 
     /// <summary>A multiplier on how nutritious cooked animal products are for this person.</summary>
     public static StatDef XylCookedAnimalProductNutritionFactor;
@@ -23,8 +24,14 @@ public static class XStatDefOf
     /// </summary>
     public static StatDef XylDrugEffectMultiplier;
 
+    public static StatDef XylDrugOverdoseResistance;
+
     /// <summary>Multiplies the character's chance becoming addicted to a drug.</summary>
     public static StatDef XylGlobalAddictionChanceFactor;
+
+    public static StatDef XylHeatstrokeResistance;
+
+    public static StatDef XylHypothermiaResistance;
 
     /// <summary>The character's multiplier on the learning rate for skills with burning passion.</summary>
     public static StatDef XylLearnFactorPassionMajor;
@@ -34,6 +41,8 @@ public static class XStatDefOf
 
     /// <summary>The character's multiplier on the learning rate for skills with no passion.</summary>
     public static StatDef XylLearnFactorPassionNone;
+
+    public static StatDef XylMalnutritionResistance;
 
     /// <summary>Chance to dodge a ranged attack that would've otherwise hit.</summary>
     public static StatDef XylRangedDodgeChance;
@@ -86,12 +95,6 @@ public static class XStatDefOf
 
     /// <summary>A multiplier on how quickly this character's will falls when they are being enslaved.</summary>
     public static StatDef XylWillFallRate;
-
-    public static StatDef XylHypothermiaResistance;
-    public static StatDef XylHeatstrokeResistance;
-    public static StatDef XylMalnutritionResistance;
-    public static StatDef XylBloodLossResistance;
-    public static StatDef XylDrugOverdoseResistance;
 
     static XStatDefOf()
     {
