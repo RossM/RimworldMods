@@ -9,13 +9,6 @@ internal class Patch_Dialog_CreateXenotype
     [InfixPatch("DrawGenes")]
     public static void GenesInOrder_Postfix(ref List<GeneDef> __result, bool ___inheritable, bool ___ignoreRestrictions)
     {
-        __result = FilterGenes(__result, ___inheritable, ___ignoreRestrictions);
-    }
-
-    private static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
-    {
-        if (ignoreRestrictions)
-            return genes;
-        return genes.Where(g => PatchHelpers.GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene)).ToList();
+        __result = PatchHelpers.FilterGenes(__result, ___inheritable, ___ignoreRestrictions);
     }
 }

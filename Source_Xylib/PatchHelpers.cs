@@ -166,4 +166,11 @@ internal static class PatchHelpers
 
         return resistanceStatByHediff.TryGetValue(def, out var stat) ? pawn.GetStatValue(stat) : 0f;
     }
+
+    public static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
+    {
+        if (ignoreRestrictions)
+            return genes;
+        return genes.Where(g => PatchHelpers.GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene)).ToList();
+    }
 }
