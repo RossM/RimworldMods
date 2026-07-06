@@ -15,12 +15,15 @@ public class GeneTracker_XylXenos : GeneTracker
 
     public bool hasPsycast;
 
+    public float youthfulMaxAge;
+
     public override void Update()
     {
         joyGiverChanceFactors?.Clear();
         disableHostilityFromFactions?.Clear();
         ingestionThoughtOverrides?.Clear();
         hasPsycast = false;
+        youthfulMaxAge = float.MaxValue;
 
         if (pawn.genes != null)
         {
@@ -33,6 +36,9 @@ public class GeneTracker_XylXenos : GeneTracker
                 Append(ref ingestionThoughtOverrides, def.CompProps<GeneCompProperties_IngestionThoughtOverrides>()?.overrides);
 
                 hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() != null;
+
+                if (def.CompProps<GeneCompProperties_Youthful>() is { } youthful)
+                    youthfulMaxAge = Mathf.Min(youthfulMaxAge, youthful.maxAge);
             }
         }
     }

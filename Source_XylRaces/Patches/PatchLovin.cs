@@ -10,12 +10,8 @@ public static class PatchLovin
     [InfixPatch(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.CompatibilityWith))]
     public static void AgeBiologicalYearsFloat_Postfix(Pawn ___pawn, ref float __result)
     {
-        foreach (var gene in ___pawn.ActiveGenesOfType<GeneWithComps>())
-        {
-            if (gene.DefExt.CompProps<GeneCompProperties_Youthful>() is not { } props)
-                continue;
-            __result = Mathf.Min(__result, props.maxAge);
-        }
+        if (___pawn.GeneTracker_XylXenos is { } tracker)
+            __result = Mathf.Min(__result, tracker.youthfulMaxAge);
     }
 
     [Feature(nameof(Config.Feature.Bugfix_Misc))]
