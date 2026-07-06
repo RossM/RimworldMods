@@ -12,7 +12,7 @@ namespace Xylib;
 ///         automatically when the gene is instantiated.
 ///     </para>
 ///     <para>
-///         Components can add behavior by overriding callback methods, and can add additional data that saved with the
+///         Components can add behavior by overriding callback methods, and can add additional data that saves with the
 ///         gene by overriding <see cref="CompExposeData" />.
 ///     </para>
 /// </remarks>
