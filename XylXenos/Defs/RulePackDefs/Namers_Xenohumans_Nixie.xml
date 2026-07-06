@@ -2,7 +2,7 @@
 
 <Defs>
   <RulePackDef>
-    <defName>XylNamerPersonNixie</defName>
+    <defName>NamerXylPersonNixie</defName>
     <rulePack>
       <rulesStrings>
         <li>r_name->[firstName] [lastName]</li>

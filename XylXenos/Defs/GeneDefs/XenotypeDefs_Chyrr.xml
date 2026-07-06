@@ -9,8 +9,8 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Chyrr_small</iconPath>
     <displayPriority>-102</displayPriority>
     <combatPowerFactor>0.9</combatPowerFactor>
-    <nameMaker>XylNamerPersonChyrrMale</nameMaker>
-    <nameMakerFemale>XylNamerPersonChyrrFemale</nameMakerFemale>
+    <nameMaker>NamerXylPersonChyrrMale</nameMaker>
+    <nameMakerFemale>NamerXylPersonChyrrFemale</nameMakerFemale>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <inheritable>true</inheritable>
     <genes>

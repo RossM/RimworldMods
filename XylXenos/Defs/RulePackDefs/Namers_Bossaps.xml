@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
-  <RulePackDef Name="XylNamerPersonBossapsBase" Abstract="True">
+  <RulePackDef Name="NamerXylPersonBossapsBase" Abstract="True">
     <include>
       <li>NamerAnimalUtility</li>
       <li>TribalWordUtility</li>
@@ -29,8 +29,8 @@
     </rulePack>
   </RulePackDef>
 
-  <RulePackDef ParentName="XylNamerPersonBossapsBase">
-    <defName>XylNamerPersonBossapsMale</defName>
+  <RulePackDef ParentName="NamerXylPersonBossapsBase">
+    <defName>NamerXylPersonBossapsMale</defName>
     <rulePack>
       <rulesStrings>
         <li>firstName(p=2)->[firstNameHumanMale]</li>
@@ -48,8 +48,8 @@
     </rulePack>
   </RulePackDef>
 
-  <RulePackDef ParentName="XylNamerPersonBossapsBase">
-    <defName>XylNamerPersonBossapsFemale</defName>
+  <RulePackDef ParentName="NamerXylPersonBossapsBase">
+    <defName>NamerXylPersonBossapsFemale</defName>
     <rulePack>
       <rulesStrings>
         <li>firstName(p=2)->[firstNameHumanFemale]</li>

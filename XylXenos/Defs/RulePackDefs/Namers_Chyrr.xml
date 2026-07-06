@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
-  <RulePackDef Name="XylNamerPersonChyrrBase" Abstract="True">
+  <RulePackDef Name="NamerXylPersonChyrrBase" Abstract="True">
     <rulePack>
       <rulesStrings>
         <li>r_name->[firstName] [lastName]</li>
@@ -23,8 +23,8 @@
     </rulePack>
   </RulePackDef>
 
-  <RulePackDef ParentName="XylNamerPersonChyrrBase">
-    <defName>XylNamerPersonChyrrMale</defName>
+  <RulePackDef ParentName="NamerXylPersonChyrrBase">
+    <defName>NamerXylPersonChyrrMale</defName>
     <rulePack>
       <rulesStrings>
         <li>nickName->[PersonJob]</li>
@@ -35,8 +35,8 @@
     </rulePack>
   </RulePackDef>
 
-  <RulePackDef ParentName="XylNamerPersonChyrrBase">
-    <defName>XylNamerPersonChyrrFemale</defName>
+  <RulePackDef ParentName="NamerXylPersonChyrrBase">
+    <defName>NamerXylPersonChyrrFemale</defName>
     <rulePack>
       <rulesStrings>
         <li>nickName->[NaturalObject]</li>

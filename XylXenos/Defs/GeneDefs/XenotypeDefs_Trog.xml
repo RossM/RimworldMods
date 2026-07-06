@@ -10,7 +10,7 @@
     <displayPriority>-106</displayPriority>
     <inheritable>true</inheritable>
     <combatPowerFactor>1.5</combatPowerFactor>
-    <nameMaker>XylNamerPersonTrog</nameMaker>
+    <nameMaker>NamerXylPersonTrog</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>
       <li>XylToxicBurst</li>

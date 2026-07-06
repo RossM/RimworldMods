@@ -30,8 +30,8 @@
       <li>(0.3, 0.5, 0.125)</li>
       <li>(0.45, 0.35, 0)</li>
     </colorSpectrum>
-    <factionNameMaker>XylNamerFactionTribalTrog</factionNameMaker>
-    <settlementNameMaker>XylNamerSettlementTribalTrog</settlementNameMaker>
+    <factionNameMaker>NamerXylFactionTribalTrog</factionNameMaker>
+    <settlementNameMaker>NamerXylSettlementTribalTrog</settlementNameMaker>
     <maxConfigurableAtWorldCreation>9999</maxConfigurableAtWorldCreation>
     <configurationListOrderPriority>50</configurationListOrderPriority>
     <permanentEnemy>true</permanentEnemy>

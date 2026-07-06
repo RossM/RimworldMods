@@ -10,7 +10,7 @@
     <displayPriority>-107</displayPriority>
     <inheritable>true</inheritable>
     <combatPowerFactor>1.9</combatPowerFactor>
-    <nameMaker>XylNamerPersonWarcat</nameMaker>
+    <nameMaker>NamerXylPersonWarcat</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>
       <li>XylFeralRage</li>

@@ -10,8 +10,8 @@
     <displayPriority>-101</displayPriority>
     <inheritable>true</inheritable>
     <combatPowerFactor>1.6</combatPowerFactor>
-    <nameMaker>XylNamerPersonBossapsMale</nameMaker>
-    <nameMakerFemale>XylNamerPersonBossapsFemale</nameMakerFemale>
+    <nameMaker>NamerXylPersonBossapsMale</nameMaker>
+    <nameMakerFemale>NamerXylPersonBossapsFemale</nameMakerFemale>
     <chanceToUseNameMaker>0.75</chanceToUseNameMaker>
     <genes>
       <li>XylHerdInstinct</li>

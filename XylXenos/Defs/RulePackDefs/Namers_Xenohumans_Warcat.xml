@@ -2,7 +2,7 @@
 
 <Defs>
   <RulePackDef>
-    <defName>XylNamerPersonWarcat</defName>
+    <defName>NamerXylPersonWarcat</defName>
     <rulePack>
       <rulesStrings>
         <li>r_name->[ColorBadass] [Animal]</li>

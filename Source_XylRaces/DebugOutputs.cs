@@ -155,33 +155,6 @@ public static class DebugOutputs
         }
     }
 
-    [DebugOutput]
-    public static void GenerateXenohumanNames()
-    {
-        List<DebugMenuOption> list = [];
-
-        foreach (XenotypeDef item in DefDatabase<XenotypeDef>.AllDefs.Where(def => def.nameMaker != null).OrderBy(def => def.defName))
-        {
-            XenotypeDef localDef = item;
-
-            list.Add(new DebugMenuOption(localDef.defName, DebugMenuOptionMode.Action, delegate
-            {
-                StringBuilder sb = new();
-
-                for (int i = 0; i < 30; i++)
-                {
-                    var nameMaker = localDef.GetNameMaker(Rand.Chance(0.5f) ? Gender.Female : Gender.Male);
-                    var name = NameTriple.FromString(NameGenerator.GenerateName(nameMaker));
-                    sb.AppendLine(name.ToStringFull);
-                }
-
-                Log.Message(sb.Length > 0 ? sb.ToString() : $"No name maker for {localDef.label}");
-            }));
-        }
-
-        Find.WindowStack.Add(new Dialog_DebugOptionListLister(list));
-    }
-
     [DebugOutput("Economy")]
     public static void DrugGeneRequirements()
     {

@@ -10,7 +10,7 @@
     <displayPriority>-104</displayPriority>
     <combatPowerFactor>1.0</combatPowerFactor>
     <inheritable>true</inheritable>
-    <nameMaker>XylNamerPersonNixie</nameMaker>
+    <nameMaker>NamerXylPersonNixie</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>
       <li MayRequire="Ludeon.RimWorld.Royalty">XylPsycast_Beckon</li>

@@ -10,7 +10,7 @@
     <displayPriority>-103</displayPriority>
     <combatPowerFactor>1.1</combatPowerFactor>
     <inheritable>true</inheritable>
-    <nameMaker>XylNamerPersonDvergr</nameMaker>
+    <nameMaker>NamerXylPersonDvergr</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>
       <li>PsychicAbility_Dull</li>
