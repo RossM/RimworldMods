@@ -18,7 +18,7 @@ public static class ReflectionHelpers
     /// <param name="baseType">The base type that defines the default method behavior.</param>
     /// <param name="methodName">The name of the base method to check.</param>
     /// <returns>
-    ///     <see langword="true" /> if <paramref name="childType" /> uses an override for the method; otherwise,
+    ///     <see langword="true" /> if <paramref name="childType" /> has an override for the method; otherwise,
     ///     <see langword="false" />.
     /// </returns>
     /// <exception cref="ArgumentException">
