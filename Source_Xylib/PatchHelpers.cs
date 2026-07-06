@@ -2,6 +2,9 @@
 
 internal static class PatchHelpers
 {
+    public static HashSet<RecipeDef> RecipesUnlockedByGenes => field ??= GetRecipesUnlockedByGenes();
+    private static Dictionary<HediffDef, StatDef> resistanceStatByHediff;
+
     public static void RunDefGenerators(bool hotReload)
     {
         foreach (var type in GenTypes.AllTypesWithAttribute<DefGeneratorAttribute>())
@@ -43,7 +46,8 @@ internal static class PatchHelpers
 
     public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene outGene)
     {
-        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene => gene.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies is true);
+        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene =>
+            gene.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies is true);
         return outGene != null;
     }
 
@@ -149,21 +153,17 @@ internal static class PatchHelpers
         }
     }
 
-    public static HashSet<RecipeDef> RecipesUnlockedByGenes => field ??= Xylib.PatchHelpers.GetRecipesUnlockedByGenes();
-
     public static float GetHediffResistance(Pawn pawn, HediffDef def)
     {
-        if (def == HediffDefOf.BloodLoss)
-            return pawn.GetStatValue(XStatDefOf.XylBloodLossResistance);
-        if (def == HediffDefOf.DrugOverdose)
-            return pawn.GetStatValue(XStatDefOf.XylDrugOverdoseResistance);
-        if (def == HediffDefOf.Heatstroke)
-            return pawn.GetStatValue(XStatDefOf.XylHeatstrokeResistance);
-        if (def == HediffDefOf.Hypothermia)
-            return pawn.GetStatValue(XStatDefOf.XylHypothermiaResistance);
-        if (def == HediffDefOf.Malnutrition)
-            return pawn.GetStatValue(XStatDefOf.XylMalnutritionResistance);
+        resistanceStatByHediff ??= new Dictionary<HediffDef, StatDef>
+        {
+            { HediffDefOf.BloodLoss, XStatDefOf.XylBloodLossResistance },
+            { HediffDefOf.DrugOverdose, XStatDefOf.XylDrugOverdoseResistance },
+            { HediffDefOf.Heatstroke, XStatDefOf.XylHeatstrokeResistance },
+            { HediffDefOf.Hypothermia, XStatDefOf.XylHypothermiaResistance },
+            { HediffDefOf.Malnutrition, XStatDefOf.XylMalnutritionResistance },
+        };
 
-        return 0f;
+        return resistanceStatByHediff.TryGetValue(def, out var stat) ? pawn.GetStatValue(stat) : 0f;
     }
 }
