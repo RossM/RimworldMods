@@ -19,7 +19,7 @@ internal static class Patch_GenConstruct
 
         BuildableDef def = thing.def.entityDefToBuild ?? thing.def;
 
-        bool hasGeneDesignator = p.GeneTracker_GeneWithComps?.unlockedBuildables?.Contains(def) ?? false;
+        bool hasGeneDesignator = p.GeneTracker_Xylib?.unlockedBuildables?.Contains(def) ?? false;
         if (!hasGeneDesignator && tmpIdeoMemberNames().Count == 0)
         {
             foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)

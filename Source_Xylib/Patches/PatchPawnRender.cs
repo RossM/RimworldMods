@@ -15,7 +15,7 @@ internal static class PatchPawnRender
     public static void AppendRequests_Postfix(PawnRenderNode __instance, PawnDrawParms parms, List<PawnGraphicDrawRequest> requests)
     {
         var type = RenderNodeModifierType.VisibilitySelfOnly;
-        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_GeneWithComps?.renderNodeModifiersByType[(int)type];
+        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
         if (renderNodeModifiers == null)
             return;
 
@@ -44,7 +44,7 @@ internal static class PatchPawnRender
     public static bool AppendRequests_Prefix(PawnRenderNode __instance, PawnDrawParms parms, List<PawnGraphicDrawRequest> requests)
     {
         var type = RenderNodeModifierType.VisibilitySelfAndChildren;
-        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_GeneWithComps?.renderNodeModifiersByType[(int)type];
+        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
         if (renderNodeModifiers == null)
             return true;
 
@@ -69,7 +69,7 @@ internal static class PatchPawnRender
         ref Vector3 scale)
     {
         var type = __instance == node ? RenderNodeModifierType.PositionSelf : RenderNodeModifierType.PositionChildren;
-        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_GeneWithComps?.renderNodeModifiersByType[(int)type];
+        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
         if (renderNodeModifiers == null)
             return;
 

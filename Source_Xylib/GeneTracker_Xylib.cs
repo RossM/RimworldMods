@@ -1,6 +1,6 @@
 ﻿namespace Xylib;
 
-public class GeneTracker_GeneWithComps : GeneTracker
+public class GeneTracker_Xylib : GeneTracker
 {
     /// <summary>
     ///     Aggregates <see cref="GeneCompProperties_RaceModifiers.bodySizeFactor" /> from all genes.<br /><br />

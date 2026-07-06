@@ -61,13 +61,13 @@ public static class Extensions
         }
 
         /// <summary>
-        ///     Gets the <see cref="GeneTracker_GeneWithComps" /> for the pawn, or null if the pawn has no genes.
+        ///     Gets the <see cref="GeneTracker_Xylib" /> for the pawn, or null if the pawn has no genes.
         /// </summary>
         [CanBeNull]
-        public GeneTracker_GeneWithComps GeneTracker_GeneWithComps
+        public GeneTracker_Xylib GeneTracker_Xylib
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => pawn.genes == null ? null : PawnExtraData<GeneTracker_GeneWithComps>.Get(pawn);
+            get => pawn.genes == null ? null : PawnExtraData<GeneTracker_Xylib>.Get(pawn);
         }
 
         /// <summary>

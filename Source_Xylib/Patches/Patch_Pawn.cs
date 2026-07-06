@@ -9,7 +9,7 @@ internal static class Patch_Pawn
     [HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
     public static void BodySize_Postfix(Pawn __instance, ref float __result)
     {
-        if (__instance.GeneTracker_GeneWithComps is { } geneTracker)
+        if (__instance.GeneTracker_Xylib is { } geneTracker)
             __result *= geneTracker.bodySizeFactor;
     }
 
@@ -29,7 +29,7 @@ internal static class Patch_Pawn
     [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
     public static void HealthScale_Postfix(Pawn __instance, ref float __result)
     {
-        if (__instance.GeneTracker_GeneWithComps is { } geneTracker)
+        if (__instance.GeneTracker_Xylib is { } geneTracker)
             __result *= geneTracker.healthScaleFactor;
     }
 

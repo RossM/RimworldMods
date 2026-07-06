@@ -97,7 +97,7 @@ internal static class PatchHelpers
     {
         foreach (var pawn in Faction.OfPlayer.AllAlivePawns)
         {
-            if (pawn.GeneTracker_GeneWithComps?.unlockedRecipes?.Contains(recipe) is true)
+            if (pawn.GeneTracker_Xylib?.unlockedRecipes?.Contains(recipe) is true)
                 return true;
         }
 
@@ -124,7 +124,7 @@ internal static class PatchHelpers
     {
         HashSet<Designator> geneDesignators = [];
 
-        foreach (var designators in Faction.OfPlayer.AllAlivePawns.Select(pawn => pawn.GeneTracker_GeneWithComps?.unlockedBuildables))
+        foreach (var designators in Faction.OfPlayer.AllAlivePawns.Select(pawn => pawn.GeneTracker_Xylib?.unlockedBuildables))
         {
             if (designators == null)
                 continue;
