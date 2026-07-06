@@ -9,6 +9,8 @@ public static class ReflectionHelpers
     public static bool HasOverridingMethod(Type childType, Type baseType, string methodName)
     {
         var baseMethodInfo = baseType.GetMethod(methodName, MethodBindingFlags);
+        if (baseMethodInfo == null)
+            throw new ArgumentException("Method not found", nameof(methodName));
 
         for (Type type = childType; type != null && type != baseType; type = type.BaseType)
         {
