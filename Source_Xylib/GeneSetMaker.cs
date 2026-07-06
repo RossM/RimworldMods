@@ -92,7 +92,7 @@ public class GeneSetMakerWeight
 [UsedFromXml]
 public class GeneSetMaker_Option : GeneSetMaker
 {
-    public override int BiostatMetForDisplay => Mathf.Clamp(0,
+    public override int BiostatMetForDisplay => count.min * Mathf.Clamp(0,
         options.Min(o => o.maker.BiostatMetForDisplay),
         options.Max(o => o.maker.BiostatMetForDisplay));
 
@@ -100,7 +100,8 @@ public class GeneSetMaker_Option : GeneSetMaker
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
-        options.RandomElementByWeight(o => o.weight).maker.AddGenes(geneSet, geneType, pawn);
+        for (int i = 0; i < countValue; i++)
+            options.RandomElementByWeight(o => o.weight).maker.AddGenes(geneSet, geneType, pawn);
     }
 
     public override IEnumerable<string> ConfigErrors()
