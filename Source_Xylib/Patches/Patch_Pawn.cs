@@ -4,7 +4,7 @@ namespace Xylib.Patches;
 internal static class Patch_Pawn
 {
     // Note: This patch is performance-sensitive
-    [Feature(nameof(DefModExtension_GeneWithComps.bodySizeFactor))]
+    [Feature(typeof(GeneCompProperties_RaceModifiers))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
     public static void BodySize_Postfix(Pawn __instance, ref float __result)
@@ -24,7 +24,7 @@ internal static class Patch_Pawn
     }
 
     // Note: This patch is performance-sensitive
-    [Feature(nameof(DefModExtension_GeneWithComps.healthScaleFactor))]
+    [Feature(typeof(GeneCompProperties_RaceModifiers))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
     public static void HealthScale_Postfix(Pawn __instance, ref float __result)

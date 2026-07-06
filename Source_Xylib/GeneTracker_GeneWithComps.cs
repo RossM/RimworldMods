@@ -47,8 +47,11 @@ public class GeneTracker_GeneWithComps : GeneTracker
             {
                 var def = gene.DefExt;
 
-                bodySizeFactor *= def.bodySizeFactor;
-                healthScaleFactor *= def.healthScaleFactor;
+                if (def.CompProps<GeneCompProperties_RaceModifiers>() is { } raceModifiers)
+                {
+                    bodySizeFactor *= raceModifiers.bodySizeFactor;
+                    healthScaleFactor *= raceModifiers.healthScaleFactor;
+                }
 
                 Append(ref renderNodeModifiers, def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.renderNodeModifiers);
                 for (int i = 0; i < renderNodeModifiersByType.Length; i++)
