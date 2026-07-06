@@ -146,6 +146,12 @@ public static class EventDefOf
     public static EventDef PostHediffsChanged;
 
     /// <summary>
+    ///     Called after <see cref="Pawn_JobTracker.StartJob" /> successfully starts a job.
+    ///     This hook passes a <see cref="JobDriver" /> as its "data" parameter.
+    /// </summary>
+    public static EventDef PostJobStarted;
+
+    /// <summary>
     ///     Called after <see cref="EventManager.LoadedGame" />, immediately after the event manager
     ///     has called <see cref="IEventListener.RegisterWith" /> on all listeners.
     /// </summary>
@@ -287,11 +293,6 @@ public class EventManager
         }
     }
 
-    /// <summary>
-    ///     Gets the shared event manager instance.
-    /// </summary>
-    [NotNull] public static EventManager Instance { get; } = new();
-
     private static bool doDebug = false;
 
     // Listeners that are automatically registered when a game is started or loaded.
@@ -308,6 +309,12 @@ public class EventManager
 
     // Scratch list used during event handling.
     private readonly List<CallbackInfo> tempCallbacks = [];
+
+    /// <summary>
+    ///     Gets the shared event manager instance.
+    /// </summary>
+    [NotNull]
+    public static EventManager Instance { get; } = new();
 
     /// <summary>
     ///     Toggles development logging for event registration and notification.
@@ -383,7 +390,8 @@ public class EventManager
     ///     The event to listen for.
     /// </param>
     /// <param name="target">
-    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked for all targets.
+    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked
+    ///     for all targets.
     /// </param>
     /// <param name="callback">
     ///     The callback to invoke. Its target object must implement <see cref="IEventListener" />.
@@ -423,7 +431,8 @@ public class EventManager
     ///     The event to listen for.
     /// </param>
     /// <param name="target">
-    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked for all targets.
+    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked
+    ///     for all targets.
     /// </param>
     /// <param name="callback">
     ///     The callback to invoke. Its target object must implement <see cref="IEventListener" />.
@@ -463,7 +472,8 @@ public class EventManager
     ///     The event to listen for.
     /// </param>
     /// <param name="target">
-    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked for all targets.
+    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked
+    ///     for all targets.
     /// </param>
     /// <param name="callback">
     ///     The callback to invoke. Its target object must implement <see cref="IEventListener" />.
@@ -493,7 +503,8 @@ public class EventManager
     ///     The event to listen for.
     /// </param>
     /// <param name="target">
-    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked for all targets.
+    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked
+    ///     for all targets.
     /// </param>
     /// <param name="callback">
     ///     The callback to invoke. Its target object must implement <see cref="IEventListener" />.
@@ -532,7 +543,8 @@ public class EventManager
     ///     The event to listen for.
     /// </param>
     /// <param name="target">
-    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked for all targets.
+    ///     If non-null, the callback will only be invoked if the event target matches. If null, the callback will be invoked
+    ///     for all targets.
     /// </param>
     /// <param name="callback">
     ///     The callback to invoke.

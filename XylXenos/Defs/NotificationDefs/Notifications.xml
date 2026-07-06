@@ -90,4 +90,9 @@
     <allowDuringScribe>true</allowDuringScribe>
   </Xylib.EventDef>
 
+  <Xylib.EventDef>
+    <defName>PostJobStarted</defName>
+    <dataType>JobDriver</dataType>
+  </Xylib.EventDef>
+
 </Defs>
