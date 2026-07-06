@@ -41,28 +41,28 @@ public class GeneTracker_Xylib : GeneTracker
         unlockedBuildables?.Clear();
         unlockedRecipes?.Clear();
 
-        if (pawn.genes != null)
+        if (pawn.genes == null)
+            return;
+
+        foreach (var gene in pawn.ActiveGenesOfType<GeneWithComps>())
         {
-            foreach (var gene in pawn.ActiveGenesOfType<GeneWithComps>())
+            var def = gene.DefExt;
+
+            if (def.CompProps<GeneCompProperties_RaceModifiers>() is { } raceModifiers)
             {
-                var def = gene.DefExt;
-
-                if (def.CompProps<GeneCompProperties_RaceModifiers>() is { } raceModifiers)
-                {
-                    bodySizeFactor *= raceModifiers.bodySizeFactor;
-                    healthScaleFactor *= raceModifiers.healthScaleFactor;
-                }
-
-                Append(ref renderNodeModifiers, def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.renderNodeModifiers);
-                for (int i = 0; i < renderNodeModifiersByType.Length; i++)
-                {
-                    Append(ref renderNodeModifiersByType[i],
-                        def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.RenderNodeModifiersOfType((RenderNodeModifierType)i));
-                }
-
-                Append(ref unlockedBuildables, def.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables);
-                Append(ref unlockedRecipes, def.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes);
+                bodySizeFactor *= raceModifiers.bodySizeFactor;
+                healthScaleFactor *= raceModifiers.healthScaleFactor;
             }
+
+            Append(ref renderNodeModifiers, def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.renderNodeModifiers);
+            for (int i = 0; i < renderNodeModifiersByType.Length; i++)
+            {
+                Append(ref renderNodeModifiersByType[i],
+                    def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.RenderNodeModifiersOfType((RenderNodeModifierType)i));
+            }
+
+            Append(ref unlockedBuildables, def.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables);
+            Append(ref unlockedRecipes, def.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes);
         }
     }
 }
