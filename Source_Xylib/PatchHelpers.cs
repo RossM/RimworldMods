@@ -150,4 +150,20 @@ internal static class PatchHelpers
     }
 
     public static HashSet<RecipeDef> RecipesUnlockedByGenes => field ??= Xylib.PatchHelpers.GetRecipesUnlockedByGenes();
+
+    public static float GetHediffResistance(Pawn pawn, HediffDef def)
+    {
+        if (def == HediffDefOf.BloodLoss)
+            return pawn.GetStatValue(XStatDefOf.XylBloodLossResistance);
+        if (def == HediffDefOf.DrugOverdose)
+            return pawn.GetStatValue(XStatDefOf.XylDrugOverdoseResistance);
+        if (def == HediffDefOf.Heatstroke)
+            return pawn.GetStatValue(XStatDefOf.XylHeatstrokeResistance);
+        if (def == HediffDefOf.Hypothermia)
+            return pawn.GetStatValue(XStatDefOf.XylHypothermiaResistance);
+        if (def == HediffDefOf.Malnutrition)
+            return pawn.GetStatValue(XStatDefOf.XylMalnutritionResistance);
+
+        return 0f;
+    }
 }

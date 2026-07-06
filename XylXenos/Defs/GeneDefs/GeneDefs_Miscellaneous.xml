@@ -341,8 +341,8 @@
           </li>
         </capMods>
         <statFactors>
-          <XylHypothermiaProgressionFactor>0.5</XylHypothermiaProgressionFactor>
-          <XylMalnutritionProgressionFactor>0.5</XylMalnutritionProgressionFactor>
+          <XylHypothermiaResistance>0.5</XylHypothermiaResistance>
+          <XylMalnutritionResistance>0.5</XylMalnutritionResistance>
         </statFactors>
       </li>
       <li>
@@ -357,8 +357,8 @@
           </li>
         </capMods>
         <statFactors>
-          <XylHypothermiaProgressionFactor>0.25</XylHypothermiaProgressionFactor>
-          <XylMalnutritionProgressionFactor>0.25</XylMalnutritionProgressionFactor>
+          <XylHypothermiaResistance>0.75</XylHypothermiaResistance>
+          <XylMalnutritionResistance>0.75</XylMalnutritionResistance>
         </statFactors>
       </li>
       <li>
@@ -373,8 +373,8 @@
           </li>
         </capMods>
         <statFactors>
-          <XylHypothermiaProgressionFactor>0.1</XylHypothermiaProgressionFactor>
-          <XylMalnutritionProgressionFactor>0.1</XylMalnutritionProgressionFactor>
+          <XylHypothermiaResistance>0.9</XylHypothermiaResistance>
+          <XylMalnutritionResistance>0.9</XylMalnutritionResistance>
         </statFactors>
       </li>
     </stages>
