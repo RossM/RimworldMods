@@ -158,10 +158,11 @@ public static class Patch_StatWorker
     public static void PawnCapacityFactor_capacity_Postfix(
         PawnCapacityFactor __instance,
         StatWorker __caller,
+        StatDef ___stat,
         StatRequest req,
         ref PawnCapacityDef __result)
     {
-        if (Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat) is { } foundHediff)
+        if (Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, ___stat) is { } foundHediff)
             __result = foundHediff.DefExt.substituteCapacity;
     }
 
@@ -173,24 +174,25 @@ public static class Patch_StatWorker
     public static void PawnCapacityOffset_capacity_Postfix(
         PawnCapacityOffset __instance,
         StatWorker __caller,
+        StatDef ___stat,
         StatRequest req,
         ref PawnCapacityDef __result)
     {
-        if (Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, __caller.stat) is { } foundHediff)
+        if (Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, ___stat) is { } foundHediff)
             __result = foundHediff.DefExt.substituteCapacity;
     }
 
     [Feature(typeof(Psycast))]
     [HarmonyPostfix]
     [HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
-    public static void ShouldShowFor_Postfix(StatWorker __instance, StatRequest req, ref bool __result)
+    public static void ShouldShowFor_Postfix(StatDef ___stat, StatRequest req, ref bool __result)
     {
         if (req.Thing is not Pawn { HasActivePsycastGene: true })
             return;
 
-        if (__instance.stat == StatDefOf.PsychicEntropyRecoveryRate)
+        if (___stat == StatDefOf.PsychicEntropyRecoveryRate)
             __result = true;
-        if (__instance.stat == StatDefOf.PsychicEntropyMax)
+        if (___stat == StatDefOf.PsychicEntropyMax)
             __result = true;
     }
 
