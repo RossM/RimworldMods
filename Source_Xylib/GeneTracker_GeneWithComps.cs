@@ -3,14 +3,14 @@
 public class GeneTracker_GeneWithComps : GeneTracker
 {
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.bodySizeFactor" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.bodySizeFactor" />
+    ///     Aggregates <see cref="GeneCompProperties_RaceModifiers.bodySizeFactor" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="GeneCompProperties_RaceModifiers.bodySizeFactor" />
     /// </summary>
     public float bodySizeFactor = 1f;
 
     /// <summary>
-    ///     Aggregates <see cref="DefModExtension_GeneWithComps.healthScaleFactor" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="DefModExtension_GeneWithComps.healthScaleFactor" />
+    ///     Aggregates <see cref="GeneCompProperties_RaceModifiers.healthScaleFactor" /> from all genes.<br /><br />
+    ///     <inheritdoc cref="GeneCompProperties_RaceModifiers.healthScaleFactor" />
     /// </summary>
     public float healthScaleFactor = 1f;
 
