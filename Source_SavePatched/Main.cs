@@ -173,11 +173,11 @@ namespace XylSavePatched
             {
                 var newLocal = ilGenerator.DeclareLocal(oldLocal.LocalType);
                 if (newLocal.LocalIndex != oldLocal.LocalIndex)
-                    throw new NotSupportedException($"Local index mismatch");
+                    throw new NotSupportedException("Local index mismatch");
             }
 
             Dictionary<int, Label> labels = new();
-            HashSet<Label> markedLabels = new();
+            HashSet<Label> markedLabels = [];
 
             // Create labels for all instructions which are branch targets
             foreach (var oldInstruction in decodedMethod.Instructions)

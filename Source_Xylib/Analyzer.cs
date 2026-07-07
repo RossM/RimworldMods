@@ -15,8 +15,11 @@ public static class Analyzer
     ///     for issues that might indicate a potential bug or maintainability problem.
     /// </summary>
     /// <param name="assembly"></param>
-    public static void CheckCodingStyle_Patches(Assembly assembly)
+    public static void CheckCodingStyle_Patches([NotNull] Assembly assembly)
     {
+        if (assembly is null)
+            throw new ArgumentNullException(nameof(assembly));
+
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
             bool typeHasHarmony = type.HasAttribute<HarmonyPatch>();
