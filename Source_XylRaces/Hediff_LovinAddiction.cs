@@ -30,7 +30,7 @@ public class Hediff_LovinAddiction : HediffWithCompsExt
             string labelInBrackets = base.LabelInBrackets;
             string text = (1f - Severity).ToStringPercent("F0");
             if (!labelInBrackets.NullOrEmpty())
-                return labelInBrackets + " " + text;
+                return labelInBrackets + ", " + text;
             return text;
         }
     }
