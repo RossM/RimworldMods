@@ -28,9 +28,6 @@ public class GeneComp
     /// </summary>
     public bool Active => parent.Active;
 
-    private static readonly Dictionary<Type, bool> hasTickCache = new();
-    private static readonly Dictionary<Type, bool> hasTickIntervalCache = new();
-
     /// <summary>
     ///     The gene this component is attached to.
     /// </summary>
@@ -40,28 +37,6 @@ public class GeneComp
     ///     The properties for this component, as defined in XML.
     /// </summary>
     [Unsaved] public GeneCompProperties props;
-
-    [Unsaved] internal readonly bool hasTick;
-    [Unsaved] internal readonly bool hasTickInterval;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="GeneComp" /> class.
-    /// </summary>
-    public GeneComp()
-    {
-        var type = GetType();
-
-        if (!hasTickCache.TryGetValue(type, out hasTick))
-        {
-            hasTickCache[type] = hasTick = ReflectionHelpers.HasOverridingMethod(type, typeof(GeneComp), nameof(CompTick));
-        }
-
-        if (!hasTickIntervalCache.TryGetValue(type, out hasTickInterval))
-        {
-            hasTickIntervalCache[type]
-                = hasTickInterval = ReflectionHelpers.HasOverridingMethod(type, typeof(GeneComp), nameof(CompTickInterval));
-        }
-    }
 
     /// <summary>
     ///     Called after the gene is created and initialized, but before it is added to the pawn.
@@ -168,8 +143,12 @@ public class GeneWithComps : Gene, IEventListener
     /// </summary>
     public GeneType GeneType => geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 
+    private static readonly Dictionary<Type, bool> hasTickCache = new();
+    private static readonly Dictionary<Type, bool> hasTickIntervalCache = new();
+
     [Unsaved] private GeneType? geneTypeInternal;
     [Unsaved] private bool activeStateNeedsUpdating = true;
+
 
     /// <summary>
     ///     The components for this gene.
@@ -274,19 +253,34 @@ public class GeneWithComps : Gene, IEventListener
         comps = [];
         foreach (GeneCompProperties compProps in compProperties)
         {
-            if (compProps.compClass == null)
+            Type compClass = compProps.compClass;
+            if (compClass == null)
                 continue;
 
             GeneComp comp = null;
             try
             {
-                comp = (GeneComp)Activator.CreateInstance(compProps.compClass);
+                comp = (GeneComp)Activator.CreateInstance(compClass);
                 comp.props = compProps;
                 comp.parent = this;
                 comps.Add(comp);
-                if (comp.hasTick)
+
+                if (!hasTickCache.TryGetValue(compClass, out var hasTick))
+                {
+                    hasTickCache[compClass]
+                        = hasTick = ReflectionHelpers.HasOverridingMethod(compClass, typeof(GeneComp), nameof(CompTick));
+                }
+
+                if (hasTick)
                     CompTick += comp.CompTick;
-                if (comp.hasTickInterval)
+
+                if (!hasTickIntervalCache.TryGetValue(compClass, out var hasTickInterval))
+                {
+                    hasTickIntervalCache[compClass]
+                        = hasTickInterval = ReflectionHelpers.HasOverridingMethod(compClass, typeof(GeneComp), nameof(CompTickInterval));
+                }
+
+                if (hasTickInterval)
                     CompTickInterval += comp.CompTickInterval;
             }
             catch (Exception ex)
