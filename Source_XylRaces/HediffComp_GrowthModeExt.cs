@@ -45,19 +45,24 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
 {
     public HediffCompProperties_GrowthModeExt TProps => (HediffCompProperties_GrowthModeExt)props;
 
-    public override string CompLabelInBracketsExtra => growthMode.label;
+    public override string CompLabelInBracketsExtra => GrowthMode.label;
 
-    public override string CompTipStringExtra => growthMode.tipString;
+    public override string CompTipStringExtra => GrowthMode.tipString;
 
-    public bool AllowTend => growthMode.allowTend;
+    public bool AllowTend => GrowthMode.allowTend;
 
-    public bool CausesNoPain => growthMode.causesNoPain;
+    public bool CausesNoPain => GrowthMode.causesNoPain;
+    public GrowthMode GrowthMode
+    {
+        get => TProps.modes[growthModeIndex];
+        set => growthModeIndex = TProps.modes.IndexOf(value);
+    }
 
-    public GrowthMode growthMode;
+    public int growthModeIndex;
 
     public override void CompExposeData()
     {
-        Scribe_Values.Look(ref growthMode, nameof(growthMode));
+        Scribe_Values.Look(ref growthModeIndex, nameof(growthModeIndex));
     }
 
     public override void CompPostPostAdd(DamageInfo? dinfo)
@@ -76,7 +81,7 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
     {
         base.CompPostTickInterval(ref severityAdjustment, delta);
 
-        float mtbDays = growthMode.changeMtbDays;
+        float mtbDays = GrowthMode.changeMtbDays;
 
         if (mtbDays > 0 && Rand.MTBEventOccurs(mtbDays, GenDate.TicksPerDay, delta))
         {
@@ -86,21 +91,21 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
 
     public virtual void ChangeGrowthMode()
     {
-        SetGrowthMode(TProps.modes.Where(mode => mode != growthMode).RandomElement());
+        SetGrowthMode(TProps.modes.Where(mode => mode != GrowthMode).RandomElement());
 
-        if (!growthMode.message.NullOrEmpty() && PawnUtility.ShouldSendNotificationAbout(Pawn))
+        if (!GrowthMode.message.NullOrEmpty() && PawnUtility.ShouldSendNotificationAbout(Pawn))
         {
             Messages.Message(
-                growthMode.message.Formatted(Pawn.Named("PAWN")),
+                GrowthMode.message.Formatted(Pawn.Named("PAWN")),
                 Pawn,
-                growthMode.messageType ?? MessageTypeDefOf.NegativeHealthEvent);
+                GrowthMode.messageType ?? MessageTypeDefOf.NegativeHealthEvent);
         }
     }
 
     private void SetGrowthMode(GrowthMode mode)
     {
-        growthMode = mode;
-        severityPerDay = growthMode.severityPerDay + growthMode.severityPerDayRange.RandomInRange;
+        GrowthMode = mode;
+        severityPerDay = GrowthMode.severityPerDay + GrowthMode.severityPerDayRange.RandomInRange;
         if (parent is HediffWithCompsExt ext)
             ext.Notify_CompStateChange();
     }
