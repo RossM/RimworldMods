@@ -199,8 +199,8 @@
           <li Class="XylXenos.GeneCompProperties_LoveEuphoria">
             <need>XylLovin</need>
             <hediffs>
-              <li>XylLoveEuphoria</li>
               <li>XylLovinAddiction</li>
+              <li>XylLoveEuphoria</li>
             </hediffs>
           </li>
         </comps>
