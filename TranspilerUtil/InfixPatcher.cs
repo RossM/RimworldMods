@@ -195,14 +195,14 @@ public static class InfixPatcher
                 }
             }
 
-            int targetIndex = targetParameterNames.FirstIndexOf(name => name == parameterName);
+            int targetIndex = Array.IndexOf(targetParameterNames, parameterName);
             if (targetIndex >= 0)
             {
                 EmitTargetParameter(parameterType, targetIndex);
                 return;
             }
 
-            int callerIndex = callerParameterNames.FirstIndexOf(name => name == parameterName);
+            int callerIndex = Array.IndexOf(callerParameterNames, parameterName);
             if (callerIndex >= 0)
             {
                 EmitCallerParameter(parameterType, callerIndex);
