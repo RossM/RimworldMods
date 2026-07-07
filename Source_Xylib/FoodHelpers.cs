@@ -34,7 +34,7 @@ public static class FoodHelpers
                 foodType |= FoodType.Humanlike;
             if (race?.FleshType == FleshTypeDefOf.Insectoid)
                 foodType |= FoodType.Insect;
-            
+
             return foodType;
         }
 

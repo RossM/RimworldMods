@@ -45,7 +45,7 @@ public class GeneComp
     [Unsaved] internal readonly bool hasTickInterval;
 
     /// <summary>
-    ///    Initializes a new instance of the <see cref="GeneComp" /> class.
+    ///     Initializes a new instance of the <see cref="GeneComp" /> class.
     /// </summary>
     public GeneComp()
     {
@@ -449,7 +449,7 @@ public class GeneWithComps : Gene, IEventListener
     }
 
     /// <summary>
-    ///     Gets the first component with type assignable to <typeparamref name="T"/>.
+    ///     Gets the first component with type assignable to <typeparamref name="T" />.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns>The component, or null if there is no matching component</returns>
@@ -475,7 +475,7 @@ public class GeneWithComps : Gene, IEventListener
         activeStateNeedsUpdating = true;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public virtual void RegisterWith(EventManager manager)
     {
         // The only things that can change when a gene is active in the base game are:

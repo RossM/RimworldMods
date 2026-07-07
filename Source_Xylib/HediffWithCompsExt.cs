@@ -30,11 +30,6 @@ public class HediffWithCompsExt : HediffWithComps
         }
     }
 
-    public void Notify_CompStateChange()
-    {
-        curStageInternal = null;
-    }
-
     protected virtual void UpdateCurStage(HediffStage stage)
     {
         foreach (var comp in comps)
@@ -100,5 +95,10 @@ public class HediffWithCompsExt : HediffWithComps
         if (showHediffsDebugInfo && !DebugString().NullOrEmpty() && !DebugString().NullOrEmpty())
             tipSb.AppendLine().AppendLine(DebugString().TrimEndNewlines());
         return tipSb.ToString().TrimEnd();
+    }
+
+    public void Notify_CompStateChange()
+    {
+        curStageInternal = null;
     }
 }

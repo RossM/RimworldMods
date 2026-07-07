@@ -60,10 +60,12 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
             if (!caster.CanSee(targetPawn))
                 continue;
 
-            if (ability.CompOfType<CompAbilityEffect_GiveHediff>() is { } giveHediffEffect && targetPawn.health.hediffSet.HasHediff(giveHediffEffect.Props.hediffDef))
+            if (ability.CompOfType<CompAbilityEffect_GiveHediff>() is { } giveHediffEffect &&
+                targetPawn.health.hediffSet.HasHediff(giveHediffEffect.Props.hediffDef))
                 continue;
 
-            if (ability.CompOfType<CompAbilityEffect_ForceJob>() is { } forceJobEffect && targetPawn.CurJobDef == forceJobEffect.Props.jobDef)
+            if (ability.CompOfType<CompAbilityEffect_ForceJob>() is { } forceJobEffect &&
+                targetPawn.CurJobDef == forceJobEffect.Props.jobDef)
                 continue;
 
             if (targetEnemies && avoidHittingNonEnemies)

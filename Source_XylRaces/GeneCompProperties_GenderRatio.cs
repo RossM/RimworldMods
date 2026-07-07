@@ -3,8 +3,6 @@
 [UsedFromXml]
 public class GeneCompProperties_GenderRatio : GeneCompProperties
 {
-    public float femaleChance = 0.5f;
-
     public string GenderRatioDescription =>
         femaleChance switch
         {
@@ -13,6 +11,8 @@ public class GeneCompProperties_GenderRatio : GeneCompProperties
             var chance => "XylGenderRatioValue".Translate(chance.ToStringPercent(),
                 (1 - chance).ToStringPercent())
         };
+
+    public float femaleChance = 0.5f;
 
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)

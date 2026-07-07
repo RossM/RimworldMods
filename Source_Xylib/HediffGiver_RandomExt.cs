@@ -27,7 +27,8 @@ public class HediffGiver_RandomExt : HediffGiver
     public bool allowDuplicates = false;
 
     /// <summary>
-    ///     When triggered from another hediff, whether to inherit the severity of the cause hediff. If false, the severity will be set to a random value in <see cref="severityRange" />.
+    ///     When triggered from another hediff, whether to inherit the severity of the cause hediff. If false, the severity
+    ///     will be set to a random value in <see cref="severityRange" />.
     /// </summary>
     public bool inheritSeverity = false;
 

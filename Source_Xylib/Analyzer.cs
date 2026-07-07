@@ -32,7 +32,8 @@ public static class Analyzer
 
                 // A patch class without [HarmonyPatch] won't get processed, so this almost certainly indicates a bug
                 if ((hasPrefix || hasPostfix || hasTranspiler || hasInfixPatch) && !typeHasHarmony)
-                    Log.Warning($"[{name}] {type.FullName}::{method.Name} appears to be a patch but is in a type with no [HarmonyPatch] attribute");
+                    Log.Warning(
+                        $"[{name}] {type.FullName}::{method.Name} appears to be a patch but is in a type with no [HarmonyPatch] attribute");
 
                 if (!typeHasHarmony)
                     continue;

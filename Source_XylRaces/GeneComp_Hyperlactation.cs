@@ -32,6 +32,12 @@ public class GeneComp_Hyperlactation : GeneComp
         ? Mathf.FloorToInt((float)(Find.TickManager.TicksGame - fullSinceTick.Value) / Props.ticksPerSorenessStage)
         : -1;
 
+    public bool ReadyToMilk =>
+        Active &&
+        allowMilking &&
+        Find.TickManager.TicksGame > lastMilkedTick + milkingCooldownDays * GenDate.TicksPerDay &&
+        MilkCount >= 1;
+
     private const int checkInterval = 60;
     public bool allowMilking = true;
     public int milkingCooldownDays = 1;
@@ -40,12 +46,6 @@ public class GeneComp_Hyperlactation : GeneComp
     public int lastMilkedTick = int.MinValue;
 
     private HediffComp_Lactating lactatingInternal;
-
-    public bool ReadyToMilk =>
-        Active &&
-        allowMilking && 
-        Find.TickManager.TicksGame > lastMilkedTick + milkingCooldownDays * GenDate.TicksPerDay &&
-        MilkCount >= 1;
 
     public override void CompExposeData()
     {

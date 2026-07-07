@@ -298,7 +298,8 @@ public static class PatchHelpers
         {
             foreach (Gene item2 in pawn.genes.GenesListForReading)
             {
-                if (item2.Active && item2.def.passionMod is { modType: PassionMod.PassionModType.AddOneLevel } && item2.def.passionMod.skill == record.def)
+                if (item2.Active && item2.def.passionMod is { modType: PassionMod.PassionModType.AddOneLevel } &&
+                    item2.def.passionMod.skill == record.def)
                     return true;
             }
         }

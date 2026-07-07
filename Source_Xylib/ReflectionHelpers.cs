@@ -4,7 +4,8 @@ namespace Xylib;
 
 public static class ReflectionHelpers
 {
-    private const BindingFlags MethodBindingFlags = BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic;
+    private const BindingFlags MethodBindingFlags
+        = BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic;
 
     /// <summary>
     ///     Determines whether <paramref name="childType" /> or any intermediate base class overrides a method declared by

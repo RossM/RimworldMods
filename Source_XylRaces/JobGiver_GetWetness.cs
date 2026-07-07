@@ -3,9 +3,8 @@
 [UsedFromXml]
 public class JobGiver_GetWetness : ThinkNode_JobGiver
 {
-    public JobDef soakJobDef;
-
     public const Danger maxDanger = Danger.None;
+    public JobDef soakJobDef;
 
     public static List<ThingDef> WetnessGivingThings
     {

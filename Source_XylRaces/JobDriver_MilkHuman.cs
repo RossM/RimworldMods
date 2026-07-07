@@ -3,6 +3,11 @@
 [UsedFromXml]
 public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 {
+    protected override SkillDef ActiveSkill => SkillDefOf.Animals;
+
+    protected override bool HasProgressBar => true;
+
+    protected override float Progress => gatherProgress / WorkTotal;
     private const float WorkTotal = 400f;
     private float gatherProgress;
 
@@ -49,12 +54,6 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
                 return;
         }
     }
-
-    protected override SkillDef ActiveSkill => SkillDefOf.Animals;
-
-    protected override bool HasProgressBar => true;
-
-    protected override float Progress => gatherProgress / WorkTotal;
 
     protected override void InteractionTickInterval(Toil toil, int delta)
     {

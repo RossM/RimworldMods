@@ -6,16 +6,12 @@ namespace Xylib;
 ///     Caches common gene and hediff queries for a pawn.
 /// </summary>
 /// <remarks>
-///     Cached gene results are cleared when the pawn's genes change, and cached hediff results are cleared when the pawn's hediffs
+///     Cached gene results are cleared when the pawn's genes change, and cached hediff results are cleared when the pawn's
+///     hediffs
 ///     change.
 /// </remarks>
 public class GeneAndHediffCache : IEventListener, IPawnData
 {
-    /// <summary>
-    ///     Gets the pawn whose genes and hediffs are cached.
-    /// </summary>
-    public Pawn Pawn { get; private set; }
-
     private readonly Dictionary<Type, IList> genesByType = new();
     private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
     private readonly Dictionary<Type, List<GeneWithComps>> genesByComp = new();
@@ -24,6 +20,11 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     private readonly Dictionary<HediffDef, List<Hediff>> hediffsByDef = new();
     private readonly Dictionary<Type, List<Hediff>> hediffsByModExt = new();
     private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
+
+    /// <summary>
+    ///     Gets the pawn whose genes and hediffs are cached.
+    /// </summary>
+    public Pawn Pawn { get; private set; }
 
     // ReSharper disable once ParameterHidesMember
     void IPawnData.Init(Pawn pawn)

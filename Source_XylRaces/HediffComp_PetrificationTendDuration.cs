@@ -87,11 +87,11 @@ public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
             return stringBuilder.ToString().TrimEndNewlines();
 
             string GetTendedLabel(BodyPartRecord bodyPartRecord) =>
-                (bodyPartRecord.def.IsSolid(bodyPartRecord, Pawn.health.hediffSet.hediffs)
+                bodyPartRecord.def.IsSolid(bodyPartRecord, Pawn.health.hediffSet.hediffs)
                     ? TProps.labelSolidTendedWell
                     : bodyPartRecord is not { depth: BodyPartDepth.Inside }
                         ? TProps.labelTendedWell
-                        : TProps.labelTendedWellInner);
+                        : TProps.labelTendedWellInner;
         }
     }
 

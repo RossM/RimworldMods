@@ -1,4 +1,5 @@
 ﻿// ReSharper disable MemberCanBeMadeStatic.Local
+
 namespace Xylib;
 
 /// <summary>

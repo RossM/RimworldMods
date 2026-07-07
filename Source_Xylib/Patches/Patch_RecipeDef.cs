@@ -12,7 +12,8 @@ internal static class Patch_RecipeDef
             return;
 
         // If the recipe is available, and there was some non-research prerequisite that was met, it's available
-        if (__result && (__instance.memePrerequisitesAny != null || __instance.factionPrerequisiteTags != null || __instance.fromIdeoBuildingPreceptOnly))
+        if (__result && (__instance.memePrerequisitesAny != null || __instance.factionPrerequisiteTags != null ||
+                         __instance.fromIdeoBuildingPreceptOnly))
             return;
 
         // If the recipe has unmet research prerequisites, it's not available

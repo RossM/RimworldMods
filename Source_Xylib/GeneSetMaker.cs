@@ -174,7 +174,11 @@ public class GeneSetMaker_List : GeneSetMaker
 {
     public override int BiostatMetForDisplay => biostatMetInternal ??= CalculateBiostatMet();
 
+    public static readonly List<GeneDef> genesTemp = [];
+
     private int? biostatMetInternal;
+
+    public List<GeneDef> genes;
 
     private int CalculateBiostatMet()
     {
@@ -186,10 +190,6 @@ public class GeneSetMaker_List : GeneSetMaker
         int maxTotal = metList.OrderByDescending(m => m).Take(count.min).Sum();
         return Mathf.Clamp(0, minTotal, maxTotal);
     }
-
-    public List<GeneDef> genes;
-
-    public static readonly List<GeneDef> genesTemp = [];
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
