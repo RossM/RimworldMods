@@ -4,7 +4,7 @@
 
 public class DefModExtension_Hediff_DietDependency : DefModExtension
 {
-    public FoodKind foodKind = FoodKind.Any;
+    public FoodType foods = FoodType.Any;
     public bool rawOnly = false;
     public float severityReductionPerNutrition = 1f;
     [MustTranslate] public string foodLabel;
@@ -135,18 +135,19 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         if (!food.def.IsRawFoodOrCorpse && DefExt.rawOnly)
             return false;
 
-        if (DefExt.foodKind == FoodUtility.GetFoodKind(food))
+        if (ValidFoodType(food.def))
             return true;
 
         var compIngredients = food.TryGetComp<CompIngredients>();
         if (compIngredients == null)
             return false;
-        if (Enumerable.Any(compIngredients.ingredients,
-                ingredient => DefExt.foodKind == FoodUtility.GetFoodKind(ingredient)))
+        if (Enumerable.Any(compIngredients.ingredients, ValidFoodType))
             return true;
 
         return false;
     }
+
+    private bool ValidFoodType(ThingDef ingredient) => (DefExt.foods & FoodHelpers.GetFoodType(ingredient)) != 0;
 
     public override void Notify_IngestedThing(Thing food, int numTaken)
     {

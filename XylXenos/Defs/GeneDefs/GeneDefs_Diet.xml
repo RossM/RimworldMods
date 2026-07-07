@@ -253,7 +253,9 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Hediff_DietDependency">
         <foodLabel>raw meat</foodLabel>
-        <foodKind>Meat</foodKind>
+        <foods>
+          <li>Meat</li>
+        </foods>
         <rawOnly>true</rawOnly>
         <!-- 
         This requires that the warcat eat 0.5 nutrition per day in raw meat out of a total
