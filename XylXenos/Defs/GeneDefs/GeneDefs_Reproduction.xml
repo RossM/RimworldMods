@@ -232,6 +232,7 @@
     <initialSeverity>1</initialSeverity>
     <isBad>false</isBad>
     <comps>
+      <li Class="Xylib.HediffCompProperties_Source"/>
       <li Class="HediffCompProperties_SeverityPerDay">
         <severityPerDay>-1</severityPerDay>
         <showHoursToRecover>true</showHoursToRecover>
@@ -240,7 +241,6 @@
         <mtbDays>10</mtbDays>
         <letter>Thanks to love euphoria from {SOURCE_nameIndef}, {PAWN_nameIndef} has experienced an inspiration!</letter>
       </li>
-      <li Class="Xylib.HediffCompProperties_Source"/>
     </comps>
     <stages>
       <li/>
@@ -275,6 +275,7 @@
     <chemicalNeed>XylLovin</chemicalNeed>
     <initialSeverity>1</initialSeverity>
     <comps>
+      <li Class="Xylib.HediffCompProperties_Source"/>
       <li Class="HediffCompProperties_SeverityPerDay">
         <severityPerDay>-0.0333</severityPerDay>
         <showDaysToRecover>true</showDaysToRecover>
@@ -282,7 +283,6 @@
       <li Class="HediffCompProperties_GiveLovinMTBFactor">
         <lovinMTBFactor>0.5</lovinMTBFactor>
       </li>
-      <li Class="Xylib.HediffCompProperties_Source"/>
     </comps>
     <stages>
       <li>
