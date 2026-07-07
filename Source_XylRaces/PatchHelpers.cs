@@ -258,7 +258,7 @@ public static class PatchHelpers
             if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
                 continue;
 
-            var foodType = FoodHelpers.GetFoodType(ingestible);
+            var foodType = ingestible.FoodType;
             if (thoughtOverride.allowedFoodTypes != FoodType.None && (foodType & thoughtOverride.allowedFoodTypes) == 0)
                 continue;
             if (thoughtOverride.disallowedFoodTypes != FoodType.None && (foodType & thoughtOverride.disallowedFoodTypes) != 0)

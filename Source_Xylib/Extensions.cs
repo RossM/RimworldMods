@@ -812,11 +812,6 @@ public static class Extensions
         }
     }
 
-    extension(ThingDef thingDef)
-    {
-        public bool IsRawFoodOrCorpse => thingDef.IsRawHumanFood() || thingDef.IsCorpse;
-    }
-
     extension(MethodInfo method)
     {
         public T CreateDelegate<T>() where T : Delegate

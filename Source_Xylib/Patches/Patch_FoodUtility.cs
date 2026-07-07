@@ -12,7 +12,7 @@ internal static class Patch_FoodUtility
         ThingDef foodDef,
         ref float __result)
     {
-        float nutritionFactor = FoodHelpers.GetExtraNutritionFactor(eater, foodSource, foodDef);
+        float nutritionFactor = eater.GetExtraNutritionFactor(foodSource, foodDef);
 
         // Adjust based on nutrition
         __result += ThingDefOf.MealSimple.ingestible.optimalityOffsetHumanlikes *
@@ -24,6 +24,6 @@ internal static class Patch_FoodUtility
     [HarmonyPatch("NutritionForEater")]
     public static void NutritionForEater_Postfix(Pawn eater, Thing food, ref float __result)
     {
-        __result *= FoodHelpers.GetExtraNutritionFactor(eater, food, food.def);
+        __result *= eater.GetExtraNutritionFactor(food, food.def);
     }
 }

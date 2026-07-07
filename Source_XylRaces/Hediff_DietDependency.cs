@@ -147,7 +147,7 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         return false;
     }
 
-    private bool ValidFoodType(ThingDef ingredient) => (DefExt.foods & FoodHelpers.GetFoodType(ingredient)) != 0;
+    private bool ValidFoodType(ThingDef ingredient) => (DefExt.foods & ingredient.FoodType) != 0;
 
     public override void Notify_IngestedThing(Thing food, int numTaken)
     {

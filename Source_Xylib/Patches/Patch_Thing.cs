@@ -31,7 +31,7 @@ internal static class Patch_Thing
     {
         if (stat == StatDefOf.FoodPoisonChanceFixedHuman)
         {
-            __result *= FoodHelpers.GetFoodPoisonChanceFactor(ingester, thing);
+            __result *= ingester.GetFoodPoisonChanceFactor(thing);
         }
     }
 

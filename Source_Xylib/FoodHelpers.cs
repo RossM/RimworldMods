@@ -15,100 +15,114 @@ public enum FoodType
 
 public static class FoodHelpers
 {
-    public static FoodType GetFoodType(ThingDef foodDef)
+    extension(ThingDef thingDef)
     {
-        FoodTypeFlags flags = foodDef.ingestible?.foodType ?? 0;
-
-        if (flags == FoodTypeFlags.Fungus)
-            return FoodType.Fungus | FoodType.Vegetable;
-        if ((flags & FoodTypeFlags.AnimalProduct) != 0)
-            return FoodType.AnimalProduct;
-        if ((flags & (FoodTypeFlags.VegetableOrFruit | FoodTypeFlags.Plant | FoodTypeFlags.Seed)) != 0)
-            return FoodType.Vegetable;
-
-        if ((flags & (FoodTypeFlags.Meat | FoodTypeFlags.Corpse)) != 0)
-        {
-            var foodType = FoodType.Meat;
-
-            RaceProperties race = foodDef.ingestible?.sourceDef?.race;
-            if (race?.Humanlike is true)
-                foodType |= FoodType.Humanlike;
-            if (race?.FleshType == FleshTypeDefOf.Insectoid)
-                foodType |= FoodType.Insect;
-
-            return foodType;
-        }
-
-        return FoodType.None;
+        public bool IsRawFoodOrCorpse => thingDef.IsRawHumanFood() || thingDef.IsCorpse;
     }
 
-    public static float GetExtraNutritionFactor(Pawn eater, Thing foodSource, ThingDef foodDef)
+    extension(ThingDef foodDef)
     {
-        if (foodDef.IsRawFoodOrCorpse)
+        public FoodType FoodType
         {
-            return GetRawNutritionFactor(eater, GetFoodType(foodDef));
-        }
+            get
+            {
+                FoodTypeFlags flags = foodDef.ingestible?.foodType ?? 0;
 
-        var compIngredients = foodSource.TryGetComp<CompIngredients>();
-        if (compIngredients == null)
-        {
-            return GetCookedNutritionFactor(eater, GetFoodType(foodDef));
-        }
+                if (flags == FoodTypeFlags.Fungus)
+                    return FoodType.Fungus | FoodType.Vegetable;
+                if ((flags & FoodTypeFlags.AnimalProduct) != 0)
+                    return FoodType.AnimalProduct;
+                if ((flags & (FoodTypeFlags.VegetableOrFruit | FoodTypeFlags.Plant | FoodTypeFlags.Seed)) != 0)
+                    return FoodType.Vegetable;
 
-        List<float> multipliers = [];
-        foreach (var ingredient in compIngredients.ingredients)
-        {
-            multipliers.Add(GetCookedNutritionFactor(eater, GetFoodType(ingredient)));
-        }
+                if ((flags & (FoodTypeFlags.Meat | FoodTypeFlags.Corpse)) != 0)
+                {
+                    var foodType = FoodType.Meat;
 
-        return multipliers.Count > 0 ? (multipliers.Min() + multipliers.Max()) / 2 : 1.0f;
+                    RaceProperties race = foodDef.ingestible?.sourceDef?.race;
+                    if (race?.Humanlike is true)
+                        foodType |= FoodType.Humanlike;
+                    if (race?.FleshType == FleshTypeDefOf.Insectoid)
+                        foodType |= FoodType.Insect;
+
+                    return foodType;
+                }
+
+                return FoodType.None;
+            }
+        }
     }
 
-    private static float GetRawNutritionFactor(Pawn eater, FoodType foodType)
+    extension(Pawn eater)
     {
-        float result = 1f;
-        if (foodType.HasFlag(FoodType.Meat))
-            result *= eater.GetStatValue(XStatDefOf.XylRawMeatNutritionFactor);
-        if (foodType.HasFlag(FoodType.Vegetable))
-            result *= eater.GetStatValue(XStatDefOf.XylRawVegetableNutritionFactor);
-        if (foodType.HasFlag(FoodType.AnimalProduct))
-            result *= eater.GetStatValue(XStatDefOf.XylRawAnimalProductNutritionFactor);
-        if (foodType.HasFlag(FoodType.Fungus))
-            result *= eater.GetStatValue(XStatDefOf.XylRawFungusNutritionFactor);
-        return result;
-    }
+        public float GetExtraNutritionFactor(Thing foodSource, ThingDef foodDef)
+        {
+            if (foodDef.IsRawFoodOrCorpse)
+            {
+                return eater.GetRawNutritionFactor(foodDef.FoodType);
+            }
 
-    private static float GetCookedNutritionFactor(Pawn eater, FoodType foodType)
-    {
-        float result = 1f;
-        if (foodType.HasFlag(FoodType.Meat))
-            result *= eater.GetStatValue(XStatDefOf.XylCookedMeatNutritionFactor);
-        if (foodType.HasFlag(FoodType.Vegetable))
-            result *= eater.GetStatValue(XStatDefOf.XylCookedVegetableNutritionFactor);
-        if (foodType.HasFlag(FoodType.AnimalProduct))
-            result *= eater.GetStatValue(XStatDefOf.XylCookedAnimalProductNutritionFactor);
-        if (foodType.HasFlag(FoodType.Fungus))
-            result *= eater.GetStatValue(XStatDefOf.XylCookedFungusNutritionFactor);
-        return result;
-    }
+            var compIngredients = foodSource.TryGetComp<CompIngredients>();
+            if (compIngredients == null)
+            {
+                return eater.GetCookedNutritionFactor(foodDef.FoodType);
+            }
 
-    public static float GetFoodPoisonChanceFactor(Pawn eater, Thing foodSource)
-    {
-        var foodDef = foodSource.def;
+            List<float> multipliers = [];
+            foreach (var ingredient in compIngredients.ingredients)
+            {
+                multipliers.Add(eater.GetCookedNutritionFactor(ingredient.FoodType));
+            }
 
-        if (!foodDef.IsRawFoodOrCorpse)
-            return 1f;
+            return multipliers.Count > 0 ? (multipliers.Min() + multipliers.Max()) / 2 : 1.0f;
+        }
 
-        FoodType foodType = GetFoodType(foodSource.def);
-        float result = 1f;
-        if (foodType.HasFlag(FoodType.Meat))
-            result *= eater.GetStatValue(XStatDefOf.XylRawMeatFoodPoisonChanceFactor);
-        if (foodType.HasFlag(FoodType.Vegetable))
-            result *= eater.GetStatValue(XStatDefOf.XylRawVegetableFoodPoisonChanceFactor);
-        if (foodType.HasFlag(FoodType.AnimalProduct))
-            result *= eater.GetStatValue(XStatDefOf.XylRawAnimalProductFoodPoisonChanceFactor);
-        if (foodType.HasFlag(FoodType.Fungus))
-            result *= eater.GetStatValue(XStatDefOf.XylRawFungusFoodPoisonChanceFactor);
-        return result;
+        private float GetRawNutritionFactor(FoodType foodType)
+        {
+            float result = 1f;
+            if (foodType.HasFlag(FoodType.Meat))
+                result *= eater.GetStatValue(XStatDefOf.XylRawMeatNutritionFactor);
+            if (foodType.HasFlag(FoodType.Vegetable))
+                result *= eater.GetStatValue(XStatDefOf.XylRawVegetableNutritionFactor);
+            if (foodType.HasFlag(FoodType.AnimalProduct))
+                result *= eater.GetStatValue(XStatDefOf.XylRawAnimalProductNutritionFactor);
+            if (foodType.HasFlag(FoodType.Fungus))
+                result *= eater.GetStatValue(XStatDefOf.XylRawFungusNutritionFactor);
+            return result;
+        }
+
+        private float GetCookedNutritionFactor(FoodType foodType)
+        {
+            float result = 1f;
+            if (foodType.HasFlag(FoodType.Meat))
+                result *= eater.GetStatValue(XStatDefOf.XylCookedMeatNutritionFactor);
+            if (foodType.HasFlag(FoodType.Vegetable))
+                result *= eater.GetStatValue(XStatDefOf.XylCookedVegetableNutritionFactor);
+            if (foodType.HasFlag(FoodType.AnimalProduct))
+                result *= eater.GetStatValue(XStatDefOf.XylCookedAnimalProductNutritionFactor);
+            if (foodType.HasFlag(FoodType.Fungus))
+                result *= eater.GetStatValue(XStatDefOf.XylCookedFungusNutritionFactor);
+            return result;
+        }
+
+        public float GetFoodPoisonChanceFactor(Thing foodSource)
+        {
+            var foodDef = foodSource.def;
+
+            if (!foodDef.IsRawFoodOrCorpse)
+                return 1f;
+
+            FoodType foodType = foodSource.def.FoodType;
+            float result = 1f;
+            if (foodType.HasFlag(FoodType.Meat))
+                result *= eater.GetStatValue(XStatDefOf.XylRawMeatFoodPoisonChanceFactor);
+            if (foodType.HasFlag(FoodType.Vegetable))
+                result *= eater.GetStatValue(XStatDefOf.XylRawVegetableFoodPoisonChanceFactor);
+            if (foodType.HasFlag(FoodType.AnimalProduct))
+                result *= eater.GetStatValue(XStatDefOf.XylRawAnimalProductFoodPoisonChanceFactor);
+            if (foodType.HasFlag(FoodType.Fungus))
+                result *= eater.GetStatValue(XStatDefOf.XylRawFungusFoodPoisonChanceFactor);
+            return result;
+        }
     }
 }
