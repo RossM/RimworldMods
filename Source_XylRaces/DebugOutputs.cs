@@ -4,9 +4,18 @@ public static class DebugOutputs
 {
     private static readonly Dictionary<string, string> specialAbbreviations = new()
     {
+        { "combat", "cbt" },
+        { "environment", "env" },
+        { "global", "glb" },
+        { "healing", "heal" },
+        { "learning", "lrn" },
         { "medical", "med" },
         { "melee", "mel" },
+        { "movement", "mov" },
+        { "resistance", "res" },
+        { "sensitivity", "sens" },
         { "social", "soc" },
+        { "toxic", "tox" },
     };
 
     [DebugOutput("Genes")]
@@ -211,15 +220,25 @@ public static class DebugOutputs
     {
         StatDef[] stats =
         [
+            // Movement
             StatDefOf.MoveSpeed,
+            // Work and learning
             StatDefOf.WorkSpeedGlobal,
+            StatDefOf.GlobalLearningFactor,
+            StatDefOf.RestFallRateFactor,
+            // Environment
             StatDefOf.ComfyTemperatureMin,
             StatDefOf.ComfyTemperatureMax,
+            StatDefOf.ToxicResistance,
+            StatDefOf.ToxicEnvironmentResistance,
+            // Combat and healing
             StatDefOf.IncomingDamageFactor,
             StatDefOf.MeleeDamageFactor,
             StatDefOf.InjuryHealingFactor,
             StatDefOf.ImmunityGainSpeed,
+            // Social and mental
             StatDefOf.PsychicSensitivity,
+            StatDefOf.PawnBeauty,
         ];
 
         List<TableDataGetter<XenotypeDef>> columns =
