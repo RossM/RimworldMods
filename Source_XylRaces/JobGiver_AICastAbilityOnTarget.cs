@@ -48,6 +48,12 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
             if (target.Thing is not Pawn targetPawn)
                 continue;
 
+            if (!targetPawn.Spawned)
+                continue;
+
+            if (targetPawn.Map != caster.Map)
+                continue;
+
             if (targetPawn.Downed)
                 continue;
 
