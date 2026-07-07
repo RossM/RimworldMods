@@ -269,7 +269,9 @@ public static class EventDefOf
 [PublicAPI]
 public class EventManager
 {
-    // Holds data about all the callbacks for a specific EventDef.
+    /// <summary>
+    ///     Holds the global and target-specific callbacks registered for one event.
+    /// </summary>
     private class NotificationInfo
     {
         public bool usesPriority = false;
@@ -277,7 +279,15 @@ public class EventManager
         public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
     }
 
-    // Holds data about a registered callback, used when unregistering a listener.
+    /// <summary>
+    ///     Records one registration owned by a listener so that <see cref="RemoveListener" /> can remove it later.
+    /// </summary>
+    /// <param name="eventDef">
+    ///     The event the listener registered for.
+    /// </param>
+    /// <param name="target">
+    ///     The target the listener registered for, or null for a global registration.
+    /// </param>
     private class RegistrationInfo(EventDef eventDef, Thing target)
     {
         public readonly EventDef eventDef = eventDef;
@@ -285,7 +295,9 @@ public class EventManager
         public readonly System.WeakReference<Thing> target = target == null ? null : new(target);
     }
 
-    // Holds data about a specific callback that should be called when an event is triggered.
+    /// <summary>
+    ///     Holds one callback and the listener that owns it.
+    /// </summary>
     private struct CallbackInfo
     {
         public Action<Thing, object> wrappedCallback;
@@ -301,19 +313,29 @@ public class EventManager
 
     private static bool doDebug = false;
 
-    // Listeners that are automatically registered when a game is started or loaded.
+    /// <summary>
+    ///     Listeners that should be registered whenever event registrations are rebuilt.
+    /// </summary>
     private static readonly List<IEventListener> staticListeners = [];
 
-    // Static listeners which are already registered, to avoid double registration.
+    /// <summary>
+    ///     Static listeners that have been registered since the last reset.
+    /// </summary>
     [Unsaved] private readonly HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
 
-    // Information about the listeners registered for each event.
+    /// <summary>
+    ///     Callback registrations indexed by <c>EventDef.index</c>.
+    /// </summary>
     private NotificationInfo[] notifications;
 
-    // Events that each listener has registered for, used for unregistering the listener.
+    /// <summary>
+    ///     Registrations owned by each listener, used by <see cref="RemoveListener" />.
+    /// </summary>
     private ConditionalWeakTable<IEventListener, List<RegistrationInfo>> registrations = new();
 
-    // Scratch list used during event handling.
+    /// <summary>
+    ///     Temporary callback list used when a notification needs priority ordering.
+    /// </summary>
     private readonly List<CallbackInfo> tempCallbacks = [];
 
     /// <summary>
@@ -331,11 +353,35 @@ public class EventManager
         doDebug = !doDebug;
     }
 
+    /// <summary>
+    ///     Initializes event storage after defs have loaded.
+    /// </summary>
     private void Init()
     {
         notifications ??= new NotificationInfo[DefDatabase<EventDef>.DefCount];
     }
 
+    /// <summary>
+    ///     Adds a callback registration after public overloads have validated and wrapped the callback signature.
+    /// </summary>
+    /// <param name="eventDef">
+    ///     The event to register for.
+    /// </param>
+    /// <param name="target">
+    ///     The target to register for, or null for a global registration.
+    /// </param>
+    /// <param name="callback">
+    ///     The normalized callback, accepting the event target and raw event data.
+    /// </param>
+    /// <param name="source">
+    ///     The object that owns the registration and must implement <see cref="IEventListener" />.
+    /// </param>
+    /// <param name="name">
+    ///     A stable name used for duplicate-registration checks and debug logging.
+    /// </param>
+    /// <param name="priority">
+    ///     The callback priority. Higher values run first when priority ordering is active for the event.
+    /// </param>
     private void RegisterInternal(
         EventDef eventDef,
         Thing target,
@@ -533,6 +579,15 @@ public class EventManager
         RegisterInternal(eventDef, target, (_, _) => callback(), callback.Target, MethodName(callback), priority);
     }
 
+    /// <summary>
+    ///     Builds the callback name used for duplicate-registration checks and debug output.
+    /// </summary>
+    /// <param name="fn">
+    ///     The registered callback delegate.
+    /// </param>
+    /// <returns>
+    ///     A name containing the declaring type and method name.
+    /// </returns>
     private static string MethodName(Delegate fn)
     {
         return $"{fn.Method.DeclaringType?.FullName ?? "<global>"}.{fn.Method.Name}";
@@ -682,6 +737,18 @@ public class EventManager
         tempCallbacks.Clear();
     }
 
+    /// <summary>
+    ///     Logs development-mode errors when a raised event does not match its def.
+    /// </summary>
+    /// <param name="eventDef">
+    ///     The event being raised.
+    /// </param>
+    /// <param name="target">
+    ///     The target passed to <see cref="Notify" />.
+    /// </param>
+    /// <param name="data">
+    ///     The data passed to <see cref="Notify" />.
+    /// </param>
     private static void ValidateNotifyArgs(EventDef eventDef, Thing target, object data)
     {
         if (eventDef.global)
@@ -727,6 +794,21 @@ public class EventManager
         }
     }
 
+    /// <summary>
+    ///     Invokes one registered callback for a raised event.
+    /// </summary>
+    /// <param name="eventDef">
+    ///     The event being raised.
+    /// </param>
+    /// <param name="callbackInfo">
+    ///     The callback registration to invoke.
+    /// </param>
+    /// <param name="target">
+    ///     The target passed to <see cref="Notify" />.
+    /// </param>
+    /// <param name="data">
+    ///     The data passed to <see cref="Notify" />.
+    /// </param>
     private static void DoNotify(EventDef eventDef, CallbackInfo callbackInfo, Thing target, object data)
     {
         switch (callbackInfo.listener)
@@ -764,6 +846,12 @@ public class EventManager
         }
     }
 
+    /// <summary>
+    ///     Registers a loaded object and any event-listener child objects it owns.
+    /// </summary>
+    /// <param name="thing">
+    ///     A loaded object that may implement <see cref="IEventListener" /> or own child listeners.
+    /// </param>
     private void CallRegistrationHandlers(object thing)
     {
         if (thing is IEventListener target)
@@ -814,6 +902,9 @@ public class EventManager
         Instance.RegisterStaticListeners();
     }
 
+    /// <summary>
+    ///     Registers static listeners that have not already been registered since the last reset.
+    /// </summary>
     private void RegisterStaticListeners()
     {
         foreach (var listener in staticListeners)
