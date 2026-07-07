@@ -8,7 +8,7 @@ internal static class Patch_RecipeDef
     [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
     public static void AvailableNow_Postfix(RecipeDef __instance, ref bool __result)
     {
-        if (!Xylib.PatchHelpers.RecipesUnlockedByGenes.Contains(__instance))
+        if (!PatchHelpers.RecipesUnlockedByGenes.Contains(__instance))
             return;
 
         // If the recipe is available, and there was some non-research prerequisite that was met, it's available
@@ -21,6 +21,6 @@ internal static class Patch_RecipeDef
         if (__instance.researchPrerequisites != null && __instance.researchPrerequisites.Any(r => !r.IsFinished))
             return;
 
-        __result = Xylib.PatchHelpers.IsRecipeUnlockedByGenes(__instance);
+        __result = PatchHelpers.IsRecipeUnlockedByGenes(__instance);
     }
 }

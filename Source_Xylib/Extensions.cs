@@ -1,5 +1,5 @@
 using System.Reflection;
-using RimWorld.Planet;
+
 // ReSharper disable ForCanBeConvertedToForeach
 
 // ReSharper disable LoopCanBeConvertedToQuery
@@ -7,6 +7,7 @@ using RimWorld.Planet;
 
 namespace Xylib;
 
+[PublicAPI]
 public static class Extensions
 {
     extension(Faction faction)
@@ -14,10 +15,10 @@ public static class Extensions
         /// <summary>
         ///     Gets all living pawns of the faction.
         /// </summary>
-        public IEnumerable<Pawn> AllAlivePawns => 
-            faction == Faction.OfPlayer ?
-                PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction :
-                PawnsFinder.AllMapsAndWorld_Alive.Where(pawn => pawn.Faction == faction);
+        public IEnumerable<Pawn> AllAlivePawns =>
+            faction == Faction.OfPlayer
+                ? PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction
+                : PawnsFinder.AllMapsAndWorld_Alive.Where(pawn => pawn.Faction == faction);
     }
 
     extension(GeneDef gene)
@@ -44,7 +45,7 @@ public static class Extensions
         /// <summary>
         ///     Gets the first <see cref="GeneCompProperties" /> of the specified type for the gene def, if it exists.
         /// </summary>
-        /// <typeparam name="T">The <see cref="GeneCompProperties"/> subclass to find.</typeparam>
+        /// <typeparam name="T">The <see cref="GeneCompProperties" /> subclass to find.</typeparam>
         /// <returns>The first matching properties object, or null if none exists.</returns>
         public T CompProps<T>() where T : GeneCompProperties => gene.Extension_GeneWithComps?.CompProps<T>();
     }
@@ -326,7 +327,8 @@ public static class Extensions
         }
 
         /// <summary>
-        ///     Gets all active genes on the pawn that have a <see cref="GeneComp" /> of the specified type which satisfies a predicate.
+        ///     Gets all active genes on the pawn that have a <see cref="GeneComp" /> of the specified type which satisfies a
+        ///     predicate.
         /// </summary>
         /// <typeparam name="T">
         ///     The <see cref="GeneComp" /> subclass to match.
@@ -382,7 +384,8 @@ public static class Extensions
         }
 
         /// <summary>
-        ///     Gets the first active gene on the pawn that has a <see cref="GeneComp" /> of the specified type which satisfies a predicate.
+        ///     Gets the first active gene on the pawn that has a <see cref="GeneComp" /> of the specified type which satisfies a
+        ///     predicate.
         /// </summary>
         /// <typeparam name="T">
         ///     The <see cref="GeneComp" /> subclass to match.
@@ -435,7 +438,8 @@ public static class Extensions
         }
 
         /// <summary>
-        ///     Determines whether the pawn has an active gene with a <see cref="GeneComp" /> of the specified type which satisfies a predicate.
+        ///     Determines whether the pawn has an active gene with a <see cref="GeneComp" /> of the specified type which satisfies
+        ///     a predicate.
         /// </summary>
         /// <typeparam name="T">
         ///     The <see cref="GeneComp" /> subclass to match.
@@ -551,7 +555,8 @@ public static class Extensions
         }
 
         /// <summary>
-        ///     Gets the first <see cref="GeneComp" /> of the specified type from the pawn's active genes that satisfies a predicate.
+        ///     Gets the first <see cref="GeneComp" /> of the specified type from the pawn's active genes that satisfies a
+        ///     predicate.
         /// </summary>
         /// <typeparam name="T">
         ///     The <see cref="GeneComp" /> subclass to return.
@@ -621,7 +626,8 @@ public static class Extensions
         public IEnumerable<HediffWithComps> HediffsWithComp<T>() where T : HediffComp => pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
 
         /// <summary>
-        ///     Gets all hediffs on the pawn that have a <see cref="HediffComp" /> of the specified type which satisfies a predicate.
+        ///     Gets all hediffs on the pawn that have a <see cref="HediffComp" /> of the specified type which satisfies a
+        ///     predicate.
         /// </summary>
         /// <typeparam name="T">
         ///     The <see cref="HediffComp" /> subclass to match.
@@ -655,7 +661,8 @@ public static class Extensions
         public HediffWithComps FirstHediffWithComp<T>() where T : HediffComp => pawn.HediffsWithComp<T>().FirstOrDefault();
 
         /// <summary>
-        ///     Gets the first hediff on the pawn that has a <see cref="HediffComp" /> of the specified type which satisfies a predicate.
+        ///     Gets the first hediff on the pawn that has a <see cref="HediffComp" /> of the specified type which satisfies a
+        ///     predicate.
         /// </summary>
         /// <typeparam name="T">
         ///     The <see cref="HediffComp" /> subclass to match.
@@ -691,7 +698,8 @@ public static class Extensions
         public bool HasHediffWithComp<T>() where T : HediffComp => pawn.HediffsWithComp<T>().Any();
 
         /// <summary>
-        ///     Determines whether the pawn has a hediff with a <see cref="HediffComp" /> of the specified type which satisfies a predicate.
+        ///     Determines whether the pawn has a hediff with a <see cref="HediffComp" /> of the specified type which satisfies a
+        ///     predicate.
         /// </summary>
         /// <typeparam name="T">
         ///     The <see cref="HediffComp" /> subclass to match.

@@ -36,7 +36,7 @@ public class GeneCompProperties_RenderNodeModifiers : GeneCompProperties
         if (renderNodeModifiers == null)
             return null;
 
-        List<RenderNodeModifier> list = new List<RenderNodeModifier>();
+        List<RenderNodeModifier> list = [];
 
         switch (type)
         {
