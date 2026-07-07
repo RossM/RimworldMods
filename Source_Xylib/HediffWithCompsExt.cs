@@ -2,7 +2,7 @@
 
 public class HediffWithCompsExt : HediffWithComps
 {
-    public Pawn SourcePawn => this.TryGetComp<HediffComp_Source>()?.OtherPawn;
+    public Pawn SourcePawn => GetComp<HediffComp_Source>()?.OtherPawn;
 
     private static readonly StringBuilder tipSb = new();
     protected HediffStage curStageInternal;
