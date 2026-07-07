@@ -264,7 +264,7 @@ public static class EventDefOf
 ///     For other types, you should call <see cref="AddListener" /> when the listener should start receiving events, and
 ///     <see cref="RemoveListener" /> when the listener should stop receiving events.
 /// </para>
-[StaticConstructorOnStartup]
+[PublicAPI]
 public class EventManager
 {
     // Holds data about all the callbacks for a specific EventDef.
