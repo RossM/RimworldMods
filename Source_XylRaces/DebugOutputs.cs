@@ -4,8 +4,9 @@ public static class DebugOutputs
 {
     private static readonly Dictionary<string, string> specialAbbreviations = new()
     {
-        { "healing", "heal" },
+        { "medical", "med" },
         { "melee", "mel" },
+        { "social", "soc" },
     };
 
     [DebugOutput("Genes")]
@@ -230,7 +231,7 @@ public static class DebugOutputs
         foreach (var stat in stats)
         {
             var localStat = stat;
-            columns.Add(new(Abbreviate(stat.label), def => BaseStatValue(def, localStat)));
+            columns.Add(new(Abbreviate(stat.label).CapitalizeFirst(), def => BaseStatValue(def, localStat)));
         }
 
         DebugTables.MakeTablesDialog(DefDatabase<XenotypeDef>.AllDefs, columns.ToArray());
@@ -261,21 +262,23 @@ public static class DebugOutputs
         }
     }
 
-    private static string Abbreviate(string s)
+    private static string Abbreviate(string @string, int lettersPerWord = 3)
     {
-        return s.Split(' ').Join(AbbreviateWord, " ");
+        return @string.Split(' ').Join(s => AbbreviateWord(s, lettersPerWord), " ");
     }
 
-    private static string AbbreviateWord(string w)
+    private static string AbbreviateWord(string w, int maxLength)
     {
         if (specialAbbreviations.TryGetValue(w, out var result))
             return result;
-        if (w.Length <= 3)
+        if (w.Length <= maxLength)
             return w;
+        if (w.EndsWith("ing"))
+            w = w[..^3] + "g";
         // ReSharper disable once StringLiteralTypo
         w = w[0] + w[1..].Where(c => !"aeiou".Contains(c)).Join(delimiter: "");
-        if (w.Length <= 3)
+        if (w.Length <= maxLength)
             return w;
-        return w[..3];
+        return w[..maxLength];
     }
 }
