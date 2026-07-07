@@ -1,4 +1,5 @@
-﻿namespace Xylib;
+﻿// ReSharper disable MemberCanBeMadeStatic.Local
+namespace Xylib;
 
 /// <summary>
 ///     Represents a type of data that can be associated with a <see cref="Pawn" />. Implement this interface to create a

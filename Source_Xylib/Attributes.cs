@@ -20,6 +20,9 @@ namespace Xylib;
 public class FeatureAttribute(string featureName) : Attribute
 {
     // ReSharper disable once UnusedMember.Global
+    /// <summary>
+    ///    The name of the feature supported by the patch.
+    /// </summary>
     public readonly string featureName = featureName;
 
     /// <summary>
@@ -58,7 +61,7 @@ public class UsedFromReflectionAttribute : Attribute;
 /// </summary>
 /// <remarks>
 ///     The library looks for a static method named <c>ImpliedDefs</c> that takes a <see cref="bool" /> and returns a value convertible
-///     to <see cref="IEnumerable{T}" />, where <c>typeof(T)</c> matches <paramref name="defType" />. It runs the method after the base
+///     to <see cref="IEnumerable{T}" />, where <c><see langword="typeof"/>(T)</c> matches <paramref name="defType" />. It runs the method after the base
 ///     game def generators run, then adds the returned defs to <see cref="DefDatabase{T}" />.
 /// </remarks>
 /// <param name="defType">
@@ -77,6 +80,9 @@ public class UsedFromReflectionAttribute : Attribute;
 [AttributeUsage(AttributeTargets.Class)]
 public class DefGeneratorAttribute(Type defType) : Attribute
 {
+    /// <summary>
+    ///     The <see cref="Def"/> subtype which this generator produces.
+    /// </summary>
     public readonly Type defType = defType;
 }
 
@@ -90,5 +96,8 @@ public class DefGeneratorAttribute(Type defType) : Attribute
 [AttributeUsage(AttributeTargets.Class)]
 public class ScribeLabelAttribute(string label) : Attribute
 {
+    /// <summary>
+    ///     The XML tag to use when saving/loading this class in <see cref="PawnExtraData{T}" />.
+    /// </summary>
     public readonly string label = label;
 }

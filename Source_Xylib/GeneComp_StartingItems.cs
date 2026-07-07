@@ -53,7 +53,7 @@ public class GeneComp_StartingItems : GeneComp, IEventListener
             yield return new(itemDef, Mathf.Clamp(count, 1, itemDef.stackLimit));
         }
 
-        bool Validate(ThingDef thingDef, StartingItemOption startingItem)
+        static bool Validate(ThingDef thingDef, StartingItemOption startingItem)
         {
             return thingDef.ingestible?.foodType.HasFlag(startingItem.foodType) is true;
         }
