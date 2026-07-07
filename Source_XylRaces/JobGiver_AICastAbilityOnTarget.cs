@@ -82,7 +82,7 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
                     continue;
             }
 
-            if (onlyTargetRanged && targetPawn.equipment?.PrimaryEq?.PrimaryVerb?.IsMeleeAttack != false)
+            if (onlyTargetRanged && targetPawn.equipment?.PrimaryEq?.PrimaryVerb?.IsMeleeAttack is not false)
                 continue;
             if (onlyTargetMelee && targetPawn.equipment?.PrimaryEq?.PrimaryVerb?.IsMeleeAttack is false)
                 continue;

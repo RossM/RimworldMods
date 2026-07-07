@@ -37,7 +37,7 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
             Projectile projectile = (Projectile)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map);
             Log.Message($"projectile={projectile} ({projectile.GetType()}");
             Thing thing = pawn.carryTracker.CarriedThing;
-            if (projectile.GetComp<CompThingContainer>()?.innerContainer.TryAddOrTransfer(thing) != true)
+            if (projectile.GetComp<CompThingContainer>()?.innerContainer.TryAddOrTransfer(thing) is not true)
             {
                 Log.Warning("Failed to add thing to projectile: projectile={projectile} thing={thing}");
                 return;
@@ -70,7 +70,7 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
 
     public override bool Valid(LocalTargetInfo target, bool showMessages = false)
     {
-        if (target.Thing?.def.thingCategories?.Contains(ThingCategoryDefOf.StoneChunks) != true)
+        if (target.Thing?.def.thingCategories?.Contains(ThingCategoryDefOf.StoneChunks) is not true)
             return false;
 
         return base.Valid(target, showMessages);

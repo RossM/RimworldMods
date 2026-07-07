@@ -23,7 +23,7 @@ public static class PawnExtensions
 
         public int GetGeneticPsylinkLevelFor(AbilityDef ability)
         {
-            if (pawn.GeneTracker_XylXenos?.hasPsycast != true)
+            if (pawn.GeneTracker_XylXenos?.hasPsycast is not true)
                 return 0;
 
             if (pawn.AllGenesOfType<GeneWithComps>().Any(gene =>
