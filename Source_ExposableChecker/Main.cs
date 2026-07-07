@@ -35,7 +35,7 @@ public class Main(ModContentPack content) : Mod(content)
         }
     }
 
-    public static void Check(Type type)
+    private static void Check(Type type)
     {
         string exposeDataFunc;
         if (typeof(IExposable).IsAssignableFrom(type))

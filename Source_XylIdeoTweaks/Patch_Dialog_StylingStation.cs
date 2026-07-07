@@ -98,7 +98,7 @@ public static class Patch_Dialog_StylingStation
         }
     }
 
-    public static string TextForMode(AutoColorMode mode) => mode switch
+    private static string TextForMode(AutoColorMode mode) => mode switch
     {
         AutoColorMode.NoAutoColor => "Off",
         AutoColorMode.UseFavoriteColor => "Favorite color",

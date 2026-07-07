@@ -1,5 +1,6 @@
 ﻿namespace XylXenos;
 
+[UsedFromXml]
 public class GrowthMode
 {
     public float weight = 1f;

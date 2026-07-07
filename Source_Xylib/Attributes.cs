@@ -43,7 +43,7 @@ public class FeatureAttribute(string featureName) : Attribute
 ///     <para>This attribute has no runtime effect.</para>
 ///     <para>On an <see langword="abstract" /> class, this indicates that all subclasses should be marked with the attribute.</para>
 /// </remarks>
-[MeansImplicitUse]
+[MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
 [AttributeUsage(AttributeTargets.Class)]
 public class UsedFromXmlAttribute : Attribute;
 
@@ -80,7 +80,7 @@ public class UsedFromReflectionAttribute : Attribute;
 /// }
 /// </code>
 /// </example>
-[MeansImplicitUse]
+[MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
 [AttributeUsage(AttributeTargets.Class)]
 public class DefGeneratorAttribute(Type defType) : Attribute
 {

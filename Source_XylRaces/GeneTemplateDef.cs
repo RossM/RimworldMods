@@ -8,6 +8,7 @@ public class GeneTemplateDef : Def
         PsychicAbility,
     }
 
+    [UsedFromXml]
     public class AbilityBiostatInfo
     {
         public IntRange levels = new(0, Int32.MaxValue);
