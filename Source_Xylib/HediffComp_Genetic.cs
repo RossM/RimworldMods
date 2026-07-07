@@ -1,6 +1,7 @@
 ﻿namespace Xylib;
 
 [UsedFromXml]
+[PublicAPI]
 public class HediffCompProperties_Genetic : HediffCompPropertiesExt
 {
     public GeneDef gene;
@@ -17,6 +18,7 @@ public class HediffCompProperties_Genetic : HediffCompPropertiesExt
     }
 }
 
+[PublicAPI]
 public class HediffComp_Genetic : HediffComp
 {
     public HediffCompProperties_Genetic Props => (HediffCompProperties_Genetic)props;

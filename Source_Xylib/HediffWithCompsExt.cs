@@ -1,5 +1,6 @@
 ﻿namespace Xylib;
 
+[PublicAPI]
 public class HediffWithCompsExt : HediffWithComps
 {
     public Pawn SourcePawn => GetComp<HediffComp_Source>()?.OtherPawn;

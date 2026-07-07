@@ -1,5 +1,6 @@
 ﻿namespace Xylib;
 
+[PublicAPI]
 public class GeneTracker_Xylib : GeneTracker
 {
     /// <summary>

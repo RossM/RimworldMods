@@ -1,6 +1,7 @@
 ﻿namespace Xylib;
 
 [UsedFromXml]
+[PublicAPI]
 public class GeneCompProperties_CongenitalHediffs : GeneCompProperties
 {
     public List<HediffGiver_Event> hediffs;
@@ -11,6 +12,7 @@ public class GeneCompProperties_CongenitalHediffs : GeneCompProperties
     }
 }
 
+[PublicAPI]
 public class GeneComp_CongenitalHediffs : GeneComp, IEventListener
 {
     public GeneCompProperties_CongenitalHediffs Props => (GeneCompProperties_CongenitalHediffs)props;

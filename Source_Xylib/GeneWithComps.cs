@@ -16,6 +16,7 @@ namespace Xylib;
 ///         gene by overriding <see cref="CompExposeData" />.
 ///     </para>
 /// </remarks>
+[PublicAPI]
 public class GeneComp
 {
     /// <summary>
@@ -130,6 +131,7 @@ public class GeneComp
 /// <summary>
 ///     A gene whose behavior is defined by <see cref="GeneComp" /> instances.
 /// </summary>
+[PublicAPI]
 public class GeneWithComps : Gene, IEventListener
 {
     /// <summary>

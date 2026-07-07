@@ -5,6 +5,7 @@ namespace Xylib;
 /// <summary>
 ///     Contains methods to check coding style and potential bugs or maintainability issues in Harmony patches.
 /// </summary>
+[PublicAPI]
 public static class Analyzer
 {
     private static readonly string name = typeof(Analyzer).FullName;
@@ -94,6 +95,7 @@ public static class Analyzer
         typeof(Def),
         typeof(DefModExtension),
         typeof(HediffCompProperties),
+        typeof(HediffGiver),
         typeof(IngestionOutcomeDoer),
         typeof(PatchOperation),
         typeof(PawnRenderNodeProperties),

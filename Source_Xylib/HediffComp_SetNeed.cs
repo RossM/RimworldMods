@@ -1,6 +1,7 @@
 ﻿namespace Xylib;
 
 [UsedFromXml]
+[PublicAPI]
 public class HediffCompProperties_SetNeed : HediffCompProperties
 {
     public NeedDef need;
@@ -13,6 +14,7 @@ public class HediffCompProperties_SetNeed : HediffCompProperties
     }
 }
 
+[PublicAPI]
 public class HediffComp_SetNeed : HediffComp
 {
     public HediffCompProperties_SetNeed Props => (HediffCompProperties_SetNeed)props;

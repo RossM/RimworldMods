@@ -6,6 +6,7 @@ namespace Xylib;
 ///     This is an enhanced version of <see cref="HediffGiver_Random" /> that adds additional features.
 /// </summary>
 [UsedFromXml]
+[PublicAPI]
 public class HediffGiver_RandomExt : HediffGiver
 {
     /// <summary>

@@ -1,5 +1,6 @@
 namespace Xylib;
 
+[PublicAPI]
 public readonly struct ProfileBlock : IDisposable
 {
     public const bool GlobalEnabled = true;

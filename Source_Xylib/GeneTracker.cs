@@ -1,5 +1,6 @@
 ﻿namespace Xylib;
 
+[PublicAPI]
 public abstract class GeneTracker : IEventListener, IPawnData
 {
     /// <summary>

@@ -1,5 +1,6 @@
 ﻿namespace Xylib;
 
+[PublicAPI]
 public class StartingApparelOption
 {
     public ThingDef item;
@@ -9,6 +10,7 @@ public class StartingApparelOption
 }
 
 [UsedFromXml]
+[PublicAPI]
 public class GeneCompProperties_ExtraApparel : GeneCompProperties
 {
     public List<StartingApparelOption> items;
@@ -19,6 +21,7 @@ public class GeneCompProperties_ExtraApparel : GeneCompProperties
     }
 }
 
+[PublicAPI]
 public class GeneComp_ExtraApparel : GeneComp, IEventListener
 {
     public GeneCompProperties_ExtraApparel Props => (GeneCompProperties_ExtraApparel)props;

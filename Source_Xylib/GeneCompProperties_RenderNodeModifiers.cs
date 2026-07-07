@@ -8,6 +8,7 @@ internal enum RenderNodeModifierType
     VisibilitySelfAndChildren,
 }
 
+[PublicAPI]
 public class RenderNodeModifier
 {
     public PawnRenderNodeTagDef tag;
@@ -23,6 +24,7 @@ public class RenderNodeModifier
 }
 
 [UsedFromXml]
+[PublicAPI]
 public class GeneCompProperties_RenderNodeModifiers : GeneCompProperties
 {
     /// <summary>

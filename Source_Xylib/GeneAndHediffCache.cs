@@ -10,6 +10,7 @@ namespace Xylib;
 ///     hediffs
 ///     change.
 /// </remarks>
+[PublicAPI]
 public class GeneAndHediffCache : IEventListener, IPawnData
 {
     private readonly Dictionary<Type, IList> genesByType = new();

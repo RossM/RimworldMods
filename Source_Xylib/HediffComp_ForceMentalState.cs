@@ -1,6 +1,7 @@
 ﻿namespace Xylib;
 
 [UsedFromXml]
+[PublicAPI]
 public class HediffCompProperties_ForceMentalState : HediffCompProperties
 {
     public MentalStateDef mentalState;
@@ -12,6 +13,7 @@ public class HediffCompProperties_ForceMentalState : HediffCompProperties
     }
 }
 
+[PublicAPI]
 public class HediffComp_ForceMentalState : HediffComp
 {
     public HediffCompProperties_ForceMentalState Props => (HediffCompProperties_ForceMentalState)props;

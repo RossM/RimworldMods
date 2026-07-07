@@ -1,6 +1,7 @@
 ﻿namespace Xylib;
 
 [UsedFromXml]
+[PublicAPI]
 public class HediffCompProperties_Source : HediffCompProperties
 {
     public bool showName = true;
@@ -11,6 +12,7 @@ public class HediffCompProperties_Source : HediffCompProperties
     }
 }
 
+[PublicAPI]
 public class HediffComp_Source : HediffComp
 {
     public HediffCompProperties_Source Props => (HediffCompProperties_Source)props;

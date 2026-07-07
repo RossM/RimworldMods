@@ -9,6 +9,7 @@
 /// <param name="xenotype">
 ///     The xenotype chosen for the pawn.
 /// </param>
+[PublicAPI]
 public class PawnGenerationData(PawnGenerationRequest request, XenotypeDef xenotype)
 {
     /// <summary>
@@ -56,6 +57,7 @@ public interface IEventListener
 ///     Defines an event that can be raised with <see cref="EventManager.Notify" />.
 /// </summary>
 [UsedFromXml]
+[PublicAPI]
 public class EventDef : Def
 {
     /// <summary>
@@ -78,6 +80,7 @@ public class EventDef : Def
 ///     Contains the built-in event definitions used by Xylib's Harmony patches.
 /// </summary>
 [DefOf]
+[PublicAPI]
 public static class EventDefOf
 {
     /// <summary>

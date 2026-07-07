@@ -1,5 +1,6 @@
 ﻿namespace Xylib;
 
+[PublicAPI]
 public class StartingItemOption
 {
     public ThingDef item;
@@ -10,6 +11,7 @@ public class StartingItemOption
 }
 
 [UsedFromXml]
+[PublicAPI]
 public class GeneCompProperties_StartingItems : GeneCompProperties
 {
     public List<StartingItemOption> items;
@@ -20,6 +22,7 @@ public class GeneCompProperties_StartingItems : GeneCompProperties
     }
 }
 
+[PublicAPI]
 public class GeneComp_StartingItems : GeneComp, IEventListener
 {
     public GeneCompProperties_StartingItems Props => (GeneCompProperties_StartingItems)props;

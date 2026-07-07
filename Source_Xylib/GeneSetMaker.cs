@@ -1,6 +1,7 @@
 ﻿namespace Xylib;
 
 [UsedFromXml]
+[PublicAPI]
 public abstract class GeneSetMaker
 {
     public virtual int BiostatMetForDisplay => 0;
@@ -84,6 +85,7 @@ public abstract class GeneSetMaker
     }
 }
 
+[PublicAPI]
 public class GeneSetMakerWeight
 {
     public GeneSetMaker maker;
@@ -91,6 +93,7 @@ public class GeneSetMakerWeight
 }
 
 [UsedFromXml]
+[PublicAPI]
 public class GeneSetMaker_Option : GeneSetMaker
 {
     public override int BiostatMetForDisplay => count.min * Mathf.Clamp(0,
@@ -130,6 +133,7 @@ public class GeneSetMaker_Option : GeneSetMaker
 }
 
 [UsedFromXml]
+[PublicAPI]
 public class GeneSetMaker_Subtree : GeneSetMaker
 {
     public GeneSetMakerDef def;
@@ -141,6 +145,7 @@ public class GeneSetMaker_Subtree : GeneSetMaker
 }
 
 [UsedFromXml]
+[PublicAPI]
 public class GeneSetMaker_Biostats : GeneSetMaker
 {
     public override int BiostatMetForDisplay => Mathf.Clamp(0, biostatMet.min, biostatMet.max) * count.min;
@@ -171,6 +176,7 @@ public class GeneSetMaker_Biostats : GeneSetMaker
 }
 
 [UsedFromXml]
+[PublicAPI]
 public class GeneSetMaker_List : GeneSetMaker
 {
     public override int BiostatMetForDisplay => biostatMetInternal ??= CalculateBiostatMet();

@@ -1,6 +1,7 @@
 ﻿namespace Xylib;
 
 [UsedFromXml]
+[PublicAPI]
 public abstract class GeneCompProperties
 {
     public Type compClass;
@@ -30,6 +31,7 @@ public abstract class GeneCompProperties
 
 [NoReorder]
 [UsedFromXml]
+[PublicAPI]
 public class DefModExtension_GeneWithComps : DefModExtension
 {
     public IEnumerable<string> CustomEffectDescriptions => field ??= GetCustomEffectDescriptions().ToList();
