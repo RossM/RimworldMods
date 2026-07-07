@@ -88,7 +88,7 @@ public class HediffWithCompsExt : HediffWithComps
         string tipStringExtra = TipStringExtra;
         if (!tipStringExtra.NullOrEmpty())
             tipSb.AppendLine().AppendLine(tipStringExtra.TrimEndNewlines());
-        if (HealthCardUtility.GetCombatLogInfo(Gen.YieldSingle(this), out var taggedString, out var _) && !taggedString.NullOrEmpty())
+        if (HealthCardUtility.GetCombatLogInfo(Gen.YieldSingle(this), out var taggedString, out _) && !taggedString.NullOrEmpty())
             tipSb.AppendLine().AppendLineTagged(("Cause".Translate() + ": " + taggedString).Colorize(ColoredText.SubtleGrayColor));
         if (showHediffsDebugInfo && !DebugString().NullOrEmpty() && !DebugString().NullOrEmpty())
             tipSb.AppendLine().AppendLine(DebugString().TrimEndNewlines());
