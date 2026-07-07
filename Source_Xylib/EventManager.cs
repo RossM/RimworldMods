@@ -55,6 +55,7 @@ public interface IEventListener
 /// <summary>
 ///     Defines an event that can be raised with <see cref="EventManager.Notify" />.
 /// </summary>
+[UsedFromXml]
 public class EventDef : Def
 {
     /// <summary>

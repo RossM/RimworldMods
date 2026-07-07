@@ -29,8 +29,8 @@ public class Main : Mod
         using (new ProfileBlock("XylXenos Load settings"))
             Settings.instance = GetSettings<Settings>();
 
-        using (new ProfileBlock("XylXenos CheckPatches"))
-            Analyzer.CheckCodingStyle_Patches(typeof(Main).Assembly);
+        using (new ProfileBlock("XylXenos CheckCodingStyle"))
+            Analyzer.CheckCodingStyle(typeof(Main).Assembly);
 
         var harmony = new Harmony("Xylthixlm.Races.Core");
 

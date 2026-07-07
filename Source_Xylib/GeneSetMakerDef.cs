@@ -1,5 +1,6 @@
 ﻿namespace Xylib;
 
+[UsedFromXml]
 public class GeneSetMakerDef : Def
 {
     public GeneSetMaker root;

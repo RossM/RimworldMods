@@ -1,5 +1,6 @@
 ﻿namespace Xylib;
 
+[UsedFromXml]
 public class GeneCompProperties_BonusGenes : GeneCompProperties
 {
     public GeneSetMakerDef maker;
@@ -12,7 +13,6 @@ public class GeneCompProperties_BonusGenes : GeneCompProperties
     }
 }
 
-[UsedFromXml]
 public class GeneComp_BonusGenes : GeneComp
 {
     [NotNull]

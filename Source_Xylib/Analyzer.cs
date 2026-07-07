@@ -86,4 +86,48 @@ public static class Analyzer
             }
         }
     }
+
+    [NotNull] [ItemNotNull] private static readonly Type[] defTypes =
+    [
+        typeof(ColorGenerator),
+        typeof(CompProperties),
+        typeof(Def),
+        typeof(DefModExtension),
+        typeof(HediffCompProperties),
+        typeof(IngestionOutcomeDoer),
+        typeof(PatchOperation),
+        typeof(PawnRenderNodeProperties),
+        typeof(ScenPart),
+    ];
+
+    public static void CheckCodingStyle_Defs([NotNull] Assembly assembly)
+    {
+        if (assembly is null)
+            throw new ArgumentNullException(nameof(assembly));
+
+        List<Type> extraDefTypes = GenTypes.AllTypesWithAttribute<UsedFromXmlAttribute>().Where(t => t.IsAbstract).ToList();
+
+        foreach (TypeInfo type in assembly.DefinedTypes)
+        {
+            if (type.IsAbstract || type.HasAttribute<UsedFromXmlAttribute>())
+                continue;
+
+            foreach (var defType in defTypes)
+            {
+                if (defType.IsAssignableFrom(type))
+                    Log.Warning($"[{name}] {type.FullName} is a {defType.Name} but is missing a [UsedFromXml] attribute");
+            }
+            foreach (var defType in extraDefTypes)
+            {
+                if (defType.IsAssignableFrom(type))
+                    Log.Warning($"[{name}] {type.FullName} is a {defType.Name} but is missing a [UsedFromXml] attribute");
+            }
+        }
+    }
+
+    public static void CheckCodingStyle(Assembly assembly)
+    {
+        CheckCodingStyle_Patches(assembly);
+        CheckCodingStyle_Defs(assembly);
+    }
 }

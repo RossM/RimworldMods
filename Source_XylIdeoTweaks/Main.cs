@@ -11,6 +11,6 @@ public class Main(ModContentPack content) : Mod(content)
 
         InfixPatcher.PatchInfix(harmony, typeof(Main).Assembly);
 
-        Analyzer.CheckCodingStyle_Patches(typeof(Main).Assembly);
+        Analyzer.CheckCodingStyle(typeof(Main).Assembly);
     }
 }

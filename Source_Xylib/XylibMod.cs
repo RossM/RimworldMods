@@ -41,7 +41,7 @@ public class XylibMod : Mod
         using (new ProfileBlock("Xylib Infix patching"))
             InfixPatcher.PatchInfix(harmony, Assembly.GetExecutingAssembly());
 
-        using (new ProfileBlock("Xylib Check patches"))
-            Analyzer.CheckCodingStyle_Patches(typeof(XylibMod).Assembly);
+        using (new ProfileBlock("Xylib Check coding style"))
+            Analyzer.CheckCodingStyle(typeof(XylibMod).Assembly);
     }
 }

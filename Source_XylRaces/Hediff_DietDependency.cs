@@ -2,6 +2,7 @@
 // TODO: Need to handle satisfying the dependency for pawns in caravans. See Caravan_NeedsTracker.TrySatisfyChemicalNeed
 // and CaravanInventoryUtility.TryGetBestFood.
 
+[UsedFromXml]
 public class DefModExtension_Hediff_DietDependency : DefModExtension
 {
     public FoodType foods = FoodType.Any;

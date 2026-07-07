@@ -10,6 +10,7 @@ public class GeneCompProperties_Flight : GeneCompProperties
     }
 }
 
+[UsedFromXml]
 public class DefModExtension_Thing_Flight : DefModExtension
 {
     public bool allowsFlight = true;

@@ -1,5 +1,6 @@
 ﻿namespace Xylib;
 
+[UsedFromXml]
 public class DefModExtension_Chemical : DefModExtension
 {
     public List<GeneDef> requiredGenesAll;

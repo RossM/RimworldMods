@@ -2,6 +2,7 @@
 
 namespace XylXenos;
 
+[UsedFromXml]
 public class DefModExtension_Faction : DefModExtension
 {
     public List<BiomeDef> allowedBiomes;

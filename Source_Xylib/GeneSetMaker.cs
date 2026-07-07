@@ -1,5 +1,6 @@
 ﻿namespace Xylib;
 
+[UsedFromXml]
 public abstract class GeneSetMaker
 {
     public virtual int BiostatMetForDisplay => 0;

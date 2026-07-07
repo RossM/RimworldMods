@@ -40,7 +40,8 @@ public class FeatureAttribute(string featureName) : Attribute
 ///     Documents that a class is referenced by name from XML.
 /// </summary>
 /// <remarks>
-///     This attribute has no runtime effect.
+///     <para>This attribute has no runtime effect.</para>
+///     <para>On an <see langword="abstract" /> class, this indicates that all subclasses should be marked with the attribute.</para>
 /// </remarks>
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Class)]
