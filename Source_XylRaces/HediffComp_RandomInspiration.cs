@@ -40,7 +40,7 @@ public class HediffComp_RandomInspiration : HediffComp
         if (inspiration == null)
             return;
 
-        Pawn sourcePawn = (parent as HediffWithCompsExt)?.sourcePawn;
+        Pawn sourcePawn = (parent as HediffWithCompsExt)?.SourcePawn;
 
         Pawn.mindState.inspirationHandler.TryStartInspiration(inspiration,
             Props.letter.Formatted(Pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));

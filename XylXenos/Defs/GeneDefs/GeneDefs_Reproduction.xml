@@ -240,6 +240,7 @@
         <mtbDays>10</mtbDays>
         <letter>Thanks to love euphoria from {SOURCE_nameIndef}, {PAWN_nameIndef} has experienced an inspiration!</letter>
       </li>
+      <li Class="Xylib.HediffCompProperties_Source"/>
     </comps>
     <stages>
       <li/>
@@ -281,6 +282,7 @@
       <li Class="HediffCompProperties_GiveLovinMTBFactor">
         <lovinMTBFactor>0.5</lovinMTBFactor>
       </li>
+      <li Class="Xylib.HediffCompProperties_Source"/>
     </comps>
     <stages>
       <li>

@@ -2,9 +2,10 @@
 
 public class HediffWithCompsExt : HediffWithComps
 {
+    public Pawn SourcePawn => this.TryGetComp<HediffComp_Source>()?.OtherPawn;
+
     private static readonly StringBuilder tipSb = new();
     protected HediffStage curStageInternal;
-    public Pawn sourcePawn;
 
     public override HediffStage CurStage
     {
@@ -53,12 +54,6 @@ public class HediffWithCompsExt : HediffWithComps
         return true;
     }
 
-    public override void ExposeData()
-    {
-        base.ExposeData();
-        Scribe_References.Look(ref sourcePawn, nameof(sourcePawn));
-    }
-
     // ReSharper disable once ParameterHidesMember
     public override string GetTooltip(Pawn pawn, bool showHediffsDebugInfo)
     {
@@ -70,6 +65,9 @@ public class HediffWithCompsExt : HediffWithComps
         if (!severityLabel.NullOrEmpty())
             tipSb.Append(": ").Append(severityLabel);
         tipSb.AppendLine();
+        
+        Pawn sourcePawn = SourcePawn;
+
         if (!def.overrideTooltip.NullOrEmpty())
             tipSb.AppendLine().AppendLineTagged(def.overrideTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
         else if (curStage != null && !curStage.overrideTooltip.NullOrEmpty())

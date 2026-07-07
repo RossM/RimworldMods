@@ -25,8 +25,8 @@ public class GeneComp_LoveEuphoria : GeneComp, IEventListener
             {
                 var hediff = partner.health.GetOrAddHediff(hediffDef);
                 hediff.Severity = hediff.def.initialSeverity;
-                if (hediff is HediffWithCompsExt hediffWithCompsExt)
-                    hediffWithCompsExt.sourcePawn = Pawn;
+                if (hediff.TryGetComp<HediffComp_Source>() is { } source)
+                    source.other = Pawn;
             }
         }
 
