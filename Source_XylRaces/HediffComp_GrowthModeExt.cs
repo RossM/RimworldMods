@@ -2,6 +2,7 @@
 
 public class GrowthMode
 {
+    public float weight = 1f;
     public bool causesNoPain = false;
     public bool allowTend = true;
     public float changeMtbDays = -1;
@@ -92,7 +93,7 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
 
     public virtual void ChangeGrowthMode()
     {
-        SetGrowthMode(TProps.modes.Where(mode => mode != GrowthMode).RandomElement());
+        SetGrowthMode(TProps.modes.Where(mode => mode != GrowthMode).RandomElementByWeight(mode => mode.weight));
 
         if (!GrowthMode.message.NullOrEmpty() && PawnUtility.ShouldSendNotificationAbout(Pawn))
         {
