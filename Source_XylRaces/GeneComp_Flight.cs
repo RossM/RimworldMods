@@ -112,6 +112,9 @@ public class GeneComp_Flight : GeneComp, IEventListener
         if (flight.Flying != wasFlying)
         {
             Pawn.Drawer.renderer.SetAllGraphicsDirty();
+            // This forces the pather to recalculate the current path
+            if (Pawn.pather.Moving)
+                Pawn.pather.TryResumePathingAfterLoading();
             wasFlying = flight.Flying;
         }
 
