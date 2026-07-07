@@ -12,7 +12,9 @@ public abstract class GeneTracker : IEventListener, IPawnData
     {
         this.pawn = pawn;
         EventManager.Instance.AddListener(this);
-        Update();
+
+        if (Scribe.mode == LoadSaveMode.Inactive)
+            Update();
     }
 
     public abstract void Update();
