@@ -27,6 +27,7 @@ public class PawnGenerationData(PawnGenerationRequest request, XenotypeDef xenot
 /// </summary>
 public interface IEventListener
 {
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
     /// <summary>
     ///     Called when a listener is created or loaded. The listener should call
     ///     <see cref="O:EventManager.Register" />
@@ -36,6 +37,7 @@ public interface IEventListener
     ///     The <see cref="EventManager" /> that should be registered with. This is always
     ///     <see cref="EventManager.Instance" />.
     /// </param>
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
     public void RegisterWith(EventManager manager);
 
     /// <summary>

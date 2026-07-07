@@ -108,7 +108,7 @@ public static class DebugOutputs
         DebugTables.MakeTablesDialog(DefDatabase<XenotypeDef>.AllDefs, columns.ToArray());
         return;
 
-        int GetSkillModifier(XenotypeDef xenotypeDef, SkillDef skillDef)
+        static int GetSkillModifier(XenotypeDef xenotypeDef, SkillDef skillDef)
         {
             return xenotypeDef.genes
                 .Where(gene => gene.aptitudes != null)
@@ -147,7 +147,7 @@ public static class DebugOutputs
         DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs.Where(ShouldShow), columns.ToArray());
         return;
 
-        bool ShouldShow(FactionDef factionDef)
+        static bool ShouldShow(FactionDef factionDef)
         {
             return !factionDef.requiredMemes.NullOrEmpty() ||
                    !factionDef.allowedMemes.NullOrEmpty() ||

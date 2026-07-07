@@ -17,19 +17,12 @@ public class Patch_PregnancyUtility
         Log.Message(
             $"GetInheritedGenes_Postfix: mother={mother} father={father} dominant parent={PatchHelpers.GetDominantParent(mother, father)}");
 
-        switch (PatchHelpers.GetDominantParent(mother, father))
+        __result = PatchHelpers.GetDominantParent(mother, father) switch
         {
-            case PatchHelpers.DominantParent.Mother:
-            {
-                __result = mother.genes.Endogenes.Select(gene => gene.def).ToList();
-                break;
-            }
-            case PatchHelpers.DominantParent.Father:
-            {
-                __result = father.genes.Endogenes.Select(gene => gene.def).ToList();
-                break;
-            }
-        }
+            PatchHelpers.DominantParent.Mother => mother.genes.Endogenes.Select(gene => gene.def).ToList(),
+            PatchHelpers.DominantParent.Father => father.genes.Endogenes.Select(gene => gene.def).ToList(),
+            _ => __result
+        };
     }
 
     [Feature(typeof(GeneCompProperties_XenotypeStrength))]

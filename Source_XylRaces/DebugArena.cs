@@ -9,10 +9,6 @@ public static class DebugArena
 {
     private const int maxFights = 5;
 
-    private static readonly Dictionary<string, string> xenotypeSuffixes = new()
-    {
-    };
-
     private static readonly Dictionary<string, float> combatPowerTmp = new();
 
     private static readonly HashSet<PawnKindDef> badKinds =
@@ -83,7 +79,7 @@ public static class DebugArena
             "Mech_Termite",
         ];
 
-        bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
+        static bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
 
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.Where(ValidXenotype).ToList();
 
@@ -123,7 +119,7 @@ public static class DebugArena
     [DebugAction("Autotests")]
     public static List<DebugActionNode> BattleRoyaleTopN()
     {
-        bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
+        static bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
 
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.Where(ValidXenotype).ToList();
 
@@ -162,7 +158,7 @@ public static class DebugArena
     [DebugAction("Autotests")]
     public static List<DebugActionNode> BattleRoyaleSpecificPawnKind()
     {
-        bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
+        static bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
 
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.Where(ValidXenotype).ToList();
 
@@ -243,16 +239,13 @@ public static class DebugArena
 
     private static PawnKindDef PawnKindWithXenotype(PawnKindDef pawnKindDef, XenotypeDef xenotype)
     {
-        if (!xenotypeSuffixes.TryGetValue(xenotype.defName, out string xenotypeSuffix))
-            xenotypeSuffix = "";
-
         PawnKindDef newPawnKindDef = pawnKindDef.MemberwiseClone();
         newPawnKindDef.useFactionXenotypes = false;
         newPawnKindDef.xenotypeSet = new XenotypeSet
         {
             xenotypeChances = [new(xenotype, 1.0f)],
         };
-        newPawnKindDef.defName = $"{pawnKindDef.defName}_{xenotype.defName}{xenotypeSuffix}";
+        newPawnKindDef.defName = $"{pawnKindDef.defName}_{xenotype.defName}";
         newPawnKindDef.label = $"{xenotype.label} {pawnKindDef.label}";
         newPawnKindDef.ignoreFactionApparelStuffRequirements = true;
         newPawnKindDef.combatPower = pawnKindDef.combatPower * xenotype.combatPowerFactor;
@@ -318,13 +311,14 @@ public static class DebugArena
             ReadEstimatedCombatPower(ratingsPath);
 
             float PawnKindWeight(PawnKindDef def) => Mathf.Pow(0.98f, total[def]);
-            float CombatPower(PawnKindDef def) => combatPowerTmp.TryGetValue(def.defName, out float value) ? value : def.combatPower;
+            static float CombatPower(PawnKindDef def) => combatPowerTmp.TryGetValue(def.defName, out float value) ? value : def.combatPower;
 
             List<PawnKindDef> filteredKinds = kinds;
             if (scoreRankLimit > 0)
                 filteredKinds = kinds.OrderByDescending(CombatPower).Take(scoreRankLimit).ToList();
 
             PawnKindDef lhsDef = forcedPawnKind ?? filteredKinds.RandomElementByWeight(PawnKindWeight);
+            // ReSharper disable once AccessToModifiedClosure
             PawnKindDef rhsDef = filteredKinds.Where(def => def != lhsDef).RandomElementByWeight(PawnKindWeight);
 
             if (forcedPawnKind != null && Rand.Chance(0.5f))

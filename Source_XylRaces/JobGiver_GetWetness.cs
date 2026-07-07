@@ -32,7 +32,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
         return obj;
     }
 
-    private Thing FindBestWetnessSource(Pawn pawn)
+    private static Thing FindBestWetnessSource(Pawn pawn)
     {
         var candidates = new List<Thing>();
         GetSearchSet(pawn, candidates);
@@ -77,7 +77,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
             maxSearchRadius: maxSearchRadius);
     }
 
-    private void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
+    private static void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
     {
         outCandidates.Clear();
 

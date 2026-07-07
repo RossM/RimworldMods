@@ -57,6 +57,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
 
         if (recipe.targetsBodyPart)
         {
+            // ReSharper disable once VariableHidesOuterVariable
             if (pawn.health.hediffSet.hediffs.Find(hediff =>
                     hediff.def == recipe.removesHediff && hediff.Part == part && hediff.Visible) is { } hediff)
             {

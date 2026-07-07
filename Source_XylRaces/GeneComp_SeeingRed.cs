@@ -72,9 +72,7 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
         (extraEnemies ??= []).Add(damageInfo.Instigator);
 
         var comp = hediff.TryGetComp<HediffComp_Disappears>();
-        if (comp == null)
-            return;
-        comp.ticksToDisappear = comp.disappearsAfterTicks;
+        comp?.ticksToDisappear = comp.disappearsAfterTicks;
     }
 
     public void RegisterWith(EventManager manager)

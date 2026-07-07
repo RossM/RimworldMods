@@ -30,8 +30,7 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, IEventListener
 
     public void Notify_PawnGenerationEarly(Thing thing, PawnGenerationData data)
     {
-        var pawn = thing as Pawn;
-        if (pawn == null)
+        if (thing is not Pawn pawn)
             return;
 
         if (data.request.ForcedCustomXenotype != null)

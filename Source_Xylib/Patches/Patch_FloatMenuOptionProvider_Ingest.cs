@@ -34,6 +34,7 @@ internal static class Patch_FloatMenuOptionProvider_Ingest
 
             if (!defExtension.prohibitedGenes.NullOrEmpty())
             {
+                // ReSharper disable once VariableHidesOuterVariable
                 if (defExtension.prohibitedGenes.FirstOrDefault(gene => context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene)
                 {
                     __result = new FloatMenuOption($"{text}: {"XylBlockedByGene".Translate(gene.label)}", null);
@@ -43,6 +44,7 @@ internal static class Patch_FloatMenuOptionProvider_Ingest
 
             if (!defExtension.requiredGenesAll.NullOrEmpty())
             {
+                // ReSharper disable once VariableHidesOuterVariable
                 if (defExtension.requiredGenesAll.FirstOrDefault(gene => !context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene)
                 {
                     __result = new FloatMenuOption($"{text}: {"XylRequiresGene".Translate(gene.label)}", null);

@@ -32,7 +32,7 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
         DoPawnModifierEditInterface(scenPartRect.BottomPartPixels(RowHeight * 2f));
     }
 
-    private string GetLabel(AbilityDef abilityDef)
+    private static string GetLabel(AbilityDef abilityDef)
     {
         return "XylScenPartPsycastLabel".Translate(abilityDef.label.CapitalizeFirst(), abilityDef.level);
     }
@@ -65,7 +65,7 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
             pawn.abilities.GainAbility(psycast);
     }
 
-    private bool CanLearnPsycast(Pawn pawn, AbilityDef abilityDef)
+    private static bool CanLearnPsycast(Pawn pawn, AbilityDef abilityDef)
     {
         return pawn.GetPsylinkLevel() >= abilityDef.level && pawn.abilities.GetAbility(abilityDef) == null;
     }

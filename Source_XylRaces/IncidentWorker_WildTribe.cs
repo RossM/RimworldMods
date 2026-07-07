@@ -74,7 +74,7 @@ public class IncidentWorker_WildTribe : IncidentWorker
         return faction;
     }
 
-    private bool TryFindEntryCell(Map map, out IntVec3 start)
+    private static bool TryFindEntryCell(Map map, out IntVec3 start)
     {
         return RCellFinder.TryFindRandomPawnEntryCell(out start, map, CellFinder.EdgeRoadChance_Animal);
     }

@@ -25,6 +25,7 @@ public class Rule_NamePersonExt : Rule
 
     public override string ToString()
     {
+        // ReSharper disable once StringLiteralTypo
         return $"{keyword}->(personname_{gender}_{slot})";
     }
 }

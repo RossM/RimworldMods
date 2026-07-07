@@ -308,7 +308,7 @@ public static class PatchHelpers
 
     public static void SortColorGenes(List<GeneDef> list)
     {
-        bool IsSkinColor(GeneDef g) => g.displayCategory == DefOf.Cosmetic_Skin && g.skinColorOverride.HasValue;
+        static bool IsSkinColor(GeneDef g) => g.displayCategory == DefOf.Cosmetic_Skin && g.skinColorOverride.HasValue;
 
         var colorGenes = list.Where(IsSkinColor).ToList();
         SortByColor(colorGenes, g => g.skinColorOverride!.Value);
