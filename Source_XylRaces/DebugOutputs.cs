@@ -2,7 +2,13 @@
 
 public static class DebugOutputs
 {
-    [DebugOutput]
+    private static readonly Dictionary<string, string> specialAbbreviations = new()
+    {
+        { "healing", "heal" },
+        { "melee", "mel" },
+    };
+
+    [DebugOutput("Genes")]
     public static void GeneDisplayOrder()
     {
         TableDataGetter<GeneDef>[] columns =
@@ -85,7 +91,7 @@ public static class DebugOutputs
         }
     }
 
-    [DebugOutput]
+    [DebugOutput("Genes")]
     public static void XenotypeSkillAptitudes()
     {
         List<TableDataGetter<XenotypeDef>> columns =
@@ -155,7 +161,7 @@ public static class DebugOutputs
         }
     }
 
-    [DebugOutput("Economy")]
+    [DebugOutput("Genes")]
     public static void DrugGeneRequirements()
     {
         TableDataGetter<ThingDef>[] columns =
@@ -197,5 +203,79 @@ public static class DebugOutputs
         }
 
         DebugTables.MakeTablesDialog(missingDefs.OrderBy(d => d.GetType().FullName).ThenBy(d => d.defName), columns);
+    }
+
+    [DebugOutput("Genes")]
+    public static void XenotypeBaseStats()
+    {
+        StatDef[] stats =
+        [
+            StatDefOf.MoveSpeed,
+            StatDefOf.WorkSpeedGlobal,
+            StatDefOf.ComfyTemperatureMin,
+            StatDefOf.ComfyTemperatureMax,
+            StatDefOf.IncomingDamageFactor,
+            StatDefOf.MeleeDamageFactor,
+            StatDefOf.InjuryHealingFactor,
+            StatDefOf.ImmunityGainSpeed,
+            StatDefOf.PsychicSensitivity,
+        ];
+
+        List<TableDataGetter<XenotypeDef>> columns =
+        [
+            new("defName", def => def.defName),
+            new("label", def => def.LabelCap),
+        ];
+
+        foreach (var stat in stats)
+        {
+            var localStat = stat;
+            columns.Add(new(Abbreviate(stat.label), def => BaseStatValue(def, localStat)));
+        }
+
+        DebugTables.MakeTablesDialog(DefDatabase<XenotypeDef>.AllDefs, columns.ToArray());
+
+        static float BaseStatValue(XenotypeDef xenotype, StatDef stat)
+        {
+            float value = ThingDefOf.Human.GetStatValueAbstract(stat);
+            float offset = 0f;
+            float factor = 1f;
+
+            foreach (var gene in xenotype.genes)
+            {
+                offset = gene.statOffsets?.Where(m => m.stat == stat).Aggregate(offset, (o, m) => o + m.value) ?? offset;
+                factor = gene.statFactors?.Where(m => m.stat == stat).Aggregate(factor, (f, m) => f * m.value) ?? factor;
+
+                if (gene.forcedTraits == null)
+                    continue;
+
+                foreach (var trait in gene.forcedTraits)
+                {
+                    var degreeData = trait.def.degreeDatas.Single(d => d.degree == trait.degree);
+                    offset = degreeData.statOffsets?.Where(m => m.stat == stat).Aggregate(offset, (o, m) => o + m.value) ?? offset;
+                    factor = degreeData.statFactors?.Where(m => m.stat == stat).Aggregate(factor, (f, m) => f * m.value) ?? factor;
+                }
+            }
+
+            return (value + offset) * factor;
+        }
+    }
+
+    private static string Abbreviate(string s)
+    {
+        return s.Split(' ').Join(AbbreviateWord, " ");
+    }
+
+    private static string AbbreviateWord(string w)
+    {
+        if (specialAbbreviations.TryGetValue(w, out var result))
+            return result;
+        if (w.Length <= 3)
+            return w;
+        // ReSharper disable once StringLiteralTypo
+        w = w[0] + w[1..].Where(c => !"aeiou".Contains(c)).Join(delimiter: "");
+        if (w.Length <= 3)
+            return w;
+        return w[..3];
     }
 }
