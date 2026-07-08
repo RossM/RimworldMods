@@ -71,7 +71,7 @@
   <Xylib.FoodGroupDef>
     <defName>Fungus</defName>
     <foodTypes>
-      <li>4096</li> <!-- Match fungus (0x1001) but not vegetable (0x1) -->
+      <li>Fungus</li>
     </foodTypes>
     <rawNutritionStat>XylRawFungusNutritionFactor</rawNutritionStat>
     <cookedNutritionStat>XylCookedFungusNutritionFactor</cookedNutritionStat>
