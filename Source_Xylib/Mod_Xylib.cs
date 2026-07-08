@@ -29,9 +29,9 @@ public static class LateInit
 }
 
 [UsedFromReflection]
-public class XylibMod : Mod
+public class Mod_Xylib : Mod
 {
-    public XylibMod(ModContentPack content) : base(content)
+    public Mod_Xylib(ModContentPack content) : base(content)
     {
         var harmony = new Harmony("Xylthixlm.Xylib");
 
@@ -42,6 +42,6 @@ public class XylibMod : Mod
             InfixPatcher.PatchInfix(harmony, Assembly.GetExecutingAssembly());
 
         using (new ProfileBlock("Xylib Check coding style"))
-            Analyzer.CheckCodingStyle(typeof(XylibMod).Assembly);
+            Analyzer.CheckCodingStyle(typeof(Mod_Xylib).Assembly);
     }
 }
