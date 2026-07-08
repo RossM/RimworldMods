@@ -5,8 +5,8 @@ public class GeneIngestionThoughtOverride
 {
     public ThingDef thing;
     public List<ThoughtDef> thoughts;
-    public FoodType allowedFoodTypes;
-    public FoodType disallowedFoodTypes;
+    [CanBeNull] public List<FoodDef> allowedFoodTypes;
+    [CanBeNull] public List<FoodDef> disallowedFoodTypes;
 }
 
 [UsedFromXml]
