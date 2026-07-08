@@ -40,7 +40,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
         if (!Rand.Chance(doer.GetStatValue(StatDefOf.AnimalGatherYield)))
         {
-            MoteMaker.ThrowText((doer.DrawPos + Target.DrawPos) / 2f, Target.Map, "TextMote_ProductWasted".Translate(), 3.65f);
+            MoteMaker.ThrowText((doer.DrawPos + Target!.DrawPos) / 2f, Target.Map, "TextMote_ProductWasted".Translate(), 3.65f);
             return;
         }
 

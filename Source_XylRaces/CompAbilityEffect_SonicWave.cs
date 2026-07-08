@@ -24,13 +24,13 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
 
     public override void Apply(LocalTargetInfo target, LocalTargetInfo dest)
     {
-        Map map = parent.pawn.MapHeld;
+        Map map = parent.pawn.Map!;
         foreach (IntVec3 item in AffectedCells(target))
         {
             var thingList = item.GetThingList(map);
             foreach (var targetPawn in thingList.OfType<Pawn>())
             {
-                if (!targetPawn.RaceProps.IsFlesh)
+                if (!targetPawn.RaceProps!.IsFlesh)
                     continue;
                 targetPawn.stances.stunner.StunFor(GetDurationSeconds(targetPawn).SecondsToTicks(), Pawn, addBattleLog: false);
             }

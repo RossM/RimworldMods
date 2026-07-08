@@ -33,7 +33,6 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
         // JobDriver_CastWithHeldThing, the destination (target B) becomes the primary target. Otherwise
         // the targeter would abort because target A is in our inventory and no longer spawned.
         base.Apply(target, dest);
-        Log.Message($"target={target}, dest={dest}, CarriedThing={parent.pawn.carryTracker.CarriedThing}");
         if (parent.pawn.carryTracker.CarriedThing != null)
             LaunchProjectile(target);
     }
@@ -41,10 +40,9 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
     private void LaunchProjectile(LocalTargetInfo target)
     {
         Pawn pawn = parent.pawn;
-        Projectile projectile = (Projectile)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map);
-        Log.Message($"projectile={projectile} ({projectile.GetType()}");
-        Thing thing = pawn.carryTracker.CarriedThing;
-        if (projectile.GetComp<CompThingContainer>()?.innerContainer.TryAddOrTransfer(thing) is not true)
+        Projectile projectile = (Projectile)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map!)!;
+        Thing thing = pawn.carryTracker.CarriedThing!;
+        if (projectile.GetComp<CompThingContainer>()?.innerContainer?.TryAddOrTransfer(thing) is not true)
         {
             Log.Warning("Failed to add thing to projectile: projectile={projectile} thing={thing}");
             return;
