@@ -5,7 +5,7 @@
 [UsedFromXml]
 public class DefModExtension_Hediff_DietDependency : DefModExtension
 {
-    [CanBeNull] public List<FoodDef> foods;
+    [CanBeNull] public List<FoodGroupDef> foodGroups;
     public bool rawOnly = false;
     public float severityReductionPerNutrition = 1f;
     [MustTranslate] public string foodLabel;
@@ -148,7 +148,7 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         return false;
     }
 
-    private bool ValidFoodType(ThingDef ingredient) => DefExt.foods is not { Count: > 0 } || ingredient.Foods.Any(DefExt.foods.Contains);
+    private bool ValidFoodType(ThingDef ingredient) => DefExt.foodGroups is not { Count: > 0 } || ingredient.FoodGroups.Intersect(DefExt.foodGroups).Any();
 
     public override void Notify_IngestedThing(Thing food, int numTaken)
     {

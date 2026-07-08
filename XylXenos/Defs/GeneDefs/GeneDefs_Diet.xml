@@ -33,9 +33,9 @@
           <li Class="XylXenos.GeneCompProperties_IngestionThoughtOverrides">
             <overrides>
               <li>
-                <allowedFoodTypes>
+                <allowedFoodGroups>
                   <li>Meat</li>
-                </allowedFoodTypes>
+                </allowedFoodGroups>
                 <thoughts>
                   <li>AteRawFood</li>
                 </thoughts>
@@ -72,9 +72,9 @@
           <li Class="XylXenos.GeneCompProperties_IngestionThoughtOverrides">
             <overrides>
               <li>
-                <allowedFoodTypes>
+                <allowedFoodGroups>
                   <li>Vegetable</li>
-                </allowedFoodTypes>
+                </allowedFoodGroups>
                 <thoughts>
                   <li>AteRawFood</li>
                 </thoughts>
@@ -152,13 +152,13 @@
           <li Class="XylXenos.GeneCompProperties_IngestionThoughtOverrides">
             <overrides>
               <li>
-                <allowedFoodTypes>
+                <allowedFoodGroups>
                   <li>Meat</li>
-                </allowedFoodTypes>
-                <disallowedFoodTypes>
+                </allowedFoodGroups>
+                <disallowedFoodGroups>
                   <li>Humanlike</li>
                   <li>Insect</li>
-                </disallowedFoodTypes>
+                </disallowedFoodGroups>
                 <thoughts>
                   <li>AteRawFood</li>
                 </thoughts>
@@ -253,9 +253,9 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Hediff_DietDependency">
         <foodLabel>raw meat</foodLabel>
-        <foods>
+        <foodGroups>
           <li>Meat</li>
-        </foods>
+        </foodGroups>
         <rawOnly>true</rawOnly>
         <!-- 
         This requires that the warcat eat 0.5 nutrition per day in raw meat out of a total

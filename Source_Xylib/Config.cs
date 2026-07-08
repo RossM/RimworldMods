@@ -1,7 +1,7 @@
 ﻿namespace Xylib;
 
 [UsedFromXml]
-public class FoodDef : Def
+public class FoodGroupDef : Def
 {
     public FoodTypeFlags foodTypes;
     public bool humanlike;

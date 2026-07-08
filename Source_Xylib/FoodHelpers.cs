@@ -9,14 +9,14 @@ public static class FoodHelpers
 
     extension(ThingDef foodDef)
     {
-        public IEnumerable<FoodDef> Foods
+        public IEnumerable<FoodGroupDef> FoodGroups
         {
             get
             {
                 FoodTypeFlags flags = foodDef.ingestible?.foodType ?? 0;
                 RaceProperties? race = foodDef.ingestible?.sourceDef?.race;
 
-                foreach (var food in DefDatabase<FoodDef>.AllDefs)
+                foreach (var food in DefDatabase<FoodGroupDef>.AllDefs)
                 {
                     if (food.foodTypes != 0 && (food.foodTypes & flags) == 0)
                         continue;
@@ -37,28 +37,28 @@ public static class FoodHelpers
         {
             if (foodDef.IsRawFoodOrCorpse)
             {
-                return eater.GetRawNutritionFactor(foodDef.Foods);
+                return eater.GetRawNutritionFactor(foodDef.FoodGroups);
             }
 
             var compIngredients = foodSource.TryGetComp<CompIngredients>();
             if (compIngredients is not { ingredients: not null })
             {
-                return eater.GetCookedNutritionFactor(foodDef.Foods);
+                return eater.GetCookedNutritionFactor(foodDef.FoodGroups);
             }
 
             List<float> multipliers = [];
             foreach (var ingredient in compIngredients.ingredients)
             {
-                multipliers.Add(eater.GetCookedNutritionFactor(ingredient.Foods));
+                multipliers.Add(eater.GetCookedNutritionFactor(ingredient.FoodGroups));
             }
 
             return multipliers.Count > 0 ? (multipliers.Min() + multipliers.Max()) / 2 : 1.0f;
         }
 
-        private float GetRawNutritionFactor(IEnumerable<FoodDef> foods)
+        private float GetRawNutritionFactor(IEnumerable<FoodGroupDef> foodGroups)
         {
             float result = 1f;
-            foreach (var food in foods)
+            foreach (var food in foodGroups)
             {
                 if (food.rawNutritionStat != null)
                     result *= eater.GetStatValue(food.rawNutritionStat);
@@ -66,10 +66,10 @@ public static class FoodHelpers
             return result;
         }
 
-        private float GetCookedNutritionFactor(IEnumerable<FoodDef> foods)
+        private float GetCookedNutritionFactor(IEnumerable<FoodGroupDef> foodGroups)
         {
             float result = 1f;
-            foreach (var food in foods)
+            foreach (var food in foodGroups)
             {
                 if (food.cookedNutritionStat != null)
                     result *= eater.GetStatValue(food.cookedNutritionStat);
@@ -84,9 +84,9 @@ public static class FoodHelpers
             if (!foodDef.IsRawFoodOrCorpse)
                 return 1f;
 
-            IEnumerable<FoodDef> foods = foodSource.def.Foods;
+            IEnumerable<FoodGroupDef> foodGroups = foodSource.def.FoodGroups;
             float result = 1f;
-            foreach (var food in foods)
+            foreach (var food in foodGroups)
             {
                 if (food.rawFoodPoisonChanceStat != null)
                     result *= eater.GetStatValue(food.rawFoodPoisonChanceStat);

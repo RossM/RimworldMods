@@ -34,7 +34,7 @@
     </resistanceStatByHediff>
   </Xylib.Config>
   
-  <Xylib.FoodDef>
+  <Xylib.FoodGroupDef>
     <defName>Meat</defName>
     <foodTypes>
       <li>Meat</li>
@@ -43,9 +43,9 @@
     <rawNutritionStat>XylRawMeatNutritionFactor</rawNutritionStat>
     <cookedNutritionStat>XylCookedMeatNutritionFactor</cookedNutritionStat>
     <rawFoodPoisonChanceStat>XylRawMeatFoodPoisonChanceFactor</rawFoodPoisonChanceStat>
-  </Xylib.FoodDef>
+  </Xylib.FoodGroupDef>
   
-  <Xylib.FoodDef>
+  <Xylib.FoodGroupDef>
     <defName>Vegetable</defName>
     <foodTypes>
       <li>Fungus</li>
@@ -56,9 +56,9 @@
     <rawNutritionStat>XylRawVegetableNutritionFactor</rawNutritionStat>
     <cookedNutritionStat>XylCookedVegetableNutritionFactor</cookedNutritionStat>
     <rawFoodPoisonChanceStat>XylRawVegetableFoodPoisonChanceFactor</rawFoodPoisonChanceStat>
-  </Xylib.FoodDef>
+  </Xylib.FoodGroupDef>
   
-    <Xylib.FoodDef>
+    <Xylib.FoodGroupDef>
     <defName>AnimalProduct</defName>
     <foodTypes>
       <li>AnimalProduct</li>
@@ -66,9 +66,9 @@
     <rawNutritionStat>XylRawAnimalProductNutritionFactor</rawNutritionStat>
     <cookedNutritionStat>XylCookedAnimalProductNutritionFactor</cookedNutritionStat>
     <rawFoodPoisonChanceStat>XylRawAnimalProductFoodPoisonChanceFactor</rawFoodPoisonChanceStat>
-  </Xylib.FoodDef>
+  </Xylib.FoodGroupDef>
   
-  <Xylib.FoodDef>
+  <Xylib.FoodGroupDef>
     <defName>Fungus</defName>
     <foodTypes>
       <li>Fungus</li>
@@ -76,25 +76,25 @@
     <rawNutritionStat>XylRawFungusNutritionFactor</rawNutritionStat>
     <cookedNutritionStat>XylCookedFungusNutritionFactor</cookedNutritionStat>
     <rawFoodPoisonChanceStat>XylRawFungusFoodPoisonChanceFactor</rawFoodPoisonChanceStat>
-  </Xylib.FoodDef>
+  </Xylib.FoodGroupDef>
   
-  <Xylib.FoodDef>
+  <Xylib.FoodGroupDef>
     <defName>Humanlike</defName>
     <foodTypes>
       <li>Meat</li>
       <li>Corpse</li>
     </foodTypes>
     <humanlike>true</humanlike>
-  </Xylib.FoodDef>
+  </Xylib.FoodGroupDef>
 
-  <Xylib.FoodDef>
+  <Xylib.FoodGroupDef>
     <defName>Insect</defName>
     <foodTypes>
       <li>Meat</li>
       <li>Corpse</li>
     </foodTypes>
     <fleshType>Insectoid</fleshType>
-  </Xylib.FoodDef>
+  </Xylib.FoodGroupDef>
   
   
 </Defs>
