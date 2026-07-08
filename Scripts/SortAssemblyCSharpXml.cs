@@ -1,7 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
-#pragma warning disable IDE0005
+using System.Linq;
 using System.Text;
-#pragma warning restore IDE0005
 using System.Xml;
 
 var path = args.Length > 0
