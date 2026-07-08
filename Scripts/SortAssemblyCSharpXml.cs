@@ -11,7 +11,7 @@ var path = args.Length > 0
 path = Path.GetFullPath(path);
 
 var bytes = File.ReadAllBytes(path);
-var hadUtf8Bom = bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF;
+var hadUtf8Bom = bytes is [0xEF, 0xBB, 0xBF, ..];
 var text = Encoding.UTF8.GetString(bytes);
 if (hadUtf8Bom && text.Length > 0 && text[0] == '\uFEFF')
 {
@@ -61,7 +61,7 @@ static IEnumerable<MemberBlock> ReadTopLevelMembers(string text)
 
     while (reader.Read())
     {
-        if (reader.NodeType == XmlNodeType.Element && reader.Depth == 0)
+        if (reader is { NodeType: XmlNodeType.Element, Depth: 0 })
         {
             if (reader.Name != "assembly")
             {
@@ -71,7 +71,7 @@ static IEnumerable<MemberBlock> ReadTopLevelMembers(string text)
             sawAssembly = true;
         }
 
-        if (reader.NodeType == XmlNodeType.Element && reader.Depth == 1 && reader.Name == "member")
+        if (reader is { NodeType: XmlNodeType.Element, Depth: 1, Name: "member" })
         {
             memberName = reader.GetAttribute("name") ?? "";
             memberStart = GetOffset(lineStarts, lineInfo);
@@ -84,7 +84,7 @@ static IEnumerable<MemberBlock> ReadTopLevelMembers(string text)
                 memberStart = null;
             }
         }
-        else if (reader.NodeType == XmlNodeType.EndElement && reader.Depth == 1 && reader.Name == "member")
+        else if (reader is { NodeType: XmlNodeType.EndElement, Depth: 1, Name: "member" })
         {
             if (memberName is null || memberStart is null)
             {
