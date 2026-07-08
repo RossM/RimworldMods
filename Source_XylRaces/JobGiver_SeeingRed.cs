@@ -9,7 +9,7 @@ public class JobGiver_SeeingRed : ThinkNode_JobGiver
 
     private float maxAttackDistance = 40f;
 
-    protected override Job TryGiveJob(Pawn pawn)
+    protected override Job? TryGiveJob(Pawn pawn)
     {
         if (pawn.TryGetAttackVerb(null) == null)
         {

@@ -94,7 +94,7 @@ public class Need_Wetness : Need_Seeker
             return 0.0f;
         }
 
-        if (Config.Instance.wetnessGivingJobs.Contains(pawn.CurJobDef) && !pawn.pather.Moving)
+        if (Config.Instance.wetnessGivingJobs?.Contains(pawn.CurJobDef) is true && !pawn.pather.Moving)
         {
             var wetnessSource = pawn.CurJob?.targetA.Thing?.def.GetModExtension<DefModExtension_Thing_WetnessSource>();
             return wetnessSource?.wetnessLevel ?? 1.0f;

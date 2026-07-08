@@ -30,17 +30,17 @@ namespace XylXenos;
 [UsedFromXml]
 public class PatchOperationAddOrMerge : PatchOperationPathed
 {
-    private enum Order
+    public enum Order
     {
         Append,
         Prepend
     }
 
-    private XmlContainer value;
+    public required XmlContainer value;
 
-    private readonly Order order = Order.Prepend;
+    public readonly Order order = Order.Prepend;
 
-    private readonly bool debug = false;
+    public readonly bool debug = false;
 
     protected override bool ApplyWorker(XmlDocument xml)
     {

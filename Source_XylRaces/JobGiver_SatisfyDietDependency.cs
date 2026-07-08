@@ -15,7 +15,7 @@ public class JobGiver_SatisfyDietDependency : ThinkNode_JobGiver
         return 0f;
     }
 
-    protected override Job TryGiveJob(Pawn pawn)
+    protected override Job? TryGiveJob(Pawn pawn)
     {
         tmpDietDependencies.Clear();
         tmpDietDependencies.AddRange(pawn.HediffsOfType<Hediff_DietDependency>().Where(h => h.ShouldSatisfy));
@@ -27,7 +27,7 @@ public class JobGiver_SatisfyDietDependency : ThinkNode_JobGiver
         {
             foreach (Hediff_DietDependency dietDependency in tmpDietDependencies)
             {
-                Thing food = dietDependency.FindFoodFor(pawn);
+                Thing? food = dietDependency.FindFoodFor(pawn);
                 if (food == null)
                     continue;
 
@@ -35,7 +35,7 @@ public class JobGiver_SatisfyDietDependency : ThinkNode_JobGiver
                 float nutritionNeeded = dietDependency.Severity / dietDependency.DefExt.severityReductionPerNutrition;
                 int count = Mathf.CeilToInt(nutritionNeeded / nutritionPer);
 
-                Pawn pawn2 = (food.ParentHolder as Pawn_InventoryTracker)?.pawn;
+                Pawn? pawn2 = (food.ParentHolder as Pawn_InventoryTracker)?.pawn;
                 Job job;
                 if (pawn2 != null && pawn2 != pawn)
                     job = JobMaker.MakeJob(JobDefOf.TakeFromOtherInventory, food, pawn2);

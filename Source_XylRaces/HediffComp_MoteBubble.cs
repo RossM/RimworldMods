@@ -3,7 +3,7 @@
 [UsedFromXml]
 public class HediffCompProperties_MoteBubble : HediffCompProperties
 {
-    public string iconPath;
+    public string? iconPath;
 
     public HediffCompProperties_MoteBubble()
     {
@@ -15,7 +15,7 @@ public class HediffComp_MoteBubble : HediffComp
 {
     public HediffCompProperties_MoteBubble Props => (HediffCompProperties_MoteBubble)props;
 
-    public MoteBubble mote;
+    public MoteBubble? mote;
 
     public override void CompExposeData()
     {
@@ -31,12 +31,12 @@ public class HediffComp_MoteBubble : HediffComp
 
     public override void CompPostPostRemoved()
     {
-        if (!mote.Destroyed)
+        if (mote?.Destroyed is false)
             mote.Destroy();
     }
 
     public override void CompPostTick(ref float severityAdjustment)
     {
-        mote.Maintain();
+        mote?.Maintain();
     }
 }

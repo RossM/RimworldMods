@@ -4,7 +4,7 @@
 public class PawnRenderNode_HeadPattern(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree)
     : PawnRenderNode_Head(pawn, props, tree)
 {
-    public override Graphic GraphicFor(Pawn pawn)
+    public override Graphic? GraphicFor(Pawn pawn)
     {
         if (!pawn.health.hediffSet.HasHead)
             return null;

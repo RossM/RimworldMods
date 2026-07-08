@@ -3,5 +3,5 @@
 [UsedFromXml]
 public class DefModExtension_Thought : DefModExtension
 {
-    public List<ThoughtDef> extraThoughts;
+    public List<ThoughtDef>? extraThoughts;
 }

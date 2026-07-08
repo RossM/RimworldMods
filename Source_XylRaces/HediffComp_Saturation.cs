@@ -1,13 +1,15 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 [UsedFromXml]
 public class HediffCompProperties_Saturation : HediffCompPropertiesExt
 {
-    public HediffDef sourceHediff;
+    public required HediffDef sourceHediff;
     public float severityLossPerDay;
     public float severityGainPerDay;
 
-    public HediffDef parent;
+    public HediffDef? parent;
 
     public HediffCompProperties_Saturation()
     {
@@ -27,9 +29,12 @@ public class HediffCompProperties_Saturation : HediffCompPropertiesExt
             yield return new(StatCategoryDefOf.Drug, "XylSaturationGain".Translate(),
                 "PerDay".Translate(severityGainPerDay.ToStringPercent()),
                 "XylSaturationGainDesc".Translate(), 0);
-            yield return new(StatCategoryDefOf.Drug, "XylDaysToFullSaturation".Translate(),
-                "PeriodDays".Translate((parent.maxSeverity / severityGainPerDay).ToStringDecimalIfSmall()),
-                "XylDaysToFullSaturationDesc".Translate(), 0);
+            if (parent != null)
+            {
+                yield return new(StatCategoryDefOf.Drug, "XylDaysToFullSaturation".Translate(),
+                    "PeriodDays".Translate((parent.maxSeverity / severityGainPerDay).ToStringDecimalIfSmall()),
+                    "XylDaysToFullSaturationDesc".Translate(), 0);
+            }
         }
 
         if (severityLossPerDay < 0)
@@ -38,6 +43,13 @@ public class HediffCompProperties_Saturation : HediffCompPropertiesExt
                 "PerDay".Translate(severityLossPerDay.ToStringPercent()),
                 "XylSaturationLossDesc".Translate(), 0);
         }
+    }
+
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
+    public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
+    {
+        if (sourceHediff is null)
+            yield return $"{nameof(sourceHediff)} is null";
     }
 }
 

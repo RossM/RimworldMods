@@ -39,7 +39,7 @@ public static class Patch_RaceProperties
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]
     [InfixPrefix(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
     [InfixPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
-    public static bool GetFirstHediffOfDef_Prefix(HediffSet __instance, out Hediff __result)
+    public static bool GetFirstHediffOfDef_Prefix(HediffSet __instance, out Hediff? __result)
     {
         __result = null;
         // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes
@@ -51,7 +51,7 @@ public static class Patch_RaceProperties
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]
     [HarmonyPrefix]
     [HarmonyPatch(nameof(RaceProperties.NutritionEatenPerDay))]
-    private static bool NutritionEatenPerDay_Prefix(Pawn p, out string __result)
+    private static bool NutritionEatenPerDay_Prefix(Pawn p, out string? __result)
     {
         __result = null;
         if (!Settings.instance.ShouldFixLactationBugsFor(p))
@@ -62,7 +62,7 @@ public static class Patch_RaceProperties
         // directly consumes food per tick. This correctly displays that effect.
         float lactationNutritionUsed = p.LactationHediff?.TryGetComp<HediffComp_Lactating>()?.AddedNutritionPerDay() ?? 0;
 
-        __result = (p.needs.food.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * GenDate.TicksPerDay + lactationNutritionUsed)
+        __result = (p.needs.food!.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * GenDate.TicksPerDay + lactationNutritionUsed)
             .ToString("0.##");
 
         return false;

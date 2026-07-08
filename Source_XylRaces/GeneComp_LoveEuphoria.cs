@@ -1,14 +1,23 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 public class GeneCompProperties_LoveEuphoria : GeneCompProperties
 {
-    public NeedDef need;
+    public required NeedDef need;
     public float needOffset = 1f;
-    public List<HediffDef> hediffs;
+    public List<HediffDef>? hediffs;
 
     public GeneCompProperties_LoveEuphoria()
     {
         compClass = typeof(GeneComp_LoveEuphoria);
+    }
+
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (need is null)
+            yield return $"{nameof(need)} is null";
     }
 }
 

@@ -6,8 +6,8 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
     public const int violationDisableTicks = 2500;
     public const int updateFrequency = 60;
 
-    [Unsaved] private static Map lastMap;
-    [Unsaved] private static HostilityOverrideManager lastManager;
+    [Unsaved] private static Map? lastMap;
+    [Unsaved] private static HostilityOverrideManager? lastManager;
 
     public bool anyOverrides = false;
     public HashSet<(Faction, Faction)> activeOverrides = [];
@@ -22,7 +22,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HostilityOverrideManager GetManager(Map map)
+    public static HostilityOverrideManager? GetManager(Map? map)
     {
         if (map == null)
             return null;
@@ -77,7 +77,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
 
         foreach (var pawn in map.mapPawns.AllPawns)
         {
-            List<FactionDef> factions = pawn.GeneTracker_XylXenos?.disableHostilityFromFactions;
+            List<FactionDef>? factions = pawn.GeneTracker_XylXenos?.disableHostilityFromFactions;
             if (factions is not { Count: > 0 })
                 continue;
 
@@ -92,7 +92,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
         }
     }
 
-    public void Notify_DamageTaken(Thing target, DamageInfo info)
+    public void Notify_DamageTaken(Thing? target, DamageInfo info)
     {
         if (target?.Map != map)
             return;

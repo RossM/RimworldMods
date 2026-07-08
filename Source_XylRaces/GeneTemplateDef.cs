@@ -17,14 +17,14 @@ public class GeneTemplateDef : Def
         public int biostatMet = 0;
     }
 
-    public string iconPath;
+    public string? iconPath;
     public Type geneClass = typeof(Gene);
 
-    public List<AbilityBiostatInfo> biostats;
+    public required List<AbilityBiostatInfo> biostats;
 
     public GeneTemplateType geneTemplateType;
 
-    public GeneCategoryDef displayCategory;
+    public GeneCategoryDef? displayCategory;
 
     public int displayOrderOffset;
 
@@ -38,8 +38,9 @@ public class GeneTemplateDef : Def
         }
 
         if (!typeof(Gene).IsAssignableFrom(geneClass))
-        {
             yield return "geneClass is not Gene or child thereof.";
-        }
+
+        if (biostats is null)
+            yield return $"{nameof(biostats)} is null";
     }
 }

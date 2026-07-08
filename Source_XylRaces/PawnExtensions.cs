@@ -14,8 +14,7 @@ public static class PawnExtensions
             // HasPsylink is patched to respect psycast genes
             pawn.HasPsylink && !pawn.Suspended && (pawn.Spawned || pawn.IsCaravanMember());
 
-        [CanBeNull]
-        public GeneTracker_XylXenos GeneTracker_XylXenos
+        public GeneTracker_XylXenos? GeneTracker_XylXenos
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => pawn.genes == null ? null : PawnExtraData<GeneTracker_XylXenos>.Get(pawn);

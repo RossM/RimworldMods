@@ -1,4 +1,6 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 [UsedFromXml]
 public class ScenPart_Psycast : ScenPart_PawnModifier
@@ -6,7 +8,7 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
     private static IEnumerable<AbilityDef> PossiblePsycasts => field ??=
         GetPossiblePsycasts();
 
-    public AbilityDef psycast;
+    public required AbilityDef psycast;
 
     private static List<AbilityDef> GetPossiblePsycasts()
     {
@@ -42,6 +44,7 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
         psycast = PossiblePsycasts.RandomElement();
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override bool HasNullDefs()
     {
         if (base.HasNullDefs())
@@ -62,7 +65,7 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
     private void LearnPsycast(Pawn pawn)
     {
         if (CanLearnPsycast(pawn, psycast))
-            pawn.abilities.GainAbility(psycast);
+            pawn.abilities!.GainAbility(psycast);
     }
 
     private static bool CanLearnPsycast(Pawn pawn, AbilityDef abilityDef)

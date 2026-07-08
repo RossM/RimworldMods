@@ -255,7 +255,7 @@ public static class DebugArena
     public static void PerformBattleRoyale(
         IEnumerable<PawnKindDef> kindsEnumerable,
         int scoreRankLimit = -1,
-        PawnKindDef forcedPawnKind = null)
+        PawnKindDef? forcedPawnKind = null)
     {
         if (!ValidateArenaCapability())
             return;

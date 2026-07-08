@@ -4,7 +4,7 @@
 public class ColorGenerator_Spectrum : ColorGenerator
 {
     public override Color ExemplaryColor => colors[0];
-    public List<Color> colors;
+    public required List<Color> colors;
 
     public override Color NewRandomizedColor()
     {

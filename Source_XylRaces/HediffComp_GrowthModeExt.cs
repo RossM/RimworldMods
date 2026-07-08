@@ -1,4 +1,6 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 [UsedFromXml]
 public class GrowthMode
@@ -9,16 +11,16 @@ public class GrowthMode
     public float changeMtbDays = -1;
     public float severityPerDay = 0f;
     public FloatRange severityPerDayRange = FloatRange.Zero;
-    [MustTranslate] public string label;
-    [MustTranslate] public string message;
-    public MessageTypeDef messageType;
-    [MustTranslate] public string tipString;
+    [MustTranslate] public string? label;
+    [MustTranslate] public string? message;
+    public MessageTypeDef? messageType;
+    [MustTranslate] public string? tipString;
 }
 
 [UsedFromXml]
 public class HediffCompProperties_GrowthModeExt : HediffCompProperties_SeverityPerDay
 {
-    public List<GrowthMode> modes;
+    public required List<GrowthMode> modes;
 
     public HediffCompProperties_GrowthModeExt()
     {
@@ -33,6 +35,7 @@ public class HediffCompProperties_GrowthModeExt : HediffCompProperties_SeverityP
             parent.hediffClass = typeof(HediffWithCompsExt);
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
     {
         foreach (var error in base.ConfigErrors(parentDef))
@@ -40,6 +43,18 @@ public class HediffCompProperties_GrowthModeExt : HediffCompProperties_SeverityP
 
         if (!typeof(HediffWithCompsExt).IsAssignableFrom(parentDef.hediffClass))
             yield return "hediffClass must be HediffWithCompsExt or a subclass thereof";
+
+        if (modes is null)
+        {
+            yield return $"{nameof(modes)} is null";
+            yield break;
+        }
+
+        foreach (var mode in modes)
+        {
+            if (mode is null)
+                yield return "mode is null";
+        }
     }
 }
 
@@ -47,13 +62,13 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
 {
     public HediffCompProperties_GrowthModeExt TProps => (HediffCompProperties_GrowthModeExt)props;
 
-    public override string CompLabelInBracketsExtra => GrowthMode.label;
+    public override string? CompLabelInBracketsExtra => GrowthMode.label;
 
-    public override string CompTipStringExtra => GrowthMode.tipString;
+    public override string? CompTipStringExtra => GrowthMode.tipString;
 
     public bool AllowTend => GrowthMode.allowTend;
 
-    [NotNull] public GrowthMode GrowthMode
+    public GrowthMode GrowthMode
     {
         get => TProps.modes[growthModeIndex];
         set => growthModeIndex = TProps.modes.IndexOf(value);

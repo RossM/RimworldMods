@@ -6,7 +6,7 @@ public class MentalState_HuntingVermin : MentalState
     private const int checkInterval = 120;
 
     private static readonly List<Pawn> tmpTargets = [];
-    public Pawn target;
+    public Pawn? target;
 
     public override void ExposeData()
     {
@@ -81,7 +81,7 @@ public class MentalState_HuntingVermin : MentalState
         return false;
     }
 
-    public static Pawn FindPawnToKill(Pawn pawn)
+    public static Pawn? FindPawnToKill(Pawn pawn)
     {
         if (!pawn.Spawned)
         {

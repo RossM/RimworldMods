@@ -7,7 +7,7 @@ public class CompProperties_AbilitySonicWave : CompProperties_AbilityEffectWithD
     public float radius;
     public bool canHitFilledCells;
 
-    public PawnCapacityDef durationMultiplierCapacity;
+    public PawnCapacityDef? durationMultiplierCapacity;
 
     public CompProperties_AbilitySonicWave()
     {

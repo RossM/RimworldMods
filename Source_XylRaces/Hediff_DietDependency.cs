@@ -5,10 +5,10 @@
 [UsedFromXml]
 public class DefModExtension_Hediff_DietDependency : DefModExtension
 {
-    [CanBeNull] public List<FoodGroupDef> foodGroups;
+    public List<FoodGroupDef>? foodGroups;
     public bool rawOnly = false;
     public float severityReductionPerNutrition = 1f;
-    [MustTranslate] public string foodLabel;
+    [MustTranslate] public string? foodLabel;
 }
 
 [UsedFromXml]
@@ -64,7 +64,7 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         }
     }
 
-    public Thing FindFoodFor(Pawn pawnGettingFood)
+    public Thing? FindFoodFor(Pawn pawnGettingFood)
     {
         ThingOwner<Thing> innerContainer = pawnGettingFood.inventory.innerContainer;
         foreach (Thing item in innerContainer)

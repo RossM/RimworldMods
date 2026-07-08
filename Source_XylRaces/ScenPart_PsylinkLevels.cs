@@ -6,7 +6,7 @@ public class ScenPart_PsylinkLevels : ScenPart_PawnModifier
     public int count = 1;
     public bool givePsycasts = true;
 
-    private string countBuf;
+    private string? countBuf;
 
     public override void ExposeData()
     {

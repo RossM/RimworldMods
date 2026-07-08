@@ -9,7 +9,7 @@ public class Hediff_PetrifiedFlesh : HediffWithCompsExt
 
     public override Color LabelColor => RelativeSeverity >= 1.0f ? FullyPetrifiedColor : base.LabelColor;
 
-    public override string SeverityLabel => Severity == 0f ? null : Severity.ToString("F1");
+    public override string? SeverityLabel => Severity == 0f ? null : Severity.ToString("F1");
 
     private static readonly Color FullyPetrifiedColor = new(0.5f, 0.5f, 0.5f);
 

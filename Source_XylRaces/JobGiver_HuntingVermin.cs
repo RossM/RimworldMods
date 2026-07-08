@@ -3,14 +3,14 @@
 [UsedFromXml]
 public class JobGiver_HuntingVermin : ThinkNode_JobGiver
 {
-    protected override Job TryGiveJob(Pawn pawn)
+    protected override Job? TryGiveJob(Pawn pawn)
     {
         Job job;
 
         if (pawn.MentalState is not MentalState_HuntingVermin mentalState_huntingVermin)
             return null;
 
-        if (mentalState_huntingVermin.target.Corpse is Corpse corpse)
+        if (mentalState_huntingVermin.target?.Corpse is Corpse corpse)
         {
             if (!pawn.CanReserveAndReach(corpse, PathEndMode.ClosestTouch, Danger.Some))
             {
@@ -24,7 +24,7 @@ public class JobGiver_HuntingVermin : ThinkNode_JobGiver
         if (!mentalState_huntingVermin.IsTargetStillValidAndReachable())
             return null;
 
-        Thing targetThing = mentalState_huntingVermin.target.SpawnedParentOrMe;
+        Thing targetThing = mentalState_huntingVermin.target!.SpawnedParentOrMe;
         job = JobMaker.MakeJob(JobDefOf.AttackMelee, targetThing);
         job.killIncappedTarget = true;
         if (targetThing != mentalState_huntingVermin.target)

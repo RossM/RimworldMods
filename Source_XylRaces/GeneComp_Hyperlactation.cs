@@ -1,27 +1,37 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 public class GeneCompProperties_Hyperlactation : GeneCompProperties
 {
-    public ThingDef item;
+    public required ThingDef item;
     public float chargePerItem = 0.1f;
-    public HediffDef hediff;
-    [CanBeNull] public List<ThoughtDef> milkedThoughts;
+    public required HediffDef hediff;
+    public List<ThoughtDef>? milkedThoughts;
     public int ticksPerSorenessStage = GenDate.TicksPerDay;
 
     public GeneCompProperties_Hyperlactation()
     {
         compClass = typeof(GeneComp_Hyperlactation);
     }
+
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (item is null)
+            yield return $"{nameof(item)} is null";
+        if (hediff is null)
+            yield return $"{nameof(hediff)} is null";
+    }
 }
 
 public class GeneComp_Hyperlactation : GeneComp
 {
-    [NotNull]
     public GeneCompProperties_Hyperlactation Props => (GeneCompProperties_Hyperlactation)props;
 
-    public Texture2D ExtraIcon => parent.DefExt.ExtraIcon;
+    public Texture2D? ExtraIcon => parent.DefExt.ExtraIcon;
 
-    public HediffComp_Lactating Lactating =>
+    public HediffComp_Lactating? Lactating =>
         lactatingInternal ??= Pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
 
     public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / Props.chargePerItem);
@@ -45,7 +55,7 @@ public class GeneComp_Hyperlactation : GeneComp
     public int? fullSinceTick;
     public int lastMilkedTick = int.MinValue;
 
-    private HediffComp_Lactating lactatingInternal;
+    private HediffComp_Lactating? lactatingInternal;
 
     public override void CompExposeData()
     {
@@ -55,7 +65,7 @@ public class GeneComp_Hyperlactation : GeneComp
         Scribe_Values.Look(ref milkingCooldownDays, nameof(milkingCooldownDays), defaultValue: 1);
     }
 
-    public TaggedString LabelForFrequency(int days)
+    private TaggedString LabelForFrequency(int days)
     {
         return days switch
         {
@@ -135,6 +145,9 @@ public class GeneComp_Hyperlactation : GeneComp
     {
         if (!Active)
             yield break;
+        if (Lactating == null)
+            yield break;
+
         float milkPerDay = Lactating.Props.fullChargeAmount * GenDate.TicksPerDay /
                            (Lactating.Props.ticksToFullCharge * Props.chargePerItem);
         yield return new StatDrawEntry(StatCategoryDefOf.PawnFood, "XylMilkProductionLabel".TranslateSimple(),

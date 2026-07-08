@@ -2,5 +2,5 @@
 
 public class XenotypeSetWithDefault : XenotypeSet
 {
-    public XenotypeDef defaultXenotype;
+    public required XenotypeDef defaultXenotype;
 }

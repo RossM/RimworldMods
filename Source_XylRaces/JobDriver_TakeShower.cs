@@ -3,7 +3,7 @@
 [UsedFromXml]
 public class DefModExtension_Job_TakeShower : DefModExtension
 {
-    public EffecterDef effecter;
+    public EffecterDef? effecter;
 }
 
 [UsedFromXml]

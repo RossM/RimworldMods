@@ -6,11 +6,11 @@ public static class Patch_PawnGenerator
     [Feature(typeof(XenotypeSetWithDefault))]
     [InfixPrefix(typeof(PawnGenerator), "<XenotypesAvailableFor>g__AddOrAdjust|49_0")]
     [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
-    public static bool AddOrAdjust_Prefix(XenotypeChance xenotypeChance, FactionDef factionDef, Faction faction)
+    public static bool AddOrAdjust_Prefix(XenotypeChance xenotypeChance, FactionDef? factionDef, Faction? faction)
     {
         if (xenotypeChance.xenotype != ((faction?.def ?? factionDef)?.xenotypeSet).DefaultXenotype)
         {
-            if (PawnGenerator.tmpXenotypeChances.ContainsKey(xenotypeChance.xenotype))
+            if (PawnGenerator.tmpXenotypeChances!.ContainsKey(xenotypeChance.xenotype))
             {
                 PawnGenerator.tmpXenotypeChances[xenotypeChance.xenotype] += xenotypeChance.chance;
             }

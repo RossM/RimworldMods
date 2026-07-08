@@ -27,7 +27,7 @@ public static class Patch_WorkGiver_Warden_Feed
                      .OrderByDescending(h => h.Severity))
         {
             //Log.Message($"JobOnThing_Postfix: pawn: {pawn}, prisoner: {prisoner}, hediff: {hediff}, severity: {hediff.Severity}");
-            Thing foodSource = hediff.FindFoodFor(pawn);
+            Thing? foodSource = hediff.FindFoodFor(pawn);
             if (foodSource == null)
                 continue;
             ThingDef foodDef = FoodUtility.GetFinalIngestibleDef(foodSource);

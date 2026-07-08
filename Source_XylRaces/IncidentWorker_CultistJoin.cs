@@ -9,7 +9,7 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
         if (def.pawnFixedGender != Gender.None)
             gender = def.pawnFixedGender;
 
-        Ideo ideo = null;
+        Ideo? ideo = null;
         if (ModsConfig.IdeologyActive)
             ideo = GetRandomIdeo();
 

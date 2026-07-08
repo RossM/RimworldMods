@@ -25,7 +25,7 @@ public static class PatchHelpers
         if (ideo == null)
             return 0f;
 
-        XenotypeDef recipientXenotype = recipient.genes?.Xenotype;
+        XenotypeDef? recipientXenotype = recipient.genes?.Xenotype;
         var xenotypeDefExtension = recipientXenotype?.GetModExtension<DefModExtension_Xenotype>();
         if (xenotypeDefExtension == null)
             return 0f;
@@ -40,7 +40,7 @@ public static class PatchHelpers
                 {
                     float offset = invert ? -0.2f : 0.2f;
                     result += offset;
-                    text += MemeAndXenotypeDesc(meme, recipientXenotype, offset);
+                    text += MemeAndXenotypeDesc(meme, recipientXenotype!, offset);
                 }
             }
         }
@@ -53,7 +53,7 @@ public static class PatchHelpers
                 {
                     float offset = invert ? 0.2f : -0.2f;
                     result += offset;
-                    text += MemeAndXenotypeDesc(meme, recipientXenotype, offset);
+                    text += MemeAndXenotypeDesc(meme, recipientXenotype!, offset);
                 }
             }
         }
@@ -241,15 +241,15 @@ public static class PatchHelpers
 
     public static bool IsThoughtFromIngestionDisallowedByGenes(
         Pawn eater,
-        ThoughtDef thought,
-        ThingDef ingestible)
+        ThoughtDef? thought,
+        ThingDef? ingestible)
     {
         if (thought == null || ingestible == null)
         {
             return false;
         }
 
-        List<GeneIngestionThoughtOverride> thoughtOverrides = eater.GeneTracker_XylXenos?.ingestionThoughtOverrides;
+        List<GeneIngestionThoughtOverride>? thoughtOverrides = eater.GeneTracker_XylXenos?.ingestionThoughtOverrides;
         if (thoughtOverrides == null)
             return false;
 
@@ -275,7 +275,7 @@ public static class PatchHelpers
 
     public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
     {
-        List<JoyGiverFactor> joyGiverChanceFactors = pawn.GeneTracker_XylXenos?.joyGiverChanceFactors;
+        List<JoyGiverFactor>? joyGiverChanceFactors = pawn.GeneTracker_XylXenos?.joyGiverChanceFactors;
         if (joyGiverChanceFactors == null)
             return 1f;
 

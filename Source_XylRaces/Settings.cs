@@ -9,7 +9,9 @@ public class Settings : ModSettings
         Never,
     }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public static Settings instance;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     public ThreeStateMode allowBackerBackstories = ThreeStateMode.Sometimes;
     public ThreeStateMode fixLactationBugs = ThreeStateMode.Always;

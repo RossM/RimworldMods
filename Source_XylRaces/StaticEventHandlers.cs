@@ -5,7 +5,7 @@ public static class StaticEventHandlers
 {
     public class Listener : IEventListener
     {
-        public void Notify_PawnGenerationEarly(Thing thing, PawnGenerationData data)
+        public void Notify_PawnGenerationEarly(Thing? thing, PawnGenerationData data)
         {
             if (thing is not Pawn pawn)
                 return;
@@ -37,7 +37,7 @@ public static class StaticEventHandlers
 
         static bool HasGenderRatio(GeneDef geneDef) => geneDef.CompProps<GeneCompProperties_GenderRatio>() != null;
 
-        GeneDef gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
+        GeneDef? gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
                        request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
                        request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
                        xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);

@@ -1,4 +1,6 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 [UsedFromXml]
 public class DefModExtension_Hediff_SubstituteCapacity : DefModExtension
@@ -11,9 +13,18 @@ public class DefModExtension_Hediff_SubstituteCapacity : DefModExtension
     }
 
     public SubstitutionMode mode;
-    public PawnCapacityDef originalCapacity;
-    public PawnCapacityDef substituteCapacity;
-    public List<StatDef> excludeStats;
+    public required PawnCapacityDef originalCapacity;
+    public required PawnCapacityDef substituteCapacity;
+    public List<StatDef>? excludeStats;
+
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (originalCapacity is null)
+            yield return $"{nameof(originalCapacity)} is null";
+        if (substituteCapacity is null)
+            yield return $"{nameof(substituteCapacity)} is null";
+    }
 }
 
 [UsedFromXml]
@@ -110,8 +121,11 @@ public class Hediff_SubstituteCapacity : HediffWithComps
             $"{LabelCap}: {DefExt.originalCapacity.LabelCap} -> {DefExt.substituteCapacity.LabelCap} ({modifier.ToStringPercentSigned()})";
     }
 
-    public static Hediff_SubstituteCapacity FindHediffFor(Pawn pawn, PawnCapacityDef capacity, StatDef stat)
+    public static Hediff_SubstituteCapacity? FindHediffFor(Pawn? pawn, PawnCapacityDef capacity, StatDef stat)
     {
+        if (pawn == null)
+            return null;
+
         foreach (Hediff_SubstituteCapacity hediff in pawn.HediffsOfType<Hediff_SubstituteCapacity>())
         {
             if (hediff.Validate(stat, capacity))

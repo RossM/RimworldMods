@@ -28,7 +28,7 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, IEventListener
         EventManager.Instance.AddListener(this);
     }
 
-    public void Notify_PawnGenerationEarly(Thing thing, PawnGenerationData data)
+    public void Notify_PawnGenerationEarly(Thing? thing, PawnGenerationData data)
     {
         if (thing is not Pawn pawn)
             return;

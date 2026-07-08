@@ -1,11 +1,19 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 
 namespace XylXenos;
 
 [UsedFromXml]
 public class DefModExtension_Thought_Need : DefModExtension
 {
-    public NeedDef need;
+    public required NeedDef need;
+
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (need is null)
+            yield return $"{nameof(need)} is null";
+    }
 }
 
 [UsedFromXml]

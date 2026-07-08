@@ -1,10 +1,12 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 [UsedFromXml]
 public class JobGiver_GetWetness : ThinkNode_JobGiver
 {
     public const Danger maxDanger = Danger.None;
-    public JobDef soakJobDef;
+    public required JobDef soakJobDef;
 
     public static List<ThingDef> WetnessGivingThings
     {
@@ -24,6 +26,15 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
         }
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
+    public override void ResolveReferences()
+    {
+        base.ResolveReferences();
+
+        if (soakJobDef == null)
+            Log.Warning($"{nameof(soakJobDef)} is null in {nameof(ThinkNode_ConditionalHasGene)}");
+    }
+
     public override ThinkNode DeepCopy(bool resolve = true)
     {
         var obj = (JobGiver_GetWetness)base.DeepCopy(resolve);
@@ -31,7 +42,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
         return obj;
     }
 
-    private static Thing FindBestWetnessSource(Pawn pawn)
+    private static Thing? FindBestWetnessSource(Pawn pawn)
     {
         var candidates = new List<Thing>();
         GetSearchSet(pawn, candidates);
@@ -116,7 +127,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
         return true;
     }
 
-    protected override Job TryGiveJob(Pawn pawn)
+    protected override Job? TryGiveJob(Pawn pawn)
     {
         if (IsValidWaterTileFor(pawn, pawn.Position))
         {

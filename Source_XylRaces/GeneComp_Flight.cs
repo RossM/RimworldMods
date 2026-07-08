@@ -21,9 +21,9 @@ public class GeneComp_Flight : GeneComp, IEventListener
     [NotNull]
     public GeneCompProperties_Flight Props => (GeneCompProperties_Flight)props;
 
-    public Texture2D ExtraIcon => parent.DefExt.ExtraIcon;
+    public Texture2D? ExtraIcon => parent.DefExt.ExtraIcon;
 
-    public bool CanFlyNow => Pawn.flight is { CanFlyNow: true } && !Pawn.Downed && flightAllowedByApparel;
+    public bool CanFlyNow => Pawn is { flight: { CanFlyNow: true }, Downed: false } && flightAllowedByApparel;
 
     public bool autoFly = true;
     public bool autoFlyDrafted = true;

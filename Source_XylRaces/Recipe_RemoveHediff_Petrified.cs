@@ -17,7 +17,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
         return allHediffs.Where(hediff => hediff.Part != null && ValidHediff(pawn, recipe, hediff)).Select(hediff => hediff.Part);
     }
 
-    public override bool AvailableOnNow(Thing thing, BodyPartRecord part = null)
+    public override bool AvailableOnNow(Thing thing, BodyPartRecord? part = null)
     {
         if (!base.AvailableOnNow(thing, part))
         {
@@ -35,7 +35,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
             return pawn.health.hediffSet.hediffs.Any(hediff => ValidHediff(pawn, recipe, hediff));
     }
 
-    public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
+    public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn? billDoer, List<Thing> ingredients, Bill bill)
     {
         if (billDoer != null)
         {
@@ -77,7 +77,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
         }
     }
 
-    private static void RemoveHediff(Pawn pawn, Pawn billDoer, Hediff hediff, Bill bill)
+    private static void RemoveHediff(Pawn pawn, Pawn? billDoer, Hediff hediff, Bill bill)
     {
         var part = hediff.Part;
         var severity = hediff.Severity;

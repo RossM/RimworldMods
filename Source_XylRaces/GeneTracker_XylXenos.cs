@@ -6,12 +6,12 @@ public class GeneTracker_XylXenos : GeneTracker
     ///     Aggregates <see cref="GeneCompProperties_JoyGiverChances.factors" /> from all genes.<br /><br />
     ///     <inheritdoc cref="GeneCompProperties_JoyGiverChances.factors" />
     /// </summary>
-    [CanBeNull] public List<JoyGiverFactor> joyGiverChanceFactors;
+    public List<JoyGiverFactor>? joyGiverChanceFactors;
 
 
-    [CanBeNull] public List<FactionDef> disableHostilityFromFactions;
+    public List<FactionDef>? disableHostilityFromFactions;
 
-    [CanBeNull] public List<GeneIngestionThoughtOverride> ingestionThoughtOverrides;
+    public List<GeneIngestionThoughtOverride>? ingestionThoughtOverrides;
 
     public bool hasPsycast;
 

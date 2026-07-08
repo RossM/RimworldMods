@@ -1,9 +1,11 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 [UsedFromXml]
 public class ThinkNode_ConditionalHasGene : ThinkNode_Conditional
 {
-    public GeneDef gene;
+    public required GeneDef gene;
 
     protected override bool Satisfied(Pawn pawn)
     {
@@ -15,5 +17,14 @@ public class ThinkNode_ConditionalHasGene : ThinkNode_Conditional
         ThinkNode_ConditionalHasGene copy = (ThinkNode_ConditionalHasGene)base.DeepCopy(resolve);
         copy.gene = gene;
         return copy;
+    }
+
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
+    public override void ResolveReferences()
+    {
+        base.ResolveReferences();
+
+        if (gene == null)
+            Log.Warning($"{nameof(gene)} is null in {nameof(ThinkNode_ConditionalHasGene)}");
     }
 }

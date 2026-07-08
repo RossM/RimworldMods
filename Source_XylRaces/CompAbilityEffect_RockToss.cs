@@ -1,16 +1,25 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 [UsedFromXml]
 public class CompProperties_AbilityRockToss : CompProperties_EffectWithDest
 {
     public float minRange;
     public float forcedMissRadius;
-    public ThingDef projectileDef;
+    public required ThingDef projectileDef;
     public bool applyMortarMissRadiusFactor;
 
     public CompProperties_AbilityRockToss()
     {
         compClass = typeof(CompAbilityEffect_RockToss);
+    }
+
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
+    public override IEnumerable<string> ConfigErrors(AbilityDef parentDef)
+    {
+        if (projectileDef is null)
+            yield return $"{nameof(projectileDef)} is null";
     }
 }
 

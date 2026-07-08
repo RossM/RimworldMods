@@ -7,7 +7,7 @@ public class DefModExtension_Incident_WildTribe : DefModExtension
 {
     public class TraitChance
     {
-        public TraitDef trait;
+        public required TraitDef trait;
         public float chance = 1.0f;
 
         [UsedFromReflection]
@@ -21,8 +21,8 @@ public class DefModExtension_Incident_WildTribe : DefModExtension
     public IntRange pawnsCount = new(2, 4);
     public IntRange exitMapTicks = new(180000, 300000);
 
-    public FactionDef faction;
-    public List<TraitChance> forcedTraits;
+    public FactionDef? faction;
+    public List<TraitChance>? forcedTraits;
 }
 
 [UsedFromXml]
@@ -55,7 +55,7 @@ public class IncidentWorker_WildTribe : IncidentWorker
             pawn.mindState.exitMapAfterTick = Find.TickManager.TicksGame + exitMapTicks;
         }
 
-        string pawnsPlural = DefExt.faction.pawnsPlural ?? "XylWildPeople".TranslateSimple();
+        string pawnsPlural = DefExt.faction?.pawnsPlural ?? "XylWildPeople".TranslateSimple();
         TaggedString baseLetterText = def.letterText.Formatted(pawnsPlural).CapitalizeFirst();
         string text = string.Format(def.letterLabel, pawnsPlural.CapitalizeFirst());
         SendStandardLetter(text, baseLetterText, def.letterDef, parms, pawns[0]);

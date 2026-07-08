@@ -18,7 +18,7 @@ public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
     public override TextureAndColor CompStateIcon =>
         parent.TendableNow(ignoreTimer: true) ? base.CompStateIcon : TextureAndColor.None;
 
-    public override string CompTipStringExtra
+    public override string? CompTipStringExtra
     {
         get
         {

@@ -1,9 +1,11 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 public class GeneCompProperties_SeeingRed : GeneCompProperties
 {
     public float chance = 1.0f;
-    public HediffDef hediffDef;
+    public required HediffDef hediffDef;
 
     public GeneCompProperties_SeeingRed()
     {
@@ -15,15 +17,21 @@ public class GeneCompProperties_SeeingRed : GeneCompProperties
         yield return new StatDrawEntry(StatCategoryDefOf.PawnCombat, "XylRageChanceLabel".TranslateSimple(),
             chance.ToStringPercent(), "XylRageChanceDesc".TranslateSimple(), 1);
     }
+
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (hediffDef is null)
+            yield return $"{nameof(hediffDef)} is null";
+    }
 }
 
 public class GeneComp_SeeingRed : GeneComp, IEventListener
 {
-    [NotNull]
     public GeneCompProperties_SeeingRed Props => (GeneCompProperties_SeeingRed)props;
 
     private const int checkInterval = 60;
-    public HashSet<Thing> extraEnemies;
+    public HashSet<Thing>? extraEnemies;
 
     public override void CompExposeData()
     {

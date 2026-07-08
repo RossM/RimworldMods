@@ -307,6 +307,30 @@
   <member name="M:RimWorld.StatDrawEntry.SetReportText(System.String)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.HediffComp_Chargeable.Props">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.Pawn_HealthTracker.GetOrAddHediff(Verse.HediffDef,Verse.BodyPartRecord,System.Nullable{Verse.DamageInfo},Verse.DamageWorker.DamageResult)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.IncidentWorker.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Job.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.GridsUtility.GetTerrain(Verse.IntVec3,Verse.Map)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.AI.ThinkNode_JobGiver.TryGiveJob(Verse.Pawn)">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <parameter name="pawn">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="F:RimWorld.Need.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
 
   <!-- Verse -->
   <member name="M:Verse.GenCollection.NullOrEmpty``1(System.Collections.Generic.HashSet{``0})">
