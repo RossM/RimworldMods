@@ -4,15 +4,7 @@ internal static class PatchHelpers
 {
     public static HashSet<RecipeDef> RecipesUnlockedByGenes => field ??= GetRecipesUnlockedByGenes();
 
-    private static Dictionary<HediffDef, StatDef> ResistanceStatByHediff => field ??=
-        new Dictionary<HediffDef, StatDef>
-        {
-            { HediffDefOf.BloodLoss!, XStatDefOf.XylBloodLossResistance },
-            { HediffDefOf.DrugOverdose!, XStatDefOf.XylDrugOverdoseResistance },
-            { HediffDefOf.Heatstroke!, XStatDefOf.XylHeatstrokeResistance },
-            { HediffDefOf.Hypothermia!, XStatDefOf.XylHypothermiaResistance },
-            { HediffDefOf.Malnutrition!, XStatDefOf.XylMalnutritionResistance },
-        };
+    private static Dictionary<HediffDef, StatDef> ResistanceStatByHediff => field ??= Config.Instance.resistanceStatByHediff;
 
     public static void RunDefGenerators(bool hotReload)
     {

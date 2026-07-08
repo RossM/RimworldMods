@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <Xylib.Config>
+    <defName>XylibConfig</defName>
+  
+    <!-- 
+    IMPORTANT! This will only work for hediffs that are applied via HealthUtility.AdjustSeverity.
+    The list already includes all of the interesting ones that don't have an existing resistance
+    stat, so unless you are adding new hediffs, you shouldn't need to patch this list.
+    -->
+    <resistanceStatByHediff>
+      <li>
+        <key>BloodLoss</key>
+        <value>XylBloodLossResistance</value>
+      </li>
+      <li>
+        <key>DrugOverdose</key>
+        <value>XylDrugOverdoseResistance</value>
+      </li>
+      <li>
+        <key>Heatstroke</key>
+        <value>XylHeatstrokeResistance</value>
+      </li>
+      <li>
+        <key>Hypothermia</key>
+        <value>XylHypothermiaResistance</value>
+      </li>
+      <li>
+        <key>Malnutrition</key>
+        <value>XylMalnutritionResistance</value>
+      </li>
+    </resistanceStatByHediff>
+  </Xylib.Config>
+  
+</Defs>
