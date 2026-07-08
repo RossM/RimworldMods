@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <assembly name="Assembly-CSharp">
+  
   <member name="T:LudeonTK.DebugActionAttribute">
     <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor"/>
   </member>
@@ -17,7 +18,8 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="T:RimWorld.DefOf">
-    <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor(JetBrains.Annotations.ImplicitUseTargetFlags)">
+    <attribute
+      ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor(JetBrains.Annotations.ImplicitUseTargetFlags)">
       <argument>2</argument> <!-- ImplicitUseTargetFlags.Members -->
     </attribute>
   </member>
@@ -151,7 +153,8 @@
       <argument>null => true</argument>
     </attribute>
   </member>
-  <member name="M:Verse.GenCollection.RandomElementByWeight``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Single})">
+  <member
+    name="M:Verse.GenCollection.RandomElementByWeight``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Single})">
     <parameter name="source">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
       <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute﻿.#ctor"/>
@@ -233,7 +236,8 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
-  <member name="M:Verse.HediffSet.GetNotMissingParts(Verse.BodyPartHeight,Verse.BodyPartDepth,Verse.BodyPartTagDef,Verse.BodyPartRecord)">
+  <member
+    name="M:Verse.HediffSet.GetNotMissingParts(Verse.BodyPartHeight,Verse.BodyPartDepth,Verse.BodyPartTagDef,Verse.BodyPartRecord)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.HediffSet.hediffs">
@@ -284,7 +288,8 @@
   <member name="P:Verse.PawnRenderNode.Props">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
-  <member name="M:Verse.Pawn_HealthTracker.GetOrAddHediff(Verse.HediffDef,Verse.BodyPartRecord,System.Nullable{Verse.DamageInfo},Verse.DamageWorker.DamageResult)">
+  <member
+    name="M:Verse.Pawn_HealthTracker.GetOrAddHediff(Verse.HediffDef,Verse.BodyPartRecord,System.Nullable{Verse.DamageInfo},Verse.DamageWorker.DamageResult)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Pawn_HealthTracker.capacities">
@@ -317,7 +322,8 @@
   <member name="F:Verse.Thing.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
-  <member name="M:Verse.VerbProperties.AdjustedArmorPenetration(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver)">
+  <member
+    name="M:Verse.VerbProperties.AdjustedArmorPenetration(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver)">
     <parameter name="tool">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
@@ -345,7 +351,8 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
-  <member name="M:Verse.VerbProperties.AdjustedMeleeDamageAmount(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver)">
+  <member
+    name="M:Verse.VerbProperties.AdjustedMeleeDamageAmount(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver)">
     <parameter name="tool">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
@@ -359,7 +366,8 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
-  <member name="M:Verse.VerbProperties.AdjustedMeleeSelectionWeight(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver,System.Boolean)">
+  <member
+    name="M:Verse.VerbProperties.AdjustedMeleeSelectionWeight(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver,System.Boolean)">
     <parameter name="tool">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
@@ -373,7 +381,8 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
-  <member name="M:Verse.VerbUtility.GetAllVerbProperties(System.Collections.Generic.List{Verse.VerbProperties},System.Collections.Generic.List{Verse.Tool})">
+  <member
+    name="M:Verse.VerbUtility.GetAllVerbProperties(System.Collections.Generic.List{Verse.VerbProperties},System.Collections.Generic.List{Verse.Tool})">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="verbProps">
@@ -383,6 +392,5 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
-
 
 </assembly>
