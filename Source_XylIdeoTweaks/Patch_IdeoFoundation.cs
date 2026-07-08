@@ -1,7 +1,7 @@
 ﻿namespace XylIdeos;
 
 [HarmonyPatch(typeof(IdeoFoundation))]
-public class Patch_IdeoFoundation
+public static class Patch_IdeoFoundation
 {
     [Feature(Features.ApparelRequirementsOverrideNudity)]
     [HarmonyPrefix]

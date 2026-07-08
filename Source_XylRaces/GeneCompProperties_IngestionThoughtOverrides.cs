@@ -1,5 +1,6 @@
 ﻿namespace XylXenos;
 
+[UsedFromXml]
 public class GeneIngestionThoughtOverride
 {
     public ThingDef thing;

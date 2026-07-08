@@ -4,7 +4,7 @@ using System.Reflection.Emit;
 namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(StartingPawnUtility))]
-internal class Patch_StartingPawnUtility
+internal static class Patch_StartingPawnUtility
 {
     private static readonly InstructionMatcher.Rule Rule_GetExtraStartingItems = new()
     {

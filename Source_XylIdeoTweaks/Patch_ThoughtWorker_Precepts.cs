@@ -1,7 +1,7 @@
 ﻿namespace XylIdeos;
 
 [HarmonyPatch]
-public class Patch_ThoughtWorker_Precepts
+public static class Patch_ThoughtWorker_Precepts
 {
     private static readonly IReadOnlyCollection<BodyPartGroupDef> GroinBodyParts = [BodyPartGroupDefOf.Legs];
 

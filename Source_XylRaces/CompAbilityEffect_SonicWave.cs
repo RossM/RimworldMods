@@ -1,5 +1,6 @@
 ﻿namespace XylXenos;
 
+[UsedFromXml]
 public class CompProperties_AbilitySonicWave : CompProperties_AbilityEffectWithDuration
 {
     public float range;

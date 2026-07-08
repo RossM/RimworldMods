@@ -10,6 +10,21 @@ public static class Analyzer
 {
     private static readonly string name = typeof(Analyzer).FullName;
 
+    [NotNull] [ItemNotNull] private static readonly Type[] defTypes =
+    [
+        typeof(AbilityCompProperties),
+        typeof(ColorGenerator),
+        typeof(CompProperties),
+        typeof(Def),
+        typeof(DefModExtension),
+        typeof(HediffCompProperties),
+        typeof(HediffGiver),
+        typeof(IngestionOutcomeDoer),
+        typeof(PatchOperation),
+        typeof(PawnRenderNodeProperties),
+        typeof(ScenPart),
+    ];
+
     /// <summary>
     ///     This checks the given assembly for Harmony patches annotated with <see cref="HarmonyPatch" /> and checks
     ///     for issues that might indicate a potential bug or maintainability problem.
@@ -23,6 +38,9 @@ public static class Analyzer
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
             bool typeHasHarmony = type.HasAttribute<HarmonyPatch>();
+
+            if (typeHasHarmony && !(type.IsAbstract && type.IsSealed))
+                Log.Warning($"[{name}] {type.FullName} should be static");
 
             foreach (MethodInfo method in type.DeclaredMethods)
             {
@@ -91,20 +109,6 @@ public static class Analyzer
         }
     }
 
-    [NotNull] [ItemNotNull] private static readonly Type[] defTypes =
-    [
-        typeof(ColorGenerator),
-        typeof(CompProperties),
-        typeof(Def),
-        typeof(DefModExtension),
-        typeof(HediffCompProperties),
-        typeof(HediffGiver),
-        typeof(IngestionOutcomeDoer),
-        typeof(PatchOperation),
-        typeof(PawnRenderNodeProperties),
-        typeof(ScenPart),
-    ];
-
     public static void CheckCodingStyle_Defs([NotNull] Assembly assembly)
     {
         if (assembly is null)
@@ -122,6 +126,7 @@ public static class Analyzer
                 if (defType.IsAssignableFrom(type))
                     Log.Warning($"[{name}] {type.FullName} is a {defType.Name} but is missing a [UsedFromXml] attribute");
             }
+
             foreach (var defType in extraDefTypes)
             {
                 if (defType.IsAssignableFrom(type))

@@ -1,5 +1,6 @@
 ﻿namespace XylXenos;
 
+[UsedFromXml]
 public class Thought_Situational_HerdInstinct : Thought_Situational
 {
     public const int NumPawns_Alone = 1;

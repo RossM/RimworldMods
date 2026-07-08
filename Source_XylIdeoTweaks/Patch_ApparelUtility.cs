@@ -1,7 +1,7 @@
 ﻿namespace XylIdeos;
 
 [HarmonyPatch(typeof(ApparelUtility))]
-public class Patch_ApparelUtility
+public static class Patch_ApparelUtility
 {
     [Feature(Features.NudityIsGenderSpecific)]
     [InfixPostfix(typeof(IdeoUtility), nameof(IdeoUtility.IdeoPrefersNudity))]

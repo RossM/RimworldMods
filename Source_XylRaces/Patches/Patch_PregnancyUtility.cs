@@ -5,7 +5,7 @@
 
 [HarmonyPatch(typeof(PregnancyUtility))]
 [HarmonyPatchCategory("PostLoadDefs")]
-public class Patch_PregnancyUtility
+public static class Patch_PregnancyUtility
 {
     [Feature(typeof(GeneCompProperties_XenotypeStrength))]
     [HarmonyPostfix]

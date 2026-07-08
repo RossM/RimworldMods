@@ -1,7 +1,7 @@
 ﻿namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(JoyGiver))]
-public class Patch_JoyGiver
+public static class Patch_JoyGiver
 {
     [Feature(typeof(GeneCompProperties_JoyGiverChances))]
     [HarmonyPostfix]

@@ -1,7 +1,7 @@
 ﻿namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(SocialProperness))]
-public class Patch_SocialProperness
+public static class Patch_SocialProperness
 {
     [Feature(typeof(GeneComp_Hyperlactation))]
     [InfixPostfix(typeof(GridsUtility), nameof(GridsUtility.IsInPrisonCell))]

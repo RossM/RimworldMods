@@ -1,7 +1,7 @@
 ﻿namespace XylIdeos;
 
 [HarmonyPatch(typeof(Pawn_StyleTracker))]
-public class Patch_Pawn_StyleTracker
+public static class Patch_Pawn_StyleTracker
 {
     [Feature(Features.PreventRestyleLoops)]
     [HarmonyPostfix]

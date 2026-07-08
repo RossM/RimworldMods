@@ -1,5 +1,6 @@
 ﻿namespace XylXenos;
 
+[UsedFromXml]
 public class CompProperties_AbilityToxicBurst : CompProperties_AbilityReleaseGas
 {
     public float AIUseRadius;

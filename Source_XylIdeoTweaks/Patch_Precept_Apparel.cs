@@ -1,7 +1,7 @@
 ﻿namespace XylIdeos;
 
 [HarmonyPatch(typeof(Precept_Apparel))]
-public class Patch_Precept_Apparel
+public static class Patch_Precept_Apparel
 {
     private static readonly IReadOnlyCollection<BodyPartGroupDef> ExcludedBodyParts =
         [BodyPartGroupDefOf.Torso, BodyPartGroupDefOf.Legs];

@@ -1,5 +1,6 @@
 ﻿namespace XylXenos;
 
+[UsedFromReflection]
 public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListener
 {
     public const int violationDisableTicks = 2500;
