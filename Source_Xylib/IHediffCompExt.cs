@@ -3,5 +3,5 @@
 public interface IHediffCompExt
 {
     bool AllowTend { get; }
-    bool CausesNoPain { get; }
+    void CompUpdateCurStage(HediffStage stage);
 }

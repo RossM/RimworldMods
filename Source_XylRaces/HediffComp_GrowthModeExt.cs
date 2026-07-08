@@ -53,15 +53,19 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
 
     public bool AllowTend => GrowthMode.allowTend;
 
-    public bool CausesNoPain => GrowthMode.causesNoPain;
-
-    public GrowthMode GrowthMode
+    [NotNull] public GrowthMode GrowthMode
     {
         get => TProps.modes[growthModeIndex];
         set => growthModeIndex = TProps.modes.IndexOf(value);
     }
 
     public int growthModeIndex;
+
+    public void CompUpdateCurStage(HediffStage stage)
+    {
+        if (GrowthMode.causesNoPain)
+            stage.painOffset = 0f;
+    }
 
     public override void CompExposeData()
     {

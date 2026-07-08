@@ -42,8 +42,8 @@ public class HediffWithCompsExt : HediffWithComps
 
         foreach (var comp in comps)
         {
-            if (comp is IHediffCompExt { CausesNoPain: true })
-                stage.painOffset = 0f;
+            if (comp is IHediffCompExt compExt)
+                compExt.CompUpdateCurStage(stage);
         }
     }
 
