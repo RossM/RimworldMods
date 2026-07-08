@@ -460,7 +460,13 @@ public class EventManager
             return;
         }
 
-        if (!typeof(T).IsAssignableFrom(eventDef.dataType))
+        if (eventDef.dataType is null)
+        {
+            Log.ErrorOnce(
+                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null",
+                Gen.HashCombineInt(0x514F7482, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
+        }
+        else if (!typeof(T).IsAssignableFrom(eventDef.dataType))
         {
             Log.ErrorOnce(
                 $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",
@@ -501,7 +507,13 @@ public class EventManager
             return;
         }
 
-        if (!typeof(T).IsAssignableFrom(eventDef.dataType))
+        if (eventDef.dataType is null)
+        {
+            Log.ErrorOnce(
+                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null",
+                Gen.HashCombineInt(0x514F7482, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
+        }
+        else if (!typeof(T).IsAssignableFrom(eventDef.dataType))
         {
             Log.ErrorOnce(
                 $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",
@@ -625,7 +637,13 @@ public class EventManager
             return;
         }
 
-        if (!typeof(T).IsAssignableFrom(eventDef.dataType))
+        if (eventDef.dataType is null)
+        {
+            Log.ErrorOnce(
+                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null",
+                Gen.HashCombineInt(0x514F7482, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
+        }
+        else if (!typeof(T).IsAssignableFrom(eventDef.dataType))
         {
             Log.ErrorOnce(
                 $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",

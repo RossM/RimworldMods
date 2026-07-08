@@ -10,7 +10,7 @@ public enum FoodType
     Fungus = 0x8,
     Humanlike = 0x10,
     Insect = 0x20,
-    Any = Meat | Vegetable | AnimalProduct | Fungus | Humanlike | Insect
+    Any = Meat | Vegetable | AnimalProduct | Fungus | Humanlike | Insect,
 }
 
 public static class FoodHelpers

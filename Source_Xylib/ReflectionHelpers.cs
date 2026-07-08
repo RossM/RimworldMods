@@ -31,9 +31,9 @@ public static class ReflectionHelpers
         if (baseMethodInfo == null)
             throw new ArgumentException("Method not found", nameof(methodName));
 
-        for (Type type = childType; type != null && type != baseType; type = type.BaseType)
+        for (Type? type = childType; type != null && type != baseType; type = type.BaseType)
         {
-            MethodInfo methodInfo = type.GetMethod(methodName, MethodBindingFlags);
+            MethodInfo? methodInfo = type.GetMethod(methodName, MethodBindingFlags);
             if (methodInfo != null && methodInfo.GetBaseDefinition() == baseMethodInfo)
                 return true;
         }

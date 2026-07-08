@@ -31,7 +31,7 @@ public static class Extensions
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (!defExtCache.TryGetValue(gene.index, out DefModExtension_GeneWithComps defExt))
+                if (!defExtCache.TryGetValue(gene.index, out DefModExtension_GeneWithComps? defExt))
                 {
                     defExt = gene.GetModExtension<DefModExtension_GeneWithComps>();
                     defExtCache.Add(gene.index, defExt);
@@ -804,7 +804,7 @@ public static class Extensions
 
         public bool ChemicalIsAllowedByGenes(ThingDef drug)
         {
-            ChemicalDef chemical = DrugStatsUtility.GetChemical(drug);
+            ChemicalDef? chemical = DrugStatsUtility.GetChemical(drug);
             if (chemical == null)
                 return true;
 

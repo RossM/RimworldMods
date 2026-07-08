@@ -8,7 +8,7 @@ namespace Xylib;
 [PublicAPI]
 public static class Analyzer
 {
-    private static readonly string name = typeof(Analyzer).FullName;
+    private static readonly string name = typeof(Analyzer).FullName!;
 
     private static readonly Type[] defTypes =
     [
@@ -84,7 +84,7 @@ public static class Analyzer
                     Log.Warning($"[{name}] {type.FullName}::{method.Name} should be named with _Transpiler");
 
                 var parameters = method.GetParameters();
-                ParameterInfo resultParameter = parameters.SingleOrDefault(p => p.Name == "__result");
+                ParameterInfo? resultParameter = parameters.SingleOrDefault(p => p.Name == "__result");
                 if (hasPrefix || hasInfixPrefix)
                 {
                     // A prefix __result parameter without 'out' might not be initialized, which results in the default

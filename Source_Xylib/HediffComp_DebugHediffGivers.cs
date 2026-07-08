@@ -9,7 +9,7 @@ public class HediffComp_DebugHediffGivers : HediffComp
             yield break;
 
         var stage = parent.CurStage;
-        if (stage == null || stage.hediffGivers is not { Count: > 0 })
+        if (stage is not { hediffGivers.Count: > 0 })
             yield break;
 
         for (var index = 0; index < stage.hediffGivers.Count; index++)

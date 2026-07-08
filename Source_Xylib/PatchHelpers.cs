@@ -18,7 +18,7 @@ internal static class PatchHelpers
     {
         foreach (var type in GenTypes.AllTypesWithAttribute<DefGeneratorAttribute>())
         {
-            using var _ = new ProfileBlock(type.FullName);
+            using var _ = new ProfileBlock(type.FullName!);
 
             try
             {

@@ -37,9 +37,9 @@ public class DefModExtension_GeneWithComps : DefModExtension
     public IEnumerable<string> CustomEffectDescriptions => field ??= GetCustomEffectDescriptions().ToList();
 
     public Texture2D? ExtraIcon =>
-        field ??= string.IsNullOrEmpty(extraIconPath)
-            ? (parent as GeneDef)?.Icon
-            : ContentFinder<Texture2D>.Get(extraIconPath) ?? (parent as GeneDef)?.Icon;
+        field ??= extraIconPath is { Length: > 0 }
+            ? ContentFinder<Texture2D>.Get(extraIconPath) ?? (parent as GeneDef)?.Icon
+            : (parent as GeneDef)?.Icon;
 
     #region Properties of the gene itself
 
@@ -136,7 +136,9 @@ public class DefModExtension_GeneWithComps : DefModExtension
         var fieldDef = parent?.GetType().GetField("geneClass");
         if (fieldDef is null || fieldDef.FieldType != typeof(Type))
             yield return "parent is not GeneDef or GeneTemplateDef";
-        else if (!typeof(GeneWithComps).IsAssignableFrom((Type)fieldDef.GetValue(parent)))
+        else if (fieldDef.GetValue(parent!) is not Type type)
+            yield return "geneClass is null";
+        else if (!typeof(GeneWithComps).IsAssignableFrom(type))
             yield return "geneClass is not GeneExt or subclass thereof";
 
         if (comps is null)
@@ -164,7 +166,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
         Extensions.defExtCache.Clear();
 
         var fieldDef = parentDef.GetType().GetField("geneClass");
-        if (fieldDef != null && fieldDef.FieldType == typeof(Type) && (Type)fieldDef.GetValue(parentDef) == typeof(Gene))
+        if (fieldDef != null && fieldDef.FieldType == typeof(Type) && (Type?)fieldDef.GetValue(parentDef) == typeof(Gene))
             fieldDef.SetValue(parentDef, typeof(GeneWithComps));
 
         if (comps is null)
@@ -172,10 +174,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
         foreach (var comp in comps)
         {
-            if (comp is null)
-                continue;
-
-            comp.ResolveReferences(parentDef);
+            comp?.ResolveReferences(parentDef);
         }
     }
 

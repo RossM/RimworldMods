@@ -14,7 +14,7 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
     {
         GetVerbsAndTools(out var verbs, out var tools);
-        Pawn pawn = req.Pawn;
+        Pawn? pawn = req.Pawn;
 
         // Melee DPS & armor penetration
         {
@@ -60,9 +60,9 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
                 float dps = totalCooldown > 0f ? totalMeleeDamage / totalCooldown : 0f;
                 float armorPenetration = totalArmorPenetration / totalWeight;
 
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, StatDefOf.MeleeWeapon_AverageDPS,
+                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee!, StatDefOf.MeleeWeapon_AverageDPS!,
                     dps, req).SetReportText(sbDps.ToString());
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, XStatDefOf.MeleeWeapon_AverageArmorPenetration,
+                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee!, XStatDefOf.MeleeWeapon_AverageArmorPenetration,
                     armorPenetration, req).SetReportText(sbArmorPenetration.ToString());
             }
         }
@@ -125,7 +125,7 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
 
             List<BodyPartRecord> partsToAdd = [];
             List<BodyPartRecord> partsToRemove = [];
-            HediffDef hediffDef = hediffGiver.hediff;
+            HediffDef hediffDef = hediffGiver.hediff!;
             int partCount = 0;
 
             foreach (BodyPartRecord part in Pawn.def.race!.body!.AllParts!)
@@ -142,9 +142,8 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
 
                     if (hediff.def == hediffDef)
                         alreadyHasHediff = true;
-                    else if (typeof(Hediff_AddedPart).IsAssignableFrom(hediff.def.hediffClass))
-                        missingPart = true;
-                    else if (typeof(Hediff_MissingPart).IsAssignableFrom(hediff.def.hediffClass))
+                    else if (typeof(Hediff_AddedPart).IsAssignableFrom(hediff.def.hediffClass!) ||
+                             typeof(Hediff_MissingPart).IsAssignableFrom(hediff.def.hediffClass!))
                         missingPart = true;
                 }
 

@@ -52,7 +52,7 @@ public class GeneComp_ExtraApparel : GeneComp, IEventListener
             if (!Rand.Chance(item.chance))
                 continue;
 
-            if (PawnApparelGenerator.GenerateApparelOfDefFor(Pawn, item.item) is { } apparel && apparel.PawnCanWear(Pawn))
+            if (PawnApparelGenerator.GenerateApparelOfDefFor(Pawn, item.item!) is { } apparel && apparel.PawnCanWear(Pawn))
             {
                 PawnApparelGenerator.PostProcessApparel(apparel, Pawn);
                 PawnGenerator.PostProcessGeneratedGear(apparel, Pawn);

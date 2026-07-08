@@ -20,7 +20,7 @@ internal static class Patch_StartingPawnUtility
             CodeInstruction.LoadArgument(0),
             // Call GetExtraStartingItems
             CodeInstruction.Call(() => GetExtraStartingItems),
-        ]
+        ],
     };
 
     [Feature(nameof(EventDefOf.InGeneratePossessions))]

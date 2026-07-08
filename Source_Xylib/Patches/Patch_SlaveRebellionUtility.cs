@@ -24,7 +24,7 @@ internal static class Patch_SlaveRebellionUtility
             CodeInstruction.LoadArgument(0),
             // Call FinishExplanation
             CodeInstruction.Call(() => PatchHelpers.AddSlaveRebellionMtbFactorExplanation),
-        ]
+        ],
     };
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]

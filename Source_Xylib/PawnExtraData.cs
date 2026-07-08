@@ -80,7 +80,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
     ///     <see cref="ScribeLabelAttribute" />, its label will be used; otherwise, the full name of the type including
     ///     namespace will be used.
     /// </summary>
-    public static string ScribeLabel { get; } = typeof(T).TryGetAttribute<ScribeLabelAttribute>()?.label ?? typeof(T).FullName;
+    public static string ScribeLabel { get; } = typeof(T).TryGetAttribute<ScribeLabelAttribute>()?.label ?? typeof(T).FullName!;
 
     /// <summary>
     ///     Retrieves the data associated with a <see cref="Pawn" />, or creates it if it doesn't exist.
