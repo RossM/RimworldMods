@@ -162,7 +162,7 @@ public class GeneComp_Hyperlactation : GeneComp
         if (Props.milkedThoughts is { Count: > 0 })
         {
             foreach (var thoughtDef in Props.milkedThoughts)
-                Pawn.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);
+                Pawn.needs.mood?.thoughts.memories.TryGainMemory(thoughtDef, doer);
         }
     }
 }

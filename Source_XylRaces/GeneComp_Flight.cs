@@ -1,4 +1,6 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 public class GeneCompProperties_Flight : GeneCompProperties
 {
@@ -24,6 +26,12 @@ public class GeneComp_Flight : GeneComp, IEventListener
 
     public bool CanFlyNow => Pawn is { flight.CanFlyNow: true, Downed: false } && flightAllowedByApparel;
 
+    [MemberNotNullWhen(true, nameof(Flight))]
+    [MemberNotNullWhen(true, nameof(Pather))]
+    private bool Spawned => Pawn.Spawned;
+    private Pawn_FlightTracker? Flight => Pawn.flight;
+    private Pawn_PathFollower? Pather => Pawn.pather;
+
     public bool autoFly = true;
     public bool autoFlyDrafted = true;
 
@@ -41,9 +49,9 @@ public class GeneComp_Flight : GeneComp, IEventListener
 
     public override IEnumerable<Gizmo> CompGetGizmos()
     {
-        if (!parent.Active)
+        if (!Active)
             yield break;
-        if (!Pawn.Spawned)
+        if (!Spawned)
             yield break;
         if (!Pawn.IsColonistPlayerControlled)
             yield break;
@@ -52,7 +60,7 @@ public class GeneComp_Flight : GeneComp, IEventListener
         if (!flightAllowedByApparel)
         {
             List<string> items = [];
-            foreach (var item in Pawn.apparel.WornApparel)
+            foreach (var item in Pawn.apparel!.WornApparel!)
             {
                 if (!ApparelAllowsFlight(item.def))
                     items.Add(item.Label);
@@ -64,11 +72,11 @@ public class GeneComp_Flight : GeneComp, IEventListener
 
         yield return new Command_ActionWithCooldown
         {
-            action = () => { Pawn.flight.StartFlying(); },
+            action = () => { Flight.StartFlying(); },
             defaultLabel = "XylCommandFlyLabel".TranslateSimple(),
             defaultDesc = "XylCommandFlyDesc".TranslateSimple(),
             Disabled = !CanFlyNow,
-            cooldownPercentGetter = () => 1.0f - Pawn.flight.flightCooldownTicks / (Pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
+            cooldownPercentGetter = () => 1.0f - Flight.flightCooldownTicks / (Pawn.GetStatValue(StatDefOf.FlightCooldown) * 60f),
             icon = ExtraIcon,
             defaultDescPostfix = "\n\n" + $"""
                     {flyingDisabledBy}{"CooldownTime".TranslateSimple()}: {Pawn.GetStatValue(StatDefOf.FlightCooldown).ToStringDecimalIfSmall()}{"LetterSecond".TranslateSimple()}
@@ -105,17 +113,16 @@ public class GeneComp_Flight : GeneComp, IEventListener
 
     public override void CompTick()
     {
-        Pawn_FlightTracker flight = Pawn.flight;
-        if (flight == null)
+        if (!Spawned)
             return;
 
-        if (flight.Flying != wasFlying)
+        if (Flight.Flying != wasFlying)
         {
             Pawn.Drawer.renderer.SetAllGraphicsDirty();
             // This forces the pather to recalculate the current path
-            if (Pawn.pather.Moving)
+            if (Pawn.pather!.Moving)
                 Pawn.pather.TryResumePathingAfterLoading();
-            wasFlying = flight.Flying;
+            wasFlying = Flight.Flying;
         }
 
         if (!CanFlyNow)
@@ -124,18 +131,18 @@ public class GeneComp_Flight : GeneComp, IEventListener
         if (Pawn.IsPlayerControlled)
         {
             if ((Pawn.Drafted ? autoFlyDrafted : autoFly) &&
-                Pawn.pather.Moving &&
-                Pawn.Position.DistanceTo(Pawn.pather.Destination.Cell) >= Props.autoFlyMinDistance &&
+                Pather.Moving &&
+                Pawn.Position.DistanceTo(Pather.Destination.Cell) >= Props.autoFlyMinDistance &&
                 Pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
             {
-                flight.StartFlying();
+                Flight.StartFlying();
             }
         }
         else
         {
-            if (Pawn.pather.Moving && Pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
+            if (Pather.Moving && Pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
             {
-                flight.StartFlying();
+                Flight.StartFlying();
             }
         }
     }
@@ -148,6 +155,9 @@ public class GeneComp_Flight : GeneComp, IEventListener
     private void CheckApparel()
     {
         flightAllowedByApparel = true;
+        if (Pawn.apparel?.WornApparel is null)
+            return;
+
         foreach (var item in Pawn.apparel.WornApparel)
             flightAllowedByApparel &= ApparelAllowsFlight(item.def);
     }

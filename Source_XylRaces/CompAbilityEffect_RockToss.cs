@@ -20,6 +20,8 @@ public class CompProperties_AbilityRockToss : CompProperties_EffectWithDest
     {
         if (projectileDef is null)
             yield return $"{nameof(projectileDef)} is null";
+        else if (projectileDef.projectile is null)
+            yield return $"null {nameof(projectileDef.projectile)} in {nameof(projectileDef)}";
     }
 }
 
@@ -62,14 +64,14 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
                 if (forcedMissTarget != target.Cell)
                 {
                     projectile.Launch(pawn, pawn.DrawPos, forcedMissTarget, target, ProjectileHitFlags.NonTargetWorld,
-                        parent.verb.preventFriendlyFire);
+                        parent.verb?.preventFriendlyFire ?? false);
                     return;
                 }
             }
         }
 
         projectile.Launch(pawn, pawn.DrawPos, target, target, ProjectileHitFlags.IntendedTarget | ProjectileHitFlags.NonTargetWorld,
-            parent.verb.preventFriendlyFire);
+            parent.verb?.preventFriendlyFire ?? false);
     }
 
     public override bool Valid(LocalTargetInfo target, bool showMessages = false)
@@ -113,7 +115,7 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
         if (target.IsValid)
         {
             GenDraw.DrawTargetHighlight(target);
-            if (Props.projectileDef.projectile.explosionRadius > 0f)
+            if (Props.projectileDef.projectile!.explosionRadius > 0f)
             {
                 GenDraw.DrawRadiusRing(target.Cell, Props.projectileDef.projectile.explosionRadius, Color.white);
             }

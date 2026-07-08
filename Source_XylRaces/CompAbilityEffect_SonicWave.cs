@@ -30,7 +30,7 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
             var thingList = item.GetThingList(map);
             foreach (var targetPawn in thingList.OfType<Pawn>())
             {
-                if (!targetPawn.RaceProps!.IsFlesh)
+                if (!targetPawn.RaceProps.IsFlesh)
                     continue;
                 targetPawn.stances.stunner.StunFor(GetDurationSeconds(targetPawn).SecondsToTicks(), Pawn, addBattleLog: false);
             }
