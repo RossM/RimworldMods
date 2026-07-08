@@ -26,7 +26,7 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
             float totalArmorPenetration = 0f;
             float totalWeight = 0f;
 
-            foreach (var verb in VerbUtility.GetAllVerbProperties(verbs, tools).Where(v => v.verbProps.IsMeleeAttack))
+            foreach (var verb in VerbUtility.GetAllVerbProperties(verbs, tools).Where(v => v.verbProps?.IsMeleeAttack is true))
             {
                 float meleeDamage = verb.verbProps.AdjustedMeleeDamageAmount(verb.tool, pawn, null, null);
                 float cooldown = verb.verbProps.AdjustedCooldown(verb.tool, pawn, null, null);
@@ -40,8 +40,8 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
 
                 if (verb.tool != null)
                 {
-                    sbDps.AppendLine($"  {verb.tool.LabelCap} ({verb.ToolCapacity.label})");
-                    sbArmorPenetration.AppendLine($"  {verb.tool.LabelCap} ({verb.ToolCapacity.label})");
+                    sbDps.AppendLine($"  {verb.tool.LabelCap} ({verb.ToolCapacity?.label})");
+                    sbArmorPenetration.AppendLine($"  {verb.tool.LabelCap} ({verb.ToolCapacity?.label})");
                 }
                 else
                 {
@@ -128,7 +128,7 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
             HediffDef hediffDef = hediffGiver.hediff;
             int partCount = 0;
 
-            foreach (BodyPartRecord part in Pawn.def!.race.body.AllParts)
+            foreach (BodyPartRecord part in Pawn.def.race!.body!.AllParts!)
             {
                 if (!hediffGiver.partsToAffect.Contains(part.def))
                     continue;

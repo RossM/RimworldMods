@@ -12,4 +12,3 @@ global using TranspilerUtil;
 global using UnityEngine;
 global using Verse;
 global using Verse.AI;
-global using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;

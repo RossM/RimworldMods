@@ -39,13 +39,13 @@ internal static class Patch_StartingPawnUtility
     [InfixPatch("GeneratePossessions")]
     public static bool List_Add_Prefix(List<ThingDefCount> __instance, ThingDefCount item, Pawn pawn)
     {
-        var chemical = item.ThingDef.GetCompProperties<CompProperties_Drug>()?.chemical;
+        var chemical = item.ThingDef?.GetCompProperties<CompProperties_Drug>()?.chemical;
         return chemical == null || pawn.ChemicalIsAllowedByGenes(chemical);
     }
 
     public static void GetExtraStartingItems(Pawn pawn)
     {
-        var items = Find.GameInitData.startingPossessions[pawn];
+        var items = Find.GameInitData?.startingPossessions?[pawn];
         EventManager.Instance.Notify(EventDefOf.InGeneratePossessions, pawn, items);
     }
 }

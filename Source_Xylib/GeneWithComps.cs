@@ -144,7 +144,7 @@ public class GeneWithComps : Gene, IEventListener
     /// <summary>
     ///     Whether this gene is an endogene or xenogene.
     /// </summary>
-    public GeneType GeneType => geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
+    public GeneType GeneType => geneTypeInternal ??= pawn.genes!.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 
     private static readonly Dictionary<Type, bool> hasTickCache = new();
     private static readonly Dictionary<Type, bool> hasTickIntervalCache = new();
@@ -238,7 +238,7 @@ public class GeneWithComps : Gene, IEventListener
         {
             try
             {
-                comps[num].CompPostMake();
+                comps[num]!.CompPostMake();
             }
             catch (Exception ex)
             {
@@ -436,10 +436,12 @@ public class GeneWithComps : Gene, IEventListener
 
         for (var index = 0; index < DefExt.hediffGivers.Count; index++)
         {
-            HediffGiver hediffGiver = DefExt.hediffGivers[index];
+            HediffGiver? hediffGiver = DefExt.hediffGivers[index];
+            if (hediffGiver is null)
+                continue;
             yield return new Command_Action
             {
-                defaultLabel = $"DEV: Trigger {Label} ({hediffGiver.hediff.label}) #{index}",
+                defaultLabel = $"DEV: Trigger {Label} ({hediffGiver.hediff?.label}) #{index}",
                 action = () => hediffGiver.TryApply(pawn),
                 groupable = false,
             };

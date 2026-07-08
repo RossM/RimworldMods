@@ -17,6 +17,8 @@ internal static class Patch_Building_GeneExtractor
     public static MethodInfo? TargetMethod()
     {
         var type = AccessTools.TypeByName("RimWorld.Building_GeneExtractor");
+        if (type == null)
+            return null;
         foreach (var nestedType in type.GetNestedTypes(AccessTools.all))
         {
             if (!nestedType.Name.StartsWith("<>c"))

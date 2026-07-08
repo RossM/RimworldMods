@@ -8,12 +8,15 @@ public class HediffWithCompsExt : HediffWithComps
     private static readonly StringBuilder tipSb = new();
     protected HediffStage? curStageInternal;
 
-    public override HediffStage CurStage
+    public override HediffStage? CurStage
     {
         get
         {
             if (curStageInternal == null)
             {
+                if (def.stages?[CurStageIndex] is null)
+                    return null;
+
                 curStageInternal = def.stages[CurStageIndex].MemberwiseClone();
                 UpdateCurStage(curStageInternal);
             }
@@ -34,6 +37,9 @@ public class HediffWithCompsExt : HediffWithComps
 
     protected virtual void UpdateCurStage(HediffStage stage)
     {
+        if (comps is null)
+            return;
+
         foreach (var comp in comps)
         {
             if (comp is IHediffCompExt { CausesNoPain: true })
@@ -45,6 +51,9 @@ public class HediffWithCompsExt : HediffWithComps
     {
         if (!base.TendableNow(ignoreTimer))
             return false;
+
+        if (comps is null)
+            return true;
 
         foreach (var comp in comps)
         {
@@ -59,7 +68,7 @@ public class HediffWithCompsExt : HediffWithComps
     public override string GetTooltip(Pawn pawn, bool showHediffsDebugInfo)
     {
         tipSb.Clear();
-        HediffStage curStage = CurStage;
+        HediffStage? curStage = CurStage;
         if (!string.IsNullOrEmpty(LabelCap))
             tipSb.AppendTagged(LabelCap.Colorize(ColoredText.TipSectionTitleColor));
         string severityLabel = SeverityLabel;

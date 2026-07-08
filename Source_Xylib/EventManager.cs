@@ -658,8 +658,8 @@ public class EventManager
                 if (!record.target.TryGetTarget(out Thing target))
                     continue;
 
-                if (Notifications[record.eventDef.index]?.localCallbacks?.TryGetValue(target, out List<CallbackInfo> callbacks) is true)
-                    callbacks.RemoveAll(callback => callback.listener == listener);
+                if (Notifications[record.eventDef.index]?.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbacks) is true)
+                    callbacks!.RemoveAll(callback => callback.listener == listener);
             }
         }
 
@@ -711,7 +711,7 @@ public class EventManager
             if (target == null || !notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
                 return;
 
-            foreach (CallbackInfo callbackInfo in localCallbacks)
+            foreach (CallbackInfo callbackInfo in localCallbacks!)
             {
                 DoNotify(eventDef, callbackInfo, target, data);
             }
@@ -811,9 +811,9 @@ public class EventManager
         {
             // ReSharper disable SuspiciousTypeConversion.Global
             case Thing { Destroyed: true }:
-            case ThingComp t when t.parent.Destroyed:
+            case ThingComp { parent.Destroyed: true }:
             // ReSharper restore SuspiciousTypeConversion.Global
-            case MapComponent m when m.map.Disposed:
+            case MapComponent { map.Disposed: true }:
                 Log.Warning(
                     $"[EventManager] A destroyed thing got an event: {callbackInfo} ({eventDef.defName} on {target})");
                 return;
@@ -833,7 +833,7 @@ public class EventManager
                 Log.Error(
                     $"[EventManager] Exception notifying {callbackInfo} ({eventDef} on {target}): {exception}");
             }
-            else if (callbackInfo.listener != null)
+            else
             {
                 Log.ErrorOnce(
                     $"[EventManager] Exception notifying {callbackInfo} ({eventDef} on {target}). Suppressing further errors. Exception: {exception}",
@@ -865,7 +865,7 @@ public class EventManager
             {
                 foreach (Gene gene in pawn.genes?.GenesListForReading ?? Enumerable.Empty<Gene>())
                     CallRegistrationHandlers(gene);
-                foreach (Hediff hediff in pawn.health.hediffSet.hediffs ?? Enumerable.Empty<Hediff>())
+                foreach (Hediff hediff in pawn.health.hediffSet.hediffs)
                     CallRegistrationHandlers(hediff);
                 break;
             }

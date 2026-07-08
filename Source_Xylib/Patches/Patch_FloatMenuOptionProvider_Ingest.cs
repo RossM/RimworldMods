@@ -13,7 +13,7 @@ internal static class Patch_FloatMenuOptionProvider_Ingest
         out FloatMenuOption? __result)
     {
         __result = null;
-        if (clickedThing.def!.ingestible is not { showIngestFloatOption: true })
+        if (clickedThing.def.ingestible is not { showIngestFloatOption: true })
         {
             return true;
         }
@@ -58,7 +58,7 @@ internal static class Patch_FloatMenuOptionProvider_Ingest
 
         if (defExtension is { requiredGenesAny.Count: > 0 })
         {
-            __result = new FloatMenuOption($"{text}: {"XylRequiresGene".Translate(defExtension.requiredGenesAny[0].label)}", null);
+            __result = new FloatMenuOption($"{text}: {"XylRequiresGene".Translate(defExtension.requiredGenesAny[0]!.label)}", null);
             return false;
         }
 

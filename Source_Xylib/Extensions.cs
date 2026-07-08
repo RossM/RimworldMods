@@ -91,7 +91,7 @@ public static class Extensions
         /// <returns>
         ///     <see langword="true" /> if the pawn has an active matching gene; otherwise, <see langword="false" />.
         /// </returns>
-        public bool HasActiveGene(GeneDef def)
+        public bool HasActiveGene(GeneDef? def)
         {
             if (def == null || pawn.genes == null)
                 return false;
@@ -99,7 +99,7 @@ public static class Extensions
             IReadOnlyList<Gene> genes = pawn.GeneAndHediffCache.GetGenesWithDef(def);
             for (var index = 0; index < genes.Count; index++)
             {
-                Gene gene = genes[index];
+                Gene gene = genes[index]!;
                 if (gene.Active)
                     return true;
             }
@@ -140,7 +140,7 @@ public static class Extensions
                 IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    T gene = genes[index];
+                    T gene = genes[index]!;
                     if (gene.Active)
                         yield return gene;
                 }
@@ -171,7 +171,7 @@ public static class Extensions
                 IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    T gene = genes[index];
+                    T gene = genes[index]!;
                     if (gene.Active && predicate(gene))
                         yield return gene;
                 }
@@ -195,7 +195,7 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                T gene = genes[index];
+                T gene = genes[index]!;
                 if (gene.Active)
                     return gene;
             }
@@ -223,7 +223,7 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                T gene = genes[index];
+                T gene = genes[index]!;
                 if (gene.Active && predicate(gene))
                     return gene;
             }
@@ -248,7 +248,7 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                T gene = genes[index];
+                T gene = genes[index]!;
                 if (gene.Active)
                     return true;
             }
@@ -276,7 +276,7 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                T gene = genes[index];
+                T gene = genes[index]!;
                 if (gene.Active && predicate(gene))
                     return true;
             }
@@ -318,7 +318,7 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    GeneWithComps gene = genes[index];
+                    GeneWithComps gene = genes[index]!;
                     if (gene.Active)
                         yield return gene;
                 }
@@ -374,7 +374,7 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                GeneWithComps gene = genes[index];
+                GeneWithComps gene = genes[index]!;
                 if (gene.Active)
                     return gene;
             }
@@ -428,7 +428,7 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                GeneWithComps gene = genes[index];
+                GeneWithComps gene = genes[index]!;
                 if (gene.Active)
                     return true;
             }
@@ -517,7 +517,7 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    GeneWithComps gene = genes[index];
+                    GeneWithComps gene = genes[index]!;
                     if (!gene.Active)
                         continue;
 
@@ -545,7 +545,7 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                GeneWithComps gene = genes[index];
+                GeneWithComps gene = genes[index]!;
                 if (gene.Active)
                     return gene.GetComp<T>();
             }
@@ -574,7 +574,7 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                GeneWithComps gene = genes[index];
+                GeneWithComps gene = genes[index]!;
                 if (!gene.Active)
                     continue;
 
@@ -643,8 +643,8 @@ public static class Extensions
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                HediffWithComps hediff = hediffs[index];
-                if (predicate(hediff.GetComp<T>()))
+                HediffWithComps hediff = hediffs[index]!;
+                if (predicate(hediff.GetComp<T>()!))
                     yield return hediff;
             }
         }
@@ -678,8 +678,8 @@ public static class Extensions
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                HediffWithComps hediff = hediffs[index];
-                if (predicate(hediff.GetComp<T>()))
+                HediffWithComps hediff = hediffs[index]!;
+                if (predicate(hediff.GetComp<T>()!))
                     return hediff;
             }
 
@@ -715,8 +715,8 @@ public static class Extensions
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                HediffWithComps hediff = hediffs[index];
-                if (predicate(hediff.GetComp<T>()))
+                HediffWithComps hediff = hediffs[index]!;
+                if (predicate(hediff.GetComp<T>()!))
                     return true;
             }
 
@@ -780,13 +780,13 @@ public static class Extensions
             IReadOnlyList<Hediff> hediffs = pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                Hediff hediff = hediffs[index];
-                if (predicate(hediff.def.GetModExtension<T>()))
+                Hediff hediff = hediffs[index]!;
+                if (predicate(hediff.def.GetModExtension<T>()!))
                     yield return hediff;
             }
         }
 
-        public bool ChemicalIsAllowedByGenes(ChemicalDef chemicalDef)
+        public bool ChemicalIsAllowedByGenes(ChemicalDef? chemicalDef)
         {
             var defExtension = chemicalDef?.GetModExtension<DefModExtension_Chemical>();
             if (defExtension == null)

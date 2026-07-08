@@ -27,7 +27,7 @@ public class GeneComp_BonusGenes : GeneComp
 
     private GeneType AddedGeneType => Props.addedGeneType ?? parent.GeneType;
 
-    public List<Gene> addedGenes = [];
+    public List<Gene>? addedGenes = [];
 
     public override void CompExposeData()
     {
@@ -38,20 +38,21 @@ public class GeneComp_BonusGenes : GeneComp
     {
         var geneSet = Props.maker!.root!.Generate(Pawn, AddedGeneType);
 
-        foreach (var gene in geneSet.GenesListForReading!)
+        foreach (var gene in geneSet.GenesListForReading)
             AddGene(gene);
 
         if (Props.removeAfterAdding)
             Pawn.genes!.RemoveGene(parent);
     }
 
-    private void AddGene(GeneDef geneDef)
+    private void AddGene(GeneDef? geneDef)
     {
         if (geneDef == null)
             return;
-        if (Pawn.genes.GenesListForReading.Any(g => g.def == geneDef))
+        if (Pawn.genes!.GenesListForReading.Any(g => g.def == geneDef))
             return;
 
+        addedGenes ??= [];
         addedGenes.Add(Pawn.genes.AddGene(geneDef, AddedGeneType == GeneType.Xenogene));
     }
 
@@ -63,6 +64,6 @@ public class GeneComp_BonusGenes : GeneComp
             return;
 
         foreach (var gene in addedGenes)
-            Pawn.genes.RemoveGene(gene);
+            Pawn.genes!.RemoveGene(gene);
     }
 }

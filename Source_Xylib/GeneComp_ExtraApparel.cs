@@ -56,30 +56,29 @@ public class GeneComp_ExtraApparel : GeneComp, IEventListener
             {
                 PawnApparelGenerator.PostProcessApparel(apparel, Pawn);
                 PawnGenerator.PostProcessGeneratedGear(apparel, Pawn);
-                Pawn.apparel.Wear(apparel, dropReplacedApparel: false);
+                Pawn.apparel!.Wear(apparel, dropReplacedApparel: false);
             }
         }
     }
 
-    public static bool ValidApparel(Pawn pawn, ThingDef thing, bool ignoreRestrictions = false)
+    public static bool ValidApparel(Pawn pawn, ThingDef? thing, bool ignoreRestrictions = false)
     {
-        if (thing == null)
-            return false;
-
-        if (!thing.apparel.PawnCanWear(pawn))
+        if (thing?.apparel?.PawnCanWear(pawn) is not true)
             return false;
 
         if (ignoreRestrictions)
             return true;
 
-        if (pawn.kindDef.apparelTags is { Count: > 0 } &&
-            !pawn.kindDef.apparelTags.Any(tag => thing.apparel.tags.Contains(tag)))
+        List<string> apparelTags = thing.apparel.tags ?? [];
+
+        if (pawn.kindDef?.apparelTags is { Count: > 0 } &&
+            !pawn.kindDef.apparelTags.Any(apparelTags.Contains))
         {
             return false;
         }
 
-        if (pawn.kindDef.apparelDisallowTags is { Count: > 0 } &&
-            pawn.kindDef.apparelDisallowTags.Any(tag => thing.apparel.tags.Contains(tag)))
+        if (pawn.kindDef?.apparelDisallowTags is { Count: > 0 } &&
+            pawn.kindDef.apparelDisallowTags.Any(apparelTags.Contains))
         {
             return false;
         }

@@ -22,7 +22,7 @@ internal static class PatchHelpers
 
             try
             {
-                Type defType = type.TryGetAttribute<DefGeneratorAttribute>().defType;
+                Type defType = type.TryGetAttribute<DefGeneratorAttribute>()!.defType;
 
                 var impliedDefsMethodInfo = type.GetMethod("ImpliedDefs");
                 if (impliedDefsMethodInfo == null)

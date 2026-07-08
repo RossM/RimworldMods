@@ -43,7 +43,7 @@ public class HediffGiver_RandomExt : HediffGiver
     /// </summary>
     /// <param name="pawn">The pawn the hediff should be applied to, if triggered.</param>
     /// <param name="cause">The hediff that is a parent to this object, if any.</param>
-    public override void OnIntervalPassed(Pawn pawn, Hediff cause)
+    public override void OnIntervalPassed(Pawn pawn, Hediff? cause)
     {
         base.OnIntervalPassed(pawn, cause);
         float chanceFactor = ChanceFactor(pawn);
@@ -70,11 +70,11 @@ public class HediffGiver_RandomExt : HediffGiver
             return false;
         if (ModsConfig.IdeologyActive && !allowOnBeggars && pawn.kindDef == PawnKindDefOf.Beggar)
             return false;
-        if (pawn.ageTracker.CurLifeStage == LifeStageDefOf.HumanlikeBaby && Find.Storyteller.difficulty.babiesAreHealthy)
+        if (pawn.ageTracker.CurLifeStage == LifeStageDefOf.HumanlikeBaby && Find.Storyteller!.difficulty.babiesAreHealthy)
             return false;
-        if (pawn.genes != null && !pawn.genes.HediffGiversCanGive(hediff))
+        if (pawn.genes?.HediffGiversCanGive(hediff) is false)
             return false;
-        if (pawn.mutant != null && !pawn.mutant.HediffGiversCanGive(hediff))
+        if (pawn.mutant?.HediffGiversCanGive(hediff) is false)
             return false;
 
         return TryApplyInner(pawn, cause);

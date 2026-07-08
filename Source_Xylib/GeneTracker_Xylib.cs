@@ -21,7 +21,7 @@ public class GeneTracker_Xylib : GeneTracker
     /// </summary>
     public List<RenderNodeModifier>? renderNodeModifiers;
 
-    internal readonly List<RenderNodeModifier>[] renderNodeModifiersByType
+    internal readonly List<RenderNodeModifier>?[] renderNodeModifiersByType
         = new List<RenderNodeModifier>[Enum.GetValues(typeof(RenderNodeModifierType)).Length];
 
     /// <summary>
@@ -37,7 +37,7 @@ public class GeneTracker_Xylib : GeneTracker
         bodySizeFactor = 1f;
         healthScaleFactor = 1f;
         renderNodeModifiers?.Clear();
-        foreach (List<RenderNodeModifier> list in renderNodeModifiersByType)
+        foreach (List<RenderNodeModifier>? list in renderNodeModifiersByType)
             list?.Clear();
         unlockedBuildables?.Clear();
         unlockedRecipes?.Clear();

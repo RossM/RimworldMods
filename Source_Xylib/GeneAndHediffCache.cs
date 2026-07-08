@@ -51,7 +51,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (genesByType.TryGetValue(typeof(T), out IList value))
             return (List<T>)value!;
 
-        value = Pawn?.genes?.GenesListForReading.OfType<T>().ToList() ?? [];
+        value = Pawn.genes?.GenesListForReading.OfType<T>().ToList() ?? [];
         genesByType.Add(typeof(T), value);
         return (List<T>)value;
     }
@@ -73,7 +73,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (genesByDef.TryGetValue(def, out List<Gene> value))
             return value!;
 
-        value = Pawn?.genes?.GenesListForReading.Where(g => g.def == def).OrderByDescending(g => g.Active).ToList() ?? [];
+        value = Pawn.genes?.GenesListForReading.Where(g => g.def == def).OrderByDescending(g => g.Active).ToList() ?? [];
         genesByDef.Add(def, value);
         return value;
     }
@@ -92,7 +92,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (genesByComp.TryGetValue(typeof(T), out List<GeneWithComps> value))
             return value!;
 
-        value = Pawn?.genes?.GenesListForReading.OfType<GeneWithComps>().Where(g => g.GetComp<T>() != null).ToList() ?? [];
+        value = Pawn.genes?.GenesListForReading.OfType<GeneWithComps>().Where(g => g.GetComp<T>() != null).ToList() ?? [];
         genesByComp.Add(typeof(T), value);
         return value;
     }
@@ -111,7 +111,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (hediffsByType.TryGetValue(typeof(T), out IList value))
             return (List<T>)value!;
 
-        value = Pawn?.health?.hediffSet?.hediffs.OfType<T>().ToList() ?? [];
+        value = Pawn.health.hediffSet.hediffs.OfType<T>().ToList();
         hediffsByType.Add(typeof(T), value);
         return (List<T>)value;
     }
@@ -130,7 +130,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (hediffsByDef.TryGetValue(def, out List<Hediff> value))
             return value!;
 
-        value = Pawn?.health?.hediffSet?.hediffs.Where(g => g.def == def).ToList() ?? [];
+        value = Pawn.health.hediffSet.hediffs.Where(g => g.def == def).ToList();
         hediffsByDef.Add(def, value);
         return value;
     }
@@ -149,7 +149,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (hediffsByModExt.TryGetValue(typeof(T), out List<Hediff> value))
             return value!;
 
-        value = Pawn?.health?.hediffSet?.hediffs.Where(g => g.def.modExtensions?.OfType<T>().Any() is true).ToList() ?? [];
+        value = Pawn.health.hediffSet.hediffs.Where(g => g.def.modExtensions?.OfType<T>().Any() is true).ToList();
         hediffsByModExt.Add(typeof(T), value);
         return value;
     }
@@ -168,8 +168,8 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))
             return value!;
 
-        value = Pawn?.health?.hediffSet?.hediffs.OfType<HediffWithComps>().Where(hediff => hediff.comps?.OfType<T>().Any() is true)
-            .ToList() ?? [];
+        value = Pawn.health.hediffSet.hediffs.OfType<HediffWithComps>().Where(hediff => hediff.comps?.OfType<T>().Any() is true)
+            .ToList();
         hediffsByComp.Add(typeof(T), value);
         return value;
     }

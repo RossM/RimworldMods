@@ -39,7 +39,7 @@ public static class Analyzer
         {
             bool typeHasHarmony = type.HasAttribute<HarmonyPatch>();
 
-            if (typeHasHarmony && !(type.IsAbstract && type.IsSealed))
+            if (typeHasHarmony && type is not { IsAbstract: true, IsSealed: true })
                 Log.Warning($"[{name}] {type.FullName} should be static");
 
             foreach (MethodInfo method in type.GetMethods())

@@ -11,18 +11,21 @@ public abstract class GeneSetMaker
 
     public GeneSet Generate(Pawn pawn, GeneType geneType = GeneType.Xenogene)
     {
+        if (pawn.genes == null)
+            throw new ArgumentException("genes is null", nameof(pawn));
+
         var geneSet = new GeneSet();
         List<GeneDef> genes = geneSet.GenesListForReading;
 
         if (pawn.genes.Xenotype != null)
         {
-            foreach (var gene in pawn.genes.Xenotype.genes)
+            foreach (var gene in pawn.genes.Xenotype.genes!)
                 geneSet.AddGene(gene);
         }
 
         if (pawn.genes.CustomXenotype != null)
         {
-            foreach (var gene in pawn.genes.CustomXenotype.genes)
+            foreach (var gene in pawn.genes.CustomXenotype.genes!)
                 geneSet.AddGene(gene);
         }
 
@@ -69,7 +72,7 @@ public abstract class GeneSetMaker
             return false;
 
         // Aptitude-giving genes must not apply to only disabled skills
-        if (gene.aptitudes is { Count: > 0 } && gene.aptitudes.All(aptitude => pawn.skills.GetSkill(aptitude.skill).TotallyDisabled))
+        if (gene.aptitudes is { Count: > 0 } && gene.aptitudes.All(aptitude => pawn.skills?.GetSkill(aptitude.skill)?.TotallyDisabled is not false))
             return false;
 
         return true;
