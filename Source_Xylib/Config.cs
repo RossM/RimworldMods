@@ -4,6 +4,7 @@
 public class FoodGroupDef : Def
 {
     public FoodTypeFlags foodTypes;
+    public bool exact;
     public bool humanlike;
     public FleshTypeDef? fleshType;
 

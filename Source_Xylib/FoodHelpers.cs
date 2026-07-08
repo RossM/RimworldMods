@@ -18,8 +18,14 @@ public static class FoodHelpers
 
                 foreach (var food in DefDatabase<FoodGroupDef>.AllDefs)
                 {
-                    if (food.foodTypes != 0 && (food.foodTypes & flags) == 0)
+                    if (food.exact)
+                    {
+                        if (food.foodTypes != flags)
+                            continue;
+                    }
+                    else if (food.foodTypes != 0 && (food.foodTypes & flags) == 0)
                         continue;
+
                     if (food.humanlike && race?.Humanlike is not true)
                         continue;
                     if (food.fleshType != null && race?.FleshType != food.fleshType)

@@ -73,6 +73,7 @@
     <foodTypes>
       <li>Fungus</li>
     </foodTypes>
+    <exact>true</exact>
     <rawNutritionStat>XylRawFungusNutritionFactor</rawNutritionStat>
     <cookedNutritionStat>XylCookedFungusNutritionFactor</cookedNutritionStat>
     <rawFoodPoisonChanceStat>XylRawFungusFoodPoisonChanceFactor</rawFoodPoisonChanceStat>
