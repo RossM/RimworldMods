@@ -39,7 +39,7 @@ public interface IEventListener
     ///     <see cref="EventManager.Instance" />.
     /// </param>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-    public void RegisterWith(EventManager manager);
+    public void RegisterWith([NotNull] EventManager manager);
 
     /// <summary>
     ///     Called before a listener is removed from the <see cref="EventManager" />. Events registered directly by the
@@ -50,7 +50,7 @@ public interface IEventListener
     ///     The <see cref="EventManager" /> that should be unregistered with. This is always
     ///     <see cref="EventManager.Instance" />.
     /// </param>
-    public void PreUnregister(EventManager manager);
+    public void PreUnregister([NotNull] EventManager manager);
 }
 
 /// <summary>
@@ -279,8 +279,8 @@ public class EventManager
     private class NotificationInfo
     {
         public bool usesPriority = false;
-        public readonly List<CallbackInfo> globalCallbacks = [];
-        public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
+        [NotNull] public readonly List<CallbackInfo> globalCallbacks = [];
+        [NotNull] public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
     }
 
     /// <summary>
@@ -325,7 +325,7 @@ public class EventManager
     /// <summary>
     ///     Static listeners that have been registered since the last reset.
     /// </summary>
-    [Unsaved] private readonly HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
+    [Unsaved] [NotNull] private readonly HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
 
     /// <summary>
     ///     Callback registrations indexed by <c>EventDef.index</c>.
@@ -340,7 +340,7 @@ public class EventManager
     /// <summary>
     ///     Temporary callback list used when a notification needs priority ordering.
     /// </summary>
-    private readonly List<CallbackInfo> tempCallbacks = [];
+    [NotNull] private readonly List<CallbackInfo> tempCallbacks = [];
 
     /// <summary>
     ///     Gets the shared event manager instance.
@@ -730,7 +730,7 @@ public class EventManager
         tempCallbacks.Clear();
         tempCallbacks.AddRange(notificationInfo.globalCallbacks);
         if (target != null && notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
-            tempCallbacks.AddRange(localCallbacks);
+            tempCallbacks.AddRange(localCallbacks!);
         tempCallbacks.SortByDescending(callback => callback.priority);
 
         foreach (CallbackInfo callbackInfo in tempCallbacks)

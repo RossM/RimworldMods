@@ -10,11 +10,13 @@ namespace Xylib;
 [PublicAPI]
 public static class Extensions
 {
-    extension(Faction faction)
+    extension([NotNull] Faction faction)
     {
         /// <summary>
         ///     Gets all living pawns of the faction.
         /// </summary>
+        [NotNull]
+        [ItemNotNull]
         public IEnumerable<Pawn> AllAlivePawns =>
             faction == Faction.OfPlayer
                 ? PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction
@@ -50,11 +52,12 @@ public static class Extensions
         public T CompProps<T>() where T : GeneCompProperties => gene.Extension_GeneWithComps?.CompProps<T>();
     }
 
-    extension(Pawn pawn)
+    extension([NotNull] Pawn pawn)
     {
         /// <summary>
         ///     Gets the <see cref="GeneAndHediffCache" /> for the pawn.
         /// </summary>
+        [NotNull]
         public GeneAndHediffCache GeneAndHediffCache
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -81,7 +84,8 @@ public static class Extensions
         ///     The matching genes.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<Gene> AllGenesOfDef(GeneDef def) => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithDef(def);
+        [NotNull]
+        public IEnumerable<Gene> AllGenesOfDef([NotNull] GeneDef def) => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithDef(def);
 
         /// <summary>
         ///     Determines whether the pawn has an active gene with the specified def.
@@ -92,7 +96,7 @@ public static class Extensions
         /// <returns>
         ///     <see langword="true" /> if the pawn has an active matching gene; otherwise, <see langword="false" />.
         /// </returns>
-        public bool HasActiveGene(GeneDef def)
+        public bool HasActiveGene([NotNull] GeneDef def)
         {
             if (def == null || pawn.genes == null)
                 return false;
@@ -118,6 +122,7 @@ public static class Extensions
         ///     The matching genes.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [NotNull]
         public IEnumerable<T> AllGenesOfType<T>() where T : Gene => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>();
 
         /// <summary>
@@ -129,6 +134,7 @@ public static class Extensions
         /// <returns>
         ///     The matching active genes.
         /// </returns>
+        [NotNull]
         public IEnumerable<T> ActiveGenesOfType<T>() where T : Gene
         {
             if (pawn.genes == null)
@@ -136,6 +142,7 @@ public static class Extensions
 
             return Iterator();
 
+            [NotNull]
             IEnumerable<T> Iterator()
             {
                 IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
@@ -160,13 +167,15 @@ public static class Extensions
         /// <returns>
         ///     The matching active genes.
         /// </returns>
-        public IEnumerable<T> ActiveGenesOfType<T>(Func<T, bool> predicate) where T : Gene
+        [NotNull]
+        public IEnumerable<T> ActiveGenesOfType<T>([NotNull] Func<T, bool> predicate) where T : Gene
         {
             if (pawn.genes == null)
                 return [];
 
             return Iterator();
 
+            [NotNull]
             IEnumerable<T> Iterator()
             {
                 IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
@@ -188,6 +197,7 @@ public static class Extensions
         /// <returns>
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
+        [CanBeNull]
         public T FirstActiveGeneOfType<T>() where T : Gene
         {
             if (pawn.genes == null)
@@ -216,7 +226,8 @@ public static class Extensions
         /// <returns>
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
-        public T FirstActiveGeneOfType<T>(Func<T, bool> predicate) where T : Gene
+        [CanBeNull]
+        public T FirstActiveGeneOfType<T>([NotNull] Func<T, bool> predicate) where T : Gene
         {
             if (pawn.genes == null)
                 return null;
@@ -269,7 +280,7 @@ public static class Extensions
         /// <returns>
         ///     <see langword="true" /> if a matching active gene exists; otherwise, <see langword="false" />.
         /// </returns>
-        public bool HasActiveGeneOfType<T>(Func<T, bool> predicate) where T : Gene
+        public bool HasActiveGeneOfType<T>([NotNull] Func<T, bool> predicate) where T : Gene
         {
             if (pawn.genes == null)
                 return false;
@@ -295,6 +306,7 @@ public static class Extensions
         ///     Matching genes with <see cref="GeneComp" /> instances.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [NotNull]
         public IEnumerable<GeneWithComps> AllGenesWithComp<T>() where T : GeneComp =>
             pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithComp<T>();
 
@@ -307,6 +319,7 @@ public static class Extensions
         /// <returns>
         ///     Matching active genes with <see cref="GeneComp" /> instances.
         /// </returns>
+        [NotNull]
         public IEnumerable<GeneWithComps> ActiveGenesWithComp<T>() where T : GeneComp
         {
             if (pawn.genes == null)
@@ -314,6 +327,7 @@ public static class Extensions
 
             return Iterator();
 
+            [NotNull]
             IEnumerable<GeneWithComps> Iterator()
             {
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
@@ -339,13 +353,15 @@ public static class Extensions
         /// <returns>
         ///     Matching active genes with <see cref="GeneComp" /> instances.
         /// </returns>
-        public IEnumerable<GeneWithComps> ActiveGenesWithComp<T>(Func<T, bool> predicate) where T : GeneComp
+        [NotNull]
+        public IEnumerable<GeneWithComps> ActiveGenesWithComp<T>([NotNull] Func<T, bool> predicate) where T : GeneComp
         {
             if (pawn.genes == null)
                 return [];
 
             return Iterator();
 
+            [NotNull]
             IEnumerable<GeneWithComps> Iterator()
             {
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
@@ -367,6 +383,7 @@ public static class Extensions
         /// <returns>
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
+        [CanBeNull]
         public GeneWithComps FirstActiveGeneWithComp<T>() where T : GeneComp
         {
             if (pawn.genes == null)
@@ -396,7 +413,8 @@ public static class Extensions
         /// <returns>
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
-        public GeneWithComps FirstActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp
+        [CanBeNull]
+        public GeneWithComps FirstActiveGeneWithComp<T>([NotNull] Func<T, bool> predicate) where T : GeneComp
         {
             if (pawn.genes == null)
                 return null;
@@ -450,7 +468,7 @@ public static class Extensions
         /// <returns>
         ///     <see langword="true" /> if a matching active gene exists; otherwise, <see langword="false" />.
         /// </returns>
-        public bool HasActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp
+        public bool HasActiveGeneWithComp<T>([NotNull] Func<T, bool> predicate) where T : GeneComp
         {
             if (pawn.genes == null)
                 return false;
@@ -475,6 +493,7 @@ public static class Extensions
         /// <returns>
         ///     The matching <see cref="GeneComp" /> instances.
         /// </returns>
+        [NotNull]
         public IEnumerable<T> ActiveGeneCompsOfType<T>() where T : GeneComp
         {
             if (pawn.genes == null)
@@ -482,6 +501,7 @@ public static class Extensions
 
             return Iterator();
 
+            [NotNull]
             IEnumerable<T> Iterator()
             {
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
@@ -506,13 +526,15 @@ public static class Extensions
         /// <returns>
         ///     The matching <see cref="GeneComp" /> instances.
         /// </returns>
-        public IEnumerable<T> ActiveGeneCompsOfType<T>(Func<T, bool> predicate) where T : GeneComp
+        [NotNull]
+        public IEnumerable<T> ActiveGeneCompsOfType<T>([NotNull] Func<T, bool> predicate) where T : GeneComp
         {
             if (pawn.genes == null)
                 return [];
 
             return Iterator();
 
+            [NotNull]
             IEnumerable<T> Iterator()
             {
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
@@ -538,6 +560,7 @@ public static class Extensions
         /// <returns>
         ///     The first matching <see cref="GeneComp" />, or <see langword="null" /> if no match is found.
         /// </returns>
+        [CanBeNull]
         public T FirstActiveGeneCompOfType<T>() where T : GeneComp
         {
             if (pawn.genes == null)
@@ -567,7 +590,8 @@ public static class Extensions
         /// <returns>
         ///     The first matching <see cref="GeneComp" />, or <see langword="null" /> if no match is found.
         /// </returns>
-        public T FirstActiveGeneCompOfType<T>(Func<T, bool> predicate) where T : GeneComp
+        [CanBeNull]
+        public T FirstActiveGeneCompOfType<T>([NotNull] Func<T, bool> predicate) where T : GeneComp
         {
             if (pawn.genes == null)
                 return null;
@@ -597,6 +621,7 @@ public static class Extensions
         ///     The matching hediffs.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [NotNull]
         public IEnumerable<T> HediffsOfType<T>() where T : Hediff => pawn.GeneAndHediffCache.GetHediffsOfType<T>();
 
         /// <summary>
@@ -611,7 +636,8 @@ public static class Extensions
         /// <returns>
         ///     The matching hediffs.
         /// </returns>
-        public IEnumerable<T> HediffsOfType<T>(Func<T, bool> predicate) where T : Hediff => pawn.HediffsOfType<T>().Where(predicate);
+        [NotNull]
+        public IEnumerable<T> HediffsOfType<T>([NotNull] Func<T, bool> predicate) where T : Hediff => pawn.HediffsOfType<T>().Where(predicate);
 
         /// <summary>
         ///     Gets all hediffs on the pawn that have a <see cref="HediffComp" /> of the specified type.
@@ -623,6 +649,7 @@ public static class Extensions
         ///     Matching hediffs with <see cref="HediffComp" /> instances.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [NotNull]
         public IEnumerable<HediffWithComps> HediffsWithComp<T>() where T : HediffComp => pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
 
         /// <summary>
@@ -638,7 +665,8 @@ public static class Extensions
         /// <returns>
         ///     Matching hediffs with <see cref="HediffComp" /> instances.
         /// </returns>
-        public IEnumerable<HediffWithComps> HediffsWithComp<T>(Func<T, bool> predicate) where T : HediffComp
+        [NotNull]
+        public IEnumerable<HediffWithComps> HediffsWithComp<T>([NotNull] Func<T, bool> predicate) where T : HediffComp
         {
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
@@ -658,6 +686,7 @@ public static class Extensions
         /// <returns>
         ///     The first matching hediff, or <see langword="null" /> if no match is found.
         /// </returns>
+        [CanBeNull]
         public HediffWithComps FirstHediffWithComp<T>() where T : HediffComp => pawn.HediffsWithComp<T>().FirstOrDefault();
 
         /// <summary>
@@ -673,7 +702,8 @@ public static class Extensions
         /// <returns>
         ///     The first matching hediff, or <see langword="null" /> if no match is found.
         /// </returns>
-        public HediffWithComps FirstHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp
+        [CanBeNull]
+        public HediffWithComps FirstHediffWithComp<T>([NotNull] Func<T, bool> predicate) where T : HediffComp
         {
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
@@ -710,7 +740,7 @@ public static class Extensions
         /// <returns>
         ///     <see langword="true" /> if a matching hediff exists; otherwise, <see langword="false" />.
         /// </returns>
-        public bool HasHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp
+        public bool HasHediffWithComp<T>([NotNull] Func<T, bool> predicate) where T : HediffComp
         {
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
@@ -733,7 +763,8 @@ public static class Extensions
         ///     The matching hediffs.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerable<Hediff> HediffsWithDef(HediffDef def) => pawn.GeneAndHediffCache.GetHediffsWithDef(def);
+        [NotNull]
+        public IEnumerable<Hediff> HediffsWithDef([NotNull] HediffDef def) => pawn.GeneAndHediffCache.GetHediffsWithDef(def);
 
         /// <summary>
         ///     Gets all hediffs on the pawn with the specified def that satisfy a predicate.
@@ -747,7 +778,8 @@ public static class Extensions
         /// <returns>
         ///     The matching hediffs.
         /// </returns>
-        public IEnumerable<Hediff> HediffsWithDef(HediffDef def, Func<Hediff, bool> predicate) =>
+        [NotNull]
+        public IEnumerable<Hediff> HediffsWithDef([NotNull] HediffDef def, [NotNull] Func<Hediff, bool> predicate) =>
             pawn.HediffsWithDef(def).Where(predicate);
 
         /// <summary>
@@ -760,6 +792,7 @@ public static class Extensions
         ///     The matching hediffs.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [NotNull]
         public IEnumerable<Hediff> HediffsWithModExtension<T>() where T : DefModExtension =>
             pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
 
@@ -775,6 +808,7 @@ public static class Extensions
         /// <returns>
         ///     The matching hediffs.
         /// </returns>
+        [NotNull]
         public IEnumerable<Hediff> HediffsWithModExtension<T>(Func<T, bool> predicate) where T : DefModExtension
         {
             IReadOnlyList<Hediff> hediffs = pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
@@ -828,20 +862,24 @@ public static class Extensions
         }
     }
 
-    extension<T>(T obj)
+    extension<T>([NotNull] T obj)
     {
+        [NotNull]
         public T MemberwiseClone()
         {
             if (memberwiseCloneFn == null)
             {
                 var method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic)!;
-                memberwiseCloneFn = method.CreateDelegate<Func<object, object>>();
+                memberwiseCloneFn = method.CreateDelegate<MemberwiseCloneDelegate>();
             }
 
-            return (T)memberwiseCloneFn(obj);
+            return ((T)memberwiseCloneFn!(obj))!;
         }
     }
 
-    private static Func<object, object> memberwiseCloneFn;
-    public static readonly Dictionary<int, DefModExtension_GeneWithComps> defExtCache = new();
+    [NotNull]
+    private delegate object MemberwiseCloneDelegate([NotNull] object obj);
+
+    private static MemberwiseCloneDelegate memberwiseCloneFn;
+    [NotNull] public static readonly Dictionary<int, DefModExtension_GeneWithComps> defExtCache = new();
 }

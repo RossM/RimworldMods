@@ -123,8 +123,8 @@ internal static class PatchHelpers
 
     public static void AddDesignators(
         DesignationCategoryDef __instance,
-        ref IEnumerable<Designator> __result,
-        Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ideoBuildingDesignatorsCached)
+        [NotNull] ref IEnumerable<Designator> __result,
+        [NotNull] Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ideoBuildingDesignatorsCached)
     {
         HashSet<Designator> geneDesignators = [];
 
@@ -153,21 +153,21 @@ internal static class PatchHelpers
         }
     }
 
-    public static float GetHediffResistance(Pawn pawn, HediffDef def)
+    public static float GetHediffResistance([NotNull] Pawn pawn, [NotNull] HediffDef def)
     {
         resistanceStatByHediff ??= new Dictionary<HediffDef, StatDef>
         {
-            { HediffDefOf.BloodLoss, XStatDefOf.XylBloodLossResistance },
-            { HediffDefOf.DrugOverdose, XStatDefOf.XylDrugOverdoseResistance },
-            { HediffDefOf.Heatstroke, XStatDefOf.XylHeatstrokeResistance },
-            { HediffDefOf.Hypothermia, XStatDefOf.XylHypothermiaResistance },
-            { HediffDefOf.Malnutrition, XStatDefOf.XylMalnutritionResistance },
+            { HediffDefOf.BloodLoss!, XStatDefOf.XylBloodLossResistance },
+            { HediffDefOf.DrugOverdose!, XStatDefOf.XylDrugOverdoseResistance },
+            { HediffDefOf.Heatstroke!, XStatDefOf.XylHeatstrokeResistance },
+            { HediffDefOf.Hypothermia!, XStatDefOf.XylHypothermiaResistance },
+            { HediffDefOf.Malnutrition!, XStatDefOf.XylMalnutritionResistance },
         };
 
         return resistanceStatByHediff.TryGetValue(def, out var stat) ? pawn.GetStatValue(stat) : 0f;
     }
 
-    public static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
+    public static List<GeneDef> FilterGenes([NotNull] List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
     {
         if (ignoreRestrictions)
             return genes;

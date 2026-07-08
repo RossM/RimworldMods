@@ -16,12 +16,18 @@ public class HediffCompProperties_Genetic : HediffCompPropertiesExt
     {
         return showStats && gene.Extension_GeneWithComps is { } geneWithComps ? geneWithComps.SpecialDisplayStats(request) : [];
     }
+
+    public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
+    {
+        if (gene is null)
+            yield return "gene is null";
+    }
 }
 
 [PublicAPI]
 public class HediffComp_Genetic : HediffComp
 {
-    public HediffCompProperties_Genetic Props => (HediffCompProperties_Genetic)props;
+    [NotNull] public HediffCompProperties_Genetic Props => (HediffCompProperties_Genetic)props;
 
-    public override bool CompShouldRemove => !Pawn.HasActiveGene(Props.gene);
+    public override bool CompShouldRemove => !Pawn!.HasActiveGene(Props.gene!);
 }

@@ -96,9 +96,12 @@ public class GeneSetMakerWeight
 [PublicAPI]
 public class GeneSetMaker_Option : GeneSetMaker
 {
-    public override int BiostatMetForDisplay => count.min * Mathf.Clamp(0,
-        options.Min(o => o.maker.BiostatMetForDisplay),
-        options.Max(o => o.maker.BiostatMetForDisplay));
+    public override int BiostatMetForDisplay =>
+        options is not null
+            ? count.min * Mathf.Clamp(0,
+                options.Min(o => o.maker.BiostatMetForDisplay),
+                options.Max(o => o.maker.BiostatMetForDisplay))
+            : 0;
 
     public List<GeneSetMakerWeight> options;
 
@@ -112,6 +115,13 @@ public class GeneSetMaker_Option : GeneSetMaker
     {
         foreach (var error in base.ConfigErrors())
             yield return error;
+
+        if (options is null)
+        {
+            yield return "options is null";
+            yield break;
+        }
+
         foreach (var option in options)
         {
             if (option.maker == null)
@@ -192,6 +202,9 @@ public class GeneSetMaker_List : GeneSetMaker
         if (count.min <= 0)
             return 0;
 
+        if (genes == null)
+            throw new InvalidOperationException();
+
         List<int> metList = genes.Select(g => g.biostatMet).ToList();
         int minTotal = metList.OrderBy(m => m).Take(count.min).Sum();
         int maxTotal = metList.OrderByDescending(m => m).Take(count.min).Sum();
@@ -200,6 +213,9 @@ public class GeneSetMaker_List : GeneSetMaker
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
+        if (genes == null)
+            throw new InvalidOperationException();
+
         genesTemp.Clear();
         genesTemp.AddRange(genes);
         genesTemp.Shuffle();
@@ -215,5 +231,11 @@ public class GeneSetMaker_List : GeneSetMaker
                     return;
             }
         }
+    }
+
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (genes is null)
+            yield return "genes is null";
     }
 }

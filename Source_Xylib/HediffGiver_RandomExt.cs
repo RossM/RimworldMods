@@ -45,6 +45,7 @@ public class HediffGiver_RandomExt : HediffGiver
     /// <param name="cause">The hediff that is a parent to this object, if any.</param>
     public override void OnIntervalPassed(Pawn pawn, Hediff cause)
     {
+        base.OnIntervalPassed(pawn, cause);
         float chanceFactor = ChanceFactor(pawn);
         if (chanceFactor != 0f && Rand.MTBEventOccurs(mtbDays / chanceFactor, GenDate.TicksPerDay, 60f) && TryApply(pawn, cause))
         {
@@ -59,7 +60,7 @@ public class HediffGiver_RandomExt : HediffGiver
     /// <param name="pawn">The pawn the hediff should be applied to.</param>
     /// <param name="cause">The hediff that is a parent to this object, if any.</param>
     /// <returns></returns>
-    public bool TryApply(Pawn pawn, Hediff cause)
+    public bool TryApply([NotNull] Pawn pawn, [CanBeNull] Hediff cause)
     {
         if (!allowOnLodgers && pawn.IsQuestLodger())
             return false;
@@ -73,13 +74,13 @@ public class HediffGiver_RandomExt : HediffGiver
             return false;
         if (pawn.genes != null && !pawn.genes.HediffGiversCanGive(hediff))
             return false;
-        if (pawn.IsMutant && !pawn.mutant.HediffGiversCanGive(hediff))
+        if (pawn.mutant != null && !pawn.mutant.HediffGiversCanGive(hediff))
             return false;
 
         return TryApplyInner(pawn, cause);
     }
 
-    private bool TryApplyInner(Pawn pawn, Hediff cause)
+    private bool TryApplyInner([NotNull] Pawn pawn, [CanBeNull] Hediff cause)
     {
         if (canAffectAnyLivePart || partsToAffect != null)
         {

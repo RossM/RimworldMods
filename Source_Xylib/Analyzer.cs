@@ -135,7 +135,7 @@ public static class Analyzer
         }
     }
 
-    public static void CheckCodingStyle(Assembly assembly)
+    public static void CheckCodingStyle([NotNull] Assembly assembly)
     {
         CheckCodingStyle_Patches(assembly);
         CheckCodingStyle_Defs(assembly);

@@ -25,7 +25,7 @@ public static class ReflectionHelpers
     /// <exception cref="ArgumentException">
     ///     Thrown when <paramref name="methodName" /> is not a method on <paramref name="baseType" />.
     /// </exception>
-    public static bool HasOverridingMethod(Type childType, Type baseType, string methodName)
+    public static bool HasOverridingMethod([NotNull] Type childType, [NotNull] Type baseType, [NotNull] string methodName)
     {
         var baseMethodInfo = baseType.GetMethod(methodName, MethodBindingFlags);
         if (baseMethodInfo == null)
@@ -46,10 +46,10 @@ public static class ReflectionHelpers
     {
         TableDataGetter<Type>[] columns =
         [
-            new("class", type => type.FullName),
-            new("BaseType", type => type.BaseType?.FullName),
-            new("CompTick", type => HasOverridingMethod(type, typeof(GeneComp), "CompTick")),
-            new("CompTickInterval", type => HasOverridingMethod(type, typeof(GeneComp), "CompTickInterval")),
+            new("class", type => type!.FullName),
+            new("BaseType", type => type!.BaseType?.FullName),
+            new("CompTick", type => HasOverridingMethod(type!, typeof(GeneComp), "CompTick")),
+            new("CompTickInterval", type => HasOverridingMethod(type!, typeof(GeneComp), "CompTickInterval")),
         ];
 
         DebugTables.MakeTablesDialog(typeof(GeneComp).AllSubclassesNonAbstract(), columns);

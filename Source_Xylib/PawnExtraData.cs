@@ -39,6 +39,9 @@ public static class PawnExtraData<T> where T : IPawnData, new()
 
         private void Notify_PawnDiscarded(Thing thing)
         {
+            if (thing is not Pawn)
+                return;
+
             data.Remove(thing.thingIDNumber);
         }
 
@@ -61,9 +64,9 @@ public static class PawnExtraData<T> where T : IPawnData, new()
         }
     }
 
-    private static readonly Dictionary<int, T> data = new();
+    [NotNull] private static readonly Dictionary<int, T> data = new();
 
-    private static readonly Listener listener = new();
+    [NotNull] private static readonly Listener listener = new();
 
     static PawnExtraData()
     {
@@ -83,7 +86,8 @@ public static class PawnExtraData<T> where T : IPawnData, new()
     /// <param name="pawn">The pawn to get the data for.</param>
     /// <returns>The data for the pawn.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Get(Pawn pawn)
+    [NotNull]
+    public static T Get([NotNull] Pawn pawn)
     {
         if (!data.TryGetValue(pawn.thingIDNumber, out T result))
         {
@@ -92,10 +96,10 @@ public static class PawnExtraData<T> where T : IPawnData, new()
             data.Add(pawn.thingIDNumber, result);
         }
 
-        return result;
+        return result!;
     }
 
-    private static void ExposeData(Pawn pawn)
+    private static void ExposeData([NotNull] Pawn pawn)
     {
         if (!data.TryGetValue(pawn.thingIDNumber, out T value))
             value = default(T);

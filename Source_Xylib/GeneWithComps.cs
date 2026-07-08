@@ -32,12 +32,14 @@ public class GeneComp
     /// <summary>
     ///     The gene this component is attached to.
     /// </summary>
-    [Unsaved] public GeneWithComps parent;
+    // ReSharper disable once NotNullOrRequiredMemberIsNotInitialized
+    [Unsaved] [NotNull] public GeneWithComps parent;
 
     /// <summary>
     ///     The properties for this component, as defined in XML.
     /// </summary>
-    [Unsaved] public GeneCompProperties props;
+    // ReSharper disable once NotNullOrRequiredMemberIsNotInitialized
+    [Unsaved] [NotNull] public GeneCompProperties props;
 
     /// <summary>
     ///     Called after the gene is created and initialized, but before it is added to the pawn.

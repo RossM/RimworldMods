@@ -108,7 +108,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
         }
     }
 
-    protected virtual IEnumerable<string> GetCustomEffectDescriptions()
+    [NotNull] protected virtual IEnumerable<string> GetCustomEffectDescriptions()
     {
         if (comps != null)
         {
