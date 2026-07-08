@@ -19,7 +19,7 @@ public class JobDriver_TakeShower : JobDriver
         this.FailOnDespawnedOrNull(TargetIndex.A);
         yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.InteractionCell);
 
-        var need_wetness = pawn.needs?.TryGetNeed<Need_Wetness>();
+        var need_wetness = pawn.needs.TryGetNeed<Need_Wetness>();
 
         Toil toil = ToilMaker.MakeToil();
         toil.defaultCompleteMode = ToilCompleteMode.Delay;
@@ -31,7 +31,7 @@ public class JobDriver_TakeShower : JobDriver
         });
         toil.initAction = () =>
         {
-            if (pawn.health?.hediffSet != null && pawn.health.hediffSet.TryGetHediff(HediffDefOf.Heatstroke, out var hediff))
+            if (pawn.health.hediffSet.TryGetHediff(HediffDefOf.Heatstroke, out var hediff))
                 pawn.health.RemoveHediff(hediff);
         };
         toil.tickIntervalAction = delta =>

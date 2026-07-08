@@ -72,7 +72,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
             return false;
 
         // Bathing in marsh is icky, only do it if really necessary.
-        if (terrain.HasTag("WaterMarshy") && pawn.needs?.TryGetNeed<Need_Wetness>() is { CurCategory: >= WetnessCategory.Neutral })
+        if (terrain.HasTag("WaterMarshy") && pawn.needs.TryGetNeed<Need_Wetness>() is { CurCategory: >= WetnessCategory.Neutral })
             return false;
 
         return Need_Wetness.GetWetness(x, pawn.Map) >= 0.5f;
@@ -149,7 +149,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
 
     public override float GetPriority(Pawn pawn)
     {
-        var need_wetness = pawn.needs?.TryGetNeed<Need_Wetness>();
+        var need_wetness = pawn.needs.TryGetNeed<Need_Wetness>();
         if (need_wetness == null)
             return 0.0f;
 

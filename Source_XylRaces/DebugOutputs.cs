@@ -148,7 +148,7 @@ public static class DebugOutputs
         {
             var memeDef = def;
 
-            columns.Add(new((string)memeDef.LabelCap, (FactionDef factionDef) =>
+            columns.Add(new((string)memeDef.LabelCap, factionDef =>
             {
                 if (factionDef.requiredMemes?.Contains(memeDef) is true)
                     return "Req";

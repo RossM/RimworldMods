@@ -6,13 +6,13 @@ public static class PawnExtensions
 {
     extension(Pawn pawn)
     {
-        public Hediff LactationHediff => pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
+        public Hediff? LactationHediff => pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
 
         public bool HasActivePsycastGene => pawn.GeneTracker_XylXenos?.hasPsycast is true;
 
         public bool NeedsPsyfocus =>
             // HasPsylink is patched to respect psycast genes
-            pawn.HasPsylink && !pawn.Suspended && (pawn.Spawned || pawn.IsCaravanMember());
+            pawn is { HasPsylink: true, Suspended: false } && (pawn.Spawned || pawn.IsCaravanMember());
 
         public GeneTracker_XylXenos? GeneTracker_XylXenos
         {

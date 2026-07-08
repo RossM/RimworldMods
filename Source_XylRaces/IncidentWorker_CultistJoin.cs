@@ -3,7 +3,7 @@
 [UsedFromXml]
 public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
 {
-    public override Pawn GeneratePawn(Map map)
+    public override Pawn GeneratePawn(Map? map)
     {
         Gender? gender = null;
         if (def.pawnFixedGender != Gender.None)
@@ -13,7 +13,7 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
         if (ModsConfig.IdeologyActive)
             ideo = GetRandomIdeo();
 
-        XenotypeDef xenotype = XenotypeHelpers.GetRandomXenotypeNotInColony();
+        XenotypeDef? xenotype = XenotypeHelpers.GetRandomXenotypeNotInColony();
 
         var pawnGenerationRequest = new PawnGenerationRequest(kind: def.pawnKind,
             faction: Faction.OfPlayer,

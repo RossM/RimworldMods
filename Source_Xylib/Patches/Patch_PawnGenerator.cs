@@ -27,7 +27,7 @@ internal static class Patch_PawnGenerator
     public static void GiveAppropriateBioAndNameTo_Prefix(
         Pawn pawn,
         PawnGenerationRequest request,
-        ref XenotypeDef xenotype)
+        ref XenotypeDef? xenotype)
     {
         var data = new PawnGenerationData(request, xenotype);
         EventManager.Instance.Notify(EventDefOf.PreGeneratePawnBioAndName, pawn, data);

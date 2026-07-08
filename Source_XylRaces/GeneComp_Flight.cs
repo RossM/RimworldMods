@@ -18,12 +18,11 @@ public class DefModExtension_Thing_Flight : DefModExtension
 
 public class GeneComp_Flight : GeneComp, IEventListener
 {
-    [NotNull]
     public GeneCompProperties_Flight Props => (GeneCompProperties_Flight)props;
 
     public Texture2D? ExtraIcon => parent.DefExt.ExtraIcon;
 
-    public bool CanFlyNow => Pawn is { flight: { CanFlyNow: true }, Downed: false } && flightAllowedByApparel;
+    public bool CanFlyNow => Pawn is { flight.CanFlyNow: true, Downed: false } && flightAllowedByApparel;
 
     public bool autoFly = true;
     public bool autoFlyDrafted = true;
@@ -180,7 +179,7 @@ public class GeneComp_Flight : GeneComp, IEventListener
     // This would be unfortunate, so try to move the pawn to a better position.
     public void Notify_Downed()
     {
-        if (Pawn.Flying && Pawn.Downed && !Pawn.Position.WalkableBy(Pawn.Map, Pawn))
+        if (Pawn is { Flying: true, Downed: true } && !Pawn.Position.WalkableBy(Pawn.Map, Pawn))
         {
             var newCell = CellFinder.StandableCellNear(Pawn.Position, Pawn.Map, 5f);
             if (newCell != IntVec3.Invalid)

@@ -1,11 +1,12 @@
-﻿namespace XylXenos;
+﻿// ReSharper disable MemberCanBeMadeStatic.Global
+namespace XylXenos;
 
 [StaticConstructorOnStartup]
 public static class StaticEventHandlers
 {
-    public class Listener : IEventListener
+    private class Listener : IEventListener
     {
-        public void Notify_PawnGenerationEarly(Thing? thing, PawnGenerationData data)
+        private void Notify_PawnGenerationEarly(Thing? thing, PawnGenerationData data)
         {
             if (thing is not Pawn pawn)
                 return;
@@ -23,14 +24,14 @@ public static class StaticEventHandlers
         }
     }
 
-    public static readonly Listener listener = new();
+    private static readonly Listener listener = new();
 
     static StaticEventHandlers()
     {
         EventManager.AddStaticListener(listener);
     }
 
-    public static void ModifyGenderByGenes(Pawn pawn, PawnGenerationRequest request, XenotypeDef xenotype)
+    public static void ModifyGenderByGenes(Pawn pawn, PawnGenerationRequest request, XenotypeDef? xenotype)
     {
         if (request.FixedGender != null)
             return;

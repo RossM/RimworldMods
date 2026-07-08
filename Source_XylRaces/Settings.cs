@@ -90,7 +90,7 @@ public class Settings : ModSettings
         };
     }
 
-    public bool AllowBackerBackstoriesFor(XenotypeDef xenotypeDef)
+    public bool AllowBackerBackstoriesFor(XenotypeDef? xenotypeDef)
     {
         return allowBackerBackstories switch
         {

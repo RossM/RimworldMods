@@ -39,7 +39,7 @@ public static class Patch_PawnGenerator
     [Feature(typeof(XenotypeSetWithDefault))]
     [InfixPostfix(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
     [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
-    public static void XenotypeDefOf_Baseliner_Postfix(FactionDef factionDef, Faction faction, ref XenotypeDef __result)
+    public static void XenotypeDefOf_Baseliner_Postfix(FactionDef? factionDef, Faction? faction, ref XenotypeDef? __result)
     {
         __result = ((faction?.def ?? factionDef)?.xenotypeSet).DefaultXenotype;
     }

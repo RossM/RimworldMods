@@ -10,7 +10,7 @@ public class JobDriver_Soak : JobDriver
 
     protected override IEnumerable<Toil> MakeNewToils()
     {
-        var need_wetness = pawn.needs?.TryGetNeed<Need_Wetness>();
+        var need_wetness = pawn.needs.TryGetNeed<Need_Wetness>();
 
         Toil goToil = Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
         goToil.tickIntervalAction = _ =>
@@ -34,8 +34,7 @@ public class JobDriver_Soak : JobDriver
         Toil toil3 = ToilMaker.MakeToil();
         toil3.initAction = () =>
         {
-            if (pawn.health?.hediffSet != null &&
-                pawn.health.hediffSet.TryGetHediff(HediffDefOf.Heatstroke, out var hediff))
+            if (pawn.health.hediffSet.TryGetHediff(HediffDefOf.Heatstroke, out var hediff))
                 pawn.health.RemoveHediff(hediff);
 
             if (!JobGiver_GetWetness.TryFindWaterTile(pawn, out IntVec3 targetTile, 10))

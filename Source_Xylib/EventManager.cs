@@ -10,7 +10,7 @@
 ///     The xenotype chosen for the pawn.
 /// </param>
 [PublicAPI]
-public class PawnGenerationData(PawnGenerationRequest request, XenotypeDef xenotype)
+public class PawnGenerationData(PawnGenerationRequest request, XenotypeDef? xenotype)
 {
     /// <summary>
     ///     The request being used to generate the pawn.
@@ -20,7 +20,7 @@ public class PawnGenerationData(PawnGenerationRequest request, XenotypeDef xenot
     /// <summary>
     ///     The xenotype chosen for the pawn.
     /// </summary>
-    public XenotypeDef xenotype = xenotype;
+    public XenotypeDef? xenotype = xenotype;
 }
 
 /// <summary>

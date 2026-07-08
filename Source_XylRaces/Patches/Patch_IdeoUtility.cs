@@ -14,7 +14,7 @@ public static class Patch_IdeoUtility
         if (xenotypeSet == null)
             return true;
 
-        var precept = (Precept_Xenotype)ideo.GetPrecept(PreceptDefOf.PreferredXenotype);
+        var precept = (Precept_Xenotype?)ideo.GetPrecept(PreceptDefOf.PreferredXenotype);
         if (precept == null)
             return true;
 

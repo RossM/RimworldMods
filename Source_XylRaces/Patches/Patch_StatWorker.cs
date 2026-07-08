@@ -199,13 +199,13 @@ public static class Patch_StatWorker
     public static void AppendSubstitutionDescription(
         StringBuilder sb,
         string whitespace,
-        Hediff_SubstituteCapacity foundHediff)
+        Hediff_SubstituteCapacity? foundHediff)
     {
         if (foundHediff != null)
             sb.AppendLine($"{whitespace}        {foundHediff.GetDescription()}");
     }
 
-    public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity foundHediff, PawnCapacityDef capacity)
+    public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity? foundHediff, PawnCapacityDef capacity)
     {
         if (foundHediff != null)
             capacity = foundHediff.DefExt.substituteCapacity;

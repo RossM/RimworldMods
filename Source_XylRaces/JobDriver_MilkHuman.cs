@@ -17,14 +17,14 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
         Scribe_Values.Look(ref gatherProgress, nameof(gatherProgress));
     }
 
-    public override bool ValidateTarget(Pawn target)
+    public override bool ValidateTarget(Pawn? target)
     {
         return target?.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>() is { ReadyToMilk: true };
     }
 
     private void Gather(Pawn doer)
     {
-        var comp = Target.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>();
+        var comp = Target?.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>();
         if (comp == null)
             return;
 

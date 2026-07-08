@@ -2,12 +2,13 @@
 
 public abstract class JobDriver_InteractWithPawn : JobDriver
 {
-    public Pawn Target => TargetPawnA;
+    // ReSharper disable once MemberCanBeProtected.Global
+    public Pawn? Target => TargetPawnA;
     protected new abstract SkillDef ActiveSkill { get; }
     protected abstract bool HasProgressBar { get; }
     protected abstract float Progress { get; }
 
-    public abstract bool ValidateTarget(Pawn target);
+    public abstract bool ValidateTarget(Pawn? target);
 
     protected abstract void InteractionTickInterval(Toil toil, int delta);
 

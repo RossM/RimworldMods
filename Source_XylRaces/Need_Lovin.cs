@@ -7,7 +7,7 @@ public class Need_Lovin(Pawn pawn) : Need(pawn)
 
     // During loading, SetInitialLevel can be called before the pawn is fully loaded, resulting in a hediff with pawn == null. If we do anything with
     // such a hediff we'll get a NullReferenceException, so here we verify that the hediff is valid before returning it.
-    public Hediff_LovinAddiction LovinAddictionHediff => pawn.HediffsOfType<Hediff_LovinAddiction>().SingleOrDefault(h => h.pawn != null);
+    public Hediff_LovinAddiction? LovinAddictionHediff => pawn.HediffsOfType<Hediff_LovinAddiction>().SingleOrDefault(h => h.pawn != null);
 
     public const float ThreshSatisfied = 0.01f;
 

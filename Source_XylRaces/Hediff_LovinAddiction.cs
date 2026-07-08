@@ -3,7 +3,7 @@
 [UsedFromXml]
 public class Hediff_LovinAddiction : HediffWithCompsExt
 {
-    public Need_Lovin Need => field ??= pawn.needs?.TryGetNeed<Need_Lovin>();
+    public Need_Lovin? Need => field ??= pawn!.needs.TryGetNeed<Need_Lovin>();
 
     public override int CurStageIndex => Need?.Satisfied is false ? 1 : 0;
 

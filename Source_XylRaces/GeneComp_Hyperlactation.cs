@@ -65,7 +65,7 @@ public class GeneComp_Hyperlactation : GeneComp
         Scribe_Values.Look(ref milkingCooldownDays, nameof(milkingCooldownDays), defaultValue: 1);
     }
 
-    private TaggedString LabelForFrequency(int days)
+    private static TaggedString LabelForFrequency(int days)
     {
         return days switch
         {
@@ -81,7 +81,7 @@ public class GeneComp_Hyperlactation : GeneComp
             yield break;
         if (!Pawn.Spawned)
             yield break;
-        if (!Pawn.IsColonistPlayerControlled && !Pawn.IsPrisonerOfColony)
+        if (Pawn is { IsColonistPlayerControlled: false, IsPrisonerOfColony: false })
             yield break;
         if (Pawn.Drafted)
             yield break;

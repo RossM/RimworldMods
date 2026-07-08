@@ -40,41 +40,38 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
 
     private void LaunchProjectile(LocalTargetInfo target)
     {
-        if (Props.projectileDef != null)
+        Pawn pawn = parent.pawn;
+        Projectile projectile = (Projectile)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map);
+        Log.Message($"projectile={projectile} ({projectile.GetType()}");
+        Thing thing = pawn.carryTracker.CarriedThing;
+        if (projectile.GetComp<CompThingContainer>()?.innerContainer.TryAddOrTransfer(thing) is not true)
         {
-            Pawn pawn = parent.pawn;
-            Projectile projectile = (Projectile)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map);
-            Log.Message($"projectile={projectile} ({projectile.GetType()}");
-            Thing thing = pawn.carryTracker.CarriedThing;
-            if (projectile.GetComp<CompThingContainer>()?.innerContainer.TryAddOrTransfer(thing) is not true)
-            {
-                Log.Warning("Failed to add thing to projectile: projectile={projectile} thing={thing}");
-                return;
-            }
+            Log.Warning("Failed to add thing to projectile: projectile={projectile} thing={thing}");
+            return;
+        }
 
-            if (Props.forcedMissRadius > 0.5f)
+        if (Props.forcedMissRadius > 0.5f)
+        {
+            float forcedMissRadius = Props.forcedMissRadius;
+            if (Props.applyMortarMissRadiusFactor)
+                forcedMissRadius *= pawn.GetStatValue(StatDefOf.MortarMissRadiusFactor);
+            forcedMissRadius = VerbUtility.CalculateAdjustedForcedMiss(forcedMissRadius, target.Cell - pawn.Position);
+            if (forcedMissRadius > 0.5f)
             {
-                float forcedMissRadius = Props.forcedMissRadius;
-                if (Props.applyMortarMissRadiusFactor)
-                    forcedMissRadius *= pawn.GetStatValue(StatDefOf.MortarMissRadiusFactor);
-                forcedMissRadius = VerbUtility.CalculateAdjustedForcedMiss(forcedMissRadius, target.Cell - pawn.Position);
-                if (forcedMissRadius > 0.5f)
+                int cellsInRadius = GenRadial.NumCellsInRadius(forcedMissRadius);
+                int patternIndex = Rand.Range(0, cellsInRadius);
+                IntVec3 forcedMissTarget = target.Cell + GenRadial.RadialPattern[patternIndex];
+                if (forcedMissTarget != target.Cell)
                 {
-                    int cellsInRadius = GenRadial.NumCellsInRadius(forcedMissRadius);
-                    int patternIndex = Rand.Range(0, cellsInRadius);
-                    IntVec3 forcedMissTarget = target.Cell + GenRadial.RadialPattern[patternIndex];
-                    if (forcedMissTarget != target.Cell)
-                    {
-                        projectile.Launch(pawn, pawn.DrawPos, forcedMissTarget, target, ProjectileHitFlags.NonTargetWorld,
-                            parent.verb.preventFriendlyFire);
-                        return;
-                    }
+                    projectile.Launch(pawn, pawn.DrawPos, forcedMissTarget, target, ProjectileHitFlags.NonTargetWorld,
+                        parent.verb.preventFriendlyFire);
+                    return;
                 }
             }
-
-            projectile.Launch(pawn, pawn.DrawPos, target, target, ProjectileHitFlags.IntendedTarget | ProjectileHitFlags.NonTargetWorld,
-                parent.verb.preventFriendlyFire);
         }
+
+        projectile.Launch(pawn, pawn.DrawPos, target, target, ProjectileHitFlags.IntendedTarget | ProjectileHitFlags.NonTargetWorld,
+            parent.verb.preventFriendlyFire);
     }
 
     public override bool Valid(LocalTargetInfo target, bool showMessages = false)
