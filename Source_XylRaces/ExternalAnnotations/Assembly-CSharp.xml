@@ -7,18 +7,20 @@
   <member name="T:LudeonTK.DebugOutputAttribute">
     <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.Ability.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.AbilityComp.parent">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.AbilityComp.props">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="T:RimWorld.DefOf">
     <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor(JetBrains.Annotations.ImplicitUseTargetFlags)">
       <argument>2</argument> <!-- ImplicitUseTargetFlags.Members -->
     </attribute>
   </member>
-  <member name="T:Verse.StaticConstructorOnStartup">
-    <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor"/>
-  </member>
-  <member name="P:RimWorld.XenotypeDef.AllGenes">
-    <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor"/>
-  </member>
-  
   <member name="P:RimWorld.Faction.OfPlayer">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -31,53 +33,24 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.IncidentWorker.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Need.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="P:RimWorld.Pawn_GeneTracker.Endogenes">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="P:RimWorld.Pawn_GeneTracker.Xenogenes">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.AI.Pawn_MindState.pawn">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.AI.Pawn_MindState.mentalStateHandler">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.AI.Pawn_MindState.mentalBreaker">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.AI.Pawn_MindState.mentalFitGenerator">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.AI.Pawn_MindState.inspirationHandler">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.AI.Pawn_MindState.priorityWork">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="M:Verse.HediffMaker.MakeHediff(Verse.HediffDef,Verse.Pawn,Verse.BodyPartRecord)">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <parameter Name="def">
-      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    </parameter>
-    <parameter Name="pawn">
-      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    </parameter>
-    <parameter Name="partRecord">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
   </member>
   <member name="P:RimWorld.Pawn_GeneTracker.GenesListForReading">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
-  <member name="P:RimWorld.PawnsFinder.All_AliveOrDead">
+  <member name="P:RimWorld.Pawn_GeneTracker.Xenogenes">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.PawnsFinder.AllMapsAndWorld_Alive">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -88,6 +61,53 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.PawnsFinder.All_AliveOrDead">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:RimWorld.StatDrawEntry.SetReportText(System.String)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Storyteller.difficulty">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.XenotypeDef.AllGenes">
+    <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Job.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.JobDriver.job">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Pawn_MindState.inspirationHandler">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Pawn_MindState.mentalBreaker">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Pawn_MindState.mentalFitGenerator">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Pawn_MindState.mentalStateHandler">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Pawn_MindState.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Pawn_MindState.priorityWork">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.AI.ThinkNode_JobGiver.TryGiveJob(Verse.Pawn)">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <parameter name="pawn">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="F:Verse.BodyPartRecord.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.Def.ConfigErrors">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -125,235 +145,6 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
-  <member name="F:Verse.Gene.def">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Gene.pawn">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="P:Verse.GenTypes.AllTypes">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
-  </member>
-  <member name="M:Verse.GenTypes.AllTypesWithAttribute``1">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Hediff.def">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.HediffComp.parent">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.HediffComp.props">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="M:Verse.HediffGiver.OnIntervalPassed(Verse.Pawn,Verse.Hediff)">
-    <parameter name="pawn">
-      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="cause">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-  </member>
-  <member name="F:Verse.HediffSet.hediffs">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="M:Verse.HediffSet.GetNotMissingParts(Verse.BodyPartHeight,Verse.BodyPartDepth,Verse.BodyPartTagDef,Verse.BodyPartRecord)">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.ageTracker">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.health">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.records">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.inventory">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.meleeVerbs">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.verbTracker">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.carryTracker">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.needs">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.mindState">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.ownership">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.thinker">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.jobs">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn.stances">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn_HealthTracker.pawn">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn_HealthTracker.hediffSet">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn_HealthTracker.capacities">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn_HealthTracker.summaryHealth">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn_HealthTracker.summaryBills">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn_HealthTracker.immunity">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="P:Verse.PawnRenderNode.Props">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:RimWorld.Storyteller.difficulty">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="M:Verse.VerbUtility.GetAllVerbProperties(System.Collections.Generic.List{Verse.VerbProperties},System.Collections.Generic.List{Verse.Tool})">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <parameter name="verbProps">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="tools">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-  </member>
-  <member name="F:Verse.BodyPartRecord.def">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.HediffDef.stages">
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.AI.JobDriver.job">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Thing.def">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="M:Verse.VerbProperties.AdjustedMeleeDamageAmount(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver)">
-    <parameter name="tool">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="attacker">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="equipment">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="hediffCompSource">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-  </member>
-  <member name="M:Verse.VerbProperties.AdjustedCooldown(Verse.Tool,Verse.Pawn,Verse.ThingDef,Verse.ThingDef)">
-    <parameter name="tool">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="attacker">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="equipment">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="equipmentStuff">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-  </member>
-  <member name="M:Verse.VerbProperties.AdjustedArmorPenetration(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver)">
-    <parameter name="tool">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="attacker">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="equipment">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="hediffCompSource">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-  </member>
-  <member name="M:Verse.VerbProperties.AdjustedMeleeSelectionWeight(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver,System.Boolean)">
-    <parameter name="tool">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="attacker">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="equipment">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-    <parameter name="hediffCompSource">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    </parameter>
-  </member>
-  <member name="M:RimWorld.StatDrawEntry.SetReportText(System.String)">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="P:Verse.HediffComp_Chargeable.Props">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="M:Verse.Pawn_HealthTracker.GetOrAddHediff(Verse.HediffDef,Verse.BodyPartRecord,System.Nullable{Verse.DamageInfo},Verse.DamageWorker.DamageResult)">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:RimWorld.IncidentWorker.def">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.AI.Job.def">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="M:Verse.GridsUtility.GetTerrain(Verse.IntVec3,Verse.Map)">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="M:Verse.AI.ThinkNode_JobGiver.TryGiveJob(Verse.Pawn)">
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    <parameter name="pawn">
-      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    </parameter>
-  </member>
-  <member name="F:RimWorld.Need.pawn">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:RimWorld.AbilityComp.parent">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:RimWorld.AbilityComp.props">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:RimWorld.Ability.pawn">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.GenRadial.RadialPattern">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn_StanceTracker.stunner">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="F:Verse.Pawn_StanceTracker.stagger">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-  <member name="M:Verse.GridsUtility.GetThingList(Verse.IntVec3,Verse.Map)">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
-
   <member name="M:Verse.GenCollection.NullOrEmpty``1(System.Collections.Generic.HashSet{``0})">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
@@ -382,8 +173,215 @@
       <argument>null => true</argument>
     </attribute>
   </member>
+  <member name="F:Verse.GenRadial.RadialPattern">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.GenTypes.AllTypes">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.GenTypes.AllTypesWithAttribute``1">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Gene.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Gene.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.GridsUtility.GetTerrain(Verse.IntVec3,Verse.Map)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.GridsUtility.GetThingList(Verse.IntVec3,Verse.Map)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Hediff.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffComp.parent">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffComp.props">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffComp_Chargeable.Props">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffDef.stages">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.HediffGiver.OnIntervalPassed(Verse.Pawn,Verse.Hediff)">
+    <parameter name="pawn">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="cause">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:Verse.HediffMaker.MakeHediff(Verse.HediffDef,Verse.Pawn,Verse.BodyPartRecord)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter Name="def">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+    <parameter Name="pawn">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+    <parameter Name="partRecord">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:Verse.HediffSet.GetNotMissingParts(Verse.BodyPartHeight,Verse.BodyPartDepth,Verse.BodyPartTagDef,Verse.BodyPartRecord)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffSet.hediffs">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.IntRange.Includes(System.Int32)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.ageTracker">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.carryTracker">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.health">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.inventory">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.jobs">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.meleeVerbs">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.mindState">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.needs">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.ownership">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.records">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.stances">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.thinker">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.verbTracker">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.PawnRenderNode.Props">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.Pawn_HealthTracker.GetOrAddHediff(Verse.HediffDef,Verse.BodyPartRecord,System.Nullable{Verse.DamageInfo},Verse.DamageWorker.DamageResult)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn_HealthTracker.capacities">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn_HealthTracker.hediffSet">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn_HealthTracker.immunity">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn_HealthTracker.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn_HealthTracker.summaryBills">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn_HealthTracker.summaryHealth">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn_StanceTracker.stagger">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn_StanceTracker.stunner">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="T:Verse.StaticConstructorOnStartup">
+    <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Thing.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.VerbProperties.AdjustedArmorPenetration(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver)">
+    <parameter name="tool">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="attacker">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="equipment">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="hediffCompSource">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:Verse.VerbProperties.AdjustedCooldown(Verse.Tool,Verse.Pawn,Verse.ThingDef,Verse.ThingDef)">
+    <parameter name="tool">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="attacker">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="equipment">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="equipmentStuff">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:Verse.VerbProperties.AdjustedMeleeDamageAmount(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver)">
+    <parameter name="tool">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="attacker">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="equipment">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="hediffCompSource">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:Verse.VerbProperties.AdjustedMeleeSelectionWeight(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver,System.Boolean)">
+    <parameter name="tool">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="attacker">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="equipment">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="hediffCompSource">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:Verse.VerbUtility.GetAllVerbProperties(System.Collections.Generic.List{Verse.VerbProperties},System.Collections.Generic.List{Verse.Tool})">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter name="verbProps">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="tools">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
   </member>
 
 
