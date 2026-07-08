@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
 
   <Xylib.Config>
     <defName>XylibConfig</defName>
-  
+
     <!-- 
     IMPORTANT! This will only work for hediffs that are applied via HealthUtility.AdjustSeverity.
     The list already includes all of the interesting ones that don't have an existing resistance
@@ -33,7 +33,7 @@
       </li>
     </resistanceStatByHediff>
   </Xylib.Config>
-  
+
   <Xylib.FoodGroupDef>
     <defName>Meat</defName>
     <foodTypes>
@@ -44,7 +44,7 @@
     <cookedNutritionStat>XylCookedMeatNutritionFactor</cookedNutritionStat>
     <rawFoodPoisonChanceStat>XylRawMeatFoodPoisonChanceFactor</rawFoodPoisonChanceStat>
   </Xylib.FoodGroupDef>
-  
+
   <Xylib.FoodGroupDef>
     <defName>Vegetable</defName>
     <foodTypes>
@@ -57,8 +57,8 @@
     <cookedNutritionStat>XylCookedVegetableNutritionFactor</cookedNutritionStat>
     <rawFoodPoisonChanceStat>XylRawVegetableFoodPoisonChanceFactor</rawFoodPoisonChanceStat>
   </Xylib.FoodGroupDef>
-  
-    <Xylib.FoodGroupDef>
+
+  <Xylib.FoodGroupDef>
     <defName>AnimalProduct</defName>
     <foodTypes>
       <li>AnimalProduct</li>
@@ -67,7 +67,7 @@
     <cookedNutritionStat>XylCookedAnimalProductNutritionFactor</cookedNutritionStat>
     <rawFoodPoisonChanceStat>XylRawAnimalProductFoodPoisonChanceFactor</rawFoodPoisonChanceStat>
   </Xylib.FoodGroupDef>
-  
+
   <Xylib.FoodGroupDef>
     <defName>Fungus</defName>
     <foodTypes>
@@ -78,7 +78,7 @@
     <cookedNutritionStat>XylCookedFungusNutritionFactor</cookedNutritionStat>
     <rawFoodPoisonChanceStat>XylRawFungusFoodPoisonChanceFactor</rawFoodPoisonChanceStat>
   </Xylib.FoodGroupDef>
-  
+
   <Xylib.FoodGroupDef>
     <defName>Humanlike</defName>
     <foodTypes>
@@ -96,6 +96,5 @@
     </foodTypes>
     <fleshType>Insectoid</fleshType>
   </Xylib.FoodGroupDef>
-  
-  
+
 </Defs>
