@@ -20,7 +20,7 @@ if (hadUtf8Bom && text.Length > 0 && text[0] == '\uFEFF')
 
 var members = ReadTopLevelMembers(text).ToList();
 var sortedMembers = members
-    .OrderBy(static member => SortKey(member.Name), StringComparer.Ordinal)
+    .OrderBy(static member => SortKey(member.Name), StringComparer.OrdinalIgnoreCase)
     .ThenBy(static member => member.Name, StringComparer.Ordinal)
     .ToList();
 
