@@ -41,7 +41,10 @@ public class FeatureAttribute(string featureName) : Attribute
 /// </summary>
 /// <remarks>
 ///     <para>This attribute has no runtime effect.</para>
-///     <para>On an <see langword="abstract" /> class, this indicates that all subclasses should be marked with the attribute.</para>
+///     <para>
+///         On an <see langword="abstract" /> class, this indicates that all subclasses should be marked with the
+///         attribute.
+///     </para>
 /// </remarks>
 [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
 [AttributeUsage(AttributeTargets.Class)]

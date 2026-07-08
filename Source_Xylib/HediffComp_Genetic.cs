@@ -27,7 +27,8 @@ public class HediffCompProperties_Genetic : HediffCompPropertiesExt
 [PublicAPI]
 public class HediffComp_Genetic : HediffComp
 {
-    [NotNull] public HediffCompProperties_Genetic Props => (HediffCompProperties_Genetic)props;
+    [NotNull]
+    public HediffCompProperties_Genetic Props => (HediffCompProperties_Genetic)props;
 
     public override bool CompShouldRemove => !Pawn!.HasActiveGene(Props.gene!);
 }

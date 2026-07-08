@@ -172,7 +172,8 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))
             return value!;
 
-        value = Pawn?.health?.hediffSet?.hediffs.OfType<HediffWithComps>().Where(hediff => hediff.comps?.OfType<T>().Any() is true).ToList() ?? [];
+        value = Pawn?.health?.hediffSet?.hediffs.OfType<HediffWithComps>().Where(hediff => hediff.comps?.OfType<T>().Any() is true)
+            .ToList() ?? [];
         hediffsByComp.Add(typeof(T), value);
         return value;
     }

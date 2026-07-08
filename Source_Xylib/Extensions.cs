@@ -85,7 +85,8 @@ public static class Extensions
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [NotNull]
-        public IEnumerable<Gene> AllGenesOfDef([NotNull] GeneDef def) => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithDef(def);
+        public IEnumerable<Gene> AllGenesOfDef([NotNull] GeneDef def) =>
+            pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithDef(def);
 
         /// <summary>
         ///     Determines whether the pawn has an active gene with the specified def.
@@ -637,7 +638,8 @@ public static class Extensions
         ///     The matching hediffs.
         /// </returns>
         [NotNull]
-        public IEnumerable<T> HediffsOfType<T>([NotNull] Func<T, bool> predicate) where T : Hediff => pawn.HediffsOfType<T>().Where(predicate);
+        public IEnumerable<T> HediffsOfType<T>([NotNull] Func<T, bool> predicate) where T : Hediff =>
+            pawn.HediffsOfType<T>().Where(predicate);
 
         /// <summary>
         ///     Gets all hediffs on the pawn that have a <see cref="HediffComp" /> of the specified type.

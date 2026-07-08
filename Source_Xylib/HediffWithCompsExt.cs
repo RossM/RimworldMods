@@ -66,7 +66,7 @@ public class HediffWithCompsExt : HediffWithComps
         if (!severityLabel.NullOrEmpty())
             tipSb.Append(": ").Append(severityLabel);
         tipSb.AppendLine();
-        
+
         Pawn sourcePawn = SourcePawn;
 
         if (!def.overrideTooltip.NullOrEmpty())

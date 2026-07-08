@@ -13,6 +13,14 @@ internal static class Patch_PawnGenerator
         xenotype = xenotypeOverride;
     }
 
+    [Feature(nameof(EventDefOf.PostGenerateInitialHediffs))]
+    [HarmonyPostfix]
+    [HarmonyPatch("GenerateInitialHediffs")]
+    public static void GenerateInitialHediffs_Postfix(Pawn pawn)
+    {
+        EventManager.Instance.Notify(EventDefOf.PostGenerateInitialHediffs, pawn);
+    }
+
     [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
     [InfixPrefix(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
     [InfixPatch("TryGenerateNewPawnInternal")]
@@ -43,13 +51,5 @@ internal static class Patch_PawnGenerator
         if (__result == null)
             return;
         EventManager.Instance.Notify(EventDefOf.PostGenerateNewPawn, __result, request);
-    }
-
-    [Feature(nameof(EventDefOf.PostGenerateInitialHediffs))]
-    [HarmonyPostfix]
-    [HarmonyPatch("GenerateInitialHediffs")]
-    public static void GenerateInitialHediffs_Postfix(Pawn pawn)
-    {
-        EventManager.Instance.Notify(EventDefOf.PostGenerateInitialHediffs, pawn);
     }
 }
