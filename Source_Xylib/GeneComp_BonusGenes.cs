@@ -4,7 +4,7 @@
 [PublicAPI]
 public class GeneCompProperties_BonusGenes : GeneCompProperties
 {
-    public GeneSetMakerDef maker;
+    public GeneSetMakerDef? maker;
     public GeneType? addedGeneType;
     public bool removeAfterAdding = false;
 
@@ -12,12 +12,17 @@ public class GeneCompProperties_BonusGenes : GeneCompProperties
     {
         compClass = typeof(GeneComp_BonusGenes);
     }
+
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (maker is null)
+            yield return "maker is null";
+    }
 }
 
 [PublicAPI]
 public class GeneComp_BonusGenes : GeneComp
 {
-    [NotNull]
     public GeneCompProperties_BonusGenes Props => (GeneCompProperties_BonusGenes)props;
 
     private GeneType AddedGeneType => Props.addedGeneType ?? parent.GeneType;
@@ -31,13 +36,13 @@ public class GeneComp_BonusGenes : GeneComp
 
     public override void CompPostPostAdd()
     {
-        var geneSet = Props.maker.root.Generate(Pawn, AddedGeneType);
+        var geneSet = Props.maker!.root!.Generate(Pawn, AddedGeneType);
 
-        foreach (var gene in geneSet.GenesListForReading)
+        foreach (var gene in geneSet.GenesListForReading!)
             AddGene(gene);
 
         if (Props.removeAfterAdding)
-            Pawn.genes.RemoveGene(parent);
+            Pawn.genes!.RemoveGene(parent);
     }
 
     private void AddGene(GeneDef geneDef)

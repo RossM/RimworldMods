@@ -14,7 +14,7 @@ internal static class Patch_Building_GeneExtractor
     }
 
     [HarmonyTargetMethod]
-    public static MethodInfo TargetMethod()
+    public static MethodInfo? TargetMethod()
     {
         var type = AccessTools.TypeByName("RimWorld.Building_GeneExtractor");
         foreach (var nestedType in type.GetNestedTypes(AccessTools.all))

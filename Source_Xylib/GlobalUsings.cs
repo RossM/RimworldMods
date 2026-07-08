@@ -1,5 +1,6 @@
 global using System;
 global using System.Collections.Generic;
+global using System.Diagnostics.CodeAnalysis;
 global using System.Linq;
 global using System.Runtime.CompilerServices;
 global using System.Text;
@@ -11,3 +12,4 @@ global using TranspilerUtil;
 global using UnityEngine;
 global using Verse;
 global using Verse.AI;
+global using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;

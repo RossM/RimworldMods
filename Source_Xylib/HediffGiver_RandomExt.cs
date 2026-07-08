@@ -60,7 +60,7 @@ public class HediffGiver_RandomExt : HediffGiver
     /// <param name="pawn">The pawn the hediff should be applied to.</param>
     /// <param name="cause">The hediff that is a parent to this object, if any.</param>
     /// <returns></returns>
-    public bool TryApply([NotNull] Pawn pawn, [CanBeNull] Hediff cause)
+    public bool TryApply(Pawn pawn, Hediff? cause)
     {
         if (!allowOnLodgers && pawn.IsQuestLodger())
             return false;
@@ -80,7 +80,7 @@ public class HediffGiver_RandomExt : HediffGiver
         return TryApplyInner(pawn, cause);
     }
 
-    private bool TryApplyInner([NotNull] Pawn pawn, [CanBeNull] Hediff cause)
+    private bool TryApplyInner(Pawn pawn, Hediff? cause)
     {
         if (canAffectAnyLivePart || partsToAffect != null)
         {
@@ -101,9 +101,9 @@ public class HediffGiver_RandomExt : HediffGiver
                     break;
 
                 Hediff newHediff = HediffMaker.MakeHediff(partRecord: parts.RandomElementByWeight(x => x.coverageAbs), def: hediff,
-                    pawn: pawn);
+                    pawn: pawn)!;
 
-                if (inheritSeverity)
+                if (inheritSeverity && cause is not null)
                     newHediff.Severity = cause.Severity;
                 else if (severityRange != FloatRange.Zero)
                     newHediff.Severity = severityRange.RandomInRange;
@@ -119,9 +119,9 @@ public class HediffGiver_RandomExt : HediffGiver
             if (!allowDuplicates && pawn.health.hediffSet.HasHediff(hediff))
                 return false;
 
-            Hediff newHediff = HediffMaker.MakeHediff(hediff, pawn);
+            Hediff newHediff = HediffMaker.MakeHediff(hediff, pawn)!;
 
-            if (inheritSeverity)
+            if (inheritSeverity && cause is not null)
                 newHediff.Severity = cause.Severity;
             else if (severityRange != FloatRange.Zero)
                 newHediff.Severity = severityRange.RandomInRange;

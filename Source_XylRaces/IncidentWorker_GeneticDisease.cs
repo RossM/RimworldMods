@@ -8,7 +8,7 @@ public class DefModExtension_Incident_GeneticDisease : DefModExtension
 
     public override IEnumerable<string> ConfigErrors()
     {
-        if (requiredGenesAny.NullOrEmpty())
+        if (requiredGenesAny is not { Count: > 0 })
             yield return "requiredGenesAny must have at least one entry";
     }
 }

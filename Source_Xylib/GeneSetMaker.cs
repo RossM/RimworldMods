@@ -69,7 +69,7 @@ public abstract class GeneSetMaker
             return false;
 
         // Aptitude-giving genes must not apply to only disabled skills
-        if (!gene.aptitudes.NullOrEmpty() && gene.aptitudes.All(aptitude => pawn.skills.GetSkill(aptitude.skill).TotallyDisabled))
+        if (gene.aptitudes is { Count: > 0 } && gene.aptitudes.All(aptitude => pawn.skills.GetSkill(aptitude.skill).TotallyDisabled))
             return false;
 
         return true;
@@ -88,7 +88,7 @@ public abstract class GeneSetMaker
 [PublicAPI]
 public class GeneSetMakerWeight
 {
-    public GeneSetMaker maker;
+    public GeneSetMaker? maker;
     public float weight = 1f;
 }
 
@@ -97,18 +97,16 @@ public class GeneSetMakerWeight
 public class GeneSetMaker_Option : GeneSetMaker
 {
     public override int BiostatMetForDisplay =>
-        options is not null
-            ? count.min * Mathf.Clamp(0,
-                options.Min(o => o.maker.BiostatMetForDisplay),
-                options.Max(o => o.maker.BiostatMetForDisplay))
-            : 0;
+        count.min * Mathf.Clamp(0,
+            options!.Min(o => o.maker!.BiostatMetForDisplay),
+            options!.Max(o => o.maker!.BiostatMetForDisplay));
 
-    public List<GeneSetMakerWeight> options;
+    public List<GeneSetMakerWeight>? options;
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
         for (int i = 0; i < countValue; i++)
-            options.RandomElementByWeight(o => o.weight).maker.AddGenes(geneSet, geneType, pawn);
+            options!.RandomElementByWeight(o => o!.weight)!.maker!.AddGenes(geneSet, geneType, pawn);
     }
 
     public override IEnumerable<string> ConfigErrors()
@@ -118,14 +116,14 @@ public class GeneSetMaker_Option : GeneSetMaker
 
         if (options is null)
         {
-            yield return "options is null";
+            yield return $"{nameof(options)} is null";
             yield break;
         }
 
         foreach (var option in options)
         {
             if (option.maker == null)
-                yield return "null maker in options";
+                yield return $"null {nameof(option.maker)} in {nameof(option)}";
             else
             {
                 foreach (var error in option.maker.ConfigErrors())
@@ -137,8 +135,8 @@ public class GeneSetMaker_Option : GeneSetMaker
     public override void ResolveReferences()
     {
         base.ResolveReferences();
-        foreach (var option in options)
-            option.maker.ResolveReferences();
+        foreach (var option in options!)
+            option.maker!.ResolveReferences();
     }
 }
 
@@ -146,11 +144,17 @@ public class GeneSetMaker_Option : GeneSetMaker
 [PublicAPI]
 public class GeneSetMaker_Subtree : GeneSetMaker
 {
-    public GeneSetMakerDef def;
+    public GeneSetMakerDef? def;
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
-        def.root.AddGenes(geneSet, geneType, pawn);
+        def!.root!.AddGenes(geneSet, geneType, pawn);
+    }
+
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (def is null)
+            yield return $"{nameof(def)} is null";
     }
 }
 
@@ -164,8 +168,8 @@ public class GeneSetMaker_Biostats : GeneSetMaker
     public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
     public IntRange biostatMet = new(int.MinValue, int.MaxValue);
 
-    public List<GeneDef> prohibitedGenes;
-    [NoTranslate] public List<string> prohibitedModContentPacks;
+    public List<GeneDef>? prohibitedGenes;
+    [NoTranslate] public List<string?>? prohibitedModContentPacks;
 
     public override bool Validate(GeneDef gene, GeneSet geneSet, GeneType geneType, Pawn pawn)
     {
@@ -195,7 +199,7 @@ public class GeneSetMaker_List : GeneSetMaker
 
     private int? biostatMetInternal;
 
-    public List<GeneDef> genes;
+    public List<GeneDef>? genes;
 
     private int CalculateBiostatMet()
     {
@@ -236,6 +240,6 @@ public class GeneSetMaker_List : GeneSetMaker
     public override IEnumerable<string> ConfigErrors()
     {
         if (genes is null)
-            yield return "genes is null";
+            yield return $"{nameof(genes)} is null";
     }
 }

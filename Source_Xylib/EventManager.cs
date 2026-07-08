@@ -39,7 +39,7 @@ public interface IEventListener
     ///     <see cref="EventManager.Instance" />.
     /// </param>
 #pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-    public void RegisterWith([NotNull] EventManager manager);
+    public void RegisterWith(EventManager manager);
 
     /// <summary>
     ///     Called before a listener is removed from the <see cref="EventManager" />. Events registered directly by the
@@ -50,7 +50,7 @@ public interface IEventListener
     ///     The <see cref="EventManager" /> that should be unregistered with. This is always
     ///     <see cref="EventManager.Instance" />.
     /// </param>
-    public void PreUnregister([NotNull] EventManager manager);
+    public void PreUnregister(EventManager manager);
 }
 
 /// <summary>
@@ -68,7 +68,7 @@ public class EventDef : Def
     /// <summary>
     ///     The type of data passed to callbacks, or null if the event does not pass data.
     /// </summary>
-    public Type dataType = null;
+    public Type? dataType = null;
 
     /// <summary>
     ///     Whether the event can be raised while RimWorld is saving or loading data.
@@ -209,10 +209,12 @@ public static class EventDefOf
     /// </summary>
     public static EventDef PreTakeDamage;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     static EventDefOf()
     {
         DefOfHelper.EnsureInitializedInCtor(typeof(EventDefOf));
     }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 }
 
 /// <summary>
@@ -279,8 +281,8 @@ public class EventManager
     private class NotificationInfo
     {
         public bool usesPriority = false;
-        [NotNull] public readonly List<CallbackInfo> globalCallbacks = [];
-        [NotNull] public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
+        public readonly List<CallbackInfo> globalCallbacks = [];
+        public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
     }
 
     /// <summary>
@@ -292,11 +294,10 @@ public class EventManager
     /// <param name="target">
     ///     The target the listener registered for, or null for a global registration.
     /// </param>
-    private class RegistrationInfo([NotNull] EventDef eventDef, [CanBeNull] Thing target)
+    private class RegistrationInfo(EventDef eventDef, Thing? target)
     {
-        [NotNull] public readonly EventDef eventDef = eventDef;
-        public readonly bool isGlobal = target == null;
-        public readonly System.WeakReference<Thing> target = target == null ? null : new(target);
+        public readonly EventDef eventDef = eventDef;
+        public readonly System.WeakReference<Thing>? target = target == null ? null : new(target);
     }
 
     /// <summary>
@@ -304,7 +305,7 @@ public class EventManager
     /// </summary>
     private struct CallbackInfo
     {
-        public Action<Thing, object> wrappedCallback;
+        public Action<Thing?, object?> wrappedCallback;
         public IEventListener listener;
         public string name;
         public int priority;
@@ -314,6 +315,11 @@ public class EventManager
             return $"{name}[{listener}]";
         }
     }
+
+    /// <summary>
+    ///     Callback registrations indexed by <c>EventDef.index</c>.
+    /// </summary>
+    private NotificationInfo?[] Notifications => field ??= new NotificationInfo[DefDatabase<EventDef>.DefCount];
 
     private static bool doDebug = false;
 
@@ -325,27 +331,21 @@ public class EventManager
     /// <summary>
     ///     Static listeners that have been registered since the last reset.
     /// </summary>
-    [Unsaved] [NotNull] private readonly HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
-
-    /// <summary>
-    ///     Callback registrations indexed by <c>EventDef.index</c>.
-    /// </summary>
-    private NotificationInfo[] notifications;
+    [Unsaved] private readonly HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
 
     /// <summary>
     ///     Registrations owned by each listener, used by <see cref="RemoveListener" />.
     /// </summary>
-    [NotNull] private ConditionalWeakTable<IEventListener, List<RegistrationInfo>> registrations = new();
+    private ConditionalWeakTable<IEventListener, List<RegistrationInfo>> registrations = new();
 
     /// <summary>
     ///     Temporary callback list used when a notification needs priority ordering.
     /// </summary>
-    [NotNull] private readonly List<CallbackInfo> tempCallbacks = [];
+    private readonly List<CallbackInfo> tempCallbacks = [];
 
     /// <summary>
     ///     Gets the shared event manager instance.
     /// </summary>
-    [NotNull]
     public static EventManager Instance { get; } = new();
 
     /// <summary>
@@ -355,14 +355,6 @@ public class EventManager
     public static void ToggleNotificationManagerLogging()
     {
         doDebug = !doDebug;
-    }
-
-    /// <summary>
-    ///     Initializes event storage after defs have loaded.
-    /// </summary>
-    private void Init()
-    {
-        notifications ??= new NotificationInfo[DefDatabase<EventDef>.DefCount];
     }
 
     /// <summary>
@@ -387,11 +379,11 @@ public class EventManager
     ///     The callback priority. Higher values run first when priority ordering is active for the event.
     /// </param>
     private void RegisterInternal(
-        [NotNull] EventDef eventDef,
-        [CanBeNull] Thing target,
-        [NotNull] Action<Thing, object> callback,
-        [NotNull] object source,
-        [NotNull] string name,
+        EventDef eventDef,
+        Thing? target,
+        Action<Thing?, object?> callback,
+        object? source,
+        string name,
         int priority)
     {
         if (source is not IEventListener listener)
@@ -403,12 +395,10 @@ public class EventManager
                 $"[EventManager] Register eventDef={eventDef} {(target == null ? "global" : $"target=[{target}]")} listener={listener} name={name} priority={priority}");
         }
 
-        Init();
-
         var records = registrations.GetOrCreateValue(listener)!;
         records.Add(new(eventDef, target));
 
-        NotificationInfo notificationInfo = notifications![eventDef.index] ??= new();
+        NotificationInfo notificationInfo = Notifications[eventDef.index] ??= new();
         if (priority != 0)
             notificationInfo.usesPriority = true;
 
@@ -458,7 +448,7 @@ public class EventManager
     /// <typeparam name="T">
     ///     The expected type of the event data.
     /// </typeparam>
-    public void Register<T>(EventDef eventDef, Thing target, [NotNull] Action<Thing, T> callback, int priority = 0)
+    public void Register<T>(EventDef? eventDef, Thing? target, Action<Thing?, T> callback, int priority = 0)
     {
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
@@ -477,7 +467,7 @@ public class EventManager
                 Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
         }
 
-        RegisterInternal(eventDef, target, (t, data) => callback(t, (T)data), callback.Target, MethodName(callback), priority);
+        RegisterInternal(eventDef, target, (t, data) => callback(t, (T)data!), callback.Target, MethodName(callback), priority);
     }
 
     /// <summary>
@@ -499,7 +489,7 @@ public class EventManager
     /// <typeparam name="T">
     ///     The expected type of the event data.
     /// </typeparam>
-    public void Register<T>(EventDef eventDef, Thing target, [NotNull] Action<T> callback, int priority = 0)
+    public void Register<T>(EventDef? eventDef, Thing? target, Action<T> callback, int priority = 0)
     {
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
@@ -518,7 +508,7 @@ public class EventManager
                 Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
         }
 
-        RegisterInternal(eventDef, target, (_, data) => callback((T)data), callback.Target, MethodName(callback), priority);
+        RegisterInternal(eventDef, target, (_, data) => callback((T)data!), callback.Target, MethodName(callback), priority);
     }
 
     /// <summary>
@@ -537,7 +527,7 @@ public class EventManager
     /// <param name="priority">
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
-    public void Register(EventDef eventDef, Thing target, [NotNull] Action<Thing> callback, int priority = 0)
+    public void Register(EventDef? eventDef, Thing? target, Action<Thing?> callback, int priority = 0)
     {
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
@@ -568,7 +558,7 @@ public class EventManager
     /// <param name="priority">
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
-    public void Register(EventDef eventDef, Thing target, [NotNull] Action callback, int priority = 0)
+    public void Register(EventDef? eventDef, Thing? target, Action callback, int priority = 0)
     {
         if (callback == null)
             throw new ArgumentNullException(nameof(callback));
@@ -592,7 +582,7 @@ public class EventManager
     /// <returns>
     ///     A name containing the declaring type and method name.
     /// </returns>
-    private static string MethodName([NotNull] Delegate fn)
+    private static string MethodName(Delegate fn)
     {
         return $"{fn.Method.DeclaringType?.FullName ?? "<global>"}.{fn.Method.Name}";
     }
@@ -618,10 +608,10 @@ public class EventManager
     ///     The expected type of the event data.
     /// </typeparam>
     public void Register<T>(
-        [NotNull] IEventListener listener,
-        EventDef eventDef,
-        Thing target,
-        [NotNull] Action<Thing, T> callback)
+        IEventListener listener,
+        EventDef? eventDef,
+        Thing? target,
+        Action<Thing?, T?> callback)
     {
         if (listener == null)
             throw new ArgumentNullException(nameof(listener));
@@ -642,7 +632,7 @@ public class EventManager
                 Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
         }
 
-        RegisterInternal(eventDef, target, (t, data) => callback(t, (T)data), listener,
+        RegisterInternal(eventDef, target, (t, data) => callback(t, (T?)data), listener,
             $"{listener.GetType().FullName}.<{eventDef.defName}>", 0);
     }
 
@@ -652,10 +642,8 @@ public class EventManager
     /// <param name="listener">
     ///     The listener to remove.
     /// </param>
-    public void RemoveListener([NotNull] IEventListener listener)
+    public void RemoveListener(IEventListener listener)
     {
-        Init();
-
         listener.PreUnregister(this);
 
         if (!registrations.TryGetValue(listener, out List<RegistrationInfo> records))
@@ -663,14 +651,14 @@ public class EventManager
 
         foreach (var record in records!)
         {
-            if (record.isGlobal)
-                notifications![record.eventDef.index]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
+            if (record.target == null)
+                Notifications[record.eventDef.index]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
             else
             {
                 if (!record.target.TryGetTarget(out Thing target))
                     continue;
 
-                if (notifications![record.eventDef.index]?.localCallbacks?.TryGetValue(target, out List<CallbackInfo> callbacks) is true)
+                if (Notifications[record.eventDef.index]?.localCallbacks?.TryGetValue(target, out List<CallbackInfo> callbacks) is true)
                     callbacks.RemoveAll(callback => callback.listener == listener);
             }
         }
@@ -690,8 +678,14 @@ public class EventManager
     /// <param name="data">
     ///     Optional event data. When supplied, its type should match <see cref="EventDef.dataType" />.
     /// </param>
-    public void Notify(EventDef eventDef, Thing target, object data = null)
+    public void Notify(EventDef? eventDef, Thing? target, object? data = null)
     {
+        if (eventDef == null)
+        {
+            Log.ErrorOnce($"[EventManager] Null event with target {target}", 0x2FBB5694);
+            return;
+        }
+
         if (Scribe.mode != LoadSaveMode.Inactive && !eventDef.allowDuringScribe)
             return;
 
@@ -701,9 +695,7 @@ public class EventManager
         if (Prefs.DevMode)
             ValidateNotifyArgs(eventDef, target, data);
 
-        Init();
-
-        NotificationInfo notificationInfo = notifications[eventDef.index];
+        NotificationInfo? notificationInfo = Notifications[eventDef.index];
         if (notificationInfo == null)
             return;
 
@@ -753,7 +745,7 @@ public class EventManager
     /// <param name="data">
     ///     The data passed to <see cref="Notify" />.
     /// </param>
-    private static void ValidateNotifyArgs(EventDef eventDef, Thing target, object data)
+    private static void ValidateNotifyArgs(EventDef eventDef, Thing? target, object? data)
     {
         if (eventDef.global)
         {
@@ -780,7 +772,7 @@ public class EventManager
                     $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given null",
                     Gen.HashCombineInt(0xEEB8AC2, eventDef.index));
             }
-            else if (!eventDef.dataType.IsAssignableFrom(data.GetType()))
+            else if (!eventDef.dataType.IsInstanceOfType(data))
             {
                 Log.ErrorOnce(
                     $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given {data.GetType()}",
@@ -813,7 +805,7 @@ public class EventManager
     /// <param name="data">
     ///     The data passed to <see cref="Notify" />.
     /// </param>
-    private static void DoNotify(EventDef eventDef, CallbackInfo callbackInfo, Thing target, object data)
+    private static void DoNotify(EventDef eventDef, CallbackInfo callbackInfo, Thing? target, object? data)
     {
         switch (callbackInfo.listener)
         {
@@ -925,11 +917,9 @@ public class EventManager
     /// </summary>
     public void Reset()
     {
-        Init();
-
         registrations = new();
-        for (int i = 0; i < notifications.Length; i++)
-            notifications[i] = null;
+        for (int i = 0; i < Notifications.Length; i++)
+            Notifications[i] = null;
         alreadyRegisteredStaticListeners.Clear();
         RegisterStaticListeners();
     }

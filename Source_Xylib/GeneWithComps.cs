@@ -33,13 +33,13 @@ public class GeneComp
     ///     The gene this component is attached to.
     /// </summary>
     // ReSharper disable once NotNullOrRequiredMemberIsNotInitialized
-    [Unsaved] [NotNull] public GeneWithComps parent;
+    [Unsaved] public required GeneWithComps parent;
 
     /// <summary>
     ///     The properties for this component, as defined in XML.
     /// </summary>
     // ReSharper disable once NotNullOrRequiredMemberIsNotInitialized
-    [Unsaved] [NotNull] public GeneCompProperties props;
+    [Unsaved] public required GeneCompProperties props;
 
     /// <summary>
     ///     Called after the gene is created and initialized, but before it is added to the pawn.
@@ -139,7 +139,6 @@ public class GeneWithComps : Gene, IEventListener
     /// <summary>
     ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for this gene.
     /// </summary>
-    [NotNull]
     public DefModExtension_GeneWithComps DefExt => field ??= def.Extension_GeneWithComps!;
 
     /// <summary>
@@ -157,7 +156,7 @@ public class GeneWithComps : Gene, IEventListener
     /// <summary>
     ///     The components for this gene.
     /// </summary>
-    [CanBeNull] public List<GeneComp> comps;
+    public List<GeneComp>? comps;
 
     /// <summary>
     ///     Whether the gene is currently active. Inactive genes shouldn't have any effect on the pawn.
@@ -182,8 +181,8 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
-    private event Action CompTick;
-    private event Action<int> CompTickInterval;
+    private event Action? CompTick;
+    private event Action<int>? CompTickInterval;
 
     /// <summary>
     ///     Called when updating <see cref="Active" />.
@@ -257,11 +256,11 @@ public class GeneWithComps : Gene, IEventListener
         comps = [];
         foreach (GeneCompProperties compProps in compProperties)
         {
-            Type compClass = compProps.compClass;
+            Type? compClass = compProps.compClass;
             if (compClass == null)
                 continue;
 
-            GeneComp comp = null;
+            GeneComp? comp = null;
             try
             {
                 comp = (GeneComp)Activator.CreateInstance(compClass);
@@ -290,7 +289,8 @@ public class GeneWithComps : Gene, IEventListener
             catch (Exception ex)
             {
                 Log.Error("Could not instantiate or initialize a GeneComp: " + ex);
-                comps.Remove(comp);
+                if (comp != null)
+                    comps.Remove(comp);
             }
         }
     }
@@ -393,12 +393,12 @@ public class GeneWithComps : Gene, IEventListener
 
         CompTickInterval?.Invoke(delta);
 
-        if (!DefExt.hediffGivers.NullOrEmpty() && pawn.IsHashIntervalTick(60, delta))
+        List<HediffGiver>? hediffGivers = DefExt.hediffGivers;
+        if (hediffGivers is { Count: > 0 } && pawn.IsHashIntervalTick(60, delta))
         {
-            for (var index = 0; index < DefExt.hediffGivers.Count; index++)
+            for (var index = 0; index < hediffGivers.Count; index++)
             {
-                HediffGiver hediffGiver = DefExt.hediffGivers[index];
-                hediffGiver.OnIntervalPassed(pawn, null);
+                hediffGivers[index]?.OnIntervalPassed(pawn, null);
             }
         }
     }
@@ -451,7 +451,7 @@ public class GeneWithComps : Gene, IEventListener
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns>The component, or null if there is no matching component</returns>
-    public T GetComp<T>() where T : GeneComp
+    public T? GetComp<T>() where T : GeneComp
     {
         if (comps == null)
             return null;

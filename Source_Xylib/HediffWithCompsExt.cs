@@ -3,10 +3,10 @@
 [PublicAPI]
 public class HediffWithCompsExt : HediffWithComps
 {
-    public Pawn SourcePawn => GetComp<HediffComp_Source>()?.OtherPawn;
+    public Pawn? SourcePawn => GetComp<HediffComp_Source>()?.OtherPawn;
 
     private static readonly StringBuilder tipSb = new();
-    protected HediffStage curStageInternal;
+    protected HediffStage? curStageInternal;
 
     public override HediffStage CurStage
     {
@@ -60,38 +60,38 @@ public class HediffWithCompsExt : HediffWithComps
     {
         tipSb.Clear();
         HediffStage curStage = CurStage;
-        if (!LabelCap.NullOrEmpty())
+        if (!string.IsNullOrEmpty(LabelCap))
             tipSb.AppendTagged(LabelCap.Colorize(ColoredText.TipSectionTitleColor));
         string severityLabel = SeverityLabel;
-        if (!severityLabel.NullOrEmpty())
+        if (!string.IsNullOrEmpty(severityLabel))
             tipSb.Append(": ").Append(severityLabel);
         tipSb.AppendLine();
 
-        Pawn sourcePawn = SourcePawn;
+        Pawn? sourcePawn = SourcePawn;
 
-        if (!def.overrideTooltip.NullOrEmpty())
+        if (!string.IsNullOrEmpty(def.overrideTooltip))
             tipSb.AppendLine().AppendLineTagged(def.overrideTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
-        else if (curStage != null && !curStage.overrideTooltip.NullOrEmpty())
+        else if (curStage != null && !string.IsNullOrEmpty(curStage.overrideTooltip))
         {
             tipSb.AppendLine().AppendLineTagged(curStage.overrideTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
         }
         else
         {
             string description = Description;
-            if (!description.NullOrEmpty())
+            if (!string.IsNullOrEmpty(description))
                 tipSb.AppendLine().AppendLine(description);
         }
 
-        if (!def.extraTooltip.NullOrEmpty())
+        if (!string.IsNullOrEmpty(def.extraTooltip))
             tipSb.AppendLine().AppendLineTagged(def.extraTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
-        if (curStage != null && !curStage.extraTooltip.NullOrEmpty())
+        if (curStage != null && !string.IsNullOrEmpty(curStage.extraTooltip))
             tipSb.AppendLine().AppendLineTagged(curStage.extraTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
         string tipStringExtra = TipStringExtra;
-        if (!tipStringExtra.NullOrEmpty())
+        if (!string.IsNullOrEmpty(tipStringExtra))
             tipSb.AppendLine().AppendLine(tipStringExtra.TrimEndNewlines());
         if (HealthCardUtility.GetCombatLogInfo(Gen.YieldSingle(this), out var taggedString, out _) && !taggedString.NullOrEmpty())
             tipSb.AppendLine().AppendLineTagged(("Cause".Translate() + ": " + taggedString).Colorize(ColoredText.SubtleGrayColor));
-        if (showHediffsDebugInfo && !DebugString().NullOrEmpty() && !DebugString().NullOrEmpty())
+        if (showHediffsDebugInfo && !string.IsNullOrEmpty(DebugString()) && !string.IsNullOrEmpty(DebugString()))
             tipSb.AppendLine().AppendLine(DebugString().TrimEndNewlines());
         return tipSb.ToString().TrimEnd();
     }

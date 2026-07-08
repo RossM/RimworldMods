@@ -13,7 +13,7 @@ public class PawnRenderNode_Wings(Pawn pawn, PawnRenderNodeProperties props, Paw
         //if (pawn.FirstActiveGeneOfType<Flight>()?.flightAllowedByApparel is false)
         //    return null;
 
-        if (!props.texPaths.NullOrEmpty())
+        if (props.texPaths is { Count: > 0 })
         {
             return pawn.flight?.Flying is true ? props.texPaths[1] : props.texPaths[0];
         }

@@ -10,7 +10,7 @@ public static class Analyzer
 {
     private static readonly string name = typeof(Analyzer).FullName;
 
-    [NotNull] [ItemNotNull] private static readonly Type[] defTypes =
+    private static readonly Type[] defTypes =
     [
         typeof(AbilityCompProperties),
         typeof(ColorGenerator),
@@ -30,7 +30,7 @@ public static class Analyzer
     ///     for issues that might indicate a potential bug or maintainability problem.
     /// </summary>
     /// <param name="assembly"></param>
-    public static void CheckCodingStyle_Patches([NotNull] Assembly assembly)
+    public static void CheckCodingStyle_Patches(Assembly assembly)
     {
         if (assembly is null)
             throw new ArgumentNullException(nameof(assembly));
@@ -109,7 +109,7 @@ public static class Analyzer
         }
     }
 
-    public static void CheckCodingStyle_Defs([NotNull] Assembly assembly)
+    public static void CheckCodingStyle_Defs(Assembly assembly)
     {
         if (assembly is null)
             throw new ArgumentNullException(nameof(assembly));
@@ -135,7 +135,7 @@ public static class Analyzer
         }
     }
 
-    public static void CheckCodingStyle([NotNull] Assembly assembly)
+    public static void CheckCodingStyle(Assembly assembly)
     {
         CheckCodingStyle_Patches(assembly);
         CheckCodingStyle_Defs(assembly);

@@ -148,13 +148,13 @@ public static class DebugOutputs
         {
             var memeDef = def;
 
-            columns.Add(new(memeDef.LabelCap, factionDef =>
+            columns.Add(new((string)memeDef.LabelCap, (FactionDef factionDef) =>
             {
                 if (factionDef.requiredMemes?.Contains(memeDef) is true)
                     return "Req";
-                if (!factionDef.allowedMemes.NullOrEmpty())
+                if (factionDef.allowedMemes is { Count: > 0 })
                     return factionDef.allowedMemes.Contains(memeDef) ? "\u2713" : "";
-                if (!factionDef.disallowedMemes.NullOrEmpty())
+                if (factionDef.disallowedMemes is { Count: > 0 })
                     return factionDef.disallowedMemes.Contains(memeDef) ? "" : "\u2713";
                 return "";
             }));
@@ -165,9 +165,9 @@ public static class DebugOutputs
 
         static bool ShouldShow(FactionDef factionDef)
         {
-            return !factionDef.requiredMemes.NullOrEmpty() ||
-                   !factionDef.allowedMemes.NullOrEmpty() ||
-                   !factionDef.disallowedMemes.NullOrEmpty();
+            return factionDef.requiredMemes is { Count: > 0 } ||
+                   factionDef.allowedMemes is { Count: > 0 } ||
+                   factionDef.disallowedMemes is { Count: > 0 };
         }
     }
 

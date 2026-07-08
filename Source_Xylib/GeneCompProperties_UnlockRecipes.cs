@@ -3,7 +3,7 @@
 [UsedFromXml]
 public class GeneCompProperties_UnlockRecipes : GeneCompProperties
 {
-    public List<RecipeDef> recipes;
+    public List<RecipeDef>? recipes;
 
     public override IEnumerable<string> CustomEffectDescriptions()
     {
@@ -14,6 +14,6 @@ public class GeneCompProperties_UnlockRecipes : GeneCompProperties
     public override IEnumerable<string> ConfigErrors()
     {
         if (recipes is null)
-            yield return "buildables is null";
+            yield return $"{nameof(recipes)} is null";
     }
 }

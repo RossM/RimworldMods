@@ -24,14 +24,14 @@ public static class Patch_IdeoUIUtility
             }
         }
 
-        if (!agreeingXenotypes.NullOrEmpty())
+        if (agreeingXenotypes is { Count: > 0 })
         {
             sb.AppendLine();
             sb.AppendInNewLine($"{"XylAgreeableXenotypes".Translate()}:".Colorize(ColoredText.TipSectionTitleColor));
             sb.AppendInNewLine(agreeingXenotypes.Select(def => def.label).ToLineList("  - ", capitalizeItems: true));
         }
 
-        if (!disagreeingXenotypes.NullOrEmpty())
+        if (disagreeingXenotypes is { Count: > 0 })
         {
             sb.AppendLine();
             sb.AppendInNewLine($"{"XylDisagreeableXenotypes".Translate()}:".Colorize(ColoredText.TipSectionTitleColor));

@@ -4,7 +4,7 @@
 [PublicAPI]
 public class GeneCompProperties_PermanentHediffs : GeneCompProperties
 {
-    public List<HediffGiver_Event> hediffs;
+    public List<HediffGiver_Event>? hediffs;
 
     public GeneCompProperties_PermanentHediffs()
     {
@@ -73,14 +73,20 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
         verbs = [];
         tools = [];
 
-        foreach (var hediff in hediffs)
+        foreach (var hediff in hediffs!)
         {
-            var props = hediff.hediff.CompProps<HediffCompProperties_VerbGiver>();
+            var props = hediff.hediff!.CompProps<HediffCompProperties_VerbGiver>();
             if (props?.verbs != null)
                 verbs.AddRange(props.verbs);
             if (props?.tools != null)
                 tools.AddRange(props.tools);
         }
+    }
+
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (hediffs is null)
+            yield return $"{nameof(hediffs)} is null";
     }
 }
 
@@ -94,7 +100,7 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
         if (!Active)
             return;
 
-        foreach (var hediffGiver in Props.hediffs)
+        foreach (var hediffGiver in Props.hediffs!)
             hediffGiver.EventOccurred(Pawn);
     }
 
@@ -112,9 +118,9 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
 
     private void UpdatePermanentHediffs()
     {
-        foreach (var hediffGiver in Props.hediffs)
+        foreach (var hediffGiver in Props.hediffs!)
         {
-            if (hediffGiver.partsToAffect.NullOrEmpty())
+            if (hediffGiver.partsToAffect is not { Count: > 0 })
                 continue;
 
             List<BodyPartRecord> partsToAdd = [];
@@ -122,7 +128,7 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
             HediffDef hediffDef = hediffGiver.hediff;
             int partCount = 0;
 
-            foreach (BodyPartRecord part in Pawn.def.race.body.AllParts)
+            foreach (BodyPartRecord part in Pawn.def!.race.body.AllParts)
             {
                 if (!hediffGiver.partsToAffect.Contains(part.def))
                     continue;

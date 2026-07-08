@@ -146,7 +146,7 @@ public class GeneComp_Hyperlactation : GeneComp
     {
         lastMilkedTick = Find.TickManager.TicksGame;
 
-        if (!Props.milkedThoughts.NullOrEmpty())
+        if (Props.milkedThoughts is { Count: > 0 })
         {
             foreach (var thoughtDef in Props.milkedThoughts)
                 Pawn.needs.mood.thoughts.memories.TryGainMemory(thoughtDef, doer);

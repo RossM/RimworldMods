@@ -17,10 +17,10 @@ public class HediffComp_Source : HediffComp
 {
     public HediffCompProperties_Source Props => (HediffCompProperties_Source)props;
 
-    public Pawn OtherPawn => (Pawn)other;
-    public Thing other;
+    public Pawn? OtherPawn => (Pawn?)other;
+    public Thing? other;
 
-    public override string CompLabelInBracketsExtra
+    public override string? CompLabelInBracketsExtra
     {
         get
         {

@@ -4,14 +4,17 @@
 public abstract class GeneTracker : IEventListener, IPawnData
 {
     /// <summary>
-    ///     The <see cref="Pawn" /> this object applies to.
+    ///     The <see cref="Verse.Pawn" /> this object applies to.
     /// </summary>
-    public Pawn pawn;
+    public Pawn Pawn
+    {
+        get => field ?? throw new InvalidOperationException();
+        set;
+    }
 
     // ReSharper disable once ParameterHidesMember
-    void IPawnData.Init(Pawn pawn)
+    void IPawnData.Init()
     {
-        this.pawn = pawn;
         EventManager.Instance.AddListener(this);
 
         if (Scribe.mode == LoadSaveMode.Inactive)
@@ -20,9 +23,9 @@ public abstract class GeneTracker : IEventListener, IPawnData
 
     public abstract void Update();
 
-    protected void Append<T>(ref List<T> dest, List<T> source)
+    protected void Append<T>(ref List<T>? dest, List<T>? source)
     {
-        if (source.NullOrEmpty())
+        if (source == null || source.Count == 0)
             return;
         if (dest == null)
             dest = [..source];
@@ -32,10 +35,10 @@ public abstract class GeneTracker : IEventListener, IPawnData
 
     void IEventListener.RegisterWith(EventManager manager)
     {
-        manager.Register(EventDefOf.PostLoadedGame, pawn, Update);
-        manager.Register(EventDefOf.PostGenesChanged, pawn, Update);
-        manager.Register(EventDefOf.PostMutated, pawn, Update);
-        manager.Register(EventDefOf.PostBirthday, pawn, Update);
+        manager.Register(EventDefOf.PostLoadedGame, Pawn, Update);
+        manager.Register(EventDefOf.PostGenesChanged, Pawn, Update);
+        manager.Register(EventDefOf.PostMutated, Pawn, Update);
+        manager.Register(EventDefOf.PostBirthday, Pawn, Update);
     }
 
     void IEventListener.PreUnregister(EventManager manager)

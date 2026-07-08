@@ -3,12 +3,12 @@ namespace Xylib.Patches;
 [HarmonyPatch(typeof(PawnGenerator))]
 internal static class Patch_PawnGenerator
 {
-    private static XenotypeDef xenotypeOverride;
+    private static XenotypeDef? xenotypeOverride;
 
     [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
     [InfixPrefix(typeof(PawnGenerator), "GenerateGenes")]
     [InfixPatch("TryGenerateNewPawnInternal")]
-    public static void GenerateGenes_Prefix(ref XenotypeDef xenotype)
+    public static void GenerateGenes_Prefix(ref XenotypeDef? xenotype)
     {
         xenotype = xenotypeOverride;
     }
@@ -46,7 +46,7 @@ internal static class Patch_PawnGenerator
     [Feature(nameof(EventDefOf.PostGenerateNewPawn))]
     [HarmonyPostfix]
     [HarmonyPatch("TryGenerateNewPawnInternal")]
-    public static void TryGenerateNewPawnInternal_Postfix(ref Pawn __result, ref PawnGenerationRequest request)
+    public static void TryGenerateNewPawnInternal_Postfix(ref Pawn? __result, ref PawnGenerationRequest request)
     {
         if (__result == null)
             return;

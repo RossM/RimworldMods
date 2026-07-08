@@ -3,7 +3,7 @@
 [PublicAPI]
 public class StartingApparelOption
 {
-    public ThingDef item;
+    public ThingDef? item;
     public float chance = 1.0f;
     public IntRange count = IntRange.Zero;
     public bool ignoreRestrictions;
@@ -13,11 +13,28 @@ public class StartingApparelOption
 [PublicAPI]
 public class GeneCompProperties_ExtraApparel : GeneCompProperties
 {
-    public List<StartingApparelOption> items;
+    public List<StartingApparelOption>? items;
 
     public GeneCompProperties_ExtraApparel()
     {
         compClass = typeof(GeneComp_ExtraApparel);
+    }
+
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (items is null)
+        {
+            yield return $"{nameof(items)} is null";
+            yield break;
+        }
+
+        foreach (var item in items)
+        {
+            if (item.item is null)
+                yield return $"null {nameof(item.item)} in {nameof(item)}";
+            if (item.count.IsInvalid)
+                yield return $"invalid {nameof(item.count)} in {nameof(item)}";
+        }
     }
 }
 
@@ -28,9 +45,9 @@ public class GeneComp_ExtraApparel : GeneComp, IEventListener
 
     public void GenerateExtraApparel()
     {
-        foreach (var item in Props.items)
+        foreach (var item in Props.items!)
         {
-            if (!ValidApparel(Pawn, item.item, item.ignoreRestrictions))
+            if (!ValidApparel(Pawn, item.item!, item.ignoreRestrictions))
                 continue;
             if (!Rand.Chance(item.chance))
                 continue;
@@ -55,13 +72,13 @@ public class GeneComp_ExtraApparel : GeneComp, IEventListener
         if (ignoreRestrictions)
             return true;
 
-        if (!pawn.kindDef.apparelTags.NullOrEmpty() &&
+        if (pawn.kindDef.apparelTags is { Count: > 0 } &&
             !pawn.kindDef.apparelTags.Any(tag => thing.apparel.tags.Contains(tag)))
         {
             return false;
         }
 
-        if (!pawn.kindDef.apparelDisallowTags.NullOrEmpty() &&
+        if (pawn.kindDef.apparelDisallowTags is { Count: > 0 } &&
             pawn.kindDef.apparelDisallowTags.Any(tag => thing.apparel.tags.Contains(tag)))
         {
             return false;

@@ -57,7 +57,7 @@ public static class GeneDefGenerator
 
         geneDef.abilities = [def];
 
-        if (!template.modExtensions.NullOrEmpty())
+        if (template.modExtensions is { Count: > 0 })
             geneDef.modExtensions = [.. template.modExtensions];
 
         return geneDef;

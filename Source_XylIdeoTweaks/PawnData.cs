@@ -1,4 +1,6 @@
-﻿namespace XylIdeos;
+﻿using System;
+
+namespace XylIdeos;
 
 public enum AutoColorMode
 {
@@ -10,7 +12,11 @@ public enum AutoColorMode
 [ScribeLabel("Source_XylIdeoTweaks.PawnData")]
 public class PawnData : IPawnData, IExposable
 {
-    [Unsaved] public Pawn pawn;
+    public Pawn Pawn
+    {
+        get => field ?? throw new InvalidOperationException();
+        set;
+    }
 
     public AutoColorMode autoColorMode;
 
@@ -25,8 +31,7 @@ public class PawnData : IPawnData, IExposable
     }
 
     // ReSharper disable once ParameterHidesMember
-    public void Init(Pawn pawn)
+    public void Init()
     {
-        this.pawn = pawn;
     }
 }

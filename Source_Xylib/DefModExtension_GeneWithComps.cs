@@ -4,10 +4,8 @@
 [PublicAPI]
 public abstract class GeneCompProperties
 {
-    [CanBeNull] public Type compClass;
+    public Type? compClass;
 
-    [NotNull]
-    [ItemNotNull]
     public virtual IEnumerable<string> ConfigErrors()
     {
         return [];
@@ -17,15 +15,11 @@ public abstract class GeneCompProperties
     {
     }
 
-    [NotNull]
-    [ItemNotNull]
     public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
     {
         return [];
     }
 
-    [NotNull]
-    [ItemNotNull]
     public virtual IEnumerable<string> CustomEffectDescriptions()
     {
         foreach (var entry in SpecialDisplayStats(StatRequest.ForEmpty()))
@@ -42,8 +36,8 @@ public class DefModExtension_GeneWithComps : DefModExtension
 {
     public IEnumerable<string> CustomEffectDescriptions => field ??= GetCustomEffectDescriptions().ToList();
 
-    public Texture2D ExtraIcon =>
-        field ??= extraIconPath.NullOrEmpty()
+    public Texture2D? ExtraIcon =>
+        field ??= string.IsNullOrEmpty(extraIconPath)
             ? (parent as GeneDef)?.Icon
             : ContentFinder<Texture2D>.Get(extraIconPath) ?? (parent as GeneDef)?.Icon;
 
@@ -70,7 +64,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
     ///     The path for an additional icon accessed through the <see cref="ExtraIcon" /> property.
     ///     This is usually used as the icon for a gizmo.
     /// </summary>
-    [NoTranslate] [CanBeNull] public string extraIconPath;
+    [NoTranslate] public string? extraIconPath;
 
     #endregion
 
@@ -85,13 +79,13 @@ public class DefModExtension_GeneWithComps : DefModExtension
     /// <summary>
     ///     Hediff givers which will trigger randomly over time.
     /// </summary>
-    [CanBeNull] public List<HediffGiver> hediffGivers;
+    public List<HediffGiver>? hediffGivers;
 
     #endregion
 
     #region Comps
 
-    [CanBeNull] public List<GeneCompProperties> comps;
+    public List<GeneCompProperties>? comps;
 
     #endregion
 
@@ -100,7 +94,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
     /// <summary>
     ///     The <see cref="GeneDef" /> or <see cref="GeneTemplateDef" /> this object is attached to.
     /// </summary>
-    [CanBeNull] public Def parent;
+    public Def? parent;
 
     #endregion
 
@@ -108,7 +102,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
     {
         if (comps is null)
             yield break;
-        
+
         foreach (var comp in comps)
         {
             if (comp is null)
@@ -119,8 +113,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
         }
     }
 
-    [NotNull]
-    [ItemNotNull]
     protected virtual IEnumerable<string> GetCustomEffectDescriptions()
     {
         if (comps is null)
@@ -187,7 +179,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
         }
     }
 
-    public T CompProps<T>() where T : GeneCompProperties
+    public T? CompProps<T>() where T : GeneCompProperties
     {
         if (comps is null)
             return null;
@@ -200,7 +192,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
         return null;
     }
 
-    public bool ValidFor([NotNull] Pawn pawn, [CanBeNull] GeneType? pawnGeneType)
+    public bool ValidFor(Pawn pawn, GeneType? pawnGeneType)
     {
         if (gender != null && gender != pawn.gender)
             return false;

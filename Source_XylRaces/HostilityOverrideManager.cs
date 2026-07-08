@@ -78,7 +78,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
         foreach (var pawn in map.mapPawns.AllPawns)
         {
             List<FactionDef> factions = pawn.GeneTracker_XylXenos?.disableHostilityFromFactions;
-            if (factions.NullOrEmpty())
+            if (factions is not { Count: > 0 })
                 continue;
 
             foreach (var factionDef in factions)

@@ -32,7 +32,7 @@ public static class PatchHelpers
 
         string text = "";
 
-        if (!xenotypeDefExtension.agreeingMemes.NullOrEmpty())
+        if (xenotypeDefExtension.agreeingMemes is { Count: > 0 })
         {
             foreach (MemeDef meme in ideo.memes)
             {
@@ -45,7 +45,7 @@ public static class PatchHelpers
             }
         }
 
-        if (!xenotypeDefExtension.disagreeingMemes.NullOrEmpty())
+        if (xenotypeDefExtension.disagreeingMemes is { Count: > 0 })
         {
             foreach (MemeDef meme in ideo.memes)
             {
@@ -143,9 +143,9 @@ public static class PatchHelpers
 
         static bool CanExistOnLayer(PlanetLayer layer, FactionDef f)
         {
-            if (!f.layerBlacklist.NullOrEmpty() && f.layerBlacklist.Contains(layer.Def))
+            if (f.layerBlacklist is { Count: > 0 } && f.layerBlacklist.Contains(layer.Def))
                 return false;
-            if (!f.layerWhitelist.NullOrEmpty() || !layer.IsRootSurface)
+            if (f.layerWhitelist is { Count: > 0 } || !layer.IsRootSurface)
                 return f.layerWhitelist.Contains(layer.Def);
             return true;
         }
@@ -232,7 +232,7 @@ public static class PatchHelpers
             if (chemical.GetModExtension<DefModExtension_Chemical>() is not { } defExtension)
                 continue;
 
-            if (!defExtension.requiredGenesAll.NullOrEmpty())
+            if (defExtension.requiredGenesAll is { Count: > 0 })
                 geneDef.prerequisite = defExtension.requiredGenesAll[0];
             else if (defExtension.requiredGenesAny is { Count: 1 })
                 geneDef.prerequisite = defExtension.requiredGenesAny[0];
@@ -264,7 +264,7 @@ public static class PatchHelpers
             if (thoughtOverride.disallowedFoodTypes != FoodType.None && (foodType & thoughtOverride.disallowedFoodTypes) != 0)
                 continue;
 
-            if (!thoughtOverride.thoughts.NullOrEmpty() && !thoughtOverride.thoughts.Contains(thought))
+            if (thoughtOverride.thoughts is { Count: > 0 } && !thoughtOverride.thoughts.Contains(thought))
                 continue;
 
             return true;

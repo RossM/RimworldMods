@@ -10,7 +10,7 @@ internal static class Patch_HediffDef
     [HarmonyPatch(nameof(HediffDef.SpecialDisplayStats))]
     public static void SpecialDisplayStats_Postfix(HediffDef __instance, StatRequest req, ref IEnumerable<StatDrawEntry> __result)
     {
-        if (__instance.comps.NullOrEmpty())
+        if (__instance.comps is not { Count: > 0 })
             return;
 
         statDrawEntries.Clear();

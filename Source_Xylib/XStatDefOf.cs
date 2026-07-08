@@ -96,8 +96,10 @@ public static class XStatDefOf
     /// <summary>A multiplier on how quickly this character's will falls when they are being enslaved.</summary>
     public static StatDef XylWillFallRate;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     static XStatDefOf()
     {
         DefOfHelper.EnsureInitializedInCtor(typeof(XStatDefOf));
     }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 }

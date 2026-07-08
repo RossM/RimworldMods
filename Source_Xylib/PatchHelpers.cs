@@ -3,7 +3,16 @@
 internal static class PatchHelpers
 {
     public static HashSet<RecipeDef> RecipesUnlockedByGenes => field ??= GetRecipesUnlockedByGenes();
-    private static Dictionary<HediffDef, StatDef> resistanceStatByHediff;
+
+    private static Dictionary<HediffDef, StatDef> ResistanceStatByHediff => field ??=
+        new Dictionary<HediffDef, StatDef>
+        {
+            { HediffDefOf.BloodLoss!, XStatDefOf.XylBloodLossResistance },
+            { HediffDefOf.DrugOverdose!, XStatDefOf.XylDrugOverdoseResistance },
+            { HediffDefOf.Heatstroke!, XStatDefOf.XylHeatstrokeResistance },
+            { HediffDefOf.Hypothermia!, XStatDefOf.XylHypothermiaResistance },
+            { HediffDefOf.Malnutrition!, XStatDefOf.XylMalnutritionResistance },
+        };
 
     public static void RunDefGenerators(bool hotReload)
     {
@@ -44,10 +53,10 @@ internal static class PatchHelpers
         }
     }
 
-    public static bool TryGetChemicalDependencyGene(Pawn pawn, out Gene outGene)
+    public static bool TryGetChemicalDependencyGene(Pawn pawn, [NotNullWhen(true)] out Gene? outGene)
     {
-        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene =>
-            gene.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies is true);
+        outGene = (pawn.genes?.GenesListForReading).FirstOrDefault(gene =>
+            gene!.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies is true);
         return outGene != null;
     }
 
@@ -84,13 +93,13 @@ internal static class PatchHelpers
         return target.GetStatValue(XStatDefOf.XylRangedDodgeChance);
     }
 
-    public static void AddSlaveRebellionMtbFactorExplanation(StringBuilder stringBuilder, Pawn pawn)
+    public static void AddSlaveRebellionMtbFactorExplanation(StringBuilder stringBuilder, Pawn? pawn)
     {
         if (pawn == null)
             return;
 
         StatRequest statRequest = StatRequest.For(pawn);
-        float baseValueFor = XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetBaseValueFor(statRequest);
+        float baseValueFor = XStatDefOf.XylSlaveRebellionMtbFactor.Worker!.GetBaseValueFor(statRequest);
         ToStringNumberSense toStringNumberSense = XStatDefOf.XylSlaveRebellionMtbFactor.toStringNumberSense;
         XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor);
         XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense,
@@ -123,8 +132,8 @@ internal static class PatchHelpers
 
     public static void AddDesignators(
         DesignationCategoryDef __instance,
-        [NotNull] ref IEnumerable<Designator> __result,
-        [NotNull] Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ideoBuildingDesignatorsCached)
+        ref IEnumerable<Designator> __result,
+        Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ideoBuildingDesignatorsCached)
     {
         HashSet<Designator> geneDesignators = [];
 
@@ -153,21 +162,12 @@ internal static class PatchHelpers
         }
     }
 
-    public static float GetHediffResistance([NotNull] Pawn pawn, [NotNull] HediffDef def)
+    public static float GetHediffResistance(Pawn pawn, HediffDef def)
     {
-        resistanceStatByHediff ??= new Dictionary<HediffDef, StatDef>
-        {
-            { HediffDefOf.BloodLoss!, XStatDefOf.XylBloodLossResistance },
-            { HediffDefOf.DrugOverdose!, XStatDefOf.XylDrugOverdoseResistance },
-            { HediffDefOf.Heatstroke!, XStatDefOf.XylHeatstrokeResistance },
-            { HediffDefOf.Hypothermia!, XStatDefOf.XylHypothermiaResistance },
-            { HediffDefOf.Malnutrition!, XStatDefOf.XylMalnutritionResistance },
-        };
-
-        return resistanceStatByHediff.TryGetValue(def, out var stat) ? pawn.GetStatValue(stat) : 0f;
+        return ResistanceStatByHediff.TryGetValue(def, out var stat) ? pawn.GetStatValue(stat) : 0f;
     }
 
-    public static List<GeneDef> FilterGenes([NotNull] List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
+    public static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
     {
         if (ignoreRestrictions)
             return genes;

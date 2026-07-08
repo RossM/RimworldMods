@@ -25,7 +25,7 @@ public static class ReflectionHelpers
     /// <exception cref="ArgumentException">
     ///     Thrown when <paramref name="methodName" /> is not a method on <paramref name="baseType" />.
     /// </exception>
-    public static bool HasOverridingMethod([NotNull] Type childType, [NotNull] Type baseType, [NotNull] string methodName)
+    public static bool HasOverridingMethod(Type childType, Type baseType, string methodName)
     {
         var baseMethodInfo = baseType.GetMethod(methodName, MethodBindingFlags);
         if (baseMethodInfo == null)

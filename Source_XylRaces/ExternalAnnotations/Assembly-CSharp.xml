@@ -26,6 +26,18 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
+  <member name="M:Verse.HediffMaker.MakeHediff(Verse.HediffDef,Verse.Pawn,Verse.BodyPartRecord)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter Name="def">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+    <parameter Name="pawn">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+    <parameter Name="partRecord">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+  </member>
   <member name="P:RimWorld.Pawn_GeneTracker.GenesListForReading">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>

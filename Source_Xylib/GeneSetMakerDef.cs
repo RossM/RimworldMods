@@ -3,12 +3,12 @@
 [UsedFromXml]
 public class GeneSetMakerDef : Def
 {
-    public GeneSetMaker root;
+    public GeneSetMaker? root;
 
     public override void ResolveReferences()
     {
         base.ResolveReferences();
-        root.ResolveReferences();
+        root?.ResolveReferences();
     }
 
     public override IEnumerable<string> ConfigErrors()
@@ -18,7 +18,7 @@ public class GeneSetMakerDef : Def
 
         if (root == null)
         {
-            yield return "root is null";
+            yield return $"{nameof(root)} is null";
             yield break;
         }
 

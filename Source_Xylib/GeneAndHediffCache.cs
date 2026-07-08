@@ -13,24 +13,27 @@ namespace Xylib;
 [PublicAPI]
 public class GeneAndHediffCache : IEventListener, IPawnData
 {
-    [NotNull] private readonly Dictionary<Type, IList> genesByType = new();
-    [NotNull] private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
-    [NotNull] private readonly Dictionary<Type, List<GeneWithComps>> genesByComp = new();
+    private readonly Dictionary<Type, IList> genesByType = new();
+    private readonly Dictionary<GeneDef, List<Gene>> genesByDef = new();
+    private readonly Dictionary<Type, List<GeneWithComps>> genesByComp = new();
 
-    [NotNull] private readonly Dictionary<Type, IList> hediffsByType = new();
-    [NotNull] private readonly Dictionary<HediffDef, List<Hediff>> hediffsByDef = new();
-    [NotNull] private readonly Dictionary<Type, List<Hediff>> hediffsByModExt = new();
-    [NotNull] private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
+    private readonly Dictionary<Type, IList> hediffsByType = new();
+    private readonly Dictionary<HediffDef, List<Hediff>> hediffsByDef = new();
+    private readonly Dictionary<Type, List<Hediff>> hediffsByModExt = new();
+    private readonly Dictionary<Type, List<HediffWithComps>> hediffsByComp = new();
 
     /// <summary>
     ///     Gets the pawn whose genes and hediffs are cached.
     /// </summary>
-    public Pawn Pawn { get; private set; }
+    public Pawn Pawn
+    {
+        get => field ?? throw new InvalidOperationException();
+        set;
+    }
 
     // ReSharper disable once ParameterHidesMember
-    void IPawnData.Init([NotNull] Pawn pawn)
+    void IPawnData.Init()
     {
-        Pawn = pawn;
         EventManager.Instance.AddListener(this);
     }
 
@@ -43,7 +46,6 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     /// <returns>
     ///     The matching genes.
     /// </returns>
-    [NotNull]
     public IReadOnlyList<T> GetGenesOfType<T>() where T : Gene
     {
         if (genesByType.TryGetValue(typeof(T), out IList value))
@@ -66,8 +68,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     /// <returns>
     ///     The matching genes.
     /// </returns>
-    [NotNull]
-    public IReadOnlyList<Gene> GetGenesWithDef([NotNull] GeneDef def)
+    public IReadOnlyList<Gene> GetGenesWithDef(GeneDef def)
     {
         if (genesByDef.TryGetValue(def, out List<Gene> value))
             return value!;
@@ -86,7 +87,6 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     /// <returns>
     ///     Matching <see cref="GeneWithComps" /> instances.
     /// </returns>
-    [NotNull]
     public IReadOnlyList<GeneWithComps> GetGenesWithComp<T>() where T : GeneComp
     {
         if (genesByComp.TryGetValue(typeof(T), out List<GeneWithComps> value))
@@ -106,7 +106,6 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     /// <returns>
     ///     The matching hediffs.
     /// </returns>
-    [NotNull]
     public IReadOnlyList<T> GetHediffsOfType<T>() where T : Hediff
     {
         if (hediffsByType.TryGetValue(typeof(T), out IList value))
@@ -126,8 +125,7 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     /// <returns>
     ///     The matching hediffs.
     /// </returns>
-    [NotNull]
-    public IReadOnlyList<Hediff> GetHediffsWithDef([NotNull] HediffDef def)
+    public IReadOnlyList<Hediff> GetHediffsWithDef(HediffDef def)
     {
         if (hediffsByDef.TryGetValue(def, out List<Hediff> value))
             return value!;
@@ -146,7 +144,6 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     /// <returns>
     ///     The matching hediffs.
     /// </returns>
-    [NotNull]
     public IReadOnlyList<Hediff> GetHediffsWithModExtension<T>() where T : DefModExtension
     {
         if (hediffsByModExt.TryGetValue(typeof(T), out List<Hediff> value))
@@ -166,7 +163,6 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     /// <returns>
     ///     Matching <see cref="HediffWithComps" /> instances.
     /// </returns>
-    [NotNull]
     public IReadOnlyList<HediffWithComps> GetHediffsWithComp<T>() where T : HediffComp
     {
         if (hediffsByComp.TryGetValue(typeof(T), out List<HediffWithComps> value))

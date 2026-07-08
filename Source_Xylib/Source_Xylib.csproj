@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net4.7.2</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Xylib</AssemblyName>
     <RootNamespace>Xylib</RootNamespace>

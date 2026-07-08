@@ -6,13 +6,15 @@ namespace Xylib;
 ///     Represents a type of data that can be associated with a <see cref="Pawn" />. Implement this interface to create a
 ///     class that can be stored in <see cref="PawnExtraData{T}" />.
 /// </summary>
+[PublicAPI]
 public interface IPawnData
 {
+    public Pawn Pawn { get; set; }
+
     /// <summary>
     ///     Called after the object is created or loaded to initialize it with the pawn it applies to.
     /// </summary>
-    /// <param name="pawn"></param>
-    void Init(Pawn pawn);
+    void Init();
 }
 
 /// <summary>
@@ -29,7 +31,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
 {
     private class Listener : IEventListener
     {
-        private void Notify_InPawnExposeData(Thing thing)
+        private void Notify_InPawnExposeData(Thing? thing)
         {
             if (thing is not Pawn pawn)
                 return;
@@ -37,7 +39,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
             ExposeData(pawn);
         }
 
-        private void Notify_PawnDiscarded(Thing thing)
+        private void Notify_PawnDiscarded(Thing? thing)
         {
             if (thing is not Pawn)
                 return;
@@ -64,9 +66,9 @@ public static class PawnExtraData<T> where T : IPawnData, new()
         }
     }
 
-    [NotNull] private static readonly Dictionary<int, T> data = new();
+    private static readonly Dictionary<int, T> data = new();
 
-    [NotNull] private static readonly Listener listener = new();
+    private static readonly Listener listener = new();
 
     static PawnExtraData()
     {
@@ -86,23 +88,22 @@ public static class PawnExtraData<T> where T : IPawnData, new()
     /// <param name="pawn">The pawn to get the data for.</param>
     /// <returns>The data for the pawn.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [NotNull]
-    public static T Get([NotNull] Pawn pawn)
+    public static T Get(Pawn pawn)
     {
         if (!data.TryGetValue(pawn.thingIDNumber, out T result))
         {
-            result = new T();
-            result.Init(pawn);
+            result = new T { Pawn = pawn };
+            result.Init();
             data.Add(pawn.thingIDNumber, result);
         }
 
         return result!;
     }
 
-    private static void ExposeData([NotNull] Pawn pawn)
+    private static void ExposeData(Pawn pawn)
     {
-        if (!data.TryGetValue(pawn.thingIDNumber, out T value))
-            value = default(T);
+        if (!data.TryGetValue(pawn.thingIDNumber, out T? value))
+            value = default;
 
         Scribe_Deep.Look(ref value, ScribeLabel);
 
@@ -113,7 +114,8 @@ public static class PawnExtraData<T> where T : IPawnData, new()
             data.Remove(pawn.thingIDNumber);
         else
         {
-            value.Init(pawn);
+            value.Pawn = pawn;
+            value.Init();
             data[pawn.thingIDNumber] = value;
         }
     }

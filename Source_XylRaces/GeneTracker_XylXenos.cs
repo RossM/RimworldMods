@@ -25,9 +25,9 @@ public class GeneTracker_XylXenos : GeneTracker
         hasPsycast = false;
         youthfulMaxAge = float.MaxValue;
 
-        if (pawn.genes != null)
+        if (Pawn.genes != null)
         {
-            foreach (var gene in pawn.ActiveGenesOfType<GeneWithComps>())
+            foreach (var gene in Pawn.ActiveGenesOfType<GeneWithComps>())
             {
                 var def = gene.DefExt;
 

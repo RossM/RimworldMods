@@ -15,7 +15,7 @@ internal static class PatchPawnRender
     public static void AppendRequests_Postfix(PawnRenderNode __instance, PawnDrawParms parms, List<PawnGraphicDrawRequest> requests)
     {
         var type = RenderNodeModifierType.VisibilitySelfOnly;
-        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
+        List<RenderNodeModifier>? renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
         if (renderNodeModifiers == null)
             return;
 
@@ -25,7 +25,7 @@ internal static class PatchPawnRender
 
             for (var j = 0; j < renderNodeModifiers.Count; j++)
             {
-                RenderNodeModifier renderNodeModifier = renderNodeModifiers[j];
+                RenderNodeModifier renderNodeModifier = renderNodeModifiers[j]!;
                 if (renderNodeModifier.Matches(requests[i].node))
                 {
                     hidden = true;
@@ -44,13 +44,13 @@ internal static class PatchPawnRender
     public static bool AppendRequests_Prefix(PawnRenderNode __instance, PawnDrawParms parms, List<PawnGraphicDrawRequest> requests)
     {
         var type = RenderNodeModifierType.VisibilitySelfAndChildren;
-        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
+        List<RenderNodeModifier>? renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
         if (renderNodeModifiers == null)
             return true;
 
         for (var i = 0; i < renderNodeModifiers.Count; i++)
         {
-            RenderNodeModifier renderNodeModifier = renderNodeModifiers[i];
+            RenderNodeModifier renderNodeModifier = renderNodeModifiers[i]!;
             if (renderNodeModifier.Matches(__instance))
                 return false;
         }
@@ -69,13 +69,13 @@ internal static class PatchPawnRender
         ref Vector3 scale)
     {
         var type = __instance == node ? RenderNodeModifierType.PositionSelf : RenderNodeModifierType.PositionChildren;
-        List<RenderNodeModifier> renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
+        List<RenderNodeModifier>? renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
         if (renderNodeModifiers == null)
             return;
 
         for (var i = 0; i < renderNodeModifiers.Count; i++)
         {
-            RenderNodeModifier renderNodeModifier = renderNodeModifiers[i];
+            RenderNodeModifier renderNodeModifier = renderNodeModifiers[i]!;
             if (renderNodeModifier.Matches(__instance))
             {
                 offset += renderNodeModifier.offset;

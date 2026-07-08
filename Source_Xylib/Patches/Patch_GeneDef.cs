@@ -12,7 +12,7 @@ internal static class Patch_GeneDef
         if (extraDescriptions.Count == 0)
             return;
 
-        __result = __result.NullOrEmpty() ? extraDescriptions : [.. __result, .. extraDescriptions];
+        __result = __result is not { Count: > 0 } ? extraDescriptions : [.. __result, .. extraDescriptions];
     }
 
     [Feature(typeof(DefModExtension_GeneWithComps))]

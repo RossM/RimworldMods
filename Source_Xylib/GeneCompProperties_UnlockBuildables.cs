@@ -3,7 +3,7 @@
 [UsedFromXml]
 public class GeneCompProperties_UnlockBuildables : GeneCompProperties
 {
-    public List<BuildableDef> buildables;
+    public List<BuildableDef>? buildables;
 
     public override IEnumerable<string> CustomEffectDescriptions()
     {
@@ -14,6 +14,6 @@ public class GeneCompProperties_UnlockBuildables : GeneCompProperties
     public override IEnumerable<string> ConfigErrors()
     {
         if (buildables is null)
-            yield return "buildables is null";
+            yield return $"{nameof(buildables)} is null";
     }
 }

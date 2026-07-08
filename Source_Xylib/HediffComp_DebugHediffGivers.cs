@@ -9,7 +9,7 @@ public class HediffComp_DebugHediffGivers : HediffComp
             yield break;
 
         var stage = parent.CurStage;
-        if (stage == null || stage.hediffGivers.NullOrEmpty())
+        if (stage == null || stage.hediffGivers is not { Count: > 0 })
             yield break;
 
         for (var index = 0; index < stage.hediffGivers.Count; index++)
@@ -28,7 +28,7 @@ public class HediffComp_DebugHediffGivers : HediffComp
         }
     }
 
-    private void Trigger([NotNull] HediffGiver giver)
+    private void Trigger(HediffGiver giver)
     {
         if (giver is HediffGiver_RandomExt giverExt)
             giverExt.TryApply(parent.pawn!, parent);
