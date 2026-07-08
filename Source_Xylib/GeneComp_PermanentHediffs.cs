@@ -4,7 +4,7 @@
 [PublicAPI]
 public class GeneCompProperties_PermanentHediffs : GeneCompProperties
 {
-    public List<HediffGiver_Event>? hediffs;
+    public required List<HediffGiver_Event> hediffs;
 
     public GeneCompProperties_PermanentHediffs()
     {
@@ -73,7 +73,7 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
         verbs = [];
         tools = [];
 
-        foreach (var hediff in hediffs!)
+        foreach (var hediff in hediffs)
         {
             var props = hediff.hediff!.CompProps<HediffCompProperties_VerbGiver>();
             if (props?.verbs != null)
@@ -83,6 +83,7 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
         }
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         if (hediffs is null)
@@ -100,7 +101,7 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
         if (!Active)
             return;
 
-        foreach (var hediffGiver in Props.hediffs!)
+        foreach (var hediffGiver in Props.hediffs)
             hediffGiver.EventOccurred(Pawn);
     }
 
@@ -118,7 +119,7 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
 
     private void UpdatePermanentHediffs()
     {
-        foreach (var hediffGiver in Props.hediffs!)
+        foreach (var hediffGiver in Props.hediffs)
         {
             if (hediffGiver.partsToAffect is not { Count: > 0 })
                 continue;

@@ -16,7 +16,14 @@ public class FoodGroupDef : Def
 [UsedFromXml]
 public class Config : Def
 {
-    public static Config Instance => field ??= DefDatabase<Config>.GetNamed("XylibConfig");
+    public static Config Instance => field ??= DefDatabase<Config>.GetNamed("XylibConfig")!;
 
-    public Dictionary<HediffDef, StatDef> resistanceStatByHediff;
+    public required Dictionary<HediffDef, StatDef> resistanceStatByHediff;
+
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (resistanceStatByHediff is null)
+            yield return $"{nameof(resistanceStatByHediff)} is null";
+    }
 }

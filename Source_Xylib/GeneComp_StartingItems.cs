@@ -14,13 +14,14 @@ public class StartingItemOption
 [PublicAPI]
 public class GeneCompProperties_StartingItems : GeneCompProperties
 {
-    public List<StartingItemOption>? items;
+    public required List<StartingItemOption> items;
 
     public GeneCompProperties_StartingItems()
     {
         compClass = typeof(GeneComp_StartingItems);
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         if (items is null)
@@ -49,7 +50,7 @@ public class GeneComp_StartingItems : GeneComp, IEventListener
         if (Props.items is not { Count: > 0 })
             yield break;
 
-        foreach (var startingItem in Props.items!)
+        foreach (var startingItem in Props.items)
         {
             if (!Rand.Chance(startingItem.chance))
                 continue;

@@ -4,7 +4,7 @@
 [PublicAPI]
 public class HediffCompProperties_Genetic : HediffCompPropertiesExt
 {
-    public GeneDef? gene;
+    public required GeneDef gene;
     public bool showStats = true;
 
     public HediffCompProperties_Genetic()
@@ -14,9 +14,10 @@ public class HediffCompProperties_Genetic : HediffCompPropertiesExt
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest request)
     {
-        return showStats && gene!.Extension_GeneWithComps is { } geneWithComps ? geneWithComps.SpecialDisplayStats(request) : [];
+        return showStats && gene.Extension_GeneWithComps is { } geneWithComps ? geneWithComps.SpecialDisplayStats(request) : [];
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
     {
         if (gene is null)
@@ -29,5 +30,5 @@ public class HediffComp_Genetic : HediffComp
 {
     public HediffCompProperties_Genetic Props => (HediffCompProperties_Genetic)props;
 
-    public override bool CompShouldRemove => !Pawn!.HasActiveGene(Props.gene!);
+    public override bool CompShouldRemove => !Pawn!.HasActiveGene(Props.gene);
 }

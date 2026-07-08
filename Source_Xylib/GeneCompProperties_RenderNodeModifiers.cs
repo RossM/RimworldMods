@@ -11,7 +11,7 @@ internal enum RenderNodeModifierType
 [PublicAPI]
 public class RenderNodeModifier
 {
-    public PawnRenderNodeTagDef? tag;
+    public required PawnRenderNodeTagDef tag;
     public float scale = 1.0f;
     public Vector3 offset = Vector3.zero;
     public bool hidden = false;
@@ -31,13 +31,10 @@ public class GeneCompProperties_RenderNodeModifiers : GeneCompProperties
     ///     Modifiers to the scale and offset to specific nodes in the pawn's render tree, used to
     ///     change the pawn's visual in a different way than just adding additional nodes.
     /// </summary>
-    public List<RenderNodeModifier>? renderNodeModifiers;
+    public required List<RenderNodeModifier> renderNodeModifiers;
 
-    internal List<RenderNodeModifier>? RenderNodeModifiersOfType(RenderNodeModifierType type)
+    internal List<RenderNodeModifier> RenderNodeModifiersOfType(RenderNodeModifierType type)
     {
-        if (renderNodeModifiers == null)
-            return null;
-
         List<RenderNodeModifier> list = [];
 
         switch (type)
@@ -82,6 +79,7 @@ public class GeneCompProperties_RenderNodeModifiers : GeneCompProperties
         }
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         if (renderNodeModifiers is null)

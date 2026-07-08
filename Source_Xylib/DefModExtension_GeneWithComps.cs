@@ -128,6 +128,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
         }
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         foreach (var configError in base.ConfigErrors())

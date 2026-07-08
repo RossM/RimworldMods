@@ -4,7 +4,7 @@
 [PublicAPI]
 public class HediffCompProperties_ForceMentalState : HediffCompProperties
 {
-    public MentalStateDef? mentalState;
+    public required MentalStateDef mentalState;
     public bool endMentalStateOnCure = true;
 
     public HediffCompProperties_ForceMentalState()
@@ -12,6 +12,7 @@ public class HediffCompProperties_ForceMentalState : HediffCompProperties
         compClass = typeof(HediffComp_ForceMentalState);
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
     {
         if (mentalState is null)

@@ -4,7 +4,7 @@
 [PublicAPI]
 public class HediffCompProperties_SetNeed : HediffCompProperties
 {
-    public NeedDef? need;
+    public required NeedDef need;
     public FloatRange levelPercentage;
     public FloatRange severityRange = new(float.MinValue, float.MaxValue);
 
@@ -13,6 +13,7 @@ public class HediffCompProperties_SetNeed : HediffCompProperties
         compClass = typeof(HediffComp_SetNeed);
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
     {
         if (need is null)
@@ -37,13 +38,13 @@ public class HediffComp_SetNeed : HediffComp
                 return null;
 
             if (Props.levelPercentage.min <= 0)
-                return $"  - {Props.need!.LabelCap}: {"max".Translate().CapitalizeFirst()} {Props.levelPercentage.max.ToStringPercent()}";
+                return $"  - {Props.need.LabelCap}: {"max".Translate().CapitalizeFirst()} {Props.levelPercentage.max.ToStringPercent()}";
             if (Props.levelPercentage.max >= 1)
-                return $"  - {Props.need!.LabelCap}: {"min".Translate().CapitalizeFirst()} {Props.levelPercentage.min.ToStringPercent()}";
+                return $"  - {Props.need.LabelCap}: {"min".Translate().CapitalizeFirst()} {Props.levelPercentage.min.ToStringPercent()}";
             if (Props.levelPercentage.min == Props.levelPercentage.max)
-                return $"  - {Props.need!.LabelCap}: {Props.levelPercentage.min.ToStringPercent()}";
+                return $"  - {Props.need.LabelCap}: {Props.levelPercentage.min.ToStringPercent()}";
             return
-                $"  - {Props.need!.LabelCap}: {Props.levelPercentage.min.ToStringPercent()}-{Props.levelPercentage.max.ToStringPercent()}";
+                $"  - {Props.need.LabelCap}: {Props.levelPercentage.min.ToStringPercent()}-{Props.levelPercentage.max.ToStringPercent()}";
         }
     }
 

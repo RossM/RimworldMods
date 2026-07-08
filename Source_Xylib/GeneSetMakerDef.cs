@@ -3,14 +3,15 @@
 [UsedFromXml]
 public class GeneSetMakerDef : Def
 {
-    public GeneSetMaker? root;
+    public required GeneSetMaker root;
 
     public override void ResolveReferences()
     {
         base.ResolveReferences();
-        root?.ResolveReferences();
+        root.ResolveReferences();
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         foreach (var error in base.ConfigErrors())

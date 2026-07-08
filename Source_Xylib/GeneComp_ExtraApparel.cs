@@ -3,7 +3,7 @@
 [PublicAPI]
 public class StartingApparelOption
 {
-    public ThingDef? item;
+    public required ThingDef item;
     public float chance = 1.0f;
     public IntRange count = IntRange.Zero;
     public bool ignoreRestrictions;
@@ -13,13 +13,14 @@ public class StartingApparelOption
 [PublicAPI]
 public class GeneCompProperties_ExtraApparel : GeneCompProperties
 {
-    public List<StartingApparelOption>? items;
+    public required List<StartingApparelOption> items;
 
     public GeneCompProperties_ExtraApparel()
     {
         compClass = typeof(GeneComp_ExtraApparel);
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         if (items is null)
@@ -45,14 +46,14 @@ public class GeneComp_ExtraApparel : GeneComp, IEventListener
 
     public void GenerateExtraApparel()
     {
-        foreach (var item in Props.items!)
+        foreach (var item in Props.items)
         {
-            if (!ValidApparel(Pawn, item.item!, item.ignoreRestrictions))
+            if (!ValidApparel(Pawn, item.item, item.ignoreRestrictions))
                 continue;
             if (!Rand.Chance(item.chance))
                 continue;
 
-            if (PawnApparelGenerator.GenerateApparelOfDefFor(Pawn, item.item!) is { } apparel && apparel.PawnCanWear(Pawn))
+            if (PawnApparelGenerator.GenerateApparelOfDefFor(Pawn, item.item) is { } apparel && apparel.PawnCanWear(Pawn))
             {
                 PawnApparelGenerator.PostProcessApparel(apparel, Pawn);
                 PawnGenerator.PostProcessGeneratedGear(apparel, Pawn);

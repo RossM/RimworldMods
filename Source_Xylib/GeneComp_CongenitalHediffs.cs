@@ -4,13 +4,14 @@
 [PublicAPI]
 public class GeneCompProperties_CongenitalHediffs : GeneCompProperties
 {
-    public List<HediffGiver_Event>? hediffs;
+    public required List<HediffGiver_Event> hediffs;
 
     public GeneCompProperties_CongenitalHediffs()
     {
         compClass = typeof(GeneComp_CongenitalHediffs);
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         if (hediffs is null)
@@ -25,7 +26,7 @@ public class GeneComp_CongenitalHediffs : GeneComp, IEventListener
 
     public void Notify_PostGeneratedInitialHediffs()
     {
-        foreach (var hediff in Props.hediffs!)
+        foreach (var hediff in Props.hediffs)
             hediff.EventOccurred(Pawn);
     }
 

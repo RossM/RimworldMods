@@ -24,7 +24,7 @@ internal static class Patch_GenConstruct
         {
             foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)
             {
-                if (gene.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables?.Contains(def) is true)
+                if (gene.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables.Contains(def) is true)
                     tmpIdeoMemberNames()!.Add("XylCharactersWithGene".Translate(gene.LabelCap));
             }
         }

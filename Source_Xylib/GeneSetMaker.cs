@@ -91,7 +91,7 @@ public abstract class GeneSetMaker
 [PublicAPI]
 public class GeneSetMakerWeight
 {
-    public GeneSetMaker? maker;
+    public required GeneSetMaker maker;
     public float weight = 1f;
 }
 
@@ -101,17 +101,18 @@ public class GeneSetMaker_Option : GeneSetMaker
 {
     public override int BiostatMetForDisplay =>
         count.min * Mathf.Clamp(0,
-            options!.Min(o => o.maker!.BiostatMetForDisplay),
-            options!.Max(o => o.maker!.BiostatMetForDisplay));
+            options.Min(o => o.maker.BiostatMetForDisplay),
+            options.Max(o => o.maker.BiostatMetForDisplay));
 
-    public List<GeneSetMakerWeight>? options;
+    public required List<GeneSetMakerWeight> options;
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
         for (int i = 0; i < countValue; i++)
-            options!.RandomElementByWeight(o => o!.weight)!.maker!.AddGenes(geneSet, geneType, pawn);
+            options.RandomElementByWeight(o => o!.weight)!.maker.AddGenes(geneSet, geneType, pawn);
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         foreach (var error in base.ConfigErrors())
@@ -138,8 +139,8 @@ public class GeneSetMaker_Option : GeneSetMaker
     public override void ResolveReferences()
     {
         base.ResolveReferences();
-        foreach (var option in options!)
-            option.maker!.ResolveReferences();
+        foreach (var option in options)
+            option.maker.ResolveReferences();
     }
 }
 
@@ -147,13 +148,14 @@ public class GeneSetMaker_Option : GeneSetMaker
 [PublicAPI]
 public class GeneSetMaker_Subtree : GeneSetMaker
 {
-    public GeneSetMakerDef? def;
+    public required GeneSetMakerDef def;
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
-        def!.root!.AddGenes(geneSet, geneType, pawn);
+        def.root.AddGenes(geneSet, geneType, pawn);
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         if (def is null)
@@ -202,7 +204,7 @@ public class GeneSetMaker_List : GeneSetMaker
 
     private int? biostatMetInternal;
 
-    public List<GeneDef>? genes;
+    public required List<GeneDef> genes;
 
     private int CalculateBiostatMet()
     {
@@ -240,6 +242,7 @@ public class GeneSetMaker_List : GeneSetMaker
         }
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         if (genes is null)
