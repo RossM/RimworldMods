@@ -3,11 +3,7 @@ namespace Xylib.Patches;
 [HarmonyPatch(typeof(HealthUtility))]
 internal static class Patch_HealthUtility
 {
-    [Feature(nameof(XStatDefOf.XylBloodLossResistance))]
-    [Feature(nameof(XStatDefOf.XylDrugOverdoseResistance))]
-    [Feature(nameof(XStatDefOf.XylHeatstrokeResistance))]
-    [Feature(nameof(XStatDefOf.XylHypothermiaResistance))]
-    [Feature(nameof(XStatDefOf.XylMalnutritionResistance))]
+    [Feature(nameof(Config.resistanceStatByHediff))]
     [HarmonyPrefix]
     [HarmonyPatch(nameof(HealthUtility.AdjustSeverity))]
     public static void AdjustSeverity_Prefix(Pawn pawn, HediffDef hdDef, ref float sevOffset)
