@@ -4,8 +4,10 @@
 [PublicAPI]
 public abstract class GeneCompProperties
 {
-    public Type compClass;
+    [CanBeNull] public Type compClass;
 
+    [NotNull]
+    [ItemNotNull]
     public virtual IEnumerable<string> ConfigErrors()
     {
         return [];
@@ -15,11 +17,15 @@ public abstract class GeneCompProperties
     {
     }
 
+    [NotNull]
+    [ItemNotNull]
     public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
     {
         return [];
     }
 
+    [NotNull]
+    [ItemNotNull]
     public virtual IEnumerable<string> CustomEffectDescriptions()
     {
         foreach (var entry in SpecialDisplayStats(StatRequest.ForEmpty()))
@@ -100,20 +106,31 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
     public IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
     {
-        if (comps != null)
+        if (comps is null)
+            yield break;
+        
+        foreach (var comp in comps)
         {
-            foreach (var comp in comps)
+            if (comp is null)
+                continue;
+
             foreach (var result in comp.SpecialDisplayStats(req))
                 yield return result;
         }
     }
 
     [NotNull]
+    [ItemNotNull]
     protected virtual IEnumerable<string> GetCustomEffectDescriptions()
     {
-        if (comps != null)
+        if (comps is null)
+            yield break;
+
+        foreach (var comp in comps)
         {
-            foreach (var comp in comps)
+            if (comp is null)
+                continue;
+
             foreach (var result in comp.CustomEffectDescriptions())
                 yield return result;
         }
@@ -125,14 +142,22 @@ public class DefModExtension_GeneWithComps : DefModExtension
             yield return configError;
 
         var fieldDef = parent?.GetType().GetField("geneClass");
-        if (fieldDef == null || fieldDef.FieldType != typeof(Type))
+        if (fieldDef is null || fieldDef.FieldType != typeof(Type))
             yield return "parent is not GeneDef or GeneTemplateDef";
         else if (!typeof(GeneWithComps).IsAssignableFrom((Type)fieldDef.GetValue(parent)))
             yield return "geneClass is not GeneExt or subclass thereof";
 
-        if (comps != null)
+        if (comps is null)
+            yield break;
+
+        foreach (var comp in comps)
         {
-            foreach (var comp in comps)
+            if (comp is null)
+            {
+                yield return "comp is null";
+                continue;
+            }
+
             foreach (var configError in comp.ConfigErrors())
                 yield return configError;
         }
@@ -150,16 +175,21 @@ public class DefModExtension_GeneWithComps : DefModExtension
         if (fieldDef != null && fieldDef.FieldType == typeof(Type) && (Type)fieldDef.GetValue(parentDef) == typeof(Gene))
             fieldDef.SetValue(parentDef, typeof(GeneWithComps));
 
-        if (comps != null)
+        if (comps is null)
+            return;
+
+        foreach (var comp in comps)
         {
-            foreach (var comp in comps)
-                comp.ResolveReferences(parentDef);
+            if (comp is null)
+                continue;
+
+            comp.ResolveReferences(parentDef);
         }
     }
 
     public T CompProps<T>() where T : GeneCompProperties
     {
-        if (comps == null)
+        if (comps is null)
             return null;
         foreach (var comp in comps)
         {
@@ -170,7 +200,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
         return null;
     }
 
-    public bool ValidFor(Pawn pawn, GeneType? pawnGeneType)
+    public bool ValidFor([NotNull] Pawn pawn, [CanBeNull] GeneType? pawnGeneType)
     {
         if (gender != null && gender != pawn.gender)
             return false;

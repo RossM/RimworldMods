@@ -17,12 +17,13 @@ namespace Xylib;
 ///     The name of the feature supported by the patch.
 /// </param>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public class FeatureAttribute(string featureName) : Attribute
+public class FeatureAttribute([NotNull] string featureName) : Attribute
 {
     // ReSharper disable once UnusedMember.Global
     /// <summary>
     ///     The name of the feature supported by the patch.
     /// </summary>
+    [NotNull]
     public readonly string featureName = featureName;
 
     /// <summary>
@@ -31,7 +32,7 @@ public class FeatureAttribute(string featureName) : Attribute
     /// <param name="feature">
     ///     The type that implements the supported feature.
     /// </param>
-    public FeatureAttribute(Type feature) : this(feature.Name)
+    public FeatureAttribute([NotNull] Type feature) : this(feature.Name)
     {
     }
 }
@@ -85,11 +86,12 @@ public class UsedFromReflectionAttribute : Attribute;
 /// </example>
 [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
 [AttributeUsage(AttributeTargets.Class)]
-public class DefGeneratorAttribute(Type defType) : Attribute
+public class DefGeneratorAttribute([NotNull] Type defType) : Attribute
 {
     /// <summary>
     ///     The <see cref="Def" /> subtype which this generator produces.
     /// </summary>
+    [NotNull]
     public readonly Type defType = defType;
 }
 
@@ -101,10 +103,12 @@ public class DefGeneratorAttribute(Type defType) : Attribute
 /// </remarks>
 /// <param name="label">The tag to use.</param>
 [AttributeUsage(AttributeTargets.Class)]
-public class ScribeLabelAttribute(string label) : Attribute
+[BaseTypeRequired(typeof(IPawnData))]
+public class ScribeLabelAttribute([NotNull] string label) : Attribute
 {
     /// <summary>
     ///     The XML tag to use when saving/loading this class in <see cref="PawnExtraData{T}" />.
     /// </summary>
+    [NotNull]
     public readonly string label = label;
 }

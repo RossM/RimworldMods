@@ -35,14 +35,14 @@ public static class Analyzer
         if (assembly is null)
             throw new ArgumentNullException(nameof(assembly));
 
-        foreach (TypeInfo type in assembly.DefinedTypes)
+        foreach (Type type in assembly.GetTypes())
         {
             bool typeHasHarmony = type.HasAttribute<HarmonyPatch>();
 
             if (typeHasHarmony && !(type.IsAbstract && type.IsSealed))
                 Log.Warning($"[{name}] {type.FullName} should be static");
 
-            foreach (MethodInfo method in type.DeclaredMethods)
+            foreach (MethodInfo method in type.GetMethods())
             {
                 var hasFeature = method.HasAttribute<FeatureAttribute>();
                 var hasPrefix = method.HasAttribute<HarmonyPrefix>();
@@ -116,7 +116,7 @@ public static class Analyzer
 
         List<Type> extraDefTypes = GenTypes.AllTypesWithAttribute<UsedFromXmlAttribute>().Where(t => t.IsAbstract).ToList();
 
-        foreach (TypeInfo type in assembly.DefinedTypes)
+        foreach (Type type in assembly.GetTypes())
         {
             if (type.IsAbstract || type.HasAttribute<UsedFromXmlAttribute>())
                 continue;
@@ -129,7 +129,7 @@ public static class Analyzer
 
             foreach (var defType in extraDefTypes)
             {
-                if (defType.IsAssignableFrom(type))
+                if (defType!.IsAssignableFrom(type))
                     Log.Warning($"[{name}] {type.FullName} is a {defType.Name} but is missing a [UsedFromXml] attribute");
             }
         }
