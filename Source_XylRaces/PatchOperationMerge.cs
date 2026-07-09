@@ -129,6 +129,6 @@ public class PatchOperationMerge : PatchOperationPathed
     }
 
     private bool CanMerge(XmlNode first, XmlNode second) =>
-        first.NodeType == XmlNodeType.Element && (first.Name != "li" || first.Attributes?["Class"] != null) && first.Name == second.Name &&
+        first.NodeType == XmlNodeType.Element && (first.Name != "li" || first.ParentNode?.Name == "modExtensions") && first.Name == second.Name &&
         first.Attributes?["Class"]?.Value == second.Attributes?["Class"]?.Value;
 }
