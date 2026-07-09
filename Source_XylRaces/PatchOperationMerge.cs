@@ -68,7 +68,7 @@ public class PatchOperationMerge : PatchOperationPathed
         foreach (XmlNode xmlNode in nodes)
         {
             if (debug)
-                Log.Message($"{xpath} -> {xmlNode.OuterXml}");
+                Debug.Log($"[{nameof(PatchOperationMerge)}] xpath: {xpath}");
 
             result = true;
             XmlDocument xmlNodeOwnerDocument = xmlNode.OwnerDocument;
@@ -79,14 +79,14 @@ public class PatchOperationMerge : PatchOperationPathed
             if (order == Order.Prepend)
                 childNodes.Reverse();
 
-            foreach (XmlNode childNode in childNodes)
-            {
-                // Debug.Log($"[{nameof(PatchOperationMerge)}] Pre-merge: {xmlNode.OuterXml}");
+            if (debug)
+                Debug.Log($"[{nameof(PatchOperationMerge)}] Pre-merge: {xmlNode.OuterXml}");
 
+            foreach (XmlNode childNode in childNodes)
                 Merge(xmlNode, childNode, xmlNodeOwnerDocument);
 
-                // Debug.Log($"[{nameof(PatchOperationMerge)}] Post-merge: {xmlNode.OuterXml}");
-            }
+            if (debug)
+                Debug.Log($"[{nameof(PatchOperationMerge)}] Post-merge: {xmlNode.OuterXml}");
         }
 
         return result;

@@ -53,10 +53,12 @@
     </value>
   </Operation>
 
-  <Operation Class="PatchOperationInsert">
-    <xpath>Defs/ThoughtDef/nullifyingGenes/li[text()="Furskin"]</xpath>
+  <Operation Class="XylXenos.PatchOperationMerge">
+    <xpath>Defs/ThoughtDef[nullifyingGenes/li="Furskin"]</xpath>
     <value>
-      <li>XylScaleskin</li>
+      <nullifyingGenes>
+        <li>XylScaleskin</li>
+      </nullifyingGenes>
     </value>
   </Operation>
 
