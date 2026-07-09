@@ -33,14 +33,13 @@ public class HediffComp_GiveHediffOnRemoval : HediffComp
         ApplyTo(parent.pawn);
     }
 
-    public bool ApplyTo(Pawn pawn)
+    public void ApplyTo(Pawn pawn)
     {
-        Hediff hediff2 = HediffMaker.MakeHediff(partRecord: parent.Part, def: Props.hediff, pawn: pawn);
+        Hediff newHediff = HediffMaker.MakeHediff(partRecord: parent.Part, def: Props.hediff, pawn: pawn);
 
         if (Props.inheritSeverity)
-            hediff2.Severity = parent.Severity;
+            newHediff.Severity = parent.Severity;
 
-        pawn.health.AddHediff(hediff2);
-        return true;
+        pawn.health.AddHediff(newHediff);
     }
 }

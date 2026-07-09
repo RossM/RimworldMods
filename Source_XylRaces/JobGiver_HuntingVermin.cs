@@ -24,6 +24,8 @@ public class JobGiver_HuntingVermin : ThinkNode_JobGiver
         if (!mentalState_huntingVermin.IsTargetStillValidAndReachable())
             return null;
 
+        DebugAssert.NotNull(mentalState_huntingVermin.target);
+
         Thing targetThing = mentalState_huntingVermin.target.SpawnedParentOrMe;
         job = JobMaker.MakeJob(JobDefOf.AttackMelee, targetThing);
         job.killIncappedTarget = true;

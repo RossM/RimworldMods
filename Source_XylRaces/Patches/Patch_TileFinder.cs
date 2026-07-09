@@ -13,7 +13,7 @@ public static class Patch_TileFinder
         Faction faction,
         ref Predicate<PlanetTile>? extraValidator)
     {
-        var extension = faction.def?.GetModExtension<DefModExtension_Faction>();
+        var extension = faction.def.GetModExtension<DefModExtension_Faction>();
         if (extension == null)
             return;
 
