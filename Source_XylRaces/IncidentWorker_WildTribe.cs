@@ -5,6 +5,7 @@ namespace XylXenos;
 [UsedFromXml]
 public class DefModExtension_Incident_WildTribe : DefModExtension
 {
+    [UsedFromXml]
     public class TraitChance
     {
         public required TraitDef trait;
@@ -14,7 +15,7 @@ public class DefModExtension_Incident_WildTribe : DefModExtension
         public void LoadDataFromXmlCustom(XmlNode xmlRoot)
         {
             DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "trait", xmlRoot.Name);
-            chance = ParseHelper.FromString<float>(xmlRoot.FirstChild.Value);
+            chance = ParseHelper.FromString<float>(xmlRoot!.FirstChild!.Value);
         }
     }
 
@@ -28,7 +29,7 @@ public class DefModExtension_Incident_WildTribe : DefModExtension
 [UsedFromXml]
 public class IncidentWorker_WildTribe : IncidentWorker
 {
-    public DefModExtension_Incident_WildTribe DefExt => def.GetModExtension<DefModExtension_Incident_WildTribe>();
+    public DefModExtension_Incident_WildTribe DefExt => def.GetModExtension<DefModExtension_Incident_WildTribe>()!;
 
     protected override bool CanFireNowSub(IncidentParms parms)
     {
@@ -64,7 +65,7 @@ public class IncidentWorker_WildTribe : IncidentWorker
 
     private Faction GenerateFaction()
     {
-        List<FactionRelation> factionRelations = Find.FactionManager.AllFactionsListForReading
+        List<FactionRelation> factionRelations = Find.FactionManager!.AllFactionsListForReading
             .Where(item => !item.def.PermanentlyHostileTo(DefExt.faction))
             .Select(item => new FactionRelation { other = item, kind = FactionRelationKind.Neutral })
             .ToList();
@@ -86,7 +87,7 @@ public class IncidentWorker_WildTribe : IncidentWorker
 
         for (int i = 0; i < count; i++)
         {
-            DevelopmentalStage stage = Find.Storyteller.difficulty.ChildrenAllowed
+            DevelopmentalStage stage = Find.Storyteller!.difficulty.ChildrenAllowed
                 ? DevelopmentalStage.Child | DevelopmentalStage.Adult
                 : DevelopmentalStage.Adult;
             List<TraitDef> traits = DefExt.forcedTraits.Where(t => Rand.Chance(t.chance)).Select(t => t.trait).ToList();
@@ -96,6 +97,8 @@ public class IncidentWorker_WildTribe : IncidentWorker
                 context: PawnGenerationContext.NonPlayer,
                 forcedTraits: traits,
                 developmentalStages: stage));
+            if (pawn is null)
+                continue;
             pawn.SetFaction(null);
             pawns.Add(pawn);
         }

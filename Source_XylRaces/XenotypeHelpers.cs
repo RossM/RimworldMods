@@ -2,7 +2,7 @@ namespace XylXenos;
 
 public static class XenotypeHelpers
 {
-    public static XenotypeDef GetRandomXenotypeNotInColony()
+    public static XenotypeDef? GetRandomXenotypeNotInColony()
     {
         HashSet<XenotypeDef> playerXenotypes = Faction.OfPlayer.AllAlivePawns.Where(pawn => pawn.genes != null)
             .Select(pawn => pawn.genes.Xenotype).ToHashSet();

@@ -3,7 +3,7 @@
 [UsedFromXml]
 public class Hediff_PetrifiedFlesh : HediffWithCompsExt
 {
-    public virtual float RelativeSeverity => Severity / Part.def.GetMaxHealth(pawn);
+    public virtual float RelativeSeverity => Severity / Part!.def.GetMaxHealth(pawn);
 
     public override int CurStageIndex => def.StageAtSeverity(RelativeSeverity);
 
@@ -16,7 +16,7 @@ public class Hediff_PetrifiedFlesh : HediffWithCompsExt
     public override float Severity
     {
         get => base.Severity;
-        set => base.Severity = Mathf.Min(value, Part.def.GetMaxHealth(pawn));
+        set => base.Severity = Mathf.Min(value, Part!.def.GetMaxHealth(pawn));
     }
 
     protected override void UpdateCurStage(HediffStage stage)
@@ -24,5 +24,13 @@ public class Hediff_PetrifiedFlesh : HediffWithCompsExt
         base.UpdateCurStage(stage);
 
         stage.partEfficiencyOffset *= RelativeSeverity;
+    }
+
+    public override void PostAdd(DamageInfo? dinfo)
+    {
+        base.PostAdd(dinfo);
+
+        if (Part == null)
+            throw new InvalidOperationException($"{nameof(Part)} is null");
     }
 }

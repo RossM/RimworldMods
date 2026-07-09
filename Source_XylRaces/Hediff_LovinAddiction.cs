@@ -37,6 +37,6 @@ public class Hediff_LovinAddiction : HediffWithCompsExt
 
     public void Notify_NeedCategoryChanged()
     {
-        pawn.health.Notify_HediffChanged(this);
+        pawn!.health.Notify_HediffChanged(this);
     }
 }

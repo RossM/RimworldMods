@@ -3,7 +3,7 @@
 [UsedFromXml]
 public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
 {
-    public override Pawn GeneratePawn(Map? map)
+    public override Pawn? GeneratePawn(Map? map)
     {
         Gender? gender = null;
         if (def.pawnFixedGender != Gender.None)
@@ -26,7 +26,9 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
             fixedIdeo: ideo,
             forcedXenotype: xenotype);
 
-        Pawn pawn = PawnGenerator.GeneratePawn(pawnGenerationRequest);
+        Pawn? pawn = PawnGenerator.GeneratePawn(pawnGenerationRequest);
+        if (pawn is null)
+            return null;
 
         var hediff = HediffMaker.MakeHediff(DefOf.XylCultistSong, pawn);
         pawn.health.AddHediff(hediff);
@@ -34,12 +36,16 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
         return pawn;
     }
 
-    private static Ideo GetRandomIdeo()
+    private static Ideo? GetRandomIdeo()
     {
-        if (!Find.IdeoManager.IdeosListForReading.Where(i => !Faction.OfPlayer.ideos.Has(i))
-                .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out Ideo ideo))
+        var playerIdeos = Faction.OfPlayer.ideos;
+        if (playerIdeos is null)
+            return null;
+
+        if (!Find.IdeoManager!.IdeosListForReading.Where(i => !playerIdeos.Has(i))
+                .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out Ideo? ideo))
         {
-            Find.IdeoManager.IdeosListForReading.Where(i => !Faction.OfPlayer.ideos.IsPrimary(i))
+            Find.IdeoManager.IdeosListForReading.Where(i => !playerIdeos.IsPrimary(i))
                 .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out ideo);
         }
 

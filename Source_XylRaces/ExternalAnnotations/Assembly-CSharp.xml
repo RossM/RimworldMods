@@ -26,6 +26,9 @@
       <argument>2</argument> <!-- ImplicitUseTargetFlags.Members -->
     </attribute>
   </member>
+  <member name="F:RimWorld.Faction.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="P:RimWorld.Faction.OfPlayer">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -34,12 +37,47 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
+  <member
+    name="M:RimWorld.FactionGenerator.NewGeneratedFactionWithRelations(RimWorld.FactionDef,System.Collections.Generic.List{RimWorld.FactionRelation},System.Boolean)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter name="facDef">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="relations">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+      <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="P:RimWorld.FactionManager.AllFactionsListForReading">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
   <member name="P:RimWorld.GeneSet.GenesListForReading">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.IncidentWorker.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member
+    name="M:RimWorld.IncidentWorker_Disease.ApplyToPawns(System.Collections.Generic.IEnumerable{Verse.Pawn},System.String@)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <parameter name="pawns">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+      <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+      <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute﻿.#ctor"/>
+    </parameter>
+    <parameter name="blockedInfo">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:RimWorld.IncidentWorker_DiseaseHuman.ActualVictims(RimWorld.IncidentParms)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <parameter name="parms">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
   </member>
   <member name="F:RimWorld.Need.pawn">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -263,6 +301,9 @@
   <member name="F:Verse.GenRadial.RadialPattern">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="M:Verse.GenText.ToStringPercent(System.Single)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="P:Verse.GenTypes.AllTypes">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -295,13 +336,31 @@
   <member name="F:Verse.Hediff.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="M:Verse.Hediff.SpecialDisplayStats(RimWorld.StatRequest)">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <parameter name="req">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
   <member name="F:Verse.HediffComp.parent">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.HediffComp.props">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="M:Verse.HediffCompProperties.ConfigErrors(Verse.HediffDef)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <parameter name="parentDef">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
   <member name="P:Verse.HediffComp_Chargeable.Props">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffDef.hediffClass">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.HediffDef.stages">
@@ -317,13 +376,13 @@
   </member>
   <member name="M:Verse.HediffMaker.MakeHediff(Verse.HediffDef,Verse.Pawn,Verse.BodyPartRecord)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <parameter Name="def">
+    <parameter name="def">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
-    <parameter Name="pawn">
+    <parameter name="pawn">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
-    <parameter Name="partRecord">
+    <parameter name="partRecord">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
@@ -640,117 +699,120 @@
   <member name="F:Verse.Map.zoneManager">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="F:Verse.MapComponent.map">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="P:Verse.MapPawns.AllHumanlike">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.AllHumanlikeSpawned">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.AllPawns">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.AllPawnsSpawned">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.AllPawnsUnspawned">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.ColonyAnimals">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.ColonySubhumansControllable">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.FreeAdultColonistsSpawned">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.FreeColonists">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.FreeColonistsAndPrisoners">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.FreeColonistsAndPrisonersSpawned">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.FreeColonistsSpawned">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.PrisonersOfColony">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.PrisonersOfColonySpawned">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SlavesAndPrisonersOfColonySpawned">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SlavesOfColonySpawned">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedAnimalsWithAnyHediff">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedColonyAnimals">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedColonyMechs">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedColonySubhumansPlayerControlled">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedDownedPawns">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedHumanlikesWithAnyHediff">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedHungryPawns">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedPawnsWhoShouldHaveInventoryUnloaded">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedPawnsWhoShouldHaveSurgeryDoneNow">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedPawnsWithAnyHediff">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedPawnsWithMiscNeeds">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedShamblers">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>    
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Pawn.ageTracker">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -787,6 +849,14 @@
   </member>
   <member name="F:Verse.Pawn.records">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.Pawn.SetFaction(RimWorld.Faction,Verse.Pawn)">
+    <parameter name="newFaction">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="recruiter">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
   </member>
   <member name="F:Verse.Pawn.stances">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>

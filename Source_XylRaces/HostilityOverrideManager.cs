@@ -46,7 +46,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
             return false;
 
         return targetPawn.IsColonyAnimal ||
-               targetPawn.GeneTracker_XylXenos?.disableHostilityFromFactions?.Contains(source.Faction.def) is true;
+               targetPawn.GeneTracker_XylXenos?.disableHostilityFromFactions?.Contains(source.Faction!.def) is true;
     }
 
     private bool HasAnyOverride(Faction from, Faction to)

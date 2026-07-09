@@ -8,7 +8,7 @@ public class HediffGiver_Torpor : HediffGiver
     public float severityGainPerDayPerDegree;
     public float severityLossPerDayPerDegree;
 
-    public override void OnIntervalPassed(Pawn pawn, Hediff cause)
+    public override void OnIntervalPassed(Pawn pawn, Hediff? cause)
     {
         float minimumTemperature = Mathf.Lerp(temperatureThreshold,
             pawn.GetStatValue(StatDefOf.ComfyTemperatureMin), comfyTemperatureImportance);

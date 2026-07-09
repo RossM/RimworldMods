@@ -6,17 +6,30 @@ public class DefModExtension_Incident_GeneticDisease : DefModExtension
     public required List<GeneDef> requiredGenesAny;
     public float chanceFactorPerTarget = 1f;
 
+    private IncidentDef? parent;
+
+    public override void ResolveReferences(Def parentDef)
+    {
+        base.ResolveReferences(parentDef);
+
+        parent = parentDef as IncidentDef;
+    }
+
     public override IEnumerable<string> ConfigErrors()
     {
         if (requiredGenesAny is not { Count: > 0 })
             yield return $"{nameof(requiredGenesAny)} must have at least one entry";
+        if (parent is null)
+            yield return $"{nameof(DefModExtension_Incident_GeneticDisease)} can only be applied to {nameof(IncidentDef)}";
+        else if (parent.diseaseIncident is null)
+            yield return $"{nameof(parent.diseaseIncident)} is null";
     }
 }
 
 [UsedFromXml]
 public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
 {
-    public DefModExtension_Incident_GeneticDisease DefExt => def.GetModExtension<DefModExtension_Incident_GeneticDisease>();
+    public DefModExtension_Incident_GeneticDisease DefExt => def.GetModExtension<DefModExtension_Incident_GeneticDisease>()!;
 
     protected override IEnumerable<Pawn> PotentialVictimCandidates(IIncidentTarget target)
     {
@@ -37,14 +50,14 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
     protected override bool TryExecuteWorker(IncidentParms parms)
     {
         List<Pawn> list = ApplyToPawns(ActualVictims(parms).ToList(), out var blockedInfo);
-        if (!list.Any() && blockedInfo.NullOrEmpty())
+        if (list is not { Count: > 0} && string.IsNullOrEmpty(blockedInfo))
         {
             return false;
         }
 
         TaggedString baseLetterLabel = def.letterLabel;
         TaggedString baseLetterText;
-        if (list.Any())
+        if (list is { Count: > 0 })
         {
             if (def.letterSingularForm)
             {
@@ -54,20 +67,20 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
                               " is marked to only generate a letter in a singular format, but multiple victims were provided.");
                 }
 
-                Pawn pawn = list[0];
-                Hediff mostRecentHediff = pawn.health.hediffSet.GetMostRecentHediff(def.diseaseIncident);
+                Pawn pawn = list[0]!;
+                Hediff mostRecentHediff = pawn.health.hediffSet.GetMostRecentHediff(def.diseaseIncident!)!;
                 baseLetterLabel = def.letterLabel.Formatted(pawn.Named("PAWN"));
                 if (mostRecentHediff.TryGetComp<HediffComp_SeverityPerDay>() is { } hediffComp_SeverityPerDay)
                 {
                     float num = hediffComp_SeverityPerDay.SeverityChangePerDay();
                     int num2 = Mathf.RoundToInt(mostRecentHediff.def.maxSeverity / num);
                     baseLetterText = def.letterText
-                        .Formatted(pawn.Named("PAWN"), def.diseaseIncident.label, mostRecentHediff.Part?.Label, num2).Resolve();
+                        .Formatted(pawn.Named("PAWN"), def.diseaseIncident!.label, mostRecentHediff.Part?.Label, num2).Resolve();
                 }
                 else
                 {
                     baseLetterText = def.letterText
-                        .Formatted(pawn.Named("PAWN"), def.diseaseIncident.label, mostRecentHediff.Part?.Label).Resolve();
+                        .Formatted(pawn.Named("PAWN"), def.diseaseIncident!.label, mostRecentHediff.Part?.Label).Resolve();
                 }
 
                 if (mostRecentHediff.IsAnyStageLifeThreatening() && !string.IsNullOrEmpty(def.diseaseLethalLetterText))
@@ -89,7 +102,7 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
                 }
 
                 baseLetterText
-                    = def.letterText.Formatted(list.Count.ToString(), Faction.OfPlayer.def.pawnsPlural, def.diseaseIncident.label)
+                    = def.letterText.Formatted(list.Count.ToString(), Faction.OfPlayer.def.pawnsPlural, def.diseaseIncident!.label)
                         .Resolve() + ":\n\n" + stringBuilder;
             }
         }

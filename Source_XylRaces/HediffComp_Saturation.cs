@@ -61,6 +61,6 @@ public class HediffComp_Saturation : HediffComp_SeverityModifierBase
 
     public override float SeverityChangePerDay()
     {
-        return Pawn.health.hediffSet.HasHediff(Props.sourceHediff) ? Props.severityGainPerDay : Props.severityLossPerDay;
+        return Pawn!.health.hediffSet.HasHediff(Props.sourceHediff) ? Props.severityGainPerDay : Props.severityLossPerDay;
     }
 }

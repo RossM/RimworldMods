@@ -3,6 +3,7 @@ using System.Xml;
 
 namespace XylXenos;
 
+[UsedFromXml]
 public class JoyGiverFactor
 {
     public required JoyGiverDef joyGiver;
@@ -12,7 +13,7 @@ public class JoyGiverFactor
     public void LoadDataFromXmlCustom(XmlNode xmlRoot)
     {
         DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "joyGiver", xmlRoot.Name);
-        factor = ParseHelper.FromString<float>(xmlRoot.FirstChild.Value);
+        factor = ParseHelper.FromString<float>(xmlRoot.FirstChild!.Value!);
     }
 }
 

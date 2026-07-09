@@ -9,6 +9,25 @@ public class DefModExtension_Hediff_DietDependency : DefModExtension
     public bool rawOnly = false;
     public float severityReductionPerNutrition = 1f;
     [MustTranslate] public string? foodLabel;
+
+    private HediffDef? parent;
+
+    public override void ResolveReferences(Def parentDef)
+    {
+        parent = parentDef as HediffDef;
+    }
+
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (parent is null)
+        {
+            yield return $"{nameof(DefModExtension_Hediff_DietDependency)} can only be applied to a {nameof(HediffDef)}";
+            yield break;
+        }
+
+        if (parent is not { stages.Count: >= Hediff_DietDependency.StageCount })
+            yield return $"Must have at least {Hediff_DietDependency.StageCount} stages";
+    }
 }
 
 [UsedFromXml]
@@ -25,6 +44,8 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         // ReSharper restore UnusedMember.Local
     }
 
+    public const int StageCount = (int)Stages.Coma + 1;
+
     public DefModExtension_Hediff_DietDependency DefExt => field ??= def.GetModExtension<DefModExtension_Hediff_DietDependency>();
 
     public bool ShouldSatisfy => CurStageIndex >= (int)Stages.Craving;
@@ -37,14 +58,18 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         {
             string text = base.TipStringExtra;
 
+            HediffComp_SeverityPerDay comp_severityPerDay = GetComp<HediffComp_SeverityPerDay>();
+            if (comp_severityPerDay is null)
+                return text;
+
             if (!text.NullOrEmpty())
                 text += "\n\n";
 
             var severityPerDay =
-                ((HediffCompProperties_SeverityPerDay)GetComp<HediffComp_SeverityPerDay>().props)
+                ((HediffCompProperties_SeverityPerDay)comp_severityPerDay.props)
                 .severityPerDay;
-            var deficiencyDays = def.stages[(int)Stages.MildDeficiency].minSeverity / severityPerDay;
-            var comaDays = def.stages[(int)Stages.Coma].minSeverity / severityPerDay;
+            var deficiencyDays = def.stages![(int)Stages.MildDeficiency]!.minSeverity / severityPerDay;
+            var comaDays = def.stages![(int)Stages.Coma]!.minSeverity / severityPerDay;
             var deathDays = def.lethalSeverity / severityPerDay;
             text += "GeneDefChemicalNeedDurationDesc".Translate(DefExt.foodLabel,
                 pawn.Named("PAWN"),

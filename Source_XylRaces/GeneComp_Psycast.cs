@@ -18,6 +18,6 @@ public class GeneComp_Psycast : GeneComp
 {
     public override void CompPostPostAdd()
     {
-        Pawn.psychicEntropy.SetInitialPsyfocusLevel();
+        Pawn.psychicEntropy?.SetInitialPsyfocusLevel();
     }
 }
