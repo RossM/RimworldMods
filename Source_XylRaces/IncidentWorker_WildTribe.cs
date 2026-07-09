@@ -31,16 +31,23 @@ public class DefModExtension_Incident_WildTribe : DefModExtension
 [UsedFromXml]
 public class IncidentWorker_WildTribe : IncidentWorker
 {
-    public DefModExtension_Incident_WildTribe DefExt => def.GetModExtension<DefModExtension_Incident_WildTribe>();
+    public DefModExtension_Incident_WildTribe DefExt => def.GetModExtension<DefModExtension_Incident_WildTribe>()!;
 
     protected override bool CanFireNowSub(IncidentParms parms)
     {
-        return TryFindEntryCell((Map)parms.target, out _);
+        var map = parms.target as Map;
+        DebugAssert.NotNull(map);
+
+        return TryFindEntryCell(map, out _);
     }
 
     protected override bool TryExecuteWorker(IncidentParms parms)
     {
-        var map = (Map)parms.target;
+        DebugAssert.NotNull(def.letterLabel);
+
+        var map = parms.target as Map;
+        DebugAssert.NotNull(map);
+
         if (!TryFindEntryCell(map, out IntVec3 start))
             return false;
 
@@ -61,19 +68,19 @@ public class IncidentWorker_WildTribe : IncidentWorker
         string pawnsPlural = DefExt.faction?.pawnsPlural ?? "XylWildPeople".TranslateSimple();
         TaggedString baseLetterText = def.letterText.Formatted(pawnsPlural).CapitalizeFirst();
         string text = string.Format(def.letterLabel, pawnsPlural.CapitalizeFirst());
-        SendStandardLetter(text, baseLetterText, def.letterDef, parms, pawns[0]);
+        SendStandardLetter(text, baseLetterText, def.letterDef ?? LetterDefOf.NeutralEvent, parms, pawns[0]);
         return true;
     }
 
     private Faction GenerateFaction()
     {
         DebugAssert.NotNull(Find.FactionManager);
+        DebugAssert.NotNull(Find.WorldGrid);
+        DebugAssert.NotNull(DefExt.faction);
 
-        List<FactionRelation> factionRelations = Find.FactionManager.AllFactionsListForReading
-            .Where(item => !item.def.PermanentlyHostileTo(DefExt.faction))
-            .Select(item => new FactionRelation { other = item, kind = FactionRelationKind.Neutral })
-            .ToList();
-        Faction faction = FactionGenerator.NewGeneratedFactionWithRelations(DefExt.faction, factionRelations, hidden: true);
+        var layer = Find.WorldGrid.Surface;
+        Faction faction = FactionGenerator.NewGeneratedFaction(layer, new FactionGeneratorParms(DefExt.faction, hidden: true));
+
         faction.temporary = true;
         Find.FactionManager.Add(faction);
         return faction;
@@ -96,8 +103,8 @@ public class IncidentWorker_WildTribe : IncidentWorker
             DevelopmentalStage stage = Find.Storyteller.difficulty.ChildrenAllowed
                 ? DevelopmentalStage.Child | DevelopmentalStage.Adult
                 : DevelopmentalStage.Adult;
-            List<TraitDef> traits = DefExt.forcedTraits.Where(t => Rand.Chance(t.chance)).Select(t => t.trait).ToList();
-            Pawn pawn = PawnGenerator.GeneratePawn(new(
+            List<TraitDef>? traits = DefExt.forcedTraits?.Where(t => Rand.Chance(t.chance)).Select(t => t.trait).ToList();
+            Pawn? pawn = PawnGenerator.GeneratePawn(new(
                 kind: PawnKindDefOf.WildMan,
                 faction: faction,
                 context: PawnGenerationContext.NonPlayer,

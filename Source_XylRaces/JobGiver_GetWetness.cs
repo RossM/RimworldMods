@@ -44,6 +44,8 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
 
     private static Thing? FindBestWetnessSource(Pawn pawn)
     {
+        DebugAssert.NotNull(pawn.Map);
+
         var candidates = new List<Thing>();
         GetSearchSet(pawn, candidates);
         if (candidates.Count == 0)
@@ -58,6 +60,8 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
 
     public static bool IsValidWaterTileFor(Pawn pawn, IntVec3 x)
     {
+        DebugAssert.NotNull(pawn.Map);
+
         if (!x.InAllowedArea(pawn))
             return false;
         if (PawnUtility.KnownDangerAt(x, pawn.Map, pawn))
@@ -81,6 +85,8 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
 
     public static bool TryFindWaterTile(Pawn pawn, out IntVec3 result, int maxSearchRadius = int.MaxValue)
     {
+        DebugAssert.NotNull(pawn.Map);
+
         bool Validator(IntVec3 x) => IsValidWaterTileFor(pawn, x) && pawn.CanReach(new LocalTargetInfo(x), PathEndMode.OnCell, maxDanger);
 
         return RCellFinder.TryFindRandomCellNearWith(pawn.Position, Validator, pawn.Map, out result,
@@ -99,35 +105,9 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
         }
     }
 
-    private static bool CanInteractWith(Pawn pawn, Thing t)
-    {
-        if (!pawn.CanReserve(t))
-        {
-            return false;
-        }
-
-        if (t.IsForbidden(pawn))
-        {
-            return false;
-        }
-
-        if (t.Fogged())
-        {
-            return false;
-        }
-
-        if (!t.IsSociallyProper(pawn))
-        {
-            return false;
-        }
-
-        if (!t.IsPoliticallyProper(pawn))
-        {
-            return false;
-        }
-
-        return true;
-    }
+    private static bool CanInteractWith(Pawn pawn, Thing t) =>
+        pawn.CanReserve(t) && !t.IsForbidden(pawn) && !t.Fogged() &&
+        t.IsSociallyProper(pawn) && t.IsPoliticallyProper(pawn);
 
     protected override Job? TryGiveJob(Pawn pawn)
     {

@@ -26,7 +26,7 @@ public class JobGiver_HuntingVermin : ThinkNode_JobGiver
 
         DebugAssert.NotNull(mentalState_huntingVermin.target);
 
-        Thing targetThing = mentalState_huntingVermin.target.SpawnedParentOrMe;
+        Thing? targetThing = mentalState_huntingVermin.target.SpawnedParentOrMe;
         job = JobMaker.MakeJob(JobDefOf.AttackMelee, targetThing);
         job.killIncappedTarget = true;
         if (targetThing != mentalState_huntingVermin.target)

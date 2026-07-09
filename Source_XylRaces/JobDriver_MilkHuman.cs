@@ -24,12 +24,16 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
     private void Gather(Pawn doer)
     {
-        var comp = Target?.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>();
+        // ReSharper disable once UseNullPropagation
+        if (Target is null)
+            return;
+        
+        var comp = Target.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>();
         if (comp == null)
             return;
 
-        // Resharper is dumb and apparently doesn't understand null propagation through extension methods
-        DebugAssert.NotNull(Target);
+        DebugAssert.NotNull(Target.Map);
+        DebugAssert.NotNull(doer.Map);
 
         comp.Notify_Milked(doer);
 
@@ -60,7 +64,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
     protected override void InteractionTickInterval(Toil toil, int delta)
     {
-        Pawn actor = toil.actor;
+        Pawn? actor = toil.actor;
         
         DebugAssert.NotNull(actor);
         DebugAssert.NotNull(actor.skills);

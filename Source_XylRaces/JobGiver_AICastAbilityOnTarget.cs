@@ -121,7 +121,7 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
 
     public override ThinkNode DeepCopy(bool resolve = true)
     {
-        JobGiver_AICastAbilityOnTarget copy = (JobGiver_AICastAbilityOnTarget)base.DeepCopy(resolve);
+        var copy = (JobGiver_AICastAbilityOnTarget)base.DeepCopy(resolve);
         copy.targetAllies = targetAllies;
         copy.targetEnemies = targetEnemies;
         copy.targetSelf = targetSelf;

@@ -11,7 +11,9 @@ public class JobDriver_TakeShower : JobDriver
 {
     public override bool TryMakePreToilReservations(bool errorOnFailed)
     {
-        return pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed);
+        DebugAssert.NotNull(pawn);
+
+        return pawn.Reserve(job.targetA, job, errorOnFailed: errorOnFailed);
     }
 
     protected override IEnumerable<Toil> MakeNewToils()

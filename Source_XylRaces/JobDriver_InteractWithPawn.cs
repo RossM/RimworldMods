@@ -14,7 +14,9 @@ public abstract class JobDriver_InteractWithPawn : JobDriver
 
     public override bool TryMakePreToilReservations(bool errorOnFailed)
     {
-        return pawn.Reserve(Target, job, 1, -1, null, errorOnFailed);
+        DebugAssert.NotNull(pawn);
+
+        return pawn.Reserve(Target, job, errorOnFailed: errorOnFailed);
     }
 
     protected override IEnumerable<Toil> MakeNewToils()

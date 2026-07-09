@@ -66,7 +66,7 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
                 return text;
 
             // ReSharper disable once AssignNullToNotNullAttribute
-            if (!string.IsNullOrEmpty(text))
+            if (!text.NullOrEmpty())
                 text += "\n\n";
 
             var severityPerDay =

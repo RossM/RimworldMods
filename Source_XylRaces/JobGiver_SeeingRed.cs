@@ -16,20 +16,18 @@ public class JobGiver_SeeingRed : ThinkNode_JobGiver
             return null;
         }
 
-        if (FindAttackTarget(pawn) is { } thing)
-        {
-            Job job = JobMaker.MakeJob(JobDefOf.AttackMelee, thing);
-            job.expiryInterval = Rand.Range(MinMeleeChaseTicks, MaxMeleeChaseTicks);
-            job.canBashDoors = true;
-            return job;
-        }
+        if (FindAttackTarget(pawn) is not { } thing)
+            return null;
 
-        return null;
+        Job job = JobMaker.MakeJob(JobDefOf.AttackMelee, thing);
+        job.expiryInterval = Rand.Range(MinMeleeChaseTicks, MaxMeleeChaseTicks);
+        job.canBashDoors = true;
+        return job;
     }
 
-    private Thing FindAttackTarget(Pawn pawn)
+    private Thing? FindAttackTarget(Pawn pawn)
     {
-        return (Thing)AttackTargetFinder.BestAttackTarget(pawn, TargetScanFlags.NeedReachable, IsGoodTarget, 0f, maxAttackDistance,
+        return (Thing?)AttackTargetFinder.BestAttackTarget(pawn, TargetScanFlags.NeedReachable, IsGoodTarget, 0f, maxAttackDistance,
             canBashDoors: true);
     }
 

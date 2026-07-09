@@ -29,7 +29,7 @@ public class DefModExtension_Incident_GeneticDisease : DefModExtension
 [UsedFromXml]
 public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
 {
-    public DefModExtension_Incident_GeneticDisease DefExt => def.GetModExtension<DefModExtension_Incident_GeneticDisease>();
+    public DefModExtension_Incident_GeneticDisease DefExt => def.GetModExtension<DefModExtension_Incident_GeneticDisease>()!;
 
     protected override IEnumerable<Pawn> PotentialVictimCandidates(IIncidentTarget target)
     {
@@ -52,7 +52,7 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
         DebugAssert.NotNull(def.diseaseIncident);
         
         List<Pawn> list = ApplyToPawns(ActualVictims(parms).ToList(), out var blockedInfo);
-        if (list is not { Count: > 0} && string.IsNullOrEmpty(blockedInfo))
+        if (list is not { Count: > 0} && blockedInfo.NullOrEmpty())
         {
             return false;
         }
@@ -88,7 +88,7 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
                         .Formatted(pawn.Named("PAWN"), def.diseaseIncident.label, mostRecentHediff.Part?.Label).Resolve();
                 }
 
-                if (mostRecentHediff.IsAnyStageLifeThreatening() && !string.IsNullOrEmpty(def.diseaseLethalLetterText))
+                if (mostRecentHediff.IsAnyStageLifeThreatening() && !def.diseaseLethalLetterText.NullOrEmpty())
                 {
                     baseLetterText += "\n\n" + def.diseaseLethalLetterText.Formatted(pawn.Named("PAWN"));
                 }
@@ -126,7 +126,7 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
             baseLetterText += blockedInfo;
         }
 
-        SendStandardLetter(baseLetterLabel, baseLetterText, def.letterDef, parms, list);
+        SendStandardLetter(baseLetterLabel, baseLetterText, def.letterDef ?? LetterDefOf.NegativeEvent, parms, list);
         return true;
     }
 
