@@ -24,7 +24,7 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
 
     public override void Apply(LocalTargetInfo target, LocalTargetInfo dest)
     {
-        Map map = parent.pawn.Map!;
+        Map map = parent.pawn.Map;
         foreach (IntVec3 item in AffectedCells(target))
         {
             var thingList = item.GetThingList(map);

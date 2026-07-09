@@ -50,7 +50,7 @@ public class PatchOperationAddOrMerge : PatchOperationPathed
         if (xml == null)
             throw new ArgumentNullException(nameof(xml));
 
-        foreach (XmlNode xmlNode in xml.SelectNodes(xpath)!)
+        foreach (XmlNode xmlNode in xml.SelectNodes(xpath))
         {
             if (debug)
                 Log.Message($"{xpath} -> {xmlNode.OuterXml}");

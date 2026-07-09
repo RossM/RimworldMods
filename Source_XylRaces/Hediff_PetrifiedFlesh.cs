@@ -3,7 +3,15 @@
 [UsedFromXml]
 public class Hediff_PetrifiedFlesh : HediffWithCompsExt
 {
-    public virtual float RelativeSeverity => Severity / Part!.def.GetMaxHealth(pawn);
+    public virtual float RelativeSeverity
+    {
+        get
+        {
+            DebugAssert.NotNull(Part);
+            DebugAssert.NotNull(pawn);
+            return Severity / Part.def.GetMaxHealth(pawn);
+        }
+    }
 
     public override int CurStageIndex => def.StageAtSeverity(RelativeSeverity);
 
@@ -16,7 +24,12 @@ public class Hediff_PetrifiedFlesh : HediffWithCompsExt
     public override float Severity
     {
         get => base.Severity;
-        set => base.Severity = Mathf.Min(value, Part!.def.GetMaxHealth(pawn));
+        set
+        {
+            DebugAssert.NotNull(Part);
+            DebugAssert.NotNull(pawn);
+            base.Severity = Mathf.Min(value, Part.def.GetMaxHealth(pawn));
+        }
     }
 
     protected override void UpdateCurStage(HediffStage stage)

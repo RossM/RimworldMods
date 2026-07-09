@@ -62,7 +62,7 @@ public static class Patch_RaceProperties
         // directly consumes food per tick. This correctly displays that effect.
         float lactationNutritionUsed = p.LactationHediff?.TryGetComp<HediffComp_Lactating>()?.AddedNutritionPerDay() ?? 0;
 
-        __result = (p.needs.food!.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * GenDate.TicksPerDay + lactationNutritionUsed)
+        __result = (p.needs.food.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * GenDate.TicksPerDay + lactationNutritionUsed)
             .ToString("0.##");
 
         return false;

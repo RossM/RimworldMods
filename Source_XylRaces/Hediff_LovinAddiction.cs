@@ -3,7 +3,14 @@
 [UsedFromXml]
 public class Hediff_LovinAddiction : HediffWithCompsExt
 {
-    public Need_Lovin? Need => field ??= pawn!.needs.TryGetNeed<Need_Lovin>();
+    public Need_Lovin? Need
+    {
+        get
+        {
+            DebugAssert.NotNull(pawn);
+            return field ??= pawn.needs.TryGetNeed<Need_Lovin>();
+        }
+    }
 
     public override int CurStageIndex => Need?.Satisfied is false ? 1 : 0;
 
@@ -37,6 +44,7 @@ public class Hediff_LovinAddiction : HediffWithCompsExt
 
     public void Notify_NeedCategoryChanged()
     {
-        pawn!.health.Notify_HediffChanged(this);
+        DebugAssert.NotNull(pawn);
+        pawn.health.Notify_HediffChanged(this);
     }
 }

@@ -65,7 +65,7 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
     private void LearnPsycast(Pawn pawn)
     {
         if (CanLearnPsycast(pawn, psycast))
-            pawn.abilities!.GainAbility(psycast);
+            pawn.abilities.GainAbility(psycast);
     }
 
     private static bool CanLearnPsycast(Pawn pawn, AbilityDef abilityDef)

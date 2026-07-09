@@ -13,7 +13,9 @@ public class JoyGiverFactor
     public void LoadDataFromXmlCustom(XmlNode xmlRoot)
     {
         DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "joyGiver", xmlRoot.Name);
-        factor = ParseHelper.FromString<float>(xmlRoot.FirstChild!.Value!);
+        if (xmlRoot.FirstChild?.Value is null)
+            throw new InvalidOperationException();
+        factor = ParseHelper.FromString<float>(xmlRoot.FirstChild.Value);
     }
 }
 

@@ -42,11 +42,14 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
         if (target is not Pawn targetPawn)
             return false;
 
-        if (!HasAnyOverride(target.Faction, source.Faction))
+        DebugAssert.NotNull(source.Faction);
+        DebugAssert.NotNull(target.Faction);
+
+		if (!HasAnyOverride(target.Faction, source.Faction))
             return false;
 
         return targetPawn.IsColonyAnimal ||
-               targetPawn.GeneTracker_XylXenos?.disableHostilityFromFactions?.Contains(source.Faction!.def) is true;
+               targetPawn.GeneTracker_XylXenos?.disableHostilityFromFactions?.Contains(source.Faction.def) is true;
     }
 
     private bool HasAnyOverride(Faction from, Faction to)

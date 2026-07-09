@@ -10,7 +10,7 @@ public static class Patch_PawnGenerator
     {
         if (xenotypeChance.xenotype != ((faction?.def ?? factionDef)?.xenotypeSet).DefaultXenotype)
         {
-            if (PawnGenerator.tmpXenotypeChances!.ContainsKey(xenotypeChance.xenotype))
+            if (PawnGenerator.tmpXenotypeChances.ContainsKey(xenotypeChance.xenotype))
             {
                 PawnGenerator.tmpXenotypeChances[xenotypeChance.xenotype] += xenotypeChance.chance;
             }

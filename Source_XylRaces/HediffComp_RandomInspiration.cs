@@ -22,10 +22,12 @@ public class HediffComp_RandomInspiration : HediffComp
 
     public override void CompPostTickInterval(ref float severityAdjustment, int delta)
     {
-        if (!Pawn!.IsHashIntervalTick(checkFrequency, delta))
+        DebugAssert.NotNull(Pawn);
+
+        if (!Pawn.IsHashIntervalTick(checkFrequency, delta))
             return;
 
-        if (Pawn!.Inspired)
+        if (Pawn.Inspired)
             return;
 
         if (Rand.MTBEventOccurs(Props.mtbDays, GenDate.TicksPerDay, checkFrequency))
@@ -36,7 +38,9 @@ public class HediffComp_RandomInspiration : HediffComp
 
     private void GiveInspiration()
     {
-        var inspiration = Pawn!.mindState.inspirationHandler.GetRandomAvailableInspirationDef();
+        DebugAssert.NotNull(Pawn);
+
+        var inspiration = Pawn.mindState.inspirationHandler.GetRandomAvailableInspirationDef();
         if (inspiration == null)
             return;
 

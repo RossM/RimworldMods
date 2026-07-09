@@ -56,6 +56,9 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
     {
         get
         {
+            DebugAssert.NotNull(def.stages);
+            DebugAssert.True(def.stages.Count >= StageCount);
+
             string text = base.TipStringExtra;
 
             HediffComp_SeverityPerDay comp_severityPerDay = GetComp<HediffComp_SeverityPerDay>();
@@ -68,8 +71,8 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
             var severityPerDay =
                 ((HediffCompProperties_SeverityPerDay)comp_severityPerDay.props)
                 .severityPerDay;
-            var deficiencyDays = def.stages![(int)Stages.MildDeficiency]!.minSeverity / severityPerDay;
-            var comaDays = def.stages![(int)Stages.Coma]!.minSeverity / severityPerDay;
+            var deficiencyDays = def.stages[(int)Stages.MildDeficiency]!.minSeverity / severityPerDay;
+            var comaDays = def.stages[(int)Stages.Coma]!.minSeverity / severityPerDay;
             var deathDays = def.lethalSeverity / severityPerDay;
             text += "GeneDefChemicalNeedDurationDesc".Translate(DefExt.foodLabel,
                 pawn.Named("PAWN"),
@@ -177,11 +180,13 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
 
     public override void Notify_IngestedThing(Thing food, int numTaken)
     {
+        DebugAssert.NotNull(pawn);
+
         float nutrition = FoodUtility.NutritionForEater(pawn, food);
 
         if (numTaken > 0)
             nutrition *= numTaken;
-        else if (pawn!.needs.food?.NutritionWanted != null)
+        else if (pawn.needs.food?.NutritionWanted != null)
         {
             // If only part of a corpse was consumed, numTaken will be 0, so assume the pawn eats until full.
             // There doesn't seem to be an easy way to get the nutrition gained directly.

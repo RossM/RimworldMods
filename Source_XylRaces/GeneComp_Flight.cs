@@ -59,8 +59,10 @@ public class GeneComp_Flight : GeneComp, IEventListener
         string flyingDisabledBy = "";
         if (!flightAllowedByApparel)
         {
+            DebugAssert.NotNull(Pawn.apparel?.WornApparel);
+
             List<string> items = [];
-            foreach (var item in Pawn.apparel!.WornApparel!)
+            foreach (var item in Pawn.apparel.WornApparel)
             {
                 if (!ApparelAllowsFlight(item.def))
                     items.Add(item.Label);
@@ -120,8 +122,8 @@ public class GeneComp_Flight : GeneComp, IEventListener
         {
             Pawn.Drawer.renderer.SetAllGraphicsDirty();
             // This forces the pather to recalculate the current path
-            if (Pawn.pather!.Moving)
-                Pawn.pather.TryResumePathingAfterLoading();
+            if (Pather.Moving)
+                Pather.TryResumePathingAfterLoading();
             wasFlying = Flight.Flying;
         }
 

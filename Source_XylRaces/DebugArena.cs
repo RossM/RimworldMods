@@ -233,7 +233,7 @@ public static class DebugArena
     private static XenotypeDef? GetDefaultXenotype(PawnKindDef pawnKindDef)
     {
         if ((pawnKindDef.xenotypeSet ?? pawnKindDef.defaultFactionDef?.xenotypeSet) is { } xenotypeSet)
-            return xenotypeSet.Count == 1 && xenotypeSet[0]!.chance >= 1 ? xenotypeSet[0]!.xenotype : xenotypeSet.DefaultXenotype;
+            return xenotypeSet is [{ chance: >= 1 } value] ? value.xenotype : xenotypeSet.DefaultXenotype;
         return XenotypeDefOf.Baseliner;
     }
 
@@ -262,6 +262,9 @@ public static class DebugArena
     {
         if (!ValidateArenaCapability())
             return;
+
+        DebugAssert.NotNull(Current.Game);
+
         List<PawnKindDef> kinds = kindsEnumerable.ToList();
         int currentFights = 0;
 
@@ -309,7 +312,9 @@ public static class DebugArena
             sb.AppendLine($"{def.defName}: {def.combatPower} combat power, {wins[def]} wins / {total[def]} total");
         Debug.Log(sb.ToString());
 
-        Current.Game!.GetComponent<GameComponent_DebugTools>()!.AddPerFrameCallback(delegate
+        GameComponent_DebugTools debugTools = Current.Game.GetComponent<GameComponent_DebugTools>();
+        DebugAssert.NotNull(debugTools);
+        debugTools.AddPerFrameCallback(delegate
         {
             if (currentFights >= maxFights)
                 return false;
@@ -418,8 +423,11 @@ public static class DebugArena
 
     public static bool BeginArenaFight(List<PawnKindDef> lhs, List<PawnKindDef> rhs, Action<ArenaResult> callback)
     {
+        DebugAssert.NotNull(Find.World?.tileTemperatures);
+        DebugAssert.NotNull(Current.Game);
+
         var tile = TileFinder.RandomSettlementTileFor(Faction.OfPlayer, mustBeAutoChoosable: true,
-            tile => lhs.Concat(rhs).Any(def => Find.World!.tileTemperatures!.SeasonAndOutdoorTemperatureAcceptableFor(tile, def.race)));
+            tile => lhs.Concat(rhs).Any(def => Find.World.tileTemperatures.SeasonAndOutdoorTemperatureAcceptableFor(tile, def.race)));
         Map map = GetOrGenerateMapUtility.GetOrGenerateMap(tile, new IntVec3(50, 1, 50), WorldObjectDefOf.Debug_Arena);
 
         try
@@ -444,7 +452,8 @@ public static class DebugArena
                 return false;
             }
 
-            RimWorld.Planet.DebugArena component = mapParent.GetComponent<RimWorld.Planet.DebugArena>()!;
+            RimWorld.Planet.DebugArena component = mapParent.GetComponent<RimWorld.Planet.DebugArena>();
+            DebugAssert.NotNull(component);
             component.lhs = lhs2;
             component.rhs = rhs2;
             component.callback = callback;
@@ -454,7 +463,8 @@ public static class DebugArena
         catch (Exception)
         {
             if (map is { Disposed: false })
-                Current.Game!.DeinitAndRemoveMap(map, false);
+                Current.Game.DeinitAndRemoveMap(map, false);
+
             throw;
         }
     }

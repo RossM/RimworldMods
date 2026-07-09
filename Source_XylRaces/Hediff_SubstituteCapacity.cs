@@ -43,7 +43,8 @@ public class Hediff_SubstituteCapacity : HediffWithComps
             if (curTick < lastActiveCheckTick + 60)
                 return field;
 
-            float originalLevel = pawn!.health.capacities.GetLevel(DefExt.originalCapacity);
+            DebugAssert.NotNull(pawn);
+            float originalLevel = pawn.health.capacities.GetLevel(DefExt.originalCapacity);
             float substituteLevel = pawn.health.capacities.GetLevel(DefExt.substituteCapacity);
             field = DefExt.mode switch
             {
@@ -89,7 +90,8 @@ public class Hediff_SubstituteCapacity : HediffWithComps
         foreach (var statDrawEntry in base.SpecialDisplayStats(req))
             yield return statDrawEntry;
 
-        float difference = pawn!.health.capacities.GetLevel(DefExt.substituteCapacity) -
+        DebugAssert.NotNull(pawn);
+        float difference = pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
                            pawn.health.capacities.GetLevel(DefExt.originalCapacity);
         if (!Active)
             difference = 0;
@@ -115,7 +117,8 @@ public class Hediff_SubstituteCapacity : HediffWithComps
 
     public TaggedString GetDescription()
     {
-        float modifier = pawn!.health.capacities.GetLevel(DefExt.substituteCapacity) -
+        DebugAssert.NotNull(pawn);
+        float modifier = pawn.health.capacities.GetLevel(DefExt.substituteCapacity) -
                          pawn.health.capacities.GetLevel(DefExt.originalCapacity);
         return
             $"{LabelCap}: {DefExt.originalCapacity.LabelCap} -> {DefExt.substituteCapacity.LabelCap} ({modifier.ToStringPercentSigned()})";

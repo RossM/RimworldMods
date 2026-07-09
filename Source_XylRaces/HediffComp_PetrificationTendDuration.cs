@@ -22,6 +22,8 @@ public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
     {
         get
         {
+            DebugAssert.NotNull(Pawn);
+            
             if (parent.IsPermanent())
             {
                 return null;
@@ -30,7 +32,7 @@ public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
             StringBuilder stringBuilder = new StringBuilder();
             if (!IsTended)
             {
-                if (!Pawn!.Dead && parent.TendableNow())
+                if (!Pawn.Dead && parent.TendableNow())
                 {
                     stringBuilder.AppendLine("NeedsTendingNow".Translate());
                 }
@@ -64,7 +66,7 @@ public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
                     }
                 }
 
-                if (!Pawn!.Dead && !TProps.TendIsPermanent && parent.TendableNow(ignoreTimer: true))
+                if (!Pawn.Dead && !TProps.TendIsPermanent && parent.TendableNow(ignoreTimer: true))
                 {
                     int num = tendTicksLeft - TProps.TendTicksOverlap;
                     if (num < 0)
@@ -87,7 +89,7 @@ public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
             return stringBuilder.ToString().TrimEndNewlines();
 
             string GetTendedLabel(BodyPartRecord bodyPartRecord) =>
-                bodyPartRecord.def.IsSolid(bodyPartRecord, Pawn!.health.hediffSet.hediffs)
+                bodyPartRecord.def.IsSolid(bodyPartRecord, Pawn.health.hediffSet.hediffs)
                     ? TProps.labelSolidTendedWell
                     : bodyPartRecord is not { depth: BodyPartDepth.Inside }
                         ? TProps.labelTendedWell

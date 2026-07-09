@@ -38,11 +38,12 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
 
     private static Ideo? GetRandomIdeo()
     {
+        DebugAssert.NotNull(Find.IdeoManager);
+        
         var playerIdeos = Faction.OfPlayer.ideos;
-        if (playerIdeos is null)
-            return null;
+        DebugAssert.NotNull(playerIdeos);
 
-        if (!Find.IdeoManager!.IdeosListForReading.Where(i => !playerIdeos.Has(i))
+        if (!Find.IdeoManager.IdeosListForReading.Where(i => !playerIdeos.Has(i))
                 .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out Ideo? ideo))
         {
             Find.IdeoManager.IdeosListForReading.Where(i => !playerIdeos.IsPrimary(i))

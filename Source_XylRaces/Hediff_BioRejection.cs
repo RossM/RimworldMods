@@ -7,7 +7,12 @@ public class Hediff_BioRejection : HediffWithComps
 
     public override float Severity
     {
-        get => pawn!.health.hediffSet.CountAddedAndImplantedParts() * 1.0f;
+        get
+        {
+            DebugAssert.NotNull(pawn);
+
+            return pawn.health.hediffSet.CountAddedAndImplantedParts() * 1.0f;
+        }
         set { }
     }
 
@@ -15,9 +20,11 @@ public class Hediff_BioRejection : HediffWithComps
     {
         get
         {
+            DebugAssert.NotNull(pawn);
+
             List<string> causes = [];
 
-            List<Hediff> hediffs = pawn!.health.hediffSet.hediffs;
+            List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
             foreach (Hediff hediff in hediffs)
             {
                 if (hediff.def.countsAsAddedPartOrImplant)

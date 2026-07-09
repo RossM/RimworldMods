@@ -42,8 +42,8 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
     private void LaunchProjectile(LocalTargetInfo target)
     {
         Pawn pawn = parent.pawn;
-        Projectile projectile = (Projectile)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map!)!;
-        Thing thing = pawn.carryTracker.CarriedThing!;
+        Projectile projectile = (Projectile)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map);
+        Thing thing = pawn.carryTracker.CarriedThing;
         if (projectile.GetComp<CompThingContainer>()?.innerContainer?.TryAddOrTransfer(thing) is not true)
         {
             Log.Warning("Failed to add thing to projectile: projectile={projectile} thing={thing}");
@@ -115,7 +115,8 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
         if (target.IsValid)
         {
             GenDraw.DrawTargetHighlight(target);
-            if (Props.projectileDef.projectile!.explosionRadius > 0f)
+            DebugAssert.NotNull(Props.projectileDef.projectile);
+            if (Props.projectileDef.projectile.explosionRadius > 0f)
             {
                 GenDraw.DrawRadiusRing(target.Cell, Props.projectileDef.projectile.explosionRadius, Color.white);
             }
