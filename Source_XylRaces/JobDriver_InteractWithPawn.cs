@@ -26,11 +26,16 @@ public abstract class JobDriver_InteractWithPawn : JobDriver
         Toil toil = ToilMaker.MakeToil();
         toil.initAction = delegate
         {
+            DebugAssert.NotNull(toil.actor);
+            DebugAssert.NotNull(toil.actor.pather);
+            DebugAssert.NotNull(Target);
+            DebugAssert.NotNull(Target.rotationTracker);
+
             Pawn actor = toil.actor;
             actor.pather.StopDead();
             PawnUtility.ForceWait(Target, 15000, maintainPosture: true);
 
-            Target?.rotationTracker.FaceTarget(actor);
+            Target.rotationTracker.FaceTarget(actor);
         };
         toil.tickIntervalAction = delta => { InteractionTickInterval(toil, delta); };
         toil.AddFinishAction(() =>

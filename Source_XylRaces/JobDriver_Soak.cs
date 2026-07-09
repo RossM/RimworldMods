@@ -10,6 +10,8 @@ public class JobDriver_Soak : JobDriver
 
     protected override IEnumerable<Toil> MakeNewToils()
     {
+        DebugAssert.NotNull(pawn);
+
         var need_wetness = pawn.needs.TryGetNeed<Need_Wetness>();
 
         Toil goToil = Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
@@ -47,6 +49,9 @@ public class JobDriver_Soak : JobDriver
 
     private void CheckForSwimmingPose()
     {
+        DebugAssert.NotNull(pawn);
+        DebugAssert.NotNull(pawn.Map);
+
         job.swimming = pawn.Position.GetTerrain(pawn.Map).IsWater;
     }
 }

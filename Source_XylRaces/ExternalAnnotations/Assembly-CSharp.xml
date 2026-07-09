@@ -172,6 +172,44 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="M:Verse.AI.ToilFailConditions.FailOn``1(``0,System.Func{System.Boolean})">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter name="f">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="condition">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:Verse.AI.Toils_Combat.CastVerb(Verse.AI.TargetIndex,System.Boolean)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.AI.Toils_General.DoAtomic(System.Action)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter name="action">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:Verse.AI.Toils_General.Wait(System.Int32,Verse.AI.TargetIndex)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.AI.Toils_Goto.GotoCell(Verse.AI.TargetIndex,Verse.AI.PathEndMode)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.AI.Toils_Goto.GotoThing(Verse.AI.TargetIndex,Verse.AI.PathEndMode,System.Boolean)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member
+    name="M:Verse.AI.Toils_Haul.StartCarryThing(Verse.AI.TargetIndex,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member
+    name="M:Verse.AI.Toils_Reserve.Reserve(Verse.AI.TargetIndex,System.Int32,System.Int32,Verse.ReservationLayerDef,System.Boolean)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter name="layer">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+  </member>
   <member name="F:Verse.BodyPartRecord.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -244,7 +282,7 @@
   <member
     name="M:Verse.GenCollection.TryRandomElementByWeight``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Single},``0@)">
     <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
-      <argument>=> true, result:notnull; => result, value:null</argument>
+      <argument>=> true, result:notnull; => false, result:null</argument>
     </attribute>
     <parameter name="source">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -257,7 +295,7 @@
   </member>
   <member name="M:Verse.GenCollection.TryRandomElement``1(System.Collections.Generic.IEnumerable{``0},``0@)">
     <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
-      <argument>=> true, result:notnull; => result, value:null</argument>
+      <argument>=> true, result:notnull; => false, result:null</argument>
     </attribute>
     <parameter name="source">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -401,6 +439,17 @@
   </member>
   <member name="F:Verse.HediffSet.hediffs">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.HediffSet.TryGetHediff(Verse.HediffDef,Verse.Hediff@)">
+    <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
+      <argument>def:notnull => true, hediff:notnull; def:null => false, hediff:null; def:notnull => false, hediff:null</argument>
+    </attribute>
+    <parameter name="def">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="hediff">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
   </member>
   <member name="M:Verse.IntRange.Includes(System.Int32)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -947,6 +996,21 @@
       rotationTracker, pather, natives, filth, roping, flight
     Unfortunately there does not seem to be a way to tell Resharper this.
     -->
+  </member>
+  <member name="M:Verse.ThingMaker.MakeThing(Verse.ThingDef,Verse.ThingDef)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter name="def">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+    <parameter name="stuff">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:Verse.ToilMaker.MakeToil(System.String)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter name="debugName">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
   </member>
   <member
     name="M:Verse.VerbProperties.AdjustedArmorPenetration(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver)">

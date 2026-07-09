@@ -16,6 +16,8 @@ public class JobDriver_TakeShower : JobDriver
 
     protected override IEnumerable<Toil> MakeNewToils()
     {
+        DebugAssert.NotNull(pawn);
+
         this.FailOnDespawnedOrNull(TargetIndex.A);
         yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.InteractionCell);
 
@@ -37,7 +39,9 @@ public class JobDriver_TakeShower : JobDriver
         toil.tickIntervalAction = delta =>
         {
             // Occasionally change facing randomly
-            Pawn actor = toil.actor;
+            Pawn? actor = toil.actor;
+            DebugAssert.NotNull(actor);
+
             if (actor.IsHashIntervalTick(200, delta) && Rand.Chance(0.5f))
                 actor.Rotation = Rot4.Random;
         };
