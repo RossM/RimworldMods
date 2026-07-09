@@ -1,7 +1,5 @@
 ﻿using System.Xml;
 
-#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
-
 namespace XylXenos;
 
 // This works like PatchOperationAdd, except if the node to be added already exists, the new node's children are added
@@ -38,7 +36,7 @@ public class PatchOperationAddOrMerge : PatchOperationPathed
 
     public XmlContainer? value;
 
-    public readonly Order order = Order.Prepend;
+    public readonly Order order = Order.Append;
 
     public readonly bool debug = false;
 
@@ -76,48 +74,61 @@ public class PatchOperationAddOrMerge : PatchOperationPathed
             XmlDocument xmlNodeOwnerDocument = xmlNode.OwnerDocument;
             if (xmlNodeOwnerDocument == null)
                 continue;
-            switch (order)
+
+            var childNodes = node.ChildNodes.OfType<XmlNode>().ToList();
+            if (order == Order.Prepend)
+                childNodes.Reverse();
+
+            foreach (XmlNode childNode in childNodes)
             {
-                case Order.Append:
-                {
-                    foreach (XmlNode childNode in node.ChildNodes.OfType<XmlNode>())
-                    {
-                        if (xmlNode.ChildNodes.OfType<XmlNode>()
-                                .FirstOrDefault(xn => xn.Name == childNode.Name) is { } existingNode)
-                        {
-                            foreach (XmlNode grandchildNode in childNode.ChildNodes)
-                                existingNode.AppendChild(
-                                    xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
-                        }
-                        else
-                            xmlNode.AppendChild(xmlNodeOwnerDocument.ImportNode(childNode, deep: true));
-                    }
+                // Debug.Log($"[{nameof(PatchOperationAddOrMerge)}] Pre-merge: {xmlNode.OuterXml}");
 
-                    break;
-                }
-                case Order.Prepend:
-                {
-                    var xmlNodes = node.ChildNodes.OfType<XmlNode>().ToList();
-                    xmlNodes.Reverse();
-                    foreach (XmlNode childNode in xmlNodes)
-                    {
-                        if (xmlNode.ChildNodes.OfType<XmlNode>()
-                                .FirstOrDefault(xn => xn.Name == childNode.Name) is { } existingNode)
-                        {
-                            foreach (XmlNode grandchildNode in childNode.ChildNodes)
-                                existingNode.PrependChild(
-                                    xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
-                        }
-                        else
-                            xmlNode.PrependChild(xmlNodeOwnerDocument.ImportNode(childNode, deep: true));
-                    }
+                Merge(xmlNode, childNode, xmlNodeOwnerDocument);
 
-                    break;
-                }
-                default: throw new ArgumentOutOfRangeException();
+                // Debug.Log($"[{nameof(PatchOperationAddOrMerge)}] Post-merge: {xmlNode.OuterXml}");
             }
         }
 
         return result;
     }
+
+    private void Merge(XmlNode targetNode, XmlNode child, XmlDocument xmlNodeOwnerDocument)
+    {
+        if (targetNode.ChildNodes.OfType<XmlNode>().FirstOrDefault(xn => CanMerge(xn, child)) is { } mergeTarget)
+        {
+            var grandchildren = child.ChildNodes.OfType<XmlNode>().ToList();
+            if (order == Order.Prepend)
+                grandchildren.Reverse();
+
+            foreach (XmlNode grandchild in grandchildren)
+                Merge(mergeTarget, grandchild, xmlNodeOwnerDocument);
+
+            return;
+        }
+
+        switch (child.NodeType)
+        {
+            case XmlNodeType.Element:
+            {
+                switch (order)
+                {
+                    case Order.Append: targetNode.AppendChild(xmlNodeOwnerDocument.ImportNode(child, deep: true)); break;
+                    case Order.Prepend: targetNode.PrependChild(xmlNodeOwnerDocument.ImportNode(child, deep: true)); break;
+                    default: throw new ArgumentOutOfRangeException();
+                }
+
+                break;
+            }
+            case XmlNodeType.Text:
+            {
+                targetNode.InnerText = child.Value;
+                break;
+            }
+            default: throw new NotSupportedException();
+        }
+    }
+
+    private bool CanMerge(XmlNode first, XmlNode second) =>
+        first.NodeType == XmlNodeType.Element && (first.Name != "li" || first.Attributes?["Class"] != null) && first.Name == second.Name &&
+        first.Attributes?["Class"]?.Value == second.Attributes?["Class"]?.Value;
 }
