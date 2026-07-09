@@ -65,7 +65,7 @@ public class PatchOperationAddOrMerge : PatchOperationPathed
         var result = false;
 
         XmlNodeList? nodes = xml.SelectNodes(xpath);
-        
+
         DebugAssert.NotNull(nodes);
         foreach (XmlNode xmlNode in nodes)
         {
@@ -76,38 +76,43 @@ public class PatchOperationAddOrMerge : PatchOperationPathed
             XmlDocument xmlNodeOwnerDocument = xmlNode.OwnerDocument;
             if (xmlNodeOwnerDocument == null)
                 continue;
-            if (order == Order.Append)
+            switch (order)
             {
-                foreach (XmlNode childNode in node.ChildNodes)
+                case Order.Append:
                 {
-                    if (xmlNode.ChildNodes.OfType<XmlNode>()
-                            .FirstOrDefault(xn => xn.Name == childNode.Name) is { } existingNode)
+                    foreach (XmlNode childNode in node.ChildNodes.OfType<XmlNode>())
                     {
-                        foreach (XmlNode grandchildNode in childNode.ChildNodes)
-                            existingNode.AppendChild(
-                                xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
+                        if (xmlNode.ChildNodes.OfType<XmlNode>()
+                                .FirstOrDefault(xn => xn.Name == childNode.Name) is { } existingNode)
+                        {
+                            foreach (XmlNode grandchildNode in childNode.ChildNodes)
+                                existingNode.AppendChild(
+                                    xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
+                        }
+                        else
+                            xmlNode.AppendChild(xmlNodeOwnerDocument.ImportNode(childNode, deep: true));
                     }
-                    else
-                        xmlNode.AppendChild(xmlNodeOwnerDocument.ImportNode(childNode, deep: true));
-                }
-            }
-            else if (order == Order.Prepend)
-            {
-                for (int num = node.ChildNodes.Count - 1; num >= 0; num--)
-                {
-                    var childNode = node.ChildNodes[num];
-                    DebugAssert.NotNull(childNode);
 
-                    if (xmlNode.ChildNodes.OfType<XmlNode>()
-                            .FirstOrDefault(xn => xn.Name == childNode.Name) is { } existingNode)
-                    {
-                        foreach (XmlNode grandchildNode in childNode.ChildNodes)
-                            existingNode.PrependChild(
-                                xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
-                    }
-                    else
-                        xmlNode.PrependChild(xmlNodeOwnerDocument.ImportNode(childNode, deep: true));
+                    break;
                 }
+                case Order.Prepend:
+                {
+                    foreach (XmlNode childNode in node.ChildNodes.OfType<XmlNode>().Reverse())
+                    {
+                        if (xmlNode.ChildNodes.OfType<XmlNode>()
+                                .FirstOrDefault(xn => xn.Name == childNode.Name) is { } existingNode)
+                        {
+                            foreach (XmlNode grandchildNode in childNode.ChildNodes)
+                                existingNode.PrependChild(
+                                    xmlNodeOwnerDocument.ImportNode(grandchildNode, deep: true));
+                        }
+                        else
+                            xmlNode.PrependChild(xmlNodeOwnerDocument.ImportNode(childNode, deep: true));
+                    }
+
+                    break;
+                }
+                default: throw new ArgumentOutOfRangeException();
             }
         }
 

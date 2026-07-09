@@ -160,10 +160,11 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
 
         var projectedWetness = need_wetness.CurLevel - 8f * need_wetness.FallPerHour;
 
-        if (need_wetness.CurLevel < Need_Wetness.thresholdWet && projectedWetness < Need_Wetness.thresholdNeutral)
-            return ThinkNodePriority.MiscNeed;
-        if (need_wetness.CurLevel < 0.95f)
-            return ThinkNodePriority.AvoidIdle;
-        return 0.0f;
+        return need_wetness.CurLevel switch
+        {
+            < Need_Wetness.thresholdWet when projectedWetness < Need_Wetness.thresholdNeutral => ThinkNodePriority.MiscNeed,
+            < 0.95f => ThinkNodePriority.AvoidIdle,
+            _ => 0.0f
+        };
     }
 }

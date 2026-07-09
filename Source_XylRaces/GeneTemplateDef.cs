@@ -13,7 +13,7 @@ public class GeneTemplateDef : Def
     [UsedFromXml]
     public class AbilityBiostatInfo
     {
-        public IntRange levels = new(0, Int32.MaxValue);
+        public IntRange levels = new(0, int.MaxValue);
         public int biostatArc = 0;
         public int biostatCpx = 0;
         public int biostatMet = 0;

@@ -163,12 +163,10 @@ public static class DebugOutputs
         DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs.Where(ShouldShow), columns.ToArray());
         return;
 
-        static bool ShouldShow(FactionDef factionDef)
-        {
-            return factionDef.requiredMemes is { Count: > 0 } ||
-                   factionDef.allowedMemes is { Count: > 0 } ||
-                   factionDef.disallowedMemes is { Count: > 0 };
-        }
+        static bool ShouldShow(FactionDef factionDef) =>
+            factionDef.requiredMemes is { Count: > 0 } ||
+            factionDef.allowedMemes is { Count: > 0 } ||
+            factionDef.disallowedMemes is { Count: > 0 };
     }
 
     [DebugOutput("Genes")]
