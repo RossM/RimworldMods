@@ -30,7 +30,7 @@
 
   <!-- Exclusion tags -->
 
-  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationMerge">
     <xpath>Defs/GeneDef[defName="RobustDigestion"]</xpath>
     <value>
       <exclusionTags>
@@ -39,7 +39,7 @@
     </value>
   </Operation>
 
-  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationMerge">
     <xpath>Defs/GeneDef[defName="FacialRidges"]</xpath>
     <value>
       <exclusionTags>
@@ -48,7 +48,7 @@
     </value>
   </Operation>
 
-  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationMerge">
     <xpath>Defs/GeneDef[defName="Brow_Heavy"]</xpath>
     <value>
       <exclusionTags>
@@ -57,7 +57,7 @@
     </value>
   </Operation>
 
-  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationMerge">
     <xpath>Defs/GeneDef[@Name="GeneHairStyleBase"]</xpath>
     <value>
       <exclusionTags>

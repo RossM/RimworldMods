@@ -2,7 +2,7 @@
 
 <Patch>
 
-  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationMerge">
     <xpath>
       Defs/ThoughtDef[
         defName="AteCorpse" or
@@ -19,7 +19,7 @@
     </value>
   </Operation>
 
-  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationMerge">
     <xpath>Defs/ThoughtDef[defName="SleptInBarracks"]</xpath>
     <value>
       <nullifyingGenes>
@@ -35,7 +35,7 @@
     </value>
   </Operation>
 
-  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationMerge">
     <xpath>Defs/ThoughtDef[defName="HoldingMePrisoner"]</xpath>
     <value>
       <nullifyingGenes>
@@ -44,7 +44,7 @@
     </value>
   </Operation>
 
-  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationMerge">
     <xpath>Defs/ThoughtDef[defName="SoakingWet"]</xpath>
     <value>
       <nullifyingGenes>

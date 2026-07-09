@@ -5,7 +5,7 @@
   <!-- 
   Most outer-layer apparel that covers the torso disables flight.
   -->
-  <Operation Class="XylXenos.PatchOperationAddOrMerge">
+  <Operation Class="XylXenos.PatchOperationMerge">
     <xpath>
       Defs/ThingDef[
         apparel/bodyPartGroups/li = "Torso" and

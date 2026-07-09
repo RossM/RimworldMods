@@ -26,7 +26,7 @@ namespace XylXenos;
 //   </list>
 // </def>
 [UsedFromXml]
-public class PatchOperationAddOrMerge : PatchOperationPathed
+public class PatchOperationMerge : PatchOperationPathed
 {
     public enum Order
     {
@@ -81,11 +81,11 @@ public class PatchOperationAddOrMerge : PatchOperationPathed
 
             foreach (XmlNode childNode in childNodes)
             {
-                // Debug.Log($"[{nameof(PatchOperationAddOrMerge)}] Pre-merge: {xmlNode.OuterXml}");
+                // Debug.Log($"[{nameof(PatchOperationMerge)}] Pre-merge: {xmlNode.OuterXml}");
 
                 Merge(xmlNode, childNode, xmlNodeOwnerDocument);
 
-                // Debug.Log($"[{nameof(PatchOperationAddOrMerge)}] Post-merge: {xmlNode.OuterXml}");
+                // Debug.Log($"[{nameof(PatchOperationMerge)}] Post-merge: {xmlNode.OuterXml}");
             }
         }
 
