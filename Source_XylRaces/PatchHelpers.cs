@@ -21,7 +21,7 @@ public static class PatchHelpers
     {
         float result = 0f;
 
-        Ideo ideo = pawn.Ideo;
+        Ideo? ideo = pawn.Ideo;
         if (ideo == null)
             return 0f;
 
@@ -89,6 +89,8 @@ public static class PatchHelpers
 
         for (int i = 0; i < candidateCount; i++)
         {
+            DebugAssert.NotNull(faction.def.colorSpectrum);
+
             float colorFromSpectrum = i / (float)(candidateCount - 1);
             float distanceMin = float.MaxValue;
             Color color = ColorsFromSpectrum.Get(faction.def.colorSpectrum, colorFromSpectrum);
@@ -198,7 +200,7 @@ public static class PatchHelpers
             .Sum(gene => gene.DefExt.CompProps<GeneCompProperties_XenotypeStrength>()?.strength ?? 0);
     }
 
-    public static bool HyperlactatingPrisonerInRoomCanProduce(Room r, ThingDef thingDef)
+    public static bool HyperlactatingPrisonerInRoomCanProduce(Room? r, ThingDef thingDef)
     {
         if (r is not { IsPrisonCell: true })
             return false;
@@ -324,6 +326,7 @@ public static class PatchHelpers
         int i = 0;
         for (int j = 0; j < list.Count; j++)
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             if (IsSkinColor(list[j]))
             {
                 list[j] = colorGenes[i];

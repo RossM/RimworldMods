@@ -9,6 +9,7 @@ public static class Patch_PawnGenerator
     public static bool AddOrAdjust_Prefix(XenotypeChance xenotypeChance, FactionDef? factionDef, Faction? faction)
     {
         DebugAssert.NotNull(PawnGenerator.tmpXenotypeChances);
+        DebugAssert.NotNull(xenotypeChance.xenotype);
 
         if (xenotypeChance.xenotype != ((faction?.def ?? factionDef)?.xenotypeSet).DefaultXenotype)
         {

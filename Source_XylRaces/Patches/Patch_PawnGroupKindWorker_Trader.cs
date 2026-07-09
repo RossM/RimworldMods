@@ -32,6 +32,7 @@ public static class Patch_PawnGroupKindWorker_Trader
         {
             DebugAssert.NotNull(Find.WorldGrid);
 
+            // ReSharper disable once AssignNullToNotNullAttribute
             Tile tile = Find.WorldGrid[parms.tile];
             DebugAssert.NotNull(tile);
             DebugAssert.NotNull(tile.PrimaryBiome);
@@ -57,7 +58,7 @@ public static class Patch_PawnGroupKindWorker_Trader
         List<Pawn> carrierPawns = [];
         for (int i = 0; i < numAnimals; i++)
         {
-            Pawn pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(kind, parms.faction, PawnGenerationContext.NonPlayer,
+            Pawn? pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(kind, parms.faction, PawnGenerationContext.NonPlayer,
                 parms.tile, forceGenerateNewPawn: false, allowDead: false, allowDowned: false, canGeneratePawnRelations: true,
                 mustBeCapableOfViolence: false, forceAddFreeWarmLayerIfNeeded: false, allowGay: true, allowPregnant: false,
                 allowFood: true, allowAddictions: true, fixedIdeo: parms.ideo, inhabitant: parms.inhabitants));
@@ -66,6 +67,7 @@ public static class Patch_PawnGroupKindWorker_Trader
 
             if (itemIndex < waresItems.Count)
             {
+                // ReSharper disable once AssignNullToNotNullAttribute
                 pawn.inventory.innerContainer.TryAdd(waresItems[itemIndex]);
                 itemIndex++;
             }
@@ -76,6 +78,7 @@ public static class Patch_PawnGroupKindWorker_Trader
 
         for (; itemIndex < waresItems.Count; itemIndex++)
         {
+            // ReSharper disable once AssignNullToNotNullAttribute
             carrierPawns.RandomElement().inventory.innerContainer.TryAdd(waresItems[itemIndex]);
         }
 

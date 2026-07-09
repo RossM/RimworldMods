@@ -8,6 +8,8 @@ public static class Patch_Thought
     [HarmonyPatch(nameof(Thought.Description), MethodType.Getter)]
     public static void Description_Postfix(Thought __instance, ref string __result)
     {
+        DebugAssert.NotNull(__instance.pawn);
+
         GeneDef? sourceGene =
             __instance.def.requiredGenes?.FirstOrDefault(geneDef => __instance.pawn.HasActiveGene(geneDef));
         if (sourceGene == null)

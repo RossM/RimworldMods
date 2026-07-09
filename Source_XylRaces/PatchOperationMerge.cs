@@ -71,7 +71,7 @@ public class PatchOperationMerge : PatchOperationPathed
                 Debug.Log($"[{nameof(PatchOperationMerge)}] xpath: {xpath}");
 
             result = true;
-            XmlDocument xmlNodeOwnerDocument = xmlNode.OwnerDocument;
+            XmlDocument? xmlNodeOwnerDocument = xmlNode.OwnerDocument;
             if (xmlNodeOwnerDocument == null)
                 continue;
 
@@ -106,6 +106,7 @@ public class PatchOperationMerge : PatchOperationPathed
             return;
         }
 
+        // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
         switch (child.NodeType)
         {
             case XmlNodeType.Element:
@@ -121,6 +122,8 @@ public class PatchOperationMerge : PatchOperationPathed
             }
             case XmlNodeType.Text:
             {
+                DebugAssert.NotNull(child.Value);
+
                 targetNode.InnerText = child.Value;
                 break;
             }

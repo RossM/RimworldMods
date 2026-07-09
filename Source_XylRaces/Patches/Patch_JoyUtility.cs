@@ -16,6 +16,7 @@ public static class Patch_JoyUtility
             if (!result)
             {
                 DebugAssert.NotNull(reason);
+                // ReSharper disable once AssignNullToNotNullAttribute
                 outFailReason?.Append(reason.label);
             }
 

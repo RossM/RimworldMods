@@ -5,6 +5,8 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
 {
     private static bool ValidHediff(Pawn pawn, RecipeDef recipe, Hediff hediff)
     {
+        DebugAssert.NotNull(hediff.Part);
+
         return hediff.def == recipe.removesHediff &&
                hediff.Visible &&
                hediff.Severity < pawn.health.hediffSet.GetPartHealth(hediff.Part);
@@ -81,10 +83,14 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
     private static void RemoveHediff(Pawn pawn, Pawn? billDoer, Hediff hediff, Bill bill)
     {
         var part = hediff.Part;
+        DebugAssert.NotNull(part);
+
         var severity = hediff.Severity;
         pawn.health.RemoveHediff(hediff);
         if (hediff.def.spawnThingOnRemoved != null && billDoer != null)
         {
+            DebugAssert.NotNull(billDoer.Map);
+
             GenSpawn.Spawn(hediff.def.spawnThingOnRemoved, billDoer.Position, billDoer.Map);
         }
 

@@ -33,6 +33,7 @@ public static class Patch_RaceProperties
         ILGenerator generator,
         MethodBase method)
     {
+        // ReSharper disable once AssignNullToNotNullAttribute
         return InstructionMatcher.MatchAndReplace([Rule_AddLactationExplanation], method, instructions, generator);
     }
 
@@ -41,6 +42,8 @@ public static class Patch_RaceProperties
     [InfixPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
     public static bool GetFirstHediffOfDef_Prefix(HediffSet __instance, out Hediff? __result)
     {
+        DebugAssert.NotNull(__instance.pawn);
+
         __result = null;
         // See comment in Patch_RaceProperties. There is a bug around lactation nutrition in the base game which causes
         // lactating pawns to need too much food. This turns out to be a problem for bossaps balance-wise, so I'm

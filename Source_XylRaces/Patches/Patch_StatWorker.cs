@@ -148,6 +148,7 @@ public static class Patch_StatWorker
     {
         var instructionsList = new List<CodeInstruction>(instructions);
         Fixup_GetOffsetsAndFactorsExplanation.MatchAndReplace(method, ref instructionsList, generator);
+        // ReSharper disable once AssignNullToNotNullAttribute
         return instructionsList;
     }
 
@@ -162,6 +163,8 @@ public static class Patch_StatWorker
         StatRequest req,
         ref PawnCapacityDef __result)
     {
+        DebugAssert.NotNull(__instance.capacity);
+
         if (Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, ___stat) is { } foundHediff)
             __result = foundHediff.DefExt.substituteCapacity;
     }
@@ -178,6 +181,8 @@ public static class Patch_StatWorker
         StatRequest req,
         ref PawnCapacityDef __result)
     {
+        DebugAssert.NotNull(__instance.capacity);
+
         if (Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, ___stat) is { } foundHediff)
             __result = foundHediff.DefExt.substituteCapacity;
     }

@@ -37,6 +37,7 @@ public class Main : Mod
         using (new ProfileBlock("XylXenos Harmony patching"))
         {
             harmony.PatchCategory("PreLoadDefs");
+            // ReSharper disable once AssignNullToNotNullAttribute
             harmony.PatchCategory(null);
         }
 

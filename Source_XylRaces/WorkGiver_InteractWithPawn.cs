@@ -18,7 +18,7 @@ public class DefModExtension_WorkGiver_InteractWithPawn : DefModExtension
 [UsedFromXml]
 public class WorkGiver_InteractWithPawn : WorkGiver_Scanner
 {
-    public DefModExtension_WorkGiver_InteractWithPawn DefExt => def.GetModExtension<DefModExtension_WorkGiver_InteractWithPawn>();
+    public DefModExtension_WorkGiver_InteractWithPawn DefExt => def.GetModExtension<DefModExtension_WorkGiver_InteractWithPawn>()!;
 
     public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
     {
@@ -39,6 +39,8 @@ public class WorkGiver_InteractWithPawn : WorkGiver_Scanner
             return false;
         if (pawn == target)
             return false;
+
+        DebugAssert.NotNull(DefExt.job.driverClass);
 
         var worker = GenWorker<JobDriver_InteractWithPawn>.Get(DefExt.job.driverClass);
         worker.pawn = pawn;

@@ -40,7 +40,7 @@ public class ScenPart_PsylinkLevels : ScenPart_PawnModifier
     {
         DebugAssert.NotNull(pawn.abilities);
 
-        Hediff_Psylink mainPsylinkSource = pawn.GetMainPsylinkSource();
+        Hediff_Psylink? mainPsylinkSource = pawn.GetMainPsylinkSource();
         if (mainPsylinkSource == null)
         {
             mainPsylinkSource = (Hediff_Psylink)HediffMaker.MakeHediff(HediffDefOf.PsychicAmplifier, pawn);
@@ -48,7 +48,11 @@ public class ScenPart_PsylinkLevels : ScenPart_PawnModifier
             {
                 var oldAbilities = new HashSet<Ability>(pawn.abilities.AllAbilitiesForReading);
                 mainPsylinkSource.suppressPostAddLetter = !sendLetter;
-                pawn.health.AddHediff(mainPsylinkSource, pawn.health.hediffSet.GetBrain());
+                
+                BodyPartRecord? brain = pawn.health.hediffSet.GetBrain();
+                DebugAssert.NotNull(brain);
+
+                pawn.health.AddHediff(mainPsylinkSource, brain);
                 foreach (var newAbility in pawn.abilities.AllAbilitiesForReading.Where(a => !oldAbilities.Contains(a)))
                     pawn.abilities.RemoveAbility(newAbility.def);
                 levelOffset -= 1;

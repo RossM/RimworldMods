@@ -57,6 +57,8 @@ public class StatWorker_SuppressionFallRate_Fixed : StatWorker
 
     public string GetExplanationForTooltip(StatRequest req)
     {
+        DebugAssert.NotNull(req.Thing);
+
         StringBuilder stringBuilder = new StringBuilder();
         float baseValueFor = GetBaseValueFor(req);
         stringBuilder.AppendLine($"{"SuppressionFallRate".Translate()}: {GetValue(req.Thing).ToStringPercent()}");

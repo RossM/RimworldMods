@@ -12,7 +12,7 @@ public static class Patch_ThingDef
         {
             bool allowsFlight = GeneComp_Flight.ApparelAllowsFlight(__instance);
 
-            __result = __result.AddItem(
+            __result = __result.Append(
                 new StatDrawEntry(StatCategoryDefOf.Apparel,
                     "XylAllowsFlightLabel".Translate(),
                     allowsFlight ? "Yes".Translate() : "No".Translate(),

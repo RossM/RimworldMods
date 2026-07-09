@@ -12,6 +12,8 @@ public static class PatchLactation
     [InfixPatch(typeof(ITab_Pawn_Feeding), "DrawRow")]
     public static void GetFirstHediffOfDef_Postfix(HediffSet __instance, HediffDef def, bool mustBeVisible, ref Hediff __result)
     {
+        DebugAssert.NotNull(__instance.pawn);
+
         if (def == HediffDefOf.Lactating && !mustBeVisible)
             __result = __instance.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
     }
@@ -21,6 +23,8 @@ public static class PatchLactation
     [InfixPatch(typeof(ChildcareUtility), "CanBreastfeed")]
     public static void HasHediff_Postfix(HediffSet __instance, HediffDef def, bool mustBeVisible, ref bool __result)
     {
+        DebugAssert.NotNull(__instance.pawn);
+
         if (def == HediffDefOf.Lactating && !mustBeVisible)
             __result = __instance.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
     }

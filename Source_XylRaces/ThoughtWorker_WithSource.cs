@@ -5,6 +5,8 @@ public class ThoughtWorker_WithSource : ThoughtWorker_Hediff
 {
     public override string PostProcessLabel(Pawn p, string label)
     {
+        DebugAssert.NotNull(def.hediff);
+
         HediffWithCompsExt? hediff = p.health.hediffSet.GetFirstHediffOfDef(def.hediff) as HediffWithCompsExt;
         Pawn? sourcePawn = hediff?.SourcePawn;
 
@@ -15,6 +17,8 @@ public class ThoughtWorker_WithSource : ThoughtWorker_Hediff
 
     public override string PostProcessDescription(Pawn p, string description)
     {
+        DebugAssert.NotNull(def.hediff);
+
         HediffWithCompsExt? hediff = p.health.hediffSet.GetFirstHediffOfDef(def.hediff) as HediffWithCompsExt;
         Pawn? sourcePawn = hediff?.SourcePawn;
 

@@ -8,6 +8,8 @@ public static class Patch_Need_Food
     [InfixPatch("FoodFallPerTickAssumingCategory")]
     private static void AddedNutritionPerDay_Postfix(HediffComp_Lactating __instance, ref float __result)
     {
+        DebugAssert.NotNull(__instance.Pawn);
+
         if (Settings.instance.ShouldFixLactationBugsFor(__instance.Pawn))
             __result = 0f;
     }

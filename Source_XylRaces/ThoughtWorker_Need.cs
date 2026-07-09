@@ -19,15 +19,19 @@ public class DefModExtension_Thought_Need : DefModExtension
 [UsedFromXml]
 public class ThoughtWorker_Need : ThoughtWorker
 {
-    public DefModExtension_Thought_Need DefExt => def.GetModExtension<DefModExtension_Thought_Need>();
+    public DefModExtension_Thought_Need DefExt => def.GetModExtension<DefModExtension_Thought_Need>()!;
 
-    public Func<Need, int> CurStageGetter => field ??= MakeGetter(DefExt.need.needClass);
+    public Func<Need, int> CurStageGetter => field ??= MakeGetter(DefExt.need?.needClass);
 
     private static readonly Dictionary<Type, Func<Need, int>> getterCache = new();
 
-    private static Func<Need, int> MakeGetter(Type needType)
+    private static Func<Need, int> MakeGetter(Type? needType)
     {
+        if (needType is null)
+            return static _ => 0;
+
         if (getterCache.TryGetValue(needType, out var func))
+            // ReSharper disable once AssignNullToNotNullAttribute
             return func;
 
         // Creates a method that does:

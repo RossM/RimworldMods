@@ -20,7 +20,7 @@ public class DefModExtension_Thought_PawnStatus : DefModExtension
 [UsedFromXml]
 public class ThoughtWorker_PawnStatus : ThoughtWorker
 {
-    public DefModExtension_Thought_PawnStatus DefExt => def.GetModExtension<DefModExtension_Thought_PawnStatus>();
+    public DefModExtension_Thought_PawnStatus DefExt => def.GetModExtension<DefModExtension_Thought_PawnStatus>()!;
 
     private bool Check(Pawn p)
     {

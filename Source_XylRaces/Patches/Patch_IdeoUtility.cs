@@ -10,14 +10,12 @@ public static class Patch_IdeoUtility
     {
         __result = false;
 
-        XenotypeSet xenotypeSet = factionDef.xenotypeSet;
+        XenotypeSet? xenotypeSet = factionDef.xenotypeSet;
         if (xenotypeSet == null)
             return true;
 
         var precept = (Precept_Xenotype?)ideo.GetPrecept(PreceptDefOf.PreferredXenotype);
-        if (precept == null)
-            return true;
 
-        return xenotypeSet.Contains(precept.xenotype);
+        return precept is not { xenotype: { } xenotype } || xenotypeSet.Contains(xenotype);
     }
 }

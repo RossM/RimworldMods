@@ -11,8 +11,10 @@ public static class Patch_ITab_Pawn_Visitor
         Rules =
         {
             InfixPatcher.MakeRedirectRule(
+                // ReSharper disable once AssignNullToNotNullAttribute
                 AccessTools.Method(typeof(StatWorker_SuppressionFallRate),
                     nameof(StatWorker_SuppressionFallRate.GetExplanationForTooltip)),
+                // ReSharper disable once AssignNullToNotNullAttribute
                 AccessTools.Method(typeof(StatWorker_SuppressionFallRate_Fixed),
                     nameof(StatWorker_SuppressionFallRate_Fixed.GetExplanationForTooltip))),
             new()
@@ -41,6 +43,7 @@ public static class Patch_ITab_Pawn_Visitor
     {
         var instructionsList = new List<CodeInstruction>(instructions);
         Fixup.MatchAndReplace(method, ref instructionsList, generator);
+        // ReSharper disable once AssignNullToNotNullAttribute
         return instructionsList;
     }
 }
