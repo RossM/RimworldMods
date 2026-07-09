@@ -30,7 +30,11 @@ public static class Patch_GeneDef_GetDescriptionFull
     public static IEnumerable<MethodInfo> TargetMethods()
     {
         var type = AccessTools.TypeByName("Verse.GeneDef");
+        DebugAssert.NotNull(type);
+
         type = type.GetNestedType("<>c", AccessTools.all);
+        DebugAssert.NotNull(type);
+
         foreach (var method in type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
         {
             var parameters = method.GetParameters();

@@ -8,6 +8,8 @@ public static class Patch_PawnGenerator
     [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
     public static bool AddOrAdjust_Prefix(XenotypeChance xenotypeChance, FactionDef? factionDef, Faction? faction)
     {
+        DebugAssert.NotNull(PawnGenerator.tmpXenotypeChances);
+
         if (xenotypeChance.xenotype != ((faction?.def ?? factionDef)?.xenotypeSet).DefaultXenotype)
         {
             if (PawnGenerator.tmpXenotypeChances.ContainsKey(xenotypeChance.xenotype))

@@ -22,8 +22,12 @@ public class WorkGiver_InteractWithPawn : WorkGiver_Scanner
 
     public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
     {
+        DebugAssert.NotNull(pawn.Map);
+
+        var foo = new MemberNotNullWhenAttribute(true, "guest");
+
         return pawn.Map.mapPawns.AllPawns.Where(targetPawn =>
-            (targetPawn.IsPrisoner ? targetPawn.guest.HostFaction : targetPawn.Faction) == pawn.Faction).ToList();
+            (targetPawn is { guest.IsPrisoner: true } ? targetPawn.guest.HostFaction : targetPawn.Faction) == pawn.Faction).ToList();
     }
 
     public override bool ShouldSkip(Pawn pawn, bool forced = false)

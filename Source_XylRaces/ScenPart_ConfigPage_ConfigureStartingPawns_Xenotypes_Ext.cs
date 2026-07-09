@@ -5,10 +5,15 @@ public class ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext : ScenPart
 {
     protected override void GenerateStartingPawns()
     {
+        DebugAssert.NotNull(xenotypeCounts);
+
         foreach (var xenotypeCount in xenotypeCounts)
             xenotypeCount.xenotype ??= XenotypeDefOf.Baseliner;
 
         base.GenerateStartingPawns();
+
+        DebugAssert.NotNull(Find.GameInitData);
+        DebugAssert.NotNull(Find.GameInitData.startingAndOptionalPawns);
 
         while (Find.GameInitData.startingAndOptionalPawns.Count < pawnChoiceCount)
         {

@@ -4,8 +4,10 @@ public static class XenotypeHelpers
 {
     public static XenotypeDef? GetRandomXenotypeNotInColony()
     {
+        DebugAssert.NotNull(Find.FactionManager);
+
         HashSet<XenotypeDef> playerXenotypes = Faction.OfPlayer.AllAlivePawns.Where(pawn => pawn.genes != null)
-            .Select(pawn => pawn.genes.Xenotype).ToHashSet();
+            .Select(pawn => pawn.genes!.Xenotype).ToHashSet();
         Dictionary<XenotypeDef, float> weights = new();
         foreach (var faction in Find.FactionManager.AllFactionsListForReading)
         {
@@ -16,7 +18,8 @@ public static class XenotypeHelpers
             for (int i = 0; i < xenotypeSet.Count; i++)
             {
                 var entry = xenotypeSet[i];
-                weights[entry.xenotype] = weights.GetWithFallback(entry.xenotype) + entry.chance;
+                if (entry != null)
+                    weights[entry.xenotype] = weights.GetWithFallback(entry.xenotype) + entry.chance;
             }
         }
 

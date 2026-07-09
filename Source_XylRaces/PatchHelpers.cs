@@ -115,6 +115,8 @@ public static class PatchHelpers
 
     public static void ReassignFactionColors(PlanetLayer layer)
     {
+        DebugAssert.NotNull(Find.FactionManager);
+
         // Ensure we don't alter world generation
         Rand.PushState();
 
@@ -145,8 +147,8 @@ public static class PatchHelpers
         {
             if (f.layerBlacklist is { Count: > 0 } && f.layerBlacklist.Contains(layer.Def))
                 return false;
-            if (f.layerWhitelist is { Count: > 0 } || !layer.IsRootSurface)
-                return f.layerWhitelist.Contains(layer.Def);
+            if (f.layerWhitelist is { Count: > 0 } && !f.layerWhitelist.Contains(layer.Def))
+                return false;
             return true;
         }
     }
@@ -154,6 +156,8 @@ public static class PatchHelpers
     [UsedFromReflection]
     public static PawnRenderFlags ModifyRenderFlags(Pawn pawn, PawnRenderFlags flags)
     {
+        DebugAssert.NotNull(pawn.pather);
+
         if (pawn.CurJobDef == DefOf.XylTakeShower && !pawn.pather.Moving)
         {
             flags &= ~(PawnRenderFlags.Clothes | PawnRenderFlags.Headgear);
@@ -177,6 +181,9 @@ public static class PatchHelpers
 
     public static void CopyXenotype(Pawn destination, Pawn source)
     {
+        DebugAssert.NotNull(destination.genes);
+        DebugAssert.NotNull(source.genes);
+
         destination.genes.SetXenotypeDirect(source.genes.Xenotype);
         destination.genes.xenotypeName = source.genes.xenotypeName;
         destination.genes.iconDef = source.genes.iconDef;
@@ -258,7 +265,7 @@ public static class PatchHelpers
             if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
                 continue;
 
-            var foodGroups = ingestible.FoodGroups;
+            IEnumerable<FoodGroupDef> foodGroups = ingestible.FoodGroups.ToList();
             if (thoughtOverride.allowedFoodGroups is { Count: > 0 } && !foodGroups.Intersect(thoughtOverride.allowedFoodGroups).Any())
                 continue;
             if (thoughtOverride.disallowedFoodGroups is { Count: > 0 } && foodGroups.Intersect(thoughtOverride.disallowedFoodGroups).Any())

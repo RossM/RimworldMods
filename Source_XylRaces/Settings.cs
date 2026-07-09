@@ -46,6 +46,7 @@ public class Settings : ModSettings
     private void BoolSetting(Listing_Standard listing, string fieldName)
     {
         var valueRef = AccessTools.FieldRefAccess<bool>(GetType(), fieldName);
+        DebugAssert.NotNull(valueRef);
 
         listing.CheckboxLabeled($"XylSettingDescription_{fieldName}".Translate(), ref valueRef(this),
             $"XylSettingTooltip_{fieldName}".Translate());
@@ -53,13 +54,16 @@ public class Settings : ModSettings
 
     private void EnumSetting<T>(Listing_Standard listing, string fieldName)
     {
+        DebugAssert.NotNull(Find.WindowStack);
+
         var valueRef = AccessTools.FieldRefAccess<T>(GetType(), fieldName);
+        DebugAssert.NotNull(valueRef);
 
         var enumType = typeof(T);
 
         if (listing.ButtonTextLabeled(
                 $"XylSettingDescription_{fieldName}".Translate(),
-                $"XylSettingOption_{fieldName}_{valueRef(this).ToString()}".Translate(),
+                $"XylSettingOption_{fieldName}_{valueRef(this)!.ToString()}".Translate(),
                 tooltip: $"XylSettingTooltip_{fieldName}".Translate()))
         {
             var names = Enum.GetNames(enumType);

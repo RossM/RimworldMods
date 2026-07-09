@@ -37,6 +37,8 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
 
     public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn? billDoer, List<Thing> ingredients, Bill bill)
     {
+        DebugAssert.NotNull(recipe.removesHediff);
+
         if (billDoer != null)
         {
             if (CheckSurgeryFail(billDoer, pawn, ingredients, part, bill))
@@ -67,9 +69,8 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
             return;
         }
 
-        for (int num = pawn.health.hediffSet.hediffs.Count - 1; num >= 0; num--)
+        foreach (var hediff in pawn.health.hediffSet.hediffs.ToList())
         {
-            Hediff hediff = pawn.health.hediffSet.hediffs[num];
             if (hediff.def == recipe.removesHediff && hediff.Visible)
             {
                 RemoveHediff(pawn, billDoer, hediff, bill);

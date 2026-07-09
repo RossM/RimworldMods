@@ -29,7 +29,12 @@ public class StatWorker_SuppressionFallRate_Fixed : StatWorker
 
     public override float GetBaseValueFor(StatRequest request)
     {
-        ((Pawn)request.Thing).needs.TryGetNeed(out Need_Suppression need);
+        var pawn = request.Thing as Pawn;
+        DebugAssert.NotNull(pawn);
+
+        pawn.needs.TryGetNeed(out Need_Suppression need);
+        DebugAssert.NotNull(need);
+
         return CurrentFallRateBasedOnSuppression(need.CurLevelPercentage);
     }
 
@@ -37,7 +42,13 @@ public class StatWorker_SuppressionFallRate_Fixed : StatWorker
     {
         StringBuilder stringBuilder = new StringBuilder();
         float baseValueFor = GetBaseValueFor(req);
-        ((Pawn)req.Thing).needs.TryGetNeed(out Need_Suppression need);
+
+        var pawn = req.Thing as Pawn;
+        DebugAssert.NotNull(pawn);
+
+        pawn.needs.TryGetNeed(out Need_Suppression need);
+        DebugAssert.NotNull(need);
+
         stringBuilder.Append(
             $"{"CurrentSuppression".Translate()} ({need.CurLevelPercentage.ToStringPercent()}): {CurrentFallRateBasedOnSuppression(need.CurLevelPercentage).ToStringPercent()}");
         GetOffsetsAndFactorsExplanation(req, stringBuilder, baseValueFor);
@@ -49,7 +60,13 @@ public class StatWorker_SuppressionFallRate_Fixed : StatWorker
         StringBuilder stringBuilder = new StringBuilder();
         float baseValueFor = GetBaseValueFor(req);
         stringBuilder.AppendLine($"{"SuppressionFallRate".Translate()}: {GetValue(req.Thing).ToStringPercent()}");
-        ((Pawn)req.Thing).needs.TryGetNeed(out Need_Suppression need);
+
+        var pawn = req.Thing as Pawn;
+        DebugAssert.NotNull(pawn);
+
+        pawn.needs.TryGetNeed(out Need_Suppression need);
+        DebugAssert.NotNull(need);
+
         stringBuilder.AppendLine(
             $"   {"CurrentSuppression".Translate()} ({need.CurLevelPercentage.ToStringPercent()}): {CurrentFallRateBasedOnSuppression(need.CurLevelPercentage).ToStringPercent()}");
         GetOffsetsAndFactorsExplanation(req, stringBuilder, baseValueFor);

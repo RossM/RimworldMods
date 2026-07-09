@@ -38,6 +38,8 @@ public class ScenPart_PsylinkLevels : ScenPart_PawnModifier
 
     public static void ChangePsylinkLevelWithoutAbility(Pawn pawn, int levelOffset, bool sendLetter = true)
     {
+        DebugAssert.NotNull(pawn.abilities);
+
         Hediff_Psylink mainPsylinkSource = pawn.GetMainPsylinkSource();
         if (mainPsylinkSource == null)
         {

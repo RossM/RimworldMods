@@ -57,6 +57,8 @@ public static class Patch_RaceProperties
         if (!Settings.instance.ShouldFixLactationBugsFor(p))
             return true;
 
+        DebugAssert.NotNull(p.needs.food);
+
         // There is a bug in the base game that causes the nutrition from lactation to be counted twice, once as part of
         // NutritionEatenPerDay which is used to calculate food fall per tick, and then the lactation hediff itself also
         // directly consumes food per tick. This correctly displays that effect.

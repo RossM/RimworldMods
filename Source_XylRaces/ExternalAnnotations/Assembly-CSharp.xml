@@ -27,6 +27,9 @@
   <member name="F:RimWorld.AbilityComp.props">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:RimWorld.Command_Ability.Ability">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="T:RimWorld.DefOf">
     <attribute
       ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor(JetBrains.Annotations.ImplicitUseTargetFlags)">
@@ -59,8 +62,20 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
+  <member name="M:RimWorld.GameConditionManager.AllowEnjoyableOutsideNow(Verse.Map,Verse.GameConditionDef@)">
+    <!-- This doesn't seem to work and I don't understand why not -->
+    <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
+      <argument>=> true, reason:null; => false, reason:notnull</argument>
+    </attribute>
+    <parameter name="map">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
   <member name="P:RimWorld.GeneSet.GenesListForReading">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Ideo.memes">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.IncidentWorker.def">
@@ -129,6 +144,10 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:RimWorld.Planet.Caravan.PlayerPawnsForStoryteller">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.Planet.WorldObject.SetFaction(RimWorld.Faction)">
     <parameter name="newFaction">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
@@ -140,13 +159,25 @@
   <member name="F:RimWorld.Storyteller.difficulty">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.Thought.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.ThoughtDef.stages">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.ThoughtHandler.memories">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.ThoughtHandler.situational">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.ThoughtWorker.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="P:RimWorld.WeatherManager.CurWeatherLerped">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.WorkGiver.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.XenotypeDef.AllGenes">
@@ -281,7 +312,7 @@
   <member name="M:Verse.GenCollection.NullOrEmpty``1(System.Collections.Generic.HashSet{``0})">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
-      <argument>null => true</argument>
+      <argument>null => true; notnull => true; notnull => false</argument>
     </attribute>
   </member>
   <member
@@ -344,7 +375,7 @@
   <member name="M:Verse.GenDictionary.NullOrEmpty``1(System.Collections.Generic.Dictionary{``0})">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
-      <argument>null => true</argument>
+      <argument>null => true; notnull => true; notnull => false</argument>
     </attribute>
   </member>
   <member name="F:Verse.Gene.def">
@@ -377,6 +408,12 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.GenWorker`1.Get(System.Type)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter name="type">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
   </member>
   <member
     name="M:Verse.GetOrGenerateMapUtility.GetOrGenerateMap(RimWorld.Planet.PlanetTile,Verse.IntVec3,RimWorld.WorldObjectDef,System.Collections.Generic.IEnumerable{Verse.GenStepWithParams},System.Boolean)">
@@ -473,6 +510,7 @@
   </member>
   <member name="F:Verse.HediffSet.hediffs">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.HediffSet.TryGetHediff(Verse.HediffDef,Verse.Hediff@)">
     <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
@@ -1056,6 +1094,13 @@
   </member>
   <member name="F:Verse.Pawn_StanceTracker.stunner">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.RecipeWorker.recipe">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Room.Owners">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="T:Verse.StaticConstructorOnStartup">
     <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor"/>

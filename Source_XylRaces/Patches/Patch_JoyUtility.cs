@@ -12,9 +12,14 @@ public static class Patch_JoyUtility
 
         if (pawn.needs.TryGetNeed<Need_Wetness>() != null)
         {
-            __result = map.gameConditionManager.AllowEnjoyableOutsideNow(map, out var reason);
-            if (!__result)
+            var result = map.gameConditionManager.AllowEnjoyableOutsideNow(map, out var reason);
+            if (!result)
+            {
+                DebugAssert.NotNull(reason);
                 outFailReason?.Append(reason.label);
+            }
+
+            __result = result;
             return false;
         }
 

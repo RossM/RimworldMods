@@ -33,6 +33,8 @@ public class ScenPart_StartingSlaves : ScenPart_PawnModifier
 
     public override void GenerateIntoMap(Map map)
     {
+        DebugAssert.NotNull(Find.Scenario);
+
         List<Pawn> pawns = map.mapPawns.FreeColonists;
 
         // If the scenario is set up by xenotype, sort the pawn list so that they are ordered
@@ -42,14 +44,17 @@ public class ScenPart_StartingSlaves : ScenPart_PawnModifier
         {
             pawns = pawns.OrderBy(p =>
             {
+                DebugAssert.NotNull(xenotypeConfig.xenotypeCounts);
+
                 int index = xenotypeConfig.xenotypeCounts.FindIndex(x => x.xenotype == p.genes?.Xenotype);
                 return index == -1 ? xenotypeConfig.xenotypeCounts.Count : index;
             }).ToList();
         }
 
-        for (int i = Math.Max(0, pawns.Count - count); i < pawns.Count; i++)
+        foreach (var pawn in pawns.Skip(Math.Max(0, pawns.Count - count)))
         {
-            var pawn = pawns[i];
+            DebugAssert.NotNull(pawn.guest);
+
             pawn.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave);
         }
     }

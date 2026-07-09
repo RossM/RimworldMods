@@ -65,11 +65,15 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
     private void LearnPsycast(Pawn pawn)
     {
         if (CanLearnPsycast(pawn, psycast))
+        {
+            DebugAssert.NotNull(pawn.abilities);
+
             pawn.abilities.GainAbility(psycast);
+        }
     }
 
     private static bool CanLearnPsycast(Pawn pawn, AbilityDef abilityDef)
     {
-        return pawn.GetPsylinkLevel() >= abilityDef.level && pawn.abilities.GetAbility(abilityDef) == null;
+        return pawn.abilities != null && pawn.GetPsylinkLevel() >= abilityDef.level && pawn.abilities.GetAbility(abilityDef) == null;
     }
 }

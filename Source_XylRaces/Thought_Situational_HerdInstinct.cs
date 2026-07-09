@@ -1,4 +1,6 @@
-﻿namespace XylXenos;
+﻿using RimWorld.Planet;
+
+namespace XylXenos;
 
 [UsedFromXml]
 public class Thought_Situational_HerdInstinct : Thought_Situational
@@ -18,7 +20,17 @@ public class Thought_Situational_HerdInstinct : Thought_Situational
 
     public override float MoodOffset()
     {
-        int colonistCount = pawn.Map.mapPawns.ColonistsSpawnedCount;
+        DebugAssert.NotNull(pawn);
+
+        int colonistCount;
+
+        if (pawn.Map is { } map)
+            colonistCount = map.mapPawns.ColonistsSpawnedCount;
+        else if (pawn.GetCaravan() is { } caravan)
+            colonistCount = caravan.PlayerPawnsForStoryteller.Count();
+        else
+            colonistCount = 1;
+
         return MoodOffsetCurveFromPopulation.Evaluate(colonistCount);
     }
 }
