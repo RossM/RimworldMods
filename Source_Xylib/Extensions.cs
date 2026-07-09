@@ -99,7 +99,10 @@ public static class Extensions
             IReadOnlyList<Gene> genes = pawn.GeneAndHediffCache.GetGenesWithDef(def);
             for (var index = 0; index < genes.Count; index++)
             {
-                Gene gene = genes[index]!;
+                // ReSharper disable once AssignNullToNotNullAttribute
+                Gene gene = genes[index];
+                DebugAssert.NotNull(gene);
+
                 if (gene.Active)
                     return true;
             }
@@ -140,7 +143,10 @@ public static class Extensions
                 IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    T gene = genes[index]!;
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    T gene = genes[index];
+                    DebugAssert.NotNull(gene);
+
                     if (gene.Active)
                         yield return gene;
                 }
@@ -171,7 +177,10 @@ public static class Extensions
                 IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    T gene = genes[index]!;
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    T gene = genes[index];
+                    DebugAssert.NotNull(gene);
+
                     if (gene.Active && predicate(gene))
                         yield return gene;
                 }
@@ -195,7 +204,10 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                T gene = genes[index]!;
+                // ReSharper disable once AssignNullToNotNullAttribute
+                T gene = genes[index];
+                DebugAssert.NotNull(gene);
+
                 if (gene.Active)
                     return gene;
             }
@@ -223,7 +235,10 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                T gene = genes[index]!;
+                // ReSharper disable once AssignNullToNotNullAttribute
+                T gene = genes[index];
+                DebugAssert.NotNull(gene);
+
                 if (gene.Active && predicate(gene))
                     return gene;
             }
@@ -248,7 +263,10 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                T gene = genes[index]!;
+                // ReSharper disable once AssignNullToNotNullAttribute
+                T gene = genes[index];
+                DebugAssert.NotNull(gene);
+
                 if (gene.Active)
                     return true;
             }
@@ -276,7 +294,10 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                T gene = genes[index]!;
+                // ReSharper disable once AssignNullToNotNullAttribute
+                T gene = genes[index];
+                DebugAssert.NotNull(gene);
+
                 if (gene.Active && predicate(gene))
                     return true;
             }
@@ -318,7 +339,10 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    GeneWithComps gene = genes[index]!;
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    GeneWithComps gene = genes[index];
+                    DebugAssert.NotNull(gene);
+                    
                     if (gene.Active)
                         yield return gene;
                 }
@@ -350,8 +374,17 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    GeneWithComps gene = genes[index]!;
-                    if (gene.Active && predicate(gene.GetComp<T>()!))
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    GeneWithComps gene = genes[index];
+                    DebugAssert.NotNull(gene);
+
+                    if (!gene.Active)
+                        continue;
+
+					T? comp = gene.GetComp<T>();
+                    DebugAssert.NotNull(comp);
+
+                    if (predicate(comp))
                         yield return gene;
                 }
             }
@@ -374,7 +407,10 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                GeneWithComps gene = genes[index]!;
+                // ReSharper disable once AssignNullToNotNullAttribute
+                GeneWithComps gene = genes[index];
+                DebugAssert.NotNull(gene);
+
                 if (gene.Active)
                     return gene;
             }
@@ -403,8 +439,17 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                GeneWithComps gene = genes[index]!;
-                if (gene.Active && predicate(gene.GetComp<T>()!))
+                // ReSharper disable once AssignNullToNotNullAttribute
+                GeneWithComps gene = genes[index];
+                DebugAssert.NotNull(gene);
+
+                if (!gene.Active)
+                    continue;
+
+				T? comp = gene.GetComp<T>();
+                DebugAssert.NotNull(comp);
+
+                if (predicate(comp))
                     return gene;
             }
 
@@ -428,7 +473,10 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                GeneWithComps gene = genes[index]!;
+                // ReSharper disable once AssignNullToNotNullAttribute
+                GeneWithComps gene = genes[index];
+                DebugAssert.NotNull(gene);
+
                 if (gene.Active)
                     return true;
             }
@@ -457,8 +505,17 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                GeneWithComps gene = genes[index]!;
-                if (gene.Active && predicate(gene.GetComp<T>()!))
+                // ReSharper disable once AssignNullToNotNullAttribute
+                GeneWithComps gene = genes[index];
+                DebugAssert.NotNull(gene);
+
+                if (!gene.Active)
+                    continue;
+
+				T? comp = gene.GetComp<T>();
+                DebugAssert.NotNull(comp);
+
+                if (predicate(comp))
                     return true;
             }
 
@@ -486,9 +543,17 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    GeneWithComps gene = genes[index]!;
-                    if (gene.Active)
-                        yield return gene.GetComp<T>()!;
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    GeneWithComps gene = genes[index];
+                    DebugAssert.NotNull(gene);
+
+                    if (!gene.Active)
+                        continue;
+
+					T? comp = gene.GetComp<T>();
+                    DebugAssert.NotNull(comp);
+
+                    yield return comp;
                 }
             }
         }
@@ -517,11 +582,16 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    GeneWithComps gene = genes[index]!;
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    GeneWithComps gene = genes[index];
+                    DebugAssert.NotNull(gene);
+
                     if (!gene.Active)
                         continue;
 
-                    var comp = gene.GetComp<T>()!;
+                    T? comp = gene.GetComp<T>();
+                    DebugAssert.NotNull(comp);
+
                     if (predicate(comp))
                         yield return comp;
                 }
@@ -545,9 +615,17 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                GeneWithComps gene = genes[index]!;
-                if (gene.Active)
-                    return gene.GetComp<T>();
+                // ReSharper disable once AssignNullToNotNullAttribute
+                GeneWithComps gene = genes[index];
+                DebugAssert.NotNull(gene);
+
+                if (!gene.Active)
+                    continue;
+
+                T? comp = gene.GetComp<T>();
+                DebugAssert.NotNull(comp);
+
+                return comp;
             }
 
             return null;
@@ -574,11 +652,16 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                GeneWithComps gene = genes[index]!;
+                // ReSharper disable once AssignNullToNotNullAttribute
+                GeneWithComps gene = genes[index];
+                DebugAssert.NotNull(gene);
+                
                 if (!gene.Active)
                     continue;
 
-                var comp = gene.GetComp<T>()!;
+                var comp = gene.GetComp<T>();
+                DebugAssert.NotNull(comp);
+                
                 if (predicate(comp))
                     return comp;
             }
@@ -643,8 +726,11 @@ public static class Extensions
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                HediffWithComps hediff = hediffs[index]!;
-                if (predicate(hediff.GetComp<T>()!))
+                // ReSharper disable once AssignNullToNotNullAttribute
+                HediffWithComps hediff = hediffs[index];
+                DebugAssert.NotNull(hediff);
+
+                if (predicate(hediff.GetComp<T>()))
                     yield return hediff;
             }
         }
@@ -678,8 +764,11 @@ public static class Extensions
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                HediffWithComps hediff = hediffs[index]!;
-                if (predicate(hediff.GetComp<T>()!))
+                // ReSharper disable once AssignNullToNotNullAttribute
+                HediffWithComps hediff = hediffs[index];
+                DebugAssert.NotNull(hediff);
+
+                if (predicate(hediff.GetComp<T>()))
                     return hediff;
             }
 
@@ -715,8 +804,11 @@ public static class Extensions
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                HediffWithComps hediff = hediffs[index]!;
-                if (predicate(hediff.GetComp<T>()!))
+                // ReSharper disable once AssignNullToNotNullAttribute
+                HediffWithComps hediff = hediffs[index];
+                DebugAssert.NotNull(hediff);
+
+                if (predicate(hediff.GetComp<T>()))
                     return true;
             }
 
@@ -780,8 +872,11 @@ public static class Extensions
             IReadOnlyList<Hediff> hediffs = pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                Hediff hediff = hediffs[index]!;
-                if (predicate(hediff.def.GetModExtension<T>()!))
+                // ReSharper disable once AssignNullToNotNullAttribute
+                Hediff hediff = hediffs[index];
+                DebugAssert.NotNull(hediff);
+
+                if (predicate(hediff.def.GetModExtension<T>()))
                     yield return hediff;
             }
         }
@@ -816,7 +911,10 @@ public static class Extensions
     {
         public T CreateDelegate<T>() where T : Delegate
         {
-            return (T)method.CreateDelegate(typeof(T));
+            var result = (T?)method.CreateDelegate(typeof(T));
+            DebugAssert.NotNull(result);
+            
+            return result;
         }
     }
 
@@ -834,7 +932,9 @@ public static class Extensions
         {
             if (memberwiseCloneFn == null)
             {
-                var method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic)!;
+                var method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
+                DebugAssert.NotNull(method);
+
                 memberwiseCloneFn = method.CreateDelegate<MemberwiseCloneDelegate>();
             }
 
