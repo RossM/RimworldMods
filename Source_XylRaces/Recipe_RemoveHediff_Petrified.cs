@@ -19,7 +19,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
         return allHediffs.Where(hediff => hediff.Part != null && ValidHediff(pawn, recipe, hediff)).Select(hediff => hediff.Part);
     }
 
-    public override bool AvailableOnNow(Thing thing, BodyPartRecord? part = null)
+    public override bool AvailableOnNow(Thing? thing, BodyPartRecord? part = null)
     {
         if (!base.AvailableOnNow(thing, part))
         {

@@ -21,7 +21,7 @@ public class ThoughtWorker_Need : ThoughtWorker
 {
     public DefModExtension_Thought_Need DefExt => def.GetModExtension<DefModExtension_Thought_Need>()!;
 
-    public Func<Need, int> CurStageGetter => field ??= MakeGetter(DefExt.need?.needClass);
+    public Func<Need, int> CurStageGetter => field ??= MakeGetter(DefExt.need.needClass);
 
     private static readonly Dictionary<Type, Func<Need, int>> getterCache = new();
 
