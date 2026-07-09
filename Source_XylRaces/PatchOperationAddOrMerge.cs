@@ -97,7 +97,9 @@ public class PatchOperationAddOrMerge : PatchOperationPathed
                 }
                 case Order.Prepend:
                 {
-                    foreach (XmlNode childNode in node.ChildNodes.OfType<XmlNode>().Reverse())
+                    var xmlNodes = node.ChildNodes.OfType<XmlNode>().ToList();
+                    xmlNodes.Reverse();
+                    foreach (XmlNode childNode in xmlNodes)
                     {
                         if (xmlNode.ChildNodes.OfType<XmlNode>()
                                 .FirstOrDefault(xn => xn.Name == childNode.Name) is { } existingNode)
