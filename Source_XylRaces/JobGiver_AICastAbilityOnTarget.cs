@@ -24,6 +24,10 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
     // ReSharper disable once ParameterHidesMember
     protected override LocalTargetInfo GetTarget(Pawn caster, Ability ability)
     {
+        DebugAssert.NotNull(caster.Map);
+        DebugAssert.NotNull(ability.def.verbProperties);
+        DebugAssert.NotNull(ability.def.verbProperties.targetParams);
+
         potentialTargets.Clear();
 
         if (!ability.CanCast)
@@ -31,8 +35,8 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
 
         HashSet<IAttackTarget> targets = [];
 
-        if (targetAllies)
-            targets.AddRange(caster.Map.mapPawns.PawnsInFaction(caster.Faction));
+        if (targetAllies && caster.Faction != null)
+            targets.AddRange(caster.Map.mapPawns.PawnsInFaction(caster.Faction).Except(caster));
         if (targetEnemies)
             targets.AddRange(caster.Map.attackTargetsCache.GetPotentialTargetsFor(caster));
         if (targetSelf)
@@ -51,6 +55,8 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
             if (!targetPawn.Spawned)
                 continue;
 
+            DebugAssert.NotNull(targetPawn.pather);
+
             if (targetPawn.Map != caster.Map)
                 continue;
 
@@ -66,11 +72,11 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
             if (!caster.CanSee(targetPawn))
                 continue;
 
-            if (ability.CompOfType<CompAbilityEffect_GiveHediff>() is { } giveHediffEffect &&
+            if (ability.CompOfType<CompAbilityEffect_GiveHediff>() is { Props: not null } giveHediffEffect &&
                 targetPawn.health.hediffSet.HasHediff(giveHediffEffect.Props.hediffDef))
                 continue;
 
-            if (ability.CompOfType<CompAbilityEffect_ForceJob>() is { } forceJobEffect &&
+            if (ability.CompOfType<CompAbilityEffect_ForceJob>() is { Props: not null } forceJobEffect &&
                 targetPawn.CurJobDef == forceJobEffect.Props.jobDef)
                 continue;
 

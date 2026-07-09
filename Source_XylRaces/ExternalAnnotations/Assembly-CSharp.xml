@@ -8,6 +8,13 @@
   <member name="T:LudeonTK.DebugOutputAttribute">
     <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.Ability.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:RimWorld.Ability.GetAffectedTargets(Verse.LocalTargetInfo)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.Ability.pawn">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -79,6 +86,9 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.Need.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.Need.pawn">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -136,16 +146,29 @@
   <member name="F:RimWorld.ThoughtHandler.situational">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:RimWorld.WeatherManager.CurWeatherLerped">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="P:RimWorld.XenotypeDef.AllGenes">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.XenotypeDef.genes">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="M:Verse.AI.AttackTargetsCache.GetPotentialTargetsFor(Verse.AI.IAttackTargetSearcher)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <parameter name="th">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
   <member name="F:Verse.AI.Job.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.AI.JobDriver.job">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.MentalState.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.AI.Pawn_MindState.inspirationHandler">
@@ -219,6 +242,9 @@
   </member>
   <member name="F:Verse.Def.defName">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.Def.GetModExtension``1">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.DefDatabase`1.AllDefs">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -437,6 +463,14 @@
     name="M:Verse.HediffSet.GetNotMissingParts(Verse.BodyPartHeight,Verse.BodyPartDepth,Verse.BodyPartTagDef,Verse.BodyPartRecord)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="M:Verse.HediffSet.HasHediff(Verse.HediffDef,System.Boolean)">
+    <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
+      <argument>def:null => false; def:notnull => false; def:notnull => true</argument>
+    </attribute>
+    <parameter name="def">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+  </member>
   <member name="F:Verse.HediffSet.hediffs">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -453,6 +487,32 @@
   </member>
   <member name="M:Verse.IntRange.Includes(System.Int32)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="M:Verse.JobMaker.MakeJob(Verse.JobDef,Verse.LocalTargetInfo)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter name="def">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:Verse.JobMaker.MakeJob(Verse.JobDef,Verse.LocalTargetInfo,Verse.LocalTargetInfo)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter name="def">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member
+    name="M:Verse.JobMaker.MakeJob(Verse.JobDef,Verse.LocalTargetInfo,Verse.LocalTargetInfo,Verse.LocalTargetInfo)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <parameter name="def">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
+  </member>
+  <member name="M:Verse.ListerThings.ThingsOfDef(Verse.ThingDef)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <parameter name="def">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    </parameter>
   </member>
   <member name="F:Verse.Map.animalPenManager">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -799,6 +859,13 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
+  <member name="M:Verse.MapPawns.PawnsInFaction(RimWorld.Faction)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <parameter name="faction">
+      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    </parameter>
+  </member>
   <member name="P:Verse.MapPawns.PrisonersOfColony">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
@@ -862,6 +929,9 @@
   <member name="P:Verse.MapPawns.SpawnedShamblers">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Mod.Content">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Pawn.ageTracker">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -930,6 +1000,9 @@
     </parameter>
   </member>
   <member name="P:Verse.PawnKindDef.RaceProps">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnRenderNode.props">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.PawnRenderNode.Props">

@@ -89,6 +89,8 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
 
     private static void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
     {
+        DebugAssert.NotNull(pawn.Map);
+
         outCandidates.Clear();
 
         foreach (ThingDef def in WetnessGivingThings)
@@ -136,7 +138,10 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
 
         if (FindBestWetnessSource(pawn) is { } bestThing)
         {
-            return JobMaker.MakeJob(bestThing.def.GetModExtension<DefModExtension_Thing_WetnessSource>().job, bestThing);
+            DefModExtension_Thing_WetnessSource? wetnessSource = bestThing.def.GetModExtension<DefModExtension_Thing_WetnessSource>();
+            DebugAssert.NotNull(wetnessSource);
+
+            return JobMaker.MakeJob(wetnessSource.job, bestThing);
         }
 
         if (TryFindWaterTile(pawn, out IntVec3 foundTile))

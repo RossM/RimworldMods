@@ -36,21 +36,38 @@ public class PatchOperationAddOrMerge : PatchOperationPathed
         Prepend
     }
 
-    public required XmlContainer value;
+    public XmlContainer? value;
 
     public readonly Order order = Order.Prepend;
 
     public readonly bool debug = false;
 
+    public override IEnumerable<string> ConfigErrors()
+    {
+        if (xpath is null)
+            yield return $"{nameof(xpath)} is null";
+        if (value is null)
+            yield return $"{nameof(value)} is null";
+        else if (value.node is null)
+            yield return $"{nameof(value)} is not an XML element";
+    }
+
     protected override bool ApplyWorker(XmlDocument xml)
     {
-        XmlNode node = value.node;
-        var result = false;
-
         if (xml == null)
             throw new ArgumentNullException(nameof(xml));
 
-        foreach (XmlNode xmlNode in xml.SelectNodes(xpath))
+        DebugAssert.NotNull(xpath);
+        DebugAssert.NotNull(value);
+        DebugAssert.NotNull(value.node);
+
+        XmlNode node = value.node;
+        var result = false;
+
+        XmlNodeList? nodes = xml.SelectNodes(xpath);
+        
+        DebugAssert.NotNull(nodes);
+        foreach (XmlNode xmlNode in nodes)
         {
             if (debug)
                 Log.Message($"{xpath} -> {xmlNode.OuterXml}");
@@ -79,6 +96,8 @@ public class PatchOperationAddOrMerge : PatchOperationPathed
                 for (int num = node.ChildNodes.Count - 1; num >= 0; num--)
                 {
                     var childNode = node.ChildNodes[num];
+                    DebugAssert.NotNull(childNode);
+
                     if (xmlNode.ChildNodes.OfType<XmlNode>()
                             .FirstOrDefault(xn => xn.Name == childNode.Name) is { } existingNode)
                     {

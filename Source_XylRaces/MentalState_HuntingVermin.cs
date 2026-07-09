@@ -29,16 +29,14 @@ public class MentalState_HuntingVermin : MentalState
     {
         base.MentalStateTick(delta);
 
+        DebugAssert.NotNull(pawn);
+
         if (target is { Dead: true })
         {
-            if (pawn.CurJob.def == JobDefOf.AttackMelee || pawn.CurJob.def == JobDefOf.Ingest)
+            if (pawn.CurJob?.def == JobDefOf.AttackMelee || pawn.CurJob?.def == JobDefOf.Ingest)
                 return;
 
-            if (!pawn.HediffsOfType<Hediff_DietDependency>().Any(hediff => hediff.ShouldSatisfy))
-                RecoverFromState();
-            else if (Rand.Chance(0.2f))
-                RecoverFromState();
-            else if (!TryFindNewTarget())
+            if (!pawn.HediffsOfType<Hediff_DietDependency>().Any(hediff => hediff.ShouldSatisfy) || Rand.Chance(0.2f) || !TryFindNewTarget())
                 RecoverFromState();
 
             return;
@@ -54,6 +52,8 @@ public class MentalState_HuntingVermin : MentalState
 
     public override TaggedString GetBeginLetterText()
     {
+        DebugAssert.NotNull(pawn);
+
         if (target == null)
         {
             Log.Error("No target. This should have been checked in this mental state's worker.");
@@ -84,9 +84,9 @@ public class MentalState_HuntingVermin : MentalState
     public static Pawn? FindPawnToKill(Pawn pawn)
     {
         if (!pawn.Spawned)
-        {
             return null;
-        }
+
+        DebugAssert.NotNull(pawn.Map);
 
         tmpTargets.Clear();
         IReadOnlyList<Pawn> allPawnsSpawned = pawn.Map.mapPawns.AllPawnsSpawned;

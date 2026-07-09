@@ -36,7 +36,7 @@ public class JobGiver_SeeingRed : ThinkNode_JobGiver
     protected virtual bool IsGoodTarget(Thing thing)
     {
         return thing is Pawn { Spawned: true, Downed: false } pawn && !pawn.IsPsychologicallyInvisible() ||
-               thing is Building { Spawned: true } building && building.def.building.IsTurret;
+               thing is Building { Spawned: true, def.building.IsTurret: true };
     }
 
     public override ThinkNode DeepCopy(bool resolve = true)

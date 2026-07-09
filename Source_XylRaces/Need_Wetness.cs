@@ -78,9 +78,11 @@ public class Need_Wetness : Need_Seeker
 
     private float CalculateInstantWetness()
     {
-        if (pawn.IsInCaravan())
+        DebugAssert.NotNull(Find.WorldGrid);
+
+        var caravan = pawn.GetCaravan();
+        if (caravan != null)
         {
-            var caravan = pawn.GetCaravan();
             var tile = Find.WorldGrid[caravan.Tile];
             if (tile.IsCoastalOrRiverTile)
                 return 1.0f;
@@ -90,9 +92,10 @@ public class Need_Wetness : Need_Seeker
         }
 
         if (!pawn.Spawned)
-        {
             return 0.0f;
-        }
+
+        DebugAssert.NotNull(pawn.Map);
+        DebugAssert.NotNull(pawn.pather);
 
         if (Config.Instance.wetnessGivingJobs?.Contains(pawn.CurJobDef) is true && !pawn.pather.Moving)
         {

@@ -53,6 +53,8 @@ public class Main : Mod
     // This a stupid trick to add a custom XML parser to a type that should have one but doesn't.
     private static void RegisterXmlLoaders()
     {
+        DebugAssert.NotNull(XmlToObjectUtils.customDataLoadMethodCache);
+
         XmlToObjectUtils.customDataLoadMethodCache[typeof(GeneticTraitData)]
             = ((Action<GeneticTraitData, XmlNode>)GeneticTraitData_LoadDataFromXmlCustom).Method;
     }
@@ -69,7 +71,7 @@ public class Main : Mod
         else
         {
             DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(data, "def", xmlRoot.Name);
-            if (xmlRoot.HasChildNodes)
+            if (xmlRoot.FirstChild?.Value is not null)
                 data.degree = ParseHelper.FromString<int>(xmlRoot.FirstChild.Value);
         }
     }

@@ -9,7 +9,7 @@ public class PawnRenderNode_HeadPattern(Pawn pawn, PawnRenderNodeProperties prop
         if (!pawn.health.hediffSet.HasHead)
             return null;
 
-        string maskPath = pawn.story.headType.graphicPath;
+        string? maskPath = pawn.story?.headType?.graphicPath;
         return GraphicDatabase.Get<Graphic_Multi>(TexPathFor(pawn), ShaderDatabase.CutoutSkinOverlay, Vector2.one, ColorFor(pawn),
             Color.white, null, maskPath);
     }
