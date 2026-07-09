@@ -15,7 +15,8 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
 
         XenotypeDef? xenotype = XenotypeHelpers.GetRandomXenotypeNotInColony();
 
-        var pawnGenerationRequest = new PawnGenerationRequest(kind: def.pawnKind,
+        var pawnGenerationRequest = new PawnGenerationRequest(
+            kind: def.pawnKind ?? PawnKindDefOf.Colonist,
             faction: Faction.OfPlayer,
             context: PawnGenerationContext.NonPlayer,
             tile: map?.Tile,

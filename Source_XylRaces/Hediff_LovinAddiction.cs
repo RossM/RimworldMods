@@ -14,11 +14,11 @@ public class Hediff_LovinAddiction : HediffWithCompsExt
 
     public override int CurStageIndex => Need?.Satisfied is false ? 1 : 0;
 
-    public override string TipStringExtra
+    public override string? TipStringExtra
     {
         get
         {
-            string text = base.TipStringExtra;
+            string? text = base.TipStringExtra;
             if (Need != null)
             {
                 if (!text.NullOrEmpty())
@@ -34,7 +34,7 @@ public class Hediff_LovinAddiction : HediffWithCompsExt
     {
         get
         {
-            string labelInBrackets = base.LabelInBrackets;
+            string? labelInBrackets = base.LabelInBrackets;
             string text = (1f - Severity).ToStringPercent("F0");
             if (!labelInBrackets.NullOrEmpty())
                 return labelInBrackets + ", " + text;

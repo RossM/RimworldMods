@@ -44,7 +44,7 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
             return;
         if (extraEnemies != null)
         {
-            Hediff hediff = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
+            Hediff? hediff = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
             if (hediff == null)
                 extraEnemies.Clear();
         }
@@ -66,7 +66,7 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
         if (Active)
             return;
 
-        Hediff hediff = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
+        Hediff? hediff = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
 
         if (hediff == null && !Rand.Chance(Props.chance))
             return;

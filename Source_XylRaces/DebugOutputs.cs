@@ -25,14 +25,14 @@ public static class DebugOutputs
         [
             new("defName", geneDef => geneDef.defName),
             new("label", geneDef => geneDef.LabelCap),
-            new("displayCategory", geneDef => geneDef.displayCategory?.defName),
-            new("displayPriorityInXenotype", geneDef => geneDef.displayCategory?.displayPriorityInXenotype),
-            new("displayPriorityInGenepack", geneDef => geneDef.displayCategory?.displayPriorityInGenepack),
+            new("displayCategory", geneDef => geneDef.displayCategory.defName),
+            new("displayPriorityInXenotype", geneDef => geneDef.displayCategory.displayPriorityInXenotype),
+            new("displayPriorityInGenepack", geneDef => geneDef.displayCategory.displayPriorityInGenepack),
             new("displayOrderInCategory", geneDef => geneDef.displayOrderInCategory),
             new("exclusionTags", geneDef => geneDef.exclusionTags?.ToCommaList() ?? "")
         ];
         DebugTables.MakeTablesDialog(
-            DefDatabase<GeneDef>.AllDefs.OrderByDescending(geneDef => geneDef.displayCategory?.displayPriorityInXenotype)
+            DefDatabase<GeneDef>.AllDefs.OrderByDescending(geneDef => geneDef.displayCategory.displayPriorityInXenotype)
                 .ThenBy(geneDef => geneDef.displayOrderInCategory), columns);
     }
 
@@ -247,6 +247,8 @@ public static class DebugOutputs
 
         foreach (var stat in stats)
         {
+            DebugAssert.NotNull(stat.label);
+
             var localStat = stat;
             columns.Add(new(Abbreviate(stat.label).CapitalizeFirst(), def => BaseStatValue(def, localStat)));
         }
@@ -269,6 +271,8 @@ public static class DebugOutputs
 
                 foreach (var trait in gene.forcedTraits)
                 {
+                    DebugAssert.NotNull(trait.def.degreeDatas);
+
                     var degreeData = trait.def.degreeDatas.Single(d => d.degree == trait.degree);
                     offset = degreeData.statOffsets?.Where(m => m.stat == stat).Aggregate(offset, (o, m) => o + m.value) ?? offset;
                     factor = degreeData.statFactors?.Where(m => m.stat == stat).Aggregate(factor, (f, m) => f * m.value) ?? factor;
@@ -279,14 +283,15 @@ public static class DebugOutputs
         }
     }
 
-    private static string Abbreviate(string @string, int lettersPerWord = 3)
+    private static string Abbreviate(string str, int lettersPerWord = 3)
     {
-        return @string.Split(' ').Join(s => AbbreviateWord(s, lettersPerWord), " ");
+        return string.Join(" ", str.Split(' ').Select(s => AbbreviateWord(s, lettersPerWord)));
     }
 
     private static string AbbreviateWord(string w, int maxLength)
     {
         if (specialAbbreviations.TryGetValue(w, out var result))
+            // ReSharper disable once AssignNullToNotNullAttribute
             return result;
         if (w.Length <= maxLength)
             return w;

@@ -30,7 +30,7 @@ public class DefModExtension_Hediff_SubstituteCapacity : DefModExtension
 [UsedFromXml]
 public class Hediff_SubstituteCapacity : HediffWithComps
 {
-    public DefModExtension_Hediff_SubstituteCapacity DefExt => def.GetModExtension<DefModExtension_Hediff_SubstituteCapacity>();
+    public DefModExtension_Hediff_SubstituteCapacity DefExt => def.GetModExtension<DefModExtension_Hediff_SubstituteCapacity>()!;
 
     [Unsaved] private int lastActiveCheckTick = int.MinValue;
 

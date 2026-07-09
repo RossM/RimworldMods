@@ -26,11 +26,17 @@ public class GeneTemplateDef : Def
 
     public GeneTemplateType geneTemplateType;
 
-    public GeneCategoryDef? displayCategory;
+    public required GeneCategoryDef displayCategory;
 
     public int displayOrderOffset;
 
     public float selectionWeight = 1f;
+
+    public override void ResolveReferences()
+    {
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+        displayCategory ??= GeneCategoryDefOf.Miscellaneous;
+    }
 
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()

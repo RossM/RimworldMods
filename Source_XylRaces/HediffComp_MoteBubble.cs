@@ -1,13 +1,22 @@
-﻿namespace XylXenos;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace XylXenos;
 
 [UsedFromXml]
 public class HediffCompProperties_MoteBubble : HediffCompProperties
 {
-    public string? iconPath;
+    public required string iconPath;
 
     public HediffCompProperties_MoteBubble()
     {
         compClass = typeof(HediffComp_MoteBubble);
+    }
+
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
+    public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
+    {
+        if (iconPath is null)
+            yield return $"{nameof(iconPath)} is null";
     }
 }
 
@@ -26,6 +35,8 @@ public class HediffComp_MoteBubble : HediffComp
 
     public override void CompPostPostAdd(DamageInfo? dinfo)
     {
+        DebugAssert.NotNull(parent.pawn);
+
         mote = MoteMaker.MakeThoughtBubble(parent.pawn, Props.iconPath, maintain: true);
     }
 

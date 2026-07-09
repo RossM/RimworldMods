@@ -42,8 +42,14 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
     private void LaunchProjectile(LocalTargetInfo target)
     {
         Pawn pawn = parent.pawn;
-        Projectile projectile = (Projectile)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map);
-        Thing thing = pawn.carryTracker.CarriedThing;
+        DebugAssert.NotNull(pawn.Map);
+
+        var projectile = (Projectile?)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map);
+        DebugAssert.NotNull(projectile);
+
+        Thing? thing = pawn.carryTracker.CarriedThing;
+        DebugAssert.NotNull(thing);
+
         if (projectile.GetComp<CompThingContainer>()?.innerContainer?.TryAddOrTransfer(thing) is not true)
         {
             Log.Warning("Failed to add thing to projectile: projectile={projectile} thing={thing}");
@@ -84,6 +90,8 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
 
     public override void DrawEffectPreview(LocalTargetInfo target)
     {
+        DebugAssert.NotNull(parent.pawn.Map);
+
         if (Props.range > 0f)
         {
             GenDraw.DrawRadiusRing(target.Cell, Props.range, Color.white,
@@ -93,6 +101,8 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
 
     public override bool CanHitTarget(LocalTargetInfo target)
     {
+        DebugAssert.NotNull(parent.pawn.Map);
+
         if (target.Cell.Impassable(parent.pawn.Map))
             return false;
         if (target.Cell.DistanceTo(selectedTarget.Cell) < Props.minRange)
@@ -105,6 +115,8 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
 
     void ITargetingSource.DrawHighlight(LocalTargetInfo target)
     {
+        DebugAssert.NotNull(parent.pawn.Map);
+
         if (Props.range > 0f)
         {
             GenDraw.DrawRadiusRing(selectedTarget.Cell, Props.range, Color.white,

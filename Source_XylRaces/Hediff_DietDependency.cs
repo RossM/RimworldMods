@@ -46,26 +46,27 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
 
     public const int StageCount = (int)Stages.Coma + 1;
 
-    public DefModExtension_Hediff_DietDependency DefExt => field ??= def.GetModExtension<DefModExtension_Hediff_DietDependency>();
+    public DefModExtension_Hediff_DietDependency DefExt => field ??= def.GetModExtension<DefModExtension_Hediff_DietDependency>()!;
 
     public bool ShouldSatisfy => CurStageIndex >= (int)Stages.Craving;
 
     public override bool ShouldRemove => false;
 
-    public override string TipStringExtra
+    public override string? TipStringExtra
     {
         get
         {
             DebugAssert.NotNull(def.stages);
             DebugAssert.True(def.stages.Count >= StageCount);
 
-            string text = base.TipStringExtra;
+            string? text = base.TipStringExtra;
 
-            HediffComp_SeverityPerDay comp_severityPerDay = GetComp<HediffComp_SeverityPerDay>();
+            HediffComp_SeverityPerDay? comp_severityPerDay = GetComp<HediffComp_SeverityPerDay>();
             if (comp_severityPerDay is null)
                 return text;
 
-            if (!text.NullOrEmpty())
+            // ReSharper disable once AssignNullToNotNullAttribute
+            if (!string.IsNullOrEmpty(text))
                 text += "\n\n";
 
             var severityPerDay =
@@ -94,6 +95,8 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
 
     public Thing? FindFoodFor(Pawn pawnGettingFood)
     {
+        DebugAssert.NotNull(pawnGettingFood.Map);
+
         ThingOwner<Thing> innerContainer = pawnGettingFood.inventory.innerContainer;
         foreach (Thing item in innerContainer)
         {
@@ -145,6 +148,8 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
 
     public int ItemsWantedToSatisfy(Thing foodSource, ThingDef foodDef)
     {
+        DebugAssert.NotNull(pawn);
+
         var nutritionNeeded = NutritionWantedToSatisfy();
         var nutritionPerItem = FoodUtility.GetNutrition(pawn, foodSource, foodDef);
         if (nutritionPerItem == 0)
@@ -154,6 +159,8 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
 
     public bool ValidateFood(Thing food)
     {
+        DebugAssert.NotNull(pawn);
+
         if (food.Destroyed || !food.IngestibleNow)
             return false;
 

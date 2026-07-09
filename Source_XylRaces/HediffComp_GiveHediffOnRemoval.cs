@@ -28,7 +28,7 @@ public class HediffComp_GiveHediffOnRemoval : HediffComp
 
     public override void CompPostPostRemoved()
     {
-        base.CompPostPostRemoved();
+        DebugAssert.NotNull(parent.pawn);
 
         ApplyTo(parent.pawn);
     }

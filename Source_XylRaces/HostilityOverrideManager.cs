@@ -100,7 +100,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
         if (target?.Map != map)
             return;
 
-        Thing source = info.Instigator;
+        Thing? source = info.Instigator;
 
         if (source?.Faction == null || target.Faction == null)
             return;

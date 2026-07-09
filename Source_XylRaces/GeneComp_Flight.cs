@@ -56,6 +56,8 @@ public class GeneComp_Flight : GeneComp, IEventListener
         if (!Pawn.IsColonistPlayerControlled)
             yield break;
 
+        DebugAssert.NotNull(ExtraIcon);
+
         string flyingDisabledBy = "";
         if (!flightAllowedByApparel)
         {
@@ -191,6 +193,8 @@ public class GeneComp_Flight : GeneComp, IEventListener
     // This would be unfortunate, so try to move the pawn to a better position.
     public void Notify_Downed()
     {
+        DebugAssert.NotNull(Pawn.Map);
+
         if (Pawn is { Flying: true, Downed: true } && !Pawn.Position.WalkableBy(Pawn.Map, Pawn))
         {
             var newCell = CellFinder.StandableCellNear(Pawn.Position, Pawn.Map, 5f);

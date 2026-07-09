@@ -32,7 +32,7 @@ public class GeneComp_Hyperlactation : GeneComp
     public Texture2D? ExtraIcon => parent.DefExt.ExtraIcon;
 
     public HediffComp_Lactating? Lactating =>
-        lactatingInternal ??= Pawn.health.hediffSet.GetHediffComps<HediffComp_Lactating>().FirstOrDefault();
+        lactatingInternal ??= Pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault()?.GetComp<HediffComp_Lactating>();
 
     public int MilkCount => Mathf.FloorToInt((Lactating?.Charge ?? 0) / Props.chargePerItem);
 
@@ -85,6 +85,8 @@ public class GeneComp_Hyperlactation : GeneComp
             yield break;
         if (Pawn.Drafted)
             yield break;
+
+        DebugAssert.NotNull(ExtraIcon);
 
         List<FloatMenuOption> rightClickFloatMenuOptions = [];
         for (int i = 0; i <= 3; i++)

@@ -18,12 +18,13 @@ public class CompProperties_AbilitySonicWave : CompProperties_AbilityEffectWithD
 public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
 {
     public new CompProperties_AbilitySonicWave Props => (CompProperties_AbilitySonicWave)props;
-    private Pawn Pawn => parent.pawn;
 
     [Unsaved] private readonly List<IntVec3> tmpCells = [];
 
     public override void Apply(LocalTargetInfo target, LocalTargetInfo dest)
     {
+        DebugAssert.NotNull(parent.pawn.Map);
+
         Map map = parent.pawn.Map;
         foreach (IntVec3 item in AffectedCells(target))
         {
@@ -32,7 +33,7 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
             {
                 if (!targetPawn.RaceProps.IsFlesh)
                     continue;
-                targetPawn.stances.stunner.StunFor(GetDurationSeconds(targetPawn).SecondsToTicks(), Pawn, addBattleLog: false);
+                targetPawn.stances.stunner.StunFor(GetDurationSeconds(targetPawn).SecondsToTicks(), parent.pawn, addBattleLog: false);
             }
         }
     }
@@ -55,21 +56,23 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
 
     public override bool AICanTargetNow(LocalTargetInfo target)
     {
+        DebugAssert.NotNull(parent.pawn.Map);
+
         bool affectsAlly = false;
         bool affectsEnemy = false;
 
-        if (Pawn.Faction != null)
+        if (parent.pawn.Faction != null)
         {
             foreach (IntVec3 item in AffectedCells(target))
             {
-                List<Thing> thingList = item.GetThingList(Pawn.Map);
+                List<Thing> thingList = item.GetThingList(parent.pawn.Map);
                 foreach (var targetPawn in thingList.OfType<Pawn>())
                 {
                     if (targetPawn.RaceProps.IsFlesh && !targetPawn.stances.stunner.Stunned)
                     {
-                        if (targetPawn != Pawn && targetPawn.Faction == Pawn.Faction)
+                        if (targetPawn != parent.pawn && targetPawn.Faction == parent.pawn.Faction)
                             affectsAlly = true;
-                        else if (targetPawn.HostileTo(Pawn))
+                        else if (targetPawn.HostileTo(parent.pawn))
                             affectsEnemy = true;
                     }
                 }
@@ -81,9 +84,11 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
 
     private List<IntVec3> AffectedCells(LocalTargetInfo target)
     {
+        DebugAssert.NotNull(parent.pawn.Map);
+
         tmpCells.Clear();
-        IntVec3 targetPosition = target.Cell.ClampInsideMap(Pawn.Map);
-        if (Pawn.Position == targetPosition)
+        IntVec3 targetPosition = target.Cell.ClampInsideMap(parent.pawn.Map);
+        if (parent.pawn.Position == targetPosition)
         {
             return tmpCells;
         }
@@ -102,11 +107,11 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
 
         bool CanUseCell(IntVec3 c)
         {
-            if (!c.InBounds(Pawn.Map))
+            if (!c.InBounds(parent.pawn.Map))
                 return false;
-            if (c == Pawn.Position)
+            if (c == parent.pawn.Position)
                 return false;
-            if (!Props.canHitFilledCells && c.Filled(Pawn.Map))
+            if (!Props.canHitFilledCells && c.Filled(parent.pawn.Map))
                 return false;
             if (!c.InHorDistOf(targetPosition, Props.radius))
                 return false;

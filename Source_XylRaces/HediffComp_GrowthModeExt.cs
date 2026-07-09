@@ -44,9 +44,9 @@ public class HediffCompProperties_GrowthModeExt : HediffCompProperties_SeverityP
         if (!typeof(HediffWithCompsExt).IsAssignableFrom(parentDef.hediffClass))
             yield return "hediffClass must be HediffWithCompsExt or a subclass thereof";
 
-        if (modes is null)
+        if (modes is not { Count: > 0 })
         {
-            yield return $"{nameof(modes)} is null";
+            yield return $"{nameof(modes)} must have at least one element";
             yield break;
         }
 
@@ -70,11 +70,21 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
 
     public GrowthMode GrowthMode
     {
-        get => TProps.modes[growthModeIndex];
-        set => growthModeIndex = TProps.modes.IndexOf(value);
+        get
+        {
+            DebugAssert.NotNull(TProps.modes);
+            
+            // ReSharper disable once AssignNullToNotNullAttribute
+            return TProps.modes[growthModeIndex];
+        }
+        set
+        {
+            DebugAssert.NotNull(TProps.modes);
+            growthModeIndex = TProps.modes.IndexOf(value);
+        }
     }
 
-    public int growthModeIndex;
+    public int growthModeIndex = 0;
 
     public void CompUpdateCurStage(HediffStage stage)
     {
@@ -91,6 +101,7 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
     {
         base.CompPostPostAdd(dinfo);
 
+        // ReSharper disable once AssignNullToNotNullAttribute
         SetGrowthMode(TProps.modes[0]);
     }
 
@@ -113,6 +124,8 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
 
     public virtual void ChangeGrowthMode()
     {
+        DebugAssert.NotNull(Pawn);
+
         SetGrowthMode(TProps.modes.Where(mode => mode != GrowthMode).RandomElementByWeight(mode => mode.weight));
 
         if (!GrowthMode.message.NullOrEmpty() && PawnUtility.ShouldSendNotificationAbout(Pawn))

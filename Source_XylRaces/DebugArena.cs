@@ -312,8 +312,9 @@ public static class DebugArena
             sb.AppendLine($"{def.defName}: {def.combatPower} combat power, {wins[def]} wins / {total[def]} total");
         Debug.Log(sb.ToString());
 
-        GameComponent_DebugTools debugTools = Current.Game.GetComponent<GameComponent_DebugTools>();
+        GameComponent_DebugTools? debugTools = Current.Game.GetComponent<GameComponent_DebugTools>();
         DebugAssert.NotNull(debugTools);
+
         debugTools.AddPerFrameCallback(delegate
         {
             if (currentFights >= maxFights)
@@ -427,7 +428,7 @@ public static class DebugArena
         DebugAssert.NotNull(Current.Game);
 
         var tile = TileFinder.RandomSettlementTileFor(Faction.OfPlayer, mustBeAutoChoosable: true,
-            tile => lhs.Concat(rhs).Any(def => Find.World.tileTemperatures.SeasonAndOutdoorTemperatureAcceptableFor(tile, def.race)));
+            tile => lhs.Concat(rhs).Any(def => Find.World.tileTemperatures.SeasonAndOutdoorTemperatureAcceptableFor(tile, def.race!)));
         Map map = GetOrGenerateMapUtility.GetOrGenerateMap(tile, new IntVec3(50, 1, 50), WorldObjectDefOf.Debug_Arena);
 
         try
@@ -452,8 +453,9 @@ public static class DebugArena
                 return false;
             }
 
-            RimWorld.Planet.DebugArena component = mapParent.GetComponent<RimWorld.Planet.DebugArena>();
+            RimWorld.Planet.DebugArena? component = mapParent.GetComponent<RimWorld.Planet.DebugArena>();
             DebugAssert.NotNull(component);
+
             component.lhs = lhs2;
             component.rhs = rhs2;
             component.callback = callback;
@@ -481,7 +483,7 @@ public static class DebugArena
                 forceGenerateNewPawn: true,
                 mustBeCapableOfViolence: true);
 
-            Pawn pawn = PawnGenerator.GeneratePawn(request);
+            Pawn? pawn = PawnGenerator.GeneratePawn(request);
 
             // Check if pawn is null
             if (pawn == null)

@@ -3,5 +3,5 @@
 [UsedFromXml]
 public class XenotypeSetWithDefault : XenotypeSet
 {
-    public required XenotypeDef defaultXenotype;
+    public XenotypeDef? defaultXenotype;
 }
