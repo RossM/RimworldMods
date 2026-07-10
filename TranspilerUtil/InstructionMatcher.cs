@@ -26,27 +26,27 @@ public class InstructionMatcher
         public OutputMode Mode = OutputMode.MatchOnly;
         public bool SaveLocals = false;
         public bool Chained = false;
-        [ItemNotNull] public CodeInstruction[] Pattern;
-        [CanBeNull][ItemNotNull] public CodeInstruction[] Output;
-        [CanBeNull] public Func<MethodBase, List<CodeInstruction>, ILGenerator, Rule> LateGenerator;
-        [CanBeNull] public Type[] LocalTypes;
+        public CodeInstruction[]? Pattern;
+        public CodeInstruction[]? Output;
+        public Func<MethodBase, List<CodeInstruction>, ILGenerator, Rule>? LateGenerator;
+        public Type[]? LocalTypes;
     }
 
     private class MatchData
     {
-        [NotNull] public required Rule rule;
+        public required Rule rule;
         public int start, end;
-        [NotNull] public required Dictionary<int, int> privateMap;
-        [NotNull] public required Dictionary<Label, Label> labelMap;
+        public required Dictionary<int, int> privateMap;
+        public required Dictionary<Label, Label> labelMap;
     }
 
     public static bool forceDebug = false;
 
-    [NotNull][ItemNotNull] public List<Rule> Rules = [];
-    [NotNull][ItemNotNull] public List<Type> LocalTypes = [];
+    public List<Rule> Rules = [];
+    public List<Type> LocalTypes = [];
 
-    [NotNull] private readonly List<Label> extraLabels = [];
-    [NotNull][ItemNotNull] private readonly List<ExceptionBlock> extraBlocks = [];
+    private readonly List<Label> extraLabels = [];
+    private readonly List<ExceptionBlock> extraBlocks = [];
 
     public InstructionMatcher()
     {
@@ -61,7 +61,7 @@ public class InstructionMatcher
         MethodBase method,
         ref List<CodeInstruction> instructions,
         out string reason,
-        ILGenerator generator = null,
+        ILGenerator generator,
         bool debug = false)
     {
         var localIndexMap = new Dictionary<int, int>();
@@ -70,20 +70,20 @@ public class InstructionMatcher
 
         debug |= forceDebug;
 
-        foreach (var rule in Rules)
-        {
-            if (rule.Mode == OutputMode.MatchOnly && rule.Output != null)
-                throw new InvalidOperationException($"{rule.Mode} rule cannot have Output = null");
-            if (rule.Mode != OutputMode.MatchOnly && rule.Output == null)
-                throw new InvalidOperationException($"{rule.Mode} rule must have Output = null");
-        }
-
         // Check and make sure that all the substitutions apply. Also work out the indexes of all locals.
         for (var ruleIndex = 0; ruleIndex < Rules.Count; ruleIndex++)
         {
             Rule rule = Rules[ruleIndex];
             if (rule.LateGenerator != null)
                 rule = rule.LateGenerator(method, instructions, generator);
+
+            if (rule.Pattern == null)
+                throw new InvalidOperationException($"{rule.Mode} rule cannot have Pattern = null");
+            if (rule is { Mode: OutputMode.MatchOnly, Output: not null })
+                throw new InvalidOperationException($"{rule.Mode} rule cannot have Output = null");
+            if (rule is { Mode: not OutputMode.MatchOnly, Output: null })
+                throw new InvalidOperationException($"{rule.Mode} rule must have Output = null");
+
             var matchCount = 0;
 
             for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[^1].end + 1 : 0;
@@ -95,8 +95,8 @@ public class InstructionMatcher
 
                 for (var patternIndex = 0; patternIndex < rule.Pattern.Length; patternIndex++)
                 {
-                    var inst = instructions[instructionIndex + patternIndex];
-                    var patternInst = rule.Pattern[patternIndex];
+                    CodeInstruction inst = instructions[instructionIndex + patternIndex];
+                    CodeInstruction patternInst = rule.Pattern[patternIndex];
 
                     //if (debug)
                     //    Debug.Log($"COMPARE {patternInst} : {inst}");
@@ -319,17 +319,17 @@ public class InstructionMatcher
         return true;
     }
 
-    private void Emit(List<CodeInstruction> outInstructions, [NotNull] CodeInstruction instruction)
+    private void Emit(List<CodeInstruction> outInstructions, CodeInstruction instruction)
     {
         Emit(outInstructions, instruction.opcode, instruction.operand, instruction.labels, instruction.blocks);
     }
 
     private void Emit(
-        [NotNull] List<CodeInstruction> outInstructions,
+        List<CodeInstruction> outInstructions,
         OpCode opcode,
-        object operand = null,
-        [CanBeNull] List<Label> labels = null,
-        [CanBeNull] List<ExceptionBlock> blocks = null)
+        object? operand = null,
+        List<Label>? labels = null,
+        List<ExceptionBlock>? blocks = null)
     {
         CodeInstruction newInstruction = new(opcode, operand);
         if (labels != null)
@@ -347,7 +347,7 @@ public class InstructionMatcher
         outInstructions.Add(newInstruction);
     }
 
-    private static Label GetReplacementLabel([NotNull] ILGenerator generator, [NotNull] MatchData match, Label label)
+    private static Label GetReplacementLabel(ILGenerator generator, MatchData match, Label label)
     {
         if (!match.labelMap.TryGetValue(label, out Label replacementLabel))
         {
@@ -362,8 +362,8 @@ public class InstructionMatcher
     private bool TryGetLocalIndex(
         ref string reason,
         ILGenerator generator,
-        [NotNull] Dictionary<int, int> localIndexMap,
-        [NotNull] MatchData match,
+        Dictionary<int, int> localIndexMap,
+        MatchData match,
         out int substituteIndex,
         int localIndex)
     {
@@ -374,12 +374,12 @@ public class InstructionMatcher
         else if (match.privateMap.TryGetValue(localIndex, out substituteIndex))
         {
         }
-        else if (match.rule.LocalTypes != null && localIndex < match.rule.LocalTypes.Length && generator != null)
+        else if (match.rule.LocalTypes != null && localIndex < match.rule.LocalTypes.Length)
         {
             substituteIndex = generator.DeclareLocal(match.rule.LocalTypes[localIndex]).LocalIndex;
             match.privateMap.Add(localIndex, substituteIndex);
         }
-        else if (localIndex < LocalTypes.Count && generator != null)
+        else if (localIndex < LocalTypes.Count)
         {
             substituteIndex = generator.DeclareLocal(LocalTypes[localIndex]).LocalIndex;
             localIndexMap.Add(localIndex, substituteIndex);
@@ -396,8 +396,8 @@ public class InstructionMatcher
     public void MatchAndReplace(
         MethodBase method,
         ref List<CodeInstruction> instructionsList,
-        ILGenerator generator = null,
-        [CallerMemberName] string methodName = null,
+        ILGenerator generator,
+        [CallerMemberName] string? methodName = null,
         bool debug = false)
     {
         if (!TryMatchAndReplace(method, ref instructionsList, out string reason, generator, debug))

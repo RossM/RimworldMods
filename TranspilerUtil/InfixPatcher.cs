@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
-using JetBrains.Annotations;
 
 namespace TranspilerUtil;
 
@@ -24,34 +23,19 @@ public static class InfixPatcher
         ILGenerator generator,
         bool debug);
 
-    private class MethodPatchWorker(
-        [NotNull] ILGenerator generator,
-        [NotNull] MethodBase caller,
-        [NotNull] MemberInfo target,
-        [NotNull][ItemNotNull] List<MethodInfo> prefixes,
-        [NotNull][ItemNotNull] List<MethodInfo> postfixes)
+    private class MethodPatchWorker
     {
-        [NotNull][ItemNotNull] private Type[] callerParameterTypes;
-        [NotNull][ItemNotNull] private string[] callerParameterNames;
-        [NotNull][ItemNotNull] private Type[] targetParameterTypes;
-        [NotNull][ItemNotNull] private string[] targetParameterNames;
-        [NotNull] private int[] parameterToLocalIndex;
+        private readonly Type[] callerParameterTypes;
+        private readonly string[] callerParameterNames;
+        private readonly Type[] targetParameterTypes;
+        private readonly string[] targetParameterNames;
+        private readonly int[] parameterToLocalIndex;
         private int resultLocalIndex = -1;
-        [NotNull] private Type targetType;
+        private readonly Type targetType;
 
         public void EmitReplacement()
         {
-            (callerParameterTypes, callerParameterNames) = GetParameterTypesAndNames(caller, "__caller");
-            (targetParameterTypes, targetParameterNames) = GetParameterTypesAndNames(target, "__instance");
-
             EmitPrelude();
-
-            targetType = target switch
-            {
-                FieldInfo field => field.FieldType,
-                MethodInfo method => method.ReturnType,
-                _ => throw new NotSupportedException(),
-            };
 
             var prefixesUsingResult = prefixes.Where(method => method.GetParameters().Any(parameter => parameter.Name == "__result"))
                 .ToList();
@@ -70,7 +54,7 @@ public static class InfixPatcher
             Label? skipLabel = null;
             foreach (var prefix in prefixes)
             {
-                (Type[] types, string[] names) = GetParameterTypesAndNames(prefix, null);
+                (Type[] types, string[] names) = GetParameterTypesAndNames(prefix, "__invalid");
                 for (int i = 0; i < types.Length; i++)
                 {
                     EmitParameterValue(types[i], names[i]);
@@ -104,7 +88,7 @@ public static class InfixPatcher
 
                 foreach (var postfix in postfixes)
                 {
-                    (Type[] types, string[] names) = GetParameterTypesAndNames(postfix, null);
+                    (Type[] types, string[] names) = GetParameterTypesAndNames(postfix, "__invalid");
                     for (int i = 0; i < types.Length; i++)
                     {
                         EmitParameterValue(types[i], names[i]);
@@ -122,7 +106,7 @@ public static class InfixPatcher
             }
         }
 
-        private void EmitInitialization([NotNull] Type type, int localIndex)
+        private void EmitInitialization(Type type, int localIndex)
         {
             if (type.IsByRef)
                 throw new NotImplementedException($"IsByRef targetType {type}");
@@ -154,7 +138,7 @@ public static class InfixPatcher
                 throw new NotImplementedException($"targetType {type}");
         }
 
-        private void EmitParameterValue([NotNull] Type parameterType, [NotNull] string parameterName)
+        private void EmitParameterValue(Type parameterType, string parameterName)
         {
             if (parameterName == "__result" && resultLocalIndex >= 0)
             {
@@ -233,7 +217,7 @@ public static class InfixPatcher
                 $"Couldn't find parameter named '{parameterName}' of type {parameterType.FullName}");
         }
 
-        private void EmitResult([NotNull] Type parameterType)
+        private void EmitResult(Type parameterType)
         {
             if (parameterType.IsByRef)
             {
@@ -243,7 +227,7 @@ public static class InfixPatcher
                 output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
         }
 
-        private void EmitCallerParameter([NotNull] Type type, int index)
+        private void EmitCallerParameter(Type type, int index)
         {
             if (type.IsByRef && !callerParameterTypes[index].IsByRef)
                 output.Add(new(OpCodes.Ldarga, index));
@@ -253,7 +237,7 @@ public static class InfixPatcher
                 output.Add(new(OpCodes.Ldobj, type));
         }
 
-        private void EmitTargetParameter([NotNull] Type type, int index)
+        private void EmitTargetParameter(Type type, int index)
         {
             if (type.IsByRef && !targetParameterTypes[index].IsByRef)
                 output.Add(CodeInstructionUtil.LoadLocalAddress(parameterToLocalIndex[index]));
@@ -267,7 +251,6 @@ public static class InfixPatcher
         {
             // Save all parameters to local. The matcher will handle renumbering the locals to new
             // unused local indexes.
-            parameterToLocalIndex = new int[targetParameterTypes.Length];
             for (int i = targetParameterTypes.Length - 1; i >= 0; i--)
             {
                 parameterToLocalIndex[i] = AddLocal(targetParameterTypes[i]);
@@ -282,7 +265,7 @@ public static class InfixPatcher
             return localIndex;
         }
 
-        private static (Type[] types, string[] names) GetParameterTypesAndNames([NotNull] MemberInfo member, [NotNull] string instanceName)
+        private static (Type[] types, string[] names) GetParameterTypesAndNames(MemberInfo member, string instanceName)
         {
             return member switch
             {
@@ -302,7 +285,7 @@ public static class InfixPatcher
             };
         }
 
-        public static OpCode OpcodeFor([NotNull] MemberInfo callee)
+        public static OpCode OpcodeFor(MemberInfo callee)
         {
             return callee switch
             {
@@ -315,14 +298,39 @@ public static class InfixPatcher
         }
 
         // ReSharper disable MemberCanBePrivate.Local
-        [NotNull] public readonly ILGenerator generator = generator;
-        [NotNull] public readonly MethodBase caller = caller;
-        [NotNull] public readonly MemberInfo target = target;
-        [NotNull][ItemNotNull] public readonly List<MethodInfo> prefixes = prefixes;
-        [NotNull][ItemNotNull] public readonly List<MethodInfo> postfixes = postfixes;
-        [NotNull][ItemNotNull] public readonly List<CodeInstruction> output = [];
+        public readonly ILGenerator generator;
+        public readonly MethodBase caller;
+        public readonly MemberInfo target;
+        public readonly List<MethodInfo> prefixes;
+        public readonly List<MethodInfo> postfixes;
+        public readonly List<CodeInstruction> output = [];
 
-        [NotNull][ItemNotNull] public readonly List<Type> localTypes = [];
+        public readonly List<Type> localTypes = [];
+
+        public MethodPatchWorker(ILGenerator generator,
+            MethodBase caller,
+            MemberInfo target,
+            List<MethodInfo> prefixes,
+            List<MethodInfo> postfixes)
+        {
+            this.generator = generator;
+            this.caller = caller;
+            this.target = target;
+            this.prefixes = prefixes;
+            this.postfixes = postfixes;
+
+            (callerParameterTypes, callerParameterNames) = GetParameterTypesAndNames(caller, "__caller");
+            (targetParameterTypes, targetParameterNames) = GetParameterTypesAndNames(target, "__instance");
+
+            targetType = target switch
+            {
+                FieldInfo field => field.FieldType,
+                MethodInfo method => method.ReturnType,
+                _ => throw new NotSupportedException(),
+            };
+
+            parameterToLocalIndex = new int[targetParameterTypes.Length];
+        }
         // ReSharper restore MemberCanBePrivate.Local
     }
 
@@ -335,13 +343,13 @@ public static class InfixPatcher
         public bool debug;
     }
 
-    public static void PatchInfix([NotNull] Harmony harmony, [NotNull] Assembly assembly)
+    public static void PatchInfix(Harmony harmony, Assembly assembly)
     {
         List<PatchInfo> patches = [];
 
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
-            var harmonyAttribute = (HarmonyPatch)Attribute.GetCustomAttribute(type, typeof(HarmonyPatch));
+            var harmonyAttribute = (HarmonyPatch?)Attribute.GetCustomAttribute(type, typeof(HarmonyPatch));
             if (harmonyAttribute == null)
                 continue;
 
@@ -350,8 +358,8 @@ public static class InfixPatcher
                 try
                 {
                     var infixTargetAttribute
-                        = (InfixTargetAttribute)Attribute.GetCustomAttribute(method, typeof(InfixPrefixAttribute)) ??
-                          (InfixTargetAttribute)Attribute.GetCustomAttribute(method, typeof(InfixPostfixAttribute));
+                        = (InfixTargetAttribute?)Attribute.GetCustomAttribute(method, typeof(InfixPrefixAttribute)) ??
+                          (InfixTargetAttribute?)Attribute.GetCustomAttribute(method, typeof(InfixPostfixAttribute));
                     var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(InfixPatchAttribute))
                         .Cast<InfixPatchAttribute>().ToArray();
                     bool debug = Attribute.GetCustomAttribute(method, typeof(InfixDebugAttribute)) != null;
@@ -394,7 +402,7 @@ public static class InfixPatcher
 
         foreach (IGrouping<MethodInfo, PatchInfo> patchGroup in patches.GroupBy(patch => patch.caller))
         {
-            var patchedMethod = patchGroup.Key;
+            MethodInfo patchedMethod = patchGroup.Key;
 
             try
             {
@@ -442,7 +450,7 @@ public static class InfixPatcher
         }
     }
 
-    private static MemberInfo GetMember([NotNull] Type type, [NotNull] string memberName, Type[] parameterTypes, Type[] genericTypes)
+    private static MemberInfo GetMember(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
     {
         string[] nameParts = memberName.Split(':');
         for (int i = 0; i < nameParts.Length - 1; i++)
@@ -472,7 +480,7 @@ public static class InfixPatcher
         return wrappedMember;
     }
 
-    private static MethodInfo MakeTranspiler([NotNull] ModuleBuilder moduleBuilder, List<InstructionMatcher.Rule> rules, string typeName, bool debug)
+    private static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, List<InstructionMatcher.Rule> rules, string typeName, bool debug)
     {
         TypeBuilder typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
 
