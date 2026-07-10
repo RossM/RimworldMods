@@ -26,27 +26,27 @@ public class InstructionMatcher
         public OutputMode Mode = OutputMode.MatchOnly;
         public bool SaveLocals = false;
         public bool Chained = false;
-        public CodeInstruction[] Pattern;
-        public CodeInstruction[] Output;
-        public Func<MethodBase, List<CodeInstruction>, ILGenerator, Rule> LateGenerator;
-        public Type[] LocalTypes;
+        [ItemNotNull] public CodeInstruction[] Pattern;
+        [CanBeNull][ItemNotNull] public CodeInstruction[] Output;
+        [CanBeNull] public Func<MethodBase, List<CodeInstruction>, ILGenerator, Rule> LateGenerator;
+        [CanBeNull] public Type[] LocalTypes;
     }
 
     private class MatchData
     {
-        public Rule rule;
+        [NotNull] public required Rule rule;
         public int start, end;
-        public Dictionary<int, int> privateMap;
-        public Dictionary<Label, Label> labelMap;
+        [NotNull] public required Dictionary<int, int> privateMap;
+        [NotNull] public required Dictionary<Label, Label> labelMap;
     }
 
     public static bool forceDebug = false;
 
-    public List<Rule> Rules = [];
-    public List<Type> LocalTypes = [];
+    [NotNull][ItemNotNull] public List<Rule> Rules = [];
+    [NotNull][ItemNotNull] public List<Type> LocalTypes = [];
 
-    readonly List<Label> extraLabels = [];
-    private readonly List<ExceptionBlock> extraBlocks = [];
+    [NotNull] private readonly List<Label> extraLabels = [];
+    [NotNull][ItemNotNull] private readonly List<ExceptionBlock> extraBlocks = [];
 
     public InstructionMatcher()
     {
@@ -112,9 +112,7 @@ public class InstructionMatcher
                         int localIndex = patternInst.LocalIndex();
                         int targetIndex = inst.LocalIndex();
 
-                        if (localIndexMap.TryGetValue(localIndex, out int substituteIndex))
-                            isMatch = targetIndex == substituteIndex;
-                        else if (tempLocalIndexMap.TryGetValue(localIndex, out substituteIndex))
+                        if (localIndexMap.TryGetValue(localIndex, out int substituteIndex) || tempLocalIndexMap.TryGetValue(localIndex, out substituteIndex))
                             isMatch = targetIndex == substituteIndex;
                         else
                             tempLocalIndexMap.Add(localIndex, targetIndex);
@@ -141,9 +139,7 @@ public class InstructionMatcher
                         // There is something very weird going on here. This may be a Harmony bug.
                         int targetIndex = inst.operand is LocalBuilder lb ? lb.LocalIndex : inst.LocalIndex();
 
-                        if (localIndexMap.TryGetValue(localIndex, out int substituteIndex))
-                            isMatch = targetIndex == substituteIndex;
-                        else if (tempLocalIndexMap.TryGetValue(localIndex, out substituteIndex))
+                        if (localIndexMap.TryGetValue(localIndex, out int substituteIndex) || tempLocalIndexMap.TryGetValue(localIndex, out substituteIndex))
                             isMatch = targetIndex == substituteIndex;
                         else
                             tempLocalIndexMap.Add(localIndex, targetIndex);
@@ -170,7 +166,7 @@ public class InstructionMatcher
                 if (!isMatch)
                     continue;
 
-                var matchData = new MatchData()
+                var matchData = new MatchData
                 {
                     rule = rule,
                     start = instructionIndex,
@@ -323,17 +319,17 @@ public class InstructionMatcher
         return true;
     }
 
-    private void Emit(List<CodeInstruction> outInstructions, CodeInstruction instruction)
+    private void Emit(List<CodeInstruction> outInstructions, [NotNull] CodeInstruction instruction)
     {
         Emit(outInstructions, instruction.opcode, instruction.operand, instruction.labels, instruction.blocks);
     }
 
     private void Emit(
-        List<CodeInstruction> outInstructions,
+        [NotNull] List<CodeInstruction> outInstructions,
         OpCode opcode,
         object operand = null,
-        List<Label> labels = null,
-        List<ExceptionBlock> blocks = null)
+        [CanBeNull] List<Label> labels = null,
+        [CanBeNull] List<ExceptionBlock> blocks = null)
     {
         CodeInstruction newInstruction = new(opcode, operand);
         if (labels != null)
@@ -351,7 +347,7 @@ public class InstructionMatcher
         outInstructions.Add(newInstruction);
     }
 
-    private static Label GetReplacementLabel(ILGenerator generator, MatchData match, Label label)
+    private static Label GetReplacementLabel([NotNull] ILGenerator generator, [NotNull] MatchData match, Label label)
     {
         if (!match.labelMap.TryGetValue(label, out Label replacementLabel))
         {
@@ -366,8 +362,8 @@ public class InstructionMatcher
     private bool TryGetLocalIndex(
         ref string reason,
         ILGenerator generator,
-        Dictionary<int, int> localIndexMap,
-        MatchData match,
+        [NotNull] Dictionary<int, int> localIndexMap,
+        [NotNull] MatchData match,
         out int substituteIndex,
         int localIndex)
     {
@@ -383,7 +379,7 @@ public class InstructionMatcher
             substituteIndex = generator.DeclareLocal(match.rule.LocalTypes[localIndex]).LocalIndex;
             match.privateMap.Add(localIndex, substituteIndex);
         }
-        else if (LocalTypes != null && localIndex < LocalTypes.Count && generator != null)
+        else if (localIndex < LocalTypes.Count && generator != null)
         {
             substituteIndex = generator.DeclareLocal(LocalTypes[localIndex]).LocalIndex;
             localIndexMap.Add(localIndex, substituteIndex);
