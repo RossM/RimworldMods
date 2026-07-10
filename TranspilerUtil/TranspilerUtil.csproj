@@ -18,9 +18,6 @@
     <Reference Include="0Harmony">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>

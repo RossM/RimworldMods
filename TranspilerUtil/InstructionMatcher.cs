@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using HarmonyLib;
 using JetBrains.Annotations;
 using UnityEngine;
-using Verse;
 
 namespace TranspilerUtil;
 
@@ -184,7 +183,10 @@ public class InstructionMatcher
 
                 matches.Add(matchData);
                 if (rule.SaveLocals)
-                    localIndexMap.AddRange(tempLocalIndexMap);
+                {
+                    foreach (var kvp in tempLocalIndexMap)
+                        localIndexMap.Add(kvp.Key, kvp.Value);
+                }
                 matchCount++;
                 if (rule.Max > 0 && matchCount >= rule.Max)
                     break;
@@ -403,7 +405,7 @@ public class InstructionMatcher
         bool debug = false)
     {
         if (!TryMatchAndReplace(method, ref instructionsList, out string reason, generator, debug))
-            Log.Error($"{methodName ?? "<Unknown>"}: {reason}");
+            throw new InvalidOperationException(reason);
     }
 
     [UsedImplicitly]
