@@ -5,33 +5,30 @@ public static class FoodHelpers
     extension(ThingDef thingDef)
     {
         public bool IsRawFoodOrCorpse => thingDef.IsRawHumanFood() || thingDef.IsCorpse;
-    }
 
-    extension(ThingDef foodDef)
-    {
         public IEnumerable<FoodGroupDef> FoodGroups
         {
             get
             {
-                FoodTypeFlags flags = foodDef.ingestible?.foodType ?? 0;
-                RaceProperties? race = foodDef.ingestible?.sourceDef?.race;
+                FoodTypeFlags flags = thingDef.ingestible?.foodType ?? 0;
+                RaceProperties? race = thingDef.ingestible?.sourceDef?.race;
 
-                foreach (var food in DefDatabase<FoodGroupDef>.AllDefs)
+                foreach (var foodGroup in DefDatabase<FoodGroupDef>.AllDefs)
                 {
-                    if (food.exact)
+                    if (foodGroup.exact)
                     {
-                        if (food.foodTypes != flags)
+                        if (foodGroup.foodTypes != flags)
                             continue;
                     }
-                    else if (food.foodTypes != 0 && (food.foodTypes & flags) == 0)
+                    else if (foodGroup.foodTypes != 0 && (foodGroup.foodTypes & flags) == 0)
                         continue;
 
-                    if (food.humanlike && race?.Humanlike is not true)
+                    if (foodGroup.humanlike && race?.Humanlike is not true)
                         continue;
-                    if (food.fleshType != null && race?.FleshType != food.fleshType)
+                    if (foodGroup.fleshType != null && race?.FleshType != foodGroup.fleshType)
                         continue;
 
-                    yield return food;
+                    yield return foodGroup;
                 }
             }
         }
