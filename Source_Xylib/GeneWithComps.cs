@@ -461,7 +461,7 @@ public class GeneWithComps : Gene, IEventListener
                 continue;
             yield return new Command_Action
             {
-                defaultLabel = $"DEV: Trigger {Label} ({hediffGiver.hediff?.label}) #{index}",
+                defaultLabel = $"DEV: Trigger {Label} ({hediffGiver.hediff.label}) #{index}",
                 action = () => hediffGiver.TryApply(pawn),
                 groupable = false,
             };
