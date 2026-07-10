@@ -52,22 +52,20 @@ public class Settings : ModSettings
             $"XylSettingTooltip_{fieldName}".Translate());
     }
 
-    private void EnumSetting<T>(Listing_Standard listing, string fieldName)
+    private void EnumSetting<T>(Listing_Standard listing, string fieldName) where T : Enum
     {
         DebugAssert.NotNull(Find.WindowStack);
 
         var valueRef = AccessTools.FieldRefAccess<T>(GetType(), fieldName);
         DebugAssert.NotNull(valueRef);
 
-        var enumType = typeof(T);
-
         if (listing.ButtonTextLabeled(
                 $"XylSettingDescription_{fieldName}".Translate(),
                 $"XylSettingOption_{fieldName}_{valueRef(this)!.ToString()}".Translate(),
                 tooltip: $"XylSettingTooltip_{fieldName}".Translate()))
         {
-            var names = Enum.GetNames(enumType);
-            var values = (T[])Enum.GetValues(enumType);
+            var names = Enum.GetNames<T>();
+            var values = Enum.GetValues<T>();
 
             List<FloatMenuOption> options = [];
             for (int i = 0; i < names.Length; i++)

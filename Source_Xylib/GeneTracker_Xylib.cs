@@ -22,7 +22,7 @@ public class GeneTracker_Xylib : GeneTracker
     public List<RenderNodeModifier>? renderNodeModifiers;
 
     internal readonly List<RenderNodeModifier>?[] renderNodeModifiersByType
-        = new List<RenderNodeModifier>[Enum.GetValues(typeof(RenderNodeModifierType)).Length];
+        = new List<RenderNodeModifier>[Enum.GetValues<RenderNodeModifierType>().Length];
 
     /// <summary>
     ///     Aggregates <see cref="GeneCompProperties_UnlockBuildables.buildables" /> from all genes.<br /><br />

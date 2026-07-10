@@ -33,7 +33,7 @@ public static class Patch_Dialog_StylingStation
         {
             List<FloatMenuOption> options = [];
 
-            foreach (var value in (AutoColorMode[])Enum.GetValues(typeof(AutoColorMode)))
+            foreach (var value in Enum.GetValues<AutoColorMode>())
             {
                 if (value == AutoColorMode.UseIdeoligeonColor && (___pawn.ideo == null || Find.IdeoManager.classicMode))
                     continue;

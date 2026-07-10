@@ -921,6 +921,12 @@ public static class Extensions
         }
     }
 
+    extension(Enum)
+    {
+        public static string[] GetNames<T>() where T : Enum => Enum.GetNames(typeof(T));
+        public static T[] GetValues<T>() where T : Enum => (T[])Enum.GetValues(typeof(T));
+    }
+
     private delegate object MemberwiseCloneDelegate(object obj);
 
     private static MemberwiseCloneDelegate? memberwiseCloneFn;
