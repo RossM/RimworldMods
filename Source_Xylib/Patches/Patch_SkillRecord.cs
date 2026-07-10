@@ -10,6 +10,8 @@ internal static class Patch_SkillRecord
     [HarmonyPatch(nameof(SkillRecord.LearnRateFactor))]
     public static void LearnRateFactor_Postfix(SkillRecord __instance, ref float __result)
     {
+        DebugAssert.NotNull(__instance.Pawn);
+
         __result *= __instance.passion switch
         {
             Passion.None => __instance.Pawn.GetStatValue(XStatDefOf.XylLearnFactorPassionNone) / SkillRecord.LearnFactorPassionNone,

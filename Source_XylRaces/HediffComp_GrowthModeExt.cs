@@ -74,7 +74,6 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
         {
             DebugAssert.NotNull(TProps.modes);
             
-            // ReSharper disable once AssignNullToNotNullAttribute
             return TProps.modes[growthModeIndex];
         }
         set
@@ -101,7 +100,6 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
     {
         base.CompPostPostAdd(dinfo);
 
-        // ReSharper disable once AssignNullToNotNullAttribute
         SetGrowthMode(TProps.modes[0]);
     }
 

@@ -12,25 +12,27 @@ internal static class Patch_FloatMenuOptionProvider_Ingest
         FloatMenuContext context,
         out FloatMenuOption? __result)
     {
+        DebugAssert.NotNull(context.FirstSelectedPawn);
+
         __result = null;
         if (clickedThing.def.ingestible is not { showIngestFloatOption: true })
         {
             return true;
         }
 
-        if (!clickedThing.IngestibleNow || !context.FirstSelectedPawn!.RaceProps!.CanEverEat(clickedThing.def))
+        if (!clickedThing.IngestibleNow || !context.FirstSelectedPawn.RaceProps.CanEverEat(clickedThing.def))
         {
             return true;
         }
 
-        ChemicalDef chemical = DrugStatsUtility.GetChemical(clickedThing.def);
+        ChemicalDef? chemical = DrugStatsUtility.GetChemical(clickedThing.def);
         if (chemical == null)
             return true;
 
         if (context.FirstSelectedPawn.ChemicalIsAllowedByGenes(chemical))
             return true;
 
-        string text = !string.IsNullOrEmpty(clickedThing.def.ingestible.ingestCommandString)
+        string text = !clickedThing.def.ingestible.ingestCommandString.NullOrEmpty()
             ? clickedThing.def.ingestible.ingestCommandString.Formatted(clickedThing.LabelShort)
             : "ConsumeThing".Translate(clickedThing.LabelShort, clickedThing);
 
@@ -58,7 +60,10 @@ internal static class Patch_FloatMenuOptionProvider_Ingest
 
         if (defExtension is { requiredGenesAny.Count: > 0 })
         {
-            __result = new FloatMenuOption($"{text}: {"XylRequiresGene".Translate(defExtension.requiredGenesAny[0]!.label)}", null);
+            GeneDef firstRequiredGene = defExtension.requiredGenesAny[0];
+            DebugAssert.NotNull(firstRequiredGene);
+
+            __result = new FloatMenuOption($"{text}: {"XylRequiresGene".Translate(firstRequiredGene.label)}", null);
             return false;
         }
 

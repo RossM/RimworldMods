@@ -129,7 +129,7 @@ public static class Analyzer
 
             foreach (var defType in extraDefTypes)
             {
-                if (defType!.IsAssignableFrom(type))
+                if (defType.IsAssignableFrom(type))
                     Log.Warning($"[{name}] {type.FullName} is a {defType.Name} but is missing a [UsedFromXml] attribute");
             }
         }

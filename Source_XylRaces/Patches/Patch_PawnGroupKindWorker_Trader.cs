@@ -32,7 +32,6 @@ public static class Patch_PawnGroupKindWorker_Trader
         {
             DebugAssert.NotNull(Find.WorldGrid);
 
-            // ReSharper disable once AssignNullToNotNullAttribute
             Tile tile = Find.WorldGrid[parms.tile];
             DebugAssert.NotNull(tile);
             DebugAssert.NotNull(tile.PrimaryBiome);
@@ -67,7 +66,6 @@ public static class Patch_PawnGroupKindWorker_Trader
 
             if (itemIndex < waresItems.Count)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 pawn.inventory.innerContainer.TryAdd(waresItems[itemIndex]);
                 itemIndex++;
             }
@@ -78,7 +76,6 @@ public static class Patch_PawnGroupKindWorker_Trader
 
         for (; itemIndex < waresItems.Count; itemIndex++)
         {
-            // ReSharper disable once AssignNullToNotNullAttribute
             carrierPawns.RandomElement().inventory.innerContainer.TryAdd(waresItems[itemIndex]);
         }
 

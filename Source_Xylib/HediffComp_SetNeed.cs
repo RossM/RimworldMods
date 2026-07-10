@@ -26,7 +26,15 @@ public class HediffComp_SetNeed : HediffComp
 {
     public HediffCompProperties_SetNeed Props => (HediffCompProperties_SetNeed)props;
 
-    public Need? Need => field ??= Pawn!.needs.TryGetNeed(Props.need);
+    public Need? Need
+    {
+        get
+        {
+            DebugAssert.NotNull(Pawn);
+
+            return field ??= Pawn.needs.TryGetNeed(Props.need);
+        }
+    }
 
     private bool Active => Need != null && Props.severityRange.Includes(parent.Severity);
 

@@ -25,17 +25,29 @@ public class HediffComp_ForceMentalState : HediffComp
 {
     public HediffCompProperties_ForceMentalState Props => (HediffCompProperties_ForceMentalState)props;
 
-    public override bool CompShouldRemove => Pawn!.mindState.mentalStateHandler.CurStateDef != Props.mentalState;
+    public override bool CompShouldRemove
+    {
+        get
+        {
+            DebugAssert.NotNull(Pawn);
+
+            return Pawn.mindState.mentalStateHandler.CurStateDef != Props.mentalState;
+        }
+    }
 
     public override void CompPostPostAdd(DamageInfo? dinfo)
     {
-        Pawn!.mindState.mentalStateHandler.TryStartMentalState(Props.mentalState, forced: true, forceWake: true, causedByDamage: true);
+        DebugAssert.NotNull(Pawn);
+
+        Pawn.mindState.mentalStateHandler.TryStartMentalState(Props.mentalState, forced: true, forceWake: true, causedByDamage: true);
     }
 
     public override void CompPostPostRemoved()
     {
-        if (Props.endMentalStateOnCure && Pawn!.mindState.mentalStateHandler.CurStateDef == Props.mentalState &&
-            !Pawn!.mindState.mentalStateHandler.CurState!.causedByMood)
+        DebugAssert.NotNull(Pawn);
+
+        if (Props.endMentalStateOnCure && Pawn.mindState.mentalStateHandler.CurStateDef == Props.mentalState &&
+            !Pawn.mindState.mentalStateHandler.CurState!.causedByMood)
         {
             Pawn.mindState.mentalStateHandler.CurState.RecoverFromState();
         }

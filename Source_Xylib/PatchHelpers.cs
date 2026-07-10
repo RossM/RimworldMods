@@ -1,10 +1,14 @@
-﻿namespace Xylib;
+﻿using System.Reflection;
+
+namespace Xylib;
 
 internal static class PatchHelpers
 {
     public static HashSet<RecipeDef> RecipesUnlockedByGenes => field ??= GetRecipesUnlockedByGenes();
 
     private static Dictionary<HediffDef, StatDef> ResistanceStatByHediff => field ??= Config.Instance.resistanceStatByHediff;
+
+    private static readonly MethodInfo addDefsMethodInfo = typeof(PatchHelpers).GetMethod(nameof(AddDefs))!;
 
     public static void RunDefGenerators(bool hotReload)
     {
@@ -14,7 +18,8 @@ internal static class PatchHelpers
 
             try
             {
-                Type defType = type.TryGetAttribute<DefGeneratorAttribute>()!.defType;
+                Type? defType = type.TryGetAttribute<DefGeneratorAttribute>()?.defType;
+                DebugAssert.NotNull(defType);
 
                 var impliedDefsMethodInfo = type.GetMethod("ImpliedDefs");
                 if (impliedDefsMethodInfo == null)
@@ -23,7 +28,7 @@ internal static class PatchHelpers
                     continue;
                 }
 
-                var addDefsFn = typeof(PatchHelpers).GetMethod(nameof(AddDefs))!.MakeGenericMethod(defType)
+                var addDefsFn = addDefsMethodInfo.MakeGenericMethod(defType)
                     .CreateDelegate<Action<IEnumerable<Def>, bool>>();
                 var impliedDefsFn = impliedDefsMethodInfo.CreateDelegate<Func<bool, IEnumerable<Def>>>();
 
@@ -48,7 +53,7 @@ internal static class PatchHelpers
     public static bool TryGetChemicalDependencyGene(Pawn pawn, [NotNullWhen(true)] out Gene? outGene)
     {
         outGene = (pawn.genes?.GenesListForReading).FirstOrDefault(gene =>
-            gene!.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies is true);
+            gene.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies is true);
         return outGene != null;
     }
 
@@ -91,7 +96,7 @@ internal static class PatchHelpers
             return;
 
         StatRequest statRequest = StatRequest.For(pawn);
-        float baseValueFor = XStatDefOf.XylSlaveRebellionMtbFactor.Worker!.GetBaseValueFor(statRequest);
+        float baseValueFor = XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetBaseValueFor(statRequest);
         ToStringNumberSense toStringNumberSense = XStatDefOf.XylSlaveRebellionMtbFactor.toStringNumberSense;
         XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetOffsetsAndFactorsExplanation(statRequest, stringBuilder, baseValueFor);
         XStatDefOf.XylSlaveRebellionMtbFactor.Worker.GetAdditionalOffsetsAndFactorsExplanation(statRequest, toStringNumberSense,

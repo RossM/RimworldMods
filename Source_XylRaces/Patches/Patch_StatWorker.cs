@@ -148,7 +148,6 @@ public static class Patch_StatWorker
     {
         var instructionsList = new List<CodeInstruction>(instructions);
         Fixup_GetOffsetsAndFactorsExplanation.MatchAndReplace(method, ref instructionsList, generator);
-        // ReSharper disable once AssignNullToNotNullAttribute
         return instructionsList;
     }
 

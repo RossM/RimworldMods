@@ -19,13 +19,13 @@ public abstract class GeneSetMaker
 
         if (pawn.genes.Xenotype != null)
         {
-            foreach (var gene in pawn.genes.Xenotype.genes!)
+            foreach (var gene in pawn.genes.Xenotype.genes)
                 geneSet.AddGene(gene);
         }
 
         if (pawn.genes.CustomXenotype != null)
         {
-            foreach (var gene in pawn.genes.CustomXenotype.genes!)
+            foreach (var gene in pawn.genes.CustomXenotype.genes)
                 geneSet.AddGene(gene);
         }
 
@@ -38,7 +38,12 @@ public abstract class GeneSetMaker
 
         var newGenes = new GeneSet();
         for (int i = existingGeneCount; i < genes.Count; i++)
-            newGenes.AddGene(genes[i]);
+        {
+            var gene = genes[i];
+            DebugAssert.NotNull(gene);
+
+            newGenes.AddGene(gene);
+        }
 
         return newGenes;
     }
@@ -109,7 +114,7 @@ public class GeneSetMaker_Option : GeneSetMaker
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
         for (int i = 0; i < countValue; i++)
-            options.RandomElementByWeight(o => o!.weight)!.maker.AddGenes(geneSet, geneType, pawn);
+            options.RandomElementByWeight(o => o.weight).maker.AddGenes(geneSet, geneType, pawn);
     }
 
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]

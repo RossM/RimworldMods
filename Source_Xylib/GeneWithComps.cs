@@ -139,12 +139,29 @@ public class GeneWithComps : Gene, IEventListener
     /// <summary>
     ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for this gene.
     /// </summary>
-    public DefModExtension_GeneWithComps DefExt => field ??= def.Extension_GeneWithComps!;
+    public DefModExtension_GeneWithComps DefExt
+    {
+        get
+        {
+            field ??= def.Extension_GeneWithComps;
+            DebugAssert.NotNull(field);
+
+            return field;
+        }
+    }
 
     /// <summary>
     ///     Whether this gene is an endogene or xenogene.
     /// </summary>
-    public GeneType GeneType => geneTypeInternal ??= pawn.genes!.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
+    public GeneType GeneType
+    {
+        get
+        {
+            DebugAssert.NotNull(pawn.genes);
+
+            return geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
+        }
+    }
 
     private static readonly Dictionary<Type, bool> hasTickCache = new();
     private static readonly Dictionary<Type, bool> hasTickIntervalCache = new();
@@ -238,7 +255,10 @@ public class GeneWithComps : Gene, IEventListener
         {
             try
             {
-                comps[num]!.CompPostMake();
+                var comp = comps[num];
+                DebugAssert.NotNull(comp);
+
+                comp.CompPostMake();
             }
             catch (Exception ex)
             {

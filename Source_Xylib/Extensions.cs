@@ -99,7 +99,6 @@ public static class Extensions
             IReadOnlyList<Gene> genes = pawn.GeneAndHediffCache.GetGenesWithDef(def);
             for (var index = 0; index < genes.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 Gene gene = genes[index];
                 DebugAssert.NotNull(gene);
 
@@ -143,7 +142,6 @@ public static class Extensions
                 IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    // ReSharper disable once AssignNullToNotNullAttribute
                     T gene = genes[index];
                     DebugAssert.NotNull(gene);
 
@@ -177,7 +175,6 @@ public static class Extensions
                 IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    // ReSharper disable once AssignNullToNotNullAttribute
                     T gene = genes[index];
                     DebugAssert.NotNull(gene);
 
@@ -204,7 +201,6 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 T gene = genes[index];
                 DebugAssert.NotNull(gene);
 
@@ -235,7 +231,6 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 T gene = genes[index];
                 DebugAssert.NotNull(gene);
 
@@ -263,7 +258,6 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 T gene = genes[index];
                 DebugAssert.NotNull(gene);
 
@@ -294,7 +288,6 @@ public static class Extensions
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 T gene = genes[index];
                 DebugAssert.NotNull(gene);
 
@@ -339,7 +332,6 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    // ReSharper disable once AssignNullToNotNullAttribute
                     GeneWithComps gene = genes[index];
                     DebugAssert.NotNull(gene);
                     
@@ -374,7 +366,6 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    // ReSharper disable once AssignNullToNotNullAttribute
                     GeneWithComps gene = genes[index];
                     DebugAssert.NotNull(gene);
 
@@ -407,7 +398,6 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
 
@@ -439,7 +429,6 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
 
@@ -473,7 +462,6 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
 
@@ -505,7 +493,6 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
 
@@ -543,7 +530,6 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    // ReSharper disable once AssignNullToNotNullAttribute
                     GeneWithComps gene = genes[index];
                     DebugAssert.NotNull(gene);
 
@@ -582,7 +568,6 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 for (var index = 0; index < genes.Count; index++)
                 {
-                    // ReSharper disable once AssignNullToNotNullAttribute
                     GeneWithComps gene = genes[index];
                     DebugAssert.NotNull(gene);
 
@@ -615,7 +600,6 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
 
@@ -652,7 +636,6 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             for (var index = 0; index < genes.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
                 
@@ -726,7 +709,6 @@ public static class Extensions
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 HediffWithComps hediff = hediffs[index];
                 DebugAssert.NotNull(hediff);
 
@@ -764,7 +746,6 @@ public static class Extensions
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 HediffWithComps hediff = hediffs[index];
                 DebugAssert.NotNull(hediff);
 
@@ -804,7 +785,6 @@ public static class Extensions
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 HediffWithComps hediff = hediffs[index];
                 DebugAssert.NotNull(hediff);
 
@@ -872,7 +852,6 @@ public static class Extensions
             IReadOnlyList<Hediff> hediffs = pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
             for (var index = 0; index < hediffs.Count; index++)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 Hediff hediff = hediffs[index];
                 DebugAssert.NotNull(hediff);
 

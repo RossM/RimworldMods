@@ -37,20 +37,24 @@ public class GeneComp_BonusGenes : GeneComp
 
     public override void CompPostPostAdd()
     {
+        DebugAssert.NotNull(Pawn.genes);
+
         var geneSet = Props.maker.root.Generate(Pawn, AddedGeneType);
 
         foreach (var gene in geneSet.GenesListForReading)
             AddGene(gene);
 
         if (Props.removeAfterAdding)
-            Pawn.genes!.RemoveGene(parent);
+            Pawn.genes.RemoveGene(parent);
     }
 
     private void AddGene(GeneDef? geneDef)
     {
+        DebugAssert.NotNull(Pawn.genes);
+
         if (geneDef == null)
             return;
-        if (Pawn.genes!.GenesListForReading.Any(g => g.def == geneDef))
+        if (Pawn.genes.GenesListForReading.Any(g => g.def == geneDef))
             return;
 
         addedGenes ??= [];
@@ -59,12 +63,14 @@ public class GeneComp_BonusGenes : GeneComp
 
     public override void CompPostPostRemove()
     {
+        DebugAssert.NotNull(Pawn.genes);
+
         if (Props.removeAfterAdding)
             return;
         if (addedGenes == null)
             return;
 
         foreach (var gene in addedGenes)
-            Pawn.genes!.RemoveGene(gene);
+            Pawn.genes.RemoveGene(gene);
     }
 }

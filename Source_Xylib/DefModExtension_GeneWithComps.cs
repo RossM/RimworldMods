@@ -131,13 +131,15 @@ public class DefModExtension_GeneWithComps : DefModExtension
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        DebugAssert.NotNull(parent);
+
         foreach (var configError in base.ConfigErrors())
             yield return configError;
 
         var fieldDef = parent?.GetType().GetField("geneClass");
         if (fieldDef is null || fieldDef.FieldType != typeof(Type))
             yield return "parent is not GeneDef or GeneTemplateDef";
-        else if (fieldDef.GetValue(parent!) is not Type type)
+        else if (fieldDef.GetValue(parent) is not Type type)
             yield return "geneClass is null";
         else if (!typeof(GeneWithComps).IsAssignableFrom(type))
             yield return "geneClass is not GeneExt or subclass thereof";

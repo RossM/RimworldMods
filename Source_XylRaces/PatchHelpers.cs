@@ -326,7 +326,6 @@ public static class PatchHelpers
         int i = 0;
         for (int j = 0; j < list.Count; j++)
         {
-            // ReSharper disable once AssignNullToNotNullAttribute
             if (IsSkinColor(list[j]))
             {
                 list[j] = colorGenes[i];

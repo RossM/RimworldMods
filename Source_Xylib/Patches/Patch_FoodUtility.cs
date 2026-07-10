@@ -12,10 +12,12 @@ internal static class Patch_FoodUtility
         ThingDef foodDef,
         ref float __result)
     {
+        DebugAssert.NotNull(ThingDefOf.MealSimple.ingestible);
+
         float nutritionFactor = eater.GetExtraNutritionFactor(foodSource, foodDef);
 
         // Adjust based on nutrition
-        __result += ThingDefOf.MealSimple!.ingestible!.optimalityOffsetHumanlikes *
+        __result += ThingDefOf.MealSimple.ingestible.optimalityOffsetHumanlikes *
                     ((nutritionFactor - 1.0f) / 0.8f);
     }
 

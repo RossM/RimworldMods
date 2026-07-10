@@ -33,7 +33,6 @@ public static class Patch_RaceProperties
         ILGenerator generator,
         MethodBase method)
     {
-        // ReSharper disable once AssignNullToNotNullAttribute
         return InstructionMatcher.MatchAndReplace([Rule_AddLactationExplanation], method, instructions, generator);
     }
 

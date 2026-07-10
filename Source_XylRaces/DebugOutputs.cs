@@ -291,7 +291,6 @@ public static class DebugOutputs
     private static string AbbreviateWord(string w, int maxLength)
     {
         if (specialAbbreviations.TryGetValue(w, out var result))
-            // ReSharper disable once AssignNullToNotNullAttribute
             return result;
         if (w.Length <= maxLength)
             return w;

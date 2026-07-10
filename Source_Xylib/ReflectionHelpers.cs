@@ -46,10 +46,10 @@ public static class ReflectionHelpers
     {
         TableDataGetter<Type>[] columns =
         [
-            new("class", type => type!.FullName),
-            new("BaseType", type => type!.BaseType?.FullName),
-            new("CompTick", type => HasOverridingMethod(type!, typeof(GeneComp), "CompTick")),
-            new("CompTickInterval", type => HasOverridingMethod(type!, typeof(GeneComp), "CompTickInterval")),
+            new("class", type => type.FullName),
+            new("BaseType", type => type.BaseType?.FullName),
+            new("CompTick", type => HasOverridingMethod(type, typeof(GeneComp), "CompTick")),
+            new("CompTickInterval", type => HasOverridingMethod(type, typeof(GeneComp), "CompTickInterval")),
         ];
 
         DebugTables.MakeTablesDialog(typeof(GeneComp).AllSubclassesNonAbstract(), columns);

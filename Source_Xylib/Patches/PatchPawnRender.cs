@@ -23,10 +23,15 @@ internal static class PatchPawnRender
         {
             bool hidden = false;
 
+            var request = requests[i];
+            DebugAssert.NotNull(request);
+
             for (var j = 0; j < renderNodeModifiers.Count; j++)
             {
-                RenderNodeModifier renderNodeModifier = renderNodeModifiers[j]!;
-                if (renderNodeModifier.Matches(requests[i].node))
+                RenderNodeModifier? renderNodeModifier = renderNodeModifiers[j];
+                DebugAssert.NotNull(renderNodeModifier);
+
+                if (renderNodeModifier.Matches(request.node))
                 {
                     hidden = true;
                     break;
@@ -50,7 +55,9 @@ internal static class PatchPawnRender
 
         for (var i = 0; i < renderNodeModifiers.Count; i++)
         {
-            RenderNodeModifier renderNodeModifier = renderNodeModifiers[i]!;
+            RenderNodeModifier? renderNodeModifier = renderNodeModifiers[i];
+            DebugAssert.NotNull(renderNodeModifier);
+
             if (renderNodeModifier.Matches(__instance))
                 return false;
         }
@@ -75,7 +82,9 @@ internal static class PatchPawnRender
 
         for (var i = 0; i < renderNodeModifiers.Count; i++)
         {
-            RenderNodeModifier renderNodeModifier = renderNodeModifiers[i]!;
+            RenderNodeModifier? renderNodeModifier = renderNodeModifiers[i];
+            DebugAssert.NotNull(renderNodeModifier);
+
             if (renderNodeModifier.Matches(__instance))
             {
                 offset += renderNodeModifier.offset;

@@ -62,6 +62,8 @@ public class HediffGiver_RandomExt : HediffGiver
     /// <returns></returns>
     public bool TryApply(Pawn pawn, Hediff? cause)
     {
+        DebugAssert.NotNull(Find.Storyteller);
+
         if (!allowOnLodgers && pawn.IsQuestLodger())
             return false;
         if (!allowOnQuestRewardPawns && pawn.IsWorldPawn() && pawn.IsQuestReward())
@@ -70,7 +72,7 @@ public class HediffGiver_RandomExt : HediffGiver
             return false;
         if (ModsConfig.IdeologyActive && !allowOnBeggars && pawn.kindDef == PawnKindDefOf.Beggar)
             return false;
-        if (pawn.ageTracker.CurLifeStage == LifeStageDefOf.HumanlikeBaby && Find.Storyteller!.difficulty.babiesAreHealthy)
+        if (pawn.ageTracker.CurLifeStage == LifeStageDefOf.HumanlikeBaby && Find.Storyteller.difficulty.babiesAreHealthy)
             return false;
         if (pawn.genes?.HediffGiversCanGive(hediff) is false)
             return false;
@@ -101,7 +103,7 @@ public class HediffGiver_RandomExt : HediffGiver
                     break;
 
                 Hediff newHediff = HediffMaker.MakeHediff(partRecord: parts.RandomElementByWeight(x => x.coverageAbs), def: hediff,
-                    pawn: pawn)!;
+                    pawn: pawn);
 
                 if (inheritSeverity && cause is not null)
                     newHediff.Severity = cause.Severity;
@@ -119,7 +121,7 @@ public class HediffGiver_RandomExt : HediffGiver
             if (!allowDuplicates && pawn.health.hediffSet.HasHediff(hediff))
                 return false;
 
-            Hediff newHediff = HediffMaker.MakeHediff(hediff, pawn)!;
+            Hediff newHediff = HediffMaker.MakeHediff(hediff, pawn);
 
             if (inheritSeverity && cause is not null)
                 newHediff.Severity = cause.Severity;

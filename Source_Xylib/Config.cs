@@ -16,7 +16,16 @@ public class FoodGroupDef : Def
 [UsedFromXml]
 public class Config : Def
 {
-    public static Config Instance => field ??= DefDatabase<Config>.GetNamed("XylibConfig")!;
+    public static Config Instance
+    {
+        get
+        {
+            field ??= DefDatabase<Config>.GetNamed("XylibConfig");
+            DebugAssert.NotNull(field);
+
+            return field;
+        }
+    }
 
     public required Dictionary<HediffDef, StatDef> resistanceStatByHediff;
 

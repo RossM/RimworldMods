@@ -69,7 +69,6 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
                               " is marked to only generate a letter in a singular format, but multiple victims were provided.");
                 }
 
-                // ReSharper disable once AssignNullToNotNullAttribute
                 Pawn pawn = list[0];
                 DebugAssert.NotNull(pawn);
                 Hediff? mostRecentHediff = pawn.health.hediffSet.GetMostRecentHediff(def.diseaseIncident);

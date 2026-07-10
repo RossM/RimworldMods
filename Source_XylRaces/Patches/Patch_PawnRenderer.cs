@@ -44,7 +44,6 @@ public static class Patch_PawnRenderer
         ILGenerator generator,
         MethodBase method)
     {
-        // ReSharper disable once AssignNullToNotNullAttribute
         return InstructionMatcher.MatchAndReplace([Rule_ModifyRenderFlags], method, instructions, generator);
     }
 }

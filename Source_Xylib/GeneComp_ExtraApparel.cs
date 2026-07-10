@@ -46,6 +46,8 @@ public class GeneComp_ExtraApparel : GeneComp, IEventListener
 
     public void GenerateExtraApparel()
     {
+        DebugAssert.NotNull(Pawn.apparel);
+
         foreach (var item in Props.items)
         {
             if (!ValidApparel(Pawn, item.item, item.ignoreRestrictions))
@@ -57,7 +59,7 @@ public class GeneComp_ExtraApparel : GeneComp, IEventListener
             {
                 PawnApparelGenerator.PostProcessApparel(apparel, Pawn);
                 PawnGenerator.PostProcessGeneratedGear(apparel, Pawn);
-                Pawn.apparel!.Wear(apparel, dropReplacedApparel: false);
+                Pawn.apparel.Wear(apparel, dropReplacedApparel: false);
             }
         }
     }

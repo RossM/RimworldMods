@@ -65,7 +65,6 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
             if (comp_severityPerDay is null)
                 return text;
 
-            // ReSharper disable once AssignNullToNotNullAttribute
             if (!text.NullOrEmpty())
                 text += "\n\n";
 

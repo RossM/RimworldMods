@@ -60,9 +60,9 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
                 float dps = totalCooldown > 0f ? totalMeleeDamage / totalCooldown : 0f;
                 float armorPenetration = totalArmorPenetration / totalWeight;
 
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee!, StatDefOf.MeleeWeapon_AverageDPS!,
+                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, StatDefOf.MeleeWeapon_AverageDPS,
                     dps, req).SetReportText(sbDps.ToString());
-                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee!, XStatDefOf.MeleeWeapon_AverageArmorPenetration,
+                yield return new StatDrawEntry(StatCategoryDefOf.Weapon_Melee, XStatDefOf.MeleeWeapon_AverageArmorPenetration,
                     armorPenetration, req).SetReportText(sbArmorPenetration.ToString());
             }
         }
@@ -75,7 +75,7 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
 
         foreach (var hediff in hediffs)
         {
-            var props = hediff.hediff!.CompProps<HediffCompProperties_VerbGiver>();
+            var props = hediff.hediff.CompProps<HediffCompProperties_VerbGiver>();
             if (props?.verbs != null)
                 verbs.AddRange(props.verbs);
             if (props?.tools != null)
@@ -119,6 +119,9 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
 
     private void UpdatePermanentHediffs()
     {
+        DebugAssert.NotNull(Pawn.def.race);
+        DebugAssert.NotNull(Pawn.def.race.body);
+
         foreach (var hediffGiver in Props.hediffs)
         {
             if (hediffGiver.partsToAffect is not { Count: > 0 })
@@ -126,10 +129,10 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
 
             List<BodyPartRecord> partsToAdd = [];
             List<BodyPartRecord> partsToRemove = [];
-            HediffDef hediffDef = hediffGiver.hediff!;
+            HediffDef hediffDef = hediffGiver.hediff;
             int partCount = 0;
 
-            foreach (BodyPartRecord part in Pawn.def.race!.body!.AllParts!)
+            foreach (BodyPartRecord part in Pawn.def.race.body.AllParts)
             {
                 if (!hediffGiver.partsToAffect.Contains(part.def))
                     continue;
@@ -143,8 +146,8 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
 
                     if (hediff.def == hediffDef)
                         alreadyHasHediff = true;
-                    else if (typeof(Hediff_AddedPart).IsAssignableFrom(hediff.def.hediffClass!) ||
-                             typeof(Hediff_MissingPart).IsAssignableFrom(hediff.def.hediffClass!))
+                    else if (typeof(Hediff_AddedPart).IsAssignableFrom(hediff.def.hediffClass) ||
+                             typeof(Hediff_MissingPart).IsAssignableFrom(hediff.def.hediffClass))
                         missingPart = true;
                 }
 

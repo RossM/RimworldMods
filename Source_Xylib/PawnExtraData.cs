@@ -97,7 +97,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
             data.Add(pawn.thingIDNumber, result);
         }
 
-        return result!;
+        return result;
     }
 
     private static void ExposeData(Pawn pawn)

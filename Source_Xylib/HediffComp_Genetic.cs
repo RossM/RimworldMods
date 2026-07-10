@@ -30,5 +30,13 @@ public class HediffComp_Genetic : HediffComp
 {
     public HediffCompProperties_Genetic Props => (HediffCompProperties_Genetic)props;
 
-    public override bool CompShouldRemove => !Pawn!.HasActiveGene(Props.gene);
+    public override bool CompShouldRemove
+    {
+        get
+        {
+            DebugAssert.NotNull(Pawn);
+
+            return !Pawn.HasActiveGene(Props.gene);
+        }
+    }
 }

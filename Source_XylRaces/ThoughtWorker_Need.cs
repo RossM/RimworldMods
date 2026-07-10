@@ -31,7 +31,6 @@ public class ThoughtWorker_Need : ThoughtWorker
             return static _ => 0;
 
         if (getterCache.TryGetValue(needType, out var func))
-            // ReSharper disable once AssignNullToNotNullAttribute
             return func;
 
         // Creates a method that does:

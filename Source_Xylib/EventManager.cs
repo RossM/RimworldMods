@@ -395,7 +395,11 @@ public class EventManager
                 $"[EventManager] Register eventDef={eventDef} {(target == null ? "global" : $"target=[{target}]")} listener={listener} name={name} priority={priority}");
         }
 
-        var records = registrations.GetOrCreateValue(listener)!;
+        var records = registrations.GetOrCreateValue(listener);
+        
+        // Resharper seems to not have correct annotations for ConditionalWeakTable
+        DebugAssert.NotNull(records);
+
         records.Add(new(eventDef, target));
 
         NotificationInfo notificationInfo = Notifications[eventDef.index] ??= new();
@@ -417,8 +421,12 @@ public class EventManager
         }
         else
         {
-            List<CallbackInfo> localCallbacks = notificationInfo.localCallbacks.GetOrCreateValue(target)!;
-            if (localCallbacks.Any(c => c.listener == listener && c.name == name))
+            List<CallbackInfo> localCallbacks = notificationInfo.localCallbacks.GetOrCreateValue(target);
+            
+            // Resharper seems to not have correct annotations for ConditionalWeakTable
+            DebugAssert.NotNull(localCallbacks);
+            
+			if (localCallbacks.Any(c => c.listener == listener && c.name == name))
             {
                 Log.Warning(
                     $"[EventManager] Adding a duplicate callback: eventDef={eventDef} target=[{target}] listener={listener} name={name}");
@@ -667,7 +675,10 @@ public class EventManager
         if (!registrations.TryGetValue(listener, out List<RegistrationInfo> records))
             return;
 
-        foreach (var record in records!)
+        // Resharper seems to not have correct annotations for ConditionalWeakTable
+        DebugAssert.NotNull(records);
+
+        foreach (var record in records)
         {
             if (record.target == null)
                 Notifications[record.eventDef.index]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
@@ -677,7 +688,12 @@ public class EventManager
                     continue;
 
                 if (Notifications[record.eventDef.index]?.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbacks) is true)
-                    callbacks!.RemoveAll(callback => callback.listener == listener);
+                {
+                    // Resharper seems to not have correct annotations for ConditionalWeakTable
+					DebugAssert.NotNull(callbacks);
+
+                    callbacks.RemoveAll(callback => callback.listener == listener);
+                }
             }
         }
 
@@ -729,7 +745,10 @@ public class EventManager
             if (target == null || !notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
                 return;
 
-            foreach (CallbackInfo callbackInfo in localCallbacks!)
+            // Resharper seems to not have correct annotations for ConditionalWeakTable
+            DebugAssert.NotNull(localCallbacks);
+            
+            foreach (CallbackInfo callbackInfo in localCallbacks)
             {
                 DoNotify(eventDef, callbackInfo, target, data);
             }
@@ -740,7 +759,13 @@ public class EventManager
         tempCallbacks.Clear();
         tempCallbacks.AddRange(notificationInfo.globalCallbacks);
         if (target != null && notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
-            tempCallbacks.AddRange(localCallbacks!);
+        {
+            // Resharper seems to not have correct annotations for ConditionalWeakTable
+            DebugAssert.NotNull(localCallbacks);
+            
+            tempCallbacks.AddRange(localCallbacks);
+        }
+
         tempCallbacks.SortByDescending(callback => callback.priority);
 
         foreach (CallbackInfo callbackInfo in tempCallbacks)

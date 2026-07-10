@@ -47,7 +47,7 @@ public static class FoodHelpers
             }
 
             var compIngredients = foodSource.TryGetComp<CompIngredients>();
-            if (compIngredients is not { ingredients: not null })
+            if (compIngredients is null)
             {
                 return eater.GetCookedNutritionFactor(foodDef.FoodGroups);
             }
