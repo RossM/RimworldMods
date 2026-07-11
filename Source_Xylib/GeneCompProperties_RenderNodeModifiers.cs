@@ -82,6 +82,9 @@ public class GeneCompProperties_RenderNodeModifiers : GeneCompProperties
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+
         if (renderNodeModifiers is null)
         {
             yield return $"{nameof(renderNodeModifiers)} is null";

@@ -930,5 +930,5 @@ public static class Extensions
     private delegate object MemberwiseCloneDelegate(object obj);
 
     private static MemberwiseCloneDelegate? memberwiseCloneFn;
-    public static readonly Dictionary<int, DefModExtension_GeneWithComps> defExtCache = new();
+    public static readonly Dictionary<int, DefModExtension_GeneWithComps?> defExtCache = new();
 }

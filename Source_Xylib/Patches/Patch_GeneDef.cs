@@ -1,3 +1,6 @@
+using System.Reflection;
+using System.Reflection.Emit;
+
 namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(GeneDef))]
@@ -25,5 +28,26 @@ internal static class Patch_GeneDef
             return;
 
         __result = __result.Concat(defExt.SpecialDisplayStats(req));
+    }
+
+    // GeneDef.ConfigErrors doesn't call Def.ConfigErrors, resulting in DefModExtension.ConfigErrors not getting called
+    // for gene mod extensions. This breaks GeneWithComps config error reporting.
+    [Feature("BUGFIX")]
+    [HarmonyTranspiler]
+    [HarmonyPatch(nameof(GeneDef.ConfigErrors))]
+    public static IEnumerable<CodeInstruction> ConfigErrors_Transpiler(MethodBase methodBase, IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+    {
+        var local = generator.DeclareLocal(typeof(IEnumerable<string>));
+
+        foreach (var inst in instructions)
+            if (inst.opcode.Value != OpCodes.Ret.Value)
+                yield return inst;
+
+        yield return CodeInstruction.StoreLocal(local.LocalIndex);
+        yield return CodeInstruction.LoadArgument(0);
+        yield return new(OpCodes.Call, AccessTools.Method(typeof(Def), nameof(Def.ConfigErrors)));
+        yield return CodeInstruction.LoadLocal(local.LocalIndex);
+        yield return new(OpCodes.Call, AccessTools.Method(typeof(Enumerable), nameof(Enumerable.Concat)).MakeGenericMethod(typeof(string)));
+        yield return new(OpCodes.Ret);
     }
 }

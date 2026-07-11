@@ -19,6 +19,9 @@ public class GeneCompProperties_IngestionThoughtOverrides : GeneCompProperties
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+
         if (overrides is null)
         {
             yield return $"{nameof(overrides)} is null";

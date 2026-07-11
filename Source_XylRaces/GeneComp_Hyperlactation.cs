@@ -18,6 +18,9 @@ public class GeneCompProperties_Hyperlactation : GeneCompProperties
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+
         if (item is null)
             yield return $"{nameof(item)} is null";
         if (hediff is null)

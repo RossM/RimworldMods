@@ -11,6 +11,9 @@ public class DefModExtension_Thing_WetnessSource : DefModExtension
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+
         if (job is null)
             yield return $"{nameof(job)} is null";
     }

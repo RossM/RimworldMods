@@ -20,6 +20,9 @@ public class DefModExtension_Hediff_SubstituteCapacity : DefModExtension
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var configError in base.ConfigErrors())
+            yield return configError;
+
         if (originalCapacity is null)
             yield return $"{nameof(originalCapacity)} is null";
         if (substituteCapacity is null)

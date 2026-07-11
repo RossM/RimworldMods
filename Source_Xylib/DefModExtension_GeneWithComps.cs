@@ -8,7 +8,7 @@ public abstract class GeneCompProperties
 
     public virtual IEnumerable<string> ConfigErrors()
     {
-        return [];
+        return PatchHelpers.RequiredMemberErrors(this) ?? [];
     }
 
     public virtual void ResolveReferences(Def parentDef)
@@ -36,10 +36,18 @@ public class DefModExtension_GeneWithComps : DefModExtension
 {
     public IEnumerable<string> CustomEffectDescriptions => field ??= GetCustomEffectDescriptions().ToList();
 
-    public Texture2D? ExtraIcon =>
-        field ??= extraIconPath is { Length: > 0 }
-            ? ContentFinder<Texture2D>.Get(extraIconPath) ?? (parent as GeneDef)?.Icon
-            : (parent as GeneDef)?.Icon;
+    public Texture2D ExtraIcon
+    {
+        get
+        {
+            var parentGene = parent as GeneDef;
+            DebugAssert.NotNull(parentGene);
+
+            return field ??= extraIconPath is { Length: > 0 }
+                ? ContentFinder<Texture2D>.Get(extraIconPath) ?? parentGene.Icon
+                : parentGene.Icon;
+        }
+    }
 
     #region Properties of the gene itself
 
@@ -164,7 +172,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
     {
         base.ResolveReferences(parentDef);
 
-        parent = parentDef;
+        parent ??= parentDef;
 
         Extensions.defExtCache.Clear();
 

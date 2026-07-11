@@ -14,6 +14,9 @@ public class GeneCompProperties_UnlockRecipes : GeneCompProperties
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+
         if (recipes is null)
             yield return $"{nameof(recipes)} is null";
     }

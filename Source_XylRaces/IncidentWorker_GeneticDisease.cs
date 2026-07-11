@@ -17,6 +17,9 @@ public class DefModExtension_Incident_GeneticDisease : DefModExtension
 
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var configError in base.ConfigErrors())
+            yield return configError;
+
         if (requiredGenesAny is not { Count: > 0 })
             yield return $"{nameof(requiredGenesAny)} must have at least one entry";
         if (parent is null)

@@ -20,6 +20,9 @@ public class HediffCompProperties_Genetic : HediffCompPropertiesExt
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
     {
+        foreach (var error in base.ConfigErrors(parentDef))
+            yield return error;
+
         if (gene is null)
             yield return $"{nameof(gene)} is null";
     }

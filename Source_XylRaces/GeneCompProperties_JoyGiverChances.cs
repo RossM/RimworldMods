@@ -27,6 +27,9 @@ public class GeneCompProperties_JoyGiverChances : GeneCompProperties
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+
         if (factors is null)
         {
             yield return $"{nameof(factors)} is null";

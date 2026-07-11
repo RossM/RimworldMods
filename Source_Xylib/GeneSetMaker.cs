@@ -85,7 +85,7 @@ public abstract class GeneSetMaker
 
     public virtual IEnumerable<string> ConfigErrors()
     {
-        return [];
+        return PatchHelpers.RequiredMemberErrors(this) ?? [];
     }
 
     public virtual void ResolveReferences()
@@ -163,6 +163,9 @@ public class GeneSetMaker_Subtree : GeneSetMaker
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+
         if (def is null)
             yield return $"{nameof(def)} is null";
     }
@@ -250,6 +253,9 @@ public class GeneSetMaker_List : GeneSetMaker
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+
         if (genes is null)
             yield return $"{nameof(genes)} is null";
     }

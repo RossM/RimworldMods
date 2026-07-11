@@ -23,6 +23,9 @@ public class GeneCompProperties_ExtraApparel : GeneCompProperties
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+
         if (items is null)
         {
             yield return $"{nameof(items)} is null";

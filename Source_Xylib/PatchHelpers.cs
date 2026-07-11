@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿using System.Collections.Concurrent;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Xylib;
 
@@ -9,6 +12,9 @@ internal static class PatchHelpers
     private static Dictionary<HediffDef, StatDef> ResistanceStatByHediff => field ??= Config.Instance.resistanceStatByHediff;
 
     private static readonly MethodInfo addDefsMethodInfo = typeof(PatchHelpers).GetMethod(nameof(AddDefs))!;
+
+    private static readonly ConcurrentDictionary<Type, Action<object, List<string>>?> requiredMemberCheckerCache = new();
+    private static readonly MethodInfo stringListAddMethod = typeof(List<string>).GetMethod("Add", [typeof(string)]);
 
     public static void RunDefGenerators(bool hotReload)
     {
@@ -169,5 +175,70 @@ internal static class PatchHelpers
         if (ignoreRestrictions)
             return genes;
         return genes.Where(g => GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene)).ToList();
+    }
+
+    public static bool IsRequiredField(MemberInfo member)
+    {
+        // RimWorld's version of .NET doesn't include RequiredMemberAttribute, so we look for any attribute class with the right name
+        Attribute[] customAttributes = Attribute.GetCustomAttributes(member, inherit: true);
+        return customAttributes.Any(a => a.GetType().FullName == "System.Runtime.CompilerServices.RequiredMemberAttribute");
+    }
+
+    private static Action<object, List<string>>? GetRequiredMemberCheckerFunc(Type defType)
+    {
+        if (requiredMemberCheckerCache.TryGetValue(defType, out var checkerFunc))
+            return checkerFunc;
+
+        List<FieldInfo> requiredFields = [];
+        for (var type = defType; type is not null; type = type.BaseType)
+        {
+            requiredFields.AddRange(type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Where(IsRequiredField));
+        }
+
+        if (requiredFields.Count == 0)
+        {
+            requiredMemberCheckerCache[defType] = checkerFunc = null;
+            return checkerFunc;
+        }
+
+        Debug.Log($"{defType.FullName} requires: {string.Join(", ", requiredFields.Select(f => f.Name))}");
+
+        var defParamExpr = Expression.Parameter(typeof(object), "def");
+        var errorsParamExpr = Expression.Parameter(typeof(List<string>), "errors");
+        var defExpr = Expression.Convert(defParamExpr, defType);
+
+        List<Expression> checkExpressions = [];
+        foreach (var field in requiredFields)
+        {
+            // Creates an expression representing:
+            //   if (def.field == null) errors.Add("field is required");
+            checkExpressions.Add(
+                Expression.IfThen(
+                    Expression.Equal(
+                        Expression.Field(defExpr, field),
+                        Expression.Constant(null)),
+                    Expression.Call(
+                        errorsParamExpr,
+                        stringListAddMethod,
+                        Expression.Constant($"{field.Name} is required"))));
+        }
+
+        var blockExpr = Expression.Block(checkExpressions);
+        var lambdaExpr = Expression.Lambda<Action<object, List<string>>>(blockExpr, defParamExpr, errorsParamExpr);
+
+        requiredMemberCheckerCache[defType] = checkerFunc = lambdaExpr.Compile();
+        return checkerFunc;
+    }
+
+    public static List<string>? RequiredMemberErrors(object def)
+    {
+        var checkerFunc = GetRequiredMemberCheckerFunc(def.GetType());
+        if (checkerFunc == null)
+            return null;
+
+        List<string> errors = [];
+        checkerFunc(def, errors);
+
+        return errors;
     }
 }

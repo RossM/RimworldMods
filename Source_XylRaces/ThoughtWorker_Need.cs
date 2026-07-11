@@ -11,6 +11,9 @@ public class DefModExtension_Thought_Need : DefModExtension
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var configError in base.ConfigErrors())
+            yield return configError;
+
         if (need is null)
             yield return $"{nameof(need)} is null";
     }

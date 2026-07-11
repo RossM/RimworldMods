@@ -19,6 +19,9 @@ public class DefModExtension_Hediff_DietDependency : DefModExtension
 
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var configError in base.ConfigErrors())
+            yield return configError;
+
         if (parent is null)
         {
             yield return $"{nameof(DefModExtension_Hediff_DietDependency)} can only be applied to a {nameof(HediffDef)}";

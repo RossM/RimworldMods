@@ -32,6 +32,9 @@ public class Config : Def
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+
         if (resistanceStatByHediff is null)
             yield return $"{nameof(resistanceStatByHediff)} is null";
     }
