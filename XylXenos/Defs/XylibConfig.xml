@@ -97,8 +97,4 @@
     <fleshType>Insectoid</fleshType>
   </Xylib.FoodGroupDef>
 
-  <Xylib.Config>
-    <defName>DummyConfig</defName>
-  </Xylib.Config>
-
 </Defs>
