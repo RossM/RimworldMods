@@ -35,8 +35,6 @@ public class GeneCompProperties_StartingItems : GeneCompProperties
 
         foreach (var item in items)
         {
-            if (item.item is null)
-                yield return $"null {nameof(item.item)} in {nameof(items)}";
             if (item.count.IsInvalid)
                 yield return $"invalid {nameof(item.count)} in {nameof(items)}";
         }
