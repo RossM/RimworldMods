@@ -38,12 +38,12 @@ internal static class Patch_GeneDef
     public static IEnumerable<CodeInstruction> ConfigErrors_Transpiler(MethodBase methodBase, IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
         var local = generator.DeclareLocal(typeof(IEnumerable<string>));
+        var label = generator.DefineLabel();
 
         foreach (var inst in instructions)
-            if (inst.opcode.Value != OpCodes.Ret.Value)
-                yield return inst;
+            yield return inst.opcode.Value == OpCodes.Ret.Value ? new(OpCodes.Br_S, label) : inst;
 
-        yield return CodeInstruction.StoreLocal(local.LocalIndex);
+        yield return CodeInstruction.StoreLocal(local.LocalIndex).WithLabels(label);
         yield return CodeInstruction.LoadArgument(0);
         yield return new(OpCodes.Call, AccessTools.Method(typeof(Def), nameof(Def.ConfigErrors)));
         yield return CodeInstruction.LoadLocal(local.LocalIndex);
