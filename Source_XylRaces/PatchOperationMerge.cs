@@ -131,7 +131,19 @@ public class PatchOperationMerge : PatchOperationPathed
         }
     }
 
-    private bool CanMerge(XmlNode first, XmlNode second) =>
-        first.NodeType == XmlNodeType.Element && (first.Name != "li" || first.ParentNode?.Name == "modExtensions") && first.Name == second.Name &&
-        first.Attributes?["Class"]?.Value == second.Attributes?["Class"]?.Value;
+    private bool CanMerge(XmlNode first, XmlNode second)
+    {
+        if (first.NodeType != XmlNodeType.Element || second.NodeType != XmlNodeType.Element)
+            return false;
+        if (first.Name != second.Name)
+            return false;
+        if (first.Attributes?["Class"]?.Value != second.Attributes?["Class"]?.Value)
+            return false;
+        return second.Attributes?["Merge"]?.Value?.ToLowerInvariant() switch
+        {
+            "true" => true,
+            "false" => false,
+            _ => first.Name != "li" || first.ParentNode?.Name == "modExtensions" || first.ParentNode?.Name == "comps",
+        };
+    }
 }
