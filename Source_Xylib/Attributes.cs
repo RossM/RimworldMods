@@ -109,3 +109,10 @@ public class ScribeLabelAttribute(string label) : Attribute
     /// </summary>
     public readonly string label = label;
 }
+
+/// <summary>
+///     Marks a field as being required to be set in XML when the class is parsed as part of
+///     loading game data.
+/// </summary>
+[AttributeUsage(AttributeTargets.Field)]
+public class RequiredAttribute : Attribute;

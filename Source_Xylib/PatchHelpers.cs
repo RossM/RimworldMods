@@ -176,13 +176,6 @@ internal static class PatchHelpers
         return genes.Where(g => GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene)).ToList();
     }
 
-    public static bool IsRequiredField(MemberInfo member)
-    {
-        // RimWorld's version of .NET doesn't include RequiredMemberAttribute, so we look for any attribute class with the right name
-        Attribute[] customAttributes = Attribute.GetCustomAttributes(member, inherit: true);
-        return customAttributes.Any(a => a.GetType().FullName == "System.Runtime.CompilerServices.RequiredMemberAttribute");
-    }
-
     private static Action<object, List<string>>? GetRequiredMemberCheckerFunc(Type defType)
     {
         if (requiredMemberCheckerCache.TryGetValue(defType, out var checkerFunc))
@@ -191,7 +184,8 @@ internal static class PatchHelpers
         List<FieldInfo> requiredFields = [];
         for (var type = defType; type is not null; type = type.BaseType)
         {
-            requiredFields.AddRange(type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Where(IsRequiredField));
+            requiredFields.AddRange(type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(IsRequiredField));
         }
 
         if (requiredFields.Count == 0)
@@ -227,6 +221,17 @@ internal static class PatchHelpers
 
         requiredMemberCheckerCache[defType] = checkerFunc = lambdaExpr.Compile();
         return checkerFunc;
+
+        static bool IsRequiredField(MemberInfo member)
+        {
+            Attribute[] customAttributes = Attribute.GetCustomAttributes(member, inherit: true);
+            return customAttributes.Any(a =>
+                a.GetType() == typeof(RequiredAttribute) ||
+                // This is the attribute automatically added by the compiler on a "required" field.
+                // RimWorld's version of .NET doesn't include it, so we look for any attribute class
+                // with the right name so that polyfills will work.
+                a.GetType().FullName == "System.Runtime.CompilerServices.RequiredMemberAttribute");
+        }
     }
 
     public static List<string>? RequiredMemberErrors(object def)
