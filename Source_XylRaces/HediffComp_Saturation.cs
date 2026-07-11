@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 [UsedFromXml]
 public class HediffCompProperties_Saturation : HediffCompPropertiesExt
@@ -43,13 +41,6 @@ public class HediffCompProperties_Saturation : HediffCompPropertiesExt
                 "PerDay".Translate(severityLossPerDay.ToStringPercent()),
                 "XylSaturationLossDesc".Translate(), 0);
         }
-    }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
-    {
-        if (sourceHediff is null)
-            yield return $"{nameof(sourceHediff)} is null";
     }
 }
 

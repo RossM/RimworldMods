@@ -86,10 +86,7 @@ public class GeneCompProperties_RenderNodeModifiers : GeneCompProperties
             yield return error;
 
         if (renderNodeModifiers is null)
-        {
-            yield return $"{nameof(renderNodeModifiers)} is null";
             yield break;
-        }
 
         foreach (var modifier in renderNodeModifiers)
         {

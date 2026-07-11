@@ -12,16 +12,6 @@ public class GeneCompProperties_BonusGenes : GeneCompProperties
     {
         compClass = typeof(GeneComp_BonusGenes);
     }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var error in base.ConfigErrors())
-            yield return error;
-
-        if (maker is null)
-            yield return "maker is null";
-    }
 }
 
 [PublicAPI]

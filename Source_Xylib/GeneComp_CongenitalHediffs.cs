@@ -10,16 +10,6 @@ public class GeneCompProperties_CongenitalHediffs : GeneCompProperties
     {
         compClass = typeof(GeneComp_CongenitalHediffs);
     }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var error in base.ConfigErrors())
-            yield return error;
-
-        if (hediffs is null)
-            yield return "hediffs is null";
-    }
 }
 
 [PublicAPI]

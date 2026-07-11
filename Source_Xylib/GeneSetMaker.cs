@@ -124,10 +124,7 @@ public class GeneSetMaker_Option : GeneSetMaker
             yield return error;
 
         if (options is null)
-        {
-            yield return $"{nameof(options)} is null";
             yield break;
-        }
 
         foreach (var option in options)
         {
@@ -158,16 +155,6 @@ public class GeneSetMaker_Subtree : GeneSetMaker
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
         def.root.AddGenes(geneSet, geneType, pawn);
-    }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var error in base.ConfigErrors())
-            yield return error;
-
-        if (def is null)
-            yield return $"{nameof(def)} is null";
     }
 }
 
@@ -248,15 +235,5 @@ public class GeneSetMaker_List : GeneSetMaker
                     return;
             }
         }
-    }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var error in base.ConfigErrors())
-            yield return error;
-
-        if (genes is null)
-            yield return $"{nameof(genes)} is null";
     }
 }

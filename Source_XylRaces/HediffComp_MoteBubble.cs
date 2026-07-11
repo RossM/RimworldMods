@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 [UsedFromXml]
 public class HediffCompProperties_MoteBubble : HediffCompProperties
@@ -10,13 +8,6 @@ public class HediffCompProperties_MoteBubble : HediffCompProperties
     public HediffCompProperties_MoteBubble()
     {
         compClass = typeof(HediffComp_MoteBubble);
-    }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
-    {
-        if (iconPath is null)
-            yield return $"{nameof(iconPath)} is null";
     }
 }
 

@@ -27,10 +27,7 @@ public class GeneCompProperties_ExtraApparel : GeneCompProperties
             yield return error;
 
         if (items is null)
-        {
-            yield return $"{nameof(items)} is null";
             yield break;
-        }
 
         foreach (var item in items)
         {

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 public class GeneCompProperties_Hyperlactation : GeneCompProperties
 {
@@ -13,18 +11,6 @@ public class GeneCompProperties_Hyperlactation : GeneCompProperties
     public GeneCompProperties_Hyperlactation()
     {
         compClass = typeof(GeneComp_Hyperlactation);
-    }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var error in base.ConfigErrors())
-            yield return error;
-
-        if (item is null)
-            yield return $"{nameof(item)} is null";
-        if (hediff is null)
-            yield return $"{nameof(hediff)} is null";
     }
 }
 

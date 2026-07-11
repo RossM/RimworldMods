@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 public class GeneCompProperties_SeeingRed : GeneCompProperties
 {
@@ -16,16 +14,6 @@ public class GeneCompProperties_SeeingRed : GeneCompProperties
     {
         yield return new StatDrawEntry(StatCategoryDefOf.PawnCombat, "XylRageChanceLabel".TranslateSimple(),
             chance.ToStringPercent(), "XylRageChanceDesc".TranslateSimple(), 1);
-    }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var error in base.ConfigErrors())
-            yield return error;
-
-        if (hediffDef is null)
-            yield return $"{nameof(hediffDef)} is null";
     }
 }
 

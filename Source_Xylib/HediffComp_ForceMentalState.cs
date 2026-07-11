@@ -11,16 +11,6 @@ public class HediffCompProperties_ForceMentalState : HediffCompProperties
     {
         compClass = typeof(HediffComp_ForceMentalState);
     }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
-    {
-        foreach (var error in base.ConfigErrors(parentDef))
-            yield return error;
-
-        if (mentalState is null)
-            yield return $"{nameof(mentalState)} is null";
-    }
 }
 
 [PublicAPI]

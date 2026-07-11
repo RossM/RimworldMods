@@ -18,10 +18,7 @@ public class GeneSetMakerDef : Def
             yield return error;
 
         if (root == null)
-        {
-            yield return $"{nameof(root)} is null";
             yield break;
-        }
 
         foreach (var error in root.ConfigErrors())
             yield return error;

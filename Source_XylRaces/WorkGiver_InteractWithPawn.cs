@@ -1,21 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 [UsedFromXml]
 public class DefModExtension_WorkGiver_InteractWithPawn : DefModExtension
 {
     public required JobDef job;
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var configError in base.ConfigErrors())
-            yield return configError;
-
-        if (job is null)
-            yield return $"{nameof(job)} is null";
-    }
 }
 
 [UsedFromXml]

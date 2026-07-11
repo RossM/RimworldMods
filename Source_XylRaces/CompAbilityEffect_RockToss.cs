@@ -21,9 +21,7 @@ public class CompProperties_AbilityRockToss : CompProperties_EffectWithDest
         foreach (var error in base.ConfigErrors(parentDef))
             yield return error;
 
-        if (projectileDef is null)
-            yield return $"{nameof(projectileDef)} is null";
-        else if (projectileDef.projectile is null)
+        if (projectileDef?.projectile is null)
             yield return $"null {nameof(projectileDef.projectile)} in {nameof(projectileDef)}";
     }
 }

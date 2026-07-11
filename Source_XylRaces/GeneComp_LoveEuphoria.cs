@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 public class GeneCompProperties_LoveEuphoria : GeneCompProperties
 {
@@ -11,16 +9,6 @@ public class GeneCompProperties_LoveEuphoria : GeneCompProperties
     public GeneCompProperties_LoveEuphoria()
     {
         compClass = typeof(GeneComp_LoveEuphoria);
-    }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var error in base.ConfigErrors())
-            yield return error;
-
-        if (need is null)
-            yield return $"{nameof(need)} is null";
     }
 }
 

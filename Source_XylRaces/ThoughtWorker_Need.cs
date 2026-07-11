@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace XylXenos;
 
@@ -7,16 +6,6 @@ namespace XylXenos;
 public class DefModExtension_Thought_Need : DefModExtension
 {
     public required NeedDef need;
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var configError in base.ConfigErrors())
-            yield return configError;
-
-        if (need is null)
-            yield return $"{nameof(need)} is null";
-    }
 }
 
 [UsedFromXml]

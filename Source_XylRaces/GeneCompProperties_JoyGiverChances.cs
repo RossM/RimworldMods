@@ -31,10 +31,7 @@ public class GeneCompProperties_JoyGiverChances : GeneCompProperties
             yield return error;
 
         if (factors is null)
-        {
-            yield return $"{nameof(factors)} is null";
             yield break;
-        }
 
         foreach (var factor in factors)
         {

@@ -12,16 +12,6 @@ public class HediffCompProperties_SetNeed : HediffCompProperties
     {
         compClass = typeof(HediffComp_SetNeed);
     }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
-    {
-        foreach (var error in base.ConfigErrors(parentDef))
-            yield return error;
-
-        if (need is null)
-            yield return $"{nameof(need)} is null";
-    }
 }
 
 [PublicAPI]

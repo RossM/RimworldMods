@@ -10,14 +10,4 @@ public class GeneCompProperties_UnlockRecipes : GeneCompProperties
         yield return
             $"{"XylNewRecipes".Translate()}: {recipes.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
     }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var error in base.ConfigErrors())
-            yield return error;
-
-        if (recipes is null)
-            yield return $"{nameof(recipes)} is null";
-    }
 }

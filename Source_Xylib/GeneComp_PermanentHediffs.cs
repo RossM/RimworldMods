@@ -82,16 +82,6 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
                 tools.AddRange(props.tools);
         }
     }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var error in base.ConfigErrors())
-            yield return error;
-
-        if (hediffs is null)
-            yield return $"{nameof(hediffs)} is null";
-    }
 }
 
 [PublicAPI]

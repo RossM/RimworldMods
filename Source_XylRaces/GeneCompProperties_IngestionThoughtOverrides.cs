@@ -23,10 +23,7 @@ public class GeneCompProperties_IngestionThoughtOverrides : GeneCompProperties
             yield return error;
 
         if (overrides is null)
-        {
-            yield return $"{nameof(overrides)} is null";
             yield break;
-        }
 
         foreach (var o in overrides)
         {

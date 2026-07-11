@@ -10,14 +10,4 @@ public class GeneCompProperties_UnlockBuildables : GeneCompProperties
         yield return
             $"{"XylNewBuildings".Translate()}: {buildables.Select(def => def.LabelCap.ToString()).OrderBy(s => s).ToCommaList()}";
     }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
-    {
-        foreach (var error in base.ConfigErrors())
-            yield return error;
-
-        if (buildables is null)
-            yield return $"{nameof(buildables)} is null";
-    }
 }

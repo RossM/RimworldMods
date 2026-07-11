@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 [UsedFromXml]
 public class HediffCompProperties_GiveHediffOnRemoval : HediffCompProperties
@@ -12,13 +10,6 @@ public class HediffCompProperties_GiveHediffOnRemoval : HediffCompProperties
     public HediffCompProperties_GiveHediffOnRemoval()
     {
         compClass = typeof(HediffComp_GiveHediffOnRemoval);
-    }
-
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors(HediffDef parentDef)
-    {
-        if (hediff is null)
-            yield return $"{nameof(hediff)} is null";
     }
 }
 
