@@ -302,4 +302,12 @@ public static class DebugOutputs
             return w;
         return w[..maxLength];
     }
+
+    [DebugOutput("Static Analysis")]
+    public static void AnalyzeRimworldAssembly()
+    {
+        var assembly = typeof(Def).Assembly;
+        Analyzer.CheckCodingStyle_ConfigErrors(assembly);
+        Analyzer.CheckCodingStyle_ExposeData(assembly);
+    }
 }
