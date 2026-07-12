@@ -25,9 +25,9 @@ public class GeneCompProperties_JoyGiverChances : GeneCompProperties
     public required List<JoyGiverFactor> factors;
 
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
-    public override IEnumerable<string> ConfigErrors()
+    public override IEnumerable<string> ConfigErrors(GeneDef? gene)
     {
-        foreach (var error in base.ConfigErrors())
+        foreach (var error in base.ConfigErrors(null))
             yield return error;
 
         if (factors is null)

@@ -6,7 +6,7 @@ public abstract class GeneCompProperties
 {
     public Type? compClass;
 
-    public virtual IEnumerable<string> ConfigErrors()
+    public virtual IEnumerable<string> ConfigErrors(GeneDef? gene)
     {
         return PatchHelpers.RequiredMemberErrors(this) ?? [];
     }
@@ -163,8 +163,8 @@ public class DefModExtension_GeneWithComps : DefModExtension
                 continue;
             }
 
-            foreach (var configError in comp.ConfigErrors())
-                yield return configError;
+            foreach (var configError in comp.ConfigErrors(parent as GeneDef))
+                yield return $"{comp}: {configError}";
         }
     }
 
