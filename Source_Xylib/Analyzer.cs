@@ -135,9 +135,46 @@ public static class Analyzer
         }
     }
 
+    public static void CheckCodingStyle_ConfigErrors(Assembly assembly)
+    {
+        if (assembly is null)
+            throw new ArgumentNullException(nameof(assembly));
+
+        foreach (Type type in assembly.GetTypes())
+        {
+            const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+
+            MethodInfo? method = type.GetMethod("ConfigErrors", bindingFlags);
+            if (method == null)
+                continue;
+
+            MethodInfo? baseMethod = null;
+            for (Type? parent = type.BaseType; parent != null; parent = parent.BaseType)
+            {
+                baseMethod = parent.GetMethod("ConfigErrors", bindingFlags);
+                if (baseMethod != method)
+                    break;
+            }
+
+            if (baseMethod == null || baseMethod == method)
+                continue;
+
+            // Check if the method is an iterator. If so, look inside the iterator
+            Type? stateMachineType = method.GetCustomAttribute<IteratorStateMachineAttribute>()?.StateMachineType;
+            if (stateMachineType is not null)
+                method = stateMachineType.GetMethod("MoveNext", bindingFlags);
+
+            var instructions = PatchProcessor.GetOriginalInstructions(method);
+
+            if (!instructions.Any(inst => ReferenceEquals(inst.operand, baseMethod)))
+                Log.Warning($"[{name}] {type.FullName}::{method.Name} is missing a call to {baseMethod.DeclaringType.FullName}::{method.Name}");
+        }
+    }
+
     public static void CheckCodingStyle(Assembly assembly)
     {
         CheckCodingStyle_Patches(assembly);
         CheckCodingStyle_Defs(assembly);
+        CheckCodingStyle_ConfigErrors(assembly);
     }
 }
