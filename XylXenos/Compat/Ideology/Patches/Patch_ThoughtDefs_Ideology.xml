@@ -2,7 +2,7 @@
 
 <Patch>
 
-  <Operation Class="XylXenos.PatchOperationMerge">
+  <Operation Class="Xylib.PatchOperationMerge">
     <xpath>Defs/ThoughtDef[starts-with(defName,"AteNonMeat_")]</xpath>
     <value>
       <nullifyingGenes>
@@ -11,7 +11,7 @@
     </value>
   </Operation>
 
-  <Operation Class="XylXenos.PatchOperationMerge">
+  <Operation Class="Xylib.PatchOperationMerge">
     <xpath>Defs/ThoughtDef[starts-with(defName,"AteMeat_") and stages/li/baseMoodEffect &lt; 0]</xpath>
     <value>
       <nullifyingGenes>
@@ -21,7 +21,7 @@
     </value>
   </Operation>
 
-  <Operation Class="XylXenos.PatchOperationMerge">
+  <Operation Class="Xylib.PatchOperationMerge">
     <xpath>Defs/ThoughtDef[starts-with(defName,"AteHumanMeat_") and stages/li/baseMoodEffect &lt; 0]</xpath>
     <value>
       <nullifyingGenes>

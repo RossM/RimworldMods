@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace XylXenos;
+namespace Xylib;
 
 // This works like PatchOperationAdd, except if the node to be added already exists, the new node's children are added
 // to the existing mode. For example, if the existing node is
@@ -25,6 +25,8 @@ namespace XylXenos;
 //     <li>Bar</li>
 //   </list>
 // </def>
+//
+// This works recursively.
 [UsedFromXml]
 public class PatchOperationMerge : PatchOperationPathed
 {

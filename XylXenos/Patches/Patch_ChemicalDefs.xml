@@ -2,7 +2,7 @@
 
 <Patch>
 
-  <Operation Class="XylXenos.PatchOperationMerge">
+  <Operation Class="Xylib.PatchOperationMerge">
     <xpath>
       Defs/ChemicalDef[not(
         modExtensions/li[@Class="Xylib.DefModExtension_Chemical"] or
