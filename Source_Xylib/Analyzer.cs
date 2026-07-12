@@ -218,7 +218,8 @@ public static class Analyzer
             foreach (var field in fieldsToSave.Except(savedFields))
             {
                 Log.Warning(
-                    $"[{name}] {type.FullName}::{field.Name} appears to be unsaved. Either save this field in {methodName}, mark it [Unsaved], or make it const or readonly.");
+                    $"[{name}] {type.FullName}::{field.Name} appears to not be saved in {methodName}"); 
+                Log.WarningOnce($"[{name}] Either save this field, mark it [Unsaved], or make it const or readonly", 0x49D9F6A4);
             }
         }
 
