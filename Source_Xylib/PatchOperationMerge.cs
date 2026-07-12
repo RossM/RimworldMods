@@ -2,31 +2,31 @@
 
 namespace Xylib;
 
-// This works like PatchOperationAdd, except if the node to be added already exists, the new node's children are added
-// to the existing mode. For example, if the existing node is
-//
-// <def>
-//   <list>
-//     <li>Foo</li>
-//   </list>
-// </def>
-//
-// and value is
-//
-// <list>
-//   <li>Bar</li>
-// </list>
-//
-// the result will be
-//
-// <def>
-//   <list>
-//     <li>Foo</li>
-//     <li>Bar</li>
-//   </list>
-// </def>
-//
-// This works recursively.
+/// <summary>
+///     Adds XML to each node selected by <see cref="PatchOperationPathed.xpath" />, creating missing containers and
+///     adding to existing ones as needed.
+/// </summary>
+/// <remarks>
+///     <para>
+///         Use this when a normal <c>PatchOperationAdd</c> would create duplicate parent elements. For example, adding
+///         <c>&lt;exclusionTags&gt;&lt;li&gt;Foo&lt;/li&gt;&lt;/exclusionTags&gt;</c> to a <c>GeneDef</c> will create
+///         <c>exclusionTags</c> if it is missing, or add <c>Foo</c> to the existing <c>exclusionTags</c> list if it is
+///         already present. The same pattern is useful for lists such as <c>nullifyingGenes</c>, <c>modExtensions</c>,
+///         and <c>comps</c>.
+///     </para>
+///     <para>
+///         Matching containers are merged recursively, so nested XML can be extended in one operation. List items are
+///         usually added as new entries, but items in <c>modExtensions</c> and <c>comps</c> are merged by their
+///         <c>Class</c> attribute. This lets a patch add fields to an existing mod extension or comp instead of adding a
+///         duplicate entry with the same class.
+///     </para>
+///     <para>
+///         Set <c>Merge="true"</c> on an element in <see cref="value" /> to force it to merge with a matching element,
+///         or <c>Merge="false"</c> to force it to be added as a separate node. Set <see cref="order" /> to
+///         <c>Prepend</c> to insert new entries before existing entries instead of after them. Set
+///         <c>&lt;debug&gt;true&lt;/debug&gt;</c> to log the selected node before and after the merge.
+///     </para>
+/// </remarks>
 [UsedFromXml]
 public class PatchOperationMerge : PatchOperationPathed
 {
