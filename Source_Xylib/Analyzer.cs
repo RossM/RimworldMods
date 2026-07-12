@@ -143,7 +143,8 @@ public static class Analyzer
 
         foreach (Type type in assembly.GetTypes())
         {
-            const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+            const BindingFlags bindingFlags
+                = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
             MethodInfo? method = type.GetMethod("ConfigErrors", bindingFlags);
             if (method == null)
@@ -166,29 +167,28 @@ public static class Analyzer
 
             var instructions = PatchProcessor.GetOriginalInstructions(innerMethod);
 
-            if (!instructions.Any(inst => IsCallTo(inst.operand, baseMethod)))
-                Log.Warning($"[{name}] {type.FullName}::{method.Name} is missing a call to {baseMethod.DeclaringType?.FullName}::{baseMethod.Name}");
+            if (!instructions.Any(inst => inst.operand is MethodInfo m && IsCallTo(m, baseMethod)))
+            {
+                Log.Warning(
+                    $"[{name}] {type.FullName}::{method.Name} is missing a call to {baseMethod.DeclaringType?.FullName}::{baseMethod.Name}");
+
+                foreach (var inst in instructions)
+                    Debug.Log($"    {inst}");
+            }
         }
 
-        static bool IsCallTo(object operand, MethodInfo target)
+        static bool IsCallTo(MethodInfo method, MethodInfo target)
         {
-            if (operand is not MethodInfo method)
-                return false;
-
             if (method == target)
                 return true;
-            
-            // Handle compiler synthesized wrapper methods
+
+            // Handle compiler generated wrapper methods
             if (method.GetCustomAttribute<CompilerGeneratedAttribute>() is not null)
             {
                 var instructions = PatchProcessor.GetOriginalInstructions(method);
-                if (instructions is { Count: 3 } &&
-                    instructions[0].opcode.Value == OpCodes.Ldarg_0.Value &&
-                    instructions[1].opcode.Value == OpCodes.Call.Value &&
-                    instructions[2].opcode.Value == OpCodes.Ret.Value)
-                {
-                    return (MethodInfo)instructions[1].operand == target;
-                }
+                if (instructions.Count(inst => inst.opcode == OpCodes.Call) != 1)
+                    return false;
+                return (MethodInfo)instructions.Single(inst => inst.opcode == OpCodes.Call).operand == target;
             }
 
             return false;
