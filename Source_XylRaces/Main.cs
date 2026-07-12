@@ -37,7 +37,7 @@ public class Main : Mod
         using (new ProfileBlock("XylXenos Harmony patching"))
         {
             harmony.PatchCategory("PreLoadDefs");
-            harmony.PatchCategory(null);
+            harmony.PatchAllUncategorized();
         }
 
         using (new ProfileBlock("XylXenos Register XML loaders"))
