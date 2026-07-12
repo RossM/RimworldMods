@@ -24,7 +24,7 @@ namespace Xylib;
 ///         Set <c>Merge="true"</c> on an element in <see cref="value" /> to force it to merge with a matching element,
 ///         or <c>Merge="false"</c> to force it to be added as a separate node. Set <see cref="order" /> to
 ///         <c>Prepend</c> to insert new entries before existing entries instead of after them. Set
-///         <c>&lt;debug&gt;true&lt;/debug&gt;</c> to log the selected node before and after the merge.
+///         <see cref="debug" /> to true to log the selected node before and after the merge.
 ///     </para>
 /// </remarks>
 [UsedFromXml]
