@@ -112,6 +112,11 @@ public static class Analyzer
         }
     }
 
+    /// <summary>
+    ///     This checks that all <see cref="Def"/> subclasses are annotated with <see cref="UsedFromXmlAttribute"/>.
+    /// </summary>
+    /// <param name="assembly"></param>
+    /// <exception cref="ArgumentNullException"></exception>
     public static void CheckCodingStyle_Defs(Assembly assembly)
     {
         if (assembly is null)
@@ -138,6 +143,11 @@ public static class Analyzer
         }
     }
 
+    /// <summary>
+    ///     This checks that <see cref="Def.ConfigErrors"/> implementations call the <see langword="base"/> implementation.
+    /// </summary>
+    /// <param name="assembly"></param>
+    /// <exception cref="ArgumentNullException"></exception>
     public static void CheckCodingStyle_ConfigErrors(Assembly assembly)
     {
         if (assembly is null)
@@ -163,6 +173,14 @@ public static class Analyzer
         }
     }
 
+    /// <summary>
+    ///     This checks that classes implementing <see cref="IExposable"/> save all their fields in <see cref="IExposable.ExposeData"/>.
+    /// </summary>
+    /// <remarks>
+    ///     To exclude a field from checking, apply <see cref="UnsavedAttribute"/>, or mark it as <see langword="const"/> or <see langword="readonly"/>.
+    /// </remarks>
+    /// <param name="assembly"></param>
+    /// <exception cref="ArgumentNullException"></exception>
     public static void CheckCodingStyle_ExposeData(Assembly assembly)
     {
         if (assembly is null)
