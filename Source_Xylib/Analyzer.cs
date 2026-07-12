@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Xylib;
 
@@ -161,13 +162,36 @@ public static class Analyzer
 
             // Check if the method is an iterator. If so, look inside the iterator
             Type? stateMachineType = method.GetCustomAttribute<IteratorStateMachineAttribute>()?.StateMachineType;
-            if (stateMachineType is not null)
-                method = stateMachineType.GetMethod("MoveNext", bindingFlags);
+            MethodInfo innerMethod = stateMachineType?.GetMethod("MoveNext", bindingFlags) ?? method;
 
-            var instructions = PatchProcessor.GetOriginalInstructions(method);
+            var instructions = PatchProcessor.GetOriginalInstructions(innerMethod);
 
-            if (!instructions.Any(inst => ReferenceEquals(inst.operand, baseMethod)))
-                Log.Warning($"[{name}] {type.FullName}::{method.Name} is missing a call to {baseMethod.DeclaringType.FullName}::{method.Name}");
+            if (!instructions.Any(inst => IsCallTo(inst.operand, baseMethod)))
+                Log.Warning($"[{name}] {type.FullName}::{method.Name} is missing a call to {baseMethod.DeclaringType?.FullName}::{baseMethod.Name}");
+        }
+
+        static bool IsCallTo(object operand, MethodInfo target)
+        {
+            if (operand is not MethodInfo method)
+                return false;
+
+            if (method == target)
+                return true;
+            
+            // Handle compiler synthesized wrapper methods
+            if (method.GetCustomAttribute<CompilerGeneratedAttribute>() is not null)
+            {
+                var instructions = PatchProcessor.GetOriginalInstructions(method);
+                if (instructions is { Count: 3 } &&
+                    instructions[0].opcode.Value == OpCodes.Ldarg_0.Value &&
+                    instructions[1].opcode.Value == OpCodes.Call.Value &&
+                    instructions[2].opcode.Value == OpCodes.Ret.Value)
+                {
+                    return (MethodInfo)instructions[1].operand == target;
+                }
+            }
+
+            return false;
         }
     }
 
