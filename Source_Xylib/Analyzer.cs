@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Reflection.Emit;
 
 namespace Xylib;
 
@@ -9,6 +8,9 @@ namespace Xylib;
 [PublicAPI]
 public static class Analyzer
 {
+    private const BindingFlags MethodBindingFlags
+        = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+
     private static readonly string name = typeof(Analyzer).FullName!;
 
     private static readonly Type[] defTypes =
@@ -143,53 +145,99 @@ public static class Analyzer
 
         foreach (Type type in assembly.GetTypes())
         {
-            const BindingFlags bindingFlags
-                = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-
-            MethodInfo? method = type.GetMethod("ConfigErrors", bindingFlags);
+            MethodInfo? method = type.GetMethod("ConfigErrors", MethodBindingFlags);
             if (method == null)
                 continue;
 
-            MethodInfo? baseMethod = null;
-            for (Type? parent = type.BaseType; parent != null; parent = parent.BaseType)
-            {
-                baseMethod = parent.GetMethod("ConfigErrors", bindingFlags);
-                if (baseMethod != method)
-                    break;
-            }
-
-            if (baseMethod == null || baseMethod == method)
+            MethodInfo? baseMethod = ReflectionHelpers.GetBaseMethod(method);
+            if (baseMethod == null)
                 continue;
 
-            // Check if the method is an iterator. If so, look inside the iterator
-            Type? stateMachineType = method.GetCustomAttribute<IteratorStateMachineAttribute>()?.StateMachineType;
-            MethodInfo innerMethod = stateMachineType?.GetMethod("MoveNext", bindingFlags) ?? method;
+            List<CodeInstruction>? instructions = ReflectionHelpers.GetInstructions(method);
 
-            var instructions = PatchProcessor.GetOriginalInstructions(innerMethod);
-
-            if (!instructions.Any(inst => inst.operand is MethodInfo m && IsCallTo(m, baseMethod)))
+            if (!instructions.Any(inst => inst.operand is MethodInfo m && ReflectionHelpers.PossiblyWrappedTargetIs(m, baseMethod)))
             {
                 Log.Warning(
                     $"[{name}] {type.FullName}::{method.Name} is missing a call to {baseMethod.DeclaringType?.FullName}::{baseMethod.Name}");
             }
         }
+    }
 
-        static bool IsCallTo(MethodInfo method, MethodInfo target)
+    public static void CheckCodingStyle_ExposeData(Assembly assembly)
+    {
+        if (assembly is null)
+            throw new ArgumentNullException(nameof(assembly));
+
+        foreach (Type type in assembly.GetTypes())
         {
-            if (method == target)
-                return true;
+            string? methodName =
+                typeof(IExposable).IsAssignableFrom(type) ? "ExposeData" :
+                typeof(ThingComp).IsAssignableFrom(type) ? "PostExposeData" :
+                IsComp(type) ? "CompExposeData" :
+                null;
+            if (methodName == null)
+                continue;
 
-            // Handle compiler generated wrapper methods
-            if (method.GetCustomAttribute<CompilerGeneratedAttribute>() is not null)
+            MethodInfo? method = type.GetMethod(methodName, MethodBindingFlags);
+
+            var fieldsToSave = type.GetFields().Where(field => ShouldExposeField(field, type)).ToList();
+
+            if (fieldsToSave.Count == 0)
+                continue;
+
+            List<FieldInfo> savedFields = [];
+            if (method is not null)
             {
                 var instructions = PatchProcessor.GetOriginalInstructions(method);
-                if (instructions.Count(inst => inst.opcode == OpCodes.Call) != 1)
-                    return false;
-                return (MethodInfo)instructions.Single(inst => inst.opcode == OpCodes.Call).operand == target;
+                DebugAssert.NotNull(instructions);
+
+                MethodInfo? baseMethod = ReflectionHelpers.GetBaseMethod(method);
+                bool callsBaseMethod = false;
+
+                foreach (var inst in instructions)
+                {
+                    if (inst.operand is FieldInfo f && f.DeclaringType == type)
+                        savedFields.Add(f);
+                    if (baseMethod is not null && inst.operand is MethodInfo m && ReflectionHelpers.PossiblyWrappedTargetIs(m, baseMethod))
+                        callsBaseMethod = true;
+                }
+
+                if (baseMethod is not null && !callsBaseMethod)
+                {
+                    Type baseType = baseMethod.DeclaringType;
+                    DebugAssert.NotNull(baseType);
+
+                    if (baseType.GetFields().Any(field => ShouldExposeField(field, baseType)))
+                    {
+                        Log.Warning(
+                            $"[{name}] {type.FullName}::{method.Name} is missing a call to {baseType.FullName}::{baseMethod.Name}");
+                    }
+                }
+            }
+
+            foreach (var field in fieldsToSave.Except(savedFields))
+            {
+                Log.Warning(
+                    $"[{name}] {type.FullName}::{field.Name} appears to be unsaved. Either save this field in {methodName}, mark it [Unsaved], or make it const or readonly.");
+            }
+        }
+
+        static bool IsComp(Type type)
+        {
+            for (Type? t = type; t != null; t = t.BaseType)
+            {
+                if (t.Name.EndsWith("Comp"))
+                    return true;
             }
 
             return false;
         }
+
+        static bool ShouldExposeField(FieldInfo field, Type type) =>
+            field.GetCustomAttribute<UnsavedAttribute>() == null &&
+            !field.Attributes.HasFlag(FieldAttributes.Literal) &&
+            !field.Attributes.HasFlag(FieldAttributes.Static) &&
+            field.DeclaringType == type;
     }
 
     public static void CheckCodingStyle(Assembly assembly)
@@ -197,5 +245,6 @@ public static class Analyzer
         CheckCodingStyle_Patches(assembly);
         CheckCodingStyle_Defs(assembly);
         CheckCodingStyle_ConfigErrors(assembly);
+        CheckCodingStyle_ExposeData(assembly);
     }
 }

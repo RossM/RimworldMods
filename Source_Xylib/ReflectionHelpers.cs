@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Xylib;
 
@@ -53,5 +54,48 @@ public static class ReflectionHelpers
         ];
 
         DebugTables.MakeTablesDialog(typeof(GeneComp).AllSubclassesNonAbstract(), columns);
+    }
+
+    public static MethodInfo? GetBaseMethod(MethodInfo method)
+    {
+        DebugAssert.NotNull(method.DeclaringType);
+
+        for (Type? parent = method.DeclaringType.BaseType; parent != null; parent = parent.BaseType)
+        {
+            MethodInfo? baseMethod = parent.GetMethod(method.Name, MethodBindingFlags);
+            if (baseMethod != method)
+                return baseMethod;
+        }
+
+        return null;
+    }
+
+    public static List<CodeInstruction>? GetInstructions(MethodInfo method)
+    {
+        // Check if the method is an iterator. If so, look inside the iterator
+        Type? stateMachineType = method.GetCustomAttribute<IteratorStateMachineAttribute>()?.StateMachineType;
+        MethodInfo innerMethod = stateMachineType?.GetMethod("MoveNext", MethodBindingFlags) ?? method;
+
+        var instructions = PatchProcessor.GetOriginalInstructions(innerMethod);
+        return instructions;
+    }
+
+    public static bool PossiblyWrappedTargetIs(MethodInfo method, MethodInfo target)
+    {
+        if (method == target)
+            return true;
+
+        // Handle compiler generated wrapper methods
+        if (method.GetCustomAttribute<CompilerGeneratedAttribute>() is not null)
+        {
+            var instructions = PatchProcessor.GetOriginalInstructions(method);
+            DebugAssert.NotNull(instructions);
+
+            if (instructions.Count(inst => inst.opcode == OpCodes.Call) != 1)
+                return false;
+            return (MethodInfo)instructions.Single(inst => inst.opcode == OpCodes.Call).operand == target;
+        }
+
+        return false;
     }
 }
