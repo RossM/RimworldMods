@@ -171,9 +171,6 @@ public static class Analyzer
             {
                 Log.Warning(
                     $"[{name}] {type.FullName}::{method.Name} is missing a call to {baseMethod.DeclaringType?.FullName}::{baseMethod.Name}");
-
-                foreach (var inst in instructions)
-                    Debug.Log($"    {inst}");
             }
         }
 
