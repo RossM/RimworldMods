@@ -93,6 +93,8 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
 
     public override void CompExposeData()
     {
+        base.CompExposeData();
+
         Scribe_Values.Look(ref growthModeIndex, nameof(growthModeIndex));
     }
 

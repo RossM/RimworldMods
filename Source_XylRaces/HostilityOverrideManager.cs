@@ -15,6 +15,8 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
 
     public override void ExposeData()
     {
+        base.ExposeData();
+
         Scribe_Values.Look(ref anyOverrides, nameof(anyOverrides));
         Scribe_Ext.Look(ref activeOverrides, nameof(activeOverrides), LookMode.Reference);
         Scribe_Collections.Look(ref lastHostileActionTick, nameof(lastHostileActionTick), keyLookMode: LookMode.Deep,
