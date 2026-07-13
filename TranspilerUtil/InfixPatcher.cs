@@ -72,7 +72,10 @@ public static class InfixPatcher
                 EmitTargetParameter(targetParameterTypes[i], i);
             }
 
-            output.Add(new(OpcodeFor(target), target));
+            if (replacementTarget != null)
+                output.Add(new(OpCodes.Call, replacementTarget));
+            else
+                output.Add(new(OpcodeFor(target), target));
 
             if (skipLabel != null || postfixes.Count > 0)
             {
@@ -301,6 +304,7 @@ public static class InfixPatcher
         public readonly ILGenerator generator;
         public readonly MethodBase caller;
         public readonly MemberInfo target;
+        public readonly MemberInfo? replacementTarget;
         public readonly List<MethodInfo> prefixes;
         public readonly List<MethodInfo> postfixes;
         public readonly List<CodeInstruction> output = [];
@@ -310,12 +314,14 @@ public static class InfixPatcher
         public MethodPatchWorker(ILGenerator generator,
             MethodBase caller,
             MemberInfo target,
+            MethodInfo? replacementTarget,
             List<MethodInfo> prefixes,
             List<MethodInfo> postfixes)
         {
             this.generator = generator;
             this.caller = caller;
             this.target = target;
+            this.replacementTarget = replacementTarget;
             this.prefixes = prefixes;
             this.postfixes = postfixes;
 
@@ -421,6 +427,7 @@ public static class InfixPatcher
                             RedirectRule_Core(generator,
                                 patchedMethod,
                                 target,
+                                null,
                                 prefixes,
                                 postfixes,
                                 1)
@@ -553,7 +560,7 @@ public static class InfixPatcher
     {
         return new()
         {
-            LateGenerator = (caller, _, generator) => RedirectRule_Core(generator, caller, oldMember, [], [], minMatches)
+            LateGenerator = (caller, _, generator) => RedirectRule_Core(generator, caller, oldMember, newMember, [], [], minMatches)
         };
     }
 
@@ -561,6 +568,7 @@ public static class InfixPatcher
         ILGenerator generator,
         MethodBase caller,
         MemberInfo target,
+        MethodInfo replacementTarget,
         List<MethodInfo> prefixes,
         List<MethodInfo> postfixes,
         int minMatches)
@@ -570,7 +578,7 @@ public static class InfixPatcher
             new(MethodPatchWorker.OpcodeFor(target), target),
         ];
 
-        var methodPatchWorker = new MethodPatchWorker(generator, caller, target, prefixes, postfixes);
+        var methodPatchWorker = new MethodPatchWorker(generator, caller, target, replacementTarget, prefixes, postfixes);
         methodPatchWorker.EmitReplacement();
 
         var rule = new InstructionMatcher.Rule
