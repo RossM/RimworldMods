@@ -20,8 +20,10 @@ internal static class PatchPawnRender
 
         const RenderNodeModifierType type = RenderNodeModifierType.VisibilitySelfOnly;
         List<RenderNodeModifier>? renderNodeModifiers = geneTracker.renderNodeModifiersByType[(int)type];
-        if (renderNodeModifiers == null)
+        if (renderNodeModifiers is not { Count: > 0 })
             return;
+
+        var count = renderNodeModifiers.Count;
 
         for (int i = requests.Count - 1; i >= 0; i--)
         {
@@ -30,7 +32,6 @@ internal static class PatchPawnRender
             var request = requests[i];
             DebugAssert.NotNull(request);
 
-            var count = renderNodeModifiers.Count;
             for (var j = 0; j < count; j++)
             {
                 RenderNodeModifier? renderNodeModifier = renderNodeModifiers[j];
@@ -59,7 +60,7 @@ internal static class PatchPawnRender
 
         const RenderNodeModifierType type = RenderNodeModifierType.VisibilitySelfAndChildren;
         List<RenderNodeModifier>? renderNodeModifiers = geneTracker.renderNodeModifiersByType[(int)type];
-        if (renderNodeModifiers == null)
+        if (renderNodeModifiers is not { Count: > 0 })
             return true;
 
         var count = renderNodeModifiers.Count;
@@ -91,7 +92,7 @@ internal static class PatchPawnRender
 
         RenderNodeModifierType type = __instance == node ? RenderNodeModifierType.PositionSelf : RenderNodeModifierType.PositionChildren;
         List<RenderNodeModifier>? renderNodeModifiers = geneTracker.renderNodeModifiersByType[(int)type];
-        if (renderNodeModifiers == null)
+        if (renderNodeModifiers is not { Count: > 0 })
             return;
 
         var count = renderNodeModifiers.Count;
