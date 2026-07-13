@@ -148,7 +148,7 @@ public static class DebugOutputs
         {
             var memeDef = def;
 
-            columns.Add(new((string)memeDef.LabelCap, factionDef =>
+            columns.Add(new(Abbreviate(memeDef.label, 5).CapitalizeFirst(), factionDef =>
             {
                 if (factionDef.requiredMemes?.Contains(memeDef) is true)
                     return "Req";
@@ -296,8 +296,9 @@ public static class DebugOutputs
             return w;
         if (w.EndsWith("ing"))
             w = w[..^3] + "g";
+        int preserved = maxLength / 2;
         // ReSharper disable once StringLiteralTypo
-        w = w[0] + w[1..].Where(c => !"aeiou".Contains(c)).Join(delimiter: "");
+        w = w[.. preserved] + w[preserved ..].Where(c => !"aeiou".Contains(c)).Join(delimiter: "");
         if (w.Length <= maxLength)
             return w;
         return w[..maxLength];
