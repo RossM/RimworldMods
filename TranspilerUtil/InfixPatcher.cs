@@ -450,34 +450,60 @@ public static class InfixPatcher
         }
     }
 
-    private static MemberInfo GetMember(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
+    private static MemberInfo? GetMember(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
     {
         string[] nameParts = memberName.Split(':');
         for (int i = 0; i < nameParts.Length - 1; i++)
             type = AccessTools.InnerTypes(type).First(type1 => type1.Name.Contains(nameParts[i]));
         memberName = nameParts[^1];
 
-        MemberInfo wrappedMember;
-        if (genericTypes != null)
+        if (parameterTypes == null && genericTypes == null)
         {
-            wrappedMember = type
-                .GetMethods()
-                .Single(m => m.Name == memberName && m.IsGenericMethod && m.GetGenericArguments().Length == genericTypes.Length)
-                .MakeGenericMethod(genericTypes);
-        }
-        else if (parameterTypes != null)
-        {
-            wrappedMember = type.GetMethod(memberName, AccessTools.all, null,
-                parameterTypes, []);
-        }
-        else
-        {
-            wrappedMember = type.GetMember(memberName, AccessTools.all).Single();
+            if (type.GetField(memberName, AccessTools.all) is { } field)
+                return field;
+            if (type.GetProperty(memberName, AccessTools.all) is { } property)
+                return property.GetMethod;
         }
 
-        if (wrappedMember is PropertyInfo propertyInfo)
-            wrappedMember = propertyInfo.GetMethod;
-        return wrappedMember;
+        return GetMemberInt(type, memberName, parameterTypes, genericTypes);
+
+    }
+
+    private static MethodInfo? GetMemberInt(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
+    {
+        foreach (var method in type.GetMethods(AccessTools.all))
+        {
+            var curMethod = method;
+
+            if (curMethod.Name != memberName)
+                continue;
+
+            if (curMethod.IsGenericMethod)
+            {
+                if (genericTypes is null)
+                    continue;
+                if (genericTypes.Length != curMethod.GetGenericArguments().Length)
+                    continue;
+
+                try
+                {
+                    curMethod = curMethod.MakeGenericMethod(genericTypes);
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+            else if (genericTypes is not null)
+                continue;
+
+            if (parameterTypes != null && !curMethod.GetParameters().Types().SequenceEqual(parameterTypes))
+                continue;
+
+            return curMethod;
+        }
+
+        return null;
     }
 
     private static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, List<InstructionMatcher.Rule> rules, string typeName, bool debug)
