@@ -18,35 +18,86 @@ public static class InfixPatcher
 
     private enum Scope
     {
+        /// <summary>
+        ///     Represents access to parameters or results of the inner (target) method.
+        /// </summary>
         Inner,
+
+        /// <summary>
+        ///     Represents access to parameters or results of the outer (caller) method.
+        /// </summary>
         Outer,
     }
 
     private enum BindingType
     {
+        /// <summary>
+        ///     Access to a method call's formal parameter.
+        /// </summary>
         Parameter,
+
+        /// <summary>
+        ///     Access to a method call's instance parameter.
+        /// </summary>
         Instance,
+
+        /// <summary>
+        ///     Access to the result of calling the inner method.
+        /// </summary>
         Result,
+
+        /// <summary>
+        ///     Access to a field from a method call's formal parameter.
+        /// </summary>
         ParameterField,
+
+        /// <summary>
+        ///     Access to aa field from a method call's instance parameter.
+        /// </summary>
         InstanceField,
+
+        /// <summary>
+        ///     Access to a local state variable.
+        /// </summary>
         State,
     }
 
     private struct ParameterBinding
     {
+        /// <summary>
+        ///     The <see cref="ParameterInfo" /> of the parameter from the patch function.
+        /// </summary>
+        /// <remarks>
+        ///     This is used to get the parameter's type, as well as its name for logging.
+        /// </remarks>
         public ParameterInfo Parameter;
+
+        /// <summary>
+        ///     Whether this applies to the outer method (caller) or inner method (target).
+        /// </summary>
         public Scope Scope;
+
+        /// <summary>
+        ///     The type of binding.
+        /// </summary>
         public BindingType BindingType;
+
+        /// <summary>
+        ///     Depending on <see cref="BindingType" /> and <see cref="Scope" /> this can be either a local variable index or an
+        ///     index into the caller or target argument lists.
+        /// </summary>
+        /// <remarks>
+        ///     For argument lists of instance methods, index 0 is the instance and formal arguments start from index 1; for static
+        ///     methods, formal arguments start from index 0.
+        /// </remarks>
         public int Index;
+
+        /// <summary>
+        ///     A <see cref="FieldInfo" /> used by <see cref="BindingType.ParameterField" /> and
+        ///     <see cref="BindingType.InstanceField" />.
+        /// </summary>
         public FieldInfo? Field;
     }
-
-    private delegate List<CodeInstruction> MatchAndReplaceFn(
-        List<InstructionMatcher.Rule> rules,
-        MethodBase method,
-        IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator,
-        bool debug);
 
     private class RuleBuilder
     {
@@ -56,7 +107,7 @@ public static class InfixPatcher
         private int resultLocalIndex = -1;
         private readonly Type targetType;
 
-        public void EmitReplacement()
+        private void EmitReplacement()
         {
             if (debug)
                 LogDebugInfo();
@@ -269,7 +320,7 @@ public static class InfixPatcher
             };
         }
 
-        public static OpCode OpcodeFor(MemberInfo callee)
+        private static OpCode OpcodeFor(MemberInfo callee)
         {
             return callee switch
             {
@@ -301,18 +352,17 @@ public static class InfixPatcher
             };
         }
 
-        // ReSharper disable MemberCanBePrivate.Local
-        public readonly ILGenerator generator;
-        public readonly MethodBase caller;
-        public readonly MemberInfo target;
-        public readonly MemberInfo? replacementTarget;
-        public readonly List<PatchInfo> prefixes;
-        public readonly List<PatchInfo> postfixes;
-        public readonly List<CodeInstruction> output = [];
+        private readonly ILGenerator generator;
+        private readonly MethodBase caller;
+        private readonly MemberInfo target;
+        private readonly MemberInfo? replacementTarget;
+        private readonly List<PatchInfo> prefixes;
+        private readonly List<PatchInfo> postfixes;
+        private readonly List<CodeInstruction> output = [];
 
-        public readonly List<Type> localTypes;
+        private readonly List<Type> localTypes;
 
-        public readonly bool debug;
+        private readonly bool debug;
 
         public RuleBuilder(
             ILGenerator generator,
@@ -345,21 +395,20 @@ public static class InfixPatcher
 
             parameterToLocalIndex = new int[targetParameterTypes.Length];
         }
-        // ReSharper restore MemberCanBePrivate.Local
     }
 
 
-    private class StateBuilder
+    private class StateBuilder<TStateKey>
     {
-        private readonly Dictionary<Type, (int index, Type type)> stateMap = new();
+        private readonly Dictionary<TStateKey, (int index, Type type)> stateMap = new();
         public readonly List<Type> LocalTypes = [];
 
-        public int GetOrAddStateLocal(Type declaringType, Type localType, MethodInfo method)
+        public int GetOrAddStateLocal(TStateKey stateKey, Type localType, MethodInfo method)
         {
             if (localType.IsByRef)
                 localType = localType.GetElementType();
 
-            if (stateMap.TryGetValue(declaringType, out var tuple))
+            if (stateMap.TryGetValue(stateKey, out var tuple))
             {
                 (int index, Type existingType) = tuple;
 
@@ -367,11 +416,11 @@ public static class InfixPatcher
                     return index;
 
                 throw new ArgumentException(
-                    $"{declaringType.FullName}.{method.Name} declares __state of type {localType} but {declaringType.FullName} already has a __state of type {existingType}");
+                    $"{method.DeclaringType?.FullName}.{method.Name} declares __state of type {localType} which conflicts with existing type {existingType}");
             }
 
             int newIndex = LocalTypes.Count;
-            stateMap.Add(declaringType, (newIndex, localType));
+            stateMap.Add(stateKey, (newIndex, localType));
             LocalTypes.Add(localType);
             return newIndex;
         }
@@ -442,7 +491,7 @@ public static class InfixPatcher
     {
         List<PatchInfo> patches = [];
 
-        Dictionary<MethodInfo, StateBuilder> stateBuilders = new();
+        Dictionary<MethodInfo, StateBuilder<Type>> stateBuilders = new();
 
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
@@ -478,7 +527,7 @@ public static class InfixPatcher
                         if (caller == null)
                             throw new InvalidOperationException("null target method");
 
-                        if (!stateBuilders.TryGetValue(caller, out StateBuilder stateBuilder))
+                        if (!stateBuilders.TryGetValue(caller, out StateBuilder<Type> stateBuilder))
                             stateBuilder = stateBuilders[caller] = new();
 
                         var arguments = method.GetParameters().Select(param => BindParameter(param, caller, target, stateBuilder))
@@ -563,7 +612,11 @@ public static class InfixPatcher
         }
     }
 
-    private static ParameterBinding BindParameter(ParameterInfo parameter, MethodInfo caller, MemberInfo target, StateBuilder stateBuilder)
+    private static ParameterBinding BindParameter(
+        ParameterInfo parameter,
+        MethodInfo caller,
+        MemberInfo target,
+        StateBuilder<Type> stateBuilder)
     {
         var parameterName = parameter.Name;
 
