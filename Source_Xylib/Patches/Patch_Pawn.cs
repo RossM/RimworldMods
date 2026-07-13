@@ -3,8 +3,6 @@ namespace Xylib.Patches;
 [HarmonyPatch(typeof(Pawn))]
 internal static class Patch_Pawn
 {
-    private static bool dyingPawnIsMutant;
-
     // Note: This patch is performance-sensitive
     [Feature(typeof(GeneCompProperties_RaceModifiers))]
     [HarmonyPostfix]
@@ -39,18 +37,18 @@ internal static class Patch_Pawn
     [Feature(nameof(EventDefOf.PostMutated))]
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn.Kill))]
-    public static void Kill_Postfix(Pawn __instance)
+    public static void Kill_Postfix(Pawn __instance, bool __state)
     {
         EventManager.Instance.Notify(EventDefOf.PostPawnKilled, __instance);
-        if (dyingPawnIsMutant && __instance.mutant == null)
+        if (__state && __instance.mutant == null)
             EventManager.Instance.Notify(EventDefOf.PostMutated, __instance);
     }
 
     [Feature(nameof(EventDefOf.PostMutated))]
     [HarmonyPrefix]
     [HarmonyPatch(nameof(Pawn.Kill))]
-    public static void Kill_Prefix(Pawn __instance)
+    public static void Kill_Prefix(Pawn __instance, out bool __state)
     {
-        dyingPawnIsMutant = __instance.mutant != null;
+        __state = __instance.mutant != null;
     }
 }
