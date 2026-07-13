@@ -194,8 +194,6 @@ internal static class PatchHelpers
             return checkerFunc;
         }
 
-        Debug.Log($"{defType.FullName} requires: {string.Join(", ", requiredFields.Select(f => f.Name))}");
-
         var defParamExpr = Expression.Parameter(typeof(object), "def");
         var errorsParamExpr = Expression.Parameter(typeof(List<string>), "errors");
         var defExpr = Expression.Convert(defParamExpr, defType);
