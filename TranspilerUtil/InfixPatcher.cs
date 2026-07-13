@@ -47,7 +47,7 @@ public static class InfixPatcher
         ILGenerator generator,
         bool debug);
 
-    private class MethodPatchWorker
+    private class RuleBuilder
     {
         private readonly Type[] callerParameterTypes;
         private readonly Type[] targetParameterTypes;
@@ -315,7 +315,7 @@ public static class InfixPatcher
 
         public readonly bool debug;
 
-        public MethodPatchWorker(
+        public RuleBuilder(
             ILGenerator generator,
             MethodBase caller,
             MemberInfo target,
@@ -345,6 +345,27 @@ public static class InfixPatcher
             parameterToLocalIndex = new int[targetParameterTypes.Length];
         }
         // ReSharper restore MemberCanBePrivate.Local
+
+        public InstructionMatcher.Rule BuildRule()
+        {
+            List<CodeInstruction> pattern =
+            [
+                new(OpcodeFor(target), target),
+            ];
+
+            EmitReplacement();
+
+            var rule = new InstructionMatcher.Rule
+            {
+                Min = 1,
+                Max = 0,
+                Mode = InstructionMatcher.OutputMode.Replace,
+                Pattern = pattern.ToArray(),
+                Output = output.ToArray(),
+                LocalTypes = localTypes.ToArray(),
+            };
+            return rule;
+        }
     }
 
     private struct PatchInfo
@@ -436,13 +457,7 @@ public static class InfixPatcher
                     rules.Add(new()
                     {
                         LateGenerator = (_, _, generator) =>
-                            RedirectRule_Core(generator,
-                                patchedMethod,
-                                target,
-                                null,
-                                prefixes,
-                                postfixes,
-                                1)
+                            RedirectRule_Core(generator, patchedMethod, target, null, prefixes, postfixes)
                     });
                 }
 
@@ -682,41 +697,18 @@ public static class InfixPatcher
     /// <param name="newMember"></param>
     /// <param name="minMatches"></param>
     /// <returns></returns>
-    public static InstructionMatcher.Rule MakeRedirectRule(MemberInfo oldMember, MethodInfo newMember, int minMatches = 1)
+    public static InstructionMatcher.Rule MakeRedirectRule(MemberInfo oldMember, MethodInfo newMember)
     {
         return new()
         {
-            LateGenerator = (caller, _, generator) => RedirectRule_Core(generator, caller, oldMember, newMember, [], [], minMatches)
+            LateGenerator = (caller, _, generator) => RedirectRule_Core(generator, caller, oldMember, newMember, [], [])
         };
     }
 
-    private static InstructionMatcher.Rule RedirectRule_Core(
-        ILGenerator generator,
-        MethodBase caller,
-        MemberInfo target,
-        MethodInfo replacementTarget,
-        List<PatchInfo> prefixes,
-        List<PatchInfo> postfixes,
-        int minMatches)
+    private static InstructionMatcher.Rule RedirectRule_Core(ILGenerator generator, MethodBase caller, MemberInfo target, MethodInfo replacementTarget, List<PatchInfo> prefixes, List<PatchInfo> postfixes)
     {
-        List<CodeInstruction> pattern =
-        [
-            new(MethodPatchWorker.OpcodeFor(target), target),
-        ];
+        var methodPatchWorker = new RuleBuilder(generator, caller, target, replacementTarget, prefixes, postfixes);
 
-        var methodPatchWorker = new MethodPatchWorker(generator, caller, target, replacementTarget, prefixes, postfixes);
-        methodPatchWorker.EmitReplacement();
-
-        var rule = new InstructionMatcher.Rule
-        {
-            Min = minMatches,
-            Max = 0,
-            Mode = InstructionMatcher.OutputMode.Replace,
-            Pattern = pattern.ToArray(),
-            Output = methodPatchWorker.output.ToArray(),
-            LocalTypes = methodPatchWorker.localTypes.ToArray(),
-        };
-
-        return rule;
+        return methodPatchWorker.BuildRule();
     }
 }
