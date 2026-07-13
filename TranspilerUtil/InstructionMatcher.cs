@@ -76,12 +76,12 @@ public class InstructionMatcher
             if (rule.LateGenerator != null)
                 rule = rule.LateGenerator(method, instructions, generator);
 
-            if (rule.Pattern == null)
-                throw new InvalidOperationException($"{rule.Mode} rule cannot have Pattern = null");
-            if (rule is { Mode: OutputMode.MatchOnly, Output: not null })
-                throw new InvalidOperationException($"{rule.Mode} rule cannot have Output = null");
-            if (rule is { Mode: not OutputMode.MatchOnly, Output: null })
-                throw new InvalidOperationException($"{rule.Mode} rule must have Output = null");
+            switch (rule)
+            {
+                case { Pattern: null }: throw new InvalidOperationException($"{rule.Mode} rule cannot have Pattern = null");
+                case { Mode: OutputMode.MatchOnly, Output: not null }: throw new InvalidOperationException($"{rule.Mode} rule cannot have Output = null");
+                case { Mode: not OutputMode.MatchOnly, Output: null }: throw new InvalidOperationException($"{rule.Mode} rule must have Output = null");
+            }
 
             var matchCount = 0;
 
