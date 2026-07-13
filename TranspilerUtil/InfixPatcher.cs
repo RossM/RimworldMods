@@ -59,22 +59,7 @@ public static class InfixPatcher
         public void EmitReplacement()
         {
             if (debug)
-            {
-                foreach (var prefix in prefixes)
-                {
-                    Debug.Log($"prefix {prefix.patchMethod.DeclaringType.FullName}::{prefix.patchMethod.Name}");
-                    foreach (var parameter in prefix.parameters)
-                        Debug.Log(
-                            $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");
-                }
-                foreach (var postfix in postfixes)
-                {
-                    Debug.Log($"postfix {postfix.patchMethod.DeclaringType.FullName}::{postfix.patchMethod.Name}");
-                    foreach (var parameter in postfix.parameters)
-                        Debug.Log(
-                            $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");
-                }
-            }
+                LogDebugInfo();
 
             EmitPrelude();
 
@@ -146,6 +131,25 @@ public static class InfixPatcher
             }
         }
 
+        private void LogDebugInfo()
+        {
+            foreach (var prefix in prefixes)
+            {
+                Debug.Log($"prefix {prefix.patchMethod.DeclaringType?.FullName}::{prefix.patchMethod.Name}");
+                foreach (var parameter in prefix.parameters)
+                    Debug.Log(
+                        $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");
+            }
+
+            foreach (var postfix in postfixes)
+            {
+                Debug.Log($"postfix {postfix.patchMethod.DeclaringType?.FullName}::{postfix.patchMethod.Name}");
+                foreach (var parameter in postfix.parameters)
+                    Debug.Log(
+                        $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");
+            }
+        }
+
         private void EmitInitialization(Type type, int localIndex)
         {
             if (type.IsByRef)
@@ -187,13 +191,7 @@ public static class InfixPatcher
                 case BindingType.Parameter:
                 case BindingType.Instance:
                 {
-                    switch (parameter.Scope)
-                    {
-                        case Scope.Outer: EmitCallerParameter(parameterType, parameter.Index); break;
-                        case Scope.Inner: EmitTargetParameter(parameterType, parameter.Index); break;
-                        default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
-                    }
-
+                    EmitParameterLookup();
                     return;
                 }
 
@@ -206,12 +204,7 @@ public static class InfixPatcher
                 case BindingType.ParameterField:
                 case BindingType.InstanceField:
                 {
-                    switch (parameter.Scope)
-                    {
-                        case Scope.Outer: EmitCallerParameter(parameterType, parameter.Index); break;
-                        case Scope.Inner: EmitTargetParameter(parameterType, parameter.Index); break;
-                        default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
-                    }
+                    EmitParameterLookup();
 
                     if (parameterType.IsByRef)
                         output.Add(new(OpCodes.Ldflda, parameter.Field));
@@ -224,6 +217,16 @@ public static class InfixPatcher
                 default:
                 {
                     throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            void EmitParameterLookup()
+            {
+                switch (parameter.Scope)
+                {
+                    case Scope.Outer: EmitCallerParameter(parameterType, parameter.Index); break;
+                    case Scope.Inner: EmitTargetParameter(parameterType, parameter.Index); break;
+                    default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
                 }
             }
         }
@@ -489,7 +492,7 @@ public static class InfixPatcher
 
             case "__result":
             {
-                if (target is MethodInfo info && info.ReturnType == typeof(void))
+                if (target is MethodInfo info && info.ReturnType.IsVoid())
                     throw new ArgumentException("__result argument cannot be used with method returning void");
                 return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = Scope.Inner };
             }
