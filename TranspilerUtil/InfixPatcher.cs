@@ -296,9 +296,9 @@ public static class InfixPatcher
             return callee switch
             {
                 FieldInfo { IsStatic: true } => OpCodes.Ldsfld,
-                FieldInfo => OpCodes.Ldfld,
+                FieldInfo { IsStatic: false } => OpCodes.Ldfld,
                 MethodBase { IsVirtual: true } => OpCodes.Callvirt,
-                MethodBase => OpCodes.Call,
+                MethodBase { IsVirtual: false } => OpCodes.Call,
                 _ => throw new InvalidOperationException()
             };
         }
