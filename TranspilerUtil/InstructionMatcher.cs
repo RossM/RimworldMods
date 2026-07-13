@@ -6,7 +6,6 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 using JetBrains.Annotations;
-using UnityEngine;
 
 namespace TranspilerUtil;
 
@@ -99,7 +98,7 @@ public class InstructionMatcher
                     CodeInstruction patternInst = rule.Pattern[patternIndex];
 
                     //if (debug)
-                    //    Debug.Log($"COMPARE {patternInst} : {inst}");
+                    //    FileLog.Log($"COMPARE {patternInst} : {inst}");
 
                     // For a load or store, map the local indexes in the pattern to the actual local indexes used
                     // in the function
@@ -175,7 +174,7 @@ public class InstructionMatcher
                     labelMap = new(),
                 };
                 if (debug)
-                    Debug.Log($"MATCH #{ruleIndex} {matchData.start}-{matchData.end}");
+                    FileLog.Log($"MATCH #{ruleIndex} {matchData.start}-{matchData.end}");
 
                 matches.Add(matchData);
                 if (rule.SaveLocals)
@@ -229,7 +228,7 @@ public class InstructionMatcher
                     {
                         Emit(outInstructions, instructions[i]);
                         if (debug)
-                            Debug.Log($"COPY MATCH {outInstructions[^1]}");
+                            FileLog.Log($"COPY MATCH {outInstructions[^1]}");
                     }
                 }
 
@@ -273,7 +272,7 @@ public class InstructionMatcher
                         extraLabels.AddRange(replaceInst.labels.Select(label => GetReplacementLabel(generator, match, label)));
 
                         if (debug)
-                            Debug.Log($"SKIP {replaceInst}");
+                            FileLog.Log($"SKIP {replaceInst}");
                         continue;
                     }
                     else if (replaceInst.operand is Label label)
@@ -287,7 +286,7 @@ public class InstructionMatcher
                         .Select(label => GetReplacementLabel(generator, match, label)));
 
                     if (debug)
-                        Debug.Log($"EMIT {outInstructions[^1]}");
+                        FileLog.Log($"EMIT {outInstructions[^1]}");
                 }
 
                 extraBlocks.Clear();
@@ -302,7 +301,7 @@ public class InstructionMatcher
                             outInstructions[^1].labels.Clear();
 
                         if (debug)
-                            Debug.Log($"COPY MATCH {outInstructions[^1]}");
+                            FileLog.Log($"COPY MATCH {outInstructions[^1]}");
                     }
                 }
             }
@@ -310,7 +309,7 @@ public class InstructionMatcher
             {
                 Emit(outInstructions, instructions[instructionIndex]);
                 if (debug)
-                    Debug.Log($"COPY {outInstructions[^1]}");
+                    FileLog.Log($"COPY {outInstructions[^1]}");
             }
         }
 
@@ -352,7 +351,7 @@ public class InstructionMatcher
         if (!match.labelMap.TryGetValue(label, out Label replacementLabel))
         {
             replacementLabel = generator.DefineLabel();
-            //Debug.Log($"Label{label.GetHashCode()} -> Label{replacementLabel.GetHashCode()}");
+            //FileLog.Log($"Label{label.GetHashCode()} -> Label{replacementLabel.GetHashCode()}");
             match.labelMap.Add(label, replacementLabel);
         }
 

@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
-using UnityEngine;
 
 namespace TranspilerUtil;
 
@@ -135,17 +134,17 @@ public static class InfixPatcher
         {
             foreach (var prefix in prefixes)
             {
-                Debug.Log($"prefix {prefix.patchMethod.DeclaringType?.FullName}::{prefix.patchMethod.Name}");
+                FileLog.Log($"prefix {prefix.patchMethod.DeclaringType?.FullName}::{prefix.patchMethod.Name}");
                 foreach (var parameter in prefix.parameters)
-                    Debug.Log(
+                    FileLog.Log(
                         $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");
             }
 
             foreach (var postfix in postfixes)
             {
-                Debug.Log($"postfix {postfix.patchMethod.DeclaringType?.FullName}::{postfix.patchMethod.Name}");
+                FileLog.Log($"postfix {postfix.patchMethod.DeclaringType?.FullName}::{postfix.patchMethod.Name}");
                 foreach (var parameter in postfix.parameters)
-                    Debug.Log(
+                    FileLog.Log(
                         $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");
             }
         }
