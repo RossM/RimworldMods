@@ -465,11 +465,11 @@ public static class InfixPatcher
                 return property.GetMethod;
         }
 
-        return GetMemberInt(type, memberName, parameterTypes, genericTypes);
+        return GetMethod(type, memberName, parameterTypes, genericTypes);
 
     }
 
-    private static MethodInfo? GetMemberInt(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
+    private static MethodInfo? GetMethod(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
     {
         foreach (var method in type.GetMethods(AccessTools.all))
         {
