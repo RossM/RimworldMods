@@ -11,10 +11,8 @@ public static class Patch_ITab_Pawn_Visitor
         Rules =
         {
             InfixPatcher.MakeRedirectRule(
-                AccessTools.Method(typeof(StatWorker_SuppressionFallRate),
-                    nameof(StatWorker_SuppressionFallRate.GetExplanationForTooltip)),
-                AccessTools.Method(typeof(StatWorker_SuppressionFallRate_Fixed),
-                    nameof(StatWorker_SuppressionFallRate_Fixed.GetExplanationForTooltip))),
+                SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate o) => o.GetExplanationForTooltip(default)),
+                SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate_Fixed o) => o.GetExplanationForTooltip(default))),
             new()
             {
                 Min = 1, Max = 0,

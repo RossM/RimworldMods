@@ -45,9 +45,9 @@ internal static class Patch_GeneDef
 
         yield return CodeInstruction.StoreLocal(local.LocalIndex).WithLabels(label);
         yield return CodeInstruction.LoadArgument(0);
-        yield return new(OpCodes.Call, AccessTools.Method(typeof(Def), nameof(Def.ConfigErrors)));
+        yield return new(OpCodes.Call, SymbolExtensions.GetMethodInfo((Def def) => def.ConfigErrors()));
         yield return CodeInstruction.LoadLocal(local.LocalIndex);
-        yield return new(OpCodes.Call, AccessTools.Method(typeof(Enumerable), nameof(Enumerable.Concat))!.MakeGenericMethod(typeof(string)));
+        yield return new(OpCodes.Call, SymbolExtensions.GetMethodInfo(() => Enumerable.Concat<string>(null, null)));
         yield return new(OpCodes.Ret);
     }
 }
