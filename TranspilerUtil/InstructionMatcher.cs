@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
-using JetBrains.Annotations;
 
 namespace TranspilerUtil;
 
@@ -37,6 +36,7 @@ public class InstructionMatcher
         public int start, end;
         public required Dictionary<int, int> privateMap;
         public required Dictionary<Label, Label> labelMap;
+        public bool emitted = false;
     }
 
     public static bool forceDebug = false;
@@ -69,6 +69,9 @@ public class InstructionMatcher
 
         debug |= forceDebug;
 
+        if (debug)
+            FileLog.Log($"## InfixPatcher {method.DeclaringType?.FullName}::{method.Name}");
+
         // Check and make sure that all the substitutions apply. Also work out the indexes of all locals.
         for (var ruleIndex = 0; ruleIndex < Rules.Count; ruleIndex++)
         {
@@ -79,8 +82,10 @@ public class InstructionMatcher
             switch (rule)
             {
                 case { Pattern: null }: throw new InvalidOperationException($"{rule.Mode} rule cannot have Pattern = null");
-                case { Mode: OutputMode.MatchOnly, Output: not null }: throw new InvalidOperationException($"{rule.Mode} rule cannot have Output = null");
-                case { Mode: not OutputMode.MatchOnly, Output: null }: throw new InvalidOperationException($"{rule.Mode} rule must have Output = null");
+                case { Mode: OutputMode.MatchOnly, Output: not null }:
+                    throw new InvalidOperationException($"{rule.Mode} rule cannot have Output = null");
+                case { Mode: not OutputMode.MatchOnly, Output: null }:
+                    throw new InvalidOperationException($"{rule.Mode} rule must have Output = null");
             }
 
             var matchCount = 0;
@@ -111,7 +116,8 @@ public class InstructionMatcher
                         int localIndex = patternInst.LocalIndex();
                         int targetIndex = inst.LocalIndex();
 
-                        if (localIndexMap.TryGetValue(localIndex, out int substituteIndex) || tempLocalIndexMap.TryGetValue(localIndex, out substituteIndex))
+                        if (localIndexMap.TryGetValue(localIndex, out int substituteIndex) ||
+                            tempLocalIndexMap.TryGetValue(localIndex, out substituteIndex))
                             isMatch = targetIndex == substituteIndex;
                         else
                             tempLocalIndexMap.Add(localIndex, targetIndex);
@@ -138,7 +144,8 @@ public class InstructionMatcher
                         // There is something very weird going on here. This may be a Harmony bug.
                         int targetIndex = inst.operand is LocalBuilder lb ? lb.LocalIndex : inst.LocalIndex();
 
-                        if (localIndexMap.TryGetValue(localIndex, out int substituteIndex) || tempLocalIndexMap.TryGetValue(localIndex, out substituteIndex))
+                        if (localIndexMap.TryGetValue(localIndex, out int substituteIndex) ||
+                            tempLocalIndexMap.TryGetValue(localIndex, out substituteIndex))
                             isMatch = targetIndex == substituteIndex;
                         else
                             tempLocalIndexMap.Add(localIndex, targetIndex);
@@ -174,7 +181,7 @@ public class InstructionMatcher
                     labelMap = new(),
                 };
                 if (debug)
-                    FileLog.Log($"MATCH #{ruleIndex} {matchData.start}-{matchData.end}");
+                    FileLog.Log($"MATCH #{ruleIndex} ({matchData.start} .. {matchData.end})");
 
                 matches.Add(matchData);
                 if (rule.SaveLocals)
@@ -182,6 +189,7 @@ public class InstructionMatcher
                     foreach (var kvp in tempLocalIndexMap)
                         localIndexMap.Add(kvp.Key, kvp.Value);
                 }
+
                 matchCount++;
                 if (rule.Max > 0 && matchCount >= rule.Max)
                     break;
@@ -218,7 +226,8 @@ public class InstructionMatcher
         for (var instructionIndex = 0; instructionIndex < instructions.Count; instructionIndex++)
         {
             int index = instructionIndex;
-            var match = sortedMatches.FirstOrDefault(r => r.start == index);
+            var match = sortedMatches.FirstOrDefault(r => r.start == index && !r.emitted);
+            match?.emitted = true;
 
             if (match?.rule.Output != null)
             {
@@ -315,6 +324,10 @@ public class InstructionMatcher
 
         // Everything succeeded, now safe to change ref instructions
         instructions = outInstructions;
+
+        if (debug)
+            FileLog.Log("");
+
         return true;
     }
 
@@ -340,6 +353,7 @@ public class InstructionMatcher
             newInstruction.labels.AddRange(extraLabels);
             extraLabels.Clear();
         }
+
         if (extraBlocks.Count > 0)
             newInstruction.blocks.AddRange(extraBlocks);
 
@@ -373,15 +387,15 @@ public class InstructionMatcher
         else if (match.privateMap.TryGetValue(localIndex, out substituteIndex))
         {
         }
-        else if (match.rule.LocalTypes != null && localIndex < match.rule.LocalTypes.Length)
-        {
-            substituteIndex = generator.DeclareLocal(match.rule.LocalTypes[localIndex]).LocalIndex;
-            match.privateMap.Add(localIndex, substituteIndex);
-        }
         else if (localIndex < LocalTypes.Count)
         {
             substituteIndex = generator.DeclareLocal(LocalTypes[localIndex]).LocalIndex;
             localIndexMap.Add(localIndex, substituteIndex);
+        }
+        else if (match.rule.LocalTypes != null && localIndex < match.rule.LocalTypes.Length)
+        {
+            substituteIndex = generator.DeclareLocal(match.rule.LocalTypes[localIndex]).LocalIndex;
+            match.privateMap.Add(localIndex, substituteIndex);
         }
         else
         {
@@ -403,7 +417,6 @@ public class InstructionMatcher
             throw new InvalidOperationException(reason);
     }
 
-    [UsedImplicitly]
     public static List<CodeInstruction> MatchAndReplace(
         List<Rule> rules,
         MethodBase method,
@@ -413,6 +426,18 @@ public class InstructionMatcher
     {
         var instructionsList = new List<CodeInstruction>(instructions);
         new InstructionMatcher(rules).MatchAndReplace(method, ref instructionsList, generator, debug: debug);
+        return instructionsList;
+    }
+
+    public static List<CodeInstruction> MatchAndReplace(
+        InstructionMatcher matcher,
+        MethodBase method,
+        IEnumerable<CodeInstruction> instructions,
+        ILGenerator generator,
+        bool debug = false)
+    {
+        var instructionsList = new List<CodeInstruction>(instructions);
+        matcher.MatchAndReplace(method, ref instructionsList, generator, debug: debug);
         return instructionsList;
     }
 }

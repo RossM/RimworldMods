@@ -29,6 +29,7 @@ public static class InfixPatcher
         Result,
         ParameterField,
         InstanceField,
+        State,
     }
 
     private struct ParameterBinding
@@ -72,7 +73,7 @@ public static class InfixPatcher
                 if (prefixesUsingResult.Count > 0)
                 {
                     if (!prefixesUsingResult[0].parameters.Single(a => a.BindingType == BindingType.Result).Parameter.IsOut)
-                        EmitInitialization(targetType, resultLocalIndex);
+                        EmitInitializer(targetType, resultLocalIndex, output);
                 }
             }
 
@@ -145,40 +146,8 @@ public static class InfixPatcher
                 FileLog.Log($"postfix {postfix.patchMethod.DeclaringType?.FullName}::{postfix.patchMethod.Name}");
                 foreach (var parameter in postfix.parameters)
                     FileLog.Log(
-                        $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");
+                        $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field={parameter.Field?.Name}");
             }
-        }
-
-        private void EmitInitialization(Type type, int localIndex)
-        {
-            if (type.IsByRef)
-                throw new NotImplementedException($"IsByRef targetType {type}");
-
-            if (type.IsClass)
-            {
-                output.Add(new(OpCodes.Ldnull));
-                output.Add(CodeInstruction.StoreLocal(localIndex));
-            }
-            else if (type.IsStruct())
-            {
-                output.Add(CodeInstructionUtil.LoadLocalAddress(localIndex));
-                output.Add(new(OpCodes.Initobj, type));
-            }
-            else if (type.IsValueType)
-            {
-                if (type == typeof(float))
-                    output.Add(new(OpCodes.Ldc_R4, (float)0));
-                else if (type == typeof(double))
-                    output.Add(new(OpCodes.Ldc_R8, (double)0));
-                else if (type == typeof(long) || type == typeof(ulong))
-                    output.Add(new(OpCodes.Ldc_I8, (long)0));
-                else
-                    output.Add(new(OpCodes.Ldc_I4_0));
-
-                output.Add(CodeInstruction.StoreLocal(localIndex));
-            }
-            else
-                throw new NotImplementedException($"targetType {type}");
         }
 
         private void EmitParameterValue(ParameterBinding parameter)
@@ -209,6 +178,16 @@ public static class InfixPatcher
                         output.Add(new(OpCodes.Ldflda, parameter.Field));
                     else
                         output.Add(new(OpCodes.Ldfld, parameter.Field));
+
+                    return;
+                }
+
+                case BindingType.State:
+                {
+                    if (parameterType.IsByRef)
+                        output.Add(new(OpCodes.Ldloca, parameter.Index));
+                    else
+                        output.Add(CodeInstruction.LoadLocal(parameter.Index));
 
                     return;
                 }
@@ -286,7 +265,7 @@ public static class InfixPatcher
                 FieldInfo { IsStatic: false } field => [field.DeclaringType],
                 MethodInfo { IsStatic: true } method => [.. method.GetParameters().Select(p => p.ParameterType)],
                 MethodInfo { IsStatic: false } method => [method.DeclaringType, .. method.GetParameters().Select(p => p.ParameterType)],
-                _ => throw new InvalidOperationException()
+                _ => throw new InvalidOperationException(),
             };
         }
 
@@ -298,7 +277,27 @@ public static class InfixPatcher
                 FieldInfo { IsStatic: false } => OpCodes.Ldfld,
                 MethodBase { IsVirtual: true } => OpCodes.Callvirt,
                 MethodBase { IsVirtual: false } => OpCodes.Call,
-                _ => throw new InvalidOperationException()
+                _ => throw new InvalidOperationException(),
+            };
+        }
+
+        public InstructionMatcher.Rule BuildRule()
+        {
+            List<CodeInstruction> pattern =
+            [
+                new(OpcodeFor(target), target),
+            ];
+
+            EmitReplacement();
+
+            return new InstructionMatcher.Rule
+            {
+                Min = 1,
+                Max = 0,
+                Mode = InstructionMatcher.OutputMode.Replace,
+                Pattern = pattern.ToArray(),
+                Output = output.ToArray(),
+                LocalTypes = localTypes.ToArray(),
             };
         }
 
@@ -311,7 +310,7 @@ public static class InfixPatcher
         public readonly List<PatchInfo> postfixes;
         public readonly List<CodeInstruction> output = [];
 
-        public readonly List<Type> localTypes = [];
+        public readonly List<Type> localTypes;
 
         public readonly bool debug;
 
@@ -321,7 +320,8 @@ public static class InfixPatcher
             MemberInfo target,
             MethodInfo? replacementTarget,
             List<PatchInfo> prefixes,
-            List<PatchInfo> postfixes)
+            List<PatchInfo> postfixes,
+            List<Type> localTypes)
         {
             this.generator = generator;
             this.caller = caller;
@@ -329,6 +329,7 @@ public static class InfixPatcher
             this.replacementTarget = replacementTarget;
             this.prefixes = prefixes;
             this.postfixes = postfixes;
+            this.localTypes = localTypes.ToList();
 
             debug = prefixes.Any(p => p.debug) || postfixes.Any(p => p.debug);
 
@@ -345,26 +346,53 @@ public static class InfixPatcher
             parameterToLocalIndex = new int[targetParameterTypes.Length];
         }
         // ReSharper restore MemberCanBePrivate.Local
+    }
+
+
+    private class StateBuilder
+    {
+        private readonly Dictionary<Type, (int index, Type type)> stateMap = new();
+        public readonly List<Type> LocalTypes = [];
+
+        public int GetOrAddStateLocal(Type declaringType, Type localType, MethodInfo method)
+        {
+            if (localType.IsByRef)
+                localType = localType.GetElementType();
+
+            if (stateMap.TryGetValue(declaringType, out var tuple))
+            {
+                (int index, Type existingType) = tuple;
+
+                if (existingType == localType)
+                    return index;
+
+                throw new ArgumentException(
+                    $"{declaringType.FullName}.{method.Name} declares __state of type {localType} but {declaringType.FullName} already has a __state of type {existingType}");
+            }
+
+            int newIndex = LocalTypes.Count;
+            stateMap.Add(declaringType, (newIndex, localType));
+            LocalTypes.Add(localType);
+            return newIndex;
+        }
 
         public InstructionMatcher.Rule BuildRule()
         {
-            List<CodeInstruction> pattern =
-            [
-                new(OpcodeFor(target), target),
-            ];
+            List<CodeInstruction> output = [];
 
-            EmitReplacement();
+            for (int index = 0; index < LocalTypes.Count; index++)
+            {
+                EmitInitializer(LocalTypes[index], index, output);
+            }
 
-            var rule = new InstructionMatcher.Rule
+            return new InstructionMatcher.Rule
             {
                 Min = 1,
-                Max = 0,
+                Max = 1,
                 Mode = InstructionMatcher.OutputMode.Replace,
-                Pattern = pattern.ToArray(),
+                Pattern = [],
                 Output = output.ToArray(),
-                LocalTypes = localTypes.ToArray(),
             };
-            return rule;
         }
     }
 
@@ -378,9 +406,43 @@ public static class InfixPatcher
         public bool debug;
     }
 
+    private static void EmitInitializer(Type type, int localIndex, List<CodeInstruction> codeInstructions)
+    {
+        if (type.IsByRef)
+            throw new NotImplementedException($"IsByRef targetType {type}");
+
+        if (type.IsClass)
+        {
+            codeInstructions.Add(new(OpCodes.Ldnull));
+            codeInstructions.Add(CodeInstruction.StoreLocal(localIndex));
+        }
+        else if (type.IsStruct())
+        {
+            codeInstructions.Add(CodeInstructionUtil.LoadLocalAddress(localIndex));
+            codeInstructions.Add(new(OpCodes.Initobj, type));
+        }
+        else if (type.IsValueType)
+        {
+            if (type == typeof(float))
+                codeInstructions.Add(new(OpCodes.Ldc_R4, (float)0));
+            else if (type == typeof(double))
+                codeInstructions.Add(new(OpCodes.Ldc_R8, (double)0));
+            else if (type == typeof(long) || type == typeof(ulong))
+                codeInstructions.Add(new(OpCodes.Ldc_I8, (long)0));
+            else
+                codeInstructions.Add(new(OpCodes.Ldc_I4_0));
+
+            codeInstructions.Add(CodeInstruction.StoreLocal(localIndex));
+        }
+        else
+            throw new NotImplementedException($"targetType {type}");
+    }
+
     public static void PatchInfix(Harmony harmony, Assembly assembly)
     {
         List<PatchInfo> patches = [];
+
+        Dictionary<MethodInfo, StateBuilder> stateBuilders = new();
 
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
@@ -416,7 +478,11 @@ public static class InfixPatcher
                         if (caller == null)
                             throw new InvalidOperationException("null target method");
 
-                        var arguments = method.GetParameters().Select(param => BindParameter(param, caller, target)).ToArray();
+                        if (!stateBuilders.TryGetValue(caller, out StateBuilder stateBuilder))
+                            stateBuilder = stateBuilders[caller] = new();
+
+                        var arguments = method.GetParameters().Select(param => BindParameter(param, caller, target, stateBuilder))
+                            .ToArray();
 
                         patches.Add(new()
                         {
@@ -448,6 +514,13 @@ public static class InfixPatcher
             try
             {
                 List<InstructionMatcher.Rule> rules = [];
+
+                if (!stateBuilders.TryGetValue(patchedMethod, out var stateBuilder))
+                    stateBuilder = new();
+
+                if (stateBuilder.LocalTypes.Count > 0)
+                    rules.Add(stateBuilder.BuildRule());
+
                 foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patchGroup.GroupBy(patch => patch.target))
                 {
                     var target = targetGroup.Key;
@@ -457,13 +530,19 @@ public static class InfixPatcher
                     rules.Add(new()
                     {
                         LateGenerator = (_, _, generator) =>
-                            RedirectRule_Core(generator, patchedMethod, target, null, prefixes, postfixes)
+                            RedirectRule_Core(generator, patchedMethod, target, null, prefixes, postfixes, stateBuilder.LocalTypes),
                     });
                 }
 
                 bool debug = patchGroup.Any(info => info.debug);
 
-                MethodInfo transpiler = MakeTranspiler(moduleBuilder, rules,
+                var matcher = new InstructionMatcher
+                {
+                    Rules = rules,
+                    LocalTypes = stateBuilder.LocalTypes,
+                };
+
+                MethodInfo transpiler = MakeTranspiler(moduleBuilder, matcher,
                     $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler", debug);
 
                 try
@@ -484,7 +563,7 @@ public static class InfixPatcher
         }
     }
 
-    private static ParameterBinding BindParameter(ParameterInfo parameter, MethodInfo caller, MemberInfo target)
+    private static ParameterBinding BindParameter(ParameterInfo parameter, MethodInfo caller, MemberInfo target, StateBuilder stateBuilder)
     {
         var parameterName = parameter.Name;
 
@@ -509,6 +588,12 @@ public static class InfixPatcher
                 if (target is MethodInfo info && info.ReturnType.IsVoid())
                     throw new ArgumentException("__result argument cannot be used with method returning void");
                 return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = Scope.Inner };
+            }
+
+            case "__state":
+            {
+                int index = stateBuilder.GetOrAddStateLocal(caller.DeclaringType, parameter.ParameterType, caller);
+                return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, Index = index };
             }
 
             case not null when parameterName.StartsWith("___"):
@@ -654,22 +739,23 @@ public static class InfixPatcher
         return null;
     }
 
-    private static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, List<InstructionMatcher.Rule> rules, string typeName, bool debug)
+    private static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, InstructionMatcher matcher, string typeName, bool debug)
     {
         TypeBuilder typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
 
-        FieldBuilder rulesField = typeBuilder.DefineField("rules", typeof(List<InstructionMatcher.Rule>),
+        FieldBuilder matcherField = typeBuilder.DefineField("matcher", typeof(InstructionMatcher),
             FieldAttributes.Public | FieldAttributes.Static);
         FieldBuilder debugField = typeBuilder.DefineField("debug", typeof(bool),
             FieldAttributes.Public | FieldAttributes.Static);
 
         MethodBuilder methodBuilder = typeBuilder.DefineMethod("Invoke", MethodAttributes.Public | MethodAttributes.Static,
-            typeof(IEnumerable<CodeInstruction>), [typeof(MethodBase), typeof(IEnumerable<CodeInstruction>), typeof(ILGenerator)]);
+            typeof(List<CodeInstruction>), [typeof(MethodBase), typeof(IEnumerable<CodeInstruction>), typeof(ILGenerator)]);
         ILGenerator generator = methodBuilder.GetILGenerator();
 
-        MethodInfo matchAndReplace = ((MatchAndReplaceFn)InstructionMatcher.MatchAndReplace).Method;
+        MethodInfo matchAndReplace
+            = SymbolExtensions.GetMethodInfo(() => InstructionMatcher.MatchAndReplace((InstructionMatcher)null, null, null, null));
 
-        generator.Emit(OpCodes.Ldsfld, rulesField);
+        generator.Emit(OpCodes.Ldsfld, matcherField);
         generator.Emit(OpCodes.Ldarg_0);
         generator.Emit(OpCodes.Ldarg_1);
         generator.Emit(OpCodes.Ldarg_2);
@@ -678,7 +764,7 @@ public static class InfixPatcher
         generator.Emit(OpCodes.Ret);
 
         Type type = typeBuilder.CreateType();
-        type.GetField(rulesField.Name).SetValue(null, rules);
+        type.GetField(matcherField.Name).SetValue(null, matcher);
         type.GetField(debugField.Name).SetValue(null, debug);
         return type.GetMethod(methodBuilder.Name);
     }
@@ -701,13 +787,20 @@ public static class InfixPatcher
     {
         return new()
         {
-            LateGenerator = (caller, _, generator) => RedirectRule_Core(generator, caller, oldMember, newMember, [], [])
+            LateGenerator = (caller, _, generator) => RedirectRule_Core(generator, caller, oldMember, newMember, [], [], []),
         };
     }
 
-    private static InstructionMatcher.Rule RedirectRule_Core(ILGenerator generator, MethodBase caller, MemberInfo target, MethodInfo replacementTarget, List<PatchInfo> prefixes, List<PatchInfo> postfixes)
+    private static InstructionMatcher.Rule RedirectRule_Core(
+        ILGenerator generator,
+        MethodBase caller,
+        MemberInfo target,
+        MethodInfo? replacementTarget,
+        List<PatchInfo> prefixes,
+        List<PatchInfo> postfixes,
+        List<Type> localTypes)
     {
-        var methodPatchWorker = new RuleBuilder(generator, caller, target, replacementTarget, prefixes, postfixes);
+        var methodPatchWorker = new RuleBuilder(generator, caller, target, replacementTarget, prefixes, postfixes, localTypes);
 
         return methodPatchWorker.BuildRule();
     }
