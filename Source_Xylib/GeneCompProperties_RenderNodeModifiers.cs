@@ -9,7 +9,7 @@ internal enum RenderNodeModifierType
 }
 
 [PublicAPI]
-public class RenderNodeModifier
+public sealed class RenderNodeModifier
 {
     public required PawnRenderNodeTagDef tag;
     public float scale = 1.0f;

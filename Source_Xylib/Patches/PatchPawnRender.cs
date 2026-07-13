@@ -14,8 +14,12 @@ internal static class PatchPawnRender
     [InfixPatch(typeof(PawnRenderTree), nameof(PawnRenderTree.ParallelPreDraw))]
     public static void AppendRequests_Postfix(PawnRenderNode __instance, PawnDrawParms parms, List<PawnGraphicDrawRequest> requests)
     {
-        var type = RenderNodeModifierType.VisibilitySelfOnly;
-        List<RenderNodeModifier>? renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
+        var geneTracker = parms.pawn?.GeneTracker_Xylib;
+        if (geneTracker == null)
+            return;
+
+        const RenderNodeModifierType type = RenderNodeModifierType.VisibilitySelfOnly;
+        List<RenderNodeModifier>? renderNodeModifiers = geneTracker.renderNodeModifiersByType[(int)type];
         if (renderNodeModifiers == null)
             return;
 
@@ -26,7 +30,8 @@ internal static class PatchPawnRender
             var request = requests[i];
             DebugAssert.NotNull(request);
 
-            for (var j = 0; j < renderNodeModifiers.Count; j++)
+            var count = renderNodeModifiers.Count;
+            for (var j = 0; j < count; j++)
             {
                 RenderNodeModifier? renderNodeModifier = renderNodeModifiers[j];
                 DebugAssert.NotNull(renderNodeModifier);
@@ -48,12 +53,17 @@ internal static class PatchPawnRender
     [HarmonyPatch(typeof(PawnRenderNode), nameof(PawnRenderNode.AppendRequests))]
     public static bool AppendRequests_Prefix(PawnRenderNode __instance, PawnDrawParms parms, List<PawnGraphicDrawRequest> requests)
     {
-        var type = RenderNodeModifierType.VisibilitySelfAndChildren;
-        List<RenderNodeModifier>? renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
+        var geneTracker = parms.pawn?.GeneTracker_Xylib;
+        if (geneTracker == null)
+            return true;
+
+        const RenderNodeModifierType type = RenderNodeModifierType.VisibilitySelfAndChildren;
+        List<RenderNodeModifier>? renderNodeModifiers = geneTracker.renderNodeModifiersByType[(int)type];
         if (renderNodeModifiers == null)
             return true;
 
-        for (var i = 0; i < renderNodeModifiers.Count; i++)
+        var count = renderNodeModifiers.Count;
+        for (var i = 0; i < count; i++)
         {
             RenderNodeModifier? renderNodeModifier = renderNodeModifiers[i];
             DebugAssert.NotNull(renderNodeModifier);
@@ -75,12 +85,17 @@ internal static class PatchPawnRender
         ref Vector3 offset,
         ref Vector3 scale)
     {
-        var type = __instance == node ? RenderNodeModifierType.PositionSelf : RenderNodeModifierType.PositionChildren;
-        List<RenderNodeModifier>? renderNodeModifiers = parms.pawn?.GeneTracker_Xylib?.renderNodeModifiersByType[(int)type];
+        var geneTracker = parms.pawn?.GeneTracker_Xylib;
+        if (geneTracker == null)
+            return;
+
+        RenderNodeModifierType type = __instance == node ? RenderNodeModifierType.PositionSelf : RenderNodeModifierType.PositionChildren;
+        List<RenderNodeModifier>? renderNodeModifiers = geneTracker.renderNodeModifiersByType[(int)type];
         if (renderNodeModifiers == null)
             return;
 
-        for (var i = 0; i < renderNodeModifiers.Count; i++)
+        var count = renderNodeModifiers.Count;
+        for (var i = 0; i < count; i++)
         {
             RenderNodeModifier? renderNodeModifier = renderNodeModifiers[i];
             DebugAssert.NotNull(renderNodeModifier);
