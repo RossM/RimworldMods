@@ -77,7 +77,8 @@ public abstract class GeneSetMaker
             return false;
 
         // Aptitude-giving genes must not apply to only disabled skills
-        if (gene.aptitudes is { Count: > 0 } && gene.aptitudes.All(aptitude => pawn.skills?.GetSkill(aptitude.skill)?.TotallyDisabled is not false))
+        if (gene.aptitudes is { Count: > 0 } &&
+            gene.aptitudes.All(aptitude => pawn.skills?.GetSkill(aptitude.skill)?.TotallyDisabled is not false))
             return false;
 
         return true;

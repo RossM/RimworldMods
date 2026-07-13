@@ -33,7 +33,7 @@ public class PatchOperationMerge : PatchOperationPathed
     public enum Order
     {
         Append,
-        Prepend
+        Prepend,
     }
 
     public XmlContainer? value;

@@ -29,6 +29,7 @@ public class GeneComp_Flight : GeneComp, IEventListener
     [MemberNotNullWhen(true, nameof(Flight))]
     [MemberNotNullWhen(true, nameof(Pather))]
     private bool Spawned => Pawn.Spawned;
+
     private Pawn_FlightTracker? Flight => Pawn.flight;
     private Pawn_PathFollower? Pather => Pawn.pather;
 
@@ -178,7 +179,7 @@ public class GeneComp_Flight : GeneComp, IEventListener
         [
             new("defName", thingDef => thingDef.defName),
             new("label", thingDef => thingDef.LabelCap),
-            new("allowsFlight", thingDef => ApparelAllowsFlight(thingDef))
+            new("allowsFlight", thingDef => ApparelAllowsFlight(thingDef)),
         ];
         DebugTables.MakeTablesDialog(
             DefDatabase<ThingDef>.AllDefs.Where(thingDef => thingDef.IsApparel).OrderBy(thingDef => thingDef.BaseMarketValue), columns);

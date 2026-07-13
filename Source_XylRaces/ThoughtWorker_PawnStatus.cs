@@ -33,7 +33,7 @@ public class ThoughtWorker_PawnStatus : ThoughtWorker
             DefModExtension_Thought_PawnStatus.StatusMode.NotPrisoner => !p.IsPrisoner,
             DefModExtension_Thought_PawnStatus.StatusMode.Freeman => p.IsFreeman,
             DefModExtension_Thought_PawnStatus.StatusMode.NotFreeman => !p.IsFreeman,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(),
         };
     }
 

@@ -44,7 +44,7 @@ public static class Patch_PregnancyUtility
         {
             PatchHelpers.DominantParent.Mother => mother.genes.Endogenes.Select(gene => gene.def).ToList(),
             PatchHelpers.DominantParent.Father => father.genes.Endogenes.Select(gene => gene.def).ToList(),
-            _ => __result
+            _ => __result,
         };
     }
 

@@ -144,7 +144,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
         {
             < Need_Wetness.thresholdWet when projectedWetness < Need_Wetness.thresholdNeutral => ThinkNodePriority.MiscNeed,
             < 0.95f => ThinkNodePriority.AvoidIdle,
-            _ => 0.0f
+            _ => 0.0f,
         };
     }
 }

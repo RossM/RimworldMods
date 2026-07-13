@@ -39,7 +39,7 @@ public class Hediff_SubstituteCapacity : HediffWithComps
             {
                 DefModExtension_Hediff_SubstituteCapacity.SubstitutionMode.Maximum => substituteLevel > originalLevel,
                 DefModExtension_Hediff_SubstituteCapacity.SubstitutionMode.Minimum => substituteLevel < originalLevel,
-                _ => true
+                _ => true,
             };
             lastActiveCheckTick = curTick;
             return field;
@@ -68,7 +68,7 @@ public class Hediff_SubstituteCapacity : HediffWithComps
             DefModExtension_Hediff_SubstituteCapacity.SubstitutionMode.Always => "XylSubstituteCapacityAlwaysDesc",
             DefModExtension_Hediff_SubstituteCapacity.SubstitutionMode.Maximum => "XylSubstituteCapacityHigherDesc",
             DefModExtension_Hediff_SubstituteCapacity.SubstitutionMode.Minimum => "XylSubstituteCapacityLowerDesc",
-            _ => throw new NotSupportedException()
+            _ => throw new NotSupportedException(),
         };
         sb.Append(desc.Translate(DefExt.substituteCapacity.label, DefExt.originalCapacity.label)
             .CapitalizeFirst());

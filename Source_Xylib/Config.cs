@@ -16,6 +16,8 @@ public class FoodGroupDef : Def
 [UsedFromXml]
 public class Config : Def
 {
+    public required Dictionary<HediffDef, StatDef> resistanceStatByHediff;
+
     public static Config Instance
     {
         get
@@ -26,6 +28,4 @@ public class Config : Def
             return field;
         }
     }
-
-    public required Dictionary<HediffDef, StatDef> resistanceStatByHediff;
 }

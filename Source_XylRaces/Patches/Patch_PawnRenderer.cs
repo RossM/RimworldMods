@@ -33,7 +33,7 @@ public static class Patch_PawnRenderer
             CodeInstruction.Call(typeof(PatchHelpers), nameof(PatchHelpers.ModifyRenderFlags)),
             // Save pawnRenderFlags
             CodeInstruction.StoreLocal(0),
-        ]
+        ],
     };
 
     [Feature(nameof(DefOf.XylTakeShower))]

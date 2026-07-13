@@ -1,4 +1,5 @@
 ﻿// ReSharper disable MemberCanBeMadeStatic.Global
+
 namespace XylXenos;
 
 [StaticConstructorOnStartup]
@@ -39,9 +40,9 @@ public static class StaticEventHandlers
         static bool HasGenderRatio(GeneDef geneDef) => geneDef.CompProps<GeneCompProperties_GenderRatio>() != null;
 
         GeneDef? gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
-                       request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
-                       request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
-                       xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
+                        request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
+                        request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
+                        xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
         var comp = gene?.CompProps<GeneCompProperties_GenderRatio>();
         if (comp == null)
             return;

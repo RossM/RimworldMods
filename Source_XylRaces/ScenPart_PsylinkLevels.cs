@@ -48,7 +48,7 @@ public class ScenPart_PsylinkLevels : ScenPart_PawnModifier
             {
                 var oldAbilities = new HashSet<Ability>(pawn.abilities.AllAbilitiesForReading);
                 mainPsylinkSource.suppressPostAddLetter = !sendLetter;
-                
+
                 BodyPartRecord? brain = pawn.health.hediffSet.GetBrain();
                 DebugAssert.NotNull(brain);
 

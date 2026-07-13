@@ -47,13 +47,13 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         // ReSharper restore UnusedMember.Local
     }
 
-    public const int StageCount = (int)Stages.Coma + 1;
-
     public DefModExtension_Hediff_DietDependency DefExt => field ??= def.GetModExtension<DefModExtension_Hediff_DietDependency>()!;
 
     public bool ShouldSatisfy => CurStageIndex >= (int)Stages.Craving;
 
     public override bool ShouldRemove => false;
+
+    public const int StageCount = (int)Stages.Coma + 1;
 
     public override string? TipStringExtra
     {
@@ -185,7 +185,8 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         return false;
     }
 
-    private bool ValidFoodType(ThingDef ingredient) => DefExt.foodGroups is not { Count: > 0 } || ingredient.FoodGroups.Intersect(DefExt.foodGroups).Any();
+    private bool ValidFoodType(ThingDef ingredient) =>
+        DefExt.foodGroups is not { Count: > 0 } || ingredient.FoodGroups.Intersect(DefExt.foodGroups).Any();
 
     public override void Notify_IngestedThing(Thing food, int numTaken)
     {

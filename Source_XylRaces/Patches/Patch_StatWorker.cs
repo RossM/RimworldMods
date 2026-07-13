@@ -24,7 +24,7 @@ public static class Patch_StatWorker
                     // Match to find the local "pawn" is stored in
                     new CodeInstruction(OpCodes.Isinst, typeof(Pawn)),
                     CodeInstruction.StoreLocal(0),
-                ]
+                ],
             },
 
             new()
@@ -56,7 +56,7 @@ public static class Patch_StatWorker
                     CodeInstruction.LoadLocal(1),
                     // Call ConditionalSetCapacity (because I don't want to emit an if)
                     CodeInstruction.Call(() => ConditionalSetCapacity),
-                ]
+                ],
             },
             new()
             {
@@ -110,7 +110,7 @@ public static class Patch_StatWorker
                     CodeInstruction.LoadLocal(1),
                     // Call ConditionalSetCapacity (because I don't want to emit an if)
                     CodeInstruction.Call(() => ConditionalSetCapacity),
-                ]
+                ],
             },
             new()
             {
@@ -134,8 +134,8 @@ public static class Patch_StatWorker
                     // Call
                     CodeInstruction.Call(() => AppendSubstitutionDescription),
                 ],
-            }
-        }
+            },
+        },
     };
 
     [Feature(typeof(Hediff_SubstituteCapacity))]

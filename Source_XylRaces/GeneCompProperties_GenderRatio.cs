@@ -9,7 +9,7 @@ public class GeneCompProperties_GenderRatio : GeneCompProperties
             >= 1.0f => "XylGenderRatioAlwaysFemale".Translate(),
             <= 0.0f => "XylGenderRatioAlwaysMale".Translate(),
             var chance => "XylGenderRatioValue".Translate(chance.ToStringPercent(),
-                (1 - chance).ToStringPercent())
+                (1 - chance).ToStringPercent()),
         };
 
     public float femaleChance = 0.5f;

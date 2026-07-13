@@ -372,7 +372,7 @@ public static class DebugArena
                     ArenaResult.Winner.Other => 0,
                     ArenaResult.Winner.Lhs => 1,
                     ArenaResult.Winner.Rhs => -1,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(),
                 };
                 streamWriter.WriteLine($"{lhsDef.defName},{lhs.Count},{rhsDef.defName},{rhs.Count},{score}");
 

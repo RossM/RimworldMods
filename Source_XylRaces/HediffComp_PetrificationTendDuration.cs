@@ -23,7 +23,7 @@ public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
         get
         {
             DebugAssert.NotNull(Pawn);
-            
+
             if (parent.IsPermanent())
             {
                 return null;

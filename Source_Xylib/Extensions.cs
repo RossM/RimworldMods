@@ -334,7 +334,7 @@ public static class Extensions
                 {
                     GeneWithComps gene = genes[index];
                     DebugAssert.NotNull(gene);
-                    
+
                     if (gene.Active)
                         yield return gene;
                 }
@@ -372,7 +372,7 @@ public static class Extensions
                     if (!gene.Active)
                         continue;
 
-					T? comp = gene.GetComp<T>();
+                    T? comp = gene.GetComp<T>();
                     DebugAssert.NotNull(comp);
 
                     if (predicate(comp))
@@ -435,7 +435,7 @@ public static class Extensions
                 if (!gene.Active)
                     continue;
 
-				T? comp = gene.GetComp<T>();
+                T? comp = gene.GetComp<T>();
                 DebugAssert.NotNull(comp);
 
                 if (predicate(comp))
@@ -499,7 +499,7 @@ public static class Extensions
                 if (!gene.Active)
                     continue;
 
-				T? comp = gene.GetComp<T>();
+                T? comp = gene.GetComp<T>();
                 DebugAssert.NotNull(comp);
 
                 if (predicate(comp))
@@ -536,7 +536,7 @@ public static class Extensions
                     if (!gene.Active)
                         continue;
 
-					T? comp = gene.GetComp<T>();
+                    T? comp = gene.GetComp<T>();
                     DebugAssert.NotNull(comp);
 
                     yield return comp;
@@ -638,13 +638,13 @@ public static class Extensions
             {
                 GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
-                
+
                 if (!gene.Active)
                     continue;
 
                 var comp = gene.GetComp<T>();
                 DebugAssert.NotNull(comp);
-                
+
                 if (predicate(comp))
                     return comp;
             }
@@ -892,7 +892,7 @@ public static class Extensions
         {
             var result = (T?)method.CreateDelegate(typeof(T));
             DebugAssert.NotNull(result);
-            
+
             return result;
         }
     }

@@ -113,7 +113,7 @@ public static class Analyzer
     }
 
     /// <summary>
-    ///     This checks that all <see cref="Def"/> subclasses are annotated with <see cref="UsedFromXmlAttribute"/>.
+    ///     This checks that all <see cref="Def" /> subclasses are annotated with <see cref="UsedFromXmlAttribute" />.
     /// </summary>
     /// <param name="assembly"></param>
     /// <exception cref="ArgumentNullException"></exception>
@@ -144,7 +144,7 @@ public static class Analyzer
     }
 
     /// <summary>
-    ///     This checks that <see cref="Def.ConfigErrors"/> implementations call the <see langword="base"/> implementation.
+    ///     This checks that <see cref="Def.ConfigErrors" /> implementations call the <see langword="base" /> implementation.
     /// </summary>
     /// <param name="assembly"></param>
     /// <exception cref="ArgumentNullException"></exception>
@@ -174,10 +174,12 @@ public static class Analyzer
     }
 
     /// <summary>
-    ///     This checks that classes implementing <see cref="IExposable"/> save all their fields in <see cref="IExposable.ExposeData"/>.
+    ///     This checks that classes implementing <see cref="IExposable" /> save all their fields in
+    ///     <see cref="IExposable.ExposeData" />.
     /// </summary>
     /// <remarks>
-    ///     To exclude a field from checking, apply <see cref="UnsavedAttribute"/>, or mark it as <see langword="const"/> or <see langword="readonly"/>.
+    ///     To exclude a field from checking, apply <see cref="UnsavedAttribute" />, or mark it as <see langword="const" /> or
+    ///     <see langword="readonly" />.
     /// </remarks>
     /// <param name="assembly"></param>
     /// <exception cref="ArgumentNullException"></exception>
@@ -236,7 +238,7 @@ public static class Analyzer
             foreach (var field in fieldsToSave.Except(savedFields))
             {
                 Log.Warning(
-                    $"[{name}] {type.FullName}::{field.Name} appears to not be saved in {methodName}"); 
+                    $"[{name}] {type.FullName}::{field.Name} appears to not be saved in {methodName}");
                 Log.WarningOnce($"[{name}] Either save this field, mark it [Unsaved], or make it const or readonly", 0x49D9F6A4);
             }
         }

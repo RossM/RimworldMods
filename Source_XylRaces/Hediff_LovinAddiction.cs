@@ -3,6 +3,8 @@
 [UsedFromXml]
 public class Hediff_LovinAddiction : HediffWithCompsExt
 {
+    public override int CurStageIndex => Need?.Satisfied is false ? 1 : 0;
+
     public Need_Lovin? Need
     {
         get
@@ -11,8 +13,6 @@ public class Hediff_LovinAddiction : HediffWithCompsExt
             return field ??= pawn.needs.TryGetNeed<Need_Lovin>();
         }
     }
-
-    public override int CurStageIndex => Need?.Satisfied is false ? 1 : 0;
 
     public override string? TipStringExtra
     {

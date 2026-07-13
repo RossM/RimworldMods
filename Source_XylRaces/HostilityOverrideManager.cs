@@ -47,7 +47,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
         DebugAssert.NotNull(source.Faction);
         DebugAssert.NotNull(target.Faction);
 
-		if (!HasAnyOverride(target.Faction, source.Faction))
+        if (!HasAnyOverride(target.Faction, source.Faction))
             return false;
 
         return targetPawn.IsColonyAnimal ||

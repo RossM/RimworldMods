@@ -27,8 +27,7 @@ public static class DebugAssert
     [Conditional("DEBUG")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void True(
-        [DoesNotReturnIf(false)]
-        bool value,
+        [DoesNotReturnIf(false)] bool value,
         [CallerArgumentExpression(nameof(value))]
         string valueExpression = "value",
         [CallerFilePath] string filePath = "??",

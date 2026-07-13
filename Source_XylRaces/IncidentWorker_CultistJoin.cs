@@ -40,7 +40,7 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
     private static Ideo? GetRandomIdeo()
     {
         DebugAssert.NotNull(Find.IdeoManager);
-        
+
         var playerIdeos = Faction.OfPlayer.ideos;
         DebugAssert.NotNull(playerIdeos);
 

@@ -36,7 +36,8 @@ public class MentalState_HuntingVermin : MentalState
             if (pawn.CurJob?.def == JobDefOf.AttackMelee || pawn.CurJob?.def == JobDefOf.Ingest)
                 return;
 
-            if (!pawn.HediffsOfType<Hediff_DietDependency>().Any(hediff => hediff.ShouldSatisfy) || Rand.Chance(0.2f) || !TryFindNewTarget())
+            if (!pawn.HediffsOfType<Hediff_DietDependency>().Any(hediff => hediff.ShouldSatisfy) || Rand.Chance(0.2f) ||
+                !TryFindNewTarget())
                 RecoverFromState();
 
             return;

@@ -66,6 +66,7 @@ public static class FoodHelpers
                 if (food.rawNutritionStat != null)
                     result *= eater.GetStatValue(food.rawNutritionStat);
             }
+
             return result;
         }
 
@@ -77,6 +78,7 @@ public static class FoodHelpers
                 if (food.cookedNutritionStat != null)
                     result *= eater.GetStatValue(food.cookedNutritionStat);
             }
+
             return result;
         }
 
@@ -94,6 +96,7 @@ public static class FoodHelpers
                 if (food.rawFoodPoisonChanceStat != null)
                     result *= eater.GetStatValue(food.rawFoodPoisonChanceStat);
             }
+
             return result;
         }
     }

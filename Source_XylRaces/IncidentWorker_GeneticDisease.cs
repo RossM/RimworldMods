@@ -53,9 +53,9 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
     protected override bool TryExecuteWorker(IncidentParms parms)
     {
         DebugAssert.NotNull(def.diseaseIncident);
-        
+
         List<Pawn> list = ApplyToPawns(ActualVictims(parms).ToList(), out var blockedInfo);
-        if (list is not { Count: > 0} && blockedInfo.NullOrEmpty())
+        if (list is not { Count: > 0 } && blockedInfo.NullOrEmpty())
         {
             return false;
         }

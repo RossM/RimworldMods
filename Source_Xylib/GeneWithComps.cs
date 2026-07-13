@@ -136,6 +136,18 @@ public class GeneComp
 [PublicAPI]
 public class GeneWithComps : Gene, IEventListener
 {
+    private static readonly Dictionary<Type, bool> hasTickCache = new();
+    private static readonly Dictionary<Type, bool> hasTickIntervalCache = new();
+
+    [Unsaved] private GeneType? geneTypeInternal;
+    [Unsaved] private bool activeStateNeedsUpdating = true;
+
+
+    /// <summary>
+    ///     The components for this gene.
+    /// </summary>
+    public List<GeneComp>? comps;
+
     /// <summary>
     ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for this gene.
     /// </summary>
@@ -162,18 +174,6 @@ public class GeneWithComps : Gene, IEventListener
             return geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
         }
     }
-
-    private static readonly Dictionary<Type, bool> hasTickCache = new();
-    private static readonly Dictionary<Type, bool> hasTickIntervalCache = new();
-
-    [Unsaved] private GeneType? geneTypeInternal;
-    [Unsaved] private bool activeStateNeedsUpdating = true;
-
-
-    /// <summary>
-    ///     The components for this gene.
-    /// </summary>
-    public List<GeneComp>? comps;
 
     /// <summary>
     ///     Whether the gene is currently active. Inactive genes shouldn't have any effect on the pawn.

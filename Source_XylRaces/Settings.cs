@@ -88,7 +88,7 @@ public class Settings : ModSettings
             ThreeStateMode.Always => true,
             ThreeStateMode.Never => false,
             ThreeStateMode.Sometimes => pawn.FirstActiveGeneWithComp<GeneComp_Hyperlactation>() != null,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(),
         };
     }
 
@@ -99,7 +99,7 @@ public class Settings : ModSettings
             ThreeStateMode.Always => true,
             ThreeStateMode.Never => false,
             ThreeStateMode.Sometimes => xenotypeDef?.GetModExtension<DefModExtension_Xenotype>()?.allowSolidBackstories ?? true,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(),
         };
     }
 }

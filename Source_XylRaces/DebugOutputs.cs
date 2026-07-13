@@ -29,7 +29,7 @@ public static class DebugOutputs
             new("displayPriorityInXenotype", geneDef => geneDef.displayCategory.displayPriorityInXenotype),
             new("displayPriorityInGenepack", geneDef => geneDef.displayCategory.displayPriorityInGenepack),
             new("displayOrderInCategory", geneDef => geneDef.displayOrderInCategory),
-            new("exclusionTags", geneDef => geneDef.exclusionTags?.ToCommaList() ?? "")
+            new("exclusionTags", geneDef => geneDef.exclusionTags?.ToCommaList() ?? ""),
         ];
         DebugTables.MakeTablesDialog(
             DefDatabase<GeneDef>.AllDefs.OrderByDescending(geneDef => geneDef.displayCategory.displayPriorityInXenotype)

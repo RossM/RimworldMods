@@ -27,7 +27,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
         // ReSharper disable once UseNullPropagation
         if (Target is null)
             return;
-        
+
         var comp = Target.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>();
         if (comp == null)
             return;
@@ -65,7 +65,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
     protected override void InteractionTickInterval(Toil toil, int delta)
     {
         Pawn? actor = toil.actor;
-        
+
         DebugAssert.NotNull(actor);
         DebugAssert.NotNull(actor.skills);
 

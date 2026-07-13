@@ -22,7 +22,7 @@ public static class Patch_RaceProperties
             CodeInstruction.LoadLocal(0),
             CodeInstruction.LoadArgument(0),
             CodeInstruction.Call(() => AddLactationExplanation),
-        ]
+        ],
     };
 
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]

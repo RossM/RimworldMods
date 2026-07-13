@@ -23,7 +23,7 @@ public class StatWorker_SuppressionFallRate_Fixed : StatWorker
         {
             > StatWorker_SuppressionFallRate.FastFallRateThreshold => StatWorker_SuppressionFallRate.FastFallRate,
             > StatWorker_SuppressionFallRate.MediumFallRateThreshold => StatWorker_SuppressionFallRate.MediumFallRate,
-            _ => StatWorker_SuppressionFallRate.SlowFallRate
+            _ => StatWorker_SuppressionFallRate.SlowFallRate,
         };
     }
 

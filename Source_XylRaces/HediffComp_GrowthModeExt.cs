@@ -68,12 +68,14 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
 
     public bool AllowTend => GrowthMode.allowTend;
 
+    public int growthModeIndex = 0;
+
     public GrowthMode GrowthMode
     {
         get
         {
             DebugAssert.NotNull(TProps.modes);
-            
+
             return TProps.modes[growthModeIndex];
         }
         set
@@ -82,8 +84,6 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
             growthModeIndex = TProps.modes.IndexOf(value);
         }
     }
-
-    public int growthModeIndex = 0;
 
     public void CompUpdateCurStage(HediffStage stage)
     {

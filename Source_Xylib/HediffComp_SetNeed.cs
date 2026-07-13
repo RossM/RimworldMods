@@ -19,6 +19,8 @@ public class HediffComp_SetNeed : HediffComp
 {
     public HediffCompProperties_SetNeed Props => (HediffCompProperties_SetNeed)props;
 
+    private bool Active => Need != null && Props.severityRange.Includes(parent.Severity);
+
     public Need? Need
     {
         get
@@ -28,8 +30,6 @@ public class HediffComp_SetNeed : HediffComp
             return field ??= Pawn.needs.TryGetNeed(Props.need);
         }
     }
-
-    private bool Active => Need != null && Props.severityRange.Includes(parent.Severity);
 
     public override string? CompTipStringExtra
     {

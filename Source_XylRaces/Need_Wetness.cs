@@ -30,7 +30,7 @@ public class Need_Wetness : Need_Seeker
         new(16.0f, 1.0f),
         new(21.0f, 1.0f),
         new(31.0f, 2.0f),
-        new(41.0f, 5.0f)
+        new(41.0f, 5.0f),
     ];
 
     private static readonly SimpleCurve RainfallToWetnessCurve =
@@ -71,7 +71,7 @@ public class Need_Wetness : Need_Seeker
                 >= thresholdNeutral => WetnessCategory.Neutral,
                 >= thresholdDry => WetnessCategory.Dry,
                 >= thresholdVeryDry => WetnessCategory.VeryDry,
-                _ => WetnessCategory.Parched
+                _ => WetnessCategory.Parched,
             };
         }
     }

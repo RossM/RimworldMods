@@ -24,9 +24,9 @@ public static class Patch_ITab_Pawn_Visitor
                 Output =
                 [
                     new(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate_Fixed)),
-                ]
-            }
-        }
+                ],
+            },
+        },
     };
 
     [Feature(nameof(StatDefOf.SlaveSuppressionFallRate))]

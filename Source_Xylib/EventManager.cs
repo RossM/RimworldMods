@@ -396,7 +396,7 @@ public class EventManager
         }
 
         var records = registrations.GetOrCreateValue(listener);
-        
+
         // Resharper seems to not have correct annotations for ConditionalWeakTable
         DebugAssert.NotNull(records);
 
@@ -422,11 +422,11 @@ public class EventManager
         else
         {
             List<CallbackInfo> localCallbacks = notificationInfo.localCallbacks.GetOrCreateValue(target);
-            
+
             // Resharper seems to not have correct annotations for ConditionalWeakTable
             DebugAssert.NotNull(localCallbacks);
-            
-			if (localCallbacks.Any(c => c.listener == listener && c.name == name))
+
+            if (localCallbacks.Any(c => c.listener == listener && c.name == name))
             {
                 Log.Warning(
                     $"[EventManager] Adding a duplicate callback: eventDef={eventDef} target=[{target}] listener={listener} name={name}");
@@ -690,7 +690,7 @@ public class EventManager
                 if (Notifications[record.eventDef.index]?.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbacks) is true)
                 {
                     // Resharper seems to not have correct annotations for ConditionalWeakTable
-					DebugAssert.NotNull(callbacks);
+                    DebugAssert.NotNull(callbacks);
 
                     callbacks.RemoveAll(callback => callback.listener == listener);
                 }
@@ -747,7 +747,7 @@ public class EventManager
 
             // Resharper seems to not have correct annotations for ConditionalWeakTable
             DebugAssert.NotNull(localCallbacks);
-            
+
             foreach (CallbackInfo callbackInfo in localCallbacks)
             {
                 DoNotify(eventDef, callbackInfo, target, data);
@@ -762,7 +762,7 @@ public class EventManager
         {
             // Resharper seems to not have correct annotations for ConditionalWeakTable
             DebugAssert.NotNull(localCallbacks);
-            
+
             tempCallbacks.AddRange(localCallbacks);
         }
 
