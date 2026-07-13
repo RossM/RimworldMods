@@ -16,6 +16,26 @@ public static class InfixPatcher
         Postfix,
     }
 
+    private enum Scope
+    {
+        Inner,
+        Outer,
+    }
+
+    private enum BindingType
+    {
+        Argument,
+        Instance,
+        Result,
+    }
+
+    private struct ArgumentBinding
+    {
+        public Scope Scope;
+        public BindingType BindingType;
+        public int Index;
+    }
+
     private delegate List<CodeInstruction> MatchAndReplaceFn(
         List<InstructionMatcher.Rule> rules,
         MethodBase method,
@@ -37,9 +57,9 @@ public static class InfixPatcher
         {
             EmitPrelude();
 
-            var prefixesUsingResult = prefixes.Where(method => method.GetParameters().Any(parameter => parameter.Name == "__result"))
+            var prefixesUsingResult = prefixes.Where(patch => patch.patchMethod.GetParameters().Any(parameter => parameter.Name == "__result"))
                 .ToList();
-            var postfixesUsingResult = postfixes.Where(method => method.GetParameters().Any(parameter => parameter.Name == "__result"))
+            var postfixesUsingResult = postfixes.Where(patch => patch.patchMethod.GetParameters().Any(parameter => parameter.Name == "__result"))
                 .ToList();
 
             if (prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
@@ -47,21 +67,22 @@ public static class InfixPatcher
                 resultLocalIndex = AddLocal(targetType);
 
                 if (prefixesUsingResult.Count > 0 &&
-                    !prefixesUsingResult[0].GetParameters().Single(parameter => parameter.Name == "__result").IsOut)
+                    !prefixesUsingResult[0].patchMethod.GetParameters().Single(parameter => parameter.Name == "__result").IsOut)
                     EmitInitialization(targetType, resultLocalIndex);
             }
 
             Label? skipLabel = null;
             foreach (var prefix in prefixes)
             {
-                (Type[] types, string[] names) = GetParameterTypesAndNames(prefix, "__invalid");
+                MethodInfo patchMethod = prefix.patchMethod;
+                (Type[] types, string[] names) = GetParameterTypesAndNames(patchMethod, "__invalid");
                 for (int i = 0; i < types.Length; i++)
                 {
                     EmitParameterValue(types[i], names[i]);
                 }
 
-                output.Add(new(OpcodeFor(prefix), prefix));
-                if (!prefix.ReturnType.IsVoid())
+                output.Add(new(OpcodeFor(patchMethod), patchMethod));
+                if (!patchMethod.ReturnType.IsVoid())
                 {
                     output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
                 }
@@ -91,14 +112,15 @@ public static class InfixPatcher
 
                 foreach (var postfix in postfixes)
                 {
-                    (Type[] types, string[] names) = GetParameterTypesAndNames(postfix, "__invalid");
+                    MethodInfo patchMethod = postfix.patchMethod;
+                    (Type[] types, string[] names) = GetParameterTypesAndNames(patchMethod, "__invalid");
                     for (int i = 0; i < types.Length; i++)
                     {
                         EmitParameterValue(types[i], names[i]);
                     }
 
-                    output.Add(new(OpcodeFor(postfix), postfix));
-                    if (!postfix.ReturnType.IsVoid())
+                    output.Add(new(OpcodeFor(patchMethod), patchMethod));
+                    if (!patchMethod.ReturnType.IsVoid())
                         output.Add(new(OpCodes.Pop));
                 }
 
@@ -305,8 +327,8 @@ public static class InfixPatcher
         public readonly MethodBase caller;
         public readonly MemberInfo target;
         public readonly MemberInfo? replacementTarget;
-        public readonly List<MethodInfo> prefixes;
-        public readonly List<MethodInfo> postfixes;
+        public readonly List<PatchInfo> prefixes;
+        public readonly List<PatchInfo> postfixes;
         public readonly List<CodeInstruction> output = [];
 
         public readonly List<Type> localTypes = [];
@@ -315,8 +337,8 @@ public static class InfixPatcher
             MethodBase caller,
             MemberInfo target,
             MethodInfo? replacementTarget,
-            List<MethodInfo> prefixes,
-            List<MethodInfo> postfixes)
+            List<PatchInfo> prefixes,
+            List<PatchInfo> postfixes)
         {
             this.generator = generator;
             this.caller = caller;
@@ -346,6 +368,7 @@ public static class InfixPatcher
         public required MethodInfo caller;
         public required MethodInfo patchMethod;
         public required PatchType patchType;
+        public required ArgumentBinding[] arguments;
         public bool debug;
     }
 
@@ -389,8 +412,12 @@ public static class InfixPatcher
 
                         patches.Add(new()
                         {
-                            caller = caller, target = target, patchMethod = method,
-                            patchType = infixTargetAttribute.patchType, debug = debug,
+                            caller = caller, 
+                            target = target, 
+                            patchMethod = method,
+                            patchType = infixTargetAttribute.patchType, 
+                            arguments = [],
+                            debug = debug,
                         });
                     }
                 }
@@ -416,10 +443,8 @@ public static class InfixPatcher
                 foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patchGroup.GroupBy(patch => patch.target))
                 {
                     var target = targetGroup.Key;
-                    var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.Prefix).Select(patch => patch.patchMethod)
-                        .ToList();
-                    var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.Postfix).Select(patch => patch.patchMethod)
-                        .ToList();
+                    var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.Prefix).ToList();
+                    var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.Postfix).ToList();
 
                     rules.Add(new()
                     {
@@ -569,8 +594,8 @@ public static class InfixPatcher
         MethodBase caller,
         MemberInfo target,
         MethodInfo replacementTarget,
-        List<MethodInfo> prefixes,
-        List<MethodInfo> postfixes,
+        List<PatchInfo> prefixes,
+        List<PatchInfo> postfixes,
         int minMatches)
     {
         List<CodeInstruction> pattern =
