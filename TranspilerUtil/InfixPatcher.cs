@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
+using UnityEngine;
 
 namespace TranspilerUtil;
 
@@ -24,16 +25,20 @@ public static class InfixPatcher
 
     private enum BindingType
     {
-        Argument,
+        Parameter,
         Instance,
         Result,
+        ParameterField,
+        InstanceField,
     }
 
-    private struct ArgumentBinding
+    private struct ParameterBinding
     {
+        public ParameterInfo Parameter;
         public Scope Scope;
         public BindingType BindingType;
         public int Index;
+        public FieldInfo? Field;
     }
 
     private delegate List<CodeInstruction> MatchAndReplaceFn(
@@ -46,40 +51,53 @@ public static class InfixPatcher
     private class MethodPatchWorker
     {
         private readonly Type[] callerParameterTypes;
-        private readonly string[] callerParameterNames;
         private readonly Type[] targetParameterTypes;
-        private readonly string[] targetParameterNames;
         private readonly int[] parameterToLocalIndex;
         private int resultLocalIndex = -1;
         private readonly Type targetType;
 
         public void EmitReplacement()
         {
+            if (debug)
+            {
+                foreach (var prefix in prefixes)
+                {
+                    Debug.Log($"prefix {prefix.patchMethod.DeclaringType.FullName}::{prefix.patchMethod.Name}");
+                    foreach (var parameter in prefix.parameters)
+                        Debug.Log(
+                            $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");
+                }
+                foreach (var postfix in postfixes)
+                {
+                    Debug.Log($"postfix {postfix.patchMethod.DeclaringType.FullName}::{postfix.patchMethod.Name}");
+                    foreach (var parameter in postfix.parameters)
+                        Debug.Log(
+                            $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");
+                }
+            }
+
             EmitPrelude();
 
-            var prefixesUsingResult = prefixes.Where(patch => patch.patchMethod.GetParameters().Any(parameter => parameter.Name == "__result"))
-                .ToList();
-            var postfixesUsingResult = postfixes.Where(patch => patch.patchMethod.GetParameters().Any(parameter => parameter.Name == "__result"))
-                .ToList();
+            var prefixesUsingResult = prefixes.Where(patch => patch.parameters.Any(a => a.BindingType == BindingType.Result)).ToList();
+            var postfixesUsingResult = postfixes.Where(patch => patch.parameters.Any(a => a.BindingType == BindingType.Result)).ToList();
 
             if (prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
             {
                 resultLocalIndex = AddLocal(targetType);
 
-                if (prefixesUsingResult.Count > 0 &&
-                    !prefixesUsingResult[0].patchMethod.GetParameters().Single(parameter => parameter.Name == "__result").IsOut)
-                    EmitInitialization(targetType, resultLocalIndex);
+                if (prefixesUsingResult.Count > 0)
+                {
+                    if (!prefixesUsingResult[0].parameters.Single(a => a.BindingType == BindingType.Result).Parameter.IsOut)
+                        EmitInitialization(targetType, resultLocalIndex);
+                }
             }
 
             Label? skipLabel = null;
             foreach (var prefix in prefixes)
             {
                 MethodInfo patchMethod = prefix.patchMethod;
-                (Type[] types, string[] names) = GetParameterTypesAndNames(patchMethod, "__invalid");
-                for (int i = 0; i < types.Length; i++)
-                {
-                    EmitParameterValue(types[i], names[i]);
-                }
+                foreach (var parameter in prefix.parameters)
+                    EmitParameterValue(parameter);
 
                 output.Add(new(OpcodeFor(patchMethod), patchMethod));
                 if (!patchMethod.ReturnType.IsVoid())
@@ -113,11 +131,8 @@ public static class InfixPatcher
                 foreach (var postfix in postfixes)
                 {
                     MethodInfo patchMethod = postfix.patchMethod;
-                    (Type[] types, string[] names) = GetParameterTypesAndNames(patchMethod, "__invalid");
-                    for (int i = 0; i < types.Length; i++)
-                    {
-                        EmitParameterValue(types[i], names[i]);
-                    }
+                    foreach (var parameter in postfix.parameters)
+                        EmitParameterValue(parameter);
 
                     output.Add(new(OpcodeFor(patchMethod), patchMethod));
                     if (!patchMethod.ReturnType.IsVoid())
@@ -163,83 +178,54 @@ public static class InfixPatcher
                 throw new NotImplementedException($"targetType {type}");
         }
 
-        private void EmitParameterValue(Type parameterType, string parameterName)
+        private void EmitParameterValue(ParameterBinding parameter)
         {
-            if (parameterName == "__result" && resultLocalIndex >= 0)
-            {
-                EmitResult(parameterType);
-                return;
-            }
+            Type parameterType = parameter.Parameter.ParameterType;
 
-            if (parameterName.StartsWith("___"))
+            switch (parameter.BindingType)
             {
-                string fieldName = parameterName[3 ..];
-
-                if (target is FieldInfo { IsStatic: false } or MethodInfo { IsStatic: false })
+                case BindingType.Parameter:
+                case BindingType.Instance:
                 {
-                    var field = target.DeclaringType!.GetField(fieldName, AccessTools.all);
-                    if (field is { IsStatic: false })
+                    switch (parameter.Scope)
                     {
-                        EmitTargetParameter(target.DeclaringType, 0);
-                        if (parameterType.IsByRef)
-                            output.Add(new(OpCodes.Ldflda, field));
-                        else
-                            output.Add(new(OpCodes.Ldfld, field));
-                        return;
+                        case Scope.Outer: EmitCallerParameter(parameterType, parameter.Index); break;
+                        case Scope.Inner: EmitTargetParameter(parameterType, parameter.Index); break;
+                        default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
                     }
+
+                    return;
                 }
 
-                if (caller is MethodInfo { IsStatic: false })
+                case BindingType.Result:
                 {
-                    var field = caller.DeclaringType!.GetField(fieldName, AccessTools.all);
-                    if (field is { IsStatic: false })
+                    EmitResult(parameterType);
+                    return;
+                }
+
+                case BindingType.ParameterField:
+                case BindingType.InstanceField:
+                {
+                    switch (parameter.Scope)
                     {
-                        EmitCallerParameter(caller.DeclaringType, 0);
-                        if (parameterType.IsByRef)
-                            output.Add(new(OpCodes.Ldflda, field));
-                        else
-                            output.Add(new(OpCodes.Ldfld, field));
-                        return;
+                        case Scope.Outer: EmitCallerParameter(parameterType, parameter.Index); break;
+                        case Scope.Inner: EmitTargetParameter(parameterType, parameter.Index); break;
+                        default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
                     }
+
+                    if (parameterType.IsByRef)
+                        output.Add(new(OpCodes.Ldflda, parameter.Field));
+                    else
+                        output.Add(new(OpCodes.Ldfld, parameter.Field));
+
+                    return;
+                }
+
+                default:
+                {
+                    throw new ArgumentOutOfRangeException();
                 }
             }
-
-            int targetIndex = Array.IndexOf(targetParameterNames, parameterName);
-            if (targetIndex >= 0)
-            {
-                EmitTargetParameter(parameterType, targetIndex);
-                return;
-            }
-
-            int callerIndex = Array.IndexOf(callerParameterNames, parameterName);
-            if (callerIndex >= 0)
-            {
-                EmitCallerParameter(parameterType, callerIndex);
-                return;
-            }
-
-            for (int j = 0; j < targetParameterTypes.Length; j++)
-            {
-                Type targetParameterType = targetParameterTypes[j];
-                Type type = targetParameterType.IsByRef ? targetParameterType.GetElementType() : targetParameterType;
-                if (type!.Name.StartsWith("<") &&
-                    Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute)))
-                {
-                    var field = type.GetField(parameterName, AccessTools.all);
-                    if (field != null)
-                    {
-                        EmitTargetParameter(targetParameterType, j);
-                        if (parameterType.IsByRef)
-                            output.Add(new(OpCodes.Ldflda, field));
-                        else
-                            output.Add(new(OpCodes.Ldfld, field));
-                        return;
-                    }
-                }
-            }
-
-            throw new InvalidOperationException(
-                $"Couldn't find parameter named '{parameterName}' of type {parameterType.FullName}");
         }
 
         private void EmitResult(Type parameterType)
@@ -290,22 +276,14 @@ public static class InfixPatcher
             return localIndex;
         }
 
-        private static (Type[] types, string[] names) GetParameterTypesAndNames(MemberInfo member, string instanceName)
+        private static Type[] GetParameterTypes(MemberInfo member)
         {
             return member switch
             {
-                FieldInfo { IsStatic: true } => (
-                    [],
-                    []),
-                FieldInfo field => (
-                    [field.DeclaringType],
-                    [instanceName]),
-                MethodInfo { IsStatic: true } method => (
-                    [.. method.GetParameters().Select(p => p.ParameterType)],
-                    [.. method.GetParameters().Select(p => p.Name)]),
-                MethodInfo method => (
-                    [method.DeclaringType, .. method.GetParameters().Select(p => p.ParameterType)],
-                    [instanceName, .. method.GetParameters().Select(p => p.Name)]),
+                FieldInfo { IsStatic: true } => [],
+                FieldInfo { IsStatic: false } field => [field.DeclaringType],
+                MethodInfo { IsStatic: true } method => [.. method.GetParameters().Select(p => p.ParameterType)],
+                MethodInfo { IsStatic: false } method => [method.DeclaringType, .. method.GetParameters().Select(p => p.ParameterType)],
                 _ => throw new InvalidOperationException()
             };
         }
@@ -333,7 +311,10 @@ public static class InfixPatcher
 
         public readonly List<Type> localTypes = [];
 
-        public MethodPatchWorker(ILGenerator generator,
+        public readonly bool debug;
+
+        public MethodPatchWorker(
+            ILGenerator generator,
             MethodBase caller,
             MemberInfo target,
             MethodInfo? replacementTarget,
@@ -347,8 +328,7 @@ public static class InfixPatcher
             this.prefixes = prefixes;
             this.postfixes = postfixes;
 
-            (callerParameterTypes, callerParameterNames) = GetParameterTypesAndNames(caller, "__caller");
-            (targetParameterTypes, targetParameterNames) = GetParameterTypesAndNames(target, "__instance");
+            debug = prefixes.Any(p => p.debug) || postfixes.Any(p => p.debug);
 
             targetType = target switch
             {
@@ -356,6 +336,9 @@ public static class InfixPatcher
                 MethodInfo method => method.ReturnType,
                 _ => throw new NotSupportedException(),
             };
+
+            callerParameterTypes = GetParameterTypes(caller);
+            targetParameterTypes = GetParameterTypes(target);
 
             parameterToLocalIndex = new int[targetParameterTypes.Length];
         }
@@ -368,7 +351,7 @@ public static class InfixPatcher
         public required MethodInfo caller;
         public required MethodInfo patchMethod;
         public required PatchType patchType;
-        public required ArgumentBinding[] arguments;
+        public required ParameterBinding[] parameters;
         public bool debug;
     }
 
@@ -396,7 +379,7 @@ public static class InfixPatcher
                     if (infixTargetAttribute == null)
                         continue;
 
-                    MemberInfo target = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
+                    MemberInfo? target = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
                         infixTargetAttribute.parameterTypes, infixTargetAttribute.genericTypes);
                     if (target == null)
                         throw new InvalidOperationException("null wrapped member");
@@ -405,18 +388,20 @@ public static class InfixPatcher
                     {
                         var patchedType = infixPatchAttribute.type ?? harmonyAttribute.info.declaringType;
 
-                        MethodInfo caller = (MethodInfo)GetMember(patchedType, infixPatchAttribute.methodName,
+                        MethodInfo? caller = (MethodInfo?)GetMember(patchedType, infixPatchAttribute.methodName,
                             infixPatchAttribute.parameterTypes, infixPatchAttribute.genericTypes);
                         if (caller == null)
                             throw new InvalidOperationException("null target method");
 
+                        var arguments = method.GetParameters().Select(param => BindParameter(param, caller, target)).ToArray();
+
                         patches.Add(new()
                         {
-                            caller = caller, 
-                            target = target, 
+                            caller = caller,
+                            target = target,
                             patchMethod = method,
-                            patchType = infixTargetAttribute.patchType, 
-                            arguments = [],
+                            patchType = infixTargetAttribute.patchType,
+                            parameters = arguments,
                             debug = debug,
                         });
                     }
@@ -482,6 +467,121 @@ public static class InfixPatcher
         }
     }
 
+    private static ParameterBinding BindParameter(ParameterInfo parameter, MethodInfo caller, MemberInfo target)
+    {
+        var parameterName = parameter.Name;
+
+        switch (parameterName)
+        {
+            case "__caller":
+            {
+                if (caller.IsStatic)
+                    throw new ArgumentException("__caller argument cannot be used with static outer method");
+                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer };
+            }
+
+            case "__instance":
+            {
+                if (target is MethodInfo { IsStatic: true } or PropertyInfo { GetMethod.IsStatic: true } or FieldInfo { IsStatic: true })
+                    throw new ArgumentException("__instance argument cannot be used with static inner method");
+                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner };
+            }
+
+            case "__result":
+            {
+                if (target is MethodInfo info && info.ReturnType == typeof(void))
+                    throw new ArgumentException("__result argument cannot be used with method returning void");
+                return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = Scope.Inner };
+            }
+
+            case not null when parameterName.StartsWith("___"):
+            {
+                var fieldName = parameterName[3..];
+
+                // Look in target instance fields
+                if (target is FieldInfo { IsStatic: false } or MethodInfo { IsStatic: false } or PropertyInfo { GetMethod.IsStatic: false })
+                {
+                    var field = target.DeclaringType!.GetField(fieldName, AccessTools.all);
+                    if (field != null)
+                        return new() { Parameter = parameter, BindingType = BindingType.InstanceField, Scope = Scope.Inner, Field = field };
+                }
+
+                // Look in target instance fields
+                if (caller is { IsStatic: false })
+                {
+                    var field = caller.DeclaringType!.GetField(fieldName, AccessTools.all);
+                    if (field != null)
+                        return new() { Parameter = parameter, BindingType = BindingType.InstanceField, Scope = Scope.Outer, Field = field };
+                }
+
+                throw new ArgumentException($"Field not found: {fieldName}");
+            }
+
+            default:
+            {
+                // Look in target parameters
+                if (target is MethodInfo targetMethod)
+                {
+                    int index = Array.FindIndex(targetMethod.GetParameters(), p => p.Name == parameterName);
+                    if (index >= 0)
+                    {
+                        if (!targetMethod.IsStatic)
+                            index++;
+                        return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Inner, Index = index };
+                    }
+                }
+
+                // Look in caller parameters
+                {
+                    int index = Array.FindIndex(caller.GetParameters(), p => p.Name == parameterName);
+                    if (index >= 0)
+                    {
+                        if (!caller.IsStatic)
+                            index++;
+                        return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Outer, Index = index };
+                    }
+                }
+
+                // Look in closure fields
+                if (target is MethodInfo targetMethod2)
+                {
+                    int closureIndex = Array.FindLastIndex(targetMethod2.GetParameters(), p => IsClosureType(p.ParameterType));
+                    if (closureIndex >= 0)
+                    {
+                        var type = targetMethod2.GetParameters()[closureIndex].ParameterType;
+                        if (type.IsByRef)
+                            type = type.GetElementType();
+
+                        var field = type.GetField(parameterName, AccessTools.all);
+
+                        if (!targetMethod2.IsStatic)
+                            closureIndex++;
+
+                        if (field != null)
+                            return new()
+                            {
+                                Parameter = parameter,
+                                BindingType = BindingType.InstanceField,
+                                Scope = Scope.Inner,
+                                Index = closureIndex,
+                                Field = field,
+                            };
+                    }
+                }
+
+                throw new ArgumentException($"Argument not found: {parameterName}");
+            }
+        }
+    }
+
+    private static bool IsClosureType(Type type)
+    {
+        if (type.IsByRef)
+            type = type.GetElementType();
+
+        return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute));
+    }
+
     private static MemberInfo? GetMember(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
     {
         string[] nameParts = memberName.Split(':');
@@ -498,7 +598,6 @@ public static class InfixPatcher
         }
 
         return GetMethod(type, memberName, parameterTypes, genericTypes);
-
     }
 
     private static MethodInfo? GetMethod(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
