@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_ExposableChecker", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_XylIdeoTweaks", "Source_XylIdeoTweaks\Source_XylIdeoTweaks.csproj", "{17C59BA0-3875-38FE-3411-A0644177718E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranspilerUtil", "TranspilerUtil\TranspilerUtil.csproj", "{C59418CE-8C09-429E-8D71-5A5C17622177}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_Disharmony", "Source_Disharmony\Source_Disharmony.csproj", "{C59418CE-8C09-429E-8D71-5A5C17622177}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XylIdeoTweaks", "XylIdeoTweaks\XylIdeoTweaks.csproj", "{A866F0D8-C387-E006-5847-E398E59960F3}"
 EndProject

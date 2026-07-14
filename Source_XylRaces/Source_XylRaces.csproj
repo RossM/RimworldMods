@@ -40,7 +40,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Source_Xylib\Source_Xylib.csproj" />
-    <ProjectReference Include="..\TranspilerUtil\TranspilerUtil.csproj" />
+    <ProjectReference Include="..\Source_Disharmony\Source_Disharmony.csproj" />
   </ItemGroup>
 
   <ItemGroup>

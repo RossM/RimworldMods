@@ -1,7 +1,7 @@
 using System.Reflection.Emit;
 using HarmonyLib;
 
-namespace TranspilerUtil;
+namespace Disharmony;
 
 public static class CodeInstructionUtil
 {

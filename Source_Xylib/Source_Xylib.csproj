@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TranspilerUtil\TranspilerUtil.csproj" />
+    <ProjectReference Include="..\Source_Disharmony\Source_Disharmony.csproj" />
   </ItemGroup>
 
   <ItemGroup>

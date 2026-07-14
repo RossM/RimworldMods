@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 
-namespace TranspilerUtil;
+namespace Disharmony;
 
 public static class Autopatcher
 {
@@ -498,8 +498,8 @@ public static class Autopatcher
                 try
                 {
                     var infixTargetAttribute
-                        = (TranspilerTargetAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPrefixAttribute)) ??
-                          (TranspilerTargetAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPostfixAttribute));
+                        = (PatchTypeAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPrefixAttribute)) ??
+                          (PatchTypeAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPostfixAttribute));
                     var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(TargetAttribute))
                         .Cast<TargetAttribute>().ToArray();
                     bool debug = Attribute.GetCustomAttribute(method, typeof(DebugAttribute)) != null;

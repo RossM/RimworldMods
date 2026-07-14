@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 
-namespace TranspilerUtil;
+namespace Disharmony;
 
 public class InstructionMatcher
 {
