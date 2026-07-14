@@ -228,7 +228,7 @@ public static class Autopatcher
                 case BindingType.State:
                 {
                     if (parameterType.IsByRef)
-                        output.Add(new(OpCodes.Ldloca, parameter.Index));
+                        output.Add(CodeInstructionUtil.LoadLocalAddress(parameter.Index));
                     else
                         output.Add(CodeInstruction.LoadLocal(parameter.Index));
 
