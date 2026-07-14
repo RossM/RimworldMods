@@ -90,7 +90,7 @@ public class InstructionMatcher
 
             var matchCount = 0;
 
-            for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[^1].end + 1 : 0;
+            for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[^1].end : 0;
                  instructionIndex <= instructions.Count - rule.Pattern.Length;
                  instructionIndex++)
             {
@@ -173,12 +173,12 @@ public class InstructionMatcher
                 {
                     rule = rule,
                     start = instructionIndex,
-                    end = instructionIndex + rule.Pattern.Length - 1,
+                    end = instructionIndex + rule.Pattern.Length,
                     localIndex_Match = localIndex_Match,
                     labelMap = new(),
                 };
                 if (debug)
-                    FileLog.Log($"MATCH #{ruleIndex} ({matchData.start} .. {matchData.end})");
+                    FileLog.Log($"MATCH #{ruleIndex} ({matchData.start} .. {matchData.end - 1})");
 
                 matches.Add(matchData);
                 if (rule.SaveLocals)
@@ -202,7 +202,7 @@ public class InstructionMatcher
         var sortedMatches = matches.OrderBy(m => m.start).ToList();
         for (var i = 0; i < sortedMatches.Count - 1; i++)
         {
-            if (sortedMatches[i].end >= sortedMatches[i + 1].start)
+            if (sortedMatches[i].end > sortedMatches[i + 1].start)
             {
                 reason = "Overlapping matches";
                 return false;
@@ -229,7 +229,7 @@ public class InstructionMatcher
             {
                 if (match.rule.Mode == OutputMode.InsertAfter)
                 {
-                    for (int i = match.start; i <= match.end; i++)
+                    for (int i = match.start; i < match.end; i++)
                     {
                         Emit(outInstructions, instructions[i]);
                         if (debug)
@@ -237,7 +237,7 @@ public class InstructionMatcher
                     }
                 }
 
-                instructionIndex = match.end;
+                instructionIndex = match.end - 1;
 
                 if (match.rule.Mode is OutputMode.Replace or OutputMode.InsertBefore &&
                     instructions[match.start] is { labels: { Count: > 0 } labels })
@@ -295,7 +295,7 @@ public class InstructionMatcher
 
                 if (match.rule.Mode == OutputMode.InsertBefore)
                 {
-                    for (int i = match.start; i <= match.end; i++)
+                    for (int i = match.start; i < match.end; i++)
                     {
                         Emit(outInstructions, instructions[i]);
 
