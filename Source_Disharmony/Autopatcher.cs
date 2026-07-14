@@ -161,16 +161,6 @@ public static class Autopatcher
         Result,
 
         /// <summary>
-        ///     Access to a field from a method call's formal parameter.
-        /// </summary>
-        ParameterField,
-
-        /// <summary>
-        ///     Access to aa field from a method call's instance parameter.
-        /// </summary>
-        InstanceField,
-
-        /// <summary>
         ///     Access to a local state variable.
         /// </summary>
         State,
@@ -206,11 +196,7 @@ public static class Autopatcher
         /// </remarks>
         public int Index;
 
-        /// <summary>
-        ///     A <see cref="FieldInfo" /> used by <see cref="BindingType.ParameterField" /> and
-        ///     <see cref="BindingType.InstanceField" />.
-        /// </summary>
-        public FieldInfo? Field;
+        public FieldInfo[]? Fields;
     }
 
     private class RuleBuilder
@@ -348,8 +334,13 @@ public static class Autopatcher
             {
                 FileLog.Log($"[{patch.patchType}] {patch.patchMethod.FullName}");
                 foreach (var parameter in patch.parameters)
+                {
+                    string fields = "";
+                    if (parameter.Fields is { Length: > 0 })
+                        fields = $" Fields=[{string.Join(", ", parameter.Fields.Select(f => f.Name))}]";
                     FileLog.Log(
-                        $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");
+                        $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index}{fields}");
+                }
             }
         }
 
@@ -362,27 +353,14 @@ public static class Autopatcher
                 case BindingType.Parameter:
                 case BindingType.Instance:
                 {
-                    EmitParameterLookup();
-                    return;
+                    EmitParameterLookup(parameterType);
+                    break;
                 }
 
                 case BindingType.Result:
                 {
                     EmitResult(parameterType);
-                    return;
-                }
-
-                case BindingType.ParameterField:
-                case BindingType.InstanceField:
-                {
-                    EmitParameterLookup();
-
-                    if (parameterType.IsByRef)
-                        output.Add(new(OpCodes.Ldflda, parameter.Field));
-                    else
-                        output.Add(new(OpCodes.Ldfld, parameter.Field));
-
-                    return;
+                    break;
                 }
 
                 case BindingType.State:
@@ -392,21 +370,33 @@ public static class Autopatcher
                     else
                         output.Add(CodeInstruction.LoadLocal(parameter.Index));
 
-                    return;
+                    break;
                 }
 
                 default:
                 {
                     throw new ArgumentOutOfRangeException();
                 }
+
             }
 
-            void EmitParameterLookup()
+            if (parameter.Fields is { Length: >0 })
+            {
+                foreach (var field in parameter.Fields)
+                {
+                    if (parameterType.IsByRef)
+                        output.Add(new(OpCodes.Ldflda, field));
+                    else
+                        output.Add(new(OpCodes.Ldfld, field));
+                }
+            }
+
+            void EmitParameterLookup(Type type)
             {
                 switch (parameter.Scope)
                 {
-                    case Scope.Outer: EmitCallerParameter(parameterType, parameter.Index); break;
-                    case Scope.Inner: EmitTargetParameter(parameterType, parameter.Index); break;
+                    case Scope.Outer: EmitCallerParameter(type, parameter.Index); break;
+                    case Scope.Inner: EmitTargetParameter(type, parameter.Index); break;
                     default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
                 }
             }
@@ -696,7 +686,7 @@ public static class Autopatcher
                 {
                     var field = target.DeclaringType!.GetField(fieldName, AccessTools.all);
                     if (field != null)
-                        return new() { Parameter = parameter, BindingType = BindingType.InstanceField, Scope = Scope.Inner, Field = field };
+                        return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner, Fields = [field] };
                 }
 
                 // Look in target instance fields
@@ -704,7 +694,7 @@ public static class Autopatcher
                 {
                     var field = caller.DeclaringType!.GetField(fieldName, AccessTools.all);
                     if (field != null)
-                        return new() { Parameter = parameter, BindingType = BindingType.InstanceField, Scope = Scope.Outer, Field = field };
+                        return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [field] };
                 }
 
                 throw new ArgumentException($"Field not found: {fieldName}");
@@ -754,10 +744,10 @@ public static class Autopatcher
                             return new()
                             {
                                 Parameter = parameter,
-                                BindingType = BindingType.InstanceField,
+                                BindingType = BindingType.Parameter,
                                 Scope = Scope.Inner,
                                 Index = closureIndex,
-                                Field = field,
+                                Fields = [field],
                             };
                     }
                 }
