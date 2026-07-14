@@ -148,7 +148,7 @@ public static class DebugOutputs
         {
             var memeDef = def;
 
-            columns.Add(new(Abbreviate(memeDef.label, 6).CapitalizeFirst(), factionDef =>
+            columns.Add(new(Abbreviate(memeDef.label).CapitalizeFirst(), factionDef =>
             {
                 if (factionDef.requiredMemes?.Contains(memeDef) is true)
                     return "Req";
@@ -283,9 +283,10 @@ public static class DebugOutputs
         }
     }
 
-    private static string Abbreviate(string str, int lettersPerWord = 3)
+    private static string Abbreviate(string str, int maxLength = 8)
     {
-        return string.Join(" ", str.Split(' ').Select(s => AbbreviateWord(s, lettersPerWord)));
+        var words = str.Split(' ').ToList();
+        return string.Join(" ", words.Select(s => AbbreviateWord(s, Mathf.Max(3, maxLength / words.Count))));
     }
 
     private static string AbbreviateWord(string w, int maxLength)
@@ -298,7 +299,7 @@ public static class DebugOutputs
             w = w[..^3] + "g";
         int preserved = maxLength / 2;
         // ReSharper disable once StringLiteralTypo
-        w = w[.. preserved] + w[preserved ..].Where(c => !"aeiou".Contains(c)).Join(delimiter: "");
+        w = w[.. preserved] + new String(w[preserved ..].Where(c => !"aeiou".Contains(c)).ToArray());
         if (w.Length <= maxLength)
             return w;
         return w[..maxLength];
