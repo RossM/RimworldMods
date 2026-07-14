@@ -4,8 +4,8 @@
 internal static class Patch_Pawn_JobTracker
 {
     [Feature(nameof(EventDefOf.PostJobStarted))]
-    [InfixPostfix(typeof(JobDriver), nameof(JobDriver.ReadyForNextToil))]
-    [InfixPatch(nameof(Pawn_JobTracker.StartJob))]
+    [InnerPostfix(typeof(JobDriver), nameof(JobDriver.ReadyForNextToil))]
+    [Target(nameof(Pawn_JobTracker.StartJob))]
     public static void ReadyForNextToil_Postfix(Pawn ___pawn, JobDriver __instance)
     {
         EventManager.Instance.Notify(EventDefOf.PostJobStarted, ___pawn, __instance);

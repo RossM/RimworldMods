@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_InteractionWorker_RecruitAttempt
 {
     [Feature(nameof(XStatDefOf.XylResistanceFallRate))]
-    [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
-    [InfixPatch(nameof(InteractionWorker_RecruitAttempt.Interacted))]
+    [InnerPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+    [Target(nameof(InteractionWorker_RecruitAttempt.Interacted))]
     public static void GetStatValue_Postfix(StatDef stat, Pawn recipient, ref float __result)
     {
         if (stat == StatDefOf.NegotiationAbility)

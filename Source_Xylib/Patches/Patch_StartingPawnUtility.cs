@@ -35,8 +35,8 @@ internal static class Patch_StartingPawnUtility
     }
 
     [Feature(typeof(CompProperties_Drug))]
-    [InfixPrefix(typeof(List<ThingDefCount>), "Add")]
-    [InfixPatch("GeneratePossessions")]
+    [InnerPrefix(typeof(List<ThingDefCount>), "Add")]
+    [Target("GeneratePossessions")]
     public static bool List_Add_Prefix(List<ThingDefCount> __instance, ThingDefCount item, Pawn pawn)
     {
         var chemical = item.ThingDef?.GetCompProperties<CompProperties_Drug>()?.chemical;

@@ -54,8 +54,8 @@ internal static class Patch_SlaveRebellionUtility
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
-    [InfixPostfix(typeof(GenDate), nameof(GenDate.ToStringTicksToPeriod))]
-    [InfixPatch("GetSlaveRebellionMtbCalculationExplanation")]
+    [InnerPostfix(typeof(GenDate), nameof(GenDate.ToStringTicksToPeriod))]
+    [Target("GetSlaveRebellionMtbCalculationExplanation")]
     public static void ToStringTicksToPeriod_Postfix(int numTicks, ref string __result)
     {
         if (numTicks < 0)

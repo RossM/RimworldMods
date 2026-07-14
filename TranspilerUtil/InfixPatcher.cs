@@ -504,11 +504,11 @@ public static class InfixPatcher
                 try
                 {
                     var infixTargetAttribute
-                        = (InfixTargetAttribute?)Attribute.GetCustomAttribute(method, typeof(InfixPrefixAttribute)) ??
-                          (InfixTargetAttribute?)Attribute.GetCustomAttribute(method, typeof(InfixPostfixAttribute));
-                    var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(InfixPatchAttribute))
-                        .Cast<InfixPatchAttribute>().ToArray();
-                    bool debug = Attribute.GetCustomAttribute(method, typeof(InfixDebugAttribute)) != null;
+                        = (TranspilerTargetAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPrefixAttribute)) ??
+                          (TranspilerTargetAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPostfixAttribute));
+                    var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(TargetAttribute))
+                        .Cast<TargetAttribute>().ToArray();
+                    bool debug = Attribute.GetCustomAttribute(method, typeof(DebugAttribute)) != null;
 
                     if (infixTargetAttribute == null)
                         continue;

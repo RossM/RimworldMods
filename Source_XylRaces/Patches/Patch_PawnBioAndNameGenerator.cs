@@ -4,8 +4,8 @@
 public static class Patch_PawnBioAndNameGenerator
 {
     [Feature(typeof(DefModExtension_Xenotype))]
-    [InfixPrefix(typeof(PawnBioAndNameGenerator), "TryGiveSolidBioTo")]
-    [InfixPatch(nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
+    [InnerPrefix(typeof(PawnBioAndNameGenerator), "TryGiveSolidBioTo")]
+    [Target(nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
     public static bool TryGiveSolidBioTo_Prefix(XenotypeDef? xenotype, out bool __result)
     {
         __result = false;

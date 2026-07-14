@@ -25,8 +25,8 @@ internal static class Patch_Thing
     }
 
     [Feature(nameof(FoodHelpers.GetFoodPoisonChanceFactor))]
-    [InfixPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
-    [InfixPatch("Ingested")]
+    [InnerPostfix(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+    [Target("Ingested")]
     public static void GetStatValue_Postfix(Pawn ingester, Thing thing, StatDef stat, ref float __result)
     {
         if (stat == StatDefOf.FoodPoisonChanceFixedHuman)

@@ -4,11 +4,11 @@
 public static class PatchBiostatMet
 {
     [Feature(typeof(GeneComp_BonusGenes))]
-    [InfixPostfix(typeof(GeneDef), nameof(GeneDef.biostatMet))]
-    [InfixPatch(typeof(Dialog_CreateXenotype), "DrawGene")]
-    [InfixPatch(typeof(GeneCreationDialogBase), "OnGenesChanged")]
-    [InfixPatch(typeof(GeneDef), "GetDescriptionFull")]
-    [InfixPatch(typeof(GeneDef), "<SpecialDisplayStats>:MoveNext")]
+    [InnerPostfix(typeof(GeneDef), nameof(GeneDef.biostatMet))]
+    [Target(typeof(Dialog_CreateXenotype), "DrawGene")]
+    [Target(typeof(GeneCreationDialogBase), "OnGenesChanged")]
+    [Target(typeof(GeneDef), "GetDescriptionFull")]
+    [Target(typeof(GeneDef), "<SpecialDisplayStats>:MoveNext")]
     public static void GeneDef_biostatMet_Postfix(GeneDef __instance, ref int __result)
     {
         __result += __instance.BiostatMetForDisplayBonus();

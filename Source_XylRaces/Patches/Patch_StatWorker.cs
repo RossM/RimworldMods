@@ -153,8 +153,8 @@ public static class Patch_StatWorker
 
     [Feature(typeof(Hediff_SubstituteCapacity))]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [InfixPostfix(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity))]
-    [InfixPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
+    [InnerPostfix(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity))]
+    [Target(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
     public static void PawnCapacityFactor_capacity_Postfix(
         PawnCapacityFactor __instance,
         StatWorker __caller,
@@ -171,8 +171,8 @@ public static class Patch_StatWorker
     // Note: this patch is performance-sensitive
     [Feature(typeof(Hediff_SubstituteCapacity))]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [InfixPostfix(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity))]
-    [InfixPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
+    [InnerPostfix(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity))]
+    [Target(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
     public static void PawnCapacityOffset_capacity_Postfix(
         PawnCapacityOffset __instance,
         StatWorker __caller,

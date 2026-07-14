@@ -31,8 +31,8 @@ internal static class Patch_GeneDef
     }
 
     [Feature(typeof(DefModExtension_GeneWithComps))]
-    [InfixPostfix(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
-    [InfixPatch("GetDescriptionFull")]
+    [InnerPostfix(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
+    [Target("GetDescriptionFull")]
     public static void GeneDef_customEffectDescriptions_Postfix(GeneDef __instance, ref List<string> __result)
     {
         var extraDescriptions = __instance.GetGeneEffectDescriptions().ToList();

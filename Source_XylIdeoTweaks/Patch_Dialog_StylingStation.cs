@@ -8,8 +8,8 @@ namespace XylIdeos;
 public static class Patch_Dialog_StylingStation
 {
     [Feature(Features.AutoColorApparel)]
-    [InfixPostfix(typeof(Widgets), nameof(Widgets.ColorSelector))]
-    [InfixPatch("DrawApparelColor")]
+    [InnerPostfix(typeof(Widgets), nameof(Widgets.ColorSelector))]
+    [Target("DrawApparelColor")]
     public static void ColorSelector_Postfix(Pawn ___pawn, ref bool __result)
     {
         if (__result)

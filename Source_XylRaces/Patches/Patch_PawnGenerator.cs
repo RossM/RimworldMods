@@ -4,8 +4,8 @@
 public static class Patch_PawnGenerator
 {
     [Feature(typeof(XenotypeSetWithDefault))]
-    [InfixPrefix(typeof(PawnGenerator), "<XenotypesAvailableFor>g__AddOrAdjust|49_0")]
-    [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
+    [InnerPrefix(typeof(PawnGenerator), "<XenotypesAvailableFor>g__AddOrAdjust|49_0")]
+    [Target(nameof(PawnGenerator.XenotypesAvailableFor))]
     public static bool AddOrAdjust_Prefix(XenotypeChance xenotypeChance, FactionDef? factionDef, Faction? faction)
     {
         DebugAssert.NotNull(PawnGenerator.tmpXenotypeChances);
@@ -27,8 +27,8 @@ public static class Patch_PawnGenerator
     }
 
     [Feature(nameof(Config.Feature.Bugfix_Misc))]
-    [InfixPrefix(typeof(PawnGenerator), "<GenerateSkills>g__CreatePassion|53_0")]
-    [InfixPatch("GenerateSkills")]
+    [InnerPrefix(typeof(PawnGenerator), "<GenerateSkills>g__CreatePassion|53_0")]
+    [Target("GenerateSkills")]
     public static bool CreatePassion_Prefix(Pawn pawn, SkillRecord record, ref int minorPassions)
     {
         if (!Settings.instance.fixGeneticPassions || !PatchHelpers.ShouldGetGeneticPassion(pawn, record, minorPassions))
@@ -40,8 +40,8 @@ public static class Patch_PawnGenerator
     }
 
     [Feature(typeof(XenotypeSetWithDefault))]
-    [InfixPostfix(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
-    [InfixPatch(nameof(PawnGenerator.XenotypesAvailableFor))]
+    [InnerPostfix(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
+    [Target(nameof(PawnGenerator.XenotypesAvailableFor))]
     public static void XenotypeDefOf_Baseliner_Postfix(FactionDef? factionDef, Faction? faction, ref XenotypeDef? __result)
     {
         __result = ((faction?.def ?? factionDef)?.xenotypeSet).DefaultXenotype;

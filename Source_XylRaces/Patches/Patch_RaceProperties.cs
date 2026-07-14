@@ -37,8 +37,8 @@ public static class Patch_RaceProperties
     }
 
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]
-    [InfixPrefix(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
-    [InfixPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
+    [InnerPrefix(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
+    [Target(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
     public static bool GetFirstHediffOfDef_Prefix(HediffSet __instance, out Hediff? __result)
     {
         DebugAssert.NotNull(__instance.pawn);

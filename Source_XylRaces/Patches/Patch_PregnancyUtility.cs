@@ -8,8 +8,8 @@
 public static class Patch_PregnancyUtility
 {
     [Feature(typeof(GeneCompProperties_XenotypeStrength))]
-    [InfixPostfix(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn), [typeof(PawnGenerationRequest)])]
-    [InfixPatch(nameof(PregnancyUtility.ApplyBirthOutcome))]
+    [InnerPostfix(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn), [typeof(PawnGenerationRequest)])]
+    [Target(nameof(PregnancyUtility.ApplyBirthOutcome))]
     public static void GeneratePawn_Postfix(Pawn geneticMother, Pawn father, ref Pawn __result)
     {
         switch (PatchHelpers.GetDominantParent(geneticMother, father))
@@ -49,8 +49,8 @@ public static class Patch_PregnancyUtility
     }
 
     [Feature(typeof(GeneCompProperties_XenotypeStrength))]
-    [InfixPostfix(typeof(PregnancyUtility), "ShouldByHybrid")]
-    [InfixPatch(nameof(PregnancyUtility.ApplyBirthOutcome))]
+    [InnerPostfix(typeof(PregnancyUtility), "ShouldByHybrid")]
+    [Target(nameof(PregnancyUtility.ApplyBirthOutcome))]
     public static void ShouldBeHybrid_Postfix(Pawn mother, Pawn father, ref bool __result)
     {
         if (PatchHelpers.GetDominantParent(mother, father) != PatchHelpers.DominantParent.None)

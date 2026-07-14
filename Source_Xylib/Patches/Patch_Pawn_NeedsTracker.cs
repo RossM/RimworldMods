@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_Pawn_NeedsTracker
 {
     [Feature(typeof(EventManager))]
-    [InfixPostfix(typeof(Need), nameof(Need.OnNeedRemoved))]
-    [InfixPatch("RemoveNeed")]
+    [InnerPostfix(typeof(Need), nameof(Need.OnNeedRemoved))]
+    [Target("RemoveNeed")]
     public static void OnNeedRemoved_Postfix(Need __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
@@ -14,8 +14,8 @@ internal static class Patch_Pawn_NeedsTracker
     }
 
     [Feature(typeof(EventManager))]
-    [InfixPostfix(typeof(Need), nameof(Need.SetInitialLevel))]
-    [InfixPatch("AddNeed")]
+    [InnerPostfix(typeof(Need), nameof(Need.SetInitialLevel))]
+    [Target("AddNeed")]
     public static void SetInitialLevel_Postfix(Need __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
