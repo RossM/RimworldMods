@@ -89,6 +89,16 @@ public static class Autopatcher
             if (!StateBuilders.TryGetValue(patchedMethod, out var stateBuilder))
                 stateBuilder = new();
 
+            MethodInfo? iteratorMethod = patchedMethod.GetIteratorImplementation();
+
+            if (iteratorMethod is not null)
+            {
+                if (stateBuilder.LocalTypes.Count > 0)
+                    throw new NotSupportedException("State variables are not supported for compiler-generated iterator methods");
+
+                throw new NotImplementedException();
+            }
+
             if (stateBuilder.LocalTypes.Count > 0)
                 rules.Add(stateBuilder.BuildRule());
 
