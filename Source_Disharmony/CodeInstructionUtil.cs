@@ -5,8 +5,11 @@ namespace Disharmony;
 
 public static class CodeInstructionUtil
 {
-    public static CodeInstruction LoadLocalAddress(int index)
+    extension (CodeInstruction)
     {
-        return new(index <= 255 ? OpCodes.Ldloca_S : OpCodes.Ldloca, index);
+        public static CodeInstruction LoadLocalAddress(int index)
+        {
+            return new(index <= 255 ? OpCodes.Ldloca_S : OpCodes.Ldloca, index);
+        }
     }
 }

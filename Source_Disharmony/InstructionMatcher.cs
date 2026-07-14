@@ -268,7 +268,7 @@ public class InstructionMatcher
                                 (int)replaceInst.operand))
                             return false;
 
-                        Emit(outInstructions, CodeInstructionUtil.LoadLocalAddress(substituteIndex));
+                        Emit(outInstructions, CodeInstruction.LoadLocalAddress(substituteIndex));
                     }
                     else if (replaceInst.IsLdloc())
                     {

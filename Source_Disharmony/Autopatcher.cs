@@ -228,7 +228,7 @@ public static class Autopatcher
                 case BindingType.State:
                 {
                     if (parameterType.IsByRef)
-                        output.Add(CodeInstructionUtil.LoadLocalAddress(parameter.Index));
+                        output.Add(CodeInstruction.LoadLocalAddress(parameter.Index));
                     else
                         output.Add(CodeInstruction.LoadLocal(parameter.Index));
 
@@ -256,7 +256,7 @@ public static class Autopatcher
         {
             if (parameterType.IsByRef)
             {
-                output.Add(CodeInstructionUtil.LoadLocalAddress(resultLocalIndex));
+                output.Add(CodeInstruction.LoadLocalAddress(resultLocalIndex));
             }
             else
                 output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
@@ -275,7 +275,7 @@ public static class Autopatcher
         private void EmitTargetParameter(Type type, int index)
         {
             if (type.IsByRef && !targetParameterTypes[index].IsByRef)
-                output.Add(CodeInstructionUtil.LoadLocalAddress(parameterToLocalIndex[index]));
+                output.Add(CodeInstruction.LoadLocalAddress(parameterToLocalIndex[index]));
             else
                 output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[index]));
             if (!type.IsByRef && targetParameterTypes[index].IsByRef)
@@ -461,7 +461,7 @@ public static class Autopatcher
         }
         else if (type.IsStruct())
         {
-            codeInstructions.Add(CodeInstructionUtil.LoadLocalAddress(localIndex));
+            codeInstructions.Add(CodeInstruction.LoadLocalAddress(localIndex));
             codeInstructions.Add(new(OpCodes.Initobj, type));
         }
         else if (type.IsValueType)
