@@ -8,12 +8,12 @@ using HarmonyLib;
 
 namespace TranspilerUtil;
 
-public static class InfixPatcher
+public static class Autopatcher
 {
     public enum PatchType
     {
-        Prefix,
-        Postfix,
+        InnerPrefix,
+        InnerPostfix,
     }
 
     private enum Scope
@@ -184,20 +184,12 @@ public static class InfixPatcher
 
         private void LogDebugInfo()
         {
-            foreach (var prefix in prefixes)
+            foreach (var patch in prefixes.Concat(postfixes))
             {
-                FileLog.Log($"prefix {prefix.patchMethod.DeclaringType?.FullName}::{prefix.patchMethod.Name}");
-                foreach (var parameter in prefix.parameters)
+                FileLog.Log($"[{patch.patchType}] {patch.patchMethod.DeclaringType?.FullName}::{patch.patchMethod.Name}");
+                foreach (var parameter in patch.parameters)
                     FileLog.Log(
                         $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");
-            }
-
-            foreach (var postfix in postfixes)
-            {
-                FileLog.Log($"postfix {postfix.patchMethod.DeclaringType?.FullName}::{postfix.patchMethod.Name}");
-                foreach (var parameter in postfix.parameters)
-                    FileLog.Log(
-                        $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field={parameter.Field?.Name}");
             }
         }
 
@@ -489,7 +481,7 @@ public static class InfixPatcher
             throw new NotImplementedException($"targetType {type}");
     }
 
-    public static void PatchInfix(Harmony harmony, Assembly assembly)
+    public static void PatchAll(Harmony harmony, Assembly assembly)
     {
         List<PatchInfo> patches = [];
 
@@ -575,8 +567,8 @@ public static class InfixPatcher
                 foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patchGroup.GroupBy(patch => patch.target))
                 {
                     var target = targetGroup.Key;
-                    var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.Prefix).ToList();
-                    var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.Postfix).ToList();
+                    var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
+                    var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
 
                     rules.Add(new()
                     {

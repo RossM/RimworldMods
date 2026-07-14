@@ -16,7 +16,7 @@ public static class PatchLate
 
         // TODO Split infix patching into early and late
         using (new ProfileBlock("XylXenos Infix patching"))
-            InfixPatcher.PatchInfix(harmony, Assembly.GetExecutingAssembly());
+            Autopatcher.PatchAll(harmony, Assembly.GetExecutingAssembly());
     }
 }
 

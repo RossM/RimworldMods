@@ -39,7 +39,7 @@ public class Mod_Xylib : Mod
             harmony.PatchCategory(null);
 
         using (new ProfileBlock("Xylib Infix patching"))
-            InfixPatcher.PatchInfix(harmony, Assembly.GetExecutingAssembly());
+            Autopatcher.PatchAll(harmony, Assembly.GetExecutingAssembly());
 
         using (new ProfileBlock("Xylib Check coding style"))
             Analyzer.CheckCodingStyle(typeof(Mod_Xylib).Assembly);

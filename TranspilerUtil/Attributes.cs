@@ -4,13 +4,13 @@ using JetBrains.Annotations;
 namespace TranspilerUtil;
 
 public abstract class TranspilerTargetAttribute(
-    InfixPatcher.PatchType patchType,
+    Autopatcher.PatchType patchType,
     Type type,
     string memberName,
     Type[]? parameterTypes,
     Type[]? genericTypes) : Attribute
 {
-    public readonly InfixPatcher.PatchType patchType = patchType;
+    public readonly Autopatcher.PatchType patchType = patchType;
     public readonly Type type = type;
     public readonly string memberName = memberName;
     public readonly Type[]? parameterTypes = parameterTypes;
@@ -20,12 +20,12 @@ public abstract class TranspilerTargetAttribute(
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
 public class InnerPrefixAttribute(Type type, string memberName, Type[]? parameterTypes = null, Type[]? genericTypes = null)
-    : TranspilerTargetAttribute(InfixPatcher.PatchType.Prefix, type, memberName, parameterTypes, genericTypes);
+    : TranspilerTargetAttribute(Autopatcher.PatchType.InnerPrefix, type, memberName, parameterTypes, genericTypes);
 
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
 public class InnerPostfixAttribute(Type type, string memberName, Type[]? parameterTypes = null, Type[]? genericTypes = null)
-    : TranspilerTargetAttribute(InfixPatcher.PatchType.Postfix, type, memberName, parameterTypes, genericTypes);
+    : TranspilerTargetAttribute(Autopatcher.PatchType.InnerPostfix, type, memberName, parameterTypes, genericTypes);
 
 /// <summary>
 ///     This attribute causes the infix transpiler to log the instruction sequence of the modified method to the debug log.
