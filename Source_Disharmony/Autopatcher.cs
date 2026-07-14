@@ -84,20 +84,22 @@ public static class Autopatcher
         {
             var patches = PatchesByMethod[patchedMethod];
 
-            List<InstructionMatcher.Rule> rules = [];
-
-            if (!StateBuilders.TryGetValue(patchedMethod, out var stateBuilder))
-                stateBuilder = new();
-
             MethodInfo? iteratorMethod = patchedMethod.GetIteratorImplementation();
 
             if (iteratorMethod is not null)
             {
-                if (stateBuilder.LocalTypes.Count > 0)
-                    throw new NotSupportedException("State variables are not supported for compiler-generated iterator methods");
+                if (patches.Any(p => p.HasBindingType(BindingType.State)))
+                    throw new NotSupportedException("__state is not supported for compiler-generated iterator methods");
+                if (patches.Any(p => p.HasBindingType(BindingType.Result)))
+                    throw new NotSupportedException("__result is not supported for compiler-generated iterator methods");
 
                 throw new NotImplementedException();
             }
+
+            List<InstructionMatcher.Rule> rules = [];
+
+            if (!StateBuilders.TryGetValue(patchedMethod, out var stateBuilder))
+                stateBuilder = new();
 
             if (stateBuilder.LocalTypes.Count > 0)
                 rules.Add(stateBuilder.BuildRule());
@@ -258,8 +260,8 @@ public static class Autopatcher
 
             EmitPrelude();
 
-            var prefixesUsingResult = prefixes.Where(patch => patch.parameters.Any(a => a.BindingType == BindingType.Result)).ToList();
-            var postfixesUsingResult = postfixes.Where(patch => patch.parameters.Any(a => a.BindingType == BindingType.Result)).ToList();
+            var prefixesUsingResult = prefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
+            var postfixesUsingResult = postfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
 
             if (prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
             {
@@ -550,6 +552,8 @@ public static class Autopatcher
         public required PatchType patchType;
         public required ParameterBinding[] parameters;
         public bool debug;
+
+        public bool HasBindingType(BindingType bindingType) => parameters.Any(p => p.BindingType == bindingType);
     }
 
     private static readonly Dictionary<MethodInfo, int> patchVersions = new();
