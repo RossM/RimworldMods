@@ -105,14 +105,14 @@ public static class Autopatcher
                 });
             }
 
-            var matcher = new InstructionMatcher
+            var patchMatcher = new InstructionMatcher
             {
                 Rules = rules,
                 LocalTypes = stateBuilder.LocalTypes,
             };
 
             int version = IncrementVersion(patchedMethod);
-            MethodInfo transpiler = MakeTranspiler(moduleBuilder, matcher,
+            MethodInfo transpiler = MakeTranspiler([patchMatcher],
                 $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler{version}", false);
             return transpiler;
         }
@@ -812,11 +812,11 @@ public static class Autopatcher
         return null;
     }
 
-    private static MethodInfo MakeTranspiler(ModuleBuilder moduleBuilder, InstructionMatcher matcher, string typeName, bool debug)
+    private static MethodInfo MakeTranspiler(InstructionMatcher[] matchers, string typeName, bool debug)
     {
         TypeBuilder typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
 
-        FieldBuilder matcherField = typeBuilder.DefineField("matcher", typeof(InstructionMatcher),
+        FieldBuilder matchersField = typeBuilder.DefineField("matchers", typeof(InstructionMatcher[]),
             FieldAttributes.Public | FieldAttributes.Static);
         FieldBuilder debugField = typeBuilder.DefineField("debug", typeof(bool),
             FieldAttributes.Public | FieldAttributes.Static);
@@ -825,10 +825,9 @@ public static class Autopatcher
             typeof(List<CodeInstruction>), [typeof(MethodBase), typeof(IEnumerable<CodeInstruction>), typeof(ILGenerator)]);
         ILGenerator generator = methodBuilder.GetILGenerator();
 
-        MethodInfo matchAndReplace
-            = SymbolExtensions.GetMethodInfo(() => InstructionMatcher.MatchAndReplace((InstructionMatcher)null, null, null, null));
+        MethodInfo matchAndReplace = SymbolExtensions.GetMethodInfo(() => InstructionMatcher.RunMatchers);
 
-        generator.Emit(OpCodes.Ldsfld, matcherField);
+        generator.Emit(OpCodes.Ldsfld, matchersField);
         generator.Emit(OpCodes.Ldarg_0);
         generator.Emit(OpCodes.Ldarg_1);
         generator.Emit(OpCodes.Ldarg_2);
@@ -837,7 +836,7 @@ public static class Autopatcher
         generator.Emit(OpCodes.Ret);
 
         Type type = typeBuilder.CreateType();
-        type.GetField(matcherField.Name).SetValue(null, matcher);
+        type.GetField(matchersField.Name).SetValue(null, matchers);
         type.GetField(debugField.Name).SetValue(null, debug);
         return type.GetMethod(methodBuilder.Name);
     }

@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using JetBrains.Annotations;
+
+namespace Disharmony;
 
 public class InstructionMatcher
 {
@@ -408,15 +410,15 @@ public class InstructionMatcher
         return instructionsList;
     }
 
-    public static List<CodeInstruction> MatchAndReplace(
-        InstructionMatcher matcher,
-        MethodBase method,
-        IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator,
-        bool debug = false)
+    [UsedImplicitly]
+    public static List<CodeInstruction> RunMatchers(InstructionMatcher[] matchers, MethodBase target, IEnumerable<CodeInstruction> instructions, ILGenerator generator, bool debug)
     {
-        var instructionsList = new List<CodeInstruction>(instructions);
-        matcher.MatchAndReplace(method, ref instructionsList, generator, debug: debug);
+        var instructionsList = instructions.ToList();
+        foreach (var matcher in matchers)
+        {
+            matcher.MatchAndReplace(target, ref instructionsList, generator, debug: debug);
+        }
+
         return instructionsList;
     }
 }
