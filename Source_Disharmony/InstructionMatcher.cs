@@ -102,9 +102,6 @@ public class InstructionMatcher
                     CodeInstruction inst = instructions[instructionIndex + patternIndex];
                     CodeInstruction patternInst = rule.Pattern[patternIndex];
 
-                    //if (debug)
-                    //    FileLog.Log($"COMPARE {patternInst} : {inst}");
-
                     // For a load or store, map the local indexes in the pattern to the actual local indexes used
                     // in the function
                     if (patternInst.IsStloc())
@@ -248,7 +245,7 @@ public class InstructionMatcher
                     Emit(outInstructions, new(OpCodes.Nop) { labels = labels });
                 }
 
-                Emit(outInstructions, new(OpCodes.Nop, $"Begin {match.rule.Name}"));
+                Emit(outInstructions, CodeInstruction.Annotation($"Begin {match.rule.Name}"));
 
                 extraBlocks.AddRange(instructions[match.start].blocks);
 
@@ -294,7 +291,7 @@ public class InstructionMatcher
 
                 extraBlocks.Clear();
 
-                Emit(outInstructions, new(OpCodes.Nop, $"End {match.rule.Name}"));
+                Emit(outInstructions, CodeInstruction.Annotation($"End {match.rule.Name}"));
 
                 if (match.rule.Mode == OutputMode.InsertBefore)
                 {
