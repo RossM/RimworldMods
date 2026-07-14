@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using HarmonyLib;
-
-namespace Disharmony;
+﻿namespace Disharmony;
 
 public class InstructionMatcher
 {
@@ -70,7 +62,7 @@ public class InstructionMatcher
         debug |= forceDebug;
 
         if (debug)
-            FileLog.Log($"## InfixPatcher {method.DeclaringType?.FullName}::{method.Name}");
+            FileLog.Log($"## InfixPatcher {method.FullName}");
 
         // Check and make sure that all the substitutions apply. Also work out the indexes of all locals.
         for (var ruleIndex = 0; ruleIndex < Rules.Count; ruleIndex++)

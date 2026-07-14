@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using HarmonyLib;
-
-namespace Disharmony;
+﻿namespace Disharmony;
 
 public static class Autopatcher
 {
@@ -135,6 +127,7 @@ public static class Autopatcher
                 foreach (var parameter in prefix.parameters)
                     EmitParameterValue(parameter);
 
+                output.Add(CodeInstruction.Annotation($"{prefix.patchType} {patchMethod.FullName}"));
                 output.Add(new(OpcodeFor(patchMethod), patchMethod));
                 if (!patchMethod.ReturnType.IsVoid())
                 {
@@ -170,6 +163,7 @@ public static class Autopatcher
                     foreach (var parameter in postfix.parameters)
                         EmitParameterValue(parameter);
 
+                    output.Add(CodeInstruction.Annotation($"{postfix.patchType} {patchMethod.FullName}"));
                     output.Add(new(OpcodeFor(patchMethod), patchMethod));
                     if (!patchMethod.ReturnType.IsVoid())
                         output.Add(new(OpCodes.Pop));
@@ -186,7 +180,7 @@ public static class Autopatcher
         {
             foreach (var patch in prefixes.Concat(postfixes))
             {
-                FileLog.Log($"[{patch.patchType}] {patch.patchMethod.DeclaringType?.FullName}::{patch.patchMethod.Name}");
+                FileLog.Log($"[{patch.patchType}] {patch.patchMethod.FullName}");
                 foreach (var parameter in patch.parameters)
                     FileLog.Log(
                         $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index} Field{parameter.Field?.Name}");

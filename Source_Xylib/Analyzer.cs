@@ -168,7 +168,7 @@ public static class Analyzer
             if (!instructions.Any(inst => inst.operand is MethodInfo m && ReflectionHelpers.PossiblyWrappedTargetIs(m, baseMethod)))
             {
                 Log.Warning(
-                    $"[{name}] {type.FullName}::{method.Name} is missing a call to {baseMethod.DeclaringType?.FullName}::{baseMethod.Name}");
+                    $"[{name}] {method.FullName} is missing a call to {baseMethod.FullName}");
             }
         }
     }
