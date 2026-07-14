@@ -349,6 +349,7 @@ public static class InfixPatcher
                 Pattern = pattern.ToArray(),
                 Output = output.ToArray(),
                 LocalTypes = localTypes.ToArray(),
+                Name = $"{target.DeclaringType?.FullName}::{target.Name}",
             };
         }
 
@@ -441,6 +442,7 @@ public static class InfixPatcher
                 Mode = InstructionMatcher.OutputMode.Replace,
                 Pattern = [],
                 Output = output.ToArray(),
+                Name = "state variable initialization",
             };
         }
     }
@@ -592,17 +594,17 @@ public static class InfixPatcher
                 };
 
                 MethodInfo transpiler = MakeTranspiler(moduleBuilder, matcher,
-                    $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler", debug);
+                    $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler", false);
 
                 try
                 {
-                    harmony.Patch(patchedMethod, transpiler: new(transpiler));
+                    harmony.Patch(patchedMethod, transpiler: new(transpiler) { debug = debug });
                 }
                 catch (Exception)
                 {
                     // Rerun with debug on so we see what went wrong
                     InstructionMatcher.forceDebug = true;
-                    harmony.Patch(patchedMethod, transpiler: new(transpiler));
+                    harmony.Patch(patchedMethod, transpiler: new(transpiler) { debug = true });
                 }
             }
             catch (Exception e)
