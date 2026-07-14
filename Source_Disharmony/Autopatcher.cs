@@ -618,7 +618,7 @@ public static class Autopatcher
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException($"Error patching {patchedMethod.DeclaringType}:{patchedMethod.Name}", e);
+                throw new InvalidOperationException($"Error patching {patchedMethod.FullName}", e);
             }
         }
 
