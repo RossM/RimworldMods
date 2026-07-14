@@ -148,7 +148,7 @@ public static class DebugOutputs
         {
             var memeDef = def;
 
-            columns.Add(new(Abbreviate(memeDef.label, 5).CapitalizeFirst(), factionDef =>
+            columns.Add(new(Abbreviate(memeDef.label, 6).CapitalizeFirst(), factionDef =>
             {
                 if (factionDef.requiredMemes?.Contains(memeDef) is true)
                     return "Req";
