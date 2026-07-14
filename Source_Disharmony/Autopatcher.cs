@@ -535,10 +535,7 @@ public static class Autopatcher
 
             return new InstructionMatcher.Rule
             {
-                Min = 1,
-                Max = 1,
-                Mode = InstructionMatcher.OutputMode.Replace,
-                Pattern = [],
+                Mode = InstructionMatcher.OutputMode.MethodPrefix,
                 Output = output.ToArray(),
                 Name = "state variable initialization",
             };

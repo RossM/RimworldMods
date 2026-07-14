@@ -6,10 +6,36 @@ public class InstructionMatcher
 {
     public enum OutputMode
     {
+        /// <summary>
+        ///     <see cref="Rule.Pattern" /> is matched against, but no instruction changes are made.
+        /// </summary>
         MatchOnly,
+
+        /// <summary>
+        ///     <see cref="Rule.Output" /> replaces the instructions that match <see cref="Rule.Pattern" />.
+        /// </summary>
         Replace,
+
+        /// <summary>
+        ///     <see cref="Rule.Output" /> is inserted before the first instruction of each match of the
+        ///     <see cref="Rule.Pattern" />.
+        /// </summary>
         InsertBefore,
+
+        /// <summary>
+        ///     <see cref="Rule.Output" /> is inserted after the last instruction of each match of the <see cref="Rule.Pattern" />.
+        /// </summary>
         InsertAfter,
+
+        /// <summary>
+        ///     <see cref="Rule.Output" /> is inserted at the very start of the instructions. No matching is done.
+        /// </summary>
+        MethodPrefix,
+
+        /// <summary>
+        ///     <see cref="Rule.Output" /> is inserted at the very end of the instructions. No matching is done.
+        /// </summary>
+        MethodPostfix,
     }
 
     public class Rule
@@ -75,11 +101,40 @@ public class InstructionMatcher
 
             switch (rule)
             {
-                case { Pattern: null }: throw new InvalidOperationException($"{rule.Mode} rule cannot have Pattern = null");
                 case { Mode: OutputMode.MatchOnly, Output: not null }:
                     throw new InvalidOperationException($"{rule.Mode} rule cannot have Output = null");
                 case { Mode: not OutputMode.MatchOnly, Output: null }:
                     throw new InvalidOperationException($"{rule.Mode} rule must have Output = null");
+                case { Mode: OutputMode.MethodPrefix or OutputMode.MethodPostfix, Pattern.Length: > 0 }:
+                    throw new InvalidOperationException($"{rule.Mode} cannot have a Pattern");
+                case { Mode: not (OutputMode.MethodPrefix or OutputMode.MethodPostfix), Pattern: not { Length: > 0 } }:
+                    throw new InvalidOperationException($"{rule.Mode} rule must have a Pattern");
+            }
+
+            if (rule.Mode == OutputMode.MethodPrefix)
+            {
+                matches.Add(new MatchData
+                {
+                    rule = rule,
+                    start = 0,
+                    end = 0,
+                    localIndex_Match = new(),
+                    labelMap = new(),
+                });
+                continue;
+            }
+
+            if (rule.Mode == OutputMode.MethodPostfix)
+            {
+                matches.Add(new MatchData
+                {
+                    rule = rule,
+                    start = instructions.Count,
+                    end = instructions.Count,
+                    localIndex_Match = new(),
+                    labelMap = new(),
+                });
+                continue;
             }
 
             var matchCount = 0;
@@ -213,7 +268,7 @@ public class InstructionMatcher
 
         // Make the substitutions
         var outInstructions = new List<CodeInstruction>();
-        for (var instructionIndex = 0; instructionIndex < instructions.Count; instructionIndex++)
+        for (var instructionIndex = 0;; instructionIndex++)
         {
             int index = instructionIndex;
             var match = sortedMatches.FirstOrDefault(r => r.start == index && !r.emitted);
@@ -303,6 +358,9 @@ public class InstructionMatcher
             }
             else
             {
+                if (instructionIndex >= instructions.Count)
+                    break;
+
                 Emit(outInstructions, instructions[instructionIndex]);
                 if (debug)
                     FileLog.Log($"COPY {outInstructions[^1]}");
@@ -411,7 +469,12 @@ public class InstructionMatcher
     }
 
     [UsedImplicitly]
-    public static List<CodeInstruction> RunMatchers(InstructionMatcher[] matchers, MethodBase target, IEnumerable<CodeInstruction> instructions, ILGenerator generator, bool debug)
+    public static List<CodeInstruction> RunMatchers(
+        InstructionMatcher[] matchers,
+        MethodBase target,
+        IEnumerable<CodeInstruction> instructions,
+        ILGenerator generator,
+        bool debug)
     {
         var instructionsList = instructions.ToList();
         foreach (var matcher in matchers)
