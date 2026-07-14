@@ -555,7 +555,7 @@ public static class Autopatcher
         public bool debug;
     }
 
-    private static readonly Dictionary<MethodInfo, int> patchVersions = new Dictionary<MethodInfo, int>();
+    private static readonly Dictionary<MethodInfo, int> patchVersions = new();
 
     private static readonly AssemblyBuilder assemblyBuilder
         = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" }, AssemblyBuilderAccess.RunAndSave);
