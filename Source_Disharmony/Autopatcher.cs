@@ -8,6 +8,118 @@ public static class Autopatcher
         InnerPostfix,
     }
 
+    private class PatchWorker(Assembly assembly)
+    {
+        public IEnumerable<MethodInfo> TargetMethods => PatchesByMethod.Keys;
+        private Dictionary<MethodInfo, List<PatchInfo>> PatchesByMethod = new();
+        private Assembly Assembly { get; } = assembly;
+        private Dictionary<MethodInfo, StateBuilder<Type>> StateBuilders { get; } = new();
+        private List<PatchInfo> Patches { get; } = [];
+
+        public void CollectPatches()
+        {
+            foreach (TypeInfo type in Assembly.DefinedTypes)
+            {
+                var harmonyAttribute = (HarmonyPatch?)Attribute.GetCustomAttribute(type, typeof(HarmonyPatch));
+                if (harmonyAttribute == null)
+                    continue;
+
+                foreach (MethodInfo method in type.DeclaredMethods)
+                {
+                    try
+                    {
+                        var infixTargetAttribute
+                            = (PatchTypeAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPrefixAttribute)) ??
+                              (PatchTypeAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPostfixAttribute));
+                        var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(TargetAttribute))
+                            .Cast<TargetAttribute>().ToArray();
+                        bool debug = Attribute.GetCustomAttribute(method, typeof(DebugAttribute)) != null;
+
+                        if (infixTargetAttribute == null)
+                            continue;
+
+                        MemberInfo? target = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
+                            infixTargetAttribute.parameterTypes, infixTargetAttribute.genericTypes);
+                        if (target == null)
+                            throw new InvalidOperationException("null wrapped member");
+
+                        foreach (var infixPatchAttribute in infixPatchAttributes)
+                        {
+                            var patchedType = infixPatchAttribute.type ?? harmonyAttribute.info.declaringType;
+
+                            MethodInfo? caller = (MethodInfo?)GetMember(patchedType, infixPatchAttribute.methodName,
+                                infixPatchAttribute.parameterTypes, infixPatchAttribute.genericTypes);
+                            if (caller == null)
+                                throw new InvalidOperationException("null target method");
+
+                            if (!StateBuilders.TryGetValue(caller, out StateBuilder<Type> stateBuilder))
+                                stateBuilder = StateBuilders[caller] = new();
+
+                            var arguments = method.GetParameters().Select(param => BindParameter(param, caller, target, stateBuilder))
+                                .ToArray();
+
+                            Patches.Add(new()
+                            {
+                                caller = caller,
+                                target = target,
+                                patchMethod = method,
+                                patchType = infixTargetAttribute.patchType,
+                                parameters = arguments,
+                                debug = debug,
+                            });
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new InvalidOperationException($"Error processing {type}:{method}", e);
+                    }
+                }
+            }
+
+            PatchesByMethod = Patches.GroupBy(patch => patch.caller).ToDictionary(g => g.Key, g => g.ToList());
+        }
+
+        public MethodInfo CreatePatchTranspiler(
+            MethodInfo patchedMethod)
+        {
+            var patches = PatchesByMethod[patchedMethod];
+
+            List<InstructionMatcher.Rule> rules = [];
+
+            if (!StateBuilders.TryGetValue(patchedMethod, out var stateBuilder))
+                stateBuilder = new();
+
+            if (stateBuilder.LocalTypes.Count > 0)
+                rules.Add(stateBuilder.BuildRule());
+
+            foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patches.GroupBy(patch => patch.target))
+            {
+                var target = targetGroup.Key;
+                var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
+                var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
+
+                rules.Add(new()
+                {
+                    LateGenerator = (_, _, generator) =>
+                        RedirectRule_Core(generator, patchedMethod, target, null, prefixes, postfixes, stateBuilder.LocalTypes),
+                });
+            }
+
+            var matcher = new InstructionMatcher
+            {
+                Rules = rules,
+                LocalTypes = stateBuilder.LocalTypes,
+            };
+
+            int version = IncrementVersion(patchedMethod);
+            MethodInfo transpiler = MakeTranspiler(moduleBuilder, matcher,
+                $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler{version}", false);
+            return transpiler;
+        }
+
+        public bool ShouldDebug(MethodInfo targetMethod) => PatchesByMethod[targetMethod].Any(p => p.debug);
+    }
+
     private enum Scope
     {
         /// <summary>
@@ -98,6 +210,50 @@ public static class Autopatcher
         private readonly int[] parameterToLocalIndex;
         private int resultLocalIndex = -1;
         private readonly Type targetType;
+
+        private readonly ILGenerator generator;
+        private readonly MethodBase caller;
+        private readonly MemberInfo target;
+        private readonly MemberInfo? replacementTarget;
+        private readonly List<PatchInfo> prefixes;
+        private readonly List<PatchInfo> postfixes;
+        private readonly List<CodeInstruction> output = [];
+
+        private readonly List<Type> localTypes;
+
+        private readonly bool debug;
+
+        public RuleBuilder(
+            ILGenerator generator,
+            MethodBase caller,
+            MemberInfo target,
+            MethodInfo? replacementTarget,
+            List<PatchInfo> prefixes,
+            List<PatchInfo> postfixes,
+            List<Type> localTypes)
+        {
+            this.generator = generator;
+            this.caller = caller;
+            this.target = target;
+            this.replacementTarget = replacementTarget;
+            this.prefixes = prefixes;
+            this.postfixes = postfixes;
+            this.localTypes = localTypes.ToList();
+
+            debug = prefixes.Any(p => p.debug) || postfixes.Any(p => p.debug);
+
+            targetType = target switch
+            {
+                FieldInfo field => field.FieldType,
+                MethodInfo method => method.ReturnType,
+                _ => throw new NotSupportedException(),
+            };
+
+            callerParameterTypes = GetParameterTypes(caller);
+            targetParameterTypes = GetParameterTypes(target);
+
+            parameterToLocalIndex = new int[targetParameterTypes.Length];
+        }
 
         private void EmitReplacement()
         {
@@ -338,50 +494,6 @@ public static class Autopatcher
                 Name = $"{target.DeclaringType?.FullName}::{target.Name}",
             };
         }
-
-        private readonly ILGenerator generator;
-        private readonly MethodBase caller;
-        private readonly MemberInfo target;
-        private readonly MemberInfo? replacementTarget;
-        private readonly List<PatchInfo> prefixes;
-        private readonly List<PatchInfo> postfixes;
-        private readonly List<CodeInstruction> output = [];
-
-        private readonly List<Type> localTypes;
-
-        private readonly bool debug;
-
-        public RuleBuilder(
-            ILGenerator generator,
-            MethodBase caller,
-            MemberInfo target,
-            MethodInfo? replacementTarget,
-            List<PatchInfo> prefixes,
-            List<PatchInfo> postfixes,
-            List<Type> localTypes)
-        {
-            this.generator = generator;
-            this.caller = caller;
-            this.target = target;
-            this.replacementTarget = replacementTarget;
-            this.prefixes = prefixes;
-            this.postfixes = postfixes;
-            this.localTypes = localTypes.ToList();
-
-            debug = prefixes.Any(p => p.debug) || postfixes.Any(p => p.debug);
-
-            targetType = target switch
-            {
-                FieldInfo field => field.FieldType,
-                MethodInfo method => method.ReturnType,
-                _ => throw new NotSupportedException(),
-            };
-
-            callerParameterTypes = GetParameterTypes(caller);
-            targetParameterTypes = GetParameterTypes(target);
-
-            parameterToLocalIndex = new int[targetParameterTypes.Length];
-        }
     }
 
 
@@ -443,6 +555,20 @@ public static class Autopatcher
         public bool debug;
     }
 
+    private static readonly Dictionary<MethodInfo, int> patchVersions = new Dictionary<MethodInfo, int>();
+
+    private static readonly AssemblyBuilder assemblyBuilder
+        = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" }, AssemblyBuilderAccess.RunAndSave);
+
+    private static readonly ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicTranspilersModule");
+
+    private static int IncrementVersion(MethodInfo method)
+    {
+        if (!patchVersions.TryGetValue(method, out int version))
+            version = 0;
+        return patchVersions[method] = version + 1;
+    }
+
     private static void EmitInitializer(Type type, int localIndex, List<CodeInstruction> codeInstructions)
     {
         if (type.IsByRef)
@@ -477,120 +603,26 @@ public static class Autopatcher
 
     public static void PatchAll(Harmony harmony, Assembly assembly)
     {
-        List<PatchInfo> patches = [];
+        var worker = new PatchWorker(assembly);
 
-        Dictionary<MethodInfo, StateBuilder<Type>> stateBuilders = new();
+        worker.CollectPatches();
 
-        foreach (TypeInfo type in assembly.DefinedTypes)
+        foreach (MethodInfo patchedMethod in worker.TargetMethods)
         {
-            var harmonyAttribute = (HarmonyPatch?)Attribute.GetCustomAttribute(type, typeof(HarmonyPatch));
-            if (harmonyAttribute == null)
-                continue;
-
-            foreach (MethodInfo method in type.DeclaredMethods)
-            {
-                try
-                {
-                    var infixTargetAttribute
-                        = (PatchTypeAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPrefixAttribute)) ??
-                          (PatchTypeAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPostfixAttribute));
-                    var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(TargetAttribute))
-                        .Cast<TargetAttribute>().ToArray();
-                    bool debug = Attribute.GetCustomAttribute(method, typeof(DebugAttribute)) != null;
-
-                    if (infixTargetAttribute == null)
-                        continue;
-
-                    MemberInfo? target = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
-                        infixTargetAttribute.parameterTypes, infixTargetAttribute.genericTypes);
-                    if (target == null)
-                        throw new InvalidOperationException("null wrapped member");
-
-                    foreach (var infixPatchAttribute in infixPatchAttributes)
-                    {
-                        var patchedType = infixPatchAttribute.type ?? harmonyAttribute.info.declaringType;
-
-                        MethodInfo? caller = (MethodInfo?)GetMember(patchedType, infixPatchAttribute.methodName,
-                            infixPatchAttribute.parameterTypes, infixPatchAttribute.genericTypes);
-                        if (caller == null)
-                            throw new InvalidOperationException("null target method");
-
-                        if (!stateBuilders.TryGetValue(caller, out StateBuilder<Type> stateBuilder))
-                            stateBuilder = stateBuilders[caller] = new();
-
-                        var arguments = method.GetParameters().Select(param => BindParameter(param, caller, target, stateBuilder))
-                            .ToArray();
-
-                        patches.Add(new()
-                        {
-                            caller = caller,
-                            target = target,
-                            patchMethod = method,
-                            patchType = infixTargetAttribute.patchType,
-                            parameters = arguments,
-                            debug = debug,
-                        });
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new InvalidOperationException($"Error processing {type}:{method}", e);
-                }
-            }
-        }
-
-        AssemblyBuilder assemblyBuilder
-            = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" },
-                AssemblyBuilderAccess.RunAndSave);
-        ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicTranspilersModule");
-
-        foreach (IGrouping<MethodInfo, PatchInfo> patchGroup in patches.GroupBy(patch => patch.caller))
-        {
-            MethodInfo patchedMethod = patchGroup.Key;
-
             try
             {
-                List<InstructionMatcher.Rule> rules = [];
-
-                if (!stateBuilders.TryGetValue(patchedMethod, out var stateBuilder))
-                    stateBuilder = new();
-
-                if (stateBuilder.LocalTypes.Count > 0)
-                    rules.Add(stateBuilder.BuildRule());
-
-                foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patchGroup.GroupBy(patch => patch.target))
-                {
-                    var target = targetGroup.Key;
-                    var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
-                    var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
-
-                    rules.Add(new()
-                    {
-                        LateGenerator = (_, _, generator) =>
-                            RedirectRule_Core(generator, patchedMethod, target, null, prefixes, postfixes, stateBuilder.LocalTypes),
-                    });
-                }
-
-                bool debug = patchGroup.Any(info => info.debug);
-
-                var matcher = new InstructionMatcher
-                {
-                    Rules = rules,
-                    LocalTypes = stateBuilder.LocalTypes,
-                };
-
-                MethodInfo transpiler = MakeTranspiler(moduleBuilder, matcher,
-                    $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler", false);
+                MethodInfo patchTranspiler = worker.CreatePatchTranspiler(patchedMethod);
+                bool debug = worker.ShouldDebug(patchedMethod);
 
                 try
                 {
-                    harmony.Patch(patchedMethod, transpiler: new(transpiler) { debug = debug });
+                    harmony.Patch(patchedMethod, transpiler: new(patchTranspiler) { debug = debug });
                 }
                 catch (Exception)
                 {
                     // Rerun with debug on so we see what went wrong
                     InstructionMatcher.forceDebug = true;
-                    harmony.Patch(patchedMethod, transpiler: new(transpiler) { debug = true });
+                    harmony.Patch(patchedMethod, transpiler: new(patchTranspiler) { debug = true });
                 }
             }
             catch (Exception e)
