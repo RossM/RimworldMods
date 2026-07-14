@@ -614,20 +614,31 @@ public static class Autopatcher
                 MethodInfo patchTranspiler = worker.CreatePatchTranspiler(patchedMethod);
                 bool debug = worker.ShouldDebug(patchedMethod);
 
-                try
-                {
-                    harmony.Patch(patchedMethod, transpiler: new(patchTranspiler) { debug = debug });
-                }
-                catch (Exception)
-                {
-                    // Rerun with debug on so we see what went wrong
-                    InstructionMatcher.forceDebug = true;
-                    harmony.Patch(patchedMethod, transpiler: new(patchTranspiler) { debug = true });
-                }
+                RunPatch(patchedMethod, patchTranspiler, Priority.Normal, debug);
             }
             catch (Exception e)
             {
                 throw new InvalidOperationException($"Error patching {patchedMethod.DeclaringType}:{patchedMethod.Name}", e);
+            }
+        }
+
+        void RunPatch(MethodInfo patchedMethod, MethodInfo patchTranspiler, int priority, bool debug)
+        {
+            bool oldForceDebug = InstructionMatcher.forceDebug;
+
+            try
+            {
+                harmony.Patch(patchedMethod, transpiler: new(patchTranspiler, priority: priority) { debug = debug });
+            }
+            catch (Exception)
+            {
+                // Rerun with debug on so we see what went wrong
+                InstructionMatcher.forceDebug = true;
+                harmony.Patch(patchedMethod, transpiler: new(patchTranspiler, priority: priority) { debug = true });
+            }
+            finally
+            {
+                InstructionMatcher.forceDebug = oldForceDebug;
             }
         }
     }
