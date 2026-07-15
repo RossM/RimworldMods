@@ -1,10 +1,13 @@
-﻿using System.Diagnostics;
-
-namespace Disharmony;
+﻿namespace Disharmony;
 
 public partial class InstructionMatcher
 {
-    private class Worker(InstructionMatcher instructionMatcher, MethodBase method, List<CodeInstruction> inInstructions, ILGenerator generator, bool debug)
+    private class Worker(
+        InstructionMatcher instructionMatcher,
+        MethodBase method,
+        List<CodeInstruction> inInstructions,
+        ILGenerator generator,
+        bool debug)
     {
         private readonly Dictionary<int, int> localMap_Method = new();
         private readonly Dictionary<Label, Label> labelMap_Method = new();
@@ -130,86 +133,193 @@ public partial class InstructionMatcher
                         break;
 
                     Emit(inInstructions[instructionIndex]);
-                    if (debug || forceDebug)
-                        FileLog.Log($"COPY {OutInstructions[^1]}");
 
                     continue;
                 }
 
                 match.emitted = true;
-
-                if (match.rule.Mode == OutputMode.InsertAfter)
-                {
-                    for (int i = match.start; i < match.end; i++)
-                    {
-                        Emit(inInstructions[i]);
-                        if (debug || forceDebug)
-                            FileLog.Log($"COPY MATCH {OutInstructions[^1]}");
-                    }
-                }
-
                 instructionIndex = match.end - 1;
 
-                if (match.rule.Mode is OutputMode.Replace or OutputMode.InsertBefore && match.start != match.end &&
-                    inInstructions[match.start] is { labels: { Count: > 0 } labels })
+                if (match.start == match.end)
                 {
-                    Emit(new(OpCodes.Nop) { labels = labels });
+                    EmitReplacement(match);
+                    continue;
                 }
 
-                Emit(CodeInstruction.Annotation($"Begin {match.rule.Name}"));
+                bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
+                bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
 
-                if (match.start != match.end && inInstructions[match.start] is { blocks: { Count: > 0 } blocks })
-                    extraBlocks.AddRange(blocks.Where(b => b.blockType != ExceptionBlockType.EndExceptionBlock));
-
-                foreach (CodeInstruction replaceInst in match.rule.Output)
+                switch (match.rule.Mode)
                 {
-                    EmitReplacement(replaceInst, match);
-
-                    if (debug || forceDebug)
-                        FileLog.Log($"EMIT {OutInstructions[^1]}");
-                }
-
-                if (match.start != match.end && inInstructions[match.end - 1] is { blocks: { Count: > 0 } blocks2 })
-                    OutInstructions[^1].blocks.AddRange(blocks2.Where(b => b.blockType == ExceptionBlockType.EndExceptionBlock));
-
-                Emit(CodeInstruction.Annotation($"End {match.rule.Name}"));
-
-                if (match.rule.Mode == OutputMode.InsertBefore)
-                {
-                    for (int i = match.start; i < match.end; i++)
+                    case OutputMode.Replace:
                     {
-                        Emit(inInstructions[i]);
+                        if (inInstructions[match.start].labels.Count > 0 || inInstructions[match.start].blocks.Any(IsBlockStart))
+                        {
+                            Emit(OpCodes.Nop,
+                                labels: inInstructions[match.start].labels,
+                                blocks: inInstructions[match.start].blocks.Where(IsBlockStart).ToList());
+                        }
 
-                        if (i == match.start)
-                            OutInstructions[^1].labels.Clear();
+                        EmitReplacement(match);
 
-                        if (debug || forceDebug)
-                            FileLog.Log($"COPY MATCH {OutInstructions[^1]}");
+                        if (inInstructions[match.end - 1].blocks.Any(IsBlockEnd))
+                        {
+                            Emit(OpCodes.Nop,
+                                blocks: inInstructions[match.end - 1].blocks.Where(IsBlockEnd).ToList());
+                        }
+
+                        break;
                     }
+                    case OutputMode.InsertBefore:
+                    {
+                        if (inInstructions[match.start].labels.Count > 0 || inInstructions[match.start].blocks.Any(IsBlockStart))
+                        {
+                            Emit(OpCodes.Nop,
+                                labels: inInstructions[match.start].labels,
+                                blocks: inInstructions[match.start].blocks.Where(IsBlockStart).ToList());
+                        }
+
+                        EmitReplacement(match);
+
+                        for (int i = match.start; i < match.end; i++)
+                        {
+                            Emit(inInstructions[i]);
+
+                            if (i == match.start)
+                            {
+                                OutInstructions[^1].labels.Clear();
+                                OutInstructions[^1].blocks.RemoveAll(IsBlockStart);
+                            }
+                        }
+
+                        break;
+                    }
+                    case OutputMode.InsertAfter:
+                    {
+                        for (int i = match.start; i < match.end; i++)
+                        {
+                            Emit(inInstructions[i]);
+
+                            if (i == match.end - 1)
+                            {
+                                OutInstructions[^1].blocks.RemoveAll(IsBlockEnd);
+                            }
+                        }
+
+                        EmitReplacement(match);
+
+                        if (inInstructions[match.end - 1].blocks.Any(IsBlockEnd))
+                        {
+                            Emit(OpCodes.Nop,
+                                blocks: inInstructions[match.end - 1].blocks.Where(IsBlockEnd).ToList());
+                        }
+
+                        break;
+                    }
+                    default: throw new InvalidOperationException();
                 }
             }
 
             if (debug || forceDebug)
+            {
+                LogInstructions();
                 FileLog.Log("");
+            }
+        }
+
+        private void LogInstructions()
+        {
+            int codePos = 0;
+
+            foreach (var codeInstruction in OutInstructions)
+            {
+                codeInstruction.labels.Do(label => FileLog.LogIL(codePos, label));
+                codeInstruction.blocks.Do(block => FileLog.LogILBlockBegin(codePos, block));
+
+                var code = codeInstruction.opcode;
+                var operand = codeInstruction.operand;
+
+                var realCode = true;
+                switch (code.OperandType)
+                {
+                    case OperandType.InlineNone:
+                        if (code == OpCodes.Nop && operand is string s)
+                        {
+                            FileLog.LogILComment(codePos, s);
+                            realCode = false;
+                        }
+                        else
+                            FileLog.LogIL(codePos, code);
+
+                        break;
+
+                    //case OperandType.InlineSig:
+                    //    FileLog.LogIL(codePos, code, (ICallSiteGenerator)operand);
+                    //    break;
+
+                    default: FileLog.LogIL(codePos, code, operand); break;
+                }
+
+                codeInstruction.blocks.Do(block => FileLog.LogILBlockEnd(codePos, block));
+                if (realCode)
+                    codePos += ILSize(codeInstruction.opcode);
+            }
+
+            FileLog.FlushBuffer();
+        }
+
+        private static int ILSize(OpCode opCode)
+        {
+            int size = opCode.Size;
+            size += opCode.OperandType switch
+            {
+                OperandType.InlineNone => 0,
+                OperandType.ShortInlineBrTarget => 1,
+                OperandType.ShortInlineI => 1,
+                OperandType.ShortInlineVar => 1,
+                OperandType.InlineVar => 2,
+                OperandType.InlineI8 => 8,
+                OperandType.InlineR => 8,
+                _ => 4,
+            };
+            return size;
+        }
+
+        private void EmitReplacement(MatchData match)
+        {
+            Emit(CodeInstruction.Annotation($"Begin {match.rule.Name}"));
+
+            foreach (CodeInstruction replaceInst in match.rule.Output)
+                EmitReplacement(replaceInst, match);
+
+            Emit(CodeInstruction.Annotation($"End {match.rule.Name}"));
         }
 
         private bool MatchPattern(Rule rule, int instructionIndex, out Dictionary<int, int> localIndex_Match)
         {
             localIndex_Match = new Dictionary<int, int>();
 
+            bool noOutput = rule.Output is not { Length: > 0 };
+
             for (var patternIndex = 0; patternIndex < rule.Pattern.Length; patternIndex++)
             {
                 if (!MatchInstruction(rule, instructionIndex, localIndex_Match, patternIndex))
                     return false;
 
-                // Check for exception blocks or labels not at the start (or end, for EndExceptionBlock) of the match
-                CodeInstruction inst = inInstructions[instructionIndex + patternIndex];
-                if (patternIndex > 0 && inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
-                    return false;
-                if (patternIndex > 0 && inst.labels.Count > 0)
-                    return false;
-                if (patternIndex < rule.Pattern.Length - 1 && inst.blocks.Any(b => b.blockType == ExceptionBlockType.EndExceptionBlock))
-                    return false;
+                if (rule.Mode == OutputMode.Replace)
+                {
+                    // Check for exception blocks or labels not at the start (or end, for EndExceptionBlock) of the match
+                    CodeInstruction inst = inInstructions[instructionIndex + patternIndex];
+                    if ((patternIndex > 0 || noOutput) && inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
+                        return false;
+                    if ((patternIndex > 0 || noOutput) && inst.labels.Count > 0)
+                        return false;
+                    if ((patternIndex < rule.Pattern.Length - 1 || noOutput) &&
+                        inst.blocks.Any(b => b.blockType == ExceptionBlockType.EndExceptionBlock))
+                    {
+                        return false;
+                    }
+                }
             }
 
             return true;
@@ -276,8 +386,8 @@ public partial class InstructionMatcher
             // the difference when writing patterns.
             else if (patternInst.opcode.Value == OpCodes.Call.Value)
             {
-                if ((inst.opcode.Value != OpCodes.Call.Value &&
-                     inst.opcode.Value != OpCodes.Callvirt.Value) ||
+                if (inst.opcode.Value != OpCodes.Call.Value &&
+                    inst.opcode.Value != OpCodes.Callvirt.Value ||
                     !inst.operand.Equals(patternInst.operand))
                     return false;
             }
