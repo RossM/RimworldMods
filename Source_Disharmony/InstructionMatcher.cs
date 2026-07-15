@@ -65,8 +65,6 @@ public partial class InstructionMatcher
     public List<Type> CrossRuleLocalTypes = [];
     public List<Label> CrossRuleLabels = [];
 
-    private readonly List<ExceptionBlock> extraBlocks = [];
-
     public InstructionMatcher()
     {
     }
