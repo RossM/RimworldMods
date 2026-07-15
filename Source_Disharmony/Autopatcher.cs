@@ -137,20 +137,6 @@ public static partial class Autopatcher
         return type.GetMethod(methodBuilder.Name);
     }
 
-    /// <summary>
-    ///     This creates a rule that replaces all calls of a given method with calls of a given other method. The
-    ///     new method's parameters will be filled with the values of the old method's parameters that have the
-    ///     same name. If the old method doesn't have a parameter with that name, the parameters of the method
-    ///     containing the call being modified are checked, and used if they match.
-    ///     You can also use __instance to match the instance the method was invoked on, and __caller to match
-    ///     the instance the calling method was invoked on.
-    ///     If there isn't a parameter with a matching name, this will fall back to trying to match based
-    ///     on parameter type, but this will give a warning.
-    /// </summary>
-    /// <param name="oldMember"></param>
-    /// <param name="newMember"></param>
-    /// <param name="minMatches"></param>
-    /// <returns></returns>
     public static InstructionMatcher.Rule MakeRedirectRule(MemberInfo oldMember, MethodInfo newMember)
     {
         return new InstructionMatcher.Rule
