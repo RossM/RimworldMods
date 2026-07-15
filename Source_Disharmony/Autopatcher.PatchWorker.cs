@@ -22,6 +22,7 @@ public static partial class Autopatcher
                 throw new NotImplementedException();
             }
 
+            List<InstructionMatcher> matchers = [];
             List<InstructionMatcher.Rule> rules = [];
 
             StateBuilder<Type> stateBuilder = new();
@@ -53,9 +54,30 @@ public static partial class Autopatcher
                 Rules = rules,
                 CrossRuleLocalTypes = stateBuilder.LocalTypes,
             };
+            matchers.Add(patchMatcher);
 
-            InstructionMatcher[] matchers = [patchMatcher];
-            if (TryUpdateTranspiler(outer, matchers))
+            rules = [];
+
+            foreach (var patch in patches.Where(p => p.inline))
+            {
+                var ruleBuilder = new InlineRuleBuilder(patch);
+
+                var rule = ruleBuilder.BuildRule();
+                if (rule != null)
+                    rules.Add(rule);
+            }
+
+            if (rules.Count > 0)
+            {
+                var inlineMatcher = new InstructionMatcher
+                {
+                    Rules = rules,
+                };
+                matchers.Add(inlineMatcher);
+            }
+
+            InstructionMatcher[] matchersArray = matchers.ToArray();
+            if (TryUpdateTranspiler(outer, matchersArray))
             {
                 FileLog.Log($"# GetHarmonyMethod: Reusing transpiler for {outer.FullName}");
 
@@ -64,7 +86,7 @@ public static partial class Autopatcher
                 return null;
             }
 
-            MethodInfo transpiler = MakeTranspiler(matchers,
+            MethodInfo transpiler = MakeTranspiler(matchersArray,
                 $"{outer.DeclaringType?.FullName?.Replace('.', '_')}_{outer.Name}_Transpiler", outer);
 
             bool debug = PatchRegistry.PatchesByMethod[outer].Any(p => p.debug);
