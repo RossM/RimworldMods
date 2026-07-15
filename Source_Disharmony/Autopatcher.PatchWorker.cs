@@ -44,7 +44,9 @@ public static partial class Autopatcher
             {
                 var inner = targetGroup.Key;
 
-                rules.Add(RedirectRule_Core(outer, inner, null, targetGroup.ToList(), stateBuilder.LocalTypes));
+                var ruleBuilder = new InfixRuleBuilder(outer, inner, null, targetGroup.ToList(), stateBuilder.LocalTypes);
+
+                rules.Add(ruleBuilder.BuildRule());
             }
 
             var patchMatcher = new InstructionMatcher
