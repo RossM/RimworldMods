@@ -126,9 +126,7 @@ public static partial class Autopatcher
                 }
 
                 if (resultLocalIndex >= 0)
-                {
-                    output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
-                }
+                    output.EmitLoad(resultLocalIndex);
             }
         }
 
@@ -169,10 +167,7 @@ public static partial class Autopatcher
 
                 case BindingType.State:
                 {
-                    if (parameterType.IsByRef)
-                        output.Add(CodeInstruction.LoadLocalAddress(parameter.Index));
-                    else
-                        output.Add(CodeInstruction.LoadLocal(parameter.Index));
+                    output.EmitLoad(parameter.Index, parameterType.IsByRef);
 
                     break;
                 }
@@ -222,10 +217,7 @@ public static partial class Autopatcher
 
         private void EmitTargetParameter(Type type, int index)
         {
-            if (type.IsByRef && !innerParameterTypes[index].IsByRef)
-                output.Add(CodeInstruction.LoadLocalAddress(innerParameterLocals[index]));
-            else
-                output.Add(CodeInstruction.LoadLocal(innerParameterLocals[index]));
+            output.EmitLoad(innerParameterLocals[index], type.IsByRef && !innerParameterTypes[index].IsByRef);
             if (!type.IsByRef && innerParameterTypes[index].IsByRef)
                 output.Add(new(OpCodes.Ldobj, type));
         }
