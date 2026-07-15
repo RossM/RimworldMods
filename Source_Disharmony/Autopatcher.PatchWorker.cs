@@ -2,76 +2,14 @@
 
 public static partial class Autopatcher
 {
-    private class PatchWorker(Assembly assembly)
+    private class PatchWorker(PatchRegistry registry)
     {
-        public IEnumerable<MethodInfo> PatchedMethods => PatchesByMethod.Keys;
-        private Dictionary<MethodInfo, List<PatchInfo>> PatchesByMethod = new();
-        private Assembly Assembly { get; } = assembly;
-        private List<PatchInfo> Patches { get; } = [];
+        private PatchRegistry PatchRegistry { get; } = registry;
 
-        public void CollectPatches()
-        {
-            foreach (TypeInfo type in Assembly.DefinedTypes)
-            {
-                var harmonyAttribute = (HarmonyPatch?)Attribute.GetCustomAttribute(type, typeof(HarmonyPatch));
-                if (harmonyAttribute == null)
-                    continue;
-
-                foreach (MethodInfo method in type.DeclaredMethods)
-                {
-                    try
-                    {
-                        var infixTargetAttribute
-                            = (PatchTypeAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPrefixAttribute)) ??
-                              (PatchTypeAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPostfixAttribute));
-                        var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(TargetAttribute))
-                            .Cast<TargetAttribute>().ToArray();
-                        bool debug = Attribute.GetCustomAttribute(method, typeof(DebugAttribute)) != null;
-
-                        if (infixTargetAttribute == null)
-                            continue;
-
-                        MemberInfo? inner = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
-                            infixTargetAttribute.parameterTypes, infixTargetAttribute.genericTypes);
-                        if (inner == null)
-                            throw new InvalidOperationException("null wrapped member");
-
-                        foreach (var infixPatchAttribute in infixPatchAttributes)
-                        {
-                            var patchedType = infixPatchAttribute.type ?? harmonyAttribute.info.declaringType;
-
-                            MethodInfo? outer = (MethodInfo?)GetMember(patchedType, infixPatchAttribute.methodName,
-                                infixPatchAttribute.parameterTypes, infixPatchAttribute.genericTypes);
-                            if (outer == null)
-                                throw new InvalidOperationException("null target method");
-
-                            var arguments = method.GetParameters().Select(param => BindParameter(param, outer, inner))
-                                .ToArray();
-
-                            Patches.Add(new()
-                            {
-                                outer = outer,
-                                inner = inner,
-                                patchMethod = method,
-                                patchType = infixTargetAttribute.patchType,
-                                parameters = arguments,
-                                debug = debug,
-                            });
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        throw new InvalidOperationException($"Error processing {type}:{method}", e);
-                    }
-                }
-            }
-
-            PatchesByMethod = Patches.GroupBy(patch => patch.outer).ToDictionary(g => g.Key, g => g.ToList());
-        }
 
         public MethodInfo CreatePatchTranspiler(MethodInfo outer)
         {
-            var patches = PatchesByMethod[outer];
+            var patches = PatchRegistry.PatchesByMethod[outer];
 
             MethodInfo? iteratorMethod = outer.GetIteratorImplementation();
 
@@ -127,6 +65,6 @@ public static partial class Autopatcher
             return transpiler;
         }
 
-        public bool ShouldDebug(MethodInfo targetMethod) => PatchesByMethod[targetMethod].Any(p => p.debug);
+        public bool ShouldDebug(MethodInfo targetMethod) => PatchRegistry.PatchesByMethod[targetMethod].Any(p => p.debug);
     }
 }

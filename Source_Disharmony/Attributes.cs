@@ -3,13 +3,13 @@
 namespace Disharmony;
 
 public abstract class PatchTypeAttribute(
-    Autopatcher.PatchType patchType,
+    PatchType patchType,
     Type type,
     string memberName,
     Type[]? parameterTypes,
     Type[]? genericTypes) : Attribute
 {
-    public readonly Autopatcher.PatchType patchType = patchType;
+    public readonly PatchType patchType = patchType;
     public readonly Type type = type;
     public readonly string memberName = memberName;
     public readonly Type[]? parameterTypes = parameterTypes;
@@ -19,12 +19,12 @@ public abstract class PatchTypeAttribute(
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
 public class InnerPrefixAttribute(Type type, string memberName, Type[]? parameterTypes = null, Type[]? genericTypes = null)
-    : PatchTypeAttribute(Autopatcher.PatchType.InnerPrefix, type, memberName, parameterTypes, genericTypes);
+    : PatchTypeAttribute(PatchType.InnerPrefix, type, memberName, parameterTypes, genericTypes);
 
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
 public class InnerPostfixAttribute(Type type, string memberName, Type[]? parameterTypes = null, Type[]? genericTypes = null)
-    : PatchTypeAttribute(Autopatcher.PatchType.InnerPostfix, type, memberName, parameterTypes, genericTypes);
+    : PatchTypeAttribute(PatchType.InnerPostfix, type, memberName, parameterTypes, genericTypes);
 
 /// <summary>
 ///     This attribute causes the infix transpiler to log the instruction sequence of the modified method to the debug log.
