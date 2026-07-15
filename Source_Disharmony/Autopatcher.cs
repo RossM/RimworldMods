@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using JetBrains.Annotations;
+
+namespace Disharmony;
 
 public enum PatchType
 {
@@ -10,9 +12,9 @@ public static partial class Autopatcher
 {
     private class StateBuilder<TStateKey>
     {
+        public List<Type> LocalTypes => output.LocalTypes;
         private readonly Dictionary<TStateKey, (int index, Type type)> stateMap = new();
         private readonly InstructionList output = [];
-        public List<Type> LocalTypes => output.LocalTypes;
 
         public int GetOrAddStateLocal(TStateKey stateKey, Type localType, MethodInfo method)
         {
@@ -38,7 +40,6 @@ public static partial class Autopatcher
 
         public InstructionMatcher.Rule BuildRule()
         {
-
             for (int index = 0; index < LocalTypes.Count; index++)
                 output.EmitLocalInitializer(index);
 
@@ -51,6 +52,8 @@ public static partial class Autopatcher
         }
     }
 
+    private const string harmonyID = "Xylthixlm.Disharmony.Autopatcher";
+
     private static readonly Dictionary<MethodInfo, Action<InstructionMatcher[]>> transpilerUpdaters = new();
 
     private static readonly AssemblyBuilder assemblyBuilder
@@ -60,7 +63,20 @@ public static partial class Autopatcher
 
     private static readonly PatchRegistry registry = new();
 
-    private static readonly Harmony harmony = new("Xylthixlm.Disharmony.Autopatcher");
+    private static readonly Harmony harmony = new(harmonyID);
+
+    private static readonly bool useTrampolines = true;
+
+    private static readonly object harmonyLocker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
+
+    private static readonly Func<MethodBase, HarmonyLib.PatchInfo> harmonyGetPatchInfo
+        = AccessTools.MethodDelegate<Func<MethodBase, HarmonyLib.PatchInfo>>("HarmonyLib.HarmonySharedState:GetPatchInfo");
+
+    private static readonly Action<MethodBase, MethodBase> harmonyDetourMethod
+        = AccessTools.MethodDelegate<Action<MethodBase, MethodBase>>("HarmonyLib.PatchTools:DetourMethod");
+
+    private static readonly Action<MethodBase, MethodInfo, HarmonyLib.PatchInfo> harmonyUpdatePatchInfo
+        = AccessTools.MethodDelegate<Action<MethodBase, MethodInfo, HarmonyLib.PatchInfo>>("HarmonyLib.HarmonySharedState:UpdatePatchInfo");
 
     public static void PatchAll(Assembly assembly)
     {
@@ -94,7 +110,10 @@ public static partial class Autopatcher
             {
                 HarmonyMethod harmonyMethod = worker.GetHarmonyMethod(patchedMethod);
 
-                RunPatch(patchedMethod, harmonyMethod);
+                if (useTrampolines)
+                    AddTranspilerWithoutPatching(patchedMethod, harmonyMethod);
+                else
+                    RunPatch(patchedMethod, harmonyMethod);
             }
             catch (Exception e)
             {
@@ -107,9 +126,9 @@ public static partial class Autopatcher
 
         void RunPatch(MethodInfo patchedMethod, HarmonyMethod? harmonyMethod)
         {
-            bool oldForceDebug = InstructionMatcher.forceDebug;
-
             FileLog.Log($"# RunPatch: {patchedMethod.FullName}");
+
+            bool oldForceDebug = InstructionMatcher.forceDebug;
 
             try
             {
@@ -126,6 +145,38 @@ public static partial class Autopatcher
             {
                 InstructionMatcher.forceDebug = oldForceDebug;
             }
+        }
+    }
+
+    private static void AddTranspilerWithoutPatching(MethodInfo original, HarmonyMethod? harmonyMethod)
+    {
+        lock (harmonyLocker)
+        {
+            HarmonyLib.PatchInfo patchInfo = harmonyGetPatchInfo(original) ?? new HarmonyLib.PatchInfo();
+
+            if (harmonyMethod != null)
+            {
+                patchInfo.transpilers =
+                [
+                    .. patchInfo.transpilers,
+                    new Patch(harmonyMethod, patchInfo.transpilers.Length, harmonyID),
+                ];
+            }
+
+            var replacement = PatchWorker.ApplyTrampoline(original);
+
+            FileLog.Log(">>> AddTranspilerWithoutPatching debug start");
+            FileLog.Log($"{replacement} {replacement.GetType()}");
+            //FileLog.Log($"MetadataToken = {replacement.MetadataToken}");
+            FileLog.Log($"MethodHandle = {replacement.MethodHandle.Value}");
+            FileLog.Log($"GetFunctionPointer = {replacement.MethodHandle.GetFunctionPointer()}");
+            FileLog.Log(">>> AddTranspilerWithoutPatching debug end");
+
+            // If we call UpdatePatchInfo with the actual replacement, it crashes in
+            // replacement.MethodHandle.GetFunctionPointer(). Use original instead.
+            // Hopefully nothing breaks too badly.
+
+            harmonyUpdatePatchInfo(original, replacement, patchInfo);
         }
     }
 
@@ -163,5 +214,48 @@ public static partial class Autopatcher
         field.SetValue(null, matchers);
         transpilerUpdaters[key] = m => field.SetValue(null, m);
         return type.GetMethod(methodBuilder.Name);
+    }
+
+    private static MethodInfo MakeTrampoline(MethodInfo target, string name)
+    {
+        Type[] parameterTypes = target.GetParameters().Types();
+        if (!target.IsStatic)
+            parameterTypes = [target.DeclaringType, .. parameterTypes];
+
+        var method = new DynamicMethod($"{target.DeclaringType?.FullName}.{target.Name}{name}", target.ReturnType, parameterTypes,
+            moduleBuilder, true);
+
+        ILGenerator generator = method.GetILGenerator();
+
+        MethodInfo getMethodFromHandle = SymbolExtensions.GetMethodInfo(() => MethodBase.GetMethodFromHandle(new RuntimeMethodHandle()));
+        MethodInfo updateMethod = SymbolExtensions.GetMethodInfo(() => ResolveTrampoline);
+
+        if (parameterTypes.Length >= 1)
+            generator.Emit(OpCodes.Ldarg_0);
+        if (parameterTypes.Length >= 2)
+            generator.Emit(OpCodes.Ldarg_1);
+        if (parameterTypes.Length >= 3)
+            generator.Emit(OpCodes.Ldarg_2);
+        if (parameterTypes.Length >= 4)
+            generator.Emit(OpCodes.Ldarg_3);
+        for (int i = 4; i < parameterTypes.Length; i++)
+            generator.Emit(OpCodes.Ldarg_S, i);
+
+        generator.Emit(OpCodes.Ldtoken, target);
+        generator.Emit(OpCodes.Call, getMethodFromHandle);
+        generator.Emit(OpCodes.Call, updateMethod);
+
+        generator.Emit(OpCodes.Tailcall);
+        generator.Emit(OpCodes.Call, target);
+
+        generator.Emit(OpCodes.Ret);
+
+        return method;
+    }
+
+    [UsedImplicitly]
+    public static void ResolveTrampoline(MethodBase method)
+    {
+        PatchWorker.ResolveTrampoline(method);
     }
 }
