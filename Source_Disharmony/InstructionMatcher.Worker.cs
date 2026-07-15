@@ -153,7 +153,9 @@ public partial class InstructionMatcher
                     if (debug || forceDebug)
                         FileLog.Log($"MATCH #{ruleIndex} ({matchData.start} .. {matchData.end - 1})");
 
-                    matches.Add(matchData);
+                    if (rule.Output != null)
+                        matches.Add(matchData);
+
                     if (rule.SaveLocals)
                     {
                         foreach (var kvp in localIndex_Match)
@@ -190,59 +192,8 @@ public partial class InstructionMatcher
             {
                 int index = instructionIndex;
                 var match = sortedMatches.FirstOrDefault(r => r.start == index && !r.emitted);
-                match?.emitted = true;
 
-                if (match?.rule.Output != null)
-                {
-                    if (match.rule.Mode == OutputMode.InsertAfter)
-                    {
-                        for (int i = match.start; i < match.end; i++)
-                        {
-                            Emit(inInstructions[i]);
-                            if (debug || forceDebug)
-                                FileLog.Log($"COPY MATCH {OutInstructions[^1]}");
-                        }
-                    }
-
-                    instructionIndex = match.end - 1;
-
-                    if (match.rule.Mode is OutputMode.Replace or OutputMode.InsertBefore &&
-                        inInstructions[match.start] is { labels: { Count: > 0 } labels })
-                    {
-                        Emit(new(OpCodes.Nop) { labels = labels });
-                    }
-
-                    Emit(CodeInstruction.Annotation($"Begin {match.rule.Name}"));
-
-                    extraBlocks.AddRange(inInstructions[match.start].blocks);
-
-                    foreach (CodeInstruction replaceInst in match.rule.Output)
-                    {
-                        EmitReplacement(replaceInst, match);
-
-                        if (debug || forceDebug)
-                            FileLog.Log($"EMIT {OutInstructions[^1]}");
-                    }
-
-                    extraBlocks.Clear();
-
-                    Emit(CodeInstruction.Annotation($"End {match.rule.Name}"));
-
-                    if (match.rule.Mode == OutputMode.InsertBefore)
-                    {
-                        for (int i = match.start; i < match.end; i++)
-                        {
-                            Emit(inInstructions[i]);
-
-                            if (i == match.start)
-                                OutInstructions[^1].labels.Clear();
-
-                            if (debug || forceDebug)
-                                FileLog.Log($"COPY MATCH {OutInstructions[^1]}");
-                        }
-                    }
-                }
-                else
+                if (match == null)
                 {
                     if (instructionIndex >= inInstructions.Count)
                         break;
@@ -250,6 +201,58 @@ public partial class InstructionMatcher
                     Emit(inInstructions[instructionIndex]);
                     if (debug || forceDebug)
                         FileLog.Log($"COPY {OutInstructions[^1]}");
+
+                    continue;
+                }
+
+                match.emitted = true;
+
+                if (match.rule.Mode == OutputMode.InsertAfter)
+                {
+                    for (int i = match.start; i < match.end; i++)
+                    {
+                        Emit(inInstructions[i]);
+                        if (debug || forceDebug)
+                            FileLog.Log($"COPY MATCH {OutInstructions[^1]}");
+                    }
+                }
+
+                instructionIndex = match.end - 1;
+
+                if (match.rule.Mode is OutputMode.Replace or OutputMode.InsertBefore &&
+                    inInstructions[match.start] is { labels: { Count: > 0 } labels })
+                {
+                    Emit(new(OpCodes.Nop) { labels = labels });
+                }
+
+                Emit(CodeInstruction.Annotation($"Begin {match.rule.Name}"));
+
+                extraBlocks.AddRange(inInstructions[match.start].blocks);
+
+                foreach (CodeInstruction replaceInst in match.rule.Output)
+                {
+                    EmitReplacement(replaceInst, match);
+
+                    if (debug || forceDebug)
+                        FileLog.Log($"EMIT {OutInstructions[^1]}");
+                }
+
+                extraBlocks.Clear();
+
+                Emit(CodeInstruction.Annotation($"End {match.rule.Name}"));
+
+                if (match.rule.Mode == OutputMode.InsertBefore)
+                {
+                    for (int i = match.start; i < match.end; i++)
+                    {
+                        Emit(inInstructions[i]);
+
+                        if (i == match.start)
+                            OutInstructions[^1].labels.Clear();
+
+                        if (debug || forceDebug)
+                            FileLog.Log($"COPY MATCH {OutInstructions[^1]}");
+                    }
                 }
             }
 
