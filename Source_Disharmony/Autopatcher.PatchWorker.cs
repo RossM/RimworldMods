@@ -6,7 +6,7 @@ public static partial class Autopatcher
     {
         private PatchRegistry PatchRegistry { get; } = registry;
 
-        public MethodInfo CreatePatchTranspiler(MethodInfo outer)
+        public HarmonyMethod? GetHarmonyMethod(MethodInfo outer)
         {
             var patches = PatchRegistry.PatchesByMethod[outer];
 
@@ -54,12 +54,23 @@ public static partial class Autopatcher
                 CrossRuleLocalTypes = stateBuilder.LocalTypes,
             };
 
-            int version = IncrementVersion(outer);
-            MethodInfo transpiler = MakeTranspiler([patchMatcher],
-                $"{outer.DeclaringType?.FullName?.Replace('.', '_')}_{outer.Name}_Transpiler{version}");
-            return transpiler;
-        }
+            InstructionMatcher[] matchers = [patchMatcher];
+            if (TryUpdateTranspiler(outer, matchers))
+            {
+                FileLog.Log($"# GetHarmonyMethod: Reusing transpiler for {outer.FullName}");
 
-        public bool ShouldDebug(MethodInfo targetMethod) => PatchRegistry.PatchesByMethod[targetMethod].Any(p => p.debug);
+                // Using null as our HarmonyMethod will cause Harmony to simply rerun the patch, including
+                // the updated transpiler.
+                return null;
+            }
+
+            MethodInfo transpiler = MakeTranspiler(matchers,
+                $"{outer.DeclaringType?.FullName?.Replace('.', '_')}_{outer.Name}_Transpiler", outer);
+
+            bool debug = PatchRegistry.PatchesByMethod[outer].Any(p => p.debug);
+
+            HarmonyMethod harmonyMethod = new(transpiler, priority: Priority.Normal) { debug = debug };
+            return harmonyMethod;
+        }
     }
 }

@@ -83,7 +83,7 @@ internal struct PatchInfo
 
 internal class PatchRegistry
 {
-    public IEnumerable<MethodInfo> PatchedMethods => PatchesByMethod.Keys;
+    public HashSet<MethodInfo> MethodsToUpdate = new();
     public Dictionary<MethodInfo, List<PatchInfo>> PatchesByMethod = new();
     private List<PatchInfo> Patches { get; } = [];
 
@@ -137,6 +137,8 @@ internal class PatchRegistry
                             parameters = arguments,
                             debug = debug,
                         });
+
+                        MethodsToUpdate.Add(outer);
                     }
                 }
                 catch (Exception e)

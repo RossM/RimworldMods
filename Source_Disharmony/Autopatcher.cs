@@ -51,36 +51,39 @@ public static partial class Autopatcher
         }
     }
 
-    private static readonly Dictionary<MethodInfo, int> patchVersions = new();
+    private static readonly Dictionary<MethodInfo, Action<InstructionMatcher[]>> transpilerUpdaters = new();
 
     private static readonly AssemblyBuilder assemblyBuilder
         = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" }, AssemblyBuilderAccess.RunAndSave);
 
     private static readonly ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicTranspilersModule");
 
-    private static int IncrementVersion(MethodInfo method)
+    private static readonly PatchRegistry registry = new();
+
+    private static readonly Harmony harmony = new("Xylthixlm.Disharmony.Autopatcher");
+
+    public static void PatchAll(Assembly assembly)
     {
-        if (!patchVersions.TryGetValue(method, out int version))
-            version = 0;
-        return patchVersions[method] = version + 1;
+        RegisterAll(assembly);
+        Apply();
     }
 
-    public static void PatchAll(Harmony harmony, Assembly assembly)
+    private static void RegisterAll(Assembly assembly)
     {
-        var registry = new PatchRegistry();
-
         registry.CollectPatches(assembly);
+    }
 
+    private static void Apply()
+    {
         var worker = new PatchWorker(registry);
 
-        foreach (MethodInfo patchedMethod in registry.PatchedMethods)
+        foreach (MethodInfo patchedMethod in registry.MethodsToUpdate)
         {
             try
             {
-                MethodInfo patchTranspiler = worker.CreatePatchTranspiler(patchedMethod);
-                bool debug = worker.ShouldDebug(patchedMethod);
+                HarmonyMethod harmonyMethod = worker.GetHarmonyMethod(patchedMethod);
 
-                RunPatch(patchedMethod, patchTranspiler, Priority.Normal, debug);
+                RunPatch(patchedMethod, harmonyMethod);
             }
             catch (Exception e)
             {
@@ -88,7 +91,10 @@ public static partial class Autopatcher
             }
         }
 
-        void RunPatch(MethodInfo patchedMethod, MethodInfo patchTranspiler, int priority, bool debug)
+        registry.MethodsToUpdate.Clear();
+        return;
+
+        void RunPatch(MethodInfo patchedMethod, HarmonyMethod? harmonyMethod)
         {
             bool oldForceDebug = InstructionMatcher.forceDebug;
 
@@ -96,13 +102,14 @@ public static partial class Autopatcher
 
             try
             {
-                harmony.Patch(patchedMethod, transpiler: new(patchTranspiler, priority: priority) { debug = debug });
+                harmony.Patch(patchedMethod, transpiler: harmonyMethod);
             }
             catch (Exception)
             {
                 // Rerun with debug on so we see what went wrong
                 InstructionMatcher.forceDebug = true;
-                harmony.Patch(patchedMethod, transpiler: new(patchTranspiler, priority: priority) { debug = true });
+                harmonyMethod?.debug = true;
+                harmony.Patch(patchedMethod, transpiler: harmonyMethod);
             }
             finally
             {
@@ -111,7 +118,16 @@ public static partial class Autopatcher
         }
     }
 
-    private static MethodInfo MakeTranspiler(InstructionMatcher[] matchers, string typeName)
+    private static bool TryUpdateTranspiler(MethodInfo key, InstructionMatcher[] matchers)
+    {
+        if (!transpilerUpdaters.TryGetValue(key, out var setter))
+            return false;
+
+        setter(matchers);
+        return true;
+    }
+
+    private static MethodInfo MakeTranspiler(InstructionMatcher[] matchers, string typeName, MethodInfo key)
     {
         TypeBuilder typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
 
@@ -134,6 +150,7 @@ public static partial class Autopatcher
         Type type = typeBuilder.CreateType();
         FieldInfo field = type.GetField(fieldBuilder.Name);
         field.SetValue(null, matchers);
+        transpilerUpdaters[key] = m => field.SetValue(null, m);
         return type.GetMethod(methodBuilder.Name);
     }
 }

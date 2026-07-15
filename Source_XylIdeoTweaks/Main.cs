@@ -9,7 +9,7 @@ public class Main(ModContentPack content) : Mod(content)
         var harmony = new Harmony("xylthixlm.ideos");
         harmony.PatchAll();
 
-        Autopatcher.PatchAll(harmony, typeof(Main).Assembly);
+        Autopatcher.PatchAll(typeof(Main).Assembly);
 
         Analyzer.CheckCodingStyle(typeof(Main).Assembly);
     }
