@@ -69,7 +69,7 @@ public static partial class Autopatcher
 
             bool debug = PatchRegistry.PatchesByMethod[outer].Any(p => p.debug);
 
-            HarmonyMethod harmonyMethod = new(transpiler, priority: Priority.Normal) { debug = debug };
+            HarmonyMethod harmonyMethod = new(transpiler, priority: Priority.LowerThanNormal) { debug = debug };
             return harmonyMethod;
         }
     }
