@@ -16,9 +16,8 @@ public static partial class Autopatcher
         private readonly MemberInfo? replacement;
         private readonly List<PatchInfo> prefixes;
         private readonly List<PatchInfo> postfixes;
-        private readonly List<CodeInstruction> output = [];
 
-        private readonly List<Type> localTypes;
+        private readonly InstructionList output = new();
 
         private readonly bool debug;
 
@@ -37,7 +36,8 @@ public static partial class Autopatcher
             this.replacement = replacement;
             this.prefixes = prefixes;
             this.postfixes = postfixes;
-            this.localTypes = localTypes.ToList();
+
+            output.LocalTypes.AddRange(localTypes);
 
             debug = prefixes.Any(p => p.debug) || postfixes.Any(p => p.debug);
 
@@ -66,12 +66,12 @@ public static partial class Autopatcher
 
             if (prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
             {
-                resultLocalIndex = AddLocal(targetType);
+                resultLocalIndex = output.AddLocal(targetType);
 
                 if (prefixesUsingResult.Count > 0)
                 {
                     if (!prefixesUsingResult[0].parameters.Single(a => a.BindingType == BindingType.Result).Parameter.IsOut)
-                        EmitInitializer(targetType, resultLocalIndex, output);
+                        output.EmitLocalInitializer(targetType, resultLocalIndex);
                 }
             }
 
@@ -84,6 +84,7 @@ public static partial class Autopatcher
 
                 output.Add(CodeInstruction.Annotation($"{prefix.patchType} {patchMethod.FullName}"));
                 output.Add(new(OpcodeFor(patchMethod), patchMethod));
+
                 if (!patchMethod.ReturnType.IsVoid())
                 {
                     output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
@@ -180,10 +181,9 @@ public static partial class Autopatcher
                 {
                     throw new ArgumentOutOfRangeException();
                 }
-
             }
 
-            if (parameter.Fields is { Length: >0 })
+            if (parameter.Fields is { Length: > 0 })
             {
                 foreach (var field in parameter.Fields)
                 {
@@ -207,12 +207,7 @@ public static partial class Autopatcher
 
         private void EmitResult(Type parameterType)
         {
-            if (parameterType.IsByRef)
-            {
-                output.Add(CodeInstruction.LoadLocalAddress(resultLocalIndex));
-            }
-            else
-                output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
+            output.EmitLoad(parameterType, resultLocalIndex);
         }
 
         private void EmitCallerParameter(Type type, int index)
@@ -241,16 +236,9 @@ public static partial class Autopatcher
             // unused local indexes.
             for (int i = innerParameterTypes.Length - 1; i >= 0; i--)
             {
-                innerParameterLocals[i] = AddLocal(innerParameterTypes[i]);
+                innerParameterLocals[i] = output.AddLocal(innerParameterTypes[i]);
                 output.Add(CodeInstruction.StoreLocal(innerParameterLocals[i]));
             }
-        }
-
-        private int AddLocal(Type type)
-        {
-            var localIndex = localTypes.Count;
-            localTypes.Add(type);
-            return localIndex;
         }
 
         private static Type[] GetParameterTypes(MemberInfo member)
@@ -292,8 +280,8 @@ public static partial class Autopatcher
                 Max = 0,
                 Mode = InstructionMatcher.OutputMode.Replace,
                 Pattern = pattern.ToArray(),
-                Output = output.ToArray(),
-                LocalTypes = localTypes.ToArray(),
+                Output = output.Instructions.ToArray(),
+                LocalTypes = output.LocalTypes.ToArray(),
                 Name = inner.FullName,
             };
         }

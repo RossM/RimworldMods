@@ -37,17 +37,17 @@ public static partial class Autopatcher
 
         public InstructionMatcher.Rule BuildRule()
         {
-            List<CodeInstruction> output = [];
+            InstructionList output = [];
 
             for (int index = 0; index < LocalTypes.Count; index++)
             {
-                EmitInitializer(LocalTypes[index], index, output);
+                output.EmitLocalInitializer(LocalTypes[index], index);
             }
 
             return new InstructionMatcher.Rule
             {
                 Mode = InstructionMatcher.OutputMode.MethodPrefix,
-                Output = output.ToArray(),
+                Output = output.Instructions.ToArray(),
                 Name = "state variable initialization",
             };
         }
@@ -65,38 +65,6 @@ public static partial class Autopatcher
         if (!patchVersions.TryGetValue(method, out int version))
             version = 0;
         return patchVersions[method] = version + 1;
-    }
-
-    private static void EmitInitializer(Type type, int localIndex, List<CodeInstruction> codeInstructions)
-    {
-        if (type.IsByRef)
-            throw new NotImplementedException($"IsByRef targetType {type}");
-
-        if (type.IsClass)
-        {
-            codeInstructions.Add(new(OpCodes.Ldnull));
-            codeInstructions.Add(CodeInstruction.StoreLocal(localIndex));
-        }
-        else if (type.IsStruct())
-        {
-            codeInstructions.Add(CodeInstruction.LoadLocalAddress(localIndex));
-            codeInstructions.Add(new(OpCodes.Initobj, type));
-        }
-        else if (type.IsValueType)
-        {
-            if (type == typeof(float))
-                codeInstructions.Add(new(OpCodes.Ldc_R4, (float)0));
-            else if (type == typeof(double))
-                codeInstructions.Add(new(OpCodes.Ldc_R8, (double)0));
-            else if (type == typeof(long) || type == typeof(ulong))
-                codeInstructions.Add(new(OpCodes.Ldc_I8, (long)0));
-            else
-                codeInstructions.Add(new(OpCodes.Ldc_I4_0));
-
-            codeInstructions.Add(CodeInstruction.StoreLocal(localIndex));
-        }
-        else
-            throw new NotImplementedException($"targetType {type}");
     }
 
     public static void PatchAll(Harmony harmony, Assembly assembly)
