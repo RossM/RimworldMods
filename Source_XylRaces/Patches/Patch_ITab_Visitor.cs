@@ -10,7 +10,7 @@ public static class Patch_ITab_Pawn_Visitor
     {
         Rules =
         {
-            Autopatcher.MakeRedirectRule(
+            InstructionMatcher.MakeRedirectRule(
                 SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate o) => o.GetExplanationForTooltip(default)),
                 SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate_Fixed o) => o.GetExplanationForTooltip(default))),
             new()

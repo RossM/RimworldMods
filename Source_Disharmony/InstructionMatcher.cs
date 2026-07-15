@@ -483,4 +483,18 @@ public class InstructionMatcher
 
         return instructionsList;
     }
+
+    public static Rule MakeRedirectRule(MemberInfo oldMember, MethodInfo newMember)
+    {
+        return new Rule
+        {
+            Min = 1,
+            Max = 0,
+            Mode = OutputMode.Replace,
+            Pattern = [new(OpCodes.Call, oldMember)],
+            Output = [new(OpCodes.Call, newMember)],
+            LocalTypes = [],
+            Name = oldMember.FullName,
+        };
+    }
 }

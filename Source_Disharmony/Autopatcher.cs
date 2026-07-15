@@ -136,18 +136,4 @@ public static partial class Autopatcher
         field.SetValue(null, matchers);
         return type.GetMethod(methodBuilder.Name);
     }
-
-    public static InstructionMatcher.Rule MakeRedirectRule(MemberInfo oldMember, MethodInfo newMember)
-    {
-        return new InstructionMatcher.Rule
-        {
-            Min = 1,
-            Max = 0,
-            Mode = InstructionMatcher.OutputMode.Replace,
-            Pattern = [new(OpCodes.Call, oldMember)],
-            Output = [new(OpCodes.Call, newMember)],
-            LocalTypes = [],
-            Name = oldMember.FullName,
-        };
-    }
 }
