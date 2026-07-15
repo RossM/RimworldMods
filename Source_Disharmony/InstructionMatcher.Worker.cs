@@ -25,9 +25,9 @@ public partial class InstructionMatcher
                 switch (rule)
                 {
                     case { Mode: OutputMode.MatchOnly, Output: not null }:
-                        throw new InvalidOperationException($"{rule.Mode} rule cannot have Output = null");
-                    case { Mode: not OutputMode.MatchOnly, Output: null }:
                         throw new InvalidOperationException($"{rule.Mode} rule must have Output = null");
+                    case { Mode: not OutputMode.MatchOnly, Output: null }:
+                        throw new InvalidOperationException($"{rule.Mode} rule cannot have Output = null");
                     case { Mode: OutputMode.MethodPrefix or OutputMode.MethodPostfix, Pattern.Length: > 0 }:
                         throw new InvalidOperationException($"{rule.Mode} cannot have a Pattern");
                     case { Mode: not (OutputMode.MethodPrefix or OutputMode.MethodPostfix), Pattern: not { Length: > 0 } }:
