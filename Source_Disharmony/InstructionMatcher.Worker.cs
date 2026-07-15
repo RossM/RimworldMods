@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using System.Diagnostics;
+
+namespace Disharmony;
 
 public partial class InstructionMatcher
 {
@@ -148,7 +150,7 @@ public partial class InstructionMatcher
 
                 instructionIndex = match.end - 1;
 
-                if (match.rule.Mode is OutputMode.Replace or OutputMode.InsertBefore &&
+                if (match.rule.Mode is OutputMode.Replace or OutputMode.InsertBefore && match.start != match.end &&
                     inInstructions[match.start] is { labels: { Count: > 0 } labels })
                 {
                     Emit(new(OpCodes.Nop) { labels = labels });
@@ -156,7 +158,8 @@ public partial class InstructionMatcher
 
                 Emit(CodeInstruction.Annotation($"Begin {match.rule.Name}"));
 
-                extraBlocks.AddRange(inInstructions[match.start].blocks);
+                if (match.start != match.end && inInstructions[match.start] is { blocks: { Count: > 0 } blocks })
+                    extraBlocks.AddRange(blocks.Where(b => b.blockType != ExceptionBlockType.EndExceptionBlock));
 
                 foreach (CodeInstruction replaceInst in match.rule.Output)
                 {
@@ -166,7 +169,8 @@ public partial class InstructionMatcher
                         FileLog.Log($"EMIT {OutInstructions[^1]}");
                 }
 
-                extraBlocks.Clear();
+                if (match.start != match.end && inInstructions[match.end - 1] is { blocks: { Count: > 0 } blocks2 })
+                    OutInstructions[^1].blocks.AddRange(blocks2.Where(b => b.blockType == ExceptionBlockType.EndExceptionBlock));
 
                 Emit(CodeInstruction.Annotation($"End {match.rule.Name}"));
 
@@ -196,6 +200,15 @@ public partial class InstructionMatcher
             for (var patternIndex = 0; patternIndex < rule.Pattern.Length; patternIndex++)
             {
                 if (!MatchInstruction(rule, instructionIndex, localIndex_Match, patternIndex))
+                    return false;
+
+                // Check for exception blocks or labels not at the start (or end, for EndExceptionBlock) of the match
+                CodeInstruction inst = inInstructions[instructionIndex + patternIndex];
+                if (patternIndex > 0 && inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
+                    return false;
+                if (patternIndex > 0 && inst.labels.Count > 0)
+                    return false;
+                if (patternIndex < rule.Pattern.Length - 1 && inst.blocks.Any(b => b.blockType == ExceptionBlockType.EndExceptionBlock))
                     return false;
             }
 
@@ -328,7 +341,11 @@ public partial class InstructionMatcher
                 newInstruction.blocks.AddRange(blocks);
 
             if (extraBlocks.Count > 0)
+            {
                 newInstruction.blocks.AddRange(extraBlocks);
+                extraBlocks.Clear();
+            }
+
             if (extraLabels.Count > 0)
             {
                 newInstruction.labels.AddRange(extraLabels);
