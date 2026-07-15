@@ -156,21 +156,15 @@ public static partial class Autopatcher
     /// <returns></returns>
     public static InstructionMatcher.Rule MakeRedirectRule(MemberInfo oldMember, MethodInfo newMember)
     {
-        return new()
+        return new InstructionMatcher.Rule
         {
-            LateGenerator = (outer, _, _) => RedirectRule_Core(outer, oldMember, newMember, [], []),
+            Min = 1,
+            Max = 0,
+            Mode = InstructionMatcher.OutputMode.Replace,
+            Pattern = [new(OpCodes.Call, oldMember)],
+            Output = [new(OpCodes.Call, newMember)],
+            LocalTypes = [],
+            Name = oldMember.FullName,
         };
-    }
-
-    private static InstructionMatcher.Rule RedirectRule_Core(
-        MethodBase outer,
-        MemberInfo inner,
-        MethodInfo? replacement,
-        List<PatchInfo> patches,
-        List<Type> localTypes)
-    {
-        var methodPatchWorker = new InfixRuleBuilder(outer, inner, replacement, patches, localTypes);
-
-        return methodPatchWorker.BuildRule();
     }
 }

@@ -12,7 +12,6 @@ public static partial class Autopatcher
 
         private readonly MethodBase outer;
         private readonly MemberInfo inner;
-        private readonly MemberInfo? replacement;
         private readonly List<PatchInfo> innerPrefixes;
         private readonly List<PatchInfo> innerPostfixes;
 
@@ -22,13 +21,11 @@ public static partial class Autopatcher
         public InfixRuleBuilder(
             MethodBase outer,
             MemberInfo inner,
-            MethodInfo? replacement,
             List<PatchInfo> patches,
             List<Type> localTypes)
         {
             this.outer = outer;
             this.inner = inner;
-            this.replacement = replacement;
 
             innerPrefixes = patches.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
             innerPostfixes = patches.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
@@ -87,10 +84,7 @@ public static partial class Autopatcher
                 EmitTargetParameter(innerParameterTypes[i], i);
             }
 
-            if (replacement != null)
-                output.Add(new(OpCodes.Call, replacement));
-            else
-                output.Add(new(OpcodeFor(inner), inner));
+            output.Add(new(OpcodeFor(inner), inner));
 
             if (skipLabel != null || innerPostfixes.Count > 0)
             {

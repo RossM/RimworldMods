@@ -44,7 +44,7 @@ public static partial class Autopatcher
             {
                 var inner = targetGroup.Key;
 
-                var ruleBuilder = new InfixRuleBuilder(outer, inner, null, targetGroup.ToList(), stateBuilder.LocalTypes);
+                var ruleBuilder = new InfixRuleBuilder(outer, inner, targetGroup.ToList(), stateBuilder.LocalTypes);
 
                 rules.Add(ruleBuilder.BuildRule());
             }
