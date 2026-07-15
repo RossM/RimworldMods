@@ -46,7 +46,6 @@ public class InstructionMatcher
         public bool Chained = false;
         public CodeInstruction[]? Pattern;
         public CodeInstruction[]? Output;
-        public Func<MethodBase, List<CodeInstruction>, ILGenerator, Rule>? LateGenerator;
         public Type[]? LocalTypes;
         public string? Name;
     }
@@ -96,8 +95,6 @@ public class InstructionMatcher
         for (var ruleIndex = 0; ruleIndex < Rules.Count; ruleIndex++)
         {
             Rule rule = Rules[ruleIndex];
-            if (rule.LateGenerator != null)
-                rule = rule.LateGenerator(method, instructions, generator);
 
             switch (rule)
             {
