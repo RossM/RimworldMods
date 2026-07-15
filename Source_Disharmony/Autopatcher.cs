@@ -165,17 +165,6 @@ public static partial class Autopatcher
 
             var replacement = PatchWorker.ApplyTrampoline(original);
 
-            FileLog.Log(">>> AddTranspilerWithoutPatching debug start");
-            FileLog.Log($"{replacement} {replacement.GetType()}");
-            //FileLog.Log($"MetadataToken = {replacement.MetadataToken}");
-            FileLog.Log($"MethodHandle = {replacement.MethodHandle.Value}");
-            FileLog.Log($"GetFunctionPointer = {replacement.MethodHandle.GetFunctionPointer()}");
-            FileLog.Log(">>> AddTranspilerWithoutPatching debug end");
-
-            // If we call UpdatePatchInfo with the actual replacement, it crashes in
-            // replacement.MethodHandle.GetFunctionPointer(). Use original instead.
-            // Hopefully nothing breaks too badly.
-
             harmonyUpdatePatchInfo(original, replacement, patchInfo);
         }
     }
