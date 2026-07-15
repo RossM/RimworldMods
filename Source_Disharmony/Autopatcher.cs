@@ -67,15 +67,15 @@ public static partial class Autopatcher
 
     private static readonly bool useTrampolines = true;
 
-    private static readonly object harmonyLocker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
+    private static readonly object harmonyInternal_locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
 
-    private static readonly Func<MethodBase, HarmonyLib.PatchInfo> harmonyGetPatchInfo
+    private static readonly Func<MethodBase, HarmonyLib.PatchInfo> harmonyInternal_GetPatchInfo
         = AccessTools.MethodDelegate<Func<MethodBase, HarmonyLib.PatchInfo>>("HarmonyLib.HarmonySharedState:GetPatchInfo");
 
-    private static readonly Action<MethodBase, MethodBase> harmonyDetourMethod
+    private static readonly Action<MethodBase, MethodBase> harmonyInternal_DetourMethod
         = AccessTools.MethodDelegate<Action<MethodBase, MethodBase>>("HarmonyLib.PatchTools:DetourMethod");
 
-    private static readonly Action<MethodBase, MethodInfo, HarmonyLib.PatchInfo> harmonyUpdatePatchInfo
+    private static readonly Action<MethodBase, MethodInfo, HarmonyLib.PatchInfo> harmonyInternal_UpdatePatchInfo
         = AccessTools.MethodDelegate<Action<MethodBase, MethodInfo, HarmonyLib.PatchInfo>>("HarmonyLib.HarmonySharedState:UpdatePatchInfo");
 
     public static void PatchAll(Assembly assembly)
@@ -150,9 +150,9 @@ public static partial class Autopatcher
 
     private static void AddTranspilerWithoutPatching(MethodInfo original, HarmonyMethod? harmonyMethod)
     {
-        lock (harmonyLocker)
+        lock (harmonyInternal_locker)
         {
-            HarmonyLib.PatchInfo patchInfo = harmonyGetPatchInfo(original) ?? new HarmonyLib.PatchInfo();
+            HarmonyLib.PatchInfo patchInfo = harmonyInternal_GetPatchInfo(original) ?? new HarmonyLib.PatchInfo();
 
             if (harmonyMethod != null)
             {
@@ -165,7 +165,7 @@ public static partial class Autopatcher
 
             var replacement = PatchWorker.ApplyTrampoline(original);
 
-            harmonyUpdatePatchInfo(original, replacement, patchInfo);
+            harmonyInternal_UpdatePatchInfo(original, replacement, patchInfo);
         }
     }
 

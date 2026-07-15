@@ -138,7 +138,7 @@ public static partial class Autopatcher
                 trampolineCount++;
                 var trampoline = MakeTrampoline(method, trampolineName);
 
-                harmonyDetourMethod(method, trampoline);
+                harmonyInternal_DetourMethod(method, trampoline);
                 FileLog.Log($"Method: {method}");
                 FileLog.Log($"Trampoline: {trampoline}");
 
