@@ -95,7 +95,7 @@ public static partial class Autopatcher
                     return index;
 
                 throw new ArgumentException(
-                    $"{method.DeclaringType?.FullName}.{method.Name} declares __state of type {localType} which conflicts with existing type {existingType}");
+                    $"{method.FullName} declares __state of type {localType} which conflicts with existing type {existingType}");
             }
 
             int newIndex = LocalTypes.Count;
@@ -225,8 +225,7 @@ public static partial class Autopatcher
     private static ParameterBinding BindParameter(
         ParameterInfo parameter,
         MethodInfo outer,
-        MemberInfo inner,
-        StateBuilder<Type> stateBuilder)
+        MemberInfo inner)
     {
         var parameterName = parameter.Name;
 
@@ -255,8 +254,7 @@ public static partial class Autopatcher
 
             case "__state":
             {
-                int index = stateBuilder.GetOrAddStateLocal(outer.DeclaringType, parameter.ParameterType, outer);
-                return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, Index = index };
+                return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
             }
 
             case not null when parameterName.StartsWith("___"):

@@ -7,7 +7,6 @@ public static partial class Autopatcher
         public IEnumerable<MethodInfo> PatchedMethods => PatchesByMethod.Keys;
         private Dictionary<MethodInfo, List<PatchInfo>> PatchesByMethod = new();
         private Assembly Assembly { get; } = assembly;
-        private Dictionary<MethodInfo, StateBuilder<Type>> StateBuilders { get; } = new();
         private List<PatchInfo> Patches { get; } = [];
 
         public void CollectPatches()
@@ -46,10 +45,7 @@ public static partial class Autopatcher
                             if (outer == null)
                                 throw new InvalidOperationException("null target method");
 
-                            if (!StateBuilders.TryGetValue(outer, out StateBuilder<Type> stateBuilder))
-                                stateBuilder = StateBuilders[outer] = new();
-
-                            var arguments = method.GetParameters().Select(param => BindParameter(param, outer, inner, stateBuilder))
+                            var arguments = method.GetParameters().Select(param => BindParameter(param, outer, inner))
                                 .ToArray();
 
                             Patches.Add(new()
@@ -91,8 +87,17 @@ public static partial class Autopatcher
 
             List<InstructionMatcher.Rule> rules = [];
 
-            if (!StateBuilders.TryGetValue(outer, out var stateBuilder))
-                stateBuilder = new();
+            StateBuilder<Type> stateBuilder = new();
+
+            foreach (var patch in patches)
+            {
+                ParameterBinding[] parameters = patch.parameters;
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    if (parameters[i].BindingType == BindingType.State)
+                        parameters[i].Index = stateBuilder.GetOrAddStateLocal(patch.patchMethod.DeclaringType, parameters[i].Parameter.ParameterType, patch.patchMethod);
+                }
+            }
 
             if (stateBuilder.LocalTypes.Count > 0)
                 rules.Add(stateBuilder.BuildRule());
