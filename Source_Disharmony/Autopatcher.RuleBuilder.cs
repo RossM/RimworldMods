@@ -2,7 +2,7 @@
 
 public static partial class Autopatcher
 {
-    private class RuleBuilder
+    private class InfixRuleBuilder
     {
         private readonly Type[] outerParameterTypes;
         private readonly Type[] innerParameterTypes;
@@ -19,7 +19,7 @@ public static partial class Autopatcher
         private readonly InstructionList output = new();
         private readonly ILGenerator generator = PatchProcessor.CreateILGenerator();
 
-        public RuleBuilder(
+        public InfixRuleBuilder(
             MethodBase outer,
             MemberInfo inner,
             MethodInfo? replacement,

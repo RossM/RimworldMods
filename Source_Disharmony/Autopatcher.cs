@@ -169,7 +169,7 @@ public static partial class Autopatcher
         List<PatchInfo> patches,
         List<Type> localTypes)
     {
-        var methodPatchWorker = new RuleBuilder(outer, inner, replacement, patches, localTypes);
+        var methodPatchWorker = new InfixRuleBuilder(outer, inner, replacement, patches, localTypes);
 
         return methodPatchWorker.BuildRule();
     }
