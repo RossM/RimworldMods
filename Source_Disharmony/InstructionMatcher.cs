@@ -84,8 +84,7 @@ public partial class InstructionMatcher
         bool debug = false)
     {
         var worker = new Worker(this, method, instructionsList, generator, debug);
-        if (!worker.TryMatchAndReplace())
-            throw new InvalidOperationException(worker.Reason);
+        worker.MatchAndReplace();
         instructionsList = worker.OutInstructions;
     }
 
