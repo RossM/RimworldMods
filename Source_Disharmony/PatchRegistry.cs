@@ -92,66 +92,102 @@ internal class PatchRegistry
     {
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
-            var harmonyAttribute = (HarmonyPatch?)Attribute.GetCustomAttribute(type, typeof(HarmonyPatch));
+            var harmonyAttribute = type.GetCustomAttribute<HarmonyPatch>();
             if (harmonyAttribute == null)
                 continue;
 
-            foreach (MethodInfo method in type.DeclaredMethods)
-            {
-                try
-                {
-                    var infixTargetAttribute
-                        = (PatchTypeAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPrefixAttribute)) ??
-                          (PatchTypeAttribute?)Attribute.GetCustomAttribute(method, typeof(InnerPostfixAttribute));
-                    var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(TargetAttribute))
-                        .Cast<TargetAttribute>().ToArray();
-                    bool debug = Attribute.GetCustomAttribute(method, typeof(DebugAttribute)) != null;
-                    bool inline = Attribute.GetCustomAttribute(method, typeof(InlineAttribute)) != null;
-
-                    if (infixTargetAttribute == null)
-                        continue;
-
-                    MemberInfo? inner = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
-                        infixTargetAttribute.parameterTypes, infixTargetAttribute.genericTypes);
-                    if (inner == null)
-                        throw new InvalidOperationException("null wrapped member");
-
-                    FileLog.Log($"# CollectPatches: {method.FullName}");
-
-                    foreach (var infixPatchAttribute in infixPatchAttributes)
-                    {
-                        var patchedType = infixPatchAttribute.type ?? harmonyAttribute.info.declaringType;
-
-                        MethodInfo? outer = (MethodInfo?)GetMember(patchedType, infixPatchAttribute.methodName,
-                            infixPatchAttribute.parameterTypes, infixPatchAttribute.genericTypes);
-                        if (outer == null)
-                            throw new InvalidOperationException("null target method");
-
-                        var arguments = method.GetParameters().Select(param => BindParameter(param, outer, inner))
-                            .ToArray();
-
-                        Patches.Add(new()
-                        {
-                            outer = outer,
-                            inner = inner,
-                            patchMethod = method,
-                            patchType = infixTargetAttribute.patchType,
-                            parameters = arguments,
-                            inline = inline,
-                            debug = debug,
-                        });
-
-                        MethodsToUpdate.Add(outer);
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new InvalidOperationException($"Error processing {type}:{method}", e);
-                }
-            }
+            ProcessType(type, harmonyAttribute.info.declaringType);
         }
 
         PatchesByMethod = Patches.GroupBy(patch => patch.outer).ToDictionary(g => g.Key, g => g.ToList());
+    }
+
+    public void CollectPatches(Assembly assembly, string? category)
+    {
+        foreach (TypeInfo type in assembly.DefinedTypes)
+        {
+            var harmonyAttribute = type.GetCustomAttribute<HarmonyPatch>();
+            if (harmonyAttribute == null)
+                continue;
+
+            var patchCategory = type.GetCustomAttribute<HarmonyPatchCategory>()?.info.category;
+            if (patchCategory != category)
+                continue;
+
+            ProcessType(type, harmonyAttribute.info.declaringType);
+        }
+
+        PatchesByMethod = Patches.GroupBy(patch => patch.outer).ToDictionary(g => g.Key, g => g.ToList());
+    }
+
+    private void ProcessType(TypeInfo type, Type? defaultTargetType)
+    {
+        foreach (MethodInfo method in type.DeclaredMethods)
+        {
+            try
+            {
+                PatchTypeAttribute patchTypeAttribute
+                    = (PatchTypeAttribute)method.GetCustomAttribute<InnerPrefixAttribute>() ??
+                      (PatchTypeAttribute)method.GetCustomAttribute<InnerPostfixAttribute>();
+                var infixPatchAttributes = method.GetCustomAttributes<TargetAttribute>().ToArray();
+                bool debug = method.GetCustomAttribute<DebugAttribute>() != null;
+                bool inline = method.GetCustomAttribute<InlineAttribute>() != null;
+
+                if (patchTypeAttribute == null)
+                    continue;
+
+                MemberInfo? inner = GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName,
+                    patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
+                if (inner == null)
+                    throw new InvalidOperationException("null wrapped member");
+
+                FileLog.Log($"# CollectPatches: {method.FullName}");
+
+                foreach (var infixPatchAttribute in infixPatchAttributes)
+                {
+                    var patchedType = infixPatchAttribute.type ?? defaultTargetType;
+                    if (patchedType == null)
+                        throw new NotSupportedException("No target type");
+
+                    MethodInfo? outer = (MethodInfo?)GetMember(patchedType, infixPatchAttribute.methodName,
+                        infixPatchAttribute.parameterTypes, infixPatchAttribute.genericTypes);
+
+                    if (outer == null)
+                        throw new InvalidOperationException("null target method");
+
+                    AddPatch(method, patchTypeAttribute.patchType, outer, inner, inline, debug);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"Error processing {type}:{method}", e);
+            }
+        }
+    }
+
+    private void AddPatch(
+        MethodInfo method,
+        PatchType patchType,
+        MethodInfo outer,
+        MemberInfo inner,
+        bool inline = false,
+        bool debug = false)
+    {
+        var arguments = method.GetParameters().Select(param => BindParameter(param, outer, inner))
+            .ToArray();
+
+        Patches.Add(new()
+        {
+            outer = outer,
+            inner = inner,
+            patchMethod = method,
+            patchType = patchType,
+            parameters = arguments,
+            inline = inline,
+            debug = debug,
+        });
+
+        MethodsToUpdate.Add(outer);
     }
 
     private static ParameterBinding BindParameter(

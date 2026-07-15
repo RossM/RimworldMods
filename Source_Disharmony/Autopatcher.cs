@@ -68,12 +68,23 @@ public static partial class Autopatcher
         Apply();
     }
 
-    private static void RegisterAll(Assembly assembly)
+    public static void RegisterAll(Assembly assembly)
     {
         registry.CollectPatches(assembly);
     }
 
-    private static void Apply()
+    public static void PatchCategory(Assembly assembly, string? category)
+    {
+        RegisterCategory(assembly, category);
+        Apply();
+    }
+
+    public static void RegisterCategory(Assembly assembly, string? category)
+    {
+        registry.CollectPatches(assembly, category);
+    }
+
+    public static void Apply()
     {
         var worker = new PatchWorker(registry);
 
