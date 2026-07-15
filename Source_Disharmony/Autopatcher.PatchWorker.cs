@@ -46,11 +46,7 @@ public static partial class Autopatcher
                 var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
                 var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
 
-                rules.Add(new()
-                {
-                    LateGenerator = (_, _, generator) =>
-                        RedirectRule_Core(generator, outer, inner, null, prefixes, postfixes, stateBuilder.LocalTypes),
-                });
+                rules.Add(RedirectRule_Core(outer, inner, null, prefixes, postfixes, stateBuilder.LocalTypes));
             }
 
             var patchMatcher = new InstructionMatcher

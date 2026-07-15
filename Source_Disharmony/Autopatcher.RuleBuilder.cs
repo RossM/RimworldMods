@@ -10,7 +10,6 @@ public static partial class Autopatcher
         private int resultLocalIndex = -1;
         private readonly Type targetType;
 
-        private readonly ILGenerator generator;
         private readonly MethodBase outer;
         private readonly MemberInfo inner;
         private readonly MemberInfo? replacement;
@@ -18,11 +17,11 @@ public static partial class Autopatcher
         private readonly List<PatchInfo> postfixes;
 
         private readonly InstructionList output = new();
+        private readonly ILGenerator generator = PatchProcessor.CreateILGenerator();
 
         private readonly bool debug;
 
         public RuleBuilder(
-            ILGenerator generator,
             MethodBase outer,
             MemberInfo inner,
             MethodInfo? replacement,
@@ -30,7 +29,6 @@ public static partial class Autopatcher
             List<PatchInfo> postfixes,
             List<Type> localTypes)
         {
-            this.generator = generator;
             this.outer = outer;
             this.inner = inner;
             this.replacement = replacement;

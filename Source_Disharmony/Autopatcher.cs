@@ -158,12 +158,11 @@ public static partial class Autopatcher
     {
         return new()
         {
-            LateGenerator = (outer, _, generator) => RedirectRule_Core(generator, outer, oldMember, newMember, [], [], []),
+            LateGenerator = (outer, _, _) => RedirectRule_Core(outer, oldMember, newMember, [], [], []),
         };
     }
 
     private static InstructionMatcher.Rule RedirectRule_Core(
-        ILGenerator generator,
         MethodBase outer,
         MemberInfo inner,
         MethodInfo? replacement,
@@ -171,7 +170,7 @@ public static partial class Autopatcher
         List<PatchInfo> postfixes,
         List<Type> localTypes)
     {
-        var methodPatchWorker = new RuleBuilder(generator, outer, inner, replacement, prefixes, postfixes, localTypes);
+        var methodPatchWorker = new RuleBuilder(outer, inner, replacement, prefixes, postfixes, localTypes);
 
         return methodPatchWorker.BuildRule();
     }
