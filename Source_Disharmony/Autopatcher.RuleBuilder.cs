@@ -13,31 +13,27 @@ public static partial class Autopatcher
         private readonly MethodBase outer;
         private readonly MemberInfo inner;
         private readonly MemberInfo? replacement;
-        private readonly List<PatchInfo> prefixes;
-        private readonly List<PatchInfo> postfixes;
+        private readonly List<PatchInfo> innerPrefixes;
+        private readonly List<PatchInfo> innerPostfixes;
 
         private readonly InstructionList output = new();
         private readonly ILGenerator generator = PatchProcessor.CreateILGenerator();
-
-        private readonly bool debug;
 
         public RuleBuilder(
             MethodBase outer,
             MemberInfo inner,
             MethodInfo? replacement,
-            List<PatchInfo> prefixes,
-            List<PatchInfo> postfixes,
+            List<PatchInfo> patches,
             List<Type> localTypes)
         {
             this.outer = outer;
             this.inner = inner;
             this.replacement = replacement;
-            this.prefixes = prefixes;
-            this.postfixes = postfixes;
+
+            innerPrefixes = patches.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
+            innerPostfixes = patches.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
 
             output.LocalTypes.AddRange(localTypes);
-
-            debug = prefixes.Any(p => p.debug) || postfixes.Any(p => p.debug);
 
             targetType = inner switch
             {
@@ -54,13 +50,10 @@ public static partial class Autopatcher
 
         private void EmitReplacement()
         {
-            if (debug)
-                LogDebugInfo();
-
             EmitPrelude();
 
-            var prefixesUsingResult = prefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
-            var postfixesUsingResult = postfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
+            var prefixesUsingResult = innerPrefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
+            var postfixesUsingResult = innerPostfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
 
             if (prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
             {
@@ -74,7 +67,7 @@ public static partial class Autopatcher
             }
 
             Label? skipLabel = null;
-            foreach (var prefix in prefixes)
+            foreach (var prefix in innerPrefixes)
             {
                 MethodInfo patchMethod = prefix.patchMethod;
                 foreach (var parameter in prefix.parameters)
@@ -99,7 +92,7 @@ public static partial class Autopatcher
             else
                 output.Add(new(OpcodeFor(inner), inner));
 
-            if (skipLabel != null || postfixes.Count > 0)
+            if (skipLabel != null || innerPostfixes.Count > 0)
             {
                 if (resultLocalIndex >= 0)
                     output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
@@ -111,7 +104,7 @@ public static partial class Autopatcher
                     output.Add(branchTarget);
                 }
 
-                foreach (var postfix in postfixes)
+                foreach (var postfix in innerPostfixes)
                 {
                     MethodInfo patchMethod = postfix.patchMethod;
                     foreach (var parameter in postfix.parameters)
@@ -125,22 +118,6 @@ public static partial class Autopatcher
 
                 if (resultLocalIndex >= 0)
                     output.EmitLoad(resultLocalIndex);
-            }
-        }
-
-        private void LogDebugInfo()
-        {
-            foreach (var patch in prefixes.Concat(postfixes))
-            {
-                FileLog.Log($"[{patch.patchType}] {patch.patchMethod.FullName}");
-                foreach (var parameter in patch.parameters)
-                {
-                    string fields = "";
-                    if (parameter.Fields is { Length: > 0 })
-                        fields = $" Fields=[{string.Join(", ", parameter.Fields.Select(f => f.Name))}]";
-                    FileLog.Log(
-                        $"Name={parameter.Parameter.Name} BindingType={parameter.BindingType} Scope={parameter.Scope} Index={parameter.Index}{fields}");
-                }
             }
         }
 

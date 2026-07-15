@@ -43,10 +43,8 @@ public static partial class Autopatcher
             foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patches.GroupBy(patch => patch.inner))
             {
                 var inner = targetGroup.Key;
-                var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
-                var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
 
-                rules.Add(RedirectRule_Core(outer, inner, null, prefixes, postfixes, stateBuilder.LocalTypes));
+                rules.Add(RedirectRule_Core(outer, inner, null, targetGroup.ToList(), stateBuilder.LocalTypes));
             }
 
             var patchMatcher = new InstructionMatcher
