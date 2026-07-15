@@ -76,6 +76,7 @@ internal struct PatchInfo
     public required MethodInfo patchMethod;
     public required PatchType patchType;
     public required ParameterBinding[] parameters;
+    public required bool inline;
     public bool debug;
 
     public bool HasBindingType(BindingType bindingType) => parameters.Any(p => p.BindingType == bindingType);
@@ -105,6 +106,7 @@ internal class PatchRegistry
                     var infixPatchAttributes = Attribute.GetCustomAttributes(method, typeof(TargetAttribute))
                         .Cast<TargetAttribute>().ToArray();
                     bool debug = Attribute.GetCustomAttribute(method, typeof(DebugAttribute)) != null;
+                    bool inline = Attribute.GetCustomAttribute(method, typeof(InlineAttribute)) != null;
 
                     if (infixTargetAttribute == null)
                         continue;
@@ -135,6 +137,7 @@ internal class PatchRegistry
                             patchMethod = method,
                             patchType = infixTargetAttribute.patchType,
                             parameters = arguments,
+                            inline = inline,
                             debug = debug,
                         });
 

@@ -46,3 +46,6 @@ public class TargetAttribute(Type? type, string methodName, Type[]? parameterTyp
     {
     }
 }
+
+[AttributeUsage(AttributeTargets.Method)]
+public class InlineAttribute : Attribute;
