@@ -51,7 +51,7 @@ public static partial class Autopatcher
             var patchMatcher = new InstructionMatcher
             {
                 Rules = rules,
-                LocalTypes = stateBuilder.LocalTypes,
+                CrossRuleLocalTypes = stateBuilder.LocalTypes,
             };
 
             int version = IncrementVersion(outer);

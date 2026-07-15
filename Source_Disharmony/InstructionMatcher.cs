@@ -54,15 +54,16 @@ public class InstructionMatcher
     {
         public required Rule rule;
         public int start, end;
-        public required Dictionary<int, int> localIndex_Match;
-        public required Dictionary<Label, Label> labelMap;
+        public required Dictionary<int, int> localMap_Match;
+        public required Dictionary<Label, Label> labelMap_Match;
         public bool emitted = false;
     }
 
     public static bool forceDebug = false;
 
     public List<Rule> Rules = [];
-    public List<Type> LocalTypes = [];
+    public List<Type> CrossRuleLocalTypes = [];
+    public List<Label> CrossRuleLabels = [];
 
     private readonly List<ExceptionBlock> extraBlocks = [];
 
@@ -82,7 +83,8 @@ public class InstructionMatcher
         ILGenerator generator,
         bool debug = false)
     {
-        var localIndex_Method = new Dictionary<int, int>();
+        var localMap_Method = new Dictionary<int, int>();
+        var labelMap_Method = new Dictionary<Label, Label>();
         var matches = new List<MatchData>();
         reason = "Success";
 
@@ -115,8 +117,8 @@ public class InstructionMatcher
                     rule = rule,
                     start = 0,
                     end = 0,
-                    localIndex_Match = new(),
-                    labelMap = new(),
+                    localMap_Match = new(),
+                    labelMap_Match = new(),
                 });
                 continue;
             }
@@ -128,8 +130,8 @@ public class InstructionMatcher
                     rule = rule,
                     start = instructions.Count,
                     end = instructions.Count,
-                    localIndex_Match = new(),
-                    labelMap = new(),
+                    localMap_Match = new(),
+                    labelMap_Match = new(),
                 });
                 continue;
             }
@@ -159,7 +161,7 @@ public class InstructionMatcher
                         int localIndex = patternInst.LocalIndex();
                         int targetIndex = inst.LocalIndex();
 
-                        if (localIndex_Method.TryGetValue(localIndex, out int substituteIndex) ||
+                        if (localMap_Method.TryGetValue(localIndex, out int substituteIndex) ||
                             localIndex_Match.TryGetValue(localIndex, out substituteIndex))
                             isMatch = targetIndex == substituteIndex;
                         else
@@ -187,7 +189,7 @@ public class InstructionMatcher
                         // There is something very weird going on here. This may be a Harmony bug.
                         int targetIndex = inst.operand is LocalBuilder lb ? lb.LocalIndex : inst.LocalIndex();
 
-                        if (localIndex_Method.TryGetValue(localIndex, out int substituteIndex) ||
+                        if (localMap_Method.TryGetValue(localIndex, out int substituteIndex) ||
                             localIndex_Match.TryGetValue(localIndex, out substituteIndex))
                             isMatch = targetIndex == substituteIndex;
                         else
@@ -220,8 +222,8 @@ public class InstructionMatcher
                     rule = rule,
                     start = instructionIndex,
                     end = instructionIndex + rule.Pattern.Length,
-                    localIndex_Match = localIndex_Match,
-                    labelMap = new(),
+                    localMap_Match = localIndex_Match,
+                    labelMap_Match = new(),
                 };
                 if (debug)
                     FileLog.Log($"MATCH #{ruleIndex} ({matchData.start} .. {matchData.end - 1})");
@@ -230,7 +232,7 @@ public class InstructionMatcher
                 if (rule.SaveLocals)
                 {
                     foreach (var kvp in localIndex_Match)
-                        localIndex_Method.Add(kvp.Key, kvp.Value);
+                        localMap_Method.Add(kvp.Key, kvp.Value);
                 }
 
                 matchCount++;
@@ -299,7 +301,7 @@ public class InstructionMatcher
                 {
                     if (replaceInst.IsStloc())
                     {
-                        if (!TryGetLocalIndex(ref reason, generator, localIndex_Method, match, out var substituteIndex,
+                        if (!TryGetLocalIndex(ref reason, generator, localMap_Method, match, out var substituteIndex,
                                 replaceInst.LocalIndex()))
                             return false;
 
@@ -307,7 +309,7 @@ public class InstructionMatcher
                     }
                     else if (replaceInst.opcode == OpCodes.Ldloca || replaceInst.opcode == OpCodes.Ldloca_S)
                     {
-                        if (!TryGetLocalIndex(ref reason, generator, localIndex_Method, match, out var substituteIndex,
+                        if (!TryGetLocalIndex(ref reason, generator, localMap_Method, match, out var substituteIndex,
                                 (int)replaceInst.operand))
                             return false;
 
@@ -315,7 +317,7 @@ public class InstructionMatcher
                     }
                     else if (replaceInst.IsLdloc())
                     {
-                        if (!TryGetLocalIndex(ref reason, generator, localIndex_Method, match, out var substituteIndex,
+                        if (!TryGetLocalIndex(ref reason, generator, localMap_Method, match, out var substituteIndex,
                                 replaceInst.LocalIndex()))
                             return false;
 
@@ -323,13 +325,13 @@ public class InstructionMatcher
                     }
                     else if (replaceInst.operand is Label label)
                     {
-                        Emit(outInstructions, replaceInst.opcode, GetReplacementLabel(generator, match, label));
+                        Emit(outInstructions, replaceInst.opcode, GetReplacementLabel(label, generator, match, labelMap_Method));
                     }
                     else
                         Emit(outInstructions, replaceInst.opcode, replaceInst.operand);
 
                     outInstructions[^1].labels.AddRange(replaceInst.labels
-                        .Select(label => GetReplacementLabel(generator, match, label)));
+                        .Select(label => GetReplacementLabel(label, generator, match, labelMap_Method)));
 
                     if (debug)
                         FileLog.Log($"EMIT {outInstructions[^1]}");
@@ -397,12 +399,13 @@ public class InstructionMatcher
         outInstructions.Add(newInstruction);
     }
 
-    private static Label GetReplacementLabel(ILGenerator generator, MatchData match, Label label)
+    private Label GetReplacementLabel(Label label, ILGenerator generator, MatchData match, Dictionary<Label, Label> labelMap_Method)
     {
-        if (!match.labelMap.TryGetValue(label, out Label replacementLabel))
+        Dictionary<Label, Label> labelMap = CrossRuleLabels.Contains(label) ? labelMap_Method : match.labelMap_Match;
+        if (!labelMap.TryGetValue(label, out Label replacementLabel))
         {
             replacementLabel = generator.DefineLabel();
-            match.labelMap.Add(label, replacementLabel);
+            labelMap.Add(label, replacementLabel);
         }
 
         return replacementLabel;
@@ -420,18 +423,18 @@ public class InstructionMatcher
         if (localIndex_Method.TryGetValue(localIndex, out substituteIndex))
         {
         }
-        else if (match.localIndex_Match.TryGetValue(localIndex, out substituteIndex))
+        else if (match.localMap_Match.TryGetValue(localIndex, out substituteIndex))
         {
         }
-        else if (localIndex < LocalTypes.Count)
+        else if (localIndex < CrossRuleLocalTypes.Count)
         {
-            substituteIndex = generator.DeclareLocal(LocalTypes[localIndex]).LocalIndex;
+            substituteIndex = generator.DeclareLocal(CrossRuleLocalTypes[localIndex]).LocalIndex;
             localIndex_Method.Add(localIndex, substituteIndex);
         }
         else if (match.rule.LocalTypes != null && localIndex < match.rule.LocalTypes.Length)
         {
             substituteIndex = generator.DeclareLocal(match.rule.LocalTypes[localIndex]).LocalIndex;
-            match.localIndex_Match.Add(localIndex, substituteIndex);
+            match.localMap_Match.Add(localIndex, substituteIndex);
         }
         else
         {

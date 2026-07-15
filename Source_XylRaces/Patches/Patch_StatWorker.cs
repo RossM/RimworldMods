@@ -8,7 +8,7 @@ public static class Patch_StatWorker
 {
     private static readonly InstructionMatcher Fixup_GetOffsetsAndFactorsExplanation = new()
     {
-        LocalTypes =
+        CrossRuleLocalTypes =
         {
             typeof(Pawn),
             typeof(PawnCapacityDef),
