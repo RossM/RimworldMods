@@ -12,8 +12,10 @@ internal class InstructionList : IEnumerable<CodeInstruction>
 
     public void Add(CodeInstruction instruction) => Instructions.Add(instruction);
 
-    public void EmitLocalInitializer(Type type, int localIndex)
+    public void EmitLocalInitializer(int localIndex)
     {
+        Type type = LocalTypes[localIndex];
+
         if (type.IsByRef)
             throw new NotImplementedException($"IsByRef targetType {type}");
 

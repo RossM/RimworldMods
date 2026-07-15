@@ -68,10 +68,10 @@ public static partial class Autopatcher
             {
                 resultLocalIndex = output.AddLocal(targetType);
 
-                if (prefixesUsingResult.Count > 0)
+                if (prefixesUsingResult.Count > 0 &&
+                    !prefixesUsingResult[0].parameters.Single(a => a.BindingType == BindingType.Result).Parameter.IsOut)
                 {
-                    if (!prefixesUsingResult[0].parameters.Single(a => a.BindingType == BindingType.Result).Parameter.IsOut)
-                        output.EmitLocalInitializer(targetType, resultLocalIndex);
+                    output.EmitLocalInitializer(resultLocalIndex);
                 }
             }
 

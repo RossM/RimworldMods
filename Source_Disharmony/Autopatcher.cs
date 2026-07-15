@@ -40,9 +40,7 @@ public static partial class Autopatcher
             InstructionList output = [];
 
             for (int index = 0; index < LocalTypes.Count; index++)
-            {
-                output.EmitLocalInitializer(LocalTypes[index], index);
-            }
+                output.EmitLocalInitializer(index);
 
             return new InstructionMatcher.Rule
             {
