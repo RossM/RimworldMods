@@ -11,7 +11,8 @@ public static partial class Autopatcher
     private class StateBuilder<TStateKey>
     {
         private readonly Dictionary<TStateKey, (int index, Type type)> stateMap = new();
-        public readonly List<Type> LocalTypes = [];
+        private readonly InstructionList output = [];
+        public List<Type> LocalTypes => output.LocalTypes;
 
         public int GetOrAddStateLocal(TStateKey stateKey, Type localType, MethodInfo method)
         {
@@ -37,7 +38,6 @@ public static partial class Autopatcher
 
         public InstructionMatcher.Rule BuildRule()
         {
-            InstructionList output = [];
 
             for (int index = 0; index < LocalTypes.Count; index++)
                 output.EmitLocalInitializer(index);
