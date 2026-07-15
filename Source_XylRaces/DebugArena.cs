@@ -233,7 +233,7 @@ public static class DebugArena
     private static XenotypeDef? GetDefaultXenotype(PawnKindDef pawnKindDef)
     {
         if ((pawnKindDef.xenotypeSet ?? pawnKindDef.defaultFactionDef?.xenotypeSet) is { } xenotypeSet)
-            return xenotypeSet is [{ chance: >= 1 } value] ? value.xenotype : xenotypeSet.DefaultXenotype;
+            return xenotypeSet is [{ chance: >= 1 } value] ? value.xenotype : xenotypeSet is XenotypeSetWithDefault withDefault ? withDefault.defaultXenotype : XenotypeDefOf.Baseliner;
         return XenotypeDefOf.Baseliner;
     }
 

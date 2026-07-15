@@ -8,6 +8,7 @@ public static class Patch_FactionDef
     [Target(nameof(FactionDef.Description))]
     public static void XenotypeDefOf_Baseliner_Postfix(FactionDef __caller, ref XenotypeDef? __result)
     {
-        __result = __caller.xenotypeSet.DefaultXenotype;
+        if (__caller.xenotypeSet is XenotypeSetWithDefault withDefault)
+            __result = withDefault.defaultXenotype;
     }
 }

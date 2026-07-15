@@ -11,7 +11,11 @@ public static class Patch_PawnGenerator
         DebugAssert.NotNull(PawnGenerator.tmpXenotypeChances);
         DebugAssert.NotNull(xenotypeChance.xenotype);
 
-        if (xenotypeChance.xenotype != ((faction?.def ?? factionDef)?.xenotypeSet).DefaultXenotype)
+        XenotypeSet? xenotypeSet = (faction?.def ?? factionDef)?.xenotypeSet;
+        if (xenotypeSet is not XenotypeSetWithDefault withDefault)
+            return true;
+
+        if (xenotypeChance.xenotype != withDefault.defaultXenotype)
         {
             if (PawnGenerator.tmpXenotypeChances.ContainsKey(xenotypeChance.xenotype))
             {
@@ -44,6 +48,7 @@ public static class Patch_PawnGenerator
     [Target(nameof(PawnGenerator.XenotypesAvailableFor))]
     public static void XenotypeDefOf_Baseliner_Postfix(FactionDef? factionDef, Faction? faction, ref XenotypeDef? __result)
     {
-        __result = ((faction?.def ?? factionDef)?.xenotypeSet).DefaultXenotype;
+        if ((faction?.def ?? factionDef)?.xenotypeSet is XenotypeSetWithDefault withDefault)
+            __result = withDefault.defaultXenotype;
     }
 }

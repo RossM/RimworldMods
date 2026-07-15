@@ -9,6 +9,7 @@ public static class Patch_XenotypeSet
     [Target(nameof(XenotypeSet.Contains))]
     public static void XenotypeDefOf_Baseliner_Postfix(XenotypeSet __caller, ref XenotypeDef? __result)
     {
-        __result = __caller.DefaultXenotype;
+        if (__caller is XenotypeSetWithDefault withDefault)
+            __result = withDefault.defaultXenotype;
     }
 }
