@@ -46,12 +46,10 @@ internal class InstructionList : IEnumerable<CodeInstruction>
             throw new NotImplementedException($"targetType {type}");
     }
 
-    public void EmitLoad(Type parameterType, int localIndex)
+    public void EmitLoad(int localIndex, bool byRef = false)
     {
-        if (parameterType.IsByRef)
-        {
+        if (byRef)
             Add(CodeInstruction.LoadLocalAddress(localIndex));
-        }
         else
             Add(CodeInstruction.LoadLocal(localIndex));
     }

@@ -207,7 +207,7 @@ public static partial class Autopatcher
 
         private void EmitResult(Type parameterType)
         {
-            output.EmitLoad(parameterType, resultLocalIndex);
+            output.EmitLoad(resultLocalIndex, parameterType.IsByRef);
         }
 
         private void EmitCallerParameter(Type type, int index)
