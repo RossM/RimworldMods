@@ -3,12 +3,12 @@
 internal enum Scope
 {
     /// <summary>
-    ///     Represents access to parameters or results of the inner (target) method.
+    ///     Represents access to parameters or results of the inner method.
     /// </summary>
     Inner,
 
     /// <summary>
-    ///     Represents access to parameters or results of the outer (caller) method.
+    ///     Represents access to parameters or results of the outer method.
     /// </summary>
     Outer,
 }
