@@ -111,13 +111,11 @@ public static partial class Autopatcher
         }
     }
 
-    private static MethodInfo MakeTranspiler(InstructionMatcher[] matchers, string typeName, bool debug)
+    private static MethodInfo MakeTranspiler(InstructionMatcher[] matchers, string typeName)
     {
         TypeBuilder typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
 
-        FieldBuilder matchersField = typeBuilder.DefineField("matchers", typeof(InstructionMatcher[]),
-            FieldAttributes.Public | FieldAttributes.Static);
-        FieldBuilder debugField = typeBuilder.DefineField("debug", typeof(bool),
+        FieldBuilder fieldBuilder = typeBuilder.DefineField("matchers", typeof(InstructionMatcher[]),
             FieldAttributes.Public | FieldAttributes.Static);
 
         MethodBuilder methodBuilder = typeBuilder.DefineMethod("Invoke", MethodAttributes.Public | MethodAttributes.Static,
@@ -126,17 +124,16 @@ public static partial class Autopatcher
 
         MethodInfo matchAndReplace = SymbolExtensions.GetMethodInfo(() => InstructionMatcher.RunMatchers);
 
-        generator.Emit(OpCodes.Ldsfld, matchersField);
+        generator.Emit(OpCodes.Ldsfld, fieldBuilder);
         generator.Emit(OpCodes.Ldarg_0);
         generator.Emit(OpCodes.Ldarg_1);
         generator.Emit(OpCodes.Ldarg_2);
-        generator.Emit(OpCodes.Ldsfld, debugField);
         generator.Emit(OpCodes.Call, matchAndReplace);
         generator.Emit(OpCodes.Ret);
 
         Type type = typeBuilder.CreateType();
-        type.GetField(matchersField.Name).SetValue(null, matchers);
-        type.GetField(debugField.Name).SetValue(null, debug);
+        FieldInfo field = type.GetField(fieldBuilder.Name);
+        field.SetValue(null, matchers);
         return type.GetMethod(methodBuilder.Name);
     }
 

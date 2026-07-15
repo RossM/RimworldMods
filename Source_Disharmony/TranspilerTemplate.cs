@@ -3,11 +3,10 @@ namespace Disharmony;
 
 internal static class TranspilerTemplate
 {
-    public static bool debug;
     public static InstructionMatcher[] matchers;
 
     public static List<CodeInstruction> Invoke(MethodBase target, IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
-        return InstructionMatcher.RunMatchers(matchers, target, instructions, generator, debug);
+        return InstructionMatcher.RunMatchers(matchers, target, instructions, generator);
     }
 }

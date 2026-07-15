@@ -6,7 +6,6 @@ public static partial class Autopatcher
     {
         private PatchRegistry PatchRegistry { get; } = registry;
 
-
         public MethodInfo CreatePatchTranspiler(MethodInfo outer)
         {
             var patches = PatchRegistry.PatchesByMethod[outer];
@@ -57,7 +56,7 @@ public static partial class Autopatcher
 
             int version = IncrementVersion(outer);
             MethodInfo transpiler = MakeTranspiler([patchMatcher],
-                $"{outer.DeclaringType?.FullName?.Replace('.', '_')}_{outer.Name}_Transpiler{version}", false);
+                $"{outer.DeclaringType?.FullName?.Replace('.', '_')}_{outer.Name}_Transpiler{version}");
             return transpiler;
         }
 

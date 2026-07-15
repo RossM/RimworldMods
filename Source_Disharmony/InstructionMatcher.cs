@@ -473,13 +473,12 @@ public class InstructionMatcher
         InstructionMatcher[] matchers,
         MethodBase target,
         IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator,
-        bool debug)
+        ILGenerator generator)
     {
         var instructionsList = instructions.ToList();
         foreach (var matcher in matchers)
         {
-            matcher.MatchAndReplace(target, ref instructionsList, generator, debug: debug);
+            matcher.MatchAndReplace(target, ref instructionsList, generator);
         }
 
         return instructionsList;
