@@ -8,6 +8,7 @@ public partial class InstructionMatcher
         private readonly Dictionary<Label, Label> labelMap_Method = new();
         private readonly List<MatchData> matches = [];
         private readonly List<ExceptionBlock> extraBlocks = [];
+        private readonly List<Label> extraLabels = [];
 
         public readonly List<CodeInstruction> OutInstructions = [];
 
@@ -262,6 +263,9 @@ public partial class InstructionMatcher
 
         private void EmitReplacement(CodeInstruction replaceInst, MatchData match)
         {
+            if (replaceInst.labels.Count > 0)
+                extraLabels.AddRange(replaceInst.labels.Select(label => GetReplacementLabel(label, match)));
+
             if (replaceInst.IsStloc())
             {
                 var substituteIndex = GetReplacementLocal(replaceInst.LocalIndex(), match);
@@ -283,9 +287,6 @@ public partial class InstructionMatcher
             }
             else
                 Emit(replaceInst.opcode, replaceInst.operand);
-
-            OutInstructions[^1].labels.AddRange(replaceInst.labels
-                .Select(label => GetReplacementLabel(label, match)));
         }
 
         private void Emit(CodeInstruction instruction)
@@ -307,6 +308,11 @@ public partial class InstructionMatcher
 
             if (extraBlocks.Count > 0)
                 newInstruction.blocks.AddRange(extraBlocks);
+            if (extraLabels.Count > 0)
+            {
+                newInstruction.labels.AddRange(extraLabels);
+                extraLabels.Clear();
+            }
 
             OutInstructions.Add(newInstruction);
         }
