@@ -217,7 +217,7 @@ public static partial class Autopatcher
         ILGenerator generator = method.GetILGenerator();
 
         MethodInfo getMethodFromHandle = SymbolExtensions.GetMethodInfo(() => MethodBase.GetMethodFromHandle(new RuntimeMethodHandle()));
-        MethodInfo updateMethod = SymbolExtensions.GetMethodInfo(() => ResolveTrampoline);
+        MethodInfo updateMethod = SymbolExtensions.GetMethodInfo(() => PatchWorker.ResolveTrampoline);
 
         if (parameterTypes.Length >= 1)
             generator.Emit(OpCodes.Ldarg_0);
@@ -240,11 +240,5 @@ public static partial class Autopatcher
         generator.Emit(OpCodes.Ret);
 
         return method;
-    }
-
-    [UsedImplicitly]
-    public static void ResolveTrampoline(MethodBase method)
-    {
-        PatchWorker.ResolveTrampoline(method);
     }
 }
