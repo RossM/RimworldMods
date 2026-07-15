@@ -124,8 +124,8 @@ public static partial class Autopatcher
 
     private struct PatchInfo
     {
-        public required MemberInfo target;
-        public required MethodInfo caller;
+        public required MemberInfo inner;
+        public required MethodInfo outer;
         public required MethodInfo patchMethod;
         public required PatchType patchType;
         public required ParameterBinding[] parameters;
@@ -186,7 +186,7 @@ public static partial class Autopatcher
 
         worker.CollectPatches();
 
-        foreach (MethodInfo patchedMethod in worker.TargetMethods)
+        foreach (MethodInfo patchedMethod in worker.PatchedMethods)
         {
             try
             {
@@ -224,8 +224,8 @@ public static partial class Autopatcher
 
     private static ParameterBinding BindParameter(
         ParameterInfo parameter,
-        MethodInfo caller,
-        MemberInfo target,
+        MethodInfo outer,
+        MemberInfo inner,
         StateBuilder<Type> stateBuilder)
     {
         var parameterName = parameter.Name;
@@ -234,28 +234,28 @@ public static partial class Autopatcher
         {
             case "__caller":
             {
-                if (caller.IsStatic)
+                if (outer.IsStatic)
                     throw new ArgumentException("__caller argument cannot be used with static outer method");
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer };
             }
 
             case "__instance":
             {
-                if (target is MethodInfo { IsStatic: true } or PropertyInfo { GetMethod.IsStatic: true } or FieldInfo { IsStatic: true })
+                if (inner is MethodInfo { IsStatic: true } or PropertyInfo { GetMethod.IsStatic: true } or FieldInfo { IsStatic: true })
                     throw new ArgumentException("__instance argument cannot be used with static inner method");
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner };
             }
 
             case "__result":
             {
-                if (target is MethodInfo info && info.ReturnType.IsVoid())
+                if (inner is MethodInfo info && info.ReturnType.IsVoid())
                     throw new ArgumentException("__result argument cannot be used with method returning void");
                 return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = Scope.Inner };
             }
 
             case "__state":
             {
-                int index = stateBuilder.GetOrAddStateLocal(caller.DeclaringType, parameter.ParameterType, caller);
+                int index = stateBuilder.GetOrAddStateLocal(outer.DeclaringType, parameter.ParameterType, outer);
                 return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, Index = index };
             }
 
@@ -264,17 +264,17 @@ public static partial class Autopatcher
                 var fieldName = parameterName[3..];
 
                 // Look in target instance fields
-                if (target is FieldInfo { IsStatic: false } or MethodInfo { IsStatic: false } or PropertyInfo { GetMethod.IsStatic: false })
+                if (inner is FieldInfo { IsStatic: false } or MethodInfo { IsStatic: false } or PropertyInfo { GetMethod.IsStatic: false })
                 {
-                    var field = target.DeclaringType!.GetField(fieldName, AccessTools.all);
+                    var field = inner.DeclaringType!.GetField(fieldName, AccessTools.all);
                     if (field != null)
                         return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner, Fields = [field] };
                 }
 
                 // Look in target instance fields
-                if (caller is { IsStatic: false })
+                if (outer is { IsStatic: false })
                 {
-                    var field = caller.DeclaringType!.GetField(fieldName, AccessTools.all);
+                    var field = outer.DeclaringType!.GetField(fieldName, AccessTools.all);
                     if (field != null)
                         return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [field] };
                 }
@@ -285,12 +285,12 @@ public static partial class Autopatcher
             default:
             {
                 // Look in target parameters
-                if (target is MethodInfo targetMethod)
+                if (inner is MethodInfo innerMethod)
                 {
-                    int index = Array.FindIndex(targetMethod.GetParameters(), p => p.Name == parameterName);
+                    int index = Array.FindIndex(innerMethod.GetParameters(), p => p.Name == parameterName);
                     if (index >= 0)
                     {
-                        if (!targetMethod.IsStatic)
+                        if (!innerMethod.IsStatic)
                             index++;
                         return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Inner, Index = index };
                     }
@@ -298,28 +298,28 @@ public static partial class Autopatcher
 
                 // Look in caller parameters
                 {
-                    int index = Array.FindIndex(caller.GetParameters(), p => p.Name == parameterName);
+                    int index = Array.FindIndex(outer.GetParameters(), p => p.Name == parameterName);
                     if (index >= 0)
                     {
-                        if (!caller.IsStatic)
+                        if (!outer.IsStatic)
                             index++;
                         return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Outer, Index = index };
                     }
                 }
 
                 // Look in closure fields
-                if (target is MethodInfo targetMethod2)
+                if (inner is MethodInfo innerMethod2)
                 {
-                    int closureIndex = Array.FindLastIndex(targetMethod2.GetParameters(), p => IsClosureType(p.ParameterType));
+                    int closureIndex = Array.FindLastIndex(innerMethod2.GetParameters(), p => IsClosureType(p.ParameterType));
                     if (closureIndex >= 0)
                     {
-                        var type = targetMethod2.GetParameters()[closureIndex].ParameterType;
+                        var type = innerMethod2.GetParameters()[closureIndex].ParameterType;
                         if (type.IsByRef)
                             type = type.GetElementType();
 
                         var field = type.GetField(parameterName, AccessTools.all);
 
-                        if (!targetMethod2.IsStatic)
+                        if (!innerMethod2.IsStatic)
                             closureIndex++;
 
                         if (field != null)
@@ -449,20 +449,20 @@ public static partial class Autopatcher
     {
         return new()
         {
-            LateGenerator = (caller, _, generator) => RedirectRule_Core(generator, caller, oldMember, newMember, [], [], []),
+            LateGenerator = (outer, _, generator) => RedirectRule_Core(generator, outer, oldMember, newMember, [], [], []),
         };
     }
 
     private static InstructionMatcher.Rule RedirectRule_Core(
         ILGenerator generator,
-        MethodBase caller,
-        MemberInfo target,
-        MethodInfo? replacementTarget,
+        MethodBase outer,
+        MemberInfo inner,
+        MethodInfo? replacement,
         List<PatchInfo> prefixes,
         List<PatchInfo> postfixes,
         List<Type> localTypes)
     {
-        var methodPatchWorker = new RuleBuilder(generator, caller, target, replacementTarget, prefixes, postfixes, localTypes);
+        var methodPatchWorker = new RuleBuilder(generator, outer, inner, replacement, prefixes, postfixes, localTypes);
 
         return methodPatchWorker.BuildRule();
     }

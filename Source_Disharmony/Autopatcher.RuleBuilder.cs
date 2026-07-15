@@ -4,16 +4,16 @@ public static partial class Autopatcher
 {
     private class RuleBuilder
     {
-        private readonly Type[] callerParameterTypes;
-        private readonly Type[] targetParameterTypes;
-        private readonly int[] parameterToLocalIndex;
+        private readonly Type[] outerParameterTypes;
+        private readonly Type[] innerParameterTypes;
+        private readonly int[] innerParameterLocals;
         private int resultLocalIndex = -1;
         private readonly Type targetType;
 
         private readonly ILGenerator generator;
-        private readonly MethodBase caller;
-        private readonly MemberInfo target;
-        private readonly MemberInfo? replacementTarget;
+        private readonly MethodBase outer;
+        private readonly MemberInfo inner;
+        private readonly MemberInfo? replacement;
         private readonly List<PatchInfo> prefixes;
         private readonly List<PatchInfo> postfixes;
         private readonly List<CodeInstruction> output = [];
@@ -24,34 +24,34 @@ public static partial class Autopatcher
 
         public RuleBuilder(
             ILGenerator generator,
-            MethodBase caller,
-            MemberInfo target,
-            MethodInfo? replacementTarget,
+            MethodBase outer,
+            MemberInfo inner,
+            MethodInfo? replacement,
             List<PatchInfo> prefixes,
             List<PatchInfo> postfixes,
             List<Type> localTypes)
         {
             this.generator = generator;
-            this.caller = caller;
-            this.target = target;
-            this.replacementTarget = replacementTarget;
+            this.outer = outer;
+            this.inner = inner;
+            this.replacement = replacement;
             this.prefixes = prefixes;
             this.postfixes = postfixes;
             this.localTypes = localTypes.ToList();
 
             debug = prefixes.Any(p => p.debug) || postfixes.Any(p => p.debug);
 
-            targetType = target switch
+            targetType = inner switch
             {
                 FieldInfo field => field.FieldType,
                 MethodInfo method => method.ReturnType,
                 _ => throw new NotSupportedException(),
             };
 
-            callerParameterTypes = GetParameterTypes(caller);
-            targetParameterTypes = GetParameterTypes(target);
+            outerParameterTypes = GetParameterTypes(outer);
+            innerParameterTypes = GetParameterTypes(inner);
 
-            parameterToLocalIndex = new int[targetParameterTypes.Length];
+            innerParameterLocals = new int[innerParameterTypes.Length];
         }
 
         private void EmitReplacement()
@@ -90,15 +90,15 @@ public static partial class Autopatcher
                 }
             }
 
-            for (int i = 0; i < targetParameterTypes.Length; i++)
+            for (int i = 0; i < innerParameterTypes.Length; i++)
             {
-                EmitTargetParameter(targetParameterTypes[i], i);
+                EmitTargetParameter(innerParameterTypes[i], i);
             }
 
-            if (replacementTarget != null)
-                output.Add(new(OpCodes.Call, replacementTarget));
+            if (replacement != null)
+                output.Add(new(OpCodes.Call, replacement));
             else
-                output.Add(new(OpcodeFor(target), target));
+                output.Add(new(OpcodeFor(inner), inner));
 
             if (skipLabel != null || postfixes.Count > 0)
             {
@@ -217,21 +217,21 @@ public static partial class Autopatcher
 
         private void EmitCallerParameter(Type type, int index)
         {
-            if (type.IsByRef && !callerParameterTypes[index].IsByRef)
+            if (type.IsByRef && !outerParameterTypes[index].IsByRef)
                 output.Add(new(OpCodes.Ldarga, index));
             else
                 output.Add(CodeInstruction.LoadArgument(index));
-            if (!type.IsByRef && callerParameterTypes[index].IsByRef)
+            if (!type.IsByRef && outerParameterTypes[index].IsByRef)
                 output.Add(new(OpCodes.Ldobj, type));
         }
 
         private void EmitTargetParameter(Type type, int index)
         {
-            if (type.IsByRef && !targetParameterTypes[index].IsByRef)
-                output.Add(CodeInstruction.LoadLocalAddress(parameterToLocalIndex[index]));
+            if (type.IsByRef && !innerParameterTypes[index].IsByRef)
+                output.Add(CodeInstruction.LoadLocalAddress(innerParameterLocals[index]));
             else
-                output.Add(CodeInstruction.LoadLocal(parameterToLocalIndex[index]));
-            if (!type.IsByRef && targetParameterTypes[index].IsByRef)
+                output.Add(CodeInstruction.LoadLocal(innerParameterLocals[index]));
+            if (!type.IsByRef && innerParameterTypes[index].IsByRef)
                 output.Add(new(OpCodes.Ldobj, type));
         }
 
@@ -239,10 +239,10 @@ public static partial class Autopatcher
         {
             // Save all parameters to local. The matcher will handle renumbering the locals to new
             // unused local indexes.
-            for (int i = targetParameterTypes.Length - 1; i >= 0; i--)
+            for (int i = innerParameterTypes.Length - 1; i >= 0; i--)
             {
-                parameterToLocalIndex[i] = AddLocal(targetParameterTypes[i]);
-                output.Add(CodeInstruction.StoreLocal(parameterToLocalIndex[i]));
+                innerParameterLocals[i] = AddLocal(innerParameterTypes[i]);
+                output.Add(CodeInstruction.StoreLocal(innerParameterLocals[i]));
             }
         }
 
@@ -281,7 +281,7 @@ public static partial class Autopatcher
         {
             List<CodeInstruction> pattern =
             [
-                new(OpcodeFor(target), target),
+                new(OpcodeFor(inner), inner),
             ];
 
             EmitReplacement();
@@ -294,7 +294,7 @@ public static partial class Autopatcher
                 Pattern = pattern.ToArray(),
                 Output = output.ToArray(),
                 LocalTypes = localTypes.ToArray(),
-                Name = $"{target.DeclaringType?.FullName}::{target.Name}",
+                Name = inner.FullName,
             };
         }
     }

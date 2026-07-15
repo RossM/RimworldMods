@@ -4,7 +4,7 @@ public static partial class Autopatcher
 {
     private class PatchWorker(Assembly assembly)
     {
-        public IEnumerable<MethodInfo> TargetMethods => PatchesByMethod.Keys;
+        public IEnumerable<MethodInfo> PatchedMethods => PatchesByMethod.Keys;
         private Dictionary<MethodInfo, List<PatchInfo>> PatchesByMethod = new();
         private Assembly Assembly { get; } = assembly;
         private Dictionary<MethodInfo, StateBuilder<Type>> StateBuilders { get; } = new();
@@ -32,30 +32,30 @@ public static partial class Autopatcher
                         if (infixTargetAttribute == null)
                             continue;
 
-                        MemberInfo? target = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
+                        MemberInfo? inner = GetMember(infixTargetAttribute.type, infixTargetAttribute.memberName,
                             infixTargetAttribute.parameterTypes, infixTargetAttribute.genericTypes);
-                        if (target == null)
+                        if (inner == null)
                             throw new InvalidOperationException("null wrapped member");
 
                         foreach (var infixPatchAttribute in infixPatchAttributes)
                         {
                             var patchedType = infixPatchAttribute.type ?? harmonyAttribute.info.declaringType;
 
-                            MethodInfo? caller = (MethodInfo?)GetMember(patchedType, infixPatchAttribute.methodName,
+                            MethodInfo? outer = (MethodInfo?)GetMember(patchedType, infixPatchAttribute.methodName,
                                 infixPatchAttribute.parameterTypes, infixPatchAttribute.genericTypes);
-                            if (caller == null)
+                            if (outer == null)
                                 throw new InvalidOperationException("null target method");
 
-                            if (!StateBuilders.TryGetValue(caller, out StateBuilder<Type> stateBuilder))
-                                stateBuilder = StateBuilders[caller] = new();
+                            if (!StateBuilders.TryGetValue(outer, out StateBuilder<Type> stateBuilder))
+                                stateBuilder = StateBuilders[outer] = new();
 
-                            var arguments = method.GetParameters().Select(param => BindParameter(param, caller, target, stateBuilder))
+                            var arguments = method.GetParameters().Select(param => BindParameter(param, outer, inner, stateBuilder))
                                 .ToArray();
 
                             Patches.Add(new()
                             {
-                                caller = caller,
-                                target = target,
+                                outer = outer,
+                                inner = inner,
                                 patchMethod = method,
                                 patchType = infixTargetAttribute.patchType,
                                 parameters = arguments,
@@ -70,15 +70,14 @@ public static partial class Autopatcher
                 }
             }
 
-            PatchesByMethod = Patches.GroupBy(patch => patch.caller).ToDictionary(g => g.Key, g => g.ToList());
+            PatchesByMethod = Patches.GroupBy(patch => patch.outer).ToDictionary(g => g.Key, g => g.ToList());
         }
 
-        public MethodInfo CreatePatchTranspiler(
-            MethodInfo patchedMethod)
+        public MethodInfo CreatePatchTranspiler(MethodInfo outer)
         {
-            var patches = PatchesByMethod[patchedMethod];
+            var patches = PatchesByMethod[outer];
 
-            MethodInfo? iteratorMethod = patchedMethod.GetIteratorImplementation();
+            MethodInfo? iteratorMethod = outer.GetIteratorImplementation();
 
             if (iteratorMethod is not null)
             {
@@ -92,22 +91,22 @@ public static partial class Autopatcher
 
             List<InstructionMatcher.Rule> rules = [];
 
-            if (!StateBuilders.TryGetValue(patchedMethod, out var stateBuilder))
+            if (!StateBuilders.TryGetValue(outer, out var stateBuilder))
                 stateBuilder = new();
 
             if (stateBuilder.LocalTypes.Count > 0)
                 rules.Add(stateBuilder.BuildRule());
 
-            foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patches.GroupBy(patch => patch.target))
+            foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patches.GroupBy(patch => patch.inner))
             {
-                var target = targetGroup.Key;
+                var inner = targetGroup.Key;
                 var prefixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
                 var postfixes = targetGroup.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
 
                 rules.Add(new()
                 {
                     LateGenerator = (_, _, generator) =>
-                        RedirectRule_Core(generator, patchedMethod, target, null, prefixes, postfixes, stateBuilder.LocalTypes),
+                        RedirectRule_Core(generator, outer, inner, null, prefixes, postfixes, stateBuilder.LocalTypes),
                 });
             }
 
@@ -117,9 +116,9 @@ public static partial class Autopatcher
                 LocalTypes = stateBuilder.LocalTypes,
             };
 
-            int version = IncrementVersion(patchedMethod);
+            int version = IncrementVersion(outer);
             MethodInfo transpiler = MakeTranspiler([patchMatcher],
-                $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler{version}", false);
+                $"{outer.DeclaringType?.FullName?.Replace('.', '_')}_{outer.Name}_Transpiler{version}", false);
             return transpiler;
         }
 
