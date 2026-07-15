@@ -68,79 +68,7 @@ public partial class InstructionMatcher
                      instructionIndex <= inInstructions.Count - rule.Pattern.Length;
                      instructionIndex++)
                 {
-                    var isMatch = true;
-                    var localIndex_Match = new Dictionary<int, int>();
-
-                    for (var patternIndex = 0; patternIndex < rule.Pattern.Length; patternIndex++)
-                    {
-                        CodeInstruction inst = inInstructions[instructionIndex + patternIndex];
-                        CodeInstruction patternInst = rule.Pattern[patternIndex];
-
-                        // For a load or store, map the local indexes in the pattern to the actual local indexes used
-                        // in the function
-                        if (patternInst.IsStloc())
-                        {
-                            isMatch = inst.IsStloc();
-                            if (!isMatch)
-                                break;
-
-                            int localIndex = patternInst.LocalIndex();
-                            int targetIndex = inst.LocalIndex();
-
-                            if (localMap_Method.TryGetValue(localIndex, out int substituteIndex) ||
-                                localIndex_Match.TryGetValue(localIndex, out substituteIndex))
-                                isMatch = targetIndex == substituteIndex;
-                            else
-                                localIndex_Match.Add(localIndex, targetIndex);
-                        }
-                        else if (patternInst.opcode.Value == OpCodes.Ldloca.Value ||
-                                 patternInst.opcode.Value == OpCodes.Ldloca_S.Value)
-                        {
-                            isMatch = inst.opcode == patternInst.opcode;
-                            if (!isMatch)
-                                break;
-
-                            throw new NotSupportedException();
-                        }
-                        else if (patternInst.IsLdloc())
-                        {
-                            isMatch = inst.IsLdloc() &&
-                                      inst.opcode.Value != OpCodes.Ldloca.Value &&
-                                      inst.opcode.Value != OpCodes.Ldloca_S.Value;
-                            if (!isMatch)
-                                break;
-
-                            int localIndex = patternInst.LocalIndex();
-
-                            // There is something very weird going on here. This may be a Harmony bug.
-                            int targetIndex = inst.operand is LocalBuilder lb ? lb.LocalIndex : inst.LocalIndex();
-
-                            if (localMap_Method.TryGetValue(localIndex, out int substituteIndex) ||
-                                localIndex_Match.TryGetValue(localIndex, out substituteIndex))
-                                isMatch = targetIndex == substituteIndex;
-                            else
-                                localIndex_Match.Add(localIndex, targetIndex);
-                        }
-                        // For convenience, let call also match callvirt. Nobody wants to worry about
-                        // the difference when writing patterns.
-                        else if (patternInst.opcode.Value == OpCodes.Call.Value)
-                        {
-                            isMatch = (inst.opcode.Value == OpCodes.Call.Value ||
-                                       inst.opcode.Value == OpCodes.Callvirt.Value) &&
-                                      inst.operand.Equals(patternInst.operand);
-                        }
-                        else if (patternInst.operand == null)
-                        {
-                            isMatch = inst.opcode.Value == patternInst.opcode.Value && inst.operand == null;
-                        }
-                        else
-                            isMatch = inst.Is(patternInst.opcode, patternInst.operand);
-
-                        if (!isMatch)
-                            break;
-                    }
-
-                    if (!isMatch)
+                    if (!MatchPattern(rule, instructionIndex, out Dictionary<int, int> localIndex_Match))
                         continue;
 
                     var matchData = new MatchData
@@ -259,6 +187,99 @@ public partial class InstructionMatcher
 
             if (debug || forceDebug)
                 FileLog.Log("");
+        }
+
+        private bool MatchPattern(Rule rule, int instructionIndex, out Dictionary<int, int> localIndex_Match)
+        {
+            localIndex_Match = new Dictionary<int, int>();
+
+            for (var patternIndex = 0; patternIndex < rule.Pattern.Length; patternIndex++)
+            {
+                if (!MatchInstruction(rule, instructionIndex, localIndex_Match, patternIndex))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool MatchInstruction(Rule rule, int instructionIndex, Dictionary<int, int> localIndex_Match, int patternIndex)
+        {
+            CodeInstruction inst = inInstructions[instructionIndex + patternIndex];
+            CodeInstruction patternInst = rule.Pattern[patternIndex];
+
+            // For a load or store, map the local indexes in the pattern to the actual local indexes used
+            // in the function
+            if (patternInst.IsStloc())
+            {
+                if (!inst.IsStloc())
+                    return false;
+
+                int localIndex = patternInst.LocalIndex();
+                int targetIndex = inst.LocalIndex();
+
+                if (localMap_Method.TryGetValue(localIndex, out int substituteIndex) ||
+                    localIndex_Match.TryGetValue(localIndex, out substituteIndex))
+                {
+                    if (targetIndex != substituteIndex)
+                        return false;
+                }
+                else
+                {
+                    localIndex_Match.Add(localIndex, targetIndex);
+                }
+            }
+            else if (patternInst.opcode.Value == OpCodes.Ldloca.Value ||
+                     patternInst.opcode.Value == OpCodes.Ldloca_S.Value)
+            {
+                if (inst.opcode != patternInst.opcode)
+                    return false;
+
+                throw new NotSupportedException();
+            }
+            else if (patternInst.IsLdloc())
+            {
+                if (!inst.IsLdloc() ||
+                    inst.opcode.Value == OpCodes.Ldloca.Value ||
+                    inst.opcode.Value == OpCodes.Ldloca_S.Value)
+                    return false;
+
+                int localIndex = patternInst.LocalIndex();
+
+                // There is something very weird going on here. This may be a Harmony bug.
+                int targetIndex = inst.operand is LocalBuilder lb ? lb.LocalIndex : inst.LocalIndex();
+
+                if (localMap_Method.TryGetValue(localIndex, out int substituteIndex) ||
+                    localIndex_Match.TryGetValue(localIndex, out substituteIndex))
+                {
+                    if (targetIndex != substituteIndex)
+                        return false;
+                }
+                else
+                {
+                    localIndex_Match.Add(localIndex, targetIndex);
+                }
+            }
+            // For convenience, let call also match callvirt. Nobody wants to worry about
+            // the difference when writing patterns.
+            else if (patternInst.opcode.Value == OpCodes.Call.Value)
+            {
+                if ((inst.opcode.Value != OpCodes.Call.Value &&
+                     inst.opcode.Value != OpCodes.Callvirt.Value) ||
+                    !inst.operand.Equals(patternInst.operand))
+                    return false;
+            }
+            else if (patternInst.operand == null)
+            {
+                if (inst.opcode.Value != patternInst.opcode.Value || inst.operand != null)
+                    return false;
+            }
+            else
+            {
+                if (!inst.Is(patternInst.opcode, patternInst.operand))
+                    return false;
+            }
+
+            return true;
         }
 
         private void EmitReplacement(CodeInstruction replaceInst, MatchData match)
