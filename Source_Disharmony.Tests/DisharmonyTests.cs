@@ -162,6 +162,12 @@ public static class PatchMethods
 
     [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.NonVoidPostfixTarget))]
     public static int NonVoidPostfix() => 42;
+
+    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.ReadRefParameterTarget))]
+    public static void ReadRefParameterPrefix(int value) => ValueParameterObserved = value;
+
+    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteRefParameterTarget))]
+    public static void WriteRefParameterPrefix(ref int value) => value = 42;
 }
 
 public static class PatchTargets
@@ -240,6 +246,8 @@ public static class PatchTargets
 
     public static void StateTarget() { }
     public static int NonVoidPostfixTarget() => 1;
+    public static void ReadRefParameterTarget(ref int value) { }
+    public static void WriteRefParameterTarget(ref int value) { }
 }
 
 public sealed class InstancePatchTarget
@@ -546,5 +554,28 @@ public sealed class DisharmonyTests
     {
         ApplyPatch(nameof(PatchMethods.NonVoidPostfix));
         Assert.That(PatchTargets.NonVoidPostfixTarget(), Is.EqualTo(1));
+    }
+
+    [Test]
+    public void PatchCanReadRefParameterWithoutDeclaringRef()
+    {
+        PatchMethods.ValueParameterObserved = 0;
+        ApplyPatch(nameof(PatchMethods.ReadRefParameterPrefix));
+        int value = 42;
+
+        PatchTargets.ReadRefParameterTarget(ref value);
+
+        Assert.That(PatchMethods.ValueParameterObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void PatchCanWriteRefParameterWhenDeclaringRef()
+    {
+        ApplyPatch(nameof(PatchMethods.WriteRefParameterPrefix));
+        int value = 1;
+
+        PatchTargets.WriteRefParameterTarget(ref value);
+
+        Assert.That(value, Is.EqualTo(42));
     }
 }
