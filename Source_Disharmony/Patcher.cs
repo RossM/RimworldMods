@@ -34,6 +34,8 @@ internal class Patcher
 
     private const string harmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
+    public static readonly Patcher Instance = new();
+
     // These variables must only be accessed while HarmonyInternals.locker is held
     private readonly Dictionary<MethodBase, MethodInfo> trampolines = new();
     private int trampolineCount;
@@ -52,11 +54,9 @@ internal class Patcher
         moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicTranspilersModule");
     }
 
-    public static readonly Patcher Instance = new();
-
     /// <summary>
-    ///     This does the same thing as <see cref="Harmony.Patch"/>> but must be called
-    ///     while we are already holding <see cref="HarmonyInternals.locker"/>.
+    ///     This does the same thing as <see cref="Harmony.Patch" />> but must be called
+    ///     while we are already holding <see cref="HarmonyInternals.locker" />.
     /// </summary>
     /// <param name="original"></param>
     private static void PatchDirectly(MethodBase original)

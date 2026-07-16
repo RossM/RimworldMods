@@ -2,7 +2,7 @@ namespace Disharmony;
 
 public static class CodeInstructionUtil
 {
-    extension (CodeInstruction)
+    extension(CodeInstruction)
     {
         public static CodeInstruction Annotation(string str) => new(OpCodes.Nop, str);
 
