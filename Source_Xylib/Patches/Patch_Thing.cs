@@ -51,8 +51,8 @@ internal static class Patch_Thing
     }
 
     [Feature(nameof(EventDefOf.PreTakeDamage))]
-    [HarmonyPrefix]
-    [HarmonyPatch("TakeDamage")]
+    [Prefix]
+    [Target("TakeDamage")]
     public static void TakeDamage_Prefix(Thing __instance, DamageInfo dinfo)
     {
         if (!IsInteresting(__instance))

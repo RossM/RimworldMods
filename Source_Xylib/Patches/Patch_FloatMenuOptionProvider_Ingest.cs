@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_FloatMenuOptionProvider_Ingest
 {
     [Feature(typeof(DefModExtension_Chemical))]
-    [HarmonyPrefix]
-    [HarmonyPatch("GetSingleOptionFor")]
+    [Prefix]
+    [Target("GetSingleOptionFor")]
     public static bool GetSingleOptionFor_Prefix(
         FloatMenuOptionProvider_Ingest __instance,
         Thing clickedThing,

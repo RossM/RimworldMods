@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_Pawn_AgeTracker
 {
     [Feature(nameof(EventDefOf.PostBirthday))]
-    [HarmonyPostfix]
-    [HarmonyPatch("BirthdayBiological")]
+    [Postfix]
+    [Target("BirthdayBiological")]
     public static void BirthdayBiological_Postfix(Pawn ___pawn)
     {
         EventManager.Instance.Notify(EventDefOf.PostBirthday, ___pawn);

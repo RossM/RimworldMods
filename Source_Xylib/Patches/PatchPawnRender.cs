@@ -50,8 +50,8 @@ internal static class PatchPawnRender
     }
 
     [Feature(typeof(GeneCompProperties_RenderNodeModifiers))]
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(PawnRenderNode), nameof(PawnRenderNode.AppendRequests))]
+    [Prefix]
+    [Target(typeof(PawnRenderNode), nameof(PawnRenderNode.AppendRequests))]
     public static bool AppendRequests_Prefix(PawnRenderNode __instance, PawnDrawParms parms, List<PawnGraphicDrawRequest> requests)
     {
         var geneTracker = parms.pawn?.GeneTracker_Xylib;
