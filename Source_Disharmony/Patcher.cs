@@ -59,7 +59,7 @@ internal class Patcher
     ///     while we are already holding <see cref="HarmonyInternals.locker"/>.
     /// </summary>
     /// <param name="original"></param>
-    private void PatchDirectly(MethodBase original)
+    private static void PatchDirectly(MethodBase original)
     {
         HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
 
