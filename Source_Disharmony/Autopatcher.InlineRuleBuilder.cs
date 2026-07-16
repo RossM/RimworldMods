@@ -114,7 +114,6 @@ public static partial class Autopatcher
                 Mode = InstructionMatcher.OutputMode.Replace,
                 Pattern = pattern.ToArray(),
                 Output = output.Instructions.ToArray(),
-                LocalTypes = output.LocalTypes.ToArray(),
                 Name = method.FullName,
             };
         }

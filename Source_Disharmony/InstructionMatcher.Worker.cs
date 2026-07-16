@@ -490,11 +490,6 @@ public partial class InstructionMatcher
                 substituteIndex = generator.DeclareLocal(instructionMatcher.CrossRuleLocalTypes[localIndex]).LocalIndex;
                 localMap_Method.Add(localIndex, substituteIndex);
             }
-            else if (match.rule.LocalTypes != null && localIndex < match.rule.LocalTypes.Length)
-            {
-                substituteIndex = generator.DeclareLocal(match.rule.LocalTypes[localIndex]).LocalIndex;
-                match.localMap_Match.Add(localIndex, substituteIndex);
-            }
             else
             {
                 throw new InvalidOperationException($"Replacement pattern uses unknown local index #{localIndex}");

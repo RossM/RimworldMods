@@ -50,6 +50,7 @@ public static partial class Autopatcher
                 inlineMatcher = new InstructionMatcher
                 {
                     Rules = rules,
+                    CrossRuleLocalTypes = context.localTypes,
                 };
             }
 

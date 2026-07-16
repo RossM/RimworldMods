@@ -46,7 +46,6 @@ public partial class InstructionMatcher
         public bool Chained = false;
         public CodeInstruction[]? Pattern;
         public CodeInstruction[]? Output;
-        public Type[]? LocalTypes;
         public string? Name;
     }
 
@@ -123,7 +122,6 @@ public partial class InstructionMatcher
             Mode = OutputMode.Replace,
             Pattern = [new(OpCodes.Call, oldMember)],
             Output = [new(OpCodes.Call, newMember)],
-            LocalTypes = [],
             Name = oldMember.FullName,
         };
     }
