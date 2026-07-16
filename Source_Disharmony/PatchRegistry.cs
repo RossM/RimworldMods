@@ -296,9 +296,15 @@ internal class PatchRegistry
 
                 // Look in caller parameters
                 {
-                    int index = Array.FindIndex(outer.GetParameters(), p => p.Name == parameterName);
+                    ParameterInfo[] parameters = outer.GetParameters();
+                    int index = Array.FindIndex(parameters, p => p.Name == parameterName);
                     if (index >= 0)
                     {
+                        // Don't allow writing through a ref parameter to an argument of the outer method. This would
+                        // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
+                        if (inner != null && parameter.ParameterType.IsByRef && !parameters[index].ParameterType.IsByRef)
+                            throw new ArgumentException("Outer method parameters can't be accessed by ref");
+
                         if (!outer.IsStatic)
                             index++;
                         return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Outer, Index = index };

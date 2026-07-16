@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 
 namespace Disharmony.Tests;
@@ -254,17 +255,23 @@ public sealed class InnerPatchTests
     }
 
     [Test]
-    public void InnerPrefixCanWriteOuterArgumentByReference()
+    public void InnerPrefixCannotWriteOuterArgumentByReference()
     {
-        ApplyPatch(nameof(InnerPatchMethods.WriteOuterArgumentPrefix));
-        Assert.That(OuterPatchTargets.WriteOuterArgumentInPrefix(1), Is.EqualTo(42));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(nameof(InnerPatchMethods.WriteOuterArgumentPrefix)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ArgumentException>());
+        Assert.That(exception.InnerException!.Message, Is.EqualTo("Outer method parameters can't be accessed by ref"));
     }
 
     [Test]
-    public void InnerPostfixCanWriteOuterArgumentByReference()
+    public void InnerPostfixCannotWriteOuterArgumentByReference()
     {
-        ApplyPatch(nameof(InnerPatchMethods.WriteOuterArgumentPostfix));
-        Assert.That(OuterPatchTargets.WriteOuterArgumentInPostfix(1), Is.EqualTo(42));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(nameof(InnerPatchMethods.WriteOuterArgumentPostfix)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ArgumentException>());
+        Assert.That(exception.InnerException!.Message, Is.EqualTo("Outer method parameters can't be accessed by ref"));
     }
 
     [Test]
