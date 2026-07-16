@@ -31,23 +31,29 @@ internal class Patcher
     private const string harmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
     // These variables must only be access while trampolineLock is held
-    private static readonly object trampolineLock = new();
-    private static readonly Dictionary<MethodBase, MethodInfo> trampolines = new();
-    private static int trampolineCount;
+    private readonly object trampolineLock = new();
+    private readonly Dictionary<MethodBase, MethodInfo> trampolines = new();
+    private int trampolineCount;
 
-    private static readonly Dictionary<MethodInfo, Action<InstructionMatcher[]>> transpilerUpdaters = new();
+    private readonly Dictionary<MethodInfo, Action<InstructionMatcher[]>> transpilerUpdaters = new();
 
-    private static readonly AssemblyBuilder assemblyBuilder
-        = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" }, AssemblyBuilderAccess.RunAndSave);
+    private readonly ModuleBuilder moduleBuilder;
 
-    private static readonly ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicTranspilersModule");
+    private readonly Harmony harmony = new(harmonyID);
 
-    private static readonly Harmony harmony = new(harmonyID);
+    public readonly bool useTrampolines = true;
 
-    public static readonly bool useTrampolines = true;
+    private Patcher()
+    {
+        AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" },
+            AssemblyBuilderAccess.RunAndSave);
 
-    [UsedImplicitly]
-    public static void ResolveTrampoline(MethodBase method)
+        moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicTranspilersModule");
+    }
+
+    public static readonly Patcher Instance = new();
+
+    public void ResolveTrampolineImpl(MethodBase method)
     {
         lock (trampolineLock)
         {
@@ -62,7 +68,13 @@ internal class Patcher
         }
     }
 
-    public static MethodInfo ApplyTrampoline(MethodInfo method)
+    [UsedImplicitly]
+    public static void ResolveTrampoline(MethodBase method)
+    {
+        Instance.ResolveTrampolineImpl(method);
+    }
+
+    public MethodInfo ApplyTrampoline(MethodInfo method)
     {
         lock (trampolineLock)
         {
@@ -83,7 +95,7 @@ internal class Patcher
         }
     }
 
-    public static void RunPatch(MethodInfo patchedMethod, HarmonyMethod? harmonyMethod)
+    public void RunPatch(MethodInfo patchedMethod, HarmonyMethod? harmonyMethod)
     {
         FileLog.Log($"# RunPatch: {patchedMethod.FullName}");
 
@@ -106,7 +118,7 @@ internal class Patcher
         }
     }
 
-    public static void AddTranspilerWithoutPatching(MethodInfo original, HarmonyMethod? harmonyMethod)
+    public void AddTranspilerWithoutPatching(MethodInfo original, HarmonyMethod? harmonyMethod)
     {
         lock (HarmonyInternals.locker)
         {
@@ -127,7 +139,7 @@ internal class Patcher
         }
     }
 
-    public static bool TryUpdateTranspiler(MethodInfo key, InstructionMatcher[] matchers)
+    public bool TryUpdateTranspiler(MethodInfo key, InstructionMatcher[] matchers)
     {
         if (!transpilerUpdaters.TryGetValue(key, out var setter))
             return false;
@@ -136,7 +148,7 @@ internal class Patcher
         return true;
     }
 
-    public static MethodInfo MakeTranspiler(InstructionMatcher[] matchers, string typeName, MethodInfo key)
+    public MethodInfo MakeTranspiler(InstructionMatcher[] matchers, string typeName, MethodInfo key)
     {
         TypeBuilder typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
 
@@ -163,7 +175,7 @@ internal class Patcher
         return type.GetMethod(methodBuilder.Name);
     }
 
-    private static MethodInfo MakeTrampoline(MethodInfo target, string name)
+    private MethodInfo MakeTrampoline(MethodInfo target, string name)
     {
         Type[] parameterTypes = target.GetParameters().Types();
         if (!target.IsStatic)

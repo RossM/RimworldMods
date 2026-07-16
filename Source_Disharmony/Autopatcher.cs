@@ -53,6 +53,7 @@ public static partial class Autopatcher
     }
 
     private static readonly PatchRegistry registry = new();
+    private static readonly Patcher patcher = Patcher.Instance;
 
     public static void PatchAll(Assembly assembly)
     {
@@ -86,10 +87,10 @@ public static partial class Autopatcher
             {
                 HarmonyMethod? harmonyMethod = worker.GetHarmonyMethod(patchedMethod);
 
-                if (Patcher.useTrampolines)
-                    Patcher.AddTranspilerWithoutPatching(patchedMethod, harmonyMethod);
+                if (patcher.useTrampolines)
+                    patcher.AddTranspilerWithoutPatching(patchedMethod, harmonyMethod);
                 else
-                    Patcher.RunPatch(patchedMethod, harmonyMethod);
+                    patcher.RunPatch(patchedMethod, harmonyMethod);
             }
             catch (Exception e)
             {

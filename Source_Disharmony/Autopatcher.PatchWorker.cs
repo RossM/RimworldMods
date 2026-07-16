@@ -80,7 +80,7 @@ public static partial class Autopatcher
             }
 
             InstructionMatcher[] matchersArray = matchers.ToArray();
-            if (Patcher.TryUpdateTranspiler(outer, matchersArray))
+            if (patcher.TryUpdateTranspiler(outer, matchersArray))
             {
                 FileLog.Log($"# GetHarmonyMethod: Reusing transpiler for {outer.FullName}");
 
@@ -89,7 +89,7 @@ public static partial class Autopatcher
                 return null;
             }
 
-            MethodInfo transpiler = Patcher.MakeTranspiler(matchersArray,
+            MethodInfo transpiler = patcher.MakeTranspiler(matchersArray,
                 $"{outer.DeclaringType?.FullName?.Replace('.', '_')}_{outer.Name}_Transpiler", outer);
 
             bool debug = PatchRegistry.PatchesByMethod[outer].Any(p => p.debug);
