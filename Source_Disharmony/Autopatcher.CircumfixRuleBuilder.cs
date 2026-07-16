@@ -12,10 +12,9 @@ public static partial class Autopatcher
         private Label? returnLabel = null;
 
         public CircumfixRuleBuilder(
-            ILGenerator generator,
+            RuleBuilderContext context,
             MethodBase outer,
-            List<PatchInfo> patches,
-            List<Type> localTypes) : base(generator, localTypes, outer)
+            List<PatchInfo> patches) : base(context, outer)
         {
             prefixes = patches.Where(patch => patch.patchType == PatchType.Prefix).ToList();
             postfixes = patches.Where(patch => patch.patchType == PatchType.Postfix).ToList();

@@ -34,12 +34,13 @@ public static partial class Autopatcher
 
         private InstructionMatcher? MakeInlineInstructionMatcher()
         {
-            ILGenerator generator = PatchProcessor.CreateILGenerator();
             List<Rule> rules = [];
+
+            var context = new RuleBuilderContext();
 
             foreach (var patch in patches.Where(p => p.inline))
             {
-                var inlineRuleBuilder = new InlineRuleBuilder(generator, patch);
+                var inlineRuleBuilder = new InlineRuleBuilder(context, patch);
                 rules.AddRange(inlineRuleBuilder.BuildRules());
             }
 
@@ -57,20 +58,19 @@ public static partial class Autopatcher
 
         private InstructionMatcher MakePatchInstructionMatcher()
         {
-            ILGenerator generator = PatchProcessor.CreateILGenerator();
-
             List<RuleBuilder> ruleBuilders = [];
-            List<Type> localTypes = [];
 
-            StateBuilder stateBuilder = new(generator, localTypes);
+            var context = new RuleBuilderContext();
+
+            StateBuilder stateBuilder = new(context);
             stateBuilder.AssignStateVariableIndexes(patches);
             ruleBuilders.Add(stateBuilder);
 
-            ruleBuilders.Add(new CircumfixRuleBuilder(generator, patchedMethod, patches, localTypes));
+            ruleBuilders.Add(new CircumfixRuleBuilder(context, patchedMethod, patches));
 
             foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patches.Where(patch => patch.inner != null)
                          .GroupBy(patch => patch.inner!))
-                ruleBuilders.Add(new InfixRuleBuilder(generator, patchedMethod, targetGroup.Key, targetGroup.ToList(), localTypes));
+                ruleBuilders.Add(new InfixRuleBuilder(context, patchedMethod, targetGroup.Key, targetGroup.ToList()));
 
             List<Rule> rules = [];
             List<Label> labels = [];
@@ -86,7 +86,7 @@ public static partial class Autopatcher
             var patchMatcher = new InstructionMatcher
             {
                 Rules = rules,
-                CrossRuleLocalTypes = localTypes,
+                CrossRuleLocalTypes = context.localTypes,
                 CrossRuleLabels = labels,
             };
 

@@ -10,11 +10,10 @@ public static partial class Autopatcher
         private readonly List<PatchInfo> innerPostfixes;
 
         public InfixRuleBuilder(
-            ILGenerator generator,
+            RuleBuilderContext context,
             MethodBase outer,
             MemberInfo inner,
-            List<PatchInfo> patches,
-            List<Type> localTypes) : base(generator, localTypes, outer, inner)
+            List<PatchInfo> patches) : base(context, outer, inner)
         {
             innerPrefixes = patches.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
             innerPostfixes = patches.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();

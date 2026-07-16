@@ -2,7 +2,7 @@
 
 public static partial class Autopatcher
 {
-    private class StateBuilder(ILGenerator generator, List<Type> localTypes) : RuleBuilder(generator, localTypes, null, null)
+    private class StateBuilder(RuleBuilderContext context) : RuleBuilder(context)
     {
         private List<Type> LocalTypes => output.LocalTypes;
         private readonly Dictionary<Type, (int index, Type type)> stateMap = new();

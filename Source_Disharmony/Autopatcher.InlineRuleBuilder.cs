@@ -10,7 +10,7 @@ public static partial class Autopatcher
         private readonly ParameterInfo[] parameters;
         private readonly List<LocalVariableInfo> locals;
 
-        public InlineRuleBuilder(ILGenerator generator, PatchInfo patch) : base(generator)
+        public InlineRuleBuilder(RuleBuilderContext context, PatchInfo patch) : base(context)
         {
             method = patch.patchMethod;
 

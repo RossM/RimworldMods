@@ -2,6 +2,19 @@
 
 public static partial class Autopatcher
 {
+    private class RuleBuilderContext
+    {
+        public readonly ILGenerator generator = PatchProcessor.CreateILGenerator();
+        public readonly List<Type> localTypes = [];
+
+        public InstructionList NewInstructionList()
+        {
+            InstructionList result = [];
+            result.LocalTypes = localTypes;
+            return result;
+        }
+    }
+
     private abstract class RuleBuilder
     {
         public virtual IEnumerable<Label> CrossRuleLabels => [];
@@ -11,23 +24,19 @@ public static partial class Autopatcher
         protected readonly MethodBase? outer;
         protected readonly MemberInfo? inner;
 
-        protected readonly InstructionList output = [];
+        protected readonly InstructionList output;
         protected readonly int[]? innerParameterLocals;
         protected int resultLocalIndex = -1;
         protected readonly ILGenerator generator;
 
-        protected RuleBuilder(ILGenerator generator) : this(generator, [])
+        protected RuleBuilder(RuleBuilderContext context, MethodBase? outer = null, MemberInfo? inner = null)
         {
-        }
-
-        protected RuleBuilder(ILGenerator generator, List<Type> localTypes, MethodBase? outer = null, MemberInfo? inner = null)
-        {
-            this.generator = generator;
+            generator = context.generator;
             this.outer = outer;
             this.inner = inner;
             outerParameterTypes = GetParameterTypes(outer);
             innerParameterTypes = GetParameterTypes(inner);
-            output.LocalTypes = localTypes;
+            output = context.NewInstructionList();
 
             if (innerParameterTypes != null)
                 innerParameterLocals = new int[innerParameterTypes.Length];
