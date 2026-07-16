@@ -160,6 +160,7 @@ internal class Patcher
 
         ILGenerator generator = method.GetILGenerator();
 
+        // Load all arguments onto the stack
         if (parameterTypes.Length >= 1)
             generator.Emit(OpCodes.Ldarg_0);
         if (parameterTypes.Length >= 2)
@@ -171,10 +172,12 @@ internal class Patcher
         for (int i = 4; i < parameterTypes.Length; i++)
             generator.Emit(OpCodes.Ldarg_S, i);
 
+        // Call ResolveTrampoline(), which generates the real patch and applies a detour
         generator.Emit(OpCodes.Ldtoken, target);
         generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle);
         generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
 
+        // Do a tail call to the original method, which will actually go to the newly installed patch
         generator.Emit(OpCodes.Tailcall);
         generator.Emit(OpCodes.Call, target);
 
