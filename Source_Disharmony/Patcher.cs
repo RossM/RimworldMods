@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using Microsoft.Win32;
+using HarmonyPatch = HarmonyLib.PatchInfo;
 
 namespace Disharmony;
 
@@ -18,29 +18,29 @@ internal class Patcher
     {
         public static readonly object locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
 
-        public static readonly Func<MethodBase, HarmonyLib.PatchInfo> GetPatchInfo
-            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyLib.PatchInfo>>("HarmonyLib.HarmonySharedState:GetPatchInfo");
+        public static readonly Func<MethodBase, HarmonyPatch> GetPatchInfo
+            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatch>>("HarmonyLib.HarmonySharedState:GetPatchInfo");
 
         public static readonly Action<MethodBase, MethodBase> DetourMethod
             = AccessTools.MethodDelegate<Action<MethodBase, MethodBase>>("HarmonyLib.PatchTools:DetourMethod");
 
-        public static readonly Action<MethodBase, MethodInfo, HarmonyLib.PatchInfo> UpdatePatchInfo
-            = AccessTools.MethodDelegate<Action<MethodBase, MethodInfo, HarmonyLib.PatchInfo>>(
+        public static readonly Action<MethodBase, MethodInfo, HarmonyPatch> UpdatePatchInfo
+            = AccessTools.MethodDelegate<Action<MethodBase, MethodInfo, HarmonyPatch>>(
                 "HarmonyLib.HarmonySharedState:UpdatePatchInfo");
+
+        public static readonly Func<MethodBase, HarmonyPatch, MethodInfo> UpdateWrapper
+            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatch, MethodInfo>>("HarmonyLib.PatchFunctions:UpdateWrapper");
     }
 
     private const string harmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
-    // These variables must only be access while trampolineLock is held
-    private readonly object trampolineLock = new();
+    // These variables must only be access while HarmonyInternals.locker is held
     private readonly Dictionary<MethodBase, MethodInfo> trampolines = new();
     private int trampolineCount;
 
     private readonly Dictionary<MethodInfo, Action<InstructionMatcher[]>> transpilerUpdaters = new();
 
     private readonly ModuleBuilder moduleBuilder;
-
-    private readonly Harmony harmony = new(harmonyID);
 
     public bool trampolinesEnabled = true;
 
@@ -54,9 +54,23 @@ internal class Patcher
 
     public static readonly Patcher Instance = new();
 
+    /// <summary>
+    ///     This does the same thing as <see cref="Harmony.Patch"/>> but must be called
+    ///     while we are already holding <see cref="HarmonyInternals.locker"/>.
+    /// </summary>
+    /// <param name="original"></param>
+    private void PatchDirectly(MethodBase original)
+    {
+        HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
+
+        MethodInfo replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
+
+        HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
+    }
+
     public void ResolveTrampolineImpl(MethodBase method)
     {
-        lock (trampolineLock)
+        lock (HarmonyInternals.locker)
         {
             // If we can't remove the method, we lost a race and some other thread has
             // already replaced the trampoline
@@ -65,7 +79,7 @@ internal class Patcher
 
             FileLog.Log($"!!! Resolving trampoline to {method.FullName}");
 
-            harmony.Patch(method);
+            PatchDirectly(method);
         }
     }
 
@@ -77,38 +91,36 @@ internal class Patcher
 
     public void ResolveAllTrampolines()
     {
-        lock (trampolineLock)
+        lock (HarmonyInternals.locker)
         {
             foreach (var method in trampolines.Keys)
             {
                 FileLog.Log($"!!! Resolving trampoline to {method.FullName}");
 
-                harmony.Patch(method);
+                PatchDirectly(method);
             }
 
             trampolines.Clear();
         }
     }
 
+    // Must hold HarmonyInternals.locker
     public MethodInfo ApplyTrampoline(MethodInfo method)
     {
-        lock (trampolineLock)
-        {
-            if (trampolines.TryGetValue(method, out var existingTrampoline))
-                return existingTrampoline;
+        if (trampolines.TryGetValue(method, out var existingTrampoline))
+            return existingTrampoline;
 
-            FileLog.Log($"!!! Applying trampoline to {method.FullName}");
+        FileLog.Log($"!!! Applying trampoline to {method.FullName}");
 
-            string trampolineName = $"_Trampoline{trampolineCount}";
-            trampolineCount++;
-            var trampoline = MakeTrampoline(method, trampolineName);
+        string trampolineName = $"_Trampoline{trampolineCount}";
+        trampolineCount++;
+        var trampoline = MakeTrampoline(method, trampolineName);
 
-            HarmonyInternals.DetourMethod(method, trampoline);
+        HarmonyInternals.DetourMethod(method, trampoline);
 
-            trampolines[method] = trampoline;
+        trampolines[method] = trampoline;
 
-            return trampoline;
-        }
+        return trampoline;
     }
 
     public MethodInfo MakeTranspiler(InstructionMatcher[] matchers, string typeName, MethodInfo key)
@@ -198,7 +210,7 @@ internal class Patcher
 
         lock (HarmonyInternals.locker)
         {
-            HarmonyLib.PatchInfo patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyLib.PatchInfo();
+            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
 
             if (harmonyMethod != null)
             {
@@ -209,14 +221,13 @@ internal class Patcher
                 ];
             }
 
-            MethodInfo replacement = original;
+            MethodInfo replacement;
             if (useTrampolines)
                 replacement = ApplyTrampoline(original);
+            else
+                replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
 
             HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
         }
-
-        if (!useTrampolines)
-            harmony.Patch(original);
     }
 }
