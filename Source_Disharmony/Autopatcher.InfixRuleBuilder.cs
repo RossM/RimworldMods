@@ -226,7 +226,7 @@ public static partial class Autopatcher
             };
         }
 
-        public InstructionMatcher.Rule BuildRule()
+        public IEnumerable<InstructionMatcher.Rule> BuildRules()
         {
             List<CodeInstruction> pattern =
             [
@@ -235,7 +235,7 @@ public static partial class Autopatcher
 
             EmitReplacement();
 
-            return new InstructionMatcher.Rule
+            yield return new InstructionMatcher.Rule
             {
                 Min = 1,
                 Max = 0,

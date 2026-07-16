@@ -2,6 +2,8 @@
 
 public enum PatchType
 {
+    Prefix,
+    Postfix,
     InnerPrefix,
     InnerPostfix,
 }
@@ -36,12 +38,15 @@ public static partial class Autopatcher
             return newIndex;
         }
 
-        public InstructionMatcher.Rule BuildRule()
+        public IEnumerable<InstructionMatcher.Rule> BuildRules()
         {
+            if (LocalTypes.Count == 0)
+                yield break;
+
             for (int index = 0; index < LocalTypes.Count; index++)
                 output.EmitLocalInitializer(index);
 
-            return new InstructionMatcher.Rule
+            yield return new InstructionMatcher.Rule
             {
                 Mode = InstructionMatcher.OutputMode.MethodPrefix,
                 Output = output.Instructions.ToArray(),
