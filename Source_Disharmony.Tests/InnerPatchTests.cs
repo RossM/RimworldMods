@@ -74,6 +74,10 @@ public static class InnerPatchMethods
     [InnerPostfix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.SameNamedArgumentInPostfix))]
     [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.SameNamedArgumentInPostfix))]
     public static void ReadSameNamedArgumentPostfix(int value) => ArgumentObserved = value;
+
+    [InnerPostfix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.NonVoidPostfixTarget))]
+    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.NonVoidPostfixTarget))]
+    public static int NonVoidPostfix() => 42;
 }
 
 public static class InnerPatchTargets
@@ -106,6 +110,7 @@ public static class InnerPatchTargets
     public static void WriteOuterArgumentInPostfix() { }
     public static void SameNamedArgumentInPrefix(int value) { }
     public static void SameNamedArgumentInPostfix(int value) { }
+    public static int NonVoidPostfixTarget() => 1;
 }
 
 public static class OuterPatchTargets
@@ -140,6 +145,8 @@ public static class OuterPatchTargets
 
     public static void SameNamedArgumentInPostfix(int value) =>
         InnerPatchTargets.SameNamedArgumentInPostfix(value + 41);
+
+    public static int NonVoidPostfixTarget() => InnerPatchTargets.NonVoidPostfixTarget();
 }
 
 [TestFixture]
@@ -276,5 +283,12 @@ public sealed class InnerPatchTests
         ApplyPatch(nameof(InnerPatchMethods.ReadSameNamedArgumentPostfix));
         OuterPatchTargets.SameNamedArgumentInPostfix(1);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPostfixReturnValueIsDiscarded()
+    {
+        ApplyPatch(nameof(InnerPatchMethods.NonVoidPostfix));
+        Assert.That(OuterPatchTargets.NonVoidPostfixTarget(), Is.EqualTo(1));
     }
 }

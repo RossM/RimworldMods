@@ -159,6 +159,9 @@ public static class PatchMethods
 
     [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.StateTarget))]
     public static void ReadStatePostfix(int __state) => StateObserved = __state;
+
+    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.NonVoidPostfixTarget))]
+    public static int NonVoidPostfix() => 42;
 }
 
 public static class PatchTargets
@@ -236,6 +239,7 @@ public static class PatchTargets
     }
 
     public static void StateTarget() { }
+    public static int NonVoidPostfixTarget() => 1;
 }
 
 public sealed class InstancePatchTarget
@@ -535,5 +539,12 @@ public sealed class DisharmonyTests
         PatchTargets.StateTarget();
 
         Assert.That(PatchMethods.StateObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void PostfixReturnValueIsDiscarded()
+    {
+        ApplyPatch(nameof(PatchMethods.NonVoidPostfix));
+        Assert.That(PatchTargets.NonVoidPostfixTarget(), Is.EqualTo(1));
     }
 }
