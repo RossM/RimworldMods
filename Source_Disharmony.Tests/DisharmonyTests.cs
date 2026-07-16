@@ -76,6 +76,34 @@ public static class PatchMethods
 
     [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultInPostfix))]
     public static void WriteReferenceResultPostfix(ref string __result) => __result = "patched";
+
+    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultAndRunTarget))]
+    public static bool WriteValueResultAndRunTargetPrefix(ref int __result)
+    {
+        __result = 42;
+        return true;
+    }
+
+    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultAndSkipTarget))]
+    public static bool WriteValueResultAndSkipTargetPrefix(ref int __result)
+    {
+        __result = 42;
+        return false;
+    }
+
+    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultAndRunTarget))]
+    public static bool WriteReferenceResultAndRunTargetPrefix(ref string? __result)
+    {
+        __result = "patched";
+        return true;
+    }
+
+    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultAndSkipTarget))]
+    public static bool WriteReferenceResultAndSkipTargetPrefix(ref string? __result)
+    {
+        __result = "patched";
+        return false;
+    }
 }
 
 public static class PatchTargets
@@ -122,6 +150,22 @@ public static class PatchTargets
         return "original";
     }
     public static string WriteReferenceResultInPostfix() => "original";
+
+    public static int WriteValueResultAndRunTarget() => 1;
+
+    public static int WriteValueResultAndSkipTarget()
+    {
+        Assert.Fail("The target should have been skipped.");
+        return 1;
+    }
+
+    public static string WriteReferenceResultAndRunTarget() => "original";
+
+    public static string WriteReferenceResultAndSkipTarget()
+    {
+        Assert.Fail("The target should have been skipped.");
+        return "original";
+    }
 }
 
 [TestFixture]
@@ -292,5 +336,33 @@ public sealed class DisharmonyTests
     {
         ApplyPatch(nameof(PatchMethods.WriteReferenceResultPostfix));
         Assert.That(PatchTargets.WriteReferenceResultInPostfix(), Is.EqualTo("patched"));
+    }
+
+    [Test]
+    public void PrefixResultIsReplacedByValueTypeTargetWhenReturningTrue()
+    {
+        ApplyPatch(nameof(PatchMethods.WriteValueResultAndRunTargetPrefix));
+        Assert.That(PatchTargets.WriteValueResultAndRunTarget(), Is.EqualTo(1));
+    }
+
+    [Test]
+    public void PrefixResultIsRetainedForValueTypeTargetWhenReturningFalse()
+    {
+        ApplyPatch(nameof(PatchMethods.WriteValueResultAndSkipTargetPrefix));
+        Assert.That(PatchTargets.WriteValueResultAndSkipTarget(), Is.EqualTo(42));
+    }
+
+    [Test]
+    public void PrefixResultIsReplacedByReferenceTypeTargetWhenReturningTrue()
+    {
+        ApplyPatch(nameof(PatchMethods.WriteReferenceResultAndRunTargetPrefix));
+        Assert.That(PatchTargets.WriteReferenceResultAndRunTarget(), Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void PrefixResultIsRetainedForReferenceTypeTargetWhenReturningFalse()
+    {
+        ApplyPatch(nameof(PatchMethods.WriteReferenceResultAndSkipTargetPrefix));
+        Assert.That(PatchTargets.WriteReferenceResultAndSkipTarget(), Is.EqualTo("patched"));
     }
 }
