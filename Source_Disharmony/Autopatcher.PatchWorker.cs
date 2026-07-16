@@ -125,8 +125,6 @@ public static partial class Autopatcher
 
         public static MethodInfo ApplyTrampoline(MethodInfo method)
         {
-            FileLog.Log($"ApplyTrampoline {method.FullName}");
-
             lock (trampolineLock)
             {
                 if (trampolines.TryGetValue(method, out var existingTrampoline))
@@ -139,8 +137,6 @@ public static partial class Autopatcher
                 var trampoline = MakeTrampoline(method, trampolineName);
 
                 harmonyInternal_DetourMethod(method, trampoline);
-                FileLog.Log($"Method: {method}");
-                FileLog.Log($"Trampoline: {trampoline}");
 
                 trampolines[method] = trampoline;
 
