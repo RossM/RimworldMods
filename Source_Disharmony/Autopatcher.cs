@@ -52,7 +52,7 @@ public static partial class Autopatcher
         }
     }
 
-    private static readonly PatchRegistry registry = new();
+    private static readonly PatchRegistry registry = PatchRegistry.Instance;
     private static readonly Patcher patcher = Patcher.Instance;
 
     public static void PatchAll(Assembly assembly)

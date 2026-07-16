@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using System.ComponentModel;
+
+namespace Disharmony;
 
 internal enum Scope
 {
@@ -84,9 +86,15 @@ internal struct PatchInfo
 
 internal class PatchRegistry
 {
-    public HashSet<MethodInfo> MethodsToUpdate = new();
+    public readonly HashSet<MethodInfo> MethodsToUpdate = new();
     public Dictionary<MethodInfo, List<PatchInfo>> PatchesByMethod = new();
     private List<PatchInfo> Patches { get; } = [];
+
+    public static readonly PatchRegistry Instance = new();
+
+    private PatchRegistry()
+    {
+    }
 
     public void CollectPatches(Assembly assembly)
     {
