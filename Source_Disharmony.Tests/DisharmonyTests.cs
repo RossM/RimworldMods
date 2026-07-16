@@ -10,6 +10,7 @@ public static class PatchMethods
     public static string? ReferenceResultObserved;
     public static InstancePatchTarget? InstanceObserved;
     public static int CombinedPatchObserved;
+    public static int StateObserved;
 
     [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.RunValueTypeTarget))]
     public static bool RunValueTypeTargetPrefix() => true;
@@ -152,6 +153,12 @@ public static class PatchMethods
 
     [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndSkipTarget))]
     public static void ObserveResultAfterTargetIsSkippedPostfix(int __result) => CombinedPatchObserved = __result;
+
+    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.StateTarget))]
+    public static void WriteStatePrefix(out int __state) => __state = 42;
+
+    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.StateTarget))]
+    public static void ReadStatePostfix(int __state) => StateObserved = __state;
 }
 
 public static class PatchTargets
@@ -227,6 +234,8 @@ public static class PatchTargets
         Assert.Fail("The target should have been skipped.");
         return 1;
     }
+
+    public static void StateTarget() { }
 }
 
 public sealed class InstancePatchTarget
@@ -513,5 +522,18 @@ public sealed class DisharmonyTests
         PatchTargets.WriteResultAndSkipTarget();
 
         Assert.That(PatchMethods.CombinedPatchObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void PostfixCanReadStateWrittenByPrefix()
+    {
+        PatchMethods.StateObserved = 0;
+        ApplyPatches(
+            nameof(PatchMethods.WriteStatePrefix),
+            nameof(PatchMethods.ReadStatePostfix));
+
+        PatchTargets.StateTarget();
+
+        Assert.That(PatchMethods.StateObserved, Is.EqualTo(42));
     }
 }
