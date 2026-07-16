@@ -6,13 +6,6 @@ public static partial class Autopatcher
 {
     private class PatchWorker(PatchRegistry registry)
     {
-        private static readonly object trampolineLock = new();
-
-        // Only access while holding trampolineLock
-        private static readonly Dictionary<MethodBase, MethodInfo> trampolines = new();
-        private static readonly Dictionary<MethodBase, IntPtr> replacementTargets = new();
-        private static int trampolineCount;
-
         private PatchRegistry PatchRegistry { get; } = registry;
 
         public HarmonyMethod? GetHarmonyMethod(MethodInfo outer)
@@ -87,7 +80,7 @@ public static partial class Autopatcher
             }
 
             InstructionMatcher[] matchersArray = matchers.ToArray();
-            if (TryUpdateTranspiler(outer, matchersArray))
+            if (Patcher.TryUpdateTranspiler(outer, matchersArray))
             {
                 FileLog.Log($"# GetHarmonyMethod: Reusing transpiler for {outer.FullName}");
 
@@ -96,50 +89,13 @@ public static partial class Autopatcher
                 return null;
             }
 
-            MethodInfo transpiler = MakeTranspiler(matchersArray,
+            MethodInfo transpiler = Patcher.MakeTranspiler(matchersArray,
                 $"{outer.DeclaringType?.FullName?.Replace('.', '_')}_{outer.Name}_Transpiler", outer);
 
             bool debug = PatchRegistry.PatchesByMethod[outer].Any(p => p.debug);
 
             HarmonyMethod harmonyMethod = new(transpiler, priority: Priority.LowerThanNormal) { debug = debug };
             return harmonyMethod;
-        }
-
-        [UsedImplicitly]
-        public static void ResolveTrampoline(MethodBase method)
-        {
-            lock (trampolineLock)
-            {
-                // If we can't remove the method, we lost a race and some other thread has
-                // already replaced the trampoline
-                if (!trampolines.Remove(method))
-                    return;
-
-                FileLog.Log($"!!! Resolving trampoline to {method.FullName}");
-
-                harmony.Patch(method);
-            }
-        }
-
-        public static MethodInfo ApplyTrampoline(MethodInfo method)
-        {
-            lock (trampolineLock)
-            {
-                if (trampolines.TryGetValue(method, out var existingTrampoline))
-                    return existingTrampoline;
-
-                FileLog.Log($"!!! Applying trampoline to {method.FullName}");
-
-                string trampolineName = $"_Trampoline{trampolineCount}";
-                trampolineCount++;
-                var trampoline = MakeTrampoline(method, trampolineName);
-
-                harmonyInternal_DetourMethod(method, trampoline);
-
-                trampolines[method] = trampoline;
-
-                return trampoline;
-            }
         }
     }
 }
