@@ -10,7 +10,12 @@ public enum PatchType
 
 public static partial class Autopatcher
 {
-    private class StateBuilder
+    private abstract class RuleBuilder
+    {
+        public abstract IEnumerable<Rule> BuildRules();
+    }
+
+    private class StateBuilder : RuleBuilder
     {
         public List<Type> LocalTypes => output.LocalTypes;
         private readonly Dictionary<Type, (int index, Type type)> stateMap = new();
@@ -38,7 +43,7 @@ public static partial class Autopatcher
             return newIndex;
         }
 
-        public IEnumerable<Rule> BuildRules()
+        public override IEnumerable<Rule> BuildRules()
         {
             if (LocalTypes.Count == 0)
                 yield break;

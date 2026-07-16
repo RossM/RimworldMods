@@ -2,7 +2,7 @@
 
 public static partial class Autopatcher
 {
-    private class InfixRuleBuilder
+    private class InfixRuleBuilder : RuleBuilder
     {
         private readonly Type[] outerParameterTypes;
         private readonly Type[] innerParameterTypes;
@@ -226,7 +226,7 @@ public static partial class Autopatcher
             };
         }
 
-        public IEnumerable<Rule> BuildRules()
+        public override IEnumerable<Rule> BuildRules()
         {
             List<CodeInstruction> pattern =
             [

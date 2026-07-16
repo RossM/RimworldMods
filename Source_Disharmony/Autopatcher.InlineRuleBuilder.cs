@@ -2,7 +2,7 @@
 
 public static partial class Autopatcher
 {
-    private class InlineRuleBuilder
+    private class InlineRuleBuilder : RuleBuilder
     {
         private readonly InstructionList output = new();
         private readonly MethodInfo method;
@@ -99,7 +99,7 @@ public static partial class Autopatcher
             return value;
         }
 
-        public IEnumerable<Rule> BuildRules()
+        public override IEnumerable<Rule> BuildRules()
         {
             List<CodeInstruction> pattern =
             [

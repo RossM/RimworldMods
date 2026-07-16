@@ -38,9 +38,8 @@ public static partial class Autopatcher
 
             foreach (var patch in patches.Where(p => p.inline))
             {
-                var ruleBuilder = new InlineRuleBuilder(patch);
-
-                rules.AddRange(ruleBuilder.BuildRules());
+                var inlineRuleBuilder = new InlineRuleBuilder(patch);
+                rules.AddRange(inlineRuleBuilder.BuildRules());
             }
 
             InstructionMatcher? inlineMatcher = null;
@@ -57,22 +56,20 @@ public static partial class Autopatcher
 
         private InstructionMatcher MakePatchInstructionMatcher()
         {
-            List<Rule> rules = new();
+            List<RuleBuilder> ruleBuilders = [];
 
             StateBuilder stateBuilder = new();
-
             stateBuilder.AssignStateVariableIndexes(patches);
+            ruleBuilders.Add(stateBuilder);
 
-            rules.AddRange(stateBuilder.BuildRules());
+            ruleBuilders.Add(new CircumfixRuleBuilder(patchedMethod, patches, stateBuilder.LocalTypes));
 
             foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patches.GroupBy(patch => patch.inner))
-            {
-                var inner = targetGroup.Key;
+                ruleBuilders.Add(new InfixRuleBuilder(patchedMethod, targetGroup.Key, targetGroup.ToList(), stateBuilder.LocalTypes));
 
-                var ruleBuilder = new InfixRuleBuilder(patchedMethod, inner, targetGroup.ToList(), stateBuilder.LocalTypes);
-
+            List<Rule> rules = [];
+            foreach (var ruleBuilder in ruleBuilders)
                 rules.AddRange(ruleBuilder.BuildRules());
-            }
 
             var patchMatcher = new InstructionMatcher
             {
