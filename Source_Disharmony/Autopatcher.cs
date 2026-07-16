@@ -10,13 +10,13 @@ public enum PatchType
 
 public static partial class Autopatcher
 {
-    private class StateBuilder<TStateKey>
+    private class StateBuilder
     {
         public List<Type> LocalTypes => output.LocalTypes;
-        private readonly Dictionary<TStateKey, (int index, Type type)> stateMap = new();
+        private readonly Dictionary<Type, (int index, Type type)> stateMap = new();
         private readonly InstructionList output = [];
 
-        public int GetOrAddStateLocal(TStateKey stateKey, Type localType, MethodInfo method)
+        private int GetOrAddStateLocal(Type stateKey, Type localType, MethodInfo method)
         {
             if (localType.IsByRef)
                 localType = localType.GetElementType();
@@ -50,6 +50,22 @@ public static partial class Autopatcher
                 Name = "state variable initialization",
             };
         }
+
+        public void AssignStateVariableIndexes(List<PatchInfo> patches)
+        {
+            foreach (var patch in patches)
+            {
+                ParameterBinding[] parameters = patch.parameters;
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    if (parameters[i].BindingType == BindingType.State)
+                    {
+                        parameters[i].Index = GetOrAddStateLocal(patch.patchMethod.DeclaringType,
+                            parameters[i].Parameter.ParameterType, patch.patchMethod);
+                    }
+                }
+            }
+        }
     }
 
     private static readonly PatchRegistry registry = PatchRegistry.Instance;
@@ -79,18 +95,13 @@ public static partial class Autopatcher
 
     public static void Apply()
     {
-        var worker = new PatchWorker(registry);
-
         foreach (MethodInfo patchedMethod in registry.MethodsToUpdate)
         {
             try
             {
-                HarmonyMethod? harmonyMethod = worker.GetHarmonyMethod(patchedMethod);
+                var worker = new PatchWorker(registry, patchedMethod);
 
-                if (patcher.useTrampolines)
-                    patcher.AddTranspilerWithoutPatching(patchedMethod, harmonyMethod);
-                else
-                    patcher.RunPatch(patchedMethod, harmonyMethod);
+                worker.UpdateMethod();
             }
             catch (Exception e)
             {
