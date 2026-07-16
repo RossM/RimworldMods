@@ -112,9 +112,8 @@ internal class Patcher
 
         FileLog.Log($"!!! Applying trampoline to {method.FullName}");
 
-        string trampolineName = $"_Trampoline{trampolineCount}";
         trampolineCount++;
-        var trampoline = MakeTrampoline(method, trampolineName);
+        var trampoline = MakeTrampoline(method, $"_Trampoline{trampolineCount}");
 
         HarmonyInternals.DetourMethod(method, trampoline);
 
