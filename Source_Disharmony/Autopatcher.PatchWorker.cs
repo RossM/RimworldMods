@@ -4,7 +4,7 @@ namespace Disharmony;
 
 public static partial class Autopatcher
 {
-    private class PatchWorker(PatchRegistry registry, MethodInfo patchedMethod)
+    private class PatchWorker(PatchRegistry registry, MethodInfo patchedMethod, bool useTrampolines = true)
     {
         private readonly List<PatchInfo> patches = registry.PatchesByMethod[patchedMethod];
 
@@ -31,34 +31,7 @@ public static partial class Autopatcher
             if (inlineMatcher != null)
                 matchers.Add(inlineMatcher);
 
-            ApplyPatch(matchers.ToArray());
-        }
-
-        private void ApplyPatch(InstructionMatcher[] matchersArray)
-        {
-            HarmonyMethod? harmonyMethod;
-            if (patcher.TryUpdateTranspiler(patchedMethod, matchersArray))
-            {
-                FileLog.Log($"# GetHarmonyMethod: Reusing transpiler for {patchedMethod.FullName}");
-
-                // Using null as our HarmonyMethod will cause Harmony to simply rerun the patch, including
-                // the updated transpiler.
-                harmonyMethod = null;
-            }
-            else
-            {
-                MethodInfo transpiler = patcher.MakeTranspiler(matchersArray,
-                    $"{patchedMethod.DeclaringType?.FullName?.Replace('.', '_')}_{patchedMethod.Name}_Transpiler", patchedMethod);
-
-                bool debug = registry.PatchesByMethod[patchedMethod].Any(p => p.debug);
-
-                harmonyMethod = new(transpiler, priority: Priority.LowerThanNormal) { debug = debug };
-            }
-
-            if (patcher.useTrampolines)
-                patcher.AddTranspilerWithoutPatching(patchedMethod, harmonyMethod);
-            else
-                patcher.RunPatch(patchedMethod, harmonyMethod);
+            patcher.ApplyPatch(patchedMethod, matchers.ToArray(), useTrampolines);
         }
 
         private InstructionMatcher? MakeInlineInstructionMatcher()

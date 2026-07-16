@@ -95,11 +95,16 @@ public static partial class Autopatcher
 
     public static void Apply()
     {
+        ApplyImpl(useTrampolines: true);
+    }
+
+    private static void ApplyImpl(bool useTrampolines)
+    {
         foreach (MethodInfo patchedMethod in registry.MethodsToUpdate)
         {
             try
             {
-                var worker = new PatchWorker(registry, patchedMethod);
+                var worker = new PatchWorker(registry, patchedMethod, useTrampolines);
 
                 worker.UpdateMethod();
             }
@@ -110,5 +115,11 @@ public static partial class Autopatcher
         }
 
         registry.MethodsToUpdate.Clear();
+    }
+
+    public static void ForceApply()
+    {
+        ApplyImpl(useTrampolines: false);
+        patcher.ResolveAllTrampolines();
     }
 }

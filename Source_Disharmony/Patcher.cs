@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Microsoft.Win32;
 
 namespace Disharmony;
 
@@ -41,7 +42,7 @@ internal class Patcher
 
     private readonly Harmony harmony = new(harmonyID);
 
-    public readonly bool useTrampolines = true;
+    public bool trampolinesEnabled = true;
 
     private Patcher()
     {
@@ -74,6 +75,21 @@ internal class Patcher
         Instance.ResolveTrampolineImpl(method);
     }
 
+    public void ResolveAllTrampolines()
+    {
+        lock (trampolineLock)
+        {
+            foreach (var method in trampolines.Keys)
+            {
+                FileLog.Log($"!!! Resolving trampoline to {method.FullName}");
+
+                harmony.Patch(method);
+            }
+
+            trampolines.Clear();
+        }
+    }
+
     public MethodInfo ApplyTrampoline(MethodInfo method)
     {
         lock (trampolineLock)
@@ -93,59 +109,6 @@ internal class Patcher
 
             return trampoline;
         }
-    }
-
-    public void RunPatch(MethodInfo patchedMethod, HarmonyMethod? harmonyMethod)
-    {
-        FileLog.Log($"# RunPatch: {patchedMethod.FullName}");
-
-        bool oldForceDebug = InstructionMatcher.forceDebug;
-
-        try
-        {
-            harmony.Patch(patchedMethod, transpiler: harmonyMethod);
-        }
-        catch (Exception)
-        {
-            // Rerun with debug on so we see what went wrong
-            InstructionMatcher.forceDebug = true;
-            harmonyMethod?.debug = true;
-            harmony.Patch(patchedMethod, transpiler: harmonyMethod);
-        }
-        finally
-        {
-            InstructionMatcher.forceDebug = oldForceDebug;
-        }
-    }
-
-    public void AddTranspilerWithoutPatching(MethodInfo original, HarmonyMethod? harmonyMethod)
-    {
-        lock (HarmonyInternals.locker)
-        {
-            HarmonyLib.PatchInfo patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyLib.PatchInfo();
-
-            if (harmonyMethod != null)
-            {
-                patchInfo.transpilers =
-                [
-                    .. patchInfo.transpilers,
-                    new Patch(harmonyMethod, patchInfo.transpilers.Length, harmonyID),
-                ];
-            }
-
-            var replacement = ApplyTrampoline(original);
-
-            HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
-        }
-    }
-
-    public bool TryUpdateTranspiler(MethodInfo key, InstructionMatcher[] matchers)
-    {
-        if (!transpilerUpdaters.TryGetValue(key, out var setter))
-            return false;
-
-        setter(matchers);
-        return true;
     }
 
     public MethodInfo MakeTranspiler(InstructionMatcher[] matchers, string typeName, MethodInfo key)
@@ -207,5 +170,53 @@ internal class Patcher
         generator.Emit(OpCodes.Ret);
 
         return method;
+    }
+
+    public void ApplyPatch(MethodInfo original, InstructionMatcher[] matchers, bool useTrampolines)
+    {
+        if (!trampolinesEnabled)
+            useTrampolines = false;
+
+        HarmonyMethod? harmonyMethod;
+        if (!transpilerUpdaters.TryGetValue(original, out var setter))
+        {
+            MethodInfo transpiler = MakeTranspiler(matchers,
+                $"{original.DeclaringType?.FullName?.Replace('.', '_')}_{original.Name}_Transpiler", original);
+
+            bool debug = PatchRegistry.Instance.PatchesByMethod[original].Any(p => p.debug);
+
+            harmonyMethod = new(transpiler, priority: Priority.LowerThanNormal) { debug = debug };
+        }
+        else
+        {
+            setter(matchers);
+
+            FileLog.Log($"# GetHarmonyMethod: Reusing transpiler for {original.FullName}");
+
+            harmonyMethod = null;
+        }
+
+        lock (HarmonyInternals.locker)
+        {
+            HarmonyLib.PatchInfo patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyLib.PatchInfo();
+
+            if (harmonyMethod != null)
+            {
+                patchInfo.transpilers =
+                [
+                    .. patchInfo.transpilers,
+                    new Patch(harmonyMethod, patchInfo.transpilers.Length, harmonyID),
+                ];
+            }
+
+            MethodInfo replacement = original;
+            if (useTrampolines)
+                replacement = ApplyTrampoline(original);
+
+            HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
+        }
+
+        if (!useTrampolines)
+            harmony.Patch(original);
     }
 }
