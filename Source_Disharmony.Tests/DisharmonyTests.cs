@@ -8,6 +8,8 @@ public static class PatchMethods
     public static string? ReferenceParameterObserved;
     public static int ValueResultObserved;
     public static string? ReferenceResultObserved;
+    public static InstancePatchTarget? InstanceObserved;
+    public static int CombinedPatchObserved;
 
     [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.RunValueTypeTarget))]
     public static bool RunValueTypeTargetPrefix() => true;
@@ -104,6 +106,52 @@ public static class PatchMethods
         __result = "patched";
         return false;
     }
+
+    [Prefix, Target(typeof(InstancePatchTarget), nameof(InstancePatchTarget.PrefixTarget))]
+    public static void CaptureInstancePrefix(InstancePatchTarget __instance) => InstanceObserved = __instance;
+
+    [Postfix, Target(typeof(InstancePatchTarget), nameof(InstancePatchTarget.PostfixTarget))]
+    public static void CaptureInstancePostfix(InstancePatchTarget __instance) => InstanceObserved = __instance;
+
+    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndRunTarget))]
+    public static bool WriteArgumentAndRunTargetPrefix(ref int value)
+    {
+        value = 42;
+        return true;
+    }
+
+    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndRunTarget))]
+    public static void ObserveArgumentAfterTargetRunsPostfix(int value) => CombinedPatchObserved = value;
+
+    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndSkipTarget))]
+    public static bool WriteArgumentAndSkipTargetPrefix(ref int value)
+    {
+        value = 42;
+        return false;
+    }
+
+    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndSkipTarget))]
+    public static void ObserveArgumentAfterTargetIsSkippedPostfix(int value) => CombinedPatchObserved = value;
+
+    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndRunTarget))]
+    public static bool WriteResultAndRunTargetPrefix(ref int __result)
+    {
+        __result = 42;
+        return true;
+    }
+
+    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndRunTarget))]
+    public static void ObserveResultAfterTargetRunsPostfix(int __result) => CombinedPatchObserved = __result;
+
+    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndSkipTarget))]
+    public static bool WriteResultAndSkipTargetPrefix(ref int __result)
+    {
+        __result = 42;
+        return false;
+    }
+
+    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndSkipTarget))]
+    public static void ObserveResultAfterTargetIsSkippedPostfix(int __result) => CombinedPatchObserved = __result;
 }
 
 public static class PatchTargets
@@ -166,6 +214,25 @@ public static class PatchTargets
         Assert.Fail("The target should have been skipped.");
         return "original";
     }
+
+    public static void WriteArgumentAndRunTarget(int value) { }
+
+    public static void WriteArgumentAndSkipTarget(int value) =>
+        Assert.Fail("The target should have been skipped.");
+
+    public static int WriteResultAndRunTarget() => 1;
+
+    public static int WriteResultAndSkipTarget()
+    {
+        Assert.Fail("The target should have been skipped.");
+        return 1;
+    }
+}
+
+public sealed class InstancePatchTarget
+{
+    public void PrefixTarget() { }
+    public void PostfixTarget() { }
 }
 
 [TestFixture]
@@ -173,6 +240,12 @@ public sealed class DisharmonyTests
 {
     private static void ApplyPatch(string patchMethodName) =>
         Autopatcher.Patch(typeof(PatchMethods).GetMethod(patchMethodName));
+
+    private static void ApplyPatches(string firstPatchMethodName, string secondPatchMethodName)
+    {
+        ApplyPatch(firstPatchMethodName);
+        ApplyPatch(secondPatchMethodName);
+    }
 
     [Test]
     public void PrefixReturningTrueRunsValueTypeTarget()
@@ -364,5 +437,81 @@ public sealed class DisharmonyTests
     {
         ApplyPatch(nameof(PatchMethods.WriteReferenceResultAndSkipTargetPrefix));
         Assert.That(PatchTargets.WriteReferenceResultAndSkipTarget(), Is.EqualTo("patched"));
+    }
+
+    [Test]
+    public void PrefixCanCapturePatchedMethodInstance()
+    {
+        PatchMethods.InstanceObserved = null;
+        ApplyPatch(nameof(PatchMethods.CaptureInstancePrefix));
+        var instance = new InstancePatchTarget();
+
+        instance.PrefixTarget();
+
+        Assert.That(PatchMethods.InstanceObserved, Is.SameAs(instance));
+    }
+
+    [Test]
+    public void PostfixCanCapturePatchedMethodInstance()
+    {
+        PatchMethods.InstanceObserved = null;
+        ApplyPatch(nameof(PatchMethods.CaptureInstancePostfix));
+        var instance = new InstancePatchTarget();
+
+        instance.PostfixTarget();
+
+        Assert.That(PatchMethods.InstanceObserved, Is.SameAs(instance));
+    }
+
+    [Test]
+    public void PostfixObservesArgumentWrittenByPrefixWhenTargetRuns()
+    {
+        PatchMethods.CombinedPatchObserved = 0;
+        ApplyPatches(
+            nameof(PatchMethods.WriteArgumentAndRunTargetPrefix),
+            nameof(PatchMethods.ObserveArgumentAfterTargetRunsPostfix));
+
+        PatchTargets.WriteArgumentAndRunTarget(1);
+
+        Assert.That(PatchMethods.CombinedPatchObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void PostfixObservesArgumentWrittenByPrefixWhenTargetIsSkipped()
+    {
+        PatchMethods.CombinedPatchObserved = 0;
+        ApplyPatches(
+            nameof(PatchMethods.WriteArgumentAndSkipTargetPrefix),
+            nameof(PatchMethods.ObserveArgumentAfterTargetIsSkippedPostfix));
+
+        PatchTargets.WriteArgumentAndSkipTarget(1);
+
+        Assert.That(PatchMethods.CombinedPatchObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void PostfixObservesTargetResultWhenPrefixWritesResultAndTargetRuns()
+    {
+        PatchMethods.CombinedPatchObserved = 0;
+        ApplyPatches(
+            nameof(PatchMethods.WriteResultAndRunTargetPrefix),
+            nameof(PatchMethods.ObserveResultAfterTargetRunsPostfix));
+
+        PatchTargets.WriteResultAndRunTarget();
+
+        Assert.That(PatchMethods.CombinedPatchObserved, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped()
+    {
+        PatchMethods.CombinedPatchObserved = 0;
+        ApplyPatches(
+            nameof(PatchMethods.WriteResultAndSkipTargetPrefix),
+            nameof(PatchMethods.ObserveResultAfterTargetIsSkippedPostfix));
+
+        PatchTargets.WriteResultAndSkipTarget();
+
+        Assert.That(PatchMethods.CombinedPatchObserved, Is.EqualTo(42));
     }
 }
