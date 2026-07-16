@@ -123,28 +123,28 @@ public static partial class Autopatcher
 
         registry.MethodsToUpdate.Clear();
         return;
+    }
 
-        void RunPatch(MethodInfo patchedMethod, HarmonyMethod? harmonyMethod)
+    private static void RunPatch(MethodInfo patchedMethod, HarmonyMethod? harmonyMethod)
+    {
+        FileLog.Log($"# RunPatch: {patchedMethod.FullName}");
+
+        bool oldForceDebug = InstructionMatcher.forceDebug;
+
+        try
         {
-            FileLog.Log($"# RunPatch: {patchedMethod.FullName}");
-
-            bool oldForceDebug = InstructionMatcher.forceDebug;
-
-            try
-            {
-                harmony.Patch(patchedMethod, transpiler: harmonyMethod);
-            }
-            catch (Exception)
-            {
-                // Rerun with debug on so we see what went wrong
-                InstructionMatcher.forceDebug = true;
-                harmonyMethod?.debug = true;
-                harmony.Patch(patchedMethod, transpiler: harmonyMethod);
-            }
-            finally
-            {
-                InstructionMatcher.forceDebug = oldForceDebug;
-            }
+            harmony.Patch(patchedMethod, transpiler: harmonyMethod);
+        }
+        catch (Exception)
+        {
+            // Rerun with debug on so we see what went wrong
+            InstructionMatcher.forceDebug = true;
+            harmonyMethod?.debug = true;
+            harmony.Patch(patchedMethod, transpiler: harmonyMethod);
+        }
+        finally
+        {
+            InstructionMatcher.forceDebug = oldForceDebug;
         }
     }
 
