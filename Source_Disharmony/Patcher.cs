@@ -15,10 +15,12 @@ internal class Patcher
 
     private static readonly AssemblyBuilder assemblyBuilder
         = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" }, AssemblyBuilderAccess.RunAndSave);
-
     private static readonly ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicTranspilersModule");
+    
     private static readonly Harmony harmony = new(harmonyID);
+
     public static readonly bool useTrampolines = true;
+
     private static readonly object harmonyInternal_locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
 
     private static readonly Func<MethodBase, HarmonyLib.PatchInfo> harmonyInternal_GetPatchInfo
