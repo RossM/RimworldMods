@@ -5,7 +5,7 @@ namespace Disharmony;
 internal class InstructionList : IEnumerable<CodeInstruction>
 {
     public readonly List<CodeInstruction> Instructions = [];
-    public readonly List<Type> LocalTypes = [];
+    public List<Type> LocalTypes = [];
 
     public IEnumerator<CodeInstruction> GetEnumerator() => Instructions.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

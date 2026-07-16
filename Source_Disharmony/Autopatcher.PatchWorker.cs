@@ -34,11 +34,12 @@ public static partial class Autopatcher
 
         private InstructionMatcher? MakeInlineInstructionMatcher()
         {
+            ILGenerator generator = PatchProcessor.CreateILGenerator();
             List<Rule> rules = [];
 
             foreach (var patch in patches.Where(p => p.inline))
             {
-                var inlineRuleBuilder = new InlineRuleBuilder(patch);
+                var inlineRuleBuilder = new InlineRuleBuilder(generator, patch);
                 rules.AddRange(inlineRuleBuilder.BuildRules());
             }
 
@@ -56,26 +57,39 @@ public static partial class Autopatcher
 
         private InstructionMatcher MakePatchInstructionMatcher()
         {
-            List<RuleBuilder> ruleBuilders = [];
+            ILGenerator generator = PatchProcessor.CreateILGenerator();
 
-            StateBuilder stateBuilder = new();
+            List<RuleBuilder> ruleBuilders = [];
+            List<Type> localTypes = [];
+
+            StateBuilder stateBuilder = new(generator, localTypes);
             stateBuilder.AssignStateVariableIndexes(patches);
             ruleBuilders.Add(stateBuilder);
 
-            ruleBuilders.Add(new CircumfixRuleBuilder(patchedMethod, patches, stateBuilder.LocalTypes));
+            ruleBuilders.Add(new CircumfixRuleBuilder(generator, patchedMethod, patches, localTypes));
 
-            foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patches.GroupBy(patch => patch.inner))
-                ruleBuilders.Add(new InfixRuleBuilder(patchedMethod, targetGroup.Key, targetGroup.ToList(), stateBuilder.LocalTypes));
+            foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patches.Where(patch => patch.inner != null)
+                         .GroupBy(patch => patch.inner!))
+                ruleBuilders.Add(new InfixRuleBuilder(generator, patchedMethod, targetGroup.Key, targetGroup.ToList(), localTypes));
 
             List<Rule> rules = [];
+            List<Label> labels = [];
             foreach (var ruleBuilder in ruleBuilders)
+            {
                 rules.AddRange(ruleBuilder.BuildRules());
+                labels.AddRange(ruleBuilder.CrossRuleLabels);
+            }
+
+            if (rules.Count == 0)
+                throw new InvalidOperationException("No rules generated");
 
             var patchMatcher = new InstructionMatcher
             {
                 Rules = rules,
-                CrossRuleLocalTypes = stateBuilder.LocalTypes,
+                CrossRuleLocalTypes = localTypes,
+                CrossRuleLabels = labels,
             };
+
             return patchMatcher;
         }
     }

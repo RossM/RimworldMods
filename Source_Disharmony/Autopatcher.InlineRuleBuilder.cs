@@ -4,15 +4,13 @@ public static partial class Autopatcher
 {
     private class InlineRuleBuilder : RuleBuilder
     {
-        private readonly InstructionList output = new();
         private readonly MethodInfo method;
         private readonly int[] argumentLocals;
         private readonly Dictionary<int, int> localMap = new();
         private readonly ParameterInfo[] parameters;
-        private readonly ILGenerator generator = PatchProcessor.CreateILGenerator();
         private readonly List<LocalVariableInfo> locals;
 
-        public InlineRuleBuilder(PatchInfo patch)
+        public InlineRuleBuilder(ILGenerator generator, PatchInfo patch) : base(generator)
         {
             method = patch.patchMethod;
 
