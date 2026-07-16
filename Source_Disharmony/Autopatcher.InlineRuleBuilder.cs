@@ -99,7 +99,7 @@ public static partial class Autopatcher
             return value;
         }
 
-        public IEnumerable<InstructionMatcher.Rule> BuildRules()
+        public IEnumerable<Rule> BuildRules()
         {
             List<CodeInstruction> pattern =
             [
@@ -109,7 +109,7 @@ public static partial class Autopatcher
             if (!EmitReplacement())
                 yield break;
 
-            yield return new InstructionMatcher.Rule
+            yield return new Rule
             {
                 Min = 1,
                 Max = 0,

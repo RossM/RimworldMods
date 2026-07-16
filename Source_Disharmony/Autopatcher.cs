@@ -38,7 +38,7 @@ public static partial class Autopatcher
             return newIndex;
         }
 
-        public IEnumerable<InstructionMatcher.Rule> BuildRules()
+        public IEnumerable<Rule> BuildRules()
         {
             if (LocalTypes.Count == 0)
                 yield break;
@@ -46,7 +46,7 @@ public static partial class Autopatcher
             for (int index = 0; index < LocalTypes.Count; index++)
                 output.EmitLocalInitializer(index);
 
-            yield return new InstructionMatcher.Rule
+            yield return new Rule
             {
                 Mode = InstructionMatcher.OutputMode.MethodPrefix,
                 Output = output.Instructions.ToArray(),

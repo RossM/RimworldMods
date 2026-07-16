@@ -34,7 +34,7 @@ public static partial class Autopatcher
 
         private InstructionMatcher? MakeInlineInstructionMatcher()
         {
-            List<InstructionMatcher.Rule> rules = [];
+            List<Rule> rules = [];
 
             foreach (var patch in patches.Where(p => p.inline))
             {
@@ -57,7 +57,7 @@ public static partial class Autopatcher
 
         private InstructionMatcher MakePatchInstructionMatcher()
         {
-            List<InstructionMatcher.Rule> rules = new();
+            List<Rule> rules = new();
 
             StateBuilder stateBuilder = new();
 
