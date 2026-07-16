@@ -4,6 +4,30 @@ namespace Disharmony;
 
 internal class Patcher
 {
+    private static class InfoOf
+    {
+        public static readonly MethodInfo GetMethodFromHandle
+            = SymbolExtensions.GetMethodInfo(() => MethodBase.GetMethodFromHandle(new RuntimeMethodHandle()));
+
+        // ReSharper disable once MemberHidesStaticFromOuterClass
+        public static readonly MethodInfo ResolveTrampoline = SymbolExtensions.GetMethodInfo(() => Patcher.ResolveTrampoline);
+    }
+
+    private static class HarmonyInternals
+    {
+        public static readonly object locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
+
+        public static readonly Func<MethodBase, HarmonyLib.PatchInfo> GetPatchInfo
+            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyLib.PatchInfo>>("HarmonyLib.HarmonySharedState:GetPatchInfo");
+
+        public static readonly Action<MethodBase, MethodBase> DetourMethod
+            = AccessTools.MethodDelegate<Action<MethodBase, MethodBase>>("HarmonyLib.PatchTools:DetourMethod");
+
+        public static readonly Action<MethodBase, MethodInfo, HarmonyLib.PatchInfo> UpdatePatchInfo
+            = AccessTools.MethodDelegate<Action<MethodBase, MethodInfo, HarmonyLib.PatchInfo>>(
+                "HarmonyLib.HarmonySharedState:UpdatePatchInfo");
+    }
+
     private const string harmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
     // These variables must only be access while trampolineLock is held
@@ -15,22 +39,12 @@ internal class Patcher
 
     private static readonly AssemblyBuilder assemblyBuilder
         = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" }, AssemblyBuilderAccess.RunAndSave);
+
     private static readonly ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicTranspilersModule");
-    
+
     private static readonly Harmony harmony = new(harmonyID);
 
     public static readonly bool useTrampolines = true;
-
-    private static readonly object harmonyInternal_locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
-
-    private static readonly Func<MethodBase, HarmonyLib.PatchInfo> harmonyInternal_GetPatchInfo
-        = AccessTools.MethodDelegate<Func<MethodBase, HarmonyLib.PatchInfo>>("HarmonyLib.HarmonySharedState:GetPatchInfo");
-
-    private static readonly Action<MethodBase, MethodBase> harmonyInternal_DetourMethod
-        = AccessTools.MethodDelegate<Action<MethodBase, MethodBase>>("HarmonyLib.PatchTools:DetourMethod");
-
-    private static readonly Action<MethodBase, MethodInfo, HarmonyLib.PatchInfo> harmonyInternal_UpdatePatchInfo
-        = AccessTools.MethodDelegate<Action<MethodBase, MethodInfo, HarmonyLib.PatchInfo>>("HarmonyLib.HarmonySharedState:UpdatePatchInfo");
 
     [UsedImplicitly]
     public static void ResolveTrampoline(MethodBase method)
@@ -61,7 +75,7 @@ internal class Patcher
             trampolineCount++;
             var trampoline = MakeTrampoline(method, trampolineName);
 
-            harmonyInternal_DetourMethod(method, trampoline);
+            HarmonyInternals.DetourMethod(method, trampoline);
 
             trampolines[method] = trampoline;
 
@@ -94,9 +108,9 @@ internal class Patcher
 
     public static void AddTranspilerWithoutPatching(MethodInfo original, HarmonyMethod? harmonyMethod)
     {
-        lock (harmonyInternal_locker)
+        lock (HarmonyInternals.locker)
         {
-            HarmonyLib.PatchInfo patchInfo = harmonyInternal_GetPatchInfo(original) ?? new HarmonyLib.PatchInfo();
+            HarmonyLib.PatchInfo patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyLib.PatchInfo();
 
             if (harmonyMethod != null)
             {
@@ -109,7 +123,7 @@ internal class Patcher
 
             var replacement = ApplyTrampoline(original);
 
-            harmonyInternal_UpdatePatchInfo(original, replacement, patchInfo);
+            HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
         }
     }
 
@@ -160,9 +174,6 @@ internal class Patcher
 
         ILGenerator generator = method.GetILGenerator();
 
-        MethodInfo getMethodFromHandle = SymbolExtensions.GetMethodInfo(() => MethodBase.GetMethodFromHandle(new RuntimeMethodHandle()));
-        MethodInfo updateMethod = SymbolExtensions.GetMethodInfo(() => ResolveTrampoline);
-
         if (parameterTypes.Length >= 1)
             generator.Emit(OpCodes.Ldarg_0);
         if (parameterTypes.Length >= 2)
@@ -175,8 +186,8 @@ internal class Patcher
             generator.Emit(OpCodes.Ldarg_S, i);
 
         generator.Emit(OpCodes.Ldtoken, target);
-        generator.Emit(OpCodes.Call, getMethodFromHandle);
-        generator.Emit(OpCodes.Call, updateMethod);
+        generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle);
+        generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
 
         generator.Emit(OpCodes.Tailcall);
         generator.Emit(OpCodes.Call, target);
