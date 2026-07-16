@@ -195,7 +195,7 @@ internal class PatchRegistry
         var arguments = method.GetParameters().Select(param => BindParameter(param, outer, inner))
             .ToArray();
 
-        Patches.Add(new()
+        PatchInfo patch = new()
         {
             outer = outer,
             inner = inner,
@@ -204,9 +204,14 @@ internal class PatchRegistry
             parameters = arguments,
             inline = inline,
             debug = debug,
-        });
+        };
+        Patches.Add(patch);
 
         MethodsToUpdate.Add(outer);
+
+        if (!PatchesByMethod.TryGetValue(outer, out var patchList))
+            patchList = PatchesByMethod[outer] = [];
+        patchList.Add(patch);
     }
 
     private static ParameterBinding BindParameter(
