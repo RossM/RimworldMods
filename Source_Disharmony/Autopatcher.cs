@@ -21,7 +21,7 @@ public static partial class Autopatcher
 
     public static void RegisterAll(Assembly assembly)
     {
-        registry.CollectPatches(assembly);
+        registry.ProcessAssembly(assembly);
     }
 
     public static void PatchCategory(Assembly assembly, string? category)
@@ -32,7 +32,29 @@ public static partial class Autopatcher
 
     public static void RegisterCategory(Assembly assembly, string? category)
     {
-        registry.CollectPatches(assembly, category);
+        registry.ProcessAssembly(assembly, category);
+    }
+
+    public static void Register(Type type)
+    {
+        registry.ProcessType(type.GetTypeInfo());
+    }
+
+    public static void Patch(Type type)
+    {
+        Register(type);
+        Apply();
+    }
+
+    public static void Register(MethodInfo method)
+    {
+        registry.ProcessMethod(method);
+    }
+
+    public static void Patch(MethodInfo method)
+    {
+        Register(method);
+        Apply();
     }
 
     public static void Apply()

@@ -94,7 +94,7 @@ internal class PatchRegistry
 
     private List<PatchInfo> Patches { get; } = [];
 
-    public void CollectPatches(Assembly assembly)
+    public void ProcessAssembly(Assembly assembly)
     {
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
@@ -102,13 +102,13 @@ internal class PatchRegistry
             if (harmonyAttribute == null)
                 continue;
 
-            ProcessType(type, harmonyAttribute.info.declaringType);
+            ProcessType(type);
         }
 
         PatchesByMethod = Patches.GroupBy(patch => patch.outer).ToDictionary(g => g.Key, g => g.ToList());
     }
 
-    public void CollectPatches(Assembly assembly, string? category)
+    public void ProcessAssembly(Assembly assembly, string? category)
     {
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
@@ -120,59 +120,67 @@ internal class PatchRegistry
             if (patchCategory != category)
                 continue;
 
-            ProcessType(type, harmonyAttribute.info.declaringType);
+            ProcessType(type);
         }
 
         PatchesByMethod = Patches.GroupBy(patch => patch.outer).ToDictionary(g => g.Key, g => g.ToList());
     }
 
-    private void ProcessType(TypeInfo type, Type? defaultTargetType)
+    public void ProcessType(TypeInfo type)
     {
+        var harmonyAttribute = type.GetCustomAttribute<HarmonyPatch>();
+        var defaultTargetType = harmonyAttribute?.info.declaringType;
+
         foreach (MethodInfo method in type.DeclaredMethods)
         {
-            try
+            ProcessMethod(method, defaultTargetType);
+        }
+    }
+
+    public void ProcessMethod(MethodInfo method, Type? defaultTargetType = null)
+    {
+        try
+        {
+            PatchTypeAttribute patchTypeAttribute =
+                (PatchTypeAttribute)method.GetCustomAttribute<PrefixAttribute>() ??
+                (PatchTypeAttribute)method.GetCustomAttribute<PostfixAttribute>() ??
+                (PatchTypeAttribute)method.GetCustomAttribute<InnerPrefixAttribute>() ??
+                (PatchTypeAttribute)method.GetCustomAttribute<InnerPostfixAttribute>();
+            var targetAttributes = method.GetCustomAttributes<TargetAttribute>().ToArray();
+            bool debug = method.GetCustomAttribute<DebugAttribute>() != null;
+            bool inline = method.GetCustomAttribute<InlineAttribute>() != null;
+
+            if (patchTypeAttribute == null)
+                return;
+
+            PatchType patchType = patchTypeAttribute.patchType;
+
+            MemberInfo? inner = GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName,
+                patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
+
+            if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix && inner == null)
+                throw new InvalidOperationException($"{patchType} patch must have an inner target");
+
+            FileLog.Log($"# CollectPatches: {method.FullName}");
+
+            foreach (var targetAttribute in targetAttributes)
             {
-                PatchTypeAttribute patchTypeAttribute =
-                    (PatchTypeAttribute)method.GetCustomAttribute<PrefixAttribute>() ??
-                    (PatchTypeAttribute)method.GetCustomAttribute<PostfixAttribute>() ??
-                    (PatchTypeAttribute)method.GetCustomAttribute<InnerPrefixAttribute>() ??
-                    (PatchTypeAttribute)method.GetCustomAttribute<InnerPostfixAttribute>();
-                var targetAttributes = method.GetCustomAttributes<TargetAttribute>().ToArray();
-                bool debug = method.GetCustomAttribute<DebugAttribute>() != null;
-                bool inline = method.GetCustomAttribute<InlineAttribute>() != null;
+                var patchedType = targetAttribute.type ?? defaultTargetType;
+                if (patchedType == null)
+                    throw new NotSupportedException("No target type");
 
-                if (patchTypeAttribute == null)
-                    continue;
+                MethodInfo? outer = (MethodInfo?)GetMember(patchedType, targetAttribute.methodName,
+                    targetAttribute.parameterTypes, targetAttribute.genericTypes);
 
-                PatchType patchType = patchTypeAttribute.patchType;
+                if (outer == null)
+                    throw new InvalidOperationException("null target method");
 
-                MemberInfo? inner = GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName,
-                    patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
-
-                if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix && inner == null)
-                    throw new InvalidOperationException($"{patchType} patch must have an inner target");
-
-                FileLog.Log($"# CollectPatches: {method.FullName}");
-
-                foreach (var targetAttribute in targetAttributes)
-                {
-                    var patchedType = targetAttribute.type ?? defaultTargetType;
-                    if (patchedType == null)
-                        throw new NotSupportedException("No target type");
-
-                    MethodInfo? outer = (MethodInfo?)GetMember(patchedType, targetAttribute.methodName,
-                        targetAttribute.parameterTypes, targetAttribute.genericTypes);
-
-                    if (outer == null)
-                        throw new InvalidOperationException("null target method");
-
-                    AddPatch(method, patchType, outer, inner, inline, debug);
-                }
+                AddPatch(method, patchType, outer, inner, inline, debug);
             }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException($"Error processing {type}:{method}", e);
-            }
+        }
+        catch (Exception e)
+        {
+            throw new InvalidOperationException($"Error processing {method.FullName}", e);
         }
     }
 
