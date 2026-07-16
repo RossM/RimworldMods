@@ -25,6 +25,16 @@ public static class LateInit
                 }
             }
         }
+
+        LongEventHandler.ExecuteWhenFinished(EagerApplyPatches);
+    }
+
+    private static void EagerApplyPatches()
+    {
+        using (new ProfileBlock("Xylib apply patches"))
+        {
+            Autopatcher.ForceApply();
+        }
     }
 }
 
