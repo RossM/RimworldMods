@@ -108,8 +108,6 @@ public static partial class Autopatcher
         [UsedImplicitly]
         public static void ResolveTrampoline(MethodBase method)
         {
-            FileLog.Log($"UpdateMethod {method.FullName}");
-
             lock (trampolineLock)
             {
                 // If we can't remove the method, we lost a race and some other thread has
