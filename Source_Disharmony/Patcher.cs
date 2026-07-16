@@ -34,7 +34,7 @@ internal class Patcher
 
     private const string harmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
-    // These variables must only be access while HarmonyInternals.locker is held
+    // These variables must only be accessed while HarmonyInternals.locker is held
     private readonly Dictionary<MethodBase, MethodInfo> trampolines = new();
     private int trampolineCount;
 
