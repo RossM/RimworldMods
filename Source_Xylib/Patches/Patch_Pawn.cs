@@ -14,8 +14,8 @@ internal static class Patch_Pawn
     }
 
     [Feature(nameof(EventDefOf.InPawnExposeData))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Pawn.ExposeData))]
+    [Postfix]
+    [Target(nameof(Pawn.ExposeData))]
     public static void ExposeData_Postfix(Pawn __instance)
     {
         Scribe.EnterNode("Xylib_PawnData");
@@ -35,8 +35,8 @@ internal static class Patch_Pawn
 
     [Feature(nameof(EventDefOf.PostPawnKilled))]
     [Feature(nameof(EventDefOf.PostMutated))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Pawn.Kill))]
+    [Postfix]
+    [Target(nameof(Pawn.Kill))]
     public static void Kill_Postfix(Pawn __instance, bool __state)
     {
         EventManager.Instance.Notify(EventDefOf.PostPawnKilled, __instance);
@@ -45,8 +45,8 @@ internal static class Patch_Pawn
     }
 
     [Feature(nameof(EventDefOf.PostMutated))]
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(Pawn.Kill))]
+    [Prefix]
+    [Target(nameof(Pawn.Kill))]
     public static void Kill_Prefix(Pawn __instance, out bool __state)
     {
         __state = __instance.mutant != null;

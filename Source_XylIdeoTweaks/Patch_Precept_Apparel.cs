@@ -7,8 +7,8 @@ public static class Patch_Precept_Apparel
         [BodyPartGroupDefOf.Torso, BodyPartGroupDefOf.Legs];
 
     [Feature(Features.ApparelRequirementsOverrideNudity)]
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(Precept_Apparel.CompatibleWith))]
+    [Prefix]
+    [Target(nameof(Precept_Apparel.CompatibleWith))]
     public static bool CompatibleWith_Prefix(Precept_Apparel __instance, Precept other, out bool __result)
     {
         __result = true;

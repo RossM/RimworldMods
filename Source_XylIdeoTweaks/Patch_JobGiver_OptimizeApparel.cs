@@ -24,8 +24,8 @@ public static class Patch_JobGiver_OptimizeApparel
     }
 
     [Feature(Features.AutoColorApparel)]
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(JobGiver_OptimizeApparel.TryCreateRecolorJob))]
+    [Prefix]
+    [Target(nameof(JobGiver_OptimizeApparel.TryCreateRecolorJob))]
     public static void TryCreateRecolorJob_Prefix(Pawn pawn)
     {
         if (PatchHelpers.AutoColorColor(pawn) is not { } color)

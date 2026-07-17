@@ -4,8 +4,8 @@
 public static class Patch_IdeoUtility
 {
     [Feature(typeof(IncidentWorker_WildTribe))]
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(IdeoUtility.CanUseIdeo))]
+    [Prefix]
+    [Target(nameof(IdeoUtility.CanUseIdeo))]
     public static bool CanUseIdeo_Prefix(FactionDef factionDef, Ideo ideo, out bool __result)
     {
         __result = false;

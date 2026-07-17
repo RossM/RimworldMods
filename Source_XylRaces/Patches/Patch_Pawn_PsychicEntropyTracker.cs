@@ -14,8 +14,8 @@ internal static class Patch_Pawn_PsychicEntropyTracker
     }
 
     [Feature(typeof(Psycast))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedToShowGizmo))]
+    [Postfix]
+    [Target(nameof(Pawn_PsychicEntropyTracker.NeedToShowGizmo))]
     public static void NeedToShowGizmo_Postfix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
     {
         if (__instance.Pawn.HasActivePsycastGene)

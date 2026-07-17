@@ -6,8 +6,8 @@ internal static class Patch_HediffDef
     private static readonly List<StatDrawEntry> statDrawEntries = [];
 
     [Feature(typeof(HediffCompPropertiesExt))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(HediffDef.SpecialDisplayStats))]
+    [Postfix]
+    [Target(nameof(HediffDef.SpecialDisplayStats))]
     public static void SpecialDisplayStats_Postfix(HediffDef __instance, StatRequest req, ref IEnumerable<StatDrawEntry> __result)
     {
         if (__instance.comps is not { Count: > 0 })

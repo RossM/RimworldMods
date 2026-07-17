@@ -4,8 +4,8 @@
 public static class Patch_OutfitDatabase
 {
     [Feature(Features.BetterDefaultOutfits)]
-    [HarmonyPostfix]
-    [HarmonyPatch("GenerateStartingOutfits")]
+    [Postfix]
+    [Target("GenerateStartingOutfits")]
     public static void GenerateStartingOutfits_Postfix(OutfitDatabase __instance)
     {
         var outfitNudist = __instance.AllOutfits.First(outfit => outfit.label == "OutfitNudist".Translate());

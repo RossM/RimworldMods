@@ -4,8 +4,8 @@
 internal static class Patch_AbilityCompProperties
 {
     [Feature(nameof(PatchHelpers.RequiredMemberErrors))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(AbilityCompProperties.ConfigErrors))]
+    [Postfix]
+    [Target(nameof(AbilityCompProperties.ConfigErrors))]
     public static void ConfigErrors_Postfix(object __instance, ref IEnumerable<string> __result)
     {
         var extraErrors = PatchHelpers.RequiredMemberErrors(__instance);

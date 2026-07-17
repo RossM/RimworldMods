@@ -4,8 +4,8 @@
 public static class Patch_IdeoUIUtility
 {
     [Feature(typeof(DefModExtension_Xenotype))]
-    [HarmonyPostfix]
-    [HarmonyPatch("GetMemeTip")]
+    [Postfix]
+    [Target("GetMemeTip")]
     public static void GetMemeTip_Postfix(MemeDef meme, ref string __result)
     {
         StringBuilder sb = new StringBuilder(__result);

@@ -17,8 +17,8 @@ public static class Patch_Dialog_StylingStation
     }
 
     [Feature(Features.AutoColorApparel)]
-    [HarmonyPrefix]
-    [HarmonyPatch("DrawPawn")]
+    [Prefix]
+    [Target("DrawPawn")]
     public static void DrawPawn_Prefix(Pawn ___pawn, Dictionary<Apparel, Color> ___apparelColors, ref Rect rect)
     {
         Rect extraLine = rect;
@@ -54,8 +54,8 @@ public static class Patch_Dialog_StylingStation
     }
 
     [Feature(Features.AutoColorApparel)]
-    [HarmonyPostfix]
-    [HarmonyPatch("PostOpen")]
+    [Postfix]
+    [Target("PostOpen")]
     public static void PostOpen_Postfix(Pawn ___pawn, Dictionary<Apparel, Color> ___apparelColors)
     {
         if (PawnData.Get(___pawn).autoColorMode != AutoColorMode.NoAutoColor)
@@ -63,8 +63,8 @@ public static class Patch_Dialog_StylingStation
     }
 
     [Feature(Features.AutoColorApparel)]
-    [HarmonyPostfix]
-    [HarmonyPatch("Reset")]
+    [Postfix]
+    [Target("Reset")]
     public static void Reset_Postfix(Pawn ___pawn, Dictionary<Apparel, Color> ___apparelColors)
     {
         if (PatchHelpers.AutoColorColor(___pawn) is not { } color)

@@ -4,8 +4,8 @@
 public static class Patch_ThingDef
 {
     [Feature(typeof(GeneComp_Flight))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(ThingDef.SpecialDisplayStats))]
+    [Postfix]
+    [Target(nameof(ThingDef.SpecialDisplayStats))]
     public static void SpecialDisplayStats_Postfix(ThingDef __instance, ref IEnumerable<StatDrawEntry> __result)
     {
         if (__instance.apparel != null)

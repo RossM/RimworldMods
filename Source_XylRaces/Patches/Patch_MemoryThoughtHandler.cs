@@ -4,8 +4,8 @@
 public static class Patch_MemoryThoughtHandler
 {
     [Feature(typeof(DefModExtension_Thought))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(MemoryThoughtHandler.RemoveMemoriesOfDef))]
+    [Postfix]
+    [Target(nameof(MemoryThoughtHandler.RemoveMemoriesOfDef))]
     public static void RemoveMemoriesOfDef_Postfix(MemoryThoughtHandler __instance, ThoughtDef def)
     {
         var extension = def.GetModExtension<DefModExtension_Thought>();
@@ -18,8 +18,8 @@ public static class Patch_MemoryThoughtHandler
     }
 
     [Feature(typeof(DefModExtension_Thought))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(MemoryThoughtHandler.RemoveMemoriesOfDefIf))]
+    [Postfix]
+    [Target(nameof(MemoryThoughtHandler.RemoveMemoriesOfDefIf))]
     public static void RemoveMemoriesOfDefIf_Postfix(MemoryThoughtHandler __instance, ThoughtDef def, Func<Thought_Memory, bool> predicate)
     {
         var extension = def.GetModExtension<DefModExtension_Thought>();
@@ -32,8 +32,8 @@ public static class Patch_MemoryThoughtHandler
     }
 
     [Feature(typeof(DefModExtension_Thought))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(MemoryThoughtHandler.RemoveMemoriesOfDefWhereOtherPawnIs))]
+    [Postfix]
+    [Target(nameof(MemoryThoughtHandler.RemoveMemoriesOfDefWhereOtherPawnIs))]
     public static void RemoveMemoriesOfDefWhereOtherPawnIs_Postfix(MemoryThoughtHandler __instance, ThoughtDef def, Pawn otherPawn)
     {
         var extension = def.GetModExtension<DefModExtension_Thought>();

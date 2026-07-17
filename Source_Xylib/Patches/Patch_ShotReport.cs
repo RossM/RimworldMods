@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_ShotReport
 {
     [Feature(nameof(XStatDefOf.XylRangedDodgeChance))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(ShotReport.GetTextReadout))]
+    [Postfix]
+    [Target(nameof(ShotReport.GetTextReadout))]
     public static void GetTextReadout_Postfix(TargetInfo ___target, ref string __result)
     {
         if (___target.Thing is Pawn targetPawn)

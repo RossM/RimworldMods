@@ -4,8 +4,8 @@
 public static class Patch_IdeoFoundation
 {
     [Feature(Features.ApparelRequirementsOverrideNudity)]
-    [HarmonyPrefix]
-    [HarmonyPatch("FinalizeIdeo")]
+    [Prefix]
+    [Target("FinalizeIdeo")]
     public static bool FinalizeIdeo_Prefix(Ideo ideo)
     {
         // Change: Only remove conflicting apparel precepts when nudity is required

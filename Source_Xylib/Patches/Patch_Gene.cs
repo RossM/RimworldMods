@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_Gene
 {
     [Feature(typeof(EventManager))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Gene.PostAdd))]
+    [Postfix]
+    [Target(nameof(Gene.PostAdd))]
     public static void PostAdd_Postfix(Gene __instance)
     {
         if (__instance is IEventListener target)
@@ -13,8 +13,8 @@ internal static class Patch_Gene
     }
 
     [Feature(typeof(EventManager))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Gene.PostRemove))]
+    [Postfix]
+    [Target(nameof(Gene.PostRemove))]
     public static void PostRemove_Postfix(Gene __instance)
     {
         if (__instance is IEventListener target)

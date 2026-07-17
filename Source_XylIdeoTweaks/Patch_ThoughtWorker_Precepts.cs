@@ -9,8 +9,8 @@ public static class Patch_ThoughtWorker_Precepts
         [BodyPartGroupDefOf.UpperHead, BodyPartGroupDefOf.FullHead];
 
     [Feature(Features.ApparelRequirementsOverrideNudity)]
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(ThoughtWorker_Precept_AnyBodyPartCovered),
+    [Prefix]
+    [Target(typeof(ThoughtWorker_Precept_AnyBodyPartCovered),
         nameof(ThoughtWorker_Precept_AnyBodyPartCovered.HasUnnecessarilyCoveredBodyParts))]
     public static bool HasUnnecessarilyCoveredBodyParts_Prefix(Pawn p, out bool __result)
     {
@@ -19,8 +19,8 @@ public static class Patch_ThoughtWorker_Precepts
     }
 
     [Feature(Features.ApparelRequirementsOverrideNudity)]
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(ThoughtWorker_Precept_AnyBodyPartButGroinCovered),
+    [Prefix]
+    [Target(typeof(ThoughtWorker_Precept_AnyBodyPartButGroinCovered),
         nameof(ThoughtWorker_Precept_AnyBodyPartButGroinCovered.HasCoveredBodyPartsButGroin))]
     public static bool HasCoveredBodyPartsButGroin_Prefix(Pawn p, out bool __result)
     {
@@ -29,8 +29,8 @@ public static class Patch_ThoughtWorker_Precepts
     }
 
     [Feature(Features.ApparelRequirementsOverrideNudity)]
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(ThoughtWorker_Precept_AnyBodyPartButHairOrFaceCovered),
+    [Prefix]
+    [Target(typeof(ThoughtWorker_Precept_AnyBodyPartButHairOrFaceCovered),
         nameof(ThoughtWorker_Precept_AnyBodyPartButHairOrFaceCovered.HasCoveredBodyPartsButHairOrFace))]
     public static bool HasCoveredBodyPartsButHairOrFace_Prefix(Pawn p, out bool __result)
     {

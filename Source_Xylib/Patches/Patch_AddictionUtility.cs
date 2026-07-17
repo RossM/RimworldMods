@@ -4,8 +4,8 @@
 internal static class Patch_AddictionUtility
 {
     [Feature(typeof(DefModExtension_Chemical))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(AddictionUtility.CanBingeOnNow))]
+    [Postfix]
+    [Target(nameof(AddictionUtility.CanBingeOnNow))]
     public static void CanBingeOnNow_Postfix(
         Pawn pawn,
         ChemicalDef chemical,
@@ -17,8 +17,8 @@ internal static class Patch_AddictionUtility
 
     [Feature(typeof(DefModExtension_Chemical))]
     [Feature(nameof(XStatDefOf.XylDrugEffectMultiplier))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(AddictionUtility.ModifyChemicalEffectForToleranceAndBodySize))]
+    [Postfix]
+    [Target(nameof(AddictionUtility.ModifyChemicalEffectForToleranceAndBodySize))]
     public static void ModifyChemicalEffectForToleranceAndBodySize_Postfix(
         Pawn pawn,
         ChemicalDef chemicalDef,

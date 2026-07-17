@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_FoodUtility
 {
     [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
-    [HarmonyPostfix]
-    [HarmonyPatch("FoodOptimality")]
+    [Postfix]
+    [Target("FoodOptimality")]
     public static void FoodOptimality_Postfix(
         Pawn eater,
         Thing foodSource,
@@ -22,8 +22,8 @@ internal static class Patch_FoodUtility
     }
 
     [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
-    [HarmonyPostfix]
-    [HarmonyPatch("NutritionForEater")]
+    [Postfix]
+    [Target("NutritionForEater")]
     public static void NutritionForEater_Postfix(Pawn eater, Thing food, ref float __result)
     {
         __result *= eater.GetExtraNutritionFactor(food, food.def);

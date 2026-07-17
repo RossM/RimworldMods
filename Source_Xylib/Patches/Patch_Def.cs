@@ -4,8 +4,8 @@
 internal static class Patch_Def
 {
     [Feature(nameof(PatchHelpers.RequiredMemberErrors))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Def.ConfigErrors))]
+    [Postfix]
+    [Target(nameof(Def.ConfigErrors))]
     public static void ConfigErrors_Postfix(object __instance, ref IEnumerable<string> __result)
     {
         var extraErrors = PatchHelpers.RequiredMemberErrors(__instance);

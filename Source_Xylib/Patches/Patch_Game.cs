@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_Game
 {
     [Feature(nameof(EventDefOf.GlobalPostGameDispose))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Game.Dispose))]
+    [Postfix]
+    [Target(nameof(Game.Dispose))]
     public static void Dispose_Postfix()
     {
         EventManager.Instance.Notify(EventDefOf.GlobalPostGameDispose, null);
@@ -13,8 +13,8 @@ internal static class Patch_Game
     }
 
     [Feature(typeof(EventManager))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Game.LoadGame))]
+    [Postfix]
+    [Target(nameof(Game.LoadGame))]
     public static void LoadGame_Postfix()
     {
         EventManager.Instance.LoadedGame();

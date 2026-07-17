@@ -6,8 +6,8 @@ namespace XylXenos.Patches;
 public static class Patch_PawnGroupKindWorker_Trader
 {
     [Feature(nameof(DefOf.XylTribeGentleNixie))]
-    [HarmonyPrefix]
-    [HarmonyPatch("GenerateCarriers")]
+    [Prefix]
+    [Target("GenerateCarriers")]
     public static bool GenerateCarriers_Prefix(
         PawnGroupMakerParms parms,
         PawnGroupMaker groupMaker,

@@ -6,8 +6,8 @@ internal static class Patch_SkillRecord
     [Feature(nameof(XStatDefOf.XylLearnFactorPassionNone))]
     [Feature(nameof(XStatDefOf.XylLearnFactorPassionMinor))]
     [Feature(nameof(XStatDefOf.XylLearnFactorPassionMajor))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(SkillRecord.LearnRateFactor))]
+    [Postfix]
+    [Target(nameof(SkillRecord.LearnRateFactor))]
     public static void LearnRateFactor_Postfix(SkillRecord __instance, ref float __result)
     {
         DebugAssert.NotNull(__instance.Pawn);

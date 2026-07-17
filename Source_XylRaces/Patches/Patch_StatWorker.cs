@@ -187,8 +187,8 @@ public static class Patch_StatWorker
     }
 
     [Feature(typeof(Psycast))]
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
+    [Postfix]
+    [Target(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
     public static void ShouldShowFor_Postfix(StatDef ___stat, StatRequest req, ref bool __result)
     {
         if (req.Thing is not Pawn { HasActivePsycastGene: true })

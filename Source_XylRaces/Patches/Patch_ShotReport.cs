@@ -4,8 +4,8 @@
 public static class Patch_ShotReport
 {
     [Feature(nameof(DefOf.XylEcholocation))]
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(ShotReport.HitFactorFromShooter))]
+    [Prefix]
+    [Target(nameof(ShotReport.HitFactorFromShooter))]
     public static bool HitFactorFromShooter_Prefix(Thing caster, float distance, out float __result)
     {
         __result = 0f;
@@ -27,8 +27,8 @@ public static class Patch_ShotReport
     }
 
     [Feature(nameof(DefOf.XylEcholocation))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(ShotReport.HitReportFor))]
+    [Postfix]
+    [Target(nameof(ShotReport.HitReportFor))]
     public static void HitReportFor_Postfix(Thing caster, ref ShotReport __result)
     {
         if (PatchHelpers.IsUsingEcholocation(caster))

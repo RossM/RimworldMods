@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_HealthUtility
 {
     [Feature(nameof(Config.resistanceStatByHediff))]
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(HealthUtility.AdjustSeverity))]
+    [Prefix]
+    [Target(nameof(HealthUtility.AdjustSeverity))]
     public static void AdjustSeverity_Prefix(Pawn pawn, HediffDef hdDef, ref float sevOffset)
     {
         if (sevOffset < 0)

@@ -4,8 +4,8 @@
 internal static class Patch_HediffCompProperties
 {
     [Feature(nameof(PatchHelpers.RequiredMemberErrors))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(HediffCompProperties.ConfigErrors))]
+    [Postfix]
+    [Target(nameof(HediffCompProperties.ConfigErrors))]
     public static void ConfigErrors_Postfix(object __instance, ref IEnumerable<string> __result)
     {
         var extraErrors = PatchHelpers.RequiredMemberErrors(__instance);

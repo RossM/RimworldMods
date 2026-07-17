@@ -4,8 +4,8 @@
 public static class Patch_Hediff_Pregnant
 {
     [Feature(nameof(Config.Feature.Parthenogenesis))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Hediff_Pregnant.PostAdd))]
+    [Postfix]
+    [Target(nameof(Hediff_Pregnant.PostAdd))]
     public static void PostAdd_Postfix(ref Hediff_Pregnant __instance)
     {
         if (__instance.Mother != null || __instance.Father != null)

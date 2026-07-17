@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_HediffComp
 {
     [Feature(typeof(EventManager))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(HediffComp.CompPostPostAdd))]
+    [Postfix]
+    [Target(nameof(HediffComp.CompPostPostAdd))]
     public static void CompPostPostAdd_Postfix(HediffComp __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
@@ -14,8 +14,8 @@ internal static class Patch_HediffComp
     }
 
     [Feature(typeof(EventManager))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(HediffComp.CompPostPostRemoved))]
+    [Postfix]
+    [Target(nameof(HediffComp.CompPostPostRemoved))]
     public static void CompPostPostRemoved_Postfix(HediffComp __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global

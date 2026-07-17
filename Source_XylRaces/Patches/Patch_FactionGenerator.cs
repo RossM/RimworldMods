@@ -6,8 +6,8 @@ namespace XylXenos.Patches;
 public static class Patch_FactionGenerator
 {
     [Feature(nameof(Settings.useDistinctiveFactionColors))]
-    [HarmonyPostfix]
-    [HarmonyPatch("InitializeFactions")]
+    [Postfix]
+    [Target("InitializeFactions")]
     public static void InitializeFactions_Postfix(PlanetLayer layer)
     {
         if (!Settings.instance.useDistinctiveFactionColors)

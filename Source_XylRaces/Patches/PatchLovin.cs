@@ -15,8 +15,8 @@ public static class PatchLovin
     }
 
     [Feature(nameof(Config.Feature.Bugfix_Misc))]
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(LovePartnerRelationUtility), "LovinMtbSinglePawnFactor")]
+    [Postfix]
+    [Target(typeof(LovePartnerRelationUtility), "LovinMtbSinglePawnFactor")]
     public static void LovinMtbSinglePawnFactor_Postfix(Pawn pawn, ref float __result)
     {
         if (ModsConfig.BiotechActive && pawn.genes != null)

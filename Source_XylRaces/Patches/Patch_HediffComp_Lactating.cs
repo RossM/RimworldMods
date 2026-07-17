@@ -4,8 +4,8 @@
 public static class Patch_HediffComp_Lactating
 {
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(HediffComp_Lactating.TryCharge))]
+    [Prefix]
+    [Target(nameof(HediffComp_Lactating.TryCharge))]
     public static void TryCharge_Prefix(HediffComp_Lactating __instance, ref float desiredChargeAmount)
     {
         DebugAssert.NotNull(__instance.Pawn);

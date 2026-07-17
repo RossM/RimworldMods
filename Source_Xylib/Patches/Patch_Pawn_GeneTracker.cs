@@ -5,8 +5,8 @@ internal static class Patch_Pawn_GeneTracker
 {
     [Feature(typeof(DefModExtension_Chemical))]
     [Feature(nameof(XStatDefOf.XylGlobalAddictionChanceFactor))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
+    [Postfix]
+    [Target(nameof(Pawn_GeneTracker.AddictionChanceFactor))]
     public static void AddictionChanceFactor_Postfix(ChemicalDef chemical, ref float __result, Pawn ___pawn)
     {
         if (!___pawn.ChemicalIsAllowedByGenes(chemical))
@@ -16,8 +16,8 @@ internal static class Patch_Pawn_GeneTracker
     }
 
     [Feature(nameof(EventDefOf.PostGenesChanged))]
-    [HarmonyPostfix]
-    [HarmonyPatch("Notify_GenesChanged")]
+    [Postfix]
+    [Target("Notify_GenesChanged")]
     public static void Notify_GenesChanged_Postfix(Pawn ___pawn)
     {
         EventManager.Instance.Notify(EventDefOf.PostGenesChanged, ___pawn);

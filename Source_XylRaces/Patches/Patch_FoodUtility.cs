@@ -6,8 +6,8 @@ namespace XylXenos.Patches;
 public static class Patch_FoodUtility
 {
     [Feature(typeof(Hediff_DietDependency))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(FoodOptimality))]
+    [Postfix]
+    [Target(nameof(FoodOptimality))]
     public static void FoodOptimality_Postfix(
         Pawn eater,
         Thing foodSource,
@@ -17,8 +17,8 @@ public static class Patch_FoodUtility
     }
 
     [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]
-    [HarmonyPrefix]
-    [HarmonyPatch("TryAddIngestThought")]
+    [Prefix]
+    [Target("TryAddIngestThought")]
     public static bool TryAddIngestThought_Prefix(
         Pawn ingester,
         ThoughtDef def,

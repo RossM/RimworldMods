@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_MapComponent
 {
     [Feature(typeof(EventManager))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(MapComponent.FinalizeInit))]
+    [Postfix]
+    [Target(nameof(MapComponent.FinalizeInit))]
     public static void FinalizeInit_Postfix(MapComponent __instance)
     {
         if (__instance is IEventListener target)
@@ -13,8 +13,8 @@ internal static class Patch_MapComponent
     }
 
     [Feature(typeof(EventManager))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(MapComponent.MapRemoved))]
+    [Postfix]
+    [Target(nameof(MapComponent.MapRemoved))]
     public static void MapRemoved_Postfix(MapComponent __instance)
     {
         if (__instance is IEventListener target)

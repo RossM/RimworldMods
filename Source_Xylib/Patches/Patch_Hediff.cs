@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_Hediff
 {
     [Feature(typeof(EventManager))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Hediff.PostAdd))]
+    [Postfix]
+    [Target(nameof(Hediff.PostAdd))]
     public static void PostAdd_Postfix(Hediff __instance)
     {
         if (__instance is IEventListener target)
@@ -13,8 +13,8 @@ internal static class Patch_Hediff
     }
 
     [Feature(typeof(EventManager))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Hediff.PostRemoved))]
+    [Postfix]
+    [Target(nameof(Hediff.PostRemoved))]
     public static void PostRemoved_Postfix(Hediff __instance)
     {
         if (__instance is IEventListener target)

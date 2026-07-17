@@ -39,8 +39,8 @@ internal static class Patch_SlaveRebellionUtility
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
-    [HarmonyPostfix]
-    [HarmonyPatch("InitiateSlaveRebellionMtbDaysHelper")]
+    [Postfix]
+    [Target("InitiateSlaveRebellionMtbDaysHelper")]
     public static void InitiateSlaveRebellionMtbDaysHelper_Postfix(Pawn pawn, ref float __result)
     {
         if (__result < 0)

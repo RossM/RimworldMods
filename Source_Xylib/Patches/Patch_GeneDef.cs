@@ -43,8 +43,8 @@ internal static class Patch_GeneDef
     }
 
     [Feature(typeof(DefModExtension_GeneWithComps))]
-    [HarmonyPostfix]
-    [HarmonyPatch("SpecialDisplayStats")]
+    [Postfix]
+    [Target("SpecialDisplayStats")]
     public static void GeneDef_SpecialDisplayStats_Postfix(GeneDef __instance, StatRequest req, ref IEnumerable<StatDrawEntry> __result)
     {
         var defExt = __instance.Extension_GeneWithComps;

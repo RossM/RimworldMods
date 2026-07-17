@@ -12,8 +12,8 @@ internal static class Patch_PawnGenerator
     }
 
     [Feature(nameof(EventDefOf.PostGenerateInitialHediffs))]
-    [HarmonyPostfix]
-    [HarmonyPatch("GenerateInitialHediffs")]
+    [Postfix]
+    [Target("GenerateInitialHediffs")]
     public static void GenerateInitialHediffs_Postfix(Pawn pawn)
     {
         EventManager.Instance.Notify(EventDefOf.PostGenerateInitialHediffs, pawn);
@@ -35,16 +35,16 @@ internal static class Patch_PawnGenerator
     }
 
     [Feature(nameof(EventDefOf.PostGenerateNewPawn))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(PawnGenerator.RedressPawn))]
+    [Postfix]
+    [Target(nameof(PawnGenerator.RedressPawn))]
     public static void RedressPawn_Postfix(Pawn pawn, PawnGenerationRequest request)
     {
         EventManager.Instance.Notify(EventDefOf.PostRedressPawn, pawn, request);
     }
 
     [Feature(nameof(EventDefOf.PostGenerateNewPawn))]
-    [HarmonyPostfix]
-    [HarmonyPatch("TryGenerateNewPawnInternal")]
+    [Postfix]
+    [Target("TryGenerateNewPawnInternal")]
     public static void TryGenerateNewPawnInternal_Postfix(ref Pawn? __result, ref PawnGenerationRequest request)
     {
         if (__result == null)

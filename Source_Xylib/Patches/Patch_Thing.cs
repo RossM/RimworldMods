@@ -4,8 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_Thing
 {
     [Feature(typeof(EventManager))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Thing.Destroy))]
+    [Postfix]
+    [Target(nameof(Thing.Destroy))]
     public static void Destroy_Postfix(Thing __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
@@ -14,8 +14,8 @@ internal static class Patch_Thing
     }
 
     [Feature(nameof(EventDefOf.PostDiscard))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Thing.Discard))]
+    [Postfix]
+    [Target(nameof(Thing.Discard))]
     public static void Discard_Postfix(Thing __instance)
     {
         if (!IsInteresting(__instance))
@@ -36,8 +36,8 @@ internal static class Patch_Thing
     }
 
     [Feature(typeof(EventManager))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Thing.PostMake))]
+    [Postfix]
+    [Target(nameof(Thing.PostMake))]
     public static void PostMake_Postfix(Thing __instance)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
