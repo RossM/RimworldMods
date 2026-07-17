@@ -15,7 +15,7 @@ public static class PatchLate
             harmony.PatchCategory("PostLoadDefs");
 
         // TODO Split infix patching into early and late
-        using (new ProfileBlock("XylXenos Infix patching"))
+        using (new ProfileBlock("XylXenos Disharmony patching"))
             Autopatcher.PatchCategory(Assembly.GetExecutingAssembly(), "PostLoadDefs");
     }
 }
@@ -40,7 +40,7 @@ public class Main : Mod
             harmony.PatchAllUncategorized();
         }
 
-        using (new ProfileBlock("XylXenos Infix patching"))
+        using (new ProfileBlock("XylXenos Disharmony patching"))
         {
             Autopatcher.PatchCategory(Assembly.GetExecutingAssembly(), "PreLoadDefs");
             Autopatcher.PatchCategory(Assembly.GetExecutingAssembly(), null);

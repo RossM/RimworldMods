@@ -48,7 +48,7 @@ public class Mod_Xylib : Mod
         using (new ProfileBlock("Xylib Harmony patching"))
             harmony.PatchCategory(null);
 
-        using (new ProfileBlock("Xylib Infix patching"))
+        using (new ProfileBlock("Xylib Disharmony patching"))
             Autopatcher.PatchAll(Assembly.GetExecutingAssembly());
 
         using (new ProfileBlock("Xylib Check coding style"))
