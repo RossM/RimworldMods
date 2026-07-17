@@ -15,6 +15,7 @@ public static class ReflectionTools
         if (name == null)
             return null;
 
+        // Harmony uses ':' to separate the type name from the method name, so if it's there, use it
         if (name.Split([':'], 2) is [string typeName, string memberName])
         {
             type = AccessTools.TypeByName(typeName);
@@ -23,40 +24,49 @@ public static class ReflectionTools
             name = memberName;
         }
 
-        List<string> nameParts = name.Split('.').ToList();
-        int index = 0;
-        typeName = "";
-        while (type == null)
-        {
-            if (index >= nameParts.Count - 1)
-                return null;
+        var nameParts = name.Split('.').ToList();
 
-            if (typeName != "")
-                typeName += ".";
-            typeName += nameParts[index];
-            index++;
-            type = AccessTools.TypeByName(typeName);
+        // Search for the type by considering foo, then foo.bar, then foo.bar.baz, etc.
+        if (type is null)
+        {
+            for (int i = 1; i <= nameParts.Count - 1; i++)
+            {
+                typeName = string.Join(".", nameParts.Take(i));
+                type = AccessTools.TypeByName(typeName);
+                if (type is not null)
+                {
+                    nameParts.RemoveRange(0, i);
+                    break;
+                }
+            }
         }
 
-        while (index < nameParts.Count - 1)
+        if (type is null)
+            return null;
+
+        // Look for nested types
+        while (nameParts.Count > 1)
         {
-            type = type.GetNestedType(nameParts[index], AccessTools.all);
-            if (type == null)
-                return null;
-            index++;
+            var nestedType = type.GetNestedType(nameParts[0], AccessTools.all);
+            if (nestedType == null)
+                break;
+            type = nestedType;
+            nameParts.RemoveAt(0);
         }
 
-        name = nameParts[index];
+        // If we still have multiple parts, we need to find a local function, which isn't implemented
+        if (nameParts.Count > 1)
+            throw new NotImplementedException();
 
         if (parameterTypes == null && genericTypes == null)
         {
-            if (type.GetField(name, AccessTools.all) is { } field)
+            if (type.GetField(nameParts[0], AccessTools.all) is { } field)
                 return field;
-            if (type.GetProperty(name, AccessTools.all) is { } property)
+            if (type.GetProperty(nameParts[0], AccessTools.all) is { } property)
                 return property.GetMethod;
         }
 
-        return GetMethod(type, name, parameterTypes, genericTypes);
+        return GetMethod(type, nameParts[0], parameterTypes, genericTypes);
     }
 
     private static MethodInfo? GetMethod(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
