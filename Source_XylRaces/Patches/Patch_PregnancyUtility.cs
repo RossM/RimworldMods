@@ -31,10 +31,8 @@ public static class Patch_PregnancyUtility
     }
 
     [Feature(typeof(GeneCompProperties_XenotypeStrength))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(PregnancyUtility.GetInheritedGenes),
-        [typeof(Pawn), typeof(Pawn), typeof(bool)],
-        [ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Out])]
+    [Postfix]
+    [Target(nameof(PregnancyUtility.GetInheritedGenes), typeof(Pawn), typeof(Pawn), typeof(Out<bool>))]
     public static void GetInheritedGenes_Postfix(Pawn mother, Pawn father, ref List<GeneDef> __result)
     {
         DebugAssert.NotNull(mother.genes);
