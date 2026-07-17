@@ -153,7 +153,12 @@ internal class Patcher
     {
         Type[] parameterTypes = target.GetParameters().Types();
         if (!target.IsStatic)
-            parameterTypes = [target.DeclaringType, .. parameterTypes];
+        {
+            if (target.DeclaringType.IsStruct())
+                parameterTypes = [target.DeclaringType.MakeByRefType(), .. parameterTypes];
+            else
+                parameterTypes = [target.DeclaringType, .. parameterTypes];
+        }
 
         var method = new DynamicMethod($"{target.DeclaringType?.FullName}.{target.Name}{name}", target.ReturnType, parameterTypes,
             moduleBuilder, true);

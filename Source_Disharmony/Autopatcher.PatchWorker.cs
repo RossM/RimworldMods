@@ -8,18 +8,6 @@ public static partial class Autopatcher
 
         public void UpdateMethod()
         {
-            MethodInfo? iteratorMethod = patchedMethod.GetIteratorImplementation();
-
-            if (iteratorMethod is not null)
-            {
-                if (patches.Any(p => p.HasBindingType(BindingType.State)))
-                    throw new NotSupportedException("__state is not supported for compiler-generated iterator methods");
-                if (patches.Any(p => p.HasBindingType(BindingType.Result)))
-                    throw new NotSupportedException("__result is not supported for compiler-generated iterator methods");
-
-                throw new NotImplementedException();
-            }
-
             List<InstructionMatcher> matchers = [];
 
             InstructionMatcher patchMatcher = MakePatchInstructionMatcher();
