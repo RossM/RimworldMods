@@ -4,14 +4,6 @@ public static class ReflectionTools
 {
     public static readonly BindingFlags DeclaredOnly = AccessTools.all | BindingFlags.DeclaredOnly;
 
-    public static bool IsClosureType(Type type)
-    {
-        if (type.IsByRef)
-            type = type.GetElementType();
-
-        return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute));
-    }
-
     public static MemberInfo? GetMember(Type? type, string? name, Type[]? parameterTypes, Type[]? genericTypes)
     {
         if (name == null)
@@ -59,7 +51,7 @@ public static class ReflectionTools
         List<MemberInfo> candidates = nameParts.Count switch
         {
             1 => type.GetMembers(DeclaredOnly).Where(m => m.Name == nameParts[0]).ToList(),
-            2 => type.GetNestedTypes(DeclaredOnly).Where(t => t.Name.StartsWith("<>c")).Append(type)
+            2 => type.GetNestedTypes(DeclaredOnly).Where(t => t.IsClosureType).Append(type)
                 .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>g__{nameParts[1]}|"))
                 .OfType<MemberInfo>().ToList(),
             _ => throw new NotSupportedException("Nested local functions are not supported"),

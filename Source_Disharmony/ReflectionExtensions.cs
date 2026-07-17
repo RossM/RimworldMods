@@ -16,4 +16,18 @@ public static class ReflectionExtensions
             return stateMachineType?.GetMethod("MoveNext", AccessTools.all);
         }
     }
+
+    extension(Type type)
+    {
+        public bool IsClosureType
+        {
+            get
+            {
+                if (type.IsByRef)
+                    type = type.GetElementType();
+
+                return type.Name.StartsWith("<>c") && Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute));
+            }
+        }
+    }
 }

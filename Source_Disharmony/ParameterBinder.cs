@@ -102,7 +102,7 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
                 // Look in closure fields
                 if (inner is MethodInfo innerMethod2)
                 {
-                    int closureIndex = Array.FindLastIndex(innerMethod2.GetParameters(), p => ReflectionTools.IsClosureType(p.ParameterType));
+                    int closureIndex = Array.FindLastIndex(innerMethod2.GetParameters(), p => p.ParameterType.IsClosureType);
                     if (closureIndex >= 0)
                     {
                         var type = innerMethod2.GetParameters()[closureIndex].ParameterType;
