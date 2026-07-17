@@ -10,6 +10,8 @@ public enum PatchType
 
 public static partial class Autopatcher
 {
+    // Lock order: applyLock, PatchRegistry.SyncRoot, Harmony's lock.
+    private static readonly object applyLock = new();
     private static readonly PatchRegistry registry = PatchRegistry.Instance;
     private static readonly Patcher patcher = Patcher.Instance;
 
@@ -64,21 +66,27 @@ public static partial class Autopatcher
 
     private static void ApplyImpl(bool useTrampolines)
     {
-        foreach (MethodInfo patchedMethod in registry.MethodsToUpdate)
+        lock (applyLock)
         {
-            try
+            lock (registry.SyncRoot)
             {
-                var worker = new PatchWorker(registry, patchedMethod, useTrampolines);
+                foreach (MethodInfo patchedMethod in registry.MethodsToUpdate)
+                {
+                    try
+                    {
+                        var worker = new PatchWorker(registry, patchedMethod, useTrampolines);
 
-                worker.UpdateMethod();
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException($"Error patching {patchedMethod.FullName}", e);
+                        worker.UpdateMethod();
+                    }
+                    catch (Exception e)
+                    {
+                        throw new InvalidOperationException($"Error patching {patchedMethod.FullName}", e);
+                    }
+                }
+
+                registry.MethodsToUpdate.Clear();
             }
         }
-
-        registry.MethodsToUpdate.Clear();
     }
 
     public static void ForceApply()
