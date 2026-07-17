@@ -4,10 +4,18 @@ public static class ReflectionTools
 {
     public static readonly BindingFlags DeclaredOnly = AccessTools.all | BindingFlags.DeclaredOnly;
 
-    public static MemberInfo? GetMember(Type? type, string? name, Type[]? parameterTypes, Type[]? genericTypes)
+    public static MemberInfo GetMember(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes)
     {
-        if (name == null)
-            return null;
+        if (name is null)
+            throw new ArgumentException("name expected");
+
+        if (memberType is not (MemberType.Any or MemberType.Method))
+        {
+            if (parameterTypes != null)
+                throw new ArgumentException($"parameterTypes is not supported for memberType {memberType}");
+            if (genericTypes != null)
+                throw new ArgumentException($"genericTypes is not supported for memberType {memberType}");
+        }
 
         // Harmony uses ':' to separate the type name from the method name, so if it's there, use it
         if (name.Split([':'], 2) is [string typeName, string memberName])
@@ -36,7 +44,7 @@ public static class ReflectionTools
         }
 
         if (type is null)
-            return null;
+            throw new InvalidOperationException($"type not found: {name}");
 
         // Look for nested types
         while (nameParts.Count > 1)
@@ -57,15 +65,28 @@ public static class ReflectionTools
             _ => throw new NotSupportedException("Nested local functions are not supported"),
         };
 
+        candidates = memberType switch
+        {
+            MemberType.Any => candidates,
+            MemberType.Method => candidates.Where(m => m is MethodInfo).ToList(),
+            MemberType.Getter or MemberType.Setter => candidates.Where(m => m is FieldInfo or PropertyInfo).ToList(),
+            _ => throw new ArgumentOutOfRangeException(nameof(memberType), memberType, null)
+        };
+
         if (parameterTypes != null || genericTypes != null)
             candidates = FilterMethods(candidates, parameterTypes, genericTypes).ToList<MemberInfo>();
 
-        if (candidates.Count > 1)
-            throw new ArgumentException("Ambiguous match");
+        switch (candidates.Count)
+        {
+            case > 1: throw new InvalidOperationException($"Ambiguous match: {name}");
+            case 0: throw new InvalidOperationException($"Member not found: {name}");
+        }
 
-        var result = candidates.SingleOrDefault();
+        var result = candidates.Single();
         if (result is PropertyInfo property)
-            result = property.GetMethod;
+            result = memberType == MemberType.Setter ? property.SetMethod : property.GetMethod;
+        if (result is FieldInfo && memberType == MemberType.Setter)
+            throw new NotSupportedException("Patching field setters is not supported");
         return result;
     }
 

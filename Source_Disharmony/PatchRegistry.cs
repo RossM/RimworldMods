@@ -170,8 +170,10 @@ internal class PatchRegistry
 
                 PatchType patchType = patchTypeAttribute.patchType;
 
-                MemberInfo? inner = ReflectionTools.GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName,
-                    patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
+                MemberInfo? inner = patchTypeAttribute.memberName != null
+                    ? ReflectionTools.GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName, patchTypeAttribute.memberType,
+                        patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes)
+                    : null;
 
                 if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix && inner == null)
                     throw new InvalidOperationException($"{patchType} patch must have an inner target");
@@ -184,11 +186,11 @@ internal class PatchRegistry
                     if (patchedType == null)
                         throw new NotSupportedException("No target type");
 
-                    MethodInfo? outer = (MethodInfo?)ReflectionTools.GetMember(patchedType, targetAttribute.methodName,
-                        targetAttribute.parameterTypes, targetAttribute.genericTypes);
+                    MethodInfo? outer = ReflectionTools.GetMember(patchedType, targetAttribute.methodName, targetAttribute.memberType,
+                        targetAttribute.parameterTypes, targetAttribute.genericTypes) as MethodInfo;
 
                     if (outer == null)
-                        throw new InvalidOperationException($"couldn't locate method {targetAttribute.methodName}");
+                        throw new InvalidOperationException($"Couldn't locate method {targetAttribute.methodName}");
 
                     AddPatch(method, patchType, outer, inner, inline, debug);
                 }
