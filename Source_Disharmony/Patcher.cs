@@ -210,8 +210,6 @@ internal class Patcher
         {
             setter(matchers);
 
-            FileLog.Log($"# GetHarmonyMethod: Reusing transpiler for {original.FullName}");
-
             harmonyMethod = null;
         }
 

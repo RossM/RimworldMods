@@ -178,8 +178,6 @@ internal class PatchRegistry
                 if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix && inner == null)
                     throw new InvalidOperationException($"{patchType} patch must have an inner target");
 
-                FileLog.Log($"# CollectPatches: {method.FullName}");
-
                 foreach (var targetAttribute in targetAttributes)
                 {
                     var patchedType = targetAttribute.type ?? defaultTargetType;
