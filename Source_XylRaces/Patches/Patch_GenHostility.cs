@@ -5,8 +5,8 @@ public static class Patch_GenHostility
 {
     // Note: This patch is performance-sensitive
     [Feature(typeof(GeneCompProperties_DisableHostility))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(GenHostility.HostileTo), typeof(Thing), typeof(Thing))]
+    [Postfix]
+    [Target(nameof(GenHostility.HostileTo), typeof(Thing), typeof(Thing))]
     public static void HostileTo_Postfix(Thing a, Thing b, ref bool __result)
     {
         if (!__result)

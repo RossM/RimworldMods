@@ -46,8 +46,8 @@ public static class Patch_MemoryThoughtHandler
     }
 
     [Feature(typeof(DefModExtension_Thought))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(MemoryThoughtHandler.TryGainMemory), typeof(Thought_Memory), typeof(Pawn))]
+    [Postfix]
+    [Target(nameof(MemoryThoughtHandler.TryGainMemory), typeof(Thought_Memory), typeof(Pawn))]
     public static void TryGainMemory_Postfix(MemoryThoughtHandler __instance, Thought_Memory newThought, Pawn otherPawn)
     {
         var extension = newThought.def.GetModExtension<DefModExtension_Thought>();

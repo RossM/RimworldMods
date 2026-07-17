@@ -6,8 +6,8 @@ namespace XylXenos.Patches;
 public static class Patch_TileFinder
 {
     [Feature(typeof(DefModExtension_Faction))]
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(TileFinder.RandomSettlementTileFor), typeof(PlanetLayer), typeof(Faction), typeof(bool),
+    [Prefix]
+    [Target(nameof(TileFinder.RandomSettlementTileFor), typeof(PlanetLayer), typeof(Faction), typeof(bool),
         typeof(Predicate<PlanetTile>))]
     public static void RandomSettlementTileFor_Prefix(
         Faction? faction,

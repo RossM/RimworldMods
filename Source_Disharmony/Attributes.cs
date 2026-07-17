@@ -59,6 +59,14 @@ public class TargetAttribute(Type? type, string methodName, Type[]? parameterTyp
         parameterTypes, genericTypes)
     {
     }
+
+    public TargetAttribute(Type? type, string methodName, params Type[] parameterTypes) : this(type, methodName, parameterTypes, null)
+    {
+    }
+
+    public TargetAttribute(string methodName, params Type[] parameterTypes) : this(null, methodName, parameterTypes, null)
+    {
+    }
 }
 
 [PublicAPI]
