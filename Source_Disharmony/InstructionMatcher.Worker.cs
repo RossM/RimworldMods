@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using System.Diagnostics;
+
+namespace Disharmony;
 
 public partial class InstructionMatcher
 {
@@ -68,6 +70,10 @@ public partial class InstructionMatcher
                 }
 
                 var matchCount = 0;
+
+                // rule.Pattern was checked to be non-null during the error checking above
+                if (rule.Pattern is null)
+                    throw new InvalidOperationException();
 
                 for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[^1].end : 0;
                      instructionIndex <= inInstructions.Count - rule.Pattern.Length;
@@ -146,8 +152,8 @@ public partial class InstructionMatcher
                     continue;
                 }
 
-                bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
-                bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
+                static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
+                static bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
 
                 switch (match.rule.Mode)
                 {
@@ -289,6 +295,10 @@ public partial class InstructionMatcher
         {
             Emit(CodeInstruction.Annotation($"Begin {match.rule.Name}"));
 
+            // Rules with null Output aren't added to matches so should never get here
+            if (match.rule.Output is null)
+                throw new InvalidOperationException();
+
             foreach (CodeInstruction replaceInst in match.rule.Output)
                 EmitReplacement(replaceInst, match);
 
@@ -301,9 +311,13 @@ public partial class InstructionMatcher
 
             bool noOutput = rule.Output is not { Length: > 0 };
 
+            // rule.Pattern is checked to be non-null before this is called
+            if (rule.Pattern is null)
+                throw new InvalidOperationException();
+
             for (var patternIndex = 0; patternIndex < rule.Pattern.Length; patternIndex++)
             {
-                if (!MatchInstruction(rule, instructionIndex, localIndex_Match, patternIndex))
+                if (!MatchInstruction(inInstructions[instructionIndex + patternIndex], rule.Pattern[patternIndex], localIndex_Match))
                     return false;
 
                 if (rule.Mode == OutputMode.Replace)
@@ -325,11 +339,8 @@ public partial class InstructionMatcher
             return true;
         }
 
-        private bool MatchInstruction(Rule rule, int instructionIndex, Dictionary<int, int> localIndex_Match, int patternIndex)
+        private bool MatchInstruction(CodeInstruction inst, CodeInstruction patternInst, Dictionary<int, int> localIndex_Match)
         {
-            CodeInstruction inst = inInstructions[instructionIndex + patternIndex];
-            CodeInstruction patternInst = rule.Pattern[patternIndex];
-
             // For a load or store, map the local indexes in the pattern to the actual local indexes used
             // in the function
             if (patternInst.IsStloc())

@@ -3,7 +3,7 @@ namespace Disharmony;
 
 internal static class TranspilerTemplate
 {
-    public static InstructionMatcher[] matchers;
+    public static readonly InstructionMatcher[] matchers = [];
 
     public static List<CodeInstruction> Invoke(MethodBase target, IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
