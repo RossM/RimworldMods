@@ -10,25 +10,53 @@ public static class ReflectionTools
         return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute));
     }
 
-    public static MemberInfo? GetMember(Type? type, string? memberName, Type[]? parameterTypes, Type[]? genericTypes)
+    public static MemberInfo? GetMember(Type? type, string? name, Type[]? parameterTypes, Type[]? genericTypes)
     {
-        if (type == null || memberName == null)
+        if (name == null)
             return null;
 
-        string[] nameParts = memberName.Split(':');
-        for (int i = 0; i < nameParts.Length - 1; i++)
-            type = AccessTools.InnerTypes(type).First(type1 => type1.Name.Contains(nameParts[i]));
-        memberName = nameParts[^1];
+        if (name.Split([':'], 2) is [string typeName, string memberName])
+        {
+            type = AccessTools.TypeByName(typeName);
+            if (type == null)
+                return null;
+            name = memberName;
+        }
+
+        List<string> nameParts = name.Split('.').ToList();
+        int index = 0;
+        typeName = "";
+        while (type == null)
+        {
+            if (index >= nameParts.Count - 1)
+                return null;
+
+            if (typeName != "")
+                typeName += ".";
+            typeName += nameParts[index];
+            index++;
+            type = AccessTools.TypeByName(typeName);
+        }
+
+        while (index < nameParts.Count - 1)
+        {
+            type = type.GetNestedType(nameParts[index], AccessTools.all);
+            if (type == null)
+                return null;
+            index++;
+        }
+
+        name = nameParts[index];
 
         if (parameterTypes == null && genericTypes == null)
         {
-            if (type.GetField(memberName, AccessTools.all) is { } field)
+            if (type.GetField(name, AccessTools.all) is { } field)
                 return field;
-            if (type.GetProperty(memberName, AccessTools.all) is { } property)
+            if (type.GetProperty(name, AccessTools.all) is { } property)
                 return property.GetMethod;
         }
 
-        return GetMethod(type, memberName, parameterTypes, genericTypes);
+        return GetMethod(type, name, parameterTypes, genericTypes);
     }
 
     private static MethodInfo? GetMethod(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
