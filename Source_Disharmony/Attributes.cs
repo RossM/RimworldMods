@@ -2,6 +2,15 @@
 
 namespace Disharmony;
 
+[PublicAPI]
+public static class Ref<T>;
+
+[PublicAPI]
+public static class In<T>;
+
+[PublicAPI]
+public static class Out<T>;
+
 public abstract class PatchTypeAttribute(
     PatchType patchType,
     Type? type = null,

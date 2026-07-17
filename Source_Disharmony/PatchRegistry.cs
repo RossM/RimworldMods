@@ -140,30 +140,30 @@ internal class PatchRegistry
     {
         lock (SyncRoot)
         {
-            var harmonyAttribute = type.GetCustomAttribute<HarmonyPatch>();
-            var defaultTargetType = harmonyAttribute?.info.declaringType;
-
             foreach (MethodInfo method in type.DeclaredMethods)
             {
-                ProcessMethod(method, defaultTargetType);
+                ProcessMethod(method);
             }
         }
     }
 
-    public void ProcessMethod(MethodInfo method, Type? defaultTargetType = null)
+    public void ProcessMethod(MethodInfo method)
     {
         lock (SyncRoot)
         {
             try
             {
-                PatchTypeAttribute patchTypeAttribute =
-                    (PatchTypeAttribute)method.GetCustomAttribute<PrefixAttribute>() ??
-                    (PatchTypeAttribute)method.GetCustomAttribute<PostfixAttribute>() ??
-                    (PatchTypeAttribute)method.GetCustomAttribute<InnerPrefixAttribute>() ??
-                    (PatchTypeAttribute)method.GetCustomAttribute<InnerPostfixAttribute>();
-                var targetAttributes = method.GetCustomAttributes<TargetAttribute>().ToArray();
-                bool debug = method.GetCustomAttribute<DebugAttribute>() != null;
-                bool inline = method.GetCustomAttribute<InlineAttribute>() != null;
+                var typeAttributes = method.DeclaringType?.GetCustomAttributes().ToList() ?? [];
+                var methodAttributes = method.GetCustomAttributes();
+
+                List<Attribute> attributes = [.. typeAttributes, .. methodAttributes];
+
+                var defaultTargetType = attributes.OfType<HarmonyPatch>().Select(p => p.info.declaringType)
+                    .FirstOrDefault(t => t is not null);
+                var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
+                var targetAttributes = attributes.OfType<TargetAttribute>().ToList();
+                bool debug = attributes.OfType<DebugAttribute>().Any();
+                bool inline = attributes.OfType<InlineAttribute>().Any();
 
                 if (patchTypeAttribute == null)
                     return;
@@ -188,7 +188,7 @@ internal class PatchRegistry
                         targetAttribute.parameterTypes, targetAttribute.genericTypes);
 
                     if (outer == null)
-                        throw new InvalidOperationException("null target method");
+                        throw new InvalidOperationException($"couldn't locate method {targetAttribute.methodName}");
 
                     AddPatch(method, patchType, outer, inner, inline, debug);
                 }
@@ -390,7 +390,9 @@ internal class PatchRegistry
 
     private static MethodInfo? GetMethod(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
     {
-        foreach (var method in type.GetMethods(AccessTools.all))
+        List<MethodInfo> results = [];
+
+        foreach (var method in type.GetMethods(AccessTools.all | BindingFlags.DeclaredOnly))
         {
             var curMethod = method;
 
@@ -416,12 +418,46 @@ internal class PatchRegistry
             else if (genericTypes is not null)
                 continue;
 
-            if (parameterTypes != null && !curMethod.GetParameters().Types().SequenceEqual(parameterTypes))
-                continue;
+            if (parameterTypes != null)
+            {
+                ParameterInfo[] parameters = curMethod.GetParameters();
+                if (parameters.Length != parameterTypes.Length)
+                    continue;
+                if (!parameters.Zip(parameterTypes, (p, t) => (p, t)).All(x => ParameterTypeMatcher(x.p, x.t)))
+                    continue;
+            }
 
-            return curMethod;
+            results.Add(curMethod);
+            continue;
+
+            static bool ParameterTypeMatcher(ParameterInfo parameter, Type type)
+            {
+                if (parameter.IsOut)
+                {
+                    return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Out<>) &&
+                           type.GetGenericArguments()[0] == parameter.ParameterType.GetElementType();
+                }
+
+                if (parameter.IsIn)
+                {
+                    return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(In<>) &&
+                           type.GetGenericArguments()[0] == parameter.ParameterType.GetElementType();
+                }
+
+                if (parameter.ParameterType.IsByRef)
+                {
+                    return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Ref<>) &&
+                           type.GetGenericArguments()[0] == parameter.ParameterType.GetElementType();
+                }
+
+                return parameter.ParameterType == type;
+            }
         }
 
+        if (results.Count > 1)
+            throw new ArgumentException("Ambiguous match");
+        if (results.Count == 1)
+            return results[0];
         return null;
     }
 }
