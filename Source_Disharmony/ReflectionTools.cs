@@ -53,12 +53,12 @@ public static class ReflectionTools
             1 => type.GetMembers(DeclaredOnly).Where(m => m.Name == nameParts[0]).ToList(),
             2 => type.GetNestedTypes(DeclaredOnly).Where(t => t.IsClosureType).Append(type)
                 .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>g__{nameParts[1]}|"))
-                .OfType<MemberInfo>().ToList(),
+                .ToList<MemberInfo>(),
             _ => throw new NotSupportedException("Nested local functions are not supported"),
         };
 
         if (parameterTypes != null || genericTypes != null)
-            candidates = FilterMethods(candidates, parameterTypes, genericTypes).OfType<MemberInfo>().ToList();
+            candidates = FilterMethods(candidates, parameterTypes, genericTypes).ToList<MemberInfo>();
 
         if (candidates.Count > 1)
             throw new ArgumentException("Ambiguous match");
