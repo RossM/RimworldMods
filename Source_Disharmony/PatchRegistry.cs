@@ -89,7 +89,7 @@ internal class PatchRegistry
     // When another lock is also needed, this must be taken after Autopatcher's apply lock
     // and before Harmony's lock.
     internal readonly object SyncRoot = new();
-    public readonly HashSet<MethodInfo> MethodsToUpdate = new();
+    public readonly HashSet<MethodInfo> MethodsToUpdate = [];
     public Dictionary<MethodInfo, List<PatchInfo>> PatchesByMethod = new();
 
     private PatchRegistry()
@@ -256,7 +256,7 @@ internal class PatchRegistry
 
             case "__result" when inner is null:
             {
-                if (outer is MethodInfo info && info.ReturnType.IsVoid())
+                if (outer.ReturnType.IsVoid())
                     throw new ArgumentException($"{parameterName} argument cannot be used with method returning void");
                 return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = Scope.Outer };
             }

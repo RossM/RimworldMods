@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Disharmony;
+﻿namespace Disharmony;
 
 public partial class InstructionMatcher
 {

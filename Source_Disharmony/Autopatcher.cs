@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using JetBrains.Annotations;
+
+namespace Disharmony;
 
 public enum PatchType
 {
@@ -8,6 +10,7 @@ public enum PatchType
     InnerPostfix,
 }
 
+[PublicAPI]
 public static partial class Autopatcher
 {
     // Lock order: applyLock, PatchRegistry.SyncRoot, Harmony's lock.
