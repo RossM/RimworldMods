@@ -19,31 +19,33 @@ public static partial class Autopatcher
             locals = patch.patchMethod.GetMethodBody().LocalVariables.ToList();
         }
 
-        static class OpCodeValue
+        private static class OpCodeValue
         {
-            public static short Ldarg_0 = OpCodes.Ldarg_0.Value;
-            public static short Ldarg_1 = OpCodes.Ldarg_1.Value;
-            public static short Ldarg_2 = OpCodes.Ldarg_2.Value;
-            public static short Ldarg_3 = OpCodes.Ldarg_3.Value;
-            public static short Ldarg = OpCodes.Ldarg.Value;
-            public static short Ldarg_S = OpCodes.Ldarg_S.Value;
-            public static short Ldarga = OpCodes.Ldarga.Value;
-            public static short Ldarga_S = OpCodes.Ldarga_S.Value;
-            public static short Ldloc_0 = OpCodes.Ldloc_0.Value;
-            public static short Ldloc_1 = OpCodes.Ldloc_1.Value;
-            public static short Ldloc_2 = OpCodes.Ldloc_2.Value;
-            public static short Ldloc_3 = OpCodes.Ldloc_3.Value;
-            public static short Ldloc = OpCodes.Ldloc.Value;
-            public static short Ldloc_S = OpCodes.Ldloc_S.Value;
-            public static short Ldloca = OpCodes.Ldloca.Value;
-            public static short Ldloca_S = OpCodes.Ldloca_S.Value;
-            public static short Stloc_0 = OpCodes.Stloc_0.Value;
-            public static short Stloc_1 = OpCodes.Stloc_1.Value;
-            public static short Stloc_2 = OpCodes.Stloc_2.Value;
-            public static short Stloc_3 = OpCodes.Stloc_3.Value;
-            public static short Stloc = OpCodes.Stloc.Value;
-            public static short Stloc_S = OpCodes.Stloc_S.Value;
-            public static short Ret = OpCodes.Ret.Value;
+            // ReSharper disable IdentifierTypo
+            public const int Ldarg_0 = 0x02;
+            public const int Ldarg_1 = 0x03;
+            public const int Ldarg_2 = 0x04;
+            public const int Ldarg_3 = 0x05;
+            public const int Ldarg = 0xFE09;
+            public const int Ldarg_S = 0x0E;
+            public const int Ldarga = 0xFE0A;
+            public const int Ldarga_S = 0x0F;
+            public const int Ldloc_0 = 0x06;
+            public const int Ldloc_1 = 0x07;
+            public const int Ldloc_2 = 0x08;
+            public const int Ldloc_3 = 0x09;
+            public const int Ldloc = 0xFE0C;
+            public const int Ldloc_S = 0x11;
+            public const int Ldloca = 0xFE0D;
+            public const int Ldloca_S = 0x12;
+            public const int Stloc_0 = 0x0A;
+            public const int Stloc_1 = 0x0B;
+            public const int Stloc_2 = 0x0C;
+            public const int Stloc_3 = 0x0D;
+            public const int Stloc = 0xFE0E;
+            public const int Stloc_S = 0x13;
+            public const int Ret = 0x2A;
+            // ReSharper restore IdentifierTypo
         }
 
         private bool EmitReplacement()
@@ -64,45 +66,33 @@ public static partial class Autopatcher
 
             foreach (var inst in instructions)
             {
-                CodeInstruction translated;
-                if (inst.opcode.Value == OpCodeValue.Ldarg_0)
-                    translated = CodeInstruction.LoadLocal(argumentLocals[0]);
-                else if (inst.opcode.Value == OpCodeValue.Ldarg_1)
-                    translated = CodeInstruction.LoadLocal(argumentLocals[1]);
-                else if (inst.opcode.Value == OpCodeValue.Ldarg_2)
-                    translated = CodeInstruction.LoadLocal(argumentLocals[2]);
-                else if (inst.opcode.Value == OpCodeValue.Ldarg_3)
-                    translated = CodeInstruction.LoadLocal(argumentLocals[3]);
-                else if (inst.opcode.Value == OpCodeValue.Ldarg || inst.opcode.Value == OpCodeValue.Ldarg_S)
-                    translated = CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)]);
-                else if (inst.opcode.Value == OpCodeValue.Ldarga || inst.opcode.Value == OpCodeValue.Ldarga_S)
-                    translated = CodeInstruction.LoadLocalAddress(argumentLocals[Convert.ToInt32(inst.operand)]);
-                else if (inst.opcode.Value == OpCodeValue.Ldloc_0)
-                    translated = CodeInstruction.LoadLocal(GetLocal(0));
-                else if (inst.opcode.Value == OpCodeValue.Ldloc_1)
-                    translated = CodeInstruction.LoadLocal(GetLocal(1));
-                else if (inst.opcode.Value == OpCodeValue.Ldloc_2)
-                    translated = CodeInstruction.LoadLocal(GetLocal(2));
-                else if (inst.opcode.Value == OpCodeValue.Ldloc_3)
-                    translated = CodeInstruction.LoadLocal(GetLocal(3));
-                else if (inst.opcode.Value == OpCodeValue.Ldloc || inst.opcode.Value == OpCodeValue.Ldloc_S)
-                    translated = CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand)));
-                else if (inst.opcode.Value == OpCodeValue.Ldloca || inst.opcode.Value == OpCodeValue.Ldloca_S)
-                    translated = CodeInstruction.LoadLocalAddress(GetLocal(Convert.ToInt32(inst.operand)));
-                else if (inst.opcode.Value == OpCodeValue.Stloc_0)
-                    translated = CodeInstruction.StoreLocal(GetLocal(0));
-                else if (inst.opcode.Value == OpCodeValue.Stloc_1)
-                    translated = CodeInstruction.StoreLocal(GetLocal(1));
-                else if (inst.opcode.Value == OpCodeValue.Stloc_2)
-                    translated = CodeInstruction.StoreLocal(GetLocal(2));
-                else if (inst.opcode.Value == OpCodeValue.Stloc_3)
-                    translated = CodeInstruction.StoreLocal(GetLocal(3));
-                else if (inst.opcode.Value == OpCodeValue.Stloc || inst.opcode.Value == OpCodeValue.Stloc_S)
-                    translated = CodeInstruction.StoreLocal(GetLocal(Convert.ToInt32(inst.operand)));
-                else if (inst.opcode.Value == OpCodeValue.Ret)
-                    translated = new(OpCodes.Br, returnLabel);
-                else
-                    translated = inst;
+                CodeInstruction translated = unchecked((ushort)inst.opcode.Value) switch
+                {
+                    OpCodeValue.Ldarg_0 => CodeInstruction.LoadLocal(argumentLocals[0]),
+                    OpCodeValue.Ldarg_1 => CodeInstruction.LoadLocal(argumentLocals[1]),
+                    OpCodeValue.Ldarg_2 => CodeInstruction.LoadLocal(argumentLocals[2]),
+                    OpCodeValue.Ldarg_3 => CodeInstruction.LoadLocal(argumentLocals[3]),
+                    OpCodeValue.Ldarg => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)]),
+                    OpCodeValue.Ldarg_S => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)]),
+                    OpCodeValue.Ldarga => CodeInstruction.LoadLocalAddress(argumentLocals[Convert.ToInt32(inst.operand)]),
+                    OpCodeValue.Ldarga_S => CodeInstruction.LoadLocalAddress(argumentLocals[Convert.ToInt32(inst.operand)]),
+                    OpCodeValue.Ldloc_0 => CodeInstruction.LoadLocal(GetLocal(0)),
+                    OpCodeValue.Ldloc_1 => CodeInstruction.LoadLocal(GetLocal(1)),
+                    OpCodeValue.Ldloc_2 => CodeInstruction.LoadLocal(GetLocal(2)),
+                    OpCodeValue.Ldloc_3 => CodeInstruction.LoadLocal(GetLocal(3)),
+                    OpCodeValue.Ldloc => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand))),
+                    OpCodeValue.Ldloc_S => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand))),
+                    OpCodeValue.Ldloca => CodeInstruction.LoadLocalAddress(GetLocal(Convert.ToInt32(inst.operand))),
+                    OpCodeValue.Ldloca_S => CodeInstruction.LoadLocalAddress(GetLocal(Convert.ToInt32(inst.operand))),
+                    OpCodeValue.Stloc_0 => CodeInstruction.StoreLocal(GetLocal(0)),
+                    OpCodeValue.Stloc_1 => CodeInstruction.StoreLocal(GetLocal(1)),
+                    OpCodeValue.Stloc_2 => CodeInstruction.StoreLocal(GetLocal(2)),
+                    OpCodeValue.Stloc_3 => CodeInstruction.StoreLocal(GetLocal(3)),
+                    OpCodeValue.Stloc => CodeInstruction.StoreLocal(GetLocal(Convert.ToInt32(inst.operand))),
+                    OpCodeValue.Stloc_S => CodeInstruction.StoreLocal(GetLocal(Convert.ToInt32(inst.operand))),
+                    OpCodeValue.Ret => new(OpCodes.Br, returnLabel),
+                    _ => inst
+                };
 
                 translated.labels = inst.labels;
                 translated.blocks = inst.blocks;
