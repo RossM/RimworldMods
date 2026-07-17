@@ -2,7 +2,7 @@ namespace Disharmony;
 
 public static class ReflectionTools
 {
-    private static bool IsClosureType(Type type)
+    public static bool IsClosureType(Type type)
     {
         if (type.IsByRef)
             type = type.GetElementType();
