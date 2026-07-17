@@ -2,6 +2,8 @@ namespace Disharmony;
 
 public static class ReflectionTools
 {
+    public static readonly BindingFlags DeclaredOnly = AccessTools.all | BindingFlags.DeclaredOnly;
+
     public static bool IsClosureType(Type type)
     {
         if (type.IsByRef)
@@ -54,42 +56,44 @@ public static class ReflectionTools
             nameParts.RemoveAt(0);
         }
 
-        // If we still have multiple parts, we need to find a local function, which isn't implemented
-        if (nameParts.Count > 1)
-            throw new NotImplementedException();
-
-        if (parameterTypes == null && genericTypes == null)
+        List<MemberInfo> candidates = nameParts.Count switch
         {
-            if (type.GetField(nameParts[0], AccessTools.all) is { } field)
-                return field;
-            if (type.GetProperty(nameParts[0], AccessTools.all) is { } property)
-                return property.GetMethod;
-        }
+            1 => type.GetMembers(DeclaredOnly).Where(m => m.Name == nameParts[0]).ToList(),
+            2 => type.GetNestedTypes(DeclaredOnly).Where(t => t.Name.StartsWith("<>c")).Append(type)
+                .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>g__{nameParts[1]}|"))
+                .OfType<MemberInfo>().ToList(),
+            _ => throw new NotSupportedException("Nested local functions are not supported"),
+        };
 
-        return GetMethod(type, nameParts[0], parameterTypes, genericTypes);
+        if (parameterTypes != null || genericTypes != null)
+            candidates = FilterMethods(candidates, parameterTypes, genericTypes).OfType<MemberInfo>().ToList();
+
+        if (candidates.Count > 1)
+            throw new ArgumentException("Ambiguous match");
+
+        var result = candidates.SingleOrDefault();
+        if (result is PropertyInfo property)
+            result = property.GetMethod;
+        return result;
     }
 
-    private static MethodInfo? GetMethod(Type type, string memberName, Type[]? parameterTypes, Type[]? genericTypes)
+    private static IEnumerable<MethodInfo> FilterMethods(IEnumerable<MemberInfo> candidates, Type[]? parameterTypes, Type[]? genericTypes)
     {
-        List<MethodInfo> results = [];
-
-        foreach (var method in type.GetMethods(AccessTools.all | BindingFlags.DeclaredOnly))
+        foreach (var candidate in candidates)
         {
-            var curMethod = method;
-
-            if (curMethod.Name != memberName)
+            if (candidate is not MethodInfo method)
                 continue;
 
-            if (curMethod.IsGenericMethod)
+            if (method.IsGenericMethod)
             {
                 if (genericTypes is null)
                     continue;
-                if (genericTypes.Length != curMethod.GetGenericArguments().Length)
+                if (genericTypes.Length != method.GetGenericArguments().Length)
                     continue;
 
                 try
                 {
-                    curMethod = curMethod.MakeGenericMethod(genericTypes);
+                    method = method.MakeGenericMethod(genericTypes);
                 }
                 catch
                 {
@@ -101,14 +105,14 @@ public static class ReflectionTools
 
             if (parameterTypes != null)
             {
-                ParameterInfo[] parameters = curMethod.GetParameters();
+                ParameterInfo[] parameters = method.GetParameters();
                 if (parameters.Length != parameterTypes.Length)
                     continue;
                 if (!parameters.Zip(parameterTypes, (p, t) => (p, t)).All(x => ParameterTypeMatcher(x.p, x.t)))
                     continue;
             }
 
-            results.Add(curMethod);
+            yield return method;
             continue;
 
             static bool ParameterTypeMatcher(ParameterInfo parameter, Type type)
@@ -134,11 +138,5 @@ public static class ReflectionTools
                 return parameter.ParameterType == type;
             }
         }
-
-        if (results.Count > 1)
-            throw new ArgumentException("Ambiguous match");
-        if (results.Count == 1)
-            return results[0];
-        return null;
     }
 }
