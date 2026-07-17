@@ -4,8 +4,8 @@
 public static class Patch_Pawn
 {
     [Feature(typeof(GeneCompProperties_Psycast))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Pawn.HasPsylink), MethodType.Getter)]
+    [Postfix]
+    [Target(nameof(Pawn.HasPsylink), MemberType.Getter)]
     public static void HasPsylink_Postfix(Pawn __instance, ref bool __result)
     {
         if (__instance.GeneTracker_XylXenos is { } geneTracker)

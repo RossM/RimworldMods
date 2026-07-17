@@ -4,8 +4,8 @@
 internal static class Patch_DesignationCategoryDef
 {
     [Feature(typeof(GeneCompProperties_UnlockBuildables))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(DesignationCategoryDef.AllResolvedAndIdeoDesignators), MethodType.Getter)]
+    [Postfix]
+    [Target(nameof(DesignationCategoryDef.AllResolvedAndIdeoDesignators), MemberType.Getter)]
     public static void AllResolvedAndIdeoDesignators_Postfix(
         DesignationCategoryDef __instance,
         Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ___ideoBuildingDesignatorsCached,
@@ -15,8 +15,8 @@ internal static class Patch_DesignationCategoryDef
     }
 
     [Feature(typeof(GeneCompProperties_UnlockBuildables))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(DesignationCategoryDef.ResolvedAllowedDesignators), MethodType.Getter)]
+    [Postfix]
+    [Target(nameof(DesignationCategoryDef.ResolvedAllowedDesignators), MemberType.Getter)]
     public static void ResolvedAllowedDesignators_Postfix(
         DesignationCategoryDef __instance,
         Dictionary<DesignationCategoryDef.BuildablePreceptBuilding, Designator> ___ideoBuildingDesignatorsCached,

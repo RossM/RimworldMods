@@ -5,8 +5,8 @@ internal static class Patch_Pawn
 {
     // Note: This patch is performance-sensitive
     [Feature(typeof(GeneCompProperties_RaceModifiers))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Pawn.BodySize), MethodType.Getter)]
+    [Postfix]
+    [Target(nameof(Pawn.BodySize), MemberType.Getter)]
     public static void BodySize_Postfix(Pawn __instance, ref float __result)
     {
         if (__instance.GeneTracker_Xylib is { } geneTracker)
@@ -25,8 +25,8 @@ internal static class Patch_Pawn
 
     // Note: This patch is performance-sensitive
     [Feature(typeof(GeneCompProperties_RaceModifiers))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Pawn.HealthScale), MethodType.Getter)]
+    [Postfix]
+    [Target(nameof(Pawn.HealthScale), MemberType.Getter)]
     public static void HealthScale_Postfix(Pawn __instance, ref float __result)
     {
         if (__instance.GeneTracker_Xylib is { } geneTracker)

@@ -5,8 +5,8 @@ internal static class Patch_Pawn_PsychicEntropyTracker
 {
     // Note: This patch is performance-sensitive
     [Feature(typeof(Psycast))]
-    [HarmonyPrefix]
-    [HarmonyPatch(nameof(Pawn_PsychicEntropyTracker.NeedsPsyfocus), MethodType.Getter)]
+    [Prefix]
+    [Target(nameof(Pawn_PsychicEntropyTracker.NeedsPsyfocus), MemberType.Getter)]
     public static bool NeedsPsyfocus_Prefix(Pawn_PsychicEntropyTracker __instance, out bool __result)
     {
         __result = __instance.Pawn.NeedsPsyfocus;

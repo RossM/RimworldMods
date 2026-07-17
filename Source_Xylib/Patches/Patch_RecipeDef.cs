@@ -4,8 +4,8 @@
 internal static class Patch_RecipeDef
 {
     [Feature(typeof(GeneCompProperties_UnlockRecipes))]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(RecipeDef.AvailableNow), MethodType.Getter)]
+    [Postfix]
+    [Target(nameof(RecipeDef.AvailableNow), MemberType.Getter)]
     public static void AvailableNow_Postfix(RecipeDef __instance, ref bool __result)
     {
         if (!PatchHelpers.RecipesUnlockedByGenes.Contains(__instance))

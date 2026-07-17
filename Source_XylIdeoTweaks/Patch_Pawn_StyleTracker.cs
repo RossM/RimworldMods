@@ -4,8 +4,8 @@
 public static class Patch_Pawn_StyleTracker
 {
     [Feature(Features.PreventRestyleLoops)]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Pawn_StyleTracker.HasUnwantedBeard), MethodType.Getter)]
+    [Postfix]
+    [Target(nameof(Pawn_StyleTracker.HasUnwantedBeard), MemberType.Getter)]
     public static void HasUnwantedBeard_Postfix(Pawn_StyleTracker __instance, ref bool __result)
     {
         if (__result)
@@ -16,8 +16,8 @@ public static class Patch_Pawn_StyleTracker
     }
 
     [Feature(Features.PreventRestyleLoops)]
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Pawn_StyleTracker.HasUnwantedHairStyle), MethodType.Getter)]
+    [Postfix]
+    [Target(nameof(Pawn_StyleTracker.HasUnwantedHairStyle), MemberType.Getter)]
     public static void HasUnwantedHairStyle_Postfix(Pawn_StyleTracker __instance, ref bool __result)
     {
         if (__result)
