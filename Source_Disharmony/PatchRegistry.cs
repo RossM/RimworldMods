@@ -208,6 +208,13 @@ internal class PatchRegistry
         bool inline = false,
         bool debug = false)
     {
+        if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix)
+        {
+            var iterator = outer.GetIteratorImplementation();
+            if (iterator != null)
+                outer = iterator;
+        }
+
         var parameterBinder = new ParameterBinder(outer, inner);
 
         var arguments = method.GetParameters().Select(parameterBinder.BindParameter).ToArray();
