@@ -112,8 +112,7 @@ internal class Patcher
 
         FileLog.Log($"!!! Applying trampoline to {method.FullName}");
 
-        trampolineCount++;
-        var trampoline = MakeTrampoline(method, $"_Trampoline{trampolineCount}");
+        MethodInfo trampoline = MakeTrampoline(method);
 
         HarmonyInternals.DetourMethod(method, trampoline);
 
@@ -149,7 +148,7 @@ internal class Patcher
         return type.GetMethod(methodBuilder.Name);
     }
 
-    private MethodInfo MakeTrampoline(MethodInfo target, string name)
+    private MethodInfo MakeTrampoline(MethodInfo target)
     {
         Type[] parameterTypes = target.GetParameters().Types();
         if (!target.IsStatic)
@@ -160,8 +159,9 @@ internal class Patcher
                 parameterTypes = [target.DeclaringType, .. parameterTypes];
         }
 
-        var method = new DynamicMethod($"{target.DeclaringType?.FullName}.{target.Name}{name}", target.ReturnType, parameterTypes,
-            moduleBuilder, true);
+        trampolineCount++;
+        var method = new DynamicMethod($"{target.DeclaringType?.FullName}.{target.Name}_Trampoline{trampolineCount}", target.ReturnType,
+            parameterTypes, moduleBuilder, true);
 
         ILGenerator generator = method.GetILGenerator();
 
