@@ -78,7 +78,7 @@ public static class ReflectionTools
 
         switch (candidates.Count)
         {
-            case > 1: throw new InvalidOperationException($"Ambiguous match: {name}");
+            case > 1: throw new AmbiguousMatchException($"Ambiguous match: {name}");
             case 0: throw new InvalidOperationException($"Member not found: {name}");
         }
 
