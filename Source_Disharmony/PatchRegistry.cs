@@ -182,7 +182,7 @@ internal class PatchRegistry
                         if (outer == null)
                             throw new InvalidOperationException($"Couldn't locate method {targetAttribute.methodName}");
 
-                        AddPatch(method, patchType, outer, inner, inline, debug);
+                        AddPatch(method, patchType, outer, Invocation.Create(inner), inline, debug);
                     }
                 }
             }
@@ -197,7 +197,7 @@ internal class PatchRegistry
         MethodInfo method,
         PatchType patchType,
         MethodInfo outer,
-        MemberInfo? inner,
+        Invocation inner,
         bool inline = false,
         bool debug = false)
     {
@@ -213,7 +213,7 @@ internal class PatchRegistry
             }
         }
 
-        var parameterBinder = new ParameterBinder(outer, inner);
+        var parameterBinder = new ParameterBinder(new MethodInvocation(outer), inner);
 
         var arguments = method.GetParameters().Select(parameterBinder.Bind).ToArray();
 
@@ -222,7 +222,7 @@ internal class PatchRegistry
 
         PatchInfo patch = new()
         {
-            inner = Invocation.Create(inner),
+            inner = inner,
             patch = new MethodInvocation(method),
             patchType = patchType,
             stateKey = method.DeclaringType,

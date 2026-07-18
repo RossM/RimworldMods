@@ -1,9 +1,8 @@
 ﻿namespace Disharmony;
 
-internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
+internal class ParameterBinder(Invocation outer, Invocation inner)
 {
-    public readonly MethodInfo outer = outer;
-    public readonly MemberInfo? inner = inner;
+    private readonly bool isInfix = inner is not EmptyInvocation;
 
     public ParameterBinding Bind(ParameterInfo parameter)
     {
@@ -12,6 +11,9 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
         var attributes = parameter.GetCustomAttributes();
         var parameterBindingAttribute = attributes.OfType<ParameterBindingAttribute>().SingleOrDefault();
 
+        var scope = DefaultScope(parameterBindingAttribute?.scope ?? Scope.Any);
+        Invocation memberForScope = MemberForScope(scope);
+
         switch (parameterBindingAttribute)
         {
             case ParameterAttribute { index: int index } parameterAttribute:
@@ -19,24 +21,22 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
                 if (parameterAttribute.scope is Scope.Inner && inner == null)
                     throw new ArgumentException("Parameter error: No inner function");
 
-                return ParameterBinding(parameter, index, DefaultScope(parameterAttribute.scope));
+                return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = scope, Index = index };
             }
 
             case ParameterAttribute parameterAttribute:
                 return BindParameter(parameter, parameterAttribute.name ?? parameterName, parameterAttribute.scope);
 
-            case InstanceAttribute instanceAttribute:
+            case InstanceAttribute:
             {
-                var scope = DefaultScope(instanceAttribute.scope);
-                if (IsStatic(MemberForScope(scope)))
+                if (memberForScope.IsStatic)
                     throw new ArgumentException($"[Instance] argument cannot be used with static outer method");
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = scope };
             }
 
             case ReturnValueAttribute:
             {
-                var scope = DefaultScope(Scope.Any);
-                if (MemberForScope(scope) is MethodInfo method && method.ReturnType.IsVoid())
+                if (memberForScope.ReturnType.IsVoid())
                     throw new ArgumentException($"[ReturnValue] argument cannot be used with method returning void");
                 return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = scope };
             }
@@ -54,33 +54,28 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
         {
             case null: throw new ArgumentException("Parameter name is null");
 
-            case "__caller" when inner is not null:
-            case "__instance" when inner is null:
+            case "__caller":
             {
-                if (IsStatic(outer))
-                    throw new ArgumentException($"{parameterName} argument cannot be used with static outer method");
+                if (!isInfix)
+                    throw new ArgumentException("__caller can only be used with inner patches");
+
+                if (outer.IsStatic)
+                    throw new ArgumentException($"{parameterName} argument cannot be used with static method");
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer };
             }
 
             case "__instance":
             {
-                if (IsStatic(inner))
-                    throw new ArgumentException($"{parameterName} argument cannot be used with static inner method");
-                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner };
-            }
-
-            case "__result" when inner is null:
-            {
-                if (outer.ReturnType.IsVoid())
-                    throw new ArgumentException($"{parameterName} argument cannot be used with method returning void");
-                return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = Scope.Outer };
+                if (memberForScope.IsStatic)
+                    throw new ArgumentException($"{parameterName} argument cannot be used with static method");
+                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = scope };
             }
 
             case "__result":
             {
-                if (inner is MethodInfo info && info.ReturnType.IsVoid())
+                if (memberForScope.ReturnType.IsVoid())
                     throw new ArgumentException($"{parameterName} argument cannot be used with method returning void");
-                return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = Scope.Inner };
+                return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = scope };
             }
 
             case "__state":
@@ -100,7 +95,7 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
         }
     }
 
-    private MemberInfo? MemberForScope(Scope scope)
+    private Invocation MemberForScope(Scope scope)
     {
         var member = scope switch
         {
@@ -111,14 +106,11 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
         return member;
     }
 
-    private bool IsStatic(MemberInfo? memberInfo) =>
-        memberInfo is MethodInfo { IsStatic: true } or PropertyInfo { GetMethod.IsStatic: true } or FieldInfo { IsStatic: true };
-
     private Scope DefaultScope(Scope scope)
     {
         return scope switch
         {
-            Scope.Any => inner is null ? Scope.Outer : Scope.Inner,
+            Scope.Any => isInfix ? Scope.Inner : Scope.Outer,
             Scope.Inner => Scope.Inner,
             Scope.Outer => Scope.Outer,
             _ => throw new ArgumentOutOfRangeException(),
@@ -128,45 +120,41 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
     private ParameterBinding BindParameter(ParameterInfo parameter, string parameterName, Scope scope)
     {
         // Look in target parameters
-        if (scope is Scope.Inner or Scope.Any && inner is MethodInfo innerMethod)
+        if (scope is Scope.Inner or Scope.Any)
         {
-            int index = Array.FindIndex(innerMethod.GetParameters(), p => p.Name == parameterName);
+            int index = Array.FindIndex(inner.GetParameterNames(), p => p == parameterName);
             if (index >= 0)
-            {
-                return ParameterBinding(parameter, index, Scope.Inner);
-            }
+                return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Inner, Index = index };
         }
 
         // Look in caller parameters
         if (scope is Scope.Outer or Scope.Any)
         {
-            ParameterInfo[] parameters = outer.GetParameters();
-            int index = Array.FindIndex(parameters, p => p.Name == parameterName);
+            Type[] parameterTypes = outer.GetParameterTypes();
+            int index = Array.FindIndex(outer.GetParameterNames(), p => p == parameterName);
             if (index >= 0)
             {
                 // Don't allow writing through a ref parameter to an argument of the outer method. This would
                 // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
-                if (inner != null && parameter.ParameterType.IsByRef && !parameters[index].ParameterType.IsByRef)
+                if (isInfix && parameter.ParameterType.IsByRef && !parameterTypes[index].IsByRef)
                     throw new ArgumentException("Outer method parameters can't be accessed by ref");
 
-                return ParameterBinding(parameter, index, Scope.Outer);
+                return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Outer, Index = index };
             }
         }
 
         // Look in closure fields
-        if (scope is Scope.Inner or Scope.Any && inner is MethodInfo innerMethod2)
+        if (scope is Scope.Inner or Scope.Any)
         {
-            int closureIndex = Array.FindLastIndex(innerMethod2.GetParameters(), p => p.ParameterType.IsClosureType);
+            var parameterTypes = inner.GetParameterTypes();
+            int closureIndex = Array.FindLastIndex(parameterTypes, p => p.IsClosureType);
             if (closureIndex >= 0)
             {
-                var type = innerMethod2.GetParameters()[closureIndex].ParameterType;
+                var type = parameterTypes[closureIndex];
                 if (type.IsByRef)
                     type = type.GetElementType();
 
                 var field = type.GetField(parameterName, AccessTools.all);
-
-                if (!innerMethod2.IsStatic)
-                    closureIndex++;
 
                 if (field != null)
                     return new()
@@ -183,37 +171,20 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
         throw new ArgumentException($"Argument not found: {parameterName}");
     }
 
-    private ParameterBinding ParameterBinding(ParameterInfo parameter, int index, Scope scope)
-    {
-        var target = scope switch
-        {
-            Scope.Inner => (MethodInfo?)inner,
-            Scope.Outer => outer,
-            Scope.Any or _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null),
-        };
-
-        if (target is not MethodInfo method)
-            throw new ArgumentException("Not a method");
-
-        if (!method.IsStatic)
-            index++;
-        return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = scope, Index = index };
-    }
-
     private ParameterBinding BindField(ParameterInfo parameter, string fieldName, Scope scope)
     {
         // Look in inner instance fields
-        if (scope is Scope.Inner or Scope.Any && inner is not null && !IsStatic(inner))
+        if (scope is Scope.Inner or Scope.Any && !inner.IsStatic)
         {
-            var field = inner.DeclaringType!.GetField(fieldName, AccessTools.all);
+            var field = inner.InstanceType.GetField(fieldName, AccessTools.all);
             if (field != null)
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner, Fields = [field] };
         }
 
         // Look in outer instance fields
-        if (scope is Scope.Outer or Scope.Any && !IsStatic(outer))
+        if (scope is Scope.Outer or Scope.Any && !outer.IsStatic)
         {
-            var field = outer.DeclaringType!.GetField(fieldName, AccessTools.all);
+            var field = outer.InstanceType.GetField(fieldName, AccessTools.all);
             if (field != null)
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [field] };
         }

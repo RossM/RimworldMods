@@ -6,6 +6,9 @@ internal abstract class Invocation
     public abstract Type ReturnType { get; }
     public abstract CodeInstruction GetCodeInstruction();
     public abstract Type[] GetParameterTypes();
+    public abstract bool IsStatic { get; }
+    public abstract string[] GetParameterNames();
+    public abstract Type InstanceType { get; }
 
     public static Invocation Create(MemberInfo? member)
     {
@@ -35,6 +38,9 @@ internal class EmptyInvocation : Invocation
     public override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
 
     public override Type[] GetParameterTypes() => [];
+    public override bool IsStatic => true;
+    public override string[] GetParameterNames() => [];
+    public override Type InstanceType => throw new NotSupportedException();
 }
 
 internal class FieldInvocation(FieldInfo field) : Invocation
@@ -49,6 +55,9 @@ internal class FieldInvocation(FieldInfo field) : Invocation
     public override CodeInstruction GetCodeInstruction() => new(field.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, field);
 
     public override Type[] GetParameterTypes() => field.IsStatic ? [] : [field.DeclaringType];
+    public override bool IsStatic => @field.IsStatic;
+    public override string[] GetParameterNames() => field.IsStatic ? [] : ["<instance>"];
+    public override Type InstanceType => @field.DeclaringType;
 
     public override bool Equals(object? obj)
     {
@@ -84,6 +93,13 @@ internal class MethodInvocation(MethodInfo method) : Invocation
     public override Type[] GetParameterTypes() => method.IsStatic
         ? [.. method.GetParameters().Select(p => p.ParameterType)]
         : [method.DeclaringType, .. method.GetParameters().Select(p => p.ParameterType)];
+
+    public override bool IsStatic => method.IsStatic;
+    public override string[] GetParameterNames() => method.IsStatic
+        ? [.. method.GetParameters().Select(p => p.Name)]
+        : ["<instance>", .. method.GetParameters().Select(p => p.Name)];
+
+    public override Type InstanceType => method.DeclaringType;
 
     public override bool Equals(object? obj)
     {
