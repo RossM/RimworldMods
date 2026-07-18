@@ -26,7 +26,7 @@ public static class LateInit
             }
         }
 
-        LongEventHandler.QueueLongEvent(EagerApplyPatches, "XylPatching", true, e => { Log.Error($"Patching error: {e}"); }, showExtraUIInfo: false);
+        LongEventHandler.QueueLongEvent(EagerApplyPatches, "XylPatching", true, e => { Log.Error($"Patching error: {e}"); });
     }
 
     private static void EagerApplyPatches()
