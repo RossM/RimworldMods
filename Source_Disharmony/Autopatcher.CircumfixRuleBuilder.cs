@@ -61,7 +61,7 @@ public static partial class Autopatcher
                     EmitParameterValue(parameter);
 
                 output.Add(CodeInstruction.Annotation($"{prefix.patchType} {patchMethod.FullName}"));
-                output.Add(new MemberInvocation(patchMethod).GetCodeInstruction());
+                output.Add(new MethodInvocation(patchMethod).GetCodeInstruction());
 
                 if (!patchMethod.ReturnType.IsVoid())
                 {
@@ -115,7 +115,7 @@ public static partial class Autopatcher
                         EmitParameterValue(parameter);
 
                     output.Add(CodeInstruction.Annotation($"{postfix.patchType} {patchMethod.FullName}"));
-                    output.Add(new MemberInvocation(patchMethod).GetCodeInstruction());
+                    output.Add(new MethodInvocation(patchMethod).GetCodeInstruction());
 
                     if (!patchMethod.ReturnType.IsVoid())
                         output.Add(new(OpCodes.Pop));
