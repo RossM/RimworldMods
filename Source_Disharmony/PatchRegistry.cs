@@ -58,8 +58,8 @@ internal struct ParameterBinding
 
 internal struct PatchInfo
 {
-    public required MemberInfo? inner;
-    public required MethodInfo outer;
+    public required Invocation? inner;
+    public required MethodInvocation outer;
     public required MethodInfo patchMethod;
     public required PatchType patchType;
     public required ParameterBinding[] parameters;
@@ -95,8 +95,6 @@ internal class PatchRegistry
 
                 ProcessType(type);
             }
-
-            PatchesByMethod = Patches.GroupBy(patch => patch.outer).ToDictionary(g => g.Key, g => g.ToList());
         }
     }
 
@@ -116,8 +114,6 @@ internal class PatchRegistry
 
                 ProcessType(type);
             }
-
-            PatchesByMethod = Patches.GroupBy(patch => patch.outer).ToDictionary(g => g.Key, g => g.ToList());
         }
     }
 
@@ -205,21 +201,29 @@ internal class PatchRegistry
         bool inline = false,
         bool debug = false)
     {
+        bool isIterator = false;
+
         if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix)
         {
             var iterator = outer.GetIteratorImplementation();
             if (iterator != null)
+            {
                 outer = iterator;
+                isIterator = true;
+            }
         }
 
         var parameterBinder = new ParameterBinder(outer, inner);
 
         var arguments = method.GetParameters().Select(parameterBinder.Bind).ToArray();
 
+        if (isIterator && arguments.Any(p => p.BindingType == BindingType.State))
+            throw new NotSupportedException("State parameters are not supported for iterator state machine methods");
+
         PatchInfo patch = new()
         {
             outer = outer,
-            inner = inner,
+            inner = inner is not null ? Invocation.Create(inner) : null,
             patchMethod = method,
             patchType = patchType,
             parameters = arguments,

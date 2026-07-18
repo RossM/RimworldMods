@@ -57,12 +57,11 @@ public static partial class Autopatcher
 
             ruleBuilders.Add(new CircumfixRuleBuilder(context, patchedMethod, patches));
 
-            foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patches.Where(patch => patch.inner != null)
+            foreach (IGrouping<Invocation, PatchInfo> targetGroup in patches.Where(patch => patch.inner != null)
                          .GroupBy(patch => patch.inner!))
             {
-                MemberInfo inner = targetGroup.Key;
-                Invocation invocation = Invocation.Create(inner);
-                ruleBuilders.Add(new InfixRuleBuilder(context, patchedMethod, invocation, targetGroup.ToList()));
+                Invocation inner = targetGroup.Key;
+                ruleBuilders.Add(new InfixRuleBuilder(context, patchedMethod, inner, targetGroup.ToList()));
             }
 
             List<Rule> rules = [];
