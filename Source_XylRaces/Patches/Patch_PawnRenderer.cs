@@ -6,44 +6,11 @@ namespace XylXenos.Patches;
 [HarmonyPatch(typeof(PawnRenderer))]
 public static class Patch_PawnRenderer
 {
-    private static readonly InstructionMatcher.Rule Rule_ModifyRenderFlags = new()
-    {
-        Min = 1, Max = 0,
-        Mode = InstructionMatcher.OutputMode.InsertAfter,
-        Pattern =
-        [
-            // pawnRenderFlags = DefaultRenderFlagsNow | PawnRenderFlags.Clothes | PawnRenderFlags.Headgear;
-            CodeInstruction.Call(typeof(PawnRenderer), "get_DefaultRenderFlagsNow"),
-            new CodeInstruction(OpCodes.Ldc_I4_S, 64),
-            new CodeInstruction(OpCodes.Or),
-            new CodeInstruction(OpCodes.Ldc_I4_S, 32),
-            new CodeInstruction(OpCodes.Or),
-            CodeInstruction.StoreLocal(0),
-        ],
-        Output =
-        [
-            // pawnRenderFlags = Comp_RenderProperties.ModifyRenderFlags(pawn, pawnRenderFlags);
-            // Load this
-            CodeInstruction.LoadArgument(0),
-            // Load this.pawn
-            CodeInstruction.LoadField(typeof(PawnRenderer), "pawn"),
-            // Load pawnRenderFlags
-            CodeInstruction.LoadLocal(0),
-            // Get modified flags
-            CodeInstruction.Call(typeof(PatchHelpers), nameof(PatchHelpers.ModifyRenderFlags)),
-            // Save pawnRenderFlags
-            CodeInstruction.StoreLocal(0),
-        ],
-    };
-
     [Feature(nameof(DefOf.XylTakeShower))]
-    [HarmonyTranspiler]
-    [HarmonyPatch("ParallelGetPreRenderResults")]
-    public static IEnumerable<CodeInstruction> ParallelGetPreRenderResults_Transpiler(
-        IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator,
-        MethodBase method)
+    [InnerPrefix(typeof(PawnRenderer), "GetDrawParms")]
+    [Target("ParallelGetPreRenderResults")]
+    public static void GetDrawParms_Prefix(Pawn ___pawn, ref PawnRenderFlags flags)
     {
-        return InstructionMatcher.MatchAndReplace([Rule_ModifyRenderFlags], method, instructions, generator);
+        flags = PatchHelpers.ModifyRenderFlags(___pawn, flags);
     }
 }
