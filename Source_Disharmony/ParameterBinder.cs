@@ -33,8 +33,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
             case ParameterAttribute { index: int index }:
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = defaultScope, Index = index };
 
-            case ParameterAttribute  { name: var name, scope: var scope }:
-                return BindParameter(parameter, name ?? parameterName, scope);
+            case ParameterAttribute { name: var name, scope: var scope }: return BindParameter(parameter, name ?? parameterName, scope);
 
             case InstanceAttribute:
             {
@@ -52,7 +51,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
 
             case StateAttribute: return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
 
-            case FieldAttribute fieldAttribute: return BindField(parameter, fieldAttribute.name ?? parameterName, fieldAttribute.scope);
+            case FieldAttribute { name: var name, scope: var scope }: return BindField(parameter, name ?? parameterName, scope);
 
             case null: break;
 
