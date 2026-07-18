@@ -42,7 +42,7 @@ internal class FieldInvocation(FieldInfo field) : Invocation
     public override string FullName => @field.FullName;
 
     public override Type ReturnType => @field.FieldType;
-    private readonly FieldInfo field = field;
+    public readonly FieldInfo field = field;
 
     public static implicit operator FieldInvocation(FieldInfo field) => new(field);
 
@@ -75,7 +75,7 @@ internal class MethodInvocation(MethodInfo method) : Invocation
     public override string FullName => method.FullName;
 
     public override Type ReturnType => method.ReturnType;
-    private readonly MethodInfo method = method;
+    public readonly MethodInfo method = method;
 
     public static implicit operator MethodInvocation(MethodInfo method) => new(method);
 

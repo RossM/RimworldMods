@@ -36,7 +36,7 @@ public static partial class Autopatcher
 
             var prefixesUsingResult = innerPrefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
             var postfixesUsingResult = innerPostfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
-            bool canSkip = innerPrefixes.Any(patch => !patch.patchMethod.ReturnType.IsVoid());
+            bool canSkip = innerPrefixes.Any(patch => !patch.patch.ReturnType.IsVoid());
 
             if (canSkip && !targetType.IsVoid() || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
             {
@@ -52,7 +52,7 @@ public static partial class Autopatcher
             Label? skipLabel = null;
             foreach (var prefix in innerPrefixes)
             {
-                MethodInvocation patchMethod = prefix.patchMethod;
+                MethodInvocation patchMethod = prefix.patch;
                 foreach (var parameter in prefix.parameters)
                     EmitParameterValue(parameter);
 
@@ -82,7 +82,7 @@ public static partial class Autopatcher
 
                 foreach (var postfix in innerPostfixes)
                 {
-                    MethodInvocation patchMethod = postfix.patchMethod;
+                    MethodInvocation patchMethod = postfix.patch;
                     foreach (var parameter in postfix.parameters)
                         EmitParameterValue(parameter);
 

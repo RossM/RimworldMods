@@ -35,26 +35,29 @@ public static partial class Autopatcher
             // ReSharper restore IdentifierTypo
         }
 
-        private readonly MethodInfo method;
+        private readonly MethodBase method;
         private readonly int[] argumentLocals;
         private readonly Dictionary<int, int> localMap = new();
-        private readonly ParameterInfo[] parameters;
-        private readonly List<LocalVariableInfo> locals;
+        private readonly Type[] parameterTypes;
+        private readonly List<LocalVariableInfo>? locals;
 
         public InlineRuleBuilder(RuleBuilderContext context, PatchInfo patch) : base(context, EmptyInvocation.Instance)
         {
-            method = patch.patchMethod;
+            method = patch.patch.method;
 
-            parameters = patch.patchMethod.GetParameters();
-            argumentLocals = new int[parameters.Length];
-            locals = patch.patchMethod.GetMethodBody().LocalVariables.ToList();
+            parameterTypes = patch.patch.GetParameterTypes();
+            argumentLocals = new int[parameterTypes.Length];
+            locals = method.GetMethodBody()?.LocalVariables.ToList();
         }
 
         private bool EmitReplacement()
         {
-            for (int i = parameters.Length - 1; i >= 0; i--)
+            if (locals is null)
+                return false;
+
+            for (int i = parameterTypes.Length - 1; i >= 0; i--)
             {
-                argumentLocals[i] = output.AddLocal(parameters[i].ParameterType);
+                argumentLocals[i] = output.AddLocal(parameterTypes[i]);
                 output.Add(CodeInstruction.StoreLocal(argumentLocals[i]));
             }
 

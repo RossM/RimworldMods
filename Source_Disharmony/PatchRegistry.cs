@@ -59,8 +59,9 @@ internal struct ParameterBinding
 internal struct PatchInfo
 {
     public required Invocation inner;
-    public required MethodInfo patchMethod;
+    public required MethodInvocation patch;
     public required PatchType patchType;
+    public required Type stateKey;
     public required ParameterBinding[] parameters;
     public required bool inline;
     public bool debug;
@@ -222,8 +223,9 @@ internal class PatchRegistry
         PatchInfo patch = new()
         {
             inner = Invocation.Create(inner),
-            patchMethod = method,
+            patch = method,
             patchType = patchType,
+            stateKey = method.DeclaringType,
             parameters = arguments,
             inline = inline,
             debug = debug,

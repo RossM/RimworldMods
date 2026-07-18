@@ -54,8 +54,8 @@ public static partial class Autopatcher
                 {
                     if (parameters[i].BindingType == BindingType.State)
                     {
-                        parameters[i].Index = GetOrAddStateLocal(patch.patchMethod.DeclaringType,
-                            parameters[i].Parameter.ParameterType, patch.patchMethod);
+                        parameters[i].Index = GetOrAddStateLocal(patch.stateKey,
+                            parameters[i].Parameter.ParameterType, patch.patch);
                     }
                 }
             }
