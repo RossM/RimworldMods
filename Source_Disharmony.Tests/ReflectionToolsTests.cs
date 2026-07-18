@@ -116,6 +116,15 @@ namespace Disharmony.Tests
         }
 
         [Test]
+        public void GetMemberFindsNonNestedMethoHarmonyCompatible()
+        {
+            const string name = "Disharmony.Tests.ReflectionFixtures.LookupTarget:Method";
+            MethodInfo expected = typeof(LookupTarget).GetMethod(nameof(LookupTarget.Method))!;
+
+            AssertAllMethodOptions(null, name, expected);
+        }
+
+        [Test]
         public void GetMemberFindsNonNestedMethodFromDeclaringType()
         {
             const string name = nameof(LookupTarget.Method);
