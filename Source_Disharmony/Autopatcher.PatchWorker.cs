@@ -59,7 +59,10 @@ public static partial class Autopatcher
 
             foreach (IGrouping<MemberInfo, PatchInfo> targetGroup in patches.Where(patch => patch.inner != null)
                          .GroupBy(patch => patch.inner!))
-                ruleBuilders.Add(new InfixRuleBuilder(context, patchedMethod, targetGroup.Key, targetGroup.ToList()));
+            {
+                MemberInfo inner = targetGroup.Key;
+                ruleBuilders.Add(new InfixRuleBuilder(context, patchedMethod, new Invocation(inner), targetGroup.ToList()));
+            }
 
             List<Rule> rules = [];
             List<Label> labels = [];

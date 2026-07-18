@@ -8,29 +8,30 @@ public static partial class Autopatcher
 
         private readonly List<PatchInfo> innerPrefixes;
         private readonly List<PatchInfo> innerPostfixes;
+        private readonly Invocation inner;
+
+        private readonly Type[] innerParameterTypes;
+        private readonly int[] innerParameterLocals;
 
         public InfixRuleBuilder(
             RuleBuilderContext context,
             MethodBase outer,
-            MemberInfo inner,
-            List<PatchInfo> patches) : base(context, outer, inner)
+            Invocation inner,
+            List<PatchInfo> patches) : base(context, outer)
         {
             innerPrefixes = patches.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
             innerPostfixes = patches.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
 
-            targetType = inner switch
-            {
-                FieldInfo field => field.FieldType,
-                MethodInfo method => method.ReturnType,
-                _ => throw new NotSupportedException(),
-            };
+            this.inner = inner;
+
+            innerParameterTypes = this.inner.ParameterTypes();
+            innerParameterLocals = new int[innerParameterTypes.Length];
+
+            targetType = this.inner.GetReturnType();
         }
 
         private void EmitReplacement()
         {
-            if (inner is null)
-                throw new InvalidOperationException();
-
             EmitPrelude();
 
             var prefixesUsingResult = innerPrefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
@@ -56,7 +57,7 @@ public static partial class Autopatcher
                     EmitParameterValue(parameter);
 
                 output.Add(CodeInstruction.Annotation($"{prefix.patchType} {patchMethod.FullName}"));
-                output.Add(InstructionFor(patchMethod));
+                output.Add(new Invocation(patchMethod).GetCodeInstruction());
 
                 if (!patchMethod.ReturnType.IsVoid())
                 {
@@ -66,10 +67,10 @@ public static partial class Autopatcher
 
             for (int i = 0; i < innerParameterTypes!.Length; i++)
             {
-                EmitTargetParameter(innerParameterTypes![i], i);
+                EmitInnerParameter(innerParameterTypes![i], i);
             }
 
-            output.Add(InstructionFor(inner));
+            output.Add(inner.GetCodeInstruction());
 
             if (skipLabel != null || innerPostfixes.Count > 0)
             {
@@ -86,7 +87,7 @@ public static partial class Autopatcher
                         EmitParameterValue(parameter);
 
                     output.Add(CodeInstruction.Annotation($"{postfix.patchType} {patchMethod.FullName}"));
-                    output.Add(InstructionFor(patchMethod));
+                    output.Add(new Invocation(patchMethod).GetCodeInstruction());
                     if (!patchMethod.ReturnType.IsVoid())
                         output.Add(new(OpCodes.Pop));
                 }
@@ -107,14 +108,22 @@ public static partial class Autopatcher
             }
         }
 
+        protected override void EmitParameterLookup(Type type, ParameterBinding parameter)
+        {
+            switch (parameter.Scope)
+            {
+                case Scope.Outer: EmitOuterParameter(type, parameter.Index); break;
+                case Scope.Inner: EmitInnerParameter(type, parameter.Index); break;
+                default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
+            }
+        }
+
+
         public override IEnumerable<Rule> BuildRules()
         {
-            if (inner is null)
-                throw new InvalidOperationException();
-
             List<CodeInstruction> pattern =
             [
-                InstructionFor(inner),
+                inner.GetCodeInstruction(),
             ];
 
             EmitReplacement();
@@ -128,6 +137,18 @@ public static partial class Autopatcher
                 Output = output.Instructions.ToArray(),
                 Name = inner.FullName,
             };
+        }
+
+        private void EmitInnerParameter(Type type, int index)
+        {
+            if (innerParameterTypes == null)
+                throw new InvalidOperationException("innerParameterTypes is null");
+            if (innerParameterLocals == null)
+                throw new InvalidOperationException("innerParameterLocals is null");
+
+            output.EmitLoad(innerParameterLocals[index], type.IsByRef && !innerParameterTypes[index].IsByRef);
+            if (!type.IsByRef && innerParameterTypes[index].IsByRef)
+                output.Add(new(OpCodes.Ldobj, type));
         }
     }
 }
