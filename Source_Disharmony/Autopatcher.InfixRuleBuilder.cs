@@ -24,7 +24,7 @@ public static partial class Autopatcher
 
             this.inner = inner;
 
-            innerParameterTypes = this.inner.GetParameterTypes();
+            innerParameterTypes = this.inner.ParameterTypes;
             innerParameterLocals = new int[innerParameterTypes.Length];
 
             targetType = this.inner.ReturnType;

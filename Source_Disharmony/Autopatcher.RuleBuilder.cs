@@ -18,7 +18,7 @@ public static partial class Autopatcher
     private abstract class RuleBuilder(RuleBuilderContext context, Invocation outer)
     {
         public virtual IEnumerable<Label> CrossRuleLabels => [];
-        private readonly Type[]? outerParameterTypes = outer.GetParameterTypes();
+        private readonly Type[]? outerParameterTypes = outer.ParameterTypes;
 
         protected readonly InstructionList output = context.NewInstructionList();
         protected int resultLocalIndex = -1;

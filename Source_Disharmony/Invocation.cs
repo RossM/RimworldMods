@@ -4,11 +4,11 @@ internal abstract class Invocation
 {
     public abstract string FullName { get; }
     public abstract Type ReturnType { get; }
-    public abstract CodeInstruction GetCodeInstruction();
-    public abstract Type[] GetParameterTypes();
+    public abstract Type[] ParameterTypes { get; }
     public abstract bool IsStatic { get; }
-    public abstract string[] GetParameterNames();
+    public abstract string[] ParameterNames { get; }
     public abstract Type InstanceType { get; }
+    public abstract CodeInstruction GetCodeInstruction();
 
     public static Invocation Create(MemberInfo? member)
     {
@@ -31,33 +31,37 @@ internal class EmptyInvocation : Invocation
 
     public override Type ReturnType => typeof(void);
 
+    public override Type[] ParameterTypes => [];
+
+    public override bool IsStatic => true;
+
+    public override string[] ParameterNames => [];
+
+    public override Type InstanceType => throw new NotSupportedException();
+
     public static readonly EmptyInvocation Instance = new();
 
     private EmptyInvocation() { }
 
     public override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
-
-    public override Type[] GetParameterTypes() => [];
-    public override bool IsStatic => true;
-    public override string[] GetParameterNames() => [];
-    public override Type InstanceType => throw new NotSupportedException();
 }
 
-internal class FieldInvocation(FieldInfo field) : Invocation
+internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
 {
-    public override string FullName => @field.FullName;
+    public override string FullName => fieldInfo.FullName;
+    public override Type ReturnType => fieldInfo.FieldType;
+    public override Type[] ParameterTypes => field ??= fieldInfo.IsStatic ? [] : [fieldInfo.DeclaringType];
+    public override bool IsStatic => fieldInfo.IsStatic;
+    public override string[] ParameterNames => field ??= fieldInfo.IsStatic ? [] : ["<instance>"];
+    public override Type InstanceType => fieldInfo.DeclaringType;
+    public FieldInfo FieldInfo => fieldInfo;
 
-    public override Type ReturnType => @field.FieldType;
-    public readonly FieldInfo field = field;
+
+    private readonly FieldInfo fieldInfo = fieldInfo;
 
     public static implicit operator FieldInvocation(FieldInfo field) => new(field);
 
-    public override CodeInstruction GetCodeInstruction() => new(field.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, field);
-
-    public override Type[] GetParameterTypes() => field.IsStatic ? [] : [field.DeclaringType];
-    public override bool IsStatic => @field.IsStatic;
-    public override string[] GetParameterNames() => field.IsStatic ? [] : ["<instance>"];
-    public override Type InstanceType => @field.DeclaringType;
+    public override CodeInstruction GetCodeInstruction() => new(fieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, fieldInfo);
 
     public override bool Equals(object? obj)
     {
@@ -70,36 +74,36 @@ internal class FieldInvocation(FieldInfo field) : Invocation
         return Equals((FieldInvocation)obj);
     }
 
-    protected bool Equals(FieldInvocation other) => field.Equals(other.field);
+    protected bool Equals(FieldInvocation other) => fieldInfo.Equals(other.fieldInfo);
 
-    public override int GetHashCode() => field.GetHashCode();
+    public override int GetHashCode() => fieldInfo.GetHashCode();
 
     public static bool operator ==(FieldInvocation? left, FieldInvocation? right) => Equals(left, right);
 
     public static bool operator !=(FieldInvocation? left, FieldInvocation? right) => !Equals(left, right);
 }
 
-internal class MethodInvocation(MethodInfo method) : Invocation
+internal class MethodInvocation(MethodInfo methodInfo) : Invocation
 {
-    public override string FullName => method.FullName;
+    public override string FullName => methodInfo.FullName;
+    public override Type ReturnType => methodInfo.ReturnType;
+    public override bool IsStatic => methodInfo.IsStatic;
+    public override Type InstanceType => methodInfo.DeclaringType;
+    public MethodInfo MethodInfo => methodInfo;
 
-    public override Type ReturnType => method.ReturnType;
-    public readonly MethodInfo method = method;
+    public override Type[] ParameterTypes => field ??=
+        methodInfo.IsStatic
+            ? [.. methodInfo.GetParameters().Select(p => p.ParameterType)]
+            : [methodInfo.DeclaringType, .. methodInfo.GetParameters().Select(p => p.ParameterType)];
+
+    public override string[] ParameterNames => field ??=
+        methodInfo.IsStatic
+            ? [.. methodInfo.GetParameters().Select(p => p.Name)]
+            : ["<instance>", .. methodInfo.GetParameters().Select(p => p.Name)];
 
     public static implicit operator MethodInvocation(MethodInfo method) => new(method);
 
-    public override CodeInstruction GetCodeInstruction() => new(method.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, method);
-
-    public override Type[] GetParameterTypes() => method.IsStatic
-        ? [.. method.GetParameters().Select(p => p.ParameterType)]
-        : [method.DeclaringType, .. method.GetParameters().Select(p => p.ParameterType)];
-
-    public override bool IsStatic => method.IsStatic;
-    public override string[] GetParameterNames() => method.IsStatic
-        ? [.. method.GetParameters().Select(p => p.Name)]
-        : ["<instance>", .. method.GetParameters().Select(p => p.Name)];
-
-    public override Type InstanceType => method.DeclaringType;
+    public override CodeInstruction GetCodeInstruction() => new(methodInfo.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, methodInfo);
 
     public override bool Equals(object? obj)
     {
@@ -112,9 +116,9 @@ internal class MethodInvocation(MethodInfo method) : Invocation
         return Equals((MethodInvocation)obj);
     }
 
-    protected bool Equals(MethodInvocation other) => method.Equals(other.method);
+    protected bool Equals(MethodInvocation other) => methodInfo.Equals(other.methodInfo);
 
-    public override int GetHashCode() => method.GetHashCode();
+    public override int GetHashCode() => methodInfo.GetHashCode();
 
     public static bool operator ==(MethodInvocation? left, MethodInvocation? right) => Equals(left, right);
 

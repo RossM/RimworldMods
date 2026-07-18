@@ -43,9 +43,9 @@ public static partial class Autopatcher
 
         public InlineRuleBuilder(RuleBuilderContext context, PatchInfo patch) : base(context, EmptyInvocation.Instance)
         {
-            method = (patch.patch as MethodInvocation)?.method;
+            method = (patch.patch as MethodInvocation)?.MethodInfo;
 
-            parameterTypes = patch.patch.GetParameterTypes();
+            parameterTypes = patch.patch.ParameterTypes;
             argumentLocals = new int[parameterTypes.Length];
             locals = method?.GetMethodBody()?.LocalVariables.ToList();
         }

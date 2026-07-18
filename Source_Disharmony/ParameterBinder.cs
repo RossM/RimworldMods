@@ -110,7 +110,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         // Look in target parameters
         if (scope is Scope.Inner or Scope.Any)
         {
-            int index = Array.FindIndex(inner.GetParameterNames(), p => p == name);
+            int index = Array.FindIndex(inner.ParameterNames, p => p == name);
             if (index >= 0)
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Inner, Index = index };
         }
@@ -118,8 +118,8 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         // Look in caller parameters
         if (scope is Scope.Outer or Scope.Any)
         {
-            Type[] parameterTypes = outer.GetParameterTypes();
-            int index = Array.FindIndex(outer.GetParameterNames(), p => p == name);
+            Type[] parameterTypes = outer.ParameterTypes;
+            int index = Array.FindIndex(outer.ParameterNames, p => p == name);
             if (index >= 0)
             {
                 // Don't allow writing through a ref parameter to an argument of the outer method. This would
@@ -134,7 +134,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         // Look in closure fields
         if (scope is Scope.Inner or Scope.Any)
         {
-            var parameterTypes = inner.GetParameterTypes();
+            var parameterTypes = inner.ParameterTypes;
             int closureIndex = Array.FindLastIndex(parameterTypes, p => p.IsClosureType);
             if (closureIndex >= 0)
             {
