@@ -59,7 +59,7 @@ public static partial class Autopatcher
             };
         }
 
-        protected static OpCode OpcodeFor(MemberInfo callee)
+        private static OpCode OpcodeFor(MemberInfo callee)
         {
             return callee switch
             {
@@ -154,5 +154,7 @@ public static partial class Autopatcher
             if (!type.IsByRef && innerParameterTypes[index].IsByRef)
                 output.Add(new(OpCodes.Ldobj, type));
         }
+
+        protected static CodeInstruction InstructionFor(MemberInfo patchMethod) => new(OpcodeFor(patchMethod), patchMethod);
     }
 }

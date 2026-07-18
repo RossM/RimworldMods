@@ -52,6 +52,8 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
 
         switch (parameterName)
         {
+            case null: throw new ArgumentException("Parameter name is null");
+
             case "__caller" when inner is not null:
             case "__instance" when inner is null:
             {

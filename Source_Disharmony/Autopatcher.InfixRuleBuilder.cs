@@ -28,6 +28,9 @@ public static partial class Autopatcher
 
         private void EmitReplacement()
         {
+            if (inner is null)
+                throw new InvalidOperationException();
+
             EmitPrelude();
 
             var prefixesUsingResult = innerPrefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
@@ -53,7 +56,7 @@ public static partial class Autopatcher
                     EmitParameterValue(parameter);
 
                 output.Add(CodeInstruction.Annotation($"{prefix.patchType} {patchMethod.FullName}"));
-                output.Add(new(OpcodeFor(patchMethod), patchMethod));
+                output.Add(InstructionFor(patchMethod));
 
                 if (!patchMethod.ReturnType.IsVoid())
                 {
@@ -66,7 +69,7 @@ public static partial class Autopatcher
                 EmitTargetParameter(innerParameterTypes![i], i);
             }
 
-            output.Add(new(OpcodeFor(inner!), inner!));
+            output.Add(InstructionFor(inner));
 
             if (skipLabel != null || innerPostfixes.Count > 0)
             {
@@ -83,7 +86,7 @@ public static partial class Autopatcher
                         EmitParameterValue(parameter);
 
                     output.Add(CodeInstruction.Annotation($"{postfix.patchType} {patchMethod.FullName}"));
-                    output.Add(new(OpcodeFor(patchMethod), patchMethod));
+                    output.Add(InstructionFor(patchMethod));
                     if (!patchMethod.ReturnType.IsVoid())
                         output.Add(new(OpCodes.Pop));
                 }
@@ -106,9 +109,12 @@ public static partial class Autopatcher
 
         public override IEnumerable<Rule> BuildRules()
         {
+            if (inner is null)
+                throw new InvalidOperationException();
+
             List<CodeInstruction> pattern =
             [
-                new(OpcodeFor(inner!), inner!),
+                InstructionFor(inner),
             ];
 
             EmitReplacement();
@@ -120,7 +126,7 @@ public static partial class Autopatcher
                 Mode = InstructionMatcher.OutputMode.Replace,
                 Pattern = pattern.ToArray(),
                 Output = output.Instructions.ToArray(),
-                Name = inner!.FullName,
+                Name = inner.FullName,
             };
         }
     }
