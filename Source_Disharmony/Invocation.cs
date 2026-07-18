@@ -18,11 +18,13 @@ internal abstract class Invocation
         };
         return invocation;
     }
+
+    public override string ToString() => $"[{GetType().FullName}({FullName})]";
 }
 
 internal class EmptyInvocation : Invocation
 {
-    public override string FullName => "Empty";
+    public override string FullName => "";
  
     public static readonly EmptyInvocation Instance = new();
 
@@ -66,8 +68,6 @@ internal class FieldInvocation(FieldInfo field) : Invocation
     public static bool operator ==(FieldInvocation? left, FieldInvocation? right) => Equals(left, right);
 
     public static bool operator !=(FieldInvocation? left, FieldInvocation? right) => !Equals(left, right);
-
-    public override string ToString() => $"[FieldInvocation({field.FullName})]";
 }
 
 internal class MethodInvocation(MethodInfo method) : Invocation
@@ -103,6 +103,4 @@ internal class MethodInvocation(MethodInfo method) : Invocation
     public static bool operator ==(MethodInvocation? left, MethodInvocation? right) => Equals(left, right);
 
     public static bool operator !=(MethodInvocation? left, MethodInvocation? right) => !Equals(left, right);
-
-    public override string ToString() => $"[MethodInvocation({method.FullName})]";
 }
