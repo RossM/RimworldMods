@@ -6,13 +6,25 @@ internal abstract class Invocation
     public abstract Type GetReturnType();
     public abstract CodeInstruction GetCodeInstruction();
     public abstract Type[] GetParameterTypes();
+
+    public static Invocation Create(MemberInfo member)
+    {
+        Invocation invocation = member switch
+        {
+            FieldInfo field => new FieldInvocation(field),
+            MethodInfo method => new MethodInvocation(method),
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+        return invocation;
+    }
 }
 
 internal class FieldInvocation(FieldInfo field) : Invocation
 {
+    public override string FullName => @field.FullName;
     private readonly FieldInfo field = field;
 
-    public override string FullName => @field.FullName;
+    public static implicit operator FieldInvocation(FieldInfo field) => new(field);
 
     public override Type GetReturnType() => field.FieldType;
 
@@ -38,13 +50,16 @@ internal class FieldInvocation(FieldInfo field) : Invocation
     public static bool operator ==(FieldInvocation? left, FieldInvocation? right) => Equals(left, right);
 
     public static bool operator !=(FieldInvocation? left, FieldInvocation? right) => !Equals(left, right);
+
+    public override string ToString() => $"[FieldInvocation({field.FullName})]";
 }
 
 internal class MethodInvocation(MethodInfo method) : Invocation
 {
+    public override string FullName => method.FullName;
     private readonly MethodInfo method = method;
 
-    public override string FullName => method.FullName;
+    public static implicit operator MethodInvocation(MethodInfo method) => new(method);
 
     public override Type GetReturnType() => method.ReturnType;
 
@@ -72,4 +87,6 @@ internal class MethodInvocation(MethodInfo method) : Invocation
     public static bool operator ==(MethodInvocation? left, MethodInvocation? right) => Equals(left, right);
 
     public static bool operator !=(MethodInvocation? left, MethodInvocation? right) => !Equals(left, right);
+
+    public override string ToString() => $"[MethodInvocation({method.FullName})]";
 }

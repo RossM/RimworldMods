@@ -61,12 +61,7 @@ public static partial class Autopatcher
                          .GroupBy(patch => patch.inner!))
             {
                 MemberInfo inner = targetGroup.Key;
-                Invocation invocation = inner switch
-                {
-                    FieldInfo field => new FieldInvocation(field),
-                    MethodInfo method => new MethodInvocation(method),
-                    _ => throw new ArgumentOutOfRangeException()
-                };
+                Invocation invocation = Invocation.Create(inner);
                 ruleBuilders.Add(new InfixRuleBuilder(context, patchedMethod, invocation, targetGroup.ToList()));
             }
 
