@@ -4,6 +4,37 @@ public static partial class Autopatcher
 {
     private class InlineRuleBuilder : RuleBuilder
     {
+        private static class OpCodeValue
+        {
+            // ReSharper disable IdentifierTypo
+            // @formatter:off
+            public const int Ldarg_0  =   0x02;
+            public const int Ldarg_1  =   0x03;
+            public const int Ldarg_2  =   0x04;
+            public const int Ldarg_3  =   0x05;
+            public const int Ldarg    = 0xFE09;
+            public const int Ldarg_S  =   0x0E;
+            public const int Ldarga   = 0xFE0A;
+            public const int Ldarga_S =   0x0F;
+            public const int Ldloc_0  =   0x06;
+            public const int Ldloc_1  =   0x07;
+            public const int Ldloc_2  =   0x08;
+            public const int Ldloc_3  =   0x09;
+            public const int Ldloc    = 0xFE0C;
+            public const int Ldloc_S  =   0x11;
+            public const int Ldloca   = 0xFE0D;
+            public const int Ldloca_S =   0x12;
+            public const int Stloc_0  =   0x0A;
+            public const int Stloc_1  =   0x0B;
+            public const int Stloc_2  =   0x0C;
+            public const int Stloc_3  =   0x0D;
+            public const int Stloc    = 0xFE0E;
+            public const int Stloc_S  =   0x13;
+            public const int Ret      =   0x2A;
+            // @formatter:on
+            // ReSharper restore IdentifierTypo
+        }
+
         private readonly MethodInfo method;
         private readonly int[] argumentLocals;
         private readonly Dictionary<int, int> localMap = new();
@@ -17,35 +48,6 @@ public static partial class Autopatcher
             parameters = patch.patchMethod.GetParameters();
             argumentLocals = new int[parameters.Length];
             locals = patch.patchMethod.GetMethodBody().LocalVariables.ToList();
-        }
-
-        private static class OpCodeValue
-        {
-            // ReSharper disable IdentifierTypo
-            public const int Ldarg_0 = 0x02;
-            public const int Ldarg_1 = 0x03;
-            public const int Ldarg_2 = 0x04;
-            public const int Ldarg_3 = 0x05;
-            public const int Ldarg = 0xFE09;
-            public const int Ldarg_S = 0x0E;
-            public const int Ldarga = 0xFE0A;
-            public const int Ldarga_S = 0x0F;
-            public const int Ldloc_0 = 0x06;
-            public const int Ldloc_1 = 0x07;
-            public const int Ldloc_2 = 0x08;
-            public const int Ldloc_3 = 0x09;
-            public const int Ldloc = 0xFE0C;
-            public const int Ldloc_S = 0x11;
-            public const int Ldloca = 0xFE0D;
-            public const int Ldloca_S = 0x12;
-            public const int Stloc_0 = 0x0A;
-            public const int Stloc_1 = 0x0B;
-            public const int Stloc_2 = 0x0C;
-            public const int Stloc_3 = 0x0D;
-            public const int Stloc = 0xFE0E;
-            public const int Stloc_S = 0x13;
-            public const int Ret = 0x2A;
-            // ReSharper restore IdentifierTypo
         }
 
         private bool EmitReplacement()
@@ -91,7 +93,7 @@ public static partial class Autopatcher
                     OpCodeValue.Stloc => CodeInstruction.StoreLocal(GetLocal(Convert.ToInt32(inst.operand))),
                     OpCodeValue.Stloc_S => CodeInstruction.StoreLocal(GetLocal(Convert.ToInt32(inst.operand))),
                     OpCodeValue.Ret => new(OpCodes.Br, returnLabel),
-                    _ => inst
+                    _ => inst,
                 };
 
                 translated.labels = inst.labels;
