@@ -91,6 +91,8 @@ internal class MethodInvocation(MethodInfo methodInfo) : Invocation
     public override Type InstanceType => methodInfo.DeclaringType;
     public MethodInfo MethodInfo => methodInfo;
 
+    private readonly MethodInfo methodInfo = methodInfo;
+
     public override Type[] ParameterTypes => field ??=
         methodInfo.IsStatic
             ? [.. methodInfo.GetParameters().Select(p => p.ParameterType)]
