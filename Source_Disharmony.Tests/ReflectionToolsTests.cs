@@ -57,6 +57,20 @@ namespace Disharmony.Tests.ReflectionFixtures
         public static void MixedMethod<T>(T value)
         {
         }
+
+        public static Func<int, int> StaticLocalMethodContainer()
+        {
+            return StaticLocalMethod;
+
+            static int StaticLocalMethod(int value) => value;
+        }
+
+        public static Func<int> CapturedLocalMethodContainer(int value)
+        {
+            return CapturedLocalMethod;
+
+            int CapturedLocalMethod() => value;
+        }
     }
 }
 
@@ -400,6 +414,36 @@ namespace Disharmony.Tests
                 MemberType.Method,
                 null,
                 null));
+        }
+
+        [Test]
+        public void GetMemberFindsStaticLocalMethodOnContainingType()
+        {
+            MethodInfo expected = LookupTarget.StaticLocalMethodContainer().Method;
+
+            MemberInfo actual = ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                "StaticLocalMethodContainer.StaticLocalMethod",
+                MemberType.Method,
+                null,
+                null);
+
+            Assert.That(actual, Is.SameAs(expected));
+        }
+
+        [Test]
+        public void GetMemberFindsCapturedLocalMethodOnClosureType()
+        {
+            MethodInfo expected = LookupTarget.CapturedLocalMethodContainer(42).Method;
+
+            MemberInfo actual = ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                "CapturedLocalMethodContainer.CapturedLocalMethod",
+                MemberType.Any,
+                null,
+                null);
+
+            Assert.That(actual, Is.SameAs(expected));
         }
 
         private static void AssertAllMethodOptions(Type? type, string name, MethodInfo expected)
