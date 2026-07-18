@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using System.Reflection.Emit;
-
-namespace XylXenos.Patches;
+﻿namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(PawnRenderer))]
 public static class Patch_PawnRenderer
