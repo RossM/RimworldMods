@@ -7,16 +7,32 @@ internal abstract class Invocation
     public abstract CodeInstruction GetCodeInstruction();
     public abstract Type[] GetParameterTypes();
 
-    public static Invocation Create(MemberInfo member)
+    public static Invocation Create(MemberInfo? member)
     {
         Invocation invocation = member switch
         {
             FieldInfo field => new FieldInvocation(field),
             MethodInfo method => new MethodInvocation(method),
+            null => EmptyInvocation.Instance,
             _ => throw new ArgumentOutOfRangeException(),
         };
         return invocation;
     }
+}
+
+internal class EmptyInvocation : Invocation
+{
+    public override string FullName => "Empty";
+ 
+    public static readonly EmptyInvocation Instance = new();
+
+    private EmptyInvocation() { }
+    
+    public override Type GetReturnType() => typeof(void);
+
+    public override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
+
+    public override Type[] GetParameterTypes() => [];
 }
 
 internal class FieldInvocation(FieldInfo field) : Invocation
