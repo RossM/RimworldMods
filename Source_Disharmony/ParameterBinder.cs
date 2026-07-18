@@ -53,7 +53,7 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
             case "__caller" when inner is not null:
             case "__instance" when inner is null:
             {
-                if (outer.IsStatic)
+                if (IsStatic(outer))
                     throw new ArgumentException($"{parameterName} argument cannot be used with static outer method");
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer };
             }
