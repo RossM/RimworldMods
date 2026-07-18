@@ -19,19 +19,30 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
                 if (parameterAttribute.scope is Scope.Inner && inner == null)
                     throw new ArgumentException("Parameter error: No inner function");
 
-                var scope = parameterAttribute.scope switch
-                {
-                    Scope.Any => inner is null ? Scope.Outer : Scope.Inner,
-                    Scope.Inner => Scope.Inner,
-                    Scope.Outer => Scope.Outer,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
-                return ParameterBinding(parameter, index, scope);
+                return ParameterBinding(parameter, index, DefaultScope(parameterAttribute.scope));
             }
 
-            case ParameterAttribute parameterAttribute: return BindParameter(parameter, parameterAttribute.name ?? parameterName, parameterAttribute.scope);
-            
+            case ParameterAttribute parameterAttribute:
+                return BindParameter(parameter, parameterAttribute.name ?? parameterName, parameterAttribute.scope);
+
+            case InstanceAttribute instanceAttribute:
+            {
+                var scope = DefaultScope(instanceAttribute.scope);
+                if (IsStatic(MemberForScope(scope)))
+                    throw new ArgumentException($"[Instance] argument cannot be used with static outer method");
+                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = scope };
+            }
+
+            case ReturnAttribute:
+            {
+                var scope = DefaultScope(Scope.Any);
+                if (MemberForScope(scope) is MethodInfo method && method.ReturnType.IsVoid())
+                    throw new ArgumentException($"[ReturnValue] argument cannot be used with method returning void");
+                return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = scope };
+            }
+
+            case StateAttribute: return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
+
             case null: break;
 
             default: throw new NotSupportedException();
@@ -49,7 +60,7 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
 
             case "__instance":
             {
-                if (inner is MethodInfo { IsStatic: true } or PropertyInfo { GetMethod.IsStatic: true } or FieldInfo { IsStatic: true })
+                if (IsStatic(inner))
                     throw new ArgumentException($"{parameterName} argument cannot be used with static inner method");
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner };
             }
@@ -83,6 +94,31 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
                 return BindParameter(parameter, parameterName, Scope.Any);
             }
         }
+    }
+
+    private MemberInfo? MemberForScope(Scope scope)
+    {
+        var member = scope switch
+        {
+            Scope.Inner => inner,
+            Scope.Outer => outer,
+            _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null),
+        };
+        return member;
+    }
+
+    private bool IsStatic(MemberInfo? memberInfo) =>
+        memberInfo is MethodInfo { IsStatic: true } or PropertyInfo { GetMethod.IsStatic: true } or FieldInfo { IsStatic: true };
+
+    private Scope DefaultScope(Scope scope)
+    {
+        return scope switch
+        {
+            Scope.Any => inner is null ? Scope.Outer : Scope.Inner,
+            Scope.Inner => Scope.Inner,
+            Scope.Outer => Scope.Outer,
+            _ => throw new ArgumentOutOfRangeException(),
+        };
     }
 
     private ParameterBinding BindParameter(ParameterInfo parameter, string parameterName, Scope scope)
@@ -149,7 +185,7 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
         {
             Scope.Inner => (MethodInfo?)inner,
             Scope.Outer => outer,
-            Scope.Any or _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null)
+            Scope.Any or _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null),
         };
 
         if (target is not MethodInfo method)

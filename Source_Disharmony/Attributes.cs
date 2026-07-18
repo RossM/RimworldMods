@@ -221,3 +221,16 @@ public class ParameterAttribute : ParameterBindingAttribute
         this.index = index;
     }
 }
+
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Parameter)]
+public class InstanceAttribute(Scope scope = Scope.Any) : ParameterBindingAttribute(scope);
+
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Parameter)]
+public class ReturnAttribute() : ParameterBindingAttribute(Scope.Any);
+
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Parameter)]
+public class StateAttribute() : ParameterBindingAttribute(Scope.Outer);
+
