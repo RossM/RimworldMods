@@ -6,6 +6,20 @@ public static class ReflectionTools
 
     public static MemberInfo GetMember(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes)
     {
+        List<MemberInfo> candidates = GetMembers(type, name, memberType, parameterTypes, genericTypes);
+
+        switch (candidates.Count)
+        {
+            case > 1: throw new AmbiguousMatchException($"Ambiguous match: {name}");
+            case 0: throw new InvalidOperationException($"Member not found: {name}");
+        }
+
+        var result = candidates.Single();
+        return result;
+    }
+
+    public static List<MemberInfo> GetMembers(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes)
+    {
         if (name is null)
             throw new ArgumentException("name expected");
 
@@ -22,7 +36,7 @@ public static class ReflectionTools
         {
             type = AccessTools.TypeByName(typeName);
             if (type == null)
-                return null;
+                throw new InvalidOperationException($"Type not found: {typeName}");
             name = memberName;
         }
 
@@ -59,9 +73,16 @@ public static class ReflectionTools
         List<MemberInfo> candidates = nameParts.Count switch
         {
             1 => type.GetMembers(DeclaredOnly).Where(m => m.Name == nameParts[0]).ToList(),
+
+            2 when nameParts[1] == "*" => 
+                type.GetNestedTypes(DeclaredOnly).Where(t => t.IsClosureType).Append(type)
+                    .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>b__"))
+                    .ToList<MemberInfo>(),
+
             2 => type.GetNestedTypes(DeclaredOnly).Where(t => t.IsClosureType).Append(type)
                 .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>g__{nameParts[1]}|"))
                 .ToList<MemberInfo>(),
+            
             _ => throw new NotSupportedException("Nested local functions are not supported"),
         };
 
@@ -76,18 +97,15 @@ public static class ReflectionTools
         if (parameterTypes != null || genericTypes != null)
             candidates = FilterMethods(candidates, parameterTypes, genericTypes).ToList<MemberInfo>();
 
-        switch (candidates.Count)
-        {
-            case > 1: throw new AmbiguousMatchException($"Ambiguous match: {name}");
-            case 0: throw new InvalidOperationException($"Member not found: {name}");
-        }
-
-        var result = candidates.Single();
-        if (result is PropertyInfo property)
-            result = memberType == MemberType.Setter ? property.SetMethod : property.GetMethod;
-        if (result is FieldInfo && memberType == MemberType.Setter)
-            throw new NotSupportedException("Patching field setters is not supported");
-        return result;
+        candidates = candidates.Select(result =>
+            result switch
+            {
+                PropertyInfo property => memberType == MemberType.Setter ? property.SetMethod : property.GetMethod,
+                FieldInfo when memberType == MemberType.Setter => throw new NotSupportedException("Patching field setters is not supported"),
+                _ => result,
+            }
+        ).ToList();
+        return candidates;
     }
 
     private static IEnumerable<MethodInfo> FilterMethods(IEnumerable<MemberInfo> candidates, Type[]? parameterTypes, Type[]? genericTypes)

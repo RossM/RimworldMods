@@ -1,18 +1,5 @@
 ﻿namespace Disharmony;
 
-internal enum Scope
-{
-    /// <summary>
-    ///     Represents access to parameters or results of the inner method.
-    /// </summary>
-    Inner,
-
-    /// <summary>
-    ///     Represents access to parameters or results of the outer method.
-    /// </summary>
-    Outer,
-}
-
 internal enum BindingType
 {
     /// <summary>
@@ -92,9 +79,7 @@ internal class PatchRegistry
     public readonly HashSet<MethodInfo> MethodsToUpdate = [];
     public Dictionary<MethodInfo, List<PatchInfo>> PatchesByMethod = new();
 
-    private PatchRegistry()
-    {
-    }
+    private PatchRegistry() { }
 
     private List<PatchInfo> Patches { get; } = [];
 
@@ -184,13 +169,24 @@ internal class PatchRegistry
                     if (patchedType == null)
                         throw new NotSupportedException("No target type");
 
-                    MethodInfo? outer = ReflectionTools.GetMember(patchedType, targetAttribute.methodName, targetAttribute.memberType,
-                        targetAttribute.parameterTypes, targetAttribute.genericTypes) as MethodInfo;
+                    List<MemberInfo> candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.methodName,
+                        targetAttribute.memberType, targetAttribute.parameterTypes, targetAttribute.genericTypes);
 
-                    if (outer == null)
-                        throw new InvalidOperationException($"Couldn't locate method {targetAttribute.methodName}");
+                    switch (candidates.Count)
+                    {
+                        case > 1 when targetAttribute is not TargetsAttribute: throw new AmbiguousMatchException($"Ambiguous match: {targetAttribute.methodName}");
+                        case 0: throw new InvalidOperationException($"Member not found: {targetAttribute.methodName}");
+                    }
 
-                    AddPatch(method, patchType, outer, inner, inline, debug);
+                    foreach (var result in candidates)
+                    {
+                        MethodInfo? outer = result as MethodInfo;
+
+                        if (outer == null)
+                            throw new InvalidOperationException($"Couldn't locate method {targetAttribute.methodName}");
+
+                        AddPatch(method, patchType, outer, inner, inline, debug);
+                    }
                 }
             }
             catch (Exception e)
@@ -217,7 +213,7 @@ internal class PatchRegistry
 
         var parameterBinder = new ParameterBinder(outer, inner);
 
-        var arguments = method.GetParameters().Select(parameterBinder.BindParameter).ToArray();
+        var arguments = method.GetParameters().Select(parameterBinder.Bind).ToArray();
 
         PatchInfo patch = new()
         {
