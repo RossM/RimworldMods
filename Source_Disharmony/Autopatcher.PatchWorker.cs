@@ -5,6 +5,7 @@ public static partial class Autopatcher
     private class PatchWorker(PatchRegistry registry, MethodInfo patchedMethod, bool useTrampolines = true)
     {
         private readonly List<PatchInfo> patches = registry.PatchesByMethod[patchedMethod];
+        private readonly MethodInvocation outer = patchedMethod;
 
         public void UpdateMethod()
         {
@@ -55,13 +56,13 @@ public static partial class Autopatcher
             stateBuilder.AssignStateVariableIndexes(patches);
             ruleBuilders.Add(stateBuilder);
 
-            ruleBuilders.Add(new CircumfixRuleBuilder(context, patchedMethod, patches));
+            ruleBuilders.Add(new CircumfixRuleBuilder(context, outer, patches));
 
             foreach (IGrouping<Invocation, PatchInfo> targetGroup in patches
                          .Where(patch => patch.patchType is PatchType.InnerPrefix or PatchType.InnerPostfix).GroupBy(patch => patch.inner))
             {
                 Invocation inner = targetGroup.Key;
-                ruleBuilders.Add(new InfixRuleBuilder(context, patchedMethod, inner, targetGroup.ToList()));
+                ruleBuilders.Add(new InfixRuleBuilder(context, outer, inner, targetGroup.ToList()));
             }
 
             List<Rule> rules = [];

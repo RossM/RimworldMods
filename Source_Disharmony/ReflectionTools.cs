@@ -171,16 +171,4 @@ public static class ReflectionTools
             }
         }
     }
-
-    public static Type[] GetParameterTypes(MemberInfo member)
-    {
-        return member switch
-        {
-            FieldInfo { IsStatic: true } => [],
-            FieldInfo { IsStatic: false } field => [field.DeclaringType],
-            MethodInfo { IsStatic: true } method => [.. method.GetParameters().Select(p => p.ParameterType)],
-            MethodInfo { IsStatic: false } method => [method.DeclaringType, .. method.GetParameters().Select(p => p.ParameterType)],
-            _ => throw new InvalidOperationException(),
-        };
-    }
 }

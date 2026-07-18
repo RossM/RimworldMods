@@ -15,22 +15,14 @@ public static partial class Autopatcher
         }
     }
 
-    private abstract class RuleBuilder
+    private abstract class RuleBuilder(RuleBuilderContext context, Invocation outer)
     {
         public virtual IEnumerable<Label> CrossRuleLabels => [];
-        private readonly Type[]? outerParameterTypes;
+        private readonly Type[]? outerParameterTypes = outer.GetParameterTypes();
 
-        protected readonly InstructionList output;
+        protected readonly InstructionList output = context.NewInstructionList();
         protected int resultLocalIndex = -1;
-        protected readonly ILGenerator generator;
-
-        protected RuleBuilder(RuleBuilderContext context, MethodBase? outer = null)
-        {
-            generator = context.generator;
-            if (outer is not null)
-                outerParameterTypes = ReflectionTools.GetParameterTypes(outer);
-            output = context.NewInstructionList();
-        }
+        protected readonly ILGenerator generator = context.generator;
 
         public abstract IEnumerable<Rule> BuildRules();
 

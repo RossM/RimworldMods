@@ -2,12 +2,12 @@
 
 public static partial class Autopatcher
 {
-    private class StateBuilder(RuleBuilderContext context) : RuleBuilder(context)
+    private class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, EmptyInvocation.Instance)
     {
         private List<Type> LocalTypes => output.LocalTypes;
         private readonly Dictionary<Type, (int index, Type type)> stateMap = new();
 
-        private int GetOrAddStateLocal(Type stateKey, Type localType, MethodInfo method)
+        private int GetOrAddStateLocal(Type stateKey, Type localType, MethodInvocation method)
         {
             if (localType.IsByRef)
                 localType = localType.GetElementType();

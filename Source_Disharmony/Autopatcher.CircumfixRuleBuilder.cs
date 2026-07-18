@@ -13,17 +13,13 @@ public static partial class Autopatcher
 
         public CircumfixRuleBuilder(
             RuleBuilderContext context,
-            MethodBase outer,
+            Invocation outer,
             List<PatchInfo> patches) : base(context, outer)
         {
             prefixes = patches.Where(patch => patch.patchType == PatchType.Prefix).ToList();
             postfixes = patches.Where(patch => patch.patchType == PatchType.Postfix).ToList();
 
-            targetType = outer switch
-            {
-                MethodInfo method => method.ReturnType,
-                _ => throw new NotSupportedException(),
-            };
+            targetType = outer.ReturnType;
         }
 
         public override IEnumerable<Label> CrossRuleLabels
@@ -56,12 +52,12 @@ public static partial class Autopatcher
 
             foreach (var prefix in prefixes)
             {
-                MethodInfo patchMethod = prefix.patchMethod;
+                MethodInvocation patchMethod = prefix.patchMethod;
                 foreach (var parameter in prefix.parameters)
                     EmitParameterValue(parameter);
 
                 output.Add(CodeInstruction.Annotation($"{prefix.patchType} {patchMethod.FullName}"));
-                output.Add(new MethodInvocation(patchMethod).GetCodeInstruction());
+                output.Add(patchMethod.GetCodeInstruction());
 
                 if (!patchMethod.ReturnType.IsVoid())
                 {
@@ -110,12 +106,12 @@ public static partial class Autopatcher
 
                 foreach (var postfix in postfixes)
                 {
-                    MethodInfo patchMethod = postfix.patchMethod;
+                    MethodInvocation patchMethod = postfix.patchMethod;
                     foreach (var parameter in postfix.parameters)
                         EmitParameterValue(parameter);
 
                     output.Add(CodeInstruction.Annotation($"{postfix.patchType} {patchMethod.FullName}"));
-                    output.Add(new MethodInvocation(patchMethod).GetCodeInstruction());
+                    output.Add(patchMethod.GetCodeInstruction());
 
                     if (!patchMethod.ReturnType.IsVoid())
                         output.Add(new(OpCodes.Pop));

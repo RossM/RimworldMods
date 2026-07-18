@@ -41,7 +41,7 @@ public static partial class Autopatcher
         private readonly ParameterInfo[] parameters;
         private readonly List<LocalVariableInfo> locals;
 
-        public InlineRuleBuilder(RuleBuilderContext context, PatchInfo patch) : base(context)
+        public InlineRuleBuilder(RuleBuilderContext context, PatchInfo patch) : base(context, EmptyInvocation.Instance)
         {
             method = patch.patchMethod;
 

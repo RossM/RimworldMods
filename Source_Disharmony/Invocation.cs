@@ -3,7 +3,7 @@
 internal abstract class Invocation
 {
     public abstract string FullName { get; }
-    public abstract Type GetReturnType();
+    public abstract Type ReturnType { get; }
     public abstract CodeInstruction GetCodeInstruction();
     public abstract Type[] GetParameterTypes();
 
@@ -25,12 +25,12 @@ internal abstract class Invocation
 internal class EmptyInvocation : Invocation
 {
     public override string FullName => "";
- 
+
+    public override Type ReturnType => typeof(void);
+
     public static readonly EmptyInvocation Instance = new();
 
     private EmptyInvocation() { }
-    
-    public override Type GetReturnType() => typeof(void);
 
     public override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
 
@@ -40,11 +40,11 @@ internal class EmptyInvocation : Invocation
 internal class FieldInvocation(FieldInfo field) : Invocation
 {
     public override string FullName => @field.FullName;
+
+    public override Type ReturnType => @field.FieldType;
     private readonly FieldInfo field = field;
 
     public static implicit operator FieldInvocation(FieldInfo field) => new(field);
-
-    public override Type GetReturnType() => field.FieldType;
 
     public override CodeInstruction GetCodeInstruction() => new(field.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, field);
 
@@ -73,11 +73,11 @@ internal class FieldInvocation(FieldInfo field) : Invocation
 internal class MethodInvocation(MethodInfo method) : Invocation
 {
     public override string FullName => method.FullName;
+
+    public override Type ReturnType => method.ReturnType;
     private readonly MethodInfo method = method;
 
     public static implicit operator MethodInvocation(MethodInfo method) => new(method);
-
-    public override Type GetReturnType() => method.ReturnType;
 
     public override CodeInstruction GetCodeInstruction() => new(method.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, method);
 
