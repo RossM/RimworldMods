@@ -260,8 +260,8 @@ public sealed class InnerPatchTests
         var exception = Assert.Throws<InvalidOperationException>(() =>
             ApplyPatch(nameof(InnerPatchMethods.WriteOuterArgumentPrefix)));
 
-        Assert.That(exception!.InnerException, Is.TypeOf<ArgumentException>());
-        Assert.That(exception.InnerException!.Message, Is.EqualTo("Outer method parameters can't be accessed by ref"));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+        Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
     }
 
     [Test]
@@ -270,8 +270,8 @@ public sealed class InnerPatchTests
         var exception = Assert.Throws<InvalidOperationException>(() =>
             ApplyPatch(nameof(InnerPatchMethods.WriteOuterArgumentPostfix)));
 
-        Assert.That(exception!.InnerException, Is.TypeOf<ArgumentException>());
-        Assert.That(exception.InnerException!.Message, Is.EqualTo("Outer method parameters can't be accessed by ref"));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+        Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
     }
 
     [Test]

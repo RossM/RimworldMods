@@ -1,5 +1,10 @@
 ﻿namespace Disharmony;
 
+public class ParameterBindingException(string argumentName, string message) : Exception(message)
+{
+    public override string Message => $"{argumentName}: {base.Message}";
+}
+
 internal class ParameterBinder(Invocation outer, Invocation inner, PatchType patchType)
 {
     private readonly bool infix = patchType is PatchType.InnerPrefix or PatchType.InnerPostfix;
@@ -26,32 +31,32 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         };
 
         if (defaultInvocation is EmptyInvocation)
-            throw new ArgumentException("Parameter error: Invalid scope");
+            throw new ParameterBindingException(parameterName, "Invalid scope");
 
         switch (parameterBindingAttribute)
         {
             case ParameterAttribute { index: int index }:
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = defaultScope, Index = index };
 
-            case ParameterAttribute { name: var name, scope: var scope }: return BindParameter(parameter, name ?? parameterName, scope);
+            case ParameterAttribute { name: var name, scope: var scope }: return BindParameterByName(parameter, name ?? parameterName, scope);
 
             case InstanceAttribute:
             {
                 if (defaultInvocation.IsStatic)
-                    throw new ArgumentException($"[Instance] argument cannot be used with static outer method");
+                    throw new ParameterBindingException(parameterName, "Method is static");
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
             }
 
             case ReturnValueAttribute:
             {
                 if (defaultInvocation.ReturnType.IsVoid())
-                    throw new ArgumentException($"[ReturnValue] argument cannot be used with method returning void");
+                    throw new ParameterBindingException(parameterName, "Method returns void");
                 return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = defaultScope };
             }
 
             case StateAttribute: return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
 
-            case FieldAttribute { name: var name, scope: var scope }: return BindField(parameter, name ?? parameterName, scope);
+            case FieldAttribute { name: var name, scope: var scope }: return BindFieldByName(parameter, name ?? parameterName, scope);
 
             case null: break;
 
@@ -60,28 +65,26 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
 
         switch (parameterName)
         {
-            case null: throw new ArgumentException("Parameter name is null");
-
             case "__caller":
             {
                 if (!infix)
-                    throw new ArgumentException("__caller can only be used with inner patches");
+                    throw new ParameterBindingException(parameterName, "Can only be used with inner patches");
                 if (outer.IsStatic)
-                    throw new ArgumentException($"{parameterName} argument cannot be used with static method");
+                    throw new ParameterBindingException(parameterName, "Method is static");
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer };
             }
 
             case "__instance":
             {
                 if (defaultInvocation.IsStatic)
-                    throw new ArgumentException($"{parameterName} argument cannot be used with static method");
+                    throw new ParameterBindingException(parameterName, "Method is static");
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
             }
 
             case "__result":
             {
                 if (defaultInvocation.ReturnType.IsVoid())
-                    throw new ArgumentException($"{parameterName} argument cannot be used with method returning void");
+                    throw new ParameterBindingException(parameterName, "Method returns void");
                 return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = defaultScope };
             }
 
@@ -90,24 +93,24 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
                 return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
             }
 
-            case not null when parameterName.StartsWith("___"):
+            case var _ when parameterName.StartsWith("___"):
             {
-                return BindField(parameter, parameterName[3..], Scope.Any);
+                return BindFieldByName(parameter, parameterName[3..], Scope.Any);
             }
 
             default:
             {
-                return BindParameter(parameter, parameterName, Scope.Any);
+                return BindParameterByName(parameter, parameterName, Scope.Any);
             }
         }
     }
 
-    private ParameterBinding BindParameter(ParameterInfo parameter, string parameterName, Scope scope)
+    private ParameterBinding BindParameterByName(ParameterInfo parameter, string name, Scope scope)
     {
         // Look in target parameters
         if (scope is Scope.Inner or Scope.Any)
         {
-            int index = Array.FindIndex(inner.GetParameterNames(), p => p == parameterName);
+            int index = Array.FindIndex(inner.GetParameterNames(), p => p == name);
             if (index >= 0)
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Inner, Index = index };
         }
@@ -116,13 +119,13 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         if (scope is Scope.Outer or Scope.Any)
         {
             Type[] parameterTypes = outer.GetParameterTypes();
-            int index = Array.FindIndex(outer.GetParameterNames(), p => p == parameterName);
+            int index = Array.FindIndex(outer.GetParameterNames(), p => p == name);
             if (index >= 0)
             {
                 // Don't allow writing through a ref parameter to an argument of the outer method. This would
                 // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
                 if (infix && parameter.ParameterType.IsByRef && !parameterTypes[index].IsByRef)
-                    throw new ArgumentException("Outer method parameters can't be accessed by ref");
+                    throw new ParameterBindingException(name, "Outer method parameter can't be accessed by ref");
 
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Outer, Index = index };
             }
@@ -139,7 +142,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
                 if (type.IsByRef)
                     type = type.GetElementType();
 
-                var field = type.GetField(parameterName, AccessTools.all);
+                var field = type.GetField(name, AccessTools.all);
 
                 if (field != null)
                     return new()
@@ -153,15 +156,15 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
             }
         }
 
-        throw new ArgumentException($"Argument not found: {parameterName}");
+        throw new ParameterBindingException(parameter.Name, "Parameter not found");
     }
 
-    private ParameterBinding BindField(ParameterInfo parameter, string fieldName, Scope scope)
+    private ParameterBinding BindFieldByName(ParameterInfo parameter, string name, Scope scope)
     {
         // Look in inner instance fields
         if (scope is Scope.Inner or Scope.Any && !inner.IsStatic)
         {
-            var field = inner.InstanceType.GetField(fieldName, AccessTools.all);
+            var field = inner.InstanceType.GetField(name, AccessTools.all);
             if (field != null)
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner, Fields = [field] };
         }
@@ -169,11 +172,11 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         // Look in outer instance fields
         if (scope is Scope.Outer or Scope.Any && !outer.IsStatic)
         {
-            var field = outer.InstanceType.GetField(fieldName, AccessTools.all);
+            var field = outer.InstanceType.GetField(name, AccessTools.all);
             if (field != null)
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [field] };
         }
 
-        throw new ArgumentException($"Field not found: {fieldName}");
+        throw new ParameterBindingException(parameter.Name, "Field not found");
     }
 }
