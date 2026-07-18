@@ -20,9 +20,7 @@ public static class StaticEventHandlers
                 priority: -100);
         }
 
-        public void PreUnregister(EventManager manager)
-        {
-        }
+        public void PreUnregister(EventManager manager) { }
     }
 
     private static readonly Listener listener = new();

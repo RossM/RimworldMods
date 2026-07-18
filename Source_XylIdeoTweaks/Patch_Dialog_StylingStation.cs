@@ -7,6 +7,21 @@ namespace XylIdeos;
 [HarmonyPatch(typeof(Dialog_StylingStation))]
 public static class Patch_Dialog_StylingStation
 {
+    private static void ApplyColors(Pawn pawn, Dictionary<Apparel, Color> apparelColors)
+    {
+        if (PatchHelpers.AutoColorColor(pawn) is not { } color)
+            return;
+
+        foreach (var item in pawn.apparel.WornApparel)
+        {
+            if (item.TryGetComp<CompColorable>() != null && !pawn.apparel.IsLocked(item))
+            {
+                Color oldColor = item.DesiredColor ?? item.GetColorIgnoringTainted();
+                apparelColors[item] = color.IndistinguishableFrom(oldColor) ? oldColor : color;
+            }
+        }
+    }
+
     [Feature(Features.AutoColorApparel)]
     [InnerPostfix(typeof(Widgets), nameof(Widgets.ColorSelector))]
     [Target("DrawApparelColor")]
@@ -74,21 +89,6 @@ public static class Patch_Dialog_StylingStation
             PawnData.Get(___pawn).autoColorMode = AutoColorMode.NoAutoColor;
     }
 
-    private static void ApplyColors(Pawn pawn, Dictionary<Apparel, Color> apparelColors)
-    {
-        if (PatchHelpers.AutoColorColor(pawn) is not { } color)
-            return;
-
-        foreach (var item in pawn.apparel.WornApparel)
-        {
-            if (item.TryGetComp<CompColorable>() != null && !pawn.apparel.IsLocked(item))
-            {
-                Color oldColor = item.DesiredColor ?? item.GetColorIgnoringTainted();
-                apparelColors[item] = color.IndistinguishableFrom(oldColor) ? oldColor : color;
-            }
-        }
-    }
-
     private static void ResetColors(Pawn pawn, Dictionary<Apparel, Color> apparelColors)
     {
         foreach (var item in pawn.apparel.WornApparel)
@@ -103,6 +103,6 @@ public static class Patch_Dialog_StylingStation
         AutoColorMode.NoAutoColor => "Off",
         AutoColorMode.UseFavoriteColor => "Favorite color",
         AutoColorMode.UseIdeoligeonColor => "Ideoligeon color",
-        _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+        _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
     };
 }

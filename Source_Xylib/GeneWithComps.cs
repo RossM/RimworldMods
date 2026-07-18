@@ -44,31 +44,23 @@ public class GeneComp
     /// <summary>
     ///     Called after the gene is created and initialized, but before it is added to the pawn.
     /// </summary>
-    public virtual void CompPostMake()
-    {
-    }
+    public virtual void CompPostMake() { }
 
     /// <summary>
     ///     Called when the game is saving or loading the gene. Override this method to save and load any data in the
     ///     component.
     /// </summary>
-    public virtual void CompExposeData()
-    {
-    }
+    public virtual void CompExposeData() { }
 
     /// <summary>
     ///     Called after the gene is added to a pawn.
     /// </summary>
-    public virtual void CompPostPostAdd()
-    {
-    }
+    public virtual void CompPostPostAdd() { }
 
     /// <summary>
     ///     Called after the gene is removed from a pawn.
     /// </summary>
-    public virtual void CompPostPostRemove()
-    {
-    }
+    public virtual void CompPostPostRemove() { }
 
     /// <summary>
     ///     Called periodically on gameplay tick. The exact tick rate is determined by the game, but is typically no more than
@@ -79,9 +71,7 @@ public class GeneComp
     ///     to avoid performance issues.
     /// </remarks>
     /// <param name="delta"></param>
-    public virtual void CompTickInterval(int delta)
-    {
-    }
+    public virtual void CompTickInterval(int delta) { }
 
     /// <summary>
     ///     Called every gameplay tick.
@@ -89,9 +79,7 @@ public class GeneComp
     /// <remarks>
     ///     This can have a significant impact on performance. Prefer to use <see cref="CompTickInterval" /> if possible.
     /// </remarks>
-    public virtual void CompTick()
-    {
-    }
+    public virtual void CompTick() { }
 
     /// <summary>
     ///     Gets UI gizmos that will be displayed when the pawn is selected.
@@ -115,9 +103,7 @@ public class GeneComp
     ///     Called when the pawn's health state is being reset, such as when an old pawn is brought back in a new role.
     ///     This should set the state of the gene component to its initial state.
     /// </summary>
-    public virtual void CompReset()
-    {
-    }
+    public virtual void CompReset() { }
 
     /// <summary>
     ///     Determines whether this component allows the gene to be active. If any component returns false, the gene will be

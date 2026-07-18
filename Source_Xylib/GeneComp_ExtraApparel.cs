@@ -107,7 +107,5 @@ public class GeneComp_ExtraApparel : GeneComp, IEventListener
         manager.Register<PawnGenerationRequest>(EventDefOf.PostRedressPawn, Pawn, Notify_PostRedressPawn);
     }
 
-    void IEventListener.PreUnregister(EventManager manager)
-    {
-    }
+    void IEventListener.PreUnregister(EventManager manager) { }
 }

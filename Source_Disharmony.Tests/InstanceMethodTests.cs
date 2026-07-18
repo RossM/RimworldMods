@@ -4,16 +4,20 @@ namespace Disharmony.Tests;
 
 public static class InstanceMethodPatchMethods
 {
-    [Prefix, Target(typeof(ClassInstanceMethodTarget), nameof(ClassInstanceMethodTarget.PrefixTarget))]
+    [Prefix]
+    [Target(typeof(ClassInstanceMethodTarget), nameof(ClassInstanceMethodTarget.PrefixTarget))]
     public static void RewriteClassMethodArgumentPrefix(ref int value) => value = 42;
 
-    [Postfix, Target(typeof(ClassInstanceMethodTarget), nameof(ClassInstanceMethodTarget.PostfixTarget))]
+    [Postfix]
+    [Target(typeof(ClassInstanceMethodTarget), nameof(ClassInstanceMethodTarget.PostfixTarget))]
     public static void RewriteClassMethodResultPostfix(ref int __result) => __result = 42;
 
-    [Prefix, Target(typeof(StructInstanceMethodTarget), nameof(StructInstanceMethodTarget.PrefixTarget))]
+    [Prefix]
+    [Target(typeof(StructInstanceMethodTarget), nameof(StructInstanceMethodTarget.PrefixTarget))]
     public static void RewriteStructMethodArgumentPrefix(ref int value) => value = 42;
 
-    [Postfix, Target(typeof(StructInstanceMethodTarget), nameof(StructInstanceMethodTarget.PostfixTarget))]
+    [Postfix]
+    [Target(typeof(StructInstanceMethodTarget), nameof(StructInstanceMethodTarget.PostfixTarget))]
     public static void RewriteStructMethodResultPostfix(ref int __result) => __result = 42;
 }
 

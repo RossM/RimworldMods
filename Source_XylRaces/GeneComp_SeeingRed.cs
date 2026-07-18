@@ -79,7 +79,5 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
         manager.Register<DamageInfo>(EventDefOf.PreTakeDamage, Pawn, Notify_DamageTaken);
     }
 
-    public void PreUnregister(EventManager manager)
-    {
-    }
+    public void PreUnregister(EventManager manager) { }
 }

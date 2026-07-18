@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Xylib.Patches;
+﻿namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(Building_GeneExtractor))]
 internal static class Patch_Building_GeneExtractor

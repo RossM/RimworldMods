@@ -12,161 +12,200 @@ public static class PatchMethods
     public static int CombinedPatchObserved;
     public static int StateObserved;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.RunValueTypeTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.RunValueTypeTarget))]
     public static bool RunValueTypeTargetPrefix() => true;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.RunReferenceTypeTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.RunReferenceTypeTarget))]
     public static bool RunReferenceTypeTargetPrefix() => true;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.SkipValueTypeTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.SkipValueTypeTarget))]
     public static bool SkipValueTypeTargetPrefix() => false;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.SkipReferenceTypeTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.SkipReferenceTypeTarget))]
     public static bool SkipReferenceTypeTargetPrefix() => false;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueParameterInPrefix))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueParameterInPrefix))]
     public static void ReadValueParameterPrefix(int value) => ValueParameterObserved = value;
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueParameterInPostfix))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueParameterInPostfix))]
     public static void ReadValueParameterPostfix(int value) => ValueParameterObserved = value;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceParameterInPrefix))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceParameterInPrefix))]
     public static void ReadReferenceParameterPrefix(string value) => ReferenceParameterObserved = value;
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceParameterInPostfix))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceParameterInPostfix))]
     public static void ReadReferenceParameterPostfix(string value) => ReferenceParameterObserved = value;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueParameterInPrefix))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueParameterInPrefix))]
     public static void WriteValueParameterPrefix(ref int value) => value = 42;
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueParameterInPostfix))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueParameterInPostfix))]
     public static void WriteValueParameterPostfix(ref int value) => value = 42;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceParameterInPrefix))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceParameterInPrefix))]
     public static void WriteReferenceParameterPrefix(ref string value) => value = "patched";
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceParameterInPostfix))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceParameterInPostfix))]
     public static void WriteReferenceParameterPostfix(ref string value) => value = "patched";
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueResultInPrefix))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueResultInPrefix))]
     public static void ReadValueResultPrefix(int __result) => ValueResultObserved = __result;
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueResultInPostfix))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueResultInPostfix))]
     public static void ReadValueResultPostfix(int __result) => ValueResultObserved = __result;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceResultInPrefix))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceResultInPrefix))]
     public static void ReadReferenceResultPrefix(string? __result) => ReferenceResultObserved = __result;
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceResultInPostfix))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceResultInPostfix))]
     public static void ReadReferenceResultPostfix(string __result) => ReferenceResultObserved = __result;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultInPrefix))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultInPrefix))]
     public static bool WriteValueResultPrefix(ref int __result)
     {
         __result = 42;
         return false;
     }
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultInPostfix))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultInPostfix))]
     public static void WriteValueResultPostfix(ref int __result) => __result = 42;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultInPrefix))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultInPrefix))]
     public static bool WriteReferenceResultPrefix(ref string? __result)
     {
         __result = "patched";
         return false;
     }
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultInPostfix))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultInPostfix))]
     public static void WriteReferenceResultPostfix(ref string __result) => __result = "patched";
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultAndRunTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultAndRunTarget))]
     public static bool WriteValueResultAndRunTargetPrefix(ref int __result)
     {
         __result = 42;
         return true;
     }
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultAndSkipTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultAndSkipTarget))]
     public static bool WriteValueResultAndSkipTargetPrefix(ref int __result)
     {
         __result = 42;
         return false;
     }
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultAndRunTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultAndRunTarget))]
     public static bool WriteReferenceResultAndRunTargetPrefix(ref string? __result)
     {
         __result = "patched";
         return true;
     }
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultAndSkipTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultAndSkipTarget))]
     public static bool WriteReferenceResultAndSkipTargetPrefix(ref string? __result)
     {
         __result = "patched";
         return false;
     }
 
-    [Prefix, Target(typeof(InstancePatchTarget), nameof(InstancePatchTarget.PrefixTarget))]
+    [Prefix]
+    [Target(typeof(InstancePatchTarget), nameof(InstancePatchTarget.PrefixTarget))]
     public static void CaptureInstancePrefix(InstancePatchTarget __instance) => InstanceObserved = __instance;
 
-    [Postfix, Target(typeof(InstancePatchTarget), nameof(InstancePatchTarget.PostfixTarget))]
+    [Postfix]
+    [Target(typeof(InstancePatchTarget), nameof(InstancePatchTarget.PostfixTarget))]
     public static void CaptureInstancePostfix(InstancePatchTarget __instance) => InstanceObserved = __instance;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndRunTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndRunTarget))]
     public static bool WriteArgumentAndRunTargetPrefix(ref int value)
     {
         value = 42;
         return true;
     }
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndRunTarget))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndRunTarget))]
     public static void ObserveArgumentAfterTargetRunsPostfix(int value) => CombinedPatchObserved = value;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndSkipTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndSkipTarget))]
     public static bool WriteArgumentAndSkipTargetPrefix(ref int value)
     {
         value = 42;
         return false;
     }
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndSkipTarget))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndSkipTarget))]
     public static void ObserveArgumentAfterTargetIsSkippedPostfix(int value) => CombinedPatchObserved = value;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndRunTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndRunTarget))]
     public static bool WriteResultAndRunTargetPrefix(ref int __result)
     {
         __result = 42;
         return true;
     }
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndRunTarget))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndRunTarget))]
     public static void ObserveResultAfterTargetRunsPostfix(int __result) => CombinedPatchObserved = __result;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndSkipTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndSkipTarget))]
     public static bool WriteResultAndSkipTargetPrefix(ref int __result)
     {
         __result = 42;
         return false;
     }
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndSkipTarget))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndSkipTarget))]
     public static void ObserveResultAfterTargetIsSkippedPostfix(int __result) => CombinedPatchObserved = __result;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.StateTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.StateTarget))]
     public static void WriteStatePrefix(out int __state) => __state = 42;
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.StateTarget))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.StateTarget))]
     public static void ReadStatePostfix(int __state) => StateObserved = __state;
 
-    [Postfix, Target(typeof(PatchTargets), nameof(PatchTargets.NonVoidPostfixTarget))]
+    [Postfix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.NonVoidPostfixTarget))]
     public static int NonVoidPostfix() => 42;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.ReadRefParameterTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadRefParameterTarget))]
     public static void ReadRefParameterPrefix(int value) => ValueParameterObserved = value;
 
-    [Prefix, Target(typeof(PatchTargets), nameof(PatchTargets.WriteRefParameterTarget))]
+    [Prefix]
+    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteRefParameterTarget))]
     public static void WriteRefParameterPrefix(ref int value) => value = 42;
 }
 
@@ -174,6 +213,7 @@ public static class PatchTargets
 {
     public static int RunValueTypeTarget() => 42;
     public static string RunReferenceTypeTarget() => "ran";
+
     public static int SkipValueTypeTarget()
     {
         Assert.Fail("The target should have been skipped.");
@@ -208,11 +248,13 @@ public static class PatchTargets
     }
 
     public static int WriteValueResultInPostfix() => 1;
+
     public static string WriteReferenceResultInPrefix()
     {
         Assert.Fail("The target should have been skipped.");
         return "original";
     }
+
     public static string WriteReferenceResultInPostfix() => "original";
 
     public static int WriteValueResultAndRunTarget() => 1;

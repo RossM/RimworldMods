@@ -9,7 +9,7 @@ public static class PatchHelpers
         {
             AutoColorMode.UseFavoriteColor => pawn.story?.favoriteColor.color,
             AutoColorMode.UseIdeoligeonColor => pawn.Ideo?.ApparelColor,
-            _ => null
+            _ => null,
         };
 
     public static bool HasUnnecessaryApparel(Pawn p, IReadOnlyCollection<BodyPartGroupDef> excludedParts = null)

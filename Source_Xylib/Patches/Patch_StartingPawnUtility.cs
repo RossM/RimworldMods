@@ -34,6 +34,12 @@ internal static class Patch_StartingPawnUtility
         return InstructionMatcher.MatchAndReplace([Rule_GetExtraStartingItems], method, instructions, generator);
     }
 
+    public static void GetExtraStartingItems(Pawn pawn)
+    {
+        var items = Find.GameInitData?.startingPossessions?[pawn];
+        EventManager.Instance.Notify(EventDefOf.InGeneratePossessions, pawn, items);
+    }
+
     [Feature(typeof(CompProperties_Drug))]
     [InnerPrefix(typeof(List<ThingDefCount>), "Add")]
     [Target("GeneratePossessions")]
@@ -41,11 +47,5 @@ internal static class Patch_StartingPawnUtility
     {
         var chemical = item.ThingDef?.GetCompProperties<CompProperties_Drug>()?.chemical;
         return chemical == null || pawn.ChemicalIsAllowedByGenes(chemical);
-    }
-
-    public static void GetExtraStartingItems(Pawn pawn)
-    {
-        var items = Find.GameInitData?.startingPossessions?[pawn];
-        EventManager.Instance.Notify(EventDefOf.InGeneratePossessions, pawn, items);
     }
 }

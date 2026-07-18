@@ -89,9 +89,7 @@ public abstract class GeneSetMaker
         return PatchHelpers.RequiredMemberErrors(this) ?? [];
     }
 
-    public virtual void ResolveReferences()
-    {
-    }
+    public virtual void ResolveReferences() { }
 }
 
 [PublicAPI]

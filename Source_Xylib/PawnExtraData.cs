@@ -61,9 +61,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
                 manager.Register(EventDefOf.InPawnExposeData, null, Notify_InPawnExposeData);
         }
 
-        void IEventListener.PreUnregister(EventManager manager)
-        {
-        }
+        void IEventListener.PreUnregister(EventManager manager) { }
     }
 
     private static readonly Dictionary<int, T> data = new();

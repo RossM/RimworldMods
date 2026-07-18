@@ -92,7 +92,5 @@ public class GeneComp_StartingItems : GeneComp, IEventListener
         manager.Register<List<ThingDefCount>>(EventDefOf.InGeneratePossessions, Pawn, Notify_InGeneratePossessions);
     }
 
-    void IEventListener.PreUnregister(EventManager manager)
-    {
-    }
+    void IEventListener.PreUnregister(EventManager manager) { }
 }

@@ -210,7 +210,5 @@ public class GeneComp_Flight : GeneComp, IEventListener
         manager.Register(EventDefOf.PostDowned, Pawn, Notify_Downed);
     }
 
-    public void PreUnregister(EventManager manager)
-    {
-    }
+    public void PreUnregister(EventManager manager) { }
 }

@@ -12,51 +12,31 @@ namespace Disharmony.Tests.ReflectionFixtures
     {
         public static class NestedTarget
         {
-            public static void Method(int value)
-            {
-            }
+            public static void Method(int value) { }
         }
 
         public static int Field;
         public static int Property { get; set; }
 
-        public static void Method(int value)
-        {
-        }
+        public static void Method(int value) { }
 
-        public static void RefMethod(ref int value)
-        {
-        }
+        public static void RefMethod(ref int value) { }
 
-        public static void InMethod(in int value)
-        {
-        }
+        public static void InMethod(in int value) { }
 
         public static void OutMethod(out int value) => value = 0;
 
-        public static void OverloadedMethod(int value)
-        {
-        }
+        public static void OverloadedMethod(int value) { }
 
-        public static void OverloadedMethod(string value)
-        {
-        }
+        public static void OverloadedMethod(string value) { }
 
-        public static void GenericMethod<T>(T value)
-        {
-        }
+        public static void GenericMethod<T>(T value) { }
 
-        public static void NonGenericMethod(int value)
-        {
-        }
+        public static void NonGenericMethod(int value) { }
 
-        public static void MixedMethod(int value)
-        {
-        }
+        public static void MixedMethod(int value) { }
 
-        public static void MixedMethod<T>(T value)
-        {
-        }
+        public static void MixedMethod<T>(T value) { }
 
         public static Func<int, int> StaticLocalMethodContainer()
         {

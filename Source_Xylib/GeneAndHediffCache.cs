@@ -201,7 +201,5 @@ public class GeneAndHediffCache : IEventListener, IPawnData
         manager.Register(EventDefOf.PostHediffsChanged, Pawn, Notify_PostHediffsChanged);
     }
 
-    void IEventListener.PreUnregister(EventManager manager)
-    {
-    }
+    void IEventListener.PreUnregister(EventManager manager) { }
 }

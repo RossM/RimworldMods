@@ -64,9 +64,7 @@ public partial class InstructionMatcher
     public List<Type> CrossRuleLocalTypes = [];
     public List<Label> CrossRuleLabels = [];
 
-    public InstructionMatcher()
-    {
-    }
+    public InstructionMatcher() { }
 
     public InstructionMatcher(params List<Rule> rules)
     {

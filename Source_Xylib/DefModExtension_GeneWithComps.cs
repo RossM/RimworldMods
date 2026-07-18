@@ -11,9 +11,7 @@ public abstract class GeneCompProperties
         return PatchHelpers.RequiredMemberErrors(this) ?? [];
     }
 
-    public virtual void ResolveReferences(Def parentDef)
-    {
-    }
+    public virtual void ResolveReferences(Def parentDef) { }
 
     public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
     {

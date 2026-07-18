@@ -31,9 +31,7 @@ public class FeatureAttribute(string featureName) : Attribute
     /// <param name="feature">
     ///     The type that implements the supported feature.
     /// </param>
-    public FeatureAttribute(Type feature) : this(feature.Name)
-    {
-    }
+    public FeatureAttribute(Type feature) : this(feature.Name) { }
 }
 
 /// <summary>

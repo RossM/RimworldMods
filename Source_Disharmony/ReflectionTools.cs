@@ -74,7 +74,7 @@ public static class ReflectionTools
         {
             1 => type.GetMembers(DeclaredOnly).Where(m => m.Name == nameParts[0]).ToList(),
 
-            2 when nameParts[1] == "*" => 
+            2 when nameParts[1] == "*" =>
                 type.GetNestedTypes(DeclaredOnly).Where(t => t.IsClosureType).Append(type)
                     .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>b__"))
                     .ToList<MemberInfo>(),
@@ -82,7 +82,7 @@ public static class ReflectionTools
             2 => type.GetNestedTypes(DeclaredOnly).Where(t => t.IsClosureType).Append(type)
                 .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>g__{nameParts[1]}|"))
                 .ToList<MemberInfo>(),
-            
+
             _ => throw new NotSupportedException("Nested local functions are not supported"),
         };
 
@@ -91,7 +91,7 @@ public static class ReflectionTools
             MemberType.Any => candidates,
             MemberType.Method => candidates.Where(m => m is MethodInfo).ToList(),
             MemberType.Getter or MemberType.Setter => candidates.Where(m => m is FieldInfo or PropertyInfo).ToList(),
-            _ => throw new ArgumentOutOfRangeException(nameof(memberType), memberType, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(memberType), memberType, null),
         };
 
         if (parameterTypes != null || genericTypes != null)
@@ -101,7 +101,8 @@ public static class ReflectionTools
             result switch
             {
                 PropertyInfo property => memberType == MemberType.Setter ? property.SetMethod : property.GetMethod,
-                FieldInfo when memberType == MemberType.Setter => throw new NotSupportedException("Patching field setters is not supported"),
+                FieldInfo when memberType == MemberType.Setter =>
+                    throw new NotSupportedException("Patching field setters is not supported"),
                 _ => result,
             }
         ).ToList();

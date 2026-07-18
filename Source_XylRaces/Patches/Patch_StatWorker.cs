@@ -151,6 +151,22 @@ public static class Patch_StatWorker
         return instructionsList;
     }
 
+    public static void AppendSubstitutionDescription(
+        StringBuilder sb,
+        string whitespace,
+        Hediff_SubstituteCapacity? foundHediff)
+    {
+        if (foundHediff != null)
+            sb.AppendLine($"{whitespace}        {foundHediff.GetDescription()}");
+    }
+
+    public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity? foundHediff, PawnCapacityDef capacity)
+    {
+        if (foundHediff != null)
+            capacity = foundHediff.DefExt.substituteCapacity;
+        return capacity;
+    }
+
     [Feature(typeof(Hediff_SubstituteCapacity))]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [InnerPostfix(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity))]
@@ -198,21 +214,5 @@ public static class Patch_StatWorker
             __result = true;
         if (___stat == StatDefOf.PsychicEntropyMax)
             __result = true;
-    }
-
-    public static void AppendSubstitutionDescription(
-        StringBuilder sb,
-        string whitespace,
-        Hediff_SubstituteCapacity? foundHediff)
-    {
-        if (foundHediff != null)
-            sb.AppendLine($"{whitespace}        {foundHediff.GetDescription()}");
-    }
-
-    public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity? foundHediff, PawnCapacityDef capacity)
-    {
-        if (foundHediff != null)
-            capacity = foundHediff.DefExt.substituteCapacity;
-        return capacity;
     }
 }

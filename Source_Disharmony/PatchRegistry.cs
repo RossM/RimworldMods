@@ -174,7 +174,8 @@ internal class PatchRegistry
 
                     switch (candidates.Count)
                     {
-                        case > 1 when targetAttribute is not TargetsAttribute: throw new AmbiguousMatchException($"Ambiguous match: {targetAttribute.methodName}");
+                        case > 1 when targetAttribute is not TargetsAttribute:
+                            throw new AmbiguousMatchException($"Ambiguous match: {targetAttribute.methodName}");
                         case 0: throw new InvalidOperationException($"Member not found: {targetAttribute.methodName}");
                     }
 

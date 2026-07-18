@@ -217,7 +217,5 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         manager.Register(EventDefOf.PostSatisfyChemicalGenes, pawn, Notify_PostSatisfyGenes);
     }
 
-    public void PreUnregister(EventManager manager)
-    {
-    }
+    public void PreUnregister(EventManager manager) { }
 }

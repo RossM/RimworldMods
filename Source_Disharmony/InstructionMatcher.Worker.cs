@@ -488,12 +488,8 @@ public partial class InstructionMatcher
 
         private int GetReplacementLocal(int localIndex, MatchData match)
         {
-            if (localMap_Method.TryGetValue(localIndex, out var substituteIndex))
-            {
-            }
-            else if (match.localMap_Match.TryGetValue(localIndex, out substituteIndex))
-            {
-            }
+            if (localMap_Method.TryGetValue(localIndex, out var substituteIndex)) { }
+            else if (match.localMap_Match.TryGetValue(localIndex, out substituteIndex)) { }
             else if (localIndex < instructionMatcher.CrossRuleLocalTypes.Count)
             {
                 substituteIndex = generator.DeclareLocal(instructionMatcher.CrossRuleLocalTypes[localIndex]).LocalIndex;

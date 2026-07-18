@@ -12,13 +12,13 @@ public enum AutoColorMode
 [ScribeLabel("Source_XylIdeoTweaks.PawnData")]
 public class PawnData : IPawnData, IExposable
 {
+    public AutoColorMode autoColorMode;
+
     public Pawn Pawn
     {
         get => field ?? throw new InvalidOperationException();
         set;
     }
-
-    public AutoColorMode autoColorMode;
 
     public void ExposeData()
     {
@@ -31,7 +31,5 @@ public class PawnData : IPawnData, IExposable
     }
 
     // ReSharper disable once ParameterHidesMember
-    public void Init()
-    {
-    }
+    public void Init() { }
 }
