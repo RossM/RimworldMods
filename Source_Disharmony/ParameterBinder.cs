@@ -33,7 +33,7 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = scope };
             }
 
-            case ReturnAttribute:
+            case ReturnValueAttribute:
             {
                 var scope = DefaultScope(Scope.Any);
                 if (MemberForScope(scope) is MethodInfo method && method.ReturnType.IsVoid())

@@ -233,7 +233,7 @@ public class InstanceAttribute(Scope scope = Scope.Any) : ParameterBindingAttrib
 
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class ReturnAttribute() : ParameterBindingAttribute(Scope.Any);
+public class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any);
 
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
