@@ -41,6 +41,22 @@ namespace Disharmony.Tests.ReflectionFixtures
         public static void OverloadedMethod(string value)
         {
         }
+
+        public static void GenericMethod<T>(T value)
+        {
+        }
+
+        public static void NonGenericMethod(int value)
+        {
+        }
+
+        public static void MixedMethod(int value)
+        {
+        }
+
+        public static void MixedMethod<T>(T value)
+        {
+        }
     }
 }
 
@@ -254,6 +270,133 @@ namespace Disharmony.Tests
             Assert.Throws<AmbiguousMatchException>(() => ReflectionTools.GetMember(
                 typeof(LookupTarget),
                 nameof(LookupTarget.OverloadedMethod),
+                MemberType.Method,
+                null,
+                null));
+        }
+
+        [Test]
+        public void GetMemberReturnsGenericMethodDefinitionWithoutTypeFilters()
+        {
+            MethodInfo expected = typeof(LookupTarget).GetMethod(nameof(LookupTarget.GenericMethod))!;
+
+            MemberInfo actual = ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.GenericMethod),
+                MemberType.Method,
+                null,
+                null);
+
+            Assert.That(actual, Is.SameAs(expected));
+            Assert.That(((MethodInfo)actual).IsGenericMethodDefinition, Is.True);
+        }
+
+        [Test]
+        public void GetMemberDoesNotMatchGenericMethodUsingOnlyConstructedParameterTypes()
+        {
+            Assert.Throws<InvalidOperationException>(() => ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.GenericMethod),
+                MemberType.Method,
+                [typeof(int)],
+                null));
+        }
+
+        [Test]
+        public void GetMemberConstructsGenericMethodUsingGenericTypes()
+        {
+            MethodInfo expected = typeof(LookupTarget).GetMethod(nameof(LookupTarget.GenericMethod))!
+                .MakeGenericMethod(typeof(int));
+
+            MemberInfo actual = ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.GenericMethod),
+                MemberType.Method,
+                null,
+                [typeof(int)]);
+
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void GetMemberConstructsGenericMethodUsingGenericAndParameterTypes()
+        {
+            MethodInfo expected = typeof(LookupTarget).GetMethod(nameof(LookupTarget.GenericMethod))!
+                .MakeGenericMethod(typeof(int));
+
+            MemberInfo actual = ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.GenericMethod),
+                MemberType.Method,
+                [typeof(int)],
+                [typeof(int)]);
+
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void GetMemberDoesNotMatchGenericMethodWithWrongGenericArity()
+        {
+            Assert.Throws<InvalidOperationException>(() => ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.GenericMethod),
+                MemberType.Method,
+                null,
+                [typeof(int), typeof(string)]));
+        }
+
+        [Test]
+        public void GetMemberDoesNotMatchNonGenericMethodWhenGenericTypesAreProvided()
+        {
+            Assert.Throws<InvalidOperationException>(() => ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.NonGenericMethod),
+                MemberType.Method,
+                null,
+                [typeof(int)]));
+        }
+
+        [Test]
+        public void GetMemberSelectsNonGenericOverloadWhenOnlyParameterTypesAreProvided()
+        {
+            MethodInfo expected = Array.Find(
+                typeof(LookupTarget).GetMethods(),
+                method => method.Name == nameof(LookupTarget.MixedMethod) && !method.IsGenericMethod)!;
+
+            MemberInfo actual = ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.MixedMethod),
+                MemberType.Method,
+                [typeof(int)],
+                null);
+
+            Assert.That(actual, Is.SameAs(expected));
+        }
+
+        [Test]
+        public void GetMemberSelectsGenericOverloadWhenGenericTypesAreProvided()
+        {
+            MethodInfo definition = Array.Find(
+                typeof(LookupTarget).GetMethods(),
+                method => method.Name == nameof(LookupTarget.MixedMethod) && method.IsGenericMethodDefinition)!;
+            MethodInfo expected = definition.MakeGenericMethod(typeof(int));
+
+            MemberInfo actual = ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.MixedMethod),
+                MemberType.Method,
+                null,
+                [typeof(int)]);
+
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void GetMemberThrowsAmbiguousMatchExceptionForMixedOverloadsWithoutTypeFilters()
+        {
+            Assert.Throws<AmbiguousMatchException>(() => ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.MixedMethod),
                 MemberType.Method,
                 null,
                 null));
