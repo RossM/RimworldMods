@@ -61,7 +61,7 @@ public static partial class Autopatcher
                          .GroupBy(patch => patch.inner!))
             {
                 MemberInfo inner = targetGroup.Key;
-                ruleBuilders.Add(new InfixRuleBuilder(context, patchedMethod, new Invocation(inner), targetGroup.ToList()));
+                ruleBuilders.Add(new InfixRuleBuilder(context, patchedMethod, new MemberInvocation(inner), targetGroup.ToList()));
             }
 
             List<Rule> rules = [];

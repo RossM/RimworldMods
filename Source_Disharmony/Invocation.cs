@@ -1,10 +1,18 @@
 ﻿namespace Disharmony;
 
-internal class Invocation(MemberInfo member)
+internal abstract class Invocation
 {
-    public string FullName => member.FullName;
+    public abstract string FullName { get; }
+    public abstract Type GetReturnType();
+    public abstract CodeInstruction GetCodeInstruction();
+    public abstract Type[] ParameterTypes();
+}
 
-    public Type GetReturnType()
+internal class MemberInvocation(MemberInfo member) : Invocation
+{
+    public override string FullName => member.FullName;
+
+    public override Type GetReturnType()
     {
         return member switch
         {
@@ -14,7 +22,7 @@ internal class Invocation(MemberInfo member)
         };
     }
 
-    public CodeInstruction GetCodeInstruction()
+    public override CodeInstruction GetCodeInstruction()
     {
         return new(member switch
         {
@@ -26,7 +34,7 @@ internal class Invocation(MemberInfo member)
         }, member);
     }
 
-    public Type[] ParameterTypes() => member switch
+    public override Type[] ParameterTypes() => member switch
     {
         FieldInfo { IsStatic: true } => [],
         FieldInfo { IsStatic: false } field => [field.DeclaringType],
