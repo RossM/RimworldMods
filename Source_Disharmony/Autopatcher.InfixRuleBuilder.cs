@@ -52,14 +52,13 @@ public static partial class Autopatcher
             Label? skipLabel = null;
             foreach (var prefix in innerPrefixes)
             {
-                MethodInvocation patchMethod = prefix.patch;
                 foreach (var parameter in prefix.parameters)
                     EmitParameterValue(parameter);
 
-                output.Add(CodeInstruction.Annotation($"{prefix.patchType} {patchMethod.FullName}"));
-                output.Add(patchMethod.GetCodeInstruction());
+                output.Add(CodeInstruction.Annotation($"{prefix.patchType} {prefix.patch.FullName}"));
+                output.Add(prefix.patch.GetCodeInstruction());
 
-                if (!patchMethod.ReturnType.IsVoid())
+                if (!prefix.patch.ReturnType.IsVoid())
                 {
                     output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
                 }
@@ -82,13 +81,12 @@ public static partial class Autopatcher
 
                 foreach (var postfix in innerPostfixes)
                 {
-                    MethodInvocation patchMethod = postfix.patch;
                     foreach (var parameter in postfix.parameters)
                         EmitParameterValue(parameter);
 
-                    output.Add(CodeInstruction.Annotation($"{postfix.patchType} {patchMethod.FullName}"));
-                    output.Add(patchMethod.GetCodeInstruction());
-                    if (!patchMethod.ReturnType.IsVoid())
+                    output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
+                    output.Add(postfix.patch.GetCodeInstruction());
+                    if (!postfix.patch.ReturnType.IsVoid())
                         output.Add(new(OpCodes.Pop));
                 }
 

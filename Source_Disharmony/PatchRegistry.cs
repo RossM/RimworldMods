@@ -59,7 +59,7 @@ internal struct ParameterBinding
 internal struct PatchInfo
 {
     public required Invocation inner;
-    public required MethodInvocation patch;
+    public required Invocation patch;
     public required PatchType patchType;
     public required Type stateKey;
     public required ParameterBinding[] parameters;
@@ -77,7 +77,7 @@ internal class PatchRegistry
     // and before Harmony's lock.
     internal readonly object SyncRoot = new();
     public readonly HashSet<MethodInfo> MethodsToUpdate = [];
-    public Dictionary<MethodInfo, List<PatchInfo>> PatchesByMethod = new();
+    public readonly Dictionary<MethodInfo, List<PatchInfo>> PatchesByMethod = new();
 
     private PatchRegistry() { }
 
@@ -223,7 +223,7 @@ internal class PatchRegistry
         PatchInfo patch = new()
         {
             inner = Invocation.Create(inner),
-            patch = method,
+            patch = new MethodInvocation(method),
             patchType = patchType,
             stateKey = method.DeclaringType,
             parameters = arguments,

@@ -5,7 +5,7 @@ public static partial class Autopatcher
     private class PatchWorker(PatchRegistry registry, MethodInfo patchedMethod, bool useTrampolines = true)
     {
         private readonly List<PatchInfo> patches = registry.PatchesByMethod[patchedMethod];
-        private readonly MethodInvocation outer = patchedMethod;
+        private readonly Invocation outer = new MethodInvocation(patchedMethod);
 
         public void UpdateMethod()
         {

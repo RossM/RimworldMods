@@ -7,7 +7,7 @@ public static partial class Autopatcher
         private List<Type> LocalTypes => output.LocalTypes;
         private readonly Dictionary<Type, (int index, Type type)> stateMap = new();
 
-        private int GetOrAddStateLocal(Type stateKey, Type localType, MethodInvocation method)
+        private int GetOrAddStateLocal(Type stateKey, Type localType, Invocation method)
         {
             if (localType.IsByRef)
                 localType = localType.GetElementType();

@@ -35,7 +35,7 @@ public static partial class Autopatcher
             // ReSharper restore IdentifierTypo
         }
 
-        private readonly MethodBase method;
+        private readonly MethodBase? method;
         private readonly int[] argumentLocals;
         private readonly Dictionary<int, int> localMap = new();
         private readonly Type[] parameterTypes;
@@ -43,11 +43,11 @@ public static partial class Autopatcher
 
         public InlineRuleBuilder(RuleBuilderContext context, PatchInfo patch) : base(context, EmptyInvocation.Instance)
         {
-            method = patch.patch.method;
+            method = (patch.patch as MethodInvocation)?.method;
 
             parameterTypes = patch.patch.GetParameterTypes();
             argumentLocals = new int[parameterTypes.Length];
-            locals = method.GetMethodBody()?.LocalVariables.ToList();
+            locals = method?.GetMethodBody()?.LocalVariables.ToList();
         }
 
         private bool EmitReplacement()
