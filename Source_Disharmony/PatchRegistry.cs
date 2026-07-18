@@ -213,7 +213,7 @@ internal class PatchRegistry
             }
         }
 
-        var parameterBinder = new ParameterBinder(new MethodInvocation(outer), inner);
+        var parameterBinder = new ParameterBinder(new MethodInvocation(outer), inner, patchType);
 
         var arguments = method.GetParameters().Select(parameterBinder.Bind).ToArray();
 

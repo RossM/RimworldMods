@@ -1,8 +1,8 @@
 ﻿namespace Disharmony;
 
-internal class ParameterBinder(Invocation outer, Invocation inner)
+internal class ParameterBinder(Invocation outer, Invocation inner, PatchType patchType)
 {
-    private readonly bool isInfix = inner is not EmptyInvocation;
+    private readonly bool infix = patchType is PatchType.InnerPrefix or PatchType.InnerPostfix;
 
     public ParameterBinding Bind(ParameterInfo parameter)
     {
@@ -11,34 +11,43 @@ internal class ParameterBinder(Invocation outer, Invocation inner)
         var attributes = parameter.GetCustomAttributes();
         var parameterBindingAttribute = attributes.OfType<ParameterBindingAttribute>().SingleOrDefault();
 
-        var scope = DefaultScope(parameterBindingAttribute?.scope ?? Scope.Any);
-        Invocation memberForScope = MemberForScope(scope);
+        Scope defaultScope = (parameterBindingAttribute?.scope ?? Scope.Any) switch
+        {
+            Scope.Any => infix ? Scope.Inner : Scope.Outer,
+            Scope.Inner => Scope.Inner,
+            Scope.Outer => Scope.Outer,
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+        Invocation defaultInvocation = defaultScope switch
+        {
+            Scope.Inner => inner,
+            Scope.Outer => outer,
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+
+        if (defaultInvocation is EmptyInvocation)
+            throw new ArgumentException("Parameter error: Invalid scope");
 
         switch (parameterBindingAttribute)
         {
-            case ParameterAttribute { index: int index } parameterAttribute:
-            {
-                if (parameterAttribute.scope is Scope.Inner && inner == null)
-                    throw new ArgumentException("Parameter error: No inner function");
+            case ParameterAttribute { index: int index }:
+                return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = defaultScope, Index = index };
 
-                return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = scope, Index = index };
-            }
-
-            case ParameterAttribute parameterAttribute:
-                return BindParameter(parameter, parameterAttribute.name ?? parameterName, parameterAttribute.scope);
+            case ParameterAttribute  { name: var name, scope: var scope }:
+                return BindParameter(parameter, name ?? parameterName, scope);
 
             case InstanceAttribute:
             {
-                if (memberForScope.IsStatic)
+                if (defaultInvocation.IsStatic)
                     throw new ArgumentException($"[Instance] argument cannot be used with static outer method");
-                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = scope };
+                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
             }
 
             case ReturnValueAttribute:
             {
-                if (memberForScope.ReturnType.IsVoid())
+                if (defaultInvocation.ReturnType.IsVoid())
                     throw new ArgumentException($"[ReturnValue] argument cannot be used with method returning void");
-                return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = scope };
+                return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = defaultScope };
             }
 
             case StateAttribute: return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
@@ -56,9 +65,8 @@ internal class ParameterBinder(Invocation outer, Invocation inner)
 
             case "__caller":
             {
-                if (!isInfix)
+                if (!infix)
                     throw new ArgumentException("__caller can only be used with inner patches");
-
                 if (outer.IsStatic)
                     throw new ArgumentException($"{parameterName} argument cannot be used with static method");
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer };
@@ -66,16 +74,16 @@ internal class ParameterBinder(Invocation outer, Invocation inner)
 
             case "__instance":
             {
-                if (memberForScope.IsStatic)
+                if (defaultInvocation.IsStatic)
                     throw new ArgumentException($"{parameterName} argument cannot be used with static method");
-                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = scope };
+                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
             }
 
             case "__result":
             {
-                if (memberForScope.ReturnType.IsVoid())
+                if (defaultInvocation.ReturnType.IsVoid())
                     throw new ArgumentException($"{parameterName} argument cannot be used with method returning void");
-                return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = scope };
+                return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = defaultScope };
             }
 
             case "__state":
@@ -93,28 +101,6 @@ internal class ParameterBinder(Invocation outer, Invocation inner)
                 return BindParameter(parameter, parameterName, Scope.Any);
             }
         }
-    }
-
-    private Invocation MemberForScope(Scope scope)
-    {
-        var member = scope switch
-        {
-            Scope.Inner => inner,
-            Scope.Outer => outer,
-            _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null),
-        };
-        return member;
-    }
-
-    private Scope DefaultScope(Scope scope)
-    {
-        return scope switch
-        {
-            Scope.Any => isInfix ? Scope.Inner : Scope.Outer,
-            Scope.Inner => Scope.Inner,
-            Scope.Outer => Scope.Outer,
-            _ => throw new ArgumentOutOfRangeException(),
-        };
     }
 
     private ParameterBinding BindParameter(ParameterInfo parameter, string parameterName, Scope scope)
@@ -136,7 +122,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner)
             {
                 // Don't allow writing through a ref parameter to an argument of the outer method. This would
                 // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
-                if (isInfix && parameter.ParameterType.IsByRef && !parameterTypes[index].IsByRef)
+                if (infix && parameter.ParameterType.IsByRef && !parameterTypes[index].IsByRef)
                     throw new ArgumentException("Outer method parameters can't be accessed by ref");
 
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Outer, Index = index };
