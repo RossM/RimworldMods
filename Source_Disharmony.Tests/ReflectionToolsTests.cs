@@ -33,6 +33,14 @@ namespace Disharmony.Tests.ReflectionFixtures
         }
 
         public static void OutMethod(out int value) => value = 0;
+
+        public static void OverloadedMethod(int value)
+        {
+        }
+
+        public static void OverloadedMethod(string value)
+        {
+        }
     }
 }
 
@@ -204,6 +212,51 @@ namespace Disharmony.Tests
                 null);
 
             Assert.That(actual, Is.SameAs(expected));
+        }
+
+        [Test]
+        public void GetMemberUsesParameterTypesToSelectIntOverload()
+        {
+            MethodInfo expected = typeof(LookupTarget).GetMethod(
+                nameof(LookupTarget.OverloadedMethod),
+                [typeof(int)])!;
+
+            MemberInfo actual = ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.OverloadedMethod),
+                MemberType.Method,
+                [typeof(int)],
+                null);
+
+            Assert.That(actual, Is.SameAs(expected));
+        }
+
+        [Test]
+        public void GetMemberUsesParameterTypesToSelectStringOverload()
+        {
+            MethodInfo expected = typeof(LookupTarget).GetMethod(
+                nameof(LookupTarget.OverloadedMethod),
+                [typeof(string)])!;
+
+            MemberInfo actual = ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.OverloadedMethod),
+                MemberType.Method,
+                [typeof(string)],
+                null);
+
+            Assert.That(actual, Is.SameAs(expected));
+        }
+
+        [Test]
+        public void GetMemberThrowsAmbiguousMatchExceptionForOverloadWithoutParameterTypes()
+        {
+            Assert.Throws<AmbiguousMatchException>(() => ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.OverloadedMethod),
+                MemberType.Method,
+                null,
+                null));
         }
 
         private static void AssertAllMethodOptions(Type? type, string name, MethodInfo expected)
