@@ -43,6 +43,8 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
 
             case StateAttribute: return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
 
+            case FieldAttribute fieldAttribute: return BindField(parameter, fieldAttribute.name ?? parameterName, fieldAttribute.scope);
+
             case null: break;
 
             default: throw new NotSupportedException();
@@ -86,7 +88,7 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
 
             case not null when parameterName.StartsWith("___"):
             {
-                return BindField(parameter, parameterName[3..]);
+                return BindField(parameter, parameterName[3..], Scope.Any);
             }
 
             default:
@@ -196,18 +198,18 @@ internal class ParameterBinder(MethodInfo outer, MemberInfo? inner)
         return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = scope, Index = index };
     }
 
-    private ParameterBinding BindField(ParameterInfo parameter, string fieldName)
+    private ParameterBinding BindField(ParameterInfo parameter, string fieldName, Scope scope)
     {
-        // Look in target instance fields
-        if (inner is FieldInfo { IsStatic: false } or MethodInfo { IsStatic: false } or PropertyInfo { GetMethod.IsStatic: false })
+        // Look in inner instance fields
+        if (scope is Scope.Inner or Scope.Any && inner is not null && !IsStatic(inner))
         {
             var field = inner.DeclaringType!.GetField(fieldName, AccessTools.all);
             if (field != null)
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner, Fields = [field] };
         }
 
-        // Look in target instance fields
-        if (outer is { IsStatic: false })
+        // Look in outer instance fields
+        if (scope is Scope.Outer or Scope.Any && !IsStatic(outer))
         {
             var field = outer.DeclaringType!.GetField(fieldName, AccessTools.all);
             if (field != null)

@@ -189,7 +189,12 @@ public class TargetsAttribute : TargetAttribute
     public TargetsAttribute(Type? type, string methodName, Type[]? parameterTypes = null, Type[]? genericTypes = null)
         : base(type, methodName, parameterTypes, genericTypes) { }
 
-    public TargetsAttribute(Type? type, string methodName, MemberType memberType, Type[]? parameterTypes = null, Type[]? genericTypes = null)
+    public TargetsAttribute(
+        Type? type,
+        string methodName,
+        MemberType memberType,
+        Type[]? parameterTypes = null,
+        Type[]? genericTypes = null)
         : base(type, methodName, memberType, parameterTypes, genericTypes) { }
 }
 
@@ -234,3 +239,11 @@ public class ReturnAttribute() : ParameterBindingAttribute(Scope.Any);
 [AttributeUsage(AttributeTargets.Parameter)]
 public class StateAttribute() : ParameterBindingAttribute(Scope.Outer);
 
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Parameter)]
+public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
+{
+    public readonly string? name = name;
+
+    public FieldAttribute(Scope scope = Scope.Any) : this(null, scope) { }
+}
