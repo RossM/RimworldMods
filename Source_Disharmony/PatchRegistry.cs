@@ -58,6 +58,7 @@ internal struct ParameterBinding
 
 internal struct PatchInfo
 {
+    public required object unpatchKey;
     public required Invocation inner;
     public required Invocation patch;
     public required PatchType patchType;
@@ -230,6 +231,7 @@ internal class PatchRegistry
 
         PatchInfo patch = new()
         {
+            unpatchKey = method.Module.Assembly,
             inner = inner,
             patch = new MethodInvocation(method),
             patchType = patchType,
