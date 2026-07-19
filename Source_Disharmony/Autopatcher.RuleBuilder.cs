@@ -47,7 +47,7 @@ public static partial class Autopatcher
 
                 case BindingType.State:
                 {
-                    output.EmitLoad(parameter.Index, parameterType.IsByRef);
+                    output.Add(CodeInstruction.LoadLocal(parameter.Index, parameterType.IsByRef));
 
                     break;
                 }
@@ -81,7 +81,7 @@ public static partial class Autopatcher
 
         private void EmitResult(Type parameterType)
         {
-            output.EmitLoad(resultLocalIndex, parameterType.IsByRef);
+            output.Add(CodeInstruction.LoadLocal(resultLocalIndex, parameterType.IsByRef));
         }
 
         protected void EmitOuterParameter(int index, bool doDereference, bool typeIsByRef)
@@ -89,10 +89,7 @@ public static partial class Autopatcher
             if (outerParameterTypes == null)
                 throw new InvalidOperationException("outerParameterTypes is null");
 
-            if (typeIsByRef && !outerParameterTypes[index].IsByRef)
-                output.Add(new(OpCodes.Ldarga, index));
-            else
-                output.Add(CodeInstruction.LoadArgument(index));
+            output.Add(CodeInstruction.LoadArgument(index, typeIsByRef && !outerParameterTypes[index].IsByRef));
             if (!typeIsByRef && outerParameterTypes[index].IsByRef && doDereference)
                 output.Add(new(OpCodes.Ldobj, outerParameterTypes[index].GetElementType()));
         }

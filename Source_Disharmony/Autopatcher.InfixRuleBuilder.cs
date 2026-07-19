@@ -92,7 +92,7 @@ public static partial class Autopatcher
                 }
 
                 if (resultLocalIndex >= 0)
-                    output.EmitLoad(resultLocalIndex);
+                    output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
             }
         }
 
@@ -145,7 +145,8 @@ public static partial class Autopatcher
             if (innerParameterLocals == null)
                 throw new InvalidOperationException("innerParameterLocals is null");
 
-            output.EmitLoad(innerParameterLocals[index], typeIsByRef && !innerParameterTypes[index].IsByRef);
+            bool byRef = typeIsByRef && !innerParameterTypes[index].IsByRef;
+            output.Add(CodeInstruction.LoadLocal(innerParameterLocals[index], byRef));
             if (!typeIsByRef && innerParameterTypes[index].IsByRef && doDereference)
                 output.Add(new(OpCodes.Ldobj, innerParameterTypes[index].GetElementType()));
         }

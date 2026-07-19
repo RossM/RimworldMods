@@ -116,7 +116,7 @@ public static partial class Autopatcher
                 }
 
                 if (resultLocalIndex >= 0)
-                    output.EmitLoad(resultLocalIndex);
+                    output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
 
                 output.Add(new(OpCodes.Ret));
 

@@ -26,7 +26,7 @@ internal class InstructionList : IEnumerable<CodeInstruction>
         }
         else if (type.IsStruct())
         {
-            Add(CodeInstruction.LoadLocalAddress(localIndex));
+            Add(CodeInstruction.LoadLocal(localIndex, true));
             Add(new(OpCodes.Initobj, type));
         }
         else if (type.IsValueType)
@@ -44,14 +44,6 @@ internal class InstructionList : IEnumerable<CodeInstruction>
         }
         else
             throw new NotImplementedException($"targetType {type}");
-    }
-
-    public void EmitLoad(int localIndex, bool byRef = false)
-    {
-        if (byRef)
-            Add(CodeInstruction.LoadLocalAddress(localIndex));
-        else
-            Add(CodeInstruction.LoadLocal(localIndex));
     }
 
     public int AddLocal(Type type)

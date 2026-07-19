@@ -426,8 +426,8 @@ public partial class InstructionMatcher
             }
             else if (replaceInst.opcode == OpCodes.Ldloca || replaceInst.opcode == OpCodes.Ldloca_S)
             {
-                var substituteIndex = GetReplacementLocal((int)replaceInst.operand, match);
-                Emit(CodeInstruction.LoadLocalAddress(substituteIndex));
+                var substituteIndex = GetReplacementLocal(replaceInst.LocalIndex(), match);
+                Emit(CodeInstruction.LoadLocal(substituteIndex, true));
             }
             else if (replaceInst.IsLdloc())
             {
