@@ -31,17 +31,17 @@ internal struct ParameterBinding
     /// <remarks>
     ///     This is used to get the parameter's type, as well as its name for logging.
     /// </remarks>
-    public ParameterInfo Parameter;
+    public required ParameterInfo Parameter;
 
     /// <summary>
     ///     Whether this applies to the outer method (caller) or inner method (target).
     /// </summary>
-    public Scope Scope;
+    public required Scope Scope;
 
     /// <summary>
     ///     The type of binding.
     /// </summary>
-    public BindingType BindingType;
+    public required BindingType BindingType;
 
     /// <summary>
     ///     Depending on <see cref="BindingType" /> and <see cref="Scope" /> this can be either a local variable index or an
