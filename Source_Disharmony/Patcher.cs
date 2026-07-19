@@ -5,6 +5,8 @@ namespace Disharmony;
 
 internal class Patcher
 {
+    private readonly bool extraDebug = false;
+
     private static class InfoOf
     {
         public static readonly MethodInfo GetMethodFromHandle
@@ -77,7 +79,8 @@ internal class Patcher
             if (!trampolines.Remove(method))
                 return;
 
-            FileLog.Log($"!!! Resolving trampoline to {method.FullName}");
+            if (extraDebug)
+                FileLog.Log($"!!! Resolving trampoline to {method.FullName}");
 
             PatchDirectly(method);
         }
@@ -95,7 +98,8 @@ internal class Patcher
         {
             foreach (var method in trampolines.Keys)
             {
-                FileLog.Log($"!!! Resolving trampoline to {method.FullName}");
+                if (extraDebug)
+                    FileLog.Log($"!!! Resolving trampoline to {method.FullName}");
 
                 PatchDirectly(method);
             }
@@ -110,7 +114,8 @@ internal class Patcher
         if (trampolines.TryGetValue(method, out var existingTrampoline))
             return existingTrampoline;
 
-        FileLog.Log($"!!! Applying trampoline to {method.FullName}");
+        if (extraDebug)
+            FileLog.Log($"!!! Applying trampoline to {method.FullName}");
 
         MethodInfo trampoline = MakeTrampoline(method);
 
