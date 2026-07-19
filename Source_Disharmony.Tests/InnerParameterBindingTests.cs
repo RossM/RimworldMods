@@ -4,100 +4,41 @@ namespace Disharmony.Tests;
 
 public static class InnerParameterBindingPatchMethods
 {
-    public static OuterParameterBindingTarget? CallerObserved;
+    public static ClassMethodTargets? CallerObserved;
     public static int FieldObserved;
     public static int CapturedVariableObserved;
 
-    [InnerPrefix(typeof(InnerParameterBindingTarget), nameof(InnerParameterBindingTarget.CallerPrefixTarget))]
-    [Target(typeof(OuterParameterBindingTarget), nameof(OuterParameterBindingTarget.CallerPrefixTarget))]
-    public static void CaptureCallerPrefix(OuterParameterBindingTarget __caller) => CallerObserved = __caller;
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoid))]
+    public static void CaptureCallerPrefix(ClassMethodTargets __caller) => CallerObserved = __caller;
 
-    [InnerPostfix(typeof(InnerParameterBindingTarget), nameof(InnerParameterBindingTarget.CallerPostfixTarget))]
-    [Target(typeof(OuterParameterBindingTarget), nameof(OuterParameterBindingTarget.CallerPostfixTarget))]
-    public static void CaptureCallerPostfix(OuterParameterBindingTarget __caller) => CallerObserved = __caller;
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoid))]
+    public static void CaptureCallerPostfix(ClassMethodTargets __caller) => CallerObserved = __caller;
 
-    [InnerPrefix(typeof(InnerWithoutFieldTarget), nameof(InnerWithoutFieldTarget.OuterFieldTarget))]
-    [Target(typeof(OuterParameterBindingTarget), nameof(OuterParameterBindingTarget.OuterFieldTarget))]
+    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithoutField))]
     public static void ReadOuterFieldPrefix(int ___foo) => FieldObserved = ___foo;
 
-    [InnerPostfix(typeof(InnerParameterBindingTarget), nameof(InnerParameterBindingTarget.InnerFieldTarget))]
-    [Target(typeof(OuterParameterBindingTarget), nameof(OuterParameterBindingTarget.InnerFieldTarget))]
+    [InnerPostfix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void ReadInnerFieldPostfix(int ___foo) => FieldObserved = ___foo;
 
     [Prefix]
-    [Target(typeof(LocalVariableBindingTarget), "CapturedVariablePrefixTarget.LocalMethod")]
+    [Target(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     public static void ReadCapturedVariablePrefix(int captured) => CapturedVariableObserved = captured;
 
     [Postfix]
-    [Target(typeof(LocalVariableBindingTarget), "CapturedVariablePostfixTarget.LocalMethod")]
+    [Target(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     public static void ReadCapturedVariablePostfix(int captured) => CapturedVariableObserved = captured;
 
-    [InnerPrefix(typeof(LocalVariableBindingTarget), "CapturedVariableInnerPrefixTarget.LocalMethod")]
-    [Target(typeof(LocalVariableBindingTarget), nameof(LocalVariableBindingTarget.CapturedVariableInnerPrefixTarget))]
+    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedVariableMethod))]
     public static void ReadCapturedVariableInnerPrefix(int captured) => CapturedVariableObserved = captured;
 
-    [InnerPostfix(typeof(LocalVariableBindingTarget), "CapturedVariableInnerPostfixTarget.LocalMethod")]
-    [Target(typeof(LocalVariableBindingTarget), nameof(LocalVariableBindingTarget.CapturedVariableInnerPostfixTarget))]
+    [InnerPostfix(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedVariableMethod))]
     public static void ReadCapturedVariableInnerPostfix(int captured) => CapturedVariableObserved = captured;
-}
-
-public sealed class OuterParameterBindingTarget
-{
-    public int foo;
-
-    public void CallerPrefixTarget() => InnerParameterBindingTarget.CallerPrefixTarget();
-    public void CallerPostfixTarget() => InnerParameterBindingTarget.CallerPostfixTarget();
-    public void OuterFieldTarget(InnerWithoutFieldTarget inner) => inner.OuterFieldTarget();
-    public void InnerFieldTarget(InnerParameterBindingTarget inner) => inner.InnerFieldTarget();
-}
-
-public sealed class InnerParameterBindingTarget
-{
-    public int foo;
-
-    public static void CallerPrefixTarget() { }
-    public static void CallerPostfixTarget() { }
-    public void InnerFieldTarget() { }
-}
-
-public sealed class InnerWithoutFieldTarget
-{
-    public void OuterFieldTarget() { }
-}
-
-public static class LocalVariableBindingTarget
-{
-    public static int CapturedVariablePrefixTarget(int value)
-    {
-        int captured = value;
-        return LocalMethod();
-
-        int LocalMethod() => captured;
-    }
-
-    public static int CapturedVariablePostfixTarget(int value)
-    {
-        int captured = value;
-        return LocalMethod();
-
-        int LocalMethod() => captured;
-    }
-
-    public static int CapturedVariableInnerPrefixTarget(int value)
-    {
-        int captured = value;
-        return LocalMethod();
-
-        int LocalMethod() => captured;
-    }
-
-    public static int CapturedVariableInnerPostfixTarget(int value)
-    {
-        int captured = value;
-        return LocalMethod();
-
-        int LocalMethod() => captured;
-    }
 }
 
 [TestFixture]
@@ -108,9 +49,9 @@ public sealed partial class InstanceBindingTests
     {
         InnerParameterBindingPatchMethods.CallerObserved = null;
         ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.CaptureCallerPrefix));
-        var outer = new OuterParameterBindingTarget();
+        var outer = new ClassMethodTargets();
 
-        outer.CallerPrefixTarget();
+        outer.CallStaticVoid();
 
         Assert.That(InnerParameterBindingPatchMethods.CallerObserved, Is.SameAs(outer));
     }
@@ -120,9 +61,9 @@ public sealed partial class InstanceBindingTests
     {
         InnerParameterBindingPatchMethods.CallerObserved = null;
         ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.CaptureCallerPostfix));
-        var outer = new OuterParameterBindingTarget();
+        var outer = new ClassMethodTargets();
 
-        outer.CallerPostfixTarget();
+        outer.CallStaticVoid();
 
         Assert.That(InnerParameterBindingPatchMethods.CallerObserved, Is.SameAs(outer));
     }
@@ -136,9 +77,9 @@ public sealed class FieldBindingTests : PatchTestBase
     {
         InnerParameterBindingPatchMethods.FieldObserved = 0;
         ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadOuterFieldPrefix));
-        var outer = new OuterParameterBindingTarget { foo = 42 };
+        var outer = new ClassMethodTargets { foo = 42 };
 
-        outer.OuterFieldTarget(new InnerWithoutFieldTarget());
+        outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
 
         Assert.That(InnerParameterBindingPatchMethods.FieldObserved, Is.EqualTo(42));
     }
@@ -148,10 +89,10 @@ public sealed class FieldBindingTests : PatchTestBase
     {
         InnerParameterBindingPatchMethods.FieldObserved = 0;
         ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadInnerFieldPostfix));
-        var outer = new OuterParameterBindingTarget { foo = 1 };
-        var inner = new InnerParameterBindingTarget { foo = 42 };
+        var outer = new ClassMethodTargets { foo = 1 };
+        var inner = new InnerInstanceMethodTargets { foo = 42 };
 
-        outer.InnerFieldTarget(inner);
+        outer.CallInnerWithField(inner);
 
         Assert.That(InnerParameterBindingPatchMethods.FieldObserved, Is.EqualTo(42));
     }
@@ -166,7 +107,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
         ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePrefix));
 
-        int result = LocalVariableBindingTarget.CapturedVariablePrefixTarget(42);
+        int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(InnerParameterBindingPatchMethods.CapturedVariableObserved, Is.EqualTo(42));
@@ -178,7 +119,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
         ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePostfix));
 
-        int result = LocalVariableBindingTarget.CapturedVariablePostfixTarget(42);
+        int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(InnerParameterBindingPatchMethods.CapturedVariableObserved, Is.EqualTo(42));
@@ -190,7 +131,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
         ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPrefix));
 
-        int result = LocalVariableBindingTarget.CapturedVariableInnerPrefixTarget(42);
+        int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(InnerParameterBindingPatchMethods.CapturedVariableObserved, Is.EqualTo(42));
@@ -202,7 +143,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
         ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPostfix));
 
-        int result = LocalVariableBindingTarget.CapturedVariableInnerPostfixTarget(42);
+        int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(InnerParameterBindingPatchMethods.CapturedVariableObserved, Is.EqualTo(42));

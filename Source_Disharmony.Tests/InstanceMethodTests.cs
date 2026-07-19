@@ -5,69 +5,35 @@ namespace Disharmony.Tests;
 public static class InstanceMethodPatchMethods
 {
     [Prefix]
-    [Target(typeof(ClassInstanceMethodTarget), nameof(ClassInstanceMethodTarget.PrefixTarget))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.IntIdentity))]
     public static void RewriteClassMethodArgumentPrefix(ref int value) => value = 42;
 
     [Postfix]
-    [Target(typeof(ClassInstanceMethodTarget), nameof(ClassInstanceMethodTarget.PostfixTarget))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.IntResult))]
     public static void RewriteClassMethodResultPostfix(ref int __result) => __result = 42;
 
     [Prefix]
-    [Target(typeof(StructInstanceMethodTarget), nameof(StructInstanceMethodTarget.PrefixTarget))]
+    [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.IntIdentity))]
     public static void RewriteStructMethodArgumentPrefix(ref int value) => value = 42;
 
     [Postfix]
-    [Target(typeof(StructInstanceMethodTarget), nameof(StructInstanceMethodTarget.PostfixTarget))]
+    [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.IntResult))]
     public static void RewriteStructMethodResultPostfix(ref int __result) => __result = 42;
 }
 
-public sealed class ClassInstanceMethodTarget
-{
-    public int Value { get; private set; }
-
-    public int PrefixTarget(int value)
-    {
-        Value = value;
-        return Value;
-    }
-
-    public int PostfixTarget()
-    {
-        Value = 1;
-        return Value;
-    }
-}
-
-public struct StructInstanceMethodTarget
-{
-    public int Value { get; private set; }
-
-    public int PrefixTarget(int value)
-    {
-        Value = value;
-        return Value;
-    }
-
-    public int PostfixTarget()
-    {
-        Value = 1;
-        return Value;
-    }
-}
-
 [TestFixture]
-public sealed class InstanceMethodTests
+public sealed class InstanceMethodTests : PatchTestBase
 {
-    private static void ApplyPatch(string patchMethodName) =>
+    private static void ApplyInstanceMethodPatch(string patchMethodName) =>
         Autopatcher.Patch(typeof(InstanceMethodPatchMethods).GetMethod(patchMethodName));
 
     [Test]
     public void PrefixCanRewriteArgumentOfClassInstanceMethod()
     {
-        ApplyPatch(nameof(InstanceMethodPatchMethods.RewriteClassMethodArgumentPrefix));
-        var instance = new ClassInstanceMethodTarget();
+        ApplyInstanceMethodPatch(nameof(InstanceMethodPatchMethods.RewriteClassMethodArgumentPrefix));
+        var instance = new ClassMethodTargets();
 
-        int result = instance.PrefixTarget(1);
+        int result = instance.IntIdentity(1);
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(instance.Value, Is.EqualTo(42));
@@ -76,10 +42,10 @@ public sealed class InstanceMethodTests
     [Test]
     public void PostfixCanRewriteResultOfClassInstanceMethod()
     {
-        ApplyPatch(nameof(InstanceMethodPatchMethods.RewriteClassMethodResultPostfix));
-        var instance = new ClassInstanceMethodTarget();
+        ApplyInstanceMethodPatch(nameof(InstanceMethodPatchMethods.RewriteClassMethodResultPostfix));
+        var instance = new ClassMethodTargets();
 
-        int result = instance.PostfixTarget();
+        int result = instance.IntResult();
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(instance.Value, Is.EqualTo(1));
@@ -88,10 +54,10 @@ public sealed class InstanceMethodTests
     [Test]
     public void PrefixCanRewriteArgumentOfStructInstanceMethod()
     {
-        ApplyPatch(nameof(InstanceMethodPatchMethods.RewriteStructMethodArgumentPrefix));
-        var instance = new StructInstanceMethodTarget();
+        ApplyInstanceMethodPatch(nameof(InstanceMethodPatchMethods.RewriteStructMethodArgumentPrefix));
+        var instance = new StructMethodTargets();
 
-        int result = instance.PrefixTarget(1);
+        int result = instance.IntIdentity(1);
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(instance.Value, Is.EqualTo(42));
@@ -100,10 +66,10 @@ public sealed class InstanceMethodTests
     [Test]
     public void PostfixCanRewriteResultOfStructInstanceMethod()
     {
-        ApplyPatch(nameof(InstanceMethodPatchMethods.RewriteStructMethodResultPostfix));
-        var instance = new StructInstanceMethodTarget();
+        ApplyInstanceMethodPatch(nameof(InstanceMethodPatchMethods.RewriteStructMethodResultPostfix));
+        var instance = new StructMethodTargets();
 
-        int result = instance.PostfixTarget();
+        int result = instance.IntResult();
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(instance.Value, Is.EqualTo(1));

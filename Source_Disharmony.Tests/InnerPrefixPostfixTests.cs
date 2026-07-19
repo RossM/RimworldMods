@@ -8,146 +8,77 @@ public static class InnerPatchMethods
     public static int ArgumentObserved;
     public static int ResultObserved;
 
-    [InnerPrefix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.RunTarget))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.RunTarget))]
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static bool RunTargetPrefix() => true;
 
-    [InnerPrefix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.SkipTarget))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.SkipTarget))]
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static bool SkipTargetPrefix() => false;
 
-    [InnerPrefix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.ReadArgumentInPrefix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.ReadArgumentInPrefix))]
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntArgument))]
     public static void ReadArgumentPrefix(int value) => ArgumentObserved = value;
 
-    [InnerPostfix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.ReadArgumentInPostfix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.ReadArgumentInPostfix))]
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntArgument))]
     public static void ReadArgumentPostfix(int value) => ArgumentObserved = value;
 
-    [InnerPrefix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.WriteArgumentInPrefix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.WriteArgumentInPrefix))]
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntIdentity))]
     public static void WriteArgumentPrefix(ref int value) => value = 42;
 
-    [InnerPostfix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.WriteArgumentInPostfix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.WriteArgumentInPostfix))]
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.RefIntArgument))]
     public static void WriteArgumentPostfix(ref int value) => value = 42;
 
-    [InnerPrefix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.ReadResultInPrefix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.ReadResultInPrefix))]
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static void ReadResultPrefix(int __result) => ResultObserved = __result;
 
-    [InnerPostfix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.ReadResultInPostfix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.ReadResultInPostfix))]
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static void ReadResultPostfix(int __result) => ResultObserved = __result;
 
-    [InnerPrefix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.WriteResultInPrefix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.WriteResultInPrefix))]
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static bool WriteResultPrefix(ref int __result)
     {
         __result = 42;
         return false;
     }
 
-    [InnerPostfix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.WriteResultInPostfix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.WriteResultInPostfix))]
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static void WriteResultPostfix(ref int __result) => __result = 42;
 
-    [InnerPrefix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.ReadOuterArgumentInPrefix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.ReadOuterArgumentInPrefix))]
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void ReadOuterArgumentPrefix(int outerValue) => ArgumentObserved = outerValue;
 
-    [InnerPostfix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.ReadOuterArgumentInPostfix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.ReadOuterArgumentInPostfix))]
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void ReadOuterArgumentPostfix(int outerValue) => ArgumentObserved = outerValue;
 
-    [InnerPrefix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.WriteOuterArgumentInPrefix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.WriteOuterArgumentInPrefix))]
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void WriteOuterArgumentPrefix(ref int outerValue) => outerValue = 42;
 
-    [InnerPostfix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.WriteOuterArgumentInPostfix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.WriteOuterArgumentInPostfix))]
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void WriteOuterArgumentPostfix(ref int outerValue) => outerValue = 42;
 
-    [InnerPrefix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.SameNamedArgumentInPrefix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.SameNamedArgumentInPrefix))]
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
     public static void ReadSameNamedArgumentPrefix(int value) => ArgumentObserved = value;
 
-    [InnerPostfix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.SameNamedArgumentInPostfix))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.SameNamedArgumentInPostfix))]
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
     public static void ReadSameNamedArgumentPostfix(int value) => ArgumentObserved = value;
 
-    [InnerPostfix(typeof(InnerPatchTargets), nameof(InnerPatchTargets.NonVoidPostfixTarget))]
-    [Target(typeof(OuterPatchTargets), nameof(OuterPatchTargets.NonVoidPostfixTarget))]
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static int NonVoidPostfix() => 42;
-}
-
-public static class InnerPatchTargets
-{
-    public static int RunTarget() => 1;
-
-    public static int SkipTarget()
-    {
-        Assert.Fail("The inner target should have been skipped.");
-        return 1;
-    }
-
-    public static void ReadArgumentInPrefix(int value) { }
-    public static void ReadArgumentInPostfix(int value) { }
-    public static int WriteArgumentInPrefix(int value) => value;
-    public static void WriteArgumentInPostfix(ref int value) { }
-    public static int ReadResultInPrefix() => 42;
-    public static int ReadResultInPostfix() => 42;
-
-    public static int WriteResultInPrefix()
-    {
-        Assert.Fail("The inner target should have been skipped.");
-        return 1;
-    }
-
-    public static int WriteResultInPostfix() => 1;
-    public static void ReadOuterArgumentInPrefix() { }
-    public static void ReadOuterArgumentInPostfix() { }
-    public static void WriteOuterArgumentInPrefix() { }
-    public static void WriteOuterArgumentInPostfix() { }
-    public static void SameNamedArgumentInPrefix(int value) { }
-    public static void SameNamedArgumentInPostfix(int value) { }
-    public static int NonVoidPostfixTarget() => 1;
-}
-
-public static class OuterPatchTargets
-{
-    public static int RunTarget() => InnerPatchTargets.RunTarget();
-    public static int SkipTarget() => InnerPatchTargets.SkipTarget();
-    public static void ReadArgumentInPrefix(int value) => InnerPatchTargets.ReadArgumentInPrefix(value);
-    public static void ReadArgumentInPostfix(int value) => InnerPatchTargets.ReadArgumentInPostfix(value);
-    public static int WriteArgumentInPrefix(int value) => InnerPatchTargets.WriteArgumentInPrefix(value);
-    public static void WriteArgumentInPostfix(ref int value) => InnerPatchTargets.WriteArgumentInPostfix(ref value);
-    public static int ReadResultInPrefix() => InnerPatchTargets.ReadResultInPrefix();
-    public static int ReadResultInPostfix() => InnerPatchTargets.ReadResultInPostfix();
-    public static int WriteResultInPrefix() => InnerPatchTargets.WriteResultInPrefix();
-    public static int WriteResultInPostfix() => InnerPatchTargets.WriteResultInPostfix();
-    public static void ReadOuterArgumentInPrefix(int outerValue) => InnerPatchTargets.ReadOuterArgumentInPrefix();
-    public static void ReadOuterArgumentInPostfix(int outerValue) => InnerPatchTargets.ReadOuterArgumentInPostfix();
-
-    public static int WriteOuterArgumentInPrefix(int outerValue)
-    {
-        InnerPatchTargets.WriteOuterArgumentInPrefix();
-        return outerValue;
-    }
-
-    public static int WriteOuterArgumentInPostfix(int outerValue)
-    {
-        InnerPatchTargets.WriteOuterArgumentInPostfix();
-        return outerValue;
-    }
-
-    public static void SameNamedArgumentInPrefix(int value) =>
-        InnerPatchTargets.SameNamedArgumentInPrefix(value + 41);
-
-    public static void SameNamedArgumentInPostfix(int value) =>
-        InnerPatchTargets.SameNamedArgumentInPostfix(value + 41);
-
-    public static int NonVoidPostfixTarget() => InnerPatchTargets.NonVoidPostfixTarget();
 }
 
 [TestFixture]
@@ -157,14 +88,14 @@ public sealed partial class ExecutionControlTests
     public void InnerPrefixReturningTrueRunsInnerTarget()
     {
         ApplyInnerPatch(nameof(InnerPatchMethods.RunTargetPrefix));
-        Assert.That(OuterPatchTargets.RunTarget(), Is.EqualTo(1));
+        Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(1));
     }
 
     [Test]
     public void InnerPrefixReturningFalseSkipsInnerTarget()
     {
         ApplyInnerPatch(nameof(InnerPatchMethods.SkipTargetPrefix));
-        Assert.That(OuterPatchTargets.SkipTarget(), Is.Zero);
+        Assert.That(OuterStaticMethodTargets.IntResult(), Is.Zero);
     }
 }
 
@@ -176,7 +107,7 @@ public sealed partial class ArgumentBindingTests
     {
         InnerPatchMethods.ArgumentObserved = 0;
         ApplyInnerPatch(nameof(InnerPatchMethods.ReadArgumentPrefix));
-        OuterPatchTargets.ReadArgumentInPrefix(42);
+        OuterStaticMethodTargets.IntArgument(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
 
@@ -185,7 +116,7 @@ public sealed partial class ArgumentBindingTests
     {
         InnerPatchMethods.ArgumentObserved = 0;
         ApplyInnerPatch(nameof(InnerPatchMethods.ReadArgumentPostfix));
-        OuterPatchTargets.ReadArgumentInPostfix(42);
+        OuterStaticMethodTargets.IntArgument(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
 
@@ -193,7 +124,7 @@ public sealed partial class ArgumentBindingTests
     public void InnerPrefixCanWriteInnerArgumentByReference()
     {
         ApplyInnerPatch(nameof(InnerPatchMethods.WriteArgumentPrefix));
-        Assert.That(OuterPatchTargets.WriteArgumentInPrefix(1), Is.EqualTo(42));
+        Assert.That(OuterStaticMethodTargets.IntIdentity(1), Is.EqualTo(42));
     }
 
     [Test]
@@ -201,7 +132,7 @@ public sealed partial class ArgumentBindingTests
     {
         ApplyInnerPatch(nameof(InnerPatchMethods.WriteArgumentPostfix));
         int value = 1;
-        OuterPatchTargets.WriteArgumentInPostfix(ref value);
+        OuterStaticMethodTargets.RefIntArgument(ref value);
         Assert.That(value, Is.EqualTo(42));
     }
 }
@@ -214,7 +145,7 @@ public sealed partial class ResultBindingTests
     {
         InnerPatchMethods.ResultObserved = -1;
         ApplyInnerPatch(nameof(InnerPatchMethods.ReadResultPrefix));
-        OuterPatchTargets.ReadResultInPrefix();
+        OuterStaticMethodTargets.IntResult();
         Assert.That(InnerPatchMethods.ResultObserved, Is.Zero);
     }
 
@@ -223,22 +154,22 @@ public sealed partial class ResultBindingTests
     {
         InnerPatchMethods.ResultObserved = 0;
         ApplyInnerPatch(nameof(InnerPatchMethods.ReadResultPostfix));
-        OuterPatchTargets.ReadResultInPostfix();
-        Assert.That(InnerPatchMethods.ResultObserved, Is.EqualTo(42));
+        OuterStaticMethodTargets.IntResult();
+        Assert.That(InnerPatchMethods.ResultObserved, Is.EqualTo(1));
     }
 
     [Test]
     public void InnerPrefixCanWriteInnerResultByReference()
     {
         ApplyInnerPatch(nameof(InnerPatchMethods.WriteResultPrefix));
-        Assert.That(OuterPatchTargets.WriteResultInPrefix(), Is.EqualTo(42));
+        Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPostfixCanWriteInnerResultByReference()
     {
         ApplyInnerPatch(nameof(InnerPatchMethods.WriteResultPostfix));
-        Assert.That(OuterPatchTargets.WriteResultInPostfix(), Is.EqualTo(42));
+        Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(42));
     }
 }
 
@@ -250,7 +181,7 @@ public sealed partial class ArgumentBindingTests
     {
         InnerPatchMethods.ArgumentObserved = 0;
         ApplyInnerPatch(nameof(InnerPatchMethods.ReadOuterArgumentPrefix));
-        OuterPatchTargets.ReadOuterArgumentInPrefix(42);
+        OuterStaticMethodTargets.OuterArgument(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
 
@@ -259,7 +190,7 @@ public sealed partial class ArgumentBindingTests
     {
         InnerPatchMethods.ArgumentObserved = 0;
         ApplyInnerPatch(nameof(InnerPatchMethods.ReadOuterArgumentPostfix));
-        OuterPatchTargets.ReadOuterArgumentInPostfix(42);
+        OuterStaticMethodTargets.OuterArgument(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
 
@@ -288,7 +219,7 @@ public sealed partial class ArgumentBindingTests
     {
         InnerPatchMethods.ArgumentObserved = 0;
         ApplyInnerPatch(nameof(InnerPatchMethods.ReadSameNamedArgumentPrefix));
-        OuterPatchTargets.SameNamedArgumentInPrefix(1);
+        OuterStaticMethodTargets.SameNamedArgument(1);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
 
@@ -297,7 +228,7 @@ public sealed partial class ArgumentBindingTests
     {
         InnerPatchMethods.ArgumentObserved = 0;
         ApplyInnerPatch(nameof(InnerPatchMethods.ReadSameNamedArgumentPostfix));
-        OuterPatchTargets.SameNamedArgumentInPostfix(1);
+        OuterStaticMethodTargets.SameNamedArgument(1);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
 }
@@ -309,6 +240,6 @@ public sealed partial class PostfixReturnValueTests
     public void InnerPostfixReturnValueIsDiscarded()
     {
         ApplyInnerPatch(nameof(InnerPatchMethods.NonVoidPostfix));
-        Assert.That(OuterPatchTargets.NonVoidPostfixTarget(), Is.EqualTo(1));
+        Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(1));
     }
 }

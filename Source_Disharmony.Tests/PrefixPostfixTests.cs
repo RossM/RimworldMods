@@ -8,76 +8,76 @@ public static class PatchMethods
     public static string? ReferenceParameterObserved;
     public static int ValueResultObserved;
     public static string? ReferenceResultObserved;
-    public static InstancePatchTarget? InstanceObserved;
+    public static ClassMethodTargets? InstanceObserved;
     public static int CombinedPatchObserved;
     public static int StateObserved;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.RunValueTypeTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static bool RunValueTypeTargetPrefix() => true;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.RunReferenceTypeTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
     public static bool RunReferenceTypeTargetPrefix() => true;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.SkipValueTypeTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntResult))]
     public static bool SkipValueTypeTargetPrefix() => false;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.SkipReferenceTypeTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingStringResult))]
     public static bool SkipReferenceTypeTargetPrefix() => false;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueParameterInPrefix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void ReadValueParameterPrefix(int value) => ValueParameterObserved = value;
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueParameterInPostfix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void ReadValueParameterPostfix(int value) => ValueParameterObserved = value;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceParameterInPrefix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringArgument))]
     public static void ReadReferenceParameterPrefix(string value) => ReferenceParameterObserved = value;
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceParameterInPostfix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringArgument))]
     public static void ReadReferenceParameterPostfix(string value) => ReferenceParameterObserved = value;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueParameterInPrefix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
     public static void WriteValueParameterPrefix(ref int value) => value = 42;
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueParameterInPostfix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefIntArgument))]
     public static void WriteValueParameterPostfix(ref int value) => value = 42;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceParameterInPrefix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringIdentity))]
     public static void WriteReferenceParameterPrefix(ref string value) => value = "patched";
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceParameterInPostfix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefStringArgument))]
     public static void WriteReferenceParameterPostfix(ref string value) => value = "patched";
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueResultInPrefix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static void ReadValueResultPrefix(int __result) => ValueResultObserved = __result;
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadValueResultInPostfix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static void ReadValueResultPostfix(int __result) => ValueResultObserved = __result;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceResultInPrefix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
     public static void ReadReferenceResultPrefix(string? __result) => ReferenceResultObserved = __result;
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadReferenceResultInPostfix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
     public static void ReadReferenceResultPostfix(string __result) => ReferenceResultObserved = __result;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultInPrefix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntResult))]
     public static bool WriteValueResultPrefix(ref int __result)
     {
         __result = 42;
@@ -85,11 +85,11 @@ public static class PatchMethods
     }
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultInPostfix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static void WriteValueResultPostfix(ref int __result) => __result = 42;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultInPrefix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingStringResult))]
     public static bool WriteReferenceResultPrefix(ref string? __result)
     {
         __result = "patched";
@@ -97,11 +97,11 @@ public static class PatchMethods
     }
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultInPostfix))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
     public static void WriteReferenceResultPostfix(ref string __result) => __result = "patched";
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultAndRunTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static bool WriteValueResultAndRunTargetPrefix(ref int __result)
     {
         __result = 42;
@@ -109,7 +109,7 @@ public static class PatchMethods
     }
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteValueResultAndSkipTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntResult))]
     public static bool WriteValueResultAndSkipTargetPrefix(ref int __result)
     {
         __result = 42;
@@ -117,7 +117,7 @@ public static class PatchMethods
     }
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultAndRunTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
     public static bool WriteReferenceResultAndRunTargetPrefix(ref string? __result)
     {
         __result = "patched";
@@ -125,7 +125,7 @@ public static class PatchMethods
     }
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteReferenceResultAndSkipTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingStringResult))]
     public static bool WriteReferenceResultAndSkipTargetPrefix(ref string? __result)
     {
         __result = "patched";
@@ -133,15 +133,15 @@ public static class PatchMethods
     }
 
     [Prefix]
-    [Target(typeof(InstancePatchTarget), nameof(InstancePatchTarget.PrefixTarget))]
-    public static void CaptureInstancePrefix(InstancePatchTarget __instance) => InstanceObserved = __instance;
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void CaptureInstancePrefix(ClassMethodTargets __instance) => InstanceObserved = __instance;
 
     [Postfix]
-    [Target(typeof(InstancePatchTarget), nameof(InstancePatchTarget.PostfixTarget))]
-    public static void CaptureInstancePostfix(InstancePatchTarget __instance) => InstanceObserved = __instance;
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void CaptureInstancePostfix(ClassMethodTargets __instance) => InstanceObserved = __instance;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndRunTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static bool WriteArgumentAndRunTargetPrefix(ref int value)
     {
         value = 42;
@@ -149,11 +149,11 @@ public static class PatchMethods
     }
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndRunTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void ObserveArgumentAfterTargetRunsPostfix(int value) => CombinedPatchObserved = value;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndSkipTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntArgument))]
     public static bool WriteArgumentAndSkipTargetPrefix(ref int value)
     {
         value = 42;
@@ -161,11 +161,11 @@ public static class PatchMethods
     }
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteArgumentAndSkipTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntArgument))]
     public static void ObserveArgumentAfterTargetIsSkippedPostfix(int value) => CombinedPatchObserved = value;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndRunTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static bool WriteResultAndRunTargetPrefix(ref int __result)
     {
         __result = 42;
@@ -173,11 +173,11 @@ public static class PatchMethods
     }
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndRunTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static void ObserveResultAfterTargetRunsPostfix(int __result) => CombinedPatchObserved = __result;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndSkipTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntResult))]
     public static bool WriteResultAndSkipTargetPrefix(ref int __result)
     {
         __result = 42;
@@ -185,121 +185,36 @@ public static class PatchMethods
     }
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteResultAndSkipTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntResult))]
     public static void ObserveResultAfterTargetIsSkippedPostfix(int __result) => CombinedPatchObserved = __result;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.StateTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void WriteStatePrefix(out int __state) => __state = 42;
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.StateTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void ReadStatePostfix(int __state) => StateObserved = __state;
 
     [Postfix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.NonVoidPostfixTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static int NonVoidPostfix() => 42;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.ReadRefParameterTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefIntArgument))]
     public static void ReadRefParameterPrefix(int value) => ValueParameterObserved = value;
 
     [Prefix]
-    [Target(typeof(PatchTargets), nameof(PatchTargets.WriteRefParameterTarget))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefIntArgument))]
     public static void WriteRefParameterPrefix(ref int value) => value = 42;
-}
-
-public static class PatchTargets
-{
-    public static int RunValueTypeTarget() => 42;
-    public static string RunReferenceTypeTarget() => "ran";
-
-    public static int SkipValueTypeTarget()
-    {
-        Assert.Fail("The target should have been skipped.");
-        return 1;
-    }
-
-    public static string SkipReferenceTypeTarget()
-    {
-        Assert.Fail("The target should have been skipped.");
-        return "original";
-    }
-
-    public static void ReadValueParameterInPrefix(int value) { }
-    public static void ReadValueParameterInPostfix(int value) { }
-    public static void ReadReferenceParameterInPrefix(string value) { }
-    public static void ReadReferenceParameterInPostfix(string value) { }
-
-    public static int WriteValueParameterInPrefix(int value) => value;
-    public static void WriteValueParameterInPostfix(ref int value) { }
-    public static string WriteReferenceParameterInPrefix(string value) => value;
-    public static void WriteReferenceParameterInPostfix(ref string value) { }
-
-    public static int ReadValueResultInPrefix() => 42;
-    public static int ReadValueResultInPostfix() => 42;
-    public static string ReadReferenceResultInPrefix() => "original";
-    public static string ReadReferenceResultInPostfix() => "original";
-
-    public static int WriteValueResultInPrefix()
-    {
-        Assert.Fail("The target should have been skipped.");
-        return 1;
-    }
-
-    public static int WriteValueResultInPostfix() => 1;
-
-    public static string WriteReferenceResultInPrefix()
-    {
-        Assert.Fail("The target should have been skipped.");
-        return "original";
-    }
-
-    public static string WriteReferenceResultInPostfix() => "original";
-
-    public static int WriteValueResultAndRunTarget() => 1;
-
-    public static int WriteValueResultAndSkipTarget()
-    {
-        Assert.Fail("The target should have been skipped.");
-        return 1;
-    }
-
-    public static string WriteReferenceResultAndRunTarget() => "original";
-
-    public static string WriteReferenceResultAndSkipTarget()
-    {
-        Assert.Fail("The target should have been skipped.");
-        return "original";
-    }
-
-    public static void WriteArgumentAndRunTarget(int value) { }
-
-    public static void WriteArgumentAndSkipTarget(int value) =>
-        Assert.Fail("The target should have been skipped.");
-
-    public static int WriteResultAndRunTarget() => 1;
-
-    public static int WriteResultAndSkipTarget()
-    {
-        Assert.Fail("The target should have been skipped.");
-        return 1;
-    }
-
-    public static void StateTarget() { }
-    public static int NonVoidPostfixTarget() => 1;
-    public static void ReadRefParameterTarget(ref int value) { }
-    public static void WriteRefParameterTarget(ref int value) { }
-}
-
-public sealed class InstancePatchTarget
-{
-    public void PrefixTarget() { }
-    public void PostfixTarget() { }
 }
 
 public abstract class PatchTestBase
 {
+    [SetUp]
+    public void UnpatchBeforeTest() =>
+        Autopatcher.UnpatchAll(typeof(PatchTestBase).Assembly);
+
     protected static void ApplyPatch(string patchMethodName) =>
         Autopatcher.Patch(typeof(PatchMethods).GetMethod(patchMethodName));
 
@@ -323,28 +238,28 @@ public sealed partial class ExecutionControlTests : PatchTestBase
     public void PrefixReturningTrueRunsValueTypeTarget()
     {
         ApplyPatch(nameof(PatchMethods.RunValueTypeTargetPrefix));
-        Assert.That(PatchTargets.RunValueTypeTarget(), Is.EqualTo(42));
+        Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
     }
 
     [Test]
     public void PrefixReturningTrueRunsReferenceTypeTarget()
     {
         ApplyPatch(nameof(PatchMethods.RunReferenceTypeTargetPrefix));
-        Assert.That(PatchTargets.RunReferenceTypeTarget(), Is.EqualTo("ran"));
+        Assert.That(StaticMethodTargets.StringResult(), Is.EqualTo("original"));
     }
 
     [Test]
     public void PrefixReturningFalseSkipsValueTypeTarget()
     {
         ApplyPatch(nameof(PatchMethods.SkipValueTypeTargetPrefix));
-        Assert.That(PatchTargets.SkipValueTypeTarget(), Is.Zero);
+        Assert.That(StaticMethodTargets.ThrowingIntResult(), Is.Zero);
     }
 
     [Test]
     public void PrefixReturningFalseSkipsReferenceTypeTarget()
     {
         ApplyPatch(nameof(PatchMethods.SkipReferenceTypeTargetPrefix));
-        Assert.That(PatchTargets.SkipReferenceTypeTarget(), Is.Null);
+        Assert.That(StaticMethodTargets.ThrowingStringResult(), Is.Null);
     }
 }
 
@@ -356,7 +271,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     {
         PatchMethods.ValueParameterObserved = 0;
         ApplyPatch(nameof(PatchMethods.ReadValueParameterPrefix));
-        PatchTargets.ReadValueParameterInPrefix(42);
+        StaticMethodTargets.IntArgument(42);
 
         Assert.That(PatchMethods.ValueParameterObserved, Is.EqualTo(42));
     }
@@ -366,7 +281,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     {
         PatchMethods.ValueParameterObserved = 0;
         ApplyPatch(nameof(PatchMethods.ReadValueParameterPostfix));
-        PatchTargets.ReadValueParameterInPostfix(42);
+        StaticMethodTargets.IntArgument(42);
 
         Assert.That(PatchMethods.ValueParameterObserved, Is.EqualTo(42));
     }
@@ -376,7 +291,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     {
         PatchMethods.ReferenceParameterObserved = null;
         ApplyPatch(nameof(PatchMethods.ReadReferenceParameterPrefix));
-        PatchTargets.ReadReferenceParameterInPrefix("original");
+        StaticMethodTargets.StringArgument("original");
 
         Assert.That(PatchMethods.ReferenceParameterObserved, Is.EqualTo("original"));
     }
@@ -386,7 +301,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     {
         PatchMethods.ReferenceParameterObserved = null;
         ApplyPatch(nameof(PatchMethods.ReadReferenceParameterPostfix));
-        PatchTargets.ReadReferenceParameterInPostfix("original");
+        StaticMethodTargets.StringArgument("original");
 
         Assert.That(PatchMethods.ReferenceParameterObserved, Is.EqualTo("original"));
     }
@@ -395,7 +310,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     public void PrefixCanWriteValueTypeParameterByReference()
     {
         ApplyPatch(nameof(PatchMethods.WriteValueParameterPrefix));
-        Assert.That(PatchTargets.WriteValueParameterInPrefix(1), Is.EqualTo(42));
+        Assert.That(StaticMethodTargets.IntIdentity(1), Is.EqualTo(42));
     }
 
     [Test]
@@ -403,7 +318,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     {
         ApplyPatch(nameof(PatchMethods.WriteValueParameterPostfix));
         int value = 1;
-        PatchTargets.WriteValueParameterInPostfix(ref value);
+        StaticMethodTargets.RefIntArgument(ref value);
         Assert.That(value, Is.EqualTo(42));
     }
 
@@ -411,7 +326,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     public void PrefixCanWriteReferenceTypeParameterByReference()
     {
         ApplyPatch(nameof(PatchMethods.WriteReferenceParameterPrefix));
-        Assert.That(PatchTargets.WriteReferenceParameterInPrefix("original"), Is.EqualTo("patched"));
+        Assert.That(StaticMethodTargets.StringIdentity("original"), Is.EqualTo("patched"));
     }
 
     [Test]
@@ -419,7 +334,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     {
         ApplyPatch(nameof(PatchMethods.WriteReferenceParameterPostfix));
         string value = "original";
-        PatchTargets.WriteReferenceParameterInPostfix(ref value);
+        StaticMethodTargets.RefStringArgument(ref value);
         Assert.That(value, Is.EqualTo("patched"));
     }
 }
@@ -432,7 +347,7 @@ public sealed partial class ResultBindingTests : PatchTestBase
     {
         PatchMethods.ValueResultObserved = -1;
         ApplyPatch(nameof(PatchMethods.ReadValueResultPrefix));
-        PatchTargets.ReadValueResultInPrefix();
+        StaticMethodTargets.IntResult();
         Assert.That(PatchMethods.ValueResultObserved, Is.Zero);
     }
 
@@ -441,8 +356,8 @@ public sealed partial class ResultBindingTests : PatchTestBase
     {
         PatchMethods.ValueResultObserved = 0;
         ApplyPatch(nameof(PatchMethods.ReadValueResultPostfix));
-        PatchTargets.ReadValueResultInPostfix();
-        Assert.That(PatchMethods.ValueResultObserved, Is.EqualTo(42));
+        StaticMethodTargets.IntResult();
+        Assert.That(PatchMethods.ValueResultObserved, Is.EqualTo(1));
     }
 
     [Test]
@@ -450,7 +365,7 @@ public sealed partial class ResultBindingTests : PatchTestBase
     {
         PatchMethods.ReferenceResultObserved = "sentinel";
         ApplyPatch(nameof(PatchMethods.ReadReferenceResultPrefix));
-        PatchTargets.ReadReferenceResultInPrefix();
+        StaticMethodTargets.StringResult();
         Assert.That(PatchMethods.ReferenceResultObserved, Is.Null);
     }
 
@@ -459,7 +374,7 @@ public sealed partial class ResultBindingTests : PatchTestBase
     {
         PatchMethods.ReferenceResultObserved = null;
         ApplyPatch(nameof(PatchMethods.ReadReferenceResultPostfix));
-        PatchTargets.ReadReferenceResultInPostfix();
+        StaticMethodTargets.StringResult();
         Assert.That(PatchMethods.ReferenceResultObserved, Is.EqualTo("original"));
     }
 
@@ -467,28 +382,28 @@ public sealed partial class ResultBindingTests : PatchTestBase
     public void PrefixCanWriteValueTypeResultByReference()
     {
         ApplyPatch(nameof(PatchMethods.WriteValueResultPrefix));
-        Assert.That(PatchTargets.WriteValueResultInPrefix(), Is.EqualTo(42));
+        Assert.That(StaticMethodTargets.ThrowingIntResult(), Is.EqualTo(42));
     }
 
     [Test]
     public void PostfixCanWriteValueTypeResultByReference()
     {
         ApplyPatch(nameof(PatchMethods.WriteValueResultPostfix));
-        Assert.That(PatchTargets.WriteValueResultInPostfix(), Is.EqualTo(42));
+        Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(42));
     }
 
     [Test]
     public void PrefixCanWriteReferenceTypeResultByReference()
     {
         ApplyPatch(nameof(PatchMethods.WriteReferenceResultPrefix));
-        Assert.That(PatchTargets.WriteReferenceResultInPrefix(), Is.EqualTo("patched"));
+        Assert.That(StaticMethodTargets.ThrowingStringResult(), Is.EqualTo("patched"));
     }
 
     [Test]
     public void PostfixCanWriteReferenceTypeResultByReference()
     {
         ApplyPatch(nameof(PatchMethods.WriteReferenceResultPostfix));
-        Assert.That(PatchTargets.WriteReferenceResultInPostfix(), Is.EqualTo("patched"));
+        Assert.That(StaticMethodTargets.StringResult(), Is.EqualTo("patched"));
     }
 }
 
@@ -499,28 +414,28 @@ public sealed partial class ExecutionControlTests
     public void PrefixResultIsReplacedByValueTypeTargetWhenReturningTrue()
     {
         ApplyPatch(nameof(PatchMethods.WriteValueResultAndRunTargetPrefix));
-        Assert.That(PatchTargets.WriteValueResultAndRunTarget(), Is.EqualTo(1));
+        Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
     }
 
     [Test]
     public void PrefixResultIsRetainedForValueTypeTargetWhenReturningFalse()
     {
         ApplyPatch(nameof(PatchMethods.WriteValueResultAndSkipTargetPrefix));
-        Assert.That(PatchTargets.WriteValueResultAndSkipTarget(), Is.EqualTo(42));
+        Assert.That(StaticMethodTargets.ThrowingIntResult(), Is.EqualTo(42));
     }
 
     [Test]
     public void PrefixResultIsReplacedByReferenceTypeTargetWhenReturningTrue()
     {
         ApplyPatch(nameof(PatchMethods.WriteReferenceResultAndRunTargetPrefix));
-        Assert.That(PatchTargets.WriteReferenceResultAndRunTarget(), Is.EqualTo("original"));
+        Assert.That(StaticMethodTargets.StringResult(), Is.EqualTo("original"));
     }
 
     [Test]
     public void PrefixResultIsRetainedForReferenceTypeTargetWhenReturningFalse()
     {
         ApplyPatch(nameof(PatchMethods.WriteReferenceResultAndSkipTargetPrefix));
-        Assert.That(PatchTargets.WriteReferenceResultAndSkipTarget(), Is.EqualTo("patched"));
+        Assert.That(StaticMethodTargets.ThrowingStringResult(), Is.EqualTo("patched"));
     }
 }
 
@@ -532,9 +447,9 @@ public sealed partial class InstanceBindingTests : PatchTestBase
     {
         PatchMethods.InstanceObserved = null;
         ApplyPatch(nameof(PatchMethods.CaptureInstancePrefix));
-        var instance = new InstancePatchTarget();
+        var instance = new ClassMethodTargets();
 
-        instance.PrefixTarget();
+        instance.Void();
 
         Assert.That(PatchMethods.InstanceObserved, Is.SameAs(instance));
     }
@@ -544,9 +459,9 @@ public sealed partial class InstanceBindingTests : PatchTestBase
     {
         PatchMethods.InstanceObserved = null;
         ApplyPatch(nameof(PatchMethods.CaptureInstancePostfix));
-        var instance = new InstancePatchTarget();
+        var instance = new ClassMethodTargets();
 
-        instance.PostfixTarget();
+        instance.Void();
 
         Assert.That(PatchMethods.InstanceObserved, Is.SameAs(instance));
     }
@@ -563,7 +478,7 @@ public sealed class PatchInteractionTests : PatchTestBase
             nameof(PatchMethods.WriteArgumentAndRunTargetPrefix),
             nameof(PatchMethods.ObserveArgumentAfterTargetRunsPostfix));
 
-        PatchTargets.WriteArgumentAndRunTarget(1);
+        StaticMethodTargets.IntArgument(1);
 
         Assert.That(PatchMethods.CombinedPatchObserved, Is.EqualTo(42));
     }
@@ -576,7 +491,7 @@ public sealed class PatchInteractionTests : PatchTestBase
             nameof(PatchMethods.WriteArgumentAndSkipTargetPrefix),
             nameof(PatchMethods.ObserveArgumentAfterTargetIsSkippedPostfix));
 
-        PatchTargets.WriteArgumentAndSkipTarget(1);
+        StaticMethodTargets.ThrowingIntArgument(1);
 
         Assert.That(PatchMethods.CombinedPatchObserved, Is.EqualTo(42));
     }
@@ -589,7 +504,7 @@ public sealed class PatchInteractionTests : PatchTestBase
             nameof(PatchMethods.WriteResultAndRunTargetPrefix),
             nameof(PatchMethods.ObserveResultAfterTargetRunsPostfix));
 
-        PatchTargets.WriteResultAndRunTarget();
+        StaticMethodTargets.IntResult();
 
         Assert.That(PatchMethods.CombinedPatchObserved, Is.EqualTo(1));
     }
@@ -602,7 +517,7 @@ public sealed class PatchInteractionTests : PatchTestBase
             nameof(PatchMethods.WriteResultAndSkipTargetPrefix),
             nameof(PatchMethods.ObserveResultAfterTargetIsSkippedPostfix));
 
-        PatchTargets.WriteResultAndSkipTarget();
+        StaticMethodTargets.ThrowingIntResult();
 
         Assert.That(PatchMethods.CombinedPatchObserved, Is.EqualTo(42));
     }
@@ -619,7 +534,7 @@ public sealed class StateBindingTests : PatchTestBase
             nameof(PatchMethods.WriteStatePrefix),
             nameof(PatchMethods.ReadStatePostfix));
 
-        PatchTargets.StateTarget();
+        StaticMethodTargets.Void();
 
         Assert.That(PatchMethods.StateObserved, Is.EqualTo(42));
     }
@@ -632,7 +547,7 @@ public sealed partial class PostfixReturnValueTests : PatchTestBase
     public void PostfixReturnValueIsDiscarded()
     {
         ApplyPatch(nameof(PatchMethods.NonVoidPostfix));
-        Assert.That(PatchTargets.NonVoidPostfixTarget(), Is.EqualTo(1));
+        Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
     }
 }
 
@@ -646,7 +561,7 @@ public sealed partial class ArgumentBindingTests
         ApplyPatch(nameof(PatchMethods.ReadRefParameterPrefix));
         int value = 42;
 
-        PatchTargets.ReadRefParameterTarget(ref value);
+        StaticMethodTargets.RefIntArgument(ref value);
 
         Assert.That(PatchMethods.ValueParameterObserved, Is.EqualTo(42));
     }
@@ -657,7 +572,7 @@ public sealed partial class ArgumentBindingTests
         ApplyPatch(nameof(PatchMethods.WriteRefParameterPrefix));
         int value = 1;
 
-        PatchTargets.WriteRefParameterTarget(ref value);
+        StaticMethodTargets.RefIntArgument(ref value);
 
         Assert.That(value, Is.EqualTo(42));
     }
