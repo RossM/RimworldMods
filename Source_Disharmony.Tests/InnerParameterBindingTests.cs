@@ -24,13 +24,21 @@ public static class InnerParameterBindingPatchMethods
     [Target(typeof(OuterParameterBindingTarget), nameof(OuterParameterBindingTarget.InnerFieldTarget))]
     public static void ReadInnerFieldPostfix(int ___foo) => FieldObserved = ___foo;
 
-    [InnerPrefix(typeof(LocalVariableBindingTarget), "CapturedVariablePrefixTarget.LocalMethod")]
-    [Target(typeof(LocalVariableBindingTarget), nameof(LocalVariableBindingTarget.CapturedVariablePrefixTarget))]
+    [Prefix]
+    [Target(typeof(LocalVariableBindingTarget), "CapturedVariablePrefixTarget.LocalMethod")]
     public static void ReadCapturedVariablePrefix(int captured) => CapturedVariableObserved = captured;
 
-    [InnerPostfix(typeof(LocalVariableBindingTarget), "CapturedVariablePostfixTarget.LocalMethod")]
-    [Target(typeof(LocalVariableBindingTarget), nameof(LocalVariableBindingTarget.CapturedVariablePostfixTarget))]
+    [Postfix]
+    [Target(typeof(LocalVariableBindingTarget), "CapturedVariablePostfixTarget.LocalMethod")]
     public static void ReadCapturedVariablePostfix(int captured) => CapturedVariableObserved = captured;
+
+    [InnerPrefix(typeof(LocalVariableBindingTarget), "CapturedVariableInnerPrefixTarget.LocalMethod")]
+    [Target(typeof(LocalVariableBindingTarget), nameof(LocalVariableBindingTarget.CapturedVariableInnerPrefixTarget))]
+    public static void ReadCapturedVariableInnerPrefix(int captured) => CapturedVariableObserved = captured;
+
+    [InnerPostfix(typeof(LocalVariableBindingTarget), "CapturedVariableInnerPostfixTarget.LocalMethod")]
+    [Target(typeof(LocalVariableBindingTarget), nameof(LocalVariableBindingTarget.CapturedVariableInnerPostfixTarget))]
+    public static void ReadCapturedVariableInnerPostfix(int captured) => CapturedVariableObserved = captured;
 }
 
 public sealed class OuterParameterBindingTarget
@@ -59,22 +67,36 @@ public sealed class InnerWithoutFieldTarget
 
 public static class LocalVariableBindingTarget
 {
-    public static void CapturedVariablePrefixTarget(int value)
+    public static int CapturedVariablePrefixTarget(int value)
     {
         int captured = value;
-        LocalMethod();
-        return;
+        return LocalMethod();
 
-        void LocalMethod() => _ = captured;
+        int LocalMethod() => captured;
     }
 
-    public static void CapturedVariablePostfixTarget(int value)
+    public static int CapturedVariablePostfixTarget(int value)
     {
         int captured = value;
-        LocalMethod();
-        return;
+        return LocalMethod();
 
-        void LocalMethod() => _ = captured;
+        int LocalMethod() => captured;
+    }
+
+    public static int CapturedVariableInnerPrefixTarget(int value)
+    {
+        int captured = value;
+        return LocalMethod();
+
+        int LocalMethod() => captured;
+    }
+
+    public static int CapturedVariableInnerPostfixTarget(int value)
+    {
+        int captured = value;
+        return LocalMethod();
+
+        int LocalMethod() => captured;
     }
 }
 
@@ -134,24 +156,50 @@ public sealed class InnerParameterBindingTests
     }
 
     [Test]
-    public void InnerPrefixLocalFunctionCanReadCapturedVariable()
+    public void PrefixOnLocalFunctionCanReadCapturedVariable()
     {
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
         ApplyPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePrefix));
 
-        LocalVariableBindingTarget.CapturedVariablePrefixTarget(42);
+        int result = LocalVariableBindingTarget.CapturedVariablePrefixTarget(42);
 
+        Assert.That(result, Is.EqualTo(42));
         Assert.That(InnerParameterBindingPatchMethods.CapturedVariableObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void InnerPostfixLocalFunctionCanReadCapturedVariable()
+    public void PostfixOnLocalFunctionCanReadCapturedVariable()
     {
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
         ApplyPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePostfix));
 
-        LocalVariableBindingTarget.CapturedVariablePostfixTarget(42);
+        int result = LocalVariableBindingTarget.CapturedVariablePostfixTarget(42);
 
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(InnerParameterBindingPatchMethods.CapturedVariableObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefixAtLocalFunctionCallCanReadCapturedVariable()
+    {
+        InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
+        ApplyPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPrefix));
+
+        int result = LocalVariableBindingTarget.CapturedVariableInnerPrefixTarget(42);
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(InnerParameterBindingPatchMethods.CapturedVariableObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPostfixAtLocalFunctionCallCanReadCapturedVariable()
+    {
+        InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
+        ApplyPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPostfix));
+
+        int result = LocalVariableBindingTarget.CapturedVariableInnerPostfixTarget(42);
+
+        Assert.That(result, Is.EqualTo(42));
         Assert.That(InnerParameterBindingPatchMethods.CapturedVariableObserved, Is.EqualTo(42));
     }
 }
