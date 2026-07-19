@@ -151,15 +151,7 @@ internal class PatchRegistry
 
                 PatchType patchType = patchTypeAttribute.patchType;
 
-                MemberInfo? inner = patchTypeAttribute.memberName != null
-                    ? ReflectionTools.GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName, patchTypeAttribute.memberType,
-                        patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes)
-                    : null;
-
-                if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix && inner == null)
-                    throw new InvalidOperationException($"{patchType} patch must have an inner target");
-
-                var innerInvocation = Invocation.Create(inner);
+                Invocation innerInvocation = GetInnerInvocation(patchTypeAttribute);
 
                 foreach (var targetAttribute in targetAttributes)
                 {
@@ -193,6 +185,20 @@ internal class PatchRegistry
                 throw new InvalidOperationException($"Error processing {method.FullName}", e);
             }
         }
+    }
+
+    private static Invocation GetInnerInvocation(PatchTypeAttribute patchTypeAttribute)
+    {
+        if (patchTypeAttribute.patchType is not (PatchType.InnerPrefix or PatchType.InnerPostfix))
+            return EmptyInvocation.Instance;
+
+        if (patchTypeAttribute.memberName == null)
+            throw new InvalidOperationException($"{patchTypeAttribute.patchType} patch must have an inner target");
+
+        MemberInfo inner = ReflectionTools.GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName, patchTypeAttribute.memberType,
+            patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
+
+        return Invocation.Create(inner);
     }
 
     private void AddPatch(
