@@ -248,4 +248,20 @@ internal class PatchRegistry
             patchList = PatchesByMethod[outer] = [];
         patchList.Add(patch);
     }
+
+    public void UnpatchAll(Assembly assembly)
+    {
+        lock (SyncRoot)
+        {
+            foreach (var kvp in PatchesByMethod)
+            {
+                var outer = kvp.Key;
+                var patchList = kvp.Value;
+
+                int count = patchList.RemoveAll(p => ReferenceEquals(p.unpatchKey, assembly));
+                if (count > 0)
+                    MethodsToUpdate.Add(outer);
+            }
+        }
+    }
 }

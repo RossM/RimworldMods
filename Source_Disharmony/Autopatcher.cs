@@ -97,4 +97,10 @@ public static partial class Autopatcher
         ApplyImpl(useTrampolines: false);
         patcher.ResolveAllTrampolines();
     }
+
+    public static void UnpatchAll(Assembly assembly)
+    {
+        registry.UnpatchAll(assembly);
+        ApplyImpl(useTrampolines: true);
+    }
 }

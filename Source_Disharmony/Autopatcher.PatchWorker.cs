@@ -9,6 +9,12 @@ public static partial class Autopatcher
 
         public void UpdateMethod()
         {
+            if (patches.Count == 0)
+            {
+                patcher.Unpatch(patchedMethod);
+                return;
+            }
+
             List<InstructionMatcher> matchers = [];
 
             InstructionMatcher patchMatcher = MakePatchInstructionMatcher();

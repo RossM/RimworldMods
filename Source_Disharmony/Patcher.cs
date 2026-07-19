@@ -201,11 +201,14 @@ internal class Patcher
         if (!trampolinesEnabled)
             useTrampolines = false;
 
+        if (matchers.Length == 0)
+            Unpatch(original);
+
         HarmonyMethod? harmonyMethod;
         if (!transpilerUpdaters.TryGetValue(original, out var setter))
         {
             MethodInfo transpiler = MakeTranspiler(matchers,
-                $"{original.DeclaringType?.FullName?.Replace('.', '_')}_{original.Name}_Transpiler", original);
+                $"{original.DeclaringType?.FullName?.Replace('.', '_')}_{original.Name}_Transpiler_{Guid.NewGuid()}", original);
 
             bool debug = PatchRegistry.Instance.PatchesByMethod[original].Any(p => p.debug);
 
@@ -236,6 +239,26 @@ internal class Patcher
                 replacement = ApplyTrampoline(original);
             else
                 replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
+
+            HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
+        }
+    }
+
+    public void Unpatch(MethodInfo original)
+    {
+        if (!transpilerUpdaters.Remove(original))
+            return;
+
+        lock (HarmonyInternals.locker)
+        {
+            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
+
+            patchInfo.transpilers =
+            [
+                .. patchInfo.transpilers.Where(t => t.owner != harmonyID),
+            ];
+
+            MethodInfo replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
 
             HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
         }
