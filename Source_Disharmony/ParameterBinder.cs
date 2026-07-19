@@ -156,6 +156,31 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
             }
         }
 
+        // Look in closure fields
+        if (scope is Scope.Outer or Scope.Any)
+        {
+            var parameterTypes = outer.ParameterTypes;
+            int closureIndex = Array.FindLastIndex(parameterTypes, p => p.IsClosureType);
+            if (closureIndex >= 0)
+            {
+                var type = parameterTypes[closureIndex];
+                if (type.IsByRef)
+                    type = type.GetElementType();
+
+                var field = type.GetField(name, AccessTools.all);
+
+                if (field != null)
+                    return new()
+                    {
+                        Parameter = parameter,
+                        BindingType = BindingType.Parameter,
+                        Scope = Scope.Outer,
+                        Index = closureIndex,
+                        Fields = [field],
+                    };
+            }
+        }
+
         throw new ParameterBindingException(parameter.Name, "Parameter not found");
     }
 
