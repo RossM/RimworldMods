@@ -159,6 +159,8 @@ internal class PatchRegistry
                 if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix && inner == null)
                     throw new InvalidOperationException($"{patchType} patch must have an inner target");
 
+                var innerInvocation = Invocation.Create(inner);
+
                 foreach (var targetAttribute in targetAttributes)
                 {
                     var patchedType = targetAttribute.type ?? defaultTargetType;
@@ -182,7 +184,7 @@ internal class PatchRegistry
                         if (outer == null)
                             throw new InvalidOperationException($"Couldn't locate method {targetAttribute.methodName}");
 
-                        AddPatch(method, patchType, outer, Invocation.Create(inner), inline, debug);
+                        AddPatch(method, patchType, outer, innerInvocation, inline, debug);
                     }
                 }
             }
