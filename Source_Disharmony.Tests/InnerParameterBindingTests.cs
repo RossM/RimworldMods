@@ -101,16 +101,13 @@ public static class LocalVariableBindingTarget
 }
 
 [TestFixture]
-public sealed class InnerParameterBindingTests
+public sealed partial class InstanceBindingTests
 {
-    private static void ApplyPatch(string patchMethodName) =>
-        Autopatcher.Patch(typeof(InnerParameterBindingPatchMethods).GetMethod(patchMethodName));
-
     [Test]
     public void InnerPrefixCanCaptureOuterMethodInstanceAsCaller()
     {
         InnerParameterBindingPatchMethods.CallerObserved = null;
-        ApplyPatch(nameof(InnerParameterBindingPatchMethods.CaptureCallerPrefix));
+        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.CaptureCallerPrefix));
         var outer = new OuterParameterBindingTarget();
 
         outer.CallerPrefixTarget();
@@ -122,19 +119,23 @@ public sealed class InnerParameterBindingTests
     public void InnerPostfixCanCaptureOuterMethodInstanceAsCaller()
     {
         InnerParameterBindingPatchMethods.CallerObserved = null;
-        ApplyPatch(nameof(InnerParameterBindingPatchMethods.CaptureCallerPostfix));
+        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.CaptureCallerPostfix));
         var outer = new OuterParameterBindingTarget();
 
         outer.CallerPostfixTarget();
 
         Assert.That(InnerParameterBindingPatchMethods.CallerObserved, Is.SameAs(outer));
     }
+}
 
+[TestFixture]
+public sealed class FieldBindingTests : PatchTestBase
+{
     [Test]
     public void TripleUnderscoreParameterCanReadOuterInstanceField()
     {
         InnerParameterBindingPatchMethods.FieldObserved = 0;
-        ApplyPatch(nameof(InnerParameterBindingPatchMethods.ReadOuterFieldPrefix));
+        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadOuterFieldPrefix));
         var outer = new OuterParameterBindingTarget { foo = 42 };
 
         outer.OuterFieldTarget(new InnerWithoutFieldTarget());
@@ -146,7 +147,7 @@ public sealed class InnerParameterBindingTests
     public void TripleUnderscoreParameterPrefersInnerInstanceField()
     {
         InnerParameterBindingPatchMethods.FieldObserved = 0;
-        ApplyPatch(nameof(InnerParameterBindingPatchMethods.ReadInnerFieldPostfix));
+        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadInnerFieldPostfix));
         var outer = new OuterParameterBindingTarget { foo = 1 };
         var inner = new InnerParameterBindingTarget { foo = 42 };
 
@@ -154,12 +155,16 @@ public sealed class InnerParameterBindingTests
 
         Assert.That(InnerParameterBindingPatchMethods.FieldObserved, Is.EqualTo(42));
     }
+}
 
+[TestFixture]
+public sealed class CapturedVariableBindingTests : PatchTestBase
+{
     [Test]
     public void PrefixOnLocalFunctionCanReadCapturedVariable()
     {
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
-        ApplyPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePrefix));
+        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePrefix));
 
         int result = LocalVariableBindingTarget.CapturedVariablePrefixTarget(42);
 
@@ -171,7 +176,7 @@ public sealed class InnerParameterBindingTests
     public void PostfixOnLocalFunctionCanReadCapturedVariable()
     {
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
-        ApplyPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePostfix));
+        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePostfix));
 
         int result = LocalVariableBindingTarget.CapturedVariablePostfixTarget(42);
 
@@ -183,7 +188,7 @@ public sealed class InnerParameterBindingTests
     public void InnerPrefixAtLocalFunctionCallCanReadCapturedVariable()
     {
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
-        ApplyPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPrefix));
+        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPrefix));
 
         int result = LocalVariableBindingTarget.CapturedVariableInnerPrefixTarget(42);
 
@@ -195,7 +200,7 @@ public sealed class InnerParameterBindingTests
     public void InnerPostfixAtLocalFunctionCallCanReadCapturedVariable()
     {
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
-        ApplyPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPostfix));
+        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPostfix));
 
         int result = LocalVariableBindingTarget.CapturedVariableInnerPostfixTarget(42);
 

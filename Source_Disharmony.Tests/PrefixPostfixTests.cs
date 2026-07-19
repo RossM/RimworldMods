@@ -298,18 +298,27 @@ public sealed class InstancePatchTarget
     public void PostfixTarget() { }
 }
 
-[TestFixture]
-public sealed class DisharmonyTests
+public abstract class PatchTestBase
 {
-    private static void ApplyPatch(string patchMethodName) =>
+    protected static void ApplyPatch(string patchMethodName) =>
         Autopatcher.Patch(typeof(PatchMethods).GetMethod(patchMethodName));
 
-    private static void ApplyPatches(string firstPatchMethodName, string secondPatchMethodName)
+    protected static void ApplyPatches(string firstPatchMethodName, string secondPatchMethodName)
     {
         ApplyPatch(firstPatchMethodName);
         ApplyPatch(secondPatchMethodName);
     }
 
+    protected static void ApplyInnerPatch(string patchMethodName) =>
+        Autopatcher.Patch(typeof(InnerPatchMethods).GetMethod(patchMethodName));
+
+    protected static void ApplyInnerParameterBindingPatch(string patchMethodName) =>
+        Autopatcher.Patch(typeof(InnerParameterBindingPatchMethods).GetMethod(patchMethodName));
+}
+
+[TestFixture]
+public sealed partial class ExecutionControlTests : PatchTestBase
+{
     [Test]
     public void PrefixReturningTrueRunsValueTypeTarget()
     {
@@ -337,7 +346,11 @@ public sealed class DisharmonyTests
         ApplyPatch(nameof(PatchMethods.SkipReferenceTypeTargetPrefix));
         Assert.That(PatchTargets.SkipReferenceTypeTarget(), Is.Null);
     }
+}
 
+[TestFixture]
+public sealed partial class ArgumentBindingTests : PatchTestBase
+{
     [Test]
     public void PrefixCanReadValueTypeParameter()
     {
@@ -409,7 +422,11 @@ public sealed class DisharmonyTests
         PatchTargets.WriteReferenceParameterInPostfix(ref value);
         Assert.That(value, Is.EqualTo("patched"));
     }
+}
 
+[TestFixture]
+public sealed partial class ResultBindingTests : PatchTestBase
+{
     [Test]
     public void PrefixReadsDefaultValueTypeResult()
     {
@@ -473,7 +490,11 @@ public sealed class DisharmonyTests
         ApplyPatch(nameof(PatchMethods.WriteReferenceResultPostfix));
         Assert.That(PatchTargets.WriteReferenceResultInPostfix(), Is.EqualTo("patched"));
     }
+}
 
+[TestFixture]
+public sealed partial class ExecutionControlTests
+{
     [Test]
     public void PrefixResultIsReplacedByValueTypeTargetWhenReturningTrue()
     {
@@ -501,7 +522,11 @@ public sealed class DisharmonyTests
         ApplyPatch(nameof(PatchMethods.WriteReferenceResultAndSkipTargetPrefix));
         Assert.That(PatchTargets.WriteReferenceResultAndSkipTarget(), Is.EqualTo("patched"));
     }
+}
 
+[TestFixture]
+public sealed partial class InstanceBindingTests : PatchTestBase
+{
     [Test]
     public void PrefixCanCapturePatchedMethodInstance()
     {
@@ -525,7 +550,11 @@ public sealed class DisharmonyTests
 
         Assert.That(PatchMethods.InstanceObserved, Is.SameAs(instance));
     }
+}
 
+[TestFixture]
+public sealed class PatchInteractionTests : PatchTestBase
+{
     [Test]
     public void PostfixObservesArgumentWrittenByPrefixWhenTargetRuns()
     {
@@ -577,7 +606,11 @@ public sealed class DisharmonyTests
 
         Assert.That(PatchMethods.CombinedPatchObserved, Is.EqualTo(42));
     }
+}
 
+[TestFixture]
+public sealed class StateBindingTests : PatchTestBase
+{
     [Test]
     public void PostfixCanReadStateWrittenByPrefix()
     {
@@ -590,14 +623,22 @@ public sealed class DisharmonyTests
 
         Assert.That(PatchMethods.StateObserved, Is.EqualTo(42));
     }
+}
 
+[TestFixture]
+public sealed partial class PostfixReturnValueTests : PatchTestBase
+{
     [Test]
     public void PostfixReturnValueIsDiscarded()
     {
         ApplyPatch(nameof(PatchMethods.NonVoidPostfix));
         Assert.That(PatchTargets.NonVoidPostfixTarget(), Is.EqualTo(1));
     }
+}
 
+[TestFixture]
+public sealed partial class ArgumentBindingTests
+{
     [Test]
     public void PatchCanReadRefParameterWithoutDeclaringRef()
     {

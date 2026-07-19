@@ -151,30 +151,31 @@ public static class OuterPatchTargets
 }
 
 [TestFixture]
-public sealed class InnerPatchTests
+public sealed partial class ExecutionControlTests
 {
-    private static void ApplyPatch(string patchMethodName) =>
-        Autopatcher.Patch(typeof(InnerPatchMethods).GetMethod(patchMethodName));
-
     [Test]
     public void InnerPrefixReturningTrueRunsInnerTarget()
     {
-        ApplyPatch(nameof(InnerPatchMethods.RunTargetPrefix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.RunTargetPrefix));
         Assert.That(OuterPatchTargets.RunTarget(), Is.EqualTo(1));
     }
 
     [Test]
     public void InnerPrefixReturningFalseSkipsInnerTarget()
     {
-        ApplyPatch(nameof(InnerPatchMethods.SkipTargetPrefix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.SkipTargetPrefix));
         Assert.That(OuterPatchTargets.SkipTarget(), Is.Zero);
     }
+}
 
+[TestFixture]
+public sealed partial class ArgumentBindingTests
+{
     [Test]
     public void InnerPrefixCanReadInnerArgument()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyPatch(nameof(InnerPatchMethods.ReadArgumentPrefix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.ReadArgumentPrefix));
         OuterPatchTargets.ReadArgumentInPrefix(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
@@ -183,7 +184,7 @@ public sealed class InnerPatchTests
     public void InnerPostfixCanReadInnerArgument()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyPatch(nameof(InnerPatchMethods.ReadArgumentPostfix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.ReadArgumentPostfix));
         OuterPatchTargets.ReadArgumentInPostfix(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
@@ -191,24 +192,28 @@ public sealed class InnerPatchTests
     [Test]
     public void InnerPrefixCanWriteInnerArgumentByReference()
     {
-        ApplyPatch(nameof(InnerPatchMethods.WriteArgumentPrefix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.WriteArgumentPrefix));
         Assert.That(OuterPatchTargets.WriteArgumentInPrefix(1), Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPostfixCanWriteInnerArgumentByReference()
     {
-        ApplyPatch(nameof(InnerPatchMethods.WriteArgumentPostfix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.WriteArgumentPostfix));
         int value = 1;
         OuterPatchTargets.WriteArgumentInPostfix(ref value);
         Assert.That(value, Is.EqualTo(42));
     }
+}
 
+[TestFixture]
+public sealed partial class ResultBindingTests
+{
     [Test]
     public void InnerPrefixReadsDefaultInnerResult()
     {
         InnerPatchMethods.ResultObserved = -1;
-        ApplyPatch(nameof(InnerPatchMethods.ReadResultPrefix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.ReadResultPrefix));
         OuterPatchTargets.ReadResultInPrefix();
         Assert.That(InnerPatchMethods.ResultObserved, Is.Zero);
     }
@@ -217,7 +222,7 @@ public sealed class InnerPatchTests
     public void InnerPostfixReadsInnerResult()
     {
         InnerPatchMethods.ResultObserved = 0;
-        ApplyPatch(nameof(InnerPatchMethods.ReadResultPostfix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.ReadResultPostfix));
         OuterPatchTargets.ReadResultInPostfix();
         Assert.That(InnerPatchMethods.ResultObserved, Is.EqualTo(42));
     }
@@ -225,22 +230,26 @@ public sealed class InnerPatchTests
     [Test]
     public void InnerPrefixCanWriteInnerResultByReference()
     {
-        ApplyPatch(nameof(InnerPatchMethods.WriteResultPrefix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.WriteResultPrefix));
         Assert.That(OuterPatchTargets.WriteResultInPrefix(), Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPostfixCanWriteInnerResultByReference()
     {
-        ApplyPatch(nameof(InnerPatchMethods.WriteResultPostfix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.WriteResultPostfix));
         Assert.That(OuterPatchTargets.WriteResultInPostfix(), Is.EqualTo(42));
     }
+}
 
+[TestFixture]
+public sealed partial class ArgumentBindingTests
+{
     [Test]
     public void InnerPrefixCanReadOuterArgumentWhenInnerHasNoMatchingArgument()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyPatch(nameof(InnerPatchMethods.ReadOuterArgumentPrefix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.ReadOuterArgumentPrefix));
         OuterPatchTargets.ReadOuterArgumentInPrefix(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
@@ -249,7 +258,7 @@ public sealed class InnerPatchTests
     public void InnerPostfixCanReadOuterArgumentWhenInnerHasNoMatchingArgument()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyPatch(nameof(InnerPatchMethods.ReadOuterArgumentPostfix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.ReadOuterArgumentPostfix));
         OuterPatchTargets.ReadOuterArgumentInPostfix(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
@@ -258,7 +267,7 @@ public sealed class InnerPatchTests
     public void InnerPrefixCannotWriteOuterArgumentByReference()
     {
         var exception = Assert.Throws<InvalidOperationException>(() =>
-            ApplyPatch(nameof(InnerPatchMethods.WriteOuterArgumentPrefix)));
+            ApplyInnerPatch(nameof(InnerPatchMethods.WriteOuterArgumentPrefix)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
         Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
@@ -268,7 +277,7 @@ public sealed class InnerPatchTests
     public void InnerPostfixCannotWriteOuterArgumentByReference()
     {
         var exception = Assert.Throws<InvalidOperationException>(() =>
-            ApplyPatch(nameof(InnerPatchMethods.WriteOuterArgumentPostfix)));
+            ApplyInnerPatch(nameof(InnerPatchMethods.WriteOuterArgumentPostfix)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
         Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
@@ -278,7 +287,7 @@ public sealed class InnerPatchTests
     public void InnerPrefixPrefersInnerArgumentWhenOuterArgumentHasSameName()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyPatch(nameof(InnerPatchMethods.ReadSameNamedArgumentPrefix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.ReadSameNamedArgumentPrefix));
         OuterPatchTargets.SameNamedArgumentInPrefix(1);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
@@ -287,15 +296,19 @@ public sealed class InnerPatchTests
     public void InnerPostfixPrefersInnerArgumentWhenOuterArgumentHasSameName()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyPatch(nameof(InnerPatchMethods.ReadSameNamedArgumentPostfix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.ReadSameNamedArgumentPostfix));
         OuterPatchTargets.SameNamedArgumentInPostfix(1);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
+}
 
+[TestFixture]
+public sealed partial class PostfixReturnValueTests
+{
     [Test]
     public void InnerPostfixReturnValueIsDiscarded()
     {
-        ApplyPatch(nameof(InnerPatchMethods.NonVoidPostfix));
+        ApplyInnerPatch(nameof(InnerPatchMethods.NonVoidPostfix));
         Assert.That(OuterPatchTargets.NonVoidPostfixTarget(), Is.EqualTo(1));
     }
 }
