@@ -35,7 +35,7 @@ public static partial class Autopatcher
                 case BindingType.Parameter:
                 case BindingType.Instance:
                 {
-                    EmitParameterLookup(parameterType, parameter);
+                    EmitParameterLookup(parameter, parameter.Fields is not { Length: > 0 }, parameterType.IsByRef);
                     break;
                 }
 
@@ -70,11 +70,11 @@ public static partial class Autopatcher
             }
         }
 
-        protected virtual void EmitParameterLookup(Type type, ParameterBinding parameter)
+        protected virtual void EmitParameterLookup(ParameterBinding parameter, bool doDereference, bool typeIsByRef)
         {
             switch (parameter.Scope)
             {
-                case Scope.Outer: EmitOuterParameter(type, parameter.Index); break;
+                case Scope.Outer: EmitOuterParameter(parameter.Index, doDereference, typeIsByRef); break;
                 default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
             }
         }
@@ -84,17 +84,17 @@ public static partial class Autopatcher
             output.EmitLoad(resultLocalIndex, parameterType.IsByRef);
         }
 
-        protected void EmitOuterParameter(Type type, int index)
+        protected void EmitOuterParameter(int index, bool doDereference, bool typeIsByRef)
         {
             if (outerParameterTypes == null)
                 throw new InvalidOperationException("outerParameterTypes is null");
 
-            if (type.IsByRef && !outerParameterTypes[index].IsByRef)
+            if (typeIsByRef && !outerParameterTypes[index].IsByRef)
                 output.Add(new(OpCodes.Ldarga, index));
             else
                 output.Add(CodeInstruction.LoadArgument(index));
-            if (!type.IsByRef && outerParameterTypes[index].IsByRef)
-                output.Add(new(OpCodes.Ldobj, type));
+            if (!typeIsByRef && outerParameterTypes[index].IsByRef && doDereference)
+                output.Add(new(OpCodes.Ldobj, outerParameterTypes[index].GetElementType()));
         }
     }
 }

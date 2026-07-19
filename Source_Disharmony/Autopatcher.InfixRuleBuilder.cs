@@ -66,7 +66,8 @@ public static partial class Autopatcher
 
             for (int i = 0; i < innerParameterTypes!.Length; i++)
             {
-                EmitInnerParameter(innerParameterTypes![i], i);
+                Type type = innerParameterTypes![i];
+                EmitInnerParameter(i, true, type.IsByRef);
             }
 
             output.Add(inner.GetCodeInstruction());
@@ -106,12 +107,12 @@ public static partial class Autopatcher
             }
         }
 
-        protected override void EmitParameterLookup(Type type, ParameterBinding parameter)
+        protected override void EmitParameterLookup(ParameterBinding parameter, bool doDereference, bool typeIsByRef)
         {
             switch (parameter.Scope)
             {
-                case Scope.Outer: EmitOuterParameter(type, parameter.Index); break;
-                case Scope.Inner: EmitInnerParameter(type, parameter.Index); break;
+                case Scope.Outer: EmitOuterParameter(parameter.Index, doDereference, typeIsByRef); break;
+                case Scope.Inner: EmitInnerParameter(parameter.Index, doDereference, typeIsByRef); break;
                 default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
             }
         }
@@ -137,16 +138,16 @@ public static partial class Autopatcher
             };
         }
 
-        private void EmitInnerParameter(Type type, int index)
+        private void EmitInnerParameter(int index, bool doDereference, bool typeIsByRef)
         {
             if (innerParameterTypes == null)
                 throw new InvalidOperationException("innerParameterTypes is null");
             if (innerParameterLocals == null)
                 throw new InvalidOperationException("innerParameterLocals is null");
 
-            output.EmitLoad(innerParameterLocals[index], type.IsByRef && !innerParameterTypes[index].IsByRef);
-            if (!type.IsByRef && innerParameterTypes[index].IsByRef)
-                output.Add(new(OpCodes.Ldobj, type));
+            output.EmitLoad(innerParameterLocals[index], typeIsByRef && !innerParameterTypes[index].IsByRef);
+            if (!typeIsByRef && innerParameterTypes[index].IsByRef && doDereference)
+                output.Add(new(OpCodes.Ldobj, innerParameterTypes[index].GetElementType()));
         }
     }
 }
