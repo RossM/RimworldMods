@@ -76,6 +76,14 @@ public static class InnerPatchMethods
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
     public static void ReadSameNamedArgumentPostfix(int value) => ArgumentObserved = value;
 
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
+    public static void WriteSameNamedArgumentPrefix(ref int value) => value = 42;
+
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
+    public static void WriteSameNamedArgumentPostfix(ref int value) => value = 42;
+
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static int NonVoidPostfix() => 42;
@@ -230,6 +238,30 @@ public sealed partial class ArgumentBindingTests
         ApplyInnerPatch(nameof(InnerPatchMethods.ReadSameNamedArgumentPostfix));
         OuterStaticMethodTargets.SameNamedArgument(1);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefixCanWriteInnerArgumentWhenOuterArgumentHasSameName()
+    {
+        ApplyInnerPatch(nameof(InnerPatchMethods.WriteSameNamedArgumentPrefix));
+        int outerValue = 7;
+
+        int result = OuterStaticMethodTargets.SameNamedRefArgument(ref outerValue);
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(outerValue, Is.EqualTo(7));
+    }
+
+    [Test]
+    public void InnerPostfixCanWriteInnerArgumentWhenOuterArgumentHasSameName()
+    {
+        ApplyInnerPatch(nameof(InnerPatchMethods.WriteSameNamedArgumentPostfix));
+        int outerValue = 7;
+
+        int result = OuterStaticMethodTargets.SameNamedRefArgument(ref outerValue);
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(outerValue, Is.EqualTo(7));
     }
 }
 

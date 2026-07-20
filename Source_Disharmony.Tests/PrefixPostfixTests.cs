@@ -9,6 +9,7 @@ public static class PatchMethods
     public static int ValueResultObserved;
     public static string? ReferenceResultObserved;
     public static ClassMethodTargets? InstanceObserved;
+    public static ClassMethodTargets? ReplacementInstance;
     public static int CombinedPatchObserved;
     public static int StateObserved;
 
@@ -141,6 +142,20 @@ public static class PatchMethods
     public static void CaptureInstancePostfix(ClassMethodTargets __instance) => InstanceObserved = __instance;
 
     [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
+    public static void WriteInstancePrefix(ref ClassMethodTargets __instance) => __instance = ReplacementInstance!;
+
+    [Postfix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
+    public static void WriteInstancePostfix(
+        ref ClassMethodTargets __instance,
+        ref ClassMethodTargets __result)
+    {
+        __instance = ReplacementInstance!;
+        __result = __instance;
+    }
+
+    [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static bool WriteArgumentAndRunTargetPrefix(ref int value)
     {
@@ -195,6 +210,14 @@ public static class PatchMethods
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void ReadStatePostfix(int __state) => StateObserved = __state;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void WriteStatePostfix(ref int __state) => __state = 43;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void ReadWrittenStatePostfix(int __state) => StateObserved = __state;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
@@ -465,6 +488,32 @@ public sealed partial class InstanceBindingTests : PatchTestBase
 
         Assert.That(PatchMethods.InstanceObserved, Is.SameAs(instance));
     }
+
+    [Test]
+    public void PrefixCanWritePatchedMethodInstanceByReference()
+    {
+        var original = new ClassMethodTargets();
+        var replacement = new ClassMethodTargets();
+        PatchMethods.ReplacementInstance = replacement;
+        ApplyPatch(nameof(PatchMethods.WriteInstancePrefix));
+
+        ClassMethodTargets result = original.Self();
+
+        Assert.That(result, Is.SameAs(replacement));
+    }
+
+    [Test]
+    public void PostfixCanWritePatchedMethodInstanceByReference()
+    {
+        var original = new ClassMethodTargets();
+        var replacement = new ClassMethodTargets();
+        PatchMethods.ReplacementInstance = replacement;
+        ApplyPatch(nameof(PatchMethods.WriteInstancePostfix));
+
+        ClassMethodTargets result = original.Self();
+
+        Assert.That(result, Is.SameAs(replacement));
+    }
 }
 
 [TestFixture]
@@ -537,6 +586,19 @@ public sealed class StateBindingTests : PatchTestBase
         StaticMethodTargets.Void();
 
         Assert.That(PatchMethods.StateObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void PostfixCanWriteStateByReferenceForLaterPostfix()
+    {
+        PatchMethods.StateObserved = 0;
+        ApplyPatch(nameof(PatchMethods.WriteStatePrefix));
+        ApplyPatch(nameof(PatchMethods.WriteStatePostfix));
+        ApplyPatch(nameof(PatchMethods.ReadWrittenStatePostfix));
+
+        StaticMethodTargets.Void();
+
+        Assert.That(PatchMethods.StateObserved, Is.EqualTo(43));
     }
 }
 

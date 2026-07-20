@@ -37,6 +37,7 @@ namespace Disharmony.Tests
         public int Value { get; private set; }
 
         public void Void() { }
+        public ClassMethodTargets Self() => this;
 
         public int IntIdentity(int value)
         {
@@ -51,6 +52,12 @@ namespace Disharmony.Tests
         }
 
         public void CallStaticVoid() => InnerStaticMethodTargets.Void();
+        public int CallStaticVoidAndReturnValue()
+        {
+            InnerStaticMethodTargets.Void();
+            return Value;
+        }
+
         public void CallInnerWithoutField(InstanceMethodTargetsWithoutFields inner) => inner.Void();
         public void CallInnerWithField(InnerInstanceMethodTargets inner) => inner.Void();
     }
@@ -100,6 +107,12 @@ namespace Disharmony.Tests
         public static void RefIntArgument(ref int value) => InnerStaticMethodTargets.RefIntArgument(ref value);
         public static void OuterArgument(int outerValue) => InnerStaticMethodTargets.Void();
         public static void SameNamedArgument(int value) => InnerStaticMethodTargets.IntArgument(value + 41);
+        public static int SameNamedRefArgument(ref int value)
+        {
+            int innerValue = 1;
+            InnerStaticMethodTargets.RefIntArgument(ref innerValue);
+            return innerValue;
+        }
     }
 
     public static class LocalFunctionTargets
@@ -107,7 +120,8 @@ namespace Disharmony.Tests
         public static int CapturedVariableMethod(int value)
         {
             int captured = value;
-            return LocalMethod();
+            _ = LocalMethod();
+            return captured;
 
             int LocalMethod() => captured;
         }
