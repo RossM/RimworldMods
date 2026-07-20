@@ -64,9 +64,9 @@ public static partial class Autopatcher
                 }
             }
 
-            for (int i = 0; i < innerParameterTypes!.Length; i++)
+            for (int i = 0; i < innerParameterTypes.Length; i++)
             {
-                Type type = innerParameterTypes![i];
+                Type type = innerParameterTypes[i];
                 EmitInnerParameter(i, true, type.IsByRef);
             }
 
@@ -100,9 +100,9 @@ public static partial class Autopatcher
         {
             // Save all parameters to local. The matcher will handle renumbering the locals to new
             // unused local indexes.
-            for (int i = innerParameterTypes!.Length - 1; i >= 0; i--)
+            for (int i = innerParameterTypes.Length - 1; i >= 0; i--)
             {
-                innerParameterLocals![i] = output.AddLocal(innerParameterTypes![i]);
+                innerParameterLocals[i] = output.AddLocal(innerParameterTypes[i]);
                 output.Add(CodeInstruction.StoreLocal(innerParameterLocals[i]));
             }
         }
