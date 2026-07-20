@@ -70,11 +70,11 @@ public static partial class Autopatcher
             }
         }
 
-        protected virtual void EmitParameterLookup(ParameterBinding parameter, bool doDereference, bool typeIsByRef)
+        protected virtual void EmitParameterLookup(ParameterBinding parameter, bool directAccess, bool typeIsByRef)
         {
             switch (parameter.Scope)
             {
-                case Scope.Outer: EmitOuterParameter(parameter.Index, doDereference, typeIsByRef); break;
+                case Scope.Outer: EmitOuterParameter(parameter.Index, directAccess, typeIsByRef); break;
                 default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
             }
         }
@@ -84,13 +84,14 @@ public static partial class Autopatcher
             output.Add(CodeInstruction.LoadLocal(resultLocalIndex, parameterType.IsByRef));
         }
 
-        protected void EmitOuterParameter(int index, bool doDereference, bool typeIsByRef)
+        protected void EmitOuterParameter(int index, bool directAccess, bool typeIsByRef)
         {
             if (outerParameterTypes == null)
                 throw new InvalidOperationException("outerParameterTypes is null");
 
-            output.Add(CodeInstruction.LoadArgument(index, typeIsByRef && !outerParameterTypes[index].IsByRef));
-            if (!typeIsByRef && outerParameterTypes[index].IsByRef && doDereference)
+            output.Add(CodeInstruction.LoadArgument(index,
+                typeIsByRef && !outerParameterTypes[index].IsByRef && (directAccess || outerParameterTypes[index].IsStruct())));
+            if (!typeIsByRef && outerParameterTypes[index].IsByRef && directAccess)
                 output.Add(new(OpCodes.Ldobj, outerParameterTypes[index].GetElementType()));
         }
     }
