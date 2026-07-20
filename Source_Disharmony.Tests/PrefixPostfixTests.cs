@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 
 namespace Disharmony.Tests;
@@ -240,6 +241,9 @@ public abstract class PatchTestBase
 
     protected static void ApplyPatch(string patchMethodName) =>
         Autopatcher.Patch(typeof(PatchMethods).GetMethod(patchMethodName));
+
+    protected static void ApplyPatch(Type patchMethodsType, string patchMethodName) =>
+        Autopatcher.Patch(patchMethodsType.GetMethod(patchMethodName));
 
     protected static void ApplyPatches(string firstPatchMethodName, string secondPatchMethodName)
     {
@@ -573,7 +577,7 @@ public sealed class PatchInteractionTests : PatchTestBase
 }
 
 [TestFixture]
-public sealed class StateBindingTests : PatchTestBase
+public sealed partial class StateBindingTests : PatchTestBase
 {
     [Test]
     public void PostfixCanReadStateWrittenByPrefix()

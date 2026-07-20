@@ -387,6 +387,68 @@ namespace Disharmony.Tests
             Assert.That(actual, Is.SameAs(expected));
         }
 
+        [Test]
+        public void GetMemberFindsLambdaUsingWildcardLocalName()
+        {
+            MethodInfo expected = LookupTarget.LambdaContainer().Method;
+
+            MemberInfo actual = ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                "LambdaContainer.*",
+                MemberType.Method,
+                null,
+                null);
+
+            Assert.That(actual, Is.SameAs(expected));
+        }
+
+        [Test]
+        public void GetMembersReturnsEveryMatchingOverload()
+        {
+            var actual = ReflectionTools.GetMembers(
+                typeof(LookupTarget),
+                nameof(LookupTarget.OverloadedMethod),
+                MemberType.Method,
+                null,
+                null);
+
+            Assert.That(actual, Has.Count.EqualTo(2));
+            Assert.That(actual, Has.All.InstanceOf<MethodInfo>());
+        }
+
+        [Test]
+        public void GetMemberRejectsFieldSetterLookup()
+        {
+            Assert.Throws<NotSupportedException>(() => ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.Field),
+                MemberType.Setter,
+                null,
+                null));
+        }
+
+        [Test]
+        public void GetMemberReportsMissingGetterForWriteOnlyProperty()
+        {
+            Assert.Throws<InvalidOperationException>(() => ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.WriteOnlyProperty),
+                MemberType.Getter,
+                null,
+                null));
+        }
+
+        [Test]
+        public void GetMemberReportsMissingSetterForReadOnlyProperty()
+        {
+            Assert.Throws<InvalidOperationException>(() => ReflectionTools.GetMember(
+                typeof(LookupTarget),
+                nameof(LookupTarget.ReadOnlyProperty),
+                MemberType.Setter,
+                null,
+                null));
+        }
+
         private static void AssertAllMethodOptions(Type? type, string name, MethodInfo expected)
         {
             AssertLookup(type, name, MemberType.Any, null, expected);

@@ -151,7 +151,7 @@ public sealed partial class InstanceBindingTests
 }
 
 [TestFixture]
-public sealed class FieldBindingTests : PatchTestBase
+public sealed partial class FieldBindingTests : PatchTestBase
 {
     [Test]
     public void TripleUnderscoreParameterCanReadOuterInstanceField()

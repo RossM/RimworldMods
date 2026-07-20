@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Disharmony.Tests
@@ -14,6 +15,12 @@ namespace Disharmony.Tests
         public static string StringIdentity(string value) => value;
         public static int IntResult() => 1;
         public static string StringResult() => "original";
+        public static int RegistrationResultA() => 1;
+        public static int RegistrationResultB() => 2;
+        public static int MutableProperty { get; set; }
+        public static void OverloadedVoid(int value) { }
+        public static void OverloadedVoid(string value) { }
+        public static T GenericIdentity<T>(T value) => value;
 
         public static void ThrowingIntArgument(int value) =>
             Assert.Fail("The target should have been skipped.");
@@ -104,6 +111,9 @@ namespace Disharmony.Tests
 
     public static class InnerStaticMethodTargets
     {
+        public static int Field = 1;
+        public static int Property => 1;
+
         public static void Void() { }
         public static void IntArgument(int value) { }
         public static void RefIntArgument(ref int value) { }
@@ -114,6 +124,10 @@ namespace Disharmony.Tests
     public static class OuterStaticMethodTargets
     {
         public static int IntResult() => InnerStaticMethodTargets.IntResult();
+        public static int FieldResult() => InnerStaticMethodTargets.Field;
+        public static int PropertyResult() => InnerStaticMethodTargets.Property;
+        public static int ReadInstanceField(InnerInstanceMethodTargets inner) => inner.foo;
+        public static int ReadStructField(InnerStructMethodTargets inner) => inner.foo;
         public static void IntArgument(int value) => InnerStaticMethodTargets.IntArgument(value);
         public static int IntIdentity(int value) => InnerStaticMethodTargets.IntIdentity(value);
         public static void RefIntArgument(ref int value) => InnerStaticMethodTargets.RefIntArgument(ref value);
@@ -124,6 +138,11 @@ namespace Disharmony.Tests
             int innerValue = 1;
             InnerStaticMethodTargets.RefIntArgument(ref innerValue);
             return innerValue;
+        }
+
+        public static IEnumerable<int> EnumerateIntResult()
+        {
+            yield return InnerStaticMethodTargets.IntResult();
         }
     }
 
@@ -153,6 +172,8 @@ namespace Disharmony.Tests.ReflectionFixtures
 
         public static int Field;
         public static int Property { get; set; }
+        public static int ReadOnlyProperty => 1;
+        public static int WriteOnlyProperty { set { } }
 
         public static void Method(int value)
         {
@@ -205,5 +226,7 @@ namespace Disharmony.Tests.ReflectionFixtures
 
             int CapturedLocalMethod() => value;
         }
+
+        public static Func<int, int> LambdaContainer() => value => value;
     }
 }
