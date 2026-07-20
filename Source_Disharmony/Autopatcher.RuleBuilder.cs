@@ -90,7 +90,7 @@ public static partial class Autopatcher
                 throw new InvalidOperationException("outerParameterTypes is null");
 
             output.Add(CodeInstruction.LoadArgument(index,
-                typeIsByRef && !outerParameterTypes[index].IsByRef && (directAccess || outerParameterTypes[index].IsStruct())));
+                typeIsByRef && !outerParameterTypes[index].IsByRef && (directAccess || outerParameterTypes[index].IsValueType)));
             if (!typeIsByRef && outerParameterTypes[index].IsByRef && directAccess)
                 output.Add(new(OpCodes.Ldobj, outerParameterTypes[index].GetElementType()));
         }

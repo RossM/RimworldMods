@@ -146,7 +146,7 @@ public static partial class Autopatcher
                 throw new InvalidOperationException("innerParameterLocals is null");
 
             output.Add(CodeInstruction.LoadLocal(innerParameterLocals[index],
-                typeIsByRef && !innerParameterTypes[index].IsByRef && (doDereference || innerParameterTypes[index].IsStruct())));
+                typeIsByRef && !innerParameterTypes[index].IsByRef && (doDereference || innerParameterTypes[index].IsValueType)));
             if (!typeIsByRef && innerParameterTypes[index].IsByRef && doDereference)
                 output.Add(new(OpCodes.Ldobj, innerParameterTypes[index].GetElementType()));
         }

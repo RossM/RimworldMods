@@ -24,23 +24,25 @@ internal class InstructionList : IEnumerable<CodeInstruction>
             Add(new(OpCodes.Ldnull));
             Add(CodeInstruction.StoreLocal(localIndex));
         }
-        else if (type.IsStruct())
+        else if (type.IsPrimitive || type.IsEnum)
         {
-            Add(CodeInstruction.LoadLocal(localIndex, true));
-            Add(new(OpCodes.Initobj, type));
-        }
-        else if (type.IsValueType)
-        {
-            if (type == typeof(float))
+            var underlyingType = type.IsEnum ? type.GetEnumUnderlyingType() : type;
+
+            if (underlyingType == typeof(float))
                 Add(new(OpCodes.Ldc_R4, (float)0));
-            else if (type == typeof(double))
+            else if (underlyingType == typeof(double))
                 Add(new(OpCodes.Ldc_R8, (double)0));
-            else if (type == typeof(long) || type == typeof(ulong))
+            else if (underlyingType == typeof(long) || underlyingType == typeof(ulong))
                 Add(new(OpCodes.Ldc_I8, (long)0));
             else
                 Add(new(OpCodes.Ldc_I4_0));
 
             Add(CodeInstruction.StoreLocal(localIndex));
+        }
+        else if (type.IsValueType)
+        {
+            Add(CodeInstruction.LoadLocal(localIndex, true));
+            Add(new(OpCodes.Initobj, type));
         }
         else
             throw new NotImplementedException($"targetType {type}");
