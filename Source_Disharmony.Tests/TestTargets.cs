@@ -67,6 +67,11 @@ namespace Disharmony.Tests
 
         public void CallInnerWithoutField(InstanceMethodTargetsWithoutFields inner) => inner.Void();
         public void CallInnerWithField(InnerInstanceMethodTargets inner) => inner.Void();
+
+        public IEnumerable<int> EnumerateIdentity(int outerValue)
+        {
+            yield return InnerStaticMethodTargets.IntIdentity(outerValue);
+        }
     }
 
     public struct StructMethodTargets
@@ -144,6 +149,7 @@ namespace Disharmony.Tests
         {
             yield return InnerStaticMethodTargets.IntResult();
         }
+
     }
 
     public static class LocalFunctionTargets
