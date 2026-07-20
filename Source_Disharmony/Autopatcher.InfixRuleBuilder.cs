@@ -67,7 +67,7 @@ public static partial class Autopatcher
             for (int i = 0; i < innerParameterTypes.Length; i++)
             {
                 Type type = innerParameterTypes[i];
-                EmitInnerParameter(i, true, type.IsByRef);
+                EmitInnerParameter(i, type);
             }
 
             output.Add(inner.GetCodeInstruction());
@@ -107,12 +107,22 @@ public static partial class Autopatcher
             }
         }
 
-        protected override void EmitParameterLookup(ParameterBinding parameter, bool directAccess, bool typeIsByRef)
+        protected override Type GetParameterType(ParameterBinding parameter)
         {
             switch (parameter.Scope)
             {
-                case Scope.Outer: EmitOuterParameter(parameter.Index, directAccess, typeIsByRef); break;
-                case Scope.Inner: EmitInnerParameter(parameter.Index, directAccess, typeIsByRef); break;
+                case Scope.Outer: return outerParameterTypes[parameter.Index];
+                case Scope.Inner: return innerParameterTypes[parameter.Index];
+                default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
+            }
+        }
+
+        protected override void EmitParameterLookup(ParameterBinding parameter, Type resultType)
+        {
+            switch (parameter.Scope)
+            {
+                case Scope.Outer: EmitOuterParameter(parameter.Index, resultType); break;
+                case Scope.Inner: EmitInnerParameter(parameter.Index, resultType); break;
                 default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
             }
         }
@@ -138,17 +148,17 @@ public static partial class Autopatcher
             };
         }
 
-        private void EmitInnerParameter(int index, bool doDereference, bool typeIsByRef)
+        private void EmitInnerParameter(int index, Type resultType)
         {
             if (innerParameterTypes == null)
                 throw new InvalidOperationException("innerParameterTypes is null");
             if (innerParameterLocals == null)
                 throw new InvalidOperationException("innerParameterLocals is null");
 
-            output.Add(CodeInstruction.LoadLocal(innerParameterLocals[index],
-                typeIsByRef && !innerParameterTypes[index].IsByRef && (doDereference || innerParameterTypes[index].IsValueType)));
-            if (!typeIsByRef && innerParameterTypes[index].IsByRef && doDereference)
-                output.Add(new(OpCodes.Ldobj, innerParameterTypes[index].GetElementType()));
+            Type parameterType = innerParameterTypes[index];
+            output.Add(CodeInstruction.LoadLocal(innerParameterLocals[index], resultType.IsByRef && !parameterType.IsByRef));
+            if (!resultType.IsByRef && parameterType.IsByRef)
+                output.Add(new(OpCodes.Ldobj, parameterType.GetElementType()));
         }
     }
 }

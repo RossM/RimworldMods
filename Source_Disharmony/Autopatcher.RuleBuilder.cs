@@ -18,7 +18,7 @@ public static partial class Autopatcher
     private abstract class RuleBuilder(RuleBuilderContext context, Invocation outer)
     {
         public virtual IEnumerable<Label> CrossRuleLabels => [];
-        private readonly Type[]? outerParameterTypes = outer.ParameterTypes;
+        protected readonly Type[]? outerParameterTypes = outer.ParameterTypes;
 
         protected readonly InstructionList output = context.NewInstructionList();
         protected int resultLocalIndex = -1;
@@ -28,26 +28,44 @@ public static partial class Autopatcher
 
         protected void EmitParameterValue(ParameterBinding parameter)
         {
-            Type parameterType = parameter.Parameter.ParameterType;
+            Type resultType;
+            bool wantRef = parameter.Parameter.ParameterType.IsByRef;
+
+            if (parameter.Fields is { Length: > 0 })
+            {
+                resultType = GetParameterType(parameter);
+                if (wantRef && resultType.IsValueType)
+                    resultType = resultType.MakeByRefType();
+                else
+                {
+                    Type? elementType = resultType.GetElementType();
+                    if (!wantRef && resultType.IsByRef && !elementType!.IsValueType)
+                        resultType = elementType;
+                }
+            }
+            else
+            {
+                resultType = parameter.Parameter.ParameterType;
+            }
 
             switch (parameter.BindingType)
             {
                 case BindingType.Parameter:
                 case BindingType.Instance:
                 {
-                    EmitParameterLookup(parameter, parameter.Fields is not { Length: > 0 }, parameterType.IsByRef);
+                    EmitParameterLookup(parameter, resultType);
                     break;
                 }
 
                 case BindingType.Result:
                 {
-                    EmitResult(parameterType);
+                    EmitResult(resultType);
                     break;
                 }
 
                 case BindingType.State:
                 {
-                    output.Add(CodeInstruction.LoadLocal(parameter.Index, parameterType.IsByRef));
+                    output.Add(CodeInstruction.LoadLocal(parameter.Index, resultType.IsByRef));
 
                     break;
                 }
@@ -62,7 +80,7 @@ public static partial class Autopatcher
             {
                 foreach (var field in parameter.Fields)
                 {
-                    if (parameterType.IsByRef)
+                    if (wantRef)
                         output.Add(new(OpCodes.Ldflda, field));
                     else
                         output.Add(new(OpCodes.Ldfld, field));
@@ -70,11 +88,20 @@ public static partial class Autopatcher
             }
         }
 
-        protected virtual void EmitParameterLookup(ParameterBinding parameter, bool directAccess, bool typeIsByRef)
+        protected virtual Type GetParameterType(ParameterBinding parameter)
         {
             switch (parameter.Scope)
             {
-                case Scope.Outer: EmitOuterParameter(parameter.Index, directAccess, typeIsByRef); break;
+                case Scope.Outer: return outerParameterTypes[parameter.Index];
+                default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
+            }
+        }
+
+        protected virtual void EmitParameterLookup(ParameterBinding parameter, Type resultType)
+        {
+            switch (parameter.Scope)
+            {
+                case Scope.Outer: EmitOuterParameter(parameter.Index, resultType); break;
                 default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
             }
         }
@@ -84,15 +111,15 @@ public static partial class Autopatcher
             output.Add(CodeInstruction.LoadLocal(resultLocalIndex, parameterType.IsByRef));
         }
 
-        protected void EmitOuterParameter(int index, bool directAccess, bool typeIsByRef)
+        protected void EmitOuterParameter(int index, Type targetType)
         {
             if (outerParameterTypes == null)
                 throw new InvalidOperationException("outerParameterTypes is null");
 
-            output.Add(CodeInstruction.LoadArgument(index,
-                typeIsByRef && !outerParameterTypes[index].IsByRef && (directAccess || outerParameterTypes[index].IsValueType)));
-            if (!typeIsByRef && outerParameterTypes[index].IsByRef && directAccess)
-                output.Add(new(OpCodes.Ldobj, outerParameterTypes[index].GetElementType()));
+            Type parameterType = outerParameterTypes[index];
+            output.Add(CodeInstruction.LoadArgument(index, targetType.IsByRef && !parameterType.IsByRef));
+            if (!targetType.IsByRef && parameterType.IsByRef)
+                output.Add(new(OpCodes.Ldobj, parameterType.GetElementType()));
         }
     }
 }
