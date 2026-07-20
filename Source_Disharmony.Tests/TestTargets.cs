@@ -91,8 +91,9 @@ namespace Disharmony.Tests
 
     public struct InnerStructMethodTargets
     {
+        public static int FieldObserved;
         public int foo;
-        public void Void() { }
+        public void Void() => FieldObserved = foo;
     }
 
     public sealed class InstanceMethodTargetsWithoutFields

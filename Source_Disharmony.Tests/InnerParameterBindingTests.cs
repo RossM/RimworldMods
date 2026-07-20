@@ -53,9 +53,9 @@ public static class InnerParameterBindingPatchMethods
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
     public static void WriteOuterStructFieldPrefix(ref int ___foo) => ___foo = 42;
 
-    [InnerPostfix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
+    [InnerPrefix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithField))]
-    public static void WriteInnerStructFieldPostfix(ref int ___foo) => ___foo = 42;
+    public static void WriteInnerStructFieldPrefix(ref int ___foo) => ___foo = 42;
 
     [Prefix]
     [Target(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
@@ -237,13 +237,15 @@ public sealed class FieldBindingTests : PatchTestBase
     [Test]
     public void TripleUnderscoreParameterCanWriteInnerStructFieldByReference()
     {
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteInnerStructFieldPostfix));
+        InnerStructMethodTargets.FieldObserved = 0;
+        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteInnerStructFieldPrefix));
         var outer = new StructMethodTargets { foo = 1 };
         var inner = new InnerStructMethodTargets { foo = 1 };
 
         outer.CallInnerWithField(ref inner);
 
-        Assert.That(inner.foo, Is.EqualTo(42));
+        Assert.That(InnerStructMethodTargets.FieldObserved, Is.EqualTo(42));
+        Assert.That(inner.foo, Is.EqualTo(1));
         Assert.That(outer.foo, Is.EqualTo(1));
     }
 }
