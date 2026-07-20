@@ -57,6 +57,10 @@ public static class InnerParameterBindingPatchMethods
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithField))]
     public static void WriteInnerStructFieldPrefix(ref int ___foo) => ___foo = 42;
 
+    [InnerPrefix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
+    [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithFieldByValue))]
+    public static void WriteInnerStructFieldPassedByValuePrefix(ref int ___foo) => ___foo = 42;
+
     [Prefix]
     [Target(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     public static void ReadCapturedVariablePrefix(int captured) => CapturedVariableObserved = captured;
@@ -243,6 +247,21 @@ public sealed class FieldBindingTests : PatchTestBase
         var inner = new InnerStructMethodTargets { foo = 1 };
 
         outer.CallInnerWithField(ref inner);
+
+        Assert.That(InnerStructMethodTargets.FieldObserved, Is.EqualTo(42));
+        Assert.That(inner.foo, Is.EqualTo(42));
+        Assert.That(outer.foo, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanWriteFieldOfInnerStructPassedByValue()
+    {
+        InnerStructMethodTargets.FieldObserved = 0;
+        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteInnerStructFieldPassedByValuePrefix));
+        var outer = new StructMethodTargets { foo = 1 };
+        var inner = new InnerStructMethodTargets { foo = 1 };
+
+        outer.CallInnerWithFieldByValue(inner);
 
         Assert.That(InnerStructMethodTargets.FieldObserved, Is.EqualTo(42));
         Assert.That(inner.foo, Is.EqualTo(1));

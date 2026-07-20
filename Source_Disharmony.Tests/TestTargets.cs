@@ -81,6 +81,7 @@ namespace Disharmony.Tests
 
         public void CallInnerWithoutField(InstanceMethodTargetsWithoutFields inner) => inner.Void();
         public void CallInnerWithField(ref InnerStructMethodTargets inner) => inner.Void();
+        public void CallInnerWithFieldByValue(InnerStructMethodTargets inner) => inner.Void();
     }
 
     public sealed class InnerInstanceMethodTargets
