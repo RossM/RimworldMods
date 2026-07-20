@@ -64,6 +64,7 @@ namespace Disharmony.Tests
 
     public struct StructMethodTargets
     {
+        public int foo;
         public int Value { get; private set; }
 
         public int IntIdentity(int value)
@@ -77,9 +78,18 @@ namespace Disharmony.Tests
             Value = 1;
             return Value;
         }
+
+        public void CallInnerWithoutField(InstanceMethodTargetsWithoutFields inner) => inner.Void();
+        public void CallInnerWithField(ref InnerStructMethodTargets inner) => inner.Void();
     }
 
     public sealed class InnerInstanceMethodTargets
+    {
+        public int foo;
+        public void Void() { }
+    }
+
+    public struct InnerStructMethodTargets
     {
         public int foo;
         public void Void() { }
