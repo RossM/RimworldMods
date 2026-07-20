@@ -105,7 +105,7 @@ public static class ReflectionTools
                     throw new NotSupportedException("Patching field setters is not supported"),
                 _ => result,
             }
-        ).ToList();
+        ).Where(m => m is not null).ToList();
         return candidates;
     }
 

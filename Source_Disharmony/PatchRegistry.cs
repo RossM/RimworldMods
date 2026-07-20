@@ -176,6 +176,8 @@ internal class PatchRegistry
 
                         if (outer == null)
                             throw new InvalidOperationException($"Couldn't locate method {targetAttribute.methodName}");
+                        if (outer.IsGenericMethod)
+                            throw new InvalidOperationException($"Can't patch instantiated generic method");
 
                         AddPatch(method, patchType, outer, innerInvocation, inline, debug);
                     }

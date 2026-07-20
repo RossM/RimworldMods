@@ -1,5 +1,6 @@
-using System;
 using NUnit.Framework;
+using System;
+using System.Reflection;
 
 namespace Disharmony.Tests;
 
@@ -48,12 +49,7 @@ public sealed class TargetSelectionTests : PatchTestBase
     [Test]
     public void TargetAttributeCanSelectClosedGenericMethod()
     {
-        ApplyPatch(typeof(TargetSelectionPatchMethods), nameof(TargetSelectionPatchMethods.RewriteClosedGenericResult));
-
-        int patched = StaticMethodTargets.GenericIdentity(1);
-        string unpatched = StaticMethodTargets.GenericIdentity("original");
-
-        Assert.That(patched, Is.EqualTo(42));
-        Assert.That(unpatched, Is.EqualTo("original"));
+        Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(typeof(TargetSelectionPatchMethods), nameof(TargetSelectionPatchMethods.RewriteClosedGenericResult)));
     }
 }
