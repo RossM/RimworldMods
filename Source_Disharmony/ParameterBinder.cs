@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using System.Data.Common;
+
+namespace Disharmony;
 
 public class ParameterBindingException(string argumentName, string message) : Exception(message)
 {
@@ -36,7 +38,10 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         switch (parameterBindingAttribute)
         {
             case ParameterAttribute { index: int index }:
+            {
+                ValidateCast(parameter, defaultInvocation.ParameterTypes[index]);
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = defaultScope, Index = index };
+            }
 
             case ParameterAttribute { name: var name, scope: var scope }: return BindParameterByName(parameter, name ?? parameterName, scope);
 
@@ -44,6 +49,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
             {
                 if (defaultInvocation.IsStatic)
                     throw new ParameterBindingException(parameterName, "Method is static");
+                ValidateCast(parameter, defaultInvocation.InstanceType);
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
             }
 
@@ -51,10 +57,15 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
             {
                 if (defaultInvocation.ReturnType.IsVoid())
                     throw new ParameterBindingException(parameterName, "Method returns void");
+                ValidateCast(parameter, defaultInvocation.ReturnType);
                 return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = defaultScope };
             }
 
-            case StateAttribute: return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
+            case StateAttribute:
+            {
+                // ValidateCast not needed, the type will be checked in StateBuilder
+                return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
+            }
 
             case FieldAttribute { name: var name, scope: var scope }: return BindFieldByName(parameter, name ?? parameterName, scope);
 
@@ -71,6 +82,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
                     throw new ParameterBindingException(parameterName, "Can only be used with inner patches");
                 if (outer.IsStatic)
                     throw new ParameterBindingException(parameterName, "Method is static");
+                ValidateCast(parameter, outer.InstanceType);
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer };
             }
 
@@ -78,6 +90,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
             {
                 if (defaultInvocation.IsStatic)
                     throw new ParameterBindingException(parameterName, "Method is static");
+                ValidateCast(parameter, defaultInvocation.InstanceType);
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
             }
 
@@ -85,11 +98,13 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
             {
                 if (defaultInvocation.ReturnType.IsVoid())
                     throw new ParameterBindingException(parameterName, "Method returns void");
+                ValidateCast(parameter, defaultInvocation.ReturnType);
                 return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = defaultScope };
             }
 
             case "__state":
             {
+                // ValidateCast not needed, the type will be checked in StateBuilder
                 return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
             }
 
@@ -112,7 +127,10 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         {
             int index = Array.FindIndex(inner.ParameterNames, p => p == name);
             if (index >= 0)
+            {
+                ValidateCast(parameter, inner.ParameterTypes[index]);
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Inner, Index = index };
+            }
         }
 
         // Look in caller parameters
@@ -127,6 +145,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
                 if (infix && parameter.ParameterType.IsByRef && !parameterTypes[index].IsByRef)
                     throw new ParameterBindingException(name, "Outer method parameter can't be accessed by ref");
 
+                ValidateCast(parameter, outer.ParameterTypes[index]);
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Outer, Index = index };
             }
         }
@@ -145,6 +164,8 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
                 var field = type.GetField(name, AccessTools.all);
 
                 if (field != null)
+                {
+                    ValidateCast(parameter, field.FieldType);
                     return new()
                     {
                         Parameter = parameter,
@@ -153,6 +174,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
                         Index = closureIndex,
                         Fields = [field],
                     };
+                }
             }
         }
 
@@ -170,6 +192,8 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
                 var field = type.GetField(name, AccessTools.all);
 
                 if (field != null)
+                {
+                    ValidateCast(parameter, field.FieldType);
                     return new()
                     {
                         Parameter = parameter,
@@ -178,6 +202,7 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
                         Index = closureIndex,
                         Fields = [field],
                     };
+                }
             }
         }
 
@@ -191,7 +216,10 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         {
             var field = inner.InstanceType.GetField(name, AccessTools.all);
             if (field != null)
+            {
+                ValidateCast(parameter, field.FieldType);
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner, Fields = [field] };
+            }
         }
 
         // Look in outer instance fields
@@ -199,9 +227,23 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         {
             var field = outer.InstanceType.GetField(name, AccessTools.all);
             if (field != null)
+            {
+                ValidateCast(parameter, field.FieldType);
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [field] };
+            }
         }
 
         throw new ParameterBindingException(parameter.Name, "Field not found");
+    }
+
+    private static void ValidateCast(Type to, Type from, string parameterName)
+    {
+        if (!to.BareType.IsAssignableFrom(from.BareType))
+            throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to {to.FullName}");
+    }
+
+    private static void ValidateCast(ParameterInfo to, Type from)
+    {
+        ValidateCast(to.ParameterType, from, to.Name);
     }
 }

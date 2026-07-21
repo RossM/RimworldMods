@@ -29,5 +29,7 @@ public static class ReflectionExtensions
                 return type.Name.StartsWith("<>c") && Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute));
             }
         }
+
+        public Type BareType => type.IsByRef ? type.GetElementType() : type;
     }
 }
