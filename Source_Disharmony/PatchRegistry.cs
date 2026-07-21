@@ -76,13 +76,17 @@ internal class PatchRegistry
 
     // When another lock is also needed, this must be taken after Autopatcher's apply lock
     // and before Harmony's lock.
-    internal readonly object SyncRoot = new();
-    public readonly HashSet<MethodInfo> MethodsToUpdate = [];
-    public readonly Dictionary<MethodInfo, List<PatchInfo>> PatchesByMethod = new();
+    private readonly object SyncRoot = new();
+    private readonly HashSet<MethodInfo> methodsToUpdate = [];
+    private readonly Dictionary<MethodInfo, List<PatchInfo>> patchesByMethod = new();
 
     private PatchRegistry() { }
 
-    private List<PatchInfo> Patches { get; } = [];
+    public List<PatchInfo> GetPatchesFor(MethodInfo method)
+    {
+        lock (SyncRoot)
+            return patchesByMethod[method].ToList();
+    }
 
     public void ProcessAssembly(Assembly assembly)
     {
@@ -242,12 +246,11 @@ internal class PatchRegistry
             inline = inline,
             debug = debug,
         };
-        Patches.Add(patch);
 
-        MethodsToUpdate.Add(outer);
+        methodsToUpdate.Add(outer);
 
-        if (!PatchesByMethod.TryGetValue(outer, out var patchList))
-            patchList = PatchesByMethod[outer] = [];
+        if (!patchesByMethod.TryGetValue(outer, out var patchList))
+            patchList = patchesByMethod[outer] = [];
         patchList.Add(patch);
     }
 
@@ -255,15 +258,37 @@ internal class PatchRegistry
     {
         lock (SyncRoot)
         {
-            foreach (var kvp in PatchesByMethod)
+            foreach (var kvp in patchesByMethod)
             {
                 var outer = kvp.Key;
                 var patchList = kvp.Value;
 
                 int count = patchList.RemoveAll(p => ReferenceEquals(p.unpatchKey, assembly));
                 if (count > 0)
-                    MethodsToUpdate.Add(outer);
+                    methodsToUpdate.Add(outer);
             }
+        }
+    }
+
+    public void ApplyImpl(bool useTrampolines)
+    {
+        lock (SyncRoot)
+        {
+            foreach (MethodInfo patchedMethod in methodsToUpdate)
+            {
+                try
+                {
+                    var worker = new Autopatcher.PatchWorker(this, patchedMethod, useTrampolines);
+
+                    worker.UpdateMethod();
+                }
+                catch (Exception e)
+                {
+                    throw new InvalidOperationException($"Error patching {patchedMethod.FullName}", e);
+                }
+            }
+
+            methodsToUpdate.Clear();
         }
     }
 }

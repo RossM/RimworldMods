@@ -210,7 +210,7 @@ internal class Patcher
             MethodInfo transpiler = MakeTranspiler(matchers,
                 $"{original.DeclaringType?.FullName?.Replace('.', '_')}_{original.Name}_Transpiler_{Guid.NewGuid()}", original);
 
-            bool debug = PatchRegistry.Instance.PatchesByMethod[original].Any(p => p.debug);
+            bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
 
             harmonyMethod = new(transpiler, priority: Priority.LowerThanNormal) { debug = debug };
         }

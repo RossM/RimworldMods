@@ -64,43 +64,18 @@ public static partial class Autopatcher
 
     public static void Apply()
     {
-        ApplyImpl(useTrampolines: true);
-    }
-
-    private static void ApplyImpl(bool useTrampolines)
-    {
-        lock (applyLock)
-        {
-            lock (registry.SyncRoot)
-            {
-                foreach (MethodInfo patchedMethod in registry.MethodsToUpdate)
-                {
-                    try
-                    {
-                        var worker = new PatchWorker(registry, patchedMethod, useTrampolines);
-
-                        worker.UpdateMethod();
-                    }
-                    catch (Exception e)
-                    {
-                        throw new InvalidOperationException($"Error patching {patchedMethod.FullName}", e);
-                    }
-                }
-
-                registry.MethodsToUpdate.Clear();
-            }
-        }
+        registry.ApplyImpl(useTrampolines: true);
     }
 
     public static void ForceApply()
     {
-        ApplyImpl(useTrampolines: false);
+        registry.ApplyImpl(useTrampolines: false);
         patcher.ResolveAllTrampolines();
     }
 
     public static void UnpatchAll(Assembly assembly)
     {
         registry.UnpatchAll(assembly);
-        ApplyImpl(useTrampolines: true);
+        registry.ApplyImpl(useTrampolines: true);
     }
 }
