@@ -93,17 +93,11 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         for (var index = 0; index < parameter.Fields.Length; index++)
         {
             FieldInfo field = parameter.Fields[index];
-            if (wantRef && (index == parameter.Fields.Length - 1 || field.FieldType.IsValueType))
-            {
-                output.Add(new(OpCodes.Ldflda, field));
-                resultType = field.FieldType.MakeByRefType();
-            }
-            else
-            {
-                output.Add(new(OpCodes.Ldfld, field));
-                resultType = field.FieldType;
-            }
+            var byRef = wantRef && (index == parameter.Fields.Length - 1 || field.FieldType.IsValueType);
+            output.Add(new(byRef ? OpCodes.Ldflda : OpCodes.Ldfld, field));
         }
+
+        resultType = wantRef ? parameter.Fields[^1].FieldType.MakeByRefType() : parameter.Fields[^1].FieldType;
     }
 
     private void EmitConversion(Type parameterType, Type resultType)
