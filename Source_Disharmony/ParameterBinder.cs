@@ -8,9 +8,10 @@ public class ParameterBindingException(string argumentName, string message) : Ex
     public override string Message => $"{argumentName}: {base.Message}";
 }
 
-internal class ParameterBinder(Invocation outer, Invocation inner, PatchType patchType, bool isIterator)
+internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType)
 {
     private readonly bool infix = patchType is PatchType.InnerPrefix or PatchType.InnerPostfix;
+    private readonly bool isIterator = outer != target;
 
     public ParameterBinding Bind(ParameterInfo parameter)
     {
@@ -40,8 +41,8 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         {
             case ParameterAttribute { index: int index }:
             {
-                if (isIterator)
-                    throw new NotImplementedException("Binding iterator state machine parameters by index");
+                if (isIterator && defaultScope == Scope.Outer)
+                    return BindParameterByName(parameter, target.ParameterNames[index], defaultScope);
                 
                 ValidateCast(parameter, defaultInvocation.ParameterTypes[index]);
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = defaultScope, Index = index };
@@ -101,8 +102,19 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
 
     private ParameterBinding BindInstance(ParameterInfo parameter, Invocation defaultInvocation, Scope defaultScope)
     {
+        if (isIterator && defaultScope == Scope.Outer)
+        {
+            if (target.IsStatic)
+                throw new ParameterBindingException(parameter.Name, "Method is static");
+
+            var thisField = outer.InstanceType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, "<>[\\d+]__this"));
+            ValidateCast(parameter, thisField.FieldType);
+            return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope, Fields = [thisField] };
+        }
+
         if (defaultInvocation.IsStatic)
             throw new ParameterBindingException(parameter.Name, "Method is static");
+
         ValidateCast(parameter, defaultInvocation.InstanceType);
         return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
     }

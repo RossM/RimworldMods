@@ -211,16 +211,17 @@ internal class PatchRegistry
     private void AddPatch(
         MethodInfo method,
         PatchType patchType,
-        MethodInfo outer,
+        MethodInvocation target,
         Invocation inner,
         bool inline = false,
         bool debug = false)
     {
+        MethodInvocation outer = target;
         bool isIterator = false;
 
         if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix)
         {
-            var iterator = outer.GetIteratorImplementation();
+            var iterator = outer.MethodInfo.GetIteratorImplementation();
             if (iterator != null)
             {
                 outer = iterator;
@@ -228,7 +229,7 @@ internal class PatchRegistry
             }
         }
 
-        var parameterBinder = new ParameterBinder(new MethodInvocation(outer), inner, patchType, isIterator);
+        var parameterBinder = new ParameterBinder(target, outer, inner, patchType);
 
         var arguments = method.GetParameters().Select(parameterBinder.Bind).ToArray();
 
@@ -247,10 +248,10 @@ internal class PatchRegistry
             debug = debug,
         };
 
-        methodsToUpdate.Add(outer);
+        methodsToUpdate.Add(outer.MethodInfo);
 
-        if (!patchesByMethod.TryGetValue(outer, out var patchList))
-            patchList = patchesByMethod[outer] = [];
+        if (!patchesByMethod.TryGetValue(outer.MethodInfo, out var patchList))
+            patchList = patchesByMethod[outer.MethodInfo] = [];
         patchList.Add(patch);
     }
 
