@@ -14,6 +14,9 @@ internal class Patcher
 
         // ReSharper disable once MemberHidesStaticFromOuterClass
         public static readonly MethodInfo ResolveTrampoline = SymbolExtensions.GetMethodInfo(() => Patcher.ResolveTrampoline);
+
+        // ReSharper disable once MemberHidesStaticFromOuterClass
+        public static readonly MethodInfo Transpiler = SymbolExtensions.GetMethodInfo(() => Patcher.Transpiler);
     }
 
     private static class HarmonyInternals
@@ -42,7 +45,7 @@ internal class Patcher
     private readonly Dictionary<MethodBase, MethodInfo> trampolines = new();
     private int trampolineCount;
 
-    private readonly Dictionary<MethodInfo, Action<InstructionMatcher[]>> transpilerUpdaters = new();
+    private readonly Dictionary<MethodBase, InstructionMatcher[]> matchersByMethod = new();
 
     private readonly ModuleBuilder moduleBuilder;
 
@@ -126,31 +129,19 @@ internal class Patcher
         return trampoline;
     }
 
-    public MethodInfo MakeTranspiler(InstructionMatcher[] matchers, string typeName, MethodInfo key)
+    [UsedImplicitly]
+    private static List<CodeInstruction> Transpiler(
+        MethodBase method,
+        IEnumerable<CodeInstruction> instructions,
+        ILGenerator generator)
     {
-        TypeBuilder typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
+        var instructionsList = instructions.ToList();
+        foreach (var matcher in Instance.matchersByMethod[method])
+        {
+            matcher.MatchAndReplace(method, ref instructionsList, generator);
+        }
 
-        FieldBuilder fieldBuilder = typeBuilder.DefineField("matchers", typeof(InstructionMatcher[]),
-            FieldAttributes.Public | FieldAttributes.Static);
-
-        MethodBuilder methodBuilder = typeBuilder.DefineMethod("Invoke", MethodAttributes.Public | MethodAttributes.Static,
-            typeof(List<CodeInstruction>), [typeof(MethodBase), typeof(IEnumerable<CodeInstruction>), typeof(ILGenerator)]);
-        ILGenerator generator = methodBuilder.GetILGenerator();
-
-        MethodInfo matchAndReplace = SymbolExtensions.GetMethodInfo(() => InstructionMatcher.RunMatchers);
-
-        generator.Emit(OpCodes.Ldsfld, fieldBuilder);
-        generator.Emit(OpCodes.Ldarg_0);
-        generator.Emit(OpCodes.Ldarg_1);
-        generator.Emit(OpCodes.Ldarg_2);
-        generator.Emit(OpCodes.Call, matchAndReplace);
-        generator.Emit(OpCodes.Ret);
-
-        Type type = typeBuilder.CreateType();
-        FieldInfo field = type.GetField(fieldBuilder.Name);
-        field.SetValue(null, matchers);
-        transpilerUpdaters[key] = m => field.SetValue(null, m);
-        return type.GetMethod(methodBuilder.Name);
+        return instructionsList;
     }
 
     private MethodInfo MakeTrampoline(MethodInfo target)
@@ -201,35 +192,24 @@ internal class Patcher
         if (matchers.Length == 0)
             Unpatch(original);
 
-        HarmonyMethod? harmonyMethod;
-        if (!transpilerUpdaters.TryGetValue(original, out var setter))
-        {
-            MethodInfo transpiler = MakeTranspiler(matchers,
-                $"{original.DeclaringType?.FullName?.Replace('.', '_')}_{original.Name}_Transpiler_{Guid.NewGuid()}", original);
-
-            bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
-
-            harmonyMethod = new(transpiler, priority: Priority.LowerThanNormal) { debug = debug };
-        }
-        else
-        {
-            setter(matchers);
-
-            harmonyMethod = null;
-        }
-
         lock (HarmonyInternals.locker)
         {
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
 
-            if (harmonyMethod != null)
+            if (!matchersByMethod.ContainsKey(original))
             {
+                bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
+
+                HarmonyMethod harmonyMethod = new(InfoOf.Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
+
                 patchInfo.transpilers =
                 [
                     .. patchInfo.transpilers,
                     new Patch(harmonyMethod, patchInfo.transpilers.Length, harmonyID),
                 ];
             }
+
+            matchersByMethod[original] = matchers;
 
             MethodInfo replacement;
             if (useTrampolines)
@@ -243,11 +223,11 @@ internal class Patcher
 
     public void Unpatch(MethodInfo original)
     {
-        if (!transpilerUpdaters.Remove(original))
-            return;
-
         lock (HarmonyInternals.locker)
         {
+            if (!matchersByMethod.Remove(original))
+                return;
+
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
 
             patchInfo.transpilers =

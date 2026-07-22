@@ -95,22 +95,6 @@ public partial class InstructionMatcher
         return instructionsList;
     }
 
-    [UsedImplicitly]
-    public static List<CodeInstruction> RunMatchers(
-        InstructionMatcher[] matchers,
-        MethodBase target,
-        IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator)
-    {
-        var instructionsList = instructions.ToList();
-        foreach (var matcher in matchers)
-        {
-            matcher.MatchAndReplace(target, ref instructionsList, generator);
-        }
-
-        return instructionsList;
-    }
-
     public static Rule MakeRedirectRule(MemberInfo oldMember, MethodInfo newMember)
     {
         return new Rule
