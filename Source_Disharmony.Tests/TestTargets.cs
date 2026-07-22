@@ -178,6 +178,49 @@ namespace Disharmony.Tests
         public static BindingStruct StructResult() => new BindingStruct { Value = 1 };
     }
 
+    public static class ExceptionHandlingTargets
+    {
+        public static void CallInTryBlock(bool throwException)
+        {
+            try
+            {
+                if (throwException)
+                    throw new InvalidOperationException();
+
+                InnerStaticMethodTargets.Void();
+            }
+            catch (InvalidOperationException)
+            {
+            }
+        }
+
+        public static void CallInCatchBlock(bool throwException)
+        {
+            try
+            {
+                if (throwException)
+                    throw new InvalidOperationException();
+            }
+            catch (InvalidOperationException)
+            {
+                InnerStaticMethodTargets.Void();
+            }
+        }
+
+        public static void CallInFinallyBlock(bool throwException)
+        {
+            try
+            {
+                if (throwException)
+                    throw new InvalidOperationException();
+            }
+            finally
+            {
+                InnerStaticMethodTargets.Void();
+            }
+        }
+    }
+
     public static class OuterStaticMethodTargets
     {
         public static int IntResult() => InnerStaticMethodTargets.IntResult();
