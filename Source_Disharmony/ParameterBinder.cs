@@ -40,27 +40,18 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         {
             case ParameterAttribute { index: int index }:
             {
+                if (isIterator)
+                    throw new NotImplementedException("Binding iterator state machine parameters by index");
+                
                 ValidateCast(parameter, defaultInvocation.ParameterTypes[index]);
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = defaultScope, Index = index };
             }
 
             case ParameterAttribute { name: var name, scope: var scope }: return BindParameterByName(parameter, name ?? parameterName, scope);
 
-            case InstanceAttribute:
-            {
-                if (defaultInvocation.IsStatic)
-                    throw new ParameterBindingException(parameterName, "Method is static");
-                ValidateCast(parameter, defaultInvocation.InstanceType);
-                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
-            }
+            case InstanceAttribute: return BindInstance(parameter, defaultInvocation, defaultScope);
 
-            case ReturnValueAttribute:
-            {
-                if (defaultInvocation.ReturnType.IsVoid())
-                    throw new ParameterBindingException(parameterName, "Method returns void");
-                ValidateCast(parameter, defaultInvocation.ReturnType);
-                return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = defaultScope };
-            }
+            case ReturnValueAttribute: return BindReturnValue(parameter, defaultInvocation, defaultScope);
 
             case StateAttribute:
             {
@@ -81,27 +72,12 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
             {
                 if (!infix)
                     throw new ParameterBindingException(parameterName, "Can only be used with inner patches");
-                if (outer.IsStatic)
-                    throw new ParameterBindingException(parameterName, "Method is static");
-                ValidateCast(parameter, outer.InstanceType);
-                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer };
+                return BindInstance(parameter, outer, Scope.Outer);
             }
 
-            case "__instance":
-            {
-                if (defaultInvocation.IsStatic)
-                    throw new ParameterBindingException(parameterName, "Method is static");
-                ValidateCast(parameter, defaultInvocation.InstanceType);
-                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
-            }
+            case "__instance": return BindInstance(parameter, defaultInvocation, defaultScope);
 
-            case "__result":
-            {
-                if (defaultInvocation.ReturnType.IsVoid())
-                    throw new ParameterBindingException(parameterName, "Method returns void");
-                ValidateCast(parameter, defaultInvocation.ReturnType);
-                return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = defaultScope };
-            }
+            case "__result": return BindReturnValue(parameter, defaultInvocation, defaultScope);
 
             case "__state":
             {
@@ -109,16 +85,26 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
                 return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
             }
 
-            case var _ when parameterName.StartsWith("___"):
-            {
-                return BindFieldByName(parameter, parameterName[3..], Scope.Any);
-            }
+            case var _ when parameterName.StartsWith("___"): return BindFieldByName(parameter, parameterName[3..], Scope.Any);
 
-            default:
-            {
-                return BindParameterByName(parameter, parameterName, Scope.Any);
-            }
+            default: return BindParameterByName(parameter, parameterName, Scope.Any);
         }
+    }
+
+    private ParameterBinding BindReturnValue(ParameterInfo parameter, Invocation defaultInvocation, Scope defaultScope)
+    {
+        if (defaultInvocation.ReturnType.IsVoid())
+            throw new ParameterBindingException(parameter.Name, "Method returns void");
+        ValidateCast(parameter, defaultInvocation.ReturnType);
+        return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = defaultScope };
+    }
+
+    private ParameterBinding BindInstance(ParameterInfo parameter, Invocation defaultInvocation, Scope defaultScope)
+    {
+        if (defaultInvocation.IsStatic)
+            throw new ParameterBindingException(parameter.Name, "Method is static");
+        ValidateCast(parameter, defaultInvocation.InstanceType);
+        return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
     }
 
     private ParameterBinding BindParameterByName(ParameterInfo parameter, string name, Scope scope)
