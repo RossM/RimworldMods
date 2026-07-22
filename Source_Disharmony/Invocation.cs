@@ -12,9 +12,19 @@
 ///         For convenience there is also a singleton <see cref="EmptyInvocation" /> which represents something that takes
 ///         no inputs and returns void, intended for use instead of <see langword="null" /> when there is no actual value.
 ///     </para>
+///     <para>
+///         All subclasses of Invocation must implement value semantics, so that two invocations that represent calling the
+///         same function or accessing the same field compare equal.
+///     </para>
 /// </remarks>
 internal abstract class Invocation
 {
+    /// <summary>
+    ///     A string for use as the parameter name of the instance argument of a non-static invocation.
+    ///     Users should <b>not</b> depend on this value! It is only for use in error messages and so on.
+    /// </summary>
+    protected const string InstanceParameterName = "<instance>";
+
     public abstract string FullName { get; }
     public abstract Type ReturnType { get; }
     public abstract Type[] ParameterTypes { get; }
@@ -23,13 +33,12 @@ internal abstract class Invocation
     public abstract Type InstanceType { get; }
     public abstract CodeInstruction GetCodeInstruction();
 
-    public static Invocation Create(MemberInfo? member)
+    public static Invocation Create(MemberInfo member)
     {
         Invocation invocation = member switch
         {
             FieldInfo field => new FieldInvocation(field),
             MethodInfo method => new MethodInvocation(method),
-            null => EmptyInvocation.Instance,
             _ => throw new ArgumentOutOfRangeException(),
         };
         return invocation;
@@ -68,7 +77,7 @@ internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
     public override Type ReturnType => fieldInfo.FieldType;
     public override Type[] ParameterTypes => field ??= fieldInfo.IsStatic ? [] : [fieldInfo.DeclaringType];
     public override bool IsStatic => fieldInfo.IsStatic;
-    public override string[] ParameterNames => field ??= fieldInfo.IsStatic ? [] : ["<instance>"];
+    public override string[] ParameterNames => field ??= fieldInfo.IsStatic ? [] : [InstanceParameterName];
     public override Type InstanceType => fieldInfo.DeclaringType;
     public FieldInfo FieldInfo => fieldInfo;
 
@@ -110,16 +119,12 @@ internal class MethodInvocation(MethodInfo methodInfo) : Invocation
     public override Type[] ParameterTypes => field ??=
         methodInfo.IsStatic
             ? [.. methodInfo.GetParameters().Select(p => p.ParameterType)]
-            :
-            [
-                methodInfo.DeclaringType!.IsValueType ? methodInfo.DeclaringType.MakeByRefType() : methodInfo.DeclaringType,
-                .. methodInfo.GetParameters().Select(p => p.ParameterType),
-            ];
+            : [methodInfo.DeclaringType.CallableType, .. methodInfo.GetParameters().Select(p => p.ParameterType)];
 
     public override string[] ParameterNames => field ??=
         methodInfo.IsStatic
             ? [.. methodInfo.GetParameters().Select(p => p.Name)]
-            : ["<instance>", .. methodInfo.GetParameters().Select(p => p.Name)];
+            : [InstanceParameterName, .. methodInfo.GetParameters().Select(p => p.Name)];
 
     private readonly MethodInfo methodInfo = methodInfo;
 

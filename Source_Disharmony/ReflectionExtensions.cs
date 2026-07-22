@@ -30,6 +30,8 @@ public static class ReflectionExtensions
             }
         }
 
-        public Type BareType => type.IsByRef ? type.GetElementType() : type;
+        public Type NoRefType => type.IsByRef ? type.GetElementType() : type;
+
+        public Type CallableType => type.IsValueType ? type.MakeByRefType() : type;
     }
 }

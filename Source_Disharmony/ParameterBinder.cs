@@ -287,7 +287,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private static void ValidateCast(Type to, Type from, string parameterName)
     {
-        if (!to.BareType.IsAssignableFrom(from.BareType))
+        if (!to.NoRefType.IsAssignableFrom(from.NoRefType))
             throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to {to.FullName}");
     }
 
