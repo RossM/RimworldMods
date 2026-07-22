@@ -13,8 +13,9 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
     protected void EmitParameterValue(ParameterBinding parameter)
     {
-        Type resultType;
-        bool wantRef = parameter.Parameter.ParameterType.IsByRef;
+        Type parameterType = parameter.Parameter.ParameterType;
+        bool wantRef = parameterType.IsByRef;
+        Type resultType = parameterType;
 
         if (parameter.Fields is { Length: > 0 })
         {
@@ -28,10 +29,6 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
                     resultType = elementType;
             }
         }
-        else
-        {
-            resultType = parameter.Parameter.ParameterType;
-        }
 
         switch (parameter.BindingType)
         {
@@ -39,6 +36,9 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
             case BindingType.Instance:
             {
                 EmitParameterLookup(parameter, resultType);
+                resultType = GetParameterType(parameter);
+                if (wantRef && !resultType.IsByRef)
+                    resultType = resultType.MakeByRefType();
                 break;
             }
 
@@ -65,12 +65,29 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         {
             for (var index = 0; index < parameter.Fields.Length; index++)
             {
-                FieldInfo? field = parameter.Fields[index];
+                FieldInfo field = parameter.Fields[index];
                 if (wantRef && (index == parameter.Fields.Length - 1 || field.FieldType.IsValueType))
+                {
                     output.Add(new(OpCodes.Ldflda, field));
+                    resultType = field.FieldType.MakeByRefType();
+                }
                 else
+                {
                     output.Add(new(OpCodes.Ldfld, field));
+                    resultType = field.FieldType;
+                }
             }
+        }
+
+        if (resultType.IsValueType && parameterType != resultType)
+        {
+            if (!parameterType.IsValueType)
+                output.Add(new(OpCodes.Box, resultType));
+            else if (parameterType.IsGenericType && parameterType.GetGenericTypeDefinition() == typeof(Nullable<>) &&
+                     parameterType.GetGenericArguments()[0] == resultType)
+                output.Add(new(OpCodes.Newobj, parameterType.GetConstructor([resultType])));
+            else
+                throw new NotImplementedException($"Can't convert {resultType.FullName} to {parameterType.FullName}");
         }
     }
 
