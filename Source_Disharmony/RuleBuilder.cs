@@ -32,6 +32,9 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
         if (parameter.Fields is { Length: > 0 })
         {
+            if (parameter.BindingType is not (BindingType.Parameter or BindingType.Instance))
+                throw new NotSupportedException();
+
             resultType = GetParameterType(parameter);
             if (wantRef && resultType.IsValueType)
                 resultType = resultType.MakeByRefType();
