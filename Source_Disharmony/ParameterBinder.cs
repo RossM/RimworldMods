@@ -107,7 +107,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             if (target.IsStatic)
                 throw new ParameterBindingException(parameter.Name, "Method is static");
 
-            var thisField = outer.InstanceType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, "<>[\\d+]__this"));
+            var thisField = outer.InstanceType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, "^<>[\\d+]__this$"));
             ValidateCast(parameter, thisField.FieldType);
             return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope, Fields = [thisField] };
         }
@@ -228,7 +228,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             List<FieldInfo> fields = [];
             if (isIterator)
             {
-                var thisField = curType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, "<>[\\d+]__this"));
+                var thisField = curType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, "^<>[\\d+]__this$"));
                 curType = thisField.FieldType;
                 fields.Add(thisField);
             }
