@@ -71,6 +71,12 @@ namespace Disharmony.Tests
             return Value;
         }
 
+        public int IntSum(int first, int second)
+        {
+            Value = first + second;
+            return Value;
+        }
+
         public int IntResult()
         {
             Value = 1;

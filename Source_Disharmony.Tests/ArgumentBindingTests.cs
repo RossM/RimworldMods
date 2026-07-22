@@ -180,35 +180,55 @@ public static partial class ArgumentBindingPatches
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
-    public static void Prefix_ParameterAttribute_ByIndex_Primitive_WriteByReference([Parameter(0)] ref int replacement) => replacement = 42;
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_WriteByReference([Parameter(0)] ref int replacement) => replacement = 42;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
-    public static void Prefix_ParameterAttribute_ByIndex_Primitive_ReadByValue([Parameter(0)] int argument) => ValueObserved = argument;
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_ReadByValue([Parameter(0)] int argument) => ValueObserved = argument;
 
     [Prefix]
     [Target(typeof(LocalFunctionTargets), "InvokeAnonymousLambda.*")]
-    public static void Prefix_AnonymousLambdaParameter_ByIndex_Primitive_ReadByValue([Parameter(0)] int argument) =>
+    public static void Prefix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByValue([Parameter(0)] int argument) =>
         ValueObserved = argument;
 
     [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.IntIdentity))]
+    public static void Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_ReadByValue(
+        [Parameter(0)] int argument) => ValueObserved = argument;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.IntIdentity))]
+    public static void Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_ReadByReference(
+        [Parameter(0)] ref int argument) => ValueObserved = argument;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.IntIdentity))]
+    public static void Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_WriteByReference(
+        [Parameter(0)] ref int argument) => argument = 42;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.IntSum))]
+    public static void Prefix_ParameterAttribute_InstanceMethod_Index1_Primitive_ReadByValue(
+        [Parameter(1)] int argument) => ValueObserved = argument;
+
+    [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringArgument))]
-    public static void Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByValue([Parameter(0)] string argument) =>
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_ReadByValue([Parameter(0)] string argument) =>
         ReferenceObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringIdentity))]
-    public static void Prefix_ParameterAttribute_ByIndex_ReferenceType_WriteByReference([Parameter(0)] ref string argument) =>
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_WriteByReference([Parameter(0)] ref string argument) =>
         argument = "patched";
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructArgument))]
-    public static void Prefix_ParameterAttribute_ByIndex_Struct_ReadByValue([Parameter(0)] BindingStruct argument) =>
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_ReadByValue([Parameter(0)] BindingStruct argument) =>
         StructObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructIdentity))]
-    public static void Prefix_ParameterAttribute_ByIndex_Struct_WriteByReference([Parameter(0)] ref BindingStruct argument) =>
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_WriteByReference([Parameter(0)] ref BindingStruct argument) =>
         argument = new BindingStruct { Value = 42 };
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
@@ -258,17 +278,17 @@ public static partial class ArgumentBindingPatches
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
-    public static void Prefix_ParameterAttribute_ByIndex_Primitive_ReadByReference(
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_ReadByReference(
         [Parameter(0)] ref int argument) => ValueObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringIdentity))]
-    public static void Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByReference(
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_ReadByReference(
         [Parameter(0)] ref string argument) => ReferenceObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructIdentity))]
-    public static void Prefix_ParameterAttribute_ByIndex_Struct_ReadByReference(
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_ReadByReference(
         [Parameter(0)] ref BindingStruct argument) => StructObserved = argument;
 }
 
@@ -353,28 +373,28 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void Prefix_ParameterAttribute_ByIndex_Primitive_ReadByReference()
+    public void Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_ReadByReference()
     {
         ArgumentBindingPatches.ValueObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Primitive_ReadByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_ReadByReference));
         StaticMethodTargets.IntIdentity(42);
         Assert.That(ArgumentBindingPatches.ValueObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByReference()
+    public void Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_ReadByReference()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_ReadByReference));
         StaticMethodTargets.StringIdentity("original");
         Assert.That(ArgumentBindingPatches.ReferenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
-    public void Prefix_ParameterAttribute_ByIndex_Struct_ReadByReference()
+    public void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_ReadByReference()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Struct_ReadByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_StaticMethod_Index0_Struct_ReadByReference));
         StaticMethodTargets.StructIdentity(new BindingStruct { Value = 42 });
         Assert.That(ArgumentBindingPatches.StructObserved.Value, Is.EqualTo(42));
     }
@@ -959,9 +979,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void Prefix_ParameterAttribute_ByIndex_Primitive_WriteByReference()
+    public void Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Primitive_WriteByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_WriteByReference));
 
         int result = StaticMethodTargets.IntIdentity(1);
 
@@ -969,10 +989,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void Prefix_ParameterAttribute_ByIndex_Primitive_ReadByValue()
+    public void Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_ReadByValue()
     {
         ArgumentBindingPatches.ValueObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Primitive_ReadByValue));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_ReadByValue));
 
         StaticMethodTargets.IntArgument(42);
 
@@ -980,12 +1000,12 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void Prefix_AnonymousLambdaParameter_ByIndex_Primitive_ReadByValue()
+    public void Prefix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByValue()
     {
         ArgumentBindingPatches.ValueObserved = 0;
         ApplyPatch(
             typeof(ArgumentBindingPatches),
-            nameof(ArgumentBindingPatches.Prefix_AnonymousLambdaParameter_ByIndex_Primitive_ReadByValue));
+            nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByValue));
 
         int result = LocalFunctionTargets.InvokeAnonymousLambda(42);
 
@@ -994,10 +1014,64 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByValue()
+    public void Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_ReadByValue()
+    {
+        ArgumentBindingPatches.ValueObserved = 0;
+        ApplyPatch(
+            typeof(ArgumentBindingPatches),
+            nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_ReadByValue));
+
+        int result = new ClassMethodTargets().IntIdentity(42);
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(ArgumentBindingPatches.ValueObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_ReadByReference()
+    {
+        ArgumentBindingPatches.ValueObserved = 0;
+        ApplyPatch(
+            typeof(ArgumentBindingPatches),
+            nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_ReadByReference));
+
+        int result = new ClassMethodTargets().IntIdentity(42);
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(ArgumentBindingPatches.ValueObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_WriteByReference()
+    {
+        ApplyPatch(
+            typeof(ArgumentBindingPatches),
+            nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_WriteByReference));
+
+        int result = new ClassMethodTargets().IntIdentity(1);
+
+        Assert.That(result, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Prefix_ParameterAttribute_InstanceMethod_Index1_Primitive_ReadByValue()
+    {
+        ArgumentBindingPatches.ValueObserved = 0;
+        ApplyPatch(
+            typeof(ArgumentBindingPatches),
+            nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_InstanceMethod_Index1_Primitive_ReadByValue));
+
+        int result = new ClassMethodTargets().IntSum(1, 42);
+
+        Assert.That(result, Is.EqualTo(43));
+        Assert.That(ArgumentBindingPatches.ValueObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_ReadByValue()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByValue));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_ReadByValue));
 
         StaticMethodTargets.StringArgument("original");
 
@@ -1005,9 +1079,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void Prefix_ParameterAttribute_ByIndex_ReferenceType_WriteByReference()
+    public void Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_ReferenceType_WriteByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_WriteByReference));
 
         string result = StaticMethodTargets.StringIdentity("original");
 
@@ -1015,10 +1089,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void Prefix_ParameterAttribute_ByIndex_Struct_ReadByValue()
+    public void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_ReadByValue()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Struct_ReadByValue));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_StaticMethod_Index0_Struct_ReadByValue));
 
         StaticMethodTargets.StructArgument(new BindingStruct { Value = 42 });
 
@@ -1026,9 +1100,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void Prefix_ParameterAttribute_ByIndex_Struct_WriteByReference()
+    public void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Struct_WriteByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_StaticMethod_Index0_Struct_WriteByReference));
 
         BindingStruct result = StaticMethodTargets.StructIdentity(new BindingStruct { Value = 1 });
 
