@@ -9,6 +9,7 @@ internal class Patcher
 
     private static class InfoOf
     {
+        // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
         public static readonly MethodInfo GetMethodFromHandle
             = SymbolExtensions.GetMethodInfo(() => MethodBase.GetMethodFromHandle(new RuntimeMethodHandle()));
 
