@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace Disharmony;
@@ -107,7 +108,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             if (target.IsStatic)
                 throw new ParameterBindingException(parameter.Name, "Method is static");
 
-            var thisField = outer.InstanceType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, "^<>[\\d+]__this$"));
+            var thisField = GetThisField(outer.InstanceType);
             ValidateCast(parameter, thisField.FieldType);
             return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope, Fields = [thisField] };
         }
@@ -139,10 +140,26 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             {
                 var iteratorType = outer.InstanceType;
                 var field = iteratorType.GetField(name, AccessTools.all);
-                if (field == null)
-                    throw new ParameterBindingException(parameter.Name, "Parameter not found");
-                ValidateCast(parameter, field.FieldType);
-                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [field] };
+                if (field != null)
+                {
+                    ValidateCast(parameter, field.FieldType);
+                    return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [field] };
+                }
+
+                if (TryGetThisField(iteratorType, out var thisField) && thisField.FieldType.IsClosureType)
+                {
+                    var type = thisField.FieldType;
+                    if (type.IsByRef)
+                        type = type.GetElementType();
+                    field = type?.GetField(name, AccessTools.all);
+                    if (field != null)
+                    {
+                        ValidateCast(parameter, field.FieldType);
+                        return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [thisField, field] };
+                    }
+                }
+
+                throw new ParameterBindingException(parameter.Name, "Parameter not found");
             }
 
             Type[] parameterTypes = outer.ParameterTypes;
@@ -238,7 +255,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             List<FieldInfo> fields = [];
             if (isIterator)
             {
-                var thisField = curType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, "^<>[\\d+]__this$"));
+                var thisField = GetThisField(curType);
                 curType = thisField.FieldType;
                 fields.Add(thisField);
             }
@@ -253,6 +270,17 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         }
 
         throw new ParameterBindingException(parameter.Name, "Field not found");
+    }
+
+    private static FieldInfo GetThisField(Type iteratorType)
+    {
+        return iteratorType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, "^<>[\\d+]__this$"));
+    }
+
+    private static bool TryGetThisField(Type iteratorType, [MaybeNullWhen(false)] out FieldInfo field)
+    {
+        field = iteratorType.GetFields(AccessTools.all).SingleOrDefault(f => Regex.IsMatch(f.Name, "^<>[\\d+]__this$"));
+        return field != null;
     }
 
     private static void ValidateCast(Type to, Type from, string parameterName)
