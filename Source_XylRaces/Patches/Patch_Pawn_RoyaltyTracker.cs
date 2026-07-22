@@ -10,8 +10,8 @@ public static class Patch_Pawn_RoyaltyTracker
         typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool),
     ])]
     [Target(nameof(Pawn_RoyaltyTracker.RoyaltyTrackerTickInterval))]
-    public static bool ReceiveLetter_Prefix(Pawn_RoyaltyTracker __instance)
+    public static bool ReceiveLetter_Prefix(Pawn_RoyaltyTracker __caller)
     {
-        return PawnUtility.ShouldSendNotificationAbout(__instance.pawn);
+        return PawnUtility.ShouldSendNotificationAbout(__caller.pawn);
     }
 }
