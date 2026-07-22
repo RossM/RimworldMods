@@ -161,7 +161,7 @@ internal class Patcher
 
         trampolineCount++;
         var method = new DynamicMethod($"{target.DeclaringType?.FullName}.{target.Name}_Trampoline{trampolineCount}", target.ReturnType,
-            parameterTypes, moduleBuilder, true);
+            parameterTypes, true);
 
         ILGenerator generator = method.GetILGenerator();
 
@@ -183,7 +183,9 @@ internal class Patcher
         generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
 
         // Do a tail call to the original method, which will actually go to the newly installed patch
-        generator.Emit(OpCodes.Tailcall);
+        // The IL verifier does not allow tail calls to be used with by-ref arguments, so skip the tailcall prefix if there are any
+        if (!parameterTypes.Any(p => p.IsByRef))
+            generator.Emit(OpCodes.Tailcall);
         generator.Emit(OpCodes.Call, target);
 
         generator.Emit(OpCodes.Ret);
