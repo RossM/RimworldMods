@@ -57,13 +57,13 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
             case BindingType.Result:
             {
-                EmitResult(resultType);
+                EmitResult(parameterType);
                 break;
             }
 
             case BindingType.State:
             {
-                output.Add(CodeInstruction.LoadLocal(parameter.Index, resultType.IsByRef));
+                output.Add(CodeInstruction.LoadLocal(parameter.Index, parameterType.IsByRef));
 
                 break;
             }
