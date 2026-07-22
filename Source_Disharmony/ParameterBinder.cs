@@ -135,6 +135,16 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         // Look in caller parameters
         if (scope is Scope.Outer or Scope.Any)
         {
+            if (isIterator)
+            {
+                var iteratorType = outer.InstanceType;
+                var field = iteratorType.GetField(name, AccessTools.all);
+                if (field == null)
+                    throw new ParameterBindingException(parameter.Name, "Parameter not found");
+                ValidateCast(parameter, field.FieldType);
+                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [field] };
+            }
+
             Type[] parameterTypes = outer.ParameterTypes;
             int index = Array.FindIndex(outer.ParameterNames, p => p == name);
             if (index >= 0)
