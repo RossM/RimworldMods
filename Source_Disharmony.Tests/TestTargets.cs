@@ -276,6 +276,12 @@ namespace Disharmony.Tests
 
     public static class LocalFunctionTargets
     {
+        public static int InvokeAnonymousLambda(int value)
+        {
+            Func<int, int> lambda = lambdaParameter => lambdaParameter;
+            return lambda(value);
+        }
+
         public static int CapturedVariableMethod(int value)
         {
             int captured = value;
