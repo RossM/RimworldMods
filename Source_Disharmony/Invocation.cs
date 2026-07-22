@@ -22,6 +22,9 @@ internal abstract class Invocation
         return invocation;
     }
 
+    public static implicit operator Invocation(FieldInfo field) => new FieldInvocation(field);
+    public static implicit operator Invocation(MethodInfo method) => new MethodInvocation(method);
+
     public override string ToString() => $"[{GetType().FullName}({FullName})]";
 }
 

@@ -156,7 +156,7 @@ internal class PatchRegistry
 
                 PatchType patchType = patchTypeAttribute.patchType;
 
-                Invocation innerInvocation = GetInnerInvocation(patchTypeAttribute);
+                Invocation inner = GetInnerInvocation(patchTypeAttribute);
 
                 foreach (var targetAttribute in targetAttributes)
                 {
@@ -176,14 +176,14 @@ internal class PatchRegistry
 
                     foreach (var result in candidates)
                     {
-                        MethodInfo? outer = result as MethodInfo;
+                        MethodInfo? target = result as MethodInfo;
 
-                        if (outer == null)
+                        if (target == null)
                             throw new InvalidOperationException($"Couldn't locate method {targetAttribute.methodName}");
-                        if (outer.IsGenericMethod)
+                        if (target.IsGenericMethod)
                             throw new InvalidOperationException($"Can't patch instantiated generic method");
 
-                        AddPatch(method, patchType, outer, innerInvocation, inline, debug);
+                        AddPatch(method, patchType, target, inner, inline, debug);
                     }
                 }
             }
@@ -209,7 +209,7 @@ internal class PatchRegistry
     }
 
     private void AddPatch(
-        MethodInfo method,
+        MethodInvocation patchMethod,
         PatchType patchType,
         MethodInvocation target,
         Invocation inner,
@@ -231,18 +231,18 @@ internal class PatchRegistry
 
         var parameterBinder = new ParameterBinder(target, outer, inner, patchType);
 
-        var arguments = method.GetParameters().Select(parameterBinder.Bind).ToArray();
+        var arguments = patchMethod.MethodInfo.GetParameters().Select(parameterBinder.Bind).ToArray();
 
         if (isIterator && arguments.Any(p => p.BindingType == BindingType.State))
             throw new NotSupportedException("State parameters are not supported for iterator state machine methods");
 
         PatchInfo patch = new()
         {
-            unpatchKey = method.Module.Assembly,
+            unpatchKey = patchMethod.MethodInfo.Module.Assembly,
             inner = inner,
-            patch = new MethodInvocation(method),
+            patch = patchMethod,
             patchType = patchType,
-            stateKey = method.DeclaringType,
+            stateKey = patchMethod.MethodInfo.DeclaringType,
             parameters = arguments,
             inline = inline,
             debug = debug,
