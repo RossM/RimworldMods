@@ -148,11 +148,6 @@ internal class InfixRuleBuilder : RuleBuilder
 
     private void EmitInnerParameter(int index, Type resultType)
     {
-        if (innerParameterTypes == null)
-            throw new InvalidOperationException("innerParameterTypes is null");
-        if (innerParameterLocals == null)
-            throw new InvalidOperationException("innerParameterLocals is null");
-
         Type parameterType = innerParameterTypes[index];
         output.Add(CodeInstruction.LoadLocal(innerParameterLocals[index], resultType.IsByRef && !parameterType.IsByRef));
         if (!resultType.IsByRef && parameterType.IsByRef)
