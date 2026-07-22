@@ -1,6 +1,3 @@
-using System.Linq;
-using NUnit.Framework;
-
 namespace Disharmony.Tests;
 
 public static class IteratorParameterBindingPatchMethods

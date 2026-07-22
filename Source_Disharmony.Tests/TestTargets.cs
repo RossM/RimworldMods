@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using NUnit.Framework;
-
 namespace Disharmony.Tests
 {
     public static class StaticMethodTargets

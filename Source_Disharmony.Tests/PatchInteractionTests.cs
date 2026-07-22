@@ -1,5 +1,3 @@
-using NUnit.Framework;
-
 namespace Disharmony.Tests;
 
 [TestFixture]
@@ -9,9 +7,8 @@ public sealed class PatchInteractionTests : PatchTestBase
     public void PostfixObservesArgumentWrittenByPrefixWhenTargetRuns()
     {
         PatchMethods.CombinedPatchObserved = 0;
-        ApplyPatches(
-            nameof(PatchMethods.WriteArgumentAndRunTargetPrefix),
-            nameof(PatchMethods.ObserveArgumentAfterTargetRunsPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteArgumentAndRunTargetPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ObserveArgumentAfterTargetRunsPostfix));
 
         StaticMethodTargets.IntArgument(1);
 
@@ -22,9 +19,8 @@ public sealed class PatchInteractionTests : PatchTestBase
     public void PostfixObservesArgumentWrittenByPrefixWhenTargetIsSkipped()
     {
         PatchMethods.CombinedPatchObserved = 0;
-        ApplyPatches(
-            nameof(PatchMethods.WriteArgumentAndSkipTargetPrefix),
-            nameof(PatchMethods.ObserveArgumentAfterTargetIsSkippedPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteArgumentAndSkipTargetPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ObserveArgumentAfterTargetIsSkippedPostfix));
 
         StaticMethodTargets.ThrowingIntArgument(1);
 
@@ -35,9 +31,8 @@ public sealed class PatchInteractionTests : PatchTestBase
     public void PostfixObservesTargetResultWhenPrefixWritesResultAndTargetRuns()
     {
         PatchMethods.CombinedPatchObserved = 0;
-        ApplyPatches(
-            nameof(PatchMethods.WriteResultAndRunTargetPrefix),
-            nameof(PatchMethods.ObserveResultAfterTargetRunsPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteResultAndRunTargetPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ObserveResultAfterTargetRunsPostfix));
 
         StaticMethodTargets.IntResult();
 
@@ -48,9 +43,8 @@ public sealed class PatchInteractionTests : PatchTestBase
     public void PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped()
     {
         PatchMethods.CombinedPatchObserved = 0;
-        ApplyPatches(
-            nameof(PatchMethods.WriteResultAndSkipTargetPrefix),
-            nameof(PatchMethods.ObserveResultAfterTargetIsSkippedPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteResultAndSkipTargetPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ObserveResultAfterTargetIsSkippedPostfix));
 
         StaticMethodTargets.ThrowingIntResult();
 

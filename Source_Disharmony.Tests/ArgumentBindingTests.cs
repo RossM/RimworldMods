@@ -1,6 +1,3 @@
-using System;
-using NUnit.Framework;
-
 namespace Disharmony.Tests;
 
 [TestFixture]
@@ -10,7 +7,7 @@ public sealed partial class ArgumentBindingTests
     public void PatchCanReadRefParameterWithoutDeclaringRef()
     {
         PatchMethods.ValueParameterObserved = 0;
-        ApplyPatch(nameof(PatchMethods.ReadRefParameterPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ReadRefParameterPrefix));
         int value = 42;
 
         StaticMethodTargets.RefIntArgument(ref value);
@@ -21,7 +18,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void PatchCanWriteRefParameterWhenDeclaringRef()
     {
-        ApplyPatch(nameof(PatchMethods.WriteRefParameterPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteRefParameterPrefix));
         int value = 1;
 
         StaticMethodTargets.RefIntArgument(ref value);
@@ -37,7 +34,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     public void PrefixCanReadValueTypeParameter()
     {
         PatchMethods.ValueParameterObserved = 0;
-        ApplyPatch(nameof(PatchMethods.ReadValueParameterPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ReadValueParameterPrefix));
         StaticMethodTargets.IntArgument(42);
 
         Assert.That(PatchMethods.ValueParameterObserved, Is.EqualTo(42));
@@ -47,7 +44,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     public void PostfixCanReadValueTypeParameter()
     {
         PatchMethods.ValueParameterObserved = 0;
-        ApplyPatch(nameof(PatchMethods.ReadValueParameterPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ReadValueParameterPostfix));
         StaticMethodTargets.IntArgument(42);
 
         Assert.That(PatchMethods.ValueParameterObserved, Is.EqualTo(42));
@@ -57,7 +54,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     public void PrefixCanReadReferenceTypeParameter()
     {
         PatchMethods.ReferenceParameterObserved = null;
-        ApplyPatch(nameof(PatchMethods.ReadReferenceParameterPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ReadReferenceParameterPrefix));
         StaticMethodTargets.StringArgument("original");
 
         Assert.That(PatchMethods.ReferenceParameterObserved, Is.EqualTo("original"));
@@ -67,7 +64,7 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     public void PostfixCanReadReferenceTypeParameter()
     {
         PatchMethods.ReferenceParameterObserved = null;
-        ApplyPatch(nameof(PatchMethods.ReadReferenceParameterPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ReadReferenceParameterPostfix));
         StaticMethodTargets.StringArgument("original");
 
         Assert.That(PatchMethods.ReferenceParameterObserved, Is.EqualTo("original"));
@@ -76,14 +73,14 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     [Test]
     public void PrefixCanWriteValueTypeParameterByReference()
     {
-        ApplyPatch(nameof(PatchMethods.WriteValueParameterPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteValueParameterPrefix));
         Assert.That(StaticMethodTargets.IntIdentity(1), Is.EqualTo(42));
     }
 
     [Test]
     public void PostfixCanWriteValueTypeParameterByReference()
     {
-        ApplyPatch(nameof(PatchMethods.WriteValueParameterPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteValueParameterPostfix));
         int value = 1;
         StaticMethodTargets.RefIntArgument(ref value);
         Assert.That(value, Is.EqualTo(42));
@@ -92,14 +89,14 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     [Test]
     public void PrefixCanWriteReferenceTypeParameterByReference()
     {
-        ApplyPatch(nameof(PatchMethods.WriteReferenceParameterPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteReferenceParameterPrefix));
         Assert.That(StaticMethodTargets.StringIdentity("original"), Is.EqualTo("patched"));
     }
 
     [Test]
     public void PostfixCanWriteReferenceTypeParameterByReference()
     {
-        ApplyPatch(nameof(PatchMethods.WriteReferenceParameterPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteReferenceParameterPostfix));
         string value = "original";
         StaticMethodTargets.RefStringArgument(ref value);
         Assert.That(value, Is.EqualTo("patched"));
@@ -113,7 +110,7 @@ public sealed partial class ArgumentBindingTests
     public void InnerPrefixCanReadOuterArgumentWhenInnerHasNoMatchingArgument()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyInnerPatch(nameof(InnerPatchMethods.ReadOuterArgumentPrefix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.ReadOuterArgumentPrefix));
         OuterStaticMethodTargets.OuterArgument(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
@@ -122,7 +119,7 @@ public sealed partial class ArgumentBindingTests
     public void InnerPostfixCanReadOuterArgumentWhenInnerHasNoMatchingArgument()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyInnerPatch(nameof(InnerPatchMethods.ReadOuterArgumentPostfix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.ReadOuterArgumentPostfix));
         OuterStaticMethodTargets.OuterArgument(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
@@ -131,7 +128,7 @@ public sealed partial class ArgumentBindingTests
     public void InnerPrefixCannotWriteOuterArgumentByReference()
     {
         var exception = Assert.Throws<InvalidOperationException>(() =>
-            ApplyInnerPatch(nameof(InnerPatchMethods.WriteOuterArgumentPrefix)));
+            ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.WriteOuterArgumentPrefix)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
         Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
@@ -141,7 +138,7 @@ public sealed partial class ArgumentBindingTests
     public void InnerPostfixCannotWriteOuterArgumentByReference()
     {
         var exception = Assert.Throws<InvalidOperationException>(() =>
-            ApplyInnerPatch(nameof(InnerPatchMethods.WriteOuterArgumentPostfix)));
+            ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.WriteOuterArgumentPostfix)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
         Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
@@ -151,7 +148,7 @@ public sealed partial class ArgumentBindingTests
     public void InnerPrefixPrefersInnerArgumentWhenOuterArgumentHasSameName()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyInnerPatch(nameof(InnerPatchMethods.ReadSameNamedArgumentPrefix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.ReadSameNamedArgumentPrefix));
         OuterStaticMethodTargets.SameNamedArgument(1);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
@@ -160,7 +157,7 @@ public sealed partial class ArgumentBindingTests
     public void InnerPostfixPrefersInnerArgumentWhenOuterArgumentHasSameName()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyInnerPatch(nameof(InnerPatchMethods.ReadSameNamedArgumentPostfix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.ReadSameNamedArgumentPostfix));
         OuterStaticMethodTargets.SameNamedArgument(1);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
@@ -168,7 +165,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void InnerPrefixCanWriteInnerArgumentWhenOuterArgumentHasSameName()
     {
-        ApplyInnerPatch(nameof(InnerPatchMethods.WriteSameNamedArgumentPrefix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.WriteSameNamedArgumentPrefix));
         int outerValue = 7;
 
         int result = OuterStaticMethodTargets.SameNamedRefArgument(ref outerValue);
@@ -180,7 +177,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void InnerPostfixCanWriteInnerArgumentWhenOuterArgumentHasSameName()
     {
-        ApplyInnerPatch(nameof(InnerPatchMethods.WriteSameNamedArgumentPostfix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.WriteSameNamedArgumentPostfix));
         int outerValue = 7;
 
         int result = OuterStaticMethodTargets.SameNamedRefArgument(ref outerValue);
@@ -193,7 +190,7 @@ public sealed partial class ArgumentBindingTests
     public void InnerPrefixCanReadInnerArgument()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyInnerPatch(nameof(InnerPatchMethods.ReadArgumentPrefix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.ReadArgumentPrefix));
         OuterStaticMethodTargets.IntArgument(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
@@ -202,7 +199,7 @@ public sealed partial class ArgumentBindingTests
     public void InnerPostfixCanReadInnerArgument()
     {
         InnerPatchMethods.ArgumentObserved = 0;
-        ApplyInnerPatch(nameof(InnerPatchMethods.ReadArgumentPostfix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.ReadArgumentPostfix));
         OuterStaticMethodTargets.IntArgument(42);
         Assert.That(InnerPatchMethods.ArgumentObserved, Is.EqualTo(42));
     }
@@ -210,14 +207,14 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void InnerPrefixCanWriteInnerArgumentByReference()
     {
-        ApplyInnerPatch(nameof(InnerPatchMethods.WriteArgumentPrefix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.WriteArgumentPrefix));
         Assert.That(OuterStaticMethodTargets.IntIdentity(1), Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPostfixCanWriteInnerArgumentByReference()
     {
-        ApplyInnerPatch(nameof(InnerPatchMethods.WriteArgumentPostfix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.WriteArgumentPostfix));
         int value = 1;
         OuterStaticMethodTargets.RefIntArgument(ref value);
         Assert.That(value, Is.EqualTo(42));

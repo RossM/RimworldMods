@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-
-namespace Disharmony.Tests;
+﻿namespace Disharmony.Tests;
 
 public static class UnpatchPatchMethods
 {

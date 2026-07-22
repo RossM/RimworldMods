@@ -1,5 +1,3 @@
-using NUnit.Framework;
-
 namespace Disharmony.Tests;
 
 [TestFixture]
@@ -9,7 +7,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
     public void PrefixOnLocalFunctionCanReadCapturedVariable()
     {
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePrefix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePrefix));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
@@ -21,7 +19,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
     public void PostfixOnLocalFunctionCanReadCapturedVariable()
     {
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePostfix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.ReadCapturedVariablePostfix));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
@@ -33,7 +31,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
     public void InnerPrefixAtLocalFunctionCallCanReadCapturedVariable()
     {
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPrefix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPrefix));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
@@ -45,7 +43,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
     public void InnerPostfixAtLocalFunctionCallCanReadCapturedVariable()
     {
         InnerParameterBindingPatchMethods.CapturedVariableObserved = 0;
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPostfix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.ReadCapturedVariableInnerPostfix));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
@@ -56,7 +54,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void PrefixOnLocalFunctionCanWriteCapturedVariableByReference()
     {
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteCapturedVariablePrefix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.WriteCapturedVariablePrefix));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(1);
 
@@ -66,7 +64,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void PostfixOnLocalFunctionCanWriteCapturedVariableByReference()
     {
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteCapturedVariablePostfix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.WriteCapturedVariablePostfix));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(1);
 
@@ -76,7 +74,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void InnerPrefixAtLocalFunctionCallCanWriteCapturedVariableByReference()
     {
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteCapturedVariableInnerPrefix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.WriteCapturedVariableInnerPrefix));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(1);
 
@@ -86,7 +84,7 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void InnerPostfixAtLocalFunctionCallCanWriteCapturedVariableByReference()
     {
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteCapturedVariableInnerPostfix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.WriteCapturedVariableInnerPostfix));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(1);
 

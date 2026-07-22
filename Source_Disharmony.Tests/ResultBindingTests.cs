@@ -1,5 +1,3 @@
-using NUnit.Framework;
-
 namespace Disharmony.Tests;
 
 [TestFixture]
@@ -9,7 +7,7 @@ public sealed partial class ResultBindingTests : PatchTestBase
     public void PrefixReadsDefaultValueTypeResult()
     {
         PatchMethods.ValueResultObserved = -1;
-        ApplyPatch(nameof(PatchMethods.ReadValueResultPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ReadValueResultPrefix));
         StaticMethodTargets.IntResult();
         Assert.That(PatchMethods.ValueResultObserved, Is.Zero);
     }
@@ -18,7 +16,7 @@ public sealed partial class ResultBindingTests : PatchTestBase
     public void PostfixReadsValueTypeResult()
     {
         PatchMethods.ValueResultObserved = 0;
-        ApplyPatch(nameof(PatchMethods.ReadValueResultPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ReadValueResultPostfix));
         StaticMethodTargets.IntResult();
         Assert.That(PatchMethods.ValueResultObserved, Is.EqualTo(1));
     }
@@ -27,7 +25,7 @@ public sealed partial class ResultBindingTests : PatchTestBase
     public void PrefixReadsDefaultReferenceTypeResult()
     {
         PatchMethods.ReferenceResultObserved = "sentinel";
-        ApplyPatch(nameof(PatchMethods.ReadReferenceResultPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ReadReferenceResultPrefix));
         StaticMethodTargets.StringResult();
         Assert.That(PatchMethods.ReferenceResultObserved, Is.Null);
     }
@@ -36,7 +34,7 @@ public sealed partial class ResultBindingTests : PatchTestBase
     public void PostfixReadsReferenceTypeResult()
     {
         PatchMethods.ReferenceResultObserved = null;
-        ApplyPatch(nameof(PatchMethods.ReadReferenceResultPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ReadReferenceResultPostfix));
         StaticMethodTargets.StringResult();
         Assert.That(PatchMethods.ReferenceResultObserved, Is.EqualTo("original"));
     }
@@ -44,28 +42,28 @@ public sealed partial class ResultBindingTests : PatchTestBase
     [Test]
     public void PrefixCanWriteValueTypeResultByReference()
     {
-        ApplyPatch(nameof(PatchMethods.WriteValueResultPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteValueResultPrefix));
         Assert.That(StaticMethodTargets.ThrowingIntResult(), Is.EqualTo(42));
     }
 
     [Test]
     public void PostfixCanWriteValueTypeResultByReference()
     {
-        ApplyPatch(nameof(PatchMethods.WriteValueResultPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteValueResultPostfix));
         Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(42));
     }
 
     [Test]
     public void PrefixCanWriteReferenceTypeResultByReference()
     {
-        ApplyPatch(nameof(PatchMethods.WriteReferenceResultPrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteReferenceResultPrefix));
         Assert.That(StaticMethodTargets.ThrowingStringResult(), Is.EqualTo("patched"));
     }
 
     [Test]
     public void PostfixCanWriteReferenceTypeResultByReference()
     {
-        ApplyPatch(nameof(PatchMethods.WriteReferenceResultPostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteReferenceResultPostfix));
         Assert.That(StaticMethodTargets.StringResult(), Is.EqualTo("patched"));
     }
 }
@@ -77,7 +75,7 @@ public sealed partial class ResultBindingTests
     public void InnerPrefixReadsDefaultInnerResult()
     {
         InnerPatchMethods.ResultObserved = -1;
-        ApplyInnerPatch(nameof(InnerPatchMethods.ReadResultPrefix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.ReadResultPrefix));
         OuterStaticMethodTargets.IntResult();
         Assert.That(InnerPatchMethods.ResultObserved, Is.Zero);
     }
@@ -86,7 +84,7 @@ public sealed partial class ResultBindingTests
     public void InnerPostfixReadsInnerResult()
     {
         InnerPatchMethods.ResultObserved = 0;
-        ApplyInnerPatch(nameof(InnerPatchMethods.ReadResultPostfix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.ReadResultPostfix));
         OuterStaticMethodTargets.IntResult();
         Assert.That(InnerPatchMethods.ResultObserved, Is.EqualTo(1));
     }
@@ -94,14 +92,14 @@ public sealed partial class ResultBindingTests
     [Test]
     public void InnerPrefixCanWriteInnerResultByReference()
     {
-        ApplyInnerPatch(nameof(InnerPatchMethods.WriteResultPrefix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.WriteResultPrefix));
         Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPostfixCanWriteInnerResultByReference()
     {
-        ApplyInnerPatch(nameof(InnerPatchMethods.WriteResultPostfix));
+        ApplyPatch(typeof(InnerPatchMethods), nameof(InnerPatchMethods.WriteResultPostfix));
         Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(42));
     }
 }

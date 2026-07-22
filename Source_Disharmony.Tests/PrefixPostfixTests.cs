@@ -1,6 +1,3 @@
-using System;
-using NUnit.Framework;
-
 namespace Disharmony.Tests;
 
 public static class PatchMethods
@@ -231,29 +228,4 @@ public static class PatchMethods
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefIntArgument))]
     public static void WriteRefParameterPrefix(ref int value) => value = 42;
-}
-
-public abstract class PatchTestBase
-{
-    [SetUp]
-    public void UnpatchBeforeTest() =>
-        Autopatcher.UnpatchAll(typeof(PatchTestBase).Assembly);
-
-    protected static void ApplyPatch(string patchMethodName) =>
-        Autopatcher.Patch(typeof(PatchMethods).GetMethod(patchMethodName));
-
-    protected static void ApplyPatch(Type patchMethodsType, string patchMethodName) =>
-        Autopatcher.Patch(patchMethodsType.GetMethod(patchMethodName));
-
-    protected static void ApplyPatches(string firstPatchMethodName, string secondPatchMethodName)
-    {
-        ApplyPatch(firstPatchMethodName);
-        ApplyPatch(secondPatchMethodName);
-    }
-
-    protected static void ApplyInnerPatch(string patchMethodName) =>
-        Autopatcher.Patch(typeof(InnerPatchMethods).GetMethod(patchMethodName));
-
-    protected static void ApplyInnerParameterBindingPatch(string patchMethodName) =>
-        Autopatcher.Patch(typeof(InnerParameterBindingPatchMethods).GetMethod(patchMethodName));
 }

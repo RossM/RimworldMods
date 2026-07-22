@@ -1,7 +1,3 @@
-using NUnit.Framework;
-using System;
-using System.Reflection;
-
 namespace Disharmony.Tests;
 
 public static class TargetSelectionPatchMethods

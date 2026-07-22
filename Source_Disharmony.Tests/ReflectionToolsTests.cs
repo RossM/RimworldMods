@@ -1,7 +1,4 @@
-using System;
-using System.Reflection;
 using Disharmony.Tests.ReflectionFixtures;
-using NUnit.Framework;
 
 // ReSharper disable UnassignedField.Global
 // ReSharper disable MemberHidesStaticFromOuterClass

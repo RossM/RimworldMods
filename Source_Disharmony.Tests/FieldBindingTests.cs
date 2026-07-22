@@ -1,5 +1,3 @@
-using NUnit.Framework;
-
 namespace Disharmony.Tests;
 
 [TestFixture]
@@ -9,7 +7,7 @@ public sealed partial class FieldBindingTests : PatchTestBase
     public void TripleUnderscoreParameterCanReadOuterInstanceField()
     {
         InnerParameterBindingPatchMethods.FieldObserved = 0;
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadOuterFieldPrefix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.ReadOuterFieldPrefix));
         var outer = new ClassMethodTargets { foo = 42 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
@@ -21,7 +19,7 @@ public sealed partial class FieldBindingTests : PatchTestBase
     public void TripleUnderscoreParameterPrefersInnerInstanceField()
     {
         InnerParameterBindingPatchMethods.FieldObserved = 0;
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadInnerFieldPostfix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.ReadInnerFieldPostfix));
         var outer = new ClassMethodTargets { foo = 1 };
         var inner = new InnerInstanceMethodTargets { foo = 42 };
 
@@ -33,7 +31,7 @@ public sealed partial class FieldBindingTests : PatchTestBase
     [Test]
     public void TripleUnderscoreParameterCanWriteOuterInstanceFieldByReference()
     {
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteOuterFieldPrefix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.WriteOuterFieldPrefix));
         var outer = new ClassMethodTargets { foo = 1 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
@@ -44,7 +42,7 @@ public sealed partial class FieldBindingTests : PatchTestBase
     [Test]
     public void TripleUnderscoreParameterCanWriteInnerInstanceFieldByReference()
     {
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteInnerFieldPostfix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.WriteInnerFieldPostfix));
         var outer = new ClassMethodTargets { foo = 1 };
         var inner = new InnerInstanceMethodTargets { foo = 1 };
 
@@ -58,7 +56,7 @@ public sealed partial class FieldBindingTests : PatchTestBase
     public void TripleUnderscoreParameterCanReadOuterStructField()
     {
         InnerParameterBindingPatchMethods.FieldObserved = 0;
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadOuterStructFieldPrefix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.ReadOuterStructFieldPrefix));
         var outer = new StructMethodTargets { foo = 42 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
@@ -70,7 +68,7 @@ public sealed partial class FieldBindingTests : PatchTestBase
     public void TripleUnderscoreParameterPrefersInnerStructField()
     {
         InnerParameterBindingPatchMethods.FieldObserved = 0;
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.ReadInnerStructFieldPostfix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.ReadInnerStructFieldPostfix));
         var outer = new StructMethodTargets { foo = 1 };
         var inner = new InnerStructMethodTargets { foo = 42 };
 
@@ -82,7 +80,7 @@ public sealed partial class FieldBindingTests : PatchTestBase
     [Test]
     public void TripleUnderscoreParameterCanWriteOuterStructFieldByReference()
     {
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteOuterStructFieldPrefix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.WriteOuterStructFieldPrefix));
         var outer = new StructMethodTargets { foo = 1 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
@@ -94,7 +92,7 @@ public sealed partial class FieldBindingTests : PatchTestBase
     public void TripleUnderscoreParameterCanWriteInnerStructFieldByReference()
     {
         InnerStructMethodTargets.FieldObserved = 0;
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteInnerStructFieldPrefix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.WriteInnerStructFieldPrefix));
         var outer = new StructMethodTargets { foo = 1 };
         var inner = new InnerStructMethodTargets { foo = 1 };
 
@@ -109,7 +107,7 @@ public sealed partial class FieldBindingTests : PatchTestBase
     public void TripleUnderscoreParameterCanWriteFieldOfInnerStructPassedByValue()
     {
         InnerStructMethodTargets.FieldObserved = 0;
-        ApplyInnerParameterBindingPatch(nameof(InnerParameterBindingPatchMethods.WriteInnerStructFieldPassedByValuePrefix));
+        ApplyPatch(typeof(InnerParameterBindingPatchMethods), nameof(InnerParameterBindingPatchMethods.WriteInnerStructFieldPassedByValuePrefix));
         var outer = new StructMethodTargets { foo = 1 };
         var inner = new InnerStructMethodTargets { foo = 1 };
 

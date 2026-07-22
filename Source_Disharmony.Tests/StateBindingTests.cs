@@ -1,5 +1,3 @@
-using NUnit.Framework;
-
 namespace Disharmony.Tests;
 
 [TestFixture]
@@ -9,9 +7,8 @@ public sealed partial class StateBindingTests : PatchTestBase
     public void PostfixCanReadStateWrittenByPrefix()
     {
         PatchMethods.StateObserved = 0;
-        ApplyPatches(
-            nameof(PatchMethods.WriteStatePrefix),
-            nameof(PatchMethods.ReadStatePostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteStatePrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ReadStatePostfix));
 
         StaticMethodTargets.Void();
 
@@ -22,9 +19,9 @@ public sealed partial class StateBindingTests : PatchTestBase
     public void PostfixCanWriteStateByReferenceForLaterPostfix()
     {
         PatchMethods.StateObserved = 0;
-        ApplyPatch(nameof(PatchMethods.WriteStatePrefix));
-        ApplyPatch(nameof(PatchMethods.WriteStatePostfix));
-        ApplyPatch(nameof(PatchMethods.ReadWrittenStatePostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteStatePrefix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.WriteStatePostfix));
+        ApplyPatch(typeof(PatchMethods), nameof(PatchMethods.ReadWrittenStatePostfix));
 
         StaticMethodTargets.Void();
 
