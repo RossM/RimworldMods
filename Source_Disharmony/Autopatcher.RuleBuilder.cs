@@ -78,9 +78,10 @@ public static partial class Autopatcher
 
             if (parameter.Fields is { Length: > 0 })
             {
-                foreach (var field in parameter.Fields)
+                for (var index = 0; index < parameter.Fields.Length; index++)
                 {
-                    if (wantRef)
+                    FieldInfo? field = parameter.Fields[index];
+                    if (wantRef && (index == parameter.Fields.Length - 1 || field.FieldType.IsValueType))
                         output.Add(new(OpCodes.Ldflda, field));
                     else
                         output.Add(new(OpCodes.Ldfld, field));
