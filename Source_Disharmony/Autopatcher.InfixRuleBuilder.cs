@@ -1,167 +1,164 @@
 ﻿namespace Disharmony;
 
-public static partial class Autopatcher
+internal class InfixRuleBuilder : RuleBuilder
 {
-    private class InfixRuleBuilder : RuleBuilder
+    private readonly Type targetType;
+
+    private readonly List<PatchInfo> innerPrefixes;
+    private readonly List<PatchInfo> innerPostfixes;
+    private readonly Invocation inner;
+
+    private readonly Type[] innerParameterTypes;
+    private readonly int[] innerParameterLocals;
+
+    public InfixRuleBuilder(
+        RuleBuilderContext context,
+        Invocation outer,
+        Invocation inner,
+        List<PatchInfo> patches) : base(context, outer)
     {
-        private readonly Type targetType;
+        innerPrefixes = patches.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
+        innerPostfixes = patches.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
 
-        private readonly List<PatchInfo> innerPrefixes;
-        private readonly List<PatchInfo> innerPostfixes;
-        private readonly Invocation inner;
+        this.inner = inner;
 
-        private readonly Type[] innerParameterTypes;
-        private readonly int[] innerParameterLocals;
+        innerParameterTypes = this.inner.ParameterTypes;
+        innerParameterLocals = new int[innerParameterTypes.Length];
 
-        public InfixRuleBuilder(
-            RuleBuilderContext context,
-            Invocation outer,
-            Invocation inner,
-            List<PatchInfo> patches) : base(context, outer)
+        targetType = this.inner.ReturnType;
+    }
+
+    private void EmitReplacement()
+    {
+        EmitPrelude();
+
+        var prefixesUsingResult = innerPrefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
+        var postfixesUsingResult = innerPostfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
+        bool canSkip = innerPrefixes.Any(patch => !patch.patch.ReturnType.IsVoid());
+
+        if (canSkip && !targetType.IsVoid() || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
         {
-            innerPrefixes = patches.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
-            innerPostfixes = patches.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
+            resultLocalIndex = output.AddLocal(targetType);
 
-            this.inner = inner;
-
-            innerParameterTypes = this.inner.ParameterTypes;
-            innerParameterLocals = new int[innerParameterTypes.Length];
-
-            targetType = this.inner.ReturnType;
+            if (prefixesUsingResult.Count > 0 &&
+                !prefixesUsingResult[0].parameters.Single(a => a.BindingType == BindingType.Result).Parameter.IsOut)
+            {
+                output.EmitLocalInitializer(resultLocalIndex);
+            }
         }
 
-        private void EmitReplacement()
+        Label? skipLabel = null;
+        foreach (var prefix in innerPrefixes)
         {
-            EmitPrelude();
+            foreach (var parameter in prefix.parameters)
+                EmitParameterValue(parameter);
 
-            var prefixesUsingResult = innerPrefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
-            var postfixesUsingResult = innerPostfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
-            bool canSkip = innerPrefixes.Any(patch => !patch.patch.ReturnType.IsVoid());
+            output.Add(CodeInstruction.Annotation($"{prefix.patchType} {prefix.patch.FullName}"));
+            output.Add(prefix.patch.GetCodeInstruction());
 
-            if (canSkip && !targetType.IsVoid() || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
+            if (!prefix.patch.ReturnType.IsVoid())
             {
-                resultLocalIndex = output.AddLocal(targetType);
-
-                if (prefixesUsingResult.Count > 0 &&
-                    !prefixesUsingResult[0].parameters.Single(a => a.BindingType == BindingType.Result).Parameter.IsOut)
-                {
-                    output.EmitLocalInitializer(resultLocalIndex);
-                }
+                output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
             }
+        }
 
-            Label? skipLabel = null;
-            foreach (var prefix in innerPrefixes)
+        for (int i = 0; i < innerParameterTypes.Length; i++)
+        {
+            Type type = innerParameterTypes[i];
+            EmitInnerParameter(i, type);
+        }
+
+        output.Add(inner.GetCodeInstruction());
+
+        if (skipLabel != null || innerPostfixes.Count > 0)
+        {
+            if (resultLocalIndex >= 0)
+                output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
+
+            if (skipLabel is Label label)
+                output.Add(new(OpCodes.Nop) { labels = [label] });
+
+            foreach (var postfix in innerPostfixes)
             {
-                foreach (var parameter in prefix.parameters)
+                foreach (var parameter in postfix.parameters)
                     EmitParameterValue(parameter);
 
-                output.Add(CodeInstruction.Annotation($"{prefix.patchType} {prefix.patch.FullName}"));
-                output.Add(prefix.patch.GetCodeInstruction());
-
-                if (!prefix.patch.ReturnType.IsVoid())
-                {
-                    output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
-                }
+                output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
+                output.Add(postfix.patch.GetCodeInstruction());
+                if (!postfix.patch.ReturnType.IsVoid())
+                    output.Add(new(OpCodes.Pop));
             }
 
-            for (int i = 0; i < innerParameterTypes.Length; i++)
-            {
-                Type type = innerParameterTypes[i];
-                EmitInnerParameter(i, type);
-            }
-
-            output.Add(inner.GetCodeInstruction());
-
-            if (skipLabel != null || innerPostfixes.Count > 0)
-            {
-                if (resultLocalIndex >= 0)
-                    output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
-
-                if (skipLabel is Label label)
-                    output.Add(new(OpCodes.Nop) { labels = [label] });
-
-                foreach (var postfix in innerPostfixes)
-                {
-                    foreach (var parameter in postfix.parameters)
-                        EmitParameterValue(parameter);
-
-                    output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
-                    output.Add(postfix.patch.GetCodeInstruction());
-                    if (!postfix.patch.ReturnType.IsVoid())
-                        output.Add(new(OpCodes.Pop));
-                }
-
-                if (resultLocalIndex >= 0)
-                    output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
-            }
+            if (resultLocalIndex >= 0)
+                output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
         }
+    }
 
-        private void EmitPrelude()
+    private void EmitPrelude()
+    {
+        // Save all parameters to local. The matcher will handle renumbering the locals to new
+        // unused local indexes.
+        for (int i = innerParameterTypes.Length - 1; i >= 0; i--)
         {
-            // Save all parameters to local. The matcher will handle renumbering the locals to new
-            // unused local indexes.
-            for (int i = innerParameterTypes.Length - 1; i >= 0; i--)
-            {
-                innerParameterLocals[i] = output.AddLocal(innerParameterTypes[i]);
-                output.Add(CodeInstruction.StoreLocal(innerParameterLocals[i]));
-            }
+            innerParameterLocals[i] = output.AddLocal(innerParameterTypes[i]);
+            output.Add(CodeInstruction.StoreLocal(innerParameterLocals[i]));
         }
+    }
 
-        protected override Type GetParameterType(ParameterBinding parameter)
+    protected override Type GetParameterType(ParameterBinding parameter)
+    {
+        if (outerParameterTypes == null)
+            throw new InvalidOperationException();
+
+        switch (parameter.Scope)
         {
-            if (outerParameterTypes == null)
-                throw new InvalidOperationException();
-
-            switch (parameter.Scope)
-            {
-                case Scope.Outer: return outerParameterTypes[parameter.Index];
-                case Scope.Inner: return innerParameterTypes[parameter.Index];
-                default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
-            }
+            case Scope.Outer: return outerParameterTypes[parameter.Index];
+            case Scope.Inner: return innerParameterTypes[parameter.Index];
+            default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
         }
+    }
 
-        protected override void EmitParameterLookup(ParameterBinding parameter, Type resultType)
+    protected override void EmitParameterLookup(ParameterBinding parameter, Type resultType)
+    {
+        switch (parameter.Scope)
         {
-            switch (parameter.Scope)
-            {
-                case Scope.Outer: EmitOuterParameter(parameter.Index, resultType); break;
-                case Scope.Inner: EmitInnerParameter(parameter.Index, resultType); break;
-                default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
-            }
+            case Scope.Outer: EmitOuterParameter(parameter.Index, resultType); break;
+            case Scope.Inner: EmitInnerParameter(parameter.Index, resultType); break;
+            default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
         }
+    }
 
 
-        public override IEnumerable<Rule> BuildRules()
+    public override IEnumerable<Rule> BuildRules()
+    {
+        List<CodeInstruction> pattern =
+        [
+            inner.GetCodeInstruction(),
+        ];
+
+        EmitReplacement();
+
+        yield return new Rule
         {
-            List<CodeInstruction> pattern =
-            [
-                inner.GetCodeInstruction(),
-            ];
+            Min = 1,
+            Max = 0,
+            Mode = InstructionMatcher.OutputMode.Replace,
+            Pattern = pattern.ToArray(),
+            Output = output.Instructions.ToArray(),
+            Name = inner.FullName,
+        };
+    }
 
-            EmitReplacement();
+    private void EmitInnerParameter(int index, Type resultType)
+    {
+        if (innerParameterTypes == null)
+            throw new InvalidOperationException("innerParameterTypes is null");
+        if (innerParameterLocals == null)
+            throw new InvalidOperationException("innerParameterLocals is null");
 
-            yield return new Rule
-            {
-                Min = 1,
-                Max = 0,
-                Mode = InstructionMatcher.OutputMode.Replace,
-                Pattern = pattern.ToArray(),
-                Output = output.Instructions.ToArray(),
-                Name = inner.FullName,
-            };
-        }
-
-        private void EmitInnerParameter(int index, Type resultType)
-        {
-            if (innerParameterTypes == null)
-                throw new InvalidOperationException("innerParameterTypes is null");
-            if (innerParameterLocals == null)
-                throw new InvalidOperationException("innerParameterLocals is null");
-
-            Type parameterType = innerParameterTypes[index];
-            output.Add(CodeInstruction.LoadLocal(innerParameterLocals[index], resultType.IsByRef && !parameterType.IsByRef));
-            if (!resultType.IsByRef && parameterType.IsByRef)
-                output.Add(new(OpCodes.Ldobj, parameterType.GetElementType()));
-        }
+        Type parameterType = innerParameterTypes[index];
+        output.Add(CodeInstruction.LoadLocal(innerParameterLocals[index], resultType.IsByRef && !parameterType.IsByRef));
+        if (!resultType.IsByRef && parameterType.IsByRef)
+            output.Add(new(OpCodes.Ldobj, parameterType.GetElementType()));
     }
 }

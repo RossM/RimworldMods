@@ -1,62 +1,59 @@
 ﻿namespace Disharmony;
 
-public static partial class Autopatcher
+internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, EmptyInvocation.Instance)
 {
-    private class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, EmptyInvocation.Instance)
+    private List<Type> LocalTypes => output.LocalTypes;
+    private readonly Dictionary<Type, (int index, Type type)> stateMap = new();
+
+    private int GetOrAddStateLocal(Type stateKey, Type localType, Invocation method)
     {
-        private List<Type> LocalTypes => output.LocalTypes;
-        private readonly Dictionary<Type, (int index, Type type)> stateMap = new();
+        if (localType.IsByRef)
+            localType = localType.GetElementType();
 
-        private int GetOrAddStateLocal(Type stateKey, Type localType, Invocation method)
+        if (stateMap.TryGetValue(stateKey, out var tuple))
         {
-            if (localType.IsByRef)
-                localType = localType.GetElementType();
+            (int index, Type existingType) = tuple;
 
-            if (stateMap.TryGetValue(stateKey, out var tuple))
-            {
-                (int index, Type existingType) = tuple;
+            if (existingType == localType)
+                return index;
 
-                if (existingType == localType)
-                    return index;
-
-                throw new ArgumentException(
-                    $"{method.FullName} declares __state of type {localType} which conflicts with existing type {existingType}");
-            }
-
-            int newIndex = LocalTypes.Count;
-            stateMap.Add(stateKey, (newIndex, localType));
-            LocalTypes.Add(localType);
-            return newIndex;
+            throw new ArgumentException(
+                $"{method.FullName} declares __state of type {localType} which conflicts with existing type {existingType}");
         }
 
-        public override IEnumerable<Rule> BuildRules()
+        int newIndex = LocalTypes.Count;
+        stateMap.Add(stateKey, (newIndex, localType));
+        LocalTypes.Add(localType);
+        return newIndex;
+    }
+
+    public override IEnumerable<Rule> BuildRules()
+    {
+        if (LocalTypes.Count == 0)
+            yield break;
+
+        for (int index = 0; index < LocalTypes.Count; index++)
+            output.EmitLocalInitializer(index);
+
+        yield return new Rule
         {
-            if (LocalTypes.Count == 0)
-                yield break;
+            Mode = InstructionMatcher.OutputMode.MethodPrefix,
+            Output = output.Instructions.ToArray(),
+            Name = "state variable initialization",
+        };
+    }
 
-            for (int index = 0; index < LocalTypes.Count; index++)
-                output.EmitLocalInitializer(index);
-
-            yield return new Rule
-            {
-                Mode = InstructionMatcher.OutputMode.MethodPrefix,
-                Output = output.Instructions.ToArray(),
-                Name = "state variable initialization",
-            };
-        }
-
-        public void AssignStateVariableIndexes(List<PatchInfo> patches)
+    public void AssignStateVariableIndexes(List<PatchInfo> patches)
+    {
+        foreach (var patch in patches)
         {
-            foreach (var patch in patches)
+            ParameterBinding[] parameters = patch.parameters;
+            for (int i = 0; i < parameters.Length; i++)
             {
-                ParameterBinding[] parameters = patch.parameters;
-                for (int i = 0; i < parameters.Length; i++)
+                if (parameters[i].BindingType == BindingType.State)
                 {
-                    if (parameters[i].BindingType == BindingType.State)
-                    {
-                        parameters[i].Index = GetOrAddStateLocal(patch.stateKey,
-                            parameters[i].Parameter.ParameterType, patch.patch);
-                    }
+                    parameters[i].Index = GetOrAddStateLocal(patch.stateKey,
+                        parameters[i].Parameter.ParameterType, patch.patch);
                 }
             }
         }

@@ -1,133 +1,130 @@
 ﻿namespace Disharmony;
 
-public static partial class Autopatcher
+internal class CircumfixRuleBuilder : RuleBuilder
 {
-    private class CircumfixRuleBuilder : RuleBuilder
+    private readonly Type targetType;
+
+    private readonly List<PatchInfo> prefixes;
+    private readonly List<PatchInfo> postfixes;
+    private Label? skipLabel = null;
+    private Label? returnLabel = null;
+
+    public CircumfixRuleBuilder(
+        RuleBuilderContext context,
+        Invocation outer,
+        List<PatchInfo> patches) : base(context, outer)
     {
-        private readonly Type targetType;
+        prefixes = patches.Where(patch => patch.patchType == PatchType.Prefix).ToList();
+        postfixes = patches.Where(patch => patch.patchType == PatchType.Postfix).ToList();
 
-        private readonly List<PatchInfo> prefixes;
-        private readonly List<PatchInfo> postfixes;
-        private Label? skipLabel = null;
-        private Label? returnLabel = null;
+        targetType = outer.ReturnType;
+    }
 
-        public CircumfixRuleBuilder(
-            RuleBuilderContext context,
-            Invocation outer,
-            List<PatchInfo> patches) : base(context, outer)
+    public override IEnumerable<Label> CrossRuleLabels
+    {
+        get
         {
-            prefixes = patches.Where(patch => patch.patchType == PatchType.Prefix).ToList();
-            postfixes = patches.Where(patch => patch.patchType == PatchType.Postfix).ToList();
+            if (skipLabel is { } label)
+                yield return label;
+            if (returnLabel is { } label2)
+                yield return label2;
+        }
+    }
 
-            targetType = outer.ReturnType;
+    public override IEnumerable<Rule> BuildRules()
+    {
+        var prefixesUsingResult = prefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
+        var postfixesUsingResult = postfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
+        bool canSkip = prefixes.Any(patch => !patch.patch.ReturnType.IsVoid());
+
+        if (canSkip && !targetType.IsVoid() || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
+        {
+            resultLocalIndex = output.AddLocal(targetType);
+
+            if (prefixesUsingResult.Count > 0 &&
+                !prefixesUsingResult[0].parameters.Single(a => a.BindingType == BindingType.Result).Parameter.IsOut)
+            {
+                output.EmitLocalInitializer(resultLocalIndex);
+            }
         }
 
-        public override IEnumerable<Label> CrossRuleLabels
+        foreach (var prefix in prefixes)
         {
-            get
+            foreach (var parameter in prefix.parameters)
+                EmitParameterValue(parameter);
+
+            output.Add(CodeInstruction.Annotation($"{prefix.patchType} {prefix.patch.FullName}"));
+            output.Add(prefix.patch.GetCodeInstruction());
+
+            if (!prefix.patch.ReturnType.IsVoid())
             {
-                if (skipLabel is { } label)
-                    yield return label;
-                if (returnLabel is { } label2)
-                    yield return label2;
+                output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
             }
         }
 
-        public override IEnumerable<Rule> BuildRules()
+        if (output.Instructions.Count > 0)
         {
-            var prefixesUsingResult = prefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
-            var postfixesUsingResult = postfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
-            bool canSkip = prefixes.Any(patch => !patch.patch.ReturnType.IsVoid());
-
-            if (canSkip && !targetType.IsVoid() || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
+            yield return new Rule
             {
-                resultLocalIndex = output.AddLocal(targetType);
+                Mode = InstructionMatcher.OutputMode.MethodPrefix,
+                Output = output.Instructions.ToArray(),
+                Name = "prefixes",
+            };
+            output.Instructions.Clear();
+        }
 
-                if (prefixesUsingResult.Count > 0 &&
-                    !prefixesUsingResult[0].parameters.Single(a => a.BindingType == BindingType.Result).Parameter.IsOut)
-                {
-                    output.EmitLocalInitializer(resultLocalIndex);
-                }
-            }
+        if (postfixes.Count > 0)
+        {
+            returnLabel = generator.DefineLabel();
 
-            foreach (var prefix in prefixes)
+            yield return new Rule
             {
-                foreach (var parameter in prefix.parameters)
-                    EmitParameterValue(parameter);
+                Min = 0,
+                Max = 0,
+                Mode = InstructionMatcher.OutputMode.Replace,
+                Pattern = [new(OpCodes.Ret)],
+                Output = [new(OpCodes.Br, returnLabel)],
+                Name = "return",
+            };
+        }
 
-                output.Add(CodeInstruction.Annotation($"{prefix.patchType} {prefix.patch.FullName}"));
-                output.Add(prefix.patch.GetCodeInstruction());
-
-                if (!prefix.patch.ReturnType.IsVoid())
-                {
-                    output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
-                }
-            }
-
-            if (output.Instructions.Count > 0)
+        if (skipLabel != null || returnLabel != null || postfixes.Count > 0)
+        {
+            if (returnLabel is { } label)
             {
-                yield return new Rule
-                {
-                    Mode = InstructionMatcher.OutputMode.MethodPrefix,
-                    Output = output.Instructions.ToArray(),
-                    Name = "prefixes",
-                };
-                output.Instructions.Clear();
-            }
-
-            if (postfixes.Count > 0)
-            {
-                returnLabel = generator.DefineLabel();
-
-                yield return new Rule
-                {
-                    Min = 0,
-                    Max = 0,
-                    Mode = InstructionMatcher.OutputMode.Replace,
-                    Pattern = [new(OpCodes.Ret)],
-                    Output = [new(OpCodes.Br, returnLabel)],
-                    Name = "return",
-                };
-            }
-
-            if (skipLabel != null || returnLabel != null || postfixes.Count > 0)
-            {
-                if (returnLabel is { } label)
-                {
-                    output.Add(new(OpCodes.Nop) { labels = [label] });
-
-                    if (resultLocalIndex >= 0)
-                        output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
-                }
-
-                if (skipLabel is { } label2)
-                    output.Add(new(OpCodes.Nop) { labels = [label2] });
-
-                foreach (var postfix in postfixes)
-                {
-                    foreach (var parameter in postfix.parameters)
-                        EmitParameterValue(parameter);
-
-                    output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
-                    output.Add(postfix.patch.GetCodeInstruction());
-
-                    if (!postfix.patch.ReturnType.IsVoid())
-                        output.Add(new(OpCodes.Pop));
-                }
+                output.Add(new(OpCodes.Nop) { labels = [label] });
 
                 if (resultLocalIndex >= 0)
-                    output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
-
-                output.Add(new(OpCodes.Ret));
-
-                yield return new Rule
-                {
-                    Mode = InstructionMatcher.OutputMode.MethodPostfix,
-                    Output = output.Instructions.ToArray(),
-                    Name = "postfixes",
-                };
-                output.Instructions.Clear();
+                    output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
             }
+
+            if (skipLabel is { } label2)
+                output.Add(new(OpCodes.Nop) { labels = [label2] });
+
+            foreach (var postfix in postfixes)
+            {
+                foreach (var parameter in postfix.parameters)
+                    EmitParameterValue(parameter);
+
+                output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
+                output.Add(postfix.patch.GetCodeInstruction());
+
+                if (!postfix.patch.ReturnType.IsVoid())
+                    output.Add(new(OpCodes.Pop));
+            }
+
+            if (resultLocalIndex >= 0)
+                output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
+
+            output.Add(new(OpCodes.Ret));
+
+            yield return new Rule
+            {
+                Mode = InstructionMatcher.OutputMode.MethodPostfix,
+                Output = output.Instructions.ToArray(),
+                Name = "postfixes",
+            };
+            output.Instructions.Clear();
         }
     }
 }
