@@ -3,7 +3,7 @@
 internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer)
 {
     public virtual IEnumerable<Label> CrossRuleLabels => [];
-    protected readonly Type[]? outerParameterTypes = outer.ParameterTypes;
+    protected readonly Type[] outerParameterTypes = outer.ParameterTypes;
 
     protected readonly InstructionList output = context.NewInstructionList();
     protected int resultLocalIndex = -1;
@@ -76,9 +76,6 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
     protected virtual Type GetParameterType(ParameterBinding parameter)
     {
-        if (outerParameterTypes == null)
-            throw new InvalidOperationException("outerParameterTypes is null");
-
         switch (parameter.Scope)
         {
             case Scope.Outer: return outerParameterTypes[parameter.Index];
@@ -102,9 +99,6 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
     protected void EmitOuterParameter(int index, Type targetType)
     {
-        if (outerParameterTypes == null)
-            throw new InvalidOperationException("outerParameterTypes is null");
-
         Type parameterType = outerParameterTypes[index];
         output.Add(CodeInstruction.LoadArgument(index, targetType.IsByRef && !parameterType.IsByRef));
         if (!targetType.IsByRef && parameterType.IsByRef)

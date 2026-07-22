@@ -107,9 +107,6 @@ internal class InfixRuleBuilder : RuleBuilder
 
     protected override Type GetParameterType(ParameterBinding parameter)
     {
-        if (outerParameterTypes == null)
-            throw new InvalidOperationException();
-
         switch (parameter.Scope)
         {
             case Scope.Outer: return outerParameterTypes[parameter.Index];
