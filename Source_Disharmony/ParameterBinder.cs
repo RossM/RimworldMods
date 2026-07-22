@@ -43,7 +43,10 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             {
                 if (isIterator && defaultScope == Scope.Outer)
                     return BindParameterByName(parameter, target.ParameterNames[index], defaultScope);
-                
+
+                if (!defaultInvocation.IsStatic)
+                    index++;
+
                 ValidateCast(parameter, defaultInvocation.ParameterTypes[index]);
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = defaultScope, Index = index };
             }
