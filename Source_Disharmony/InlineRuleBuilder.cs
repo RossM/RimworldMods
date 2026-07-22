@@ -33,19 +33,19 @@ internal class InlineRuleBuilder : RuleBuilder
         // ReSharper restore IdentifierTypo
     }
 
-    private readonly MethodBase? method;
+    private readonly MethodBase method;
     private readonly int[] argumentLocals;
     private readonly Dictionary<int, int> localMap = new();
     private readonly Type[] parameterTypes;
     private readonly List<LocalVariableInfo>? locals;
 
-    public InlineRuleBuilder(RuleBuilderContext context, PatchInfo patch) : base(context, EmptyInvocation.Instance)
+    public InlineRuleBuilder(RuleBuilderContext context, MethodInvocation patch) : base(context, EmptyInvocation.Instance)
     {
-        method = (patch.patch as MethodInvocation)?.MethodInfo;
+        method = patch.MethodInfo;
 
-        parameterTypes = patch.patch.ParameterTypes;
+        parameterTypes = patch.ParameterTypes;
         argumentLocals = new int[parameterTypes.Length];
-        locals = method?.GetMethodBody()?.LocalVariables.ToList();
+        locals = method.GetMethodBody()?.LocalVariables.ToList();
     }
 
     private bool EmitReplacement()
@@ -124,7 +124,7 @@ internal class InlineRuleBuilder : RuleBuilder
 
     public override IEnumerable<Rule> BuildRules()
     {
-        if (method == null || locals == null)
+        if (locals == null)
             yield break;
 
         List<CodeInstruction> pattern =

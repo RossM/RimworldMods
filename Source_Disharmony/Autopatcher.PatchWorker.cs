@@ -35,7 +35,9 @@ public static partial class Autopatcher
 
             foreach (var patch in patches.Where(p => p.inline))
             {
-                var inlineRuleBuilder = new InlineRuleBuilder(context, patch);
+                if (patch.patch is not MethodInvocation method)
+                    continue;
+                var inlineRuleBuilder = new InlineRuleBuilder(context, method);
                 rules.AddRange(inlineRuleBuilder.BuildRules());
             }
 
