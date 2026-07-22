@@ -503,3 +503,126 @@ public sealed partial class IteratorParameterBindingTests
         Assert.That(IteratorParameterBindingPatches.StructInstanceFieldObserved, Is.EqualTo(42));
     }
 }
+
+public static partial class IteratorParameterBindingPatches
+{
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(LocalFunctionTargets), "PrimitiveLocalIterator.LocalIterator")]
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByValue(int enclosingValue) =>
+        ParameterObserved = enclosingValue;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(LocalFunctionTargets), "PrimitiveLocalIterator.LocalIterator")]
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByReference(ref int enclosingValue) =>
+        ParameterObserved = enclosingValue;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
+    [Target(typeof(LocalFunctionTargets), "ReferenceTypeLocalIterator.LocalIterator")]
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByValue(
+        BindingReference enclosingValue) => ReferenceObserved = enclosingValue;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
+    [Target(typeof(LocalFunctionTargets), "ReferenceTypeLocalIterator.LocalIterator")]
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByReference(
+        ref BindingReference enclosingValue) => ReferenceObserved = enclosingValue;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
+    [Target(typeof(LocalFunctionTargets), "StructLocalIterator.LocalIterator")]
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByValue(BindingStruct enclosingValue) =>
+        StructObserved = enclosingValue;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
+    [Target(typeof(LocalFunctionTargets), "StructLocalIterator.LocalIterator")]
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByReference(ref BindingStruct enclosingValue) =>
+        StructObserved = enclosingValue;
+}
+
+[TestFixture]
+public sealed partial class IteratorParameterBindingTests
+{
+    [Test]
+    public void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByValue()
+    {
+        IteratorParameterBindingPatches.ParameterObserved = 0;
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByValue));
+
+        int result = LocalFunctionTargets.PrimitiveLocalIterator(42).Single();
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(IteratorParameterBindingPatches.ParameterObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByReference()
+    {
+        IteratorParameterBindingPatches.ParameterObserved = 0;
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByReference));
+
+        int result = LocalFunctionTargets.PrimitiveLocalIterator(42).Single();
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(IteratorParameterBindingPatches.ParameterObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByValue()
+    {
+        IteratorParameterBindingPatches.ReferenceObserved = null;
+        var value = new BindingReference { Value = 42 };
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByValue));
+
+        BindingReference result = LocalFunctionTargets.ReferenceTypeLocalIterator(value).Single();
+
+        Assert.That(result, Is.SameAs(value));
+        Assert.That(IteratorParameterBindingPatches.ReferenceObserved, Is.SameAs(value));
+    }
+
+    [Test]
+    public void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByReference()
+    {
+        IteratorParameterBindingPatches.ReferenceObserved = null;
+        var value = new BindingReference { Value = 42 };
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByReference));
+
+        BindingReference result = LocalFunctionTargets.ReferenceTypeLocalIterator(value).Single();
+
+        Assert.That(result, Is.SameAs(value));
+        Assert.That(IteratorParameterBindingPatches.ReferenceObserved, Is.SameAs(value));
+    }
+
+    [Test]
+    public void InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByValue()
+    {
+        IteratorParameterBindingPatches.StructObserved = default;
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByValue));
+
+        BindingStruct result = LocalFunctionTargets.StructLocalIterator(new BindingStruct { Value = 42 }).Single();
+
+        Assert.That(result.Value, Is.EqualTo(42));
+        Assert.That(IteratorParameterBindingPatches.StructObserved.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByReference()
+    {
+        IteratorParameterBindingPatches.StructObserved = default;
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByReference));
+
+        BindingStruct result = LocalFunctionTargets.StructLocalIterator(new BindingStruct { Value = 42 }).Single();
+
+        Assert.That(result.Value, Is.EqualTo(42));
+        Assert.That(IteratorParameterBindingPatches.StructObserved.Value, Is.EqualTo(42));
+    }
+}

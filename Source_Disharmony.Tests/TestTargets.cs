@@ -259,6 +259,39 @@ namespace Disharmony.Tests
 
             BindingStruct LocalMethod() => captured;
         }
+
+        public static IEnumerable<int> PrimitiveLocalIterator(int enclosingValue)
+        {
+            return LocalIterator();
+
+            IEnumerable<int> LocalIterator()
+            {
+                _ = InnerStaticMethodTargets.IntIdentity(enclosingValue);
+                yield return enclosingValue;
+            }
+        }
+
+        public static IEnumerable<BindingReference> ReferenceTypeLocalIterator(BindingReference enclosingValue)
+        {
+            return LocalIterator();
+
+            IEnumerable<BindingReference> LocalIterator()
+            {
+                _ = InnerStaticMethodTargets.StringIdentity(enclosingValue.Value.ToString());
+                yield return enclosingValue;
+            }
+        }
+
+        public static IEnumerable<BindingStruct> StructLocalIterator(BindingStruct enclosingValue)
+        {
+            return LocalIterator();
+
+            IEnumerable<BindingStruct> LocalIterator()
+            {
+                _ = InnerStaticMethodTargets.StructIdentity(enclosingValue);
+                yield return enclosingValue;
+            }
+        }
     }
 }
 
