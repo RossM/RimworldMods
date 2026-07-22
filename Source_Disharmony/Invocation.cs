@@ -5,7 +5,7 @@
 /// </summary>
 /// <remarks>
 ///     <para>
-///         <c>Invocation</c> represents a very generic idea of an IL instruction that takes zero or more inputs and
+///         Invocation represents a very generic idea of an IL instruction that takes zero or more inputs and
 ///         produces a result.
 ///         Method calls are represented with <see cref="MethodInvocation" />, and field references are represented with
 ///         <see cref="FieldInvocation" />.
