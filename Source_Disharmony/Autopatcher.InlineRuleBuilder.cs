@@ -53,7 +53,7 @@ public static partial class Autopatcher
         private bool EmitReplacement()
         {
             if (locals is null)
-                return false;
+                throw new InvalidOperationException();
 
             for (int i = parameterTypes.Length - 1; i >= 0; i--)
             {
@@ -114,6 +114,9 @@ public static partial class Autopatcher
 
         private int GetLocal(int index)
         {
+            if (locals is null)
+                throw new InvalidOperationException();
+
             if (!localMap.TryGetValue(index, out int value))
                 localMap[index] = value = output.AddLocal(locals[index].LocalType);
             return value;
@@ -121,6 +124,9 @@ public static partial class Autopatcher
 
         public override IEnumerable<Rule> BuildRules()
         {
+            if (method == null || locals == null)
+                yield break;
+
             List<CodeInstruction> pattern =
             [
                 new(OpCodes.Call, method),

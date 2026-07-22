@@ -91,6 +91,9 @@ public static partial class Autopatcher
 
         protected virtual Type GetParameterType(ParameterBinding parameter)
         {
+            if (outerParameterTypes == null)
+                throw new InvalidOperationException("outerParameterTypes is null");
+
             switch (parameter.Scope)
             {
                 case Scope.Outer: return outerParameterTypes[parameter.Index];
