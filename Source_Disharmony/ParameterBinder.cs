@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using System.Text.RegularExpressions;
 
 namespace Disharmony;
 
@@ -7,7 +8,7 @@ public class ParameterBindingException(string argumentName, string message) : Ex
     public override string Message => $"{argumentName}: {base.Message}";
 }
 
-internal class ParameterBinder(Invocation outer, Invocation inner, PatchType patchType)
+internal class ParameterBinder(Invocation outer, Invocation inner, PatchType patchType, bool isIterator)
 {
     private readonly bool infix = patchType is PatchType.InnerPrefix or PatchType.InnerPostfix;
 
@@ -225,11 +226,21 @@ internal class ParameterBinder(Invocation outer, Invocation inner, PatchType pat
         // Look in outer instance fields
         if (scope is Scope.Outer or Scope.Any && !outer.IsStatic)
         {
-            var field = outer.InstanceType.GetField(name, AccessTools.all);
+            Type curType = outer.InstanceType;
+            List<FieldInfo> fields = [];
+            if (isIterator)
+            {
+                var thisField = curType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, "<>[\\d+]__this"));
+                curType = thisField.FieldType;
+                fields.Add(thisField);
+            }
+
+            var field = curType.GetField(name, AccessTools.all);
             if (field != null)
             {
+                fields.Add(field);
                 ValidateCast(parameter, field.FieldType);
-                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [field] };
+                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [.. fields] };
             }
         }
 

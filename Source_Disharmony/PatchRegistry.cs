@@ -23,7 +23,7 @@ internal enum BindingType
     State,
 }
 
-internal struct ParameterBinding
+internal class ParameterBinding
 {
     /// <summary>
     ///     The <see cref="ParameterInfo" /> of the parameter from the patch function.
@@ -228,7 +228,7 @@ internal class PatchRegistry
             }
         }
 
-        var parameterBinder = new ParameterBinder(new MethodInvocation(outer), inner, patchType);
+        var parameterBinder = new ParameterBinder(new MethodInvocation(outer), inner, patchType, isIterator);
 
         var arguments = method.GetParameters().Select(parameterBinder.Bind).ToArray();
 
