@@ -1,6 +1,6 @@
 namespace Disharmony.Tests;
 
-public static class StateBindingPatches
+public static partial class StateBindingPatches
 {
     public static int Observed;
     public static string? ReferenceObserved;
@@ -139,6 +139,127 @@ public static class StateBindingPatches
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void StateAttributeAllowsStructStateToBeWrittenByReference_SecondPostfix([State] BindingStruct state) =>
         StructObserved = state;
+}
+
+public static partial class StateBindingPatches
+{
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void PostfixCanReadStateThroughReference_Prefix(out int __state) => __state = 42;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void PostfixCanReadStateThroughReference_Postfix(ref int __state) => Observed = __state;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void PostfixCanReadReferenceTypeStateThroughReference_Prefix(out string __state) => __state = "original";
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void PostfixCanReadReferenceTypeStateThroughReference_Postfix(ref string __state) =>
+        ReferenceObserved = __state;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void PostfixCanReadStructStateThroughReference_Prefix(out BindingStruct __state) =>
+        __state = new BindingStruct { Value = 42 };
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void PostfixCanReadStructStateThroughReference_Postfix(ref BindingStruct __state) => StructObserved = __state;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void StateAttributeCanReadPrimitiveStateThroughReference_Prefix([State] out int state) => state = 42;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void StateAttributeCanReadPrimitiveStateThroughReference_Postfix([State] ref int state) => Observed = state;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void StateAttributeCanReadReferenceTypeStateThroughReference_Prefix([State] out string state) =>
+        state = "original";
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void StateAttributeCanReadReferenceTypeStateThroughReference_Postfix([State] ref string state) =>
+        ReferenceObserved = state;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void StateAttributeCanReadStructStateThroughReference_Prefix([State] out BindingStruct state) =>
+        state = new BindingStruct { Value = 42 };
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void StateAttributeCanReadStructStateThroughReference_Postfix([State] ref BindingStruct state) =>
+        StructObserved = state;
+}
+
+[TestFixture]
+public sealed partial class StateBindingTests
+{
+    [Test]
+    public void PostfixCanReadStateThroughReference()
+    {
+        StateBindingPatches.Observed = 0;
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStateThroughReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStateThroughReference_Postfix));
+        StaticMethodTargets.Void();
+        Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void PostfixCanReadReferenceTypeStateThroughReference()
+    {
+        StateBindingPatches.ReferenceObserved = null;
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadReferenceTypeStateThroughReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadReferenceTypeStateThroughReference_Postfix));
+        StaticMethodTargets.Void();
+        Assert.That(StateBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void PostfixCanReadStructStateThroughReference()
+    {
+        StateBindingPatches.StructObserved = default;
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStructStateThroughReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStructStateThroughReference_Postfix));
+        StaticMethodTargets.Void();
+        Assert.That(StateBindingPatches.StructObserved.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void StateAttributeCanReadPrimitiveStateThroughReference()
+    {
+        StateBindingPatches.Observed = 0;
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadPrimitiveStateThroughReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadPrimitiveStateThroughReference_Postfix));
+        StaticMethodTargets.Void();
+        Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void StateAttributeCanReadReferenceTypeStateThroughReference()
+    {
+        StateBindingPatches.ReferenceObserved = null;
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadReferenceTypeStateThroughReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadReferenceTypeStateThroughReference_Postfix));
+        StaticMethodTargets.Void();
+        Assert.That(StateBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void StateAttributeCanReadStructStateThroughReference()
+    {
+        StateBindingPatches.StructObserved = default;
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadStructStateThroughReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadStructStateThroughReference_Postfix));
+        StaticMethodTargets.Void();
+        Assert.That(StateBindingPatches.StructObserved.Value, Is.EqualTo(42));
+    }
 }
 
 [TestFixture]

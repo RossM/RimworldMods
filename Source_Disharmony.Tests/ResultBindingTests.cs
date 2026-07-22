@@ -1,6 +1,6 @@
 namespace Disharmony.Tests;
 
-public static class ResultBindingPatches
+public static partial class ResultBindingPatches
 {
     public static int ValueObserved;
     public static string? ReferenceObserved;
@@ -184,6 +184,241 @@ public static class ResultBindingPatches
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
     public static void ReturnValueAttributeCanWriteStructResultInPostfix([ReturnValue] ref BindingStruct value) =>
         value = new BindingStruct { Value = 42 };
+}
+
+public static partial class ResultBindingPatches
+{
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
+    public static void PrefixCanReadValueTypeResultThroughReference(ref int __result) => ValueObserved = __result;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
+    public static void PrefixCanReadReferenceTypeResultThroughReference(ref string? __result) => ReferenceObserved = __result;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
+    public static void PrefixCanReadStructResultThroughReference(ref BindingStruct __result) => StructObserved = __result;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
+    public static void PostfixCanReadValueTypeResultThroughReference(ref int __result) => ValueObserved = __result;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
+    public static void PostfixCanReadReferenceTypeResultThroughReference(ref string __result) => ReferenceObserved = __result;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
+    public static void PostfixCanReadStructResultThroughReference(ref BindingStruct __result) => StructObserved = __result;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
+    public static void InnerPrefixCanReadInnerValueTypeResultThroughReference(ref int __result) => InnerObserved = __result;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringResult))]
+    public static void InnerPrefixCanReadInnerReferenceTypeResultThroughReference(ref string? __result) =>
+        ReferenceObserved = __result;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructResult))]
+    public static void InnerPrefixCanReadInnerStructResultThroughReference(ref BindingStruct __result) => StructObserved = __result;
+
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
+    public static void InnerPostfixCanReadInnerValueTypeResultThroughReference(ref int __result) => InnerObserved = __result;
+
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringResult))]
+    public static void InnerPostfixCanReadInnerReferenceTypeResultThroughReference(ref string __result) =>
+        ReferenceObserved = __result;
+
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructResult))]
+    public static void InnerPostfixCanReadInnerStructResultThroughReference(ref BindingStruct __result) => StructObserved = __result;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
+    public static void ReturnValueAttributeCanReadPrimitiveResultThroughReference([ReturnValue] ref int value) =>
+        ValueObserved = value;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
+    public static void ReturnValueAttributeCanReadDefaultReferenceTypeResultThroughReference(
+        [ReturnValue] ref string? value) => ReferenceObserved = value;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
+    public static void ReturnValueAttributeCanReadDefaultStructResultThroughReference(
+        [ReturnValue] ref BindingStruct value) => StructObserved = value;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
+    public static void ReturnValueAttributeCanReadReferenceTypeResultThroughReference(
+        [ReturnValue] ref string value) => ReferenceObserved = value;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
+    public static void ReturnValueAttributeCanReadStructResultThroughReference(
+        [ReturnValue] ref BindingStruct value) => StructObserved = value;
+}
+
+[TestFixture]
+public sealed partial class ResultBindingTests
+{
+    [Test]
+    public void PrefixCanReadValueTypeResultThroughReference()
+    {
+        ResultBindingPatches.ValueObserved = -1;
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.PrefixCanReadValueTypeResultThroughReference));
+        StaticMethodTargets.IntResult();
+        Assert.That(ResultBindingPatches.ValueObserved, Is.Zero);
+    }
+
+    [Test]
+    public void PrefixCanReadReferenceTypeResultThroughReference()
+    {
+        ResultBindingPatches.ReferenceObserved = "sentinel";
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.PrefixCanReadReferenceTypeResultThroughReference));
+        StaticMethodTargets.StringResult();
+        Assert.That(ResultBindingPatches.ReferenceObserved, Is.Null);
+    }
+
+    [Test]
+    public void PrefixCanReadStructResultThroughReference()
+    {
+        ResultBindingPatches.StructObserved = new BindingStruct { Value = -1 };
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.PrefixCanReadStructResultThroughReference));
+        StaticMethodTargets.StructResult();
+        Assert.That(ResultBindingPatches.StructObserved.Value, Is.Zero);
+    }
+
+    [Test]
+    public void PostfixCanReadValueTypeResultThroughReference()
+    {
+        ResultBindingPatches.ValueObserved = 0;
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.PostfixCanReadValueTypeResultThroughReference));
+        StaticMethodTargets.IntResult();
+        Assert.That(ResultBindingPatches.ValueObserved, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void PostfixCanReadReferenceTypeResultThroughReference()
+    {
+        ResultBindingPatches.ReferenceObserved = null;
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.PostfixCanReadReferenceTypeResultThroughReference));
+        StaticMethodTargets.StringResult();
+        Assert.That(ResultBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void PostfixCanReadStructResultThroughReference()
+    {
+        ResultBindingPatches.StructObserved = default;
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.PostfixCanReadStructResultThroughReference));
+        StaticMethodTargets.StructResult();
+        Assert.That(ResultBindingPatches.StructObserved.Value, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InnerPrefixCanReadInnerValueTypeResultThroughReference()
+    {
+        ResultBindingPatches.InnerObserved = -1;
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPrefixCanReadInnerValueTypeResultThroughReference));
+        OuterStaticMethodTargets.IntResult();
+        Assert.That(ResultBindingPatches.InnerObserved, Is.Zero);
+    }
+
+    [Test]
+    public void InnerPrefixCanReadInnerReferenceTypeResultThroughReference()
+    {
+        ResultBindingPatches.ReferenceObserved = "sentinel";
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPrefixCanReadInnerReferenceTypeResultThroughReference));
+        OuterStaticMethodTargets.StringResult();
+        Assert.That(ResultBindingPatches.ReferenceObserved, Is.Null);
+    }
+
+    [Test]
+    public void InnerPrefixCanReadInnerStructResultThroughReference()
+    {
+        ResultBindingPatches.StructObserved = new BindingStruct { Value = -1 };
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPrefixCanReadInnerStructResultThroughReference));
+        OuterStaticMethodTargets.StructResult();
+        Assert.That(ResultBindingPatches.StructObserved.Value, Is.Zero);
+    }
+
+    [Test]
+    public void InnerPostfixCanReadInnerValueTypeResultThroughReference()
+    {
+        ResultBindingPatches.InnerObserved = 0;
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPostfixCanReadInnerValueTypeResultThroughReference));
+        OuterStaticMethodTargets.IntResult();
+        Assert.That(ResultBindingPatches.InnerObserved, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InnerPostfixCanReadInnerReferenceTypeResultThroughReference()
+    {
+        ResultBindingPatches.ReferenceObserved = null;
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPostfixCanReadInnerReferenceTypeResultThroughReference));
+        OuterStaticMethodTargets.StringResult();
+        Assert.That(ResultBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void InnerPostfixCanReadInnerStructResultThroughReference()
+    {
+        ResultBindingPatches.StructObserved = default;
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPostfixCanReadInnerStructResultThroughReference));
+        OuterStaticMethodTargets.StructResult();
+        Assert.That(ResultBindingPatches.StructObserved.Value, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void ReturnValueAttributeCanReadPrimitiveResultThroughReference()
+    {
+        ResultBindingPatches.ValueObserved = 0;
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.ReturnValueAttributeCanReadPrimitiveResultThroughReference));
+        StaticMethodTargets.IntResult();
+        Assert.That(ResultBindingPatches.ValueObserved, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void ReturnValueAttributeCanReadDefaultReferenceTypeResultThroughReference()
+    {
+        ResultBindingPatches.ReferenceObserved = "sentinel";
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.ReturnValueAttributeCanReadDefaultReferenceTypeResultThroughReference));
+        StaticMethodTargets.StringResult();
+        Assert.That(ResultBindingPatches.ReferenceObserved, Is.Null);
+    }
+
+    [Test]
+    public void ReturnValueAttributeCanReadDefaultStructResultThroughReference()
+    {
+        ResultBindingPatches.StructObserved = new BindingStruct { Value = -1 };
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.ReturnValueAttributeCanReadDefaultStructResultThroughReference));
+        StaticMethodTargets.StructResult();
+        Assert.That(ResultBindingPatches.StructObserved.Value, Is.Zero);
+    }
+
+    [Test]
+    public void ReturnValueAttributeCanReadReferenceTypeResultThroughReference()
+    {
+        ResultBindingPatches.ReferenceObserved = null;
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.ReturnValueAttributeCanReadReferenceTypeResultThroughReference));
+        StaticMethodTargets.StringResult();
+        Assert.That(ResultBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void ReturnValueAttributeCanReadStructResultThroughReference()
+    {
+        ResultBindingPatches.StructObserved = default;
+        ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.ReturnValueAttributeCanReadStructResultThroughReference));
+        StaticMethodTargets.StructResult();
+        Assert.That(ResultBindingPatches.StructObserved.Value, Is.EqualTo(1));
+    }
 }
 
 [TestFixture]

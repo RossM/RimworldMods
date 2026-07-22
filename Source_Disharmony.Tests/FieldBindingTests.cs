@@ -16,6 +16,11 @@ public static class FieldBindingPatches
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void TripleUnderscoreParameterCanReadPrimitiveFieldThroughReference(ref int ___primitiveField) =>
+        Observed = ___primitiveField;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void TripleUnderscoreParameterCanReadReferenceTypeField(BindingReference ___referenceField) =>
         ReferenceObserved = ___referenceField;
 
@@ -26,12 +31,22 @@ public static class FieldBindingPatches
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void TripleUnderscoreParameterCanReadReferenceTypeFieldThroughReference(
+        ref BindingReference ___referenceField) => ReferenceObserved = ___referenceField;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void TripleUnderscoreParameterCanReadStructField(BindingStruct ___structField) => StructObserved = ___structField;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void TripleUnderscoreParameterCanWriteStructFieldByReference(ref BindingStruct ___structField) =>
         ___structField = new BindingStruct { Value = 42 };
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void TripleUnderscoreParameterCanReadStructFieldThroughReference(ref BindingStruct ___structField) =>
+        StructObserved = ___structField;
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithoutField))]
@@ -45,9 +60,17 @@ public static class FieldBindingPatches
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithoutField))]
     public static void TripleUnderscoreParameterCanWriteOuterInstanceFieldByReference(ref int ___foo) => ___foo = 42;
 
+    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithoutField))]
+    public static void TripleUnderscoreParameterCanReadOuterInstanceFieldThroughReference(ref int ___foo) => Observed = ___foo;
+
     [InnerPostfix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void TripleUnderscoreParameterCanWriteInnerInstanceFieldByReference(ref int ___foo) => ___foo = 42;
+
+    [InnerPrefix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
+    public static void TripleUnderscoreParameterCanReadInnerInstanceFieldThroughReference(ref int ___foo) => Observed = ___foo;
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
@@ -61,17 +84,34 @@ public static class FieldBindingPatches
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
     public static void TripleUnderscoreParameterCanWriteOuterStructFieldByReference(ref int ___foo) => ___foo = 42;
 
+    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
+    public static void TripleUnderscoreParameterCanReadOuterStructFieldThroughReference(ref int ___foo) => Observed = ___foo;
+
     [InnerPrefix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithField))]
     public static void TripleUnderscoreParameterCanWriteInnerStructFieldByReference(ref int ___foo) => ___foo = 42;
 
     [InnerPrefix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
+    [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithField))]
+    public static void TripleUnderscoreParameterCanReadInnerStructFieldThroughReference(ref int ___foo) => Observed = ___foo;
+
+    [InnerPrefix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithFieldByValue))]
     public static void TripleUnderscoreParameterCanWriteFieldOfInnerStructPassedByValue(ref int ___foo) => ___foo = 42;
+
+    [InnerPrefix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
+    [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithFieldByValue))]
+    public static void TripleUnderscoreParameterCanReadFieldOfInnerStructPassedByValueThroughReference(ref int ___foo) =>
+        Observed = ___foo;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void FieldAttributeBindsWritableInstanceField([Field("foo")] ref int field) => field = 42;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void FieldAttributeCanReadPrimitiveFieldThroughReference([Field("foo")] ref int field) => Observed = field;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
@@ -89,12 +129,22 @@ public static class FieldBindingPatches
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void FieldAttributeCanReadReferenceTypeFieldThroughReference(
+        [Field("referenceField")] ref BindingReference field) => ReferenceObserved = field;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void FieldAttributeCanReadStructField([Field("structField")] BindingStruct field) => StructObserved = field;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void FieldAttributeCanWriteStructFieldByReference([Field("structField")] ref BindingStruct field) =>
         field = new BindingStruct { Value = 42 };
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void FieldAttributeCanReadStructFieldThroughReference([Field("structField")] ref BindingStruct field) =>
+        StructObserved = field;
 
     [InnerPrefix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
@@ -387,5 +437,142 @@ public sealed partial class FieldBindingTests : PatchTestBase
         outer.CallInnerWithField(inner);
 
         Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanReadPrimitiveFieldThroughReference()
+    {
+        FieldBindingPatches.Observed = 0;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanReadPrimitiveFieldThroughReference));
+        var target = new ClassMethodTargets { primitiveField = 42 };
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanReadReferenceTypeFieldThroughReference()
+    {
+        FieldBindingPatches.ReferenceObserved = null;
+        var field = new BindingReference { Value = 42 };
+        var target = new ClassMethodTargets { referenceField = field };
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanReadReferenceTypeFieldThroughReference));
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.ReferenceObserved, Is.SameAs(field));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanReadStructFieldThroughReference()
+    {
+        FieldBindingPatches.StructObserved = default;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanReadStructFieldThroughReference));
+        var target = new ClassMethodTargets { structField = new BindingStruct { Value = 42 } };
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.StructObserved.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanReadOuterInstanceFieldThroughReference()
+    {
+        FieldBindingPatches.Observed = 0;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanReadOuterInstanceFieldThroughReference));
+        var outer = new ClassMethodTargets { foo = 42 };
+
+        outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
+
+        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanReadInnerInstanceFieldThroughReference()
+    {
+        FieldBindingPatches.Observed = 0;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanReadInnerInstanceFieldThroughReference));
+        var outer = new ClassMethodTargets { foo = 1 };
+        var inner = new InnerInstanceMethodTargets { foo = 42 };
+
+        outer.CallInnerWithField(inner);
+
+        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanReadOuterStructFieldThroughReference()
+    {
+        FieldBindingPatches.Observed = 0;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanReadOuterStructFieldThroughReference));
+        var outer = new StructMethodTargets { foo = 42 };
+
+        outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
+
+        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanReadInnerStructFieldThroughReference()
+    {
+        FieldBindingPatches.Observed = 0;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanReadInnerStructFieldThroughReference));
+        var outer = new StructMethodTargets { foo = 1 };
+        var inner = new InnerStructMethodTargets { foo = 42 };
+
+        outer.CallInnerWithField(ref inner);
+
+        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanReadFieldOfInnerStructPassedByValueThroughReference()
+    {
+        FieldBindingPatches.Observed = 0;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanReadFieldOfInnerStructPassedByValueThroughReference));
+        var outer = new StructMethodTargets { foo = 1 };
+        var inner = new InnerStructMethodTargets { foo = 42 };
+
+        outer.CallInnerWithFieldByValue(inner);
+
+        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void FieldAttributeCanReadPrimitiveFieldThroughReference()
+    {
+        FieldBindingPatches.Observed = 0;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.FieldAttributeCanReadPrimitiveFieldThroughReference));
+        var target = new ClassMethodTargets { foo = 42 };
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void FieldAttributeCanReadReferenceTypeFieldThroughReference()
+    {
+        FieldBindingPatches.ReferenceObserved = null;
+        var field = new BindingReference { Value = 42 };
+        var target = new ClassMethodTargets { referenceField = field };
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.FieldAttributeCanReadReferenceTypeFieldThroughReference));
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.ReferenceObserved, Is.SameAs(field));
+    }
+
+    [Test]
+    public void FieldAttributeCanReadStructFieldThroughReference()
+    {
+        FieldBindingPatches.StructObserved = default;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.FieldAttributeCanReadStructFieldThroughReference));
+        var target = new ClassMethodTargets { structField = new BindingStruct { Value = 42 } };
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.StructObserved.Value, Is.EqualTo(42));
     }
 }

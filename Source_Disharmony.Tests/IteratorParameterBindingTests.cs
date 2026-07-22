@@ -1,6 +1,6 @@
 namespace Disharmony.Tests;
 
-public static class IteratorParameterBindingPatches
+public static partial class IteratorParameterBindingPatches
 {
     public static int ParameterObserved;
     public static int FieldObserved;
@@ -53,6 +53,11 @@ public static class IteratorParameterBindingPatches
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
+    public static void InnerPrefixOnIteratorCanReadDeclaringInstancePrimitiveFieldThroughReference(
+        [Field("primitiveField", Scope.Outer)] ref int value) => FieldObserved = value;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
     public static void InnerPrefixOnIteratorCanReadDeclaringInstanceReferenceTypeField(
         [Field("referenceField", Scope.Outer)] BindingReference value) => ReferenceObserved = value;
 
@@ -64,6 +69,11 @@ public static class IteratorParameterBindingPatches
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
+    public static void InnerPrefixOnIteratorCanReadDeclaringInstanceReferenceTypeFieldThroughReference(
+        [Field("referenceField", Scope.Outer)] ref BindingReference value) => ReferenceObserved = value;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
     public static void InnerPrefixOnIteratorCanReadDeclaringInstanceStructField(
         [Field("structField", Scope.Outer)] BindingStruct value) => StructObserved = value;
 
@@ -72,6 +82,11 @@ public static class IteratorParameterBindingPatches
     public static void InnerPrefixOnIteratorCanWriteDeclaringInstanceStructFieldByReference(
         [Field("structField", Scope.Outer)] ref BindingStruct value) =>
         value = new BindingStruct { Value = 42 };
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
+    public static void InnerPrefixOnIteratorCanReadDeclaringInstanceStructFieldThroughReference(
+        [Field("structField", Scope.Outer)] ref BindingStruct value) => StructObserved = value;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
@@ -100,7 +115,7 @@ public static class IteratorParameterBindingPatches
 }
 
 [TestFixture]
-public sealed class IteratorParameterBindingTests : PatchTestBase
+public sealed partial class IteratorParameterBindingTests : PatchTestBase
 {
     [Test]
     public void InnerPrefixOnIteratorCanReadOriginalMethodParameter()
@@ -229,6 +244,20 @@ public sealed class IteratorParameterBindingTests : PatchTestBase
     }
 
     [Test]
+    public void InnerPrefixOnIteratorCanReadDeclaringInstancePrimitiveFieldThroughReference()
+    {
+        IteratorParameterBindingPatches.FieldObserved = 0;
+        var target = new ClassMethodTargets { primitiveField = 42 };
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefixOnIteratorCanReadDeclaringInstancePrimitiveFieldThroughReference));
+
+        target.EnumerateIdentity(1).Single();
+
+        Assert.That(IteratorParameterBindingPatches.FieldObserved, Is.EqualTo(42));
+    }
+
+    [Test]
     public void InnerPrefixOnIteratorCanReadDeclaringInstanceReferenceTypeField()
     {
         IteratorParameterBindingPatches.ReferenceObserved = null;
@@ -257,6 +286,21 @@ public sealed class IteratorParameterBindingTests : PatchTestBase
     }
 
     [Test]
+    public void InnerPrefixOnIteratorCanReadDeclaringInstanceReferenceTypeFieldThroughReference()
+    {
+        IteratorParameterBindingPatches.ReferenceObserved = null;
+        var field = new BindingReference { Value = 42 };
+        var target = new ClassMethodTargets { referenceField = field };
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefixOnIteratorCanReadDeclaringInstanceReferenceTypeFieldThroughReference));
+
+        target.EnumerateIdentity(1).Single();
+
+        Assert.That(IteratorParameterBindingPatches.ReferenceObserved, Is.SameAs(field));
+    }
+
+    [Test]
     public void InnerPrefixOnIteratorCanReadDeclaringInstanceStructField()
     {
         IteratorParameterBindingPatches.StructObserved = default;
@@ -281,6 +325,20 @@ public sealed class IteratorParameterBindingTests : PatchTestBase
         target.EnumerateIdentity(1).Single();
 
         Assert.That(target.structField.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefixOnIteratorCanReadDeclaringInstanceStructFieldThroughReference()
+    {
+        IteratorParameterBindingPatches.StructObserved = default;
+        var target = new ClassMethodTargets { structField = new BindingStruct { Value = 42 } };
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefixOnIteratorCanReadDeclaringInstanceStructFieldThroughReference));
+
+        target.EnumerateIdentity(1).Single();
+
+        Assert.That(IteratorParameterBindingPatches.StructObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
@@ -353,5 +411,95 @@ public sealed class IteratorParameterBindingTests : PatchTestBase
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(target.foo, Is.EqualTo(1));
+    }
+}
+
+public static partial class IteratorParameterBindingPatches
+{
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
+    public static void InnerPrefixOnIteratorCanReadOriginalMethodParameterThroughReference(ref int outerValue) =>
+        ParameterObserved = outerValue;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateReferenceIdentity))]
+    public static void InnerPrefixOnIteratorCanReadOriginalReferenceTypeParameterThroughReference(
+        ref BindingReference outerValue) => ReferenceObserved = outerValue;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateStructIdentity))]
+    public static void InnerPrefixOnIteratorCanReadOriginalStructParameterThroughReference(ref BindingStruct outerValue) =>
+        StructObserved = outerValue;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateDeclaringInstanceValue))]
+    public static void InnerPrefixOnIteratorCanReadDeclaringReferenceTypeInstanceThroughReference(
+        [Instance(Scope.Outer)] ref ClassMethodTargets instance) => InstanceObserved = instance;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.EnumerateDeclaringInstanceValue))]
+    public static void InnerPrefixOnIteratorCanReadDeclaringStructInstanceThroughReference(
+        [Instance(Scope.Outer)] ref StructMethodTargets instance) => StructInstanceFieldObserved = instance.foo;
+}
+
+[TestFixture]
+public sealed partial class IteratorParameterBindingTests
+{
+    [Test]
+    public void InnerPrefixOnIteratorCanReadOriginalMethodParameterThroughReference()
+    {
+        IteratorParameterBindingPatches.ParameterObserved = 0;
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefixOnIteratorCanReadOriginalMethodParameterThroughReference));
+        new ClassMethodTargets().EnumerateIdentity(42).Single();
+        Assert.That(IteratorParameterBindingPatches.ParameterObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefixOnIteratorCanReadOriginalReferenceTypeParameterThroughReference()
+    {
+        IteratorParameterBindingPatches.ReferenceObserved = null;
+        var value = new BindingReference { Value = 42 };
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefixOnIteratorCanReadOriginalReferenceTypeParameterThroughReference));
+        new ClassMethodTargets().EnumerateReferenceIdentity(value).Single();
+        Assert.That(IteratorParameterBindingPatches.ReferenceObserved, Is.SameAs(value));
+    }
+
+    [Test]
+    public void InnerPrefixOnIteratorCanReadOriginalStructParameterThroughReference()
+    {
+        IteratorParameterBindingPatches.StructObserved = default;
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefixOnIteratorCanReadOriginalStructParameterThroughReference));
+        new ClassMethodTargets().EnumerateStructIdentity(new BindingStruct { Value = 42 }).Single();
+        Assert.That(IteratorParameterBindingPatches.StructObserved.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefixOnIteratorCanReadDeclaringReferenceTypeInstanceThroughReference()
+    {
+        IteratorParameterBindingPatches.InstanceObserved = null;
+        var target = new ClassMethodTargets { foo = 42 };
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefixOnIteratorCanReadDeclaringReferenceTypeInstanceThroughReference));
+        target.EnumerateDeclaringInstanceValue().Single();
+        Assert.That(IteratorParameterBindingPatches.InstanceObserved, Is.SameAs(target));
+    }
+
+    [Test]
+    public void InnerPrefixOnIteratorCanReadDeclaringStructInstanceThroughReference()
+    {
+        IteratorParameterBindingPatches.StructInstanceFieldObserved = 0;
+        var target = new StructMethodTargets { foo = 42 };
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefixOnIteratorCanReadDeclaringStructInstanceThroughReference));
+        target.EnumerateDeclaringInstanceValue().Single();
+        Assert.That(IteratorParameterBindingPatches.StructInstanceFieldObserved, Is.EqualTo(42));
     }
 }

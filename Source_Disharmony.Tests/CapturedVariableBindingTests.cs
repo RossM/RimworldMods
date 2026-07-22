@@ -1,6 +1,6 @@
 namespace Disharmony.Tests;
 
-public static class CapturedVariableBindingPatches
+public static partial class CapturedVariableBindingPatches
 {
     public static int Observed;
     public static BindingReference? ReferenceObserved;
@@ -78,7 +78,7 @@ public static class CapturedVariableBindingPatches
 }
 
 [TestFixture]
-public sealed class CapturedVariableBindingTests : PatchTestBase
+public sealed partial class CapturedVariableBindingTests : PatchTestBase
 {
     [Test]
     public void PrefixOnLocalFunctionCanReadCapturedVariable()
@@ -252,5 +252,124 @@ public sealed class CapturedVariableBindingTests : PatchTestBase
         int result = LocalFunctionTargets.CapturedVariableMethod(1);
 
         Assert.That(result, Is.EqualTo(42));
+    }
+}
+
+public static partial class CapturedVariableBindingPatches
+{
+    [Prefix]
+    [Target(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    public static void PrefixOnLocalFunctionCanReadCapturedVariableThroughReference(ref int captured) => Observed = captured;
+
+    [Prefix]
+    [Target(typeof(LocalFunctionTargets), "CapturedReferenceVariableMethod.LocalMethod")]
+    public static void PrefixOnLocalFunctionCanReadCapturedReferenceTypeVariableThroughReference(
+        ref BindingReference captured) => ReferenceObserved = captured;
+
+    [Prefix]
+    [Target(typeof(LocalFunctionTargets), "CapturedStructVariableMethod.LocalMethod")]
+    public static void PrefixOnLocalFunctionCanReadCapturedStructVariableThroughReference(ref BindingStruct captured) =>
+        StructObserved = captured;
+
+    [Postfix]
+    [Target(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    public static void PostfixOnLocalFunctionCanReadCapturedVariableThroughReference(ref int captured) => Observed = captured;
+
+    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedVariableMethod))]
+    public static void InnerPrefixAtLocalFunctionCallCanReadCapturedVariableThroughReference(ref int captured) =>
+        Observed = captured;
+
+    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedReferenceVariableMethod.LocalMethod")]
+    [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedReferenceVariableMethod))]
+    public static void InnerPrefixAtLocalFunctionCallCanReadCapturedReferenceTypeVariableThroughReference(
+        ref BindingReference captured) => ReferenceObserved = captured;
+
+    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedStructVariableMethod.LocalMethod")]
+    [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedStructVariableMethod))]
+    public static void InnerPrefixAtLocalFunctionCallCanReadCapturedStructVariableThroughReference(ref BindingStruct captured) =>
+        StructObserved = captured;
+
+    [InnerPostfix(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedVariableMethod))]
+    public static void InnerPostfixAtLocalFunctionCallCanReadCapturedVariableThroughReference(ref int captured) =>
+        Observed = captured;
+}
+
+[TestFixture]
+public sealed partial class CapturedVariableBindingTests
+{
+    [Test]
+    public void PrefixOnLocalFunctionCanReadCapturedVariableThroughReference()
+    {
+        CapturedVariableBindingPatches.Observed = 0;
+        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.PrefixOnLocalFunctionCanReadCapturedVariableThroughReference));
+        LocalFunctionTargets.CapturedVariableMethod(42);
+        Assert.That(CapturedVariableBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void PrefixOnLocalFunctionCanReadCapturedReferenceTypeVariableThroughReference()
+    {
+        CapturedVariableBindingPatches.ReferenceObserved = null;
+        var value = new BindingReference { Value = 42 };
+        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.PrefixOnLocalFunctionCanReadCapturedReferenceTypeVariableThroughReference));
+        LocalFunctionTargets.CapturedReferenceVariableMethod(value);
+        Assert.That(CapturedVariableBindingPatches.ReferenceObserved, Is.SameAs(value));
+    }
+
+    [Test]
+    public void PrefixOnLocalFunctionCanReadCapturedStructVariableThroughReference()
+    {
+        CapturedVariableBindingPatches.StructObserved = default;
+        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.PrefixOnLocalFunctionCanReadCapturedStructVariableThroughReference));
+        LocalFunctionTargets.CapturedStructVariableMethod(new BindingStruct { Value = 42 });
+        Assert.That(CapturedVariableBindingPatches.StructObserved.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void PostfixOnLocalFunctionCanReadCapturedVariableThroughReference()
+    {
+        CapturedVariableBindingPatches.Observed = 0;
+        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.PostfixOnLocalFunctionCanReadCapturedVariableThroughReference));
+        LocalFunctionTargets.CapturedVariableMethod(42);
+        Assert.That(CapturedVariableBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefixAtLocalFunctionCallCanReadCapturedVariableThroughReference()
+    {
+        CapturedVariableBindingPatches.Observed = 0;
+        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefixAtLocalFunctionCallCanReadCapturedVariableThroughReference));
+        LocalFunctionTargets.CapturedVariableMethod(42);
+        Assert.That(CapturedVariableBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefixAtLocalFunctionCallCanReadCapturedReferenceTypeVariableThroughReference()
+    {
+        CapturedVariableBindingPatches.ReferenceObserved = null;
+        var value = new BindingReference { Value = 42 };
+        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefixAtLocalFunctionCallCanReadCapturedReferenceTypeVariableThroughReference));
+        LocalFunctionTargets.CapturedReferenceVariableMethod(value);
+        Assert.That(CapturedVariableBindingPatches.ReferenceObserved, Is.SameAs(value));
+    }
+
+    [Test]
+    public void InnerPrefixAtLocalFunctionCallCanReadCapturedStructVariableThroughReference()
+    {
+        CapturedVariableBindingPatches.StructObserved = default;
+        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefixAtLocalFunctionCallCanReadCapturedStructVariableThroughReference));
+        LocalFunctionTargets.CapturedStructVariableMethod(new BindingStruct { Value = 42 });
+        Assert.That(CapturedVariableBindingPatches.StructObserved.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPostfixAtLocalFunctionCallCanReadCapturedVariableThroughReference()
+    {
+        CapturedVariableBindingPatches.Observed = 0;
+        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPostfixAtLocalFunctionCallCanReadCapturedVariableThroughReference));
+        LocalFunctionTargets.CapturedVariableMethod(42);
+        Assert.That(CapturedVariableBindingPatches.Observed, Is.EqualTo(42));
     }
 }
