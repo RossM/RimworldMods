@@ -1,5 +1,18 @@
 ﻿namespace Disharmony;
 
+/// <summary>
+///     Class representing a possible patch method or patch target.
+/// </summary>
+/// <remarks>
+///     <para>
+///         <c>Invocation</c> represents a very generic idea of an IL instruction that takes zero or more inputs and
+///         produces a result.
+///         Method calls are represented with <see cref="MethodInvocation" />, and field references are represented with
+///         <see cref="FieldInvocation" />.
+///         For convenience there is also a singleton <see cref="EmptyInvocation" /> which represents something that takes
+///         no inputs and returns void, intended for use instead of <see langword="null" /> when there is no actual value.
+///     </para>
+/// </remarks>
 internal abstract class Invocation
 {
     public abstract string FullName { get; }
