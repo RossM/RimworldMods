@@ -15,7 +15,20 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
     {
         Type parameterType = parameter.Parameter.ParameterType;
         bool wantRef = parameterType.IsByRef;
-        Type resultType = parameterType;
+        EmitRawParameterValue(parameter, wantRef, out Type resultType);
+
+        if (parameter.Fields is { Length: > 0 })
+            EmitFieldLookups(parameter, wantRef, ref resultType);
+
+        if (resultType.IsValueType && parameterType != resultType)
+            EmitConversion(parameterType, resultType);
+    }
+
+    private void EmitRawParameterValue(ParameterBinding parameter, bool wantRef, out Type resultType)
+    {
+        Type parameterType = parameter.Parameter.ParameterType;
+
+        resultType = parameterType;
 
         if (parameter.Fields is { Length: > 0 })
         {
@@ -60,35 +73,38 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
                 throw new ArgumentOutOfRangeException();
             }
         }
+    }
 
-        if (parameter.Fields is { Length: > 0 })
+    private void EmitFieldLookups(ParameterBinding parameter, bool wantRef, ref Type resultType)
+    {
+        if (parameter.Fields is not { Length: > 0 })
+            throw new InvalidOperationException();
+
+        for (var index = 0; index < parameter.Fields.Length; index++)
         {
-            for (var index = 0; index < parameter.Fields.Length; index++)
+            FieldInfo field = parameter.Fields[index];
+            if (wantRef && (index == parameter.Fields.Length - 1 || field.FieldType.IsValueType))
             {
-                FieldInfo field = parameter.Fields[index];
-                if (wantRef && (index == parameter.Fields.Length - 1 || field.FieldType.IsValueType))
-                {
-                    output.Add(new(OpCodes.Ldflda, field));
-                    resultType = field.FieldType.MakeByRefType();
-                }
-                else
-                {
-                    output.Add(new(OpCodes.Ldfld, field));
-                    resultType = field.FieldType;
-                }
+                output.Add(new(OpCodes.Ldflda, field));
+                resultType = field.FieldType.MakeByRefType();
+            }
+            else
+            {
+                output.Add(new(OpCodes.Ldfld, field));
+                resultType = field.FieldType;
             }
         }
+    }
 
-        if (resultType.IsValueType && parameterType != resultType)
-        {
-            if (!parameterType.IsValueType)
-                output.Add(new(OpCodes.Box, resultType));
-            else if (parameterType.IsGenericType && parameterType.GetGenericTypeDefinition() == typeof(Nullable<>) &&
-                     parameterType.GetGenericArguments()[0] == resultType)
-                output.Add(new(OpCodes.Newobj, parameterType.GetConstructor([resultType])));
-            else
-                throw new NotImplementedException($"Can't convert {resultType.FullName} to {parameterType.FullName}");
-        }
+    private void EmitConversion(Type parameterType, Type resultType)
+    {
+        if (!parameterType.IsValueType)
+            output.Add(new(OpCodes.Box, resultType));
+        else if (parameterType.IsGenericType && parameterType.GetGenericTypeDefinition() == typeof(Nullable<>) &&
+                 parameterType.GetGenericArguments()[0] == resultType)
+            output.Add(new(OpCodes.Newobj, parameterType.GetConstructor([resultType])));
+        else
+            throw new NotImplementedException($"Can't convert {resultType.FullName} to {parameterType.FullName}");
     }
 
     protected virtual Type GetParameterType(ParameterBinding parameter)
