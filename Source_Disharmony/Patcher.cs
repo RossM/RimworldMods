@@ -48,17 +48,7 @@ internal class Patcher
 
     private readonly Dictionary<MethodBase, InstructionMatcher[]> matchersByMethod = new();
 
-    private readonly ModuleBuilder moduleBuilder;
-
     public bool trampolinesEnabled = true;
-
-    private Patcher()
-    {
-        AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(new() { Name = "DynamicTranspilersAssembly" },
-            AssemblyBuilderAccess.RunAndSave);
-
-        moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicTranspilersModule");
-    }
 
     /// <summary>
     ///     This does the same thing as <see cref="Harmony.Patch" />> but must be called
