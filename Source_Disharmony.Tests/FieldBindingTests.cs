@@ -3,6 +3,35 @@ namespace Disharmony.Tests;
 public static class FieldBindingPatches
 {
     public static int Observed;
+    public static BindingReference? ReferenceObserved;
+    public static BindingStruct StructObserved;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void TripleUnderscoreParameterCanReadPrimitiveField(int ___primitiveField) => Observed = ___primitiveField;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void TripleUnderscoreParameterCanWritePrimitiveFieldByReference(ref int ___primitiveField) => ___primitiveField = 42;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void TripleUnderscoreParameterCanReadReferenceTypeField(BindingReference ___referenceField) =>
+        ReferenceObserved = ___referenceField;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void TripleUnderscoreParameterCanWriteReferenceTypeFieldByReference(ref BindingReference ___referenceField) =>
+        ___referenceField = new BindingReference { Value = 42 };
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void TripleUnderscoreParameterCanReadStructField(BindingStruct ___structField) => StructObserved = ___structField;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void TripleUnderscoreParameterCanWriteStructFieldByReference(ref BindingStruct ___structField) =>
+        ___structField = new BindingStruct { Value = 42 };
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithoutField))]
@@ -44,6 +73,29 @@ public static class FieldBindingPatches
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void FieldAttributeBindsWritableInstanceField([Field("foo")] ref int field) => field = 42;
 
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void FieldAttributeCanReadPrimitiveField([Field("primitiveField")] int field) => Observed = field;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void FieldAttributeCanReadReferenceTypeField([Field("referenceField")] BindingReference field) =>
+        ReferenceObserved = field;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void FieldAttributeCanWriteReferenceTypeFieldByReference([Field("referenceField")] ref BindingReference field) =>
+        field = new BindingReference { Value = 42 };
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void FieldAttributeCanReadStructField([Field("structField")] BindingStruct field) => StructObserved = field;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void FieldAttributeCanWriteStructFieldByReference([Field("structField")] ref BindingStruct field) =>
+        field = new BindingStruct { Value = 42 };
+
     [InnerPrefix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void FieldAttributeCanSelectOuterInstanceField([Field("foo", Scope.Outer)] int field) => Observed = field;
@@ -56,6 +108,76 @@ public static class FieldBindingPatches
 [TestFixture]
 public sealed partial class FieldBindingTests : PatchTestBase
 {
+    [Test]
+    public void TripleUnderscoreParameterCanReadPrimitiveField()
+    {
+        FieldBindingPatches.Observed = 0;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanReadPrimitiveField));
+        var target = new ClassMethodTargets { primitiveField = 42 };
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanWritePrimitiveFieldByReference()
+    {
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanWritePrimitiveFieldByReference));
+        var target = new ClassMethodTargets { primitiveField = 1 };
+
+        target.Void();
+
+        Assert.That(target.primitiveField, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanReadReferenceTypeField()
+    {
+        FieldBindingPatches.ReferenceObserved = null;
+        var field = new BindingReference { Value = 42 };
+        var target = new ClassMethodTargets { referenceField = field };
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanReadReferenceTypeField));
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.ReferenceObserved, Is.SameAs(field));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanWriteReferenceTypeFieldByReference()
+    {
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanWriteReferenceTypeFieldByReference));
+        var target = new ClassMethodTargets { referenceField = new BindingReference { Value = 1 } };
+
+        target.Void();
+
+        Assert.That(target.referenceField.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanReadStructField()
+    {
+        FieldBindingPatches.StructObserved = default;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanReadStructField));
+        var target = new ClassMethodTargets { structField = new BindingStruct { Value = 42 } };
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.StructObserved.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void TripleUnderscoreParameterCanWriteStructFieldByReference()
+    {
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.TripleUnderscoreParameterCanWriteStructFieldByReference));
+        var target = new ClassMethodTargets { structField = new BindingStruct { Value = 1 } };
+
+        target.Void();
+
+        Assert.That(target.structField.Value, Is.EqualTo(42));
+    }
+
     [Test]
     public void TripleUnderscoreParameterCanReadOuterInstanceField()
     {
@@ -180,6 +302,65 @@ public sealed partial class FieldBindingTests : PatchTestBase
         target.Void();
 
         Assert.That(target.foo, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void FieldAttributeCanReadPrimitiveField()
+    {
+        FieldBindingPatches.Observed = 0;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.FieldAttributeCanReadPrimitiveField));
+        var target = new ClassMethodTargets { primitiveField = 42 };
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void FieldAttributeCanReadReferenceTypeField()
+    {
+        FieldBindingPatches.ReferenceObserved = null;
+        var field = new BindingReference { Value = 42 };
+        var target = new ClassMethodTargets { referenceField = field };
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.FieldAttributeCanReadReferenceTypeField));
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.ReferenceObserved, Is.SameAs(field));
+    }
+
+    [Test]
+    public void FieldAttributeCanWriteReferenceTypeFieldByReference()
+    {
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.FieldAttributeCanWriteReferenceTypeFieldByReference));
+        var target = new ClassMethodTargets { referenceField = new BindingReference { Value = 1 } };
+
+        target.Void();
+
+        Assert.That(target.referenceField.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void FieldAttributeCanReadStructField()
+    {
+        FieldBindingPatches.StructObserved = default;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.FieldAttributeCanReadStructField));
+        var target = new ClassMethodTargets { structField = new BindingStruct { Value = 42 } };
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.StructObserved.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void FieldAttributeCanWriteStructFieldByReference()
+    {
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.FieldAttributeCanWriteStructFieldByReference));
+        var target = new ClassMethodTargets { structField = new BindingStruct { Value = 1 } };
+
+        target.Void();
+
+        Assert.That(target.structField.Value, Is.EqualTo(42));
     }
 
     [Test]

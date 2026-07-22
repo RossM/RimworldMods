@@ -1,16 +1,30 @@
 namespace Disharmony.Tests
 {
+    public sealed class BindingReference
+    {
+        public int Value;
+    }
+
+    public struct BindingStruct
+    {
+        public int Value;
+    }
+
     public static class StaticMethodTargets
     {
         public static void Void() { }
         public static void IntArgument(int value) { }
         public static void StringArgument(string value) { }
+        public static void StructArgument(BindingStruct value) { }
         public static void RefIntArgument(ref int value) { }
         public static void RefStringArgument(ref string value) { }
+        public static void RefStructArgument(ref BindingStruct value) { }
         public static int IntIdentity(int value) => value;
         public static string StringIdentity(string value) => value;
+        public static BindingStruct StructIdentity(BindingStruct value) => value;
         public static int IntResult() => 1;
         public static string StringResult() => "original";
+        public static BindingStruct StructResult() => new BindingStruct { Value = 1 };
         public static int RegistrationResultA() => 1;
         public static int RegistrationResultB() => 2;
         public static int MutableProperty { get; set; }
@@ -32,11 +46,20 @@ namespace Disharmony.Tests
             Assert.Fail("The target should have been skipped.");
             return "original";
         }
+
+        public static BindingStruct ThrowingStructResult()
+        {
+            Assert.Fail("The target should have been skipped.");
+            return new BindingStruct { Value = 1 };
+        }
     }
 
     public sealed class ClassMethodTargets
     {
         public int foo;
+        public int primitiveField;
+        public BindingReference referenceField = new BindingReference();
+        public BindingStruct structField;
         public int Value { get; private set; }
 
         public void Void() { }
@@ -66,7 +89,26 @@ namespace Disharmony.Tests
 
         public IEnumerable<int> EnumerateIdentity(int outerValue)
         {
-            yield return InnerStaticMethodTargets.IntIdentity(outerValue);
+            _ = InnerStaticMethodTargets.IntIdentity(outerValue);
+            yield return outerValue;
+        }
+
+        public IEnumerable<BindingReference> EnumerateReferenceIdentity(BindingReference outerValue)
+        {
+            _ = InnerStaticMethodTargets.StringIdentity(outerValue.Value.ToString());
+            yield return outerValue;
+        }
+
+        public IEnumerable<BindingStruct> EnumerateStructIdentity(BindingStruct outerValue)
+        {
+            _ = InnerStaticMethodTargets.StructIdentity(outerValue);
+            yield return outerValue;
+        }
+
+        public IEnumerable<int> EnumerateDeclaringInstanceValue()
+        {
+            _ = InnerStaticMethodTargets.IntResult();
+            yield return foo;
         }
     }
 
@@ -90,6 +132,12 @@ namespace Disharmony.Tests
         public void CallInnerWithoutField(InstanceMethodTargetsWithoutFields inner) => inner.Void();
         public void CallInnerWithField(ref InnerStructMethodTargets inner) => inner.Void();
         public void CallInnerWithFieldByValue(InnerStructMethodTargets inner) => inner.Void();
+
+        public IEnumerable<int> EnumerateDeclaringInstanceValue()
+        {
+            _ = InnerStaticMethodTargets.IntResult();
+            yield return foo;
+        }
     }
 
     public sealed class InnerInstanceMethodTargets
@@ -117,27 +165,62 @@ namespace Disharmony.Tests
 
         public static void Void() { }
         public static void IntArgument(int value) { }
+        public static void StringArgument(string value) { }
+        public static void StructArgument(BindingStruct value) { }
         public static void RefIntArgument(ref int value) { }
+        public static void RefStringArgument(ref string value) { }
+        public static void RefStructArgument(ref BindingStruct value) { }
         public static int IntIdentity(int value) => value;
+        public static string StringIdentity(string value) => value;
+        public static BindingStruct StructIdentity(BindingStruct value) => value;
         public static int IntResult() => 1;
+        public static string StringResult() => "original";
+        public static BindingStruct StructResult() => new BindingStruct { Value = 1 };
     }
 
     public static class OuterStaticMethodTargets
     {
         public static int IntResult() => InnerStaticMethodTargets.IntResult();
+        public static string StringResult() => InnerStaticMethodTargets.StringResult();
+        public static BindingStruct StructResult() => InnerStaticMethodTargets.StructResult();
         public static int FieldResult() => InnerStaticMethodTargets.Field;
         public static int PropertyResult() => InnerStaticMethodTargets.Property;
         public static int ReadInstanceField(InnerInstanceMethodTargets inner) => inner.foo;
         public static int ReadStructField(InnerStructMethodTargets inner) => inner.foo;
         public static void IntArgument(int value) => InnerStaticMethodTargets.IntArgument(value);
+        public static void StringArgument(string value) => InnerStaticMethodTargets.StringArgument(value);
+        public static void StructArgument(BindingStruct value) => InnerStaticMethodTargets.StructArgument(value);
         public static int IntIdentity(int value) => InnerStaticMethodTargets.IntIdentity(value);
+        public static string StringIdentity(string value) => InnerStaticMethodTargets.StringIdentity(value);
+        public static BindingStruct StructIdentity(BindingStruct value) => InnerStaticMethodTargets.StructIdentity(value);
         public static void RefIntArgument(ref int value) => InnerStaticMethodTargets.RefIntArgument(ref value);
+        public static void RefStringArgument(ref string value) => InnerStaticMethodTargets.RefStringArgument(ref value);
+        public static void RefStructArgument(ref BindingStruct value) => InnerStaticMethodTargets.RefStructArgument(ref value);
         public static void OuterArgument(int outerValue) => InnerStaticMethodTargets.Void();
+        public static void OuterReferenceTypeArgument(string outerValue) => InnerStaticMethodTargets.Void();
+        public static void OuterStructArgument(BindingStruct outerValue) => InnerStaticMethodTargets.Void();
         public static void SameNamedArgument(int value) => InnerStaticMethodTargets.IntArgument(value + 41);
+        public static void SameNamedReferenceTypeArgument(string value) => InnerStaticMethodTargets.StringArgument("inner");
+        public static void SameNamedStructArgument(BindingStruct value) =>
+            InnerStaticMethodTargets.StructArgument(new BindingStruct { Value = 42 });
         public static int SameNamedRefArgument(ref int value)
         {
             int innerValue = 1;
             InnerStaticMethodTargets.RefIntArgument(ref innerValue);
+            return innerValue;
+        }
+
+        public static string SameNamedRefReferenceTypeArgument(ref string value)
+        {
+            string innerValue = "inner";
+            InnerStaticMethodTargets.RefStringArgument(ref innerValue);
+            return innerValue;
+        }
+
+        public static BindingStruct SameNamedRefStructArgument(ref BindingStruct value)
+        {
+            var innerValue = new BindingStruct { Value = 1 };
+            InnerStaticMethodTargets.RefStructArgument(ref innerValue);
             return innerValue;
         }
 
@@ -157,6 +240,24 @@ namespace Disharmony.Tests
             return captured;
 
             int LocalMethod() => captured;
+        }
+
+        public static BindingReference CapturedReferenceVariableMethod(BindingReference value)
+        {
+            BindingReference captured = value;
+            _ = LocalMethod();
+            return captured;
+
+            BindingReference LocalMethod() => captured;
+        }
+
+        public static BindingStruct CapturedStructVariableMethod(BindingStruct value)
+        {
+            BindingStruct captured = value;
+            _ = LocalMethod();
+            return captured;
+
+            BindingStruct LocalMethod() => captured;
         }
     }
 }
