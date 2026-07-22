@@ -179,56 +179,51 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         // Look in closure fields
         if (scope is Scope.Inner or Scope.Any)
         {
-            var parameterTypes = inner.ParameterTypes;
-            int closureIndex = Array.FindLastIndex(parameterTypes, p => p.IsClosureType);
-            if (closureIndex >= 0)
-            {
-                var type = parameterTypes[closureIndex].NoRefType;
-
-                var field = type?.GetField(name, AccessTools.all);
-
-                if (field != null)
-                {
-                    ValidateCast(parameter, field.FieldType);
-                    return new()
-                    {
-                        Parameter = parameter,
-                        BindingType = BindingType.Parameter,
-                        Scope = Scope.Inner,
-                        Index = closureIndex,
-                        Fields = [field],
-                    };
-                }
-            }
+            if (TryBindClosureByName(parameter, name, inner.ParameterTypes, Scope.Inner, out var parameterBinding))
+                return parameterBinding;
         }
 
         // Look in closure fields
         if (scope is Scope.Outer or Scope.Any)
         {
-            var parameterTypes = outer.ParameterTypes;
-            int closureIndex = Array.FindLastIndex(parameterTypes, p => p.IsClosureType);
-            if (closureIndex >= 0)
-            {
-                var type = parameterTypes[closureIndex].NoRefType;
-
-                var field = type?.GetField(name, AccessTools.all);
-
-                if (field != null)
-                {
-                    ValidateCast(parameter, field.FieldType);
-                    return new()
-                    {
-                        Parameter = parameter,
-                        BindingType = BindingType.Parameter,
-                        Scope = Scope.Outer,
-                        Index = closureIndex,
-                        Fields = [field],
-                    };
-                }
-            }
+            if (TryBindClosureByName(parameter, name, outer.ParameterTypes, Scope.Outer, out var parameterBinding))
+                return parameterBinding;
         }
 
         throw new ParameterBindingException(parameter.Name, "Parameter not found");
+    }
+
+    private static bool TryBindClosureByName(
+        ParameterInfo parameter,
+        string name,
+        Type[] parameterTypes,
+        Scope scope,
+        [MaybeNullWhen(false)] out ParameterBinding parameterBinding)
+    {
+        int closureIndex = Array.FindLastIndex(parameterTypes, p => p.IsClosureType);
+        if (closureIndex >= 0)
+        {
+            var type = parameterTypes[closureIndex].NoRefType;
+
+            var field = type?.GetField(name, AccessTools.all);
+
+            if (field != null)
+            {
+                ValidateCast(parameter, field.FieldType);
+                parameterBinding = new()
+                {
+                    Parameter = parameter,
+                    BindingType = BindingType.Parameter,
+                    Scope = scope,
+                    Index = closureIndex,
+                    Fields = [field],
+                };
+                return true;
+            }
+        }
+
+        parameterBinding = null;
+        return false;
     }
 
     private ParameterBinding BindFieldByName(ParameterInfo parameter, string name, Scope scope)
