@@ -2,47 +2,71 @@ using HarmonyLib;
 
 namespace Disharmony.Tests;
 
-public static class RegistrationPatchMethods
-{
-    [Postfix]
-    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
-    public static void ReplaceFirstResult(ref int __result) => __result = 42;
-
-    [Postfix]
-    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultB))]
-    public static void ReplaceSecondResult(ref int __result) => __result = 42;
-}
-
-public static class MultipleTargetPatchMethods
+public static class AutopatcherRegistrationPatches
 {
     public static int OverloadPatchCalls;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
+    public static void RegisterMethodDefersPatchUntilApply(ref int __result) => __result = 42;
+
+    [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultB))]
-    public static void ReplaceBothResults(ref int __result) => __result = 42;
+    public static void ForceApplyAppliesRegisteredMethod(ref int __result) => __result = 42;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultB))]
+    public static void MultipleTargetAttributesPatchEachTarget(ref int __result) => __result = 42;
 
     [Postfix]
     [Targets(typeof(StaticMethodTargets), nameof(StaticMethodTargets.OverloadedVoid))]
-    public static void ObserveOverload() => OverloadPatchCalls++;
+    public static void TargetsAttributePatchesEveryOverload() => OverloadPatchCalls++;
+}
+
+public static class PatchTypeProcessesEveryPatchMethodOnTypePatches
+{
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
+    public static void PatchTypeProcessesEveryPatchMethodOnType_First(ref int __result) => __result = 42;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultB))]
+    public static void PatchTypeProcessesEveryPatchMethodOnType_Second(ref int __result) => __result = 42;
 }
 
 [HarmonyPatch(typeof(StaticMethodTargets))]
 [HarmonyPatchCategory("included")]
-public static class IncludedCategoryPatchMethods
+public static class IncludedCategoryPatches
 {
     [Postfix]
     [Target(nameof(StaticMethodTargets.RegistrationResultA))]
-    public static void ReplaceResult(ref int __result) => __result = 42;
+    public static void PatchCategoryProcessesOnlyMatchingCategory(ref int __result) => __result = 42;
+
+    [Postfix]
+    [Target(nameof(StaticMethodTargets.RegistrationResultA))]
+    public static void RegisterAllDefersAssemblyPatchesUntilApply_Included(ref int __result) => __result = 42;
+
+    [Postfix]
+    [Target(nameof(StaticMethodTargets.RegistrationResultA))]
+    public static void PatchAllProcessesAllAssemblyPatchCategories_Included(ref int __result) => __result = 42;
 }
 
 [HarmonyPatch(typeof(StaticMethodTargets))]
 [HarmonyPatchCategory("excluded")]
-public static class ExcludedCategoryPatchMethods
+public static class ExcludedCategoryPatches
 {
     [Postfix]
     [Target(nameof(StaticMethodTargets.RegistrationResultB))]
-    public static void ReplaceResult(ref int __result) => __result = 42;
+    public static void PatchCategoryProcessesOnlyMatchingCategory(ref int __result) => __result = 42;
+
+    [Postfix]
+    [Target(nameof(StaticMethodTargets.RegistrationResultB))]
+    public static void RegisterAllDefersAssemblyPatchesUntilApply_Excluded(ref int __result) => __result = 42;
+
+    [Postfix]
+    [Target(nameof(StaticMethodTargets.RegistrationResultB))]
+    public static void PatchAllProcessesAllAssemblyPatchCategories_Excluded(ref int __result) => __result = 42;
 }
 
 [TestFixture]
@@ -54,7 +78,8 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void RegisterMethodDefersPatchUntilApply()
     {
-        MethodInfo patch = typeof(RegistrationPatchMethods).GetMethod(nameof(RegistrationPatchMethods.ReplaceFirstResult))!;
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.RegisterMethodDefersPatchUntilApply))!;
 
         Autopatcher.Register(patch);
 
@@ -68,7 +93,8 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void ForceApplyAppliesRegisteredMethod()
     {
-        MethodInfo patch = typeof(RegistrationPatchMethods).GetMethod(nameof(RegistrationPatchMethods.ReplaceSecondResult))!;
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.ForceApplyAppliesRegisteredMethod))!;
 
         Autopatcher.Register(patch);
         Autopatcher.ForceApply();
@@ -79,7 +105,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchTypeProcessesEveryPatchMethodOnType()
     {
-        Autopatcher.Patch(typeof(RegistrationPatchMethods));
+        Autopatcher.Patch(typeof(PatchTypeProcessesEveryPatchMethodOnTypePatches));
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
@@ -88,7 +114,8 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void MultipleTargetAttributesPatchEachTarget()
     {
-        MethodInfo patch = typeof(MultipleTargetPatchMethods).GetMethod(nameof(MultipleTargetPatchMethods.ReplaceBothResults))!;
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.MultipleTargetAttributesPatchEachTarget))!;
 
         Autopatcher.Patch(patch);
 
@@ -99,14 +126,15 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void TargetsAttributePatchesEveryOverload()
     {
-        MultipleTargetPatchMethods.OverloadPatchCalls = 0;
-        MethodInfo patch = typeof(MultipleTargetPatchMethods).GetMethod(nameof(MultipleTargetPatchMethods.ObserveOverload))!;
+        AutopatcherRegistrationPatches.OverloadPatchCalls = 0;
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.TargetsAttributePatchesEveryOverload))!;
         Autopatcher.Patch(patch);
 
         StaticMethodTargets.OverloadedVoid(1);
         StaticMethodTargets.OverloadedVoid("value");
 
-        Assert.That(MultipleTargetPatchMethods.OverloadPatchCalls, Is.EqualTo(2));
+        Assert.That(AutopatcherRegistrationPatches.OverloadPatchCalls, Is.EqualTo(2));
     }
 
     [Test]
