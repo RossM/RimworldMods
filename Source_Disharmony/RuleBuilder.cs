@@ -38,33 +38,43 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
             case BindingType.Parameter:
             case BindingType.Instance:
             {
-                Type desiredType = parameterType;
+                Type desiredType;
                 if (parameter.Fields is { Length: > 0 })
                 {
                     desiredType = parameter.Fields[0].DeclaringType!;
                     if (wantRef && desiredType.IsValueType)
                         desiredType = desiredType.MakeByRefType();
                 }
+                else
+                {
+                    desiredType = GetParameterType(parameter);
+                    if (wantRef && !desiredType.IsByRef)
+                        desiredType = desiredType.MakeByRefType();
+                    else if (!wantRef && desiredType.IsByRef)
+                        desiredType = desiredType.GetElementType();
+                }
 
                 EmitParameterLookup(parameter, desiredType);
-
-                resultType = GetParameterType(parameter);
-                if (wantRef && !resultType.IsByRef)
-                    resultType = resultType.MakeByRefType();
+                resultType = desiredType;
                 
                 break;
             }
 
             case BindingType.Result:
             {
-                EmitResult(parameterType);
+                output.Add(CodeInstruction.LoadLocal(resultLocalIndex, wantRef));
+                resultType = output.LocalTypes[resultLocalIndex];
+                if (wantRef)
+                    resultType = resultType.MakeByRefType();
                 break;
             }
 
             case BindingType.State:
             {
-                output.Add(CodeInstruction.LoadLocal(parameter.Index, parameterType.IsByRef));
-
+                output.Add(CodeInstruction.LoadLocal(parameter.Index, wantRef));
+                resultType = output.LocalTypes[parameter.Index];
+                if (wantRef)
+                    resultType = resultType.MakeByRefType();
                 break;
             }
 
@@ -123,11 +133,6 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
             case Scope.Outer: EmitOuterParameter(parameter.Index, resultType); break;
             default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
         }
-    }
-
-    private void EmitResult(Type parameterType)
-    {
-        output.Add(CodeInstruction.LoadLocal(resultLocalIndex, parameterType.IsByRef));
     }
 
     protected void EmitOuterParameter(int index, Type targetType)
