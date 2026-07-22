@@ -157,12 +157,7 @@ internal class Patcher
     {
         Type[] parameterTypes = target.GetParameters().Types();
         if (!target.IsStatic)
-        {
-            if (target.DeclaringType.IsStruct())
-                parameterTypes = [target.DeclaringType.MakeByRefType(), .. parameterTypes];
-            else
-                parameterTypes = [target.DeclaringType, .. parameterTypes];
-        }
+            parameterTypes = [target.DeclaringType.CallableType, .. parameterTypes];
 
         trampolineCount++;
         var method = new DynamicMethod($"{target.DeclaringType?.FullName}.{target.Name}_Trampoline{trampolineCount}", target.ReturnType,
