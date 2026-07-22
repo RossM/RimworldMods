@@ -187,7 +187,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 if (type.IsByRef)
                     type = type.GetElementType();
 
-                var field = type.GetField(name, AccessTools.all);
+                var field = type?.GetField(name, AccessTools.all);
 
                 if (field != null)
                 {
@@ -215,7 +215,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 if (type.IsByRef)
                     type = type.GetElementType();
 
-                var field = type.GetField(name, AccessTools.all);
+                var field = type?.GetField(name, AccessTools.all);
 
                 if (field != null)
                 {
