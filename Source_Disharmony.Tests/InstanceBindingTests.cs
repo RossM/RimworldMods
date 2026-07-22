@@ -10,30 +10,30 @@ public static partial class InstanceBindingPatches
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
-    public static void PrefixCanCapturePatchedMethodInstance(ClassMethodTargets __instance) => InstanceObserved = __instance;
+    public static void Prefix_InstanceParameter_ReferenceType_ReadByValue(ClassMethodTargets __instance) => InstanceObserved = __instance;
 
     [Postfix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
-    public static void PostfixCanCapturePatchedMethodInstance(ClassMethodTargets __instance) => InstanceObserved = __instance;
+    public static void Postfix_InstanceParameter_ReferenceType_ReadByValue(ClassMethodTargets __instance) => InstanceObserved = __instance;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
-    public static void PrefixCanWritePatchedMethodInstanceByReference(ref ClassMethodTargets __instance) =>
+    public static void Prefix_InstanceParameter_ReferenceType_WriteByReference(ref ClassMethodTargets __instance) =>
         __instance = ReplacementInstance!;
 
     [Prefix]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.IntResult))]
-    public static void PrefixCanCapturePatchedStructInstance(StructMethodTargets __instance) =>
+    public static void Prefix_InstanceParameter_Struct_ReadByValue(StructMethodTargets __instance) =>
         StructInstanceFieldObserved = __instance.foo;
 
     [Prefix]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.IntResult))]
-    public static void PrefixCanWritePatchedStructInstanceByReference(ref StructMethodTargets __instance) =>
+    public static void Prefix_InstanceParameter_Struct_WriteByReference(ref StructMethodTargets __instance) =>
         __instance.foo = 42;
 
     [Postfix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
-    public static void PostfixCanWritePatchedMethodInstanceByReference(
+    public static void Postfix_InstanceParameter_ReferenceType_WriteByReference(
         ref ClassMethodTargets __instance,
         ref ClassMethodTargets __result)
     {
@@ -43,65 +43,65 @@ public static partial class InstanceBindingPatches
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoid))]
-    public static void InnerPrefixCanCaptureOuterMethodInstanceAsCaller(ClassMethodTargets __caller) => CallerObserved = __caller;
+    public static void InnerPrefix_CallerParameter_ReferenceType_ReadByValue(ClassMethodTargets __caller) => CallerObserved = __caller;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoid))]
-    public static void InnerPostfixCanCaptureOuterMethodInstanceAsCaller(ClassMethodTargets __caller) => CallerObserved = __caller;
+    public static void InnerPostfix_CallerParameter_ReferenceType_ReadByValue(ClassMethodTargets __caller) => CallerObserved = __caller;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
-    public static void InnerPrefixCanWriteOuterMethodInstanceByReference(ref ClassMethodTargets __caller) =>
+    public static void InnerPrefix_CallerParameter_ReferenceType_WriteByReference(ref ClassMethodTargets __caller) =>
         __caller = ReplacementCaller!;
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InnerPrefixCanCaptureOuterStructMethodInstanceAsCaller(StructMethodTargets __caller) =>
+    public static void InnerPrefix_CallerParameter_Struct_ReadByValue(StructMethodTargets __caller) =>
         StructInstanceFieldObserved = __caller.foo;
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InnerPrefixCanWriteOuterStructMethodInstanceByReference(ref StructMethodTargets __caller) =>
+    public static void InnerPrefix_CallerParameter_Struct_WriteByReference(ref StructMethodTargets __caller) =>
         __caller.foo = 42;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
-    public static void InnerPostfixCanWriteOuterMethodInstanceByReference(ref ClassMethodTargets __caller) =>
+    public static void InnerPostfix_CallerParameter_ReferenceType_WriteByReference(ref ClassMethodTargets __caller) =>
         __caller = ReplacementCaller!;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
-    public static void InstanceAttributeBindsPatchedMethodInstance([Instance] ClassMethodTargets target) =>
+    public static void Prefix_InstanceAttribute_ReferenceType_ReadByValue([Instance] ClassMethodTargets target) =>
         InstanceObserved = target;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
-    public static void InstanceAttributeCanWritePatchedReferenceTypeInstanceByReference(
+    public static void Prefix_InstanceAttribute_ReferenceType_WriteByReference(
         [Instance] ref ClassMethodTargets target) => target = ReplacementInstance!;
 
     [InnerPrefix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
-    public static void InstanceAttributeCanSelectOuterInstance([Instance(Scope.Outer)] ClassMethodTargets target) =>
+    public static void InnerPrefix_InstanceAttribute_OuterScope_ReferenceType_ReadByValue([Instance(Scope.Outer)] ClassMethodTargets target) =>
         InstanceObserved = target;
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InstanceAttributeCanReadOuterStructInstanceByValue(
+    public static void InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByValue(
         [Instance(Scope.Outer)] StructMethodTargets target) => StructInstanceFieldObserved = target.foo;
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InstanceAttributeCanWriteOuterStructInstanceByReference(
+    public static void InnerPrefix_InstanceAttribute_OuterScope_Struct_WriteByReference(
         [Instance(Scope.Outer)] ref StructMethodTargets target) => target.foo = 42;
 
     [Prefix]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.IntResult))]
-    public static void InstanceAttributeCanWriteStructInstanceByReference([Instance] ref StructMethodTargets target) =>
+    public static void Prefix_InstanceAttribute_Struct_WriteByReference([Instance] ref StructMethodTargets target) =>
         target.foo = 42;
 
     [Postfix]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.IntResult))]
-    public static void InstanceAttributeCanReadStructInstanceByValue([Instance] StructMethodTargets target) =>
+    public static void Prefix_InstanceAttribute_Struct_ReadByValue([Instance] StructMethodTargets target) =>
         StructInstanceFieldObserved = target.foo;
 }
 
@@ -109,48 +109,48 @@ public static partial class InstanceBindingPatches
 {
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
-    public static void PrefixCanReadPatchedMethodInstanceThroughReference(ref ClassMethodTargets __instance) =>
+    public static void Prefix_InstanceParameter_ReferenceType_ReadByReference(ref ClassMethodTargets __instance) =>
         InstanceObserved = __instance;
 
     [Prefix]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.IntResult))]
-    public static void PrefixCanReadPatchedStructInstanceThroughReference(ref StructMethodTargets __instance) =>
+    public static void Prefix_InstanceParameter_Struct_ReadByReference(ref StructMethodTargets __instance) =>
         StructInstanceFieldObserved = __instance.foo;
 
     [Postfix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
-    public static void PostfixCanReadPatchedMethodInstanceThroughReference(
+    public static void Postfix_InstanceParameter_ReferenceType_ReadByReference(
         ref ClassMethodTargets __instance,
         ref ClassMethodTargets __result) => InstanceObserved = __instance;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
-    public static void InnerPrefixCanReadOuterMethodInstanceThroughReference(ref ClassMethodTargets __caller) =>
+    public static void InnerPrefix_CallerParameter_ReferenceType_ReadByReference(ref ClassMethodTargets __caller) =>
         CallerObserved = __caller;
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InnerPrefixCanReadOuterStructMethodInstanceThroughReference(ref StructMethodTargets __caller) =>
+    public static void InnerPrefix_CallerParameter_Struct_ReadByReference(ref StructMethodTargets __caller) =>
         StructInstanceFieldObserved = __caller.foo;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
-    public static void InnerPostfixCanReadOuterMethodInstanceThroughReference(ref ClassMethodTargets __caller) =>
+    public static void InnerPostfix_CallerParameter_ReferenceType_ReadByReference(ref ClassMethodTargets __caller) =>
         CallerObserved = __caller;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
-    public static void InstanceAttributeCanReadPatchedReferenceTypeInstanceThroughReference(
+    public static void Prefix_InstanceAttribute_ReferenceType_ReadByReference(
         [Instance] ref ClassMethodTargets target) => InstanceObserved = target;
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InstanceAttributeCanReadOuterStructInstanceThroughReference(
+    public static void InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByReference(
         [Instance(Scope.Outer)] ref StructMethodTargets target) => StructInstanceFieldObserved = target.foo;
 
     [Prefix]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.IntResult))]
-    public static void InstanceAttributeCanReadStructInstanceThroughReference(
+    public static void Prefix_InstanceAttribute_Struct_ReadByReference(
         [Instance] ref StructMethodTargets target) => StructInstanceFieldObserved = target.foo;
 }
 
@@ -158,91 +158,91 @@ public static partial class InstanceBindingPatches
 public sealed partial class InstanceBindingTests
 {
     [Test]
-    public void PrefixCanReadPatchedMethodInstanceThroughReference()
+    public void Prefix_InstanceParameter_ReferenceType_ReadByReference()
     {
         InstanceBindingPatches.InstanceObserved = null;
         var target = new ClassMethodTargets();
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.PrefixCanReadPatchedMethodInstanceThroughReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceParameter_ReferenceType_ReadByReference));
         target.Self();
         Assert.That(InstanceBindingPatches.InstanceObserved, Is.SameAs(target));
     }
 
     [Test]
-    public void PrefixCanReadPatchedStructInstanceThroughReference()
+    public void Prefix_InstanceParameter_Struct_ReadByReference()
     {
         InstanceBindingPatches.StructInstanceFieldObserved = 0;
         var target = new StructMethodTargets { foo = 42 };
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.PrefixCanReadPatchedStructInstanceThroughReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceParameter_Struct_ReadByReference));
         target.IntResult();
         Assert.That(InstanceBindingPatches.StructInstanceFieldObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void PostfixCanReadPatchedMethodInstanceThroughReference()
+    public void Postfix_InstanceParameter_ReferenceType_ReadByReference()
     {
         InstanceBindingPatches.InstanceObserved = null;
         var target = new ClassMethodTargets();
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.PostfixCanReadPatchedMethodInstanceThroughReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Postfix_InstanceParameter_ReferenceType_ReadByReference));
         target.Self();
         Assert.That(InstanceBindingPatches.InstanceObserved, Is.SameAs(target));
     }
 
     [Test]
-    public void InnerPrefixCanReadOuterMethodInstanceThroughReference()
+    public void InnerPrefix_CallerParameter_ReferenceType_ReadByReference()
     {
         InstanceBindingPatches.CallerObserved = null;
         var target = new ClassMethodTargets();
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefixCanReadOuterMethodInstanceThroughReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_ReferenceType_ReadByReference));
         target.CallStaticVoidAndReturnValue();
         Assert.That(InstanceBindingPatches.CallerObserved, Is.SameAs(target));
     }
 
     [Test]
-    public void InnerPrefixCanReadOuterStructMethodInstanceThroughReference()
+    public void InnerPrefix_CallerParameter_Struct_ReadByReference()
     {
         InstanceBindingPatches.StructInstanceFieldObserved = 0;
         var target = new StructMethodTargets { foo = 42 };
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefixCanReadOuterStructMethodInstanceThroughReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_Struct_ReadByReference));
         target.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
         Assert.That(InstanceBindingPatches.StructInstanceFieldObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void InnerPostfixCanReadOuterMethodInstanceThroughReference()
+    public void InnerPostfix_CallerParameter_ReferenceType_ReadByReference()
     {
         InstanceBindingPatches.CallerObserved = null;
         var target = new ClassMethodTargets();
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPostfixCanReadOuterMethodInstanceThroughReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPostfix_CallerParameter_ReferenceType_ReadByReference));
         target.CallStaticVoidAndReturnValue();
         Assert.That(InstanceBindingPatches.CallerObserved, Is.SameAs(target));
     }
 
     [Test]
-    public void InstanceAttributeCanReadPatchedReferenceTypeInstanceThroughReference()
+    public void Prefix_InstanceAttribute_ReferenceType_ReadByReference()
     {
         InstanceBindingPatches.InstanceObserved = null;
         var target = new ClassMethodTargets();
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InstanceAttributeCanReadPatchedReferenceTypeInstanceThroughReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceAttribute_ReferenceType_ReadByReference));
         target.Self();
         Assert.That(InstanceBindingPatches.InstanceObserved, Is.SameAs(target));
     }
 
     [Test]
-    public void InstanceAttributeCanReadOuterStructInstanceThroughReference()
+    public void InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByReference()
     {
         InstanceBindingPatches.StructInstanceFieldObserved = 0;
         var target = new StructMethodTargets { foo = 42 };
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InstanceAttributeCanReadOuterStructInstanceThroughReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByReference));
         target.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
         Assert.That(InstanceBindingPatches.StructInstanceFieldObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void InstanceAttributeCanReadStructInstanceThroughReference()
+    public void Prefix_InstanceAttribute_Struct_ReadByReference()
     {
         InstanceBindingPatches.StructInstanceFieldObserved = 0;
         var target = new StructMethodTargets { foo = 42 };
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InstanceAttributeCanReadStructInstanceThroughReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceAttribute_Struct_ReadByReference));
         target.IntResult();
         Assert.That(InstanceBindingPatches.StructInstanceFieldObserved, Is.EqualTo(42));
     }
@@ -252,10 +252,10 @@ public sealed partial class InstanceBindingTests
 public sealed partial class InstanceBindingTests : PatchTestBase
 {
     [Test]
-    public void PrefixCanCapturePatchedMethodInstance()
+    public void Prefix_InstanceParameter_ReferenceType_ReadByValue()
     {
         InstanceBindingPatches.InstanceObserved = null;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.PrefixCanCapturePatchedMethodInstance));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceParameter_ReferenceType_ReadByValue));
         var instance = new ClassMethodTargets();
 
         instance.Void();
@@ -264,10 +264,10 @@ public sealed partial class InstanceBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PostfixCanCapturePatchedMethodInstance()
+    public void Postfix_InstanceParameter_ReferenceType_ReadByValue()
     {
         InstanceBindingPatches.InstanceObserved = null;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.PostfixCanCapturePatchedMethodInstance));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Postfix_InstanceParameter_ReferenceType_ReadByValue));
         var instance = new ClassMethodTargets();
 
         instance.Void();
@@ -276,12 +276,12 @@ public sealed partial class InstanceBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PrefixCanWritePatchedMethodInstanceByReference()
+    public void Prefix_InstanceParameter_ReferenceType_WriteByReference()
     {
         var original = new ClassMethodTargets();
         var replacement = new ClassMethodTargets();
         InstanceBindingPatches.ReplacementInstance = replacement;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.PrefixCanWritePatchedMethodInstanceByReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceParameter_ReferenceType_WriteByReference));
 
         ClassMethodTargets result = original.Self();
 
@@ -289,10 +289,10 @@ public sealed partial class InstanceBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PrefixCanCapturePatchedStructInstance()
+    public void Prefix_InstanceParameter_Struct_ReadByValue()
     {
         InstanceBindingPatches.StructInstanceFieldObserved = 0;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.PrefixCanCapturePatchedStructInstance));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceParameter_Struct_ReadByValue));
         var target = new StructMethodTargets { foo = 42 };
 
         target.IntResult();
@@ -301,9 +301,9 @@ public sealed partial class InstanceBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PrefixCanWritePatchedStructInstanceByReference()
+    public void Prefix_InstanceParameter_Struct_WriteByReference()
     {
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.PrefixCanWritePatchedStructInstanceByReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceParameter_Struct_WriteByReference));
         var target = new StructMethodTargets { foo = 1 };
 
         target.IntResult();
@@ -312,12 +312,12 @@ public sealed partial class InstanceBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PostfixCanWritePatchedMethodInstanceByReference()
+    public void Postfix_InstanceParameter_ReferenceType_WriteByReference()
     {
         var original = new ClassMethodTargets();
         var replacement = new ClassMethodTargets();
         InstanceBindingPatches.ReplacementInstance = replacement;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.PostfixCanWritePatchedMethodInstanceByReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Postfix_InstanceParameter_ReferenceType_WriteByReference));
 
         ClassMethodTargets result = original.Self();
 
@@ -329,10 +329,10 @@ public sealed partial class InstanceBindingTests : PatchTestBase
 public sealed partial class InstanceBindingTests
 {
     [Test]
-    public void InnerPrefixCanCaptureOuterMethodInstanceAsCaller()
+    public void InnerPrefix_CallerParameter_ReferenceType_ReadByValue()
     {
         InstanceBindingPatches.CallerObserved = null;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefixCanCaptureOuterMethodInstanceAsCaller));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_ReferenceType_ReadByValue));
         var outer = new ClassMethodTargets();
 
         outer.CallStaticVoid();
@@ -341,10 +341,10 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InnerPostfixCanCaptureOuterMethodInstanceAsCaller()
+    public void InnerPostfix_CallerParameter_ReferenceType_ReadByValue()
     {
         InstanceBindingPatches.CallerObserved = null;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPostfixCanCaptureOuterMethodInstanceAsCaller));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPostfix_CallerParameter_ReferenceType_ReadByValue));
         var outer = new ClassMethodTargets();
 
         outer.CallStaticVoid();
@@ -353,13 +353,13 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InnerPrefixCanWriteOuterMethodInstanceByReference()
+    public void InnerPrefix_CallerParameter_ReferenceType_WriteByReference()
     {
         var original = new ClassMethodTargets();
         var replacement = new ClassMethodTargets();
         replacement.IntIdentity(42);
         InstanceBindingPatches.ReplacementCaller = replacement;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefixCanWriteOuterMethodInstanceByReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_ReferenceType_WriteByReference));
 
         int result = original.CallStaticVoidAndReturnValue();
 
@@ -367,10 +367,10 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InnerPrefixCanCaptureOuterStructMethodInstanceAsCaller()
+    public void InnerPrefix_CallerParameter_Struct_ReadByValue()
     {
         InstanceBindingPatches.StructInstanceFieldObserved = 0;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefixCanCaptureOuterStructMethodInstanceAsCaller));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_Struct_ReadByValue));
         var outer = new StructMethodTargets { foo = 42 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
@@ -379,9 +379,9 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InnerPrefixCanWriteOuterStructMethodInstanceByReference()
+    public void InnerPrefix_CallerParameter_Struct_WriteByReference()
     {
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefixCanWriteOuterStructMethodInstanceByReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_Struct_WriteByReference));
         var outer = new StructMethodTargets { foo = 1 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
@@ -390,13 +390,13 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InnerPostfixCanWriteOuterMethodInstanceByReference()
+    public void InnerPostfix_CallerParameter_ReferenceType_WriteByReference()
     {
         var original = new ClassMethodTargets();
         var replacement = new ClassMethodTargets();
         replacement.IntIdentity(42);
         InstanceBindingPatches.ReplacementCaller = replacement;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPostfixCanWriteOuterMethodInstanceByReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPostfix_CallerParameter_ReferenceType_WriteByReference));
 
         int result = original.CallStaticVoidAndReturnValue();
 
@@ -404,10 +404,10 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InstanceAttributeBindsPatchedMethodInstance()
+    public void Prefix_InstanceAttribute_ReferenceType_ReadByValue()
     {
         InstanceBindingPatches.InstanceObserved = null;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InstanceAttributeBindsPatchedMethodInstance));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceAttribute_ReferenceType_ReadByValue));
         var target = new ClassMethodTargets();
 
         target.Void();
@@ -416,12 +416,12 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InstanceAttributeCanWritePatchedReferenceTypeInstanceByReference()
+    public void Prefix_InstanceAttribute_ReferenceType_WriteByReference()
     {
         var original = new ClassMethodTargets();
         var replacement = new ClassMethodTargets();
         InstanceBindingPatches.ReplacementInstance = replacement;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InstanceAttributeCanWritePatchedReferenceTypeInstanceByReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceAttribute_ReferenceType_WriteByReference));
 
         ClassMethodTargets result = original.Self();
 
@@ -429,10 +429,10 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InstanceAttributeCanSelectOuterInstance()
+    public void InnerPrefix_InstanceAttribute_OuterScope_ReferenceType_ReadByValue()
     {
         InstanceBindingPatches.InstanceObserved = null;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InstanceAttributeCanSelectOuterInstance));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_InstanceAttribute_OuterScope_ReferenceType_ReadByValue));
         var outer = new ClassMethodTargets();
 
         outer.CallInnerWithField(new InnerInstanceMethodTargets());
@@ -441,10 +441,10 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InstanceAttributeCanReadOuterStructInstanceByValue()
+    public void InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByValue()
     {
         InstanceBindingPatches.StructInstanceFieldObserved = 0;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InstanceAttributeCanReadOuterStructInstanceByValue));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByValue));
         var outer = new StructMethodTargets { foo = 42 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
@@ -453,9 +453,9 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InstanceAttributeCanWriteOuterStructInstanceByReference()
+    public void InnerPrefix_InstanceAttribute_OuterScope_Struct_WriteByReference()
     {
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InstanceAttributeCanWriteOuterStructInstanceByReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_InstanceAttribute_OuterScope_Struct_WriteByReference));
         var outer = new StructMethodTargets { foo = 1 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
@@ -464,9 +464,9 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InstanceAttributeCanWriteStructInstanceByReference()
+    public void Prefix_InstanceAttribute_Struct_WriteByReference()
     {
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InstanceAttributeCanWriteStructInstanceByReference));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceAttribute_Struct_WriteByReference));
         var target = new StructMethodTargets { foo = 1 };
 
         target.IntResult();
@@ -475,10 +475,10 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InstanceAttributeCanReadStructInstanceByValue()
+    public void Prefix_InstanceAttribute_Struct_ReadByValue()
     {
         InstanceBindingPatches.StructInstanceFieldObserved = 0;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InstanceAttributeCanReadStructInstanceByValue));
+        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Prefix_InstanceAttribute_Struct_ReadByValue));
         var target = new StructMethodTargets { foo = 42 };
 
         target.IntResult();

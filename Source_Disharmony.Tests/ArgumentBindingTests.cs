@@ -9,211 +9,211 @@ public static partial class ArgumentBindingPatches
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefIntArgument))]
-    public static void PatchCanReadRefParameterWithoutDeclaringRef(int value) => ValueObserved = value;
+    public static void Prefix_RefArgument_Primitive_ReadByValue(int value) => ValueObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefIntArgument))]
-    public static void PatchCanWriteRefParameterWhenDeclaringRef(ref int value) => value = 42;
+    public static void Prefix_RefArgument_Primitive_WriteByReference(ref int value) => value = 42;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefStringArgument))]
-    public static void PatchCanReadRefReferenceTypeParameterWithoutDeclaringRef(string value) => ReferenceObserved = value;
+    public static void Prefix_RefArgument_ReferenceType_ReadByValue(string value) => ReferenceObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefStringArgument))]
-    public static void PatchCanWriteRefReferenceTypeParameterWhenDeclaringRef(ref string value) => value = "patched";
+    public static void Prefix_RefArgument_ReferenceType_WriteByReference(ref string value) => value = "patched";
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefStructArgument))]
-    public static void PatchCanReadRefStructParameterWithoutDeclaringRef(BindingStruct value) => StructObserved = value;
+    public static void Prefix_RefArgument_Struct_ReadByValue(BindingStruct value) => StructObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefStructArgument))]
-    public static void PatchCanWriteRefStructParameterWhenDeclaringRef(ref BindingStruct value) =>
+    public static void Prefix_RefArgument_Struct_WriteByReference(ref BindingStruct value) =>
         value = new BindingStruct { Value = 42 };
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
-    public static void PrefixCanReadValueTypeParameter(int value) => ValueObserved = value;
+    public static void Prefix_Argument_Primitive_ReadByValue(int value) => ValueObserved = value;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
-    public static void PostfixCanReadValueTypeParameter(int value) => ValueObserved = value;
+    public static void Postfix_Argument_Primitive_ReadByValue(int value) => ValueObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringArgument))]
-    public static void PrefixCanReadReferenceTypeParameter(string value) => ReferenceObserved = value;
+    public static void Prefix_Argument_ReferenceType_ReadByValue(string value) => ReferenceObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructArgument))]
-    public static void PrefixCanReadStructParameter(BindingStruct value) => StructObserved = value;
+    public static void Prefix_Argument_Struct_ReadByValue(BindingStruct value) => StructObserved = value;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringArgument))]
-    public static void PostfixCanReadReferenceTypeParameter(string value) => ReferenceObserved = value;
+    public static void Postfix_Argument_ReferenceType_ReadByValue(string value) => ReferenceObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
-    public static void PrefixCanWriteValueTypeParameterByReference(ref int value) => value = 42;
+    public static void Prefix_Argument_Primitive_WriteByReference(ref int value) => value = 42;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefIntArgument))]
-    public static void PostfixCanWriteValueTypeParameterByReference(ref int value) => value = 42;
+    public static void Postfix_Argument_Primitive_WriteByReference(ref int value) => value = 42;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringIdentity))]
-    public static void PrefixCanWriteReferenceTypeParameterByReference(ref string value) => value = "patched";
+    public static void Prefix_Argument_ReferenceType_WriteByReference(ref string value) => value = "patched";
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructIdentity))]
-    public static void PrefixCanWriteStructParameterByReference(ref BindingStruct value) =>
+    public static void Prefix_Argument_Struct_WriteByReference(ref BindingStruct value) =>
         value = new BindingStruct { Value = 42 };
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefStringArgument))]
-    public static void PostfixCanWriteReferenceTypeParameterByReference(ref string value) => value = "patched";
+    public static void Postfix_Argument_ReferenceType_WriteByReference(ref string value) => value = "patched";
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
-    public static void InnerPrefixCanReadOuterArgumentWhenInnerHasNoMatchingArgument(int outerValue) => InnerObserved = outerValue;
+    public static void InnerPrefix_OuterArgument_Primitive_ReadByValue_WhenInnerHasNoMatch(int outerValue) => InnerObserved = outerValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterReferenceTypeArgument))]
-    public static void InnerPrefixCanReadOuterReferenceTypeArgumentWhenInnerHasNoMatchingArgument(string outerValue) =>
+    public static void InnerPrefix_OuterArgument_ReferenceType_ReadByValue_WhenInnerHasNoMatch(string outerValue) =>
         ReferenceObserved = outerValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterStructArgument))]
-    public static void InnerPrefixCanReadOuterStructArgumentWhenInnerHasNoMatchingArgument(BindingStruct outerValue) =>
+    public static void InnerPrefix_OuterArgument_Struct_ReadByValue_WhenInnerHasNoMatch(BindingStruct outerValue) =>
         StructObserved = outerValue;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
-    public static void InnerPostfixCanReadOuterArgumentWhenInnerHasNoMatchingArgument(int outerValue) => InnerObserved = outerValue;
+    public static void InnerPostfix_OuterArgument_Primitive_ReadByValue_WhenInnerHasNoMatch(int outerValue) => InnerObserved = outerValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
-    public static void InnerPrefixCannotWriteOuterArgumentByReference(ref int outerValue) => outerValue = 42;
+    public static void InnerPrefix_OuterArgument_Primitive_WriteByReference_Rejected(ref int outerValue) => outerValue = 42;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterReferenceTypeArgument))]
-    public static void InnerPrefixCannotWriteOuterReferenceTypeArgumentByReference(ref string outerValue) =>
+    public static void InnerPrefix_OuterArgument_ReferenceType_WriteByReference_Rejected(ref string outerValue) =>
         outerValue = "patched";
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterStructArgument))]
-    public static void InnerPrefixCannotWriteOuterStructArgumentByReference(ref BindingStruct outerValue) =>
+    public static void InnerPrefix_OuterArgument_Struct_WriteByReference_Rejected(ref BindingStruct outerValue) =>
         outerValue = new BindingStruct { Value = 42 };
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
-    public static void InnerPostfixCannotWriteOuterArgumentByReference(ref int outerValue) => outerValue = 42;
+    public static void InnerPostfix_OuterArgument_Primitive_WriteByReference_Rejected(ref int outerValue) => outerValue = 42;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
-    public static void InnerPrefixPrefersInnerArgumentWhenOuterArgumentHasSameName(int value) => InnerObserved = value;
+    public static void InnerPrefix_InnerArgument_Primitive_ReadByValue_WhenOuterHasSameName(int value) => InnerObserved = value;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedReferenceTypeArgument))]
-    public static void InnerPrefixPrefersInnerReferenceTypeArgumentWhenOuterArgumentHasSameName(string value) =>
+    public static void InnerPrefix_InnerArgument_ReferenceType_ReadByValue_WhenOuterHasSameName(string value) =>
         ReferenceObserved = value;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedStructArgument))]
-    public static void InnerPrefixPrefersInnerStructArgumentWhenOuterArgumentHasSameName(BindingStruct value) =>
+    public static void InnerPrefix_InnerArgument_Struct_ReadByValue_WhenOuterHasSameName(BindingStruct value) =>
         StructObserved = value;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
-    public static void InnerPostfixPrefersInnerArgumentWhenOuterArgumentHasSameName(int value) => InnerObserved = value;
+    public static void InnerPostfix_InnerArgument_Primitive_ReadByValue_WhenOuterHasSameName(int value) => InnerObserved = value;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
-    public static void InnerPrefixCanWriteInnerArgumentWhenOuterArgumentHasSameName(ref int value) => value = 42;
+    public static void InnerPrefix_InnerArgument_Primitive_WriteByReference_WhenOuterHasSameName(ref int value) => value = 42;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStringArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefReferenceTypeArgument))]
-    public static void InnerPrefixCanWriteInnerReferenceTypeArgumentWhenOuterArgumentHasSameName(ref string value) =>
+    public static void InnerPrefix_InnerArgument_ReferenceType_WriteByReference_WhenOuterHasSameName(ref string value) =>
         value = "patched";
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStructArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefStructArgument))]
-    public static void InnerPrefixCanWriteInnerStructArgumentWhenOuterArgumentHasSameName(ref BindingStruct value) =>
+    public static void InnerPrefix_InnerArgument_Struct_WriteByReference_WhenOuterHasSameName(ref BindingStruct value) =>
         value = new BindingStruct { Value = 42 };
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
-    public static void InnerPostfixCanWriteInnerArgumentWhenOuterArgumentHasSameName(ref int value) => value = 42;
+    public static void InnerPostfix_InnerArgument_Primitive_WriteByReference_WhenOuterHasSameName(ref int value) => value = 42;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntArgument))]
-    public static void InnerPrefixCanReadInnerArgument(int value) => InnerObserved = value;
+    public static void InnerPrefix_InnerArgument_Primitive_ReadByValue(int value) => InnerObserved = value;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringArgument))]
-    public static void InnerPrefixCanReadInnerReferenceTypeArgument(string value) => ReferenceObserved = value;
+    public static void InnerPrefix_InnerArgument_ReferenceType_ReadByValue(string value) => ReferenceObserved = value;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructArgument))]
-    public static void InnerPrefixCanReadInnerStructArgument(BindingStruct value) => StructObserved = value;
+    public static void InnerPrefix_InnerArgument_Struct_ReadByValue(BindingStruct value) => StructObserved = value;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntArgument))]
-    public static void InnerPostfixCanReadInnerArgument(int value) => InnerObserved = value;
+    public static void InnerPostfix_InnerArgument_Primitive_ReadByValue(int value) => InnerObserved = value;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntIdentity))]
-    public static void InnerPrefixCanWriteInnerArgumentByReference(ref int value) => value = 42;
+    public static void InnerPrefix_InnerArgument_Primitive_WriteByReference(ref int value) => value = 42;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringIdentity))]
-    public static void InnerPrefixCanWriteInnerReferenceTypeArgumentByReference(ref string value) => value = "patched";
+    public static void InnerPrefix_InnerArgument_ReferenceType_WriteByReference(ref string value) => value = "patched";
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructIdentity))]
-    public static void InnerPrefixCanWriteInnerStructArgumentByReference(ref BindingStruct value) =>
+    public static void InnerPrefix_InnerArgument_Struct_WriteByReference(ref BindingStruct value) =>
         value = new BindingStruct { Value = 42 };
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.RefIntArgument))]
-    public static void InnerPostfixCanWriteInnerArgumentByReference(ref int value) => value = 42;
+    public static void InnerPostfix_InnerArgument_Primitive_WriteByReference(ref int value) => value = 42;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
-    public static void ParameterAttributeCanBindWritableArgumentByIndex([Parameter(0)] ref int replacement) => replacement = 42;
+    public static void Prefix_ParameterAttribute_ByIndex_Primitive_WriteByReference([Parameter(0)] ref int replacement) => replacement = 42;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
-    public static void ParameterAttributeCanReadPrimitiveArgumentByIndex([Parameter(0)] int argument) => ValueObserved = argument;
+    public static void Prefix_ParameterAttribute_ByIndex_Primitive_ReadByValue([Parameter(0)] int argument) => ValueObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringArgument))]
-    public static void ParameterAttributeCanReadReferenceTypeArgumentByIndex([Parameter(0)] string argument) =>
+    public static void Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByValue([Parameter(0)] string argument) =>
         ReferenceObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringIdentity))]
-    public static void ParameterAttributeCanWriteReferenceTypeArgumentByIndex([Parameter(0)] ref string argument) =>
+    public static void Prefix_ParameterAttribute_ByIndex_ReferenceType_WriteByReference([Parameter(0)] ref string argument) =>
         argument = "patched";
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructArgument))]
-    public static void ParameterAttributeCanReadStructArgumentByIndex([Parameter(0)] BindingStruct argument) =>
+    public static void Prefix_ParameterAttribute_ByIndex_Struct_ReadByValue([Parameter(0)] BindingStruct argument) =>
         StructObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructIdentity))]
-    public static void ParameterAttributeCanWriteStructArgumentByIndex([Parameter(0)] ref BindingStruct argument) =>
+    public static void Prefix_ParameterAttribute_ByIndex_Struct_WriteByReference([Parameter(0)] ref BindingStruct argument) =>
         argument = new BindingStruct { Value = 42 };
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
-    public static void ParameterAttributeCanSelectOuterArgumentByName(
+    public static void InnerPrefix_ParameterAttribute_OuterScope_Primitive_ReadByValue(
         [Parameter("value", Scope.Outer)] int outerValue) => InnerObserved = outerValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
-    public static void ParameterAttributeCanSelectInnerArgumentByName(
+    public static void InnerPrefix_ParameterAttribute_InnerScope_Primitive_ReadByValue(
         [Parameter("value", Scope.Inner)] int innerValue) => InnerObserved = innerValue;
 }
 
@@ -221,49 +221,49 @@ public static partial class ArgumentBindingPatches
 {
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefIntArgument))]
-    public static void PatchCanReadRefParameterThroughReference(ref int value) => ValueObserved = value;
+    public static void Prefix_RefArgument_Primitive_ReadByReference(ref int value) => ValueObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefStringArgument))]
-    public static void PatchCanReadRefReferenceTypeParameterThroughReference(ref string value) => ReferenceObserved = value;
+    public static void Prefix_RefArgument_ReferenceType_ReadByReference(ref string value) => ReferenceObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefStructArgument))]
-    public static void PatchCanReadRefStructParameterThroughReference(ref BindingStruct value) => StructObserved = value;
+    public static void Prefix_RefArgument_Struct_ReadByReference(ref BindingStruct value) => StructObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
-    public static void PrefixCanReadValueTypeParameterThroughReference(ref int value) => ValueObserved = value;
+    public static void Prefix_Argument_Primitive_ReadByReference(ref int value) => ValueObserved = value;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefIntArgument))]
-    public static void PostfixCanReadValueTypeParameterThroughReference(ref int value) => ValueObserved = value;
+    public static void Postfix_Argument_Primitive_ReadByReference(ref int value) => ValueObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringIdentity))]
-    public static void PrefixCanReadReferenceTypeParameterThroughReference(ref string value) => ReferenceObserved = value;
+    public static void Prefix_Argument_ReferenceType_ReadByReference(ref string value) => ReferenceObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructIdentity))]
-    public static void PrefixCanReadStructParameterThroughReference(ref BindingStruct value) => StructObserved = value;
+    public static void Prefix_Argument_Struct_ReadByReference(ref BindingStruct value) => StructObserved = value;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefStringArgument))]
-    public static void PostfixCanReadReferenceTypeParameterThroughReference(ref string value) => ReferenceObserved = value;
+    public static void Postfix_Argument_ReferenceType_ReadByReference(ref string value) => ReferenceObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
-    public static void ParameterAttributeCanReadPrimitiveArgumentThroughReferenceByIndex(
+    public static void Prefix_ParameterAttribute_ByIndex_Primitive_ReadByReference(
         [Parameter(0)] ref int argument) => ValueObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringIdentity))]
-    public static void ParameterAttributeCanReadReferenceTypeArgumentThroughReferenceByIndex(
+    public static void Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByReference(
         [Parameter(0)] ref string argument) => ReferenceObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructIdentity))]
-    public static void ParameterAttributeCanReadStructArgumentThroughReferenceByIndex(
+    public static void Prefix_ParameterAttribute_ByIndex_Struct_ReadByReference(
         [Parameter(0)] ref BindingStruct argument) => StructObserved = argument;
 }
 
@@ -271,105 +271,105 @@ public static partial class ArgumentBindingPatches
 public sealed partial class ArgumentBindingTests
 {
     [Test]
-    public void PatchCanReadRefParameterThroughReference()
+    public void Prefix_RefArgument_Primitive_ReadByReference()
     {
         ArgumentBindingPatches.ValueObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PatchCanReadRefParameterThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_RefArgument_Primitive_ReadByReference));
         int value = 42;
         StaticMethodTargets.RefIntArgument(ref value);
         Assert.That(ArgumentBindingPatches.ValueObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void PatchCanReadRefReferenceTypeParameterThroughReference()
+    public void Prefix_RefArgument_ReferenceType_ReadByReference()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PatchCanReadRefReferenceTypeParameterThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_RefArgument_ReferenceType_ReadByReference));
         string value = "original";
         StaticMethodTargets.RefStringArgument(ref value);
         Assert.That(ArgumentBindingPatches.ReferenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
-    public void PatchCanReadRefStructParameterThroughReference()
+    public void Prefix_RefArgument_Struct_ReadByReference()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PatchCanReadRefStructParameterThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_RefArgument_Struct_ReadByReference));
         var value = new BindingStruct { Value = 42 };
         StaticMethodTargets.RefStructArgument(ref value);
         Assert.That(ArgumentBindingPatches.StructObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
-    public void PrefixCanReadValueTypeParameterThroughReference()
+    public void Prefix_Argument_Primitive_ReadByReference()
     {
         ArgumentBindingPatches.ValueObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PrefixCanReadValueTypeParameterThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_Argument_Primitive_ReadByReference));
         StaticMethodTargets.IntIdentity(42);
         Assert.That(ArgumentBindingPatches.ValueObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void PostfixCanReadValueTypeParameterThroughReference()
+    public void Postfix_Argument_Primitive_ReadByReference()
     {
         ArgumentBindingPatches.ValueObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PostfixCanReadValueTypeParameterThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Postfix_Argument_Primitive_ReadByReference));
         int value = 42;
         StaticMethodTargets.RefIntArgument(ref value);
         Assert.That(ArgumentBindingPatches.ValueObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void PrefixCanReadReferenceTypeParameterThroughReference()
+    public void Prefix_Argument_ReferenceType_ReadByReference()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PrefixCanReadReferenceTypeParameterThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_Argument_ReferenceType_ReadByReference));
         StaticMethodTargets.StringIdentity("original");
         Assert.That(ArgumentBindingPatches.ReferenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
-    public void PrefixCanReadStructParameterThroughReference()
+    public void Prefix_Argument_Struct_ReadByReference()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PrefixCanReadStructParameterThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_Argument_Struct_ReadByReference));
         StaticMethodTargets.StructIdentity(new BindingStruct { Value = 42 });
         Assert.That(ArgumentBindingPatches.StructObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
-    public void PostfixCanReadReferenceTypeParameterThroughReference()
+    public void Postfix_Argument_ReferenceType_ReadByReference()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PostfixCanReadReferenceTypeParameterThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Postfix_Argument_ReferenceType_ReadByReference));
         string value = "original";
         StaticMethodTargets.RefStringArgument(ref value);
         Assert.That(ArgumentBindingPatches.ReferenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
-    public void ParameterAttributeCanReadPrimitiveArgumentThroughReferenceByIndex()
+    public void Prefix_ParameterAttribute_ByIndex_Primitive_ReadByReference()
     {
         ArgumentBindingPatches.ValueObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.ParameterAttributeCanReadPrimitiveArgumentThroughReferenceByIndex));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Primitive_ReadByReference));
         StaticMethodTargets.IntIdentity(42);
         Assert.That(ArgumentBindingPatches.ValueObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void ParameterAttributeCanReadReferenceTypeArgumentThroughReferenceByIndex()
+    public void Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByReference()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.ParameterAttributeCanReadReferenceTypeArgumentThroughReferenceByIndex));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByReference));
         StaticMethodTargets.StringIdentity("original");
         Assert.That(ArgumentBindingPatches.ReferenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
-    public void ParameterAttributeCanReadStructArgumentThroughReferenceByIndex()
+    public void Prefix_ParameterAttribute_ByIndex_Struct_ReadByReference()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.ParameterAttributeCanReadStructArgumentThroughReferenceByIndex));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Struct_ReadByReference));
         StaticMethodTargets.StructIdentity(new BindingStruct { Value = 42 });
         Assert.That(ArgumentBindingPatches.StructObserved.Value, Is.EqualTo(42));
     }
@@ -379,58 +379,58 @@ public static partial class ArgumentBindingPatches
 {
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
-    public static void InnerPrefixCannotReadOuterArgumentThroughReference(ref int outerValue) => InnerObserved = outerValue;
+    public static void InnerPrefix_OuterArgument_Primitive_ReadByReference_Rejected(ref int outerValue) => InnerObserved = outerValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterReferenceTypeArgument))]
-    public static void InnerPrefixCannotReadOuterReferenceTypeArgumentThroughReference(ref string outerValue) =>
+    public static void InnerPrefix_OuterArgument_ReferenceType_ReadByReference_Rejected(ref string outerValue) =>
         ReferenceObserved = outerValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterStructArgument))]
-    public static void InnerPrefixCannotReadOuterStructArgumentThroughReference(ref BindingStruct outerValue) =>
+    public static void InnerPrefix_OuterArgument_Struct_ReadByReference_Rejected(ref BindingStruct outerValue) =>
         StructObserved = outerValue;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
-    public static void InnerPostfixCannotReadOuterArgumentThroughReference(ref int outerValue) => InnerObserved = outerValue;
+    public static void InnerPostfix_OuterArgument_Primitive_ReadByReference_Rejected(ref int outerValue) => InnerObserved = outerValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
-    public static void InnerPrefixCanReadInnerArgumentThroughReferenceWhenOuterArgumentHasSameName(ref int value) =>
+    public static void InnerPrefix_InnerArgument_Primitive_ReadByReference_WhenOuterHasSameName(ref int value) =>
         InnerObserved = value;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStringArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefReferenceTypeArgument))]
-    public static void InnerPrefixCanReadInnerReferenceTypeArgumentThroughReferenceWhenOuterArgumentHasSameName(
+    public static void InnerPrefix_InnerArgument_ReferenceType_ReadByReference_WhenOuterHasSameName(
         ref string value) => ReferenceObserved = value;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStructArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefStructArgument))]
-    public static void InnerPrefixCanReadInnerStructArgumentThroughReferenceWhenOuterArgumentHasSameName(
+    public static void InnerPrefix_InnerArgument_Struct_ReadByReference_WhenOuterHasSameName(
         ref BindingStruct value) => StructObserved = value;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
-    public static void InnerPostfixCanReadInnerArgumentThroughReferenceWhenOuterArgumentHasSameName(ref int value) =>
+    public static void InnerPostfix_InnerArgument_Primitive_ReadByReference_WhenOuterHasSameName(ref int value) =>
         InnerObserved = value;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntIdentity))]
-    public static void InnerPrefixCanReadInnerArgumentThroughReference(ref int value) => InnerObserved = value;
+    public static void InnerPrefix_InnerArgument_Primitive_ReadByReference(ref int value) => InnerObserved = value;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringIdentity))]
-    public static void InnerPrefixCanReadInnerReferenceTypeArgumentThroughReference(ref string value) =>
+    public static void InnerPrefix_InnerArgument_ReferenceType_ReadByReference(ref string value) =>
         ReferenceObserved = value;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructIdentity))]
-    public static void InnerPrefixCanReadInnerStructArgumentThroughReference(ref BindingStruct value) => StructObserved = value;
+    public static void InnerPrefix_InnerArgument_Struct_ReadByReference(ref BindingStruct value) => StructObserved = value;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.RefIntArgument))]
-    public static void InnerPostfixCanReadInnerArgumentThroughReference(ref int value) => InnerObserved = value;
+    public static void InnerPostfix_InnerArgument_Primitive_ReadByReference(ref int value) => InnerObserved = value;
 }
 
 [TestFixture]
@@ -443,93 +443,93 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPrefixCannotReadOuterArgumentThroughReference() =>
-        AssertOuterReferenceBindingRejected(nameof(ArgumentBindingPatches.InnerPrefixCannotReadOuterArgumentThroughReference));
+    public void InnerPrefix_OuterArgument_Primitive_ReadByReference_Rejected() =>
+        AssertOuterReferenceBindingRejected(nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_Primitive_ReadByReference_Rejected));
 
     [Test]
-    public void InnerPrefixCannotReadOuterReferenceTypeArgumentThroughReference() =>
-        AssertOuterReferenceBindingRejected(nameof(ArgumentBindingPatches.InnerPrefixCannotReadOuterReferenceTypeArgumentThroughReference));
+    public void InnerPrefix_OuterArgument_ReferenceType_ReadByReference_Rejected() =>
+        AssertOuterReferenceBindingRejected(nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_ReferenceType_ReadByReference_Rejected));
 
     [Test]
-    public void InnerPrefixCannotReadOuterStructArgumentThroughReference() =>
-        AssertOuterReferenceBindingRejected(nameof(ArgumentBindingPatches.InnerPrefixCannotReadOuterStructArgumentThroughReference));
+    public void InnerPrefix_OuterArgument_Struct_ReadByReference_Rejected() =>
+        AssertOuterReferenceBindingRejected(nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_Struct_ReadByReference_Rejected));
 
     [Test]
-    public void InnerPostfixCannotReadOuterArgumentThroughReference() =>
-        AssertOuterReferenceBindingRejected(nameof(ArgumentBindingPatches.InnerPostfixCannotReadOuterArgumentThroughReference));
+    public void InnerPostfix_OuterArgument_Primitive_ReadByReference_Rejected() =>
+        AssertOuterReferenceBindingRejected(nameof(ArgumentBindingPatches.InnerPostfix_OuterArgument_Primitive_ReadByReference_Rejected));
 
     [Test]
-    public void InnerPrefixCanReadInnerArgumentThroughReferenceWhenOuterArgumentHasSameName()
+    public void InnerPrefix_InnerArgument_Primitive_ReadByReference_WhenOuterHasSameName()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadInnerArgumentThroughReferenceWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Primitive_ReadByReference_WhenOuterHasSameName));
         int outer = 7;
         OuterStaticMethodTargets.SameNamedRefArgument(ref outer);
         Assert.That(ArgumentBindingPatches.InnerObserved, Is.EqualTo(1));
     }
 
     [Test]
-    public void InnerPrefixCanReadInnerReferenceTypeArgumentThroughReferenceWhenOuterArgumentHasSameName()
+    public void InnerPrefix_InnerArgument_ReferenceType_ReadByReference_WhenOuterHasSameName()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadInnerReferenceTypeArgumentThroughReferenceWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_ReferenceType_ReadByReference_WhenOuterHasSameName));
         string outer = "outer";
         OuterStaticMethodTargets.SameNamedRefReferenceTypeArgument(ref outer);
         Assert.That(ArgumentBindingPatches.ReferenceObserved, Is.EqualTo("inner"));
     }
 
     [Test]
-    public void InnerPrefixCanReadInnerStructArgumentThroughReferenceWhenOuterArgumentHasSameName()
+    public void InnerPrefix_InnerArgument_Struct_ReadByReference_WhenOuterHasSameName()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadInnerStructArgumentThroughReferenceWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Struct_ReadByReference_WhenOuterHasSameName));
         var outer = new BindingStruct { Value = 7 };
         OuterStaticMethodTargets.SameNamedRefStructArgument(ref outer);
         Assert.That(ArgumentBindingPatches.StructObserved.Value, Is.EqualTo(1));
     }
 
     [Test]
-    public void InnerPostfixCanReadInnerArgumentThroughReferenceWhenOuterArgumentHasSameName()
+    public void InnerPostfix_InnerArgument_Primitive_ReadByReference_WhenOuterHasSameName()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfixCanReadInnerArgumentThroughReferenceWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfix_InnerArgument_Primitive_ReadByReference_WhenOuterHasSameName));
         int outer = 7;
         OuterStaticMethodTargets.SameNamedRefArgument(ref outer);
         Assert.That(ArgumentBindingPatches.InnerObserved, Is.EqualTo(1));
     }
 
     [Test]
-    public void InnerPrefixCanReadInnerArgumentThroughReference()
+    public void InnerPrefix_InnerArgument_Primitive_ReadByReference()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadInnerArgumentThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Primitive_ReadByReference));
         OuterStaticMethodTargets.IntIdentity(42);
         Assert.That(ArgumentBindingPatches.InnerObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void InnerPrefixCanReadInnerReferenceTypeArgumentThroughReference()
+    public void InnerPrefix_InnerArgument_ReferenceType_ReadByReference()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadInnerReferenceTypeArgumentThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_ReferenceType_ReadByReference));
         OuterStaticMethodTargets.StringIdentity("original");
         Assert.That(ArgumentBindingPatches.ReferenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
-    public void InnerPrefixCanReadInnerStructArgumentThroughReference()
+    public void InnerPrefix_InnerArgument_Struct_ReadByReference()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadInnerStructArgumentThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Struct_ReadByReference));
         OuterStaticMethodTargets.StructIdentity(new BindingStruct { Value = 42 });
         Assert.That(ArgumentBindingPatches.StructObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
-    public void InnerPostfixCanReadInnerArgumentThroughReference()
+    public void InnerPostfix_InnerArgument_Primitive_ReadByReference()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfixCanReadInnerArgumentThroughReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfix_InnerArgument_Primitive_ReadByReference));
         int value = 42;
         OuterStaticMethodTargets.RefIntArgument(ref value);
         Assert.That(ArgumentBindingPatches.InnerObserved, Is.EqualTo(42));
@@ -540,10 +540,10 @@ public sealed partial class ArgumentBindingTests
 public sealed partial class ArgumentBindingTests
 {
     [Test]
-    public void PatchCanReadRefParameterWithoutDeclaringRef()
+    public void Prefix_RefArgument_Primitive_ReadByValue()
     {
         ArgumentBindingPatches.ValueObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PatchCanReadRefParameterWithoutDeclaringRef));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_RefArgument_Primitive_ReadByValue));
         int value = 42;
 
         StaticMethodTargets.RefIntArgument(ref value);
@@ -552,9 +552,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void PatchCanWriteRefParameterWhenDeclaringRef()
+    public void Prefix_RefArgument_Primitive_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PatchCanWriteRefParameterWhenDeclaringRef));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_RefArgument_Primitive_WriteByReference));
         int value = 1;
 
         StaticMethodTargets.RefIntArgument(ref value);
@@ -563,10 +563,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void PatchCanReadRefReferenceTypeParameterWithoutDeclaringRef()
+    public void Prefix_RefArgument_ReferenceType_ReadByValue()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PatchCanReadRefReferenceTypeParameterWithoutDeclaringRef));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_RefArgument_ReferenceType_ReadByValue));
         string value = "original";
 
         StaticMethodTargets.RefStringArgument(ref value);
@@ -575,9 +575,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void PatchCanWriteRefReferenceTypeParameterWhenDeclaringRef()
+    public void Prefix_RefArgument_ReferenceType_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PatchCanWriteRefReferenceTypeParameterWhenDeclaringRef));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_RefArgument_ReferenceType_WriteByReference));
         string value = "original";
 
         StaticMethodTargets.RefStringArgument(ref value);
@@ -586,10 +586,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void PatchCanReadRefStructParameterWithoutDeclaringRef()
+    public void Prefix_RefArgument_Struct_ReadByValue()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PatchCanReadRefStructParameterWithoutDeclaringRef));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_RefArgument_Struct_ReadByValue));
         var value = new BindingStruct { Value = 42 };
 
         StaticMethodTargets.RefStructArgument(ref value);
@@ -598,9 +598,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void PatchCanWriteRefStructParameterWhenDeclaringRef()
+    public void Prefix_RefArgument_Struct_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PatchCanWriteRefStructParameterWhenDeclaringRef));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_RefArgument_Struct_WriteByReference));
         var value = new BindingStruct { Value = 1 };
 
         StaticMethodTargets.RefStructArgument(ref value);
@@ -613,40 +613,40 @@ public sealed partial class ArgumentBindingTests
 public sealed partial class ArgumentBindingTests : PatchTestBase
 {
     [Test]
-    public void PrefixCanReadValueTypeParameter()
+    public void Prefix_Argument_Primitive_ReadByValue()
     {
         ArgumentBindingPatches.ValueObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PrefixCanReadValueTypeParameter));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_Argument_Primitive_ReadByValue));
         StaticMethodTargets.IntArgument(42);
 
         Assert.That(ArgumentBindingPatches.ValueObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void PostfixCanReadValueTypeParameter()
+    public void Postfix_Argument_Primitive_ReadByValue()
     {
         ArgumentBindingPatches.ValueObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PostfixCanReadValueTypeParameter));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Postfix_Argument_Primitive_ReadByValue));
         StaticMethodTargets.IntArgument(42);
 
         Assert.That(ArgumentBindingPatches.ValueObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void PrefixCanReadReferenceTypeParameter()
+    public void Prefix_Argument_ReferenceType_ReadByValue()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PrefixCanReadReferenceTypeParameter));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_Argument_ReferenceType_ReadByValue));
         StaticMethodTargets.StringArgument("original");
 
         Assert.That(ArgumentBindingPatches.ReferenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
-    public void PrefixCanReadStructParameter()
+    public void Prefix_Argument_Struct_ReadByValue()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PrefixCanReadStructParameter));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_Argument_Struct_ReadByValue));
 
         StaticMethodTargets.StructArgument(new BindingStruct { Value = 42 });
 
@@ -654,42 +654,42 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PostfixCanReadReferenceTypeParameter()
+    public void Postfix_Argument_ReferenceType_ReadByValue()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PostfixCanReadReferenceTypeParameter));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Postfix_Argument_ReferenceType_ReadByValue));
         StaticMethodTargets.StringArgument("original");
 
         Assert.That(ArgumentBindingPatches.ReferenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
-    public void PrefixCanWriteValueTypeParameterByReference()
+    public void Prefix_Argument_Primitive_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PrefixCanWriteValueTypeParameterByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_Argument_Primitive_WriteByReference));
         Assert.That(StaticMethodTargets.IntIdentity(1), Is.EqualTo(42));
     }
 
     [Test]
-    public void PostfixCanWriteValueTypeParameterByReference()
+    public void Postfix_Argument_Primitive_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PostfixCanWriteValueTypeParameterByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Postfix_Argument_Primitive_WriteByReference));
         int value = 1;
         StaticMethodTargets.RefIntArgument(ref value);
         Assert.That(value, Is.EqualTo(42));
     }
 
     [Test]
-    public void PrefixCanWriteReferenceTypeParameterByReference()
+    public void Prefix_Argument_ReferenceType_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PrefixCanWriteReferenceTypeParameterByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_Argument_ReferenceType_WriteByReference));
         Assert.That(StaticMethodTargets.StringIdentity("original"), Is.EqualTo("patched"));
     }
 
     [Test]
-    public void PrefixCanWriteStructParameterByReference()
+    public void Prefix_Argument_Struct_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PrefixCanWriteStructParameterByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_Argument_Struct_WriteByReference));
 
         BindingStruct result = StaticMethodTargets.StructIdentity(new BindingStruct { Value = 1 });
 
@@ -697,9 +697,9 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PostfixCanWriteReferenceTypeParameterByReference()
+    public void Postfix_Argument_ReferenceType_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.PostfixCanWriteReferenceTypeParameterByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Postfix_Argument_ReferenceType_WriteByReference));
         string value = "original";
         StaticMethodTargets.RefStringArgument(ref value);
         Assert.That(value, Is.EqualTo("patched"));
@@ -710,19 +710,19 @@ public sealed partial class ArgumentBindingTests : PatchTestBase
 public sealed partial class ArgumentBindingTests
 {
     [Test]
-    public void InnerPrefixCanReadOuterArgumentWhenInnerHasNoMatchingArgument()
+    public void InnerPrefix_OuterArgument_Primitive_ReadByValue_WhenInnerHasNoMatch()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadOuterArgumentWhenInnerHasNoMatchingArgument));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_Primitive_ReadByValue_WhenInnerHasNoMatch));
         OuterStaticMethodTargets.OuterArgument(42);
         Assert.That(ArgumentBindingPatches.InnerObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void InnerPrefixCanReadOuterReferenceTypeArgumentWhenInnerHasNoMatchingArgument()
+    public void InnerPrefix_OuterArgument_ReferenceType_ReadByValue_WhenInnerHasNoMatch()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadOuterReferenceTypeArgumentWhenInnerHasNoMatchingArgument));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_ReferenceType_ReadByValue_WhenInnerHasNoMatch));
 
         OuterStaticMethodTargets.OuterReferenceTypeArgument("original");
 
@@ -730,10 +730,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPrefixCanReadOuterStructArgumentWhenInnerHasNoMatchingArgument()
+    public void InnerPrefix_OuterArgument_Struct_ReadByValue_WhenInnerHasNoMatch()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadOuterStructArgumentWhenInnerHasNoMatchingArgument));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_Struct_ReadByValue_WhenInnerHasNoMatch));
 
         OuterStaticMethodTargets.OuterStructArgument(new BindingStruct { Value = 42 });
 
@@ -741,68 +741,68 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPostfixCanReadOuterArgumentWhenInnerHasNoMatchingArgument()
+    public void InnerPostfix_OuterArgument_Primitive_ReadByValue_WhenInnerHasNoMatch()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfixCanReadOuterArgumentWhenInnerHasNoMatchingArgument));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfix_OuterArgument_Primitive_ReadByValue_WhenInnerHasNoMatch));
         OuterStaticMethodTargets.OuterArgument(42);
         Assert.That(ArgumentBindingPatches.InnerObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void InnerPrefixCannotWriteOuterArgumentByReference()
+    public void InnerPrefix_OuterArgument_Primitive_WriteByReference_Rejected()
     {
         var exception = Assert.Throws<InvalidOperationException>(() =>
-            ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCannotWriteOuterArgumentByReference)));
+            ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_Primitive_WriteByReference_Rejected)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
         Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
     }
 
     [Test]
-    public void InnerPrefixCannotWriteOuterReferenceTypeArgumentByReference()
+    public void InnerPrefix_OuterArgument_ReferenceType_WriteByReference_Rejected()
     {
         var exception = Assert.Throws<InvalidOperationException>(() =>
-            ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCannotWriteOuterReferenceTypeArgumentByReference)));
+            ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_ReferenceType_WriteByReference_Rejected)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
         Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
     }
 
     [Test]
-    public void InnerPrefixCannotWriteOuterStructArgumentByReference()
+    public void InnerPrefix_OuterArgument_Struct_WriteByReference_Rejected()
     {
         var exception = Assert.Throws<InvalidOperationException>(() =>
-            ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCannotWriteOuterStructArgumentByReference)));
+            ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_Struct_WriteByReference_Rejected)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
         Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
     }
 
     [Test]
-    public void InnerPostfixCannotWriteOuterArgumentByReference()
+    public void InnerPostfix_OuterArgument_Primitive_WriteByReference_Rejected()
     {
         var exception = Assert.Throws<InvalidOperationException>(() =>
-            ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfixCannotWriteOuterArgumentByReference)));
+            ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfix_OuterArgument_Primitive_WriteByReference_Rejected)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
         Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
     }
 
     [Test]
-    public void InnerPrefixPrefersInnerArgumentWhenOuterArgumentHasSameName()
+    public void InnerPrefix_InnerArgument_Primitive_ReadByValue_WhenOuterHasSameName()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixPrefersInnerArgumentWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Primitive_ReadByValue_WhenOuterHasSameName));
         OuterStaticMethodTargets.SameNamedArgument(1);
         Assert.That(ArgumentBindingPatches.InnerObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void InnerPrefixPrefersInnerReferenceTypeArgumentWhenOuterArgumentHasSameName()
+    public void InnerPrefix_InnerArgument_ReferenceType_ReadByValue_WhenOuterHasSameName()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixPrefersInnerReferenceTypeArgumentWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_ReferenceType_ReadByValue_WhenOuterHasSameName));
 
         OuterStaticMethodTargets.SameNamedReferenceTypeArgument("outer");
 
@@ -810,10 +810,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPrefixPrefersInnerStructArgumentWhenOuterArgumentHasSameName()
+    public void InnerPrefix_InnerArgument_Struct_ReadByValue_WhenOuterHasSameName()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixPrefersInnerStructArgumentWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Struct_ReadByValue_WhenOuterHasSameName));
 
         OuterStaticMethodTargets.SameNamedStructArgument(new BindingStruct { Value = 1 });
 
@@ -821,18 +821,18 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPostfixPrefersInnerArgumentWhenOuterArgumentHasSameName()
+    public void InnerPostfix_InnerArgument_Primitive_ReadByValue_WhenOuterHasSameName()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfixPrefersInnerArgumentWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfix_InnerArgument_Primitive_ReadByValue_WhenOuterHasSameName));
         OuterStaticMethodTargets.SameNamedArgument(1);
         Assert.That(ArgumentBindingPatches.InnerObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void InnerPrefixCanWriteInnerArgumentWhenOuterArgumentHasSameName()
+    public void InnerPrefix_InnerArgument_Primitive_WriteByReference_WhenOuterHasSameName()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanWriteInnerArgumentWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Primitive_WriteByReference_WhenOuterHasSameName));
         int outerValue = 7;
 
         int result = OuterStaticMethodTargets.SameNamedRefArgument(ref outerValue);
@@ -842,9 +842,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPrefixCanWriteInnerReferenceTypeArgumentWhenOuterArgumentHasSameName()
+    public void InnerPrefix_InnerArgument_ReferenceType_WriteByReference_WhenOuterHasSameName()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanWriteInnerReferenceTypeArgumentWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_ReferenceType_WriteByReference_WhenOuterHasSameName));
         string outerValue = "outer";
 
         string result = OuterStaticMethodTargets.SameNamedRefReferenceTypeArgument(ref outerValue);
@@ -854,9 +854,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPrefixCanWriteInnerStructArgumentWhenOuterArgumentHasSameName()
+    public void InnerPrefix_InnerArgument_Struct_WriteByReference_WhenOuterHasSameName()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanWriteInnerStructArgumentWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Struct_WriteByReference_WhenOuterHasSameName));
         var outerValue = new BindingStruct { Value = 7 };
 
         BindingStruct result = OuterStaticMethodTargets.SameNamedRefStructArgument(ref outerValue);
@@ -866,9 +866,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPostfixCanWriteInnerArgumentWhenOuterArgumentHasSameName()
+    public void InnerPostfix_InnerArgument_Primitive_WriteByReference_WhenOuterHasSameName()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfixCanWriteInnerArgumentWhenOuterArgumentHasSameName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfix_InnerArgument_Primitive_WriteByReference_WhenOuterHasSameName));
         int outerValue = 7;
 
         int result = OuterStaticMethodTargets.SameNamedRefArgument(ref outerValue);
@@ -878,19 +878,19 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPrefixCanReadInnerArgument()
+    public void InnerPrefix_InnerArgument_Primitive_ReadByValue()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadInnerArgument));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Primitive_ReadByValue));
         OuterStaticMethodTargets.IntArgument(42);
         Assert.That(ArgumentBindingPatches.InnerObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void InnerPrefixCanReadInnerReferenceTypeArgument()
+    public void InnerPrefix_InnerArgument_ReferenceType_ReadByValue()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadInnerReferenceTypeArgument));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_ReferenceType_ReadByValue));
 
         OuterStaticMethodTargets.StringArgument("original");
 
@@ -898,10 +898,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPrefixCanReadInnerStructArgument()
+    public void InnerPrefix_InnerArgument_Struct_ReadByValue()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanReadInnerStructArgument));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Struct_ReadByValue));
 
         OuterStaticMethodTargets.StructArgument(new BindingStruct { Value = 42 });
 
@@ -909,25 +909,25 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPostfixCanReadInnerArgument()
+    public void InnerPostfix_InnerArgument_Primitive_ReadByValue()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfixCanReadInnerArgument));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfix_InnerArgument_Primitive_ReadByValue));
         OuterStaticMethodTargets.IntArgument(42);
         Assert.That(ArgumentBindingPatches.InnerObserved, Is.EqualTo(42));
     }
 
     [Test]
-    public void InnerPrefixCanWriteInnerArgumentByReference()
+    public void InnerPrefix_InnerArgument_Primitive_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanWriteInnerArgumentByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Primitive_WriteByReference));
         Assert.That(OuterStaticMethodTargets.IntIdentity(1), Is.EqualTo(42));
     }
 
     [Test]
-    public void InnerPrefixCanWriteInnerReferenceTypeArgumentByReference()
+    public void InnerPrefix_InnerArgument_ReferenceType_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanWriteInnerReferenceTypeArgumentByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_ReferenceType_WriteByReference));
 
         string result = OuterStaticMethodTargets.StringIdentity("original");
 
@@ -935,9 +935,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPrefixCanWriteInnerStructArgumentByReference()
+    public void InnerPrefix_InnerArgument_Struct_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefixCanWriteInnerStructArgumentByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_InnerArgument_Struct_WriteByReference));
 
         BindingStruct result = OuterStaticMethodTargets.StructIdentity(new BindingStruct { Value = 1 });
 
@@ -945,18 +945,18 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void InnerPostfixCanWriteInnerArgumentByReference()
+    public void InnerPostfix_InnerArgument_Primitive_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfixCanWriteInnerArgumentByReference));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPostfix_InnerArgument_Primitive_WriteByReference));
         int value = 1;
         OuterStaticMethodTargets.RefIntArgument(ref value);
         Assert.That(value, Is.EqualTo(42));
     }
 
     [Test]
-    public void ParameterAttributeCanBindWritableArgumentByIndex()
+    public void Prefix_ParameterAttribute_ByIndex_Primitive_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.ParameterAttributeCanBindWritableArgumentByIndex));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Primitive_WriteByReference));
 
         int result = StaticMethodTargets.IntIdentity(1);
 
@@ -964,10 +964,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void ParameterAttributeCanReadPrimitiveArgumentByIndex()
+    public void Prefix_ParameterAttribute_ByIndex_Primitive_ReadByValue()
     {
         ArgumentBindingPatches.ValueObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.ParameterAttributeCanReadPrimitiveArgumentByIndex));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Primitive_ReadByValue));
 
         StaticMethodTargets.IntArgument(42);
 
@@ -975,10 +975,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void ParameterAttributeCanReadReferenceTypeArgumentByIndex()
+    public void Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByValue()
     {
         ArgumentBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.ParameterAttributeCanReadReferenceTypeArgumentByIndex));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_ReferenceType_ReadByValue));
 
         StaticMethodTargets.StringArgument("original");
 
@@ -986,9 +986,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void ParameterAttributeCanWriteReferenceTypeArgumentByIndex()
+    public void Prefix_ParameterAttribute_ByIndex_ReferenceType_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.ParameterAttributeCanWriteReferenceTypeArgumentByIndex));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_ReferenceType_WriteByReference));
 
         string result = StaticMethodTargets.StringIdentity("original");
 
@@ -996,10 +996,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void ParameterAttributeCanReadStructArgumentByIndex()
+    public void Prefix_ParameterAttribute_ByIndex_Struct_ReadByValue()
     {
         ArgumentBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.ParameterAttributeCanReadStructArgumentByIndex));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Struct_ReadByValue));
 
         StaticMethodTargets.StructArgument(new BindingStruct { Value = 42 });
 
@@ -1007,9 +1007,9 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void ParameterAttributeCanWriteStructArgumentByIndex()
+    public void Prefix_ParameterAttribute_ByIndex_Struct_WriteByReference()
     {
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.ParameterAttributeCanWriteStructArgumentByIndex));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_ByIndex_Struct_WriteByReference));
 
         BindingStruct result = StaticMethodTargets.StructIdentity(new BindingStruct { Value = 1 });
 
@@ -1017,10 +1017,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void ParameterAttributeCanSelectOuterArgumentByName()
+    public void InnerPrefix_ParameterAttribute_OuterScope_Primitive_ReadByValue()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.ParameterAttributeCanSelectOuterArgumentByName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_ParameterAttribute_OuterScope_Primitive_ReadByValue));
 
         OuterStaticMethodTargets.SameNamedArgument(1);
 
@@ -1028,10 +1028,10 @@ public sealed partial class ArgumentBindingTests
     }
 
     [Test]
-    public void ParameterAttributeCanSelectInnerArgumentByName()
+    public void InnerPrefix_ParameterAttribute_InnerScope_Primitive_ReadByValue()
     {
         ArgumentBindingPatches.InnerObserved = 0;
-        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.ParameterAttributeCanSelectInnerArgumentByName));
+        ApplyPatch(typeof(ArgumentBindingPatches), nameof(ArgumentBindingPatches.InnerPrefix_ParameterAttribute_InnerScope_Primitive_ReadByValue));
 
         OuterStaticMethodTargets.SameNamedArgument(1);
 

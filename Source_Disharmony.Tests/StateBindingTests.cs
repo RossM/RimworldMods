@@ -8,136 +8,136 @@ public static partial class StateBindingPatches
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadStateWrittenByPrefix_Prefix(out int __state) => __state = 42;
+    public static void Postfix_StateParameter_Primitive_ReadByValue_Prefix(out int __state) => __state = 42;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadStateWrittenByPrefix_Postfix(int __state) => Observed = __state;
+    public static void Postfix_StateParameter_Primitive_ReadByValue_Postfix(int __state) => Observed = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanWriteStateByReferenceForLaterPostfix_Prefix(out int __state) => __state = 42;
+    public static void Postfix_StateParameter_Primitive_WriteByReference_Prefix(out int __state) => __state = 42;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanWriteStateByReferenceForLaterPostfix_FirstPostfix(ref int __state) => __state = 43;
+    public static void Postfix_StateParameter_Primitive_WriteByReference_FirstPostfix(ref int __state) => __state = 43;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanWriteStateByReferenceForLaterPostfix_SecondPostfix(int __state) => Observed = __state;
+    public static void Postfix_StateParameter_Primitive_WriteByReference_SecondPostfix(int __state) => Observed = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadReferenceTypeStateWrittenByPrefix_Prefix(out string __state) => __state = "original";
+    public static void Postfix_StateParameter_ReferenceType_ReadByValue_Prefix(out string __state) => __state = "original";
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadReferenceTypeStateWrittenByPrefix_Postfix(string __state) => ReferenceObserved = __state;
+    public static void Postfix_StateParameter_ReferenceType_ReadByValue_Postfix(string __state) => ReferenceObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanWriteReferenceTypeStateByReferenceForLaterPostfix_Prefix(out string __state) =>
+    public static void Postfix_StateParameter_ReferenceType_WriteByReference_Prefix(out string __state) =>
         __state = "original";
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanWriteReferenceTypeStateByReferenceForLaterPostfix_FirstPostfix(ref string __state) =>
+    public static void Postfix_StateParameter_ReferenceType_WriteByReference_FirstPostfix(ref string __state) =>
         __state = "patched";
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanWriteReferenceTypeStateByReferenceForLaterPostfix_SecondPostfix(string __state) =>
+    public static void Postfix_StateParameter_ReferenceType_WriteByReference_SecondPostfix(string __state) =>
         ReferenceObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadStructStateWrittenByPrefix_Prefix(out BindingStruct __state) =>
+    public static void Postfix_StateParameter_Struct_ReadByValue_Prefix(out BindingStruct __state) =>
         __state = new BindingStruct { Value = 42 };
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadStructStateWrittenByPrefix_Postfix(BindingStruct __state) => StructObserved = __state;
+    public static void Postfix_StateParameter_Struct_ReadByValue_Postfix(BindingStruct __state) => StructObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanWriteStructStateByReferenceForLaterPostfix_Prefix(out BindingStruct __state) =>
+    public static void Postfix_StateParameter_Struct_WriteByReference_Prefix(out BindingStruct __state) =>
         __state = new BindingStruct { Value = 1 };
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanWriteStructStateByReferenceForLaterPostfix_FirstPostfix(ref BindingStruct __state) =>
+    public static void Postfix_StateParameter_Struct_WriteByReference_FirstPostfix(ref BindingStruct __state) =>
         __state = new BindingStruct { Value = 42 };
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanWriteStructStateByReferenceForLaterPostfix_SecondPostfix(BindingStruct __state) =>
+    public static void Postfix_StateParameter_Struct_WriteByReference_SecondPostfix(BindingStruct __state) =>
         StructObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeSharesStateBetweenPrefixAndPostfix_Prefix([State] out int state) => state = 42;
+    public static void Postfix_StateAttribute_Primitive_ReadByValue_Prefix([State] out int state) => state = 42;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeSharesStateBetweenPrefixAndPostfix_Postfix([State] int state) => Observed = state;
+    public static void Postfix_StateAttribute_Primitive_ReadByValue_Postfix([State] int state) => Observed = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeAllowsPrimitiveStateToBeWrittenByReference_Prefix([State] out int state) => state = 1;
+    public static void Postfix_StateAttribute_Primitive_WriteByReference_Prefix([State] out int state) => state = 1;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeAllowsPrimitiveStateToBeWrittenByReference_FirstPostfix([State] ref int state) => state = 42;
+    public static void Postfix_StateAttribute_Primitive_WriteByReference_FirstPostfix([State] ref int state) => state = 42;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeAllowsPrimitiveStateToBeWrittenByReference_SecondPostfix([State] int state) => Observed = state;
+    public static void Postfix_StateAttribute_Primitive_WriteByReference_SecondPostfix([State] int state) => Observed = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeSharesReferenceTypeStateByValue_Prefix([State] out string state) => state = "original";
+    public static void Postfix_StateAttribute_ReferenceType_ReadByValue_Prefix([State] out string state) => state = "original";
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeSharesReferenceTypeStateByValue_Postfix([State] string state) => ReferenceObserved = state;
+    public static void Postfix_StateAttribute_ReferenceType_ReadByValue_Postfix([State] string state) => ReferenceObserved = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeAllowsReferenceTypeStateToBeWrittenByReference_Prefix([State] out string state) =>
+    public static void Postfix_StateAttribute_ReferenceType_WriteByReference_Prefix([State] out string state) =>
         state = "original";
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeAllowsReferenceTypeStateToBeWrittenByReference_FirstPostfix([State] ref string state) =>
+    public static void Postfix_StateAttribute_ReferenceType_WriteByReference_FirstPostfix([State] ref string state) =>
         state = "patched";
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeAllowsReferenceTypeStateToBeWrittenByReference_SecondPostfix([State] string state) =>
+    public static void Postfix_StateAttribute_ReferenceType_WriteByReference_SecondPostfix([State] string state) =>
         ReferenceObserved = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeSharesStructStateByValue_Prefix([State] out BindingStruct state) =>
+    public static void Postfix_StateAttribute_Struct_ReadByValue_Prefix([State] out BindingStruct state) =>
         state = new BindingStruct { Value = 42 };
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeSharesStructStateByValue_Postfix([State] BindingStruct state) => StructObserved = state;
+    public static void Postfix_StateAttribute_Struct_ReadByValue_Postfix([State] BindingStruct state) => StructObserved = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeAllowsStructStateToBeWrittenByReference_Prefix([State] out BindingStruct state) =>
+    public static void Postfix_StateAttribute_Struct_WriteByReference_Prefix([State] out BindingStruct state) =>
         state = new BindingStruct { Value = 1 };
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeAllowsStructStateToBeWrittenByReference_FirstPostfix([State] ref BindingStruct state) =>
+    public static void Postfix_StateAttribute_Struct_WriteByReference_FirstPostfix([State] ref BindingStruct state) =>
         state = new BindingStruct { Value = 42 };
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeAllowsStructStateToBeWrittenByReference_SecondPostfix([State] BindingStruct state) =>
+    public static void Postfix_StateAttribute_Struct_WriteByReference_SecondPostfix([State] BindingStruct state) =>
         StructObserved = state;
 }
 
@@ -145,56 +145,56 @@ public static partial class StateBindingPatches
 {
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadStateThroughReference_Prefix(out int __state) => __state = 42;
+    public static void Postfix_StateParameter_Primitive_ReadByReference_Prefix(out int __state) => __state = 42;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadStateThroughReference_Postfix(ref int __state) => Observed = __state;
+    public static void Postfix_StateParameter_Primitive_ReadByReference_Postfix(ref int __state) => Observed = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadReferenceTypeStateThroughReference_Prefix(out string __state) => __state = "original";
+    public static void Postfix_StateParameter_ReferenceType_ReadByReference_Prefix(out string __state) => __state = "original";
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadReferenceTypeStateThroughReference_Postfix(ref string __state) =>
+    public static void Postfix_StateParameter_ReferenceType_ReadByReference_Postfix(ref string __state) =>
         ReferenceObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadStructStateThroughReference_Prefix(out BindingStruct __state) =>
+    public static void Postfix_StateParameter_Struct_ReadByReference_Prefix(out BindingStruct __state) =>
         __state = new BindingStruct { Value = 42 };
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void PostfixCanReadStructStateThroughReference_Postfix(ref BindingStruct __state) => StructObserved = __state;
+    public static void Postfix_StateParameter_Struct_ReadByReference_Postfix(ref BindingStruct __state) => StructObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeCanReadPrimitiveStateThroughReference_Prefix([State] out int state) => state = 42;
+    public static void Postfix_StateAttribute_Primitive_ReadByReference_Prefix([State] out int state) => state = 42;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeCanReadPrimitiveStateThroughReference_Postfix([State] ref int state) => Observed = state;
+    public static void Postfix_StateAttribute_Primitive_ReadByReference_Postfix([State] ref int state) => Observed = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeCanReadReferenceTypeStateThroughReference_Prefix([State] out string state) =>
+    public static void Postfix_StateAttribute_ReferenceType_ReadByReference_Prefix([State] out string state) =>
         state = "original";
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeCanReadReferenceTypeStateThroughReference_Postfix([State] ref string state) =>
+    public static void Postfix_StateAttribute_ReferenceType_ReadByReference_Postfix([State] ref string state) =>
         ReferenceObserved = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeCanReadStructStateThroughReference_Prefix([State] out BindingStruct state) =>
+    public static void Postfix_StateAttribute_Struct_ReadByReference_Prefix([State] out BindingStruct state) =>
         state = new BindingStruct { Value = 42 };
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateAttributeCanReadStructStateThroughReference_Postfix([State] ref BindingStruct state) =>
+    public static void Postfix_StateAttribute_Struct_ReadByReference_Postfix([State] ref BindingStruct state) =>
         StructObserved = state;
 }
 
@@ -202,61 +202,61 @@ public static partial class StateBindingPatches
 public sealed partial class StateBindingTests
 {
     [Test]
-    public void PostfixCanReadStateThroughReference()
+    public void Postfix_StateParameter_Primitive_ReadByReference()
     {
         StateBindingPatches.Observed = 0;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStateThroughReference_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStateThroughReference_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_ReadByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_ReadByReference_Postfix));
         StaticMethodTargets.Void();
         Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
     }
 
     [Test]
-    public void PostfixCanReadReferenceTypeStateThroughReference()
+    public void Postfix_StateParameter_ReferenceType_ReadByReference()
     {
         StateBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadReferenceTypeStateThroughReference_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadReferenceTypeStateThroughReference_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_ReadByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_ReadByReference_Postfix));
         StaticMethodTargets.Void();
         Assert.That(StateBindingPatches.ReferenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
-    public void PostfixCanReadStructStateThroughReference()
+    public void Postfix_StateParameter_Struct_ReadByReference()
     {
         StateBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStructStateThroughReference_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStructStateThroughReference_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_ReadByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_ReadByReference_Postfix));
         StaticMethodTargets.Void();
         Assert.That(StateBindingPatches.StructObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
-    public void StateAttributeCanReadPrimitiveStateThroughReference()
+    public void Postfix_StateAttribute_Primitive_ReadByReference()
     {
         StateBindingPatches.Observed = 0;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadPrimitiveStateThroughReference_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadPrimitiveStateThroughReference_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_ReadByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_ReadByReference_Postfix));
         StaticMethodTargets.Void();
         Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
     }
 
     [Test]
-    public void StateAttributeCanReadReferenceTypeStateThroughReference()
+    public void Postfix_StateAttribute_ReferenceType_ReadByReference()
     {
         StateBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadReferenceTypeStateThroughReference_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadReferenceTypeStateThroughReference_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_ReadByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_ReadByReference_Postfix));
         StaticMethodTargets.Void();
         Assert.That(StateBindingPatches.ReferenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
-    public void StateAttributeCanReadStructStateThroughReference()
+    public void Postfix_StateAttribute_Struct_ReadByReference()
     {
         StateBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadStructStateThroughReference_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeCanReadStructStateThroughReference_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_ReadByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_ReadByReference_Postfix));
         StaticMethodTargets.Void();
         Assert.That(StateBindingPatches.StructObserved.Value, Is.EqualTo(42));
     }
@@ -266,11 +266,11 @@ public sealed partial class StateBindingTests
 public sealed partial class StateBindingTests : PatchTestBase
 {
     [Test]
-    public void PostfixCanReadStateWrittenByPrefix()
+    public void Postfix_StateParameter_Primitive_ReadByValue()
     {
         StateBindingPatches.Observed = 0;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStateWrittenByPrefix_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStateWrittenByPrefix_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_ReadByValue_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
@@ -278,12 +278,12 @@ public sealed partial class StateBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PostfixCanWriteStateByReferenceForLaterPostfix()
+    public void Postfix_StateParameter_Primitive_WriteByReference()
     {
         StateBindingPatches.Observed = 0;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanWriteStateByReferenceForLaterPostfix_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanWriteStateByReferenceForLaterPostfix_FirstPostfix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanWriteStateByReferenceForLaterPostfix_SecondPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_WriteByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_WriteByReference_FirstPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 
@@ -291,11 +291,11 @@ public sealed partial class StateBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PostfixCanReadReferenceTypeStateWrittenByPrefix()
+    public void Postfix_StateParameter_ReferenceType_ReadByValue()
     {
         StateBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadReferenceTypeStateWrittenByPrefix_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadReferenceTypeStateWrittenByPrefix_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_ReadByValue_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
@@ -303,12 +303,12 @@ public sealed partial class StateBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PostfixCanWriteReferenceTypeStateByReferenceForLaterPostfix()
+    public void Postfix_StateParameter_ReferenceType_WriteByReference()
     {
         StateBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanWriteReferenceTypeStateByReferenceForLaterPostfix_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanWriteReferenceTypeStateByReferenceForLaterPostfix_FirstPostfix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanWriteReferenceTypeStateByReferenceForLaterPostfix_SecondPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_WriteByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_WriteByReference_FirstPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 
@@ -316,11 +316,11 @@ public sealed partial class StateBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PostfixCanReadStructStateWrittenByPrefix()
+    public void Postfix_StateParameter_Struct_ReadByValue()
     {
         StateBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStructStateWrittenByPrefix_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanReadStructStateWrittenByPrefix_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_ReadByValue_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
@@ -328,12 +328,12 @@ public sealed partial class StateBindingTests : PatchTestBase
     }
 
     [Test]
-    public void PostfixCanWriteStructStateByReferenceForLaterPostfix()
+    public void Postfix_StateParameter_Struct_WriteByReference()
     {
         StateBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanWriteStructStateByReferenceForLaterPostfix_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanWriteStructStateByReferenceForLaterPostfix_FirstPostfix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.PostfixCanWriteStructStateByReferenceForLaterPostfix_SecondPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_WriteByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_WriteByReference_FirstPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 
@@ -341,11 +341,11 @@ public sealed partial class StateBindingTests : PatchTestBase
     }
 
     [Test]
-    public void StateAttributeSharesStateBetweenPrefixAndPostfix()
+    public void Postfix_StateAttribute_Primitive_ReadByValue()
     {
         StateBindingPatches.Observed = 0;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeSharesStateBetweenPrefixAndPostfix_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeSharesStateBetweenPrefixAndPostfix_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_ReadByValue_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
@@ -353,12 +353,12 @@ public sealed partial class StateBindingTests : PatchTestBase
     }
 
     [Test]
-    public void StateAttributeAllowsPrimitiveStateToBeWrittenByReference()
+    public void Postfix_StateAttribute_Primitive_WriteByReference()
     {
         StateBindingPatches.Observed = 0;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeAllowsPrimitiveStateToBeWrittenByReference_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeAllowsPrimitiveStateToBeWrittenByReference_FirstPostfix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeAllowsPrimitiveStateToBeWrittenByReference_SecondPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_WriteByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_WriteByReference_FirstPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 
@@ -366,11 +366,11 @@ public sealed partial class StateBindingTests : PatchTestBase
     }
 
     [Test]
-    public void StateAttributeSharesReferenceTypeStateByValue()
+    public void Postfix_StateAttribute_ReferenceType_ReadByValue()
     {
         StateBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeSharesReferenceTypeStateByValue_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeSharesReferenceTypeStateByValue_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_ReadByValue_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
@@ -378,12 +378,12 @@ public sealed partial class StateBindingTests : PatchTestBase
     }
 
     [Test]
-    public void StateAttributeAllowsReferenceTypeStateToBeWrittenByReference()
+    public void Postfix_StateAttribute_ReferenceType_WriteByReference()
     {
         StateBindingPatches.ReferenceObserved = null;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeAllowsReferenceTypeStateToBeWrittenByReference_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeAllowsReferenceTypeStateToBeWrittenByReference_FirstPostfix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeAllowsReferenceTypeStateToBeWrittenByReference_SecondPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_WriteByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_WriteByReference_FirstPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 
@@ -391,11 +391,11 @@ public sealed partial class StateBindingTests : PatchTestBase
     }
 
     [Test]
-    public void StateAttributeSharesStructStateByValue()
+    public void Postfix_StateAttribute_Struct_ReadByValue()
     {
         StateBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeSharesStructStateByValue_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeSharesStructStateByValue_Postfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_ReadByValue_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
@@ -403,12 +403,12 @@ public sealed partial class StateBindingTests : PatchTestBase
     }
 
     [Test]
-    public void StateAttributeAllowsStructStateToBeWrittenByReference()
+    public void Postfix_StateAttribute_Struct_WriteByReference()
     {
         StateBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeAllowsStructStateToBeWrittenByReference_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeAllowsStructStateToBeWrittenByReference_FirstPostfix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.StateAttributeAllowsStructStateToBeWrittenByReference_SecondPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_WriteByReference_Prefix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_WriteByReference_FirstPostfix));
+        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 
