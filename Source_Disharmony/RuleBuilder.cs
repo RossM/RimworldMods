@@ -27,6 +27,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
     private void EmitRawParameterValue(ParameterBinding parameter, bool wantRef, out Type resultType)
     {
         Type parameterType = parameter.Parameter.ParameterType;
+        Type desiredType = parameterType;
 
         resultType = parameterType;
 
@@ -35,15 +36,9 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
             if (parameter.BindingType is not (BindingType.Parameter or BindingType.Instance))
                 throw new NotSupportedException();
 
-            resultType = GetParameterType(parameter);
-            if (wantRef && resultType.IsValueType)
-                resultType = resultType.MakeByRefType();
-            else
-            {
-                Type? elementType = resultType.GetElementType();
-                if (!wantRef && resultType.IsByRef && !elementType!.IsValueType)
-                    resultType = elementType;
-            }
+            desiredType = parameter.Fields[0].DeclaringType!;
+            if (wantRef && desiredType.IsValueType)
+                desiredType = desiredType.MakeByRefType();
         }
 
         switch (parameter.BindingType)
@@ -51,7 +46,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
             case BindingType.Parameter:
             case BindingType.Instance:
             {
-                EmitParameterLookup(parameter, resultType);
+                EmitParameterLookup(parameter, desiredType);
                 resultType = GetParameterType(parameter);
                 if (wantRef && !resultType.IsByRef)
                     resultType = resultType.MakeByRefType();
