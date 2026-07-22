@@ -7,8 +7,7 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
 
     private int GetOrAddStateLocal(Type stateKey, Type localType, Invocation method)
     {
-        if (localType.IsByRef)
-            localType = localType.GetElementType();
+        localType = localType.NoRefType;
 
         if (stateMap.TryGetValue(stateKey, out var tuple))
         {

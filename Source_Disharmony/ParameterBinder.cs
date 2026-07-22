@@ -150,9 +150,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
                 if (TryGetThisField(iteratorType, out var thisField) && thisField.FieldType.IsClosureType)
                 {
-                    var type = thisField.FieldType;
-                    if (type.IsByRef)
-                        type = type.GetElementType();
+                    var type = thisField.FieldType.NoRefType;
                     field = type?.GetField(name, AccessTools.all);
                     if (field != null)
                     {
@@ -185,9 +183,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             int closureIndex = Array.FindLastIndex(parameterTypes, p => p.IsClosureType);
             if (closureIndex >= 0)
             {
-                var type = parameterTypes[closureIndex];
-                if (type.IsByRef)
-                    type = type.GetElementType();
+                var type = parameterTypes[closureIndex].NoRefType;
 
                 var field = type?.GetField(name, AccessTools.all);
 
@@ -213,9 +209,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             int closureIndex = Array.FindLastIndex(parameterTypes, p => p.IsClosureType);
             if (closureIndex >= 0)
             {
-                var type = parameterTypes[closureIndex];
-                if (type.IsByRef)
-                    type = type.GetElementType();
+                var type = parameterTypes[closureIndex].NoRefType;
 
                 var field = type?.GetField(name, AccessTools.all);
 

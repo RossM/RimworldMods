@@ -23,9 +23,7 @@ public static class ReflectionExtensions
         {
             get
             {
-                if (type.IsByRef)
-                    type = type.GetElementType();
-
+                type = type.NoRefType;
                 return type.Name.StartsWith("<>c") && Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute));
             }
         }
