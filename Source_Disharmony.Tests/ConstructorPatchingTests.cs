@@ -5,18 +5,18 @@ public static class ConstructorPatchingPatches
     public static int ExecutionCount;
 
     [Prefix]
-    [Target(typeof(ConstructorTargets), ".ctor")]
+    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor)]
     public static void Prefix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
 
     [Postfix]
-    [Target(typeof(ConstructorTargets), ".ctor")]
+    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor)]
     public static void Postfix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
 
-    [InnerPrefix(typeof(ConstructorTargets), ".ctor")]
+    [InnerPrefix(typeof(ConstructorTargets), memberType: MemberType.Constructor)]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create))]
     public static void InnerPrefix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
 
-    [InnerPostfix(typeof(ConstructorTargets), ".ctor")]
+    [InnerPostfix(typeof(ConstructorTargets), memberType: MemberType.Constructor)]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create))]
     public static void InnerPostfix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
 }

@@ -34,6 +34,11 @@ public enum MemberType
     ///     <see cref="NotSupportedException" />.
     /// </summary>
     Setter,
+
+    /// <summary>
+    ///     Matches constructors.
+    /// </summary>
+    Constructor,
 }
 
 public enum Scope
