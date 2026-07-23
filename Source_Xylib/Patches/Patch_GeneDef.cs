@@ -8,6 +8,9 @@ internal static class Patch_GeneDef
 {
     // GeneDef.ConfigErrors doesn't call Def.ConfigErrors, resulting in DefModExtension.ConfigErrors not getting called
     // for gene mod extensions. This breaks GeneWithComps config error reporting.
+    //
+    // This can't currently be replaced with a Disharmony patch because it needs to make a direct call to the base
+    // method.
     [Feature("BUGFIX")]
     [HarmonyTranspiler]
     [HarmonyPatch(nameof(GeneDef.ConfigErrors))]
