@@ -39,12 +39,6 @@ internal class Patcher
     private const string harmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
     public static readonly Patcher Instance = new();
-    private static int thunkCount;
-
-    private static readonly AssemblyBuilder thunkAssembly
-        = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName { Name = "Xylthixlm.Disharmony.RuntimeThunks" },
-            AssemblyBuilderAccess.Run);
-    private static readonly ModuleBuilder thunkModule = thunkAssembly.DefineDynamicModule("Xylthixlm.Disharmony.RuntimeThunks");
 
     private readonly bool extraDebug = false;
     private readonly Module module;
@@ -56,9 +50,6 @@ internal class Patcher
     private readonly Dictionary<MethodBase, InstructionMatcher[]> matchersByMethod = new();
 
     public bool trampolinesEnabled = true;
-
-    private readonly Dictionary<MethodInvocation, MethodInfo> thunks = new();
-    private readonly Dictionary<MethodInfo, MethodInvocation> reverseThunks = new();
 
     public Patcher()
     {
@@ -247,32 +238,5 @@ internal class Patcher
 
             HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);
         }
-    }
-
-    public MethodInfo MakeThunk(MethodInvocation target)
-    {
-        if (thunks.TryGetValue(target, out var value))
-            return value;
-
-        Type[] parameterTypes = target.ParameterTypes;
-
-        TypeBuilder thunkType = thunkModule.DefineType($"Xylthixlm.Disharmony.RuntimeThunks.{target.FullName}_Thunk{thunkCount++}");
-        var method = thunkType.DefineMethod($"{target.FullName}_Thunk", MethodAttributes.Static | MethodAttributes.Public,
-            target.ReturnType, parameterTypes);
-
-        ILGenerator generator = method.GetILGenerator();
-
-        EmitLoadArguments(generator, parameterTypes);
-
-        // Do a non-virtual tail call
-        generator.Emit(OpCodes.Tailcall);
-        generator.Emit(OpCodes.Call, target);
-        generator.Emit(OpCodes.Ret);
-
-        thunks[target] = method;
-        reverseThunks[method] = target;
-
-        thunkType.CreateType();
-        return method;
     }
 }

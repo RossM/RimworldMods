@@ -114,14 +114,14 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         if (baseMethod is null)
             throw new InvalidOperationException($"{method.FullName}: Base method not found");
 
-        var thunk = Patcher.Instance.MakeThunk(baseMethod);
+        //var thunk = Patcher.Instance.MakeThunk(baseMethod);
 
         // ParameterType must be a subclass of Delegate here
         ConstructorInfo delegateConstructor = parameter.Parameter.ParameterType.GetConstructor([typeof(object), typeof(IntPtr)]);
 
         // Create a delegate to the thunk
         output.Add(CodeInstruction.LoadArgument(0));
-        output.Add(new(OpCodes.Ldftn, thunk));
+        output.Add(new(OpCodes.Ldftn, baseMethod));
         output.Add(new(OpCodes.Newobj, delegateConstructor));
     }
 
