@@ -280,6 +280,26 @@ namespace Disharmony.Tests
         public static ConstructorTargets Create(int value) => new ConstructorTargets(value);
     }
 
+    public class BaseMethodTargets
+    {
+        public int InstanceValue { get; set; }
+
+        public virtual string Describe(int value) => $"base:{value}:{InstanceValue}";
+
+        public virtual string DescribeWithInnerCall(int value) => $"base:{value}:{InstanceValue}";
+    }
+
+    public sealed class DerivedMethodTargets : BaseMethodTargets
+    {
+        public override string Describe(int value) => $"derived:{value}:{InstanceValue}";
+
+        public override string DescribeWithInnerCall(int value)
+        {
+            InnerStaticMethodTargets.Void();
+            return $"derived:{value}:{InstanceValue}";
+        }
+    }
+
     public static class OuterStaticMethodTargets
     {
         public static int IntResult() => InnerStaticMethodTargets.IntResult();
