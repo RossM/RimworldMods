@@ -57,13 +57,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case ReturnValueAttribute: return BindReturnValue(parameter, defaultInvocation, defaultScope);
 
-            case StateAttribute { key: var key }:
-            {
-                string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}#{key ?? parameterName}";
-
-                // ValidateCast not needed, the type will be checked in StateBuilder
-                return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, StateKey = stateKey };
-            }
+            case StateAttribute { key: var key }: return BindState(parameter, key);
 
             case FieldAttribute { name: var name, scope: var scope }: return BindFieldByName(parameter, name ?? parameterName, scope);
 
@@ -85,21 +79,22 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case "__result": return BindReturnValue(parameter, defaultInvocation, defaultScope);
 
-            case "__state":
-            {
-                string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}#{parameterName}";
+            case "__state": return BindState(parameter, null);
 
-                // ValidateCast not needed, the type will be checked in StateBuilder
-                return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, StateKey = stateKey };
-            }
-
-            case "__base":
-                return BindBase(parameter);
+            case "__base": return BindBase(parameter);
 
             case var _ when parameterName.StartsWith("___"): return BindFieldByName(parameter, parameterName[3..], Scope.Any);
 
             default: return BindParameterByName(parameter, parameterName, Scope.Any);
         }
+    }
+
+    private ParameterBinding BindState(ParameterInfo parameter, string? key)
+    {
+        string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}#{key ?? parameter.Name}";
+
+        // ValidateCast not needed, the type will be checked in StateBuilder
+        return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, StateKey = stateKey };
     }
 
     private ParameterBinding BindBase(ParameterInfo parameter)
