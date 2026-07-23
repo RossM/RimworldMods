@@ -1,45 +1,8 @@
-using System.Reflection;
-using System.Reflection.Emit;
-
 namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(StartingPawnUtility))]
 internal static class Patch_StartingPawnUtility
 {
-    private static readonly InstructionMatcher.Rule Rule_GetExtraStartingItems = new()
-    {
-        Min = 1, Max = 1,
-        Mode = InstructionMatcher.OutputMode.InsertAfter,
-        Pattern =
-        [
-            CodeInstruction.Call(typeof(Rand), $"get_{nameof(Rand.Value)}"),
-        ],
-        Output =
-        [
-            // Load pawn
-            CodeInstruction.LoadArgument(0),
-            // Call GetExtraStartingItems
-            CodeInstruction.Call(() => GetExtraStartingItems),
-        ],
-    };
-
-    [Feature(nameof(EventDefOf.InGeneratePossessions))]
-    [HarmonyTranspiler]
-    [HarmonyPatch("GeneratePossessions")]
-    public static IEnumerable<CodeInstruction> GeneratePossessions_Transpiler(
-        IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator,
-        MethodBase method)
-    {
-        return InstructionMatcher.MatchAndReplace([Rule_GetExtraStartingItems], method, instructions, generator);
-    }
-
-    public static void GetExtraStartingItems(Pawn pawn)
-    {
-        var items = Find.GameInitData?.startingPossessions?[pawn];
-        EventManager.Instance.Notify(EventDefOf.InGeneratePossessions, pawn, items);
-    }
-
     [Feature(typeof(CompProperties_Drug))]
     [InnerPrefix(typeof(List<ThingDefCount>), "Add")]
     [Target("GeneratePossessions")]
@@ -47,5 +10,18 @@ internal static class Patch_StartingPawnUtility
     {
         var chemical = item.ThingDef?.GetCompProperties<CompProperties_Drug>()?.chemical;
         return chemical == null || pawn.ChemicalIsAllowedByGenes(chemical);
+    }
+
+    [Feature(nameof(EventDefOf.InGeneratePossessions))]
+    [InnerPostfix(typeof(Rand), nameof(Rand.Value), MemberType.Getter)]
+    [Target("GeneratePossessions")]
+    public static void Rand_Value_Postfix(Pawn pawn, [State] ref bool sentEvent)
+    {
+        if (sentEvent)
+            return;
+        sentEvent = true;
+
+        var items = Find.GameInitData?.startingPossessions?[pawn];
+        EventManager.Instance.Notify(EventDefOf.InGeneratePossessions, pawn, items);
     }
 }
