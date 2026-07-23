@@ -227,6 +227,26 @@ namespace Disharmony.Tests
         }
     }
 
+    public static class ConstantTargets
+    {
+        public const int IntValue = 42;
+        public const int IntReplacement = 43;
+        public const long LongValue = 42000000000L;
+        public const long LongReplacement = 43000000000L;
+        public const float FloatValue = 4.25f;
+        public const float FloatReplacement = 5.25f;
+        public const double DoubleValue = 8.5;
+        public const double DoubleReplacement = 9.5;
+        public const string StringValue = "original";
+        public const string StringReplacement = "patched";
+
+        public static int IntResult() => IntValue;
+        public static long LongResult() => LongValue;
+        public static float FloatResult() => FloatValue;
+        public static double DoubleResult() => DoubleValue;
+        public static string StringResult() => StringValue;
+    }
+
     public static class OuterStaticMethodTargets
     {
         public static int IntResult() => InnerStaticMethodTargets.IntResult();
