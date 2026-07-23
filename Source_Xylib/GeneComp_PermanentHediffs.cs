@@ -174,7 +174,7 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
     private IEnumerable<Hediff> GetLinkedHediffs()
     {
         HashSet<HediffDef> defs = [.. Props.hediffs.Select(hediffGiver => hediffGiver.hediff)];
-        return Pawn.health.hediffSet.hediffs.Where(hediff => defs.Contains(hediff.def)).ToList();
+        return [.. Pawn.health.hediffSet.hediffs.Where(hediff => defs.Contains(hediff.def))];
     }
 
 

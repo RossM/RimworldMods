@@ -12,10 +12,13 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
 
     private static List<AbilityDef> GetPossiblePsycasts()
     {
-        return DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
-                abilityDef.verbProperties?.verbClass == typeof(Verb_CastPsycast))
-            .OrderBy(abilityDef => abilityDef.level)
-            .ThenBy(AbilityDef => AbilityDef.label).ToList();
+        return
+        [
+            .. DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
+                    abilityDef.verbProperties?.verbClass == typeof(Verb_CastPsycast))
+                .OrderBy(abilityDef => abilityDef.level)
+                .ThenBy(AbilityDef => AbilityDef.label),
+        ];
     }
 
     public override void ExposeData()

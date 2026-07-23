@@ -8,78 +8,78 @@ public static class ConstructorPatchingPatches
     public static ConstructorTargets? ResultObserved;
 
     [Prefix]
-    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: new Type[] { })]
+    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
     public static void Prefix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
 
     [Postfix]
-    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: new Type[] { })]
+    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
     public static void Postfix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
 
     [InnerPrefix(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
-        parameterTypes: new Type[] { })]
-    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: new Type[] { })]
+        parameterTypes: [])]
+    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [])]
     public static void InnerPrefix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
 
     [InnerPostfix(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
-        parameterTypes: new Type[] { })]
-    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: new Type[] { })]
+        parameterTypes: [])]
+    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [])]
     public static void InnerPostfix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
 
     [Prefix]
     [Target(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
-        parameterTypes: new Type[] { typeof(int) })]
+        parameterTypes: [typeof(int)])]
     public static void Prefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => ParameterObserved = value;
 
     [Postfix]
     [Target(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
-        parameterTypes: new Type[] { typeof(int) })]
+        parameterTypes: [typeof(int)])]
     public static void Postfix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => ParameterObserved = value;
 
     [InnerPrefix(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
-        parameterTypes: new Type[] { typeof(int) })]
-    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: new Type[] { typeof(int) })]
+        parameterTypes: [typeof(int)])]
+    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [typeof(int)])]
     public static void InnerPrefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => ParameterObserved = value;
 
     [InnerPostfix(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
-        parameterTypes: new Type[] { typeof(int) })]
-    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: new Type[] { typeof(int) })]
+        parameterTypes: [typeof(int)])]
+    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [typeof(int)])]
     public static void InnerPostfix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => ParameterObserved = value;
 
     [Prefix]
-    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: new Type[] { })]
+    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
     public static void Prefix_Constructor_ReferenceType_Parameterless_Instance_ReadByValue(ConstructorTargets __instance) =>
         InstanceObserved = __instance;
 
     [Postfix]
-    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: new Type[] { })]
+    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
     public static void Postfix_Constructor_ReferenceType_Parameterless_Instance_ReadByValue(ConstructorTargets __instance) =>
         InstanceObserved = __instance;
 
     [InnerPrefix(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
-        parameterTypes: new Type[] { })]
-    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: new Type[] { })]
+        parameterTypes: [])]
+    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [])]
     public static void InnerPrefix_Constructor_ReferenceType_Parameterless_Result_ReadByValue(ConstructorTargets? __result) =>
         ResultObserved = __result;
 
     [InnerPostfix(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
-        parameterTypes: new Type[] { })]
-    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: new Type[] { })]
+        parameterTypes: [])]
+    [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [])]
     public static void InnerPostfix_Constructor_ReferenceType_Parameterless_Result_ReadByValue(ConstructorTargets __result) =>
         ResultObserved = __result;
 }

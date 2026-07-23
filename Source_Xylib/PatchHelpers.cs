@@ -173,7 +173,7 @@ internal static class PatchHelpers
     {
         if (ignoreRestrictions)
             return genes;
-        return genes.Where(g => GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene)).ToList();
+        return [.. genes.Where(g => GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene))];
     }
 
     private static Action<object, List<string>>? GetRequiredMemberCheckerFunc(Type defType)

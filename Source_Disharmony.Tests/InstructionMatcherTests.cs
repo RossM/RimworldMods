@@ -143,8 +143,9 @@ public sealed class InstructionMatcherTests
     }
 
     private static OpCode[] MeaningfulOpCodes(IEnumerable<CodeInstruction> instructions) =>
-        instructions
+    [
+        .. instructions
             .Where(instruction => instruction.opcode != OpCodes.Nop || instruction.operand is not string)
-            .Select(instruction => instruction.opcode)
-            .ToArray();
+            .Select(instruction => instruction.opcode),
+    ];
 }

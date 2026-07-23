@@ -82,7 +82,7 @@ public static class PatchHelpers
     {
         const int candidateCount = 21;
 
-        List<Color> factionColors = allFactions.Select(otherFaction => otherFaction.Color).ToList();
+        List<Color> factionColors = [.. allFactions.Select(otherFaction => otherFaction.Color)];
 
         float bestColorFromSpectrum = 0f;
         float bestDistanceMin = -1f;
@@ -124,9 +124,12 @@ public static class PatchHelpers
 
         try
         {
-            List<Faction> allFactions = Find.FactionManager.AllFactionsListForReading
-                .Where(faction => CanExistOnLayer(layer, faction.def)).ToList();
-            List<Faction> shuffledFactions = allFactions.Where(faction => faction.def.colorSpectrum != null).ToList();
+            List<Faction> allFactions =
+            [
+                .. Find.FactionManager.AllFactionsListForReading
+                    .Where(faction => CanExistOnLayer(layer, faction.def)),
+            ];
+            List<Faction> shuffledFactions = [.. allFactions.Where(faction => faction.def.colorSpectrum != null)];
             shuffledFactions.Shuffle();
 
             for (int iter = 0; iter < 3; iter++)
@@ -267,7 +270,7 @@ public static class PatchHelpers
             if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
                 continue;
 
-            IEnumerable<FoodGroupDef> foodGroups = ingestible.FoodGroups.ToList();
+            List<FoodGroupDef> foodGroups = [.. ingestible.FoodGroups];
             if (thoughtOverride.allowedFoodGroups is { Count: > 0 } && !foodGroups.Intersect(thoughtOverride.allowedFoodGroups).Any())
                 continue;
             if (thoughtOverride.disallowedFoodGroups is { Count: > 0 } && foodGroups.Intersect(thoughtOverride.disallowedFoodGroups).Any())

@@ -15,8 +15,11 @@ public class WorkGiver_InteractWithPawn : WorkGiver_Scanner
     {
         DebugAssert.NotNull(pawn.Map);
 
-        return pawn.Map.mapPawns.AllPawns.Where(targetPawn =>
-            (targetPawn is { guest.IsPrisoner: true } ? targetPawn.guest.HostFaction : targetPawn.Faction) == pawn.Faction).ToList();
+        return
+        [
+            .. pawn.Map.mapPawns.AllPawns.Where(targetPawn =>
+                (targetPawn is { guest.IsPrisoner: true } ? targetPawn.guest.HostFaction : targetPawn.Faction) == pawn.Faction),
+        ];
     }
 
     public override bool ShouldSkip(Pawn pawn, bool forced = false)

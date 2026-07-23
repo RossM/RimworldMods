@@ -55,7 +55,7 @@ public static class DebugOutputs
             }));
         }
 
-        DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs, columns.ToArray());
+        DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs, [.. columns]);
         return;
 
         static float GetXenotypeChance(FactionDef factionDef, XenotypeDef xenotypeDef)
@@ -88,7 +88,7 @@ public static class DebugOutputs
         }
 
         DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(pawnKindDef => pawnKindDef.xenotypeSet != null),
-            columns.ToArray());
+            [.. columns]);
         return;
 
         static float GetXenotypeChance(PawnKindDef pawnKindDef, XenotypeDef xenotypeDef)
@@ -121,7 +121,7 @@ public static class DebugOutputs
             }));
         }
 
-        DebugTables.MakeTablesDialog(DefDatabase<XenotypeDef>.AllDefs, columns.ToArray());
+        DebugTables.MakeTablesDialog(DefDatabase<XenotypeDef>.AllDefs, [.. columns]);
         return;
 
         static int GetSkillModifier(XenotypeDef xenotypeDef, SkillDef skillDef)
@@ -160,7 +160,7 @@ public static class DebugOutputs
             }));
         }
 
-        DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs.Where(ShouldShow), columns.ToArray());
+        DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs.Where(ShouldShow), [.. columns]);
         return;
 
         static bool ShouldShow(FactionDef factionDef) =>
@@ -253,7 +253,7 @@ public static class DebugOutputs
             columns.Add(new(Abbreviate(stat.label).CapitalizeFirst(), def => BaseStatValue(def, localStat)));
         }
 
-        DebugTables.MakeTablesDialog(DefDatabase<XenotypeDef>.AllDefs, columns.ToArray());
+        DebugTables.MakeTablesDialog(DefDatabase<XenotypeDef>.AllDefs, [.. columns]);
 
         static float BaseStatValue(XenotypeDef xenotype, StatDef stat)
         {
@@ -299,7 +299,7 @@ public static class DebugOutputs
             w = w[..^3] + "g";
         int preserved = maxLength / 2;
         // ReSharper disable once StringLiteralTypo
-        w = w[.. preserved] + new String(w[preserved ..].Where(c => !"aeiou".Contains(c)).ToArray());
+        w = w[.. preserved] + new string([.. w[preserved ..].Where(c => !"aeiou".Contains(c))]);
         if (w.Length <= maxLength)
             return w;
         return w[..maxLength];

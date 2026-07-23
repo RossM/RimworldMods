@@ -42,13 +42,16 @@ public class ScenPart_StartingSlaves : ScenPart_PawnModifier
         // to ensure that the non-warcats are the slaves.
         if (Find.Scenario.AllParts.OfType<ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes>().FirstOrDefault() is { } xenotypeConfig)
         {
-            pawns = pawns.OrderBy(p =>
-            {
-                DebugAssert.NotNull(xenotypeConfig.xenotypeCounts);
+            pawns =
+            [
+                .. pawns.OrderBy(p =>
+                {
+                    DebugAssert.NotNull(xenotypeConfig.xenotypeCounts);
 
-                int index = xenotypeConfig.xenotypeCounts.FindIndex(x => x.xenotype == p.genes?.Xenotype);
-                return index == -1 ? xenotypeConfig.xenotypeCounts.Count : index;
-            }).ToList();
+                    int index = xenotypeConfig.xenotypeCounts.FindIndex(x => x.xenotype == p.genes?.Xenotype);
+                    return index == -1 ? xenotypeConfig.xenotypeCounts.Count : index;
+                }),
+            ];
         }
 
         foreach (var pawn in pawns.Skip(Math.Max(0, pawns.Count - count)))

@@ -233,8 +233,12 @@ public static class DebugArena
     private static XenotypeDef? GetDefaultXenotype(PawnKindDef pawnKindDef)
     {
         if ((pawnKindDef.xenotypeSet ?? pawnKindDef.defaultFactionDef?.xenotypeSet) is { } xenotypeSet)
-            return xenotypeSet is [{ chance: >= 1 } value] ? value.xenotype :
-                xenotypeSet is XenotypeSetWithDefault withDefault ? withDefault.defaultXenotype : XenotypeDefOf.Baseliner;
+            return xenotypeSet switch
+            {
+                [{ chance: >= 1 } value] => value.xenotype,
+                XenotypeSetWithDefault withDefault => withDefault.defaultXenotype,
+                _ => XenotypeDefOf.Baseliner
+            };
         return XenotypeDefOf.Baseliner;
     }
 
@@ -266,7 +270,7 @@ public static class DebugArena
 
         DebugAssert.NotNull(Current.Game);
 
-        List<PawnKindDef> kinds = kindsEnumerable.ToList();
+        List<PawnKindDef> kinds = [.. kindsEnumerable];
         int currentFights = 0;
 
         Dictionary<PawnKindDef, int> wins = new();
@@ -328,7 +332,7 @@ public static class DebugArena
 
             List<PawnKindDef> filteredKinds = kinds;
             if (scoreRankLimit > 0)
-                filteredKinds = kinds.OrderByDescending(CombatPower).Take(scoreRankLimit).ToList();
+                filteredKinds = [.. kinds.OrderByDescending(CombatPower).Take(scoreRankLimit)];
 
             PawnKindDef lhsDef = forcedPawnKind ?? filteredKinds.RandomElementByWeight(PawnKindWeight);
             // ReSharper disable once AccessToModifiedClosure
@@ -353,8 +357,8 @@ public static class DebugArena
             if (lhsCount <= 0 || rhsCount <= 0)
                 return false;
 
-            List<PawnKindDef> lhs = Enumerable.Repeat(lhsDef, lhsCount).ToList();
-            List<PawnKindDef> rhs = Enumerable.Repeat(rhsDef, rhsCount).ToList();
+            List<PawnKindDef> lhs = [.. Enumerable.Repeat(lhsDef, lhsCount)];
+            List<PawnKindDef> rhs = [.. Enumerable.Repeat(rhsDef, rhsCount)];
 
             if (BeginArenaFight(lhs, rhs, FightCompletedCallback))
                 currentFights += 1;

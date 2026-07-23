@@ -124,7 +124,7 @@ public static class Analyzer
         if (assembly is null)
             throw new ArgumentNullException(nameof(assembly));
 
-        List<Type> extraDefTypes = GenTypes.AllTypesWithAttribute<UsedFromXmlAttribute>().Where(t => t.IsAbstract).ToList();
+        List<Type> extraDefTypes = [.. GenTypes.AllTypesWithAttribute<UsedFromXmlAttribute>().Where(t => t.IsAbstract)];
 
         foreach (Type type in assembly.GetTypes())
         {

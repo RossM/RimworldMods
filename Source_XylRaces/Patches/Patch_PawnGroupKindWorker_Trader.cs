@@ -25,7 +25,7 @@ public static class Patch_PawnGroupKindWorker_Trader
         // (1) Selkies are excluded from non-coastal, non-river tiles
         // (2) Fewer animals are generated if mastodons are selected as the carrier type
 
-        List<Thing> waresItems = wares.Where(thing => thing is not Pawn).ToList();
+        List<Thing> waresItems = [.. wares.Where(thing => thing is not Pawn)];
         int itemIndex = 0;
         IEnumerable<PawnGenOption> carrierOptions = groupMaker.carriers;
         if (parms.tile.Valid)

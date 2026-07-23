@@ -8,7 +8,7 @@ internal static class Patch_GenConstruct
 
     [Feature(typeof(GeneCompProperties_UnlockBuildables))]
     [InnerPostfix(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
-    [Target(nameof(GenConstruct.CanConstruct), [typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef)])]
+    [Target(nameof(GenConstruct.CanConstruct), typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef))]
     public static void MembersCanBuild_Postfix(Ideo __instance, Thing thing, Pawn p, ref bool __result)
     {
         if (__result)

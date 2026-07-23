@@ -54,7 +54,7 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
     {
         DebugAssert.NotNull(def.diseaseIncident);
 
-        List<Pawn> list = ApplyToPawns(ActualVictims(parms).ToList(), out var blockedInfo);
+        List<Pawn> list = ApplyToPawns([.. ActualVictims(parms)], out var blockedInfo);
         if (list is not { Count: > 0 } && blockedInfo.NullOrEmpty())
         {
             return false;

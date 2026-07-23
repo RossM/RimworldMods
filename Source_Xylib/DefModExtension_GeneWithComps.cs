@@ -32,7 +32,7 @@ public abstract class GeneCompProperties
 [PublicAPI]
 public class DefModExtension_GeneWithComps : DefModExtension
 {
-    public IEnumerable<string> CustomEffectDescriptions => field ??= GetCustomEffectDescriptions().ToList();
+    public IEnumerable<string> CustomEffectDescriptions => field ??= [.. GetCustomEffectDescriptions()];
 
     public Texture2D ExtraIcon
     {

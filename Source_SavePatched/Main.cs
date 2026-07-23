@@ -115,10 +115,10 @@ public class Main(ModContentPack content) : Mod(content)
     {
         Patches patchInfo = Harmony.GetPatchInfo(method);
 
-        List<MethodInfo> prefixes = PatchFunctions.GetSortedPatchMethods(method, patchInfo.Prefixes.ToArray(), false);
-        List<MethodInfo> postfixes = PatchFunctions.GetSortedPatchMethods(method, patchInfo.Postfixes.ToArray(), false);
-        List<MethodInfo> transpilers = PatchFunctions.GetSortedPatchMethods(method, patchInfo.Transpilers.ToArray(), false);
-        List<MethodInfo> finalizers = PatchFunctions.GetSortedPatchMethods(method, patchInfo.Finalizers.ToArray(), false);
+        List<MethodInfo> prefixes = PatchFunctions.GetSortedPatchMethods(method, [.. patchInfo.Prefixes], false);
+        List<MethodInfo> postfixes = PatchFunctions.GetSortedPatchMethods(method, [.. patchInfo.Postfixes], false);
+        List<MethodInfo> transpilers = PatchFunctions.GetSortedPatchMethods(method, [.. patchInfo.Transpilers], false);
+        List<MethodInfo> finalizers = PatchFunctions.GetSortedPatchMethods(method, [.. patchInfo.Finalizers], false);
 
         //var patcher = new MethodPatcher(method, null, prefixes, postfixes, transpilers, finalizers, false);
 
@@ -149,14 +149,14 @@ public class Main(ModContentPack content) : Mod(content)
     private static MethodBuilder MakeMethodBuilder(MethodInfo methodInfo, TypeBuilder typeBuilder)
     {
         var methodBuilder = typeBuilder.DefineMethod(methodInfo.Name, methodInfo.Attributes,
-            methodInfo.ReturnType, methodInfo.GetParameters().Select(p => p.ParameterType).ToArray());
+            methodInfo.ReturnType, [.. methodInfo.GetParameters().Select(p => p.ParameterType)]);
         return methodBuilder;
     }
 
     private static ConstructorBuilder MakeMethodBuilder(ConstructorInfo methodInfo, TypeBuilder typeBuilder)
     {
         var methodBuilder = typeBuilder.DefineConstructor(methodInfo.Attributes, methodInfo.CallingConvention,
-            methodInfo.GetParameters().Select(p => p.ParameterType).ToArray());
+            [.. methodInfo.GetParameters().Select(p => p.ParameterType)]);
         return methodBuilder;
     }
 
@@ -216,7 +216,7 @@ public class Main(ModContentPack content) : Mod(content)
             }
             else if (oldInstruction.OpCode == OpCodes.Switch)
             {
-                ilGenerator.Emit(oldInstruction.OpCode, ((int[])oldInstruction.Value).Select(i => labels[i]).ToArray());
+                ilGenerator.Emit(oldInstruction.OpCode, [.. ((int[])oldInstruction.Value).Select(i => labels[i])]);
             }
             else
             {
@@ -296,7 +296,7 @@ public class Main(ModContentPack content) : Mod(content)
         foreach (var property in type.GetProperties())
         {
             typeBuilder.DefineProperty(property.Name, property.Attributes, property.PropertyType,
-                property.GetIndexParameters().Select(p => p.ParameterType).ToArray());
+                [.. property.GetIndexParameters().Select(p => p.ParameterType)]);
         }
 
         return typeBuilder;

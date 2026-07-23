@@ -18,7 +18,7 @@ public class GeneComp_Hyperlactation : GeneComp
 {
     public GeneCompProperties_Hyperlactation Props => (GeneCompProperties_Hyperlactation)props;
 
-    public Texture2D? ExtraIcon => parent.DefExt.ExtraIcon;
+    public Texture2D ExtraIcon => parent.DefExt.ExtraIcon;
 
     public HediffComp_Lactating? Lactating =>
         lactatingInternal ??= Pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault()?.GetComp<HediffComp_Lactating>();

@@ -6,8 +6,11 @@ public static class XenotypeHelpers
     {
         DebugAssert.NotNull(Find.FactionManager);
 
-        HashSet<XenotypeDef> playerXenotypes = Faction.OfPlayer.AllAlivePawns.Where(pawn => pawn.genes != null)
-            .Select(pawn => pawn.genes!.Xenotype).ToHashSet();
+        HashSet<XenotypeDef> playerXenotypes =
+        [
+            .. Faction.OfPlayer.AllAlivePawns.Where(pawn => pawn.genes != null)
+                .Select(pawn => pawn.genes!.Xenotype),
+        ];
         Dictionary<XenotypeDef, float> weights = new();
         foreach (var faction in Find.FactionManager.AllFactionsListForReading)
         {

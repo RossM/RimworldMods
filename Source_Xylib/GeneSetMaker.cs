@@ -208,7 +208,7 @@ public class GeneSetMaker_List : GeneSetMaker
         if (genes == null)
             throw new InvalidOperationException();
 
-        List<int> metList = genes.Select(g => g.biostatMet).ToList();
+        List<int> metList = [.. genes.Select(g => g.biostatMet)];
         int minTotal = metList.OrderBy(m => m).Take(count.min).Sum();
         int maxTotal = metList.OrderByDescending(m => m).Take(count.min).Sum();
         return Mathf.Clamp(0, minTotal, maxTotal);
