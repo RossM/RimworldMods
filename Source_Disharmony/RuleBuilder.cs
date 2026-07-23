@@ -101,7 +101,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         MethodInfo methodInfo = method.MethodInfo;
                 
         MethodInfo? baseMethod = null;
-        for (Type parent = method.InstanceType.BaseType; parent != typeof(object) && parent != null; parent = parent.BaseType)
+        for (Type? parent = method.InstanceType.BaseType; parent != typeof(object) && parent != null; parent = parent.BaseType)
         {
             ParameterInfo[] parameters = methodInfo.GetParameters();
             baseMethod = parent.GetMethod(methodInfo.Name,
