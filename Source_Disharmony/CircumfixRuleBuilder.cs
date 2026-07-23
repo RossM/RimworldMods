@@ -54,7 +54,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
                 EmitParameterValue(parameter);
 
             output.Add(CodeInstruction.Annotation($"{prefix.patchType} {prefix.patch.FullName}"));
-            output.Add(prefix.patch.GetCodeInstruction());
+            output.AddRange(prefix.patch.GetCodeInstructions());
 
             if (!prefix.patch.ReturnType.IsVoid())
             {
@@ -107,7 +107,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
                     EmitParameterValue(parameter);
 
                 output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
-                output.Add(postfix.patch.GetCodeInstruction());
+                output.AddRange(postfix.patch.GetCodeInstructions());
 
                 if (!postfix.patch.ReturnType.IsVoid())
                     output.Add(new(OpCodes.Pop));

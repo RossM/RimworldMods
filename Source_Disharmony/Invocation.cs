@@ -38,7 +38,10 @@ internal abstract class Invocation
     ///     If <see cref="IsStatic"/> is true, its behavior is subclass-specific.
     /// </summary>
     public abstract Type InstanceType { get; }
-    public abstract CodeInstruction GetCodeInstruction();
+
+    protected abstract CodeInstruction GetCodeInstruction();
+
+    public virtual IEnumerable<CodeInstruction> GetCodeInstructions() => [GetCodeInstruction()];
 
     public static Invocation Create(MemberInfo member)
     {
@@ -76,7 +79,8 @@ internal class EmptyInvocation : Invocation
 
     private EmptyInvocation() { }
 
-    public override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
+    protected override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
+    public override IEnumerable<CodeInstruction> GetCodeInstructions() => [];
 }
 
 internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
@@ -94,7 +98,7 @@ internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
 
     public static implicit operator FieldInvocation(FieldInfo field) => new(field);
 
-    public override CodeInstruction GetCodeInstruction() => new(fieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, fieldInfo);
+    protected override CodeInstruction GetCodeInstruction() => new(fieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, fieldInfo);
 
     public override bool Equals(object? obj)
     {
@@ -147,7 +151,7 @@ internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
 
     public static implicit operator MethodInvocation(MethodInfo method) => new(method);
 
-    public override CodeInstruction GetCodeInstruction() => new(methodInfo.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, methodInfo);
+    protected override CodeInstruction GetCodeInstruction() => new(methodInfo.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, methodInfo);
 
     public override bool Equals(object? obj)
     {
@@ -187,7 +191,7 @@ internal class ConstructorInvocation(ConstructorInfo constructorInfo) : MethodBa
     private readonly ConstructorInfo constructorInfo = constructorInfo;
     public override MethodBase MethodBase => constructorInfo;
 
-    public override CodeInstruction GetCodeInstruction() => new(OpCodes.Newobj, constructorInfo);
+    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Newobj, constructorInfo);
 
     public override bool Equals(object? obj)
     {
@@ -228,7 +232,7 @@ internal class PatchableConstructorInvocation(ConstructorInfo constructorInfo) :
             ? [.. ConstructorInfo.GetParameters().Select(p => p.Name)]
             : [InstanceParameterName, .. ConstructorInfo.GetParameters().Select(p => p.Name)];
 
-    public override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
+    protected override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
 }
 
 internal abstract class ConstantInvocation : Invocation
@@ -247,7 +251,7 @@ internal class ConstantIntInvocation(int value) : ConstantInvocation
     public override Type ReturnType => typeof(int);
     public int Value => value;
 
-    public override CodeInstruction GetCodeInstruction() => value switch
+    protected override CodeInstruction GetCodeInstruction() => value switch
     {
         -1 => new(OpCodes.Ldc_I4_M1),
         0 => new(OpCodes.Ldc_I4_0),
@@ -270,7 +274,7 @@ internal class ConstantLongInvocation(long value) : ConstantInvocation
     public override Type ReturnType => typeof(long);
     public long Value => value;
 
-    public override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_I8, value);
+    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_I8, value);
 }
 
 internal class ConstantStringInvocation(string value) : ConstantInvocation
@@ -279,7 +283,7 @@ internal class ConstantStringInvocation(string value) : ConstantInvocation
     public override Type ReturnType => typeof(string);
     public string Value => value;
 
-    public override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldstr, value);
+    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldstr, value);
 }
 
 internal class ConstantFloatInvocation(float value) : ConstantInvocation
@@ -288,7 +292,7 @@ internal class ConstantFloatInvocation(float value) : ConstantInvocation
     public override Type ReturnType => typeof(float);
     public float Value => value;
 
-    public override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R4, value);
+    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R4, value);
 }
 
 internal class ConstantDoubleInvocation(double value) : ConstantInvocation
@@ -297,5 +301,5 @@ internal class ConstantDoubleInvocation(double value) : ConstantInvocation
     public override Type ReturnType => typeof(double);
     public double Value => value;
 
-    public override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R8, value);
+    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R8, value);
 }

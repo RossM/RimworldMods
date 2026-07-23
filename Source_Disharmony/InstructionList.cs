@@ -11,6 +11,7 @@ internal class InstructionList : IEnumerable<CodeInstruction>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public void Add(CodeInstruction instruction) => Instructions.Add(instruction);
+    public void AddRange(IEnumerable<CodeInstruction> instructions) => Instructions.AddRange(instructions); 
 
     public void EmitLocalInitializer(int localIndex)
     {

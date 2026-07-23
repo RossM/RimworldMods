@@ -54,7 +54,7 @@ internal class InfixRuleBuilder : RuleBuilder
                 EmitParameterValue(parameter);
 
             output.Add(CodeInstruction.Annotation($"{prefix.patchType} {prefix.patch.FullName}"));
-            output.Add(prefix.patch.GetCodeInstruction());
+            output.AddRange(prefix.patch.GetCodeInstructions());
 
             if (!prefix.patch.ReturnType.IsVoid())
             {
@@ -68,7 +68,7 @@ internal class InfixRuleBuilder : RuleBuilder
             EmitInnerParameter(i, type);
         }
 
-        output.Add(inner.GetCodeInstruction());
+        output.AddRange(inner.GetCodeInstructions());
 
         if (skipLabel != null || innerPostfixes.Count > 0)
         {
@@ -84,7 +84,7 @@ internal class InfixRuleBuilder : RuleBuilder
                     EmitParameterValue(parameter);
 
                 output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
-                output.Add(postfix.patch.GetCodeInstruction());
+                output.AddRange(postfix.patch.GetCodeInstructions());
                 if (!postfix.patch.ReturnType.IsVoid())
                     output.Add(new(OpCodes.Pop));
             }
@@ -130,7 +130,7 @@ internal class InfixRuleBuilder : RuleBuilder
     {
         List<CodeInstruction> pattern =
         [
-            inner.GetCodeInstruction(),
+            .. inner.GetCodeInstructions(),
         ];
 
         EmitReplacement();
