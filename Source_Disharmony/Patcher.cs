@@ -190,7 +190,7 @@ internal class Patcher
 
             if (!matchersByMethod.ContainsKey(original.MethodBase))
             {
-                bool debug = PatchRegistry.Instance.GetPatchesFor(original.MethodBase).Any(p => p.debug);
+                bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
 
                 HarmonyMethod harmonyMethod = new(InfoOf.Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
 

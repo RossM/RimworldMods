@@ -77,12 +77,12 @@ internal class PatchRegistry
     // When another lock is also needed, this must be taken after Autopatcher's apply lock
     // and before Harmony's lock.
     private readonly object SyncRoot = new();
-    private readonly HashSet<MethodBase> methodsToUpdate = [];
-    private readonly Dictionary<MethodBase, List<PatchInfo>> patchesByMethod = new();
+    private readonly HashSet<MethodBaseInvocation> methodsToUpdate = [];
+    private readonly Dictionary<MethodBaseInvocation, List<PatchInfo>> patchesByMethod = new();
 
     private PatchRegistry() { }
 
-    public List<PatchInfo> GetPatchesFor(MethodBase method)
+    public List<PatchInfo> GetPatchesFor(MethodBaseInvocation method)
     {
         lock (SyncRoot)
             return patchesByMethod[method].ToList();
@@ -265,10 +265,10 @@ internal class PatchRegistry
             debug = debug,
         };
 
-        methodsToUpdate.Add(outer.MethodBase);
+        methodsToUpdate.Add(outer);
 
-        if (!patchesByMethod.TryGetValue(outer.MethodBase, out var patchList))
-            patchList = patchesByMethod[outer.MethodBase] = [];
+        if (!patchesByMethod.TryGetValue(outer, out var patchList))
+            patchList = patchesByMethod[outer] = [];
         patchList.Add(patch);
     }
 
@@ -292,17 +292,11 @@ internal class PatchRegistry
     {
         lock (SyncRoot)
         {
-            foreach (MethodBase patchedMethod in methodsToUpdate)
+            foreach (MethodBaseInvocation patchedMethod in methodsToUpdate)
             {
                 try
                 {
-                    MethodBaseInvocation invocation = patchedMethod switch
-                    {
-                        MethodInfo method => new MethodInvocation(method),
-                        ConstructorInfo constructor => new PatchableConstructorInvocation(constructor),
-                        _ => throw new ArgumentOutOfRangeException(),
-                    };
-                    var worker = new Autopatcher.PatchWorker(this, invocation, useTrampolines);
+                    var worker = new Autopatcher.PatchWorker(this, patchedMethod, useTrampolines);
 
                     worker.UpdateMethod();
                 }
