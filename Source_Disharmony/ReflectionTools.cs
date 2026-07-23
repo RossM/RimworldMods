@@ -23,13 +23,11 @@ public static class ReflectionTools
         if (name is null)
             throw new ArgumentException("name expected");
 
-        if (memberType is not (MemberType.Any or MemberType.Method or MemberType.Constructor))
-        {
-            if (parameterTypes != null)
-                throw new ArgumentException($"parameterTypes is not supported for memberType {memberType}");
-            if (genericTypes != null)
-                throw new ArgumentException($"genericTypes is not supported for memberType {memberType}");
-        }
+        if (parameterTypes != null && memberType is not (MemberType.Any or MemberType.Method or MemberType.Constructor))
+            throw new ArgumentException($"parameterTypes is not supported for memberType {memberType}");
+
+        if (genericTypes != null && memberType is not (MemberType.Any or MemberType.Method))
+            throw new ArgumentException($"genericTypes is not supported for memberType {memberType}");
 
         // Harmony uses ':' to separate the type name from the method name, so if it's there, use it
         if (name.Split([':'], 2) is [string typeName, string memberName])
