@@ -59,6 +59,8 @@ internal class ParameterBinding
     public int Index;
 
     public FieldInfo[]? Fields;
+
+    public string? StateKey;
 }
 
 internal struct PatchInfo
@@ -67,7 +69,6 @@ internal struct PatchInfo
     public required Invocation inner;
     public required Invocation patch;
     public required PatchType patchType;
-    public required Type stateKey;
     public required ParameterBinding[] parameters;
     public required bool inline;
     public bool debug;
@@ -251,7 +252,7 @@ internal class PatchRegistry
             }
         }
 
-        var parameterBinder = new ParameterBinder(target, outer, inner, patchType);
+        var parameterBinder = new ParameterBinder(target, outer, inner, patchType, patchMethod.MethodInfo.DeclaringType!.FullName);
 
         var arguments = patchMethod.MethodInfo.GetParameters().Select(parameterBinder.Bind).ToArray();
 
@@ -264,7 +265,6 @@ internal class PatchRegistry
             inner = inner,
             patch = patchMethod,
             patchType = patchType,
-            stateKey = patchMethod.MethodInfo.DeclaringType,
             parameters = arguments,
             inline = inline,
             debug = debug,

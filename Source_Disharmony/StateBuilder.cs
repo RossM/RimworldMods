@@ -3,9 +3,9 @@
 internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, EmptyInvocation.Instance)
 {
     private List<Type> LocalTypes => output.LocalTypes;
-    private readonly Dictionary<Type, (int index, Type type)> stateMap = new();
+    private readonly Dictionary<string, (int index, Type type)> stateMap = new();
 
-    private int GetOrAddStateLocal(Type stateKey, Type localType, Invocation method)
+    private int GetOrAddStateLocal(string stateKey, Type localType, Invocation method)
     {
         localType = localType.NoRefType;
 
@@ -51,8 +51,9 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
             {
                 if (parameter.BindingType == BindingType.State)
                 {
-                    parameter.Index = GetOrAddStateLocal(patch.stateKey,
-                        parameter.Parameter.ParameterType, patch.patch);
+                    if (parameter.StateKey is null)
+                        throw new InvalidOperationException("Null StateKey");
+                    parameter.Index = GetOrAddStateLocal(parameter.StateKey, parameter.Parameter.ParameterType, patch.patch);
                 }
             }
         }
