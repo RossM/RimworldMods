@@ -86,35 +86,37 @@ public class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
-public class InnerPrefixAttribute : PatchTypeAttribute
+public class InnerPrefixAttribute(
+    Type type,
+    string? memberName = null,
+    MemberType memberType = MemberType.Any,
+    Type[]? parameterTypes = null,
+    Type[]? genericTypes = null)
+    : PatchTypeAttribute(PatchType.InnerPrefix, type, memberName, memberType, parameterTypes, genericTypes)
 {
-    public InnerPrefixAttribute(Type type, string memberName, Type[]? parameterTypes = null, Type[]? genericTypes = null) :
-        base(PatchType.InnerPrefix, type, memberName, MemberType.Any, parameterTypes, genericTypes) { }
+    public InnerPrefixAttribute(Type type, string? memberName) : this(type, memberName, MemberType.Any) { }
 
-    public InnerPrefixAttribute(
-        Type type,
-        string memberName,
-        MemberType memberType,
-        Type[]? parameterTypes = null,
-        Type[]? genericTypes = null) :
-        base(PatchType.InnerPrefix, type, memberName, memberType, parameterTypes, genericTypes) { }
+    public InnerPrefixAttribute(Type type, string? memberName, params Type[] parameterTypes) : this(type, memberName, MemberType.Any,
+        parameterTypes)
+    { }
 }
 
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
-public class InnerPostfixAttribute : PatchTypeAttribute
+public class InnerPostfixAttribute(
+    Type type,
+    string? memberName = null,
+    MemberType memberType = MemberType.Any,
+    Type[]? parameterTypes = null,
+    Type[]? genericTypes = null)
+    : PatchTypeAttribute(PatchType.InnerPostfix, type, memberName, memberType, parameterTypes, genericTypes)
 {
-    public InnerPostfixAttribute(Type type, string memberName, Type[]? parameterTypes = null, Type[]? genericTypes = null) :
-        base(PatchType.InnerPostfix, type, memberName, MemberType.Any, parameterTypes, genericTypes) { }
+    public InnerPostfixAttribute(Type type, string? memberName) : this(type, memberName, MemberType.Any)
+    { }
 
-    public InnerPostfixAttribute(
-        Type type,
-        string memberName,
-        MemberType memberType,
-        Type[]? parameterTypes = null,
-        Type[]? genericTypes = null) :
-        base(PatchType.InnerPostfix, type, memberName, memberType, parameterTypes, genericTypes) { }
+    public InnerPostfixAttribute(Type type, string? memberName, params Type[] parameterTypes) : this(type, memberName, MemberType.Any,
+        parameterTypes) { }
 }
 
 [PublicAPI]
@@ -162,73 +164,67 @@ public class DebugAttribute : Attribute;
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 public class TargetAttribute(
     Type? type,
-    string methodName,
-    MemberType memberType,
+    string? methodName = null,
+    MemberType memberType = MemberType.Any,
     Type[]? parameterTypes = null,
     Type[]? genericTypes = null)
     : Attribute
 {
     public readonly Type? type = type;
-    public readonly string methodName = methodName;
+    public readonly string? methodName = methodName;
     public readonly MemberType memberType = memberType;
     public readonly Type[]? parameterTypes = parameterTypes;
     public readonly Type[]? genericTypes = genericTypes;
 
-    public TargetAttribute(string methodName, Type[]? parameterTypes = null, Type[]? genericTypes = null)
-        : this(null, methodName, MemberType.Any, parameterTypes, genericTypes) { }
+    public TargetAttribute(Type? type, string? methodName)
+        : this(type, methodName, MemberType.Any) { }
 
-    public TargetAttribute(string methodName, MemberType memberType, Type[]? parameterTypes = null, Type[]? genericTypes = null)
+    public TargetAttribute(Type? type, string? methodName, params Type[] parameterTypes)
+        : this(type, methodName, MemberType.Any, parameterTypes) { }
+
+    public TargetAttribute(
+        string? methodName = null,
+        MemberType memberType = MemberType.Any,
+        Type[]? parameterTypes = null,
+        Type[]? genericTypes = null)
         : this(null, methodName, memberType, parameterTypes, genericTypes) { }
 
-    public TargetAttribute(Type? type, string methodName, params Type[] parameterTypes)
-        : this(type, methodName, MemberType.Any, parameterTypes, null) { }
-
-    public TargetAttribute(Type? type, string methodName, MemberType memberType, params Type[] parameterTypes)
-        : this(type, methodName, memberType, parameterTypes, null) { }
+    public TargetAttribute(string methodName)
+        : this(null, methodName, MemberType.Any) { }
 
     public TargetAttribute(string methodName, params Type[] parameterTypes)
-        : this(null, methodName, MemberType.Any, parameterTypes, null) { }
-
-    public TargetAttribute(string methodName, MemberType memberType, params Type[] parameterTypes)
-        : this(null, methodName, memberType, parameterTypes, null) { }
-
-    public TargetAttribute(Type? type, string methodName, Type[]? parameterTypes = null, Type[]? genericTypes = null)
-        : this(type, methodName, MemberType.Any, parameterTypes, genericTypes) { }
+        : this(null, methodName, MemberType.Any, parameterTypes) { }
 }
 
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public class TargetsAttribute : TargetAttribute
+public class TargetsAttribute(
+    Type? type,
+    string? methodName = null,
+    MemberType memberType = MemberType.Any,
+    Type[]? parameterTypes = null,
+    Type[]? genericTypes = null)
+    : TargetAttribute(type, methodName, memberType, parameterTypes, genericTypes)
 {
-    public TargetsAttribute(string methodName, Type[]? parameterTypes = null, Type[]? genericTypes = null)
-        : base(methodName, parameterTypes, genericTypes) { }
+    public TargetsAttribute(Type? type, string? methodName)
+        : this(type, methodName, MemberType.Any) { }
 
-    public TargetsAttribute(string methodName, MemberType memberType, Type[]? parameterTypes = null, Type[]? genericTypes = null)
-        : base(methodName, memberType, parameterTypes, genericTypes) { }
-
-    public TargetsAttribute(Type? type, string methodName, params Type[] parameterTypes)
-        : base(type, methodName, parameterTypes) { }
-
-    public TargetsAttribute(Type? type, string methodName, MemberType memberType, params Type[] parameterTypes)
-        : base(type, methodName, memberType, parameterTypes) { }
-
-    public TargetsAttribute(string methodName, params Type[] parameterTypes)
-        : base(methodName, parameterTypes) { }
-
-    public TargetsAttribute(string methodName, MemberType memberType, params Type[] parameterTypes)
-        : base(methodName, memberType, parameterTypes) { }
-
-    public TargetsAttribute(Type? type, string methodName, Type[]? parameterTypes = null, Type[]? genericTypes = null)
-        : base(type, methodName, parameterTypes, genericTypes) { }
+    public TargetsAttribute(Type? type, string? methodName, params Type[] parameterTypes)
+        : this(type, methodName, MemberType.Any, parameterTypes) { }
 
     public TargetsAttribute(
-        Type? type,
-        string methodName,
-        MemberType memberType,
+        string? methodName = null,
+        MemberType memberType = MemberType.Any,
         Type[]? parameterTypes = null,
         Type[]? genericTypes = null)
-        : base(type, methodName, memberType, parameterTypes, genericTypes) { }
+        : this(null, methodName, memberType, parameterTypes, genericTypes) { }
+
+    public TargetsAttribute(string methodName)
+        : this(null, methodName, MemberType.Any) { }
+
+    public TargetsAttribute(string methodName, params Type[] parameterTypes)
+        : this(null, methodName, MemberType.Any, parameterTypes) { }
 }
 
 [PublicAPI]
