@@ -1,43 +1,8 @@
-using System.Reflection;
-using System.Reflection.Emit;
-
 namespace Xylib.Patches;
 
 [HarmonyPatch(typeof(SlaveRebellionUtility))]
 internal static class Patch_SlaveRebellionUtility
 {
-    private static readonly InstructionMatcher.Rule Rule_AddSlaveRebellionMtbFactorExplanation = new()
-    {
-        Min = 1, Max = 0,
-        Mode = InstructionMatcher.OutputMode.InsertBefore,
-        Pattern =
-        [
-            CodeInstruction.LoadLocal(0),
-            new CodeInstruction(OpCodes.Ldstr, "{0}: {1}"),
-            new CodeInstruction(OpCodes.Ldstr, "SuppressionFinalInterval"),
-        ],
-        Output =
-        [
-            // Load stringBuilder
-            CodeInstruction.LoadLocal(0),
-            // Load pawn
-            CodeInstruction.LoadArgument(0),
-            // Call FinishExplanation
-            CodeInstruction.Call(() => PatchHelpers.AddSlaveRebellionMtbFactorExplanation),
-        ],
-    };
-
-    [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
-    [HarmonyTranspiler]
-    [HarmonyPatch("GetSlaveRebellionMtbCalculationExplanation")]
-    public static IEnumerable<CodeInstruction> GetSlaveRebellionMtbCalculationExplanation_Transpiler(
-        IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator,
-        MethodBase method)
-    {
-        return InstructionMatcher.MatchAndReplace([Rule_AddSlaveRebellionMtbFactorExplanation], method, instructions, generator);
-    }
-
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
     [Postfix]
     [Target("InitiateSlaveRebellionMtbDaysHelper")]
@@ -51,6 +16,22 @@ internal static class Patch_SlaveRebellionUtility
             return;
 
         __result *= pawn.GetStatValue(XStatDefOf.XylSlaveRebellionMtbFactor);
+    }
+
+    [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
+    [InnerPostfix(typeof(StringBuilder), memberType: MemberType.Constructor, parameterTypes: [])]
+    [Target("GetSlaveRebellionMtbCalculationExplanation")]
+    public static void StringBuilder_ctor_Postfix(StringBuilder __result, out StringBuilder __state)
+    {
+        __state = __result;
+    }
+
+    [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
+    [InnerPostfixConstant("SuppressionFinalInterval")]
+    [Target("GetSlaveRebellionMtbCalculationExplanation")]
+    public static void SuppressionFinalInterval_Postfix(Pawn? pawn, StringBuilder __state)
+    {
+        PatchHelpers.AddSlaveRebellionMtbFactorExplanation(__state, pawn);
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
