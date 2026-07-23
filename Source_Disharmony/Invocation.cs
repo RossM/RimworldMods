@@ -120,16 +120,6 @@ internal abstract class MethodBaseInvocation : Invocation
 {
     public abstract MethodBase MethodBase { get; }
 
-    public new static MethodBaseInvocation Create(MemberInfo member)
-    {
-        return member switch
-        {
-            MethodInfo method => new MethodInvocation(method),
-            ConstructorInfo constructor => new ConstructorInvocation(constructor),
-            _ => throw new ArgumentOutOfRangeException(),
-        };
-    }
-
     public static implicit operator MethodBaseInvocation(MethodInfo method) => new MethodInvocation(method);
     public static implicit operator MethodBaseInvocation(ConstructorInfo constructor) => new ConstructorInvocation(constructor);
 }

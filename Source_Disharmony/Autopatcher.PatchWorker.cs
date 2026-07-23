@@ -2,16 +2,17 @@
 
 public static partial class Autopatcher
 {
-    internal class PatchWorker(PatchRegistry registry, MethodBase patchedMethod, bool useTrampolines = true)
+    internal class PatchWorker(PatchRegistry registry, MethodBaseInvocation patchedMethod, bool useTrampolines = true)
     {
-        private readonly List<PatchInfo> patches = registry.GetPatchesFor(patchedMethod);
-        private readonly Invocation outer = MethodBaseInvocation.Create(patchedMethod);
+        private readonly Invocation outer = patchedMethod;
+        private readonly List<PatchInfo> patches = registry.GetPatchesFor(patchedMethod.MethodBase);
 
         public void UpdateMethod()
         {
+            MethodBase patchedMethod1 = patchedMethod.MethodBase;
             if (patches.Count == 0)
             {
-                patcher.Unpatch(patchedMethod);
+                patcher.Unpatch(patchedMethod1);
                 return;
             }
 
@@ -24,7 +25,7 @@ public static partial class Autopatcher
             if (inlineMatcher != null)
                 matchers.Add(inlineMatcher);
 
-            patcher.ApplyPatch(patchedMethod, matchers.ToArray(), useTrampolines);
+            patcher.ApplyPatch(patchedMethod1, matchers.ToArray(), useTrampolines);
         }
 
         private InstructionMatcher? MakeInlineInstructionMatcher()

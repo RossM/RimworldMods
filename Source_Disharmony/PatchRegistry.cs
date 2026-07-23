@@ -296,7 +296,13 @@ internal class PatchRegistry
             {
                 try
                 {
-                    var worker = new Autopatcher.PatchWorker(this, patchedMethod, useTrampolines);
+                    MethodBaseInvocation invocation = patchedMethod switch
+                    {
+                        MethodInfo method => new MethodInvocation(method),
+                        ConstructorInfo constructor => new PatchableConstructorInvocation(constructor),
+                        _ => throw new ArgumentOutOfRangeException(),
+                    };
+                    var worker = new Autopatcher.PatchWorker(this, invocation, useTrampolines);
 
                     worker.UpdateMethod();
                 }
