@@ -103,7 +103,7 @@ internal class Patcher
     }
 
     // Must hold HarmonyInternals.locker
-    public MethodInfo ApplyTrampoline(MethodBase method)
+    public MethodInfo ApplyTrampoline(MethodInfo method)
     {
         if (trampolines.TryGetValue(method, out var existingTrampoline))
             return existingTrampoline;
@@ -111,7 +111,7 @@ internal class Patcher
         if (extraDebug)
             FileLog.Log($"!!! Applying trampoline to {method.FullName}");
 
-        MethodInfo trampoline = MakeTrampoline(MethodBaseInvocation.Create(method));
+        MethodInfo trampoline = MakeTrampoline(method);
 
         HarmonyInternals.DetourMethod(method, trampoline);
 
@@ -135,7 +135,7 @@ internal class Patcher
         return instructionsList;
     }
 
-    private MethodInfo MakeTrampoline(MethodBaseInvocation target)
+    private MethodInfo MakeTrampoline(MethodInvocation target)
     {
         Type[] parameterTypes = target.ParameterTypes;
 
@@ -158,33 +158,15 @@ internal class Patcher
             generator.Emit(OpCodes.Ldarg_S, i);
 
         // Call ResolveTrampoline(), which generates the real patch and applies a detour
-        switch (target)
-        {
-            case MethodInvocation methodTarget: generator.Emit(OpCodes.Ldtoken, methodTarget.MethodInfo); break;
-            case ConstructorInvocation constructorTarget: generator.Emit(OpCodes.Ldtoken, constructorTarget.ConstructorInfo); break;
-            default: throw new NotSupportedException();
-        }
+        generator.Emit(OpCodes.Ldtoken, target.MethodInfo);
         generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle);
         generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
 
-        switch (target)
-        {
-            case MethodInvocation methodTarget:
-            {
-                // Do a tail call to the original method, which will actually go to the newly installed patch
-                // The IL verifier does not allow tail calls to be used with by-ref arguments, so skip the tailcall prefix if there are any
-                if (!parameterTypes.Any(p => p.IsByRef))
-                    generator.Emit(OpCodes.Tailcall);
-                generator.Emit(OpCodes.Call, methodTarget.MethodInfo); break;
-            }
-            case ConstructorInvocation constructorTarget:
-            {
-                // This doesn't work, it initializes a brand-new object rather than the one currently being constructed.
-                generator.Emit(OpCodes.Newobj, constructorTarget.ConstructorInfo);
-                break;
-            }
-            default: throw new NotSupportedException();
-        }
+        // Do a tail call to the original method, which will actually go to the newly installed patch
+        // The IL verifier does not allow tail calls to be used with by-ref arguments, so skip the tailcall prefix if there are any
+        if (!parameterTypes.Any(p => p.IsByRef))
+            generator.Emit(OpCodes.Tailcall);
+        generator.Emit(OpCodes.Call, target.MethodInfo);
 
         generator.Emit(OpCodes.Ret);
 
@@ -221,8 +203,8 @@ internal class Patcher
             MethodInfo replacement;
             // Trampolines for constructors are currently bugged and do not correctly chain to the newly-patched constructor,
             // so disable trampolines for constructors.
-            if (useTrampolines && original is MethodInfo)
-                replacement = ApplyTrampoline(original);
+            if (useTrampolines && original is MethodInfo originalMethod)
+                replacement = ApplyTrampoline(originalMethod);
             else
                 replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
 
