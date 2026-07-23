@@ -179,6 +179,10 @@ internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
     public static bool operator !=(MethodInvocation? left, MethodInvocation? right) => !Equals(left, right);
 }
 
+/// <summary>
+///     This class represents a <see cref="OpCodes.Newobj"/> call of a constructor.
+/// </summary>
+/// <param name="constructorInfo"></param>
 internal class ConstructorInvocation(ConstructorInfo constructorInfo) : MethodBaseInvocation
 {
     public override string FullName => constructorInfo.FullName;
@@ -213,6 +217,28 @@ internal class ConstructorInvocation(ConstructorInfo constructorInfo) : MethodBa
     public static bool operator ==(ConstructorInvocation? left, ConstructorInvocation? right) => Equals(left, right);
 
     public static bool operator !=(ConstructorInvocation? left, ConstructorInvocation? right) => !Equals(left, right);
+}
+
+/// <summary>
+///     This class represents a constructor call as seen from inside the constructor itself, where it
+///     functions like an ordinary instance method returning void.
+/// </summary>
+/// <param name="constructorInfo"></param>
+internal class PatchableConstructorInvocation(ConstructorInfo constructorInfo) : ConstructorInvocation(constructorInfo)
+{
+    public override Type ReturnType => typeof(void);
+    public override bool IsStatic => ConstructorInfo.IsStatic;
+
+    public override Type[] ParameterTypes => field ??=
+        IsStatic
+            ? [.. ConstructorInfo.GetParameters().Select(p => p.ParameterType)]
+            : [ConstructorInfo.DeclaringType.CallableType, .. ConstructorInfo.GetParameters().Select(p => p.ParameterType)];
+    public override string[] ParameterNames => field ??=
+        IsStatic
+            ? [.. ConstructorInfo.GetParameters().Select(p => p.Name)]
+            : [InstanceParameterName, .. ConstructorInfo.GetParameters().Select(p => p.Name)];
+
+    public override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
 }
 
 internal abstract class ConstantInvocation : Invocation
