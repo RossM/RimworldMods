@@ -9,10 +9,9 @@ public static partial class Autopatcher
 
         public void UpdateMethod()
         {
-            MethodBase patchedMethod1 = patchedMethod.MethodBase;
             if (patches.Count == 0)
             {
-                patcher.Unpatch(patchedMethod1);
+                patcher.Unpatch(patchedMethod);
                 return;
             }
 
@@ -25,7 +24,7 @@ public static partial class Autopatcher
             if (inlineMatcher != null)
                 matchers.Add(inlineMatcher);
 
-            patcher.ApplyPatch(patchedMethod1, matchers.ToArray(), useTrampolines);
+            patcher.ApplyPatch(patchedMethod, matchers.ToArray(), useTrampolines);
         }
 
         private InstructionMatcher? MakeInlineInstructionMatcher()

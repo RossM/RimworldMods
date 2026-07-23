@@ -103,9 +103,9 @@ internal class Patcher
     }
 
     // Must hold HarmonyInternals.locker
-    public MethodInfo ApplyTrampoline(MethodInfo method)
+    public MethodInfo ApplyTrampoline(MethodBaseInvocation method)
     {
-        if (trampolines.TryGetValue(method, out var existingTrampoline))
+        if (trampolines.TryGetValue(method.MethodBase, out var existingTrampoline))
             return existingTrampoline;
 
         if (extraDebug)
@@ -113,9 +113,9 @@ internal class Patcher
 
         MethodInfo trampoline = MakeTrampoline(method);
 
-        HarmonyInternals.DetourMethod(method, trampoline);
+        HarmonyInternals.DetourMethod(method.MethodBase, trampoline);
 
-        trampolines[method] = trampoline;
+        trampolines[method.MethodBase] = trampoline;
 
         return trampoline;
     }
@@ -135,7 +135,7 @@ internal class Patcher
         return instructionsList;
     }
 
-    private MethodInfo MakeTrampoline(MethodInvocation target)
+    private MethodInfo MakeTrampoline(MethodBaseInvocation target)
     {
         Type[] parameterTypes = target.ParameterTypes;
 
@@ -173,7 +173,7 @@ internal class Patcher
         return method;
     }
 
-    public void ApplyPatch(MethodBase original, InstructionMatcher[] matchers, bool useTrampolines)
+    public void ApplyPatch(MethodBaseInvocation original, InstructionMatcher[] matchers, bool useTrampolines)
     {
         if (!trampolinesEnabled)
             useTrampolines = false;
@@ -183,11 +183,11 @@ internal class Patcher
 
         lock (HarmonyInternals.locker)
         {
-            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
+            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
 
-            if (!matchersByMethod.ContainsKey(original))
+            if (!matchersByMethod.ContainsKey(original.MethodBase))
             {
-                bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
+                bool debug = PatchRegistry.Instance.GetPatchesFor(original.MethodBase).Any(p => p.debug);
 
                 HarmonyMethod harmonyMethod = new(InfoOf.Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
 
@@ -198,37 +198,37 @@ internal class Patcher
                 ];
             }
 
-            matchersByMethod[original] = matchers;
+            matchersByMethod[original.MethodBase] = matchers;
 
             MethodInfo replacement;
             // Trampolines for constructors are currently bugged and do not correctly chain to the newly-patched constructor,
             // so disable trampolines for constructors.
-            if (useTrampolines && original is MethodInfo originalMethod)
-                replacement = ApplyTrampoline(originalMethod);
+            if (useTrampolines && original is MethodInvocation)
+                replacement = ApplyTrampoline(original);
             else
-                replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
+                replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
 
-            HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
+            HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);
         }
     }
 
-    public void Unpatch(MethodBase original)
+    public void Unpatch(MethodBaseInvocation original)
     {
         lock (HarmonyInternals.locker)
         {
-            if (!matchersByMethod.Remove(original))
+            if (!matchersByMethod.Remove(original.MethodBase))
                 return;
 
-            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
+            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
 
             patchInfo.transpilers =
             [
                 .. patchInfo.transpilers.Where(t => t.owner != harmonyID),
             ];
 
-            MethodInfo replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
+            MethodInfo replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
 
-            HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
+            HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);
         }
     }
 }
