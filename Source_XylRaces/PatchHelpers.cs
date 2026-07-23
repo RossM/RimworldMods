@@ -349,4 +349,17 @@ public static class PatchHelpers
             return Mathf.RoundToInt(V * 100f);
         });
     }
+
+    public static void AddLactationExplanation(StringBuilder stringBuilder, Pawn pawn)
+    {
+        if (!Settings.instance.ShouldFixLactationBugsFor(pawn))
+            return;
+
+        if (pawn.LactationHediff?.TryGetComp<HediffComp_Lactating>() is { } hediffComp_Lactating)
+        {
+            stringBuilder.AppendLine(
+                $"{pawn.LactationHediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
+            stringBuilder.AppendLine();
+        }
+    }
 }

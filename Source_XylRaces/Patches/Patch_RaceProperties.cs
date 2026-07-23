@@ -1,54 +1,8 @@
-﻿using System.Reflection;
-using System.Reflection.Emit;
-
-namespace XylXenos.Patches;
+﻿namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(RaceProperties))]
 public static class Patch_RaceProperties
 {
-    private static readonly InstructionMatcher.Rule Rule_AddLactationExplanation = new()
-    {
-        Min = 1, Max = 0,
-        Mode = InstructionMatcher.OutputMode.InsertBefore,
-        Pattern =
-        [
-            // stringBuilder.AppendLine("StatsReport_FinalValue" ...
-            CodeInstruction.LoadLocal(0),
-            new CodeInstruction(OpCodes.Ldstr, "StatsReport_FinalValue"),
-        ],
-        Output =
-        [
-            // LactationExplanation(stringBuilder, pawn);
-            CodeInstruction.LoadLocal(0),
-            CodeInstruction.LoadArgument(0),
-            CodeInstruction.Call(() => AddLactationExplanation),
-        ],
-    };
-
-    [Feature(nameof(Config.Feature.Bugfix_Lactation))]
-    [HarmonyTranspiler]
-    [HarmonyPatch(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
-    public static IEnumerable<CodeInstruction> NutritionEatenPerDayExplanation_Transpiler(
-        IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator,
-        MethodBase method)
-    {
-        return InstructionMatcher.MatchAndReplace([Rule_AddLactationExplanation], method, instructions, generator);
-    }
-
-    public static void AddLactationExplanation(StringBuilder stringBuilder, Pawn pawn)
-    {
-        if (!Settings.instance.ShouldFixLactationBugsFor(pawn))
-            return;
-
-        if (pawn.LactationHediff?.TryGetComp<HediffComp_Lactating>() is { } hediffComp_Lactating)
-        {
-            stringBuilder.AppendLine(
-                $"{pawn.LactationHediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
-            stringBuilder.AppendLine();
-        }
-    }
-
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]
     [InnerPrefix(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
     [Target(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
@@ -83,5 +37,21 @@ public static class Patch_RaceProperties
             .ToString("0.##");
 
         return false;
+    }
+
+    [Feature(nameof(Config.Feature.Bugfix_Lactation))]
+    [InnerPostfixConstant("StatsReport_FinalValue")]
+    [Target("NutritionEatenPerDayExplanation")]
+    public static void StatsReport_FinalValue_Postfix([Parameter("p")] Pawn pawn, [State] StringBuilder sb)
+    {
+        PatchHelpers.AddLactationExplanation(sb, pawn);
+    }
+
+    [Feature(nameof(Config.Feature.Bugfix_Lactation))]
+    [InnerPostfix(typeof(StringBuilder), memberType: MemberType.Constructor, parameterTypes: [])]
+    [Target("NutritionEatenPerDayExplanation")]
+    public static void StringBuilder_ctor_Postfix(StringBuilder __result, [State] out StringBuilder sb)
+    {
+        sb = __result;
     }
 }
