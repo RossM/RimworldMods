@@ -35,13 +35,10 @@ public static class Patch_PregnancyUtility
     [Target(nameof(PregnancyUtility.GetInheritedGenes), typeof(Pawn), typeof(Pawn), typeof(Out<bool>))]
     public static void GetInheritedGenes_Postfix(Pawn mother, Pawn father, ref List<GeneDef> __result)
     {
-        DebugAssert.NotNull(mother.genes);
-        DebugAssert.NotNull(father.genes);
-
         __result = PatchHelpers.GetDominantParent(mother, father) switch
         {
-            PatchHelpers.DominantParent.Mother => mother.genes.Endogenes.Select(gene => gene.def).ToList(),
-            PatchHelpers.DominantParent.Father => father.genes.Endogenes.Select(gene => gene.def).ToList(),
+            PatchHelpers.DominantParent.Mother => [.. mother.genes.Endogenes.Select(gene => gene.def)],
+            PatchHelpers.DominantParent.Father => [.. father.genes.Endogenes.Select(gene => gene.def)],
             _ => __result,
         };
     }

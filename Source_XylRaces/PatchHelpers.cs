@@ -168,7 +168,7 @@ public static class PatchHelpers
         return flags;
     }
 
-    public static DominantParent GetDominantParent(Pawn mother, Pawn father)
+    public static DominantParent GetDominantParent(Pawn? mother, Pawn? father)
     {
         int fatherStrength = XenotypeStrength(father);
         int motherStrength = XenotypeStrength(mother);
@@ -191,9 +191,9 @@ public static class PatchHelpers
         destination.genes.iconDef = source.genes.iconDef;
     }
 
-    private static int XenotypeStrength(Pawn pawn)
+    private static int XenotypeStrength(Pawn? pawn)
     {
-        if (pawn.genes == null)
+        if (pawn?.genes == null)
             return int.MinValue;
 
         return pawn.ActiveGenesOfType<GeneWithComps>()
