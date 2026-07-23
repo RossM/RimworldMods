@@ -199,13 +199,22 @@ internal class PatchRegistry
         if (patchTypeAttribute.patchType is not (PatchType.InnerPrefix or PatchType.InnerPostfix))
             return EmptyInvocation.Instance;
 
-        if (patchTypeAttribute.memberName == null)
-            throw new InvalidOperationException($"{patchTypeAttribute.patchType} patch must have an inner target");
+        switch (patchTypeAttribute)
+        {
+            case InnerPostfixConstantAttribute { value: int value }: return new ConstantIntInvocation(value);
+            case InnerPostfixConstantAttribute { value: long value }: return new ConstantLongInvocation(value);
+            case InnerPostfixConstantAttribute { value: float value }: return new ConstantFloatInvocation(value);
+            case InnerPostfixConstantAttribute { value: double value }: return new ConstantDoubleInvocation(value);
+            case InnerPostfixConstantAttribute { value: string value }: return new ConstantStringInvocation(value);
+            case { memberName: string memberName }:
+            {
+                MemberInfo inner = ReflectionTools.GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName, patchTypeAttribute.memberType,
+                    patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
 
-        MemberInfo inner = ReflectionTools.GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName, patchTypeAttribute.memberType,
-            patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
-
-        return Invocation.Create(inner);
+                return Invocation.Create(inner);
+            }
+            default: throw new InvalidOperationException($"{patchTypeAttribute.patchType} patch must have an inner target");
+        }
     }
 
     private void AddPatch(

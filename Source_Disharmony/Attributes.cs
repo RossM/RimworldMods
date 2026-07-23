@@ -117,6 +117,39 @@ public class InnerPostfixAttribute : PatchTypeAttribute
         base(PatchType.InnerPostfix, type, memberName, memberType, parameterTypes, genericTypes) { }
 }
 
+[PublicAPI]
+[MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Method)]
+public class InnerPostfixConstantAttribute : PatchTypeAttribute
+{
+    public readonly object value;
+
+    public InnerPostfixConstantAttribute(int value) : base(PatchType.InnerPostfix)
+    {
+        this.value = value;
+    }
+
+    public InnerPostfixConstantAttribute(long value) : base(PatchType.InnerPostfix)
+    {
+        this.value = value;
+    }
+
+    public InnerPostfixConstantAttribute(float value) : base(PatchType.InnerPostfix)
+    {
+        this.value = value;
+    }
+
+    public InnerPostfixConstantAttribute(double value) : base(PatchType.InnerPostfix)
+    {
+        this.value = value;
+    }
+
+    public InnerPostfixConstantAttribute(string value) : base(PatchType.InnerPostfix)
+    {
+        this.value = value;
+    }
+}
+
 /// <summary>
 ///     This attribute causes the infix transpiler to log the instruction sequence of the modified method to the debug log.
 /// </summary>

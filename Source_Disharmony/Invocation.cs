@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using System.Globalization;
+
+namespace Disharmony;
 
 /// <summary>
 ///     Class representing a possible patch method or patch target.
@@ -62,7 +64,7 @@ internal class EmptyInvocation : Invocation
 
     public override string[] ParameterNames => [];
 
-    public override Type InstanceType => throw new NotSupportedException();
+    public override Type InstanceType => typeof(void);
 
     public static readonly EmptyInvocation Instance = new();
 
@@ -150,4 +152,73 @@ internal class MethodInvocation(MethodInfo methodInfo) : Invocation
     public static bool operator ==(MethodInvocation? left, MethodInvocation? right) => Equals(left, right);
 
     public static bool operator !=(MethodInvocation? left, MethodInvocation? right) => !Equals(left, right);
+}
+
+internal abstract class ConstantInvocation : Invocation
+{
+    public override bool IsStatic => true;
+    public override Type InstanceType => typeof(void);
+
+    public override Type[] ParameterTypes => [];
+
+    public override string[] ParameterNames => [];
+}
+
+internal class ConstantIntInvocation(int value) : ConstantInvocation
+{
+    public override string FullName => value.ToString();
+    public override Type ReturnType => typeof(int);
+    public int Value => value;
+
+    public override CodeInstruction GetCodeInstruction() => value switch
+    {
+        -1 => new(OpCodes.Ldc_I4_M1),
+        0 => new(OpCodes.Ldc_I4_0),
+        1 => new(OpCodes.Ldc_I4_1),
+        2 => new(OpCodes.Ldc_I4_2),
+        3 => new(OpCodes.Ldc_I4_3),
+        4 => new(OpCodes.Ldc_I4_4),
+        5 => new(OpCodes.Ldc_I4_5),
+        6 => new(OpCodes.Ldc_I4_6),
+        7 => new(OpCodes.Ldc_I4_7),
+        8 => new(OpCodes.Ldc_I4_8),
+        >= -128 and <= 127 => new(OpCodes.Ldc_I4_S, value),
+        _ => new(OpCodes.Ldc_I4, value),
+    };
+}
+
+internal class ConstantLongInvocation(long value) : ConstantInvocation
+{
+    public override string FullName => value.ToString();
+    public override Type ReturnType => typeof(long);
+    public long Value => value;
+
+    public override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_I8, value);
+}
+
+internal class ConstantStringInvocation(string value) : ConstantInvocation
+{
+    public override string FullName => $"\"{value}\"";
+    public override Type ReturnType => typeof(string);
+    public string Value => value;
+
+    public override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldstr, value);
+}
+
+internal class ConstantFloatInvocation(float value) : ConstantInvocation
+{
+    public override string FullName => value.ToString(CultureInfo.InvariantCulture);
+    public override Type ReturnType => typeof(float);
+    public float Value => value;
+
+    public override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R4, value);
+}
+
+internal class ConstantDoubleInvocation(double value) : ConstantInvocation
+{
+    public override string FullName => value.ToString(CultureInfo.InvariantCulture);
+    public override Type ReturnType => typeof(double);
+    public double Value => value;
+
+    public override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R8, value);
 }
