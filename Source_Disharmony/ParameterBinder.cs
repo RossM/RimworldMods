@@ -47,9 +47,11 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case ReturnValueAttribute: return BindReturnValue(parameter, invocation, scope);
 
-            case StateAttribute { key: var key }: return BindState(parameter, key);
+            case StateAttribute { key: var key }: return BindState(parameter, key ?? parameterName);
 
             case FieldAttribute { name: var name, scope: var attributeScope }: return BindFieldByName(parameter, name ?? parameterName, attributeScope);
+
+            case BaseMethodAttribute: return BindBaseMethod(parameter);
 
             case null: break;
 
@@ -69,9 +71,9 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case "__result": return BindReturnValue(parameter, invocation, scope);
 
-            case "__state": return BindState(parameter, null);
+            case "__state": return BindState(parameter, parameterName);
 
-            case "__base": return BindBase(parameter);
+            case "__base": return BindBaseMethod(parameter);
 
             case var _ when parameterName.StartsWith("___"): return BindFieldByName(parameter, parameterName[3..], Scope.Any);
 
@@ -91,15 +93,15 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = scope, Index = index };
     }
 
-    private ParameterBinding BindState(ParameterInfo parameter, string? key)
+    private ParameterBinding BindState(ParameterInfo parameter, string key)
     {
-        string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}#{key ?? parameter.Name}";
+        string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}#{key}";
 
         // ValidateCast not needed, the type will be checked in StateBuilder
         return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, StateKey = stateKey };
     }
 
-    private ParameterBinding BindBase(ParameterInfo parameter)
+    private ParameterBinding BindBaseMethod(ParameterInfo parameter)
     {
         if (outer is not MethodInvocation method || outer.IsStatic)
             throw new ParameterBindingException(parameter.Name, "Must be an instance method");

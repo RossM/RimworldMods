@@ -286,3 +286,7 @@ public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBi
 
     public FieldAttribute(Scope scope = Scope.Any) : this(null, scope) { }
 }
+
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Parameter)]
+public class BaseMethodAttribute() : ParameterBindingAttribute(Scope.Outer);
