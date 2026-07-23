@@ -8,7 +8,7 @@ public class ParameterBindingException(string argumentName, string message) : Ex
     public override string Message => $"{argumentName}: {base.Message}";
 }
 
-internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, string stateKey)
+internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, string className)
 {
     private readonly bool infix = patchType is PatchType.InnerPrefix or PatchType.InnerPostfix;
     private readonly bool isIterator = outer != target;
@@ -57,10 +57,20 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case ReturnValueAttribute: return BindReturnValue(parameter, defaultInvocation, defaultScope);
 
-            case StateAttribute:
+            case StateAttribute { key: string key }:
             {
+                string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}#{key}";
+
                 // ValidateCast not needed, the type will be checked in StateBuilder
                 return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, StateKey = stateKey };
+            }
+
+            case StateAttribute:
+            {
+                string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}";
+
+                // ValidateCast not needed, the type will be checked in StateBuilder
+                    return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, StateKey = stateKey };
             }
 
             case FieldAttribute { name: var name, scope: var scope }: return BindFieldByName(parameter, name ?? parameterName, scope);
@@ -85,6 +95,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case "__state":
             {
+                string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}";
+
                 // ValidateCast not needed, the type will be checked in StateBuilder
                 return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, StateKey = stateKey };
             }

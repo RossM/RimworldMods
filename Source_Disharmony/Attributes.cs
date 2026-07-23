@@ -271,7 +271,12 @@ public class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any);
 
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class StateAttribute() : ParameterBindingAttribute(Scope.Outer);
+public class StateAttribute(string? key) : ParameterBindingAttribute(Scope.Outer)
+{
+    public readonly string? key = key;
+
+    public StateAttribute() : this(null) { }
+}
 
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
