@@ -20,46 +20,36 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         var attributes = parameter.GetCustomAttributes();
         var parameterBindingAttribute = attributes.OfType<ParameterBindingAttribute>().SingleOrDefault();
 
-        Scope defaultScope = (parameterBindingAttribute?.scope ?? Scope.Any) switch
+        Scope scope = (parameterBindingAttribute?.scope ?? Scope.Any) switch
         {
             Scope.Any => infix ? Scope.Inner : Scope.Outer,
             Scope.Inner => Scope.Inner,
             Scope.Outer => Scope.Outer,
             _ => throw new ArgumentOutOfRangeException(),
         };
-        Invocation defaultInvocation = defaultScope switch
+        Invocation invocation = scope switch
         {
             Scope.Inner => inner,
             Scope.Outer => outer,
             _ => throw new ArgumentOutOfRangeException(),
         };
 
-        if (defaultInvocation is EmptyInvocation)
+        if (invocation is EmptyInvocation)
             throw new ParameterBindingException(parameterName, "Invalid scope");
 
         switch (parameterBindingAttribute)
         {
-            case ParameterAttribute { index: int index }:
-            {
-                if (isIterator && defaultScope == Scope.Outer)
-                    return BindParameterByName(parameter, target.ParameterNames[index], defaultScope);
+            case ParameterAttribute { index: int index }: return BindParameterByIndex(parameter, invocation, scope, index);
 
-                if (!defaultInvocation.IsStatic)
-                    index++;
+            case ParameterAttribute { name: var name, scope: var attributeScope }: return BindParameterByName(parameter, name ?? parameterName, attributeScope);
 
-                ValidateCast(parameter, defaultInvocation.ParameterTypes[index]);
-                return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = defaultScope, Index = index };
-            }
+            case InstanceAttribute: return BindInstance(parameter, invocation, scope);
 
-            case ParameterAttribute { name: var name, scope: var scope }: return BindParameterByName(parameter, name ?? parameterName, scope);
-
-            case InstanceAttribute: return BindInstance(parameter, defaultInvocation, defaultScope);
-
-            case ReturnValueAttribute: return BindReturnValue(parameter, defaultInvocation, defaultScope);
+            case ReturnValueAttribute: return BindReturnValue(parameter, invocation, scope);
 
             case StateAttribute { key: var key }: return BindState(parameter, key);
 
-            case FieldAttribute { name: var name, scope: var scope }: return BindFieldByName(parameter, name ?? parameterName, scope);
+            case FieldAttribute { name: var name, scope: var attributeScope }: return BindFieldByName(parameter, name ?? parameterName, attributeScope);
 
             case null: break;
 
@@ -75,9 +65,9 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 return BindInstance(parameter, outer, Scope.Outer);
             }
 
-            case "__instance": return BindInstance(parameter, defaultInvocation, defaultScope);
+            case "__instance": return BindInstance(parameter, invocation, scope);
 
-            case "__result": return BindReturnValue(parameter, defaultInvocation, defaultScope);
+            case "__result": return BindReturnValue(parameter, invocation, scope);
 
             case "__state": return BindState(parameter, null);
 
@@ -87,6 +77,18 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             default: return BindParameterByName(parameter, parameterName, Scope.Any);
         }
+    }
+
+    private ParameterBinding BindParameterByIndex(ParameterInfo parameter, Invocation invocation, Scope scope, int index)
+    {
+        if (isIterator && scope == Scope.Outer)
+            return BindParameterByName(parameter, target.ParameterNames[index], scope);
+
+        if (!invocation.IsStatic)
+            index++;
+
+        ValidateCast(parameter, invocation.ParameterTypes[index]);
+        return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = scope, Index = index };
     }
 
     private ParameterBinding BindState(ParameterInfo parameter, string? key)
