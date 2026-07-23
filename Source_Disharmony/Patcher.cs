@@ -234,6 +234,8 @@ internal class Patcher
             if (!matchersByMethod.Remove(original.MethodBase))
                 return;
 
+            trampolines.Remove(original.MethodBase);
+
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
 
             patchInfo.transpilers =
