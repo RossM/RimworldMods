@@ -90,18 +90,29 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             }
 
             case "__base":
-            {
-                if (outer.IsStatic)
-                    throw new ParameterBindingException(parameterName, "Must be an instance method");
-
-                ValidateCast(typeof(Delegate), parameter.ParameterType, parameterName);
-                return new() { Parameter = parameter, BindingType = BindingType.BaseMethod, Scope = Scope.Outer };
-            }
+                return BindBase(parameter);
 
             case var _ when parameterName.StartsWith("___"): return BindFieldByName(parameter, parameterName[3..], Scope.Any);
 
             default: return BindParameterByName(parameter, parameterName, Scope.Any);
         }
+    }
+
+    private ParameterBinding BindBase(ParameterInfo parameter)
+    {
+        if (outer is not MethodInvocation method || outer.IsStatic)
+            throw new ParameterBindingException(parameter.Name, "Must be an instance method");
+
+        ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
+
+        // Validate the delegate type has the right parameter types
+        var delegateInvoke = parameter.ParameterType.GetMethod("Invoke");
+        if (delegateInvoke is null)
+            throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
+        if (!delegateInvoke.GetParameters().Types().SequenceEqual(method.MethodInfo.GetParameters().Types()))
+            throw new ParameterBindingException(parameter.Name, "Type mismatch");
+
+        return new() { Parameter = parameter, BindingType = BindingType.BaseMethod, Scope = Scope.Outer };
     }
 
     private ParameterBinding BindReturnValue(ParameterInfo parameter, Invocation defaultInvocation, Scope defaultScope)
