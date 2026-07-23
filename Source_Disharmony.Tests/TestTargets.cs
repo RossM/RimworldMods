@@ -261,6 +261,13 @@ namespace Disharmony.Tests
         public static string StringResult() => StringValue;
     }
 
+    public sealed class ConstructorTargets
+    {
+        public ConstructorTargets() { }
+
+        public static ConstructorTargets Create() => new ConstructorTargets();
+    }
+
     public static class OuterStaticMethodTargets
     {
         public static int IntResult() => InnerStaticMethodTargets.IntResult();
