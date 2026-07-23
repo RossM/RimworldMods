@@ -32,4 +32,17 @@ public static class ReflectionExtensions
 
         public Type CallableType => type.IsValueType ? type.MakeByRefType() : type;
     }
+
+    extension(ILGenerator generator)
+    {
+        internal void Emit(OpCode opCode, MethodBaseInvocation invocation)
+        {
+            switch (invocation)
+            {
+                case MethodInvocation method: generator.Emit(opCode, method.MethodInfo); break;
+                case ConstructorInvocation constructor: generator.Emit(opCode, constructor.ConstructorInfo); break;
+                default: throw new ArgumentOutOfRangeException(nameof(invocation));
+            }
+        }
+    }
 }

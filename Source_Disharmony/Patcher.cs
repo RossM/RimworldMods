@@ -158,7 +158,7 @@ internal class Patcher
             generator.Emit(OpCodes.Ldarg_S, i);
 
         // Call ResolveTrampoline(), which generates the real patch and applies a detour
-        generator.Emit(OpCodes.Ldtoken, target.MethodInfo);
+        generator.Emit(OpCodes.Ldtoken, target);
         generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle);
         generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
 
@@ -166,7 +166,7 @@ internal class Patcher
         // The IL verifier does not allow tail calls to be used with by-ref arguments, so skip the tailcall prefix if there are any
         if (!parameterTypes.Any(p => p.IsByRef))
             generator.Emit(OpCodes.Tailcall);
-        generator.Emit(OpCodes.Call, target.MethodInfo);
+        generator.Emit(OpCodes.Call, target);
 
         generator.Emit(OpCodes.Ret);
 
