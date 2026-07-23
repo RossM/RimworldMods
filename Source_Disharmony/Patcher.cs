@@ -5,8 +5,6 @@ namespace Disharmony;
 
 internal class Patcher
 {
-    private readonly bool extraDebug = false;
-
     private static class InfoOf
     {
         // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
@@ -41,6 +39,8 @@ internal class Patcher
     private const string harmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
     public static readonly Patcher Instance = new();
+    private readonly bool extraDebug = false;
+    private readonly Module module;
 
     // These variables must only be accessed while HarmonyInternals.locker is held
     private readonly Dictionary<MethodBase, MethodInfo> trampolines = new();
@@ -49,6 +49,11 @@ internal class Patcher
     private readonly Dictionary<MethodBase, InstructionMatcher[]> matchersByMethod = new();
 
     public bool trampolinesEnabled = true;
+
+    public Patcher()
+    {
+        module = GetType().Module;
+    }
 
     /// <summary>
     ///     This does the same thing as <see cref="Harmony.Patch" />> but must be called
@@ -141,7 +146,7 @@ internal class Patcher
 
         trampolineCount++;
         var method = new DynamicMethod($"{target.FullName}_Trampoline{trampolineCount}", target.ReturnType,
-            parameterTypes, true);
+            parameterTypes, module, true);
 
         ILGenerator generator = method.GetILGenerator();
 
@@ -163,9 +168,7 @@ internal class Patcher
         generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
 
         // Do a tail call to the original method, which will actually go to the newly installed patch
-        // The IL verifier does not allow tail calls to be used with by-ref arguments, so skip the tailcall prefix if there are any
-        if (!parameterTypes.Any(p => p.IsByRef))
-            generator.Emit(OpCodes.Tailcall);
+        generator.Emit(OpCodes.Tailcall);
         generator.Emit(OpCodes.Call, target);
 
         generator.Emit(OpCodes.Ret);
