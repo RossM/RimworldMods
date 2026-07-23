@@ -227,7 +227,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         {
             var type = parameterTypes[closureIndex].NoRefType;
 
-            var field = type?.GetField(name, AccessTools.all);
+            var field = type.GetField(name, AccessTools.all);
 
             if (field != null)
             {

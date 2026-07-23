@@ -24,7 +24,7 @@ public static partial class Autopatcher
             if (inlineMatcher != null)
                 matchers.Add(inlineMatcher);
 
-            patcher.ApplyPatch(patchedMethod, matchers.ToArray(), useTrampolines);
+            patcher.ApplyPatch(patchedMethod, [.. matchers], useTrampolines);
         }
 
         private InstructionMatcher? MakeInlineInstructionMatcher()
@@ -70,7 +70,7 @@ public static partial class Autopatcher
                          .Where(patch => patch.patchType is PatchType.InnerPrefix or PatchType.InnerPostfix).GroupBy(patch => patch.inner))
             {
                 Invocation inner = targetGroup.Key;
-                ruleBuilders.Add(new InfixRuleBuilder(context, outer, inner, targetGroup.ToList()));
+                ruleBuilders.Add(new InfixRuleBuilder(context, outer, inner, [.. targetGroup]));
             }
 
             List<Rule> rules = [];

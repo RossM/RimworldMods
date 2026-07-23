@@ -37,7 +37,7 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
         yield return new Rule
         {
             Mode = InstructionMatcher.OutputMode.MethodPrefix,
-            Output = output.Instructions.ToArray(),
+            Output = [.. output.Instructions],
             Name = "state variable initialization",
         };
     }
@@ -47,12 +47,12 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
         foreach (var patch in patches)
         {
             ParameterBinding[] parameters = patch.parameters;
-            for (int i = 0; i < parameters.Length; i++)
+            foreach (ParameterBinding parameter in parameters)
             {
-                if (parameters[i].BindingType == BindingType.State)
+                if (parameter.BindingType == BindingType.State)
                 {
-                    parameters[i].Index = GetOrAddStateLocal(patch.stateKey,
-                        parameters[i].Parameter.ParameterType, patch.patch);
+                    parameter.Index = GetOrAddStateLocal(patch.stateKey,
+                        parameter.Parameter.ParameterType, patch.patch);
                 }
             }
         }

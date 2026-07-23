@@ -90,7 +90,7 @@ internal class PatchRegistry
     public List<PatchInfo> GetPatchesFor(MethodBaseInvocation method)
     {
         lock (SyncRoot)
-            return patchesByMethod[method].ToList();
+            return [.. patchesByMethod[method]];
     }
 
     public void ProcessAssembly(Assembly assembly)
@@ -188,7 +188,7 @@ internal class PatchRegistry
                         if (target == null)
                             throw new InvalidOperationException($"{nameForErrors}: Couldn't locate method");
                         if (target.IsGenericMethod)
-                            throw new InvalidOperationException($"Can't patch instantiated generic method");
+                            throw new InvalidOperationException($"{nameForErrors}: Can't patch instantiated generic method");
 
                         MethodBaseInvocation outer = target switch
                         {

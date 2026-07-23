@@ -161,7 +161,7 @@ public partial class InstructionMatcher
                         {
                             Emit(OpCodes.Nop,
                                 labels: inInstructions[match.start].labels,
-                                blocks: inInstructions[match.start].blocks.Where(IsBlockStart).ToList());
+                                blocks: [.. inInstructions[match.start].blocks.Where(IsBlockStart)]);
                         }
 
                         EmitReplacement(match);
@@ -169,7 +169,7 @@ public partial class InstructionMatcher
                         if (inInstructions[match.end - 1].blocks.Any(IsBlockEnd))
                         {
                             Emit(OpCodes.Nop,
-                                blocks: inInstructions[match.end - 1].blocks.Where(IsBlockEnd).ToList());
+                                blocks: [.. inInstructions[match.end - 1].blocks.Where(IsBlockEnd)]);
                         }
 
                         break;
@@ -180,7 +180,7 @@ public partial class InstructionMatcher
                         {
                             Emit(OpCodes.Nop,
                                 labels: inInstructions[match.start].labels,
-                                blocks: inInstructions[match.start].blocks.Where(IsBlockStart).ToList());
+                                blocks: [.. inInstructions[match.start].blocks.Where(IsBlockStart)]);
                         }
 
                         EmitReplacement(match);
@@ -215,7 +215,7 @@ public partial class InstructionMatcher
                         if (inInstructions[match.end - 1].blocks.Any(IsBlockEnd))
                         {
                             Emit(OpCodes.Nop,
-                                blocks: inInstructions[match.end - 1].blocks.Where(IsBlockEnd).ToList());
+                                blocks: [.. inInstructions[match.end - 1].blocks.Where(IsBlockEnd)]);
                         }
 
                         break;
@@ -237,8 +237,10 @@ public partial class InstructionMatcher
 
             foreach (var codeInstruction in OutInstructions)
             {
-                codeInstruction.labels.Do(label => FileLog.LogIL(codePos, label));
-                codeInstruction.blocks.Do(block => FileLog.LogILBlockBegin(codePos, block));
+                foreach (var label in codeInstruction.labels)
+                    FileLog.LogIL(codePos, label);
+                foreach (var block in codeInstruction.blocks)
+                    FileLog.LogILBlockBegin(codePos, block);
 
                 var code = codeInstruction.opcode;
                 var operand = codeInstruction.operand;
@@ -264,7 +266,8 @@ public partial class InstructionMatcher
                     default: FileLog.LogIL(codePos, code, operand); break;
                 }
 
-                codeInstruction.blocks.Do(block => FileLog.LogILBlockEnd(codePos, block));
+                foreach (var block in codeInstruction.blocks)
+                    FileLog.LogILBlockEnd(codePos, block);
                 if (realCode)
                     codePos += ILSize(codeInstruction.opcode);
             }

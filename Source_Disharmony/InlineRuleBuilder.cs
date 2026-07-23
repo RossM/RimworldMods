@@ -140,8 +140,8 @@ internal class InlineRuleBuilder : RuleBuilder
             Min = 1,
             Max = 0,
             Mode = InstructionMatcher.OutputMode.Replace,
-            Pattern = pattern.ToArray(),
-            Output = output.Instructions.ToArray(),
+            Pattern = [.. pattern],
+            Output = [.. output.Instructions],
             Name = method.FullName,
         };
     }

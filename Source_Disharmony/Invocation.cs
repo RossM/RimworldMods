@@ -85,20 +85,18 @@ internal class EmptyInvocation : Invocation
 
 internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
 {
-    public override string FullName => fieldInfo.FullName;
-    public override Type ReturnType => fieldInfo.FieldType;
-    public override Type[] ParameterTypes => field ??= fieldInfo.IsStatic ? [] : [fieldInfo.DeclaringType];
-    public override bool IsStatic => fieldInfo.IsStatic;
-    public override string[] ParameterNames => field ??= fieldInfo.IsStatic ? [] : [InstanceParameterName];
-    public override Type InstanceType => fieldInfo.DeclaringType;
-    public FieldInfo FieldInfo => fieldInfo;
+    public override string FullName => FieldInfo.FullName;
+    public override Type ReturnType => FieldInfo.FieldType;
+    public override Type[] ParameterTypes => field ??= FieldInfo.IsStatic ? [] : [FieldInfo.DeclaringType];
+    public override bool IsStatic => FieldInfo.IsStatic;
+    public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [] : [InstanceParameterName];
+    public override Type InstanceType => FieldInfo.DeclaringType;
+    public FieldInfo FieldInfo { get; } = fieldInfo;
 
-
-    private readonly FieldInfo fieldInfo = fieldInfo;
 
     public static implicit operator FieldInvocation(FieldInfo field) => new(field);
 
-    protected override CodeInstruction GetCodeInstruction() => new(fieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, fieldInfo);
+    protected override CodeInstruction GetCodeInstruction() => new(FieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, FieldInfo);
 
     public override bool Equals(object? obj)
     {
@@ -111,9 +109,9 @@ internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
         return Equals((FieldInvocation)obj);
     }
 
-    protected bool Equals(FieldInvocation other) => fieldInfo.Equals(other.fieldInfo);
+    protected bool Equals(FieldInvocation other) => FieldInfo.Equals(other.FieldInfo);
 
-    public override int GetHashCode() => fieldInfo.GetHashCode();
+    public override int GetHashCode() => FieldInfo.GetHashCode();
 
     public static bool operator ==(FieldInvocation? left, FieldInvocation? right) => Equals(left, right);
 
@@ -130,28 +128,27 @@ internal abstract class MethodBaseInvocation : Invocation
 
 internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
 {
-    public override string FullName => methodInfo.FullName;
-    public override Type ReturnType => methodInfo.ReturnType;
-    public override bool IsStatic => methodInfo.IsStatic;
-    public override Type InstanceType => methodInfo.DeclaringType;
-    public MethodInfo MethodInfo => methodInfo;
-    public override MethodBase MethodBase => methodInfo;
+    public override string FullName => MethodInfo.FullName;
+    public override Type ReturnType => MethodInfo.ReturnType;
+    public override bool IsStatic => MethodInfo.IsStatic;
+    public override Type InstanceType => MethodInfo.DeclaringType;
+    public MethodInfo MethodInfo { get; } = methodInfo;
+
+    public override MethodBase MethodBase => MethodInfo;
 
     public override Type[] ParameterTypes => field ??=
-        methodInfo.IsStatic
-            ? [.. methodInfo.GetParameters().Select(p => p.ParameterType)]
-            : [methodInfo.DeclaringType.CallableType, .. methodInfo.GetParameters().Select(p => p.ParameterType)];
+        MethodInfo.IsStatic
+            ? [.. MethodInfo.GetParameters().Select(p => p.ParameterType)]
+            : [MethodInfo.DeclaringType.CallableType, .. MethodInfo.GetParameters().Select(p => p.ParameterType)];
 
     public override string[] ParameterNames => field ??=
-        methodInfo.IsStatic
-            ? [.. methodInfo.GetParameters().Select(p => p.Name)]
-            : [InstanceParameterName, .. methodInfo.GetParameters().Select(p => p.Name)];
-
-    private readonly MethodInfo methodInfo = methodInfo;
+        MethodInfo.IsStatic
+            ? [.. MethodInfo.GetParameters().Select(p => p.Name)]
+            : [InstanceParameterName, .. MethodInfo.GetParameters().Select(p => p.Name)];
 
     public static implicit operator MethodInvocation(MethodInfo method) => new(method);
 
-    protected override CodeInstruction GetCodeInstruction() => new(methodInfo.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, methodInfo);
+    protected override CodeInstruction GetCodeInstruction() => new(MethodInfo.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, MethodInfo);
 
     public override bool Equals(object? obj)
     {
@@ -164,9 +161,9 @@ internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
         return Equals((MethodInvocation)obj);
     }
 
-    protected bool Equals(MethodInvocation other) => methodInfo.Equals(other.methodInfo);
+    protected bool Equals(MethodInvocation other) => MethodInfo.Equals(other.MethodInfo);
 
-    public override int GetHashCode() => methodInfo.GetHashCode();
+    public override int GetHashCode() => MethodInfo.GetHashCode();
 
     public static bool operator ==(MethodInvocation? left, MethodInvocation? right) => Equals(left, right);
 
@@ -179,19 +176,18 @@ internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
 /// <param name="constructorInfo"></param>
 internal class ConstructorInvocation(ConstructorInfo constructorInfo) : MethodBaseInvocation
 {
-    public override string FullName => constructorInfo.FullName;
-    public override Type ReturnType => constructorInfo.DeclaringType;
-    public override Type[] ParameterTypes => field ??= [.. constructorInfo.GetParameters().Select(p => p.ParameterType)];
+    public override string FullName => ConstructorInfo.FullName;
+    public override Type ReturnType => ConstructorInfo.DeclaringType;
+    public override Type[] ParameterTypes => field ??= [.. ConstructorInfo.GetParameters().Select(p => p.ParameterType)];
 
     public override bool IsStatic => true;
-    public override string[] ParameterNames => field ??= [.. constructorInfo.GetParameters().Select(p => p.Name)];
-    public override Type InstanceType => constructorInfo.DeclaringType;
-    public ConstructorInfo ConstructorInfo => constructorInfo;
+    public override string[] ParameterNames => field ??= [.. ConstructorInfo.GetParameters().Select(p => p.Name)];
+    public override Type InstanceType => ConstructorInfo.DeclaringType;
+    public ConstructorInfo ConstructorInfo { get; } = constructorInfo;
 
-    private readonly ConstructorInfo constructorInfo = constructorInfo;
-    public override MethodBase MethodBase => constructorInfo;
+    public override MethodBase MethodBase => ConstructorInfo;
 
-    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Newobj, constructorInfo);
+    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Newobj, ConstructorInfo);
 
     public override bool Equals(object? obj)
     {
@@ -204,9 +200,9 @@ internal class ConstructorInvocation(ConstructorInfo constructorInfo) : MethodBa
         return Equals((ConstructorInvocation)obj);
     }
 
-    protected bool Equals(ConstructorInvocation other) => constructorInfo.Equals(other.constructorInfo);
+    protected bool Equals(ConstructorInvocation other) => ConstructorInfo.Equals(other.ConstructorInfo);
 
-    public override int GetHashCode() => constructorInfo.GetHashCode();
+    public override int GetHashCode() => ConstructorInfo.GetHashCode();
 
     public static bool operator ==(ConstructorInvocation? left, ConstructorInvocation? right) => Equals(left, right);
 

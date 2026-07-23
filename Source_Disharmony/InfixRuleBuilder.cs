@@ -17,8 +17,8 @@ internal class InfixRuleBuilder : RuleBuilder
         Invocation inner,
         List<PatchInfo> patches) : base(context, outer)
     {
-        innerPrefixes = patches.Where(patch => patch.patchType == PatchType.InnerPrefix).ToList();
-        innerPostfixes = patches.Where(patch => patch.patchType == PatchType.InnerPostfix).ToList();
+        innerPrefixes = [.. patches.Where(patch => patch.patchType == PatchType.InnerPrefix)];
+        innerPostfixes = [.. patches.Where(patch => patch.patchType == PatchType.InnerPostfix)];
 
         this.inner = inner;
 
@@ -107,12 +107,12 @@ internal class InfixRuleBuilder : RuleBuilder
 
     protected override Type GetParameterType(ParameterBinding parameter)
     {
-        switch (parameter.Scope)
+        return parameter.Scope switch
         {
-            case Scope.Outer: return outerParameterTypes[parameter.Index];
-            case Scope.Inner: return innerParameterTypes[parameter.Index];
-            default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
-        }
+            Scope.Outer => outerParameterTypes[parameter.Index],
+            Scope.Inner => innerParameterTypes[parameter.Index],
+            _ => throw new ArgumentOutOfRangeException(nameof(parameter.Scope))
+        };
     }
 
     protected override void EmitParameterLookup(ParameterBinding parameter, Type resultType)
@@ -121,6 +121,7 @@ internal class InfixRuleBuilder : RuleBuilder
         {
             case Scope.Outer: EmitOuterParameter(parameter.Index, resultType); break;
             case Scope.Inner: EmitInnerParameter(parameter.Index, resultType); break;
+            case Scope.Any:
             default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
         }
     }
@@ -140,8 +141,8 @@ internal class InfixRuleBuilder : RuleBuilder
             Min = 1,
             Max = 0,
             Mode = InstructionMatcher.OutputMode.Replace,
-            Pattern = pattern.ToArray(),
-            Output = output.Instructions.ToArray(),
+            Pattern = [.. pattern],
+            Output = [.. output.Instructions],
             Name = inner.FullName,
         };
     }

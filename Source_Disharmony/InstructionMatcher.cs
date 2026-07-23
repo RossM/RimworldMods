@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace Disharmony;
+﻿namespace Disharmony;
 
 public partial class InstructionMatcher
 {

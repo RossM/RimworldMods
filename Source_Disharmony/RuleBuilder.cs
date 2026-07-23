@@ -151,11 +151,11 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
     protected virtual Type GetParameterType(ParameterBinding parameter)
     {
-        switch (parameter.Scope)
+        return parameter.Scope switch
         {
-            case Scope.Outer: return outerParameterTypes[parameter.Index];
-            default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
-        }
+            Scope.Outer => outerParameterTypes[parameter.Index],
+            _ => throw new ArgumentOutOfRangeException(nameof(parameter.Scope))
+        };
     }
 
     protected virtual void EmitParameterLookup(ParameterBinding parameter, Type resultType)

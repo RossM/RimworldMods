@@ -96,7 +96,7 @@ public static class ReflectionTools
         if (parameterTypes != null || genericTypes != null)
             candidates = FilterMethods(candidates, parameterTypes, genericTypes);
 
-        return candidates.Select(result =>
+        candidates = candidates.Select(result =>
             result switch
             {
                 PropertyInfo property => memberType == MemberType.Setter ? property.SetMethod : property.GetMethod,
@@ -104,7 +104,9 @@ public static class ReflectionTools
                     throw new NotSupportedException("Patching field setters is not supported"),
                 _ => result,
             }
-        ).Where(m => m is not null).ToList();
+        ).Where(m => m is not null);
+
+        return [.. candidates];
     }
 
     private static IEnumerable<MethodBase> FilterMethods(IEnumerable<MemberInfo> candidates, Type[]? parameterTypes, Type[]? genericTypes)

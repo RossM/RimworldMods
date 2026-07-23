@@ -14,8 +14,8 @@ internal class CircumfixRuleBuilder : RuleBuilder
         Invocation outer,
         List<PatchInfo> patches) : base(context, outer)
     {
-        prefixes = patches.Where(patch => patch.patchType == PatchType.Prefix).ToList();
-        postfixes = patches.Where(patch => patch.patchType == PatchType.Postfix).ToList();
+        prefixes = [.. patches.Where(patch => patch.patchType == PatchType.Prefix)];
+        postfixes = [.. patches.Where(patch => patch.patchType == PatchType.Postfix)];
 
         targetType = outer.ReturnType;
     }
@@ -67,7 +67,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
             yield return new Rule
             {
                 Mode = InstructionMatcher.OutputMode.MethodPrefix,
-                Output = output.Instructions.ToArray(),
+                Output = [.. output.Instructions],
                 Name = "prefixes",
             };
             output.Instructions.Clear();
@@ -121,7 +121,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
             yield return new Rule
             {
                 Mode = InstructionMatcher.OutputMode.MethodPostfix,
-                Output = output.Instructions.ToArray(),
+                Output = [.. output.Instructions],
                 Name = "postfixes",
             };
             output.Instructions.Clear();
