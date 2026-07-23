@@ -57,20 +57,12 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case ReturnValueAttribute: return BindReturnValue(parameter, defaultInvocation, defaultScope);
 
-            case StateAttribute { key: string key }:
+            case StateAttribute { key: var key }:
             {
-                string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}#{key}";
+                string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}#{key ?? parameterName}";
 
                 // ValidateCast not needed, the type will be checked in StateBuilder
                 return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, StateKey = stateKey };
-            }
-
-            case StateAttribute:
-            {
-                string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}";
-
-                // ValidateCast not needed, the type will be checked in StateBuilder
-                    return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, StateKey = stateKey };
             }
 
             case FieldAttribute { name: var name, scope: var scope }: return BindFieldByName(parameter, name ?? parameterName, scope);
@@ -95,7 +87,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case "__state":
             {
-                string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}";
+                string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}#{parameterName}";
 
                 // ValidateCast not needed, the type will be checked in StateBuilder
                 return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, StateKey = stateKey };

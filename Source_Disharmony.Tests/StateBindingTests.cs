@@ -205,7 +205,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void StateSharing_SameClass_SameType_ImplicitAndAttribute_Shares_Postfix([State] int state) =>
+    public static void StateSharing_SameClass_SameType_ImplicitAndAttribute_Shares_Postfix([State("__state")] int state) =>
         Observed = state;
 
     [Prefix]
