@@ -32,9 +32,10 @@ public sealed class ConstructorPatchingTests : PatchTestBase
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.Prefix_Constructor_ReferenceType_Parameterless_Executes));
 
-        _ = new ConstructorTargets();
+        var result = new ConstructorTargets();
 
         Assert.That(ConstructorPatchingPatches.ExecutionCount, Is.EqualTo(1));
+        Assert.That(result.ConstructorExecuted, Is.True);
     }
 
     [Test]
@@ -45,9 +46,10 @@ public sealed class ConstructorPatchingTests : PatchTestBase
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.Postfix_Constructor_ReferenceType_Parameterless_Executes));
 
-        _ = new ConstructorTargets();
+        var result = new ConstructorTargets();
 
         Assert.That(ConstructorPatchingPatches.ExecutionCount, Is.EqualTo(1));
+        Assert.That(result.ConstructorExecuted, Is.True);
     }
 
     [Test]
@@ -58,9 +60,10 @@ public sealed class ConstructorPatchingTests : PatchTestBase
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.InnerPrefix_Constructor_ReferenceType_Parameterless_Executes));
 
-        _ = ConstructorTargets.Create();
+        ConstructorTargets result = ConstructorTargets.Create();
 
         Assert.That(ConstructorPatchingPatches.ExecutionCount, Is.EqualTo(1));
+        Assert.That(result.ConstructorExecuted, Is.True);
     }
 
     [Test]
@@ -71,8 +74,9 @@ public sealed class ConstructorPatchingTests : PatchTestBase
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.InnerPostfix_Constructor_ReferenceType_Parameterless_Executes));
 
-        _ = ConstructorTargets.Create();
+        ConstructorTargets result = ConstructorTargets.Create();
 
         Assert.That(ConstructorPatchingPatches.ExecutionCount, Is.EqualTo(1));
+        Assert.That(result.ConstructorExecuted, Is.True);
     }
 }

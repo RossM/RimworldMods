@@ -263,7 +263,12 @@ namespace Disharmony.Tests
 
     public sealed class ConstructorTargets
     {
-        public ConstructorTargets() { }
+        public bool ConstructorExecuted { get; }
+
+        public ConstructorTargets()
+        {
+            ConstructorExecuted = true;
+        }
 
         public static ConstructorTargets Create() => new ConstructorTargets();
     }
