@@ -110,7 +110,9 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (delegateInvoke is null)
             throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
         if (!delegateInvoke.GetParameters().Types().SequenceEqual(method.MethodInfo.GetParameters().Types()))
-            throw new ParameterBindingException(parameter.Name, "Type mismatch");
+            throw new ParameterBindingException(parameter.Name, "Parameter type mismatch");
+        if (delegateInvoke.ReturnType != method.MethodInfo.ReturnType)
+            throw new ParameterBindingException(parameter.Name, "Return type mismatch");
 
         return new() { Parameter = parameter, BindingType = BindingType.BaseMethod, Scope = Scope.Outer };
     }

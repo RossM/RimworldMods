@@ -118,7 +118,7 @@ public sealed class BaseMethodBindingTests : PatchTestBase
                 nameof(BaseMethodBindingPatches.Prefix_BaseMethod_Delegate_ParameterTypeMismatch_RejectedByPatch)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
-        Assert.That(exception.InnerException!.Message, Is.EqualTo("__base: Type mismatch"));
+        Assert.That(exception.InnerException!.Message, Is.EqualTo("__base: Parameter type mismatch"));
     }
 
     [Test]
@@ -130,7 +130,7 @@ public sealed class BaseMethodBindingTests : PatchTestBase
                 nameof(BaseMethodBindingPatches.Prefix_BaseMethod_Delegate_ParameterCountMismatch_RejectedByPatch)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
-        Assert.That(exception.InnerException!.Message, Is.EqualTo("__base: Type mismatch"));
+        Assert.That(exception.InnerException!.Message, Is.EqualTo("__base: Parameter type mismatch"));
     }
 
     [Test]
@@ -142,6 +142,6 @@ public sealed class BaseMethodBindingTests : PatchTestBase
                 nameof(BaseMethodBindingPatches.Prefix_BaseMethod_Delegate_ReturnTypeMismatch_RejectedByPatch)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
-        Assert.That(exception.InnerException!.Message, Is.EqualTo("__base: Type mismatch"));
+        Assert.That(exception.InnerException!.Message, Is.EqualTo("__base: Return type mismatch"));
     }
 }
