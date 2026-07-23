@@ -267,9 +267,17 @@ namespace Disharmony.Tests
             ConstructorExecuted = true;
         }
 
+        public ConstructorTargets(int value)
+        {
+            ConstructorExecuted = true;
+            Value = value;
+        }
+
         public bool ConstructorExecuted { get; }
+        public int Value { get; }
 
         public static ConstructorTargets Create() => new ConstructorTargets();
+        public static ConstructorTargets Create(int value) => new ConstructorTargets(value);
     }
 
     public static class OuterStaticMethodTargets
