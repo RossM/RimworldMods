@@ -41,15 +41,15 @@ public static class IncludedCategoryPatches
 {
     [Postfix]
     [Target(nameof(StaticMethodTargets.RegistrationResultA))]
+    public static void PatchAllProcessesAllAssemblyPatchCategories_Included(ref int __result) => __result = 42;
+
+    [Postfix]
+    [Target(nameof(StaticMethodTargets.RegistrationResultA))]
     public static void PatchCategoryProcessesOnlyMatchingCategory(ref int __result) => __result = 42;
 
     [Postfix]
     [Target(nameof(StaticMethodTargets.RegistrationResultA))]
     public static void RegisterAllDefersAssemblyPatchesUntilApply_Included(ref int __result) => __result = 42;
-
-    [Postfix]
-    [Target(nameof(StaticMethodTargets.RegistrationResultA))]
-    public static void PatchAllProcessesAllAssemblyPatchCategories_Included(ref int __result) => __result = 42;
 }
 
 [HarmonyPatch(typeof(StaticMethodTargets))]
@@ -58,15 +58,15 @@ public static class ExcludedCategoryPatches
 {
     [Postfix]
     [Target(nameof(StaticMethodTargets.RegistrationResultB))]
+    public static void PatchAllProcessesAllAssemblyPatchCategories_Excluded(ref int __result) => __result = 42;
+
+    [Postfix]
+    [Target(nameof(StaticMethodTargets.RegistrationResultB))]
     public static void PatchCategoryProcessesOnlyMatchingCategory(ref int __result) => __result = 42;
 
     [Postfix]
     [Target(nameof(StaticMethodTargets.RegistrationResultB))]
     public static void RegisterAllDefersAssemblyPatchesUntilApply_Excluded(ref int __result) => __result = 42;
-
-    [Postfix]
-    [Target(nameof(StaticMethodTargets.RegistrationResultB))]
-    public static void PatchAllProcessesAllAssemblyPatchCategories_Excluded(ref int __result) => __result = 42;
 }
 
 [TestFixture]

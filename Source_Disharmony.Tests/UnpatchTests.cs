@@ -43,5 +43,4 @@ internal class UnpatchTests
         Assert.That(UnpatchPatchTargets.TargetA(), Is.EqualTo(1));
         Assert.That(UnpatchPatchTargets.TargetB(), Is.EqualTo(2));
     }
-
 }

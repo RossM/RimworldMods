@@ -34,7 +34,8 @@ public static partial class CapturedVariableBindingPatches
 
     [InnerPrefix(typeof(LocalFunctionTargets), "CapturedStructVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedStructVariableMethod))]
-    public static void InnerPrefix_LocalFunctionCallCapturedVariable_Struct_ReadByValue(BindingStruct captured) => StructObserved = captured;
+    public static void InnerPrefix_LocalFunctionCallCapturedVariable_Struct_ReadByValue(BindingStruct captured) =>
+        StructObserved = captured;
 
     [InnerPostfix(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedVariableMethod))]
@@ -84,7 +85,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     public void Prefix_LocalFunctionCapturedVariable_Primitive_ReadByValue()
     {
         CapturedVariableBindingPatches.Observed = 0;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Primitive_ReadByValue));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Primitive_ReadByValue));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
@@ -97,7 +99,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     {
         CapturedVariableBindingPatches.ReferenceObserved = null;
         var value = new BindingReference { Value = 42 };
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_ReferenceType_ReadByValue));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_ReferenceType_ReadByValue));
 
         LocalFunctionTargets.CapturedReferenceVariableMethod(value);
 
@@ -108,7 +111,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     public void Prefix_LocalFunctionCapturedVariable_Struct_ReadByValue()
     {
         CapturedVariableBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Struct_ReadByValue));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Struct_ReadByValue));
 
         LocalFunctionTargets.CapturedStructVariableMethod(new BindingStruct { Value = 42 });
 
@@ -119,7 +123,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     public void Postfix_LocalFunctionCapturedVariable_Primitive_ReadByValue()
     {
         CapturedVariableBindingPatches.Observed = 0;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Postfix_LocalFunctionCapturedVariable_Primitive_ReadByValue));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Postfix_LocalFunctionCapturedVariable_Primitive_ReadByValue));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
@@ -131,7 +136,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     public void InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_ReadByValue()
     {
         CapturedVariableBindingPatches.Observed = 0;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_ReadByValue));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_ReadByValue));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
@@ -144,7 +150,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     {
         CapturedVariableBindingPatches.ReferenceObserved = null;
         var value = new BindingReference { Value = 42 };
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_ReferenceType_ReadByValue));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_ReferenceType_ReadByValue));
 
         LocalFunctionTargets.CapturedReferenceVariableMethod(value);
 
@@ -155,7 +162,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     public void InnerPrefix_LocalFunctionCallCapturedVariable_Struct_ReadByValue()
     {
         CapturedVariableBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Struct_ReadByValue));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Struct_ReadByValue));
 
         LocalFunctionTargets.CapturedStructVariableMethod(new BindingStruct { Value = 42 });
 
@@ -166,7 +174,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     public void InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_ReadByValue()
     {
         CapturedVariableBindingPatches.Observed = 0;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_ReadByValue));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_ReadByValue));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(42);
 
@@ -177,7 +186,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void Prefix_LocalFunctionCapturedVariable_Primitive_WriteByReference()
     {
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Primitive_WriteByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Primitive_WriteByReference));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(1);
 
@@ -187,7 +197,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void Prefix_LocalFunctionCapturedVariable_ReferenceType_WriteByReference()
     {
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_ReferenceType_WriteByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_ReferenceType_WriteByReference));
 
         BindingReference result = LocalFunctionTargets.CapturedReferenceVariableMethod(new BindingReference { Value = 1 });
 
@@ -197,7 +208,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void Prefix_LocalFunctionCapturedVariable_Struct_WriteByReference()
     {
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Struct_WriteByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Struct_WriteByReference));
 
         BindingStruct result = LocalFunctionTargets.CapturedStructVariableMethod(new BindingStruct { Value = 1 });
 
@@ -207,7 +219,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void Postfix_LocalFunctionCapturedVariable_Primitive_WriteByReference()
     {
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Postfix_LocalFunctionCapturedVariable_Primitive_WriteByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Postfix_LocalFunctionCapturedVariable_Primitive_WriteByReference));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(1);
 
@@ -217,7 +230,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_WriteByReference()
     {
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_WriteByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_WriteByReference));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(1);
 
@@ -227,7 +241,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_LocalFunctionCallCapturedVariable_ReferenceType_WriteByReference()
     {
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_ReferenceType_WriteByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_ReferenceType_WriteByReference));
 
         BindingReference result = LocalFunctionTargets.CapturedReferenceVariableMethod(new BindingReference { Value = 1 });
 
@@ -237,7 +252,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_LocalFunctionCallCapturedVariable_Struct_WriteByReference()
     {
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Struct_WriteByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Struct_WriteByReference));
 
         BindingStruct result = LocalFunctionTargets.CapturedStructVariableMethod(new BindingStruct { Value = 1 });
 
@@ -247,7 +263,8 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
     [Test]
     public void InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_WriteByReference()
     {
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_WriteByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_WriteByReference));
 
         int result = LocalFunctionTargets.CapturedVariableMethod(1);
 
@@ -303,7 +320,8 @@ public sealed partial class CapturedVariableBindingTests
     public void Prefix_LocalFunctionCapturedVariable_Primitive_ReadByReference()
     {
         CapturedVariableBindingPatches.Observed = 0;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Primitive_ReadByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Primitive_ReadByReference));
         LocalFunctionTargets.CapturedVariableMethod(42);
         Assert.That(CapturedVariableBindingPatches.Observed, Is.EqualTo(42));
     }
@@ -313,7 +331,8 @@ public sealed partial class CapturedVariableBindingTests
     {
         CapturedVariableBindingPatches.ReferenceObserved = null;
         var value = new BindingReference { Value = 42 };
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_ReferenceType_ReadByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_ReferenceType_ReadByReference));
         LocalFunctionTargets.CapturedReferenceVariableMethod(value);
         Assert.That(CapturedVariableBindingPatches.ReferenceObserved, Is.SameAs(value));
     }
@@ -322,7 +341,8 @@ public sealed partial class CapturedVariableBindingTests
     public void Prefix_LocalFunctionCapturedVariable_Struct_ReadByReference()
     {
         CapturedVariableBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Struct_ReadByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Prefix_LocalFunctionCapturedVariable_Struct_ReadByReference));
         LocalFunctionTargets.CapturedStructVariableMethod(new BindingStruct { Value = 42 });
         Assert.That(CapturedVariableBindingPatches.StructObserved.Value, Is.EqualTo(42));
     }
@@ -331,7 +351,8 @@ public sealed partial class CapturedVariableBindingTests
     public void Postfix_LocalFunctionCapturedVariable_Primitive_ReadByReference()
     {
         CapturedVariableBindingPatches.Observed = 0;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.Postfix_LocalFunctionCapturedVariable_Primitive_ReadByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.Postfix_LocalFunctionCapturedVariable_Primitive_ReadByReference));
         LocalFunctionTargets.CapturedVariableMethod(42);
         Assert.That(CapturedVariableBindingPatches.Observed, Is.EqualTo(42));
     }
@@ -340,7 +361,8 @@ public sealed partial class CapturedVariableBindingTests
     public void InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_ReadByReference()
     {
         CapturedVariableBindingPatches.Observed = 0;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_ReadByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_ReadByReference));
         LocalFunctionTargets.CapturedVariableMethod(42);
         Assert.That(CapturedVariableBindingPatches.Observed, Is.EqualTo(42));
     }
@@ -350,7 +372,8 @@ public sealed partial class CapturedVariableBindingTests
     {
         CapturedVariableBindingPatches.ReferenceObserved = null;
         var value = new BindingReference { Value = 42 };
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_ReferenceType_ReadByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_ReferenceType_ReadByReference));
         LocalFunctionTargets.CapturedReferenceVariableMethod(value);
         Assert.That(CapturedVariableBindingPatches.ReferenceObserved, Is.SameAs(value));
     }
@@ -359,7 +382,8 @@ public sealed partial class CapturedVariableBindingTests
     public void InnerPrefix_LocalFunctionCallCapturedVariable_Struct_ReadByReference()
     {
         CapturedVariableBindingPatches.StructObserved = default;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Struct_ReadByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPrefix_LocalFunctionCallCapturedVariable_Struct_ReadByReference));
         LocalFunctionTargets.CapturedStructVariableMethod(new BindingStruct { Value = 42 });
         Assert.That(CapturedVariableBindingPatches.StructObserved.Value, Is.EqualTo(42));
     }
@@ -368,7 +392,8 @@ public sealed partial class CapturedVariableBindingTests
     public void InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_ReadByReference()
     {
         CapturedVariableBindingPatches.Observed = 0;
-        ApplyPatch(typeof(CapturedVariableBindingPatches), nameof(CapturedVariableBindingPatches.InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_ReadByReference));
+        ApplyPatch(typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches.InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_ReadByReference));
         LocalFunctionTargets.CapturedVariableMethod(42);
         Assert.That(CapturedVariableBindingPatches.Observed, Is.EqualTo(42));
     }

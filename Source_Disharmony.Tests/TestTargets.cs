@@ -12,6 +12,7 @@ namespace Disharmony.Tests
 
     public static class StaticMethodTargets
     {
+        public static int MutableProperty { get; set; }
         public static void Void() { }
         public static void IntArgument(int value) { }
         public static void StringArgument(string value) { }
@@ -27,7 +28,6 @@ namespace Disharmony.Tests
         public static BindingStruct StructResult() => new BindingStruct { Value = 1 };
         public static int RegistrationResultA() => 1;
         public static int RegistrationResultB() => 2;
-        public static int MutableProperty { get; set; }
         public static void OverloadedVoid(int value) { }
         public static void OverloadedVoid(string value) { }
         public static T GenericIdentity<T>(T value) => value;
@@ -84,6 +84,7 @@ namespace Disharmony.Tests
         }
 
         public void CallStaticVoid() => InnerStaticMethodTargets.Void();
+
         public int CallStaticVoidAndReturnValue()
         {
             InnerStaticMethodTargets.Void();
@@ -166,8 +167,8 @@ namespace Disharmony.Tests
 
     public static class InnerStaticMethodTargets
     {
-        public static int Field = 1;
         public static int Property => 1;
+        public static int Field = 1;
 
         public static void Void() { }
         public static void IntArgument(int value) { }
@@ -195,9 +196,7 @@ namespace Disharmony.Tests
 
                 InnerStaticMethodTargets.Void();
             }
-            catch (InvalidOperationException)
-            {
-            }
+            catch (InvalidOperationException) { }
         }
 
         public static void CallInCatchBlock(bool throwException)
@@ -263,12 +262,12 @@ namespace Disharmony.Tests
 
     public sealed class ConstructorTargets
     {
-        public bool ConstructorExecuted { get; }
-
         public ConstructorTargets()
         {
             ConstructorExecuted = true;
         }
+
+        public bool ConstructorExecuted { get; }
 
         public static ConstructorTargets Create() => new ConstructorTargets();
     }
@@ -296,8 +295,10 @@ namespace Disharmony.Tests
         public static void OuterStructArgument(BindingStruct outerValue) => InnerStaticMethodTargets.Void();
         public static void SameNamedArgument(int value) => InnerStaticMethodTargets.IntArgument(value + 41);
         public static void SameNamedReferenceTypeArgument(string value) => InnerStaticMethodTargets.StringArgument("inner");
+
         public static void SameNamedStructArgument(BindingStruct value) =>
             InnerStaticMethodTargets.StructArgument(new BindingStruct { Value = 42 });
+
         public static int SameNamedRefArgument(ref int value)
         {
             int innerValue = 1;
@@ -323,7 +324,6 @@ namespace Disharmony.Tests
         {
             yield return InnerStaticMethodTargets.IntResult();
         }
-
     }
 
     public static class LocalFunctionTargets
@@ -402,53 +402,38 @@ namespace Disharmony.Tests.ReflectionFixtures
     {
         public static class NestedTarget
         {
-            public static void Method(int value)
-            {
-            }
+            public static void Method(int value) { }
         }
+
+        public static int ReadOnlyProperty => 1;
 
         public static int Field;
         public static int Property { get; set; }
-        public static int ReadOnlyProperty => 1;
-        public static int WriteOnlyProperty { set { } }
 
-        public static void Method(int value)
+        public static int WriteOnlyProperty
         {
+            set { }
         }
 
-        public static void RefMethod(ref int value)
-        {
-        }
+        public static void Method(int value) { }
 
-        public static void InMethod(in int value)
-        {
-        }
+        public static void RefMethod(ref int value) { }
+
+        public static void InMethod(in int value) { }
 
         public static void OutMethod(out int value) => value = 0;
 
-        public static void OverloadedMethod(int value)
-        {
-        }
+        public static void OverloadedMethod(int value) { }
 
-        public static void OverloadedMethod(string value)
-        {
-        }
+        public static void OverloadedMethod(string value) { }
 
-        public static void GenericMethod<T>(T value)
-        {
-        }
+        public static void GenericMethod<T>(T value) { }
 
-        public static void NonGenericMethod(int value)
-        {
-        }
+        public static void NonGenericMethod(int value) { }
 
-        public static void MixedMethod(int value)
-        {
-        }
+        public static void MixedMethod(int value) { }
 
-        public static void MixedMethod<T>(T value)
-        {
-        }
+        public static void MixedMethod<T>(T value) { }
 
         public static Func<int, int> StaticLocalMethodContainer()
         {

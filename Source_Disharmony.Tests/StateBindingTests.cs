@@ -283,7 +283,8 @@ public sealed partial class StateBindingTests : PatchTestBase
         StateBindingPatches.Observed = 0;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_WriteByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_WriteByReference_FirstPostfix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_WriteByReference_SecondPostfix));
+        ApplyPatch(typeof(StateBindingPatches),
+            nameof(StateBindingPatches.Postfix_StateParameter_Primitive_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 
@@ -307,8 +308,10 @@ public sealed partial class StateBindingTests : PatchTestBase
     {
         StateBindingPatches.ReferenceObserved = null;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_WriteByReference_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_WriteByReference_FirstPostfix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_WriteByReference_SecondPostfix));
+        ApplyPatch(typeof(StateBindingPatches),
+            nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_WriteByReference_FirstPostfix));
+        ApplyPatch(typeof(StateBindingPatches),
+            nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 
@@ -358,7 +361,8 @@ public sealed partial class StateBindingTests : PatchTestBase
         StateBindingPatches.Observed = 0;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_WriteByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_WriteByReference_FirstPostfix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_WriteByReference_SecondPostfix));
+        ApplyPatch(typeof(StateBindingPatches),
+            nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 
@@ -382,8 +386,10 @@ public sealed partial class StateBindingTests : PatchTestBase
     {
         StateBindingPatches.ReferenceObserved = null;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_WriteByReference_Prefix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_WriteByReference_FirstPostfix));
-        ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_WriteByReference_SecondPostfix));
+        ApplyPatch(typeof(StateBindingPatches),
+            nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_WriteByReference_FirstPostfix));
+        ApplyPatch(typeof(StateBindingPatches),
+            nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 

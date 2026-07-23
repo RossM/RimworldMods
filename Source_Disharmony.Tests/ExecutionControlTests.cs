@@ -65,28 +65,32 @@ public sealed partial class ExecutionControlTests
     [Test]
     public void PrefixResultIsReplacedByValueTypeTargetWhenReturningTrue()
     {
-        ApplyPatch(typeof(ExecutionControlPatches), nameof(ExecutionControlPatches.PrefixResultIsReplacedByValueTypeTargetWhenReturningTrue));
+        ApplyPatch(typeof(ExecutionControlPatches),
+            nameof(ExecutionControlPatches.PrefixResultIsReplacedByValueTypeTargetWhenReturningTrue));
         Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
     }
 
     [Test]
     public void PrefixResultIsRetainedForValueTypeTargetWhenReturningFalse()
     {
-        ApplyPatch(typeof(ExecutionControlPatches), nameof(ExecutionControlPatches.PrefixResultIsRetainedForValueTypeTargetWhenReturningFalse));
+        ApplyPatch(typeof(ExecutionControlPatches),
+            nameof(ExecutionControlPatches.PrefixResultIsRetainedForValueTypeTargetWhenReturningFalse));
         Assert.That(StaticMethodTargets.ThrowingIntResult(), Is.EqualTo(42));
     }
 
     [Test]
     public void PrefixResultIsReplacedByReferenceTypeTargetWhenReturningTrue()
     {
-        ApplyPatch(typeof(ExecutionControlPatches), nameof(ExecutionControlPatches.PrefixResultIsReplacedByReferenceTypeTargetWhenReturningTrue));
+        ApplyPatch(typeof(ExecutionControlPatches),
+            nameof(ExecutionControlPatches.PrefixResultIsReplacedByReferenceTypeTargetWhenReturningTrue));
         Assert.That(StaticMethodTargets.StringResult(), Is.EqualTo("original"));
     }
 
     [Test]
     public void PrefixResultIsRetainedForReferenceTypeTargetWhenReturningFalse()
     {
-        ApplyPatch(typeof(ExecutionControlPatches), nameof(ExecutionControlPatches.PrefixResultIsRetainedForReferenceTypeTargetWhenReturningFalse));
+        ApplyPatch(typeof(ExecutionControlPatches),
+            nameof(ExecutionControlPatches.PrefixResultIsRetainedForReferenceTypeTargetWhenReturningFalse));
         Assert.That(StaticMethodTargets.ThrowingStringResult(), Is.EqualTo("patched"));
     }
 }

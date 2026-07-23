@@ -60,8 +60,10 @@ public sealed class PatchInteractionTests : PatchTestBase
     public void PostfixObservesArgumentWrittenByPrefixWhenTargetRuns()
     {
         PatchInteractionPatches.Observed = 0;
-        ApplyPatch(typeof(PatchInteractionPatches), nameof(PatchInteractionPatches.PostfixObservesArgumentWrittenByPrefixWhenTargetRuns_Prefix));
-        ApplyPatch(typeof(PatchInteractionPatches), nameof(PatchInteractionPatches.PostfixObservesArgumentWrittenByPrefixWhenTargetRuns_Postfix));
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.PostfixObservesArgumentWrittenByPrefixWhenTargetRuns_Prefix));
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.PostfixObservesArgumentWrittenByPrefixWhenTargetRuns_Postfix));
 
         StaticMethodTargets.IntArgument(1);
 
@@ -72,8 +74,10 @@ public sealed class PatchInteractionTests : PatchTestBase
     public void PostfixObservesArgumentWrittenByPrefixWhenTargetIsSkipped()
     {
         PatchInteractionPatches.Observed = 0;
-        ApplyPatch(typeof(PatchInteractionPatches), nameof(PatchInteractionPatches.PostfixObservesArgumentWrittenByPrefixWhenTargetIsSkipped_Prefix));
-        ApplyPatch(typeof(PatchInteractionPatches), nameof(PatchInteractionPatches.PostfixObservesArgumentWrittenByPrefixWhenTargetIsSkipped_Postfix));
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.PostfixObservesArgumentWrittenByPrefixWhenTargetIsSkipped_Prefix));
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.PostfixObservesArgumentWrittenByPrefixWhenTargetIsSkipped_Postfix));
 
         StaticMethodTargets.ThrowingIntArgument(1);
 
@@ -84,8 +88,10 @@ public sealed class PatchInteractionTests : PatchTestBase
     public void PostfixObservesTargetResultWhenPrefixWritesResultAndTargetRuns()
     {
         PatchInteractionPatches.Observed = 0;
-        ApplyPatch(typeof(PatchInteractionPatches), nameof(PatchInteractionPatches.PostfixObservesTargetResultWhenPrefixWritesResultAndTargetRuns_Prefix));
-        ApplyPatch(typeof(PatchInteractionPatches), nameof(PatchInteractionPatches.PostfixObservesTargetResultWhenPrefixWritesResultAndTargetRuns_Postfix));
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.PostfixObservesTargetResultWhenPrefixWritesResultAndTargetRuns_Prefix));
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.PostfixObservesTargetResultWhenPrefixWritesResultAndTargetRuns_Postfix));
 
         StaticMethodTargets.IntResult();
 
@@ -96,8 +102,10 @@ public sealed class PatchInteractionTests : PatchTestBase
     public void PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped()
     {
         PatchInteractionPatches.Observed = 0;
-        ApplyPatch(typeof(PatchInteractionPatches), nameof(PatchInteractionPatches.PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped_Prefix));
-        ApplyPatch(typeof(PatchInteractionPatches), nameof(PatchInteractionPatches.PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped_Postfix));
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped_Prefix));
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped_Postfix));
 
         StaticMethodTargets.ThrowingIntResult();
 

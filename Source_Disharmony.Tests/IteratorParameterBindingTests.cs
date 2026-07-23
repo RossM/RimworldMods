@@ -90,7 +90,8 @@ public static partial class IteratorParameterBindingPatches
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
-    public static void InnerPostfix_IteratorDeclaringInstance_ReferenceType_ReadByValue([Instance(Scope.Outer)] ClassMethodTargets instance) =>
+    public static void InnerPostfix_IteratorDeclaringInstance_ReferenceType_ReadByValue(
+        [Instance(Scope.Outer)] ClassMethodTargets instance) =>
         InstanceObserved = instance;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
