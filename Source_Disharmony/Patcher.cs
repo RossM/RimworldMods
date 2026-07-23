@@ -204,9 +204,7 @@ internal class Patcher
             matchersByMethod[original.MethodBase] = matchers;
 
             MethodInfo replacement;
-            // Trampolines for constructors are currently bugged and do not correctly chain to the newly-patched constructor,
-            // so disable trampolines for constructors.
-            if (useTrampolines && original is MethodInvocation)
+            if (useTrampolines)
                 replacement = ApplyTrampoline(original);
             else
                 replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
