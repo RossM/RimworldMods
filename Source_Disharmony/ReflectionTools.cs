@@ -23,7 +23,7 @@ public static class ReflectionTools
         if (name is null)
             throw new ArgumentException("name expected");
 
-        if (memberType is not (MemberType.Any or MemberType.Method))
+        if (memberType is not (MemberType.Any or MemberType.Method or MemberType.Constructor))
         {
             if (parameterTypes != null)
                 throw new ArgumentException($"parameterTypes is not supported for memberType {memberType}");
