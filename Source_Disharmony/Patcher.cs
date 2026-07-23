@@ -39,6 +39,13 @@ internal class Patcher
     private const string harmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
     public static readonly Patcher Instance = new();
+    private static int thunkCount;
+
+    private static readonly AssemblyBuilder thunkAssembly
+        = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName { Name = "Xylthixlm.Disharmony.RuntimeThunks" },
+            AssemblyBuilderAccess.Run);
+    private static readonly ModuleBuilder thunkModule = thunkAssembly.DefineDynamicModule("Xylthixlm.Disharmony.RuntimeThunks");
+
     private readonly bool extraDebug = false;
     private readonly Module module;
 
@@ -49,6 +56,9 @@ internal class Patcher
     private readonly Dictionary<MethodBase, InstructionMatcher[]> matchersByMethod = new();
 
     public bool trampolinesEnabled = true;
+
+    private readonly Dictionary<MethodInvocation, MethodInfo> thunks = new();
+    private readonly Dictionary<MethodInfo, MethodInvocation> reverseThunks = new();
 
     public Patcher()
     {
@@ -150,6 +160,23 @@ internal class Patcher
 
         ILGenerator generator = method.GetILGenerator();
 
+        EmitLoadArguments(generator, parameterTypes);
+
+        // Call ResolveTrampoline(), which generates the real patch and applies a detour
+        generator.Emit(OpCodes.Ldtoken, target);
+        generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle);
+        generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
+
+        // Do a tail call to the original method, which will actually go to the newly installed patch
+        generator.Emit(OpCodes.Tailcall);
+        generator.Emit(OpCodes.Call, target);
+        generator.Emit(OpCodes.Ret);
+
+        return method;
+    }
+
+    private static void EmitLoadArguments(ILGenerator generator, Type[] parameterTypes)
+    {
         // Load all arguments onto the stack
         if (parameterTypes.Length >= 1)
             generator.Emit(OpCodes.Ldarg_0);
@@ -161,19 +188,6 @@ internal class Patcher
             generator.Emit(OpCodes.Ldarg_3);
         for (int i = 4; i < parameterTypes.Length; i++)
             generator.Emit(OpCodes.Ldarg_S, i);
-
-        // Call ResolveTrampoline(), which generates the real patch and applies a detour
-        generator.Emit(OpCodes.Ldtoken, target);
-        generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle);
-        generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
-
-        // Do a tail call to the original method, which will actually go to the newly installed patch
-        generator.Emit(OpCodes.Tailcall);
-        generator.Emit(OpCodes.Call, target);
-
-        generator.Emit(OpCodes.Ret);
-
-        return method;
     }
 
     public void ApplyPatch(MethodBaseInvocation original, InstructionMatcher[] matchers, bool useTrampolines)
@@ -231,5 +245,32 @@ internal class Patcher
 
             HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);
         }
+    }
+
+    public MethodInfo MakeThunk(MethodInvocation target)
+    {
+        if (thunks.TryGetValue(target, out var value))
+            return value;
+
+        Type[] parameterTypes = target.ParameterTypes;
+
+        TypeBuilder thunkType = thunkModule.DefineType($"Xylthixlm.Disharmony.RuntimeThunks.{target.FullName}_Thunk{thunkCount++}");
+        var method = thunkType.DefineMethod($"{target.FullName}_Thunk", MethodAttributes.Static | MethodAttributes.Public,
+            target.ReturnType, parameterTypes);
+
+        ILGenerator generator = method.GetILGenerator();
+
+        EmitLoadArguments(generator, parameterTypes);
+
+        // Do a non-virtual tail call
+        generator.Emit(OpCodes.Tailcall);
+        generator.Emit(OpCodes.Call, target);
+        generator.Emit(OpCodes.Ret);
+
+        thunks[target] = method;
+        reverseThunks[method] = target;
+
+        thunkType.CreateType();
+        return method;
     }
 }

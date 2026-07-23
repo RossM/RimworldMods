@@ -21,6 +21,11 @@ internal enum BindingType
     ///     Access to a local state variable.
     /// </summary>
     State,
+
+    /// <summary>
+    ///     Gets a delegate to the base method of the method.
+    /// </summary>
+    BaseMethod,
 }
 
 internal class ParameterBinding

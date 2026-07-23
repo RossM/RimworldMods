@@ -78,11 +78,51 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
                 break;
             }
 
+            case BindingType.BaseMethod:
+            {
+                EmitBaseMethodDelegate(parameter);
+                break;
+            }
+
             default:
             {
                 throw new ArgumentOutOfRangeException();
             }
         }
+    }
+
+    private void EmitBaseMethodDelegate(ParameterBinding parameter)
+    {
+        if (parameter.Scope != Scope.Outer)
+            throw new NotImplementedException();
+        if (outer is not MethodInvocation method)
+            throw new InvalidOperationException();
+
+        MethodInfo methodInfo = method.MethodInfo;
+                
+        MethodInfo? baseMethod = null;
+        for (Type parent = method.InstanceType.BaseType; parent != typeof(object) && parent != null; parent = parent.BaseType)
+        {
+            ParameterInfo[] parameters = methodInfo.GetParameters();
+            baseMethod = parent.GetMethod(methodInfo.Name,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null, parameters.Types(), null);
+            if (baseMethod != null)
+                break;
+        }
+
+        if (baseMethod is null)
+            throw new InvalidOperationException($"{method.FullName}: Base method not found");
+
+        var thunk = Patcher.Instance.MakeThunk(baseMethod);
+
+        // ParameterType must be a subclass of Delegate here
+        ConstructorInfo delegateConstructor = parameter.Parameter.ParameterType.GetConstructor([typeof(object), typeof(IntPtr)]);
+
+        // Create a delegate to the thunk
+        output.Add(CodeInstruction.LoadArgument(0));
+        output.Add(new(OpCodes.Ldftn, thunk));
+        output.Add(new(OpCodes.Newobj, delegateConstructor));
     }
 
     private void EmitFieldLookups(ParameterBinding parameter, bool wantRef, ref Type resultType)

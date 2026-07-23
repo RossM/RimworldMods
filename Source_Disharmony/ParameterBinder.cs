@@ -89,6 +89,15 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer };
             }
 
+            case "__base":
+            {
+                if (outer.IsStatic)
+                    throw new ParameterBindingException(parameterName, "Must be an instance method");
+
+                ValidateCast(typeof(Delegate), parameter.ParameterType, parameterName);
+                return new() { Parameter = parameter, BindingType = BindingType.BaseMethod, Scope = Scope.Outer };
+            }
+
             case var _ when parameterName.StartsWith("___"): return BindFieldByName(parameter, parameterName[3..], Scope.Any);
 
             default: return BindParameterByName(parameter, parameterName, Scope.Any);
