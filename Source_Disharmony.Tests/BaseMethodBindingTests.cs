@@ -36,6 +36,18 @@ public static class BaseMethodBindingPatches
         int value,
         Func<int, string> __base) =>
         ResultObserved = __base(value);
+
+    [Prefix]
+    [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.Describe))]
+    public static void Prefix_BaseMethod_Delegate_ParameterTypeMismatch_RejectedByPatch(Func<string, string> __base) { }
+
+    [Prefix]
+    [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.Describe))]
+    public static void Prefix_BaseMethod_Delegate_ParameterCountMismatch_RejectedByPatch(Func<string> __base) { }
+
+    [Prefix]
+    [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.Describe))]
+    public static void Prefix_BaseMethod_Delegate_ReturnTypeMismatch_RejectedByPatch(Func<int, int> __base) { }
 }
 
 [TestFixture]
@@ -95,5 +107,41 @@ public sealed class BaseMethodBindingTests : PatchTestBase
 
         Assert.That(result, Is.EqualTo("derived:41:1"));
         Assert.That(BaseMethodBindingPatches.ResultObserved, Is.EqualTo("base:41:1"));
+    }
+
+    [Test]
+    public void Prefix_BaseMethod_Delegate_ParameterTypeMismatch_RejectedByPatch()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(BaseMethodBindingPatches),
+                nameof(BaseMethodBindingPatches.Prefix_BaseMethod_Delegate_ParameterTypeMismatch_RejectedByPatch)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+        Assert.That(exception.InnerException!.Message, Is.EqualTo("__base: Type mismatch"));
+    }
+
+    [Test]
+    public void Prefix_BaseMethod_Delegate_ParameterCountMismatch_RejectedByPatch()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(BaseMethodBindingPatches),
+                nameof(BaseMethodBindingPatches.Prefix_BaseMethod_Delegate_ParameterCountMismatch_RejectedByPatch)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+        Assert.That(exception.InnerException!.Message, Is.EqualTo("__base: Type mismatch"));
+    }
+
+    [Test]
+    public void Prefix_BaseMethod_Delegate_ReturnTypeMismatch_RejectedByPatch()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(BaseMethodBindingPatches),
+                nameof(BaseMethodBindingPatches.Prefix_BaseMethod_Delegate_ReturnTypeMismatch_RejectedByPatch)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+        Assert.That(exception.InnerException!.Message, Is.EqualTo("__base: Type mismatch"));
     }
 }
