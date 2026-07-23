@@ -72,6 +72,66 @@ public static class InnerPostfixConstantPatches
     [Target(typeof(ConstantTargets), nameof(ConstantTargets.StringResult))]
     public static void InnerPostfixConstant_String_Result_WriteByReference(ref string __result) =>
         __result = ConstantTargets.StringReplacement;
+
+    [InnerPostfixConstant(-1)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SpecialEncoding_ValueMinus1_Result))]
+    public static void InnerPostfixConstant_Int_SpecialEncoding_ValueMinus1_Result_ReadByValue(int __result) =>
+        IntObserved = __result;
+
+    [InnerPostfixConstant(0)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SpecialEncoding_Value0_Result))]
+    public static void InnerPostfixConstant_Int_SpecialEncoding_Value0_Result_ReadByValue(int __result) => IntObserved = __result;
+
+    [InnerPostfixConstant(1)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SpecialEncoding_Value1_Result))]
+    public static void InnerPostfixConstant_Int_SpecialEncoding_Value1_Result_ReadByValue(int __result) => IntObserved = __result;
+
+    [InnerPostfixConstant(2)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SpecialEncoding_Value2_Result))]
+    public static void InnerPostfixConstant_Int_SpecialEncoding_Value2_Result_ReadByValue(int __result) => IntObserved = __result;
+
+    [InnerPostfixConstant(3)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SpecialEncoding_Value3_Result))]
+    public static void InnerPostfixConstant_Int_SpecialEncoding_Value3_Result_ReadByValue(int __result) => IntObserved = __result;
+
+    [InnerPostfixConstant(4)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SpecialEncoding_Value4_Result))]
+    public static void InnerPostfixConstant_Int_SpecialEncoding_Value4_Result_ReadByValue(int __result) => IntObserved = __result;
+
+    [InnerPostfixConstant(5)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SpecialEncoding_Value5_Result))]
+    public static void InnerPostfixConstant_Int_SpecialEncoding_Value5_Result_ReadByValue(int __result) => IntObserved = __result;
+
+    [InnerPostfixConstant(6)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SpecialEncoding_Value6_Result))]
+    public static void InnerPostfixConstant_Int_SpecialEncoding_Value6_Result_ReadByValue(int __result) => IntObserved = __result;
+
+    [InnerPostfixConstant(7)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SpecialEncoding_Value7_Result))]
+    public static void InnerPostfixConstant_Int_SpecialEncoding_Value7_Result_ReadByValue(int __result) => IntObserved = __result;
+
+    [InnerPostfixConstant(8)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SpecialEncoding_Value8_Result))]
+    public static void InnerPostfixConstant_Int_SpecialEncoding_Value8_Result_ReadByValue(int __result) => IntObserved = __result;
+
+    [InnerPostfixConstant(-128)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SignedByteEncoding_ValueMinus128_Result))]
+    public static void InnerPostfixConstant_Int_SignedByteEncoding_ValueMinus128_Result_ReadByValue(int __result) =>
+        IntObserved = __result;
+
+    [InnerPostfixConstant(-129)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_Int32Encoding_ValueMinus129_Result))]
+    public static void InnerPostfixConstant_Int_Int32Encoding_ValueMinus129_Result_ReadByValue(int __result) =>
+        IntObserved = __result;
+
+    [InnerPostfixConstant(127)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_SignedByteEncoding_Value127_Result))]
+    public static void InnerPostfixConstant_Int_SignedByteEncoding_Value127_Result_ReadByValue(int __result) =>
+        IntObserved = __result;
+
+    [InnerPostfixConstant(128)]
+    [Target(typeof(ConstantTargets), nameof(ConstantTargets.Int_Int32Encoding_Value128_Result))]
+    public static void InnerPostfixConstant_Int_Int32Encoding_Value128_Result_ReadByValue(int __result) => IntObserved = __result;
 }
 
 [TestFixture]
@@ -275,5 +335,201 @@ public sealed class InnerPostfixConstantTests : PatchTestBase
         string result = ConstantTargets.StringResult();
 
         Assert.That(result, Is.EqualTo(ConstantTargets.StringReplacement));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SpecialEncoding_ValueMinus1_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SpecialEncoding_ValueMinus1_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SpecialEncoding_ValueMinus1_Result();
+
+        Assert.That(result, Is.EqualTo(-1));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(-1));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SpecialEncoding_Value0_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = -1;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SpecialEncoding_Value0_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SpecialEncoding_Value0_Result();
+
+        Assert.That(result, Is.Zero);
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.Zero);
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SpecialEncoding_Value1_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SpecialEncoding_Value1_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SpecialEncoding_Value1_Result();
+
+        Assert.That(result, Is.EqualTo(1));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SpecialEncoding_Value2_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SpecialEncoding_Value2_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SpecialEncoding_Value2_Result();
+
+        Assert.That(result, Is.EqualTo(2));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SpecialEncoding_Value3_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SpecialEncoding_Value3_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SpecialEncoding_Value3_Result();
+
+        Assert.That(result, Is.EqualTo(3));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(3));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SpecialEncoding_Value4_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SpecialEncoding_Value4_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SpecialEncoding_Value4_Result();
+
+        Assert.That(result, Is.EqualTo(4));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(4));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SpecialEncoding_Value5_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SpecialEncoding_Value5_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SpecialEncoding_Value5_Result();
+
+        Assert.That(result, Is.EqualTo(5));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(5));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SpecialEncoding_Value6_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SpecialEncoding_Value6_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SpecialEncoding_Value6_Result();
+
+        Assert.That(result, Is.EqualTo(6));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(6));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SpecialEncoding_Value7_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SpecialEncoding_Value7_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SpecialEncoding_Value7_Result();
+
+        Assert.That(result, Is.EqualTo(7));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(7));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SpecialEncoding_Value8_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SpecialEncoding_Value8_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SpecialEncoding_Value8_Result();
+
+        Assert.That(result, Is.EqualTo(8));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(8));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SignedByteEncoding_ValueMinus128_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SignedByteEncoding_ValueMinus128_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SignedByteEncoding_ValueMinus128_Result();
+
+        Assert.That(result, Is.EqualTo(-128));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(-128));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_Int32Encoding_ValueMinus129_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_Int32Encoding_ValueMinus129_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_Int32Encoding_ValueMinus129_Result();
+
+        Assert.That(result, Is.EqualTo(-129));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(-129));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_SignedByteEncoding_Value127_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_SignedByteEncoding_Value127_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_SignedByteEncoding_Value127_Result();
+
+        Assert.That(result, Is.EqualTo(127));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(127));
+    }
+
+    [Test]
+    public void InnerPostfixConstant_Int_Int32Encoding_Value128_Result_ReadByValue()
+    {
+        InnerPostfixConstantPatches.IntObserved = 0;
+        ApplyPatch(
+            typeof(InnerPostfixConstantPatches),
+            nameof(InnerPostfixConstantPatches.InnerPostfixConstant_Int_Int32Encoding_Value128_Result_ReadByValue));
+
+        int result = ConstantTargets.Int_Int32Encoding_Value128_Result();
+
+        Assert.That(result, Is.EqualTo(128));
+        Assert.That(InnerPostfixConstantPatches.IntObserved, Is.EqualTo(128));
     }
 }

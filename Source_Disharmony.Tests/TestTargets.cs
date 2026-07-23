@@ -241,6 +241,20 @@ namespace Disharmony.Tests
         public const string StringReplacement = "patched";
 
         public static int IntResult() => IntValue;
+        public static int Int_SpecialEncoding_ValueMinus1_Result() => -1;
+        public static int Int_SpecialEncoding_Value0_Result() => 0;
+        public static int Int_SpecialEncoding_Value1_Result() => 1;
+        public static int Int_SpecialEncoding_Value2_Result() => 2;
+        public static int Int_SpecialEncoding_Value3_Result() => 3;
+        public static int Int_SpecialEncoding_Value4_Result() => 4;
+        public static int Int_SpecialEncoding_Value5_Result() => 5;
+        public static int Int_SpecialEncoding_Value6_Result() => 6;
+        public static int Int_SpecialEncoding_Value7_Result() => 7;
+        public static int Int_SpecialEncoding_Value8_Result() => 8;
+        public static int Int_SignedByteEncoding_ValueMinus128_Result() => -128;
+        public static int Int_Int32Encoding_ValueMinus129_Result() => -129;
+        public static int Int_SignedByteEncoding_Value127_Result() => 127;
+        public static int Int_Int32Encoding_Value128_Result() => 128;
         public static long LongResult() => LongValue;
         public static float FloatResult() => FloatValue;
         public static double DoubleResult() => DoubleValue;
