@@ -167,13 +167,21 @@ internal class Patcher
         generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle);
         generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
 
-        // Do a tail call to the original method, which will actually go to the newly installed patch
-        // The IL verifier does not allow tail calls to be used with by-ref arguments, so skip the tailcall prefix if there are any
-        if (!parameterTypes.Any(p => p.IsByRef))
-            generator.Emit(OpCodes.Tailcall);
         switch (target)
         {
-            case MethodInvocation methodTarget: generator.Emit(OpCodes.Call, methodTarget.MethodInfo); break;
+            case MethodInvocation methodTarget:
+            {
+                // Do a tail call to the original method, which will actually go to the newly installed patch
+                // The IL verifier does not allow tail calls to be used with by-ref arguments, so skip the tailcall prefix if there are any
+                if (!parameterTypes.Any(p => p.IsByRef))
+                    generator.Emit(OpCodes.Tailcall);
+                generator.Emit(OpCodes.Call, methodTarget.MethodInfo); break;
+            }
+            case ConstructorInvocation constructorTarget:
+            {
+                generator.Emit(OpCodes.Newobj, constructorTarget.ConstructorInfo);
+                break;
+            }
             default: throw new NotSupportedException();
         }
 
@@ -210,8 +218,7 @@ internal class Patcher
             matchersByMethod[original] = matchers;
 
             MethodInfo replacement;
-            // Currently trampolines don't work with constructors
-            if (useTrampolines && original is MethodInfo)
+            if (useTrampolines)
                 replacement = ApplyTrampoline(original);
             else
                 replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
