@@ -21,17 +21,17 @@ internal static class Patch_SlaveRebellionUtility
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
     [InnerPostfix(typeof(StringBuilder), memberType: MemberType.Constructor, parameterTypes: [])]
     [Target("GetSlaveRebellionMtbCalculationExplanation")]
-    public static void StringBuilder_ctor_Postfix(StringBuilder __result, out StringBuilder __state)
+    public static void StringBuilder_ctor_Postfix(StringBuilder __result, [State] out StringBuilder sb)
     {
-        __state = __result;
+        sb = __result;
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
     [InnerPostfixConstant("SuppressionFinalInterval")]
     [Target("GetSlaveRebellionMtbCalculationExplanation")]
-    public static void SuppressionFinalInterval_Postfix(Pawn? pawn, StringBuilder __state)
+    public static void SuppressionFinalInterval_Postfix(Pawn? pawn, [State] StringBuilder sb)
     {
-        PatchHelpers.AddSlaveRebellionMtbFactorExplanation(__state, pawn);
+        PatchHelpers.AddSlaveRebellionMtbFactorExplanation(sb, pawn);
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
