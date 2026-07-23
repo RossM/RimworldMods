@@ -25,7 +25,6 @@ public static class ConstructorPatchingPatches
 public sealed class ConstructorPatchingTests : PatchTestBase
 {
     [Test]
-    [Ignore("Patching constructors is not implemented")]
     public void Prefix_Constructor_ReferenceType_Parameterless_Executes()
     {
         ConstructorPatchingPatches.ExecutionCount = 0;
@@ -39,7 +38,6 @@ public sealed class ConstructorPatchingTests : PatchTestBase
     }
 
     [Test]
-    [Ignore("Patching constructors is not implemented")]
     public void Postfix_Constructor_ReferenceType_Parameterless_Executes()
     {
         ConstructorPatchingPatches.ExecutionCount = 0;
@@ -53,7 +51,6 @@ public sealed class ConstructorPatchingTests : PatchTestBase
     }
 
     [Test]
-    [Ignore("Patching constructors is not implemented")]
     public void InnerPrefix_Constructor_ReferenceType_Parameterless_Executes()
     {
         ConstructorPatchingPatches.ExecutionCount = 0;
@@ -67,7 +64,6 @@ public sealed class ConstructorPatchingTests : PatchTestBase
     }
 
     [Test]
-    [Ignore("Patching constructors is not implemented")]
     public void InnerPostfix_Constructor_ReferenceType_Parameterless_Executes()
     {
         ConstructorPatchingPatches.ExecutionCount = 0;

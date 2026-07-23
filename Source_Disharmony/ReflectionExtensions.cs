@@ -7,7 +7,7 @@ public static class ReflectionExtensions
         public string FullName => $"{member.DeclaringType?.FullName}::{member.Name}";
     }
 
-    extension(MethodInfo method)
+    extension(MethodBase method)
     {
         public MethodInfo? GetIteratorImplementation()
         {

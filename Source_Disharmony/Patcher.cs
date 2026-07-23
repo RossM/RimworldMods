@@ -103,7 +103,7 @@ internal class Patcher
     }
 
     // Must hold HarmonyInternals.locker
-    public MethodInfo ApplyTrampoline(MethodInfo method)
+    public MethodInfo ApplyTrampoline(MethodBase method)
     {
         if (trampolines.TryGetValue(method, out var existingTrampoline))
             return existingTrampoline;
@@ -111,7 +111,7 @@ internal class Patcher
         if (extraDebug)
             FileLog.Log($"!!! Applying trampoline to {method.FullName}");
 
-        MethodInfo trampoline = MakeTrampoline(method);
+        MethodInfo trampoline = MakeTrampoline(MethodBaseInvocation.Create(method));
 
         HarmonyInternals.DetourMethod(method, trampoline);
 
@@ -135,14 +135,12 @@ internal class Patcher
         return instructionsList;
     }
 
-    private MethodInfo MakeTrampoline(MethodInfo target)
+    private MethodInfo MakeTrampoline(MethodBaseInvocation target)
     {
-        Type[] parameterTypes = target.GetParameters().Types();
-        if (!target.IsStatic)
-            parameterTypes = [target.DeclaringType.CallableType, .. parameterTypes];
+        Type[] parameterTypes = target.ParameterTypes;
 
         trampolineCount++;
-        var method = new DynamicMethod($"{target.DeclaringType?.FullName}.{target.Name}_Trampoline{trampolineCount}", target.ReturnType,
+        var method = new DynamicMethod($"{target.FullName}_Trampoline{trampolineCount}", target.ReturnType,
             parameterTypes, true);
 
         ILGenerator generator = method.GetILGenerator();
@@ -160,7 +158,12 @@ internal class Patcher
             generator.Emit(OpCodes.Ldarg_S, i);
 
         // Call ResolveTrampoline(), which generates the real patch and applies a detour
-        generator.Emit(OpCodes.Ldtoken, target);
+        switch (target)
+        {
+            case MethodInvocation methodTarget: generator.Emit(OpCodes.Ldtoken, methodTarget.MethodInfo); break;
+            case ConstructorInvocation constructorTarget: generator.Emit(OpCodes.Ldtoken, constructorTarget.ConstructorInfo); break;
+            default: throw new NotSupportedException();
+        }
         generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle);
         generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
 
@@ -168,14 +171,18 @@ internal class Patcher
         // The IL verifier does not allow tail calls to be used with by-ref arguments, so skip the tailcall prefix if there are any
         if (!parameterTypes.Any(p => p.IsByRef))
             generator.Emit(OpCodes.Tailcall);
-        generator.Emit(OpCodes.Call, target);
+        switch (target)
+        {
+            case MethodInvocation methodTarget: generator.Emit(OpCodes.Call, methodTarget.MethodInfo); break;
+            default: throw new NotSupportedException();
+        }
 
         generator.Emit(OpCodes.Ret);
 
         return method;
     }
 
-    public void ApplyPatch(MethodInfo original, InstructionMatcher[] matchers, bool useTrampolines)
+    public void ApplyPatch(MethodBase original, InstructionMatcher[] matchers, bool useTrampolines)
     {
         if (!trampolinesEnabled)
             useTrampolines = false;
@@ -203,7 +210,8 @@ internal class Patcher
             matchersByMethod[original] = matchers;
 
             MethodInfo replacement;
-            if (useTrampolines)
+            // Currently trampolines don't work with constructors
+            if (useTrampolines && original is MethodInfo)
                 replacement = ApplyTrampoline(original);
             else
                 replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
@@ -212,7 +220,7 @@ internal class Patcher
         }
     }
 
-    public void Unpatch(MethodInfo original)
+    public void Unpatch(MethodBase original)
     {
         lock (HarmonyInternals.locker)
         {

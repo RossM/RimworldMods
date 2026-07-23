@@ -32,22 +32,28 @@ internal abstract class Invocation
     public abstract Type[] ParameterTypes { get; }
     public abstract bool IsStatic { get; }
     public abstract string[] ParameterNames { get; }
+
+    /// <summary>
+    ///     If <see cref="IsStatic"/> is false, this returns the type of the instance parameter to this invocation.
+    ///     If <see cref="IsStatic"/> is true, its behavior is subclass-specific.
+    /// </summary>
     public abstract Type InstanceType { get; }
     public abstract CodeInstruction GetCodeInstruction();
 
     public static Invocation Create(MemberInfo member)
     {
-        Invocation invocation = member switch
+        return member switch
         {
             FieldInfo field => new FieldInvocation(field),
             MethodInfo method => new MethodInvocation(method),
+            ConstructorInfo constructor => new ConstructorInvocation(constructor),
             _ => throw new ArgumentOutOfRangeException(),
         };
-        return invocation;
     }
 
     public static implicit operator Invocation(FieldInfo field) => new FieldInvocation(field);
     public static implicit operator Invocation(MethodInfo method) => new MethodInvocation(method);
+    public static implicit operator Invocation(ConstructorInfo constructor) => new ConstructorInvocation(constructor);
 
     public override string ToString() => $"[{GetType().FullName}({FullName})]";
 }
@@ -110,13 +116,32 @@ internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
     public static bool operator !=(FieldInvocation? left, FieldInvocation? right) => !Equals(left, right);
 }
 
-internal class MethodInvocation(MethodInfo methodInfo) : Invocation
+internal abstract class MethodBaseInvocation : Invocation
+{
+    public abstract MethodBase MethodBase { get; }
+
+    public new static MethodBaseInvocation Create(MemberInfo member)
+    {
+        return member switch
+        {
+            MethodInfo method => new MethodInvocation(method),
+            ConstructorInfo constructor => new ConstructorInvocation(constructor),
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+    }
+
+    public static implicit operator MethodBaseInvocation(MethodInfo method) => new MethodInvocation(method);
+    public static implicit operator MethodBaseInvocation(ConstructorInfo constructor) => new ConstructorInvocation(constructor);
+}
+
+internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
 {
     public override string FullName => methodInfo.FullName;
     public override Type ReturnType => methodInfo.ReturnType;
     public override bool IsStatic => methodInfo.IsStatic;
     public override Type InstanceType => methodInfo.DeclaringType;
     public MethodInfo MethodInfo => methodInfo;
+    public override MethodBase MethodBase => methodInfo;
 
     public override Type[] ParameterTypes => field ??=
         methodInfo.IsStatic
@@ -152,6 +177,42 @@ internal class MethodInvocation(MethodInfo methodInfo) : Invocation
     public static bool operator ==(MethodInvocation? left, MethodInvocation? right) => Equals(left, right);
 
     public static bool operator !=(MethodInvocation? left, MethodInvocation? right) => !Equals(left, right);
+}
+
+internal class ConstructorInvocation(ConstructorInfo constructorInfo) : MethodBaseInvocation
+{
+    public override string FullName => constructorInfo.FullName;
+    public override Type ReturnType => constructorInfo.DeclaringType;
+    public override Type[] ParameterTypes => field ??= [.. constructorInfo.GetParameters().Select(p => p.ParameterType)];
+
+    public override bool IsStatic => true;
+    public override string[] ParameterNames => field ??= [.. constructorInfo.GetParameters().Select(p => p.Name)];
+    public override Type InstanceType => constructorInfo.DeclaringType;
+    public ConstructorInfo ConstructorInfo => constructorInfo;
+
+    private readonly ConstructorInfo constructorInfo = constructorInfo;
+    public override MethodBase MethodBase => constructorInfo;
+
+    public override CodeInstruction GetCodeInstruction() => new(OpCodes.Newobj, constructorInfo);
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null)
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj.GetType() != GetType())
+            return false;
+        return Equals((ConstructorInvocation)obj);
+    }
+
+    protected bool Equals(ConstructorInvocation other) => constructorInfo.Equals(other.constructorInfo);
+
+    public override int GetHashCode() => constructorInfo.GetHashCode();
+
+    public static bool operator ==(ConstructorInvocation? left, ConstructorInvocation? right) => Equals(left, right);
+
+    public static bool operator !=(ConstructorInvocation? left, ConstructorInvocation? right) => !Equals(left, right);
 }
 
 internal abstract class ConstantInvocation : Invocation

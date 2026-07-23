@@ -20,7 +20,7 @@ public static class ReflectionTools
 
     public static List<MemberInfo> GetMembers(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes)
     {
-        if (name is null)
+        if (name is null && memberType is not MemberType.Constructor)
             throw new ArgumentException("name expected");
 
         if (parameterTypes != null && memberType is not (MemberType.Any or MemberType.Method or MemberType.Constructor))
@@ -30,7 +30,7 @@ public static class ReflectionTools
             throw new ArgumentException($"genericTypes is not supported for memberType {memberType}");
 
         // Harmony uses ':' to separate the type name from the method name, so if it's there, use it
-        if (name.Split([':'], 2) is [string typeName, string memberName])
+        if (name?.Split([':'], 2) is [string typeName, string memberName])
         {
             type = AccessTools.TypeByName(typeName);
             if (type == null)
@@ -38,7 +38,7 @@ public static class ReflectionTools
             name = memberName;
         }
 
-        var nameParts = name.Split('.').ToList();
+        var nameParts = name?.Split('.').ToList() ?? [];
 
         // Search for the type by considering foo, then foo.bar, then foo.bar.baz, etc.
         if (type is null)
@@ -70,6 +70,8 @@ public static class ReflectionTools
 
         IEnumerable<MemberInfo> candidates = nameParts.Count switch
         {
+            0 => type.GetConstructors(),
+
             1 => type.GetMembers(DeclaredOnly).Where(m => m.Name == nameParts[0]),
 
             2 when nameParts[1] == "*" =>

@@ -2,10 +2,10 @@
 
 public static partial class Autopatcher
 {
-    internal class PatchWorker(PatchRegistry registry, MethodInfo patchedMethod, bool useTrampolines = true)
+    internal class PatchWorker(PatchRegistry registry, MethodBase patchedMethod, bool useTrampolines = true)
     {
         private readonly List<PatchInfo> patches = registry.GetPatchesFor(patchedMethod);
-        private readonly Invocation outer = patchedMethod;
+        private readonly Invocation outer = MethodBaseInvocation.Create(patchedMethod);
 
         public void UpdateMethod()
         {

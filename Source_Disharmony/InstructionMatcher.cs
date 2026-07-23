@@ -95,7 +95,7 @@ public partial class InstructionMatcher
         return instructionsList;
     }
 
-    public static Rule MakeRedirectRule(MemberInfo oldMember, MethodInfo newMember)
+    public static Rule MakeRedirectRule(MemberInfo oldMember, MethodBase newMember)
     {
         return new Rule
         {

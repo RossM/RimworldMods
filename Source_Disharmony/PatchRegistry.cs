@@ -77,12 +77,12 @@ internal class PatchRegistry
     // When another lock is also needed, this must be taken after Autopatcher's apply lock
     // and before Harmony's lock.
     private readonly object SyncRoot = new();
-    private readonly HashSet<MethodInfo> methodsToUpdate = [];
-    private readonly Dictionary<MethodInfo, List<PatchInfo>> patchesByMethod = new();
+    private readonly HashSet<MethodBase> methodsToUpdate = [];
+    private readonly Dictionary<MethodBase, List<PatchInfo>> patchesByMethod = new();
 
     private PatchRegistry() { }
 
-    public List<PatchInfo> GetPatchesFor(MethodInfo method)
+    public List<PatchInfo> GetPatchesFor(MethodBase method)
     {
         lock (SyncRoot)
             return patchesByMethod[method].ToList();
@@ -167,23 +167,25 @@ internal class PatchRegistry
                     List<MemberInfo> candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.methodName,
                         targetAttribute.memberType, targetAttribute.parameterTypes, targetAttribute.genericTypes);
 
+                    var nameForErrors = targetAttribute.memberType == MemberType.Constructor ? ".ctor" : targetAttribute.methodName;
+
                     switch (candidates.Count)
                     {
                         case > 1 when targetAttribute is not TargetsAttribute:
-                            throw new AmbiguousMatchException($"Ambiguous match: {targetAttribute.methodName}");
-                        case 0: throw new InvalidOperationException($"Member not found: {targetAttribute.methodName}");
+                            throw new AmbiguousMatchException($"{nameForErrors}: Ambiguous match");
+                        case 0: throw new InvalidOperationException($"{nameForErrors}: Member not found");
                     }
 
                     foreach (var result in candidates)
                     {
-                        MethodInfo? target = result as MethodInfo;
+                        MethodBase? target = result as MethodBase;
 
                         if (target == null)
-                            throw new InvalidOperationException($"Couldn't locate method {targetAttribute.methodName}");
+                            throw new InvalidOperationException($"{nameForErrors}: Couldn't locate method");
                         if (target.IsGenericMethod)
                             throw new InvalidOperationException($"Can't patch instantiated generic method");
 
-                        AddPatch(method, patchType, target, inner, inline, debug);
+                        AddPatch(method, patchType, MethodBaseInvocation.Create(target), inner, inline, debug);
                     }
                 }
             }
@@ -206,7 +208,7 @@ internal class PatchRegistry
             case InnerPostfixConstantAttribute { value: float value }: return new ConstantFloatInvocation(value);
             case InnerPostfixConstantAttribute { value: double value }: return new ConstantDoubleInvocation(value);
             case InnerPostfixConstantAttribute { value: string value }: return new ConstantStringInvocation(value);
-            case { memberName: string memberName }:
+            case { memberName: string } or { memberType: MemberType.Constructor }:
             {
                 MemberInfo inner = ReflectionTools.GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName, patchTypeAttribute.memberType,
                     patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
@@ -220,17 +222,17 @@ internal class PatchRegistry
     private void AddPatch(
         MethodInvocation patchMethod,
         PatchType patchType,
-        MethodInvocation target,
+        MethodBaseInvocation target,
         Invocation inner,
         bool inline = false,
         bool debug = false)
     {
-        MethodInvocation outer = target;
+        MethodBaseInvocation outer = target;
         bool isIterator = false;
 
-        if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix)
+        if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix && outer is MethodInvocation outerMethod)
         {
-            var iterator = outer.MethodInfo.GetIteratorImplementation();
+            var iterator = outerMethod.MethodInfo.GetIteratorImplementation();
             if (iterator != null)
             {
                 outer = iterator;
@@ -257,10 +259,10 @@ internal class PatchRegistry
             debug = debug,
         };
 
-        methodsToUpdate.Add(outer.MethodInfo);
+        methodsToUpdate.Add(outer.MethodBase);
 
-        if (!patchesByMethod.TryGetValue(outer.MethodInfo, out var patchList))
-            patchList = patchesByMethod[outer.MethodInfo] = [];
+        if (!patchesByMethod.TryGetValue(outer.MethodBase, out var patchList))
+            patchList = patchesByMethod[outer.MethodBase] = [];
         patchList.Add(patch);
     }
 
@@ -284,7 +286,7 @@ internal class PatchRegistry
     {
         lock (SyncRoot)
         {
-            foreach (MethodInfo patchedMethod in methodsToUpdate)
+            foreach (MethodBase patchedMethod in methodsToUpdate)
             {
                 try
                 {
