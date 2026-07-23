@@ -179,6 +179,7 @@ internal class Patcher
             }
             case ConstructorInvocation constructorTarget:
             {
+                // This doesn't work, it initializes a brand-new object rather than the one currently being constructed.
                 generator.Emit(OpCodes.Newobj, constructorTarget.ConstructorInfo);
                 break;
             }
