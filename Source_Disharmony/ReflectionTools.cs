@@ -70,34 +70,33 @@ public static class ReflectionTools
             nameParts.RemoveAt(0);
         }
 
-        List<MemberInfo> candidates = nameParts.Count switch
+        IEnumerable<MemberInfo> candidates = nameParts.Count switch
         {
-            1 => type.GetMembers(DeclaredOnly).Where(m => m.Name == nameParts[0]).ToList(),
+            1 => type.GetMembers(DeclaredOnly).Where(m => m.Name == nameParts[0]),
 
             2 when nameParts[1] == "*" =>
                 type.GetNestedTypes(DeclaredOnly).Where(t => t.IsClosureType).Append(type)
-                    .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>b__"))
-                    .ToList<MemberInfo>(),
+                    .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>b__")),
 
             2 => type.GetNestedTypes(DeclaredOnly).Where(t => t.IsClosureType).Append(type)
-                .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>g__{nameParts[1]}|"))
-                .ToList<MemberInfo>(),
+                .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>g__{nameParts[1]}|")),
 
             _ => throw new NotSupportedException("Nested local functions are not supported"),
         };
 
         candidates = memberType switch
         {
-            MemberType.Any => candidates,
-            MemberType.Method => candidates.Where(m => m is MethodInfo).ToList(),
-            MemberType.Getter or MemberType.Setter => candidates.Where(m => m is FieldInfo or PropertyInfo).ToList(),
+            MemberType.Any => candidates.Where(m => m is MethodInfo or FieldInfo or PropertyInfo),
+            MemberType.Method => candidates.Where(m => m is MethodInfo),
+            MemberType.Getter or MemberType.Setter => candidates.Where(m => m is FieldInfo or PropertyInfo),
+            MemberType.Constructor => candidates.Where(m => m is ConstructorInfo),
             _ => throw new ArgumentOutOfRangeException(nameof(memberType), memberType, null),
         };
 
         if (parameterTypes != null || genericTypes != null)
-            candidates = FilterMethods(candidates, parameterTypes, genericTypes).ToList<MemberInfo>();
+            candidates = FilterMethods(candidates, parameterTypes, genericTypes);
 
-        candidates = candidates.Select(result =>
+        return candidates.Select(result =>
             result switch
             {
                 PropertyInfo property => memberType == MemberType.Setter ? property.SetMethod : property.GetMethod,
@@ -106,18 +105,20 @@ public static class ReflectionTools
                 _ => result,
             }
         ).Where(m => m is not null).ToList();
-        return candidates;
     }
 
-    private static IEnumerable<MethodInfo> FilterMethods(IEnumerable<MemberInfo> candidates, Type[]? parameterTypes, Type[]? genericTypes)
+    private static IEnumerable<MethodBase> FilterMethods(IEnumerable<MemberInfo> candidates, Type[]? parameterTypes, Type[]? genericTypes)
     {
         foreach (var candidate in candidates)
         {
-            if (candidate is not MethodInfo method)
+            if (candidate is not MethodBase method)
                 continue;
 
             if (method.IsGenericMethod)
             {
+                if (method is not MethodInfo methodInfo)
+                    throw new NotSupportedException();
+
                 if (genericTypes is null)
                     continue;
                 if (genericTypes.Length != method.GetGenericArguments().Length)
@@ -125,7 +126,7 @@ public static class ReflectionTools
 
                 try
                 {
-                    method = method.MakeGenericMethod(genericTypes);
+                    method = methodInfo.MakeGenericMethod(genericTypes);
                 }
                 catch
                 {
