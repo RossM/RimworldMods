@@ -37,18 +37,18 @@ internal static class Patch_Pawn
     [Feature(nameof(EventDefOf.PostMutated))]
     [Postfix]
     [Target(nameof(Pawn.Kill))]
-    public static void Kill_Postfix(Pawn __instance, bool __state)
+    public static void Kill_Postfix(Pawn __instance, [State] bool wasMutant)
     {
         EventManager.Instance.Notify(EventDefOf.PostPawnKilled, __instance);
-        if (__state && __instance.mutant == null)
+        if (wasMutant && __instance.mutant == null)
             EventManager.Instance.Notify(EventDefOf.PostMutated, __instance);
     }
 
     [Feature(nameof(EventDefOf.PostMutated))]
     [Prefix]
     [Target(nameof(Pawn.Kill))]
-    public static void Kill_Prefix(Pawn __instance, out bool __state)
+    public static void Kill_Prefix(Pawn __instance, [State] out bool wasMutant)
     {
-        __state = __instance.mutant != null;
+        wasMutant = __instance.mutant != null;
     }
 }

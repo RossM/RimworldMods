@@ -6,9 +6,9 @@ internal static class Patch_PawnGenerator
     [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
     [InnerPrefix(typeof(PawnGenerator), "GenerateGenes")]
     [Target("TryGenerateNewPawnInternal")]
-    public static void GenerateGenes_Prefix(ref XenotypeDef? xenotype, XenotypeDef? __state)
+    public static void GenerateGenes_Prefix(ref XenotypeDef? xenotype, [State] PawnGenerationData data)
     {
-        xenotype = __state;
+        xenotype = data.xenotype;
     }
 
     [Feature(nameof(EventDefOf.PostGenerateInitialHediffs))]
@@ -26,12 +26,12 @@ internal static class Patch_PawnGenerator
         Pawn pawn,
         PawnGenerationRequest request,
         ref XenotypeDef? xenotype,
-        out XenotypeDef? __state)
+        [State] out PawnGenerationData data)
     {
-        var data = new PawnGenerationData(request, xenotype);
+        data = new PawnGenerationData(request, xenotype);
         EventManager.Instance.Notify(EventDefOf.PreGeneratePawnBioAndName, pawn, data);
 
-        __state = xenotype = data.xenotype;
+        xenotype = data.xenotype;
     }
 
     [Feature(nameof(EventDefOf.PostGenerateNewPawn))]
