@@ -2,18 +2,39 @@
 
 ## Description
 
-Disharmony is a Harmony-compatible modding framework, built on top of Harmony, that provides powerful and easy-to-use 
-patching capabilities.
+Disharmony is a game-modding patch framework built on top of Harmony. It keeps the familiar prefix-and-postfix style,
+while making patches that would normally require a transpiler much easier to write and maintain.
 
 ## Features
 
-<!-- List the key features and capabilities of Disharmony. -->
+* **Familiar Harmony-style patches.** Prefixes and postfixes can inspect or change arguments and return values, share
+  state, access instances and fields, skip the original method, and target methods, constructors, properties, and
+  fields.
 
-* Inner prefixes and inner postfixes
-* Easy patching of local functions, nested classes, and iterator state machines
-* Convenient API for ref, in, and out parameters
-* Just-in-time patching
+* **Patch individual calls inside a method.** Inner prefixes and postfixes run around a particular method call made by
+  the target method. This covers many common transpiler use cases without requiring you to search and rewrite raw IL
+  instructions.
+
+* **Reach compiler-generated code more easily.** Disharmony provides ways to target local functions, lambdas, nested
+  classes, captured variables, and iterator methods. These are possible to patch with Harmony, but often require
+  knowledge of compiler-generated names and state-machine internals.
+
+* **Clearer parameter binding.** Attributes explicitly identify arguments, instances, fields, return values, shared
+  state, and base methods. Disharmony also provides convenient ways to distinguish ordinary, `ref`, `in`, and `out`
+  parameters when selecting overloaded methods.
+
+* **Patch one or many targets.** A patch can target a specific overload, several explicitly named members, or every
+  matching overload. Patches can also be registered by method, type, assembly, or Harmony patch category.
+
+* **Just-in-time patch application.** Disharmony can defer the more expensive construction of a patch until the
+  affected method is first called. Patches can also be applied immediately when required.
+
+* **Harmony interoperability.** Disharmony uses Harmony underneath and understands selected Harmony conventions,
+  including patch classes and categories. It is intended as an extension of the Harmony ecosystem rather than an
+  entirely unrelated replacement.
 
 ## Migrating from Harmony
 
-<!-- Explain how to migrate an existing Harmony-based mod to Disharmony, including API differences and examples. -->
+For an existing Harmony mod, switching does not mean that every patch must be rewritten. Straightforward prefixes and
+postfixes remain conceptually similar. The greatest benefit comes from replacing fragile transpilers and awkward
+patches of compiler-generated code with patches that directly describe the call or behavior you want to change.
