@@ -14,16 +14,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public string ID => $"#{startingInstructionIndex}";
     }
 
-    public static List<CodeInstruction> Transpiler(
-        MethodBase method,
-        IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator)
-    {
-        var optimizer = new Optimizer(method, [.. instructions], generator);
-        optimizer.Optimize();
-        return optimizer.output.Instructions;
-    }
-
     private void LogInstructions(string phase)
     {
         int codePos = 0;
@@ -90,7 +80,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             codePos += ReflectionTools.ILSize(codeInstruction.opcode);
     }
 
-    private void Optimize()
+    public void Optimize()
     {
         LogInstructions("Input");
 
@@ -214,6 +204,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     }
 
     private readonly ILGenerator generator = generator;
-    private readonly InstructionList output = [];
+    public readonly InstructionList output = [];
     private readonly List<BasicBlock> basicBlocks = [];
 }

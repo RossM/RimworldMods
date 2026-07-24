@@ -15,10 +15,7 @@ internal class Patcher
         public static readonly MethodInfo ResolveTrampoline = SymbolExtensions.GetMethodInfo(() => Patcher.ResolveTrampoline);
 
         // ReSharper disable once MemberHidesStaticFromOuterClass
-        public static readonly MethodInfo Patcher_Transpiler = SymbolExtensions.GetMethodInfo(() => Patcher.Transpiler);
-
-        // ReSharper disable once MemberHidesStaticFromOuterClass
-        public static readonly MethodInfo Optimizer_Transpiler = SymbolExtensions.GetMethodInfo(() => Optimizer.Transpiler);
+        public static readonly MethodInfo Transpiler = SymbolExtensions.GetMethodInfo(() => Patcher.Transpiler);
     }
 
     private static class HarmonyInternals
@@ -146,6 +143,13 @@ internal class Patcher
             matcher.MatchAndReplace(method, ref instructionsList, generator);
         }
 
+        if (Instance.optimizerEnabled)
+        {
+            var optimizer = new Optimizer(method, instructionsList, generator);
+            optimizer.Optimize();
+            return optimizer.output.Instructions;
+        }
+
         return instructionsList;
     }
 
@@ -202,30 +206,16 @@ internal class Patcher
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
 
             bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
-            bool inline = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.inline);
 
             if (!matchersByMethod.ContainsKey(original.MethodBase))
             {
-                HarmonyMethod patcher = new(InfoOf.Patcher_Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
-                HarmonyMethod optimizer = new(InfoOf.Optimizer_Transpiler, priority: int.MinValue) { debug = debug };
+                HarmonyMethod patcher = new(InfoOf.Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
 
-                if (inline && optimizerEnabled)
-                {
-                    patchInfo.transpilers =
-                    [
-                        .. patchInfo.transpilers,
-                        new Patch(patcher, patchInfo.transpilers.Length, harmonyID),
-                        new Patch(optimizer, patchInfo.transpilers.Length + 1, harmonyID),
-                    ];
-                }
-                else
-                {
-                    patchInfo.transpilers =
-                    [
-                        .. patchInfo.transpilers,
-                        new Patch(patcher, patchInfo.transpilers.Length, harmonyID),
-                    ];
-                }
+                patchInfo.transpilers =
+                [
+                    .. patchInfo.transpilers,
+                    new Patch(patcher, patchInfo.transpilers.Length, harmonyID),
+                ];
             }
 
             matchersByMethod[original.MethodBase] = matchers;
