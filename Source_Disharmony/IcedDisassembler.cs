@@ -1,6 +1,6 @@
+#if ENABLE_DISASSEMBLY
 using System.Diagnostics.CodeAnalysis;
 
-#if ENABLE_DISASSEMBLY
 namespace Disharmony;
 
 /// <summary>
