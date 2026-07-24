@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Security.Policy;
-
-namespace Disharmony;
+﻿namespace Disharmony;
 
 internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator)
 {
