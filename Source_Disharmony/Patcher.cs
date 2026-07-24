@@ -3,7 +3,7 @@ using HarmonyPatch = HarmonyLib.PatchInfo;
 
 namespace Disharmony;
 
-internal partial class Patcher
+internal class Patcher
 {
     private static class InfoOf
     {
@@ -66,12 +66,12 @@ internal partial class Patcher
         HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
 
         MethodInfo replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
+#if ENABLE_DISASSEMBLY
+        if (patchInfo.transpilers.Any(p => p.debug && p.owner == harmonyID))
+            JitAssemblyLogger.TryLog(original, replacement);
+#endif
 
         HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
-
-#if ENABLE_DISASSEMBLY
-        Instance.LogAssemblyIfEnabled(original, replacement);
-#endif
     }
 
     public void ResolveTrampolineImpl(MethodBase method)
@@ -198,9 +198,6 @@ internal partial class Patcher
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
 
             bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
-#if ENABLE_DISASSEMBLY
-            SetAssemblyLogging(original.MethodBase, debug);
-#endif
 
             if (!matchersByMethod.ContainsKey(original.MethodBase))
             {
@@ -219,14 +216,15 @@ internal partial class Patcher
             if (useTrampolines)
                 replacement = ApplyTrampoline(original);
             else
+            {
                 replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
+#if ENABLE_DISASSEMBLY
+                if (patchInfo.transpilers.Any(p => p.debug && p.owner == harmonyID))
+                    JitAssemblyLogger.TryLog(original.MethodBase, replacement);
+#endif
+            }
 
             HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);
-
-#if ENABLE_DISASSEMBLY
-            if (!useTrampolines)
-                LogAssemblyIfEnabled(original.MethodBase, replacement);
-#endif
         }
     }
 
@@ -238,10 +236,6 @@ internal partial class Patcher
                 return;
 
             trampolines.Remove(original.MethodBase);
-
-#if ENABLE_DISASSEMBLY
-            SetAssemblyLogging(original.MethodBase, false);
-#endif
 
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
 
