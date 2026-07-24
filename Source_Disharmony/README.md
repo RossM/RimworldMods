@@ -23,7 +23,7 @@ while making patches that would normally require a transpiler much easier to wri
   `out` parameters when selecting overloaded methods.
 
 * **Patch one or many targets.** A patch can target a specific overload, several explicitly named members, or every
-  matching overload. Patches can also be registered by method, type, assembly, or Harmony patch category.
+  matching overload. Patches can be registered by method, type, assembly, or Harmony patch category.
 
 * **Just-in-time patch application.** Disharmony can defer the more expensive construction of a patch until the
   affected method is first called, avoiding wasteful redundant work when several mods patch the same method. Patches
