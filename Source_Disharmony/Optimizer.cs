@@ -30,62 +30,74 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         FileLog.LogBuffered($"### Optimizer {phase}: {method.FullDescription()}");
 
-        foreach (var block in basicBlocks)
+        if (basicBlocks.Count > 0)
         {
-            FileLog.LogBuffered("#####################################");
-            FileLog.LogBuffered($"# Basic block:  {block.ID,-19} #");
-            FileLog.LogBuffered($"# Predecessors: {string.Join(", ", block.predecessors.Select(b => b.ID)),-19} #");
-            FileLog.LogBuffered($"# Successors:   {string.Join(", ", block.successors.Select(b => b.ID)),-19} #");
-            FileLog.LogBuffered("#####################################");
-            foreach (var codeInstruction in block.instructions)
+            foreach (var block in basicBlocks)
             {
-                foreach (var label in codeInstruction.labels)
-                    FileLog.LogIL(codePos, label);
-                foreach (var block2 in codeInstruction.blocks)
-                    FileLog.LogILBlockBegin(codePos, block2);
-
-                var code = codeInstruction.opcode;
-                var operand = codeInstruction.operand;
-
-                var realCode = true;
-                switch (code.OperandType)
-                {
-                    case OperandType.InlineNone:
-                        if (code == OpCodes.Nop && operand is string s)
-                        {
-                            FileLog.LogILComment(codePos, s);
-                            realCode = false;
-                        }
-                        else
-                            FileLog.LogIL(codePos, code);
-
-                        break;
-
-                    //case OperandType.InlineSig:
-                    //    FileLog.LogIL(codePos, code, (ICallSiteGenerator)operand);
-                    //    break;
-
-                    default: FileLog.LogIL(codePos, code, operand); break;
-                }
-
-                foreach (var block2 in codeInstruction.blocks)
-                    FileLog.LogILBlockEnd(codePos, block2);
-                if (realCode)
-                    codePos += ReflectionTools.ILSize(codeInstruction.opcode);
+                FileLog.LogBuffered("#####################################");
+                FileLog.LogBuffered($"# Basic block:  {block.ID,-19} #");
+                FileLog.LogBuffered($"# Predecessors: {string.Join(", ", block.predecessors.Select(b => b.ID)),-19} #");
+                FileLog.LogBuffered($"# Successors:   {string.Join(", ", block.successors.Select(b => b.ID)),-19} #");
+                FileLog.LogBuffered("#####################################");
+                foreach (var codeInstruction in block.instructions)
+                    LogInstruction(codeInstruction, ref codePos);
             }
+        }
+        else
+        {
+            foreach (var codeInstruction in inputInstructions)
+                LogInstruction(codeInstruction, ref codePos);
         }
 
         FileLog.LogBuffered("");
         FileLog.FlushBuffer();
     }
 
+    private static void LogInstruction(CodeInstruction codeInstruction, ref int codePos)
+    {
+        foreach (var label in codeInstruction.labels)
+            FileLog.LogIL(codePos, label);
+        foreach (var block2 in codeInstruction.blocks)
+            FileLog.LogILBlockBegin(codePos, block2);
+
+        var code = codeInstruction.opcode;
+        var operand = codeInstruction.operand;
+
+        var realCode = true;
+        switch (code.OperandType)
+        {
+            case OperandType.InlineNone:
+                if (code == OpCodes.Nop && operand is string s)
+                {
+                    FileLog.LogILComment(codePos, s);
+                    realCode = false;
+                }
+                else
+                    FileLog.LogIL(codePos, code);
+
+                break;
+
+            //case OperandType.InlineSig:
+            //    FileLog.LogIL(codePos, code, (ICallSiteGenerator)operand);
+            //    break;
+
+            default: FileLog.LogIL(codePos, code, operand); break;
+        }
+
+        foreach (var block2 in codeInstruction.blocks)
+            FileLog.LogILBlockEnd(codePos, block2);
+        if (realCode)
+            codePos += ReflectionTools.ILSize(codeInstruction.opcode);
+    }
+
     private void Optimize()
     {
-        MakeBasicBlocks();
-        LogInstructions("MakeBasicBlocks");
+        LogInstructions("Input");
 
+        MakeBasicBlocks();
         RemoveNops();
         RewriteLabels();
+        LogInstructions("MakeBasicBlocks");
 
         MergeBasicBlocks();
         RewriteLabels();
@@ -104,15 +116,10 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         int instructionIndex = 0;
 
-        List<CodeInstruction> annotations = [];
-
         foreach (var inst in inputInstructions)
         {
-            if (inst.labels.Count == 0 && inst.opcode == OpCodes.Nop && inst.operand is string)
-            {
-                annotations.Add(inst);
+            if (inst.labels.Count == 0 && inst.blocks.Count == 0 && inst.opcode == OpCodes.Nop)
                 continue;
-            }
 
             if (inst.labels.Count > 0 || inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
             {
@@ -120,9 +127,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 curBlock.labels.AddRange(inst.labels);
             }
 
-            curBlock.instructions.AddRange(annotations);
-            annotations.Clear();
-            
             curBlock.instructions.Add(inst);
             instructionIndex++;
 
