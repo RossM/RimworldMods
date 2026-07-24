@@ -188,7 +188,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
             while (true)
             {
-                if (block.successors.Count != 1 || block.instructions[^1].blocks.Any(IsBlockEnd))
+                if (block.successors.Count != 1 || block.instructions[^1].blocks.Any(IsBlockEnd) || block.instructions[^1].IsLeave)
                     break;
                 var successor = block.successors[0];
 
