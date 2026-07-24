@@ -33,6 +33,10 @@ internal class UnpatchTests
     private static void ApplyPatch(string patchMethodName) =>
         Autopatcher.Patch(typeof(UnpatchPatches).GetMethod(patchMethodName));
 
+    [SetUp]
+    public void DisableOptimizer() =>
+        Patcher.Instance.optimizerEnabled = false;
+
     [Test]
     public void PrefixReturningFalseSkipsValueTypeTarget()
     {
