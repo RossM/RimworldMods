@@ -10,7 +10,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public ExceptionBlock? harmonyBlock;
         public ExceptionRegion? parent;
         public ExceptionRegion? next;
-        public List<ExceptionRegion> children = [];
         public int depth;
 
         public static ExceptionRegion? SharedParent(ExceptionRegion? first, ExceptionRegion? second)
@@ -40,10 +39,10 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     {
         public required ExceptionRegion exceptionRegion;
         public int startingInstructionIndex = 0;
-        public List<Label> labels = [];
+        public readonly List<Label> labels = [];
         public readonly List<CodeInstruction> instructions = [];
-        public List<BasicBlock> successors = [];
-        public List<BasicBlock> predecessors = [];
+        public readonly List<BasicBlock> successors = [];
+        public readonly List<BasicBlock> predecessors = [];
         public BasicBlock? fallthroughBlock;
 
         public string ID => $"#{startingInstructionIndex}";
@@ -70,7 +69,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         int codePos = 0;
 
         FileLog.LogBuffered($"### Optimizer {phase}: {method.FullDescription()}");
-        LogExceptionRegion(exceptionRoot);
 
         for (var index = 0; index < basicBlocks.Count; index++)
         {
@@ -79,8 +77,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             FileLog.LogBuffered($"# Basic block:  {block.ID,-19} #");
             FileLog.LogBuffered($"# Predecessors: {string.Join(", ", block.predecessors.Select(b => b.ID)),-19} #");
             FileLog.LogBuffered($"# Successors:   {string.Join(", ", block.successors.Select(b => b.ID)),-19} #");
-            if (block.exceptionRegion.harmonyBlock != null)
-                FileLog.LogBuffered($"# Exception Region: {block.exceptionRegion.harmonyBlock.blockType} depth {block.exceptionRegion.depth}");
             FileLog.LogBuffered("#####################################");
 
             foreach (var label in block.labels)
@@ -98,13 +94,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         FileLog.LogBuffered("");
         FileLog.FlushBuffer();
-
-        static void LogExceptionRegion(ExceptionRegion region)
-        {
-            FileLog.LogBuffered($"{"".PadLeft(2 * region.depth)} {region.harmonyBlock?.blockType.ToString() ?? "root"}");
-            foreach (var child in region.children)
-                LogExceptionRegion(child);
-        }
     }
 
     private IEnumerable<ExceptionBlock> ExceptionBlockBegins(int index)
@@ -198,7 +187,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     }
 
     /// <summary>
-    ///     Generate basic blocks and remove some nops (those with no labels or blocks).
+    ///     Generate basic blocks.
     /// </summary>
     private void MakeBasicBlocks()
     {
@@ -242,6 +231,9 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             if (basicBlocks[i].instructions[^1].CanFallThrough)
                 basicBlocks[i].fallthroughBlock = basicBlocks[i + 1];
         }
+        // Add a ret to the last basic block if one is missing (perhaps because of a poorly behaved transpiler)
+        if (basicBlocks[^1].instructions[^1].CanFallThrough)
+            basicBlocks[^1].instructions.Add(new(OpCodes.Ret));
 
         foreach (var block in basicBlocks)
         {
@@ -291,7 +283,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                     harmonyBlock = harmonyBlock,
                     parent = exceptionRegion,
                 };
-                exceptionRegion.children.Add(newRegion);
                 exceptionRegion = newRegion;
             }
             else
@@ -303,7 +294,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                     parent = exceptionRegion.parent,
                 };
                 exceptionRegion.next = newRegion;
-                exceptionRegion.parent!.children.Add(newRegion);
                 exceptionRegion = newRegion;
             }
         }
