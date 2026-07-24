@@ -105,9 +105,15 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         RewriteLabels();
         LogInstructions("RemoveFallthroughs");
 
+        JumpThreading();
+        LogInstructions("JumpThreading");
+
         MergeBasicBlocks();
         RewriteLabels();
         LogInstructions("MergeBasicBlocks");
+
+        DeadCodeElimination();
+        LogInstructions("DeadCodeElimination");
 
         foreach (var block in basicBlocks)
         foreach (var inst in block.instructions)
@@ -148,10 +154,24 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         foreach (var block in basicBlocks)
         {
             var finalInstruction = block.instructions[^1];
+            
             if (finalInstruction.CanFallThrough && block.fallthroughBlock is not null)
                 block.successors.Add(block.fallthroughBlock);
-            if (finalInstruction.operand is Label label)
-                block.successors.Add(basicBlocks.Single(b => b.labels.Contains(label)));
+
+            switch (finalInstruction.operand)
+            {
+                case Label label:
+                {
+                    block.successors.Add(basicBlocks.Single(b => b.labels.Contains(label))); 
+                    break;
+                }
+                case Label[] labels:
+                {
+                    foreach (var label in labels)
+                        block.successors.Add(basicBlocks.Single(b => b.labels.Contains(label)));
+                    break;
+                }
+            }
         }
 
         UpdatePredecessors();
@@ -224,6 +244,28 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         }
     }
 
+    private void JumpThreading()
+    {
+        foreach (var block in basicBlocks)
+        foreach (var inst in block.instructions)
+        {
+            if (inst.operand is Label label)
+            {
+                var targetBlock = basicBlocks.Single(b => b.labels.Contains(label));
+                CodeInstruction firstInstruction = targetBlock.instructions[0];
+                if (firstInstruction.IsUnconditionalBranch && !firstInstruction.blocks.Any(IsBlockStart))
+                {
+                    var newTargetBlock = basicBlocks.Single(b => b.labels.Contains((Label)firstInstruction.operand));
+                    block.successors.Remove(targetBlock);
+                    block.successors.Add(newTargetBlock);
+                    inst.operand = firstInstruction.operand;
+                }
+            }
+        }
+
+        UpdatePredecessors();
+    }
+
     /// <summary>
     ///     Merge basic blocks that are each other's only successor and predecessor.
     ///     Must not be run before RemoveFallthroughs.
@@ -255,7 +297,31 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         }
     }
 
-    private readonly ILGenerator generator = generator;
+    private void DeadCodeElimination()
+    {
+        Queue<BasicBlock> worklist = new();
+        HashSet<BasicBlock> liveBlocks = new();
+
+        worklist.Enqueue(basicBlocks[0]);
+
+        // Badly need better structured exception handling
+        foreach (var block in basicBlocks)
+        {
+            if (block.instructions[0].blocks.Any(IsBlockStart))
+                worklist.Enqueue(block);
+        }
+
+        while (worklist.Count > 0)
+        {
+            var block = worklist.Dequeue();
+            if (liveBlocks.Add(block))
+                foreach (var successor in block.successors)
+                    worklist.Enqueue(successor);
+        }
+
+        basicBlocks.RemoveAll(b => !liveBlocks.Contains(b));
+    }
+
     public readonly InstructionList output = [];
     private readonly List<BasicBlock> basicBlocks = [];
 }
