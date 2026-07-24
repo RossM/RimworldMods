@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using System.Security.Policy;
+
+namespace Disharmony;
 
 internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator)
 {
@@ -12,6 +14,13 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public BasicBlock? fallthroughBlock;
 
         public string ID => $"#{startingInstructionIndex}";
+
+        public void Append(CodeInstruction inst)
+        {
+            inst.blocks.AddRange(instructions[^1].blocks.Where(IsBlockEnd));
+            instructions[^1].blocks.RemoveAll(IsBlockEnd);
+            instructions.Add(inst);
+        }
     }
 
     static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
@@ -92,6 +101,10 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         RewriteLabels();
         LogInstructions("MakeBasicBlocks");
 
+        RemoveFallthroughs();
+        RewriteLabels();
+        LogInstructions("RemoveFallthroughs");
+
         MergeBasicBlocks();
         RewriteLabels();
         LogInstructions("MergeBasicBlocks");
@@ -101,6 +114,9 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             output.Add(inst);
     }
 
+    /// <summary>
+    ///     Generate basic blocks and remove some nops (those with no labels or blocks).
+    /// </summary>
     private void MakeBasicBlocks()
     {
         BasicBlock curBlock = new();
@@ -122,7 +138,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             curBlock.instructions.Add(inst);
             instructionIndex++;
 
-            if (inst.opcode.FlowControl is not (FlowControl.Next or FlowControl.Call or FlowControl.Meta) || inst.blocks.Any(IsBlockEnd))
+            if (inst.CanBranch || inst.blocks.Any(IsBlockEnd))
                 NewBasicBlock();
         }
 
@@ -132,7 +148,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         foreach (var block in basicBlocks)
         {
             var finalInstruction = block.instructions[^1];
-            if (finalInstruction.opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch && block.fallthroughBlock is not null)
+            if (finalInstruction.CanFallThrough && block.fallthroughBlock is not null)
                 block.successors.Add(block.fallthroughBlock);
             if (finalInstruction.operand is Label label)
                 block.successors.Add(basicBlocks.Single(b => b.labels.Contains(label)));
@@ -154,6 +170,9 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         }
     }
 
+    /// <summary>
+    ///     Update predecessor lists. Should be called whenever control flow changes.
+    /// </summary>
     private void UpdatePredecessors()
     {
         foreach (var block in basicBlocks)
@@ -170,6 +189,9 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             block.instructions.RemoveAll(i => i.opcode == OpCodes.Nop && i.blocks.Count == 0);
     }
 
+    /// <summary>
+    ///     Rewrite instruction labels to match the basic block's.
+    /// </summary>
     private void RewriteLabels()
     {
         foreach (var block in basicBlocks)
@@ -180,6 +202,32 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         }
     }
 
+    /// <summary>
+    ///     Ensure that all basic blocks end with a control transfer instruction. After this has
+    ///     run, there may be a conditional control transfer instruction that is not the last
+    ///     instruction in the block.
+    /// </summary>
+    private void RemoveFallthroughs()
+    {
+        foreach (var block in basicBlocks)
+        {
+            if (!block.instructions[^1].CanFallThrough)
+                continue;
+            if (block.fallthroughBlock == null)
+                block.Append(new(OpCodes.Ret));
+            else
+            {
+                if (block.fallthroughBlock.labels.Count == 0)
+                    block.fallthroughBlock.labels.Add(generator.DefineLabel());
+                block.Append(new(OpCodes.Br, block.fallthroughBlock.labels[0]));
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Merge basic blocks that are each other's only successor and predecessor.
+    ///     Must not be run before RemoveFallthroughs.
+    /// </summary>
     private void MergeBasicBlocks()
     {
         for (int i = 0; i < basicBlocks.Count; i++)
