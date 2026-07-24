@@ -48,6 +48,17 @@ public static class BaseMethodBindingPatches
     [Prefix]
     [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.Describe))]
     public static void Prefix_BaseMethod_Delegate_ReturnTypeMismatch_RejectedByPatch(Func<int, int> __base) { }
+
+    [Prefix]
+    [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.Describe))]
+    public static bool Prefix_BaseMethodAttribute_ReturnValueAttribute_NonReservedNames_Invokes(
+        int value,
+        [BaseMethod] Func<int, string> baseMethod,
+        [ReturnValue] ref string result)
+    {
+        result = baseMethod(value);
+        return false;
+    }
 }
 
 [TestFixture]
@@ -143,5 +154,18 @@ public sealed class BaseMethodBindingTests : PatchTestBase
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
         Assert.That(exception.InnerException!.Message, Is.EqualTo("__base: Return type mismatch"));
+    }
+
+    [Test]
+    public void Prefix_BaseMethodAttribute_ReturnValueAttribute_NonReservedNames_Invokes()
+    {
+        ApplyPatch(
+            typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.Prefix_BaseMethodAttribute_ReturnValueAttribute_NonReservedNames_Invokes));
+        var target = new DerivedMethodTargets { InstanceValue = 1 };
+
+        string result = target.Describe(41);
+
+        Assert.That(result, Is.EqualTo("base:41:1"));
     }
 }
