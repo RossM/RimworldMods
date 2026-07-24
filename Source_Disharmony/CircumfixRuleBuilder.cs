@@ -42,7 +42,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
             resultLocalIndex = output.AddLocal(targetType);
 
             if (prefixesUsingResult.Count > 0 &&
-                !prefixesUsingResult[0].parameters.Single(a => a.BindingType == BindingType.Result).Parameter.IsOut)
+                !prefixesUsingResult[0].parameters.Where(a => a.BindingType == BindingType.Result).All(a => a.Parameter.IsOut))
             {
                 output.EmitLocalInitializer(resultLocalIndex);
             }
