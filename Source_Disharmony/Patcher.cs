@@ -15,7 +15,10 @@ internal class Patcher
         public static readonly MethodInfo ResolveTrampoline = SymbolExtensions.GetMethodInfo(() => Patcher.ResolveTrampoline);
 
         // ReSharper disable once MemberHidesStaticFromOuterClass
-        public static readonly MethodInfo Transpiler = SymbolExtensions.GetMethodInfo(() => Patcher.Transpiler);
+        public static readonly MethodInfo Patcher_Transpiler = SymbolExtensions.GetMethodInfo(() => Patcher.Transpiler);
+
+        // ReSharper disable once MemberHidesStaticFromOuterClass
+        public static readonly MethodInfo Optimizer_Transpiler = SymbolExtensions.GetMethodInfo(() => Optimizer.Transpiler);
     }
 
     private static class HarmonyInternals
@@ -201,12 +204,14 @@ internal class Patcher
 
             if (!matchersByMethod.ContainsKey(original.MethodBase))
             {
-                HarmonyMethod harmonyMethod = new(InfoOf.Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
+                HarmonyMethod patcher = new(InfoOf.Patcher_Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
+                HarmonyMethod optimizer = new(InfoOf.Optimizer_Transpiler, priority: int.MinValue) { debug = debug };
 
                 patchInfo.transpilers =
                 [
                     .. patchInfo.transpilers,
-                    new Patch(harmonyMethod, patchInfo.transpilers.Length, harmonyID),
+                    new Patch(patcher, patchInfo.transpilers.Length, harmonyID),
+                    new Patch(optimizer, patchInfo.transpilers.Length + 1, harmonyID),
                 ];
             }
 
