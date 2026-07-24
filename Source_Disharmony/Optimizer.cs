@@ -14,6 +14,9 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public string ID => $"#{startingInstructionIndex}";
     }
 
+    static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
+    static bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
+
     private void LogInstructions(string phase)
     {
         int codePos = 0;
@@ -93,7 +96,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         RewriteLabels();
         LogInstructions("MergeBasicBlocks");
 
-        FileLog.LogBuffered($"### Final instructions: {method.FullDescription()}");
         foreach (var block in basicBlocks)
         foreach (var inst in block.instructions)
             output.Add(inst);
@@ -111,7 +113,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             if (inst.labels.Count == 0 && inst.blocks.Count == 0 && inst.opcode == OpCodes.Nop)
                 continue;
 
-            if (inst.labels.Count > 0 || inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
+            if (inst.labels.Count > 0 || inst.blocks.Any(IsBlockStart))
             {
                 NewBasicBlock();
                 curBlock.labels.AddRange(inst.labels);
@@ -120,7 +122,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             curBlock.instructions.Add(inst);
             instructionIndex++;
 
-            if (inst.opcode.FlowControl is not (FlowControl.Next or FlowControl.Call or FlowControl.Meta) || inst.HasBlock(ExceptionBlockType.EndExceptionBlock))
+            if (inst.opcode.FlowControl is not (FlowControl.Next or FlowControl.Call or FlowControl.Meta) || inst.blocks.Any(IsBlockEnd))
                 NewBasicBlock();
         }
 
@@ -186,10 +188,12 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
             while (true)
             {
-                if (block.successors.Count != 1 || block.successors[0].predecessors.Count != 1)
+                if (block.successors.Count != 1 || block.instructions[^1].blocks.Any(IsBlockEnd))
                     break;
-
                 var successor = block.successors[0];
+
+                if (successor.predecessors.Count != 1 || successor.instructions[0].blocks.Any(IsBlockStart))
+                    break;
 
                 if (block.instructions[^1].opcode.FlowControl == FlowControl.Branch)
                     block.instructions.RemoveAt(block.instructions.Count - 1);
