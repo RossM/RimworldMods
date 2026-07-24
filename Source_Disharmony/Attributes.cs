@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 
 namespace Disharmony;
 
@@ -158,7 +158,8 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
 }
 
 /// <summary>
-///     This attribute causes the infix transpiler to log the instruction sequence of the modified method to the debug log.
+///     This attribute causes the infix transpiler to log the modified IL and, when available, the Mono JIT assembly to the
+///     Harmony debug log.
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method)]

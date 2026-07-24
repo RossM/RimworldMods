@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using HarmonyPatch = HarmonyLib.PatchInfo;
 
 namespace Disharmony;
 
-internal class Patcher
+internal partial class Patcher
 {
     private static class InfoOf
     {
@@ -68,6 +68,10 @@ internal class Patcher
         MethodInfo replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
 
         HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
+
+#if ENABLE_DISASSEMBLY
+        Instance.LogAssemblyIfEnabled(original, replacement);
+#endif
     }
 
     public void ResolveTrampolineImpl(MethodBase method)
@@ -193,10 +197,13 @@ internal class Patcher
         {
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
 
+            bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
+#if ENABLE_DISASSEMBLY
+            SetAssemblyLogging(original.MethodBase, debug);
+#endif
+
             if (!matchersByMethod.ContainsKey(original.MethodBase))
             {
-                bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
-
                 HarmonyMethod harmonyMethod = new(InfoOf.Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
 
                 patchInfo.transpilers =
@@ -215,6 +222,11 @@ internal class Patcher
                 replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
 
             HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);
+
+#if ENABLE_DISASSEMBLY
+            if (!useTrampolines)
+                LogAssemblyIfEnabled(original.MethodBase, replacement);
+#endif
         }
     }
 
@@ -226,6 +238,10 @@ internal class Patcher
                 return;
 
             trampolines.Remove(original.MethodBase);
+
+#if ENABLE_DISASSEMBLY
+            SetAssemblyLogging(original.MethodBase, false);
+#endif
 
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
 

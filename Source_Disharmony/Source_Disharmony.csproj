@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net4.7.2</TargetFramework>
@@ -7,6 +7,8 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>Disharmony</AssemblyName>
     <RootNamespace>Disharmony</RootNamespace>
+    <EnableDisassembly Condition="'$(EnableDisassembly)' == ''">true</EnableDisassembly>
+    <DefineConstants Condition="'$(EnableDisassembly)' == 'true'">$(DefineConstants);ENABLE_DISASSEMBLY</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +18,10 @@
     </PackageReference>
     <PackageReference Include="PolySharp" Version="1.15.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Iced" Version="1.21.0" Condition="'$(EnableDisassembly)' == 'true'">
+      <IncludeAssets>runtime</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
@@ -29,6 +35,8 @@
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\Disharmony.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\Disharmony.dll&quot;" />
     <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\Disharmony.dll&quot; &quot;..\XylXenos\Assemblies\Disharmony.dll&quot;" />
+    <Exec Condition="'$(EnableDisassembly)' == 'true' And Exists('bin\$(Configuration)\net4.7.2\Iced.dll')" Command="copy &quot;bin\$(Configuration)\net4.7.2\Iced.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\Iced.dll&quot;" />
+    <Exec Condition="'$(EnableDisassembly)' == 'true' And Exists('bin\$(Configuration)\net4.7.2\Iced.dll')" Command="copy &quot;bin\$(Configuration)\net4.7.2\Iced.dll&quot; &quot;..\XylXenos\Assemblies\Iced.dll&quot;" />
   </Target>
 
 </Project>
