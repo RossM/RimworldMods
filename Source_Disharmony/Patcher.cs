@@ -53,6 +53,7 @@ internal class Patcher
     private readonly Dictionary<MethodBase, InstructionMatcher[]> matchersByMethod = new();
 
     public bool trampolinesEnabled = true;
+    public bool optimizerEnabled = false;
 
     public Patcher()
     {
@@ -208,7 +209,7 @@ internal class Patcher
                 HarmonyMethod patcher = new(InfoOf.Patcher_Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
                 HarmonyMethod optimizer = new(InfoOf.Optimizer_Transpiler, priority: int.MinValue) { debug = debug };
 
-                if (inline)
+                if (inline && optimizerEnabled)
                 {
                     patchInfo.transpilers =
                     [
