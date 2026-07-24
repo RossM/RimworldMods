@@ -174,4 +174,21 @@ public static class ReflectionTools
             }
         }
     }
+
+    internal static int ILSize(OpCode opCode)
+    {
+        int size = opCode.Size;
+        size += opCode.OperandType switch
+        {
+            OperandType.InlineNone => 0,
+            OperandType.ShortInlineBrTarget => 1,
+            OperandType.ShortInlineI => 1,
+            OperandType.ShortInlineVar => 1,
+            OperandType.InlineVar => 2,
+            OperandType.InlineI8 => 8,
+            OperandType.InlineR => 8,
+            _ => 4,
+        };
+        return size;
+    }
 }

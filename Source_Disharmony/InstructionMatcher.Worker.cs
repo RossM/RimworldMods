@@ -269,27 +269,10 @@ public partial class InstructionMatcher
                 foreach (var block in codeInstruction.blocks)
                     FileLog.LogILBlockEnd(codePos, block);
                 if (realCode)
-                    codePos += ILSize(codeInstruction.opcode);
+                    codePos += ReflectionTools.ILSize(codeInstruction.opcode);
             }
 
             FileLog.FlushBuffer();
-        }
-
-        private static int ILSize(OpCode opCode)
-        {
-            int size = opCode.Size;
-            size += opCode.OperandType switch
-            {
-                OperandType.InlineNone => 0,
-                OperandType.ShortInlineBrTarget => 1,
-                OperandType.ShortInlineI => 1,
-                OperandType.ShortInlineVar => 1,
-                OperandType.InlineVar => 2,
-                OperandType.InlineI8 => 8,
-                OperandType.InlineR => 8,
-                _ => 4,
-            };
-            return size;
         }
 
         private void EmitReplacement(MatchData match)

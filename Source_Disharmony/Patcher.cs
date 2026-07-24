@@ -201,18 +201,30 @@ internal class Patcher
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
 
             bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
+            bool inline = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.inline);
 
             if (!matchersByMethod.ContainsKey(original.MethodBase))
             {
                 HarmonyMethod patcher = new(InfoOf.Patcher_Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
                 HarmonyMethod optimizer = new(InfoOf.Optimizer_Transpiler, priority: int.MinValue) { debug = debug };
 
-                patchInfo.transpilers =
-                [
-                    .. patchInfo.transpilers,
-                    new Patch(patcher, patchInfo.transpilers.Length, harmonyID),
-                    new Patch(optimizer, patchInfo.transpilers.Length + 1, harmonyID),
-                ];
+                if (inline)
+                {
+                    patchInfo.transpilers =
+                    [
+                        .. patchInfo.transpilers,
+                        new Patch(patcher, patchInfo.transpilers.Length, harmonyID),
+                        new Patch(optimizer, patchInfo.transpilers.Length + 1, harmonyID),
+                    ];
+                }
+                else
+                {
+                    patchInfo.transpilers =
+                    [
+                        .. patchInfo.transpilers,
+                        new Patch(patcher, patchInfo.transpilers.Length, harmonyID),
+                    ];
+                }
             }
 
             matchersByMethod[original.MethodBase] = matchers;
