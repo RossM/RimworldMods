@@ -5,10 +5,10 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     private class BasicBlock
     {
         public int startingInstructionIndex = 0;
-        public readonly List<Label> labels = [];
+        public List<Label> labels = [];
         public readonly List<CodeInstruction> instructions = [];
-        public readonly List<BasicBlock> successors = [];
-        public readonly List<BasicBlock> predecessors = [];
+        public List<BasicBlock> successors = [];
+        public List<BasicBlock> predecessors = [];
         public BasicBlock? fallthroughBlock;
 
         public string ID => $"#{startingInstructionIndex}";
@@ -84,6 +84,13 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         MakeBasicBlocks();
         LogInstructions("MakeBasicBlocks");
 
+        RemoveNops();
+        RewriteLabels();
+
+        MergeBasicBlocks();
+        RewriteLabels();
+        LogInstructions("MergeBasicBlocks");
+
         FileLog.LogBuffered($"### Final instructions: {method.FullDescription()}");
         foreach (var block in basicBlocks)
         foreach (var inst in block.instructions)
@@ -107,7 +114,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 continue;
             }
 
-            if (inst.labels.Count > 0)
+            if (inst.labels.Count > 0 || inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
             {
                 NewBasicBlock();
                 curBlock.labels.AddRange(inst.labels);
@@ -119,7 +126,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             curBlock.instructions.Add(inst);
             instructionIndex++;
 
-            if (inst.opcode.FlowControl is not (FlowControl.Next or FlowControl.Call or FlowControl.Meta))
+            if (inst.opcode.FlowControl is not (FlowControl.Next or FlowControl.Call or FlowControl.Meta) || inst.HasBlock(ExceptionBlockType.EndExceptionBlock))
                 NewBasicBlock();
         }
 
@@ -135,9 +142,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 block.successors.Add(basicBlocks.Single(b => b.labels.Contains(label)));
         }
 
-        foreach (var block in basicBlocks)
-        foreach (var successor in block.successors)
-            successor.predecessors.Add(block);
+        UpdatePredecessors();
 
         return;
 
@@ -150,6 +155,57 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             basicBlocks.Add(newBlock);
             curBlock.fallthroughBlock = newBlock;
             curBlock = newBlock;
+        }
+    }
+
+    private void UpdatePredecessors()
+    {
+        foreach (var block in basicBlocks)
+            block.predecessors.Clear();
+
+        foreach (var block in basicBlocks)
+        foreach (var successor in block.successors)
+            successor.predecessors.Add(block);
+    }
+
+    private void RemoveNops()
+    {
+        foreach (var block in basicBlocks)
+            block.instructions.RemoveAll(i => i.opcode == OpCodes.Nop && i.blocks.Count == 0);
+    }
+
+    private void RewriteLabels()
+    {
+        foreach (var block in basicBlocks)
+        {
+            foreach (var inst in block.instructions)
+                inst.labels.Clear();
+            block.instructions[0].labels.AddRange(block.labels);
+        }
+    }
+
+    private void MergeBasicBlocks()
+    {
+        for (int i = 0; i < basicBlocks.Count; i++)
+        {
+            var block = basicBlocks[i];
+
+            while (true)
+            {
+                if (block.successors.Count != 1 || block.successors[0].predecessors.Count != 1)
+                    break;
+
+                var successor = block.successors[0];
+
+                if (block.instructions[^1].opcode.FlowControl == FlowControl.Branch)
+                    block.instructions.RemoveAt(block.instructions.Count - 1);
+
+                block.instructions.AddRange(successor.instructions);
+                block.successors = successor.successors;
+                block.fallthroughBlock = successor.fallthroughBlock;
+                basicBlocks.Remove(successor);
+                UpdatePredecessors();
+            }
         }
     }
 
