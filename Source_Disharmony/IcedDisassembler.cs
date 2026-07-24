@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 #if ENABLE_DISASSEMBLY
 namespace Disharmony;
 
@@ -66,7 +68,7 @@ internal sealed class IcedDisassembler
         ConfigureFormatter(formatterType);
     }
 
-    public static bool TryCreate(out IcedDisassembler? disassembler, out string error)
+    public static bool TryCreate([NotNullWhen(true)] out IcedDisassembler? disassembler, out string error)
     {
         try
         {
@@ -112,9 +114,9 @@ internal sealed class IcedDisassembler
             format.Invoke(formatter, [instruction, formatterOutput]);
 
             string bytes = BitConverter.ToString(code, offset, length).Replace('-', ' ');
-            string assembly = formatterOutput.ToString() ?? "";
+            string assembly = formatterOutput.ToString();
             result.Add(
-                $"{instructionAddress.ToString($"X{addressWidth}")}  {bytes.PadRight(MaximumInstructionLength * 3 - 1)}  {assembly}");
+                $"{instructionAddress.ToString($"X{addressWidth}")}  {bytes,-(MaximumInstructionLength * 3 - 1)}  {assembly}");
 
             offset += length;
         }
@@ -130,13 +132,13 @@ internal sealed class IcedDisassembler
     {
         Type? runtimeInformation = typeof(object).Assembly.GetType("System.Runtime.InteropServices.RuntimeInformation");
         object? architecture = runtimeInformation?.GetProperty("ProcessArchitecture")?.GetValue(null);
-        switch (architecture?.ToString())
+        return architecture?.ToString() switch
         {
-            case "X86": return 32;
-            case "X64": return 64;
-            case null: return IntPtr.Size * 8;
-            default: throw new PlatformNotSupportedException($"Iced cannot decode {architecture} machine code");
-        }
+            "X86" => 32,
+            "X64" => 64,
+            null => IntPtr.Size * 8,
+            _ => throw new PlatformNotSupportedException($"Iced cannot decode {architecture} machine code")
+        };
     }
 
     private void ConfigureFormatter(Type formatterType)

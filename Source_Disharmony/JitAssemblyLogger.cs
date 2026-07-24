@@ -21,7 +21,7 @@ internal static class JitAssemblyLogger
                 return;
             }
 
-            List<string> instructions = disassembler!.Disassemble(codeStart, code);
+            List<string> instructions = disassembler.Disassemble(codeStart, code);
 
             lock (logLock)
             {
