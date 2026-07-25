@@ -47,7 +47,14 @@ internal class Patcher
     private readonly Dictionary<MethodBase, MethodInfo> trampolines = new();
     private int trampolineCount;
 
-    private readonly Dictionary<MethodBase, InstructionMatcher[]> matchersByMethod = new();
+    private struct MethodPatch
+    {
+        public required InstructionMatcher[] matchers;
+        public bool optimize;
+        public bool debug;
+    }
+
+    private readonly Dictionary<MethodBase, MethodPatch> methodPatches = new();
 
     public bool trampolinesEnabled = true;
     public bool optimizerEnabled = false;
@@ -138,14 +145,15 @@ internal class Patcher
         ILGenerator generator)
     {
         var instructionsList = instructions.ToList();
-        foreach (var matcher in Instance.matchersByMethod[method])
+        var patch = Instance.methodPatches[method];
+        foreach (var matcher in patch.matchers)
         {
             matcher.MatchAndReplace(method, ref instructionsList, generator);
         }
 
-        if (Instance.optimizerEnabled)
+        if (patch.optimize)
         {
-            var optimizer = new Optimizer(method, instructionsList, generator);
+            var optimizer = new Optimizer(method, instructionsList, generator, debug: patch.debug);
             optimizer.Optimize();
             return optimizer.output.Instructions;
         }
@@ -207,7 +215,7 @@ internal class Patcher
 
             bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
 
-            if (!matchersByMethod.ContainsKey(original.MethodBase))
+            if (!methodPatches.ContainsKey(original.MethodBase))
             {
                 HarmonyMethod patcher = new(InfoOf.Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
 
@@ -218,7 +226,12 @@ internal class Patcher
                 ];
             }
 
-            matchersByMethod[original.MethodBase] = matchers;
+            methodPatches[original.MethodBase] = new()
+            {
+                matchers = matchers,
+                optimize = optimizerEnabled,
+                debug = debug,
+            };
 
             MethodInfo replacement;
             if (useTrampolines)
@@ -240,7 +253,7 @@ internal class Patcher
     {
         lock (HarmonyInternals.locker)
         {
-            if (!matchersByMethod.Remove(original.MethodBase))
+            if (!methodPatches.Remove(original.MethodBase))
                 return;
 
             trampolines.Remove(original.MethodBase);

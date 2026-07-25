@@ -1,6 +1,6 @@
 ﻿namespace Disharmony;
 
-internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator)
+internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator, bool debug)
 {
     private record Op(OpCode opcode, object? operand = null)
     {
@@ -76,6 +76,9 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
     private void LogInstructions(string phase, IEnumerable<CodeInstruction> instructions)
     {
+        if (!debug)
+            return;
+
         int codePos = 0;
 
         FileLog.LogBuffered($"### Optimizer {phase}: {method.FullDescription()}");
@@ -89,6 +92,9 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
     private void LogBlocks(string phase)
     {
+        if (!debug)
+            return;
+
         int codePos = 0;
 
         FileLog.LogBuffered($"### Optimizer {phase}: {method.FullDescription()}");
