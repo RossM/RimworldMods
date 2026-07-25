@@ -232,12 +232,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
     private void Emit()
     {
-        foreach (var block in basicBlocks)
-        {
-            if (block.labels.Count == 0)
-                block.labels.Add(generator.DefineLabel());
-        }
-
         for (var index = 0; index < basicBlocks.Count; index++)
         {
             BasicBlock? block = basicBlocks[index];
@@ -252,19 +246,24 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             foreach (var inst in instructions)
                 output.Add(inst);
         }
-
-        return;
     }
 
-    static CodeInstruction ConvertToCodeInstruction(Op i)
+    CodeInstruction ConvertToCodeInstruction(Op i)
     {
         var codeInstruction = i.ToCodeInstruction();
         switch (codeInstruction.operand)
         {
-            case BasicBlockBase blockTarget: codeInstruction.operand = blockTarget.labels[0]; break;
-            case BasicBlockBase[] blocksTarget: codeInstruction.operand = blocksTarget.Select(b => b.labels[0]).ToArray(); break;
+            case BasicBlockBase blockTarget: codeInstruction.operand = GetLabel(blockTarget); break;
+            case BasicBlockBase[] blocksTarget: codeInstruction.operand = blocksTarget.Select(GetLabel).ToArray(); break;
         }
         return codeInstruction;
+
+        Label GetLabel(BasicBlockBase block)
+        {
+            if (block.labels.Count == 0)
+                block.labels.Add(generator.DefineLabel());
+            return block.labels[0];
+        }
     }
 
     /// <summary>
