@@ -172,25 +172,25 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         LogInstructions("Input", inputInstructions);
 
         MakeBasicBlocks();
-        LogBlocks("MakeBasicBlocks");
+        LogBlocks(nameof(MakeBasicBlocks));
 
         NopElimination();
-        LogBlocks("NopElimination");
+        LogBlocks(nameof(NopElimination));
 
         JumpThreading();
-        LogBlocks("JumpThreading");
+        LogBlocks(nameof(JumpThreading));
 
         BranchElimination();
-        LogBlocks("BranchElimination");
+        LogBlocks(nameof(BranchElimination));
 
         MergeBlocks();
-        LogBlocks("MergeBlocks");
+        LogBlocks(nameof(MergeBlocks));
 
         AggressiveDeadCodeEliminationAndReorder();
-        LogBlocks("DeadCodeEliminationAndReorder");
+        LogBlocks(nameof(AggressiveDeadCodeEliminationAndReorder));
 
         InsertBranches();
-        LogBlocks("InsertBranches");
+        LogBlocks(nameof(InsertBranches));
 
         Emit();
         LogInstructions("Output", output.Instructions);
