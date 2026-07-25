@@ -470,7 +470,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             BasicBlock? fallthroughBlock = basicBlocks[i].fallthroughBlock;
             if (fallthroughBlock == null || (i < basicBlocks.Count - 1 && fallthroughBlock == basicBlocks[i + 1]))
                 continue;
-            basicBlocks[i].instructions.Add(new(OpCodes.Br, fallthroughBlock.labels[0]));
+            basicBlocks[i].instructions.Add(new(OpCodes.Br_S, fallthroughBlock.labels[0]));
             basicBlocks[i].fallthroughBlock = null;
         }
     }
