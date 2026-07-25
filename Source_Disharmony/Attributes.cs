@@ -235,8 +235,15 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
     public readonly object value;
 
     /// <summary>
-    ///     Runs the patch after each matching 32-bit integer constant.
+    ///     Runs the patch after each matching 32-bit integer constant, 16-bit integer
+    ///     constant, or <see langword="bool"/> constant.
     /// </summary>
+    /// <remarks>
+    ///     .NET stores all constants smaller than 32 bits, including <see langword="bool"/>, as
+    ///     32-bit values internally. <see langword="true"/> is stored as 1 and <see langword="false"/>
+    ///     is stored as 0. Use caution when patching 0 or 1 as they may match <see langword="bool"/> values
+    ///     added by the compiler.
+    /// </remarks>
     /// <param name="value">The constant value to match.</param>
     public InnerPostfixConstantAttribute(int value) : base(PatchType.InnerPostfix)
     {
