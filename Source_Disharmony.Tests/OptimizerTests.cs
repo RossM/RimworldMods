@@ -219,6 +219,69 @@ public static class OptimizerExceptionTargets
     }
 }
 
+public static class OptimizerPrefixTargets
+{
+    public static int PrefixTargetExecutions;
+    public static int InnerTargetExecutions;
+
+    public static int PrefixAlwaysFalseTarget(int value)
+    {
+        PrefixTargetExecutions++;
+        if (value < 0)
+            return -1;
+        return 1;
+    }
+
+    public static int PrefixAlwaysTrueTarget(int value)
+    {
+        PrefixTargetExecutions++;
+        if (value < 0)
+            return -1;
+        return 1;
+    }
+
+    public static int CallInnerAlwaysFalseTarget(int value)
+    {
+        if (value < 0)
+            return -1;
+        return InnerAlwaysFalseTarget(value);
+    }
+
+    public static int CallInnerAlwaysTrueTarget(int value)
+    {
+        if (value < 0)
+            return -1;
+        return InnerAlwaysTrueTarget(value);
+    }
+
+    public static int InnerAlwaysFalseTarget(int value)
+    {
+        InnerTargetExecutions++;
+        return value;
+    }
+
+    public static int InnerAlwaysTrueTarget(int value)
+    {
+        InnerTargetExecutions++;
+        return value;
+    }
+
+    public static int PrefixConditionallySkippedTarget(bool skip)
+    {
+        PrefixTargetExecutions++;
+        return 1;
+    }
+
+    public static int CallInnerConditionallySkippedTarget(bool skip) =>
+        InnerConditionallySkippedTarget();
+
+    public static int InnerConditionallySkippedTarget()
+    {
+        InnerTargetExecutions++;
+        return 1;
+    }
+}
+
 public static class OptimizerPatches
 {
     public static int PatchCalls;
@@ -288,6 +351,60 @@ public static class OptimizerPatches
     [Prefix]
     [Target(typeof(OptimizerExceptionTargets), nameof(OptimizerExceptionTargets.CatchAndRethrow))]
     public static void CatchAndRethrow_PreservesHandledAndRethrownPaths() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixAlwaysFalseTarget))]
+    public static bool Prefix_AlwaysFalse_SkipsTarget(ref int __result)
+    {
+        RecordPatch();
+        __result = 42;
+        return false;
+    }
+
+    [Prefix]
+    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixAlwaysTrueTarget))]
+    public static bool Prefix_AlwaysTrue_RunsTarget()
+    {
+        RecordPatch();
+        return true;
+    }
+
+    [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerAlwaysFalseTarget))]
+    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerAlwaysFalseTarget))]
+    public static bool InnerPrefix_AlwaysFalse_SkipsInnerTarget(ref int __result)
+    {
+        RecordPatch();
+        __result = 42;
+        return false;
+    }
+
+    [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerAlwaysTrueTarget))]
+    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerAlwaysTrueTarget))]
+    public static bool InnerPrefix_AlwaysTrue_RunsInnerTarget()
+    {
+        RecordPatch();
+        return true;
+    }
+
+    [Prefix]
+    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixConditionallySkippedTarget))]
+    public static bool Prefix_ArgumentControlsWhetherTargetIsSkipped(bool skip, ref int __result)
+    {
+        RecordPatch();
+        __result = 42;
+        return !skip;
+    }
+
+    [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerConditionallySkippedTarget))]
+    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget))]
+    public static bool InnerPrefix_OuterArgumentControlsWhetherInnerTargetIsSkipped(
+        [Parameter("skip", Scope.Outer)] bool skip,
+        ref int __result)
+    {
+        RecordPatch();
+        __result = 42;
+        return !skip;
+    }
 }
 
 [TestFixture]
@@ -301,6 +418,8 @@ public sealed class OptimizerTests : PatchTestBase
         OptimizerControlFlowTargets.RightOperandCalls = 0;
         OptimizerExceptionTargets.FinallyExecutions = 0;
         OptimizerExceptionTargets.DisposalCount = 0;
+        OptimizerPrefixTargets.PrefixTargetExecutions = 0;
+        OptimizerPrefixTargets.InnerTargetExecutions = 0;
     }
 
     [TearDown]
@@ -512,6 +631,74 @@ public sealed class OptimizerTests : PatchTestBase
         Assert.That(OptimizerExceptionTargets.CatchAndRethrow(false), Is.EqualTo(42));
         var exception = Assert.Throws<InvalidOperationException>(() => OptimizerExceptionTargets.CatchAndRethrow(true));
         Assert.That(exception!.Message, Is.EqualTo("original"));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void Prefix_AlwaysFalse_SkipsTarget()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.Prefix_AlwaysFalse_SkipsTarget));
+
+        Assert.That(OptimizerPrefixTargets.PrefixAlwaysFalseTarget(-1), Is.EqualTo(42));
+        Assert.That(OptimizerPrefixTargets.PrefixAlwaysFalseTarget(1), Is.EqualTo(42));
+        Assert.That(OptimizerPrefixTargets.PrefixTargetExecutions, Is.Zero);
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void Prefix_AlwaysTrue_RunsTarget()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.Prefix_AlwaysTrue_RunsTarget));
+
+        Assert.That(OptimizerPrefixTargets.PrefixAlwaysTrueTarget(-1), Is.EqualTo(-1));
+        Assert.That(OptimizerPrefixTargets.PrefixAlwaysTrueTarget(1), Is.EqualTo(1));
+        Assert.That(OptimizerPrefixTargets.PrefixTargetExecutions, Is.EqualTo(2));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InnerPrefix_AlwaysFalse_SkipsInnerTarget()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InnerPrefix_AlwaysFalse_SkipsInnerTarget));
+
+        Assert.That(OptimizerPrefixTargets.CallInnerAlwaysFalseTarget(-1), Is.EqualTo(-1));
+        Assert.That(OptimizerPrefixTargets.CallInnerAlwaysFalseTarget(1), Is.EqualTo(42));
+        Assert.That(OptimizerPrefixTargets.InnerTargetExecutions, Is.Zero);
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InnerPrefix_AlwaysTrue_RunsInnerTarget()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InnerPrefix_AlwaysTrue_RunsInnerTarget));
+
+        Assert.That(OptimizerPrefixTargets.CallInnerAlwaysTrueTarget(-1), Is.EqualTo(-1));
+        Assert.That(OptimizerPrefixTargets.CallInnerAlwaysTrueTarget(1), Is.EqualTo(1));
+        Assert.That(OptimizerPrefixTargets.InnerTargetExecutions, Is.EqualTo(1));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void Prefix_ArgumentControlsWhetherTargetIsSkipped()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.Prefix_ArgumentControlsWhetherTargetIsSkipped));
+
+        Assert.That(OptimizerPrefixTargets.PrefixConditionallySkippedTarget(false), Is.EqualTo(1));
+        Assert.That(OptimizerPrefixTargets.PrefixConditionallySkippedTarget(true), Is.EqualTo(42));
+        Assert.That(OptimizerPrefixTargets.PrefixTargetExecutions, Is.EqualTo(1));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InnerPrefix_OuterArgumentControlsWhetherInnerTargetIsSkipped()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.InnerPrefix_OuterArgumentControlsWhetherInnerTargetIsSkipped));
+
+        Assert.That(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget(false), Is.EqualTo(1));
+        Assert.That(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget(true), Is.EqualTo(42));
+        Assert.That(OptimizerPrefixTargets.InnerTargetExecutions, Is.EqualTo(1));
         Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
     }
 }
