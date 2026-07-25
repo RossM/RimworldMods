@@ -186,8 +186,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         MergeBlocks();
         LogBlocks("MergeBlocks");
 
-        DeadCodeElimination();
-        LogBlocks("DeadCodeElimination");
+        AggressiveDeadCodeEliminationAndReorder();
+        LogBlocks("DeadCodeEliminationAndReorder");
 
         InsertBranches();
         LogBlocks("InsertBranches");
@@ -337,7 +337,9 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 BasicBlock newBlock = new() { startingInstructionIndex = instructionIndex, exceptionRegion = exceptionRegion };
                 basicBlocks.Add(newBlock);
                 curBlock = newBlock;
-                exceptionRegion.entry ??= newBlock;
+
+                for (var region = exceptionRegion; region != null; region = region.parent)
+                    region.entry ??= newBlock;
             }
 
             curBlock.labels.AddRange(labels);
@@ -438,7 +440,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         UpdatePredecessors();
     }
 
-    private void DeadCodeElimination()
+    private void SimpleDeadCodeElimination()
     {
         Queue<BasicBlock> queue = new();
         HashSet<BasicBlock> liveBlocks = new();
@@ -461,6 +463,65 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         basicBlocks.RemoveAll(b => !liveBlocks.Contains(b));
 
         UpdatePredecessors();
+    }
+
+    private void AggressiveDeadCodeEliminationAndReorder()
+    {
+        List<BasicBlock> outputBlocks = [];
+        AggressiveDeadCodeEliminationAndReorder(exceptionRoot, outputBlocks);
+        basicBlocks.Clear();
+        basicBlocks.AddRange(outputBlocks);
+    }
+
+    private List<BasicBlock> AggressiveDeadCodeEliminationAndReorder(ExceptionRegion region, List<BasicBlock> outputBlocks)
+    {
+        LinkedList<BasicBlock> queue = new();
+        HashSet<BasicBlock> emitted = new();
+        List<BasicBlock> leaveTargets = [];
+
+        queue.AddFirst(region.entry!);
+
+        FileLog.Log($"{"".PadLeft(region.depth * 2)}- Visiting {region.harmonyBlock?.blockType.ToString() ?? "Root"}");
+
+        while (queue.Count > 0)
+        {
+            var block = queue.First.Value;
+            queue.RemoveFirst();
+            if (!emitted.Add(block))
+                continue;
+
+            FileLog.Log($"{"".PadLeft(region.depth * 2 + 1)}- Processing {block.ID}");
+
+            List<BasicBlock> successors;
+            if (block.exceptionRegion == region)
+            {
+                outputBlocks.Add(block);
+                successors = block.successors;
+                if (block.fallthroughBlock != null && block.fallthroughBlock.exceptionRegion == region)
+                    queue.AddFirst(block.fallthroughBlock);
+            }
+            else
+            {
+                var immediateChild = block.exceptionRegion;
+                while (immediateChild.parent != region)
+                    immediateChild = immediateChild.parent!;
+                    
+                successors = AggressiveDeadCodeEliminationAndReorder(immediateChild, outputBlocks);
+            }
+
+            foreach (var successor in successors)
+            {
+                if (successor.exceptionRegion == region || ExceptionRegion.SharedParent(region, successor.exceptionRegion) == region)
+                    queue.AddLast(successor);
+                else
+                    leaveTargets.Add(successor);
+            }
+        }
+
+        if (region.next != null)
+            leaveTargets.AddRange(AggressiveDeadCodeEliminationAndReorder(region.next, outputBlocks));
+
+        return leaveTargets;
     }
 
     private void InsertBranches()
