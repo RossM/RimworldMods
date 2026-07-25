@@ -57,7 +57,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public required ExceptionRegion exceptionRegion;
         public int id = 0;
         public readonly List<Label> labels = [];
-        public readonly List<Op> instructions = [];
+        public readonly List<Op> ops = [];
         public readonly List<BasicBlock> successors = [];
         public readonly List<BasicBlock> predecessors = [];
         public BasicBlock? fallthroughBlock;
@@ -108,9 +108,9 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             foreach (var harmonyBlock in ExceptionBlockBegins(index))
                 FileLog.LogILBlockBegin(codePos, harmonyBlock);
 
-            foreach (var codeInstruction in block.instructions)
-                LogInstruction(codeInstruction.ToCodeInstruction(), ref codePos);
-            if (block.instructions.Count == 0)
+            foreach (var op in block.ops)
+                LogInstruction(op.ToCodeInstruction(), ref codePos);
+            if (block.ops.Count == 0)
                 LogInstruction(Ops.Nop.ToCodeInstruction(), ref codePos);
 
             if (block.fallthroughBlock != null)
@@ -233,7 +233,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         for (var index = 0; index < basicBlocks.Count; index++)
         {
             BasicBlock? block = basicBlocks[index];
-            List<CodeInstruction> instructions = [.. block.instructions.Select(i => i.ToCodeInstruction())];
+            List<CodeInstruction> instructions = [.. block.ops.Select(i => i.ToCodeInstruction())];
             if (instructions.Count == 0)
                 instructions.Add(Ops.Nop.ToCodeInstruction());
             instructions[0].labels.AddRange(block.labels);
@@ -243,7 +243,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             foreach (var inst in instructions)
                 output.Add(inst);
         }
-    }s
+    }
 
     /// <summary>
     ///     Generate basic blocks.
@@ -266,7 +266,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 NewBasicBlock(inst.labels);
             }
 
-            curBlock.instructions.Add(new(inst.opcode, inst.operand));
+            curBlock.ops.Add(new(inst.opcode, inst.operand));
 
             if (inst.CanBranch || inst.blocks.Any(IsBlockEnd))
             {
@@ -277,7 +277,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             }
         }
 
-        if (curBlock.instructions.Count == 0)
+        if (curBlock.ops.Count == 0)
             basicBlocks.Remove(curBlock);
 
         for (int i = 0; i < basicBlocks.Count - 1; i++)
@@ -288,7 +288,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         // Add a ret to the last basic block if one is missing (perhaps because of a poorly behaved transpiler)
         if (CanFallThrough(basicBlocks[^1]))
-            basicBlocks[^1].instructions.Add(Ops.Ret);
+            basicBlocks[^1].ops.Add(Ops.Ret);
 
         foreach (var block in basicBlocks)
         {
@@ -302,13 +302,13 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         // Convert block-final unconditional branches to fallthrough
         foreach (var block in basicBlocks)
         {
-            if (block.instructions.Count == 0)
+            if (block.ops.Count == 0)
                 continue;
 
-            if (block.instructions[^1].IsUnconditionalBranch)
+            if (block.ops[^1].IsUnconditionalBranch)
             {
-                block.fallthroughBlock = labelToBlock[(Label)block.instructions[^1].operand!];
-                block.instructions.RemoveAt(block.instructions.Count - 1);
+                block.fallthroughBlock = labelToBlock[(Label)block.ops[^1].operand!];
+                block.ops.RemoveAt(block.ops.Count - 1);
             }
         }
 
@@ -317,10 +317,10 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             if (block.fallthroughBlock is not null)
                 block.successors.Add(block.fallthroughBlock);
 
-            if (block.instructions.Count == 0)
+            if (block.ops.Count == 0)
                 continue;
 
-            switch (block.instructions[^1].operand)
+            switch (block.ops[^1].operand)
             {
                 case Label label:
                 {
@@ -367,7 +367,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         void NewBasicBlock(List<Label> labels)
         {
-            if (curBlock.instructions.Count == 0)
+            if (curBlock.ops.Count == 0)
             {
                 curBlock.exceptionRegion = exceptionRegion;
                 for (var region = exceptionRegion; region != null; region = region.parent)
@@ -387,13 +387,13 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         }
 
         static bool CanFallThrough(BasicBlock basicBlock) =>
-            basicBlock.instructions.Count == 0 || basicBlock.instructions[^1].CanFallThrough;
+            basicBlock.ops.Count == 0 || basicBlock.ops[^1].CanFallThrough;
     }
 
     private void NopElimination()
     {
         foreach (var block in basicBlocks)
-            block.instructions.RemoveAll(i => i.opcode == OpCodes.Nop);
+            block.ops.RemoveAll(i => i.opcode == OpCodes.Nop);
     }
 
     private void BranchElimination()
@@ -402,14 +402,14 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         foreach (var block in basicBlocks)
         {
-            if (block.instructions.Count == 0)
+            if (block.ops.Count == 0)
                 continue;
             if (block.fallthroughBlock is null)
                 continue;
             if (block.successors.Any(s => s != block.fallthroughBlock))
                 continue;
 
-            switch (block.instructions[^1].opcode)
+            switch (block.ops[^1].opcode)
             {
                 // Brtrue, Brfalse
                 case
@@ -417,7 +417,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                     FlowControl: FlowControl.Cond_Branch, StackBehaviourPop: StackBehaviour.Popi, StackBehaviourPush: StackBehaviour.Push0,
                 }:
                 {
-                    block.instructions[^1] = Ops.Pop;
+                    block.ops[^1] = Ops.Pop;
                     block.successors.Clear();
                     block.successors.Add(block.fallthroughBlock);
                     changed = true;
@@ -430,8 +430,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                     StackBehaviourPush: StackBehaviour.Push0,
                 }:
                 {
-                    block.instructions[^1] = Ops.Pop;
-                    block.instructions.Add(Ops.Pop);
+                    block.ops[^1] = Ops.Pop;
+                    block.ops.Add(Ops.Pop);
                     block.successors.Clear();
                     block.successors.Add(block.fallthroughBlock);
                     changed = true;
@@ -452,7 +452,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             if (fallthroughBlock == null)
                 continue;
             int iterations = 0;
-            while (fallthroughBlock.instructions.Count == 0 &&
+            while (fallthroughBlock.ops.Count == 0 &&
                    fallthroughBlock.fallthroughBlock!.exceptionRegion == fallthroughBlock.exceptionRegion &&
                    !fallthroughBlock.EntryPoint &&
                    iterations++ < 20)
@@ -476,11 +476,11 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             var block = basicBlocks[i];
             if (block.successors is not [var successor])
                 continue;
-            if (block.instructions.Count > 0 && block.instructions[^1].CanBranch)
+            if (block.ops.Count > 0 && block.ops[^1].CanBranch)
                 continue;
             if (successor.predecessors.Count != 1 || successor.exceptionRegion != block.exceptionRegion || successor.EntryPoint)
                 continue;
-            block.instructions.AddRange(successor.instructions);
+            block.ops.AddRange(successor.ops);
             block.fallthroughBlock = successor.fallthroughBlock;
             block.successors.Clear();
             block.successors.AddRange(successor.successors);
@@ -577,27 +577,27 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     {
         foreach (var block in basicBlocks)
         {
-            if (block.instructions.Count == 0)
+            if (block.ops.Count == 0)
                 continue;
             if (block.fallthroughBlock is null)
                 continue;
             if (block.fallthroughBlock.predecessors.Count == 1)
                 continue;
 
-            var finalInstruction = block.instructions[^1];
+            var finalInstruction = block.ops[^1];
             if (finalInstruction.opcode.FlowControl is FlowControl.Cond_Branch &&
                 finalInstruction.operand is Label label &&
                 labelToBlock[label].predecessors.Count == 1)
             {
                 if (finalInstruction.opcode == OpCodes.Brfalse || finalInstruction.opcode == OpCodes.Brfalse_S)
                 {
-                    block.instructions[^1] = new(OpCodes.Brtrue_S, block.fallthroughBlock.labels[0]);
+                    block.ops[^1] = new(OpCodes.Brtrue_S, block.fallthroughBlock.labels[0]);
                     block.fallthroughBlock = labelToBlock[label];
                 }
 
                 if (finalInstruction.opcode == OpCodes.Brtrue || finalInstruction.opcode == OpCodes.Brtrue_S)
                 {
-                    block.instructions[^1] = new(OpCodes.Brfalse_S, block.fallthroughBlock.labels[0]);
+                    block.ops[^1] = new(OpCodes.Brfalse_S, block.fallthroughBlock.labels[0]);
                     block.fallthroughBlock = labelToBlock[label];
                 }
             }
@@ -611,7 +611,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             BasicBlock? fallthroughBlock = basicBlocks[i].fallthroughBlock;
             if (fallthroughBlock == null || i < basicBlocks.Count - 1 && fallthroughBlock == basicBlocks[i + 1])
                 continue;
-            basicBlocks[i].instructions.Add(new(OpCodes.Br_S, fallthroughBlock.labels[0]));
+            basicBlocks[i].ops.Add(new(OpCodes.Br_S, fallthroughBlock.labels[0]));
             basicBlocks[i].fallthroughBlock = null;
         }
     }
