@@ -12,6 +12,13 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public bool CanFallThrough => opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch;
     }
 
+    private static class Ops
+    {
+        public static readonly Op Nop = new(OpCodes.Nop);
+        public static readonly Op Ret = new(OpCodes.Ret);
+        public static readonly Op Pop = new(OpCodes.Pop);
+    }
+
     private class ExceptionRegion
     {
         public ExceptionBlock? harmonyBlock;
@@ -104,7 +111,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             foreach (var codeInstruction in block.instructions)
                 LogInstruction(codeInstruction.ToCodeInstruction(), ref codePos);
             if (block.instructions.Count == 0)
-                LogInstruction((CodeInstruction)new(OpCodes.Nop), ref codePos);
+                LogInstruction(Ops.Nop.ToCodeInstruction(), ref codePos);
 
             if (block.fallthroughBlock != null)
                 FileLog.LogBuffered($"IL_{codePos:X4}: // fallthrough => {block.fallthroughBlock.ID}");
@@ -228,7 +235,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             BasicBlock? block = basicBlocks[index];
             List<CodeInstruction> instructions = [.. block.instructions.Select(i => i.ToCodeInstruction())];
             if (instructions.Count == 0)
-                instructions.Add(new(OpCodes.Nop));
+                instructions.Add(Ops.Nop.ToCodeInstruction());
             instructions[0].labels.AddRange(block.labels);
             instructions[0].blocks.AddRange(ExceptionBlockBegins(index));
             instructions[^1].blocks.AddRange(ExceptionBlockEnds(index));
@@ -236,7 +243,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             foreach (var inst in instructions)
                 output.Add(inst);
         }
-    }
+    }s
 
     /// <summary>
     ///     Generate basic blocks.
@@ -281,7 +288,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         // Add a ret to the last basic block if one is missing (perhaps because of a poorly behaved transpiler)
         if (CanFallThrough(basicBlocks[^1]))
-            basicBlocks[^1].instructions.Add(new(OpCodes.Ret));
+            basicBlocks[^1].instructions.Add(Ops.Ret);
 
         foreach (var block in basicBlocks)
         {
@@ -410,7 +417,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                     FlowControl: FlowControl.Cond_Branch, StackBehaviourPop: StackBehaviour.Popi, StackBehaviourPush: StackBehaviour.Push0,
                 }:
                 {
-                    block.instructions[^1] = new(OpCodes.Pop);
+                    block.instructions[^1] = Ops.Pop;
                     block.successors.Clear();
                     block.successors.Add(block.fallthroughBlock);
                     changed = true;
@@ -423,8 +430,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                     StackBehaviourPush: StackBehaviour.Push0,
                 }:
                 {
-                    block.instructions[^1] = new(OpCodes.Pop);
-                    block.instructions.Add(new(OpCodes.Pop));
+                    block.instructions[^1] = Ops.Pop;
+                    block.instructions.Add(Ops.Pop);
                     block.successors.Clear();
                     block.successors.Add(block.fallthroughBlock);
                     changed = true;
