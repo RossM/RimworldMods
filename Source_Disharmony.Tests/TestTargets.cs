@@ -12,41 +12,69 @@ namespace Disharmony.Tests
 
     public static class StaticMethodTargets
     {
-        public static int MutableProperty { get; set; }
+        public static int MutableProperty
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            get;
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            set;
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Void() { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void IntArgument(int value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void StringArgument(string value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void StructArgument(BindingStruct value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RefIntArgument(ref int value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RefStringArgument(ref string value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RefStructArgument(ref BindingStruct value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int IntIdentity(int value) => value;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string StringIdentity(string value) => value;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingStruct StructIdentity(BindingStruct value) => value;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int IntResult() => 1;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string StringResult() => "original";
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingStruct StructResult() => new BindingStruct { Value = 1 };
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int RegistrationResultA() => 1;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int RegistrationResultB() => 2;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void OverloadedVoid(int value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void OverloadedVoid(string value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static T GenericIdentity<T>(T value) => value;
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowingIntArgument(int value) =>
             Assert.Fail("The target should have been skipped.");
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int ThrowingIntResult()
         {
             Assert.Fail("The target should have been skipped.");
             return 1;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string ThrowingStringResult()
         {
             Assert.Fail("The target should have been skipped.");
             return "original";
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingStruct ThrowingStructResult()
         {
             Assert.Fail("The target should have been skipped.");
@@ -62,56 +90,69 @@ namespace Disharmony.Tests
         public BindingStruct structField;
         public int Value { get; private set; }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void Void() { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public ClassMethodTargets Self() => this;
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public int IntIdentity(int value)
         {
             Value = value;
             return Value;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public int IntSum(int first, int second)
         {
             Value = first + second;
             return Value;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public int IntResult()
         {
             Value = 1;
             return Value;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void CallStaticVoid() => InnerStaticMethodTargets.Void();
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public int CallStaticVoidAndReturnValue()
         {
             InnerStaticMethodTargets.Void();
             return Value;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void CallInnerWithoutField(InstanceMethodTargetsWithoutFields inner) => inner.Void();
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void CallInnerWithField(InnerInstanceMethodTargets inner) => inner.Void();
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public IEnumerable<int> EnumerateIdentity(int outerValue)
         {
             _ = InnerStaticMethodTargets.IntIdentity(outerValue);
             yield return outerValue;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public IEnumerable<BindingReference> EnumerateReferenceIdentity(BindingReference outerValue)
         {
             _ = InnerStaticMethodTargets.StringIdentity(outerValue.Value.ToString());
             yield return outerValue;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public IEnumerable<BindingStruct> EnumerateStructIdentity(BindingStruct outerValue)
         {
             _ = InnerStaticMethodTargets.StructIdentity(outerValue);
             yield return outerValue;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public IEnumerable<int> EnumerateDeclaringInstanceValue()
         {
             _ = InnerStaticMethodTargets.IntResult();
@@ -124,22 +165,28 @@ namespace Disharmony.Tests
         public int foo;
         public int Value { get; private set; }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public int IntIdentity(int value)
         {
             Value = value;
             return Value;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public int IntResult()
         {
             Value = 1;
             return Value;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void CallInnerWithoutField(InstanceMethodTargetsWithoutFields inner) => inner.Void();
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void CallInnerWithField(ref InnerStructMethodTargets inner) => inner.Void();
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void CallInnerWithFieldByValue(InnerStructMethodTargets inner) => inner.Void();
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public IEnumerable<int> EnumerateDeclaringInstanceValue()
         {
             _ = InnerStaticMethodTargets.IntResult();
@@ -150,6 +197,7 @@ namespace Disharmony.Tests
     public sealed class InnerInstanceMethodTargets
     {
         public int foo;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void Void() { }
     }
 
@@ -157,36 +205,56 @@ namespace Disharmony.Tests
     {
         public static int FieldObserved;
         public int foo;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void Void() => FieldObserved = foo;
     }
 
     public sealed class InstanceMethodTargetsWithoutFields
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void Void() { }
     }
 
     public static class InnerStaticMethodTargets
     {
-        public static int Property => 1;
+        public static int Property
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            get => 1;
+        }
         public static int Field = 1;
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Void() { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void IntArgument(int value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void StringArgument(string value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void StructArgument(BindingStruct value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RefIntArgument(ref int value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RefStringArgument(ref string value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RefStructArgument(ref BindingStruct value) { }
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int IntIdentity(int value) => value;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string StringIdentity(string value) => value;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingStruct StructIdentity(BindingStruct value) => value;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int IntResult() => 1;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string StringResult() => "original";
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingStruct StructResult() => new BindingStruct { Value = 1 };
     }
 
     public static class ExceptionHandlingTargets
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void CallInTryBlock(bool throwException)
         {
             try
@@ -199,6 +267,7 @@ namespace Disharmony.Tests
             catch (InvalidOperationException) { }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void CallInCatchBlock(bool throwException)
         {
             try
@@ -212,6 +281,7 @@ namespace Disharmony.Tests
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void CallInFinallyBlock(bool throwException)
         {
             try
@@ -239,34 +309,55 @@ namespace Disharmony.Tests
         public const string StringValue = "original";
         public const string StringReplacement = "patched";
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int IntResult() => IntValue;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SpecialEncoding_ValueMinus1_Result() => -1;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SpecialEncoding_Value0_Result() => 0;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SpecialEncoding_Value1_Result() => 1;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SpecialEncoding_Value2_Result() => 2;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SpecialEncoding_Value3_Result() => 3;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SpecialEncoding_Value4_Result() => 4;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SpecialEncoding_Value5_Result() => 5;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SpecialEncoding_Value6_Result() => 6;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SpecialEncoding_Value7_Result() => 7;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SpecialEncoding_Value8_Result() => 8;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SignedByteEncoding_ValueMinus128_Result() => -128;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_Int32Encoding_ValueMinus129_Result() => -129;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_SignedByteEncoding_Value127_Result() => 127;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int Int_Int32Encoding_Value128_Result() => 128;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static long LongResult() => LongValue;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static float FloatResult() => FloatValue;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static double DoubleResult() => DoubleValue;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string StringResult() => StringValue;
     }
 
     public sealed class ConstructorTargets
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public ConstructorTargets()
         {
             ConstructorExecuted = true;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public ConstructorTargets(int value)
         {
             ConstructorExecuted = true;
@@ -276,7 +367,9 @@ namespace Disharmony.Tests
         public bool ConstructorExecuted { get; }
         public int Value { get; }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static ConstructorTargets Create() => new ConstructorTargets();
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static ConstructorTargets Create(int value) => new ConstructorTargets(value);
     }
 
@@ -284,15 +377,19 @@ namespace Disharmony.Tests
     {
         public int InstanceValue { get; set; }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public virtual string Describe(int value) => $"base:{value}:{InstanceValue}";
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public virtual string DescribeWithInnerCall(int value) => $"base:{value}:{InstanceValue}";
     }
 
     public sealed class DerivedMethodTargets : BaseMethodTargets
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public override string Describe(int value) => $"derived:{value}:{InstanceValue}";
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public override string DescribeWithInnerCall(int value)
         {
             InnerStaticMethodTargets.Void();
@@ -302,31 +399,54 @@ namespace Disharmony.Tests
 
     public static class OuterStaticMethodTargets
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int IntResult() => InnerStaticMethodTargets.IntResult();
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string StringResult() => InnerStaticMethodTargets.StringResult();
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingStruct StructResult() => InnerStaticMethodTargets.StructResult();
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int FieldResult() => InnerStaticMethodTargets.Field;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int PropertyResult() => InnerStaticMethodTargets.Property;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int ReadInstanceField(InnerInstanceMethodTargets inner) => inner.foo;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int ReadStructField(InnerStructMethodTargets inner) => inner.foo;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void IntArgument(int value) => InnerStaticMethodTargets.IntArgument(value);
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void StringArgument(string value) => InnerStaticMethodTargets.StringArgument(value);
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void StructArgument(BindingStruct value) => InnerStaticMethodTargets.StructArgument(value);
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int IntIdentity(int value) => InnerStaticMethodTargets.IntIdentity(value);
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string StringIdentity(string value) => InnerStaticMethodTargets.StringIdentity(value);
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingStruct StructIdentity(BindingStruct value) => InnerStaticMethodTargets.StructIdentity(value);
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RefIntArgument(ref int value) => InnerStaticMethodTargets.RefIntArgument(ref value);
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RefStringArgument(ref string value) => InnerStaticMethodTargets.RefStringArgument(ref value);
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RefStructArgument(ref BindingStruct value) => InnerStaticMethodTargets.RefStructArgument(ref value);
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void OuterArgument(int outerValue) => InnerStaticMethodTargets.Void();
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void OuterReferenceTypeArgument(string outerValue) => InnerStaticMethodTargets.Void();
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void OuterStructArgument(BindingStruct outerValue) => InnerStaticMethodTargets.Void();
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SameNamedArgument(int value) => InnerStaticMethodTargets.IntArgument(value + 41);
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SameNamedReferenceTypeArgument(string value) => InnerStaticMethodTargets.StringArgument("inner");
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SameNamedStructArgument(BindingStruct value) =>
             InnerStaticMethodTargets.StructArgument(new BindingStruct { Value = 42 });
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int SameNamedRefArgument(ref int value)
         {
             int innerValue = 1;
@@ -334,6 +454,7 @@ namespace Disharmony.Tests
             return innerValue;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string SameNamedRefReferenceTypeArgument(ref string value)
         {
             string innerValue = "inner";
@@ -341,6 +462,7 @@ namespace Disharmony.Tests
             return innerValue;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingStruct SameNamedRefStructArgument(ref BindingStruct value)
         {
             var innerValue = new BindingStruct { Value = 1 };
@@ -348,6 +470,7 @@ namespace Disharmony.Tests
             return innerValue;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static IEnumerable<int> EnumerateIntResult()
         {
             yield return InnerStaticMethodTargets.IntResult();
@@ -356,43 +479,54 @@ namespace Disharmony.Tests
 
     public static class LocalFunctionTargets
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int InvokeAnonymousLambda(int value)
         {
-            Func<int, int> lambda = lambdaParameter => lambdaParameter;
+            Func<int, int> lambda =
+                [MethodImpl(MethodImplOptions.NoInlining)]
+                (lambdaParameter) => lambdaParameter;
             return lambda(value);
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int CapturedVariableMethod(int value)
         {
             int captured = value;
             _ = LocalMethod();
             return captured;
 
+            [MethodImpl(MethodImplOptions.NoInlining)]
             int LocalMethod() => captured;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingReference CapturedReferenceVariableMethod(BindingReference value)
         {
             BindingReference captured = value;
             _ = LocalMethod();
             return captured;
 
+            [MethodImpl(MethodImplOptions.NoInlining)]
             BindingReference LocalMethod() => captured;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingStruct CapturedStructVariableMethod(BindingStruct value)
         {
             BindingStruct captured = value;
             _ = LocalMethod();
             return captured;
 
+            [MethodImpl(MethodImplOptions.NoInlining)]
             BindingStruct LocalMethod() => captured;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static IEnumerable<int> PrimitiveLocalIterator(int enclosingValue)
         {
             return LocalIterator();
 
+            [MethodImpl(MethodImplOptions.NoInlining)]
             IEnumerable<int> LocalIterator()
             {
                 _ = InnerStaticMethodTargets.IntIdentity(enclosingValue);
@@ -400,10 +534,12 @@ namespace Disharmony.Tests
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static IEnumerable<BindingReference> ReferenceTypeLocalIterator(BindingReference enclosingValue)
         {
             return LocalIterator();
 
+            [MethodImpl(MethodImplOptions.NoInlining)]
             IEnumerable<BindingReference> LocalIterator()
             {
                 _ = InnerStaticMethodTargets.StringIdentity(enclosingValue.Value.ToString());
@@ -411,10 +547,12 @@ namespace Disharmony.Tests
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static IEnumerable<BindingStruct> StructLocalIterator(BindingStruct enclosingValue)
         {
             return LocalIterator();
 
+            [MethodImpl(MethodImplOptions.NoInlining)]
             IEnumerable<BindingStruct> LocalIterator()
             {
                 _ = InnerStaticMethodTargets.StructIdentity(enclosingValue);
@@ -430,6 +568,7 @@ namespace Disharmony.Tests.ReflectionFixtures
     {
         public static class NestedTarget
         {
+            [MethodImpl(MethodImplOptions.NoInlining)]
             public static void Method(int value) { }
         }
 
@@ -443,26 +582,37 @@ namespace Disharmony.Tests.ReflectionFixtures
             set { }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Method(int value) { }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RefMethod(ref int value) { }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void InMethod(in int value) { }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void OutMethod(out int value) => value = 0;
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void OverloadedMethod(int value) { }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void OverloadedMethod(string value) { }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void GenericMethod<T>(T value) { }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void NonGenericMethod(int value) { }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void MixedMethod(int value) { }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void MixedMethod<T>(T value) { }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static Func<int, int> StaticLocalMethodContainer()
         {
             return StaticLocalMethod;
@@ -470,6 +620,7 @@ namespace Disharmony.Tests.ReflectionFixtures
             static int StaticLocalMethod(int value) => value;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static Func<int> CapturedLocalMethodContainer(int value)
         {
             return CapturedLocalMethod;
@@ -477,6 +628,7 @@ namespace Disharmony.Tests.ReflectionFixtures
             int CapturedLocalMethod() => value;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static Func<int, int> LambdaContainer() => value => value;
     }
 }

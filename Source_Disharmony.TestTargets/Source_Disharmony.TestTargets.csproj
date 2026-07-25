@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net4.7.2</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Optimize>true</Optimize>
+    <AssemblyName>Disharmony.TestTargets</AssemblyName>
+    <RootNamespace>Disharmony.Tests</RootNamespace>
+    <DefineConstants>$(DefineConstants);DISHARMONY_TEST_TARGETS</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Source_Disharmony.Tests\GlobalUsings.cs" Link="GlobalUsings.cs" />
+    <Compile Include="..\Source_Disharmony.Tests\TestTargets.cs" Link="TestTargets.cs" />
+    <Compile Include="..\Source_Disharmony.Tests\OptimizerTests.cs" Link="OptimizerTargets.cs" />
+    <Compile Include="..\Source_Disharmony.Tests\UnpatchTests.cs" Link="UnpatchTargets.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="4.3.2" />
+  </ItemGroup>
+
+  <Target Name="RequireReleaseConfiguration" BeforeTargets="CoreCompile" Condition="'$(Configuration)' != 'Release'">
+    <Error Text="Disharmony test targets must be built with Configuration=Release." />
+  </Target>
+
+</Project>

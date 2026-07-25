@@ -18,6 +18,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Source_Disharmony\Source_Disharmony.csproj" />
+    <ProjectReference Include="..\Source_Disharmony.TestTargets\Source_Disharmony.TestTargets.csproj">
+      <SetConfiguration>Configuration=Release</SetConfiguration>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="TestTargets.cs" />
   </ItemGroup>
 
   <ItemGroup>

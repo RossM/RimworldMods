@@ -1,3 +1,4 @@
+#if DISHARMONY_TEST_TARGETS
 namespace Disharmony.Tests;
 
 public sealed class OptimizerNullPropagationNode
@@ -10,6 +11,7 @@ public static class OptimizerControlFlowTargets
 {
     public static int RightOperandCalls;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static string ConditionalBranches(int value)
     {
         if (value < 0)
@@ -19,6 +21,7 @@ public static class OptimizerControlFlowTargets
         return "positive";
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int DenseSwitch(int value)
     {
         switch (value)
@@ -31,6 +34,7 @@ public static class OptimizerControlFlowTargets
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int LoopWithBreakAndContinue(int limit)
     {
         int total = 0;
@@ -46,15 +50,18 @@ public static class OptimizerControlFlowTargets
         return total;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static bool ShortCircuit(bool left, bool right) =>
         left && EvaluateRight(right);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private static bool EvaluateRight(bool value)
     {
         RightOperandCalls++;
         return value;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int RefLocalConditional(bool selectFirst)
     {
         int first = 1;
@@ -64,6 +71,7 @@ public static class OptimizerControlFlowTargets
         return selectFirst ? first : second;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static string PatternMatching(object? value) =>
         value switch
         {
@@ -76,15 +84,18 @@ public static class OptimizerControlFlowTargets
             _ => "other",
         };
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int? NullPropagation(OptimizerNullPropagationNode? node) =>
         node?.Next?.Value;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static string NullCoalescingAssignment(string? value)
     {
         value ??= "fallback";
         return value;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int ForeachWithContinueAndEarlyReturn(IEnumerable<int> values)
     {
         int total = 0;
@@ -105,6 +116,7 @@ public static class OptimizerExceptionTargets
 {
     private sealed class TestDisposable : IDisposable
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public void Dispose() => DisposalCount++;
     }
 
@@ -113,6 +125,7 @@ public static class OptimizerExceptionTargets
     public static int FinallyExecutions;
     public static int DisposalCount;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int TryCatch(bool throwException)
     {
         try
@@ -127,6 +140,7 @@ public static class OptimizerExceptionTargets
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int TryFinally(bool returnEarly)
     {
         try
@@ -141,6 +155,7 @@ public static class OptimizerExceptionTargets
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int NestedTryFinallyAndCatch(int mode)
     {
         try
@@ -168,6 +183,7 @@ public static class OptimizerExceptionTargets
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int ExceptionFilter(bool filterMatches)
     {
         try
@@ -184,6 +200,7 @@ public static class OptimizerExceptionTargets
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int UsingWithEarlyReturn(bool returnEarly)
     {
         using (new TestDisposable())
@@ -194,6 +211,7 @@ public static class OptimizerExceptionTargets
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int LockWithConditionalReturn(bool returnEarly)
     {
         lock (SyncRoot)
@@ -204,6 +222,7 @@ public static class OptimizerExceptionTargets
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int CatchAndRethrow(bool rethrow)
     {
         try
@@ -224,6 +243,7 @@ public static class OptimizerPrefixTargets
     public static int PrefixTargetExecutions;
     public static int InnerTargetExecutions;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int PrefixAlwaysFalseTarget(int value)
     {
         PrefixTargetExecutions++;
@@ -232,6 +252,7 @@ public static class OptimizerPrefixTargets
         return 1;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int PrefixAlwaysTrueTarget(int value)
     {
         PrefixTargetExecutions++;
@@ -240,6 +261,7 @@ public static class OptimizerPrefixTargets
         return 1;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int CallInnerAlwaysFalseTarget(int value)
     {
         if (value < 0)
@@ -247,6 +269,7 @@ public static class OptimizerPrefixTargets
         return InnerAlwaysFalseTarget(value);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int CallInnerAlwaysTrueTarget(int value)
     {
         if (value < 0)
@@ -254,33 +277,41 @@ public static class OptimizerPrefixTargets
         return InnerAlwaysTrueTarget(value);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int InnerAlwaysFalseTarget(int value)
     {
         InnerTargetExecutions++;
         return value;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int InnerAlwaysTrueTarget(int value)
     {
         InnerTargetExecutions++;
         return value;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int PrefixConditionallySkippedTarget(bool skip)
     {
         PrefixTargetExecutions++;
         return 1;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int CallInnerConditionallySkippedTarget(bool skip) =>
         InnerConditionallySkippedTarget();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int InnerConditionallySkippedTarget()
     {
         InnerTargetExecutions++;
         return 1;
     }
 }
+
+#else
+namespace Disharmony.Tests;
 
 public static class OptimizerPatches
 {
@@ -724,3 +755,4 @@ public sealed class OptimizerTests : PatchTestBase
         Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
     }
 }
+#endif
