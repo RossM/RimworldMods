@@ -183,6 +183,9 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         BranchElimination();
         LogBlocks("BranchElimination");
 
+        MergeBlocks();
+        LogBlocks("MergeBlocks");
+
         DeadCodeElimination();
         LogBlocks("DeadCodeElimination");
 
@@ -403,6 +406,24 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 block.successors.Add(fallthroughBlock);
                 block.fallthroughBlock = fallthroughBlock;
             }
+        }
+
+        UpdatePredecessors();
+    }
+
+    private void MergeBlocks()
+    {
+        for (int i = basicBlocks.Count - 1; i >= 0; i--)
+        {
+            var block = basicBlocks[i];
+            if (block.successors is not [var successor])
+                continue;
+            if (block.instructions.Count > 0 && block.instructions[^1].CanBranch)
+                continue;
+            if (successor.predecessors.Count != 1 || successor.exceptionRegion != block.exceptionRegion || successor.EntryPoint)
+                continue;
+            block.instructions.AddRange(successor.instructions);
+            block.fallthroughBlock = successor.fallthroughBlock;
         }
 
         UpdatePredecessors();
