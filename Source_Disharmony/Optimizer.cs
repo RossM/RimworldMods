@@ -36,14 +36,14 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     private class BasicBlock
     {
         public required ExceptionRegion exceptionRegion;
-        public int startingInstructionIndex = 0;
+        public int id = 0;
         public readonly List<Label> labels = [];
         public readonly List<CodeInstruction> instructions = [];
         public readonly List<BasicBlock> successors = [];
         public readonly List<BasicBlock> predecessors = [];
         public BasicBlock? fallthroughBlock;
 
-        public string ID => $"#{startingInstructionIndex}";
+        public string ID => $"#{id}";
 
         public bool EntryPoint => exceptionRegion.entry == this;
     }
@@ -180,11 +180,17 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         JumpThreading();
         LogBlocks(nameof(JumpThreading));
 
+        SimpleDeadCodeElimination();
+        LogBlocks(nameof(SimpleDeadCodeElimination));
+
         BranchElimination();
         LogBlocks(nameof(BranchElimination));
 
         MergeBlocks();
         LogBlocks(nameof(MergeBlocks));
+
+        BranchInversion();
+        LogBlocks(nameof(BranchInversion));
 
         AggressiveDeadCodeEliminationAndReorder();
         LogBlocks(nameof(AggressiveDeadCodeEliminationAndReorder));
@@ -221,7 +227,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         basicBlocks.Add(curBlock);
         exceptionRoot.entry = curBlock;
 
-        int instructionIndex = 0;
         ExceptionRegion exceptionRegion = exceptionRoot;
 
         foreach (var inst in inputInstructions)
@@ -235,7 +240,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             }
 
             curBlock.instructions.Add(inst);
-            instructionIndex++;
 
             if (inst.CanBranch || inst.blocks.Any(IsBlockEnd))
             {
@@ -334,7 +338,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         void NewBasicBlock(List<Label> labels)
         {
             {
-                BasicBlock newBlock = new() { startingInstructionIndex = instructionIndex, exceptionRegion = exceptionRegion };
+                BasicBlock newBlock = new() { id = basicBlocks.Count, exceptionRegion = exceptionRegion };
                 basicBlocks.Add(newBlock);
                 curBlock = newBlock;
 
@@ -524,6 +528,36 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             leaveTargets.AddRange(AggressiveDeadCodeEliminationAndReorder(region.next, outputBlocks));
 
         return leaveTargets;
+    }
+
+    private void BranchInversion()
+    {
+        foreach (var block in basicBlocks)
+        {
+            if (block.instructions.Count == 0)
+                continue;
+            if (block.fallthroughBlock is null)
+                continue;
+            if (block.fallthroughBlock.predecessors.Count == 1)
+                continue;
+
+            var finalInstruction = block.instructions[^1];
+            if (finalInstruction.opcode.FlowControl is FlowControl.Cond_Branch &&
+                finalInstruction.operand is Label label &&
+                labelToBlock[label].predecessors.Count == 1)
+            {
+                if (finalInstruction.opcode == OpCodes.Brfalse || finalInstruction.opcode == OpCodes.Brfalse_S)
+                {
+                    block.instructions[^1] = new(OpCodes.Brtrue_S, block.fallthroughBlock.labels[0]);
+                    block.fallthroughBlock = labelToBlock[label];
+                }
+                if (finalInstruction.opcode == OpCodes.Brtrue || finalInstruction.opcode == OpCodes.Brtrue_S)
+                {
+                    block.instructions[^1] = new(OpCodes.Brfalse_S, block.fallthroughBlock.labels[0]);
+                    block.fallthroughBlock = labelToBlock[label];
+                }
+            }
+        }
     }
 
     private void InsertBranches()
