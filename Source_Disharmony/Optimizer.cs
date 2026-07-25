@@ -2,6 +2,16 @@
 
 internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator)
 {
+    private record Op(OpCode opcode, object? operand = null)
+    {
+        public CodeInstruction ToCodeInstruction() => new(opcode, operand);
+
+        public bool IsLeave => opcode == OpCodes.Leave_S || opcode == OpCodes.Leave;
+        public bool IsUnconditionalBranch => opcode == OpCodes.Br_S || opcode == OpCodes.Br;
+        public bool CanBranch => opcode.FlowControl is not (FlowControl.Next or FlowControl.Call or FlowControl.Meta);
+        public bool CanFallThrough => opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch;
+    }
+
     private class ExceptionRegion
     {
         public ExceptionBlock? harmonyBlock;
@@ -40,7 +50,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public required ExceptionRegion exceptionRegion;
         public int id = 0;
         public readonly List<Label> labels = [];
-        public readonly List<CodeInstruction> instructions = [];
+        public readonly List<Op> instructions = [];
         public readonly List<BasicBlock> successors = [];
         public readonly List<BasicBlock> predecessors = [];
         public BasicBlock? fallthroughBlock;
@@ -92,7 +102,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 FileLog.LogILBlockBegin(codePos, harmonyBlock);
 
             foreach (var codeInstruction in block.instructions)
-                LogInstruction(codeInstruction, ref codePos);
+                LogInstruction(codeInstruction.ToCodeInstruction(), ref codePos);
             if (block.instructions.Count == 0)
                 LogInstruction((CodeInstruction)new(OpCodes.Nop), ref codePos);
 
@@ -216,13 +226,14 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         for (var index = 0; index < basicBlocks.Count; index++)
         {
             BasicBlock? block = basicBlocks[index];
-            if (block.instructions.Count == 0)
-                block.instructions.Add(new(OpCodes.Nop));
-            block.instructions[0].labels.AddRange(block.labels);
-            block.instructions[0].blocks.AddRange(ExceptionBlockBegins(index));
-            block.instructions[^1].blocks.AddRange(ExceptionBlockEnds(index));
+            List<CodeInstruction> instructions = [.. block.instructions.Select(i => i.ToCodeInstruction())];
+            if (instructions.Count == 0)
+                instructions.Add(new(OpCodes.Nop));
+            instructions[0].labels.AddRange(block.labels);
+            instructions[0].blocks.AddRange(ExceptionBlockBegins(index));
+            instructions[^1].blocks.AddRange(ExceptionBlockEnds(index));
 
-            foreach (var inst in block.instructions)
+            foreach (var inst in instructions)
                 output.Add(inst);
         }
     }
@@ -248,7 +259,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 NewBasicBlock(inst.labels);
             }
 
-            curBlock.instructions.Add(inst);
+            curBlock.instructions.Add(new(inst.opcode, inst.operand));
 
             if (inst.CanBranch || inst.blocks.Any(IsBlockEnd))
             {
@@ -257,9 +268,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
                 NewBasicBlock([]);
             }
-
-            inst.labels.Clear();
-            inst.blocks.Clear();
         }
 
         if (curBlock.instructions.Count == 0)
@@ -292,7 +300,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
             if (block.instructions[^1].IsUnconditionalBranch)
             {
-                block.fallthroughBlock = labelToBlock[(Label)block.instructions[^1].operand];
+                block.fallthroughBlock = labelToBlock[(Label)block.instructions[^1].operand!];
                 block.instructions.RemoveAt(block.instructions.Count - 1);
             }
         }
