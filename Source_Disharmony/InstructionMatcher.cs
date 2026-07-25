@@ -39,6 +39,7 @@ public partial class InstructionMatcher
     public class Rule
     {
         public int Min = 1, Max = 1;
+        public int Priority = 0;
         public OutputMode Mode = OutputMode.MatchOnly;
         public bool SaveLocals = false;
         public bool Chained = false;

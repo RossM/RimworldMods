@@ -111,7 +111,7 @@ public partial class InstructionMatcher
                 }
             }
 
-            var sortedMatches = matches.OrderBy(m => m.start).ToList();
+            var sortedMatches = matches.OrderBy(m => m.start).ThenByDescending(m => m.rule.Priority).ToList();
             for (var i = 0; i < sortedMatches.Count - 1; i++)
             {
                 if (sortedMatches[i].end > sortedMatches[i + 1].start)

@@ -36,6 +36,7 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
 
         yield return new Rule
         {
+            Priority = 100,
             Mode = InstructionMatcher.OutputMode.MethodPrefix,
             Output = [.. output.Instructions],
             Name = "state variable initialization",
