@@ -19,10 +19,19 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public static readonly Op Pop = new(OpCodes.Pop);
     }
 
-    private class ExceptionRegion
+    private class BasicBlockBase
+    {
+        public int id = 0;
+        public readonly List<Label> labels = [];
+        public readonly List<BasicBlock> successors = [];
+        public readonly List<BasicBlock> predecessors = [];
+        public ExceptionRegion? parent;
+        public string ID => $"#{id}";
+    }
+
+    private class ExceptionRegion : BasicBlockBase
     {
         public ExceptionBlock? harmonyBlock;
-        public ExceptionRegion? parent;
         public ExceptionRegion? next;
         public BasicBlock? entry;
         public int depth;
@@ -49,17 +58,10 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         }
     }
 
-    private class BasicBlock
+    private class BasicBlock : BasicBlockBase
     {
-        public string ID => $"#{id}";
-
-        public bool EntryPoint => exceptionRegion.entry == this;
-        public required ExceptionRegion exceptionRegion;
-        public int id = 0;
-        public readonly List<Label> labels = [];
+        public bool EntryPoint => parent!.entry == this;
         public readonly List<Op> ops = [];
-        public readonly List<BasicBlock> successors = [];
-        public readonly List<BasicBlock> predecessors = [];
         public BasicBlock? fallthroughBlock;
     }
 
@@ -67,6 +69,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     private readonly List<BasicBlock> basicBlocks = [];
     private readonly ExceptionRegion exceptionRoot = new();
     private readonly Dictionary<Label, BasicBlock> labelToBlock = new();
+    private int nextBlockId = 1;
 
     private static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
     private static bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
@@ -99,7 +102,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             FileLog.LogBuffered($"# Successors:   {string.Join(", ", block.successors.Select(b => b.ID)),-19} #");
             if (block.EntryPoint)
                 FileLog.LogBuffered(
-                    $"# Entry Point:  {block.exceptionRegion.harmonyBlock?.blockType.ToString() ?? "Function",-19} #");
+                    $"# Entry Point:  {block.parent!.harmonyBlock?.blockType.ToString() ?? "Function",-19} #");
             FileLog.LogBuffered("#####################################");
 
             foreach (var label in block.labels)
@@ -120,17 +123,14 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 FileLog.LogILBlockEnd(codePos, harmonyBlock);
         }
 
-        //while (FileLog.indentLevel > 0)
-        //    FileLog.LogILBlockEnd(codePos, new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
-
         FileLog.LogBuffered("");
         FileLog.FlushBuffer();
     }
 
     private IEnumerable<ExceptionBlock> ExceptionBlockBegins(int index)
     {
-        ExceptionRegion blockExceptionRegion = basicBlocks[index].exceptionRegion;
-        ExceptionRegion prevBlockExceptionRegion = index >= 1 ? basicBlocks[index - 1].exceptionRegion : exceptionRoot;
+        ExceptionRegion blockExceptionRegion = basicBlocks[index].parent!;
+        ExceptionRegion prevBlockExceptionRegion = index >= 1 ? basicBlocks[index - 1].parent! : exceptionRoot;
         if (blockExceptionRegion == prevBlockExceptionRegion)
             return [];
 
@@ -145,8 +145,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
     private IEnumerable<ExceptionBlock> ExceptionBlockEnds(int index)
     {
-        ExceptionRegion blockExceptionRegion = basicBlocks[index].exceptionRegion;
-        ExceptionRegion nextBlockExceptionRegion = index < basicBlocks.Count - 1 ? basicBlocks[index + 1].exceptionRegion : exceptionRoot;
+        ExceptionRegion blockExceptionRegion = basicBlocks[index].parent!;
+        ExceptionRegion nextBlockExceptionRegion = index < basicBlocks.Count - 1 ? basicBlocks[index + 1].parent! : exceptionRoot;
         if (blockExceptionRegion == nextBlockExceptionRegion)
             yield break;
 
@@ -179,10 +179,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                     FileLog.LogIL(codePos, code);
 
                 break;
-
-            //case OperandType.InlineSig:
-            //    FileLog.LogIL(codePos, code, (ICallSiteGenerator)operand);
-            //    break;
 
             default: FileLog.LogIL(codePos, code, operand); break;
         }
@@ -250,7 +246,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     /// </summary>
     private void MakeBasicBlocks()
     {
-        BasicBlock curBlock = new() { exceptionRegion = exceptionRoot };
+        BasicBlock curBlock = new() { id = nextBlockId++, parent = exceptionRoot };
         basicBlocks.Add(curBlock);
         exceptionRoot.entry = curBlock;
 
@@ -346,6 +342,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             {
                 var newRegion = new ExceptionRegion
                 {
+                    id = nextBlockId++,
                     depth = exceptionRegion.depth + 1,
                     harmonyBlock = harmonyBlock,
                     parent = exceptionRegion,
@@ -356,6 +353,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             {
                 var newRegion = new ExceptionRegion
                 {
+                    id = nextBlockId++,
                     depth = exceptionRegion.depth,
                     harmonyBlock = harmonyBlock,
                     parent = exceptionRegion.parent,
@@ -369,13 +367,13 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         {
             if (curBlock.ops.Count == 0)
             {
-                curBlock.exceptionRegion = exceptionRegion;
+                curBlock.parent = exceptionRegion;
                 for (var region = exceptionRegion; region != null; region = region.parent)
                     region.entry ??= curBlock;
             }
             else
             {
-                BasicBlock newBlock = new() { id = basicBlocks.Count, exceptionRegion = exceptionRegion };
+                BasicBlock newBlock = new() { id = nextBlockId++, parent = exceptionRegion };
                 basicBlocks.Add(newBlock);
                 curBlock = newBlock;
 
@@ -453,7 +451,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 continue;
             int iterations = 0;
             while (fallthroughBlock.ops.Count == 0 &&
-                   fallthroughBlock.fallthroughBlock!.exceptionRegion == fallthroughBlock.exceptionRegion &&
+                   fallthroughBlock.fallthroughBlock!.parent == fallthroughBlock.parent &&
                    !fallthroughBlock.EntryPoint &&
                    iterations++ < 20)
                 fallthroughBlock = fallthroughBlock.fallthroughBlock;
@@ -478,7 +476,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 continue;
             if (block.ops.Count > 0 && block.ops[^1].CanBranch)
                 continue;
-            if (successor.predecessors.Count != 1 || successor.exceptionRegion != block.exceptionRegion || successor.EntryPoint)
+            if (successor.predecessors.Count != 1 || successor.parent != block.parent || successor.EntryPoint)
                 continue;
             block.ops.AddRange(successor.ops);
             block.fallthroughBlock = successor.fallthroughBlock;
@@ -542,16 +540,16 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             FileLog.Log($"{"".PadLeft(region.depth * 2 + 1)}- Processing {block.ID}");
 
             List<BasicBlock> successors;
-            if (block.exceptionRegion == region)
+            if (block.parent == region)
             {
                 outputBlocks.Add(block);
                 successors = block.successors;
-                if (block.fallthroughBlock != null && block.fallthroughBlock.exceptionRegion == region)
+                if (block.fallthroughBlock != null && block.fallthroughBlock.parent == region)
                     queue.AddFirst(block.fallthroughBlock);
             }
             else
             {
-                var immediateChild = block.exceptionRegion;
+                var immediateChild = block.parent!;
                 while (immediateChild.parent != region)
                     immediateChild = immediateChild.parent!;
 
@@ -560,7 +558,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
             foreach (var successor in successors)
             {
-                if (successor.exceptionRegion == region || ExceptionRegion.SharedParent(region, successor.exceptionRegion) == region)
+                if (successor.parent == region || ExceptionRegion.SharedParent(region, successor.parent) == region)
                     queue.AddLast(successor);
                 else
                     leaveTargets.Add(successor);
