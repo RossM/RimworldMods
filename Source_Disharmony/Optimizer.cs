@@ -362,23 +362,32 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         {
             if (block.instructions.Count == 0)
                 continue;
+            if (block.fallthroughBlock is null)
+                continue;
+            if (block.successors.Any(s => s != block.fallthroughBlock))
+                continue;
 
-            if (block.instructions[^1].opcode is
-                     {
-                         FlowControl: FlowControl.Cond_Branch, 
-                         StackBehaviourPop: StackBehaviour.Popi,
-                         StackBehaviourPush: StackBehaviour.Push0,
-                     })
+            switch (block.instructions[^1].opcode)
             {
-                if (block.fallthroughBlock is null)
-                    continue;
-                if (block.successors.Any(s => s != block.fallthroughBlock))
-                    continue;
-
-                block.instructions[^1] = new(OpCodes.Pop);
-                block.successors.Clear();
-                block.successors.Add(block.fallthroughBlock);
-                changed = true;
+                // Brtrue, Brfalse
+                case { FlowControl: FlowControl.Cond_Branch, StackBehaviourPop: StackBehaviour.Popi, StackBehaviourPush: StackBehaviour.Push0 }:
+                {
+                    block.instructions[^1] = new(OpCodes.Pop);
+                    block.successors.Clear();
+                    block.successors.Add(block.fallthroughBlock);
+                    changed = true;
+                    break;
+                }
+                // Beq, Bge, Bgt, Ble, Blt, Bne_Un, Bge_Un, Bgt_Un, Ble_Un, Blt_Un
+                case { FlowControl: FlowControl.Cond_Branch, StackBehaviourPop: StackBehaviour.Pop1_pop1, StackBehaviourPush: StackBehaviour.Push0 }:
+                {
+                    block.instructions[^1] = new(OpCodes.Pop);
+                    block.instructions.Add(new(OpCodes.Pop));
+                    block.successors.Clear();
+                    block.successors.Add(block.fallthroughBlock);
+                    changed = true;
+                    break;
+                }
             }
         }
 
