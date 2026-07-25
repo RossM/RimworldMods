@@ -46,8 +46,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public BasicBlock? fallthroughBlock;
     }
 
-    private static readonly CodeInstruction Nop = new(OpCodes.Nop);
-
     public readonly InstructionList output = [];
     private readonly List<BasicBlock> basicBlocks = [];
     private readonly ExceptionRegion exceptionRoot = new();
@@ -84,7 +82,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             FileLog.LogBuffered($"# Successors:   {string.Join(", ", block.successors.Select(b => b.ID)),-19} #");
             if (block.EntryPoint)
                 FileLog.LogBuffered(
-                    $"# Entry Point:  {block.exceptionRegion.harmonyBlock?.blockType.ToString() ?? "Function entry",-19} #");
+                    $"# Entry Point:  {block.exceptionRegion.harmonyBlock?.blockType.ToString() ?? "Function",-19} #");
             FileLog.LogBuffered("#####################################");
 
             foreach (var label in block.labels)
@@ -96,7 +94,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             foreach (var codeInstruction in block.instructions)
                 LogInstruction(codeInstruction, ref codePos);
             if (block.instructions.Count == 0)
-                LogInstruction(Nop, ref codePos);
+                LogInstruction((CodeInstruction)new(OpCodes.Nop), ref codePos);
 
             if (block.fallthroughBlock != null)
                 FileLog.LogBuffered($"IL_{codePos:X4}: // fallthrough => {block.fallthroughBlock.ID}");
@@ -219,7 +217,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         {
             BasicBlock? block = basicBlocks[index];
             if (block.instructions.Count == 0)
-                block.instructions.Add(Nop);
+                block.instructions.Add(new(OpCodes.Nop));
             block.instructions[0].labels.AddRange(block.labels);
             block.instructions[0].blocks.AddRange(ExceptionBlockBegins(index));
             block.instructions[^1].blocks.AddRange(ExceptionBlockEnds(index));
@@ -278,8 +276,13 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             basicBlocks[^1].instructions.Add(new(OpCodes.Ret));
 
         foreach (var block in basicBlocks)
-        foreach (var label in block.labels)
-            labelToBlock[label] = block;
+        {
+            if (block.labels.Count == 0)
+                block.labels.Add(generator.DefineLabel());
+
+            foreach (var label in block.labels)
+                labelToBlock[label] = block;
+        }
 
         // Convert block-final unconditional branches to fallthrough
         foreach (var block in basicBlocks)
@@ -366,8 +369,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             }
 
             curBlock.labels.AddRange(labels);
-            if (curBlock.labels.Count == 0)
-                curBlock.labels.Add(generator.DefineLabel());
         }
 
         static bool CanFallThrough(BasicBlock basicBlock) =>
