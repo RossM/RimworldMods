@@ -105,14 +105,17 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 FileLog.LogILBlockEnd(codePos, harmonyBlock);
         }
 
+        //while (FileLog.indentLevel > 0)
+        //    FileLog.LogILBlockEnd(codePos, new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+
         FileLog.LogBuffered("");
         FileLog.FlushBuffer();
     }
 
     private IEnumerable<ExceptionBlock> ExceptionBlockBegins(int index)
     {
-        ExceptionRegion? blockExceptionRegion = basicBlocks[index].exceptionRegion;
-        ExceptionRegion? prevBlockExceptionRegion = index >= 1 ? basicBlocks[index - 1].exceptionRegion : null;
+        ExceptionRegion blockExceptionRegion = basicBlocks[index].exceptionRegion;
+        ExceptionRegion prevBlockExceptionRegion = index >= 1 ? basicBlocks[index - 1].exceptionRegion : exceptionRoot;
         if (blockExceptionRegion == prevBlockExceptionRegion)
             return [];
 
@@ -127,8 +130,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
     private IEnumerable<ExceptionBlock> ExceptionBlockEnds(int index)
     {
-        ExceptionRegion? blockExceptionRegion = basicBlocks[index].exceptionRegion;
-        ExceptionRegion? nextBlockExceptionRegion = index < basicBlocks.Count - 1 ? basicBlocks[index + 1].exceptionRegion : null;
+        ExceptionRegion blockExceptionRegion = basicBlocks[index].exceptionRegion;
+        ExceptionRegion nextBlockExceptionRegion = index < basicBlocks.Count - 1 ? basicBlocks[index + 1].exceptionRegion : exceptionRoot;
         if (blockExceptionRegion == nextBlockExceptionRegion)
             yield break;
 
@@ -346,13 +349,20 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         void NewBasicBlock(List<Label> labels)
         {
+            if (curBlock.instructions.Count == 0)
+            {
+                curBlock.exceptionRegion = exceptionRegion;
+                for (var region = exceptionRegion; region != null; region = region.parent)
+                    region.entry ??= curBlock;
+            }
+            else
             {
                 BasicBlock newBlock = new() { id = basicBlocks.Count, exceptionRegion = exceptionRegion };
                 basicBlocks.Add(newBlock);
                 curBlock = newBlock;
 
                 for (var region = exceptionRegion; region != null; region = region.parent)
-                    region.entry ??= newBlock;
+                    region.entry ??= curBlock;
             }
 
             curBlock.labels.AddRange(labels);
