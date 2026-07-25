@@ -435,6 +435,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 continue;
             block.instructions.AddRange(successor.instructions);
             block.fallthroughBlock = successor.fallthroughBlock;
+            block.successors.Clear();
+            block.successors.AddRange(successor.successors);
         }
 
         UpdatePredecessors();
