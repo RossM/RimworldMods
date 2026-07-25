@@ -134,7 +134,7 @@ namespace Disharmony.Tests
         [MethodImpl(MethodImplOptions.NoInlining)]
         public IEnumerable<int> EnumerateIdentity(int outerValue)
         {
-            _ = InnerStaticMethodTargets.IntIdentity(outerValue);
+            _ = InnerStaticMethodTargets.IntIdentity(outerValue + foo);
             yield return outerValue;
         }
 
