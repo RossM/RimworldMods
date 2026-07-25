@@ -290,70 +290,87 @@ public static class OptimizerPatches
 
     [Prefix]
     [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.ConditionalBranches))]
+    [Optimize]
     public static void ConditionalBranches_PreservesEveryPath() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.DenseSwitch))]
+    [Optimize]
     public static void DenseSwitch_PreservesCasesAndDefault() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.LoopWithBreakAndContinue))]
+    [Optimize]
     public static void LoopWithBreakAndContinue_PreservesBackEdges() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.ShortCircuit))]
+    [Optimize]
     public static void ShortCircuit_PreservesSkippedRightOperand() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.RefLocalConditional))]
+    [Optimize]
     public static void RefLocalConditional_PreservesManagedPointerBranches() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.PatternMatching))]
+    [Optimize]
     public static void PatternMatching_PreservesTypePropertyGuardAndNullPatterns() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.NullPropagation))]
+    [Optimize]
     public static void NullPropagation_PreservesNullAtEveryLink() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.NullCoalescingAssignment))]
+    [Optimize]
     public static void NullCoalescingAssignment_PreservesNullAndNonNullValues() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.ForeachWithContinueAndEarlyReturn))]
+    [Optimize]
     public static void ForeachWithContinueAndEarlyReturn_PreservesLoopAndEnumeratorCleanup() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerExceptionTargets), nameof(OptimizerExceptionTargets.TryCatch))]
+    [Optimize]
     public static void TryCatch_PreservesNormalAndExceptionalPaths() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerExceptionTargets), nameof(OptimizerExceptionTargets.TryFinally))]
+    [Optimize]
     public static void TryFinally_PreservesReturnsAndFinallyExecution() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerExceptionTargets), nameof(OptimizerExceptionTargets.NestedTryFinallyAndCatch))]
+    [Optimize]
     public static void NestedTryFinallyAndCatch_PreservesExceptionRegionControlFlow() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerExceptionTargets), nameof(OptimizerExceptionTargets.ExceptionFilter))]
+    [Optimize]
     public static void ExceptionFilter_PreservesFilterAndFallbackHandlers() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerExceptionTargets), nameof(OptimizerExceptionTargets.UsingWithEarlyReturn))]
+    [Optimize]
     public static void UsingWithEarlyReturn_PreservesCompilerGeneratedFinally() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerExceptionTargets), nameof(OptimizerExceptionTargets.LockWithConditionalReturn))]
+    [Optimize]
     public static void LockWithConditionalReturn_PreservesCompilerGeneratedFinally() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerExceptionTargets), nameof(OptimizerExceptionTargets.CatchAndRethrow))]
+    [Optimize]
     public static void CatchAndRethrow_PreservesHandledAndRethrownPaths() => RecordPatch();
 
     [Prefix]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixAlwaysFalseTarget))]
+    [Optimize]
     public static bool Prefix_AlwaysFalse_SkipsTarget(ref int __result)
     {
         RecordPatch();
@@ -363,6 +380,7 @@ public static class OptimizerPatches
 
     [Prefix]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixAlwaysTrueTarget))]
+    [Optimize]
     public static bool Prefix_AlwaysTrue_RunsTarget()
     {
         RecordPatch();
@@ -371,6 +389,7 @@ public static class OptimizerPatches
 
     [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerAlwaysFalseTarget))]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerAlwaysFalseTarget))]
+    [Optimize]
     public static bool InnerPrefix_AlwaysFalse_SkipsInnerTarget(ref int __result)
     {
         RecordPatch();
@@ -380,6 +399,7 @@ public static class OptimizerPatches
 
     [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerAlwaysTrueTarget))]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerAlwaysTrueTarget))]
+    [Optimize]
     public static bool InnerPrefix_AlwaysTrue_RunsInnerTarget()
     {
         RecordPatch();
@@ -388,6 +408,7 @@ public static class OptimizerPatches
 
     [Prefix]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixConditionallySkippedTarget))]
+    [Optimize]
     public static bool Prefix_ArgumentControlsWhetherTargetIsSkipped(bool skip, ref int __result)
     {
         RecordPatch();
@@ -397,6 +418,7 @@ public static class OptimizerPatches
 
     [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerConditionallySkippedTarget))]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget))]
+    [Optimize]
     public static bool InnerPrefix_OuterArgumentControlsWhetherInnerTargetIsSkipped(
         [Parameter("skip", Scope.Outer)] bool skip,
         ref int __result)

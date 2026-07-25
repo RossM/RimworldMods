@@ -151,7 +151,7 @@ internal class Patcher
             matcher.MatchAndReplace(method, ref instructionsList, generator);
         }
 
-        if (patch.optimize)
+        if (Instance.optimizerEnabled && patch.optimize)
         {
             var optimizer = new Optimizer(method, instructionsList, generator, debug: patch.debug);
             optimizer.Optimize();
@@ -214,6 +214,7 @@ internal class Patcher
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
 
             bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
+            bool optimize = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.optimize);
 
             if (!methodPatches.ContainsKey(original.MethodBase))
             {
@@ -229,7 +230,7 @@ internal class Patcher
             methodPatches[original.MethodBase] = new()
             {
                 matchers = matchers,
-                optimize = optimizerEnabled,
+                optimize = optimize,
                 debug = debug,
             };
 

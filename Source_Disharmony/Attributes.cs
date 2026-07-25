@@ -166,6 +166,10 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
 public class DebugAttribute : Attribute;
 
 [PublicAPI]
+[AttributeUsage(AttributeTargets.Method)]
+public class OptimizeAttribute : Attribute;
+
+[PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 public class TargetAttribute(

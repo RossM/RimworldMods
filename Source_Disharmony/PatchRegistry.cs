@@ -70,9 +70,9 @@ internal struct PatchInfo
     public required Invocation patch;
     public required PatchType patchType;
     public required ParameterBinding[] parameters;
-    public required bool inline;
+    public bool inline;
     public bool debug;
-
+    public bool optimize;
     public bool HasBindingType(BindingType bindingType) => parameters.Any(p => p.BindingType == bindingType);
 }
 
@@ -156,6 +156,7 @@ internal class PatchRegistry
                 var targetAttributes = attributes.OfType<TargetAttribute>().ToList();
                 bool debug = attributes.OfType<DebugAttribute>().Any();
                 bool inline = attributes.OfType<InlineAttribute>().Any();
+                bool optimize = attributes.OfType<OptimizeAttribute>().Any();
 
                 if (patchTypeAttribute == null)
                     return;
@@ -197,7 +198,7 @@ internal class PatchRegistry
                             ConstructorInfo outerConstructor => new PatchableConstructorInvocation(outerConstructor),
                             _ => throw new ArgumentOutOfRangeException(),
                         };
-                        AddPatch(method, patchType, outer, inner, inline, debug);
+                        AddPatch(method, patchType, outer, inner, inline: inline, debug: debug, optimize: optimize);
                     }
                 }
             }
@@ -237,7 +238,8 @@ internal class PatchRegistry
         MethodBaseInvocation target,
         Invocation inner,
         bool inline = false,
-        bool debug = false)
+        bool debug = false,
+        bool optimize = false)
     {
         MethodBaseInvocation outer = target;
         bool isIterator = false;
@@ -268,6 +270,7 @@ internal class PatchRegistry
             parameters = arguments,
             inline = inline,
             debug = debug,
+            optimize = optimize,
         };
 
         methodsToUpdate.Add(outer);

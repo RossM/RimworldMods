@@ -534,7 +534,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         queue.AddFirst(region.entry!);
 
-        FileLog.Log($"{"".PadLeft(region.depth * 2)}- Visiting {region.harmonyBlock?.blockType.ToString() ?? "Root"}");
+        if (debug)
+            FileLog.Log($"{"".PadLeft(region.depth * 4)}- Visiting {region.harmonyBlock?.blockType.ToString() ?? "Root"}");
 
         while (queue.Count > 0)
         {
@@ -543,7 +544,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             if (!emitted.Add(block))
                 continue;
 
-            FileLog.Log($"{"".PadLeft(region.depth * 2 + 1)}- Processing {block.ID}");
+            if (debug)
+                FileLog.Log($"{"".PadLeft(region.depth * 4 + 2)}- Processing {block.ID}");
 
             List<BasicBlock> successors;
             if (block.parent == region)
