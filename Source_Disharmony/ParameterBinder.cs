@@ -223,7 +223,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         string name,
         Type[] parameterTypes,
         Scope scope,
-        [MaybeNullWhen(false)] out ParameterBinding parameterBinding)
+        [NotNullWhen(true)] out ParameterBinding? parameterBinding)
     {
         int closureIndex = Array.FindLastIndex(parameterTypes, p => p.IsClosureType);
         if (closureIndex >= 0)
@@ -293,7 +293,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         return iteratorType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, "^<>[\\d+]__this$"));
     }
 
-    private static bool TryGetThisField(Type iteratorType, [MaybeNullWhen(false)] out FieldInfo field)
+    private static bool TryGetThisField(Type iteratorType, [NotNullWhen(true)] out FieldInfo? field)
     {
         field = iteratorType.GetFields(AccessTools.all).SingleOrDefault(f => Regex.IsMatch(f.Name, "^<>[\\d+]__this$"));
         return field != null;
