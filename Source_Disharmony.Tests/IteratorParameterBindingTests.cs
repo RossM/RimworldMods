@@ -16,7 +16,7 @@ public static partial class IteratorParameterBindingPatches
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
-    public static void InnerPrefix_IteratorOriginalParameter_Primitive_WriteByReference(ref int outerValue) => outerValue = 42;
+    public static void InnerPrefix_IteratorOriginalParameter_Primitive_WriteByReference_Rejected(ref int outerValue) => outerValue = 42;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateReferenceIdentity))]
@@ -25,7 +25,7 @@ public static partial class IteratorParameterBindingPatches
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateReferenceIdentity))]
-    public static void InnerPrefix_IteratorOriginalParameter_ReferenceType_WriteByReference(ref BindingReference outerValue) =>
+    public static void InnerPrefix_IteratorOriginalParameter_ReferenceType_WriteByReference_Rejected(ref BindingReference outerValue) =>
         outerValue = new BindingReference { Value = 42 };
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
@@ -34,12 +34,17 @@ public static partial class IteratorParameterBindingPatches
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateStructIdentity))]
-    public static void InnerPrefix_IteratorOriginalParameter_Struct_WriteByReference(ref BindingStruct outerValue) =>
+    public static void InnerPrefix_IteratorOriginalParameter_Struct_WriteByReference_Rejected(ref BindingStruct outerValue) =>
         outerValue = new BindingStruct { Value = 42 };
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
     public static void InnerPostfix_IteratorOriginalParameter_Primitive_ReadByValue(int outerValue) => ParameterObserved = outerValue;
+
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
+    public static void InnerPostfix_IteratorOriginalParameter_Primitive_ReadByReference_Rejected(ref int outerValue) =>
+        ParameterObserved = outerValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
@@ -134,16 +139,14 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     }
 
     [Test]
-    public void InnerPrefix_IteratorOriginalParameter_Primitive_WriteByReference()
+    public void InnerPrefix_IteratorOriginalParameter_Primitive_WriteByReference_Rejected()
     {
-        var target = new ClassMethodTargets();
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Primitive_WriteByReference));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Primitive_WriteByReference_Rejected)));
 
-        int result = target.EnumerateIdentity(1).Single();
-
-        Assert.That(result, Is.EqualTo(42));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
@@ -162,16 +165,14 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     }
 
     [Test]
-    public void InnerPrefix_IteratorOriginalParameter_ReferenceType_WriteByReference()
+    public void InnerPrefix_IteratorOriginalParameter_ReferenceType_WriteByReference_Rejected()
     {
-        var target = new ClassMethodTargets();
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_ReferenceType_WriteByReference));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_ReferenceType_WriteByReference_Rejected)));
 
-        BindingReference result = target.EnumerateReferenceIdentity(new BindingReference { Value = 1 }).Single();
-
-        Assert.That(result.Value, Is.EqualTo(42));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
@@ -189,16 +190,14 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     }
 
     [Test]
-    public void InnerPrefix_IteratorOriginalParameter_Struct_WriteByReference()
+    public void InnerPrefix_IteratorOriginalParameter_Struct_WriteByReference_Rejected()
     {
-        var target = new ClassMethodTargets();
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Struct_WriteByReference));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Struct_WriteByReference_Rejected)));
 
-        BindingStruct result = target.EnumerateStructIdentity(new BindingStruct { Value = 1 }).Single();
-
-        Assert.That(result.Value, Is.EqualTo(42));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
@@ -214,6 +213,17 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(IteratorParameterBindingPatches.ParameterObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPostfix_IteratorOriginalParameter_Primitive_ReadByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPostfix_IteratorOriginalParameter_Primitive_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
@@ -418,17 +428,17 @@ public static partial class IteratorParameterBindingPatches
 {
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
-    public static void InnerPrefix_IteratorOriginalParameter_Primitive_ReadByReference(ref int outerValue) =>
+    public static void InnerPrefix_IteratorOriginalParameter_Primitive_ReadByReference_Rejected(ref int outerValue) =>
         ParameterObserved = outerValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateReferenceIdentity))]
-    public static void InnerPrefix_IteratorOriginalParameter_ReferenceType_ReadByReference(
+    public static void InnerPrefix_IteratorOriginalParameter_ReferenceType_ReadByReference_Rejected(
         ref BindingReference outerValue) => ReferenceObserved = outerValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateStructIdentity))]
-    public static void InnerPrefix_IteratorOriginalParameter_Struct_ReadByReference(ref BindingStruct outerValue) =>
+    public static void InnerPrefix_IteratorOriginalParameter_Struct_ReadByReference_Rejected(ref BindingStruct outerValue) =>
         StructObserved = outerValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
@@ -446,37 +456,36 @@ public static partial class IteratorParameterBindingPatches
 public sealed partial class IteratorParameterBindingTests
 {
     [Test]
-    public void InnerPrefix_IteratorOriginalParameter_Primitive_ReadByReference()
+    public void InnerPrefix_IteratorOriginalParameter_Primitive_ReadByReference_Rejected()
     {
-        IteratorParameterBindingPatches.ParameterObserved = 0;
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Primitive_ReadByReference));
-        new ClassMethodTargets().EnumerateIdentity(42).Single();
-        Assert.That(IteratorParameterBindingPatches.ParameterObserved, Is.EqualTo(42));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Primitive_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
-    public void InnerPrefix_IteratorOriginalParameter_ReferenceType_ReadByReference()
+    public void InnerPrefix_IteratorOriginalParameter_ReferenceType_ReadByReference_Rejected()
     {
-        IteratorParameterBindingPatches.ReferenceObserved = null;
-        var value = new BindingReference { Value = 42 };
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_ReferenceType_ReadByReference));
-        new ClassMethodTargets().EnumerateReferenceIdentity(value).Single();
-        Assert.That(IteratorParameterBindingPatches.ReferenceObserved, Is.SameAs(value));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_ReferenceType_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
-    public void InnerPrefix_IteratorOriginalParameter_Struct_ReadByReference()
+    public void InnerPrefix_IteratorOriginalParameter_Struct_ReadByReference_Rejected()
     {
-        IteratorParameterBindingPatches.StructObserved = default;
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Struct_ReadByReference));
-        new ClassMethodTargets().EnumerateStructIdentity(new BindingStruct { Value = 42 }).Single();
-        Assert.That(IteratorParameterBindingPatches.StructObserved.Value, Is.EqualTo(42));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Struct_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
@@ -517,8 +526,18 @@ public static partial class IteratorParameterBindingPatches
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(LocalFunctionTargets), "PrimitiveLocalIterator.LocalIterator")]
-    public static void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByReference(ref int enclosingValue) =>
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByReference_Rejected(ref int enclosingValue) =>
         ParameterObserved = enclosingValue;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(LocalFunctionTargets), "PrimitiveLocalIterator.LocalIterator")]
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_WriteByReference_Rejected(ref int enclosingValue) =>
+        enclosingValue = 42;
+
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(LocalFunctionTargets), "PrimitiveLocalIterator.LocalIterator")]
+    public static void InnerPostfix_LocalIteratorEnclosingParameter_Primitive_ReadByReference_Rejected(
+        ref int enclosingValue) => ParameterObserved = enclosingValue;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
     [Target(typeof(LocalFunctionTargets), "ReferenceTypeLocalIterator.LocalIterator")]
@@ -527,8 +546,13 @@ public static partial class IteratorParameterBindingPatches
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
     [Target(typeof(LocalFunctionTargets), "ReferenceTypeLocalIterator.LocalIterator")]
-    public static void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByReference(
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByReference_Rejected(
         ref BindingReference enclosingValue) => ReferenceObserved = enclosingValue;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
+    [Target(typeof(LocalFunctionTargets), "ReferenceTypeLocalIterator.LocalIterator")]
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_WriteByReference_Rejected(
+        ref BindingReference enclosingValue) => enclosingValue = new BindingReference { Value = 42 };
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
     [Target(typeof(LocalFunctionTargets), "StructLocalIterator.LocalIterator")]
@@ -537,8 +561,13 @@ public static partial class IteratorParameterBindingPatches
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
     [Target(typeof(LocalFunctionTargets), "StructLocalIterator.LocalIterator")]
-    public static void InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByReference(ref BindingStruct enclosingValue) =>
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByReference_Rejected(ref BindingStruct enclosingValue) =>
         StructObserved = enclosingValue;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
+    [Target(typeof(LocalFunctionTargets), "StructLocalIterator.LocalIterator")]
+    public static void InnerPrefix_LocalIteratorEnclosingParameter_Struct_WriteByReference_Rejected(ref BindingStruct enclosingValue) =>
+        enclosingValue = new BindingStruct { Value = 42 };
 }
 
 [TestFixture]
@@ -559,17 +588,36 @@ public sealed partial class IteratorParameterBindingTests
     }
 
     [Test]
-    public void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByReference()
+    public void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByReference_Rejected()
     {
-        IteratorParameterBindingPatches.ParameterObserved = 0;
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByReference));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByReference_Rejected)));
 
-        int result = LocalFunctionTargets.PrimitiveLocalIterator(42).Single();
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
 
-        Assert.That(result, Is.EqualTo(42));
-        Assert.That(IteratorParameterBindingPatches.ParameterObserved, Is.EqualTo(42));
+    [Test]
+    public void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_WriteByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Primitive_WriteByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+
+    [Test]
+    public void InnerPostfix_LocalIteratorEnclosingParameter_Primitive_ReadByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPostfix_LocalIteratorEnclosingParameter_Primitive_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
@@ -588,18 +636,25 @@ public sealed partial class IteratorParameterBindingTests
     }
 
     [Test]
-    public void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByReference()
+    public void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByReference_Rejected()
     {
-        IteratorParameterBindingPatches.ReferenceObserved = null;
-        var value = new BindingReference { Value = 42 };
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByReference));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByReference_Rejected)));
 
-        BindingReference result = LocalFunctionTargets.ReferenceTypeLocalIterator(value).Single();
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
 
-        Assert.That(result, Is.SameAs(value));
-        Assert.That(IteratorParameterBindingPatches.ReferenceObserved, Is.SameAs(value));
+    [Test]
+    public void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_WriteByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_WriteByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
@@ -617,16 +672,24 @@ public sealed partial class IteratorParameterBindingTests
     }
 
     [Test]
-    public void InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByReference()
+    public void InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByReference_Rejected()
     {
-        IteratorParameterBindingPatches.StructObserved = default;
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByReference));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByReference_Rejected)));
 
-        BindingStruct result = LocalFunctionTargets.StructLocalIterator(new BindingStruct { Value = 42 }).Single();
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
 
-        Assert.That(result.Value, Is.EqualTo(42));
-        Assert.That(IteratorParameterBindingPatches.StructObserved.Value, Is.EqualTo(42));
+    [Test]
+    public void InnerPrefix_LocalIteratorEnclosingParameter_Struct_WriteByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Struct_WriteByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 }

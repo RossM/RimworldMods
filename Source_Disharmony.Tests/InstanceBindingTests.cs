@@ -33,7 +33,7 @@ public static partial class InstanceBindingPatches
 
     [Postfix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
-    public static void Postfix_InstanceParameter_ReferenceType_WriteByReference(
+    public static void Postfix_InstanceParameter_ReferenceType_WriteByReference_Rejected(
         ref ClassMethodTargets __instance,
         ref ClassMethodTargets __result)
     {
@@ -51,7 +51,7 @@ public static partial class InstanceBindingPatches
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
-    public static void InnerPrefix_CallerParameter_ReferenceType_WriteByReference(ref ClassMethodTargets __caller) =>
+    public static void InnerPrefix_CallerParameter_ReferenceType_WriteByReference_Rejected(ref ClassMethodTargets __caller) =>
         __caller = ReplacementCaller!;
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
@@ -61,12 +61,12 @@ public static partial class InstanceBindingPatches
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InnerPrefix_CallerParameter_Struct_WriteByReference(ref StructMethodTargets __caller) =>
+    public static void InnerPrefix_CallerParameter_Struct_WriteByReference_Rejected(ref StructMethodTargets __caller) =>
         __caller.foo = 42;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
-    public static void InnerPostfix_CallerParameter_ReferenceType_WriteByReference(ref ClassMethodTargets __caller) =>
+    public static void InnerPostfix_CallerParameter_ReferenceType_WriteByReference_Rejected(ref ClassMethodTargets __caller) =>
         __caller = ReplacementCaller!;
 
     [Prefix]
@@ -92,7 +92,7 @@ public static partial class InstanceBindingPatches
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InnerPrefix_InstanceAttribute_OuterScope_Struct_WriteByReference(
+    public static void InnerPrefix_InstanceAttribute_OuterScope_Struct_WriteByReference_Rejected(
         [Instance(Scope.Outer)] ref StructMethodTargets target) => target.foo = 42;
 
     [Prefix]
@@ -120,23 +120,23 @@ public static partial class InstanceBindingPatches
 
     [Postfix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
-    public static void Postfix_InstanceParameter_ReferenceType_ReadByReference(
+    public static void Postfix_InstanceParameter_ReferenceType_ReadByReference_Rejected(
         ref ClassMethodTargets __instance,
         ref ClassMethodTargets __result) => InstanceObserved = __instance;
 
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
-    public static void InnerPrefix_CallerParameter_ReferenceType_ReadByReference(ref ClassMethodTargets __caller) =>
+    public static void InnerPrefix_CallerParameter_ReferenceType_ReadByReference_Rejected(ref ClassMethodTargets __caller) =>
         CallerObserved = __caller;
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InnerPrefix_CallerParameter_Struct_ReadByReference(ref StructMethodTargets __caller) =>
+    public static void InnerPrefix_CallerParameter_Struct_ReadByReference_Rejected(ref StructMethodTargets __caller) =>
         StructInstanceFieldObserved = __caller.foo;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
-    public static void InnerPostfix_CallerParameter_ReferenceType_ReadByReference(ref ClassMethodTargets __caller) =>
+    public static void InnerPostfix_CallerParameter_ReferenceType_ReadByReference_Rejected(ref ClassMethodTargets __caller) =>
         CallerObserved = __caller;
 
     [Prefix]
@@ -146,7 +146,7 @@ public static partial class InstanceBindingPatches
 
     [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByReference(
+    public static void InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByReference_Rejected(
         [Instance(Scope.Outer)] ref StructMethodTargets target) => StructInstanceFieldObserved = target.foo;
 
     [Prefix]
@@ -179,45 +179,47 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void Postfix_InstanceParameter_ReferenceType_ReadByReference()
+    public void Postfix_InstanceParameter_ReferenceType_ReadByReference_Rejected()
     {
-        InstanceBindingPatches.InstanceObserved = null;
-        var target = new ClassMethodTargets();
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Postfix_InstanceParameter_ReferenceType_ReadByReference));
-        target.Self();
-        Assert.That(InstanceBindingPatches.InstanceObserved, Is.SameAs(target));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.Postfix_InstanceParameter_ReferenceType_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
-    public void InnerPrefix_CallerParameter_ReferenceType_ReadByReference()
+    public void InnerPrefix_CallerParameter_ReferenceType_ReadByReference_Rejected()
     {
-        InstanceBindingPatches.CallerObserved = null;
-        var target = new ClassMethodTargets();
-        ApplyPatch(typeof(InstanceBindingPatches),
-            nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_ReferenceType_ReadByReference));
-        target.CallStaticVoidAndReturnValue();
-        Assert.That(InstanceBindingPatches.CallerObserved, Is.SameAs(target));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_ReferenceType_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
-    public void InnerPrefix_CallerParameter_Struct_ReadByReference()
+    public void InnerPrefix_CallerParameter_Struct_ReadByReference_Rejected()
     {
-        InstanceBindingPatches.StructInstanceFieldObserved = 0;
-        var target = new StructMethodTargets { foo = 42 };
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_Struct_ReadByReference));
-        target.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
-        Assert.That(InstanceBindingPatches.StructInstanceFieldObserved, Is.EqualTo(42));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_Struct_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
-    public void InnerPostfix_CallerParameter_ReferenceType_ReadByReference()
+    public void InnerPostfix_CallerParameter_ReferenceType_ReadByReference_Rejected()
     {
-        InstanceBindingPatches.CallerObserved = null;
-        var target = new ClassMethodTargets();
-        ApplyPatch(typeof(InstanceBindingPatches),
-            nameof(InstanceBindingPatches.InnerPostfix_CallerParameter_ReferenceType_ReadByReference));
-        target.CallStaticVoidAndReturnValue();
-        Assert.That(InstanceBindingPatches.CallerObserved, Is.SameAs(target));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.InnerPostfix_CallerParameter_ReferenceType_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
@@ -231,14 +233,14 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByReference()
+    public void InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByReference_Rejected()
     {
-        InstanceBindingPatches.StructInstanceFieldObserved = 0;
-        var target = new StructMethodTargets { foo = 42 };
-        ApplyPatch(typeof(InstanceBindingPatches),
-            nameof(InstanceBindingPatches.InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByReference));
-        target.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
-        Assert.That(InstanceBindingPatches.StructInstanceFieldObserved, Is.EqualTo(42));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
@@ -316,16 +318,86 @@ public sealed partial class InstanceBindingTests : PatchTestBase
     }
 
     [Test]
-    public void Postfix_InstanceParameter_ReferenceType_WriteByReference()
+    public void Postfix_InstanceParameter_ReferenceType_WriteByReference_Rejected()
     {
-        var original = new ClassMethodTargets();
-        var replacement = new ClassMethodTargets();
-        InstanceBindingPatches.ReplacementInstance = replacement;
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.Postfix_InstanceParameter_ReferenceType_WriteByReference));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.Postfix_InstanceParameter_ReferenceType_WriteByReference_Rejected)));
 
-        ClassMethodTargets result = original.Self();
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+}
 
-        Assert.That(result, Is.SameAs(replacement));
+public static partial class InstanceBindingPatches
+{
+    [Postfix]
+    [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.IntResult))]
+    public static void Postfix_InstanceAttribute_Struct_ReadByReference_Rejected(
+        [Instance] ref StructMethodTargets instance) => StructInstanceFieldObserved = instance.foo;
+
+    [Postfix]
+    [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.IntResult))]
+    public static void Postfix_InstanceAttribute_Struct_WriteByReference_Rejected(
+        [Instance] ref StructMethodTargets instance) => instance.foo = 42;
+
+    [InnerPostfix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
+    public static void InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_ReadByReference_Rejected(
+        [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) => _ = instance.foo;
+
+    [InnerPostfix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
+    public static void InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_WriteByReference_Rejected(
+        [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) =>
+        instance = new InnerInstanceMethodTargets { foo = 42 };
+}
+
+[TestFixture]
+public sealed partial class InstanceBindingTests
+{
+    [Test]
+    public void Postfix_InstanceAttribute_Struct_ReadByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.Postfix_InstanceAttribute_Struct_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+
+    [Test]
+    public void Postfix_InstanceAttribute_Struct_WriteByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.Postfix_InstanceAttribute_Struct_WriteByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+
+    [Test]
+    public void InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_ReadByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+
+    [Test]
+    public void InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_WriteByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_WriteByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 }
 
@@ -357,18 +429,14 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InnerPrefix_CallerParameter_ReferenceType_WriteByReference()
+    public void InnerPrefix_CallerParameter_ReferenceType_WriteByReference_Rejected()
     {
-        var original = new ClassMethodTargets();
-        var replacement = new ClassMethodTargets();
-        replacement.IntIdentity(42);
-        InstanceBindingPatches.ReplacementCaller = replacement;
-        ApplyPatch(typeof(InstanceBindingPatches),
-            nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_ReferenceType_WriteByReference));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_ReferenceType_WriteByReference_Rejected)));
 
-        int result = original.CallStaticVoidAndReturnValue();
-
-        Assert.That(result, Is.EqualTo(42));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
@@ -384,29 +452,25 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InnerPrefix_CallerParameter_Struct_WriteByReference()
+    public void InnerPrefix_CallerParameter_Struct_WriteByReference_Rejected()
     {
-        ApplyPatch(typeof(InstanceBindingPatches), nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_Struct_WriteByReference));
-        var outer = new StructMethodTargets { foo = 1 };
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_Struct_WriteByReference_Rejected)));
 
-        outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
-
-        Assert.That(outer.foo, Is.EqualTo(42));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
-    public void InnerPostfix_CallerParameter_ReferenceType_WriteByReference()
+    public void InnerPostfix_CallerParameter_ReferenceType_WriteByReference_Rejected()
     {
-        var original = new ClassMethodTargets();
-        var replacement = new ClassMethodTargets();
-        replacement.IntIdentity(42);
-        InstanceBindingPatches.ReplacementCaller = replacement;
-        ApplyPatch(typeof(InstanceBindingPatches),
-            nameof(InstanceBindingPatches.InnerPostfix_CallerParameter_ReferenceType_WriteByReference));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.InnerPostfix_CallerParameter_ReferenceType_WriteByReference_Rejected)));
 
-        int result = original.CallStaticVoidAndReturnValue();
-
-        Assert.That(result, Is.EqualTo(42));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]
@@ -461,15 +525,14 @@ public sealed partial class InstanceBindingTests
     }
 
     [Test]
-    public void InnerPrefix_InstanceAttribute_OuterScope_Struct_WriteByReference()
+    public void InnerPrefix_InstanceAttribute_OuterScope_Struct_WriteByReference_Rejected()
     {
-        ApplyPatch(typeof(InstanceBindingPatches),
-            nameof(InstanceBindingPatches.InnerPrefix_InstanceAttribute_OuterScope_Struct_WriteByReference));
-        var outer = new StructMethodTargets { foo = 1 };
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(InstanceBindingPatches),
+                nameof(InstanceBindingPatches.InnerPrefix_InstanceAttribute_OuterScope_Struct_WriteByReference_Rejected)));
 
-        outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
-
-        Assert.That(outer.foo, Is.EqualTo(42));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
     [Test]

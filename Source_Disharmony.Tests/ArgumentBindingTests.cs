@@ -246,6 +246,125 @@ public static partial class ArgumentBindingPatches
 
 public static partial class ArgumentBindingPatches
 {
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
+    public static void Postfix_ValueArgument_Primitive_ReadByReference_Rejected(ref int value) =>
+        ValueObserved = value;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
+    public static void Postfix_ParameterAttribute_ValueArgument_Primitive_WriteByReference_Rejected(
+        [Parameter(0)] ref int value) => value = 42;
+
+    [Postfix]
+    [Target(typeof(LocalFunctionTargets), "InvokeAnonymousLambda.*")]
+    public static void Postfix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByReference_Rejected(
+        [Parameter(0)] ref int argument) => ValueObserved = argument;
+
+    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
+    public static void InnerPrefix_ParameterAttribute_OuterArgument_Primitive_ReadByReference_Rejected(
+        [Parameter(0, Scope.Outer)] ref int outerValue) => InnerObserved = outerValue;
+
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
+    public static void InnerPostfix_ParameterAttribute_OuterArgument_Primitive_WriteByReference_Rejected(
+        [Parameter(0, Scope.Outer)] ref int outerValue) => outerValue = 42;
+
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntArgument))]
+    public static void InnerPostfix_InnerValueArgument_Primitive_ReadByReference_Rejected(ref int value) =>
+        InnerObserved = value;
+
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntArgument))]
+    public static void InnerPostfix_InnerValueArgument_Primitive_WriteByReference_Rejected(ref int value) =>
+        value = 42;
+}
+
+[TestFixture]
+public sealed partial class ArgumentBindingTests
+{
+    [Test]
+    public void Postfix_ValueArgument_Primitive_ReadByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(ArgumentBindingPatches),
+                nameof(ArgumentBindingPatches.Postfix_ValueArgument_Primitive_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+
+    [Test]
+    public void Postfix_ParameterAttribute_ValueArgument_Primitive_WriteByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(ArgumentBindingPatches),
+                nameof(ArgumentBindingPatches.Postfix_ParameterAttribute_ValueArgument_Primitive_WriteByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+
+    [Test]
+    public void Postfix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(ArgumentBindingPatches),
+                nameof(ArgumentBindingPatches.Postfix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+
+    [Test]
+    public void InnerPrefix_ParameterAttribute_OuterArgument_Primitive_ReadByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(ArgumentBindingPatches),
+                nameof(ArgumentBindingPatches.InnerPrefix_ParameterAttribute_OuterArgument_Primitive_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+
+    [Test]
+    public void InnerPostfix_ParameterAttribute_OuterArgument_Primitive_WriteByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(ArgumentBindingPatches),
+                nameof(ArgumentBindingPatches.InnerPostfix_ParameterAttribute_OuterArgument_Primitive_WriteByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+
+    [Test]
+    public void InnerPostfix_InnerValueArgument_Primitive_ReadByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(ArgumentBindingPatches),
+                nameof(ArgumentBindingPatches.InnerPostfix_InnerValueArgument_Primitive_ReadByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+
+    [Test]
+    public void InnerPostfix_InnerValueArgument_Primitive_WriteByReference_Rejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(ArgumentBindingPatches),
+                nameof(ArgumentBindingPatches.InnerPostfix_InnerValueArgument_Primitive_WriteByReference_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+    }
+}
+
+public static partial class ArgumentBindingPatches
+{
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefIntArgument))]
     public static void Prefix_RefArgument_Primitive_ReadByReference(ref int value) => ValueObserved = value;
