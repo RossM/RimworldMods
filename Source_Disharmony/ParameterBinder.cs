@@ -317,9 +317,9 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (to.ParameterType.IsByRef && !from.IsByRef)
         {
             if (scope == Scope.Outer && patchType != PatchType.Prefix)
-                throw new ParameterBindingException(to.Name, $"{patchType} can't access outer method {bindingType} by ref");
+                throw new ParameterBindingException(to.Name, $"{patchType} can't access outer method {bindingType} by reference");
             if (scope == Scope.Inner && patchType != PatchType.InnerPrefix)
-                throw new ParameterBindingException(to.Name, $"{patchType} can't access inner method {bindingType} by ref");
+                throw new ParameterBindingException(to.Name, $"{patchType} can't access inner method {bindingType} by reference");
         }
     }
 
