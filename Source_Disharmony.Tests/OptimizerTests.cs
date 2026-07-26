@@ -51,6 +51,17 @@ public static class OptimizerControlFlowTargets
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int ConditionalInfiniteLoop(bool loopForever)
+    {
+        if (loopForever)
+        {
+            while (true) { }
+        }
+
+        return 42;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static bool ShortCircuit(bool left, bool right) =>
         left && EvaluateRight(right);
 
@@ -335,6 +346,11 @@ public static class OptimizerPatches
     public static void LoopWithBreakAndContinue_PreservesBackEdges() => RecordPatch();
 
     [Prefix]
+    [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.ConditionalInfiniteLoop))]
+    [Optimize]
+    public static void ConditionalInfiniteLoop_PreservesNonLoopingPath() => RecordPatch();
+
+    [Prefix]
     [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.ShortCircuit))]
     [Optimize]
     public static void ShortCircuit_PreservesSkippedRightOperand() => RecordPatch();
@@ -515,6 +531,19 @@ public sealed class OptimizerTests : PatchTestBase
         Assert.That(OptimizerControlFlowTargets.LoopWithBreakAndContinue(4), Is.EqualTo(4));
         Assert.That(OptimizerControlFlowTargets.LoopWithBreakAndContinue(10), Is.EqualTo(16));
         Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(3));
+    }
+
+    [Test]
+    public void ConditionalInfiniteLoop_PreservesNonLoopingPath()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.ConditionalInfiniteLoop_PreservesNonLoopingPath));
+
+        int result = OptimizerControlFlowTargets.ConditionalInfiniteLoop(false);
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
     }
 
     [Test]
