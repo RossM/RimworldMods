@@ -39,7 +39,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     private class Region : Block
     {
         public ExceptionBlock? harmonyBlock;
-        public BasicBlock? entry;
+        public Block? entry;
         public int depth;
 
         public static Region? SharedParent(Region? first, Region? second)
@@ -384,6 +384,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                     harmonyBlock = harmonyBlock,
                     parent = exceptionRegion,
                 };
+                exceptionRegion.entry ??= newRegion;
                 exceptionRegion = newRegion;
             }
             else
@@ -405,17 +406,14 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             if (curBlock.ops.Count == 0)
             {
                 curBlock.parent = exceptionRegion;
-                for (var region = exceptionRegion; region != null; region = region.parent)
-                    region.entry ??= curBlock;
+                exceptionRegion.entry ??= curBlock;
             }
             else
             {
                 BasicBlock newBlock = new() { id = nextBlockId++, parent = exceptionRegion };
                 basicBlocks.Add(newBlock);
                 curBlock = newBlock;
-
-                for (var region = exceptionRegion; region != null; region = region.parent)
-                    region.entry ??= curBlock;
+                exceptionRegion.entry ??= curBlock;
             }
         }
 
@@ -560,7 +558,10 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         HashSet<Block> emitted = new();
         List<Block> leaveTargets = [];
 
-        queue.AddFirst(region.entry!);
+        Block entry = region;
+        while (entry is Region r)
+            entry = r.entry!;
+        queue.AddFirst(entry);
 
         if (debug)
             FileLog.Log($"{"".PadLeft(region.depth * 4)}- Visiting {region.ID}");
