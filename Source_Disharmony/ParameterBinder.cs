@@ -148,7 +148,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (invocation.IsStatic)
             throw new ParameterBindingException(parameter.Name, "Method is static");
 
-        if (!invocation.InstanceType.IsValueType)
+        if (!invocation.InstanceType.IsValueType && invocation is not FieldInvocation)
             ValidateReference(parameter, invocation.InstanceType, scope, "instance");
         ValidateCast(parameter.ParameterType, invocation.InstanceType, parameter.Name);
         return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = scope };
