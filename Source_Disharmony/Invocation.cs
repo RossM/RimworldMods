@@ -43,17 +43,6 @@ internal abstract class Invocation
 
     public virtual IEnumerable<CodeInstruction> GetCodeInstructions() => [GetCodeInstruction()];
 
-    public static Invocation Create(MemberInfo member)
-    {
-        return member switch
-        {
-            FieldInfo field => new FieldInvocation(field),
-            MethodInfo method => new MethodInvocation(method),
-            ConstructorInfo constructor => new ConstructorInvocation(constructor),
-            _ => throw new ArgumentOutOfRangeException(),
-        };
-    }
-
     public static implicit operator Invocation(FieldInfo field) => new FieldInvocation(field);
     public static implicit operator Invocation(MethodInfo method) => new MethodInvocation(method);
     public static implicit operator Invocation(ConstructorInfo constructor) => new ConstructorInvocation(constructor);

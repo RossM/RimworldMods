@@ -84,7 +84,7 @@ internal class PatchRegistry
     // and before Harmony's lock.
     private readonly object SyncRoot = new();
     private readonly HashSet<MethodBaseInvocation> methodsToUpdate = [];
-    private readonly Dictionary<MethodBaseInvocation, List<PatchInfo>> patchesByMethod = new();
+    private readonly Dictionary<MethodBaseInvocation, List<PatchInfo>> patchesByMethod = [];
 
     private PatchRegistry() { }
 

@@ -2,16 +2,16 @@
 
 internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator, bool debug)
 {
-    private record Op(OpCode opcode, object? operand = null)
+    private record Op(OpCode Opcode, object? Operand = null)
     {
-        public bool IsLeave => opcode == OpCodes.Leave_S || opcode == OpCodes.Leave;
-        public bool IsUnconditionalBranch => opcode == OpCodes.Br_S || opcode == OpCodes.Br;
-        public bool CanBranch => opcode.FlowControl is not (FlowControl.Next or FlowControl.Call or FlowControl.Meta);
+        public bool IsLeave => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
+        public bool IsUnconditionalBranch => Opcode == OpCodes.Br_S || Opcode == OpCodes.Br;
+        public bool CanBranch => Opcode.FlowControl is not (FlowControl.Next or FlowControl.Call or FlowControl.Meta);
 
         public bool CanFallThrough =>
-            opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch;
+            Opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch;
 
-        public CodeInstruction ToCodeInstruction() => new(opcode, operand);
+        public CodeInstruction ToCodeInstruction() => new(Opcode, Operand);
     }
 
     private static class Ops
@@ -233,8 +233,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     private void Emit()
     {
         Stack<Region> regionStack = new();
-        List<ExceptionBlock> harmonyBlocks = new();
-        List<Label> labels = new();
+        List<ExceptionBlock> harmonyBlocks = [];
+        List<Label> labels = [];
 
         foreach (var block in allBlocks)
         {
@@ -283,11 +283,12 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     private CodeInstruction ConvertToCodeInstruction(Op i)
     {
         var codeInstruction = i.ToCodeInstruction();
-        switch (codeInstruction.operand)
+        codeInstruction.operand = codeInstruction.operand switch
         {
-            case Block blockTarget: codeInstruction.operand = GetLabel(blockTarget); break;
-            case Block[] blocksTarget: codeInstruction.operand = blocksTarget.Select(GetLabel).ToArray(); break;
-        }
+            Block blockTarget => GetLabel(blockTarget),
+            Block[] blocksTarget => blocksTarget.Select(GetLabel).ToArray(),
+            _ => codeInstruction.operand
+        };
 
         return codeInstruction;
 
@@ -299,7 +300,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     /// </summary>
     private void MakeBasicBlocks()
     {
-        Dictionary<Label, BasicBlock> labelToBlock = new();
+        Dictionary<Label, BasicBlock> labelToBlock = [];
 
         Region exceptionRegion = root;
         allBlocks.Add(root);
@@ -354,11 +355,12 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             for (var index = 0; index < block.ops.Count; index++)
             {
                 Op? op = block.ops[index];
-                switch (op.operand)
+                block.ops[index] = op.Operand switch
                 {
-                    case Label label: block.ops[index] = new(op.opcode, labelToBlock[label]); break;
-                    case Label[] labels: block.ops[index] = new(op.opcode, labels.Select(l => labelToBlock[l]).ToArray<Block>()); break;
-                }
+                    Label label => new(op.Opcode, labelToBlock[label]),
+                    Label[] labels => new(op.Opcode, labels.Select(l => labelToBlock[l]).ToArray<Block>()),
+                    _ => block.ops[index]
+                };
             }
         }
 
@@ -370,7 +372,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
             if (block.ops[^1].IsUnconditionalBranch)
             {
-                block.next = (BasicBlock?)block.ops[^1].operand;
+                block.next = (BasicBlock?)block.ops[^1].Operand;
                 block.ops.RemoveAt(block.ops.Count - 1);
             }
         }
@@ -383,7 +385,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             if (block.ops.Count == 0)
                 continue;
 
-            switch (block.ops[^1].operand)
+            switch (block.ops[^1].Operand)
             {
                 case Block label:
                 {
@@ -437,15 +439,15 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             if (curBlock.ops.Count == 0)
             {
                 curBlock.parent = exceptionRegion;
-                exceptionRegion.entry ??= curBlock;
             }
             else
             {
                 BasicBlock newBlock = new() { id = nextBlockId++, parent = exceptionRegion };
                 allBlocks.Add(newBlock);
                 curBlock = newBlock;
-                exceptionRegion.entry ??= curBlock;
             }
+
+            exceptionRegion.entry ??= curBlock;
         }
 
         static bool CanFallThrough(BasicBlock basicBlock) =>
@@ -455,7 +457,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     private void NopElimination()
     {
         foreach (var block in basicBlocks)
-            block.ops.RemoveAll(i => i.opcode == OpCodes.Nop);
+            block.ops.RemoveAll(i => i.Opcode == OpCodes.Nop);
     }
 
     private void BranchElimination()
@@ -471,7 +473,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             if (block.successors.Any(s => s != block.next))
                 continue;
 
-            switch (block.ops[^1].opcode)
+            switch (block.ops[^1].Opcode)
             {
                 // Brtrue, Brfalse
                 case
@@ -554,7 +556,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     private void SimpleDeadCodeElimination()
     {
         Queue<Block> queue = new();
-        HashSet<Block> liveBlocks = new();
+        HashSet<Block> liveBlocks = [];
 
         foreach (var block in allBlocks)
         {
@@ -589,7 +591,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     private List<Block> AggressiveDeadCodeEliminationAndReorder(Region region, List<Block> outputBlocks)
     {
         LinkedList<Block> queue = new();
-        HashSet<Block> emitted = new();
+        HashSet<Block> emitted = [];
         List<Block> leaveTargets = [];
 
         outputBlocks.Add(region);
@@ -656,17 +658,16 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 continue;
 
             var finalInstruction = block.ops[^1];
-            if (finalInstruction.opcode.FlowControl is FlowControl.Cond_Branch &&
-                finalInstruction.operand is Block label &&
-                label.predecessors.Count == 1)
+            if (finalInstruction.Opcode.FlowControl is FlowControl.Cond_Branch &&
+                finalInstruction.Operand is Block { predecessors.Count: 1 } label)
             {
-                if (finalInstruction.opcode == OpCodes.Brfalse || finalInstruction.opcode == OpCodes.Brfalse_S)
+                if (finalInstruction.Opcode == OpCodes.Brfalse || finalInstruction.Opcode == OpCodes.Brfalse_S)
                 {
                     block.ops[^1] = new(OpCodes.Brtrue_S, block.next);
                     block.next = label;
                 }
 
-                if (finalInstruction.opcode == OpCodes.Brtrue || finalInstruction.opcode == OpCodes.Brtrue_S)
+                if (finalInstruction.Opcode == OpCodes.Brtrue || finalInstruction.Opcode == OpCodes.Brtrue_S)
                 {
                     block.ops[^1] = new(OpCodes.Brfalse_S, block.next);
                     block.next = label;

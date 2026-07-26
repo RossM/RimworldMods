@@ -197,7 +197,6 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 throw new ParameterBindingException(parameter.Name, "Parameter not found");
             }
 
-            Type[] parameterTypes = outer.ParameterTypes;
             int index = Array.FindIndex(outer.ParameterNames, p => p == name);
             if (index >= 0)
             {
