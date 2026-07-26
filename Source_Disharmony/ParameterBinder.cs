@@ -1,7 +1,5 @@
-﻿using System.Data.Common;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 
 namespace Disharmony;
 
