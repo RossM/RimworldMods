@@ -38,6 +38,17 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public Block? next;
 
         public override string ToString() => ID;
+
+        public bool HasAncestor(Region parent)
+        {
+            for (Block? b = this; b != null; b = b.parent)
+            {
+                if (b == parent)
+                    return true;
+            }
+
+            return false;
+        }
     }
 
     private class Region : Block
@@ -574,54 +585,55 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         while (stack.Count >= 1)
         {
-            var top = stack.Peek();
+            var (region, queue) = stack.Peek();
 
-            if (top.queue.Count == 0)
+            if (queue.Count == 0)
             {
                 stack.Pop();
                 if (stack.Count > 0)
                 {
-                    top = stack.Peek();
-                    foreach (var leavingBlock in leavingBlocks.Where(b => b.parent == top.region))
-                        top.queue.AddLast(leavingBlock);
-                    leavingBlocks.RemoveAll(b => b.parent == top.region);
+                    (region, queue) = stack.Peek();
+                    foreach (var leavingBlock in leavingBlocks.Where(b => b.parent == region))
+                        queue.AddLast(leavingBlock);
+                    leavingBlocks.RemoveAll(b => b.parent == region);
                 }
                 continue;
             }
 
-            var block = top.queue.First.Value;
-            top.queue.RemoveFirst();
-            if (!HasAncestor(top.region, block))
+            var block = queue.First.Value;
+            queue.RemoveFirst();
+            if (!block.HasAncestor(region))
                 throw new InvalidOperationException();
-            while (block.parent != top.region)
+            while (block.parent != region)
                 block = block.parent!;
 
             if (!visited.Add(block))
                 continue;
             outputBlocks.Add(block);
-
+            
             if (debug)
                 FileLog.LogBuffered($"{"".PadLeft(stack.Count * 2)}- {block.ID}");
+
             if (block.next != null)
-                top.queue.AddFirst(block.next);
+                queue.AddFirst(block.next);
 
             switch (block)
             {
                 case Region r2:
                 {
-                    top = (r2, []);
-                    stack.Push(top);
-                    top.queue.AddLast(r2.entry!);
+                    (region, queue) = (r2, []);
+                    stack.Push((region, queue));
+                    queue.AddLast(r2.entry!);
                     break;
                 }
                 case BasicBlock bb:
                 {
                     foreach (var successor in bb.successors)
                     {
-                        if (!HasAncestor(top.region, successor))
+                        if (!successor.HasAncestor(region))
                             leavingBlocks.Add(successor);
                         else if (successor != bb.next)
-                            top.queue.AddLast(successor);
+                            queue.AddLast(successor);
                     }
 
                     break;
@@ -633,19 +645,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         allBlocks.Clear();
         allBlocks.AddRange(outputBlocks);
         basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
-        return;
-
-        static bool HasAncestor(Region parent, Block child)
-        {
-            for (Block? b = child; b != null; b = b.parent)
-            {
-                if (b == parent)
-                    return true;
-            }
-
-            return false;
-        }
     }
+
     private void BranchInversion()
     {
         foreach (var block in basicBlocks)
