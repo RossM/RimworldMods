@@ -41,7 +41,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         {
             case ParameterAttribute { index: int index }: return BindParameterByIndex(parameter, invocation, scope, index);
 
-            case ParameterAttribute { name: var name, scope: var attributeScope }: return BindParameterByName(parameter, name ?? parameterName, attributeScope);
+            case ParameterAttribute { name: var name, scope: var attributeScope }:
+                return BindParameterByName(parameter, name ?? parameterName, attributeScope);
 
             case InstanceAttribute: return BindInstance(parameter, invocation, scope);
 
@@ -49,7 +50,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case StateAttribute { key: var key }: return BindState(parameter, key ?? parameterName);
 
-            case FieldAttribute { name: var name, scope: var attributeScope }: return BindFieldByName(parameter, name ?? parameterName, attributeScope);
+            case FieldAttribute { name: var name, scope: var attributeScope }:
+                return BindFieldByName(parameter, name ?? parameterName, attributeScope);
 
             case BaseMethodAttribute: return BindBaseMethod(parameter);
 
@@ -135,7 +137,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             if (target.IsStatic)
                 throw new ParameterBindingException(parameter.Name, "Method is static");
             if (parameter.ParameterType.IsByRef)
-                throw new ParameterBindingException(parameter.Name, "Accessing 'this' by reference is not supported for iterator state machine methods");
+                throw new ParameterBindingException(parameter.Name,
+                    "Accessing 'this' by reference is not supported for iterator state machine methods");
 
             var thisField = GetThisField(outer.InstanceType);
             Validate(parameter, thisField.FieldType, scope, "instance");
@@ -184,7 +187,10 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                     if (field != null)
                     {
                         Validate(parameter, field.FieldType, Scope.Outer, "parameter");
-                        return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [thisField, field] };
+                        return new()
+                        {
+                            Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [thisField, field],
+                        };
                     }
                 }
 
@@ -316,10 +322,10 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 throw new ParameterBindingException(to.Name, $"{patchType} can't access inner method {bindingType} by ref");
         }
     }
+
     private void Validate(ParameterInfo to, Type from, Scope scope, string bindingType)
     {
         ValidateReference(to, from, scope, bindingType);
         ValidateCast(to.ParameterType, from, to.Name);
     }
-
 }
