@@ -134,6 +134,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         {
             if (target.IsStatic)
                 throw new ParameterBindingException(parameter.Name, "Method is static");
+            if (parameter.ParameterType.IsByRef)
+                throw new ParameterBindingException(parameter.Name, "Accessing 'this' by reference is not supported for iterator state machine methods");
 
             var thisField = GetThisField(outer.InstanceType);
             ValidateCast(parameter, thisField.FieldType);
