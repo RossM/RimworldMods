@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Xylib;
 
@@ -33,7 +34,8 @@ public static class LateInit
     {
         using (new ProfileBlock("Xylib apply patches"))
         {
-            Autopatcher.ForceApply();
+            Autopatcher.Apply();
+            Task.Factory.StartNew(Autopatcher.ForceApply, TaskCreationOptions.LongRunning);
         }
     }
 }
