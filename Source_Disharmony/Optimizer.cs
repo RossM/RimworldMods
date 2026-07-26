@@ -39,11 +39,11 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         public override string ToString() => ID;
 
-        public bool HasAncestor(Region parent)
+        public bool HasAncestor(Region region)
         {
             for (Block? b = this; b != null; b = b.parent)
             {
-                if (b == parent)
+                if (b == region)
                     return true;
             }
 
