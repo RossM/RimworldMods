@@ -106,17 +106,19 @@ internal class Patcher
 
     public void ResolveAllTrampolines()
     {
-        lock (HarmonyInternals.locker)
+        while (true)
         {
-            foreach (var method in trampolines.Keys)
+            lock (HarmonyInternals.locker)
             {
+                if (trampolines.Count == 0)
+                    return;
+                var method = trampolines.Keys.First();
                 if (extraDebug)
                     FileLog.Log($"!!! Resolving trampoline to {method.FullName}");
 
                 PatchDirectly(method);
+                trampolines.Remove(method);
             }
-
-            trampolines.Clear();
         }
     }
 

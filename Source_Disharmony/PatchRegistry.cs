@@ -303,10 +303,14 @@ internal class PatchRegistry
 
     public void ApplyImpl(bool useTrampolines)
     {
-        lock (syncRoot)
+        while (true)
         {
-            foreach (MethodBaseInvocation patchedMethod in methodsToUpdate)
+            lock (syncRoot)
             {
+                if (methodsToUpdate.Count == 0)
+                    return;
+
+                var patchedMethod = methodsToUpdate.First();
                 try
                 {
                     var worker = new Autopatcher.PatchWorker(this, patchedMethod, useTrampolines);
@@ -317,9 +321,11 @@ internal class PatchRegistry
                 {
                     throw new InvalidOperationException($"Error patching {patchedMethod.FullName}", e);
                 }
+                finally
+                {
+                    methodsToUpdate.Remove(patchedMethod);
+                }
             }
-
-            methodsToUpdate.Clear();
         }
     }
 }
