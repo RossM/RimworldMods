@@ -123,7 +123,7 @@ internal class SetFieldInvocation(FieldInfo fieldInfo) : FieldInvocation(fieldIn
     public const string ValueFieldName = "value";
 
     public override Type ReturnType => typeof(void);
-    public override Type[] ParameterTypes => field ??= FieldInfo.IsStatic ? [FieldInfo.FieldType] : [FieldInfo.DeclaringType, FieldInfo.FieldType];
+    public override Type[] ParameterTypes => field ??= FieldInfo.IsStatic ? [FieldInfo.FieldType] : [FieldInfo.DeclaringType.CallableType, FieldInfo.FieldType];
     public override bool IsStatic => FieldInfo.IsStatic;
     public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [ValueFieldName] : [InstanceParameterName, ValueFieldName];
 
