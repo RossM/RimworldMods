@@ -2,6 +2,8 @@ namespace Disharmony.Tests;
 
 public static class InnerMemberAccessPatches
 {
+    public static InnerInstanceMethodTargets? InstanceObserved;
+
     [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Field), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.FieldResult))]
     public static bool InnerPrefixCanReplaceStaticFieldRead(ref int __result)
@@ -25,6 +27,11 @@ public static class InnerMemberAccessPatches
     [InnerPostfix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.foo), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadInstanceField))]
     public static void InnerPostfixCanReplaceInstanceFieldRead(ref int __result) => __result = 42;
+
+    [InnerPostfix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.foo), MemberType.Getter)]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadInstanceField))]
+    public static void InnerPostfix_InstanceField_ReferenceType_Instance_ReadByReference(
+        [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) => InstanceObserved = instance;
 
     [InnerPostfix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.foo), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadStructField))]
@@ -80,6 +87,21 @@ public sealed class InnerMemberAccessTests : PatchTestBase
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(inner.foo, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InnerPostfix_InstanceField_ReferenceType_Instance_ReadByReference()
+    {
+        InnerMemberAccessPatches.InstanceObserved = null;
+        var inner = new InnerInstanceMethodTargets { foo = 42 };
+        ApplyPatch(
+            typeof(InnerMemberAccessPatches),
+            nameof(InnerMemberAccessPatches.InnerPostfix_InstanceField_ReferenceType_Instance_ReadByReference));
+
+        int result = OuterStaticMethodTargets.ReadInstanceField(inner);
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(InnerMemberAccessPatches.InstanceObserved, Is.SameAs(inner));
     }
 
     [Test]
