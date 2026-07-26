@@ -1,6 +1,5 @@
 namespace Disharmony.Tests;
 
-#if !DISHARMONY_TEST_TARGETS
 public static class UnpatchPatches
 {
     public static int ObservedPatch;
@@ -21,19 +20,7 @@ public static class UnpatchPatches
     [Target(typeof(UnpatchPatchTargets), nameof(UnpatchPatchTargets.ApplyUnpatchApplyTarget))]
     public static void ApplyUnpatchApply_ExecutesSecondPatch_Second() => ObservedPatch = 2;
 }
-#endif
 
-#if DISHARMONY_TEST_TARGETS
-public static class UnpatchPatchTargets
-{
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public static int TargetA() => 1;
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public static int TargetB() => 2;
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public static void ApplyUnpatchApplyTarget() { }
-}
-#else
 internal class UnpatchTests
 {
     private static void ApplyPatch(string patchMethodName) =>
@@ -82,4 +69,3 @@ internal class UnpatchTests
         Assert.That(observedPatch, Is.EqualTo(2));
     }
 }
-#endif

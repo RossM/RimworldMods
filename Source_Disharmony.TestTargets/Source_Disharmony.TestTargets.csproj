@@ -8,15 +8,7 @@
     <Optimize>true</Optimize>
     <AssemblyName>Disharmony.TestTargets</AssemblyName>
     <RootNamespace>Disharmony.Tests</RootNamespace>
-    <DefineConstants>$(DefineConstants);DISHARMONY_TEST_TARGETS</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="..\Source_Disharmony.Tests\GlobalUsings.cs" Link="GlobalUsings.cs" />
-    <Compile Include="..\Source_Disharmony.Tests\TestTargets.cs" Link="TestTargets.cs" />
-    <Compile Include="..\Source_Disharmony.Tests\OptimizerTests.cs" Link="OptimizerTargets.cs" />
-    <Compile Include="..\Source_Disharmony.Tests\UnpatchTests.cs" Link="UnpatchTargets.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="NUnit" Version="4.3.2" />
