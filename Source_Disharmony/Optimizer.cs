@@ -36,6 +36,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         ///     exception region in the chain.
         /// </summary>
         public Block? next;
+
+        public override string ToString() => ID;
     }
 
     private class Region : Block
@@ -44,27 +46,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public ExceptionBlock? harmonyBlock;
         public Block? entry;
         public int depth;
-
-        public static Region? SharedParent(Region? first, Region? second)
-        {
-            if (first is null || second is null)
-                return null;
-
-            while (first.parent != null && first.depth > second.depth)
-                first = first.parent;
-            while (second.parent != null && second.depth > first.depth)
-                second = second.parent;
-
-            while (second != null && first != null)
-            {
-                if (first == second)
-                    return first;
-                first = first.parent;
-                second = second.parent;
-            }
-
-            return null;
-        }
     }
 
     private class BasicBlock : Block
@@ -584,70 +565,87 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     private void AggressiveDeadCodeEliminationAndReorder()
     {
         List<Block> outputBlocks = [];
-        AggressiveDeadCodeEliminationAndReorder(root, outputBlocks);
-        allBlocks.Clear();
-        allBlocks.AddRange(outputBlocks);
-        basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
-    }
+        HashSet<Block> visited = [];
+        Stack<(Region region, LinkedList<Block> queue)> stack = [];
+        List<Block> leavingBlocks = [];
 
-    private List<Block> AggressiveDeadCodeEliminationAndReorder(Region region, List<Block> outputBlocks)
-    {
-        LinkedList<Block> queue = new();
-        HashSet<Block> emitted = [];
-        List<Block> leaveTargets = [];
+        stack.Push((root, []));
+        stack.Peek().queue.AddLast(root.entry!);
 
-        outputBlocks.Add(region);
-
-        Block entry = region;
-        while (entry is Region r)
-            entry = r.entry!;
-        queue.AddFirst(entry);
-
-        if (debug)
-            FileLog.Log($"{"".PadLeft(region.depth * 4)}- Visiting {region.ID}");
-
-        while (queue.Count > 0)
+        while (stack.Count >= 1)
         {
-            var block = queue.First.Value;
-            queue.RemoveFirst();
-            if (!emitted.Add(block))
+            var top = stack.Peek();
+
+            if (top.queue.Count == 0)
+            {
+                stack.Pop();
+                if (stack.Count > 0)
+                {
+                    top = stack.Peek();
+                    foreach (var leavingBlock in leavingBlocks.Where(b => b.parent == top.region))
+                        top.queue.AddLast(leavingBlock);
+                    leavingBlocks.RemoveAll(b => b.parent == top.region);
+                }
                 continue;
+            }
+
+            var block = top.queue.First.Value;
+            top.queue.RemoveFirst();
+            if (!HasAncestor(top.region, block))
+                throw new InvalidOperationException();
+            while (block.parent != top.region)
+                block = block.parent!;
+
+            if (!visited.Add(block))
+                continue;
+            outputBlocks.Add(block);
 
             if (debug)
-                FileLog.Log($"{"".PadLeft(region.depth * 4 + 2)}- Processing {block.ID}");
+                FileLog.LogBuffered($"{"".PadLeft(stack.Count * 2)}- {block.ID}");
+            if (block.next != null)
+                top.queue.AddFirst(block.next);
 
-            List<Block> successors;
-            if (block.parent == region && block is BasicBlock bb)
+            switch (block)
             {
-                outputBlocks.Add(bb);
-                successors = block.successors;
-                if (bb.next != null && bb.next.parent == region)
-                    queue.AddFirst(bb.next);
-            }
-            else
-            {
-                var immediateChild = block.parent!;
-                while (immediateChild.parent != region)
-                    immediateChild = immediateChild.parent!;
+                case Region r2:
+                {
+                    top = (r2, []);
+                    stack.Push(top);
+                    top.queue.AddLast(r2.entry!);
+                    break;
+                }
+                case BasicBlock bb:
+                {
+                    foreach (var successor in bb.successors)
+                    {
+                        if (!HasAncestor(top.region, successor))
+                            leavingBlocks.Add(successor);
+                        else if (successor != bb.next)
+                            top.queue.AddLast(successor);
+                    }
 
-                successors = AggressiveDeadCodeEliminationAndReorder(immediateChild, outputBlocks);
-            }
-
-            foreach (var successor in successors)
-            {
-                if (successor.parent == region || Region.SharedParent(region, successor.parent) == region)
-                    queue.AddLast(successor);
-                else
-                    leaveTargets.Add(successor);
+                    break;
+                }
+                default: throw new InvalidOperationException();
             }
         }
 
-        if (region.next != null)
-            leaveTargets.AddRange(AggressiveDeadCodeEliminationAndReorder((Region)region.next, outputBlocks));
+        allBlocks.Clear();
+        allBlocks.AddRange(outputBlocks);
+        basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
+        return;
 
-        return leaveTargets;
+        static bool HasAncestor(Region parent, Block child)
+        {
+            for (Block? b = child; b != null; b = b.parent)
+            {
+                if (b == parent)
+                    return true;
+            }
+
+            return false;
+        }
     }
-
     private void BranchInversion()
     {
         foreach (var block in basicBlocks)
