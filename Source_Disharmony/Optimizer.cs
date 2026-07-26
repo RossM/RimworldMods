@@ -4,12 +4,14 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 {
     private record Op(OpCode opcode, object? operand = null)
     {
-        public CodeInstruction ToCodeInstruction() => new(opcode, operand);
-
         public bool IsLeave => opcode == OpCodes.Leave_S || opcode == OpCodes.Leave;
         public bool IsUnconditionalBranch => opcode == OpCodes.Br_S || opcode == OpCodes.Br;
         public bool CanBranch => opcode.FlowControl is not (FlowControl.Next or FlowControl.Call or FlowControl.Meta);
-        public bool CanFallThrough => opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch;
+
+        public bool CanFallThrough =>
+            opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch;
+
+        public CodeInstruction ToCodeInstruction() => new(opcode, operand);
     }
 
     private static class Ops
@@ -21,6 +23,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
     private class Block
     {
+        public bool EntryPoint => parent == null || parent.entry == this;
+        public virtual string ID => $"#{id}";
         public int id = 0;
         public Label? label;
         public readonly List<Block> successors = [];
@@ -32,13 +36,11 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         ///     exception region in the chain.
         /// </summary>
         public Block? next;
-
-        public bool EntryPoint => parent == null || parent.entry == this;
-        public virtual string ID => $"#{id}";
     }
 
     private class Region : Block
     {
+        public override string ID => parent == null ? "Root" : $"{harmonyBlock!.blockType} #{id}";
         public ExceptionBlock? harmonyBlock;
         public Block? entry;
         public int depth;
@@ -63,8 +65,6 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
             return null;
         }
-
-        public override string ID => parent == null ? "Root" : $"{harmonyBlock!.blockType} #{id}";
     }
 
     private class BasicBlock : Block
@@ -103,70 +103,63 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             return;
 
         int codePos = 0;
+        Stack<Region> regionStack = new();
 
         FileLog.LogBuffered($"### Optimizer {phase}: {method.FullDescription()}");
 
-        for (var index = 0; index < basicBlocks.Count; index++)
+        foreach (var block in allBlocks)
         {
-            BasicBlock? block = basicBlocks[index];
-            FileLog.LogBuffered("#####################################");
-            FileLog.LogBuffered($"# Basic block:  {block.ID,-19} #");
-            FileLog.LogBuffered($"# Predecessors: {string.Join(", ", block.predecessors.Select(b => b.ID)),-19} #");
-            FileLog.LogBuffered($"# Successors:   {string.Join(", ", block.successors.Select(b => b.ID)),-19} #");
-            if (block.EntryPoint)
+            while (regionStack.Count >= 1 && block.parent != regionStack.Peek())
+            {
+                if (regionStack.Peek().harmonyBlock != null && regionStack.Peek().next == null)
+                    FileLog.LogILBlockEnd(codePos, new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+                regionStack.Pop();
+            }
+
+            FileLog.LogBuffered("#########################################");
+            FileLog.LogBuffered($"# Block:        {block.ID,-23} #");
+            FileLog.LogBuffered($"# Predecessors: {string.Join(", ", block.predecessors.Select(b => b.ID)),-23} #");
+            FileLog.LogBuffered($"# Successors:   {string.Join(", ", block.successors.Select(b => b.ID)),-23} #");
+            if (block is { EntryPoint: true, parent: not null })
                 FileLog.LogBuffered(
-                    $"# Entry Point:  {block.parent!.ID,-19} #");
-            FileLog.LogBuffered("#####################################");
+                    $"# Entry Point:  {block.parent!.ID,-23} #");
+            FileLog.LogBuffered("#########################################");
 
             if (block.label is Label label)
                 FileLog.LogIL(codePos, label);
 
-            foreach (var harmonyBlock in ExceptionBlockBegins(index))
-                FileLog.LogILBlockBegin(codePos, harmonyBlock);
-
-            foreach (var op in block.ops)
-                LogInstruction(ConvertToCodeInstruction(op), ref codePos);
-            if (block.ops.Count == 0)
-                LogInstruction(Ops.Nop.ToCodeInstruction(), ref codePos);
+            switch (block)
+            {
+                case Region region:
+                {
+                    regionStack.Push(region);
+                    if (region.harmonyBlock != null)
+                        FileLog.LogILBlockBegin(codePos, region.harmonyBlock);
+                    break;
+                }
+                case BasicBlock bb:
+                {
+                    foreach (var op in bb.ops)
+                        LogInstruction(ConvertToCodeInstruction(op), ref codePos);
+                    if (bb.ops.Count == 0)
+                        LogInstruction(Ops.Nop.ToCodeInstruction(), ref codePos);
+                    break;
+                }
+            }
 
             if (block.next != null)
                 FileLog.LogBuffered($"IL_{codePos:X4}: // fallthrough => {block.next.ID}");
+        }
 
-            foreach (var harmonyBlock in ExceptionBlockEnds(index))
-                FileLog.LogILBlockEnd(codePos, harmonyBlock);
+        while (regionStack.Count > 0)
+        {
+            if (regionStack.Peek().harmonyBlock != null)
+                FileLog.LogILBlockEnd(codePos, new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+            regionStack.Pop();
         }
 
         FileLog.LogBuffered("");
         FileLog.FlushBuffer();
-    }
-
-    private IEnumerable<ExceptionBlock> ExceptionBlockBegins(int index)
-    {
-        Region blockExceptionRegion = basicBlocks[index].parent!;
-        Region prevBlockExceptionRegion = index >= 1 ? basicBlocks[index - 1].parent! : root;
-        if (blockExceptionRegion == prevBlockExceptionRegion)
-            return [];
-
-        var parent = Region.SharedParent(prevBlockExceptionRegion, blockExceptionRegion);
-        List<ExceptionBlock> blocks = [];
-        for (var region = blockExceptionRegion; region != parent && region != null; region = region.parent)
-            if (region.harmonyBlock != null)
-                blocks.Add(region.harmonyBlock);
-        blocks.Reverse();
-        return blocks;
-    }
-
-    private IEnumerable<ExceptionBlock> ExceptionBlockEnds(int index)
-    {
-        Region blockExceptionRegion = basicBlocks[index].parent!;
-        Region nextBlockExceptionRegion = index < basicBlocks.Count - 1 ? basicBlocks[index + 1].parent! : root;
-        if (blockExceptionRegion == nextBlockExceptionRegion)
-            yield break;
-
-        var parent = Region.SharedParent(blockExceptionRegion, nextBlockExceptionRegion);
-        for (var region = blockExceptionRegion; region != null && region != parent && region.next == null; region = region.parent)
-            if (region.harmonyBlock != null)
-                yield return new ExceptionBlock(ExceptionBlockType.EndExceptionBlock);
     }
 
     private static void LogInstruction(CodeInstruction codeInstruction, ref int codePos)
@@ -239,24 +232,55 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
     private void Emit()
     {
-        for (var index = 0; index < basicBlocks.Count; index++)
+        Stack<Region> regionStack = new();
+        List<ExceptionBlock> harmonyBlocks = new();
+        List<Label> labels = new();
+
+        foreach (var block in allBlocks)
         {
-            BasicBlock? block = basicBlocks[index];
+            while (regionStack.Count >= 1 && block.parent != regionStack.Peek())
+            {
+                if (regionStack.Peek().harmonyBlock != null && regionStack.Peek().next == null)
+                    output.Instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+                regionStack.Pop();
+            }
 
-            List<CodeInstruction> instructions = [.. block.ops.Select(ConvertToCodeInstruction)];
-            if (instructions.Count == 0)
-                instructions.Add(Ops.Nop.ToCodeInstruction());
             if (block.label is Label label)
-                instructions[0].labels.Add(label);
-            instructions[0].blocks.AddRange(ExceptionBlockBegins(index));
-            instructions[^1].blocks.AddRange(ExceptionBlockEnds(index));
+                labels.Add(label);
 
-            foreach (var inst in instructions)
-                output.Add(inst);
+            switch (block)
+            {
+                case Region region:
+                {
+                    regionStack.Push(region);
+                    if (region.harmonyBlock != null)
+                        harmonyBlocks.Add(region.harmonyBlock);
+                    break;
+                }
+                case BasicBlock bb:
+                {
+                    List<CodeInstruction> instructions = [.. bb.ops.Select(ConvertToCodeInstruction)];
+                    if (instructions.Count == 0)
+                        instructions.Add(Ops.Nop.ToCodeInstruction());
+                    instructions[0].labels.AddRange(labels);
+                    labels.Clear();
+                    instructions[0].blocks.AddRange(harmonyBlocks);
+                    harmonyBlocks.Clear();
+                    output.Instructions.AddRange(instructions);
+                    break;
+                }
+            }
+        }
+
+        while (regionStack.Count > 0)
+        {
+            if (regionStack.Peek().harmonyBlock != null)
+                output.Instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+            regionStack.Pop();
         }
     }
 
-    CodeInstruction ConvertToCodeInstruction(Op i)
+    private CodeInstruction ConvertToCodeInstruction(Op i)
     {
         var codeInstruction = i.ToCodeInstruction();
         switch (codeInstruction.operand)
@@ -264,6 +288,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             case Block blockTarget: codeInstruction.operand = GetLabel(blockTarget); break;
             case Block[] blocksTarget: codeInstruction.operand = blocksTarget.Select(GetLabel).ToArray(); break;
         }
+
         return codeInstruction;
 
         Label GetLabel(Block block) => block.label ??= generator.DefineLabel();
@@ -514,7 +539,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 continue;
             if (block.ops.Count > 0 && block.ops[^1].CanBranch)
                 continue;
-            if (successor.predecessors.Count != 1 || successor.parent != block.parent || successor is not BasicBlock { EntryPoint: false } bb)
+            if (successor.predecessors.Count != 1 || successor.parent != block.parent ||
+                successor is not BasicBlock { EntryPoint: false } bb)
                 continue;
             block.ops.AddRange(bb.ops);
             block.next = bb.next;
@@ -545,7 +571,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 queue.Enqueue(successor);
         }
 
-        allBlocks.RemoveAll(b => !liveBlocks.Contains(b));
+        allBlocks.RemoveAll(b => b is BasicBlock && !liveBlocks.Contains(b));
         basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
 
         UpdatePredecessors();
@@ -566,7 +592,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         HashSet<Block> emitted = new();
         List<Block> leaveTargets = [];
 
-        allBlocks.Add(region);
+        outputBlocks.Add(region);
 
         Block entry = region;
         while (entry is Region r)
