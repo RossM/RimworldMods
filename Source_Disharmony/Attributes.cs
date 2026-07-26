@@ -15,7 +15,7 @@ public static class Out<T>;
 public enum MemberType
 {
     /// <summary>
-    ///     Matches methods, properties, and fields. For properties, applies to the property getter.
+    ///     Matches methods, property getters, and fields.
     /// </summary>
     Any,
 
@@ -25,13 +25,12 @@ public enum MemberType
     Method,
 
     /// <summary>
-    ///     Matches properties and fields. For properties, applies to the property getter.
+    ///     Matches property getters and fields.
     /// </summary>
     Getter,
 
     /// <summary>
-    ///     Matches properties and fields. For properties, applies to the property setter. For fields, throws a
-    ///     <see cref="NotSupportedException" />.
+    ///     Matches property setters. Attempting to match a field throws a <see cref="NotSupportedException" />.
     /// </summary>
     Setter,
 
@@ -44,20 +43,20 @@ public enum MemberType
 public enum Scope
 {
     /// <summary>
-    ///     Represents access to parameters or results of either inner or outer method.
+    ///     Selects parameters or results from either the inner or outer method.
     /// </summary>
     /// <remarks>
-    ///     If both the inner and outer methods have a matching parameter, it matches the inner parameter.
+    ///     If both methods have a matching parameter, the inner parameter takes precedence.
     /// </remarks>
     Any,
 
     /// <summary>
-    ///     Represents access to parameters or results of the inner method.
+    ///     Selects parameters or results from the inner method.
     /// </summary>
     Inner,
 
     /// <summary>
-    ///     Represents access to parameters or results of the outer method.
+    ///     Selects parameters or results from the outer method.
     /// </summary>
     Outer,
 }
@@ -98,8 +97,8 @@ public class PrefixAttribute() : PatchTypeAttribute(PatchType.Prefix);
 public class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
 
 /// <summary>
-///     Marks a patch method to run before every matching inner member access or call made by the selected outer methods.
-///     A prefix that returns <see langword="false" /> skips the matching inner member.
+///     Marks a patch method to run before each matching inner member access or call within the selected outer methods.
+///     A prefix that returns <see langword="false" /> skips the matched access or call.
 /// </summary>
 /// <param name="type">
 ///     The type that declares the inner member, or <see langword="null" /> to resolve it from
@@ -117,13 +116,22 @@ public class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
 ///     selecting one.
 /// </param>
 /// <remarks>
-///     Member lookup supports a type-qualified name in the form <c>TypeName:MemberName</c>. When <paramref name="type" />
-///     is <see langword="null" />, a qualified type name can instead be included as the leading portion of
-///     <paramref name="memberName" />. Dotted names can traverse nested types, select a local function as
-///     <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as <c>OuterMethod.*</c>. Only members declared
-///     directly by the resolved type are considered. In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />,
-///     <see cref="In{T}" />, or <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or
-///     <see langword="out" /> parameters.
+///     <para>
+///         When <paramref name="type" /> is <see langword="null" />, <paramref name="memberName" /> must include the
+///         declaring type. Write the type and member as a single dotted name, such as <c>Namespace.Type.Member</c>.
+///         The Harmony-style spelling <c>Namespace.Type:Member</c>, which uses a colon to separate the type and member,
+///         is also accepted.
+///     </para>
+///     <para>
+///         Once the declaring type has been identified, additional dotted segments can traverse nested types, select a
+///         local function as <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as
+///         <c>OuterMethod.*</c>. Only members declared directly by the resolved type are considered.
+///     </para>
+///     <para>
+///         In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />, <see cref="In{T}" />, or
+///         <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or <see langword="out" />
+///         parameters.
+///     </para>
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -161,7 +169,7 @@ public class InnerPrefixAttribute(
 }
 
 /// <summary>
-///     Marks a patch method to run after every matching inner member access or call made by the selected outer methods.
+///     Marks a patch method to run after each matching inner member access or call within the selected outer methods.
 ///     Use <see cref="ReturnValueAttribute" /> on a patch parameter to inspect or replace the inner member's result.
 /// </summary>
 /// <param name="type">
@@ -180,13 +188,22 @@ public class InnerPrefixAttribute(
 ///     selecting one.
 /// </param>
 /// <remarks>
-///     Member lookup supports a type-qualified name in the form <c>TypeName:MemberName</c>. When <paramref name="type" />
-///     is <see langword="null" />, a qualified type name can instead be included as the leading portion of
-///     <paramref name="memberName" />. Dotted names can traverse nested types, select a local function as
-///     <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as <c>OuterMethod.*</c>. Only members declared
-///     directly by the resolved type are considered. In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />,
-///     <see cref="In{T}" />, or <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or
-///     <see langword="out" /> parameters.
+///     <para>
+///         When <paramref name="type" /> is <see langword="null" />, <paramref name="memberName" /> must include the
+///         declaring type. Write the type and member as a single dotted name, such as <c>Namespace.Type.Member</c>.
+///         The Harmony-style spelling <c>Namespace.Type:Member</c>, which uses a colon to separate the type and member,
+///         is also accepted.
+///     </para>
+///     <para>
+///         Once the declaring type has been identified, additional dotted segments can traverse nested types, select a
+///         local function as <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as
+///         <c>OuterMethod.*</c>. Only members declared directly by the resolved type are considered.
+///     </para>
+///     <para>
+///         In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />, <see cref="In{T}" />, or
+///         <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or <see langword="out" />
+///         parameters.
+///     </para>
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -235,14 +252,13 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
     public readonly object value;
 
     /// <summary>
-    ///     Runs the patch after each matching 32-bit integer constant, 16-bit integer
-    ///     constant, or <see langword="bool"/> constant.
+    ///     Runs the patch after each matching 32-bit integer constant in IL.
     /// </summary>
     /// <remarks>
-    ///     .NET stores all constants smaller than 32 bits, including <see langword="bool"/>, as
-    ///     32-bit values internally. <see langword="true"/> is stored as 1 and <see langword="false"/>
-    ///     is stored as 0. Use caution when patching 0 or 1 as they may match <see langword="bool"/> values
-    ///     added by the compiler.
+    ///     IL provides only 32-bit and 64-bit integer constant forms, so constants of smaller integer types, including
+    ///     <see langword="bool" />, are emitted as 32-bit values. <see langword="true" /> is represented as 1, and
+    ///     <see langword="false" /> is represented as 0. Exercise caution when patching 0 or 1 because they can match
+    ///     <see langword="bool" /> values introduced by the compiler.
     /// </remarks>
     /// <param name="value">The constant value to match.</param>
     public InnerPostfixConstantAttribute(int value) : base(PatchType.InnerPostfix)
@@ -288,16 +304,15 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
 }
 
 /// <summary>
-///     This attribute causes the infix transpiler to log the modified IL and, when available, the Mono JIT assembly to the
-///     Harmony debug log.
+///     Logs the modified IL and, when available, the generated Mono JIT assembly to the Harmony debug log.
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method)]
 public class DebugAttribute : Attribute;
 
 /// <summary>
-///     Marks the selected target members for Disharmony's experimental, optional IL optimization pass after their patches
-///     are applied. The optimizer must be enabled separately.
+///     Marks the selected target members for Disharmony's optional, experimental IL optimization pass, which runs after
+///     their patches are applied. The optimizer must be enabled separately.
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method)]
@@ -323,14 +338,26 @@ public class OptimizeAttribute : Attribute;
 ///     The generic type arguments used when matching a generic method, or <see langword="null" /> when not selecting one.
 /// </param>
 /// <remarks>
-///     Member lookup supports a type-qualified name in the form <c>TypeName:MemberName</c>. When <paramref name="type" />
-///     is <see langword="null" />, a qualified type name can instead be included as the leading portion of
-///     <paramref name="methodName" />. Dotted names can traverse nested types, select a local function as
-///     <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as <c>OuterMethod.*</c>. Only members declared
-///     directly by the resolved type are considered. In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />,
-///     <see cref="In{T}" />, or <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or
-///     <see langword="out" /> parameters. Use <see cref="TargetsAttribute" /> when a name is expected to match more than one
-///     member.
+///     <para>
+///         When <paramref name="type" /> is <see langword="null" /> and no containing
+///         <see cref="HarmonyLib.HarmonyPatch" /> attribute supplies it, <paramref name="methodName" /> must include the
+///         declaring type. Write the type and member as a single dotted name, such as <c>Namespace.Type.Member</c>. The
+///         Harmony-style spelling <c>Namespace.Type:Member</c>, which uses a colon to separate the type and member, is
+///         also accepted.
+///     </para>
+///     <para>
+///         Once the declaring type has been identified, additional dotted segments can traverse nested types, select a
+///         local function as <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as
+///         <c>OuterMethod.*</c>. Only members declared directly by the resolved type are considered.
+///     </para>
+///     <para>
+///         In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />, <see cref="In{T}" />, or
+///         <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or <see langword="out" />
+///         parameters.
+///     </para>
+///     <para>
+///         Use <see cref="TargetsAttribute" /> when a name is expected to match more than one member.
+///     </para>
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -431,13 +458,23 @@ public class TargetAttribute(
 ///     The generic type arguments used when matching generic methods, or <see langword="null" /> when not selecting them.
 /// </param>
 /// <remarks>
-///     Member lookup supports a type-qualified name in the form <c>TypeName:MemberName</c>. When <paramref name="type" />
-///     is <see langword="null" />, a qualified type name can instead be included as the leading portion of
-///     <paramref name="methodName" />. Dotted names can traverse nested types, select a local function as
-///     <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as <c>OuterMethod.*</c>. Only members declared
-///     directly by the resolved type are considered. In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />,
-///     <see cref="In{T}" />, or <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or
-///     <see langword="out" /> parameters.
+///     <para>
+///         When <paramref name="type" /> is <see langword="null" /> and no containing
+///         <see cref="HarmonyLib.HarmonyPatch" /> attribute supplies it, <paramref name="methodName" /> must include the
+///         declaring type. Write the type and member as a single dotted name, such as <c>Namespace.Type.Member</c>. The
+///         Harmony-style spelling <c>Namespace.Type:Member</c>, which uses a colon to separate the type and member, is
+///         also accepted.
+///     </para>
+///     <para>
+///         Once the declaring type has been identified, additional dotted segments can traverse nested types, select a
+///         local function as <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as
+///         <c>OuterMethod.*</c>. Only members declared directly by the resolved type are considered.
+///     </para>
+///     <para>
+///         In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />, <see cref="In{T}" />, or
+///         <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or <see langword="out" />
+///         parameters.
+///     </para>
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -513,8 +550,7 @@ public class TargetsAttribute(
 }
 
 /// <summary>
-///     Requests that the patch method's body be inlined into each selected target member instead of being invoked by a
-///     method call.
+///     Inlines the patch method's body into each selected target member instead of invoking it with a method call.
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method)]
@@ -526,8 +562,8 @@ public abstract class ParameterBindingAttribute(Scope scope) : Attribute
 }
 
 /// <summary>
-///     Binds a patch parameter to a parameter of the outer method or inner method. The source parameter can be selected by
-///     name or zero-based index, and <see cref="Scope" /> distinguishes the two methods for an inner patch.
+///     Binds a patch parameter to a parameter of either the outer or inner method. The source parameter can be selected by
+///     name or zero-based index, and <see cref="Scope" /> selects the method for an inner patch.
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
@@ -575,7 +611,7 @@ public class ParameterAttribute : ParameterBindingAttribute
 }
 
 /// <summary>
-///     Binds a patch parameter to the instance on which the outer method or inner method is invoked.
+///     Binds a patch parameter to the instance on which either the outer or inner method is invoked.
 /// </summary>
 /// <param name="scope">
 ///     The method whose instance is bound in an inner patch. The default, <see cref="Scope.Any" />, uses the inner method
@@ -586,8 +622,8 @@ public class ParameterAttribute : ParameterBindingAttribute
 public class InstanceAttribute(Scope scope = Scope.Any) : ParameterBindingAttribute(scope);
 
 /// <summary>
-///     Binds a patch parameter to the outer method's return value for an ordinary patch, or the inner method's return value
-///     for an inner patch. Pass the parameter by reference to replace that return value.
+///     Binds a patch parameter to the outer method's return value for an ordinary patch or the inner method's return value
+///     for an inner patch. Pass the parameter by reference to replace the bound return value.
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
@@ -610,8 +646,8 @@ public class StateAttribute(string? key) : ParameterBindingAttribute(Scope.Outer
 }
 
 /// <summary>
-///     Binds a patch parameter to an instance field associated with the outer method or inner method. The field can be
-///     selected by name, and <see cref="Scope" /> distinguishes the two methods for an inner patch.
+///     Binds a patch parameter to an instance field associated with either the outer or inner method. The field can be
+///     selected by name, and <see cref="Scope" /> selects the method for an inner patch.
 /// </summary>
 /// <param name="name">
 ///     The field name, or <see langword="null" /> to use the attributed patch parameter's name.
@@ -638,7 +674,7 @@ public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBi
 
 /// <summary>
 ///     Binds a patch parameter to a delegate that invokes the nearest base-class implementation of the outer instance
-///     method, allowing the patch to call that implementation directly as if using <see langword="base"/>.
+///     method, allowing the patch to call that implementation directly as if using <see langword="base" />.
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
