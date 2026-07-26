@@ -310,22 +310,22 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to {to.FullName}");
     }
 
-    private void ValidateReference(ParameterInfo to, Type from, Scope scope, string bindingType)
+    private void ValidateReference(ParameterInfo parameter, Type type, Scope scope, string bindingType)
     {
         // Don't allow writing through a ref parameter to an argument of the outer method. This would
         // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
-        if (to.ParameterType.IsByRef && !from.IsByRef)
+        if (parameter.ParameterType.IsByRef && !type.IsByRef)
         {
             if (scope == Scope.Outer && patchType != PatchType.Prefix)
-                throw new ParameterBindingException(to.Name, $"{patchType} can't access outer method {bindingType} by reference");
+                throw new ParameterBindingException(parameter.Name, $"{patchType} can't access outer method {bindingType} by reference");
             if (scope == Scope.Inner && patchType != PatchType.InnerPrefix)
-                throw new ParameterBindingException(to.Name, $"{patchType} can't access inner method {bindingType} by reference");
+                throw new ParameterBindingException(parameter.Name, $"{patchType} can't access inner method {bindingType} by reference");
         }
     }
 
-    private void Validate(ParameterInfo to, Type from, Scope scope, string bindingType)
+    private void Validate(ParameterInfo parameter, Type type, Scope scope, string bindingType)
     {
-        ValidateReference(to, from, scope, bindingType);
-        ValidateCast(to.ParameterType, from, to.Name);
+        ValidateReference(parameter, type, scope, bindingType);
+        ValidateCast(parameter.ParameterType, type, parameter.Name);
     }
 }
