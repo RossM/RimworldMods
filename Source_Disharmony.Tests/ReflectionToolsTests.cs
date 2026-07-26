@@ -414,14 +414,18 @@ public sealed class ReflectionToolsTests
     }
 
     [Test]
-    public void GetMemberRejectsFieldSetterLookup()
+    public void GetMemberReturnsFieldForSetterMemberType()
     {
-        Assert.Throws<NotSupportedException>(() => ReflectionTools.GetMember(
+        FieldInfo expected = typeof(LookupTarget).GetField(nameof(LookupTarget.Field))!;
+
+        MemberInfo actual = ReflectionTools.GetMember(
             typeof(LookupTarget),
             nameof(LookupTarget.Field),
             MemberType.Setter,
             null,
-            null));
+            null);
+
+        Assert.That(actual, Is.SameAs(expected));
     }
 
     [Test]

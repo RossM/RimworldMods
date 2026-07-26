@@ -428,6 +428,12 @@ namespace Disharmony.Tests
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static int ReadStructProperty(InnerStructMethodTargets inner) => inner.Property;
         [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void SetStaticField(int value) => InnerStaticMethodTargets.Field = value;
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void SetInstanceField(InnerInstanceMethodTargets inner, int value) => inner.foo = value;
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void SetStructField(ref InnerStructMethodTargets inner, int value) => inner.foo = value;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void IntArgument(int value) => InnerStaticMethodTargets.IntArgument(value);
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void StringArgument(string value) => InnerStaticMethodTargets.StringArgument(value);
