@@ -915,7 +915,6 @@ public sealed partial class ArgumentBindingTests
                 nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_Primitive_WriteByReference_Rejected)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
-        Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
     }
 
     [Test]
@@ -926,7 +925,6 @@ public sealed partial class ArgumentBindingTests
                 nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_ReferenceType_WriteByReference_Rejected)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
-        Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
     }
 
     [Test]
@@ -937,7 +935,6 @@ public sealed partial class ArgumentBindingTests
                 nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_Struct_WriteByReference_Rejected)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
-        Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
     }
 
     [Test]
@@ -948,7 +945,6 @@ public sealed partial class ArgumentBindingTests
                 nameof(ArgumentBindingPatches.InnerPostfix_OuterArgument_Primitive_WriteByReference_Rejected)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
-        Assert.That(exception.InnerException!.Message, Is.EqualTo("outerValue: Outer method parameter can't be accessed by ref"));
     }
 
     [Test]

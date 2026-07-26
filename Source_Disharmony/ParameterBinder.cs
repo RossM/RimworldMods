@@ -1,5 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace Disharmony;
 
@@ -89,7 +91,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (!invocation.IsStatic)
             index++;
 
-        ValidateCast(parameter, invocation.ParameterTypes[index]);
+        Validate(parameter, invocation.ParameterTypes[index], scope, "parameter");
         return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = scope, Index = index };
     }
 
@@ -124,7 +126,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
     {
         if (defaultInvocation.ReturnType.IsVoid())
             throw new ParameterBindingException(parameter.Name, "Method returns void");
-        ValidateCast(parameter, defaultInvocation.ReturnType);
+        ValidateCast(parameter.ParameterType, defaultInvocation.ReturnType, parameter.Name);
         return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = defaultScope };
     }
 
@@ -138,14 +140,16 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 throw new ParameterBindingException(parameter.Name, "Accessing 'this' by reference is not supported for iterator state machine methods");
 
             var thisField = GetThisField(outer.InstanceType);
-            ValidateCast(parameter, thisField.FieldType);
+            Validate(parameter, thisField.FieldType, defaultScope, "instance");
             return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope, Fields = [thisField] };
         }
 
         if (defaultInvocation.IsStatic)
             throw new ParameterBindingException(parameter.Name, "Method is static");
 
-        ValidateCast(parameter, defaultInvocation.InstanceType);
+        if (!defaultInvocation.InstanceType.IsValueType)
+            ValidateReference(parameter, defaultInvocation.InstanceType, defaultScope, "instance");
+        ValidateCast(parameter.ParameterType, defaultInvocation.InstanceType, parameter.Name);
         return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
     }
 
@@ -157,7 +161,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             int index = Array.FindIndex(inner.ParameterNames, p => p == name);
             if (index >= 0)
             {
-                ValidateCast(parameter, inner.ParameterTypes[index]);
+                Validate(parameter, inner.ParameterTypes[index], Scope.Inner, "parameter");
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Inner, Index = index };
             }
         }
@@ -171,7 +175,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 var field = iteratorType.GetField(name, AccessTools.all);
                 if (field != null)
                 {
-                    ValidateCast(parameter, field.FieldType);
+                    Validate(parameter, field.FieldType, Scope.Outer, "parameter");
                     return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [field] };
                 }
 
@@ -181,7 +185,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                     field = type.GetField(name, AccessTools.all);
                     if (field != null)
                     {
-                        ValidateCast(parameter, field.FieldType);
+                        Validate(parameter, field.FieldType, Scope.Outer, "parameter");
                         return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [thisField, field] };
                     }
                 }
@@ -193,12 +197,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             int index = Array.FindIndex(outer.ParameterNames, p => p == name);
             if (index >= 0)
             {
-                // Don't allow writing through a ref parameter to an argument of the outer method. This would
-                // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
-                if (infix && parameter.ParameterType.IsByRef && !parameterTypes[index].IsByRef)
-                    throw new ParameterBindingException(name, "Outer method parameter can't be accessed by ref");
-
-                ValidateCast(parameter, outer.ParameterTypes[index]);
+                Validate(parameter, outer.ParameterTypes[index], Scope.Outer, "parameter");
                 return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Outer, Index = index };
             }
         }
@@ -220,7 +219,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         throw new ParameterBindingException(parameter.Name, "Parameter not found");
     }
 
-    private static bool TryBindClosureByName(
+    private bool TryBindClosureByName(
         ParameterInfo parameter,
         string name,
         Type[] parameterTypes,
@@ -236,7 +235,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             if (field != null)
             {
-                ValidateCast(parameter, field.FieldType);
+                ValidateCast(parameter.ParameterType, field.FieldType, parameter.Name);
                 parameterBinding = new()
                 {
                     Parameter = parameter,
@@ -261,7 +260,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             var field = inner.InstanceType.GetField(name, AccessTools.all);
             if (field != null)
             {
-                ValidateCast(parameter, field.FieldType);
+                ValidateCast(parameter.ParameterType, field.FieldType, parameter.Name);
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner, Fields = [field] };
             }
         }
@@ -282,7 +281,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             if (field != null)
             {
                 fields.Add(field);
-                ValidateCast(parameter, field.FieldType);
+                ValidateCast(parameter.ParameterType, field.FieldType, parameter.Name);
                 return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [.. fields] };
             }
         }
@@ -307,8 +306,22 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to {to.FullName}");
     }
 
-    private static void ValidateCast(ParameterInfo to, Type from)
+    private void ValidateReference(ParameterInfo to, Type from, Scope scope, string bindingType)
     {
+        // Don't allow writing through a ref parameter to an argument of the outer method. This would
+        // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
+        if (to.ParameterType.IsByRef && !from.IsByRef)
+        {
+            if (scope == Scope.Outer && patchType != PatchType.Prefix)
+                throw new ParameterBindingException(to.Name, $"{patchType} can't access outer method {bindingType} by ref");
+            if (scope == Scope.Inner && patchType != PatchType.InnerPrefix)
+                throw new ParameterBindingException(to.Name, $"{patchType} can't access inner method {bindingType} by ref");
+        }
+    }
+    private void Validate(ParameterInfo to, Type from, Scope scope, string bindingType)
+    {
+        ValidateReference(to, from, scope, bindingType);
         ValidateCast(to.ParameterType, from, to.Name);
     }
+
 }
