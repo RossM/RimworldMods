@@ -374,16 +374,15 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_IteratorDeclaringInstance_ReferenceType_WriteByReference()
     {
-        var original = new ClassMethodTargets { foo = 1 };
-        var replacement = new ClassMethodTargets { foo = 42 };
-        IteratorParameterBindingPatches.ReplacementInstance = replacement;
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_ReferenceType_WriteByReference));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_ReferenceType_WriteByReference)));
 
-        int result = original.EnumerateDeclaringInstanceValue().Single();
-
-        Assert.That(result, Is.EqualTo(42));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+        Assert.That(
+            exception.InnerException!.Message,
+            Is.EqualTo("instance: Accessing 'this' by reference is not supported for iterator state machine methods"));
     }
 
     [Test]
@@ -403,15 +402,15 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_IteratorDeclaringInstance_Struct_WriteByReference()
     {
-        var target = new StructMethodTargets { foo = 1 };
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_Struct_WriteByReference));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_Struct_WriteByReference)));
 
-        int result = target.EnumerateDeclaringInstanceValue().Single();
-
-        Assert.That(result, Is.EqualTo(42));
-        Assert.That(target.foo, Is.EqualTo(1));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+        Assert.That(
+            exception.InnerException!.Message,
+            Is.EqualTo("instance: Accessing 'this' by reference is not supported for iterator state machine methods"));
     }
 }
 
@@ -483,25 +482,29 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_IteratorDeclaringInstance_ReferenceType_ReadByReference()
     {
-        IteratorParameterBindingPatches.InstanceObserved = null;
-        var target = new ClassMethodTargets { foo = 42 };
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_ReferenceType_ReadByReference));
-        target.EnumerateDeclaringInstanceValue().Single();
-        Assert.That(IteratorParameterBindingPatches.InstanceObserved, Is.SameAs(target));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_ReferenceType_ReadByReference)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+        Assert.That(
+            exception.InnerException!.Message,
+            Is.EqualTo("instance: Accessing 'this' by reference is not supported for iterator state machine methods"));
     }
 
     [Test]
     public void InnerPrefix_IteratorDeclaringInstance_Struct_ReadByReference()
     {
-        IteratorParameterBindingPatches.StructInstanceFieldObserved = 0;
-        var target = new StructMethodTargets { foo = 42 };
-        ApplyPatch(
-            typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_Struct_ReadByReference));
-        target.EnumerateDeclaringInstanceValue().Single();
-        Assert.That(IteratorParameterBindingPatches.StructInstanceFieldObserved, Is.EqualTo(42));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(IteratorParameterBindingPatches),
+                nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_Struct_ReadByReference)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
+        Assert.That(
+            exception.InnerException!.Message,
+            Is.EqualTo("instance: Accessing 'this' by reference is not supported for iterator state machine methods"));
     }
 }
 
