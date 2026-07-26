@@ -120,17 +120,17 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         return new() { Parameter = parameter, BindingType = BindingType.BaseMethod, Scope = Scope.Outer };
     }
 
-    private ParameterBinding BindReturnValue(ParameterInfo parameter, Invocation defaultInvocation, Scope defaultScope)
+    private ParameterBinding BindReturnValue(ParameterInfo parameter, Invocation invocation, Scope scope)
     {
-        if (defaultInvocation.ReturnType.IsVoid())
+        if (invocation.ReturnType.IsVoid())
             throw new ParameterBindingException(parameter.Name, "Method returns void");
-        ValidateCast(parameter.ParameterType, defaultInvocation.ReturnType, parameter.Name);
-        return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = defaultScope };
+        ValidateCast(parameter.ParameterType, invocation.ReturnType, parameter.Name);
+        return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = scope };
     }
 
-    private ParameterBinding BindInstance(ParameterInfo parameter, Invocation defaultInvocation, Scope defaultScope)
+    private ParameterBinding BindInstance(ParameterInfo parameter, Invocation invocation, Scope scope)
     {
-        if (isIterator && defaultScope == Scope.Outer)
+        if (isIterator && scope == Scope.Outer)
         {
             if (target.IsStatic)
                 throw new ParameterBindingException(parameter.Name, "Method is static");
@@ -138,17 +138,17 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 throw new ParameterBindingException(parameter.Name, "Accessing 'this' by reference is not supported for iterator state machine methods");
 
             var thisField = GetThisField(outer.InstanceType);
-            Validate(parameter, thisField.FieldType, defaultScope, "instance");
-            return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope, Fields = [thisField] };
+            Validate(parameter, thisField.FieldType, scope, "instance");
+            return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = scope, Fields = [thisField] };
         }
 
-        if (defaultInvocation.IsStatic)
+        if (invocation.IsStatic)
             throw new ParameterBindingException(parameter.Name, "Method is static");
 
-        if (!defaultInvocation.InstanceType.IsValueType)
-            ValidateReference(parameter, defaultInvocation.InstanceType, defaultScope, "instance");
-        ValidateCast(parameter.ParameterType, defaultInvocation.InstanceType, parameter.Name);
-        return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = defaultScope };
+        if (!invocation.InstanceType.IsValueType)
+            ValidateReference(parameter, invocation.InstanceType, scope, "instance");
+        ValidateCast(parameter.ParameterType, invocation.InstanceType, parameter.Name);
+        return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = scope };
     }
 
     private ParameterBinding BindParameterByName(ParameterInfo parameter, string name, Scope scope)
