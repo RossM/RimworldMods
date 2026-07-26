@@ -4,18 +4,18 @@ namespace Disharmony;
 
 internal class InstructionList : IEnumerable<CodeInstruction>
 {
-    public readonly List<CodeInstruction> Instructions = [];
-    public List<Type> LocalTypes = [];
+    public readonly List<CodeInstruction> instructions = [];
+    public List<Type> localTypes = [];
 
-    public IEnumerator<CodeInstruction> GetEnumerator() => Instructions.GetEnumerator();
+    public IEnumerator<CodeInstruction> GetEnumerator() => instructions.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public void Add(CodeInstruction instruction) => Instructions.Add(instruction);
-    public void AddRange(IEnumerable<CodeInstruction> instructions) => Instructions.AddRange(instructions); 
+    public void Add(CodeInstruction instruction) => instructions.Add(instruction);
+    public void AddRange(IEnumerable<CodeInstruction> instructions) => this.instructions.AddRange(instructions); 
 
     public void EmitLocalInitializer(int localIndex)
     {
-        Type type = LocalTypes[localIndex];
+        Type type = localTypes[localIndex];
 
         if (type.IsByRef)
             throw new NotImplementedException($"IsByRef targetType {type}");
@@ -51,8 +51,8 @@ internal class InstructionList : IEnumerable<CodeInstruction>
 
     public int AddLocal(Type type)
     {
-        var localIndex = LocalTypes.Count;
-        LocalTypes.Add(type);
+        var localIndex = localTypes.Count;
+        localTypes.Add(type);
         return localIndex;
     }
 }

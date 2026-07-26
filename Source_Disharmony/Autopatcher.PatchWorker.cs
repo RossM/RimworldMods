@@ -46,8 +46,8 @@ public static partial class Autopatcher
             {
                 inlineMatcher = new InstructionMatcher
                 {
-                    Rules = rules,
-                    CrossRuleLocalTypes = context.localTypes,
+                    rules = rules,
+                    crossRuleLocalTypes = context.localTypes,
                 };
             }
 
@@ -86,9 +86,9 @@ public static partial class Autopatcher
 
             var patchMatcher = new InstructionMatcher
             {
-                Rules = rules,
-                CrossRuleLocalTypes = context.localTypes,
-                CrossRuleLabels = labels,
+                rules = rules,
+                crossRuleLocalTypes = context.localTypes,
+                crossRuleLabels = labels,
             };
 
             return patchMatcher;

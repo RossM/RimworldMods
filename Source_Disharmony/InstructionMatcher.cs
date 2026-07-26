@@ -5,47 +5,47 @@ public partial class InstructionMatcher
     public enum OutputMode
     {
         /// <summary>
-        ///     <see cref="Rule.Pattern" /> is matched against, but no instruction changes are made.
+        ///     <see cref="Rule.pattern" /> is matched against, but no instruction changes are made.
         /// </summary>
         MatchOnly,
 
         /// <summary>
-        ///     <see cref="Rule.Output" /> replaces the instructions that match <see cref="Rule.Pattern" />.
+        ///     <see cref="Rule.output" /> replaces the instructions that match <see cref="Rule.pattern" />.
         /// </summary>
         Replace,
 
         /// <summary>
-        ///     <see cref="Rule.Output" /> is inserted before the first instruction of each match of the
-        ///     <see cref="Rule.Pattern" />.
+        ///     <see cref="Rule.output" /> is inserted before the first instruction of each match of the
+        ///     <see cref="Rule.pattern" />.
         /// </summary>
         InsertBefore,
 
         /// <summary>
-        ///     <see cref="Rule.Output" /> is inserted after the last instruction of each match of the <see cref="Rule.Pattern" />.
+        ///     <see cref="Rule.output" /> is inserted after the last instruction of each match of the <see cref="Rule.pattern" />.
         /// </summary>
         InsertAfter,
 
         /// <summary>
-        ///     <see cref="Rule.Output" /> is inserted at the very start of the instructions. No matching is done.
+        ///     <see cref="Rule.output" /> is inserted at the very start of the instructions. No matching is done.
         /// </summary>
         MethodPrefix,
 
         /// <summary>
-        ///     <see cref="Rule.Output" /> is inserted at the very end of the instructions. No matching is done.
+        ///     <see cref="Rule.output" /> is inserted at the very end of the instructions. No matching is done.
         /// </summary>
         MethodPostfix,
     }
 
     public class Rule
     {
-        public int Min = 1, Max = 1;
-        public int Priority = 0;
-        public OutputMode Mode = OutputMode.MatchOnly;
-        public bool SaveLocals = false;
-        public bool Chained = false;
-        public CodeInstruction[]? Pattern;
-        public CodeInstruction[]? Output;
-        public string? Name;
+        public int min = 1, max = 1;
+        public int priority = 0;
+        public OutputMode mode = OutputMode.MatchOnly;
+        public bool saveLocals = false;
+        public bool chained = false;
+        public CodeInstruction[]? pattern;
+        public CodeInstruction[]? output;
+        public string? name;
     }
 
     private class MatchData
@@ -59,15 +59,15 @@ public partial class InstructionMatcher
 
     public static bool forceDebug = false;
 
-    public List<Rule> Rules = [];
-    public List<Type> CrossRuleLocalTypes = [];
-    public List<Label> CrossRuleLabels = [];
+    public List<Rule> rules = [];
+    public List<Type> crossRuleLocalTypes = [];
+    public List<Label> crossRuleLabels = [];
 
     public InstructionMatcher() { }
 
     public InstructionMatcher(params List<Rule> rules)
     {
-        Rules = rules;
+        this.rules = rules;
     }
 
     public void MatchAndReplace(
@@ -79,7 +79,7 @@ public partial class InstructionMatcher
     {
         var worker = new Worker(this, method, instructionsList, generator, debug);
         worker.MatchAndReplace();
-        instructionsList = worker.OutInstructions;
+        instructionsList = worker.outInstructions;
     }
 
     public static List<CodeInstruction> MatchAndReplace(
@@ -98,12 +98,12 @@ public partial class InstructionMatcher
     {
         return new Rule
         {
-            Min = 1,
-            Max = 0,
-            Mode = OutputMode.Replace,
-            Pattern = [new(OpCodes.Call, oldMember)],
-            Output = [new(OpCodes.Call, newMember)],
-            Name = oldMember.FullName,
+            min = 1,
+            max = 0,
+            mode = OutputMode.Replace,
+            pattern = [new(OpCodes.Call, oldMember)],
+            output = [new(OpCodes.Call, newMember)],
+            name = oldMember.FullName,
         };
     }
 }

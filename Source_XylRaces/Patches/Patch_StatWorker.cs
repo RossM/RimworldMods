@@ -8,18 +8,18 @@ public static class Patch_StatWorker
 {
     private static readonly InstructionMatcher Fixup_GetOffsetsAndFactorsExplanation = new()
     {
-        CrossRuleLocalTypes =
+        crossRuleLocalTypes =
         {
             typeof(Pawn),
             typeof(PawnCapacityDef),
             typeof(Hediff_SubstituteCapacity),
         },
-        Rules =
+        rules =
         {
             new()
             {
-                SaveLocals = true,
-                Pattern =
+                saveLocals = true,
+                pattern =
                 [
                     // Match to find the local "pawn" is stored in
                     new CodeInstruction(OpCodes.Isinst, typeof(Pawn)),
@@ -29,13 +29,13 @@ public static class Patch_StatWorker
 
             new()
             {
-                Min = 1, Max = 0,
-                Mode = InstructionMatcher.OutputMode.InsertAfter,
-                Pattern =
+                min = 1, max = 0,
+                mode = InstructionMatcher.OutputMode.InsertAfter,
+                pattern =
                 [
                     CodeInstruction.LoadField(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
                 ],
-                Output =
+                output =
                 [
                     CodeInstruction.StoreLocal(1),
                     // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
@@ -60,15 +60,15 @@ public static class Patch_StatWorker
             },
             new()
             {
-                Min = 1, Max = 1,
-                Chained = true,
-                Mode = InstructionMatcher.OutputMode.InsertAfter,
-                Pattern =
+                min = 1, max = 1,
+                chained = true,
+                mode = InstructionMatcher.OutputMode.InsertAfter,
+                pattern =
                 [
                     // sb.AppendLine(whitespace + "    " + text + ": " + offset.ToStringSign() + text2 + " (" + text3 + ")");
                     CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]),
                 ],
-                Output =
+                output =
                 [
                     // AppendSubstitutionDescription(sb, whitespace, foundHediff);
                     // sb
@@ -83,13 +83,13 @@ public static class Patch_StatWorker
             },
             new()
             {
-                Min = 1, Max = 0,
-                Mode = InstructionMatcher.OutputMode.InsertAfter,
-                Pattern =
+                min = 1, max = 0,
+                mode = InstructionMatcher.OutputMode.InsertAfter,
+                pattern =
                 [
                     CodeInstruction.LoadField(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
                 ],
-                Output =
+                output =
                 [
                     CodeInstruction.StoreLocal(1),
                     // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
@@ -114,15 +114,15 @@ public static class Patch_StatWorker
             },
             new()
             {
-                Min = 1, Max = 1,
-                Chained = true,
-                Mode = InstructionMatcher.OutputMode.InsertAfter,
-                Pattern =
+                min = 1, max = 1,
+                chained = true,
+                mode = InstructionMatcher.OutputMode.InsertAfter,
+                pattern =
                 [
                     // sb.AppendLine(whitespace + "    " + text8 + ": x" + text9 + " (" + text10 + ")");
                     CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]),
                 ],
-                Output =
+                output =
                 [
                     // AppendSubstitutionDescription(sb, whitespace, foundHediff);
                     // sb

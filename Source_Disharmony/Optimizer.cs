@@ -227,7 +227,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         LogBlocks(nameof(InsertBranches));
 
         Emit();
-        LogInstructions("Output", output.Instructions);
+        LogInstructions("Output", output.instructions);
     }
 
     private void Emit()
@@ -241,7 +241,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             while (regionStack.Count >= 1 && block.parent != regionStack.Peek())
             {
                 if (regionStack.Peek().harmonyBlock != null && regionStack.Peek().next == null)
-                    output.Instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+                    output.instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
                 regionStack.Pop();
             }
 
@@ -266,7 +266,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                     labels.Clear();
                     instructions[0].blocks.AddRange(harmonyBlocks);
                     harmonyBlocks.Clear();
-                    output.Instructions.AddRange(instructions);
+                    output.instructions.AddRange(instructions);
                     break;
                 }
             }
@@ -275,7 +275,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         while (regionStack.Count > 0)
         {
             if (regionStack.Peek().harmonyBlock != null)
-                output.Instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+                output.instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
             regionStack.Pop();
         }
     }

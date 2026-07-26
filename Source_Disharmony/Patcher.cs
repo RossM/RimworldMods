@@ -36,7 +36,7 @@ internal class Patcher
             = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatch, MethodInfo>>("HarmonyLib.PatchFunctions:UpdateWrapper");
     }
 
-    private const string harmonyID = "Xylthixlm.Disharmony.Autopatcher";
+    private const string HarmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
     public static readonly Patcher Instance = new();
 
@@ -75,7 +75,7 @@ internal class Patcher
 
         MethodInfo replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
 #if ENABLE_DISASSEMBLY
-        if (patchInfo.transpilers.Any(p => p.debug && p.owner == harmonyID))
+        if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
             JitAssemblyLogger.TryLog(original, replacement);
 #endif
 
@@ -155,7 +155,7 @@ internal class Patcher
         {
             var optimizer = new Optimizer(method, instructionsList, generator, debug: patch.debug);
             optimizer.Optimize();
-            return optimizer.output.Instructions;
+            return optimizer.output.instructions;
         }
 
         return instructionsList;
@@ -223,7 +223,7 @@ internal class Patcher
                 patchInfo.transpilers =
                 [
                     .. patchInfo.transpilers,
-                    new Patch(patcher, patchInfo.transpilers.Length, harmonyID),
+                    new Patch(patcher, patchInfo.transpilers.Length, HarmonyID),
                 ];
             }
 
@@ -241,7 +241,7 @@ internal class Patcher
             {
                 replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
 #if ENABLE_DISASSEMBLY
-                if (patchInfo.transpilers.Any(p => p.debug && p.owner == harmonyID))
+                if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
                     JitAssemblyLogger.TryLog(original.MethodBase, replacement);
 #endif
             }
@@ -263,7 +263,7 @@ internal class Patcher
 
             patchInfo.transpilers =
             [
-                .. patchInfo.transpilers.Where(t => t.owner != harmonyID),
+                .. patchInfo.transpilers.Where(t => t.owner != HarmonyID),
             ];
 
             MethodInfo replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);

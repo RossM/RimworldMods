@@ -36,31 +36,31 @@ internal class ParameterBinding
     /// <remarks>
     ///     This is used to get the parameter's type, as well as its name for logging.
     /// </remarks>
-    public required ParameterInfo Parameter;
+    public required ParameterInfo parameter;
 
     /// <summary>
     ///     Whether this applies to the outer method (caller) or inner method (target).
     /// </summary>
-    public required Scope Scope;
+    public required Scope scope;
 
     /// <summary>
     ///     The type of binding.
     /// </summary>
-    public required BindingType BindingType;
+    public required BindingType bindingType;
 
     /// <summary>
-    ///     Depending on <see cref="BindingType" /> and <see cref="Scope" /> this can be either a local variable index or an
+    ///     Depending on <see cref="bindingType" /> and <see cref="scope" /> this can be either a local variable index or an
     ///     index into the caller or target argument lists.
     /// </summary>
     /// <remarks>
     ///     For argument lists of instance methods, index 0 is the instance and formal arguments start from index 1; for static
     ///     methods, formal arguments start from index 0.
     /// </remarks>
-    public int Index;
+    public int index;
 
-    public FieldInfo[]? Fields;
+    public FieldInfo[]? fields;
 
-    public string? StateKey;
+    public string? stateKey;
 }
 
 internal struct PatchInfo
@@ -73,7 +73,7 @@ internal struct PatchInfo
     public bool inline;
     public bool debug;
     public bool optimize;
-    public readonly bool HasBindingType(BindingType bindingType) => parameters.Any(p => p.BindingType == bindingType);
+    public readonly bool HasBindingType(BindingType bindingType) => parameters.Any(p => p.bindingType == bindingType);
 }
 
 internal class PatchRegistry
@@ -82,7 +82,7 @@ internal class PatchRegistry
 
     // When another lock is also needed, this must be taken after Autopatcher's apply lock
     // and before Harmony's lock.
-    private readonly object SyncRoot = new();
+    private readonly object syncRoot = new();
     private readonly HashSet<MethodBaseInvocation> methodsToUpdate = [];
     private readonly Dictionary<MethodBaseInvocation, List<PatchInfo>> patchesByMethod = [];
 
@@ -90,13 +90,13 @@ internal class PatchRegistry
 
     public List<PatchInfo> GetPatchesFor(MethodBaseInvocation method)
     {
-        lock (SyncRoot)
+        lock (syncRoot)
             return [.. patchesByMethod[method]];
     }
 
     public void ProcessAssembly(Assembly assembly)
     {
-        lock (SyncRoot)
+        lock (syncRoot)
         {
             foreach (TypeInfo type in assembly.DefinedTypes)
             {
@@ -111,7 +111,7 @@ internal class PatchRegistry
 
     public void ProcessAssembly(Assembly assembly, string? category)
     {
-        lock (SyncRoot)
+        lock (syncRoot)
         {
             foreach (TypeInfo type in assembly.DefinedTypes)
             {
@@ -130,7 +130,7 @@ internal class PatchRegistry
 
     public void ProcessType(TypeInfo type)
     {
-        lock (SyncRoot)
+        lock (syncRoot)
         {
             foreach (MethodInfo method in type.DeclaredMethods)
             {
@@ -141,7 +141,7 @@ internal class PatchRegistry
 
     public void ProcessMethod(MethodInfo method)
     {
-        lock (SyncRoot)
+        lock (syncRoot)
         {
             try
             {
@@ -263,7 +263,7 @@ internal class PatchRegistry
 
         var arguments = patchMethod.MethodInfo.GetParameters().Select(parameterBinder.Bind).ToArray();
 
-        if (isIterator && arguments.Any(p => p.BindingType == BindingType.State))
+        if (isIterator && arguments.Any(p => p.bindingType == BindingType.State))
             throw new NotSupportedException("State parameters are not supported for iterator state machine methods");
 
         PatchInfo patch = new()
@@ -287,7 +287,7 @@ internal class PatchRegistry
 
     public void UnpatchAll(Assembly assembly)
     {
-        lock (SyncRoot)
+        lock (syncRoot)
         {
             foreach (var kvp in patchesByMethod)
             {
@@ -303,7 +303,7 @@ internal class PatchRegistry
 
     public void ApplyImpl(bool useTrampolines)
     {
-        lock (SyncRoot)
+        lock (syncRoot)
         {
             foreach (MethodBaseInvocation patchedMethod in methodsToUpdate)
             {

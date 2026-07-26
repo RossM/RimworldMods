@@ -14,9 +14,9 @@ public sealed class InstructionMatcherTests
     {
         var rule = new InstructionMatcher.Rule
         {
-            Mode = InstructionMatcher.OutputMode.Replace,
-            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            mode = InstructionMatcher.OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
         List<CodeInstruction> result = Run(
@@ -31,9 +31,9 @@ public sealed class InstructionMatcherTests
     {
         var rule = new InstructionMatcher.Rule
         {
-            Mode = InstructionMatcher.OutputMode.InsertBefore,
-            Pattern = [new CodeInstruction(OpCodes.Ret)],
-            Output = [new CodeInstruction(OpCodes.Nop)],
+            mode = InstructionMatcher.OutputMode.InsertBefore,
+            pattern = [new CodeInstruction(OpCodes.Ret)],
+            output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ret)]);
@@ -46,9 +46,9 @@ public sealed class InstructionMatcherTests
     {
         var rule = new InstructionMatcher.Rule
         {
-            Mode = InstructionMatcher.OutputMode.InsertAfter,
-            Pattern = [new CodeInstruction(OpCodes.Nop)],
-            Output = [new CodeInstruction(OpCodes.Pop)],
+            mode = InstructionMatcher.OutputMode.InsertAfter,
+            pattern = [new CodeInstruction(OpCodes.Nop)],
+            output = [new CodeInstruction(OpCodes.Pop)],
         };
 
         List<CodeInstruction> result = Run(
@@ -63,13 +63,13 @@ public sealed class InstructionMatcherTests
     {
         var prefix = new InstructionMatcher.Rule
         {
-            Mode = InstructionMatcher.OutputMode.MethodPrefix,
-            Output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            mode = InstructionMatcher.OutputMode.MethodPrefix,
+            output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
         };
         var postfix = new InstructionMatcher.Rule
         {
-            Mode = InstructionMatcher.OutputMode.MethodPostfix,
-            Output = [new CodeInstruction(OpCodes.Pop)],
+            mode = InstructionMatcher.OutputMode.MethodPostfix,
+            output = [new CodeInstruction(OpCodes.Pop)],
         };
 
         List<CodeInstruction> result = Run([prefix, postfix], [new CodeInstruction(OpCodes.Ret)]);
@@ -82,15 +82,15 @@ public sealed class InstructionMatcherTests
     {
         var captureLocal = new InstructionMatcher.Rule
         {
-            Mode = InstructionMatcher.OutputMode.MatchOnly,
-            Pattern = [CodeInstruction.StoreLocal(0)],
-            SaveLocals = true,
+            mode = InstructionMatcher.OutputMode.MatchOnly,
+            pattern = [CodeInstruction.StoreLocal(0)],
+            saveLocals = true,
         };
         var replaceMappedLoad = new InstructionMatcher.Rule
         {
-            Mode = InstructionMatcher.OutputMode.Replace,
-            Pattern = [CodeInstruction.LoadLocal(0)],
-            Output = [CodeInstruction.LoadLocal(0)],
+            mode = InstructionMatcher.OutputMode.Replace,
+            pattern = [CodeInstruction.LoadLocal(0)],
+            output = [CodeInstruction.LoadLocal(0)],
         };
 
         List<CodeInstruction> result = Run(
@@ -121,9 +121,9 @@ public sealed class InstructionMatcherTests
     {
         var rule = new InstructionMatcher.Rule
         {
-            Mode = InstructionMatcher.OutputMode.Replace,
-            Pattern = [CodeInstruction.StoreLocal(0), CodeInstruction.LoadLocal(0)],
-            Output = [CodeInstruction.LoadLocal(0)],
+            mode = InstructionMatcher.OutputMode.Replace,
+            pattern = [CodeInstruction.StoreLocal(0), CodeInstruction.LoadLocal(0)],
+            output = [CodeInstruction.LoadLocal(0)],
         };
 
         List<CodeInstruction> result = Run(

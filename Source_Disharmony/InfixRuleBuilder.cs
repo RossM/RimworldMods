@@ -41,7 +41,7 @@ internal class InfixRuleBuilder : RuleBuilder
             resultLocalIndex = output.AddLocal(targetType);
 
             if (prefixesUsingResult.Count > 0 &&
-                !prefixesUsingResult[0].parameters.Where(a => a.BindingType == BindingType.Result).All(a => a.Parameter.IsOut))
+                !prefixesUsingResult[0].parameters.Where(a => a.bindingType == BindingType.Result).All(a => a.parameter.IsOut))
             {
                 output.EmitLocalInitializer(resultLocalIndex);
             }
@@ -107,22 +107,22 @@ internal class InfixRuleBuilder : RuleBuilder
 
     protected override Type GetParameterType(ParameterBinding parameter)
     {
-        return parameter.Scope switch
+        return parameter.scope switch
         {
-            Scope.Outer => outerParameterTypes[parameter.Index],
-            Scope.Inner => innerParameterTypes[parameter.Index],
-            _ => throw new ArgumentOutOfRangeException(nameof(parameter.Scope))
+            Scope.Outer => outerParameterTypes[parameter.index],
+            Scope.Inner => innerParameterTypes[parameter.index],
+            _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope))
         };
     }
 
     protected override void EmitParameterLookup(ParameterBinding parameter, Type resultType)
     {
-        switch (parameter.Scope)
+        switch (parameter.scope)
         {
-            case Scope.Outer: EmitOuterParameter(parameter.Index, resultType); break;
-            case Scope.Inner: EmitInnerParameter(parameter.Index, resultType); break;
+            case Scope.Outer: EmitOuterParameter(parameter.index, resultType); break;
+            case Scope.Inner: EmitInnerParameter(parameter.index, resultType); break;
             case Scope.Any:
-            default: throw new ArgumentOutOfRangeException(nameof(parameter.Scope));
+            default: throw new ArgumentOutOfRangeException(nameof(parameter.scope));
         }
     }
 
@@ -138,12 +138,12 @@ internal class InfixRuleBuilder : RuleBuilder
 
         yield return new Rule
         {
-            Min = 1,
-            Max = 0,
-            Mode = InstructionMatcher.OutputMode.Replace,
-            Pattern = [.. pattern],
-            Output = [.. output.Instructions],
-            Name = inner.FullName,
+            min = 1,
+            max = 0,
+            mode = InstructionMatcher.OutputMode.Replace,
+            pattern = [.. pattern],
+            output = [.. output.instructions],
+            name = inner.FullName,
         };
     }
 

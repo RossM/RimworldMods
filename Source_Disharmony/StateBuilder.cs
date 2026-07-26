@@ -2,7 +2,7 @@
 
 internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, EmptyInvocation.Instance)
 {
-    private List<Type> LocalTypes => output.LocalTypes;
+    private List<Type> LocalTypes => output.localTypes;
     private readonly Dictionary<string, (int index, Type type)> stateMap = new();
 
     private int GetOrAddStateLocal(string stateKey, Type localType, Invocation method)
@@ -36,10 +36,10 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
 
         yield return new Rule
         {
-            Priority = 100,
-            Mode = InstructionMatcher.OutputMode.MethodPrefix,
-            Output = [.. output.Instructions],
-            Name = "state variable initialization",
+            priority = 100,
+            mode = InstructionMatcher.OutputMode.MethodPrefix,
+            output = [.. output.instructions],
+            name = "state variable initialization",
         };
     }
 
@@ -50,11 +50,11 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
             ParameterBinding[] parameters = patch.parameters;
             foreach (ParameterBinding parameter in parameters)
             {
-                if (parameter.BindingType == BindingType.State)
+                if (parameter.bindingType == BindingType.State)
                 {
-                    if (parameter.StateKey is null)
+                    if (parameter.stateKey is null)
                         throw new InvalidOperationException("Null StateKey");
-                    parameter.Index = GetOrAddStateLocal(parameter.StateKey, parameter.Parameter.ParameterType, patch.patch);
+                    parameter.index = GetOrAddStateLocal(parameter.stateKey, parameter.parameter.ParameterType, patch.patch);
                 }
             }
         }

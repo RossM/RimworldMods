@@ -15,7 +15,7 @@ public partial class InstructionMatcher
         private readonly List<ExceptionBlock> extraBlocks = [];
         private readonly List<Label> extraLabels = [];
 
-        public readonly List<CodeInstruction> OutInstructions = [];
+        public readonly List<CodeInstruction> outInstructions = [];
 
         public void MatchAndReplace()
         {
@@ -23,23 +23,23 @@ public partial class InstructionMatcher
                 FileLog.Log($"## InfixPatcher {method.FullName}");
 
             // Check and make sure that all the substitutions apply. Also work out the indexes of all locals.
-            for (var ruleIndex = 0; ruleIndex < instructionMatcher.Rules.Count; ruleIndex++)
+            for (var ruleIndex = 0; ruleIndex < instructionMatcher.rules.Count; ruleIndex++)
             {
-                Rule rule = instructionMatcher.Rules[ruleIndex];
+                Rule rule = instructionMatcher.rules[ruleIndex];
 
                 switch (rule)
                 {
-                    case { Mode: OutputMode.MatchOnly, Output: not null }:
-                        throw new InvalidOperationException($"{rule.Mode} rule must have Output = null");
-                    case { Mode: not OutputMode.MatchOnly, Output: null }:
-                        throw new InvalidOperationException($"{rule.Mode} rule cannot have Output = null");
-                    case { Mode: OutputMode.MethodPrefix or OutputMode.MethodPostfix, Pattern.Length: > 0 }:
-                        throw new InvalidOperationException($"{rule.Mode} cannot have a Pattern");
-                    case { Mode: not (OutputMode.MethodPrefix or OutputMode.MethodPostfix), Pattern: not { Length: > 0 } }:
-                        throw new InvalidOperationException($"{rule.Mode} rule must have a Pattern");
+                    case { mode: OutputMode.MatchOnly, output: not null }:
+                        throw new InvalidOperationException($"{rule.mode} rule must have Output = null");
+                    case { mode: not OutputMode.MatchOnly, output: null }:
+                        throw new InvalidOperationException($"{rule.mode} rule cannot have Output = null");
+                    case { mode: OutputMode.MethodPrefix or OutputMode.MethodPostfix, pattern.Length: > 0 }:
+                        throw new InvalidOperationException($"{rule.mode} cannot have a Pattern");
+                    case { mode: not (OutputMode.MethodPrefix or OutputMode.MethodPostfix), pattern: not { Length: > 0 } }:
+                        throw new InvalidOperationException($"{rule.mode} rule must have a Pattern");
                 }
 
-                switch (rule.Mode)
+                switch (rule.mode)
                 {
                     case OutputMode.MethodPrefix:
                     {
@@ -70,11 +70,11 @@ public partial class InstructionMatcher
                 var matchCount = 0;
 
                 // rule.Pattern was checked to be non-null during the error checking above
-                if (rule.Pattern is null)
+                if (rule.pattern is null)
                     throw new InvalidOperationException();
 
-                for (int instructionIndex = rule.Chained && matches.Count > 0 ? matches[^1].end : 0;
-                     instructionIndex <= inInstructions.Count - rule.Pattern.Length;
+                for (int instructionIndex = rule.chained && matches.Count > 0 ? matches[^1].end : 0;
+                     instructionIndex <= inInstructions.Count - rule.pattern.Length;
                      instructionIndex++)
                 {
                     if (!MatchPattern(rule, instructionIndex, out Dictionary<int, int> localIndex_Match))
@@ -84,34 +84,34 @@ public partial class InstructionMatcher
                     {
                         rule = rule,
                         start = instructionIndex,
-                        end = instructionIndex + rule.Pattern.Length,
+                        end = instructionIndex + rule.pattern.Length,
                         localMap_Match = localIndex_Match,
                         labelMap_Match = [],
                     };
                     if (debug || forceDebug)
                         FileLog.Log($"MATCH #{ruleIndex} ({matchData.start} .. {matchData.end - 1})");
 
-                    if (rule.Output != null)
+                    if (rule.output != null)
                         matches.Add(matchData);
 
-                    if (rule.SaveLocals)
+                    if (rule.saveLocals)
                     {
                         foreach (var kvp in localIndex_Match)
                             localMap_Method.Add(kvp.Key, kvp.Value);
                     }
 
                     matchCount++;
-                    if (rule.Max > 0 && matchCount >= rule.Max)
+                    if (rule.max > 0 && matchCount >= rule.max)
                         break;
                 }
 
-                if (matchCount < rule.Min)
+                if (matchCount < rule.min)
                 {
                     throw new InvalidOperationException($"Not enough matches found for substitution #{ruleIndex}");
                 }
             }
 
-            var sortedMatches = matches.OrderBy(m => m.start).ThenByDescending(m => m.rule.Priority).ToList();
+            var sortedMatches = matches.OrderBy(m => m.start).ThenByDescending(m => m.rule.priority).ToList();
             for (var i = 0; i < sortedMatches.Count - 1; i++)
             {
                 if (sortedMatches[i].end > sortedMatches[i + 1].start)
@@ -153,7 +153,7 @@ public partial class InstructionMatcher
                 static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
                 static bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
 
-                switch (match.rule.Mode)
+                switch (match.rule.mode)
                 {
                     case OutputMode.Replace:
                     {
@@ -191,8 +191,8 @@ public partial class InstructionMatcher
 
                             if (i == match.start)
                             {
-                                OutInstructions[^1].labels.Clear();
-                                OutInstructions[^1].blocks.RemoveAll(IsBlockStart);
+                                outInstructions[^1].labels.Clear();
+                                outInstructions[^1].blocks.RemoveAll(IsBlockStart);
                             }
                         }
 
@@ -206,7 +206,7 @@ public partial class InstructionMatcher
 
                             if (i == match.end - 1)
                             {
-                                OutInstructions[^1].blocks.RemoveAll(IsBlockEnd);
+                                outInstructions[^1].blocks.RemoveAll(IsBlockEnd);
                             }
                         }
 
@@ -235,7 +235,7 @@ public partial class InstructionMatcher
         {
             int codePos = 0;
 
-            foreach (var codeInstruction in OutInstructions)
+            foreach (var codeInstruction in outInstructions)
             {
                 foreach (var label in codeInstruction.labels)
                     FileLog.LogIL(codePos, label);
@@ -277,34 +277,34 @@ public partial class InstructionMatcher
 
         private void EmitReplacement(MatchData match)
         {
-            Emit(CodeInstruction.Annotation($"Begin {match.rule.Name}"));
+            Emit(CodeInstruction.Annotation($"Begin {match.rule.name}"));
 
             // Rules with null Output aren't added to matches so should never get here
-            if (match.rule.Output is null)
+            if (match.rule.output is null)
                 throw new InvalidOperationException();
 
-            foreach (CodeInstruction replaceInst in match.rule.Output)
+            foreach (CodeInstruction replaceInst in match.rule.output)
                 EmitReplacement(replaceInst, match);
 
-            Emit(CodeInstruction.Annotation($"End {match.rule.Name}"));
+            Emit(CodeInstruction.Annotation($"End {match.rule.name}"));
         }
 
         private bool MatchPattern(Rule rule, int instructionIndex, out Dictionary<int, int> localIndex_Match)
         {
             localIndex_Match = [];
 
-            bool noOutput = rule.Output is not { Length: > 0 };
+            bool noOutput = rule.output is not { Length: > 0 };
 
             // rule.Pattern is checked to be non-null before this is called
-            if (rule.Pattern is null)
+            if (rule.pattern is null)
                 throw new InvalidOperationException();
 
-            for (var patternIndex = 0; patternIndex < rule.Pattern.Length; patternIndex++)
+            for (var patternIndex = 0; patternIndex < rule.pattern.Length; patternIndex++)
             {
-                if (!MatchInstruction(inInstructions[instructionIndex + patternIndex], rule.Pattern[patternIndex], localIndex_Match))
+                if (!MatchInstruction(inInstructions[instructionIndex + patternIndex], rule.pattern[patternIndex], localIndex_Match))
                     return false;
 
-                if (rule.Mode == OutputMode.Replace)
+                if (rule.mode == OutputMode.Replace)
                 {
                     // Check for exception blocks or labels not at the start (or end, for EndExceptionBlock) of the match
                     CodeInstruction inst = inInstructions[instructionIndex + patternIndex];
@@ -312,7 +312,7 @@ public partial class InstructionMatcher
                         return false;
                     if ((patternIndex > 0 || noOutput) && inst.labels.Count > 0)
                         return false;
-                    if ((patternIndex < rule.Pattern.Length - 1 || noOutput) &&
+                    if ((patternIndex < rule.pattern.Length - 1 || noOutput) &&
                         inst.blocks.Any(b => b.blockType == ExceptionBlockType.EndExceptionBlock))
                     {
                         return false;
@@ -457,12 +457,12 @@ public partial class InstructionMatcher
                 extraLabels.Clear();
             }
 
-            OutInstructions.Add(newInstruction);
+            outInstructions.Add(newInstruction);
         }
 
         private Label GetReplacementLabel(Label label, MatchData match)
         {
-            Dictionary<Label, Label> labelMap = instructionMatcher.CrossRuleLabels.Contains(label) ? labelMap_Method : match.labelMap_Match;
+            Dictionary<Label, Label> labelMap = instructionMatcher.crossRuleLabels.Contains(label) ? labelMap_Method : match.labelMap_Match;
             if (!labelMap.TryGetValue(label, out Label replacementLabel))
             {
                 replacementLabel = generator.DefineLabel();
@@ -476,9 +476,9 @@ public partial class InstructionMatcher
         {
             if (localMap_Method.TryGetValue(localIndex, out var substituteIndex)) { }
             else if (match.localMap_Match.TryGetValue(localIndex, out substituteIndex)) { }
-            else if (localIndex < instructionMatcher.CrossRuleLocalTypes.Count)
+            else if (localIndex < instructionMatcher.crossRuleLocalTypes.Count)
             {
-                substituteIndex = generator.DeclareLocal(instructionMatcher.CrossRuleLocalTypes[localIndex]).LocalIndex;
+                substituteIndex = generator.DeclareLocal(instructionMatcher.crossRuleLocalTypes[localIndex]).LocalIndex;
                 localMap_Method.Add(localIndex, substituteIndex);
             }
             else

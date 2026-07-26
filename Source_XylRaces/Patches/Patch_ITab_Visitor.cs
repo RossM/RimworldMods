@@ -8,20 +8,20 @@ public static class Patch_ITab_Pawn_Visitor
 {
     private static readonly InstructionMatcher Fixup = new()
     {
-        Rules =
+        rules =
         {
             InstructionMatcher.MakeRedirectRule(
                 SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate o) => o.GetExplanationForTooltip(default)),
                 SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate_Fixed o) => o.GetExplanationForTooltip(default))),
             new()
             {
-                Min = 1, Max = 0,
-                Mode = InstructionMatcher.OutputMode.Replace,
-                Pattern =
+                min = 1, max = 0,
+                mode = InstructionMatcher.OutputMode.Replace,
+                pattern =
                 [
                     new(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate)),
                 ],
-                Output =
+                output =
                 [
                     new(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate_Fixed)),
                 ],

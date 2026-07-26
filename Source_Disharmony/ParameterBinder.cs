@@ -92,7 +92,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             index++;
 
         Validate(parameter, invocation.ParameterTypes[index], scope, "parameter");
-        return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = scope, Index = index };
+        return new() { parameter = parameter, bindingType = BindingType.Parameter, scope = scope, index = index };
     }
 
     private ParameterBinding BindState(ParameterInfo parameter, string key)
@@ -100,7 +100,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}#{key}";
 
         // ValidateCast not needed, the type will be checked in StateBuilder
-        return new() { Parameter = parameter, BindingType = BindingType.State, Scope = Scope.Outer, StateKey = stateKey };
+        return new() { parameter = parameter, bindingType = BindingType.State, scope = Scope.Outer, stateKey = stateKey };
     }
 
     private ParameterBinding BindBaseMethod(ParameterInfo parameter)
@@ -118,7 +118,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (delegateInvoke.ReturnType != method.MethodInfo.ReturnType)
             throw new ParameterBindingException(parameter.Name, "Return type mismatch");
 
-        return new() { Parameter = parameter, BindingType = BindingType.BaseMethod, Scope = Scope.Outer };
+        return new() { parameter = parameter, bindingType = BindingType.BaseMethod, scope = Scope.Outer };
     }
 
     private ParameterBinding BindReturnValue(ParameterInfo parameter, Invocation invocation, Scope scope)
@@ -126,7 +126,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (invocation.ReturnType.IsVoid())
             throw new ParameterBindingException(parameter.Name, "Method returns void");
         ValidateCast(parameter.ParameterType, invocation.ReturnType, parameter.Name);
-        return new() { Parameter = parameter, BindingType = BindingType.Result, Scope = scope };
+        return new() { parameter = parameter, bindingType = BindingType.Result, scope = scope };
     }
 
     private ParameterBinding BindInstance(ParameterInfo parameter, Invocation invocation, Scope scope)
@@ -141,7 +141,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             var thisField = GetThisField(outer.InstanceType);
             Validate(parameter, thisField.FieldType, scope, "instance");
-            return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = scope, Fields = [thisField] };
+            return new() { parameter = parameter, bindingType = BindingType.Instance, scope = scope, fields = [thisField] };
         }
 
         if (invocation.IsStatic)
@@ -150,7 +150,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (!invocation.InstanceType.IsValueType && invocation is not FieldInvocation)
             ValidateReference(parameter, invocation.InstanceType, scope, "instance");
         ValidateCast(parameter.ParameterType, invocation.InstanceType, parameter.Name);
-        return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = scope };
+        return new() { parameter = parameter, bindingType = BindingType.Instance, scope = scope };
     }
 
     private ParameterBinding BindParameterByName(ParameterInfo parameter, string name, Scope scope)
@@ -162,7 +162,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             if (index >= 0)
             {
                 Validate(parameter, inner.ParameterTypes[index], Scope.Inner, "parameter");
-                return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Inner, Index = index };
+                return new() { parameter = parameter, bindingType = BindingType.Parameter, scope = Scope.Inner, index = index };
             }
         }
 
@@ -176,7 +176,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 if (field != null)
                 {
                     Validate(parameter, field.FieldType, Scope.Outer, "parameter");
-                    return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [field] };
+                    return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Outer, fields = [field] };
                 }
 
                 if (TryGetThisField(iteratorType, out var thisField) && thisField.FieldType.IsClosureType)
@@ -188,7 +188,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                         Validate(parameter, field.FieldType, Scope.Outer, "parameter");
                         return new()
                         {
-                            Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [thisField, field],
+                            parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Outer, fields = [thisField, field],
                         };
                     }
                 }
@@ -200,7 +200,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             if (index >= 0)
             {
                 Validate(parameter, outer.ParameterTypes[index], Scope.Outer, "parameter");
-                return new() { Parameter = parameter, BindingType = BindingType.Parameter, Scope = Scope.Outer, Index = index };
+                return new() { parameter = parameter, bindingType = BindingType.Parameter, scope = Scope.Outer, index = index };
             }
         }
 
@@ -240,11 +240,11 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 ValidateCast(parameter.ParameterType, field.FieldType, parameter.Name);
                 parameterBinding = new()
                 {
-                    Parameter = parameter,
-                    BindingType = BindingType.Parameter,
-                    Scope = scope,
-                    Index = closureIndex,
-                    Fields = [field],
+                    parameter = parameter,
+                    bindingType = BindingType.Parameter,
+                    scope = scope,
+                    index = closureIndex,
+                    fields = [field],
                 };
                 return true;
             }
@@ -263,7 +263,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             if (field != null)
             {
                 ValidateCast(parameter.ParameterType, field.FieldType, parameter.Name);
-                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Inner, Fields = [field] };
+                return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Inner, fields = [field] };
             }
         }
 
@@ -284,7 +284,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             {
                 fields.Add(field);
                 ValidateCast(parameter.ParameterType, field.FieldType, parameter.Name);
-                return new() { Parameter = parameter, BindingType = BindingType.Instance, Scope = Scope.Outer, Fields = [.. fields] };
+                return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Outer, fields = [.. fields] };
             }
         }
 

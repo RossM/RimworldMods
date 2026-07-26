@@ -42,7 +42,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
             resultLocalIndex = output.AddLocal(targetType);
 
             if (prefixesUsingResult.Count > 0 &&
-                !prefixesUsingResult[0].parameters.Where(a => a.BindingType == BindingType.Result).All(a => a.Parameter.IsOut))
+                !prefixesUsingResult[0].parameters.Where(a => a.bindingType == BindingType.Result).All(a => a.parameter.IsOut))
             {
                 output.EmitLocalInitializer(resultLocalIndex);
             }
@@ -62,15 +62,15 @@ internal class CircumfixRuleBuilder : RuleBuilder
             }
         }
 
-        if (output.Instructions.Count > 0)
+        if (output.instructions.Count > 0)
         {
             yield return new Rule
             {
-                Mode = InstructionMatcher.OutputMode.MethodPrefix,
-                Output = [.. output.Instructions],
-                Name = "prefixes",
+                mode = InstructionMatcher.OutputMode.MethodPrefix,
+                output = [.. output.instructions],
+                name = "prefixes",
             };
-            output.Instructions.Clear();
+            output.instructions.Clear();
         }
 
         if (postfixes.Count > 0)
@@ -79,12 +79,12 @@ internal class CircumfixRuleBuilder : RuleBuilder
 
             yield return new Rule
             {
-                Min = 0,
-                Max = 0,
-                Mode = InstructionMatcher.OutputMode.Replace,
-                Pattern = [new(OpCodes.Ret)],
-                Output = [new(OpCodes.Br, returnLabel)],
-                Name = "return",
+                min = 0,
+                max = 0,
+                mode = InstructionMatcher.OutputMode.Replace,
+                pattern = [new(OpCodes.Ret)],
+                output = [new(OpCodes.Br, returnLabel)],
+                name = "return",
             };
         }
 
@@ -120,11 +120,11 @@ internal class CircumfixRuleBuilder : RuleBuilder
 
             yield return new Rule
             {
-                Mode = InstructionMatcher.OutputMode.MethodPostfix,
-                Output = [.. output.Instructions],
-                Name = "postfixes",
+                mode = InstructionMatcher.OutputMode.MethodPostfix,
+                output = [.. output.instructions],
+                name = "postfixes",
             };
-            output.Instructions.Clear();
+            output.instructions.Clear();
         }
     }
 }
