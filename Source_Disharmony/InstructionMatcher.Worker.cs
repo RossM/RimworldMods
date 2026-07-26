@@ -9,8 +9,8 @@ public partial class InstructionMatcher
         ILGenerator generator,
         bool debug)
     {
-        private readonly Dictionary<int, int> localMap_Method = new();
-        private readonly Dictionary<Label, Label> labelMap_Method = new();
+        private readonly Dictionary<int, int> localMap_Method = [];
+        private readonly Dictionary<Label, Label> labelMap_Method = [];
         private readonly List<MatchData> matches = [];
         private readonly List<ExceptionBlock> extraBlocks = [];
         private readonly List<Label> extraLabels = [];
@@ -48,8 +48,8 @@ public partial class InstructionMatcher
                             rule = rule,
                             start = 0,
                             end = 0,
-                            localMap_Match = new(),
-                            labelMap_Match = new(),
+                            localMap_Match = [],
+                            labelMap_Match = [],
                         });
                         continue;
                     }
@@ -60,8 +60,8 @@ public partial class InstructionMatcher
                             rule = rule,
                             start = inInstructions.Count,
                             end = inInstructions.Count,
-                            localMap_Match = new(),
-                            labelMap_Match = new(),
+                            localMap_Match = [],
+                            labelMap_Match = [],
                         });
                         continue;
                     }
@@ -86,7 +86,7 @@ public partial class InstructionMatcher
                         start = instructionIndex,
                         end = instructionIndex + rule.Pattern.Length,
                         localMap_Match = localIndex_Match,
-                        labelMap_Match = new(),
+                        labelMap_Match = [],
                     };
                     if (debug || forceDebug)
                         FileLog.Log($"MATCH #{ruleIndex} ({matchData.start} .. {matchData.end - 1})");
@@ -291,7 +291,7 @@ public partial class InstructionMatcher
 
         private bool MatchPattern(Rule rule, int instructionIndex, out Dictionary<int, int> localIndex_Match)
         {
-            localIndex_Match = new Dictionary<int, int>();
+            localIndex_Match = [];
 
             bool noOutput = rule.Output is not { Length: > 0 };
 

@@ -111,8 +111,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
 
         // Validate the delegate type has the right parameter types
-        var delegateInvoke = parameter.ParameterType.GetMethod("Invoke");
-        if (delegateInvoke is null)
+        var delegateInvoke = parameter.ParameterType.GetMethod("Invoke") ??
             throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
         if (!delegateInvoke.GetParameters().Types().SequenceEqual(method.MethodInfo.GetParameters().Types()))
             throw new ParameterBindingException(parameter.Name, "Parameter type mismatch");

@@ -73,7 +73,7 @@ internal struct PatchInfo
     public bool inline;
     public bool debug;
     public bool optimize;
-    public bool HasBindingType(BindingType bindingType) => parameters.Any(p => p.BindingType == bindingType);
+    public readonly bool HasBindingType(BindingType bindingType) => parameters.Any(p => p.BindingType == bindingType);
 }
 
 internal class PatchRegistry
@@ -167,8 +167,7 @@ internal class PatchRegistry
 
                 foreach (var targetAttribute in targetAttributes)
                 {
-                    var patchedType = targetAttribute.type ?? defaultTargetType;
-                    if (patchedType == null)
+                    var patchedType = targetAttribute.type ?? defaultTargetType ??
                         throw new NotSupportedException("No target type");
 
                     List<MemberInfo> candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.methodName,
@@ -185,9 +184,7 @@ internal class PatchRegistry
 
                     foreach (var result in candidates)
                     {
-                        MethodBase? target = result as MethodBase;
-
-                        if (target == null)
+                        MethodBase target = result as MethodBase ??
                             throw new InvalidOperationException($"{nameForErrors}: Couldn't locate method");
                         if (target.IsGenericMethod)
                             throw new InvalidOperationException($"{nameForErrors}: Can't patch instantiated generic method");

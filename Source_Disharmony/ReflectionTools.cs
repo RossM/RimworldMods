@@ -32,8 +32,7 @@ public static class ReflectionTools
         // Harmony uses ':' to separate the type name from the method name, so if it's there, use it
         if (name?.Split([':'], 2) is [string typeName, string memberName])
         {
-            type = AccessTools.TypeByName(typeName);
-            if (type == null)
+            type = AccessTools.TypeByName(typeName) ??
                 throw new InvalidOperationException($"Type not found: {typeName}");
             name = memberName;
         }
