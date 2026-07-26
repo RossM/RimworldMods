@@ -100,8 +100,6 @@ public static class ReflectionTools
             result switch
             {
                 PropertyInfo property => memberType == MemberType.Setter ? property.SetMethod : property.GetMethod,
-                FieldInfo when memberType == MemberType.Setter =>
-                    throw new NotSupportedException("Patching field setters is not supported"),
                 _ => result,
             }
         ).Where(m => m is not null);

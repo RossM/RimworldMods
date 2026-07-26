@@ -223,10 +223,18 @@ internal class PatchRegistry
             case InnerPostfixConstantAttribute { value: string value }: return new ConstantStringInvocation(value);
             case { memberName: string } or { memberType: MemberType.Constructor }:
             {
-                MemberInfo inner = ReflectionTools.GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName, patchTypeAttribute.memberType,
-                    patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
+                MemberInfo inner = ReflectionTools.GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName,
+                    patchTypeAttribute.memberType, patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
 
-                return Invocation.Create(inner);
+                return inner switch
+                {
+                    FieldInfo field => patchTypeAttribute.memberType is MemberType.Setter
+                        ? new SetFieldInvocation(field)
+                        : new FieldInvocation(field),
+                    MethodInfo method => new MethodInvocation(method),
+                    ConstructorInfo constructor => new ConstructorInvocation(constructor),
+                    _ => throw new ArgumentOutOfRangeException(),
+                };
             }
             default: throw new InvalidOperationException($"{patchTypeAttribute.patchType} patch must have an inner target");
         }

@@ -118,6 +118,18 @@ internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
     public static bool operator !=(FieldInvocation? left, FieldInvocation? right) => !Equals(left, right);
 }
 
+internal class SetFieldInvocation(FieldInfo fieldInfo) : FieldInvocation(fieldInfo)
+{
+    public const string ValueFieldName = "value";
+
+    public override Type ReturnType => typeof(void);
+    public override Type[] ParameterTypes => field ??= FieldInfo.IsStatic ? [FieldInfo.FieldType] : [FieldInfo.DeclaringType, FieldInfo.FieldType];
+    public override bool IsStatic => FieldInfo.IsStatic;
+    public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [ValueFieldName] : [InstanceParameterName, ValueFieldName];
+
+    protected override CodeInstruction GetCodeInstruction() => new(FieldInfo.IsStatic ? OpCodes.Stsfld : OpCodes.Stfld, FieldInfo);
+}
+
 internal abstract class MethodBaseInvocation : Invocation
 {
     public abstract MethodBase MethodBase { get; }
