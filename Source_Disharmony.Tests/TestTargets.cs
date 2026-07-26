@@ -197,6 +197,11 @@ namespace Disharmony.Tests
     public sealed class InnerInstanceMethodTargets
     {
         public int foo;
+        public int Property
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            get => foo;
+        }
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void Void() { }
     }
@@ -205,6 +210,11 @@ namespace Disharmony.Tests
     {
         public static int FieldObserved;
         public int foo;
+        public int Property
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            get => foo;
+        }
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void Void() => FieldObserved = foo;
     }
@@ -413,6 +423,10 @@ namespace Disharmony.Tests
         public static int ReadInstanceField(InnerInstanceMethodTargets inner) => inner.foo;
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static int ReadStructField(InnerStructMethodTargets inner) => inner.foo;
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static int ReadInstanceProperty(InnerInstanceMethodTargets inner) => inner.Property;
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static int ReadStructProperty(InnerStructMethodTargets inner) => inner.Property;
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void IntArgument(int value) => InnerStaticMethodTargets.IntArgument(value);
         [MethodImpl(MethodImplOptions.NoInlining)]
