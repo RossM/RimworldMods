@@ -638,7 +638,7 @@ public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBi
 
 /// <summary>
 ///     Binds a patch parameter to a delegate that invokes the nearest base-class implementation of the outer instance
-///     method, allowing the patch to call that implementation without virtual dispatch.
+///     method, allowing the patch to call that implementation directly as if using <see langword="base"/>.
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
