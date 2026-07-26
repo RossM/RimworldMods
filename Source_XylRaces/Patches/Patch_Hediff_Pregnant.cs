@@ -6,7 +6,7 @@ public static class Patch_Hediff_Pregnant
     [Feature(nameof(Config.Feature.Parthenogenesis))]
     [Postfix]
     [Target(nameof(Hediff_Pregnant.PostAdd))]
-    public static void PostAdd_Postfix(ref Hediff_Pregnant __instance)
+    public static void PostAdd_Postfix(Hediff_Pregnant __instance)
     {
         if (__instance.Mother != null || __instance.Father != null)
             return;
