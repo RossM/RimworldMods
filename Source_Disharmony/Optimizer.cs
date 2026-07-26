@@ -33,6 +33,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         /// </summary>
         public Block? next;
 
+        public bool EntryPoint => parent == null || parent.entry == this;
         public virtual string ID => $"#{id}";
     }
 
@@ -68,12 +69,12 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
     private class BasicBlock : Block
     {
-        public bool EntryPoint => parent!.entry == this;
         public readonly List<Op> ops = [];
     }
 
     public readonly InstructionList output = [];
-    private readonly List<BasicBlock> basicBlocks = [];
+    private readonly List<Block> allBlocks = [];
+    private List<BasicBlock> basicBlocks = [];
     private readonly Region root = new();
     private int nextBlockId = 1;
 
@@ -275,11 +276,12 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     {
         Dictionary<Label, BasicBlock> labelToBlock = new();
 
-        BasicBlock curBlock = new() { id = nextBlockId++, parent = root };
-        basicBlocks.Add(curBlock);
-        root.entry = curBlock;
-
         Region exceptionRegion = root;
+        allBlocks.Add(root);
+
+        BasicBlock curBlock = new() { id = nextBlockId++, parent = exceptionRegion };
+        allBlocks.Add(curBlock);
+        exceptionRegion.entry ??= curBlock;
 
         foreach (var inst in inputInstructions)
         {
@@ -307,7 +309,9 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         }
 
         if (curBlock.ops.Count == 0)
-            basicBlocks.Remove(curBlock);
+            allBlocks.Remove(curBlock);
+
+        basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
 
         for (int i = 0; i < basicBlocks.Count - 1; i++)
         {
@@ -384,6 +388,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                     harmonyBlock = harmonyBlock,
                     parent = exceptionRegion,
                 };
+                allBlocks.Add(newRegion);
                 exceptionRegion.entry ??= newRegion;
                 exceptionRegion = newRegion;
             }
@@ -396,6 +401,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                     harmonyBlock = harmonyBlock,
                     parent = exceptionRegion.parent,
                 };
+                allBlocks.Add(newRegion);
                 exceptionRegion.next = newRegion;
                 exceptionRegion = newRegion;
             }
@@ -411,7 +417,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             else
             {
                 BasicBlock newBlock = new() { id = nextBlockId++, parent = exceptionRegion };
-                basicBlocks.Add(newBlock);
+                allBlocks.Add(newBlock);
                 curBlock = newBlock;
                 exceptionRegion.entry ??= curBlock;
             }
@@ -524,7 +530,7 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         Queue<Block> queue = new();
         HashSet<Block> liveBlocks = new();
 
-        foreach (var block in basicBlocks)
+        foreach (var block in allBlocks)
         {
             if (block.EntryPoint)
                 queue.Enqueue(block);
@@ -539,24 +545,28 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 queue.Enqueue(successor);
         }
 
-        basicBlocks.RemoveAll(b => !liveBlocks.Contains(b));
+        allBlocks.RemoveAll(b => !liveBlocks.Contains(b));
+        basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
 
         UpdatePredecessors();
     }
 
     private void AggressiveDeadCodeEliminationAndReorder()
     {
-        List<BasicBlock> outputBlocks = [];
+        List<Block> outputBlocks = [];
         AggressiveDeadCodeEliminationAndReorder(root, outputBlocks);
-        basicBlocks.Clear();
-        basicBlocks.AddRange(outputBlocks);
+        allBlocks.Clear();
+        allBlocks.AddRange(outputBlocks);
+        basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
     }
 
-    private List<Block> AggressiveDeadCodeEliminationAndReorder(Region region, List<BasicBlock> outputBlocks)
+    private List<Block> AggressiveDeadCodeEliminationAndReorder(Region region, List<Block> outputBlocks)
     {
         LinkedList<Block> queue = new();
         HashSet<Block> emitted = new();
         List<Block> leaveTargets = [];
+
+        allBlocks.Add(region);
 
         Block entry = region;
         while (entry is Region r)
