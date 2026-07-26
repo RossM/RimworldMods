@@ -15,7 +15,7 @@ public static class Out<T>;
 public enum MemberType
 {
     /// <summary>
-    ///     Matches methods, property getters, and fields.
+    ///     Matches methods, property getters, and field read accesses.
     /// </summary>
     Any,
 
@@ -25,12 +25,12 @@ public enum MemberType
     Method,
 
     /// <summary>
-    ///     Matches property getters and fields.
+    ///     Matches property getters and field read accesses.
     /// </summary>
     Getter,
 
     /// <summary>
-    ///     Matches property setters. Attempting to match a field throws a <see cref="NotSupportedException" />.
+    ///     Matches property setters and field write accesses.
     /// </summary>
     Setter,
 
