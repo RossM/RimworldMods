@@ -357,11 +357,13 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 Op? op = block.ops[index];
                 block.ops[index] = op.Operand switch
                 {
-                    Label label => new(op.Opcode, labelToBlock[label]),
-                    Label[] labels => new(op.Opcode, labels.Select(l => labelToBlock[l]).ToArray<Block>()),
+                    Label label => new(op.Opcode, GetTarget(label)),
+                    Label[] labels => new(op.Opcode, labels.Select(GetTarget).ToArray()),
                     _ => block.ops[index]
                 };
             }
+
+            Block GetTarget(Label label) => labelToBlock[label];
         }
 
         // Convert block-final unconditional branches to fallthrough
