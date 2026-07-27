@@ -100,11 +100,8 @@ internal class PatchRegistry
         {
             foreach (TypeInfo type in assembly.DefinedTypes)
             {
-                var harmonyAttribute = type.GetCustomAttribute<HarmonyPatch>();
-                if (harmonyAttribute == null)
-                    continue;
-
-                ProcessType(type);
+                if (type.GetCustomAttribute<PatchAttribute>() != null || type.GetCustomAttribute<HarmonyPatch>() != null)
+                    ProcessType(type);
             }
         }
     }
@@ -115,12 +112,11 @@ internal class PatchRegistry
         {
             foreach (TypeInfo type in assembly.DefinedTypes)
             {
-                var harmonyAttribute = type.GetCustomAttribute<HarmonyPatch>();
-                if (harmonyAttribute == null)
+                if (type.GetCustomAttribute<PatchAttribute>() == null && type.GetCustomAttribute<HarmonyPatch>() == null)
                     continue;
 
-                var patchCategory = type.GetCustomAttribute<HarmonyPatchCategory>()?.info.category;
-                if (patchCategory != category)
+                if ((type.GetCustomAttribute<CategoryAttribute>()?.category ??
+                     type.GetCustomAttribute<HarmonyPatchCategory>()?.info.category) != category)
                     continue;
 
                 ProcessType(type);
@@ -150,8 +146,9 @@ internal class PatchRegistry
 
                 List<Attribute> attributes = [.. typeAttributes, .. methodAttributes];
 
-                var defaultTargetType = attributes.OfType<HarmonyPatch>().Select(p => p.info.declaringType)
-                    .FirstOrDefault(t => t is not null);
+                var defaultTargetType =
+                    attributes.OfType<PatchAttribute>().Select(p => p.type).FirstOrDefault(t => t is not null) ??
+                    attributes.OfType<HarmonyPatch>().Select(p => p.info.declaringType).FirstOrDefault(t => t is not null);
                 var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
                 var targetAttributes = attributes.OfType<TargetAttribute>().ToList();
                 bool debug = attributes.OfType<DebugAttribute>().Any();
@@ -185,7 +182,7 @@ internal class PatchRegistry
                     foreach (var result in candidates)
                     {
                         MethodBase target = result as MethodBase ??
-                            throw new InvalidOperationException($"{nameForErrors}: Couldn't locate method");
+                                            throw new InvalidOperationException($"{nameForErrors}: Couldn't locate method");
                         if (target.IsGenericMethod)
                             throw new InvalidOperationException($"{nameForErrors}: Can't patch instantiated generic method");
 

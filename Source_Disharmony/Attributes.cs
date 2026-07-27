@@ -61,6 +61,21 @@ public enum Scope
     Outer,
 }
 
+[PublicAPI]
+[MeansImplicitUse]
+[AttributeUsage(AttributeTargets.Class)]
+public class PatchAttribute(Type? type = null) : Attribute
+{
+    public readonly Type? type = type;
+}
+
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Class)]
+public class CategoryAttribute(string category) : Attribute
+{
+    public readonly string category = category;
+}
+
 public abstract class PatchTypeAttribute(
     PatchType patchType,
     Type? type = null,
@@ -307,7 +322,7 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
 ///     Logs the modified IL and, when available, the generated Mono JIT assembly to the Harmony debug log.
 /// </summary>
 [PublicAPI]
-[AttributeUsage(AttributeTargets.Method)]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class DebugAttribute : Attribute;
 
 /// <summary>
@@ -315,7 +330,7 @@ public class DebugAttribute : Attribute;
 ///     their patches are applied. The optimizer must be enabled separately.
 /// </summary>
 [PublicAPI]
-[AttributeUsage(AttributeTargets.Method)]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class OptimizeAttribute : Attribute;
 
 /// <summary>
@@ -360,8 +375,7 @@ public class OptimizeAttribute : Attribute;
 ///     </para>
 /// </remarks>
 [PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
 public class TargetAttribute(
     Type? type,
     string? methodName = null,
@@ -477,8 +491,7 @@ public class TargetAttribute(
 ///     </para>
 /// </remarks>
 [PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
 public class TargetsAttribute(
     Type? type,
     string? methodName = null,
@@ -553,7 +566,7 @@ public class TargetsAttribute(
 ///     Inlines the patch method's body into each selected target member instead of invoking it with a method call.
 /// </summary>
 [PublicAPI]
-[AttributeUsage(AttributeTargets.Method)]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class InlineAttribute : Attribute;
 
 public abstract class ParameterBindingAttribute(Scope scope) : Attribute
