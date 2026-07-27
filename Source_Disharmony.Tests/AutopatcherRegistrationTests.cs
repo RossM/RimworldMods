@@ -35,6 +35,45 @@ public static class PatchTypeProcessesEveryPatchMethodOnTypePatches
     public static void PatchTypeProcessesEveryPatchMethodOnType_Second(ref int __result) => __result = 42;
 }
 
+[Patch(typeof(StaticMethodTargets))]
+[Category("preferred-attributes")]
+public static class PreferredRegistrationAttributePatches
+{
+    [Postfix]
+    [Target(nameof(StaticMethodTargets.IntIdentity))]
+    public static void PatchAttributeMarksClassForAssemblyProcessing(ref int __result) => __result = 42;
+
+    [Postfix]
+    [Target(nameof(StaticMethodTargets.StringIdentity))]
+    public static void CategoryAttributeMarksClassForCategoryProcessing(ref string __result) => __result = "patched";
+}
+
+[Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
+public static class ClassTargetAttributePatches
+{
+    public static int FirstPatchCalls;
+    public static int SecondPatchCalls;
+
+    [Postfix]
+    public static void ClassTargetAttributeAppliesToEveryPatchMethod_First() => FirstPatchCalls++;
+
+    [Postfix]
+    public static void ClassTargetAttributeAppliesToEveryPatchMethod_Second() => SecondPatchCalls++;
+}
+
+[Targets(typeof(StaticMethodTargets), nameof(StaticMethodTargets.OverloadedVoid))]
+public static class ClassTargetsAttributePatches
+{
+    public static int FirstPatchCalls;
+    public static int SecondPatchCalls;
+
+    [Postfix]
+    public static void ClassTargetsAttributeAppliesToEveryPatchMethod_First() => FirstPatchCalls++;
+
+    [Postfix]
+    public static void ClassTargetsAttributeAppliesToEveryPatchMethod_Second() => SecondPatchCalls++;
+}
+
 [HarmonyPatch(typeof(StaticMethodTargets))]
 [HarmonyPatchCategory("included")]
 public static class IncludedCategoryPatches
@@ -109,6 +148,49 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
+    }
+
+    [Test]
+    public void PatchAttributeMarksClassForAssemblyProcessing()
+    {
+        Autopatcher.PatchAll(TestAssembly);
+
+        Assert.That(StaticMethodTargets.IntIdentity(1), Is.EqualTo(42));
+    }
+
+    [Test]
+    public void CategoryAttributeMarksClassForCategoryProcessing()
+    {
+        Autopatcher.PatchCategory(TestAssembly, "preferred-attributes");
+
+        Assert.That(StaticMethodTargets.StringIdentity("original"), Is.EqualTo("patched"));
+    }
+
+    [Test]
+    public void ClassTargetAttributeAppliesToEveryPatchMethod()
+    {
+        ClassTargetAttributePatches.FirstPatchCalls = 0;
+        ClassTargetAttributePatches.SecondPatchCalls = 0;
+        Autopatcher.Patch(typeof(ClassTargetAttributePatches));
+
+        StaticMethodTargets.RegistrationResultA();
+
+        Assert.That(ClassTargetAttributePatches.FirstPatchCalls, Is.EqualTo(1));
+        Assert.That(ClassTargetAttributePatches.SecondPatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void ClassTargetsAttributeAppliesToEveryPatchMethod()
+    {
+        ClassTargetsAttributePatches.FirstPatchCalls = 0;
+        ClassTargetsAttributePatches.SecondPatchCalls = 0;
+        Autopatcher.Patch(typeof(ClassTargetsAttributePatches));
+
+        StaticMethodTargets.OverloadedVoid(1);
+        StaticMethodTargets.OverloadedVoid("value");
+
+        Assert.That(ClassTargetsAttributePatches.FirstPatchCalls, Is.EqualTo(2));
+        Assert.That(ClassTargetsAttributePatches.SecondPatchCalls, Is.EqualTo(2));
     }
 
     [Test]
