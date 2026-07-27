@@ -5,6 +5,7 @@ namespace Disharmony.Tests;
 public static class AutopatcherRegistrationPatches
 {
     public static int OverloadPatchCalls;
+    public static MethodBase? ObservedMethod;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
@@ -22,6 +23,25 @@ public static class AutopatcherRegistrationPatches
     [Postfix]
     [Targets(typeof(StaticMethodTargets), nameof(StaticMethodTargets.OverloadedVoid))]
     public static void TargetsAttributePatchesEveryOverload() => OverloadPatchCalls++;
+
+    [Postfix]
+    public static void Register_TargetsOnly_UsesAttributesAndDefersUntilApply(ref int __result) => __result = 42;
+
+    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    public static void Patch_TargetsOnly_UsesAttributesForInnerPatch(ref int __result) => __result = 42;
+
+    public static bool Register_AllInformation_UsesExplicitPrefixAndDefersUntilApply() => false;
+
+    public static void Patch_AllInformation_UsesExplicitPostfixForEveryTarget(ref int __result) => __result = 42;
+
+    public static bool Patch_AllInformation_UsesExplicitInnerPrefix() => false;
+
+    public static void Patch_AllInformation_UsesExplicitInnerPostfix(ref int __result) => __result = 42;
+
+    public static void Patch_AllInformation_UsesExplicitFieldSetter(ref int value) => value = 42;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void Patch_AllInformation_UsesInlineOption() => ObservedMethod = MethodBase.GetCurrentMethod();
 }
 
 public static class PatchTypeProcessesEveryPatchMethodOnTypePatches
@@ -217,6 +237,155 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
         StaticMethodTargets.OverloadedVoid("value");
 
         Assert.That(AutopatcherRegistrationPatches.OverloadPatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void Register_TargetsOnly_UsesAttributesAndDefersUntilApply()
+    {
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.Register_TargetsOnly_UsesAttributesAndDefersUntilApply))!;
+        MethodInfo firstTarget = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.RegistrationResultA))!;
+        MethodInfo secondTarget = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.RegistrationResultB))!;
+
+        Autopatcher.Register(patch, [firstTarget, secondTarget]);
+
+        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(1));
+        Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(2));
+
+        Autopatcher.Apply();
+
+        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
+        Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Patch_TargetsOnly_UsesAttributesForInnerPatch()
+    {
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.Patch_TargetsOnly_UsesAttributesForInnerPatch))!;
+        MethodInfo target = typeof(OuterStaticMethodTargets)
+            .GetMethod(nameof(OuterStaticMethodTargets.IntResult))!;
+
+        Autopatcher.Patch(patch, target);
+
+        Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Register_AllInformation_UsesExplicitPrefixAndDefersUntilApply()
+    {
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.Register_AllInformation_UsesExplicitPrefixAndDefersUntilApply))!;
+        MethodInfo target = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.RegistrationResultA))!;
+
+        Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
+
+        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(1));
+
+        Autopatcher.Apply();
+
+        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.Zero);
+    }
+
+    [Test]
+    public void Patch_AllInformation_UsesExplicitPostfixForEveryTarget()
+    {
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.Patch_AllInformation_UsesExplicitPostfixForEveryTarget))!;
+        MethodInfo firstTarget = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.RegistrationResultA))!;
+        MethodInfo secondTarget = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.RegistrationResultB))!;
+
+        Autopatcher.Patch(patch, PatchType.Postfix, targets: [firstTarget, secondTarget]);
+
+        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
+        Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Patch_AllInformation_UsesExplicitInnerPrefix()
+    {
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.Patch_AllInformation_UsesExplicitInnerPrefix))!;
+        MethodInfo innerTarget = typeof(InnerStaticMethodTargets)
+            .GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
+        MethodInfo outerTarget = typeof(OuterStaticMethodTargets)
+            .GetMethod(nameof(OuterStaticMethodTargets.IntResult))!;
+
+        Autopatcher.Patch(
+            patch,
+            PatchType.InnerPrefix,
+            innerTarget: innerTarget,
+            targets: [outerTarget]);
+
+        Assert.That(OuterStaticMethodTargets.IntResult(), Is.Zero);
+    }
+
+    [Test]
+    public void Patch_AllInformation_UsesExplicitInnerPostfix()
+    {
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.Patch_AllInformation_UsesExplicitInnerPostfix))!;
+        MethodInfo innerTarget = typeof(InnerStaticMethodTargets)
+            .GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
+        MethodInfo outerTarget = typeof(OuterStaticMethodTargets)
+            .GetMethod(nameof(OuterStaticMethodTargets.IntResult))!;
+
+        Autopatcher.Patch(
+            patch,
+            PatchType.InnerPostfix,
+            innerTarget: innerTarget,
+            targets: [outerTarget]);
+
+        Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Patch_AllInformation_UsesExplicitFieldSetter()
+    {
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.Patch_AllInformation_UsesExplicitFieldSetter))!;
+        FieldInfo innerTarget = typeof(InnerStaticMethodTargets)
+            .GetField(nameof(InnerStaticMethodTargets.Field))!;
+        MethodInfo outerTarget = typeof(OuterStaticMethodTargets)
+            .GetMethod(nameof(OuterStaticMethodTargets.SetStaticField))!;
+        InnerStaticMethodTargets.Field = 0;
+
+        Autopatcher.Patch(
+            patch,
+            PatchType.InnerPrefix,
+            innerTarget: innerTarget,
+            innerMemberType: MemberType.Setter,
+            targets: [outerTarget]);
+
+        OuterStaticMethodTargets.SetStaticField(1);
+
+        Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Patch_AllInformation_UsesInlineOption()
+    {
+        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
+            .GetMethod(nameof(AutopatcherRegistrationPatches.Patch_AllInformation_UsesInlineOption))!;
+        MethodInfo target = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.RegistrationResultA))!;
+        AutopatcherRegistrationPatches.ObservedMethod = null;
+
+        Autopatcher.Patch(
+            patch,
+            PatchType.Prefix,
+            options: PatchOptions.Inline,
+            targets: [target]);
+
+        StaticMethodTargets.RegistrationResultA();
+
+        Assert.That(AutopatcherRegistrationPatches.ObservedMethod, Is.Not.Null);
+        Assert.That(AutopatcherRegistrationPatches.ObservedMethod, Is.Not.EqualTo(patch));
     }
 
     [Test]
