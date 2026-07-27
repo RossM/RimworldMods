@@ -294,6 +294,21 @@ internal class PatchRegistry
 
     private void AddPatch(MethodInfo method, PatchType patchType, MethodBase target, Invocation inner, PatchOptions options)
     {
+        if (method.IsGenericMethod)
+            throw new NotSupportedException($"{method.FullName}: Generic patch functions are not supported");
+        if (!method.IsStatic)
+            throw new InvalidOperationException($"{method.FullName}: Patch methods must be static");
+        if (method.ReturnType != typeof(void) && method.ReturnType != typeof(bool))
+            throw new InvalidOperationException($"{method.FullName}: Patch methods must return 'bool' or 'void'");
+        switch (patchType)
+        {
+            case PatchType.Prefix: break;
+            case PatchType.Postfix: break;
+            case PatchType.InnerPrefix: break;
+            case PatchType.InnerPostfix: break;
+            default: throw new ArgumentOutOfRangeException(nameof(patchType), patchType, null);
+        }
+
         if (target.IsGenericMethod)
             throw new InvalidOperationException($"{target.FullName}: Can't patch instantiated generic method");
 
