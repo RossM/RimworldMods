@@ -43,7 +43,7 @@ internal class Patcher
     private readonly Module module;
 
     // These variables must only be accessed while HarmonyInternals.locker is held
-    private readonly Dictionary<MethodBase, MethodInfo> trampolines = new();
+    private readonly Dictionary<MethodBase, MethodInfo> trampolines = [];
     private int trampolineCount;
 
     private struct MethodPatch
@@ -53,7 +53,7 @@ internal class Patcher
         public bool debug;
     }
 
-    private readonly Dictionary<MethodBase, MethodPatch> methodPatches = new();
+    private readonly Dictionary<MethodBase, MethodPatch> methodPatches = [];
 
     public bool optimizerEnabled = false;
 

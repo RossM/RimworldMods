@@ -75,9 +75,9 @@ internal struct PatchInfo
     public required PatchType patchType;
     public required ParameterBinding[] parameters;
     public required PatchOptions options;
-    public bool Inline => options.HasFlag(PatchOptions.Inline);
-    public bool Debug => options.HasFlag(PatchOptions.Debug);
-    public bool Optimize => options.HasFlag(PatchOptions.Optimize);
+    public readonly bool Inline => options.HasFlag(PatchOptions.Inline);
+    public readonly bool Debug => options.HasFlag(PatchOptions.Debug);
+    public readonly bool Optimize => options.HasFlag(PatchOptions.Optimize);
     public readonly bool HasBindingType(BindingType bindingType) => parameters.Any(p => p.bindingType == bindingType);
 }
 
