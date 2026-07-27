@@ -152,7 +152,7 @@ internal class PatchRegistry
                     attributes.OfType<HarmonyPatch>().Select(p => p.info.declaringType).FirstOrDefault(t => t is not null);
                 var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
                 var targetAttributes = attributes.OfType<TargetAttribute>().ToList();
-                var options = attributes.OfType<PatchOptionsAttribute>().SingleOrDefault()?.options ?? PatchOptions.Default;
+                var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.options ?? PatchOptions.Default;
 
                 if (patchTypeAttribute == null)
                     return;
@@ -205,7 +205,7 @@ internal class PatchRegistry
                 List<Attribute> attributes = [.. methodAttributes, .. typeAttributes];
 
                 var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
-                var options = attributes.OfType<PatchOptionsAttribute>().SingleOrDefault()?.options ?? PatchOptions.Default;
+                var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.options ?? PatchOptions.Default;
 
                 if (patchTypeAttribute == null)
                     return;
