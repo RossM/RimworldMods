@@ -2,6 +2,8 @@ namespace Disharmony.Tests;
 
 public class RuntimePatchExceptionPatches
 {
+    public static int PatchCalls;
+
     public static void RuleBuilder_IncompatibleParameterConversion_IsRejectedBeforeUpdateMethod(string value) { }
 
     public static void RuleBuilder_OutOfRangeParameterIndex_IsRejectedBeforeUpdateMethod(
@@ -19,6 +21,8 @@ public class RuntimePatchExceptionPatches
 
     public static void Circumfix_GenericPatchMethod_IsRejectedBeforeUpdateMethod<T>() { }
 
+    public static void Circumfix_ConstructedGenericPatchMethod_IsAllowed<T>() => PatchCalls++;
+
     public static BindingStruct Circumfix_PrefixReturningStruct_IsRejectedBeforeUpdateMethod() => default;
 
     public static BindingStruct Infix_InnerPrefixReturningStruct_IsRejectedBeforeUpdateMethod() => default;
@@ -32,6 +36,13 @@ public class RuntimePatchExceptionPatches
         primitive = 42;
         reference = "state";
     }
+}
+
+public static class RuntimePatchExceptionGenericPatches<T>
+{
+    public static void Circumfix_OpenGenericDeclaringType_IsRejectedBeforeUpdateMethod() { }
+
+    public static void Circumfix_ClosedGenericDeclaringType_IsAllowed() { }
 }
 
 [TestFixture]
@@ -151,6 +162,54 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
         Assert.Throws<InvalidOperationException>(() =>
+        {
+            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Autopatcher.ForceApply();
+        });
+    }
+
+    [Test]
+    public void Circumfix_ConstructedGenericPatchMethod_IsAllowed()
+    {
+        RuntimePatchExceptionPatches.PatchCalls = 0;
+        MethodInfo patch = typeof(RuntimePatchExceptionPatches)
+            .GetMethod(nameof(RuntimePatchExceptionPatches.Circumfix_ConstructedGenericPatchMethod_IsAllowed))!
+            .MakeGenericMethod(typeof(int));
+        MethodInfo target = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.Void))!;
+
+        Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
+        Autopatcher.ForceApply();
+
+        StaticMethodTargets.Void();
+
+        Assert.That(RuntimePatchExceptionPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void Circumfix_OpenGenericDeclaringType_IsRejectedBeforeUpdateMethod()
+    {
+        MethodInfo patch = typeof(RuntimePatchExceptionGenericPatches<>)
+            .GetMethod(nameof(RuntimePatchExceptionGenericPatches<int>.Circumfix_OpenGenericDeclaringType_IsRejectedBeforeUpdateMethod))!;
+        MethodInfo target = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.Void))!;
+
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Autopatcher.ForceApply();
+        });
+    }
+
+    [Test]
+    public void Circumfix_ClosedGenericDeclaringType_IsAllowed()
+    {
+        MethodInfo patch = typeof(RuntimePatchExceptionGenericPatches<int>)
+            .GetMethod(nameof(RuntimePatchExceptionGenericPatches<int>.Circumfix_ClosedGenericDeclaringType_IsAllowed))!;
+        MethodInfo target = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.Void))!;
+
+        Assert.DoesNotThrow(() =>
         {
             Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
             Autopatcher.ForceApply();

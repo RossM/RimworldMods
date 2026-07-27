@@ -4,21 +4,26 @@ public static class PostfixReturnValuePatches
 {
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
-    public static int PostfixReturnValueIsDiscarded() => 42;
+    public static int PostfixReturningNonVoidIsRejected() => 42;
 
     [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
-    public static int InnerPostfixReturnValueIsDiscarded() => 42;
+    public static int InnerPostfixReturningNonVoidIsRejected() => 42;
 }
 
 [TestFixture]
 public sealed partial class PostfixReturnValueTests : PatchTestBase
 {
     [Test]
-    public void PostfixReturnValueIsDiscarded()
+    public void PostfixReturningNonVoidIsRejected()
     {
-        ApplyPatch(typeof(PostfixReturnValuePatches), nameof(PostfixReturnValuePatches.PostfixReturnValueIsDiscarded));
-        Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(PostfixReturnValuePatches),
+                nameof(PostfixReturnValuePatches.PostfixReturningNonVoidIsRejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<InvalidOperationException>());
+        Assert.That(exception.InnerException!.Message, Does.EndWith("Postfix must return 'void'"));
     }
 }
 
@@ -26,9 +31,14 @@ public sealed partial class PostfixReturnValueTests : PatchTestBase
 public sealed partial class PostfixReturnValueTests
 {
     [Test]
-    public void InnerPostfixReturnValueIsDiscarded()
+    public void InnerPostfixReturningNonVoidIsRejected()
     {
-        ApplyPatch(typeof(PostfixReturnValuePatches), nameof(PostfixReturnValuePatches.InnerPostfixReturnValueIsDiscarded));
-        Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(1));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(PostfixReturnValuePatches),
+                nameof(PostfixReturnValuePatches.InnerPostfixReturningNonVoidIsRejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<InvalidOperationException>());
+        Assert.That(exception.InnerException!.Message, Does.EndWith("InnerPostfix must return 'void'"));
     }
 }
