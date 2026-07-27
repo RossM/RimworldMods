@@ -394,27 +394,12 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
     }
 }
 
-/// <summary>
-///     Logs the modified IL and, when available, the generated Mono JIT assembly for the attributed patch methods.
-/// </summary>
-/// <remarks>
-///     When applied to a class, this setting applies to every patch method declared by the class. Output is written to the
-///     Harmony debug log.
-/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-public class DebugAttribute : Attribute;
-
-/// <summary>
-///     Requests Disharmony's optional, experimental IL optimization pass for the attributed patch methods.
-/// </summary>
-/// <remarks>
-///     The pass runs after patches are inserted and must be enabled separately. When applied to a class, this setting
-///     applies to every patch method declared by the class.
-/// </remarks>
-[PublicAPI]
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-public class OptimizeAttribute : Attribute;
+public class PatchOptionsAttribute(PatchOptions options) : Attribute
+{
+    public PatchOptions options = options;
+}
 
 /// <summary>
 ///     Selects exactly one outer method, constructor, or property accessor for the attributed patch method or methods.
@@ -631,16 +616,6 @@ public class TargetsAttribute(
     public TargetsAttribute(string methodName, params Type[] parameterTypes)
         : this(null, methodName, MemberType.Any, parameterTypes) { }
 }
-
-/// <summary>
-///     Inlines the attributed patch methods into each selected target instead of invoking them with method calls.
-/// </summary>
-/// <remarks>
-///     When applied to a class, this setting applies to every patch method declared by the class.
-/// </remarks>
-[PublicAPI]
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-public class InlineAttribute : Attribute;
 
 public abstract class ParameterBindingAttribute(Scope scope) : Attribute
 {

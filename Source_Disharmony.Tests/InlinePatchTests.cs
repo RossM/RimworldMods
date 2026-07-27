@@ -2,7 +2,7 @@ namespace Disharmony.Tests;
 
 public static class InlinePatchPatches
 {
-    [Inline]
+    [PatchOptions(PatchOptions.Inline)]
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
     public static void InlinePrefixExecutesInlinedBranchAndRefWrite(ref int value)

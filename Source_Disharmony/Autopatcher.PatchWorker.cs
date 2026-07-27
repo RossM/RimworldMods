@@ -33,7 +33,7 @@ public static partial class Autopatcher
 
             var context = new RuleBuilderContext();
 
-            foreach (var patch in patches.Where(p => p.inline))
+            foreach (var patch in patches.Where(p => p.Inline))
             {
                 if (patch.patch is not MethodInvocation method)
                     continue;

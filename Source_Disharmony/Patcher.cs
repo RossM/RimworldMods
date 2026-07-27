@@ -215,8 +215,8 @@ internal class Patcher
         {
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
 
-            bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.debug);
-            bool optimize = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.optimize);
+            bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.Debug);
+            bool optimize = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.Optimize);
 
             if (!methodPatches.ContainsKey(original.MethodBase))
             {

@@ -70,9 +70,10 @@ internal struct PatchInfo
     public required Invocation patch;
     public required PatchType patchType;
     public required ParameterBinding[] parameters;
-    public bool inline;
-    public bool debug;
-    public bool optimize;
+    public required PatchOptions options;
+    public bool Inline => options.HasFlag(PatchOptions.Inline);
+    public bool Debug => options.HasFlag(PatchOptions.Debug);
+    public bool Optimize => options.HasFlag(PatchOptions.Optimize);
     public readonly bool HasBindingType(BindingType bindingType) => parameters.Any(p => p.bindingType == bindingType);
 }
 
@@ -144,16 +145,14 @@ internal class PatchRegistry
                 var typeAttributes = method.DeclaringType?.GetCustomAttributes().ToList() ?? [];
                 var methodAttributes = method.GetCustomAttributes();
 
-                List<Attribute> attributes = [.. typeAttributes, .. methodAttributes];
+                List<Attribute> attributes = [.. methodAttributes, .. typeAttributes];
 
                 var defaultTargetType =
                     attributes.OfType<PatchAttribute>().Select(p => p.type).FirstOrDefault(t => t is not null) ??
                     attributes.OfType<HarmonyPatch>().Select(p => p.info.declaringType).FirstOrDefault(t => t is not null);
                 var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
                 var targetAttributes = attributes.OfType<TargetAttribute>().ToList();
-                bool debug = attributes.OfType<DebugAttribute>().Any();
-                bool inline = attributes.OfType<InlineAttribute>().Any();
-                bool optimize = attributes.OfType<OptimizeAttribute>().Any();
+                var options = attributes.OfType<PatchOptionsAttribute>().SingleOrDefault()?.options ?? PatchOptions.Default;
 
                 if (patchTypeAttribute == null)
                     return;
@@ -183,7 +182,7 @@ internal class PatchRegistry
                     {
                         MethodBase target = result as MethodBase ??
                                             throw new InvalidOperationException($"{nameForErrors}: Couldn't locate method");
-                        AddPatch(method, patchType, target, inner, inline, debug, optimize);
+                        AddPatch(method, patchType, target, inner, options);
                     }
                 }
             }
@@ -203,12 +202,10 @@ internal class PatchRegistry
                 var typeAttributes = method.DeclaringType?.GetCustomAttributes().ToList() ?? [];
                 var methodAttributes = method.GetCustomAttributes();
 
-                List<Attribute> attributes = [.. typeAttributes, .. methodAttributes];
+                List<Attribute> attributes = [.. methodAttributes, .. typeAttributes];
 
                 var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
-                bool debug = attributes.OfType<DebugAttribute>().Any();
-                bool inline = attributes.OfType<InlineAttribute>().Any();
-                bool optimize = attributes.OfType<OptimizeAttribute>().Any();
+                var options = attributes.OfType<PatchOptionsAttribute>().SingleOrDefault()?.options ?? PatchOptions.Default;
 
                 if (patchTypeAttribute == null)
                     return;
@@ -219,7 +216,7 @@ internal class PatchRegistry
 
                 foreach (var target in targets)
                 {
-                    AddPatch(method, patchType, target, inner, inline, debug, optimize);
+                    AddPatch(method, patchType, target, inner, options);
                 }
             }
             catch (Exception e)
@@ -241,17 +238,13 @@ internal class PatchRegistry
         {
             try
             {
-                bool inline = options.HasFlag(PatchOptions.Inline);
-                bool debug = options.HasFlag(PatchOptions.Debug);
-                bool optimize = options.HasFlag(PatchOptions.Optimize);
-
                 Invocation inner = patchType is PatchType.InnerPrefix or PatchType.InnerPostfix
                     ? InnerInvocation(innerTarget, innerMemberType)
                     : EmptyInvocation.Instance;
 
                 foreach (var target in targets)
                 {
-                    AddPatch(method, patchType, target, inner, inline, debug, optimize);
+                    AddPatch(method, patchType, target, inner, options);
                 }
             }
             catch (Exception e)
@@ -297,7 +290,7 @@ internal class PatchRegistry
         };
     }
 
-    private void AddPatch(MethodInfo method, PatchType patchType, MethodBase target, Invocation inner, bool inline, bool debug, bool optimize)
+    private void AddPatch(MethodInfo method, PatchType patchType, MethodBase target, Invocation inner, PatchOptions options)
     {
         if (target.IsGenericMethod)
             throw new InvalidOperationException($"{target.FullName}: Can't patch instantiated generic method");
@@ -308,7 +301,7 @@ internal class PatchRegistry
             ConstructorInfo outerConstructor => new PatchableConstructorInvocation(outerConstructor),
             _ => throw new ArgumentOutOfRangeException(),
         };
-        AddPatch(method, patchType, outer, inner, inline: inline, debug: debug, optimize: optimize);
+        AddPatch(method, patchType, outer, inner, options);
     }
 
     private void AddPatch(
@@ -316,9 +309,7 @@ internal class PatchRegistry
         PatchType patchType,
         MethodBaseInvocation target,
         Invocation inner,
-        bool inline = false,
-        bool debug = false,
-        bool optimize = false)
+        PatchOptions options)
     {
         MethodBaseInvocation outer = target;
         bool isIterator = false;
@@ -347,9 +338,7 @@ internal class PatchRegistry
             patch = patchMethod,
             patchType = patchType,
             parameters = arguments,
-            inline = inline,
-            debug = debug,
-            optimize = optimize,
+            options = options,
         };
 
         methodsToUpdate.Add(outer);
