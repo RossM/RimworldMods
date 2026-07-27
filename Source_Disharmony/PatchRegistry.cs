@@ -183,16 +183,7 @@ internal class PatchRegistry
                     {
                         MethodBase target = result as MethodBase ??
                                             throw new InvalidOperationException($"{nameForErrors}: Couldn't locate method");
-                        if (target.IsGenericMethod)
-                            throw new InvalidOperationException($"{nameForErrors}: Can't patch instantiated generic method");
-
-                        MethodBaseInvocation outer = target switch
-                        {
-                            MethodInfo outerMethod => new MethodInvocation(outerMethod),
-                            ConstructorInfo outerConstructor => new PatchableConstructorInvocation(outerConstructor),
-                            _ => throw new ArgumentOutOfRangeException(),
-                        };
-                        AddPatch(method, patchType, outer, inner, inline: inline, debug: debug, optimize: optimize);
+                        AddPatch(method, patchType, target, inner, inline, debug, optimize);
                     }
                 }
             }
@@ -232,6 +223,20 @@ internal class PatchRegistry
             }
             default: throw new InvalidOperationException($"{patchTypeAttribute.patchType} patch must have an inner target");
         }
+    }
+
+    private void AddPatch(MethodInfo method, PatchType patchType, MethodBase target, Invocation inner, bool inline, bool debug, bool optimize)
+    {
+        if (target.IsGenericMethod)
+            throw new InvalidOperationException($"{target.FullName}: Can't patch instantiated generic method");
+
+        MethodBaseInvocation outer = target switch
+        {
+            MethodInfo outerMethod => new MethodInvocation(outerMethod),
+            ConstructorInfo outerConstructor => new PatchableConstructorInvocation(outerConstructor),
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+        AddPatch(method, patchType, outer, inner, inline: inline, debug: debug, optimize: optimize);
     }
 
     private void AddPatch(
