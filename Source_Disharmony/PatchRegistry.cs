@@ -1,5 +1,7 @@
 ﻿namespace Disharmony;
 
+public class RuntimePatchException(string message, Exception innerException) : Exception(message, innerException);
+
 internal enum BindingType
 {
     /// <summary>
@@ -382,7 +384,7 @@ internal class PatchRegistry
                 }
                 catch (Exception e)
                 {
-                    throw new InvalidOperationException($"Error patching {patchedMethod.FullName}", e);
+                    throw new RuntimePatchException($"Error patching {patchedMethod.FullName}", e);
                 }
                 finally
                 {
