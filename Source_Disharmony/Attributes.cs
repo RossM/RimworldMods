@@ -80,12 +80,40 @@ public enum Scope
     Outer,
 }
 
+/// <summary>
+///     Selects additional behavior when configuring a patch through a <c>Register</c> or <c>Patch</c> overload.
+/// </summary>
+/// <remarks>
+///     These flags correspond to <see cref="InlineAttribute" />, <see cref="OptimizeAttribute" />, and
+///     <see cref="DebugAttribute" /> and can be combined.
+/// </remarks>
 [Flags]
 public enum PatchOptions
 {
+    /// <summary>
+    ///     Enables no additional behavior.
+    /// </summary>
     Default = 0,
+
+    /// <summary>
+    ///     Runs the patch as part of each target instead of making a separate call to the patch method.
+    /// </summary>
     Inline = 0x1,
+
+    /// <summary>
+    ///     Requests Disharmony's optional, experimental IL optimization pass.
+    /// </summary>
+    /// <remarks>
+    ///     The optimization pass must be enabled separately.
+    /// </remarks>
     Optimize = 0x2,
+
+    /// <summary>
+    ///     Logs the modified IL and, when available, the generated Mono JIT assembly.
+    /// </summary>
+    /// <remarks>
+    ///     Output is written to the Harmony debug log.
+    /// </remarks>
     Debug = 0x8000,
 }
 

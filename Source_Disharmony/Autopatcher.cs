@@ -54,6 +54,14 @@ public enum PatchType
 ///         <see cref="TargetAttribute" /> applies the same patch method to multiple outer members.
 ///     </para>
 ///     <para>
+///         When the patch method uses attributes to describe how it runs but the outer targets are chosen in code, pass
+///         those targets to the method-level overloads of
+///         <see cref="Register(MethodInfo, IEnumerable{MethodBase})" /> and
+///         <see cref="Patch(MethodInfo, IEnumerable{MethodBase})" /> instead of adding target attributes. To configure the
+///         entire patch in code, use an overload that also accepts a <see cref="PatchType" />. Parameter-binding
+///         attributes on the patch method work with either approach.
+///     </para>
+///     <para>
 ///         A target's declaring type is resolved from the target attribute first, then from the containing
 ///         <see cref="PatchAttribute" /> or Harmony patch metadata, and finally from the member name. When the name must
 ///         supply the type, write the type and member as a dotted name, such as <c>Namespace.Type.Member</c>. The
@@ -222,11 +230,46 @@ public static partial class Autopatcher
         registry.ProcessMethod(method);
     }
 
+    /// <summary>
+    ///     Registers an attributed patch method for the supplied outer targets without making the patch take effect.
+    /// </summary>
+    /// <param name="method">The static method that implements the patch.</param>
+    /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
+    /// <remarks>
+    ///     Use this overload when attributes such as <see cref="PrefixAttribute" /> or
+    ///     <see cref="InnerPostfixAttribute" /> describe how the patch runs, but the targets are chosen in code.
+    ///     <see cref="TargetAttribute" /> and <see cref="TargetsAttribute" /> are not needed and are ignored; other
+    ///     attributes on the patch method or its class still apply. Call <see cref="Apply" /> or
+    ///     <see cref="ForceApply" /> when all patches have been registered.
+    /// </remarks>
     public static void Register(MethodInfo method, params IEnumerable<MethodBase> targets)
     {
         registry.ProcessMethod(method, targets);
     }
 
+    /// <summary>
+    ///     Registers a patch described in code without making it take effect.
+    /// </summary>
+    /// <param name="method">The static method that implements the patch.</param>
+    /// <param name="patchType">
+    ///     Whether the patch runs before or after each outer target, or before or after a matching operation within it.
+    /// </param>
+    /// <param name="innerTarget">
+    ///     For an inner patch, the method call, constructor call, or field access to match within each outer target. This
+    ///     is required for <see cref="PatchType.InnerPrefix" /> and <see cref="PatchType.InnerPostfix" /> and has no effect
+    ///     on other patch types.
+    /// </param>
+    /// <param name="innerMemberType">
+    ///     For an inner field, use <see cref="MemberType.Setter" /> to match writes; any other value matches reads. This has
+    ///     no effect on inner methods or constructors, or on non-inner patches.
+    /// </param>
+    /// <param name="options">Additional behaviors, such as inlining the patch or producing debug output.</param>
+    /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
+    /// <remarks>
+    ///     Use this overload when the patch kind, targets, and options are chosen in code. The patch method does not need
+    ///     attributes for those settings; if present, they are ignored. Attributes that bind patch parameters remain
+    ///     effective. Call <see cref="Apply" /> or <see cref="ForceApply" /> when all patches have been registered.
+    /// </remarks>
     public static void Register(
         MethodInfo method,
         PatchType patchType,
@@ -252,12 +295,50 @@ public static partial class Autopatcher
         Apply();
     }
 
+    /// <summary>
+    ///     Patches the supplied outer targets using an attributed patch method.
+    /// </summary>
+    /// <param name="method">The static method that implements the patch.</param>
+    /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
+    /// <remarks>
+    ///     Use this overload when attributes such as <see cref="PrefixAttribute" /> or
+    ///     <see cref="InnerPostfixAttribute" /> describe how the patch runs, but the targets are chosen in code.
+    ///     <see cref="TargetAttribute" /> and <see cref="TargetsAttribute" /> are not needed and are ignored; other
+    ///     attributes on the patch method or its class still apply. This call also makes all patches registered so far
+    ///     take effect. Use <see cref="Register(MethodInfo, IEnumerable{MethodBase})" /> when more patches will be
+    ///     registered before applying them together.
+    /// </remarks>
     public static void Patch(MethodInfo method, params IEnumerable<MethodBase> targets)
     {
         Register(method, targets);
         Apply();
     }
 
+    /// <summary>
+    ///     Applies a patch whose behavior and targets are described in code.
+    /// </summary>
+    /// <param name="method">The static method that implements the patch.</param>
+    /// <param name="patchType">
+    ///     Whether the patch runs before or after each outer target, or before or after a matching operation within it.
+    /// </param>
+    /// <param name="innerTarget">
+    ///     For an inner patch, the method call, constructor call, or field access to match within each outer target. This
+    ///     is required for <see cref="PatchType.InnerPrefix" /> and <see cref="PatchType.InnerPostfix" /> and has no effect
+    ///     on other patch types.
+    /// </param>
+    /// <param name="innerMemberType">
+    ///     For an inner field, use <see cref="MemberType.Setter" /> to match writes; any other value matches reads. This has
+    ///     no effect on inner methods or constructors, or on non-inner patches.
+    /// </param>
+    /// <param name="options">Additional behaviors, such as inlining the patch or producing debug output.</param>
+    /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
+    /// <remarks>
+    ///     Use this overload when the patch kind, targets, and options are chosen in code. The patch method does not need
+    ///     attributes for those settings; if present, they are ignored. Attributes that bind patch parameters remain
+    ///     effective. This call also makes all patches registered so far take effect. Use
+    ///     <see cref="Register(MethodInfo, PatchType, MemberInfo, MemberType, PatchOptions, IEnumerable{MethodBase})" />
+    ///     when more patches will be registered before applying them together.
+    /// </remarks>
     public static void Patch(
         MethodInfo method,
         PatchType patchType,
