@@ -237,11 +237,20 @@ public static partial class Autopatcher
     }
 
     /// <summary>
-    ///     Applies all pending patch changes using lazy trampolines.
+    ///     Activates all pending patch changes while deferring their expensive preparation until needed.
     /// </summary>
     /// <remarks>
-    ///     Each affected target is redirected immediately, but its final patched body is generated when the target is next
-    ///     invoked. Use <see cref="ForceApply" /> when patch generation must complete before any target is called.
+    ///     <para>
+    ///         Patches are effective when this method returns; calling <see cref="ForceApply" /> afterward is not required
+    ///         for correctness. Most preparation is postponed until each affected method is first called, which keeps
+    ///         initialization fast but can make that first call take longer.
+    ///     </para>
+    ///     <para>
+    ///         Deferred preparation can also combine patches registered by multiple mods before the target is used. Call
+    ///         <see cref="ForceApply" /> when the application would rather complete the deferred work during a chosen idle
+    ///         period than during first use. Its remarks describe the just-in-time behavior and scheduling considerations
+    ///         in more detail.
+    ///     </para>
     /// </remarks>
     public static void Apply()
     {
