@@ -222,6 +222,22 @@ public static partial class Autopatcher
         registry.ProcessMethod(method);
     }
 
+    public static void Register(MethodInfo method, params IEnumerable<MethodBase> targets)
+    {
+        registry.ProcessMethod(method, targets);
+    }
+
+    public static void Register(
+        MethodInfo method,
+        PatchType patchType,
+        MemberInfo? innerTarget = null,
+        MemberType innerMemberType = MemberType.Any,
+        PatchOptions options = PatchOptions.Default,
+        params IEnumerable<MethodBase> targets)
+    {
+        registry.ProcessMethod(method, patchType, innerTarget, innerMemberType, options, targets);
+    }
+
     /// <summary>
     ///     Registers one patch method, then applies all pending patch changes.
     /// </summary>
@@ -233,6 +249,24 @@ public static partial class Autopatcher
     public static void Patch(MethodInfo method)
     {
         Register(method);
+        Apply();
+    }
+
+    public static void Patch(MethodInfo method, params IEnumerable<MethodBase> targets)
+    {
+        Register(method, targets);
+        Apply();
+    }
+
+    public static void Patch(
+        MethodInfo method,
+        PatchType patchType,
+        MemberInfo? innerTarget = null,
+        MemberType innerMemberType = MemberType.Any,
+        PatchOptions options = PatchOptions.Default,
+        params IEnumerable<MethodBase> targets)
+    {
+        Register(method, patchType, innerTarget, innerMemberType, options, targets);
         Apply();
     }
 

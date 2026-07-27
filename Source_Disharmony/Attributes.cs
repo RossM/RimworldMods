@@ -80,6 +80,15 @@ public enum Scope
     Outer,
 }
 
+[Flags]
+public enum PatchOptions
+{
+    Default = 0,
+    Inline = 0x1,
+    Optimize = 0x2,
+    Debug = 0x8000,
+}
+
 /// <summary>
 ///     Marks a class as a patch container for assembly discovery and optionally supplies its default target type.
 /// </summary>

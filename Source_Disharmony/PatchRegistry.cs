@@ -194,6 +194,73 @@ internal class PatchRegistry
         }
     }
 
+    public void ProcessMethod(MethodInfo method, IEnumerable<MethodBase> targets)
+    {
+        lock (syncRoot)
+        {
+            try
+            {
+                var typeAttributes = method.DeclaringType?.GetCustomAttributes().ToList() ?? [];
+                var methodAttributes = method.GetCustomAttributes();
+
+                List<Attribute> attributes = [.. typeAttributes, .. methodAttributes];
+
+                var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
+                bool debug = attributes.OfType<DebugAttribute>().Any();
+                bool inline = attributes.OfType<InlineAttribute>().Any();
+                bool optimize = attributes.OfType<OptimizeAttribute>().Any();
+
+                if (patchTypeAttribute == null)
+                    return;
+
+                PatchType patchType = patchTypeAttribute.patchType;
+
+                Invocation inner = GetInnerInvocation(patchTypeAttribute);
+
+                foreach (var target in targets)
+                {
+                    AddPatch(method, patchType, target, inner, inline, debug, optimize);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"Error processing {method.FullName}", e);
+            }
+        }
+    }
+
+    public void ProcessMethod(
+        MethodInfo method,
+        PatchType patchType,
+        MemberInfo? innerTarget,
+        MemberType innerMemberType,
+        PatchOptions options,
+        IEnumerable<MethodBase> targets)
+    {
+        lock (syncRoot)
+        {
+            try
+            {
+                bool inline = options.HasFlag(PatchOptions.Inline);
+                bool debug = options.HasFlag(PatchOptions.Debug);
+                bool optimize = options.HasFlag(PatchOptions.Optimize);
+
+                Invocation inner = patchType is PatchType.InnerPrefix or PatchType.InnerPostfix
+                    ? InnerInvocation(innerTarget, innerMemberType)
+                    : EmptyInvocation.Instance;
+
+                foreach (var target in targets)
+                {
+                    AddPatch(method, patchType, target, inner, inline, debug, optimize);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"Error processing {method.FullName}", e);
+            }
+        }
+    }
+
     private static Invocation GetInnerInvocation(PatchTypeAttribute patchTypeAttribute)
     {
         if (patchTypeAttribute.patchType is not (PatchType.InnerPrefix or PatchType.InnerPostfix))
@@ -211,18 +278,23 @@ internal class PatchRegistry
                 MemberInfo inner = ReflectionTools.GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName,
                     patchTypeAttribute.memberType, patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
 
-                return inner switch
-                {
-                    FieldInfo field => patchTypeAttribute.memberType is MemberType.Setter
-                        ? new SetFieldInvocation(field)
-                        : new FieldInvocation(field),
-                    MethodInfo method => new MethodInvocation(method),
-                    ConstructorInfo constructor => new ConstructorInvocation(constructor),
-                    _ => throw new ArgumentOutOfRangeException(),
-                };
+                return InnerInvocation(inner, patchTypeAttribute.memberType);
             }
             default: throw new InvalidOperationException($"{patchTypeAttribute.patchType} patch must have an inner target");
         }
+    }
+
+    private static Invocation InnerInvocation(MemberInfo? inner, MemberType memberType)
+    {
+        return inner switch
+        {
+            FieldInfo field => memberType is MemberType.Setter
+                ? new SetFieldInvocation(field)
+                : new FieldInvocation(field),
+            MethodInfo method => new MethodInvocation(method),
+            ConstructorInfo constructor => new ConstructorInvocation(constructor),
+            _ => throw new ArgumentOutOfRangeException(),
+        };
     }
 
     private void AddPatch(MethodInfo method, PatchType patchType, MethodBase target, Invocation inner, bool inline, bool debug, bool optimize)
