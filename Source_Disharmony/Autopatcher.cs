@@ -40,6 +40,11 @@ public enum PatchType
 ///         within the outer member; the matched operation is called the inner member.
 ///     </para>
 ///     <para>
+///         Use <see cref="PatchOptionsAttribute" /> to enable optional behavior for an attributed patch. An attribute on a
+///         patch class provides options for all of its patch methods; an attribute on an individual method replaces those
+///         options for that method.
+///     </para>
+///     <para>
 ///         For assembly discovery, place patch methods in a class marked with <see cref="PatchAttribute" />.
 ///         <see cref="PatchAttribute.type" /> can provide a default declaring type for the class's targets, and
 ///         <see cref="CategoryAttribute" /> can restrict category-specific discovery. Harmony's
@@ -238,8 +243,8 @@ public static partial class Autopatcher
     /// <remarks>
     ///     Use this overload when attributes such as <see cref="PrefixAttribute" /> or
     ///     <see cref="InnerPostfixAttribute" /> describe how the patch runs, but the targets are chosen in code.
-    ///     <see cref="TargetAttribute" /> and <see cref="TargetsAttribute" /> are not needed and are ignored; other
-    ///     attributes on the patch method or its class still apply. Call <see cref="Apply" /> or
+    ///     <see cref="TargetAttribute" /> and <see cref="TargetsAttribute" /> are not needed and are ignored.
+    ///     <see cref="PatchOptionsAttribute" /> and parameter-binding attributes still apply. Call <see cref="Apply" /> or
     ///     <see cref="ForceApply" /> when all patches have been registered.
     /// </remarks>
     public static void Register(MethodInfo method, params IEnumerable<MethodBase> targets)
@@ -267,8 +272,9 @@ public static partial class Autopatcher
     /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
     /// <remarks>
     ///     Use this overload when the patch kind, targets, and options are chosen in code. The patch method does not need
-    ///     attributes for those settings; if present, they are ignored. Attributes that bind patch parameters remain
-    ///     effective. Call <see cref="Apply" /> or <see cref="ForceApply" /> when all patches have been registered.
+    ///     patch-kind, target, or <see cref="PatchOptionsAttribute" /> attributes; if present, they are ignored. Attributes
+    ///     that bind patch parameters remain effective. Call <see cref="Apply" /> or <see cref="ForceApply" /> when all
+    ///     patches have been registered.
     /// </remarks>
     public static void Register(
         MethodInfo method,
@@ -303,10 +309,10 @@ public static partial class Autopatcher
     /// <remarks>
     ///     Use this overload when attributes such as <see cref="PrefixAttribute" /> or
     ///     <see cref="InnerPostfixAttribute" /> describe how the patch runs, but the targets are chosen in code.
-    ///     <see cref="TargetAttribute" /> and <see cref="TargetsAttribute" /> are not needed and are ignored; other
-    ///     attributes on the patch method or its class still apply. This call also makes all patches registered so far
-    ///     take effect. Use <see cref="Register(MethodInfo, IEnumerable{MethodBase})" /> when more patches will be
-    ///     registered before applying them together.
+    ///     <see cref="TargetAttribute" /> and <see cref="TargetsAttribute" /> are not needed and are ignored.
+    ///     <see cref="PatchOptionsAttribute" /> and parameter-binding attributes still apply. This call also makes all
+    ///     patches registered so far take effect. Use <see cref="Register(MethodInfo, IEnumerable{MethodBase})" /> when
+    ///     more patches will be registered before applying them together.
     /// </remarks>
     public static void Patch(MethodInfo method, params IEnumerable<MethodBase> targets)
     {
@@ -334,8 +340,8 @@ public static partial class Autopatcher
     /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
     /// <remarks>
     ///     Use this overload when the patch kind, targets, and options are chosen in code. The patch method does not need
-    ///     attributes for those settings; if present, they are ignored. Attributes that bind patch parameters remain
-    ///     effective. This call also makes all patches registered so far take effect. Use
+    ///     patch-kind, target, or <see cref="PatchOptionsAttribute" /> attributes; if present, they are ignored. Attributes
+    ///     that bind patch parameters remain effective. This call also makes all patches registered so far take effect. Use
     ///     <see cref="Register(MethodInfo, PatchType, MemberInfo, MemberType, PatchOptions, IEnumerable{MethodBase})" />
     ///     when more patches will be registered before applying them together.
     /// </remarks>

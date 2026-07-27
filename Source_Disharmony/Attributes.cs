@@ -81,11 +81,12 @@ public enum Scope
 }
 
 /// <summary>
-///     Selects additional behavior when configuring a patch through a <c>Register</c> or <c>Patch</c> overload.
+///     Lists the optional behaviors that can be enabled for a patch.
 /// </summary>
 /// <remarks>
-///     These flags correspond to <see cref="InlineAttribute" />, <see cref="OptimizeAttribute" />, and
-///     <see cref="DebugAttribute" /> and can be combined.
+///     For an attributed patch, pass the desired flags to <see cref="PatchOptionsAttribute" />. When configuring a patch
+///     entirely in code, pass them to the <c>options</c> parameter of the appropriate <c>Register</c> or <c>Patch</c>
+///     overload.
 /// </remarks>
 [Flags]
 public enum PatchOptions
@@ -394,6 +395,15 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
     }
 }
 
+/// <summary>
+///     Enables optional behaviors for the attributed patch method or patch class.
+/// </summary>
+/// <param name="options">The behaviors to enable. Multiple <see cref="PatchOptions" /> flags can be combined.</param>
+/// <remarks>
+///     Apply this attribute to a patch class to provide options for every patch method declared by the class. An attribute
+///     on an individual patch method replaces the class-level options for that method. The <c>Register</c> and
+///     <c>Patch</c> overloads that accept a <see cref="PatchOptions" /> argument use that argument instead.
+/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class PatchOptionsAttribute(PatchOptions options) : Attribute
