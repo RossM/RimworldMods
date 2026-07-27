@@ -78,9 +78,9 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
                 break;
             }
 
-            case BindingType.BaseMethod:
+            case BindingType.Delegate:
             {
-                EmitBaseMethodDelegate(parameter);
+                EmitDelegate(parameter);
                 break;
             }
 
@@ -91,35 +91,14 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         }
     }
 
-    private void EmitBaseMethodDelegate(ParameterBinding parameter)
+    private void EmitDelegate(ParameterBinding parameter)
     {
-        if (parameter.scope != Scope.Outer)
-            throw new NotImplementedException();
-        if (outer is not MethodInvocation method)
-            throw new InvalidOperationException();
-
-        MethodInfo methodInfo = method.MethodInfo;
-                
-        MethodInfo? baseMethod = null;
-        for (Type? parent = method.InstanceType.BaseType; parent != typeof(object) && parent != null; parent = parent.BaseType)
-        {
-            ParameterInfo[] parameters = methodInfo.GetParameters();
-            baseMethod = parent.GetMethod(methodInfo.Name,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                null, parameters.Types(), null);
-            if (baseMethod != null)
-                break;
-        }
-
-        if (baseMethod is null)
-            throw new InvalidOperationException($"{method.FullName}: Base method not found");
-
         // ParameterType must be a subclass of Delegate here
         ConstructorInfo delegateConstructor = parameter.parameter.ParameterType.GetConstructor([typeof(object), typeof(IntPtr)]);
 
         // Create a delegate
         output.Add(CodeInstruction.LoadArgument(0));
-        output.Add(new(OpCodes.Ldftn, baseMethod));
+        output.Add(new(OpCodes.Ldftn, parameter.methodInfo));
         output.Add(new(OpCodes.Newobj, delegateConstructor));
     }
 

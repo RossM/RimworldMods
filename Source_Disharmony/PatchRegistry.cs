@@ -25,9 +25,9 @@ internal enum BindingType
     State,
 
     /// <summary>
-    ///     Gets a delegate to the base method of the method.
+    ///     Gets a delegate based on a given MethodInfo.
     /// </summary>
-    BaseMethod,
+    Delegate,
 }
 
 internal class ParameterBinding
@@ -63,6 +63,8 @@ internal class ParameterBinding
     public FieldInfo[]? fields;
 
     public string? stateKey;
+
+    public MethodBase? methodInfo;
 }
 
 internal struct PatchInfo

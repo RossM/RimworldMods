@@ -118,7 +118,21 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (delegateInvoke.ReturnType != method.MethodInfo.ReturnType)
             throw new ParameterBindingException(parameter.Name, "Return type mismatch");
 
-        return new() { parameter = parameter, bindingType = BindingType.BaseMethod, scope = Scope.Outer };
+        MethodInfo? baseMethod = null;
+        for (Type? parent = method.InstanceType.BaseType; parent != typeof(object) && parent != null; parent = parent.BaseType)
+        {
+            ParameterInfo[] parameters = method.MethodInfo.GetParameters();
+            baseMethod = parent.GetMethod(method.MethodInfo.Name,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null, parameters.Types(), null);
+            if (baseMethod != null)
+                break;
+        }
+
+        if (baseMethod is null)
+            throw new ParameterBindingException(parameter.Name, "Base method not found");
+
+        return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = Scope.Outer, methodInfo = baseMethod };
     }
 
     private ParameterBinding BindReturnValue(ParameterInfo parameter, Invocation invocation, Scope scope)
