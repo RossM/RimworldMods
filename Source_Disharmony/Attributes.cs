@@ -61,6 +61,17 @@ public enum Scope
     Outer,
 }
 
+/// <summary>
+///     Marks a class as a collection of patch methods eligible for assembly-level discovery and optionally specifies
+///     their default target type.
+/// </summary>
+/// <param name="type">
+///     The default type that declares the target members, or <see langword="null" /> when the target attributes identify
+///     their declaring types individually.
+/// </param>
+/// <remarks>
+///     A type specified directly by <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" /> takes precedence.
+/// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Class)]
@@ -69,6 +80,16 @@ public class PatchAttribute(Type? type = null) : Attribute
     public readonly Type? type = type;
 }
 
+/// <summary>
+///     Assigns a patch class to a named category for selective assembly-level discovery.
+/// </summary>
+/// <param name="category">The category name used to select the patch class.</param>
+/// <remarks>
+///     The category is considered by <see cref="Autopatcher.PatchCategory" /> and
+///     <see cref="Autopatcher.RegisterCategory" />. <see cref="Autopatcher.PatchAll" /> and
+///     <see cref="Autopatcher.RegisterAll" /> process the class regardless of its category. The class must also be marked
+///     with <see cref="PatchAttribute" /> or <see cref="HarmonyLib.HarmonyPatch" /> to be discovered.
+/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
 public class CategoryAttribute(string category) : Attribute
