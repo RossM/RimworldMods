@@ -56,7 +56,6 @@ internal class Patcher
 
     private readonly Dictionary<MethodBase, MethodPatch> methodPatches = new();
 
-    public bool trampolinesEnabled = true;
     public bool optimizerEnabled = false;
 
     public Patcher()
@@ -205,9 +204,6 @@ internal class Patcher
 
     public void ApplyPatch(MethodBaseInvocation original, InstructionMatcher[] matchers, bool useTrampolines)
     {
-        if (!trampolinesEnabled)
-            useTrampolines = false;
-
         if (matchers.Length == 0)
             Unpatch(original);
 
