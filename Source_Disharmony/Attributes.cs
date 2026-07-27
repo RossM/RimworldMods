@@ -2,15 +2,30 @@ using JetBrains.Annotations;
 
 namespace Disharmony;
 
+/// <summary>
+///     Represents a <see langword="ref" /> <typeparamref name="T" /> parameter in a target or inner-member signature.
+/// </summary>
+/// <typeparam name="T">The parameter's element type.</typeparam>
 [PublicAPI]
 public static class Ref<T>;
 
+/// <summary>
+///     Represents an <see langword="in" /> <typeparamref name="T" /> parameter in a target or inner-member signature.
+/// </summary>
+/// <typeparam name="T">The parameter's element type.</typeparam>
 [PublicAPI]
 public static class In<T>;
 
+/// <summary>
+///     Represents an <see langword="out" /> <typeparamref name="T" /> parameter in a target or inner-member signature.
+/// </summary>
+/// <typeparam name="T">The parameter's element type.</typeparam>
 [PublicAPI]
 public static class Out<T>;
 
+/// <summary>
+///     Specifies the kind of member or member access selected by a target or inner-patch attribute.
+/// </summary>
 [PublicAPI]
 public enum MemberType
 {
@@ -40,37 +55,49 @@ public enum MemberType
     Constructor,
 }
 
+/// <summary>
+///     Specifies whether an inner patch binds data from the inner member or its containing outer member.
+/// </summary>
 public enum Scope
 {
     /// <summary>
-    ///     Selects parameters or results from either the inner or outer method.
+    ///     Uses the default scope for the binding.
     /// </summary>
     /// <remarks>
-    ///     If both methods have a matching parameter, the inner parameter takes precedence.
+    ///     Ordinary patches use the outer member. Inner patches use the inner member, except that name-based parameter and
+    ///     field lookups fall back to the outer member when the inner member has no match.
     /// </remarks>
     Any,
 
     /// <summary>
-    ///     Selects parameters or results from the inner method.
+    ///     Uses data from the inner member.
     /// </summary>
     Inner,
 
     /// <summary>
-    ///     Selects parameters or results from the outer method.
+    ///     Uses data from the outer member.
     /// </summary>
     Outer,
 }
 
 /// <summary>
-///     Marks a class as a collection of patch methods eligible for assembly-level discovery and optionally specifies
-///     their default target type.
+///     Marks a class as a patch container for assembly discovery and optionally supplies its default target type.
 /// </summary>
 /// <param name="type">
-///     The default type that declares the target members, or <see langword="null" /> when the target attributes identify
+///     The default type that declares the outer target members, or <see langword="null" /> when target attributes identify
 ///     their declaring types individually.
 /// </param>
 /// <remarks>
-///     A type specified directly by <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" /> takes precedence.
+///     <para>
+///         <see cref="Autopatcher.PatchAll" />, <see cref="Autopatcher.RegisterAll" />,
+///         <see cref="Autopatcher.PatchCategory" />, and <see cref="Autopatcher.RegisterCategory" /> discover classes marked
+///         with this attribute. Direct registration by type or method does not require it.
+///     </para>
+///     <para>
+///         A type specified directly by <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" /> takes precedence.
+///         Harmony's <see cref="HarmonyLib.HarmonyPatch" /> is also recognized for compatibility, but this attribute is
+///         preferred for new patch classes. See <see cref="Autopatcher" /> for the complete authoring and targeting model.
+///     </para>
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -81,14 +108,21 @@ public class PatchAttribute(Type? type = null) : Attribute
 }
 
 /// <summary>
-///     Assigns a patch class to a named category for selective assembly-level discovery.
+///     Assigns a patch container to a named category for category-specific assembly discovery.
 /// </summary>
 /// <param name="category">The category name used to select the patch class.</param>
 /// <remarks>
-///     The category is considered by <see cref="Autopatcher.PatchCategory" /> and
-///     <see cref="Autopatcher.RegisterCategory" />. <see cref="Autopatcher.PatchAll" /> and
-///     <see cref="Autopatcher.RegisterAll" /> process the class regardless of its category. The class must also be marked
-///     with <see cref="PatchAttribute" /> or <see cref="HarmonyLib.HarmonyPatch" /> to be discovered.
+///     <para>
+///         <see cref="Autopatcher.PatchCategory" /> and <see cref="Autopatcher.RegisterCategory" /> compare this name with
+///         the requested category. <see cref="Autopatcher.PatchAll" /> and <see cref="Autopatcher.RegisterAll" /> ignore
+///         categories.
+///     </para>
+///     <para>
+///         This attribute does not make the class discoverable by itself. New patch containers should also use
+///         <see cref="PatchAttribute" />. Existing Harmony metadata can instead supply
+///         <see cref="HarmonyLib.HarmonyPatch" /> as the patch marker, and
+///         <see cref="HarmonyLib.HarmonyPatchCategory" /> is recognized as an alternative category declaration.
+///     </para>
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
@@ -114,19 +148,26 @@ public abstract class PatchTypeAttribute(
 }
 
 /// <summary>
-///     Marks a patch method to run before each member selected by <see cref="TargetAttribute" /> or
-///     <see cref="TargetsAttribute" />. A prefix that returns <see langword="false" /> skips the selected member.
+///     Marks a patch method to run before each selected outer member. A prefix that returns
+///     <see langword="false" /> skips the outer member.
 /// </summary>
+/// <remarks>
+///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. See
+///     <see cref="Autopatcher" /> for patch structure, targeting, and parameter binding.
+/// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
 public class PrefixAttribute() : PatchTypeAttribute(PatchType.Prefix);
 
 /// <summary>
-///     Marks a patch method to run after each member selected by <see cref="TargetAttribute" /> or
-///     <see cref="TargetsAttribute" />. Use <see cref="ReturnValueAttribute" /> on a patch parameter to inspect or replace
-///     the member's return value.
+///     Marks a patch method to run after each selected outer member.
 /// </summary>
+/// <remarks>
+///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. Bind the outer return
+///     value with <see cref="ReturnValueAttribute" /> or the conventional parameter name <c>__result</c>; pass it by
+///     reference to replace it. See <see cref="Autopatcher" /> for the complete patch model.
+/// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
@@ -152,22 +193,8 @@ public class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
 ///     selecting one.
 /// </param>
 /// <remarks>
-///     <para>
-///         When <paramref name="type" /> is <see langword="null" />, <paramref name="memberName" /> must include the
-///         declaring type. Write the type and member as a single dotted name, such as <c>Namespace.Type.Member</c>.
-///         The Harmony-style spelling <c>Namespace.Type:Member</c>, which uses a colon to separate the type and member,
-///         is also accepted.
-///     </para>
-///     <para>
-///         Once the declaring type has been identified, additional dotted segments can traverse nested types, select a
-///         local function as <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as
-///         <c>OuterMethod.*</c>. Only members declared directly by the resolved type are considered.
-///     </para>
-///     <para>
-///         In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />, <see cref="In{T}" />, or
-///         <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or <see langword="out" />
-///         parameters.
-///     </para>
+///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. See
+///     <see cref="Autopatcher" /> for member-name syntax, overload selection, and inner-versus-outer parameter binding.
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -206,7 +233,6 @@ public class InnerPrefixAttribute(
 
 /// <summary>
 ///     Marks a patch method to run after each matching inner member access or call within the selected outer methods.
-///     Use <see cref="ReturnValueAttribute" /> on a patch parameter to inspect or replace the inner member's result.
 /// </summary>
 /// <param name="type">
 ///     The type that declares the inner member, or <see langword="null" /> to resolve it from
@@ -224,22 +250,10 @@ public class InnerPrefixAttribute(
 ///     selecting one.
 /// </param>
 /// <remarks>
-///     <para>
-///         When <paramref name="type" /> is <see langword="null" />, <paramref name="memberName" /> must include the
-///         declaring type. Write the type and member as a single dotted name, such as <c>Namespace.Type.Member</c>.
-///         The Harmony-style spelling <c>Namespace.Type:Member</c>, which uses a colon to separate the type and member,
-///         is also accepted.
-///     </para>
-///     <para>
-///         Once the declaring type has been identified, additional dotted segments can traverse nested types, select a
-///         local function as <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as
-///         <c>OuterMethod.*</c>. Only members declared directly by the resolved type are considered.
-///     </para>
-///     <para>
-///         In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />, <see cref="In{T}" />, or
-///         <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or <see langword="out" />
-///         parameters.
-///     </para>
+///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. Bind the inner result
+///     with <see cref="ReturnValueAttribute" /> or the conventional parameter name <c>__result</c>; pass it by reference
+///     to replace it. See <see cref="Autopatcher" /> for member-name syntax, overload selection, and inner-versus-outer
+///     parameter binding.
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -278,8 +292,12 @@ public class InnerPostfixAttribute(
 
 /// <summary>
 ///     Marks a patch method to run after each occurrence of the specified constant in the selected outer methods.
-///     Use <see cref="ReturnValueAttribute" /> on a patch parameter to inspect or replace the constant value.
 /// </summary>
+/// <remarks>
+///     Bind the constant value with <see cref="ReturnValueAttribute" /> or the conventional parameter name
+///     <c>__result</c>; pass it by reference to replace it. Select outer members with <see cref="TargetAttribute" /> or
+///     <see cref="TargetsAttribute" />. See <see cref="Autopatcher" /> for the complete patch model.
+/// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
@@ -340,59 +358,56 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
 }
 
 /// <summary>
-///     Logs the modified IL and, when available, the generated Mono JIT assembly to the Harmony debug log.
+///     Logs the modified IL and, when available, the generated Mono JIT assembly for the attributed patch methods.
 /// </summary>
+/// <remarks>
+///     When applied to a class, this setting applies to every patch method declared by the class. Output is written to the
+///     Harmony debug log.
+/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class DebugAttribute : Attribute;
 
 /// <summary>
-///     Marks the selected target members for Disharmony's optional, experimental IL optimization pass, which runs after
-///     their patches are applied. The optimizer must be enabled separately.
+///     Requests Disharmony's optional, experimental IL optimization pass for the attributed patch methods.
 /// </summary>
+/// <remarks>
+///     The pass runs after patches are inserted and must be enabled separately. When applied to a class, this setting
+///     applies to every patch method declared by the class.
+/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class OptimizeAttribute : Attribute;
 
 /// <summary>
-///     Identifies a single member to which the attributed patch method applies. The member type, parameter types, and
-///     generic type arguments can be supplied to distinguish overloads.
+///     Selects exactly one outer method, constructor, or property accessor for the attributed patch method or methods.
 /// </summary>
 /// <param name="type">
-///     The type that declares the target member, or <see langword="null" /> to resolve it from
-///     <paramref name="methodName" /> or use the type declared by a containing <see cref="HarmonyLib.HarmonyPatch" />
-///     attribute.
+///     The type that declares the target, or <see langword="null" /> to use the default from a containing
+///     <see cref="PatchAttribute" /> or Harmony patch attribute, or to resolve it from <paramref name="methodName" />.
 /// </param>
 /// <param name="methodName">
 ///     The name of the target member, or <see langword="null" /> when targeting a constructor.
 /// </param>
 /// <param name="memberType">The kind of member or accessor to target.</param>
 /// <param name="parameterTypes">
-///     The parameter types used to select an overload, or <see langword="null" /> to match without a parameter signature.
+///     The parameter types used to select an overload, or <see langword="null" /> to omit parameter filtering.
 /// </param>
 /// <param name="genericTypes">
-///     The generic type arguments used when matching a generic method, or <see langword="null" /> when not selecting one.
+///     The generic type arguments used to identify a constructed generic method, or <see langword="null" /> when generic
+///     type arguments are not part of the selection.
 /// </param>
 /// <remarks>
 ///     <para>
-///         When <paramref name="type" /> is <see langword="null" /> and no containing
-///         <see cref="HarmonyLib.HarmonyPatch" /> attribute supplies it, <paramref name="methodName" /> must include the
-///         declaring type. Write the type and member as a single dotted name, such as <c>Namespace.Type.Member</c>. The
-///         Harmony-style spelling <c>Namespace.Type:Member</c>, which uses a colon to separate the type and member, is
-///         also accepted.
+///         When applied to a class, this target applies to every patch method declared by the class. Method-level targets
+///         are added to class-level targets.
 ///     </para>
 ///     <para>
-///         Once the declaring type has been identified, additional dotted segments can traverse nested types, select a
-///         local function as <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as
-///         <c>OuterMethod.*</c>. Only members declared directly by the resolved type are considered.
+///         The selection must resolve to exactly one member. Use <see cref="TargetsAttribute" /> to patch every match.
+///         Constructed generic methods can be identified during lookup but are not currently supported as outer targets.
 ///     </para>
 ///     <para>
-///         In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />, <see cref="In{T}" />, or
-///         <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or <see langword="out" />
-///         parameters.
-///     </para>
-///     <para>
-///         Use <see cref="TargetsAttribute" /> when a name is expected to match more than one member.
+///         See <see cref="Autopatcher" /> for declaring-type precedence, member-name syntax, and overload selection.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -416,7 +431,7 @@ public class TargetAttribute(
     /// </summary>
     /// <param name="type">
     ///     The type that declares the target member, or <see langword="null" /> to resolve it from
-    ///     <paramref name="methodName" /> or from containing Harmony patch metadata.
+    ///     <paramref name="methodName" /> or containing patch metadata.
     /// </param>
     /// <param name="methodName">The name of the target member.</param>
     public TargetAttribute(Type? type, string? methodName)
@@ -427,7 +442,7 @@ public class TargetAttribute(
     /// </summary>
     /// <param name="type">
     ///     The type that declares the target member, or <see langword="null" /> to resolve it from
-    ///     <paramref name="methodName" /> or from containing Harmony patch metadata.
+    ///     <paramref name="methodName" /> or containing patch metadata.
     /// </param>
     /// <param name="methodName">The name of the target member.</param>
     /// <param name="parameterTypes">The parameter types that identify the overload.</param>
@@ -435,7 +450,7 @@ public class TargetAttribute(
         : this(type, methodName, MemberType.Any, parameterTypes) { }
 
     /// <summary>
-    ///     Applies the patch to a member whose declaring type is resolved from the member name or containing Harmony patch
+    ///     Applies the patch to a member whose declaring type is resolved from the member name or containing patch
     ///     metadata.
     /// </summary>
     /// <param name="methodName">
@@ -446,7 +461,8 @@ public class TargetAttribute(
     ///     The parameter types used to select an overload, or <see langword="null" /> to match without a parameter signature.
     /// </param>
     /// <param name="genericTypes">
-    ///     The generic type arguments used when matching a generic method, or <see langword="null" /> when not selecting one.
+    ///     The generic type arguments used to identify a constructed generic method, or <see langword="null" /> when
+    ///     generic type arguments are not part of the selection.
     /// </param>
     public TargetAttribute(
         string? methodName = null,
@@ -456,7 +472,7 @@ public class TargetAttribute(
         : this(null, methodName, memberType, parameterTypes, genericTypes) { }
 
     /// <summary>
-    ///     Applies the patch to a member whose declaring type is resolved from the member name or containing Harmony patch
+    ///     Applies the patch to a member whose declaring type is resolved from the member name or containing patch
     ///     metadata.
     /// </summary>
     /// <param name="methodName">The name of the target member.</param>
@@ -465,7 +481,7 @@ public class TargetAttribute(
 
     /// <summary>
     ///     Applies the patch to a specific overload whose declaring type is resolved from the member name or containing
-    ///     Harmony patch metadata.
+    ///     patch metadata.
     /// </summary>
     /// <param name="methodName">The name of the target member.</param>
     /// <param name="parameterTypes">The parameter types that identify the overload.</param>
@@ -474,41 +490,36 @@ public class TargetAttribute(
 }
 
 /// <summary>
-///     Identifies every member matching the supplied criteria as a target of the attributed patch method. Use
-///     <see cref="TargetAttribute" /> instead when the criteria must resolve to exactly one member.
+///     Selects every outer method, constructor, or property accessor matching the supplied criteria for the attributed
+///     patch method or methods.
 /// </summary>
 /// <param name="type">
-///     The type that declares the target members, or <see langword="null" /> to resolve it from
-///     <paramref name="methodName" /> or use the type declared by a containing <see cref="HarmonyLib.HarmonyPatch" />
-///     attribute.
+///     The type that declares the targets, or <see langword="null" /> to use the default from a containing
+///     <see cref="PatchAttribute" /> or Harmony patch attribute, or to resolve it from <paramref name="methodName" />.
 /// </param>
 /// <param name="methodName">
 ///     The name shared by the target members, or <see langword="null" /> when targeting constructors.
 /// </param>
 /// <param name="memberType">The kind of members or accessors to target.</param>
 /// <param name="parameterTypes">
-///     The parameter types used to filter overloads, or <see langword="null" /> to match without a parameter signature.
+///     The parameter types used to filter overloads, or <see langword="null" /> to omit parameter filtering.
 /// </param>
 /// <param name="genericTypes">
-///     The generic type arguments used when matching generic methods, or <see langword="null" /> when not selecting them.
+///     The generic type arguments used to identify constructed generic methods, or <see langword="null" /> when generic
+///     type arguments are not part of the selection.
 /// </param>
 /// <remarks>
 ///     <para>
-///         When <paramref name="type" /> is <see langword="null" /> and no containing
-///         <see cref="HarmonyLib.HarmonyPatch" /> attribute supplies it, <paramref name="methodName" /> must include the
-///         declaring type. Write the type and member as a single dotted name, such as <c>Namespace.Type.Member</c>. The
-///         Harmony-style spelling <c>Namespace.Type:Member</c>, which uses a colon to separate the type and member, is
-///         also accepted.
+///         When applied to a class, these targets apply to every patch method declared by the class. Method-level targets
+///         are added to class-level targets.
 ///     </para>
 ///     <para>
-///         Once the declaring type has been identified, additional dotted segments can traverse nested types, select a
-///         local function as <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas as
-///         <c>OuterMethod.*</c>. Only members declared directly by the resolved type are considered.
+///         Every match is patched; use <see cref="TargetAttribute" /> when the selection must resolve to exactly one
+///         member. Constructed generic methods can be identified during lookup but are not currently supported as outer
+///         targets.
 ///     </para>
 ///     <para>
-///         In <paramref name="parameterTypes" />, use <see cref="Ref{T}" />, <see cref="In{T}" />, or
-///         <see cref="Out{T}" /> to match <see langword="ref" />, <see langword="in" />, or <see langword="out" />
-///         parameters.
+///         See <see cref="Autopatcher" /> for declaring-type precedence, member-name syntax, and overload selection.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -526,7 +537,7 @@ public class TargetsAttribute(
     /// </summary>
     /// <param name="type">
     ///     The type that declares the target members, or <see langword="null" /> to resolve it from
-    ///     <paramref name="methodName" /> or from containing Harmony patch metadata.
+    ///     <paramref name="methodName" /> or containing patch metadata.
     /// </param>
     /// <param name="methodName">The name shared by the target members.</param>
     public TargetsAttribute(Type? type, string? methodName)
@@ -537,7 +548,7 @@ public class TargetsAttribute(
     /// </summary>
     /// <param name="type">
     ///     The type that declares the target members, or <see langword="null" /> to resolve it from
-    ///     <paramref name="methodName" /> or from containing Harmony patch metadata.
+    ///     <paramref name="methodName" /> or containing patch metadata.
     /// </param>
     /// <param name="methodName">The name shared by the target members.</param>
     /// <param name="parameterTypes">The parameter types used to filter the overloads.</param>
@@ -546,7 +557,7 @@ public class TargetsAttribute(
 
     /// <summary>
     ///     Applies the patch to every matching member whose declaring type is resolved from the member name or containing
-    ///     Harmony patch metadata.
+    ///     patch metadata.
     /// </summary>
     /// <param name="methodName">
     ///     The name shared by the target members, or <see langword="null" /> when targeting constructors.
@@ -556,7 +567,8 @@ public class TargetsAttribute(
     ///     The parameter types used to filter overloads, or <see langword="null" /> to match without a parameter signature.
     /// </param>
     /// <param name="genericTypes">
-    ///     The generic type arguments used when matching generic methods, or <see langword="null" /> when not selecting them.
+    ///     The generic type arguments used to identify constructed generic methods, or <see langword="null" /> when
+    ///     generic type arguments are not part of the selection.
     /// </param>
     public TargetsAttribute(
         string? methodName = null,
@@ -567,7 +579,7 @@ public class TargetsAttribute(
 
     /// <summary>
     ///     Applies the patch to every matching member whose declaring type is resolved from the member name or containing
-    ///     Harmony patch metadata.
+    ///     patch metadata.
     /// </summary>
     /// <param name="methodName">The name shared by the target members.</param>
     public TargetsAttribute(string methodName)
@@ -575,7 +587,7 @@ public class TargetsAttribute(
 
     /// <summary>
     ///     Applies the patch to every matching overload whose declaring type is resolved from the member name or containing
-    ///     Harmony patch metadata.
+    ///     patch metadata.
     /// </summary>
     /// <param name="methodName">The name shared by the target members.</param>
     /// <param name="parameterTypes">The parameter types used to filter the overloads.</param>
@@ -584,8 +596,11 @@ public class TargetsAttribute(
 }
 
 /// <summary>
-///     Inlines the patch method's body into each selected target member instead of invoking it with a method call.
+///     Inlines the attributed patch methods into each selected target instead of invoking them with method calls.
 /// </summary>
+/// <remarks>
+///     When applied to a class, this setting applies to every patch method declared by the class.
+/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class InlineAttribute : Attribute;
@@ -596,9 +611,14 @@ public abstract class ParameterBindingAttribute(Scope scope) : Attribute
 }
 
 /// <summary>
-///     Binds a patch parameter to a parameter of either the outer or inner method. The source parameter can be selected by
-///     name or zero-based index, and <see cref="Scope" /> selects the method for an inner patch.
+///     Binds a patch parameter to a parameter of either the outer or inner member. The source parameter can be selected by
+///     name or zero-based index, and <see cref="Scope" /> selects the member for an inner patch.
 /// </summary>
+/// <remarks>
+///     Patch parameters bind by name without this attribute. Use it when the patch parameter has a different name, when
+///     positional binding is more stable, or when an inner patch must select a specific scope. See
+///     <see cref="Autopatcher" /> for implicit binding conventions.
+/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
 public class ParameterAttribute : ParameterBindingAttribute
@@ -610,8 +630,8 @@ public class ParameterAttribute : ParameterBindingAttribute
     ///     Binds to the source parameter having the same name as the attributed patch parameter.
     /// </summary>
     /// <param name="scope">
-    ///     The method whose parameter is bound in an inner patch. The default, <see cref="Scope.Any" />, searches the inner
-    ///     method first and then the outer method.
+    ///     The member whose parameter is bound in an inner patch. The default, <see cref="Scope.Any" />, searches the inner
+    ///     member first and then the outer member.
     /// </param>
     public ParameterAttribute(Scope scope = Scope.Any) : base(scope) { }
 
@@ -622,8 +642,8 @@ public class ParameterAttribute : ParameterBindingAttribute
     ///     The source parameter name, or <see langword="null" /> to use the attributed patch parameter's name.
     /// </param>
     /// <param name="scope">
-    ///     The method whose parameter is bound in an inner patch. The default, <see cref="Scope.Any" />, searches the inner
-    ///     method first and then the outer method.
+    ///     The member whose parameter is bound in an inner patch. The default, <see cref="Scope.Any" />, searches the inner
+    ///     member first and then the outer member.
     /// </param>
     public ParameterAttribute(string? name, Scope scope = Scope.Any) : base(scope)
     {
@@ -635,8 +655,8 @@ public class ParameterAttribute : ParameterBindingAttribute
     /// </summary>
     /// <param name="index">The zero-based index of the source parameter, excluding the instance argument.</param>
     /// <param name="scope">
-    ///     The method whose parameter is bound in an inner patch. The default, <see cref="Scope.Any" />, uses the inner
-    ///     method for an inner patch and the outer method otherwise.
+    ///     The member whose parameter is bound in an inner patch. The default, <see cref="Scope.Any" />, uses the inner
+    ///     member for an inner patch and the outer member otherwise.
     /// </param>
     public ParameterAttribute(int index, Scope scope = Scope.Any) : base(scope)
     {
@@ -645,18 +665,18 @@ public class ParameterAttribute : ParameterBindingAttribute
 }
 
 /// <summary>
-///     Binds a patch parameter to the instance on which either the outer or inner method is invoked.
+///     Binds a patch parameter to the instance on which either the outer or inner member is invoked.
 /// </summary>
 /// <param name="scope">
-///     The method whose instance is bound in an inner patch. The default, <see cref="Scope.Any" />, uses the inner method
-///     for an inner patch and the outer method otherwise.
+///     The member whose instance is bound in an inner patch. The default, <see cref="Scope.Any" />, uses the inner member
+///     for an inner patch and the outer member otherwise.
 /// </param>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
 public class InstanceAttribute(Scope scope = Scope.Any) : ParameterBindingAttribute(scope);
 
 /// <summary>
-///     Binds a patch parameter to the outer method's return value for an ordinary patch or the inner method's return value
+///     Binds a patch parameter to the outer member's return value for an ordinary patch or the inner member's return value
 ///     for an inner patch. Pass the parameter by reference to replace the bound return value.
 /// </summary>
 [PublicAPI]
@@ -664,31 +684,37 @@ public class InstanceAttribute(Scope scope = Scope.Any) : ParameterBindingAttrib
 public class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any);
 
 /// <summary>
-///     Binds a patch parameter to temporary state for the current invocation of the outer method. Patch methods in the
+///     Binds a patch parameter to temporary state for the current invocation of the outer member. Patch methods in the
 ///     same class can share state by using the same key and value type.
 /// </summary>
 /// <param name="key">
 ///     The key used to identify the shared state, or <see langword="null" /> to use the attributed patch parameter's name.
 /// </param>
+/// <remarks>
+///     State is not supported when an inner patch targets an iterator state-machine method.
+/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
 public class StateAttribute(string? key) : ParameterBindingAttribute(Scope.Outer)
 {
     public readonly string? key = key;
 
+    /// <summary>
+    ///     Binds temporary state using the attributed patch parameter's name as the key.
+    /// </summary>
     public StateAttribute() : this(null) { }
 }
 
 /// <summary>
-///     Binds a patch parameter to an instance field associated with either the outer or inner method. The field can be
-///     selected by name, and <see cref="Scope" /> selects the method for an inner patch.
+///     Binds a patch parameter to an instance field associated with either the outer or inner member. The field can be
+///     selected by name, and <see cref="Scope" /> selects the member for an inner patch.
 /// </summary>
 /// <param name="name">
 ///     The field name, or <see langword="null" /> to use the attributed patch parameter's name.
 /// </param>
 /// <param name="scope">
-///     The method whose instance is searched in an inner patch. The default, <see cref="Scope.Any" />, searches the inner
-///     method's instance first and then the outer method's instance.
+///     The member whose instance is searched in an inner patch. The default, <see cref="Scope.Any" />, searches the inner
+///     member's instance first and then the outer member's instance.
 /// </param>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
@@ -700,8 +726,8 @@ public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBi
     ///     Binds to the field having the same name as the attributed patch parameter.
     /// </summary>
     /// <param name="scope">
-    ///     The method whose instance is searched in an inner patch. The default, <see cref="Scope.Any" />, searches the
-    ///     inner method's instance first and then the outer method's instance.
+    ///     The member whose instance is searched in an inner patch. The default, <see cref="Scope.Any" />, searches the
+    ///     inner member's instance first and then the outer member's instance.
     /// </param>
     public FieldAttribute(Scope scope = Scope.Any) : this(null, scope) { }
 }
@@ -710,6 +736,10 @@ public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBi
 ///     Binds a patch parameter to a delegate that invokes the nearest base-class implementation of the outer instance
 ///     method, allowing the patch to call that implementation directly as if using <see langword="base" />.
 /// </summary>
+/// <remarks>
+///     The patch parameter must be a delegate whose parameters and return type match the outer method. Static methods do
+///     not have a base-method binding.
+/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
 public class BaseMethodAttribute() : ParameterBindingAttribute(Scope.Outer);
