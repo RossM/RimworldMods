@@ -27,7 +27,11 @@ public class RuntimePatchExceptionPatches
 
     public static BindingStruct Infix_InnerPrefixReturningStruct_IsRejectedBeforeUpdateMethod() => default;
 
-    public static void Infix_InnerTargetAbsentFromOuterTarget_IsRejectedBeforeUpdateMethod() { }
+    public static void ForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod() { }
+
+    public static void ApplyThenForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod() { }
+
+    public static void TrampolineResolution_ApplicationFailure_ReportsAndRestoresOriginalMethod() { }
 
     public static void StateBuilder_SameKeyWithDifferentTypes_DoesNotConflict(
         [State("shared")] out int primitive,
@@ -253,25 +257,78 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
     }
 
     [Test]
-    [Ignore("Maybe WONTFIX")]
-    public void Infix_InnerTargetAbsentFromOuterTarget_IsRejectedBeforeUpdateMethod()
+    public void ForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod()
     {
         MethodInfo patch = typeof(RuntimePatchExceptionPatches)
-            .GetMethod(nameof(RuntimePatchExceptionPatches.Infix_InnerTargetAbsentFromOuterTarget_IsRejectedBeforeUpdateMethod))!;
+            .GetMethod(nameof(RuntimePatchExceptionPatches.ForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod))!;
         MethodInfo innerTarget = typeof(InnerStaticMethodTargets)
             .GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
         MethodInfo outerTarget = typeof(StaticMethodTargets)
-            .GetMethod(nameof(StaticMethodTargets.Void))!;
+            .GetMethod(nameof(StaticMethodTargets.IntResult))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Autopatcher.Register(
+            patch,
+            PatchType.InnerPrefix,
+            innerTarget: innerTarget,
+            targets: [outerTarget]);
+
+        Assert.Throws<RuntimePatchException>(() => Autopatcher.ForceApply());
+        Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
+    }
+
+    [Test]
+    public void ApplyThenForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod()
+    {
+        MethodInfo patch = typeof(RuntimePatchExceptionPatches)
+            .GetMethod(nameof(RuntimePatchExceptionPatches.ApplyThenForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod))!;
+        MethodInfo innerTarget = typeof(InnerStaticMethodTargets)
+            .GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
+        MethodInfo outerTarget = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.IntResult))!;
+
+        Autopatcher.Register(
+            patch,
+            PatchType.InnerPrefix,
+            innerTarget: innerTarget,
+            targets: [outerTarget]);
+        Autopatcher.Apply();
+
+        Assert.Throws<RuntimePatchException>(() => Autopatcher.ForceApply());
+        Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
+    }
+
+    [Test]
+    public void TrampolineResolution_ApplicationFailure_ReportsAndRestoresOriginalMethod()
+    {
+        MethodInfo patch = typeof(RuntimePatchExceptionPatches)
+            .GetMethod(nameof(RuntimePatchExceptionPatches.TrampolineResolution_ApplicationFailure_ReportsAndRestoresOriginalMethod))!;
+        MethodInfo innerTarget = typeof(InnerStaticMethodTargets)
+            .GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
+        MethodInfo outerTarget = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.IntResult))!;
+        List<Exception> reportedExceptions = [];
+        Action<Exception> handler = reportedExceptions.Add;
+        Autopatcher.RuntimeExceptionHandler += handler;
+
+        try
         {
             Autopatcher.Register(
                 patch,
                 PatchType.InnerPrefix,
                 innerTarget: innerTarget,
                 targets: [outerTarget]);
-            Autopatcher.ForceApply();
-        });
+            Autopatcher.Apply();
+
+            Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
+            Assert.That(reportedExceptions, Has.Count.EqualTo(1));
+
+            Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
+            Assert.That(reportedExceptions, Has.Count.EqualTo(1));
+        }
+        finally
+        {
+            Autopatcher.RuntimeExceptionHandler -= handler;
+        }
     }
 
     [Test]
