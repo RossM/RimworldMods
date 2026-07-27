@@ -298,14 +298,22 @@ internal class PatchRegistry
             throw new NotSupportedException($"{method.FullName}: Generic patch functions are not supported");
         if (!method.IsStatic)
             throw new InvalidOperationException($"{method.FullName}: Patch methods must be static");
-        if (method.ReturnType != typeof(void) && method.ReturnType != typeof(bool))
-            throw new InvalidOperationException($"{method.FullName}: Patch methods must return 'bool' or 'void'");
         switch (patchType)
         {
-            case PatchType.Prefix: break;
-            case PatchType.Postfix: break;
-            case PatchType.InnerPrefix: break;
-            case PatchType.InnerPostfix: break;
+            case PatchType.Prefix:
+            case PatchType.InnerPrefix:
+            {
+                if (method.ReturnType != typeof(void) && method.ReturnType != typeof(bool))
+                    throw new InvalidOperationException($"{method.FullName}: {patchType} must return 'bool' or 'void'");
+                break;
+            }
+            case PatchType.Postfix:
+            case PatchType.InnerPostfix:
+            {
+                if (method.ReturnType != typeof(void))
+                    throw new InvalidOperationException($"{method.FullName}: {patchType} must return 'void'");
+                break;
+            }
             default: throw new ArgumentOutOfRangeException(nameof(patchType), patchType, null);
         }
 
