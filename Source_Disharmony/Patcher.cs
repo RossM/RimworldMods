@@ -40,7 +40,6 @@ internal class Patcher
 
     public static readonly Patcher Instance = new();
 
-    private readonly bool extraDebug = false;
     private readonly Module module;
 
     // These variables must only be accessed while HarmonyInternals.locker is held
@@ -68,21 +67,39 @@ internal class Patcher
     ///     while we are already holding <see cref="HarmonyInternals.locker" />.
     /// </summary>
     /// <param name="original"></param>
-    private static void PatchDirectly(MethodBase original)
+    private static Exception? PatchDirectly(MethodBase original)
     {
         HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
 
-        MethodInfo replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
+        MethodInfo replacement;
+        try
+        {
+            replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
 #if ENABLE_DISASSEMBLY
-        if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
-            JitAssemblyLogger.TryLog(original, replacement);
+            if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
+                JitAssemblyLogger.TryLog(original, replacement);
 #endif
+        }
+        catch (Exception e)
+        {
+            patchInfo.transpilers =
+            [
+                .. patchInfo.transpilers.Where(t => t.owner != HarmonyID),
+            ];
+
+            replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
+
+            HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
+            return e;
+        }
 
         HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
+        return null;
     }
 
     public void ResolveTrampolineImpl(MethodBase method)
     {
+        Exception? e;
         lock (HarmonyInternals.locker)
         {
             // If we can't remove the method, we lost a race and some other thread has
@@ -90,11 +107,11 @@ internal class Patcher
             if (!trampolines.Remove(method))
                 return;
 
-            if (extraDebug)
-                FileLog.Log($"!!! Resolving trampoline to {method.FullName}");
-
-            PatchDirectly(method);
+            e = PatchDirectly(method);
         }
+
+        if (e != null)
+            Autopatcher.ReportException(e);
     }
 
     [UsedImplicitly]
@@ -107,17 +124,18 @@ internal class Patcher
     {
         while (true)
         {
+            Exception? e;
             lock (HarmonyInternals.locker)
             {
                 if (trampolines.Count == 0)
                     return;
                 var method = trampolines.Keys.First();
-                if (extraDebug)
-                    FileLog.Log($"!!! Resolving trampoline to {method.FullName}");
 
-                PatchDirectly(method);
+                e = PatchDirectly(method);
                 trampolines.Remove(method);
             }
+            if (e != null)
+                throw new RuntimePatchException("Patch error", e);
         }
     }
 
@@ -126,9 +144,6 @@ internal class Patcher
     {
         if (trampolines.TryGetValue(method.MethodBase, out var existingTrampoline))
             return existingTrampoline;
-
-        if (extraDebug)
-            FileLog.Log($"!!! Applying trampoline to {method.FullName}");
 
         MethodInfo trampoline = MakeTrampoline(method);
 
@@ -205,7 +220,7 @@ internal class Patcher
     public void ApplyPatch(MethodBaseInvocation original, InstructionMatcher[] matchers, bool useTrampolines)
     {
         if (matchers.Length == 0)
-            Unpatch(original);
+            Unpatch(original.MethodBase);
 
         lock (HarmonyInternals.locker)
         {
@@ -237,36 +252,43 @@ internal class Patcher
                 replacement = ApplyTrampoline(original);
             else
             {
-                replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
+                try
+                {
+                    replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
 #if ENABLE_DISASSEMBLY
-                if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
-                    JitAssemblyLogger.TryLog(original.MethodBase, replacement);
+                    if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
+                        JitAssemblyLogger.TryLog(original.MethodBase, replacement);
 #endif
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimePatchException("Patch error", e);
+                }
             }
 
             HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);
         }
     }
 
-    public void Unpatch(MethodBaseInvocation original)
+    public void Unpatch(MethodBase methodBase)
     {
         lock (HarmonyInternals.locker)
         {
-            if (!methodPatches.Remove(original.MethodBase))
+            if (!methodPatches.Remove(methodBase))
                 return;
 
-            trampolines.Remove(original.MethodBase);
+            trampolines.Remove(methodBase);
 
-            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
+            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(methodBase) ?? new HarmonyPatch();
 
             patchInfo.transpilers =
             [
                 .. patchInfo.transpilers.Where(t => t.owner != HarmonyID),
             ];
 
-            MethodInfo replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
+            MethodInfo replacement = HarmonyInternals.UpdateWrapper(methodBase, patchInfo);
 
-            HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);
+            HarmonyInternals.UpdatePatchInfo(methodBase, replacement, patchInfo);
         }
     }
 }

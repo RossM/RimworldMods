@@ -11,7 +11,7 @@ public static partial class Autopatcher
         {
             if (patches.Count == 0)
             {
-                patcher.Unpatch(patchedMethod);
+                patcher.Unpatch(patchedMethod.MethodBase);
                 return;
             }
 

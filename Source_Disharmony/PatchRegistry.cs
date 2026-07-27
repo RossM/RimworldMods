@@ -322,13 +322,19 @@ internal class PatchRegistry
         if (target.IsGenericMethod)
             throw new InvalidOperationException($"{target.FullName}: Can't patch instantiated generic method");
 
+        MethodBaseInvocation outer = GetOuterInvocation(target);
+        AddPatch(method, patchType, outer, inner, options);
+    }
+
+    private static MethodBaseInvocation GetOuterInvocation(MethodBase target)
+    {
         MethodBaseInvocation outer = target switch
         {
             MethodInfo outerMethod => new MethodInvocation(outerMethod),
             ConstructorInfo outerConstructor => new PatchableConstructorInvocation(outerConstructor),
             _ => throw new ArgumentOutOfRangeException(),
         };
-        AddPatch(method, patchType, outer, inner, options);
+        return outer;
     }
 
     private void AddPatch(

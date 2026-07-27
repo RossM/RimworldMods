@@ -133,6 +133,13 @@ public static partial class Autopatcher
     private static readonly PatchRegistry registry = PatchRegistry.Instance;
     private static readonly Patcher patcher = Patcher.Instance;
 
+    public static event Action<Exception>? RuntimeExceptionHandler;
+
+    internal static void ReportException(Exception exception)
+    {
+        RuntimeExceptionHandler?.Invoke(exception);
+    }
+
     /// <summary>
     ///     Discovers and registers every patch class in an assembly, then applies all pending patch changes.
     /// </summary>
