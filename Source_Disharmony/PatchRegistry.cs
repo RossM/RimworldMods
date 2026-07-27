@@ -294,7 +294,7 @@ internal class PatchRegistry
 
     private void AddPatch(MethodInfo method, PatchType patchType, MethodBase target, Invocation inner, PatchOptions options)
     {
-        if (method.IsGenericMethod)
+        if (method.ContainsGenericParameters)
             throw new NotSupportedException($"{method.FullName}: Generic patch functions are not supported");
         if (!method.IsStatic)
             throw new InvalidOperationException($"{method.FullName}: Patch methods must be static");
