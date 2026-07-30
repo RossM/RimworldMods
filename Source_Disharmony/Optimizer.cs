@@ -1,8 +1,8 @@
 ﻿namespace Disharmony;
 
-internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator, bool debug)
+internal class Optimizer
 {
-    private record Op(OpCode Opcode, object? Operand = null)
+    private class Op(OpCode opcode, object? operand = null)
     {
         public bool IsLeave => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
         public bool IsUnconditionalBranch => Opcode == OpCodes.Br_S || Opcode == OpCodes.Br;
@@ -12,6 +12,61 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             Opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch;
 
         public CodeInstruction ToCodeInstruction() => new(Opcode, Operand);
+
+        public int StackPops =>
+            Opcode.StackBehaviourPop switch
+            {
+                StackBehaviour.Pop0 => 0,
+                StackBehaviour.Pop1 => 1,
+                StackBehaviour.Pop1_pop1 => 2,
+                StackBehaviour.Popi => 1,
+                StackBehaviour.Popi_pop1 => 2,
+                StackBehaviour.Popi_popi => 2,
+                StackBehaviour.Popi_popi8 => 2,
+                StackBehaviour.Popi_popi_popi => 3,
+                StackBehaviour.Popi_popr4 => 2,
+                StackBehaviour.Popi_popr8 => 2,
+                StackBehaviour.Popref => 1,
+                StackBehaviour.Popref_pop1 => 2,
+                StackBehaviour.Popref_popi => 2,
+                StackBehaviour.Popref_popi_popi => 3,
+                StackBehaviour.Popref_popi_popi8 => 3,
+                StackBehaviour.Popref_popi_popr4 => 3,
+                StackBehaviour.Popref_popi_popr8 => 3,
+                StackBehaviour.Popref_popi_popref => 3,
+                StackBehaviour.Varpop => Operand switch
+                {
+                    MethodBase method => method.GetParameters().Length + (method.IsStatic ? 0 : 1),
+                    _ => throw new ArgumentOutOfRangeException(),
+                },
+                StackBehaviour.Popref_popi_pop1 => 3,
+                _ => throw new ArgumentOutOfRangeException(),
+            };
+
+        public int StackPushes => Opcode.StackBehaviourPush switch {
+            StackBehaviour.Push0 => 0,
+            StackBehaviour.Push1 => 1,
+            StackBehaviour.Push1_push1 => 2,
+            StackBehaviour.Pushi => 1,
+            StackBehaviour.Pushi8 => 1,
+            StackBehaviour.Pushr4 => 1,
+            StackBehaviour.Pushr8 => 1,
+            StackBehaviour.Pushref => 1,
+            StackBehaviour.Varpush => Operand switch
+            {
+                MethodInfo method => method.ReturnType == typeof(void) ? 0 : 1,
+                _ => throw new ArgumentOutOfRangeException(),
+            },
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        public OpCode Opcode { get; } = opcode;
+        public object? Operand { get; } = operand;
+        public void Deconstruct(out OpCode opcode, out object? operand)
+        {
+            opcode = Opcode;
+            operand = Operand;
+        }
     }
 
     private static class Ops
@@ -30,6 +85,11 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
         public readonly List<Block> successors = [];
         public readonly List<Block> predecessors = [];
         public Region? parent;
+
+        public List<Type> entryLocals = [];
+        public List<Type> entryStack = [];
+        public List<Type> exitLocals = [];
+        public List<Type> exitStack = [];
 
         /// <summary>
         ///     For BasicBlocks, has the next block in the flow of control. For Regions, has the next
@@ -69,6 +129,24 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
     private List<BasicBlock> basicBlocks = [];
     private readonly Region root = new();
     private int nextBlockId = 1;
+    private bool valid = false;
+    private readonly MethodBase method;
+    private readonly List<CodeInstruction> inputInstructions;
+    private readonly ILGenerator generator;
+    private readonly bool debug;
+    private List<LocalVariableInfo> localVariables;
+
+    public Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator, bool debug)
+    {
+        this.method = method;
+        this.inputInstructions = inputInstructions;
+        this.generator = generator;
+        this.debug = debug;
+
+        localVariables = method.GetMethodBody()?.LocalVariables.ToList() ?? [];
+
+        valid = true;
+    }
 
     private static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
     private static bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
@@ -108,14 +186,15 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
                 regionStack.Pop();
             }
 
-            FileLog.LogBuffered("#########################################");
-            FileLog.LogBuffered($"# Block:        {block.ID,-23} #");
-            FileLog.LogBuffered($"# Predecessors: {string.Join(", ", block.predecessors.Select(b => b.ID)),-23} #");
-            FileLog.LogBuffered($"# Successors:   {string.Join(", ", block.successors.Select(b => b.ID)),-23} #");
+            FileLog.LogBuffered($"# Block:        {block.ID}");
+            FileLog.LogBuffered($"# Predecessors: {string.Join(", ", block.predecessors.Select(b => b.ID))}");
+            FileLog.LogBuffered($"# Successors:   {string.Join(", ", block.successors.Select(b => b.ID))}");
             if (block is { EntryPoint: true, parent: not null })
-                FileLog.LogBuffered(
-                    $"# Entry Point:  {block.parent!.ID,-23} #");
-            FileLog.LogBuffered("#########################################");
+                FileLog.LogBuffered($"# Entry Point:  {block.parent.ID}");
+            if (block is { entryLocals.Count: > 0 })
+                FileLog.LogBuffered($"# Locals:       {string.Join(", ", block.entryLocals.Select(t => t.FullName))}");
+            if (block is { entryStack.Count: > 0 })
+                FileLog.LogBuffered($"# Stack:        {string.Join(", ", block.entryStack.Select(t => t.FullName))}");
 
             if (block.label is Label label)
                 FileLog.LogIL(codePos, label);
@@ -187,8 +266,11 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
             codePos += ReflectionTools.ILSize(codeInstruction.opcode);
     }
 
-    public void Optimize()
+    public List<CodeInstruction> Optimize()
     {
+        if (!valid)
+            return inputInstructions;
+
         LogInstructions("Input", inputInstructions);
 
         MakeBasicBlocks();
@@ -220,6 +302,8 @@ internal class Optimizer(MethodBase method, List<CodeInstruction> inputInstructi
 
         Emit();
         LogInstructions("Output", output.instructions);
+
+        return output.instructions;
     }
 
     private void Emit()
