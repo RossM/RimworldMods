@@ -74,6 +74,36 @@ internal partial class Optimizer
                         stack.Add(stack[^1]);
                         break;
                     }
+                    case OpCodeValues.Ldobj:
+                    {
+                        stack[^1] = stack[^1].GetElementType();
+                        break;
+                    }
+                    case OpCodeValues.Ldstr:
+                    {
+                        stack.Add(typeof(string));
+                        break;
+                    }
+                    case OpCodeValues.Ldfld when op.Operand is FieldInfo field:
+                    {
+                        stack[^1] = field.FieldType;
+                        break;
+                    }
+                    case OpCodeValues.Ldflda when op.Operand is FieldInfo field:
+                    {
+                        stack[^1] = field.FieldType.MakeByRefType();
+                        break;
+                    }
+                    case OpCodeValues.Ldsfld when op.Operand is FieldInfo field:
+                    {
+                        stack.Add(field.FieldType);
+                        break;
+                    }
+                    case OpCodeValues.Ldsflda when op.Operand is FieldInfo field:
+                    {
+                        stack.Add(field.FieldType.MakeByRefType());
+                        break;
+                    }
                     case OpCodeValues.NewObj when op.Operand is ConstructorInfo constructor:
                     {
                         var count = constructor.GetParameters().Length;

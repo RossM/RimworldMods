@@ -21,6 +21,12 @@ internal static class OpCodeValues
     public const int Ldloc_S  =   0x11;
     public const int Ldloca   = 0xFE0D;
     public const int Ldloca_S =   0x12;
+    public const int Ldobj    =   0x71;
+    public const int Ldstr    =   0x72;
+    public const int Ldfld    =   0x7B;
+    public const int Ldflda   =   0x7C;
+    public const int Ldsfld   =   0x7E;
+    public const int Ldsflda  =   0x7F;
     public const int NewObj   =   0x73;
     public const int Ret      =   0x2A;
     public const int Stloc    = 0xFE0E;
