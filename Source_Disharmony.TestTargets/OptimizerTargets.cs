@@ -321,6 +321,133 @@ public static class OptimizerMixedTargets
         selected = 42;
         return (first.Number, second.Number);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int ExplicitReferenceCastOnLocal(bool compatibleType)
+    {
+        OptimizerBranchValue value;
+        if (compatibleType)
+            value = new OptimizerFirstBranchValue(7);
+        else
+            value = new OptimizerSecondBranchValue(11);
+
+        var first = (OptimizerFirstBranchValue)value;
+        return first.Number;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int ExplicitReferenceCastOnEvaluationStack(bool compatibleType)
+    {
+        var first = (OptimizerFirstBranchValue)(compatibleType
+            ? (object)new OptimizerFirstBranchValue(7)
+            : new OptimizerSecondBranchValue(11));
+        return first.Number;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int ExplicitUnboxingCastOnLocal(bool boxedInt)
+    {
+        object value;
+        if (boxedInt)
+            value = 42;
+        else
+            value = (short)7;
+
+        return (int)value;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int ExplicitUnboxingCastOnEvaluationStack(bool boxedInt) =>
+        (int)(boxedInt ? (object)42 : (short)7);
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static (bool IsString, bool IsInt, bool IsDataObject) IsOperatorsOnLocal(int kind)
+    {
+        object value;
+        switch (kind)
+        {
+            case 0:
+                value = "text";
+                break;
+            case 1:
+                value = 42;
+                break;
+            default:
+                value = new OptimizerDataObject { Number = 7 };
+                break;
+        }
+
+        return (value is string, value is int, value is OptimizerDataObject);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int? AsClassOnLocal(bool compatibleType)
+    {
+        OptimizerBranchValue value;
+        if (compatibleType)
+            value = new OptimizerFirstBranchValue(7);
+        else
+            value = new OptimizerSecondBranchValue(11);
+
+        OptimizerFirstBranchValue? first = value as OptimizerFirstBranchValue;
+        return first?.Number;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int? AsInterfaceOnLocal(bool implementsInterface)
+    {
+        object value;
+        if (implementsInterface)
+            value = new OptimizerDataReader(7);
+        else
+            value = new OptimizerDataObject { Number = 11 };
+
+        IOptimizerDataReader? reader = value as IOptimizerDataReader;
+        return reader?.Read();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static bool IsOperatorOnLocal(bool selectFirst)
+    {
+        object value;
+        if (selectFirst)
+            value = new OptimizerFirstBranchValue(7);
+        else
+            value = new OptimizerSecondBranchValue(11);
+
+        return value is OptimizerFirstBranchValue;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int? AsOperatorOnLocal(bool selectFirst)
+    {
+        object value;
+        if (selectFirst)
+            value = new OptimizerFirstBranchValue(7);
+        else
+            value = new OptimizerSecondBranchValue(11);
+
+        OptimizerFirstBranchValue? first = value as OptimizerFirstBranchValue;
+        return first?.Number;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static bool IsOperatorOnEvaluationStack(bool selectFirst) =>
+        (selectFirst
+            ? (object)new OptimizerFirstBranchValue(7)
+            : new OptimizerSecondBranchValue(11))
+        is OptimizerFirstBranchValue;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int? AsOperatorOnEvaluationStack(bool selectFirst)
+    {
+        OptimizerFirstBranchValue? first =
+            (selectFirst
+                ? (object)new OptimizerFirstBranchValue(7)
+                : new OptimizerSecondBranchValue(11))
+            as OptimizerFirstBranchValue;
+        return first?.Number;
+    }
 }
 
 public static class OptimizerControlFlowTargets

@@ -267,6 +267,113 @@ public static class OptimizerPatches
     [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ConditionalRefToObjectField))]
     [PatchOptions(PatchOptions.Optimize)]
     public static void ConditionalRefToObjectField_PreservesSelectedFieldMutation() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ExplicitReferenceCastOnLocal))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void ExplicitReferenceCast_Local_SuccessAndFailure() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ExplicitReferenceCastOnEvaluationStack))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void ExplicitReferenceCast_EvaluationStack_SuccessAndFailure() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ExplicitUnboxingCastOnLocal))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void ExplicitUnboxingCast_Local_SuccessAndFailure() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ExplicitUnboxingCastOnEvaluationStack))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void ExplicitUnboxingCast_EvaluationStack_SuccessAndFailure() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.IsOperatorsOnLocal))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void Is_Local_RecognizesEachRuntimeType() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.AsClassOnLocal))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void AsClass_Local_SuccessAndFailure() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.AsInterfaceOnLocal))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void AsInterface_Local_SuccessAndFailure() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.IsOperatorOnLocal))]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
+    public static void InlinePrefix_Is_Local_KnownSuccess(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = true;
+    }
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.IsOperatorOnLocal))]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
+    public static void InlinePrefix_Is_Local_KnownFailure(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = false;
+    }
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.IsOperatorOnEvaluationStack))]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
+    public static void InlinePrefix_Is_EvaluationStack_KnownSuccess(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = true;
+    }
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.IsOperatorOnEvaluationStack))]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
+    public static void InlinePrefix_Is_EvaluationStack_KnownFailure(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = false;
+    }
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.AsOperatorOnLocal))]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
+    public static void InlinePrefix_As_Local_KnownSuccess(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = true;
+    }
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.AsOperatorOnLocal))]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
+    public static void InlinePrefix_As_Local_KnownFailure(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = false;
+    }
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.AsOperatorOnEvaluationStack))]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
+    public static void InlinePrefix_As_EvaluationStack_KnownSuccess(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = true;
+    }
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.AsOperatorOnEvaluationStack))]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
+    public static void InlinePrefix_As_EvaluationStack_KnownFailure(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = false;
+    }
 }
 
 [TestFixture]
@@ -906,6 +1013,185 @@ public sealed class OptimizerTests : PatchTestBase
         Assert.That(first.Second, Is.EqualTo(11));
         Assert.That(second.First, Is.EqualTo(7));
         Assert.That(second.Second, Is.EqualTo(42));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void ExplicitReferenceCast_Local_SuccessAndFailure()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.ExplicitReferenceCast_Local_SuccessAndFailure));
+
+        Assert.That(OptimizerMixedTargets.ExplicitReferenceCastOnLocal(true), Is.EqualTo(7));
+        Assert.Throws<InvalidCastException>(() => OptimizerMixedTargets.ExplicitReferenceCastOnLocal(false));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void ExplicitReferenceCast_EvaluationStack_SuccessAndFailure()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.ExplicitReferenceCast_EvaluationStack_SuccessAndFailure));
+
+        Assert.That(OptimizerMixedTargets.ExplicitReferenceCastOnEvaluationStack(true), Is.EqualTo(7));
+        Assert.Throws<InvalidCastException>(
+            () => OptimizerMixedTargets.ExplicitReferenceCastOnEvaluationStack(false));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void ExplicitUnboxingCast_Local_SuccessAndFailure()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.ExplicitUnboxingCast_Local_SuccessAndFailure));
+
+        Assert.That(OptimizerMixedTargets.ExplicitUnboxingCastOnLocal(true), Is.EqualTo(42));
+        Assert.Throws<InvalidCastException>(() => OptimizerMixedTargets.ExplicitUnboxingCastOnLocal(false));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void ExplicitUnboxingCast_EvaluationStack_SuccessAndFailure()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.ExplicitUnboxingCast_EvaluationStack_SuccessAndFailure));
+
+        Assert.That(OptimizerMixedTargets.ExplicitUnboxingCastOnEvaluationStack(true), Is.EqualTo(42));
+        Assert.Throws<InvalidCastException>(
+            () => OptimizerMixedTargets.ExplicitUnboxingCastOnEvaluationStack(false));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void Is_Local_RecognizesEachRuntimeType()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.Is_Local_RecognizesEachRuntimeType));
+
+        var text = OptimizerMixedTargets.IsOperatorsOnLocal(0);
+        var number = OptimizerMixedTargets.IsOperatorsOnLocal(1);
+        var dataObject = OptimizerMixedTargets.IsOperatorsOnLocal(2);
+
+        Assert.That(text.IsString, Is.True);
+        Assert.That(text.IsInt, Is.False);
+        Assert.That(text.IsDataObject, Is.False);
+        Assert.That(number.IsString, Is.False);
+        Assert.That(number.IsInt, Is.True);
+        Assert.That(number.IsDataObject, Is.False);
+        Assert.That(dataObject.IsString, Is.False);
+        Assert.That(dataObject.IsInt, Is.False);
+        Assert.That(dataObject.IsDataObject, Is.True);
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(3));
+    }
+
+    [Test]
+    public void AsClass_Local_SuccessAndFailure()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.AsClass_Local_SuccessAndFailure));
+
+        Assert.That(OptimizerMixedTargets.AsClassOnLocal(true), Is.EqualTo(7));
+        Assert.That(OptimizerMixedTargets.AsClassOnLocal(false), Is.Null);
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void AsInterface_Local_SuccessAndFailure()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.AsInterface_Local_SuccessAndFailure));
+
+        Assert.That(OptimizerMixedTargets.AsInterfaceOnLocal(true), Is.EqualTo(7));
+        Assert.That(OptimizerMixedTargets.AsInterfaceOnLocal(false), Is.Null);
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InlinePrefix_Is_Local_KnownSuccess()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InlinePrefix_Is_Local_KnownSuccess));
+
+        Assert.That(OptimizerMixedTargets.IsOperatorOnLocal(false), Is.True);
+        Assert.That(OptimizerMixedTargets.IsOperatorOnLocal(true), Is.True);
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InlinePrefix_Is_Local_KnownFailure()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InlinePrefix_Is_Local_KnownFailure));
+
+        Assert.That(OptimizerMixedTargets.IsOperatorOnLocal(false), Is.False);
+        Assert.That(OptimizerMixedTargets.IsOperatorOnLocal(true), Is.False);
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InlinePrefix_Is_EvaluationStack_KnownSuccess()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.InlinePrefix_Is_EvaluationStack_KnownSuccess));
+
+        Assert.That(OptimizerMixedTargets.IsOperatorOnEvaluationStack(false), Is.True);
+        Assert.That(OptimizerMixedTargets.IsOperatorOnEvaluationStack(true), Is.True);
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InlinePrefix_Is_EvaluationStack_KnownFailure()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.InlinePrefix_Is_EvaluationStack_KnownFailure));
+
+        Assert.That(OptimizerMixedTargets.IsOperatorOnEvaluationStack(false), Is.False);
+        Assert.That(OptimizerMixedTargets.IsOperatorOnEvaluationStack(true), Is.False);
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InlinePrefix_As_Local_KnownSuccess()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InlinePrefix_As_Local_KnownSuccess));
+
+        Assert.That(OptimizerMixedTargets.AsOperatorOnLocal(false), Is.EqualTo(7));
+        Assert.That(OptimizerMixedTargets.AsOperatorOnLocal(true), Is.EqualTo(7));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InlinePrefix_As_Local_KnownFailure()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InlinePrefix_As_Local_KnownFailure));
+
+        Assert.That(OptimizerMixedTargets.AsOperatorOnLocal(false), Is.Null);
+        Assert.That(OptimizerMixedTargets.AsOperatorOnLocal(true), Is.Null);
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InlinePrefix_As_EvaluationStack_KnownSuccess()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.InlinePrefix_As_EvaluationStack_KnownSuccess));
+
+        Assert.That(OptimizerMixedTargets.AsOperatorOnEvaluationStack(false), Is.EqualTo(7));
+        Assert.That(OptimizerMixedTargets.AsOperatorOnEvaluationStack(true), Is.EqualTo(7));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InlinePrefix_As_EvaluationStack_KnownFailure()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.InlinePrefix_As_EvaluationStack_KnownFailure));
+
+        Assert.That(OptimizerMixedTargets.AsOperatorOnEvaluationStack(false), Is.Null);
+        Assert.That(OptimizerMixedTargets.AsOperatorOnEvaluationStack(true), Is.Null);
         Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
     }
 }
