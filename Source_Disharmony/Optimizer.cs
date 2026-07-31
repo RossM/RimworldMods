@@ -76,24 +76,6 @@ internal partial class Optimizer
                 _ => throw new ArgumentOutOfRangeException(),
             };
 
-        public int StackPushes => Opcode.StackBehaviourPush switch
-        {
-            StackBehaviour.Push0 => 0,
-            StackBehaviour.Push1 => 1,
-            StackBehaviour.Push1_push1 => 2,
-            StackBehaviour.Pushi => 1,
-            StackBehaviour.Pushi8 => 1,
-            StackBehaviour.Pushr4 => 1,
-            StackBehaviour.Pushr8 => 1,
-            StackBehaviour.Pushref => 1,
-            StackBehaviour.Varpush => Operand switch
-            {
-                MethodInfo method => method.ReturnType == typeof(void) ? 0 : 1,
-                _ => throw new ArgumentOutOfRangeException(),
-            },
-            _ => throw new ArgumentOutOfRangeException(),
-        };
-
         public OpCode Opcode { get; } = opcode;
         public object? Operand { get; } = operand;
         public int Index => unchecked((ushort)Opcode.Value) switch

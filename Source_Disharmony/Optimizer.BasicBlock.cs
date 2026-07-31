@@ -126,7 +126,7 @@ internal partial class Optimizer
                                 stack.Add(typeof(AnyType));
                                 stack.Add(typeof(AnyType));
                                 break;
-                            case StackBehaviour.Pushi: stack.Add(typeof(int)); break;
+                            case StackBehaviour.Pushi: stack.Add(typeof(AnyType)); break;
                             case StackBehaviour.Pushi8: stack.Add(typeof(long)); break;
                             case StackBehaviour.Pushr4: stack.Add(typeof(float)); break;
                             case StackBehaviour.Pushr8: stack.Add(typeof(double)); break;
