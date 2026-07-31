@@ -225,7 +225,7 @@ public static class OptimizerPatches
 
     [Prefix]
     [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ConditionalInterfaceImplementation))]
-    [PatchOptions(PatchOptions.Optimize)]
+    [PatchOptions(PatchOptions.Optimize | PatchOptions.Debug)]
     public static void ConditionalInterfaceImplementation_PreservesInterfaceDispatch() => RecordPatch();
 
     [Prefix]

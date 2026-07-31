@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System.CodeDom;
+using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Disharmony;
 
@@ -95,6 +97,39 @@ internal class Optimizer
 
         public OpCode Opcode { get; } = opcode;
         public object? Operand { get; } = operand;
+        public int Index => unchecked((ushort)Opcode.Value) switch
+        {
+            OpCodeValues.Ldarg_0 => 0,
+            OpCodeValues.Ldarg_1 => 1,
+            OpCodeValues.Ldarg_2 => 2,
+            OpCodeValues.Ldarg_3 => 3,
+            OpCodeValues.Ldarg or OpCodeValues.Ldarg_S => ToLocalIndex(Operand),
+            OpCodeValues.Ldarga or OpCodeValues.Ldarga_S => ToLocalIndex(Operand),
+            //OpCodeValues.Starg_0 => 0,
+            //OpCodeValues.Starg_1 => 1,
+            //OpCodeValues.Starg_2 => 2,
+            //OpCodeValues.Starg_3 => 3,
+            //OpCodeValues.Starg or OpCodeValues.Starg_S => Convert.ToInt32(Operand),
+            OpCodeValues.Ldloc_0 => 0,
+            OpCodeValues.Ldloc_1 => 1,
+            OpCodeValues.Ldloc_2 => 2,
+            OpCodeValues.Ldloc_3 => 3,
+            OpCodeValues.Ldloc or OpCodeValues.Ldloc_S => ToLocalIndex(Operand),
+            OpCodeValues.Ldloca or OpCodeValues.Ldloca_S => ToLocalIndex(Operand),
+            OpCodeValues.Stloc_0 => 0,
+            OpCodeValues.Stloc_1 => 1,
+            OpCodeValues.Stloc_2 => 2,
+            OpCodeValues.Stloc_3 => 3,
+            OpCodeValues.Stloc or OpCodeValues.Stloc_S => ToLocalIndex(Operand),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private static int ToLocalIndex(object? value)
+        {
+            if (value is LocalBuilder lb)
+                return lb.LocalIndex;
+            return Convert.ToInt32(value);
+        }
 
         public CodeInstruction ToCodeInstruction() => new(Opcode, Operand);
 
@@ -170,6 +205,7 @@ internal class Optimizer
     private readonly List<CodeInstruction> inputInstructions;
     private readonly ILGenerator generator;
     private readonly bool debug;
+    private List<Type> parameterTypes;
 
     public Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator, bool debug)
     {
@@ -177,6 +213,11 @@ internal class Optimizer
         this.inputInstructions = inputInstructions;
         this.generator = generator;
         this.debug = debug;
+
+        if (method.HasThis)
+            parameterTypes = [method.DeclaringType.CallableType, .. method.GetParameters().Types()];
+        else
+            parameterTypes = [.. method.GetParameters().Types()];
 
         valid = true;
     }
@@ -797,32 +838,113 @@ internal class Optimizer
                     List<Type> locals = [.. block.entryLocals];
                     List<Type> stack = [.. block.entryStack];
 
+                    void ExpandLocals(int i)
+                    {
+                        while (locals.Count < i + 1)
+                            locals.Add(typeof(UnknownType));
+                    }
+
                     foreach (var op in bb.ops)
                     {
-                        int popCount = op.StackPops;
-                        for (int i = 0; i < popCount; i++)
-                            stack.RemoveAt(stack.Count - 1);
-
-                        switch (op.Opcode.StackBehaviourPush)
+                        switch (unchecked((ushort)op.Opcode.Value))
                         {
-                            case StackBehaviour.Push0: break;
-                            case StackBehaviour.Push1: stack.Add(typeof(AnyType)); break;
-                            case StackBehaviour.Push1_push1:
-                                stack.Add(typeof(AnyType));
-                                stack.Add(typeof(AnyType));
-                                break;
-                            case StackBehaviour.Pushi: stack.Add(typeof(int)); break;
-                            case StackBehaviour.Pushi8: stack.Add(typeof(long)); break;
-                            case StackBehaviour.Pushr4: stack.Add(typeof(float)); break;
-                            case StackBehaviour.Pushr8: stack.Add(typeof(double)); break;
-                            case StackBehaviour.Pushref: stack.Add(typeof(object)); break;
-                            case StackBehaviour.Varpush when op.Operand is MethodInfo methodInfo:
+                            case OpCodeValues.Ldloc_0:
+                            case OpCodeValues.Ldloc_1:
+                            case OpCodeValues.Ldloc_2:
+                            case OpCodeValues.Ldloc_3:
+                            case OpCodeValues.Ldloc:
+                            case OpCodeValues.Ldloc_S:
                             {
-                                if (methodInfo.ReturnType != typeof(void))
-                                    stack.Add(methodInfo.ReturnType);
+                                int index = op.Index;
+                                ExpandLocals(index);
+                                stack.Add(locals[index]);
                                 break;
                             }
-                            default: throw new ArgumentException();
+                            case OpCodeValues.Stloc_0:
+                            case OpCodeValues.Stloc_1:
+                            case OpCodeValues.Stloc_2:
+                            case OpCodeValues.Stloc_3:
+                            case OpCodeValues.Stloc:
+                            case OpCodeValues.Stloc_S:
+                            {
+                                int index = op.Index;
+                                ExpandLocals(index);
+                                locals[index] = stack[^1];
+                                stack.RemoveAt(stack.Count - 1);
+                                break;
+                            }
+                            case OpCodeValues.Ldloca:
+                            case OpCodeValues.Ldloca_S:
+                            {
+                                int index = op.Index;
+                                ExpandLocals(index);
+                                stack.Add(locals[index].MakeByRefType());
+                                // Can't be bothered to do fancy analysis here
+                                if (!locals[index].IsValueType)
+                                    locals[index] = typeof(object);
+                                break;
+                            }
+                            case OpCodeValues.Ldarg_0:
+                            case OpCodeValues.Ldarg_1:
+                            case OpCodeValues.Ldarg_2:
+                            case OpCodeValues.Ldarg_3:
+                            case OpCodeValues.Ldarg:
+                            case OpCodeValues.Ldarg_S:
+                            {
+                                int index = op.Index;
+                                stack.Add(parameterTypes[index]);
+                                break;
+                            }
+                            case OpCodeValues.Ldarga:
+                            case OpCodeValues.Ldarga_S:
+                            {
+                                int index = op.Index;
+                                stack.Add(parameterTypes[index].MakeByRefType());
+                                break;
+                            }
+                            case OpCodeValues.Dup:
+                            {
+                                stack.Add(stack[^1]);
+                                break;
+                            }
+                            case OpCodeValues.NewObj when op.Operand is ConstructorInfo constructor:
+                            {
+                                var count = constructor.GetParameters().Length;
+                                for (int i = 0; i < count; i++)
+                                    stack.RemoveAt(stack.Count - 1);
+                                stack.Add(constructor.DeclaringType);
+                                break;
+                            }
+                            default:
+                            {
+                                int popCount = op.StackPops;
+                                for (int i = 0; i < popCount; i++)
+                                    stack.RemoveAt(stack.Count - 1);
+
+                                switch (op.Opcode.StackBehaviourPush)
+                                {
+                                    case StackBehaviour.Push0: break;
+                                    case StackBehaviour.Push1: stack.Add(typeof(AnyType)); break;
+                                    case StackBehaviour.Push1_push1:
+                                        stack.Add(typeof(AnyType));
+                                        stack.Add(typeof(AnyType));
+                                        break;
+                                    case StackBehaviour.Pushi: stack.Add(typeof(int)); break;
+                                    case StackBehaviour.Pushi8: stack.Add(typeof(long)); break;
+                                    case StackBehaviour.Pushr4: stack.Add(typeof(float)); break;
+                                    case StackBehaviour.Pushr8: stack.Add(typeof(double)); break;
+                                    case StackBehaviour.Pushref: stack.Add(typeof(object)); break;
+                                    case StackBehaviour.Varpush when op.Operand is MethodInfo methodInfo:
+                                    {
+                                        if (methodInfo.ReturnType != typeof(void))
+                                            stack.Add(methodInfo.ReturnType);
+                                        break;
+                                    }
+                                    default: throw new ArgumentException();
+                                }
+
+                                break;
+                            }
                         }
                     }
 
@@ -936,6 +1058,9 @@ internal class Optimizer
         var rightTypes = GetBaseTypes(right);
         for (int i = Math.Min(leftTypes.Count, rightTypes.Count) - 1; i >= 0; i--)
         {
+            if (leftTypes[i] == typeof(object) && TryGetCommonInterface(left, right, out Type? commonInterface))
+                return commonInterface;
+
             if (leftTypes[i] == rightTypes[i])
                 return leftTypes[i];
         }
@@ -943,6 +1068,14 @@ internal class Optimizer
         // No value is possible
         return typeof(void);
     }
+
+    private static bool TryGetCommonInterface(Type left, Type right, [NotNullWhen(true)] out Type? value)
+    {
+        HashSet<Type> interfaces = [.. left.GetInterfaces().Intersect(right.GetInterfaces())];
+        value = interfaces.FirstOrDefault(i => !interfaces.Any(i2 => i != i2 && i.IsAssignableFrom(i2)));
+        return value != null;
+    }
+
 
     private static List<Type> CombineTypeLists(List<Type> left, List<Type> right, bool padIfNeeded = false)
     {
