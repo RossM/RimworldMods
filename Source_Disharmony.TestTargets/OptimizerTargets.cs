@@ -6,6 +6,323 @@ public sealed class OptimizerNullPropagationNode
     public int Value;
 }
 
+public sealed class OptimizerDataObject
+{
+    public int Number;
+    public string Text { get; set; } = "";
+}
+
+public struct OptimizerDataStruct
+{
+    public int Number;
+    public string Text { get; set; }
+}
+
+public interface IOptimizerDataReader
+{
+    int Read();
+}
+
+public sealed class OptimizerDataReader : IOptimizerDataReader
+{
+    private readonly int value;
+
+    public OptimizerDataReader(int value) => this.value = value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public int Read() => value;
+}
+
+public sealed class OptimizerAlternateDataReader : IOptimizerDataReader
+{
+    private readonly int value;
+
+    public OptimizerAlternateDataReader(int value) => this.value = value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public int Read() => value;
+}
+
+public abstract class OptimizerBranchValue
+{
+    protected OptimizerBranchValue(int number) => Number = number;
+
+    public int Number { get; }
+}
+
+public sealed class OptimizerFirstBranchValue : OptimizerBranchValue
+{
+    public OptimizerFirstBranchValue(int number) : base(number) { }
+}
+
+public sealed class OptimizerSecondBranchValue : OptimizerBranchValue
+{
+    public OptimizerSecondBranchValue(int number) : base(number) { }
+}
+
+public sealed class OptimizerInstanceDataTargets
+{
+    public int Number;
+    public string Text { get; private set; } = "";
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public (int Number, string Text) SetMembers(int number, string text)
+    {
+        Number = number;
+        Text = text;
+        return (Number, Text);
+    }
+}
+
+public static class OptimizerDataTargets
+{
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static (int Sum, long Product, double Quotient, byte Narrowed)
+        PrimitiveArithmeticAndNumericConversions(int left, int right) =>
+        (left + right, (long)left * right, (double)left / right, unchecked((byte)left));
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int CheckedNumericConversion(long value) =>
+        checked((int)value);
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int[] Arrays(int first, int second)
+    {
+        var result = new int[2];
+        result[0] = second;
+        result[1] = first;
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static OptimizerDataObject Objects(int number, string text)
+    {
+        var result = new OptimizerDataObject
+        {
+            Number = number,
+            Text = text,
+        };
+
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static (OptimizerDataStruct Original, OptimizerDataStruct Copy)
+        StructCopyAndMutation(int number, string text)
+    {
+        var original = new OptimizerDataStruct
+        {
+            Number = number,
+            Text = text,
+        };
+        OptimizerDataStruct copy = original;
+        copy.Number = 42;
+        copy.Text = "copy";
+        return (original, copy);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static (object Boxed, int Unboxed) BoxingAndUnboxing(int value)
+    {
+        object boxed = value;
+        int unboxed = (int)boxed;
+        return (boxed, unboxed);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static (bool HasValue, int Value) NullableValueOperations(int? value)
+    {
+        int? copy = value;
+        return (copy.HasValue, copy.GetValueOrDefault());
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static (int Primitive, string Reference, OptimizerDataStruct Structure)
+        GenericMethodCalls(int primitive, string reference, OptimizerDataStruct structure) =>
+        (Identity(primitive), Identity(reference), Identity(structure));
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static T Identity<T>(T value) => value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int CapturingLambda(int value, int offset)
+    {
+        Func<int, int> addOffset = input => input + offset;
+        return addOffset(value);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static string StringInterpolation(string label, int value) =>
+        $"{label}: {value:D4}";
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static (string Text, int Number) TupleConstructionAndDeconstruction(int number, string text)
+    {
+        var tuple = (Number: number, Text: text);
+        (int extractedNumber, string extractedText) = tuple;
+        return (extractedText, extractedNumber);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int InterfaceDispatch(int value)
+    {
+        IOptimizerDataReader reader = new OptimizerDataReader(value);
+        return reader.Read();
+    }
+}
+
+public static class OptimizerMixedTargets
+{
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static OptimizerBranchValue ConditionalReferenceType(bool selectFirst)
+    {
+        OptimizerBranchValue result = selectFirst
+            ? new OptimizerFirstBranchValue(7)
+            : new OptimizerSecondBranchValue(11);
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int ConditionalInterfaceImplementation(bool selectFirst)
+    {
+        IOptimizerDataReader reader = selectFirst
+            ? new OptimizerDataReader(7)
+            : new OptimizerAlternateDataReader(11);
+        return reader.Read();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static object ConditionalBoxing(bool selectNumber)
+    {
+        object result = selectNumber
+            ? 42
+            : "text";
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static OptimizerDataStruct ConditionalStructCopy(bool selectFirst)
+    {
+        var first = new OptimizerDataStruct
+        {
+            Number = 7,
+            Text = "first",
+        };
+        var second = new OptimizerDataStruct
+        {
+            Number = 11,
+            Text = "second",
+        };
+        OptimizerDataStruct result = selectFirst ? first : second;
+        result.Number++;
+        result.Text = result.Text.ToUpperInvariant();
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static double SwitchWithNumericConversions(int mode, int value)
+    {
+        double result = mode switch
+        {
+            0 => value,
+            1 => (long)value * 2,
+            2 => (float)value / 2,
+            _ => (double)value / 4,
+        };
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static OptimizerDataObject LoopOverArray(int[] values)
+    {
+        var result = new OptimizerDataObject();
+        for (int index = 0; index < values.Length; index++)
+        {
+            result.Number += values[index];
+            result.Text = $"{index}: {values[index]}";
+        }
+
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static OptimizerDataObject TryCatchWithReferenceLocal(string value)
+    {
+        OptimizerDataObject result;
+        try
+        {
+            result = new OptimizerDataObject
+            {
+                Number = int.Parse(value),
+                Text = "parsed",
+            };
+        }
+        catch (FormatException)
+        {
+            result = new OptimizerDataObject
+            {
+                Number = -1,
+                Text = "fallback",
+            };
+        }
+
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static OptimizerDataStruct TryFinallyWithStructLocal(bool useFirst)
+    {
+        var result = new OptimizerDataStruct();
+        try
+        {
+            if (useFirst)
+            {
+                result.Number = 7;
+                result.Text = "first";
+            }
+            else
+            {
+                result.Number = 11;
+                result.Text = "second";
+            }
+        }
+        finally
+        {
+            result.Number++;
+            result.Text = result.Text.ToUpperInvariant();
+        }
+
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int ConditionalDelegate(bool addOffset, int value)
+    {
+        Func<int, int> operation;
+        if (addOffset)
+        {
+            int offset = 2;
+            operation = input => input + offset;
+        }
+        else
+        {
+            operation = static input => input * 2;
+        }
+
+        return operation(value);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static (int First, int Second) ConditionalRefToObjectField(bool selectFirst)
+    {
+        var first = new OptimizerDataObject { Number = 7 };
+        var second = new OptimizerDataObject { Number = 11 };
+        ref int selected = ref (selectFirst ? ref first.Number : ref second.Number);
+        selected = 42;
+        return (first.Number, second.Number);
+    }
+}
+
 public static class OptimizerControlFlowTargets
 {
     public static int RightOperandCalls;

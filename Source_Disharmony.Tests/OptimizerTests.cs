@@ -150,6 +150,123 @@ public static class OptimizerPatches
         __result = 42;
         return !skip;
     }
+
+    [Prefix]
+    [Target(
+        typeof(OptimizerDataTargets),
+        nameof(OptimizerDataTargets.PrimitiveArithmeticAndNumericConversions))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void PrimitiveArithmeticAndNumericConversions_PreserveResults() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerDataTargets), nameof(OptimizerDataTargets.CheckedNumericConversion))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void CheckedNumericConversion_PreservesValueAndOverflow() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerDataTargets), nameof(OptimizerDataTargets.Arrays))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void Arrays_PreserveConstructionLengthAndElementAccess() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerDataTargets), nameof(OptimizerDataTargets.Objects))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void Objects_PreserveConstructionFieldAndPropertyAccess() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerDataTargets), nameof(OptimizerDataTargets.StructCopyAndMutation))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void Structs_PreserveCopyAndIndependentMutation() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerDataTargets), nameof(OptimizerDataTargets.BoxingAndUnboxing))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void BoxingAndUnboxing_PreserveRuntimeTypeAndValue() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerDataTargets), nameof(OptimizerDataTargets.NullableValueOperations))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void NullableValues_PreservePresentAndAbsentValues() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerDataTargets), nameof(OptimizerDataTargets.GenericMethodCalls))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void GenericCalls_PreservePrimitiveReferenceAndStructArguments() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerDataTargets), nameof(OptimizerDataTargets.CapturingLambda))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void CapturingLambda_PreservesClosureAndDelegateInvocation() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerDataTargets), nameof(OptimizerDataTargets.StringInterpolation))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void StringInterpolation_PreservesFormatting() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerDataTargets), nameof(OptimizerDataTargets.TupleConstructionAndDeconstruction))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void Tuples_PreserveConstructionAndDeconstruction() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerInstanceDataTargets), nameof(OptimizerInstanceDataTargets.SetMembers))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void InstanceMembers_PreserveFieldAndPropertyMutation() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerDataTargets), nameof(OptimizerDataTargets.InterfaceDispatch))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void InterfaceDispatch_PreservesImplementationCall() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ConditionalReferenceType))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void ConditionalReferenceType_PreservesConcreteTypeAndBaseMembers() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ConditionalInterfaceImplementation))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void ConditionalInterfaceImplementation_PreservesInterfaceDispatch() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ConditionalBoxing))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void ConditionalBoxing_PreservesValueAndReferenceAlternatives() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ConditionalStructCopy))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void ConditionalStructCopy_PreservesSelectionAndMutation() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.SwitchWithNumericConversions))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void SwitchWithNumericConversions_PreservesEveryConvertedValue() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.LoopOverArray))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void LoopOverArray_PreservesElementsAndObjectMemberUpdates() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.TryCatchWithReferenceLocal))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void TryCatchWithReferenceLocal_PreservesNormalAndFallbackObjects() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.TryFinallyWithStructLocal))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void TryFinallyWithStructLocal_PreservesBranchAndFinallyMutations() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ConditionalDelegate))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void ConditionalDelegate_PreservesCapturingAndStaticAlternatives() => RecordPatch();
+
+    [Prefix]
+    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.ConditionalRefToObjectField))]
+    [PatchOptions(PatchOptions.Optimize)]
+    public static void ConditionalRefToObjectField_PreservesSelectedFieldMutation() => RecordPatch();
 }
 
 [TestFixture]
@@ -457,6 +574,338 @@ public sealed class OptimizerTests : PatchTestBase
         Assert.That(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget(false), Is.EqualTo(1));
         Assert.That(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget(true), Is.EqualTo(42));
         Assert.That(OptimizerPrefixTargets.InnerTargetExecutions, Is.EqualTo(1));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void PrimitiveArithmeticAndNumericConversions_PreserveResults()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.PrimitiveArithmeticAndNumericConversions_PreserveResults));
+
+        var result = OptimizerDataTargets.PrimitiveArithmeticAndNumericConversions(300, 4);
+
+        Assert.That(result.Sum, Is.EqualTo(304));
+        Assert.That(result.Product, Is.EqualTo(1200L));
+        Assert.That(result.Quotient, Is.EqualTo(75.0));
+        Assert.That(result.Narrowed, Is.EqualTo(44));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void CheckedNumericConversion_PreservesValueAndOverflow()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.CheckedNumericConversion_PreservesValueAndOverflow));
+
+        Assert.That(OptimizerDataTargets.CheckedNumericConversion(42L), Is.EqualTo(42));
+        Assert.Throws<OverflowException>(() => OptimizerDataTargets.CheckedNumericConversion(long.MaxValue));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void Arrays_PreserveConstructionLengthAndElementAccess()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.Arrays_PreserveConstructionLengthAndElementAccess));
+
+        int[] result = OptimizerDataTargets.Arrays(7, 11);
+
+        Assert.That(result, Has.Length.EqualTo(2));
+        Assert.That(result[0], Is.EqualTo(11));
+        Assert.That(result[1], Is.EqualTo(7));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void Objects_PreserveConstructionFieldAndPropertyAccess()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.Objects_PreserveConstructionFieldAndPropertyAccess));
+
+        OptimizerDataObject result = OptimizerDataTargets.Objects(42, "text");
+
+        Assert.That(result.Number, Is.EqualTo(42));
+        Assert.That(result.Text, Is.EqualTo("text"));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void Structs_PreserveCopyAndIndependentMutation()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.Structs_PreserveCopyAndIndependentMutation));
+
+        var result = OptimizerDataTargets.StructCopyAndMutation(7, "original");
+
+        Assert.That(result.Original.Number, Is.EqualTo(7));
+        Assert.That(result.Original.Text, Is.EqualTo("original"));
+        Assert.That(result.Copy.Number, Is.EqualTo(42));
+        Assert.That(result.Copy.Text, Is.EqualTo("copy"));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void BoxingAndUnboxing_PreserveRuntimeTypeAndValue()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.BoxingAndUnboxing_PreserveRuntimeTypeAndValue));
+
+        var result = OptimizerDataTargets.BoxingAndUnboxing(42);
+
+        Assert.That(result.Boxed, Is.TypeOf<int>());
+        Assert.That(result.Boxed, Is.EqualTo(42));
+        Assert.That(result.Unboxed, Is.EqualTo(42));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void NullableValues_PreservePresentAndAbsentValues()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.NullableValues_PreservePresentAndAbsentValues));
+
+        var present = OptimizerDataTargets.NullableValueOperations(42);
+        var absent = OptimizerDataTargets.NullableValueOperations(null);
+
+        Assert.That(present.HasValue, Is.True);
+        Assert.That(present.Value, Is.EqualTo(42));
+        Assert.That(absent.HasValue, Is.False);
+        Assert.That(absent.Value, Is.Zero);
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void GenericCalls_PreservePrimitiveReferenceAndStructArguments()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.GenericCalls_PreservePrimitiveReferenceAndStructArguments));
+        var structure = new OptimizerDataStruct
+        {
+            Number = 42,
+            Text = "structure",
+        };
+
+        var result = OptimizerDataTargets.GenericMethodCalls(7, "reference", structure);
+
+        Assert.That(result.Primitive, Is.EqualTo(7));
+        Assert.That(result.Reference, Is.EqualTo("reference"));
+        Assert.That(result.Structure.Number, Is.EqualTo(42));
+        Assert.That(result.Structure.Text, Is.EqualTo("structure"));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void CapturingLambda_PreservesClosureAndDelegateInvocation()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.CapturingLambda_PreservesClosureAndDelegateInvocation));
+
+        Assert.That(OptimizerDataTargets.CapturingLambda(40, 2), Is.EqualTo(42));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void StringInterpolation_PreservesFormatting()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.StringInterpolation_PreservesFormatting));
+
+        Assert.That(OptimizerDataTargets.StringInterpolation("value", 42), Is.EqualTo("value: 0042"));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void Tuples_PreserveConstructionAndDeconstruction()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.Tuples_PreserveConstructionAndDeconstruction));
+
+        var result = OptimizerDataTargets.TupleConstructionAndDeconstruction(42, "text");
+
+        Assert.That(result.Text, Is.EqualTo("text"));
+        Assert.That(result.Number, Is.EqualTo(42));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InstanceMembers_PreserveFieldAndPropertyMutation()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InstanceMembers_PreserveFieldAndPropertyMutation));
+        var target = new OptimizerInstanceDataTargets();
+
+        var result = target.SetMembers(42, "text");
+
+        Assert.That(target.Number, Is.EqualTo(42));
+        Assert.That(target.Text, Is.EqualTo("text"));
+        Assert.That(result.Number, Is.EqualTo(42));
+        Assert.That(result.Text, Is.EqualTo("text"));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InterfaceDispatch_PreservesImplementationCall()
+    {
+        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InterfaceDispatch_PreservesImplementationCall));
+
+        Assert.That(OptimizerDataTargets.InterfaceDispatch(42), Is.EqualTo(42));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void ConditionalReferenceType_PreservesConcreteTypeAndBaseMembers()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.ConditionalReferenceType_PreservesConcreteTypeAndBaseMembers));
+
+        OptimizerBranchValue first = OptimizerMixedTargets.ConditionalReferenceType(true);
+        OptimizerBranchValue second = OptimizerMixedTargets.ConditionalReferenceType(false);
+
+        Assert.That(first, Is.TypeOf<OptimizerFirstBranchValue>());
+        Assert.That(first.Number, Is.EqualTo(7));
+        Assert.That(second, Is.TypeOf<OptimizerSecondBranchValue>());
+        Assert.That(second.Number, Is.EqualTo(11));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void ConditionalInterfaceImplementation_PreservesInterfaceDispatch()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.ConditionalInterfaceImplementation_PreservesInterfaceDispatch));
+
+        Assert.That(OptimizerMixedTargets.ConditionalInterfaceImplementation(true), Is.EqualTo(7));
+        Assert.That(OptimizerMixedTargets.ConditionalInterfaceImplementation(false), Is.EqualTo(11));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void ConditionalBoxing_PreservesValueAndReferenceAlternatives()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.ConditionalBoxing_PreservesValueAndReferenceAlternatives));
+
+        object number = OptimizerMixedTargets.ConditionalBoxing(true);
+        object text = OptimizerMixedTargets.ConditionalBoxing(false);
+
+        Assert.That(number, Is.TypeOf<int>());
+        Assert.That(number, Is.EqualTo(42));
+        Assert.That(text, Is.TypeOf<string>());
+        Assert.That(text, Is.EqualTo("text"));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void ConditionalStructCopy_PreservesSelectionAndMutation()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.ConditionalStructCopy_PreservesSelectionAndMutation));
+
+        OptimizerDataStruct first = OptimizerMixedTargets.ConditionalStructCopy(true);
+        OptimizerDataStruct second = OptimizerMixedTargets.ConditionalStructCopy(false);
+
+        Assert.That(first.Number, Is.EqualTo(8));
+        Assert.That(first.Text, Is.EqualTo("FIRST"));
+        Assert.That(second.Number, Is.EqualTo(12));
+        Assert.That(second.Text, Is.EqualTo("SECOND"));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void SwitchWithNumericConversions_PreservesEveryConvertedValue()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.SwitchWithNumericConversions_PreservesEveryConvertedValue));
+
+        Assert.That(OptimizerMixedTargets.SwitchWithNumericConversions(0, 8), Is.EqualTo(8.0));
+        Assert.That(OptimizerMixedTargets.SwitchWithNumericConversions(1, 8), Is.EqualTo(16.0));
+        Assert.That(OptimizerMixedTargets.SwitchWithNumericConversions(2, 8), Is.EqualTo(4.0));
+        Assert.That(OptimizerMixedTargets.SwitchWithNumericConversions(3, 8), Is.EqualTo(2.0));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(4));
+    }
+
+    [Test]
+    public void LoopOverArray_PreservesElementsAndObjectMemberUpdates()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.LoopOverArray_PreservesElementsAndObjectMemberUpdates));
+
+        OptimizerDataObject result = OptimizerMixedTargets.LoopOverArray([1, 2, 3]);
+
+        Assert.That(result.Number, Is.EqualTo(6));
+        Assert.That(result.Text, Is.EqualTo("2: 3"));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void TryCatchWithReferenceLocal_PreservesNormalAndFallbackObjects()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.TryCatchWithReferenceLocal_PreservesNormalAndFallbackObjects));
+
+        OptimizerDataObject parsed = OptimizerMixedTargets.TryCatchWithReferenceLocal("42");
+        OptimizerDataObject fallback = OptimizerMixedTargets.TryCatchWithReferenceLocal("not a number");
+
+        Assert.That(parsed.Number, Is.EqualTo(42));
+        Assert.That(parsed.Text, Is.EqualTo("parsed"));
+        Assert.That(fallback.Number, Is.EqualTo(-1));
+        Assert.That(fallback.Text, Is.EqualTo("fallback"));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void TryFinallyWithStructLocal_PreservesBranchAndFinallyMutations()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.TryFinallyWithStructLocal_PreservesBranchAndFinallyMutations));
+
+        OptimizerDataStruct first = OptimizerMixedTargets.TryFinallyWithStructLocal(true);
+        OptimizerDataStruct second = OptimizerMixedTargets.TryFinallyWithStructLocal(false);
+
+        Assert.That(first.Number, Is.EqualTo(8));
+        Assert.That(first.Text, Is.EqualTo("FIRST"));
+        Assert.That(second.Number, Is.EqualTo(12));
+        Assert.That(second.Text, Is.EqualTo("SECOND"));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void ConditionalDelegate_PreservesCapturingAndStaticAlternatives()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.ConditionalDelegate_PreservesCapturingAndStaticAlternatives));
+
+        Assert.That(OptimizerMixedTargets.ConditionalDelegate(true, 40), Is.EqualTo(42));
+        Assert.That(OptimizerMixedTargets.ConditionalDelegate(false, 21), Is.EqualTo(42));
+        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void ConditionalRefToObjectField_PreservesSelectedFieldMutation()
+    {
+        ApplyPatch(
+            typeof(OptimizerPatches),
+            nameof(OptimizerPatches.ConditionalRefToObjectField_PreservesSelectedFieldMutation));
+
+        var first = OptimizerMixedTargets.ConditionalRefToObjectField(true);
+        var second = OptimizerMixedTargets.ConditionalRefToObjectField(false);
+
+        Assert.That(first.First, Is.EqualTo(42));
+        Assert.That(first.Second, Is.EqualTo(11));
+        Assert.That(second.First, Is.EqualTo(7));
+        Assert.That(second.Second, Is.EqualTo(42));
         Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
     }
 }
