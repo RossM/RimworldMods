@@ -835,124 +835,7 @@ internal class Optimizer
                 }
                 case BasicBlock bb:
                 {
-                    List<Type> locals = [.. block.entryLocals];
-                    List<Type> stack = [.. block.entryStack];
-
-                    void ExpandLocals(int i)
-                    {
-                        while (locals.Count < i + 1)
-                            locals.Add(typeof(UnknownType));
-                    }
-
-                    foreach (var op in bb.ops)
-                    {
-                        switch (unchecked((ushort)op.Opcode.Value))
-                        {
-                            case OpCodeValues.Ldloc_0:
-                            case OpCodeValues.Ldloc_1:
-                            case OpCodeValues.Ldloc_2:
-                            case OpCodeValues.Ldloc_3:
-                            case OpCodeValues.Ldloc:
-                            case OpCodeValues.Ldloc_S:
-                            {
-                                int index = op.Index;
-                                ExpandLocals(index);
-                                stack.Add(locals[index]);
-                                break;
-                            }
-                            case OpCodeValues.Stloc_0:
-                            case OpCodeValues.Stloc_1:
-                            case OpCodeValues.Stloc_2:
-                            case OpCodeValues.Stloc_3:
-                            case OpCodeValues.Stloc:
-                            case OpCodeValues.Stloc_S:
-                            {
-                                int index = op.Index;
-                                ExpandLocals(index);
-                                locals[index] = stack[^1];
-                                stack.RemoveAt(stack.Count - 1);
-                                break;
-                            }
-                            case OpCodeValues.Ldloca:
-                            case OpCodeValues.Ldloca_S:
-                            {
-                                int index = op.Index;
-                                ExpandLocals(index);
-                                stack.Add(locals[index].MakeByRefType());
-                                // Can't be bothered to do fancy analysis here
-                                if (!locals[index].IsValueType)
-                                    locals[index] = typeof(object);
-                                break;
-                            }
-                            case OpCodeValues.Ldarg_0:
-                            case OpCodeValues.Ldarg_1:
-                            case OpCodeValues.Ldarg_2:
-                            case OpCodeValues.Ldarg_3:
-                            case OpCodeValues.Ldarg:
-                            case OpCodeValues.Ldarg_S:
-                            {
-                                int index = op.Index;
-                                stack.Add(parameterTypes[index]);
-                                break;
-                            }
-                            case OpCodeValues.Ldarga:
-                            case OpCodeValues.Ldarga_S:
-                            {
-                                int index = op.Index;
-                                stack.Add(parameterTypes[index].MakeByRefType());
-                                break;
-                            }
-                            case OpCodeValues.Dup:
-                            {
-                                stack.Add(stack[^1]);
-                                break;
-                            }
-                            case OpCodeValues.NewObj when op.Operand is ConstructorInfo constructor:
-                            {
-                                var count = constructor.GetParameters().Length;
-                                for (int i = 0; i < count; i++)
-                                    stack.RemoveAt(stack.Count - 1);
-                                stack.Add(constructor.DeclaringType);
-                                break;
-                            }
-                            default:
-                            {
-                                int popCount = op.StackPops;
-                                for (int i = 0; i < popCount; i++)
-                                    stack.RemoveAt(stack.Count - 1);
-
-                                switch (op.Opcode.StackBehaviourPush)
-                                {
-                                    case StackBehaviour.Push0: break;
-                                    case StackBehaviour.Push1: stack.Add(typeof(AnyType)); break;
-                                    case StackBehaviour.Push1_push1:
-                                        stack.Add(typeof(AnyType));
-                                        stack.Add(typeof(AnyType));
-                                        break;
-                                    case StackBehaviour.Pushi: stack.Add(typeof(int)); break;
-                                    case StackBehaviour.Pushi8: stack.Add(typeof(long)); break;
-                                    case StackBehaviour.Pushr4: stack.Add(typeof(float)); break;
-                                    case StackBehaviour.Pushr8: stack.Add(typeof(double)); break;
-                                    case StackBehaviour.Pushref: stack.Add(typeof(object)); break;
-                                    case StackBehaviour.Varpush when op.Operand is MethodInfo methodInfo:
-                                    {
-                                        if (methodInfo.ReturnType != typeof(void))
-                                            stack.Add(methodInfo.ReturnType);
-                                        break;
-                                    }
-                                    default: throw new ArgumentException();
-                                }
-
-                                break;
-                            }
-                        }
-                    }
-
-                    if (bb.ops is [.., { ClearsStack: true }])
-                        bb.exitStack = [];
-
-                    bb.exitLocals = locals;
-                    bb.exitStack = stack;
+                    SymbolicExecute(bb);
 
                     foreach (var successor in block.successors)
                         UpdateSuccessor(block, successor);
@@ -978,6 +861,129 @@ internal class Optimizer
             successor.entryLocals = entryLocals;
             successor.entryStack = entryStack;
             worklist.Enqueue(successor);
+        }
+    }
+
+    private void SymbolicExecute(BasicBlock block)
+    {
+        List<Type> locals = [.. block.entryLocals];
+        List<Type> stack = [.. block.entryStack];
+
+        foreach (var op in block.ops)
+        {
+            switch (unchecked((ushort)op.Opcode.Value))
+            {
+                case OpCodeValues.Ldloc_0:
+                case OpCodeValues.Ldloc_1:
+                case OpCodeValues.Ldloc_2:
+                case OpCodeValues.Ldloc_3:
+                case OpCodeValues.Ldloc:
+                case OpCodeValues.Ldloc_S:
+                {
+                    int index = op.Index;
+                    ExpandLocals(index);
+                    stack.Add(locals[index]);
+                    break;
+                }
+                case OpCodeValues.Stloc_0:
+                case OpCodeValues.Stloc_1:
+                case OpCodeValues.Stloc_2:
+                case OpCodeValues.Stloc_3:
+                case OpCodeValues.Stloc:
+                case OpCodeValues.Stloc_S:
+                {
+                    int index = op.Index;
+                    ExpandLocals(index);
+                    locals[index] = stack[^1];
+                    stack.RemoveAt(stack.Count - 1);
+                    break;
+                }
+                case OpCodeValues.Ldloca:
+                case OpCodeValues.Ldloca_S:
+                {
+                    int index = op.Index;
+                    ExpandLocals(index);
+                    stack.Add(locals[index].MakeByRefType());
+                    // Can't be bothered to do fancy analysis here
+                    if (!locals[index].IsValueType)
+                        locals[index] = typeof(object);
+                    break;
+                }
+                case OpCodeValues.Ldarg_0:
+                case OpCodeValues.Ldarg_1:
+                case OpCodeValues.Ldarg_2:
+                case OpCodeValues.Ldarg_3:
+                case OpCodeValues.Ldarg:
+                case OpCodeValues.Ldarg_S:
+                {
+                    int index = op.Index;
+                    stack.Add(parameterTypes[index]);
+                    break;
+                }
+                case OpCodeValues.Ldarga:
+                case OpCodeValues.Ldarga_S:
+                {
+                    int index = op.Index;
+                    stack.Add(parameterTypes[index].MakeByRefType());
+                    break;
+                }
+                case OpCodeValues.Dup:
+                {
+                    stack.Add(stack[^1]);
+                    break;
+                }
+                case OpCodeValues.NewObj when op.Operand is ConstructorInfo constructor:
+                {
+                    var count = constructor.GetParameters().Length;
+                    for (int i = 0; i < count; i++)
+                        stack.RemoveAt(stack.Count - 1);
+                    stack.Add(constructor.DeclaringType);
+                    break;
+                }
+                default:
+                {
+                    int popCount = op.StackPops;
+                    for (int i = 0; i < popCount; i++)
+                        stack.RemoveAt(stack.Count - 1);
+
+                    switch (op.Opcode.StackBehaviourPush)
+                    {
+                        case StackBehaviour.Push0: break;
+                        case StackBehaviour.Push1: stack.Add(typeof(AnyType)); break;
+                        case StackBehaviour.Push1_push1:
+                            stack.Add(typeof(AnyType));
+                            stack.Add(typeof(AnyType));
+                            break;
+                        case StackBehaviour.Pushi: stack.Add(typeof(int)); break;
+                        case StackBehaviour.Pushi8: stack.Add(typeof(long)); break;
+                        case StackBehaviour.Pushr4: stack.Add(typeof(float)); break;
+                        case StackBehaviour.Pushr8: stack.Add(typeof(double)); break;
+                        case StackBehaviour.Pushref: stack.Add(typeof(object)); break;
+                        case StackBehaviour.Varpush when op.Operand is MethodInfo methodInfo:
+                        {
+                            if (methodInfo.ReturnType != typeof(void))
+                                stack.Add(methodInfo.ReturnType);
+                            break;
+                        }
+                        default: throw new ArgumentException();
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        if (block.ops is [.., { ClearsStack: true }])
+            stack = [];
+
+        block.exitLocals = locals;
+        block.exitStack = stack;
+        return;
+
+        void ExpandLocals(int i)
+        {
+            while (locals.Count < i + 1)
+                locals.Add(typeof(UnknownType));
         }
     }
 
