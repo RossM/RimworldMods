@@ -166,6 +166,9 @@ namespace Disharmony.Tests
         public int Value { get; private set; }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
+        public override string ToString() => $"StructMethodTargets:{foo}";
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public int IntIdentity(int value)
         {
             Value = value;

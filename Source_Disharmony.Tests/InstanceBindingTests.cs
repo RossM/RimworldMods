@@ -27,6 +27,11 @@ public static partial class InstanceBindingPatches
         StructInstanceFieldObserved = __instance.foo;
 
     [Prefix]
+    [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.ToString), parameterTypes: [])]
+    public static void Prefix_InstanceParameter_Struct_VirtualMethod_ReadByValue(StructMethodTargets __instance) =>
+        StructInstanceFieldObserved = __instance.foo;
+
+    [Prefix]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.IntResult))]
     public static void Prefix_InstanceParameter_Struct_WriteByReference(ref StructMethodTargets __instance) =>
         __instance.foo = 42;
@@ -310,6 +315,21 @@ public sealed partial class InstanceBindingTests : PatchTestBase
         target.IntResult();
 
         Assert.That(InstanceBindingPatches.StructInstanceFieldObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Prefix_InstanceParameter_Struct_VirtualMethod_ReadByValue()
+    {
+        InstanceBindingPatches.StructInstanceFieldObserved = 0;
+        ApplyPatch(
+            typeof(InstanceBindingPatches),
+            nameof(InstanceBindingPatches.Prefix_InstanceParameter_Struct_VirtualMethod_ReadByValue));
+        var target = new StructMethodTargets { foo = 42 };
+
+        string result = target.ToString();
+
+        Assert.That(InstanceBindingPatches.StructInstanceFieldObserved, Is.EqualTo(42));
+        Assert.That(result, Is.EqualTo("StructMethodTargets:42"));
     }
 
     [Test]
