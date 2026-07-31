@@ -31,6 +31,7 @@ internal abstract class Invocation
     public abstract Type ReturnType { get; }
     public abstract Type[] ParameterTypes { get; }
     public abstract bool IsStatic { get; }
+    public virtual bool HasThis => !IsStatic;
     public abstract string[] ParameterNames { get; }
 
     /// <summary>
@@ -132,20 +133,21 @@ internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
     public override string FullName => MethodInfo.FullName;
     public override Type ReturnType => MethodInfo.ReturnType;
     public override bool IsStatic => MethodInfo.IsStatic;
+    public override bool HasThis => MethodInfo.HasThis;
     public override Type InstanceType => MethodInfo.DeclaringType;
     public MethodInfo MethodInfo { get; } = methodInfo;
 
     public override MethodBase MethodBase => MethodInfo;
 
     public override Type[] ParameterTypes => field ??=
-        MethodInfo.IsStatic
-            ? [.. MethodInfo.GetParameters().Select(p => p.ParameterType)]
-            : [MethodInfo.DeclaringType.CallableType, .. MethodInfo.GetParameters().Select(p => p.ParameterType)];
+        MethodInfo.HasThis
+            ? [MethodInfo.DeclaringType.CallableType, .. MethodInfo.GetParameters().Select(p => p.ParameterType)]
+            : [.. MethodInfo.GetParameters().Select(p => p.ParameterType)];
 
     public override string[] ParameterNames => field ??=
-        MethodInfo.IsStatic
-            ? [.. MethodInfo.GetParameters().Select(p => p.Name)]
-            : [InstanceParameterName, .. MethodInfo.GetParameters().Select(p => p.Name)];
+        MethodInfo.HasThis
+            ? [InstanceParameterName, .. MethodInfo.GetParameters().Select(p => p.Name)]
+            : [.. MethodInfo.GetParameters().Select(p => p.Name)];
 
     public static implicit operator MethodInvocation(MethodInfo method) => new(method);
 
@@ -219,15 +221,16 @@ internal class PatchableConstructorInvocation(ConstructorInfo constructorInfo) :
 {
     public override Type ReturnType => typeof(void);
     public override bool IsStatic => ConstructorInfo.IsStatic;
+    public override bool HasThis => ConstructorInfo.HasThis;
 
     public override Type[] ParameterTypes => field ??=
-        IsStatic
-            ? [.. ConstructorInfo.GetParameters().Select(p => p.ParameterType)]
-            : [ConstructorInfo.DeclaringType.CallableType, .. ConstructorInfo.GetParameters().Select(p => p.ParameterType)];
+        ConstructorInfo.HasThis
+            ? [ConstructorInfo.DeclaringType.CallableType, .. ConstructorInfo.GetParameters().Select(p => p.ParameterType)]
+            : [.. ConstructorInfo.GetParameters().Select(p => p.ParameterType)];
     public override string[] ParameterNames => field ??=
-        IsStatic
-            ? [.. ConstructorInfo.GetParameters().Select(p => p.Name)]
-            : [InstanceParameterName, .. ConstructorInfo.GetParameters().Select(p => p.Name)];
+        ConstructorInfo.HasThis
+            ? [InstanceParameterName, .. ConstructorInfo.GetParameters().Select(p => p.Name)]
+            : [.. ConstructorInfo.GetParameters().Select(p => p.Name)];
 
     protected override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
 }

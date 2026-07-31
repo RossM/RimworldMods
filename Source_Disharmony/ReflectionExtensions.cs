@@ -15,6 +15,8 @@ public static class ReflectionExtensions
             Type? stateMachineType = method.GetCustomAttribute<IteratorStateMachineAttribute>()?.StateMachineType;
             return stateMachineType?.GetMethod("MoveNext", AccessTools.all);
         }
+
+        public bool HasThis => (method.CallingConvention & CallingConventions.HasThis) != 0;
     }
 
     extension(Type type)

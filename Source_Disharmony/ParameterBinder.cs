@@ -88,7 +88,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (isIterator && scope == Scope.Outer)
             return BindParameterByName(parameter, target.ParameterNames[index], scope);
 
-        if (!invocation.IsStatic)
+        if (invocation.HasThis)
             index++;
 
         Validate(parameter, invocation.ParameterTypes[index], scope, "parameter");
