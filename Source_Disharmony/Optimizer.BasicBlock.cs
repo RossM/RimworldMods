@@ -45,7 +45,7 @@ internal partial class Optimizer
                     {
                         int index = op.Index;
                         ExpandLocals(index);
-                        stack.Add(locals[index].MakeByRefType());
+                        stack.Add(ToRef(locals[index]));
                         // Can't be bothered to do fancy analysis here
                         if (!locals[index].IsValueType)
                             locals[index] = typeof(object);
@@ -66,7 +66,7 @@ internal partial class Optimizer
                     case OpCodeValues.Ldarga_S:
                     {
                         int index = op.Index;
-                        stack.Add(parameterTypes[index].MakeByRefType());
+                        stack.Add(ToRef(parameterTypes[index]));
                         break;
                     }
                     case OpCodeValues.Dup:
@@ -76,7 +76,7 @@ internal partial class Optimizer
                     }
                     case OpCodeValues.Ldobj:
                     {
-                        stack[^1] = stack[^1].GetElementType();
+                        stack[^1] = FromRef(stack[^1]);
                         break;
                     }
                     case OpCodeValues.Ldstr:
@@ -91,7 +91,7 @@ internal partial class Optimizer
                     }
                     case OpCodeValues.Ldflda when op.Operand is FieldInfo field:
                     {
-                        stack[^1] = field.FieldType.MakeByRefType();
+                        stack[^1] = ToRef(field.FieldType);
                         break;
                     }
                     case OpCodeValues.Ldsfld when op.Operand is FieldInfo field:
@@ -101,7 +101,7 @@ internal partial class Optimizer
                     }
                     case OpCodeValues.Ldsflda when op.Operand is FieldInfo field:
                     {
-                        stack.Add(field.FieldType.MakeByRefType());
+                        stack.Add(ToRef(field.FieldType));
                         break;
                     }
                     case OpCodeValues.NewObj when op.Operand is ConstructorInfo constructor:
@@ -158,5 +158,11 @@ internal partial class Optimizer
                     locals.Add(typeof(UnknownType));
             }
         }
+
+        private static bool IsSpecialType(Type type) => type == typeof(AnyType) || type == typeof(UnknownType);
+
+        private static Type ToRef(Type type) => IsSpecialType(type) ? type : type.MakeByRefType();
+
+        private static Type FromRef(Type type) => IsSpecialType(type) ? type : type.GetElementType() ?? throw new InvalidOperationException();
     }
 }
