@@ -2,37 +2,6 @@
 
 internal class InlineRuleBuilder : RuleBuilder
 {
-    private static class OpCodeValue
-    {
-        // ReSharper disable IdentifierTypo
-        // @formatter:off
-        public const int Ldarg_0  =   0x02;
-        public const int Ldarg_1  =   0x03;
-        public const int Ldarg_2  =   0x04;
-        public const int Ldarg_3  =   0x05;
-        public const int Ldarg    = 0xFE09;
-        public const int Ldarg_S  =   0x0E;
-        public const int Ldarga   = 0xFE0A;
-        public const int Ldarga_S =   0x0F;
-        public const int Ldloc_0  =   0x06;
-        public const int Ldloc_1  =   0x07;
-        public const int Ldloc_2  =   0x08;
-        public const int Ldloc_3  =   0x09;
-        public const int Ldloc    = 0xFE0C;
-        public const int Ldloc_S  =   0x11;
-        public const int Ldloca   = 0xFE0D;
-        public const int Ldloca_S =   0x12;
-        public const int Stloc_0  =   0x0A;
-        public const int Stloc_1  =   0x0B;
-        public const int Stloc_2  =   0x0C;
-        public const int Stloc_3  =   0x0D;
-        public const int Stloc    = 0xFE0E;
-        public const int Stloc_S  =   0x13;
-        public const int Ret      =   0x2A;
-        // @formatter:on
-        // ReSharper restore IdentifierTypo
-    }
-
     private readonly MethodBase method;
     private readonly int[] argumentLocals;
     private readonly Dictionary<int, int> localMap = new();
@@ -72,29 +41,29 @@ internal class InlineRuleBuilder : RuleBuilder
             CodeInstruction translated = unchecked((ushort)inst.opcode.Value) switch
             {
                 // @formatter:off
-                OpCodeValue.Ldarg_0  => CodeInstruction.LoadLocal(argumentLocals[0]),
-                OpCodeValue.Ldarg_1  => CodeInstruction.LoadLocal(argumentLocals[1]),
-                OpCodeValue.Ldarg_2  => CodeInstruction.LoadLocal(argumentLocals[2]),
-                OpCodeValue.Ldarg_3  => CodeInstruction.LoadLocal(argumentLocals[3]),
-                OpCodeValue.Ldarg    => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)]),
-                OpCodeValue.Ldarg_S  => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)]),
-                OpCodeValue.Ldarga   => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)], true),
-                OpCodeValue.Ldarga_S => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)], true),
-                OpCodeValue.Ldloc_0  => CodeInstruction.LoadLocal(GetLocal(0)),
-                OpCodeValue.Ldloc_1  => CodeInstruction.LoadLocal(GetLocal(1)),
-                OpCodeValue.Ldloc_2  => CodeInstruction.LoadLocal(GetLocal(2)),
-                OpCodeValue.Ldloc_3  => CodeInstruction.LoadLocal(GetLocal(3)),
-                OpCodeValue.Ldloc    => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand))),
-                OpCodeValue.Ldloc_S  => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand))),
-                OpCodeValue.Ldloca   => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand)), true),
-                OpCodeValue.Ldloca_S => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand)), true),
-                OpCodeValue.Stloc_0  => CodeInstruction.StoreLocal(GetLocal(0)),
-                OpCodeValue.Stloc_1  => CodeInstruction.StoreLocal(GetLocal(1)),
-                OpCodeValue.Stloc_2  => CodeInstruction.StoreLocal(GetLocal(2)),
-                OpCodeValue.Stloc_3  => CodeInstruction.StoreLocal(GetLocal(3)),
-                OpCodeValue.Stloc    => CodeInstruction.StoreLocal(GetLocal(Convert.ToInt32(inst.operand))),
-                OpCodeValue.Stloc_S  => CodeInstruction.StoreLocal(GetLocal(Convert.ToInt32(inst.operand))),
-                OpCodeValue.Ret      => new(OpCodes.Br, returnLabel),
+                OpCodeValues.Ldarg_0  => CodeInstruction.LoadLocal(argumentLocals[0]),
+                OpCodeValues.Ldarg_1  => CodeInstruction.LoadLocal(argumentLocals[1]),
+                OpCodeValues.Ldarg_2  => CodeInstruction.LoadLocal(argumentLocals[2]),
+                OpCodeValues.Ldarg_3  => CodeInstruction.LoadLocal(argumentLocals[3]),
+                OpCodeValues.Ldarg    => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)]),
+                OpCodeValues.Ldarg_S  => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)]),
+                OpCodeValues.Ldarga   => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)], true),
+                OpCodeValues.Ldarga_S => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)], true),
+                OpCodeValues.Ldloc_0  => CodeInstruction.LoadLocal(GetLocal(0)),
+                OpCodeValues.Ldloc_1  => CodeInstruction.LoadLocal(GetLocal(1)),
+                OpCodeValues.Ldloc_2  => CodeInstruction.LoadLocal(GetLocal(2)),
+                OpCodeValues.Ldloc_3  => CodeInstruction.LoadLocal(GetLocal(3)),
+                OpCodeValues.Ldloc    => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand))),
+                OpCodeValues.Ldloc_S  => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand))),
+                OpCodeValues.Ldloca   => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand)), true),
+                OpCodeValues.Ldloca_S => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand)), true),
+                OpCodeValues.Stloc_0  => CodeInstruction.StoreLocal(GetLocal(0)),
+                OpCodeValues.Stloc_1  => CodeInstruction.StoreLocal(GetLocal(1)),
+                OpCodeValues.Stloc_2  => CodeInstruction.StoreLocal(GetLocal(2)),
+                OpCodeValues.Stloc_3  => CodeInstruction.StoreLocal(GetLocal(3)),
+                OpCodeValues.Stloc    => CodeInstruction.StoreLocal(GetLocal(Convert.ToInt32(inst.operand))),
+                OpCodeValues.Stloc_S  => CodeInstruction.StoreLocal(GetLocal(Convert.ToInt32(inst.operand))),
+                OpCodeValues.Ret      => new(OpCodes.Br, returnLabel),
                 _ => inst,
                 // @formatter:on
             };

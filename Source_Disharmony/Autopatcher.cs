@@ -137,7 +137,10 @@ public static partial class Autopatcher
 
     internal static void ReportException(Exception exception)
     {
-        RuntimeExceptionHandler?.Invoke(exception);
+        if (RuntimeExceptionHandler != null)
+            RuntimeExceptionHandler(exception);
+        else
+            FileLog.Log($"!!! Unhandled exception: {exception}");
     }
 
     /// <summary>

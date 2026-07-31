@@ -1,17 +1,49 @@
-﻿namespace Disharmony;
+﻿using System.Collections;
+
+namespace Disharmony;
+
+internal class UniqueQueue<T> : IEnumerable<T>
+{
+    public int Count => queue.Count;
+    private readonly Queue<T> queue = [];
+    private readonly HashSet<T> hashSet = [];
+
+    public bool Enqueue(T item)
+    {
+        if (!hashSet.Add(item))
+            return false;
+        queue.Enqueue(item);
+        return true;
+    }
+
+    public T Dequeue()
+    {
+        T item = queue.Dequeue();
+        hashSet.Remove(item);
+        return item;
+    }
+
+    public IEnumerator<T> GetEnumerator() => queue.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)queue).GetEnumerator();
+}
 
 internal class Optimizer
 {
+    // These two types are used to track special cases in type analysis
+    private struct UnknownType;
+
+    private struct AnyType;
+
     private class Op(OpCode opcode, object? operand = null)
     {
         public bool IsLeave => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
+        public bool ClearsStack => Opcode == OpCodes.Ret || Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
         public bool IsUnconditionalBranch => Opcode == OpCodes.Br_S || Opcode == OpCodes.Br;
-        public bool CanBranch => Opcode.FlowControl is not (FlowControl.Next or FlowControl.Call or FlowControl.Meta);
+        public bool CanBranch => Opcode.FlowControl is FlowControl.Branch or FlowControl.Cond_Branch;
 
         public bool CanFallThrough =>
-            Opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch;
-
-        public CodeInstruction ToCodeInstruction() => new(Opcode, Operand);
+            Opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch or FlowControl.Break;
 
         public int StackPops =>
             Opcode.StackBehaviourPop switch
@@ -36,14 +68,15 @@ internal class Optimizer
                 StackBehaviour.Popref_popi_popref => 3,
                 StackBehaviour.Varpop => Operand switch
                 {
-                    MethodBase method => method.GetParameters().Length + (method.IsStatic ? 0 : 1),
-                    _ => throw new ArgumentOutOfRangeException(),
+                    MethodBase method => method.GetParameters().Length + (method is MethodInfo { IsStatic: false } ? 1 : 0),
+                    _ => 0,
                 },
                 StackBehaviour.Popref_popi_pop1 => 3,
                 _ => throw new ArgumentOutOfRangeException(),
             };
 
-        public int StackPushes => Opcode.StackBehaviourPush switch {
+        public int StackPushes => Opcode.StackBehaviourPush switch
+        {
             StackBehaviour.Push0 => 0,
             StackBehaviour.Push1 => 1,
             StackBehaviour.Push1_push1 => 2,
@@ -57,11 +90,14 @@ internal class Optimizer
                 MethodInfo method => method.ReturnType == typeof(void) ? 0 : 1,
                 _ => throw new ArgumentOutOfRangeException(),
             },
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(),
         };
 
         public OpCode Opcode { get; } = opcode;
         public object? Operand { get; } = operand;
+
+        public CodeInstruction ToCodeInstruction() => new(Opcode, Operand);
+
         public void Deconstruct(out OpCode opcode, out object? operand)
         {
             opcode = Opcode;
@@ -134,7 +170,6 @@ internal class Optimizer
     private readonly List<CodeInstruction> inputInstructions;
     private readonly ILGenerator generator;
     private readonly bool debug;
-    private List<LocalVariableInfo> localVariables;
 
     public Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator, bool debug)
     {
@@ -142,8 +177,6 @@ internal class Optimizer
         this.inputInstructions = inputInstructions;
         this.generator = generator;
         this.debug = debug;
-
-        localVariables = method.GetMethodBody()?.LocalVariables.ToList() ?? [];
 
         valid = true;
     }
@@ -186,15 +219,15 @@ internal class Optimizer
                 regionStack.Pop();
             }
 
-            FileLog.LogBuffered($"# Block:        {block.ID}");
-            FileLog.LogBuffered($"# Predecessors: {string.Join(", ", block.predecessors.Select(b => b.ID))}");
-            FileLog.LogBuffered($"# Successors:   {string.Join(", ", block.successors.Select(b => b.ID))}");
+            FileLog.LogBuffered($"## Block:        {block.ID}");
+            FileLog.LogBuffered($"## Predecessors: {string.Join(", ", block.predecessors.Select(b => b.ID))}");
+            FileLog.LogBuffered($"## Successors:   {string.Join(", ", block.successors.Select(b => b.ID))}");
             if (block is { EntryPoint: true, parent: not null })
-                FileLog.LogBuffered($"# Entry Point:  {block.parent.ID}");
+                FileLog.LogBuffered($"## Entry Point:  {block.parent.ID}");
             if (block is { entryLocals.Count: > 0 })
-                FileLog.LogBuffered($"# Locals:       {string.Join(", ", block.entryLocals.Select(t => t.FullName))}");
+                FileLog.LogBuffered($"## Locals:       {string.Join(", ", block.entryLocals.Select(t => t.FullName))}");
             if (block is { entryStack.Count: > 0 })
-                FileLog.LogBuffered($"# Stack:        {string.Join(", ", block.entryStack.Select(t => t.FullName))}");
+                FileLog.LogBuffered($"## Stack:        {string.Join(", ", block.entryStack.Select(t => t.FullName))}");
 
             if (block.label is Label label)
                 FileLog.LogIL(codePos, label);
@@ -297,6 +330,9 @@ internal class Optimizer
         AggressiveDeadCodeEliminationAndReorder();
         LogBlocks(nameof(AggressiveDeadCodeEliminationAndReorder));
 
+        DeduceTypes();
+        LogBlocks(nameof(DeduceTypes));
+
         InsertBranches();
         LogBlocks(nameof(InsertBranches));
 
@@ -363,7 +399,7 @@ internal class Optimizer
         {
             Block blockTarget => GetLabel(blockTarget),
             Block[] blocksTarget => blocksTarget.Select(GetLabel).ToArray(),
-            _ => codeInstruction.operand
+            _ => codeInstruction.operand,
         };
 
         return codeInstruction;
@@ -435,7 +471,7 @@ internal class Optimizer
                 {
                     Label label => new(op.Opcode, GetTarget(label)),
                     Label[] labels => new(op.Opcode, labels.Select(GetTarget).ToArray()),
-                    _ => block.ops[index]
+                    _ => block.ops[index],
                 };
             }
 
@@ -681,6 +717,7 @@ internal class Optimizer
                         queue.AddLast(leavingBlock);
                     leavingBlocks.RemoveAll(b => b.parent == region);
                 }
+
                 continue;
             }
 
@@ -694,7 +731,7 @@ internal class Optimizer
             if (!visited.Add(block))
                 continue;
             outputBlocks.Add(block);
-            
+
             if (debug)
                 FileLog.LogBuffered($"{"".PadLeft(stack.Count * 2)}- {block.ID}");
 
@@ -729,6 +766,97 @@ internal class Optimizer
         allBlocks.Clear();
         allBlocks.AddRange(outputBlocks);
         basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
+    }
+
+    private void DeduceTypes()
+    {
+        UniqueQueue<Block> worklist = [];
+        foreach (var block in allBlocks)
+            worklist.Enqueue(block);
+
+        while (worklist.Count > 0)
+        {
+            var block = worklist.Dequeue();
+
+            switch (block)
+            {
+                case Region region:
+                {
+                    region.exitLocals = region.entryLocals;
+                    region.exitStack = region.entryStack;
+
+                    if (region.harmonyBlock is { blockType: ExceptionBlockType.BeginCatchBlock })
+                        region.exitStack = [region.harmonyBlock.catchType];
+
+                    if (region.entry != null)
+                        UpdateSuccessor(region, region.entry);
+                    break;
+                }
+                case BasicBlock bb:
+                {
+                    List<Type> locals = [.. block.entryLocals];
+                    List<Type> stack = [.. block.entryStack];
+
+                    foreach (var op in bb.ops)
+                    {
+                        int popCount = op.StackPops;
+                        for (int i = 0; i < popCount; i++)
+                            stack.RemoveAt(stack.Count - 1);
+
+                        switch (op.Opcode.StackBehaviourPush)
+                        {
+                            case StackBehaviour.Push0: break;
+                            case StackBehaviour.Push1: stack.Add(typeof(AnyType)); break;
+                            case StackBehaviour.Push1_push1:
+                                stack.Add(typeof(AnyType));
+                                stack.Add(typeof(AnyType));
+                                break;
+                            case StackBehaviour.Pushi: stack.Add(typeof(int)); break;
+                            case StackBehaviour.Pushi8: stack.Add(typeof(long)); break;
+                            case StackBehaviour.Pushr4: stack.Add(typeof(float)); break;
+                            case StackBehaviour.Pushr8: stack.Add(typeof(double)); break;
+                            case StackBehaviour.Pushref: stack.Add(typeof(object)); break;
+                            case StackBehaviour.Varpush when op.Operand is MethodInfo methodInfo:
+                            {
+                                if (methodInfo.ReturnType != typeof(void))
+                                    stack.Add(methodInfo.ReturnType);
+                                break;
+                            }
+                            default: throw new ArgumentException();
+                        }
+                    }
+
+                    if (bb.ops is [.., { ClearsStack: true }])
+                        bb.exitStack = [];
+
+                    bb.exitLocals = locals;
+                    bb.exitStack = stack;
+
+                    foreach (var successor in block.successors)
+                        UpdateSuccessor(block, successor);
+                    break;
+                }
+                default: throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        return;
+
+        void UpdateSuccessor(Block block, Block successor)
+        {
+            var entryLocals = CombineTypeLists(successor.entryLocals, block.exitLocals, true);
+
+            List<Type> entryStack = successor.entryStack.Count == 0 && block.exitStack.Count > 0
+                ? block.exitStack
+                : CombineTypeLists(successor.entryStack, block.exitStack);
+
+            if (entryLocals.SequenceEqual(successor.entryLocals) && entryStack.SequenceEqual(successor.entryStack))
+                return;
+
+            successor.entryLocals = entryLocals;
+            successor.entryStack = entryStack;
+            worklist.Enqueue(successor);
+        }
     }
 
     private void BranchInversion()
@@ -784,5 +912,51 @@ internal class Optimizer
         foreach (var block in basicBlocks)
         foreach (var successor in block.successors)
             successor.predecessors.Add(block);
+    }
+
+    private static List<Type> GetBaseTypes(Type type)
+    {
+        if (type.IsValueType || type.IsByRef)
+            return [type];
+        List<Type> output = [];
+        for (Type? ancestor = type; ancestor != null; ancestor = ancestor.BaseType)
+            output.Add(ancestor);
+        output.Reverse();
+        return output;
+    }
+
+    private static Type CombineTypes(Type left, Type right)
+    {
+        if (left == typeof(UnknownType) || right == typeof(AnyType) || left == right)
+            return right;
+        if (right == typeof(UnknownType) || left == typeof(AnyType))
+            return left;
+
+        var leftTypes = GetBaseTypes(left);
+        var rightTypes = GetBaseTypes(right);
+        for (int i = Math.Min(leftTypes.Count, rightTypes.Count) - 1; i >= 0; i--)
+        {
+            if (leftTypes[i] == rightTypes[i])
+                return leftTypes[i];
+        }
+
+        // No value is possible
+        return typeof(void);
+    }
+
+    private static List<Type> CombineTypeLists(List<Type> left, List<Type> right, bool padIfNeeded = false)
+    {
+        if (!padIfNeeded && left.Count != right.Count)
+            throw new ArgumentException();
+
+        while (left.Count < right.Count)
+            left.Add(typeof(UnknownType));
+        while (right.Count < left.Count)
+            right.Add(typeof(UnknownType));
+
+        List<Type> output = new List<Type>(left.Count);
+        for (int i = 0; i < left.Count; i++)
+            output.Add(CombineTypes(left[i], right[i]));
+        return output;
     }
 }
