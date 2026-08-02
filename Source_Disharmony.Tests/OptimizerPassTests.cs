@@ -249,7 +249,7 @@ public sealed class OptimizerPassTests
         Optimizer.BasicBlock join = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => op.Opcode == OpCodes.Ldloc));
 
-        optimizer.ConvertStackToVariables();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
 
         Optimizer.Op load = join.ops.Single(op => op.Opcode == OpCodes.Ldloc);
         Assert.That(load.outputs.Single().type, Is.EqualTo(typeof(string)));
@@ -280,7 +280,7 @@ public sealed class OptimizerPassTests
         Assert.That(join.incomingEdges, Has.Count.EqualTo(2));
         Assert.That(join.incomingEdges.SelectMany(edge => edge.assignments), Is.Empty);
 
-        optimizer.ConvertStackToVariables();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
 
         Assert.That(optimizer.Form, Is.EqualTo(Optimizer.IrForm.Variables));
         Assert.That(entry.ops[2].inputs, Is.EqualTo(new[] { entry.ops[1].outputs.Single() }));
@@ -315,7 +315,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        optimizer.ConvertStackToVariables();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
 
         Optimizer.Variable local = optimizer.LocalVariables[declaredLocal!.LocalIndex];
         Optimizer.Op store = optimizer.BasicBlocks[0].ops[1];
@@ -339,7 +339,7 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        optimizer.ConvertStackToVariables();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
 
         Optimizer.Variable local = optimizer.LocalVariables[4];
         Assert.That(local.type, Is.Null);
@@ -365,7 +365,7 @@ public sealed class OptimizerPassTests
         Assert.That(fieldLoad.Opcode, Is.EqualTo(OpCodes.Ldsfld));
         Assert.That(fieldLoad.prefixes.Select(prefix => prefix.Opcode), Is.EqualTo(new[] { OpCodes.Volatile }));
 
-        optimizer.ConvertStackToVariables();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
         optimizer.Emit();
         Assert.That(optimizer.outputInstructions.instructions.Select(instruction => instruction.opcode), Is.EqualTo(new[]
         {
@@ -386,7 +386,7 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        optimizer.ConvertStackToVariables();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
 
         Optimizer.Op value = optimizer.BasicBlocks[0].ops[0];
         Optimizer.Op returnOperation = optimizer.BasicBlocks[0].ops[1];
@@ -407,7 +407,7 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        optimizer.ConvertStackToVariables();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
 
         Optimizer.Variable argument = optimizer.ArgumentVariables[0];
         Assert.That(argument.type, Is.EqualTo(typeof(int)));
@@ -427,7 +427,7 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        optimizer.ConvertStackToVariables();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
 
         Optimizer.Op load = optimizer.BasicBlocks[0].ops[0];
         Optimizer.Op duplicate = optimizer.BasicBlocks[0].ops[1];
