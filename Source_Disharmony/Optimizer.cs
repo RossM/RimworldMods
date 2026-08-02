@@ -66,16 +66,18 @@ internal partial class Optimizer
         // A negative index means that executing the instruction produces a new value.
         internal readonly record struct StackOutput(Type Type, int InputIndex = -1);
 
-        // This is recorded during symbolic execution so later passes do not reinterpret CIL opcodes.
+        // Recorded during symbolic execution so variable materialization does not reinterpret CIL opcodes.
         internal readonly record struct VariableAccess(VariableKind VariableKind, int Index, VariableAccessKind Kind);
 
-        // Canonical only in Stack form. SymbolicExecute records the complete evaluation-stack
-        // transition here; ConvertStackToVariables consumes and then clears it. Inputs are ordered
-        // from the deepest popped value to the top of the stack.
-        internal readonly List<Type> inputTypes = [];
-        internal readonly List<StackOutput> stackOutputs = [];
-        internal readonly List<VariableAccess> variableAccesses = [];
-        internal bool clearsStack;
+        // Instances live only inside ConvertStackToVariables. Inputs are ordered from the deepest
+        // popped value to the top of the evaluation stack.
+        internal sealed class StackTransition
+        {
+            public readonly List<Type> inputTypes = [];
+            public readonly List<StackOutput> outputs = [];
+            public readonly List<VariableAccess> variableAccesses = [];
+            public bool clearsStack;
+        }
 
         // Prefixes remain attached to the operation they govern so no later pass can separate them.
         public readonly List<Op> prefixes = [];
@@ -190,22 +192,7 @@ internal partial class Optimizer
         public virtual string ID => $"#{id}";
         public int id = 0;
         public Label? label;
-        public readonly List<Block> successors = [];
-        public readonly List<Block> predecessors = [];
         public Region? parent;
-
-        // Canonical only in Stack form. DeduceTypes computes these facts; variable conversion
-        // consumes and clears them so later analysis cannot accidentally use stale type state.
-        public List<Type> entryLocals = [];
-        public List<Type> entryStack = [];
-        public List<Type> exitLocals = [];
-        public List<Type> exitStack = [];
-
-        /// <summary>
-        ///     For BasicBlocks, has the next block in the flow of control. For Regions, has the next
-        ///     exception region in the chain.
-        /// </summary>
-        public Block? next;
 
         public override string ToString() => ID;
 
@@ -226,6 +213,7 @@ internal partial class Optimizer
         public override string ID => parent == null ? "Root" : $"{harmonyBlock!.blockType} #{id}";
         public ExceptionBlock? harmonyBlock;
         public Block? entry;
+        public Region? next;
         public int depth;
     }
 
@@ -312,14 +300,13 @@ internal partial class Optimizer
             }
 
             FileLog.LogBuffered($"## Block:        {block.ID}");
-            FileLog.LogBuffered($"## Predecessors: {string.Join(", ", block.predecessors.Select(b => b.ID))}");
-            FileLog.LogBuffered($"## Successors:   {string.Join(", ", block.successors.Select(b => b.ID))}");
+            if (block is BasicBlock basicBlock)
+            {
+                FileLog.LogBuffered($"## Predecessors: {string.Join(", ", basicBlock.predecessors.Select(b => b.ID))}");
+                FileLog.LogBuffered($"## Successors:   {string.Join(", ", basicBlock.successors.Select(b => b.ID))}");
+            }
             if (block is { EntryPoint: true, parent: not null })
                 FileLog.LogBuffered($"## Entry Point:  {block.parent.ID}");
-            if (block is { entryLocals.Count: > 0 })
-                FileLog.LogBuffered($"## Locals:       {string.Join(", ", block.entryLocals.Select(t => t.FullName))}");
-            if (block is { entryStack.Count: > 0 })
-                FileLog.LogBuffered($"## Stack:        {string.Join(", ", block.entryStack.Select(t => t.FullName))}");
 
             if (block.label is Label label)
                 FileLog.LogIL(codePos, label);
@@ -360,8 +347,8 @@ internal partial class Optimizer
                 }
             }
 
-            if (block.next != null)
-                FileLog.LogBuffered($"IL_{codePos:X4}: // fallthrough => {block.next.ID}");
+            if (block is BasicBlock { next: not null } bb2)
+                FileLog.LogBuffered($"IL_{codePos:X4}: // fallthrough => {bb2.next.ID}");
         }
 
         while (regionStack.Count > 0)
@@ -460,9 +447,6 @@ internal partial class Optimizer
         AggressiveDeadCodeEliminationAndReorder();
         LogBlocks(nameof(AggressiveDeadCodeEliminationAndReorder));
 
-        DeduceTypes();
-        LogBlocks(nameof(DeduceTypes));
-
         ConvertStackToVariables();
         LogBlocks(nameof(ConvertStackToVariables));
 
@@ -533,14 +517,14 @@ internal partial class Optimizer
         var codeInstruction = i.ToCodeInstruction();
         codeInstruction.operand = codeInstruction.operand switch
         {
-            Block blockTarget => GetLabel(blockTarget),
-            Block[] blocksTarget => blocksTarget.Select(GetLabel).ToArray(),
+            ControlFlowEdge edge => GetLabel(edge),
+            ControlFlowEdge[] edges => edges.Select(GetLabel).ToArray(),
             _ => codeInstruction.operand,
         };
 
         return codeInstruction;
 
-        Label GetLabel(Block block) => block.label ??= generator.DefineLabel();
+        Label GetLabel(ControlFlowEdge edge) => edge.Target.label ??= generator.DefineLabel();
     }
 
     /// <summary>
@@ -587,10 +571,11 @@ internal partial class Optimizer
 
         basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
 
+        Dictionary<BasicBlock, BasicBlock> fallthroughTargets = [];
         for (int i = 0; i < basicBlocks.Count - 1; i++)
         {
             if (CanFallThrough(basicBlocks[i]))
-                basicBlocks[i].next = basicBlocks[i + 1];
+                fallthroughTargets.Add(basicBlocks[i], basicBlocks[i + 1]);
         }
 
         // Add a ret to the last basic block if one is missing (perhaps because of a poorly behaved transpiler)
@@ -611,7 +596,7 @@ internal partial class Optimizer
                 };
             }
 
-            Block GetTarget(Label label) => labelToBlock[label];
+            BasicBlock GetTarget(Label label) => labelToBlock[label];
         }
 
         // Convert block-final unconditional branches to fallthrough
@@ -622,35 +607,29 @@ internal partial class Optimizer
 
             if (block.ops[^1].IsUnconditionalBranch)
             {
-                block.next = (BasicBlock?)block.ops[^1].Operand;
+                fallthroughTargets[block] = (BasicBlock)block.ops[^1].Operand!;
                 block.ops.RemoveAt(block.ops.Count - 1);
             }
         }
 
         foreach (var block in basicBlocks)
         {
-            if (block.next is not null)
-                block.successors.Add(block.next);
+            if (fallthroughTargets.TryGetValue(block, out var fallthroughTarget))
+                block.fallthroughEdge = AddControlFlowEdge(block, fallthroughTarget);
 
             if (block.ops.Count == 0)
                 continue;
 
-            switch (block.ops[^1].Operand)
+            Op finalOperation = block.ops[^1];
+            block.ops[^1] = finalOperation.Operand switch
             {
-                case Block label:
-                {
-                    block.successors.Add(label);
-                    break;
-                }
-                case Block[] labels:
-                {
-                    block.successors.AddRange(labels);
-                    break;
-                }
-            }
+                BasicBlock target => new(finalOperation.Opcode, AddControlFlowEdge(block, target)),
+                BasicBlock[] targets => new(finalOperation.Opcode,
+                    targets.Select(target => AddControlFlowEdge(block, target)).ToArray()),
+                _ => finalOperation,
+            };
         }
 
-        UpdatePredecessors();
         BundlePrefixes();
 
         return;
@@ -733,6 +712,53 @@ internal partial class Optimizer
         }
     }
 
+    private static ControlFlowEdge AddControlFlowEdge(BasicBlock source, BasicBlock target)
+    {
+        var edge = new ControlFlowEdge(source, target);
+        source.outgoingEdges.Add(edge);
+        target.incomingEdges.Add(edge);
+        return edge;
+    }
+
+    private static void RemoveControlFlowEdge(ControlFlowEdge edge)
+    {
+        if (!edge.Source.outgoingEdges.Remove(edge) || !edge.Target.incomingEdges.Remove(edge))
+            throw new InvalidOperationException("Control-flow edge is not attached to both endpoint blocks");
+        if (edge.Source.fallthroughEdge == edge)
+            edge.Source.fallthroughEdge = null;
+    }
+
+    private static void RedirectControlFlowEdge(ControlFlowEdge edge, BasicBlock target)
+    {
+        if (!edge.Target.incomingEdges.Remove(edge))
+            throw new InvalidOperationException("Control-flow edge is not attached to its target block");
+        edge.Target = target;
+        target.incomingEdges.Add(edge);
+    }
+
+    private static void MoveControlFlowEdgeSource(ControlFlowEdge edge, BasicBlock source)
+    {
+        BasicBlock oldSource = edge.Source;
+        if (oldSource == source)
+        {
+            if (!source.outgoingEdges.Contains(edge))
+                throw new InvalidOperationException("Control-flow edge is not attached to its source block");
+            return;
+        }
+
+        bool isFallthrough = oldSource.fallthroughEdge == edge;
+        if (isFallthrough && source.fallthroughEdge != null)
+            throw new InvalidOperationException($"Basic block {source.ID} already has a fallthrough edge");
+        if (!oldSource.outgoingEdges.Remove(edge))
+            throw new InvalidOperationException("Control-flow edge is not attached to its source block");
+        if (isFallthrough)
+            oldSource.fallthroughEdge = null;
+        edge.Source = source;
+        source.outgoingEdges.Add(edge);
+        if (isFallthrough)
+            source.fallthroughEdge = edge;
+    }
+
     internal void NopElimination()
     {
         foreach (var block in basicBlocks)
@@ -741,15 +767,13 @@ internal partial class Optimizer
 
     internal void BranchElimination()
     {
-        bool changed = false;
-
         foreach (var block in basicBlocks)
         {
             if (block.ops.Count == 0)
                 continue;
-            if (block.next is null)
+            if (block.fallthroughEdge is not { } fallthroughEdge)
                 continue;
-            if (block.successors.Any(s => s != block.next))
+            if (block.outgoingEdges.Any(edge => edge.Target != fallthroughEdge.Target))
                 continue;
 
             switch (block.ops[^1].Opcode)
@@ -761,9 +785,7 @@ internal partial class Optimizer
                 }:
                 {
                     block.ops[^1] = Ops.Pop;
-                    block.successors.Clear();
-                    block.successors.Add(block.next);
-                    changed = true;
+                    RemoveBranchEdges();
                     break;
                 }
                 // Beq, Bge, Bgt, Ble, Blt, Bne_Un, Bge_Un, Bgt_Un, Ble_Un, Blt_Un
@@ -775,40 +797,36 @@ internal partial class Optimizer
                 {
                     block.ops[^1] = Ops.Pop;
                     block.ops.Add(Ops.Pop);
-                    block.successors.Clear();
-                    block.successors.Add(block.next);
-                    changed = true;
+                    RemoveBranchEdges();
                     break;
                 }
             }
-        }
 
-        if (changed)
-            UpdatePredecessors();
+            void RemoveBranchEdges()
+            {
+                foreach (var edge in block.outgoingEdges.Where(edge => edge != fallthroughEdge).ToArray())
+                    RemoveControlFlowEdge(edge);
+            }
+        }
     }
 
     internal void JumpThreading()
     {
         foreach (var block in basicBlocks)
         {
-            Block? fallthroughBlock = block.next;
-            if (fallthroughBlock == null)
+            ControlFlowEdge? fallthroughEdge = block.fallthroughEdge;
+            if (fallthroughEdge == null)
                 continue;
+            BasicBlock fallthroughBlock = fallthroughEdge.Target;
             int iterations = 0;
-            while (fallthroughBlock is BasicBlock { ops.Count: 0, EntryPoint: false } bb &&
-                   bb.next!.parent == bb.parent &&
+            while (fallthroughBlock is { ops.Count: 0, EntryPoint: false, fallthroughEdge: not null } bb &&
+                   bb.fallthroughEdge.Target.parent == bb.parent &&
                    iterations++ < 20)
-                fallthroughBlock = bb.next;
+                fallthroughBlock = bb.fallthroughEdge.Target;
 
-            if (block.next != fallthroughBlock)
-            {
-                block.successors.Remove(block.next!);
-                block.successors.Add(fallthroughBlock);
-                block.next = fallthroughBlock;
-            }
+            if (fallthroughEdge.Target != fallthroughBlock)
+                RedirectControlFlowEdge(fallthroughEdge, fallthroughBlock);
         }
-
-        UpdatePredecessors();
     }
 
     internal void MergeBlocks()
@@ -816,20 +834,21 @@ internal partial class Optimizer
         for (int i = basicBlocks.Count - 1; i >= 0; i--)
         {
             var block = basicBlocks[i];
-            if (block.successors is not [var successor])
+            if (block.outgoingEdges is not [var successorEdge])
                 continue;
             if (block.ops.Count > 0 && block.ops[^1].CanBranch)
                 continue;
-            if (successor.predecessors.Count != 1 || successor.parent != block.parent ||
-                successor is not BasicBlock { EntryPoint: false } bb)
+            BasicBlock successor = successorEdge.Target;
+            if (successor.incomingEdges.Count != 1 || successor.parent != block.parent ||
+                successor is not { EntryPoint: false } bb)
                 continue;
-            block.ops.AddRange(bb.ops);
-            block.next = bb.next;
-            block.successors.Clear();
-            block.successors.AddRange(bb.successors);
-        }
 
-        UpdatePredecessors();
+            block.ops.AddRange(bb.ops);
+            RemoveControlFlowEdge(successorEdge);
+
+            foreach (var edge in bb.outgoingEdges.ToArray())
+                MoveControlFlowEdgeSource(edge, block);
+        }
     }
 
     internal void SimpleDeadCodeElimination()
@@ -848,14 +867,20 @@ internal partial class Optimizer
             var block = queue.Dequeue();
             if (!liveBlocks.Add(block))
                 continue;
-            foreach (var successor in block.successors)
-                queue.Enqueue(successor);
+            if (block is BasicBlock basicBlock)
+            {
+                foreach (var edge in basicBlock.outgoingEdges)
+                    queue.Enqueue(edge.Target);
+            }
         }
 
+        foreach (var deadBlock in basicBlocks.Where(block => !liveBlocks.Contains(block)).ToArray())
+        {
+            foreach (var edge in deadBlock.incomingEdges.Concat(deadBlock.outgoingEdges).Distinct().ToArray())
+                RemoveControlFlowEdge(edge);
+        }
         allBlocks.RemoveAll(b => b is BasicBlock && !liveBlocks.Contains(b));
         basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
-
-        UpdatePredecessors();
     }
 
     internal void AggressiveDeadCodeEliminationAndReorder()
@@ -900,8 +925,15 @@ internal partial class Optimizer
             if (debug)
                 FileLog.LogBuffered($"{"".PadLeft(stack.Count * 2)}- {block.ID}");
 
-            if (block.next != null)
-                queue.AddFirst(block.next);
+            switch (block)
+            {
+                case Region { next: not null } chainedRegion:
+                    queue.AddFirst(chainedRegion.next);
+                    break;
+                case BasicBlock { fallthroughEdge: not null } basicBlock:
+                    queue.AddFirst(basicBlock.fallthroughEdge.Target);
+                    break;
+            }
 
             switch (block)
             {
@@ -914,11 +946,12 @@ internal partial class Optimizer
                 }
                 case BasicBlock bb:
                 {
-                    foreach (var successor in bb.successors)
+                    foreach (var edge in bb.outgoingEdges)
                     {
+                        BasicBlock successor = edge.Target;
                         if (!successor.HasAncestor(region))
                             leavingBlocks.Add(successor);
-                        else if (successor != bb.next)
+                        else if (edge != bb.fallthroughEdge)
                             queue.AddLast(successor);
                     }
 
@@ -928,64 +961,15 @@ internal partial class Optimizer
             }
         }
 
+        HashSet<Block> retainedBlocks = [.. outputBlocks];
+        foreach (var deadBlock in basicBlocks.Where(block => !retainedBlocks.Contains(block)).ToArray())
+        {
+            foreach (var edge in deadBlock.incomingEdges.Concat(deadBlock.outgoingEdges).Distinct().ToArray())
+                RemoveControlFlowEdge(edge);
+        }
         allBlocks.Clear();
         allBlocks.AddRange(outputBlocks);
         basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
-    }
-
-    internal void DeduceTypes()
-    {
-        UniqueQueue<Block> worklist = [];
-        foreach (var block in allBlocks)
-            worklist.Enqueue(block);
-
-        while (worklist.Count > 0)
-        {
-            var block = worklist.Dequeue();
-
-            switch (block)
-            {
-                case Region region:
-                {
-                    region.exitLocals = region.entryLocals;
-                    region.exitStack = region.entryStack;
-
-                    if (region.harmonyBlock is { blockType: ExceptionBlockType.BeginCatchBlock })
-                        region.exitStack = [region.harmonyBlock.catchType];
-
-                    if (region.entry != null)
-                        UpdateSuccessor(region, region.entry);
-                    break;
-                }
-                case BasicBlock bb:
-                {
-                    bb.SymbolicExecute(parameterTypes, returnType);
-
-                    foreach (var successor in block.successors)
-                        UpdateSuccessor(block, successor);
-                    break;
-                }
-                default: throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        return;
-
-        void UpdateSuccessor(Block block, Block successor)
-        {
-            var entryLocals = CombineTypeLists(successor.entryLocals, block.exitLocals, true);
-
-            List<Type> entryStack = successor.entryStack.Count == 0 && block.exitStack.Count > 0
-                ? block.exitStack
-                : CombineTypeLists(successor.entryStack, block.exitStack);
-
-            if (entryLocals.SequenceEqual(successor.entryLocals) && entryStack.SequenceEqual(successor.entryStack))
-                return;
-
-            successor.entryLocals = entryLocals;
-            successor.entryStack = entryStack;
-            worklist.Enqueue(successor);
-        }
     }
 
     internal void ConvertStackToVariables()
@@ -993,39 +977,72 @@ internal partial class Optimizer
         if (Form != IrForm.Stack)
             throw new InvalidOperationException($"Cannot convert {Form} form to variables");
 
+        Dictionary<Block, List<Type>> entryLocals = allBlocks.ToDictionary(block => block, _ => new List<Type>());
+        Dictionary<Block, List<Type>> entryStacks = allBlocks.ToDictionary(block => block, _ => new List<Type>());
+        Dictionary<BasicBlock, List<Type>> exitStacks = [];
+        Dictionary<Op, Op.StackTransition> transitions = [];
+        UniqueQueue<Block> worklist = [];
+        foreach (var block in allBlocks)
+            worklist.Enqueue(block);
+
+        while (worklist.Count > 0)
+        {
+            Block block = worklist.Dequeue();
+            switch (block)
+            {
+                case Region region:
+                {
+                    List<Type> stack = region.harmonyBlock is { blockType: ExceptionBlockType.BeginCatchBlock }
+                        ? [region.harmonyBlock.catchType]
+                        : entryStacks[region];
+                    if (region.entry != null)
+                        UpdateEntry(region.entry, entryLocals[region], stack);
+                    break;
+                }
+                case BasicBlock basicBlock:
+                {
+                    (List<Type> locals, List<Type> stack) = basicBlock.SymbolicExecute(
+                        entryLocals[basicBlock], entryStacks[basicBlock], parameterTypes, returnType, transitions);
+                    exitStacks[basicBlock] = stack;
+                    foreach (var edge in basicBlock.outgoingEdges)
+                        UpdateEntry(edge.Target, locals, stack);
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         InitializeVariables();
 
         foreach (var block in basicBlocks)
         {
             block.entryStackVariables.Clear();
-            for (int index = 0; index < block.entryStack.Count; index++)
-                block.entryStackVariables.Add(NewVariable(VariableKind.EntryStackSlot, block.entryStack[index], index, block));
+            for (int index = 0; index < entryStacks[block].Count; index++)
+                block.entryStackVariables.Add(NewVariable(VariableKind.EntryStackSlot, entryStacks[block][index], index, block));
         }
 
         foreach (var block in basicBlocks)
-            MaterializeBlockVariables(block);
+            MaterializeBlockVariables(block, exitStacks[block].Count, transitions);
 
-        BuildVariableEdges();
-        DiscardStackAnalysis();
+        PopulateEdgeAssignments();
         Form = IrForm.Variables;
-    }
 
-    private void DiscardStackAnalysis()
-    {
-        foreach (var block in allBlocks)
-        {
-            block.entryLocals.Clear();
-            block.entryStack.Clear();
-            block.exitLocals.Clear();
-            block.exitStack.Clear();
-        }
+        return;
 
-        foreach (var op in basicBlocks.SelectMany(block => block.ops))
+        void UpdateEntry(Block successor, List<Type> outgoingLocals, List<Type> outgoingStack)
         {
-            op.inputTypes.Clear();
-            op.stackOutputs.Clear();
-            op.variableAccesses.Clear();
-            op.clearsStack = false;
+            List<Type> locals = CombineTypeLists(entryLocals[successor], outgoingLocals, true);
+            List<Type> stack = entryStacks[successor].Count == 0 && outgoingStack.Count > 0
+                ? [.. outgoingStack]
+                : CombineTypeLists(entryStacks[successor], outgoingStack);
+
+            if (locals.SequenceEqual(entryLocals[successor]) && stack.SequenceEqual(entryStacks[successor]))
+                return;
+
+            entryLocals[successor] = locals;
+            entryStacks[successor] = stack;
+            worklist.Enqueue(successor);
         }
     }
 
@@ -1086,7 +1103,10 @@ internal partial class Optimizer
         }
     }
 
-    private void MaterializeBlockVariables(BasicBlock block)
+    private void MaterializeBlockVariables(
+        BasicBlock block,
+        int expectedExitStackSize,
+        IReadOnlyDictionary<Op, Op.StackTransition> transitions)
     {
         List<Variable> stack = [.. block.entryStackVariables];
 
@@ -1094,8 +1114,9 @@ internal partial class Optimizer
         {
             op.inputs.Clear();
             op.outputs.Clear();
+            Op.StackTransition transition = transitions[op];
 
-            int inputCount = op.inputTypes.Count;
+            int inputCount = transition.inputTypes.Count;
             if (inputCount > stack.Count)
                 throw new InvalidOperationException($"{op.Opcode} reads {inputCount} values from a stack of {stack.Count}");
 
@@ -1103,7 +1124,7 @@ internal partial class Optimizer
             op.inputs.AddRange(stack.Skip(firstInput));
             stack.RemoveRange(firstInput, inputCount);
 
-            foreach (var output in op.stackOutputs)
+            foreach (var output in transition.outputs)
             {
                 Variable variable = output.InputIndex >= 0
                     ? op.inputs[output.InputIndex]
@@ -1112,10 +1133,10 @@ internal partial class Optimizer
                 stack.Add(variable);
             }
 
-            if (op.clearsStack)
+            if (transition.clearsStack)
                 stack.Clear();
 
-            foreach (var access in op.variableAccesses)
+            foreach (var access in transition.variableAccesses)
             {
                 Variable variable = access.VariableKind switch
                 {
@@ -1144,30 +1165,18 @@ internal partial class Optimizer
 
         block.exitStackVariables.Clear();
         block.exitStackVariables.AddRange(stack);
-        if (block.exitStackVariables.Count != block.exitStack.Count)
+        if (block.exitStackVariables.Count != expectedExitStackSize)
             throw new InvalidOperationException($"Variable stack disagrees with type stack at the exit of {block.ID}");
     }
 
-    private void BuildVariableEdges()
+    private void PopulateEdgeAssignments()
     {
-        foreach (var block in basicBlocks)
-        {
-            block.incomingEdges.Clear();
-            block.outgoingEdges.Clear();
-        }
-
         foreach (var source in basicBlocks)
         {
-            bool emittedFallThrough = false;
-            foreach (Block successor in source.successors)
+            foreach (var edge in source.outgoingEdges)
             {
-                if (successor is not BasicBlock target)
-                    throw new InvalidOperationException($"Basic block {source.ID} has non-basic successor {successor.ID}");
-
-                bool isFallThrough = !emittedFallThrough && source.next == target;
-                emittedFallThrough |= isFallThrough;
-                var edge = new ControlFlowEdge(source, target,
-                    isFallThrough ? ControlFlowEdgeKind.FallThrough : ControlFlowEdgeKind.Branch);
+                BasicBlock target = edge.Target;
+                edge.assignments.Clear();
 
                 if (source.exitStackVariables.Count != target.entryStackVariables.Count)
                 {
@@ -1181,9 +1190,6 @@ internal partial class Optimizer
                     edge.assignments.Add(new VariableAssignment(
                         source.exitStackVariables[index], target.entryStackVariables[index]));
                 }
-
-                source.outgoingEdges.Add(edge);
-                target.incomingEdges.Add(edge);
             }
         }
     }
@@ -1236,25 +1242,25 @@ internal partial class Optimizer
         {
             if (block.ops.Count == 0)
                 continue;
-            if (block.next is null)
+            if (block.fallthroughEdge is not { } fallthroughEdge)
                 continue;
-            if (block.next.predecessors.Count == 1)
+            if (fallthroughEdge.Target.incomingEdges.Count == 1)
                 continue;
 
             var finalInstruction = block.ops[^1];
             if (finalInstruction.Opcode.FlowControl is FlowControl.Cond_Branch &&
-                finalInstruction.Operand is Block { predecessors.Count: 1 } label)
+                finalInstruction.Operand is ControlFlowEdge { Target.incomingEdges.Count: 1 } branchEdge)
             {
                 if (finalInstruction.Opcode == OpCodes.Brfalse || finalInstruction.Opcode == OpCodes.Brfalse_S)
                 {
-                    block.ops[^1] = new(OpCodes.Brtrue_S, block.next);
-                    block.next = label;
+                    block.ops[^1] = new(OpCodes.Brtrue_S, fallthroughEdge);
+                    block.fallthroughEdge = branchEdge;
                 }
 
                 if (finalInstruction.Opcode == OpCodes.Brtrue || finalInstruction.Opcode == OpCodes.Brtrue_S)
                 {
-                    block.ops[^1] = new(OpCodes.Brfalse_S, block.next);
-                    block.next = label;
+                    block.ops[^1] = new(OpCodes.Brfalse_S, fallthroughEdge);
+                    block.fallthroughEdge = branchEdge;
                 }
             }
         }
@@ -1264,25 +1270,12 @@ internal partial class Optimizer
     {
         for (int i = 0; i < basicBlocks.Count; i++)
         {
-            Block? fallthroughBlock = basicBlocks[i].next;
-            if (fallthroughBlock == null || i < basicBlocks.Count - 1 && fallthroughBlock == basicBlocks[i + 1])
+            ControlFlowEdge? fallthroughEdge = basicBlocks[i].fallthroughEdge;
+            if (fallthroughEdge == null || i < basicBlocks.Count - 1 && fallthroughEdge.Target == basicBlocks[i + 1])
                 continue;
-            basicBlocks[i].ops.Add(new(OpCodes.Br_S, fallthroughBlock));
-            basicBlocks[i].next = null;
+            basicBlocks[i].ops.Add(new(OpCodes.Br_S, fallthroughEdge));
+            basicBlocks[i].fallthroughEdge = null;
         }
-    }
-
-    /// <summary>
-    ///     Update predecessor lists. Should be called whenever control flow changes.
-    /// </summary>
-    private void UpdatePredecessors()
-    {
-        foreach (var block in basicBlocks)
-            block.predecessors.Clear();
-
-        foreach (var block in basicBlocks)
-        foreach (var successor in block.successors)
-            successor.predecessors.Add(block);
     }
 
     private static List<Type> GetBaseTypes(Type type)
@@ -1326,19 +1319,22 @@ internal partial class Optimizer
     }
 
 
-    private static List<Type> CombineTypeLists(List<Type> left, List<Type> right, bool padIfNeeded = false)
+    private static List<Type> CombineTypeLists(
+        IReadOnlyList<Type> left,
+        IReadOnlyList<Type> right,
+        bool padIfNeeded = false)
     {
         if (!padIfNeeded && left.Count != right.Count)
             throw new ArgumentException();
 
-        while (left.Count < right.Count)
-            left.Add(typeof(UnknownType));
-        while (right.Count < left.Count)
-            right.Add(typeof(UnknownType));
-
-        List<Type> output = new List<Type>(left.Count);
-        for (int i = 0; i < left.Count; i++)
-            output.Add(CombineTypes(left[i], right[i]));
+        int count = Math.Max(left.Count, right.Count);
+        List<Type> output = new(count);
+        for (int i = 0; i < count; i++)
+        {
+            Type leftType = i < left.Count ? left[i] : typeof(UnknownType);
+            Type rightType = i < right.Count ? right[i] : typeof(UnknownType);
+            output.Add(CombineTypes(leftType, rightType));
+        }
         return output;
     }
 }

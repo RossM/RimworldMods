@@ -32,10 +32,14 @@ public sealed class OptimizerPassTests
         Optimizer.BasicBlock fallthrough = optimizer.BasicBlocks[1];
         Optimizer.BasicBlock target = optimizer.BasicBlocks[2];
         Assert.That(condition.next, Is.SameAs(fallthrough));
-        Assert.That(condition.ops[^1].Operand, Is.SameAs(target));
+        Assert.That(condition.fallthroughEdge, Is.Not.Null);
+        Assert.That(condition.fallthroughEdge!.Target, Is.SameAs(fallthrough));
+        Assert.That(condition.ops[^1].Operand, Is.TypeOf<Optimizer.ControlFlowEdge>());
+        Assert.That(((Optimizer.ControlFlowEdge)condition.ops[^1].Operand!).Target, Is.SameAs(target));
         Assert.That(condition.successors, Is.EqualTo(new[] { fallthrough, target }));
         Assert.That(fallthrough.predecessors, Is.EqualTo(new[] { condition }));
         Assert.That(target.predecessors, Is.EqualTo(new[] { condition, fallthrough }));
+        Assert.That(condition.outgoingEdges, Has.All.Matches<Optimizer.ControlFlowEdge>(edge => edge.assignments.Count == 0));
     }
 
     [Test]
@@ -75,11 +79,13 @@ public sealed class OptimizerPassTests
         Optimizer.BasicBlock condition = optimizer.BasicBlocks[0];
         Optimizer.BasicBlock empty = optimizer.BasicBlocks[1];
         Optimizer.BasicBlock afterEmpty = optimizer.BasicBlocks[2];
+        Optimizer.ControlFlowEdge fallthroughEdge = condition.fallthroughEdge!;
         optimizer.NopElimination();
 
         optimizer.JumpThreading();
 
         Assert.That(empty.ops, Is.Empty);
+        Assert.That(condition.fallthroughEdge, Is.SameAs(fallthroughEdge));
         Assert.That(condition.next, Is.SameAs(afterEmpty));
         Assert.That(condition.successors, Does.Not.Contain(empty));
         Assert.That(empty.predecessors, Is.Empty);
@@ -124,12 +130,14 @@ public sealed class OptimizerPassTests
         });
         optimizer.MakeBasicBlocks();
         Optimizer.BasicBlock condition = optimizer.BasicBlocks[0];
+        Optimizer.BasicBlock target = optimizer.BasicBlocks[1];
 
         optimizer.BranchElimination();
 
         Assert.That(OpCodesIn(condition), Is.EqualTo(new[] { OpCodes.Ldc_I4_0, OpCodes.Pop }));
-        Assert.That(condition.successors, Has.Count.EqualTo(1));
-        Assert.That(condition.successors[0], Is.SameAs(condition.next));
+        Assert.That(condition.successors.Count(), Is.EqualTo(1));
+        Assert.That(condition.successors.Single(), Is.SameAs(condition.next));
+        Assert.That(target.incomingEdges, Is.EqualTo(new[] { condition.fallthroughEdge }));
     }
 
     [Test]
@@ -155,6 +163,36 @@ public sealed class OptimizerPassTests
         Assert.That(first.next, Is.Null);
         Assert.That(first.successors, Is.Empty);
         Assert.That(merged.predecessors, Is.Empty);
+    }
+
+    [Test]
+    public void MergeBlocksTransfersSuccessorFallthroughEdge()
+    {
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label condition = generator.DefineLabel();
+            Label target = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Nop),
+                new CodeInstruction(OpCodes.Ldc_I4_0).WithLabels(condition),
+                new CodeInstruction(OpCodes.Brfalse, target),
+                new CodeInstruction(OpCodes.Ret),
+                new CodeInstruction(OpCodes.Ret).WithLabels(target),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        Optimizer.BasicBlock first = optimizer.BasicBlocks[0];
+        Optimizer.BasicBlock merged = optimizer.BasicBlocks[1];
+        Optimizer.ControlFlowEdge fallthroughEdge = merged.fallthroughEdge!;
+
+        optimizer.MergeBlocks();
+
+        Assert.That(first.fallthroughEdge, Is.SameAs(fallthroughEdge));
+        Assert.That(fallthroughEdge.Source, Is.SameAs(first));
+        Assert.That(first.outgoingEdges, Does.Contain(fallthroughEdge));
+        Assert.That(merged.fallthroughEdge, Is.Null);
+        Assert.That(merged.outgoingEdges, Is.Empty);
     }
 
     [Test]
@@ -186,7 +224,7 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
-    public void DeduceTypesPropagatesLocalTypeThroughJoin()
+    public void ConvertStackToVariablesPropagatesLocalTypeThroughJoin()
     {
         Optimizer optimizer = CreateOptimizer(generator =>
         {
@@ -211,10 +249,10 @@ public sealed class OptimizerPassTests
         Optimizer.BasicBlock join = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => op.Opcode == OpCodes.Ldloc));
 
-        optimizer.DeduceTypes();
+        optimizer.ConvertStackToVariables();
 
-        Assert.That(join.entryStack, Is.Empty);
-        Assert.That(join.entryLocals, Is.EqualTo(new[] { typeof(string) }));
+        Optimizer.Op load = join.ops.Single(op => op.Opcode == OpCodes.Ldloc);
+        Assert.That(load.outputs.Single().type, Is.EqualTo(typeof(string)));
     }
 
     [Test]
@@ -236,11 +274,11 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        optimizer.DeduceTypes();
         int operationCount = optimizer.BasicBlocks.Sum(block => block.ops.Count);
         Optimizer.BasicBlock entry = optimizer.BasicBlocks[0];
         Optimizer.BasicBlock join = optimizer.BasicBlocks[3];
-        Assert.That(join.entryStack, Is.EqualTo(new[] { typeof(string) }));
+        Assert.That(join.incomingEdges, Has.Count.EqualTo(2));
+        Assert.That(join.incomingEdges.SelectMany(edge => edge.assignments), Is.Empty);
 
         optimizer.ConvertStackToVariables();
 
@@ -248,14 +286,11 @@ public sealed class OptimizerPassTests
         Assert.That(entry.ops[2].inputs, Is.EqualTo(new[] { entry.ops[1].outputs.Single() }));
         Assert.That(entry.exitStackVariables, Is.EqualTo(new[] { entry.ops[0].outputs.Single() }));
         Assert.That(join.entryStackVariables, Has.Count.EqualTo(1));
+        Assert.That(join.entryStackVariables[0].type, Is.EqualTo(typeof(string)));
         Assert.That(join.incomingEdges, Has.Count.EqualTo(2));
         Assert.That(join.incomingEdges.SelectMany(edge => edge.assignments), Has.All.Matches<Optimizer.VariableAssignment>(
             assignment => assignment.Destination == join.entryStackVariables[0]));
         Assert.That(optimizer.BasicBlocks.Sum(block => block.ops.Count), Is.EqualTo(operationCount));
-        Assert.That(optimizer.Blocks.SelectMany(block =>
-            block.entryLocals.Concat(block.entryStack).Concat(block.exitLocals).Concat(block.exitStack)), Is.Empty);
-        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops), Has.All.Matches<Optimizer.Op>(op =>
-            op.inputTypes.Count == 0 && op.stackOutputs.Count == 0 && op.variableAccesses.Count == 0 && !op.clearsStack));
 
         optimizer.InsertBranches();
         optimizer.Emit();
@@ -280,8 +315,6 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        optimizer.DeduceTypes();
-
         optimizer.ConvertStackToVariables();
 
         Optimizer.Variable local = optimizer.LocalVariables[declaredLocal!.LocalIndex];
@@ -306,8 +339,6 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        optimizer.DeduceTypes();
-
         optimizer.ConvertStackToVariables();
 
         Optimizer.Variable local = optimizer.LocalVariables[4];
@@ -334,7 +365,6 @@ public sealed class OptimizerPassTests
         Assert.That(fieldLoad.Opcode, Is.EqualTo(OpCodes.Ldsfld));
         Assert.That(fieldLoad.prefixes.Select(prefix => prefix.Opcode), Is.EqualTo(new[] { OpCodes.Volatile }));
 
-        optimizer.DeduceTypes();
         optimizer.ConvertStackToVariables();
         optimizer.Emit();
         Assert.That(optimizer.output.instructions.Select(instruction => instruction.opcode), Is.EqualTo(new[]
@@ -356,8 +386,6 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        optimizer.DeduceTypes();
-
         optimizer.ConvertStackToVariables();
 
         Optimizer.Op value = optimizer.BasicBlocks[0].ops[0];
@@ -379,8 +407,6 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        optimizer.DeduceTypes();
-
         optimizer.ConvertStackToVariables();
 
         Optimizer.Variable argument = optimizer.ArgumentVariables[0];
@@ -401,8 +427,6 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        optimizer.DeduceTypes();
-
         optimizer.ConvertStackToVariables();
 
         Optimizer.Op load = optimizer.BasicBlocks[0].ops[0];
@@ -434,7 +458,8 @@ public sealed class OptimizerPassTests
         optimizer.BranchInversion();
 
         Assert.That(condition.ops[^1].Opcode, Is.EqualTo(OpCodes.Brtrue_S));
-        Assert.That(condition.ops[^1].Operand, Is.SameAs(shared));
+        Assert.That(condition.ops[^1].Operand, Is.TypeOf<Optimizer.ControlFlowEdge>());
+        Assert.That(((Optimizer.ControlFlowEdge)condition.ops[^1].Operand!).Target, Is.SameAs(shared));
         Assert.That(condition.next, Is.SameAs(unique));
     }
 
@@ -454,13 +479,16 @@ public sealed class OptimizerPassTests
         optimizer.MakeBasicBlocks();
         Optimizer.BasicBlock entry = optimizer.BasicBlocks[0];
         Optimizer.BasicBlock target = optimizer.BasicBlocks[2];
+        Optimizer.ControlFlowEdge fallthroughEdge = entry.fallthroughEdge!;
 
         optimizer.InsertBranches();
 
         Assert.That(entry.next, Is.Null);
         Assert.That(entry.ops, Has.Count.EqualTo(1));
         Assert.That(entry.ops[0].Opcode, Is.EqualTo(OpCodes.Br_S));
-        Assert.That(entry.ops[0].Operand, Is.SameAs(target));
+        Assert.That(entry.ops[0].Operand, Is.SameAs(fallthroughEdge));
+        Assert.That(entry.ops[0].Operand, Is.TypeOf<Optimizer.ControlFlowEdge>());
+        Assert.That(((Optimizer.ControlFlowEdge)entry.ops[0].Operand!).Target, Is.SameAs(target));
     }
 
     [Test]
