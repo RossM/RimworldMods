@@ -134,12 +134,189 @@ public sealed class InstructionMatcherTests
         Assert.That(localLoad.LocalIndex(), Is.EqualTo(3));
     }
 
+    [Test]
+    public void ReplacementStoreForNewLocalAtShortIndexRetainsLocalBuilderOperand()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.StoreLocal(0));
+
+        CodeInstruction localStore = result.Single(instruction => instruction.IsStloc());
+        Assert.That(localStore.opcode, Is.EqualTo(OpCodes.Stloc_S));
+        AssertLocalBuilderOperand(localStore, expectedIndex: 4);
+    }
+
+    [Test]
+    public void ReplacementLoadForNewLocalAtShortIndexRetainsLocalBuilderOperand()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0));
+
+        CodeInstruction localLoad = result.Single(instruction =>
+            instruction.IsLdloc() && instruction.opcode != OpCodes.Ldloca && instruction.opcode != OpCodes.Ldloca_S);
+        Assert.That(localLoad.opcode, Is.EqualTo(OpCodes.Ldloc_S));
+        AssertLocalBuilderOperand(localLoad, expectedIndex: 4);
+    }
+
+    [Test]
+    public void ReplacementAddressLoadForNewLocalAtShortIndexRetainsLocalBuilderOperand()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0, true));
+
+        CodeInstruction localAddressLoad = result.Single(instruction =>
+            instruction.opcode == OpCodes.Ldloca || instruction.opcode == OpCodes.Ldloca_S);
+        Assert.That(localAddressLoad.opcode, Is.EqualTo(OpCodes.Ldloca_S));
+        AssertLocalBuilderOperand(localAddressLoad, expectedIndex: 4);
+    }
+
+    [Test]
+    public void ReplacementStoreForNewLocalAtIndexZeroUsesOperandBearingShortOpcode()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.StoreLocal(0), precedingLocalCount: 0);
+
+        CodeInstruction localStore = result.Single(instruction => instruction.IsStloc());
+        Assert.That(localStore.opcode, Is.EqualTo(OpCodes.Stloc_S));
+        AssertLocalBuilderOperand(localStore, expectedIndex: 0);
+    }
+
+    [Test]
+    public void ReplacementLoadForNewLocalAtIndexZeroUsesOperandBearingShortOpcode()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0), precedingLocalCount: 0);
+
+        CodeInstruction localLoad = result.Single(instruction => instruction.IsLdloc());
+        Assert.That(localLoad.opcode, Is.EqualTo(OpCodes.Ldloc_S));
+        AssertLocalBuilderOperand(localLoad, expectedIndex: 0);
+    }
+
+    [Test]
+    public void ReplacementAddressLoadForNewLocalAtIndexZeroRetainsLocalBuilderOperand()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0, true), precedingLocalCount: 0);
+
+        CodeInstruction localAddressLoad = result.Single(instruction =>
+            instruction.opcode == OpCodes.Ldloca || instruction.opcode == OpCodes.Ldloca_S);
+        Assert.That(localAddressLoad.opcode, Is.EqualTo(OpCodes.Ldloca_S));
+        AssertLocalBuilderOperand(localAddressLoad, expectedIndex: 0);
+    }
+
+    [Test]
+    public void ReplacementStoreForNewLocalAtMaximumShortIndexRetainsLocalBuilderOperand()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.StoreLocal(0), precedingLocalCount: byte.MaxValue);
+
+        CodeInstruction localStore = result.Single(instruction => instruction.IsStloc());
+        Assert.That(localStore.opcode, Is.EqualTo(OpCodes.Stloc_S));
+        AssertLocalBuilderOperand(localStore, expectedIndex: byte.MaxValue);
+    }
+
+    [Test]
+    public void ReplacementLoadForNewLocalAtMaximumShortIndexRetainsLocalBuilderOperand()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0), precedingLocalCount: byte.MaxValue);
+
+        CodeInstruction localLoad = result.Single(instruction => instruction.IsLdloc());
+        Assert.That(localLoad.opcode, Is.EqualTo(OpCodes.Ldloc_S));
+        AssertLocalBuilderOperand(localLoad, expectedIndex: byte.MaxValue);
+    }
+
+    [Test]
+    public void ReplacementAddressLoadForNewLocalAtMaximumShortIndexRetainsLocalBuilderOperand()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0, true), precedingLocalCount: byte.MaxValue);
+
+        CodeInstruction localAddressLoad = result.Single(instruction =>
+            instruction.opcode == OpCodes.Ldloca || instruction.opcode == OpCodes.Ldloca_S);
+        Assert.That(localAddressLoad.opcode, Is.EqualTo(OpCodes.Ldloca_S));
+        AssertLocalBuilderOperand(localAddressLoad, expectedIndex: byte.MaxValue);
+    }
+
+    [Test]
+    public void ReplacementStoreForNewLocalAtLongIndexRetainsLocalBuilderOperand()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.StoreLocal(0), precedingLocalCount: 256);
+
+        CodeInstruction localStore = result.Single(instruction => instruction.IsStloc());
+        Assert.That(localStore.opcode, Is.EqualTo(OpCodes.Stloc));
+        AssertLocalBuilderOperand(localStore, expectedIndex: 256);
+    }
+
+    [Test]
+    public void ReplacementLoadForNewLocalAtLongIndexRetainsLocalBuilderOperand()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0), precedingLocalCount: 256);
+
+        CodeInstruction localLoad = result.Single(instruction => instruction.IsLdloc());
+        Assert.That(localLoad.opcode, Is.EqualTo(OpCodes.Ldloc));
+        AssertLocalBuilderOperand(localLoad, expectedIndex: 256);
+    }
+
+    [Test]
+    public void ReplacementAddressLoadForNewLocalAtLongIndexRetainsLocalBuilderOperand()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0, true), precedingLocalCount: 256);
+
+        CodeInstruction localAddressLoad = result.Single(instruction =>
+            instruction.opcode == OpCodes.Ldloca || instruction.opcode == OpCodes.Ldloca_S);
+        Assert.That(localAddressLoad.opcode, Is.EqualTo(OpCodes.Ldloca));
+        AssertLocalBuilderOperand(localAddressLoad, expectedIndex: 256);
+    }
+
+    [Test]
+    public void ReplacementOperationsForNewLocalReuseSameLocalBuilder()
+    {
+        List<CodeInstruction> result = RunWithNewLocal(
+            CodeInstruction.StoreLocal(0),
+            CodeInstruction.LoadLocal(0),
+            CodeInstruction.LoadLocal(0, true));
+
+        LocalBuilder[] localBuilders =
+        [
+            .. result
+                .Where(instruction => instruction.IsStloc() || instruction.IsLdloc())
+                .Select(instruction => instruction.operand)
+                .Cast<LocalBuilder>(),
+        ];
+        Assert.That(localBuilders, Has.Length.EqualTo(3));
+        Assert.That(localBuilders, Has.All.SameAs(localBuilders[0]));
+    }
+
     private static List<CodeInstruction> Run(
         List<InstructionMatcher.Rule> rules,
         IEnumerable<CodeInstruction> instructions)
     {
         var dynamicMethod = new DynamicMethod("InstructionMatcherTest", typeof(void), Type.EmptyTypes);
         return InstructionMatcher.MatchAndReplace(rules, TargetMethod, instructions, dynamicMethod.GetILGenerator());
+    }
+
+    private static List<CodeInstruction> RunWithNewLocal(CodeInstruction replacement, int precedingLocalCount = 4) =>
+        RunWithNewLocal(precedingLocalCount, replacement);
+
+    private static List<CodeInstruction> RunWithNewLocal(params CodeInstruction[] replacements) =>
+        RunWithNewLocal(4, replacements);
+
+    private static List<CodeInstruction> RunWithNewLocal(int precedingLocalCount, params CodeInstruction[] replacements)
+    {
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        for (int i = 0; i < precedingLocalCount; i++)
+            generator.DeclareLocal(typeof(int));
+
+        var matcher = new InstructionMatcher(new InstructionMatcher.Rule
+        {
+            mode = InstructionMatcher.OutputMode.MethodPrefix,
+            output = replacements,
+        });
+        matcher.crossRuleLocalTypes.Add(typeof(string));
+
+        List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
+        matcher.MatchAndReplace(TargetMethod, ref instructions, generator);
+        return instructions;
+    }
+
+    private static void AssertLocalBuilderOperand(CodeInstruction instruction, int expectedIndex)
+    {
+        Assert.That(instruction.operand, Is.TypeOf<LocalBuilder>());
+        var localBuilder = (LocalBuilder)instruction.operand;
+        Assert.That(localBuilder.LocalIndex, Is.EqualTo(expectedIndex));
+        Assert.That(localBuilder.LocalType, Is.EqualTo(typeof(string)));
     }
 
     private static OpCode[] MeaningfulOpCodes(IEnumerable<CodeInstruction> instructions) =>

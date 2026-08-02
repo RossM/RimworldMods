@@ -10,6 +10,7 @@ public partial class InstructionMatcher
         bool debug)
     {
         private readonly Dictionary<int, int> localMap_Method = [];
+        private readonly Dictionary<int, LocalBuilder> localBuilderMap_Method = [];
         private readonly Dictionary<Label, Label> labelMap_Method = [];
         private readonly List<MatchData> matches = [];
         private readonly List<ExceptionBlock> extraBlocks = [];
@@ -407,18 +408,18 @@ public partial class InstructionMatcher
 
             if (replaceInst.IsStloc())
             {
-                var substituteIndex = GetReplacementLocal(replaceInst.LocalIndex(), match);
-                Emit(CodeInstruction.StoreLocal(substituteIndex));
+                var substituteLocal = GetReplacementLocal(replaceInst.LocalIndex(), match);
+                Emit(StoreLocal(substituteLocal));
             }
             else if (replaceInst.opcode == OpCodes.Ldloca || replaceInst.opcode == OpCodes.Ldloca_S)
             {
-                var substituteIndex = GetReplacementLocal(replaceInst.LocalIndex(), match);
-                Emit(CodeInstruction.LoadLocal(substituteIndex, true));
+                var substituteLocal = GetReplacementLocal(replaceInst.LocalIndex(), match);
+                Emit(LoadLocal(substituteLocal, true));
             }
             else if (replaceInst.IsLdloc())
             {
-                var substituteIndex = GetReplacementLocal(replaceInst.LocalIndex(), match);
-                Emit(CodeInstruction.LoadLocal(substituteIndex));
+                var substituteLocal = GetReplacementLocal(replaceInst.LocalIndex(), match);
+                Emit(LoadLocal(substituteLocal));
             }
             else if (replaceInst.operand is Label label)
             {
@@ -472,21 +473,43 @@ public partial class InstructionMatcher
             return replacementLabel;
         }
 
-        private int GetReplacementLocal(int localIndex, MatchData match)
+        private object GetReplacementLocal(int localIndex, MatchData match)
         {
-            if (localMap_Method.TryGetValue(localIndex, out var substituteIndex)) { }
-            else if (match.localMap_Match.TryGetValue(localIndex, out substituteIndex)) { }
-            else if (localIndex < instructionMatcher.crossRuleLocalTypes.Count)
+            if (localMap_Method.TryGetValue(localIndex, out var substituteIndex))
+                return substituteIndex;
+            if (localBuilderMap_Method.TryGetValue(localIndex, out var substituteBuilder))
+                return substituteBuilder;
+            if (match.localMap_Match.TryGetValue(localIndex, out substituteIndex))
+                return substituteIndex;
+            if (localIndex < instructionMatcher.crossRuleLocalTypes.Count)
             {
-                substituteIndex = generator.DeclareLocal(instructionMatcher.crossRuleLocalTypes[localIndex]).LocalIndex;
-                localMap_Method.Add(localIndex, substituteIndex);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Replacement pattern uses unknown local index #{localIndex}");
+                substituteBuilder = generator.DeclareLocal(instructionMatcher.crossRuleLocalTypes[localIndex]);
+                localBuilderMap_Method.Add(localIndex, substituteBuilder);
+                return substituteBuilder;
             }
 
-            return substituteIndex;
+            throw new InvalidOperationException($"Replacement pattern uses unknown local index #{localIndex}");
         }
+
+        private static CodeInstruction StoreLocal(object local) => local switch
+        {
+            LocalBuilder builder => new(
+                builder.LocalIndex <= byte.MaxValue ? OpCodes.Stloc_S : OpCodes.Stloc,
+                builder),
+            int index => CodeInstruction.StoreLocal(index),
+            _ => throw new ArgumentOutOfRangeException(nameof(local)),
+        };
+
+        private static CodeInstruction LoadLocal(object local, bool useAddress = false) => local switch
+        {
+            LocalBuilder builder when useAddress => new(
+                builder.LocalIndex <= byte.MaxValue ? OpCodes.Ldloca_S : OpCodes.Ldloca,
+                builder),
+            LocalBuilder builder => new(
+                builder.LocalIndex <= byte.MaxValue ? OpCodes.Ldloc_S : OpCodes.Ldloc,
+                builder),
+            int index => CodeInstruction.LoadLocal(index, useAddress),
+            _ => throw new ArgumentOutOfRangeException(nameof(local)),
+        };
     }
 }
