@@ -45,17 +45,16 @@ internal partial class Optimizer
         public readonly List<ControlFlowEdge> outgoingEdges = [];
         public ControlFlowEdge? fallthroughEdge;
 
-        // Canonical in Variables form and empty in Stack form. An entry stack slot acts like a
-        // block parameter. Each incoming edge assigns its corresponding exit value to it; these
-        // assignments are logical and emit no CIL copies.
+        // Canonical in Variables form and empty in Stack form. These are the mutable logical stack
+        // slots present on entry. A slot may be defined by operations in several predecessor blocks;
+        // that deliberate non-SSA representation keeps ordinary control-flow edges empty.
         public readonly List<Variable> entryStackVariables = [];
-        public readonly List<Variable> exitStackVariables = [];
     }
 
     internal sealed class ControlFlowEdge(BasicBlock source, BasicBlock target)
     {
-        // Populated when stack values are materialized as variables. All assignments occur in
-        // parallel and remain logical until SSA destruction decides whether any copies are needed.
+        // Reserved for SSA construction and destruction. Stack form and regular Variables form
+        // require this list to be empty; assignments, when present, occur in parallel.
         public readonly List<VariableAssignment> assignments = [];
 
         // Mutated only by the optimizer's edge helpers, which keep both endpoint collections in sync.
@@ -69,7 +68,7 @@ internal partial class Optimizer
         {
             VariableKind.Argument => $"a{index}",
             VariableKind.Local => $"l{index}",
-            VariableKind.EntryStackSlot => $"s{block!.id}_{index}",
+            VariableKind.StackSlot => $"s{id}",
             VariableKind.Temporary => $"v{id}",
             _ => throw new ArgumentOutOfRangeException(),
         };
@@ -79,14 +78,11 @@ internal partial class Optimizer
         public required VariableKind kind;
 
         // For a Local this is set only from authoritative local metadata or a LocalBuilder, never
-        // inferred from stores. EntryStackSlot and Temporary types come from symbolic stack analysis.
+        // inferred from stores. StackSlot and Temporary types come from symbolic stack analysis.
         public Type? type;
 
-        // Argument/local index, or stack position for an EntryStackSlot. Temporaries leave this at -1.
+        // Argument/local index. Logical evaluation-stack variables leave this at -1.
         public int index = -1;
-
-        // Only EntryStackSlots have an owning block.
-        public BasicBlock? block;
 
         // Preserves both the identity and authoritative type of transpiler-created locals when known.
         public LocalBuilder? localBuilder;
@@ -108,8 +104,11 @@ internal partial class Optimizer
         /// <summary>A mutable CIL local. Its declared type may be unavailable.</summary>
         Local,
 
-        /// <summary>A basic-block entry stack position, analogous to a block parameter.</summary>
-        EntryStackSlot,
+        /// <summary>
+        ///     A mutable logical evaluation-stack slot. Before SSA, the same slot may be defined in
+        ///     several predecessor blocks and used as an entry value by their common successor.
+        /// </summary>
+        StackSlot,
 
         /// <summary>A value produced by an operation within a basic block.</summary>
         Temporary,
@@ -129,15 +128,27 @@ internal partial class Optimizer
         Stack,
 
         /// <summary>
-        ///     Operations and CFG edges also have explicit variables. The original stack schedule is
-        ///     retained for emission, so entering this form does not introduce runtime copies.
+        ///     Operation operands are canonical explicit variables and CFG edges are empty. Stack
+        ///     operand counts retain enough CIL semantics to schedule these variables back onto the
+        ///     evaluation stack without maintaining a separate operation representation.
         /// </summary>
         Variables,
     }
 
-    // These two types are used to track special cases in type analysis
+    // Symbolic stack analysis treats types as a lattice joined by CombineTypes.
+    // Both sentinels can also be used as the element type of a managed pointer, preserving the
+    // known byref shape even when the referent type is imprecise.
+    /// <summary>
+    ///     The bottom type: no type evidence has reached this value yet. Joining it with another
+    ///     type yields that type, so later control-flow information can refine it.
+    /// </summary>
     private struct UnknownType;
 
+    /// <summary>
+    ///     The top type: a value exists, but its compatible CIL type is unavailable. Joining it with
+    ///     any other type remains <see cref="AnyType"/>; missing metadata uses this rather than
+    ///     <see cref="UnknownType"/> because additional control-flow evidence cannot restore it.
+    /// </summary>
     private struct AnyType;
 
     internal class Op(OpCode opcode, object? operand = null)
@@ -236,10 +247,12 @@ internal partial class Optimizer
         // Prefixes remain attached to the operation they govern so no later pass can separate them.
         public readonly List<Op> prefixes = [];
 
-        // Canonical in Variables form and empty before conversion. These include both evaluation-
-        // stack values and argument/local accesses.
+        // Canonical in Variables form and empty in Stack form. Evaluation-stack values precede
+        // argument/local accesses in each list; the counts identify the boundary between them.
         public readonly List<Variable> inputs = [];
         public readonly List<Variable> outputs = [];
+        public int stackInputCount;
+        public int stackOutputCount;
 
         public OpCode Opcode { get; } = opcode;
         public object? Operand { get; } = operand;
@@ -356,8 +369,18 @@ internal partial class Optimizer
 
     internal IrForm Form { get; private set; }
 
-    private static bool IsSpecialType(Type type) => type == typeof(AnyType) || type == typeof(UnknownType);
-    private static Type FromRef(Type type) => IsSpecialType(type) ? type : type.GetElementType() ?? throw new InvalidOperationException();
+    private static bool IsSpecialType(Type type) =>
+        type == typeof(AnyType) || type == typeof(UnknownType) ||
+        type.IsByRef && IsSpecialType(type.GetElementType()!);
+
+    private static Type FromRef(Type type)
+    {
+        if (type.IsByRef)
+            return type.GetElementType()!;
+        if (IsSpecialType(type))
+            return type;
+        throw new InvalidOperationException();
+    }
 
     private static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
     private static bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
@@ -402,6 +425,16 @@ internal partial class Optimizer
             {
                 FileLog.LogBuffered($"## Predecessors: {string.Join(", ", basicBlock.Predecessors.Select(b => b.ID))}");
                 FileLog.LogBuffered($"## Successors:   {string.Join(", ", basicBlock.Successors.Select(b => b.ID))}");
+                if (Form == IrForm.Variables)
+                {
+                    FileLog.LogBuffered($"## Entry Stack:  {string.Join(", ", basicBlock.entryStackVariables)}");
+                    foreach (var edge in basicBlock.incomingEdges)
+                    {
+                        string assignments = string.Join(", ", edge.assignments.Select(assignment =>
+                            $"{assignment.Destination} = {assignment.Source}"));
+                        FileLog.LogBuffered($"## Assignments {edge.Source.ID} => {edge.Target.ID}: {assignments}");
+                    }
+                }
             }
 
             if (block is { EntryPoint: true, parent: not null })
@@ -433,16 +466,6 @@ internal partial class Optimizer
 
                     if (bb.ops.Count == 0)
                         LogInstruction(Ops.Nop.ToCodeInstruction(), ref codePos);
-
-                    if (Form == IrForm.Variables)
-                    {
-                        foreach (var edge in bb.outgoingEdges.Where(edge => edge.assignments.Count > 0))
-                        {
-                            string assignments = string.Join(", ", edge.assignments.Select(assignment =>
-                                $"{assignment.Destination} = {assignment.Source}"));
-                            FileLog.LogBuffered($"## Edge {edge.Source.ID} => {edge.Target.ID}: {assignments}");
-                        }
-                    }
 
                     break;
                 }
@@ -551,6 +574,9 @@ internal partial class Optimizer
         ConvertStackToVariables();
         LogBlocks(nameof(ConvertStackToVariables));
 
+        ConvertVariablesToStack();
+        LogBlocks(nameof(ConvertVariablesToStack));
+
         InsertBranches();
         LogBlocks(nameof(InsertBranches));
 
@@ -565,8 +591,16 @@ internal partial class Optimizer
         new StackToVariableConverter(this).ConvertStackToVariables();
     }
 
+    private void ConvertVariablesToStack()
+    {
+        new VariableToStackConverter(this).ConvertVariablesToStack();
+    }
+
     internal void Emit()
     {
+        if (Form != IrForm.Stack)
+            throw new InvalidOperationException($"Cannot emit {Form} form; convert it to stack form first");
+
         Stack<Region> regionStack = new();
         List<ExceptionBlock> harmonyBlocks = [];
         List<Label> labels = [];
@@ -1109,7 +1143,6 @@ internal partial class Optimizer
         VariableKind kind,
         Type? type,
         int index = -1,
-        BasicBlock? block = null,
         LocalBuilder? localBuilder = null,
         bool pinned = false)
     {
@@ -1119,7 +1152,6 @@ internal partial class Optimizer
             kind = kind,
             type = type,
             index = index,
-            block = block,
             localBuilder = localBuilder,
             pinned = pinned,
         };
@@ -1165,6 +1197,9 @@ internal partial class Optimizer
 
     internal void InsertBranches()
     {
+        if (Form != IrForm.Stack)
+            throw new InvalidOperationException($"Cannot insert emitting branches in {Form} form");
+
         for (int i = 0; i < basicBlocks.Count; i++)
         {
             ControlFlowEdge? fallthroughEdge = basicBlocks[i].fallthroughEdge;
@@ -1179,6 +1214,8 @@ internal partial class Optimizer
     {
         if (type.IsValueType || type.IsByRef)
             return [type];
+        if (type.IsInterface)
+            return [typeof(object), type];
         List<Type> output = [];
         for (Type? ancestor = type; ancestor != null; ancestor = ancestor.BaseType)
             output.Add(ancestor);
@@ -1192,6 +1229,25 @@ internal partial class Optimizer
             return right;
         if (right == typeof(UnknownType) || left == typeof(AnyType))
             return left;
+
+        // Interfaces and their implementations have a direct least upper bound that is not visible
+        // in either type's BaseType chain. Value types are excluded because CIL requires an explicit
+        // box instruction before an unboxed value can join an object or interface stack type.
+        if (!left.IsValueType && !right.IsValueType && !left.IsByRef && !right.IsByRef)
+        {
+            if (left.IsAssignableFrom(right))
+                return left;
+            if (right.IsAssignableFrom(left))
+                return right;
+        }
+
+        if (left.IsByRef || right.IsByRef)
+        {
+            if (!left.IsByRef || !right.IsByRef)
+                return typeof(void);
+            Type elementType = CombineTypes(left.GetElementType()!, right.GetElementType()!);
+            return elementType == typeof(void) ? typeof(void) : ToRef(elementType);
+        }
 
         var leftTypes = GetBaseTypes(left);
         var rightTypes = GetBaseTypes(right);
@@ -1211,8 +1267,10 @@ internal partial class Optimizer
     private static bool TryGetCommonInterface(Type left, Type right, [NotNullWhen(true)] out Type? value)
     {
         HashSet<Type> interfaces = [.. left.GetInterfaces().Intersect(right.GetInterfaces())];
-        value = interfaces.FirstOrDefault(i => !interfaces.Any(i2 => i != i2 && i.IsAssignableFrom(i2)));
-        return value != null;
+        List<Type> mostSpecific = [.. interfaces.Where(i =>
+            !interfaces.Any(i2 => i != i2 && i.IsAssignableFrom(i2)))];
+        value = mostSpecific.Count == 1 ? mostSpecific[0] : null;
+        return mostSpecific.Count == 1;
     }
 
 
@@ -1236,5 +1294,7 @@ internal partial class Optimizer
         return output;
     }
 
-    private static Type ToRef(Type type) => IsSpecialType(type) ? type : type.MakeByRefType();
+    // Even when the referent type is imprecise, taking its address establishes that the stack value
+    // is a managed pointer. Keeping the lattice marker as the element type retains both facts.
+    private static Type ToRef(Type type) => type.MakeByRefType();
 }

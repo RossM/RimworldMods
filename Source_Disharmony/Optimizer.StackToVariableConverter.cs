@@ -7,6 +7,7 @@ internal partial class Optimizer
         private readonly Dictionary<Block, List<Type>> entryLocals = optimizer.allBlocks.ToDictionary(block => block, _ => new List<Type>());
         private readonly Dictionary<Block, List<Type>> entryStacks = optimizer.allBlocks.ToDictionary(block => block, _ => new List<Type>());
         private readonly Dictionary<BasicBlock, List<Type>> exitStacks = [];
+        private readonly Dictionary<BasicBlock, List<Variable>> exitStackVariables = [];
         private readonly Dictionary<Op, Op.StackTransition> transitions = [];
         private readonly UniqueQueue<Block> worklist = [];
 
@@ -15,6 +16,7 @@ internal partial class Optimizer
             if (optimizer.Form != IrForm.Stack)
                 throw new InvalidOperationException($"Cannot convert {optimizer.Form} form to variables");
 
+            InitializeVariables();
             foreach (var block in optimizer.allBlocks)
                 worklist.Enqueue(block);
 
@@ -48,19 +50,17 @@ internal partial class Optimizer
                 }
             }
 
-            InitializeVariables();
-
             foreach (var block in optimizer.basicBlocks)
             {
                 block.entryStackVariables.Clear();
                 for (int index = 0; index < entryStacks[block].Count; index++)
-                    block.entryStackVariables.Add(optimizer.NewVariable(VariableKind.EntryStackSlot, entryStacks[block][index], index, block));
+                    block.entryStackVariables.Add(optimizer.NewVariable(VariableKind.StackSlot, entryStacks[block][index]));
             }
 
             foreach (var block in optimizer.basicBlocks)
-                MaterializeBlockVariables(block, exitStacks[block].Count, transitions);
+                exitStackVariables[block] = MaterializeBlockVariables(block, exitStacks[block].Count, transitions);
 
-            PopulateEdgeAssignments();
+            MergeCrossBlockStackSlots();
             optimizer.Form = IrForm.Variables;
 
             return;
@@ -131,7 +131,10 @@ internal partial class Optimizer
                         while (locals.Count < index + 1)
                             locals.Add(typeof(UnknownType));
                         transition.variableAccesses.Add(new(VariableKind.Local, index, Op.VariableAccessKind.Address));
-                        stack.Add(ToRef(locals[index]));
+                        Type declaredType = optimizer.localVariables.TryGetValue(index, out Variable? local)
+                            ? local.type ?? typeof(AnyType)
+                            : typeof(AnyType);
+                        stack.Add(ToRef(declaredType));
                         // Can't be bothered to do fancy analysis here
                         if (!locals[index].IsValueType)
                             locals[index] = typeof(object);
@@ -200,12 +203,169 @@ internal partial class Optimizer
                         stack.Add(ToRef(field.FieldType));
                         break;
                     }
-                    case OpCodeValues.NewObj when op.Operand is ConstructorInfo constructor:
+                    case OpCodeValues.Newobj when op.Operand is ConstructorInfo constructor:
                     {
                         var count = constructor.GetParameters().Length;
                         for (int i = 0; i < count; i++)
                             stack.RemoveAt(stack.Count - 1);
                         stack.Add(constructor.DeclaringType);
+                        break;
+                    }
+                    case OpCodeValues.Ldc_I4:
+                    case OpCodeValues.Ldc_I4_S:
+                    case OpCodeValues.Ldc_I4_M1:
+                    case OpCodeValues.Ldc_I4_0:
+                    case OpCodeValues.Ldc_I4_1:
+                    case OpCodeValues.Ldc_I4_2:
+                    case OpCodeValues.Ldc_I4_3:
+                    case OpCodeValues.Ldc_I4_4:
+                    case OpCodeValues.Ldc_I4_5:
+                    case OpCodeValues.Ldc_I4_6:
+                    case OpCodeValues.Ldc_I4_7:
+                    case OpCodeValues.Ldc_I4_8:
+                    case OpCodeValues.Ceq:
+                    case OpCodeValues.Cgt:
+                    case OpCodeValues.Cgt_Un:
+                    case OpCodeValues.Clt:
+                    case OpCodeValues.Clt_Un:
+                    case OpCodeValues.Sizeof:
+                    case OpCodeValues.Conv_I1:
+                    case OpCodeValues.Conv_I2:
+                    case OpCodeValues.Conv_I4:
+                    case OpCodeValues.Conv_U1:
+                    case OpCodeValues.Conv_U2:
+                    case OpCodeValues.Conv_U4:
+                    case OpCodeValues.Conv_Ovf_I1:
+                    case OpCodeValues.Conv_Ovf_I1_Un:
+                    case OpCodeValues.Conv_Ovf_I2:
+                    case OpCodeValues.Conv_Ovf_I2_Un:
+                    case OpCodeValues.Conv_Ovf_I4:
+                    case OpCodeValues.Conv_Ovf_I4_Un:
+                    case OpCodeValues.Conv_Ovf_U1:
+                    case OpCodeValues.Conv_Ovf_U1_Un:
+                    case OpCodeValues.Conv_Ovf_U2:
+                    case OpCodeValues.Conv_Ovf_U2_Un:
+                    case OpCodeValues.Conv_Ovf_U4:
+                    case OpCodeValues.Conv_Ovf_U4_Un:
+                    case OpCodeValues.Ldind_I1:
+                    case OpCodeValues.Ldind_I2:
+                    case OpCodeValues.Ldind_I4:
+                    case OpCodeValues.Ldind_U1:
+                    case OpCodeValues.Ldind_U2:
+                    case OpCodeValues.Ldind_U4:
+                    case OpCodeValues.Ldelem_I1:
+                    case OpCodeValues.Ldelem_I2:
+                    case OpCodeValues.Ldelem_I4:
+                    case OpCodeValues.Ldelem_U1:
+                    case OpCodeValues.Ldelem_U2:
+                    case OpCodeValues.Ldelem_U4:
+                    {
+                        PopInputsAndPush(typeof(int), popCount);
+                        break;
+                    }
+                    case OpCodeValues.Conv_I:
+                    case OpCodeValues.Conv_Ovf_I:
+                    case OpCodeValues.Conv_Ovf_I_Un:
+                    case OpCodeValues.Ldind_I:
+                    case OpCodeValues.Ldelem_I:
+                    case OpCodeValues.Ldftn:
+                    case OpCodeValues.Ldvirtftn:
+                    case OpCodeValues.Localloc:
+                    {
+                        PopInputsAndPush(typeof(IntPtr), popCount);
+                        break;
+                    }
+                    case OpCodeValues.Conv_U:
+                    case OpCodeValues.Conv_Ovf_U:
+                    case OpCodeValues.Conv_Ovf_U_Un:
+                    case OpCodeValues.Ldlen:
+                    {
+                        PopInputsAndPush(typeof(UIntPtr), popCount);
+                        break;
+                    }
+                    case OpCodeValues.Isinst:
+                    case OpCodeValues.Castclass:
+                    {
+                        Type type = op.Operand is Type testedType && !testedType.IsValueType
+                            ? testedType
+                            : typeof(object);
+                        PopInputsAndPush(type, popCount);
+                        break;
+                    }
+                    case OpCodeValues.Unbox_Any:
+                    case OpCodeValues.Ldelem:
+                    {
+                        PopInputsAndPush(op.Operand as Type ?? typeof(AnyType), popCount);
+                        break;
+                    }
+                    case OpCodeValues.Unbox:
+                    case OpCodeValues.Ldelema:
+                    case OpCodeValues.Refanyval:
+                    {
+                        PopInputsAndPush(op.Operand is Type type ? ToRef(type) : typeof(AnyType), popCount);
+                        break;
+                    }
+                    case OpCodeValues.Ldnull:
+                    case OpCodeValues.Box:
+                    {
+                        PopInputsAndPush(typeof(object), popCount);
+                        break;
+                    }
+                    case OpCodeValues.Newarr:
+                    {
+                        PopInputsAndPush(op.Operand is Type elementType ? elementType.MakeArrayType() : typeof(AnyType), popCount);
+                        break;
+                    }
+                    case OpCodeValues.Arglist:
+                    {
+                        PopInputsAndPush(typeof(RuntimeArgumentHandle), popCount);
+                        break;
+                    }
+                    case OpCodeValues.Mkrefany:
+                    {
+                        PopInputsAndPush(typeof(TypedReference), popCount);
+                        break;
+                    }
+                    case OpCodeValues.Refanytype:
+                    {
+                        PopInputsAndPush(typeof(IntPtr), popCount);
+                        break;
+                    }
+                    case OpCodeValues.Ldtoken:
+                    {
+                        Type type = op.Operand switch
+                        {
+                            Type => typeof(RuntimeTypeHandle),
+                            MethodBase => typeof(RuntimeMethodHandle),
+                            FieldInfo => typeof(RuntimeFieldHandle),
+                            _ => typeof(AnyType),
+                        };
+                        PopInputsAndPush(type, popCount);
+                        break;
+                    }
+                    case OpCodeValues.Add:
+                    case OpCodeValues.Add_Ovf:
+                    case OpCodeValues.Add_Ovf_Un:
+                    case OpCodeValues.Sub:
+                    case OpCodeValues.Sub_Ovf:
+                    case OpCodeValues.Sub_Ovf_Un:
+                    case OpCodeValues.Mul:
+                    case OpCodeValues.Mul_Ovf:
+                    case OpCodeValues.Mul_Ovf_Un:
+                    case OpCodeValues.Div:
+                    case OpCodeValues.Div_Un:
+                    case OpCodeValues.Rem:
+                    case OpCodeValues.Rem_Un:
+                    case OpCodeValues.And:
+                    case OpCodeValues.Or:
+                    case OpCodeValues.Xor:
+                    case OpCodeValues.Shl:
+                    case OpCodeValues.Shr:
+                    case OpCodeValues.Shr_Un:
+                    case OpCodeValues.Neg:
+                    case OpCodeValues.Not:
+                    {
+                        PopInputsAndPush(InferArithmeticType(op.Opcode, transition.inputTypes), popCount);
                         break;
                     }
                     default:
@@ -264,6 +424,13 @@ internal partial class Optimizer
                 while (locals.Count < index + 1)
                     locals.Add(typeof(UnknownType));
             }
+
+            void PopInputsAndPush(Type type, int inputCount)
+            {
+                for (int i = 0; i < inputCount; i++)
+                    stack.RemoveAt(stack.Count - 1);
+                stack.Add(type);
+            }
         }
 
         public void InitializeVariables()
@@ -305,7 +472,64 @@ internal partial class Optimizer
             }
         }
 
-        public void MaterializeBlockVariables(
+        private static Type InferArithmeticType(OpCode opcode, IReadOnlyList<Type> inputs)
+        {
+            Type left = inputs[0];
+            if (left == typeof(AnyType))
+                return typeof(AnyType);
+            if (inputs.Count == 1)
+                return left;
+
+            Type right = inputs[1];
+            if (right == typeof(AnyType))
+                return typeof(AnyType);
+            if (left == typeof(UnknownType) || right == typeof(UnknownType))
+                return typeof(UnknownType);
+            bool leftIsPointer = left.IsByRef || left.IsPointer;
+            bool rightIsPointer = right.IsByRef || right.IsPointer;
+            if (leftIsPointer || rightIsPointer)
+            {
+                bool isPointerAddition = opcode == OpCodes.Add || opcode == OpCodes.Add_Ovf_Un;
+                bool isPointerSubtraction = opcode == OpCodes.Sub || opcode == OpCodes.Sub_Ovf_Un;
+
+                // CIL permits only the unchecked and unsigned-overflow forms for pointer arithmetic.
+                // A pointer may be offset by int32 or native int; only subtraction permits two pointers.
+                if (isPointerAddition)
+                {
+                    if (leftIsPointer && IsPointerOffset(right))
+                        return left;
+                    if (rightIsPointer && IsPointerOffset(left))
+                        return right;
+                }
+                else if (isPointerSubtraction && leftIsPointer)
+                {
+                    if (rightIsPointer)
+                        return typeof(IntPtr);
+                    if (IsPointerOffset(right))
+                        return left;
+                }
+
+                return typeof(AnyType);
+            }
+            if (left == typeof(IntPtr) || left == typeof(UIntPtr))
+                return left;
+            if (right == typeof(IntPtr) || right == typeof(UIntPtr))
+                return right;
+            if (left == right)
+                return left;
+            if (left == typeof(double) || right == typeof(double))
+                return typeof(double);
+            if (left == typeof(float) || right == typeof(float))
+                return typeof(float);
+            if (left == typeof(long) || right == typeof(long) || left == typeof(ulong) || right == typeof(ulong))
+                return typeof(long);
+            return typeof(int);
+        }
+
+        private static bool IsPointerOffset(Type type) =>
+            type == typeof(int) || type == typeof(uint) || type == typeof(IntPtr) || type == typeof(UIntPtr);
+
+        public List<Variable> MaterializeBlockVariables(
             BasicBlock block,
             int expectedExitStackSize,
             IReadOnlyDictionary<Op, Op.StackTransition> transitions)
@@ -319,6 +543,8 @@ internal partial class Optimizer
                 Op.StackTransition transition = transitions[op];
 
                 int inputCount = transition.inputTypes.Count;
+                op.stackInputCount = inputCount;
+                op.stackOutputCount = transition.outputs.Count;
                 if (inputCount > stack.Count)
                     throw new InvalidOperationException($"{op.Opcode} reads {inputCount} values from a stack of {stack.Count}");
 
@@ -360,33 +586,115 @@ internal partial class Optimizer
                 }
             }
 
-            block.exitStackVariables.Clear();
-            block.exitStackVariables.AddRange(stack);
-            if (block.exitStackVariables.Count != expectedExitStackSize)
+            if (stack.Count != expectedExitStackSize)
                 throw new InvalidOperationException($"Variable stack disagrees with type stack at the exit of {block.ID}");
+            return stack;
         }
 
-        public void PopulateEdgeAssignments()
+        // Postcondition: each source exit stack is identical to every successor entry stack, using
+        // shared mutable StackSlot variables. This is deliberately not SSA: a join's slot may have
+        // definitions in several predecessors, and no value transfer is attached to a CFG edge.
+        private void MergeCrossBlockStackSlots()
         {
+            Dictionary<Variable, HashSet<Variable>> connections = [];
+
             foreach (var source in optimizer.basicBlocks)
             {
                 foreach (var edge in source.outgoingEdges)
                 {
                     BasicBlock target = edge.Target;
-                    edge.assignments.Clear();
+                    if (edge.assignments.Count != 0)
+                        throw new InvalidOperationException(
+                            $"Edge {source.ID} => {target.ID} already has assignments before SSA construction");
 
-                    if (source.exitStackVariables.Count != target.entryStackVariables.Count)
+                    List<Variable> sourceStack = exitStackVariables[source];
+                    if (sourceStack.Count != target.entryStackVariables.Count)
                     {
                         throw new InvalidOperationException(
                             $"Stack depth mismatch on edge {source.ID} => {target.ID}: " +
-                            $"{source.exitStackVariables.Count} != {target.entryStackVariables.Count}");
+                            $"{sourceStack.Count} != {target.entryStackVariables.Count}");
                     }
 
-                    for (int index = 0; index < source.exitStackVariables.Count; index++)
+                    for (int index = 0; index < sourceStack.Count; index++)
                     {
-                        edge.assignments.Add(new VariableAssignment(
-                            source.exitStackVariables[index], target.entryStackVariables[index]));
+                        Variable sourceVariable = sourceStack[index];
+                        Variable targetVariable = target.entryStackVariables[index];
+                        GetConnections(sourceVariable).Add(targetVariable);
+                        GetConnections(targetVariable).Add(sourceVariable);
                     }
+                }
+            }
+
+            Dictionary<Variable, Variable> replacements = [];
+            HashSet<Variable> visited = [];
+            foreach (var initial in connections.Keys)
+            {
+                if (!visited.Add(initial))
+                    continue;
+
+                List<Variable> component = [];
+                Stack<Variable> pending = new();
+                pending.Push(initial);
+                while (pending.Count > 0)
+                {
+                    Variable variable = pending.Pop();
+                    component.Add(variable);
+                    foreach (var connected in connections[variable])
+                    {
+                        if (visited.Add(connected))
+                            pending.Push(connected);
+                    }
+                }
+
+                Variable representative = component[0];
+                foreach (var variable in component.Skip(1))
+                {
+                    if (variable.id < representative.id)
+                        representative = variable;
+                }
+                Type type = component.Select(variable => variable.type ??
+                        throw new InvalidOperationException($"Cross-block stack variable {variable} has no type"))
+                    .Aggregate(CombineTypes);
+                if (type == typeof(void))
+                    throw new InvalidOperationException("Incompatible types in a cross-block stack slot");
+
+                representative.kind = VariableKind.StackSlot;
+                representative.type = type;
+                foreach (var variable in component)
+                    replacements[variable] = representative;
+            }
+
+            foreach (var block in optimizer.basicBlocks)
+            {
+                ReplaceVariables(block.entryStackVariables);
+                foreach (var op in block.ops)
+                {
+                    ReplaceVariables(op.inputs);
+                    ReplaceVariables(op.outputs);
+                }
+            }
+
+            optimizer.variables.RemoveAll(variable =>
+                replacements.TryGetValue(variable, out Variable? replacement) && replacement != variable);
+
+            return;
+
+            HashSet<Variable> GetConnections(Variable variable)
+            {
+                if (!connections.TryGetValue(variable, out HashSet<Variable>? values))
+                {
+                    values = [];
+                    connections.Add(variable, values);
+                }
+                return values;
+            }
+
+            void ReplaceVariables(List<Variable> values)
+            {
+                for (int index = 0; index < values.Count; index++)
+                {
+                    if (replacements.TryGetValue(values[index], out Variable? replacement))
+                        values[index] = replacement;
                 }
             }
         }
