@@ -553,6 +553,12 @@ internal partial class Optimizer
         NopElimination();
         LogBlocks(nameof(NopElimination));
 
+        SimpleDeadCodeElimination();
+        LogBlocks(nameof(SimpleDeadCodeElimination));
+
+        ConvertStackToVariables();
+        LogBlocks(nameof(ConvertStackToVariables));
+
         JumpThreading();
         LogBlocks(nameof(JumpThreading));
 
@@ -565,17 +571,14 @@ internal partial class Optimizer
         MergeBlocks();
         LogBlocks(nameof(MergeBlocks));
 
+        ConvertVariablesToStack();
+        LogBlocks(nameof(ConvertVariablesToStack));
+
         BranchInversion();
         LogBlocks(nameof(BranchInversion));
 
         AggressiveDeadCodeEliminationAndReorder();
         LogBlocks(nameof(AggressiveDeadCodeEliminationAndReorder));
-
-        ConvertStackToVariables();
-        LogBlocks(nameof(ConvertStackToVariables));
-
-        ConvertVariablesToStack();
-        LogBlocks(nameof(ConvertVariablesToStack));
 
         InsertBranches();
         LogBlocks(nameof(InsertBranches));
@@ -924,7 +927,7 @@ internal partial class Optimizer
                     FlowControl: FlowControl.Cond_Branch, StackBehaviourPop: StackBehaviour.Popi, StackBehaviourPush: StackBehaviour.Push0,
                 }:
                 {
-                    block.ops[^1] = Ops.Pop;
+                    ReplaceBranchWithPops(block.ops[^1], 1);
                     RemoveBranchEdges();
                     break;
                 }
@@ -935,10 +938,33 @@ internal partial class Optimizer
                     StackBehaviourPush: StackBehaviour.Push0,
                 }:
                 {
-                    block.ops[^1] = Ops.Pop;
-                    block.ops.Add(Ops.Pop);
+                    ReplaceBranchWithPops(block.ops[^1], 2);
                     RemoveBranchEdges();
                     break;
+                }
+            }
+
+            void ReplaceBranchWithPops(Op branch, int popCount)
+            {
+                block.ops.RemoveAt(block.ops.Count - 1);
+                if (Form == IrForm.Stack)
+                {
+                    for (int index = 0; index < popCount; index++)
+                        block.ops.Add(Ops.Pop);
+                    return;
+                }
+
+                if (branch.stackInputCount != popCount || branch.inputs.Count < popCount)
+                    throw new InvalidOperationException($"Invalid variable operands on {branch.Opcode} in {block.ID}");
+
+                // A branch records popped values from deepest to topmost; separate pop operations
+                // must consume them in the reverse order in which they occur on the CIL stack.
+                for (int index = popCount - 1; index >= 0; index--)
+                {
+                    Op pop = Ops.Pop;
+                    pop.inputs.Add(branch.inputs[index]);
+                    pop.stackInputCount = 1;
+                    block.ops.Add(pop);
                 }
             }
 
@@ -1025,6 +1051,9 @@ internal partial class Optimizer
 
     internal void AggressiveDeadCodeEliminationAndReorder()
     {
+        // CIL permits a backward edge carrying evaluation-stack values only when the target also
+        // has a forward incoming edge. Earlier optimizer passes may temporarily violate that
+        // restriction; ordering blocks by first control-flow visit restores it before emission.
         List<Block> outputBlocks = [root];
         HashSet<Block> visited = [];
         Stack<(Region region, LinkedList<Block> queue)> stack = [];

@@ -141,6 +141,44 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
+    public void BranchEliminationPreservesVariableInputsInPopOrder()
+    {
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label target = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldstr, "first"),
+                new CodeInstruction(OpCodes.Ldstr, "second"),
+                new CodeInstruction(OpCodes.Beq, target),
+                new CodeInstruction(OpCodes.Ret).WithLabels(target),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        Optimizer.BasicBlock condition = optimizer.BasicBlocks[0];
+        Optimizer.Variable first = condition.ops[0].outputs.Single();
+        Optimizer.Variable second = condition.ops[1].outputs.Single();
+
+        optimizer.BranchElimination();
+
+        Optimizer.Op[] pops = [.. condition.ops.Where(op => op.Opcode == OpCodes.Pop)];
+        Assert.That(pops, Has.Length.EqualTo(2));
+        Assert.That(pops.Select(pop => pop.stackInputCount), Is.EqualTo(new[] { 1, 1 }));
+        Assert.That(pops[0].inputs, Is.EqualTo(new[] { second }));
+        Assert.That(pops[1].inputs, Is.EqualTo(new[] { first }));
+
+        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+        Assert.That(OpCodesIn(condition), Is.EqualTo(new[]
+        {
+            OpCodes.Ldstr,
+            OpCodes.Ldstr,
+            OpCodes.Pop,
+            OpCodes.Pop,
+        }));
+    }
+
+    [Test]
     public void MergeBlocksAppendsSinglePredecessorSuccessor()
     {
         Optimizer optimizer = CreateOptimizer(generator =>
@@ -253,6 +291,76 @@ public sealed class OptimizerPassTests
 
         Optimizer.Op load = join.ops.Single(op => op.Opcode == OpCodes.Ldloc);
         Assert.That(load.outputs.Single().type, Is.EqualTo(typeof(string)));
+    }
+
+    [Test]
+    public void ConvertStackToVariablesSeedsCatchEntryBeforeProcessingItsBlock()
+    {
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label exit = generator.DefineLabel();
+            var tryLeave = new CodeInstruction(OpCodes.Leave, exit);
+            tryLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+            var catchPop = new CodeInstruction(OpCodes.Pop);
+            catchPop.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+            var catchLeave = new CodeInstruction(OpCodes.Leave, exit);
+            catchLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+            return
+            [
+                tryLeave,
+                catchPop,
+                catchLeave,
+                new CodeInstruction(OpCodes.Ret).WithLabels(exit),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        optimizer.SimpleDeadCodeElimination();
+        Optimizer.Region catchRegion = optimizer.Blocks.OfType<Optimizer.Region>().Single(region =>
+            region.harmonyBlock?.blockType == ExceptionBlockType.BeginCatchBlock);
+        Optimizer.BasicBlock catchEntry = (Optimizer.BasicBlock)catchRegion.entry!;
+        Assert.That(optimizer.Blocks.ToList().IndexOf(catchEntry),
+            Is.LessThan(optimizer.Blocks.ToList().IndexOf(catchRegion)));
+
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        Assert.That(catchEntry.entryStackVariables, Has.Count.EqualTo(1));
+        Assert.That(catchEntry.entryStackVariables[0].type, Is.EqualTo(typeof(Exception)));
+        Assert.That(catchEntry.ops[0].inputs, Is.EqualTo(catchEntry.entryStackVariables));
+    }
+
+    [Test]
+    public void ConvertStackToVariablesDoesNotDependOnBasicBlockOrder()
+    {
+        // A backward-only edge carrying a stack value is an allowed intermediate optimizer shape,
+        // although CIL emission requires another forward edge. The final aggressive reorder
+        // restores that CIL invariant; variable conversion must not depend on it already holding.
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label consumer = generator.DefineLabel();
+            Label producer = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Br, producer),
+                new CodeInstruction(OpCodes.Pop).WithLabels(consumer),
+                new CodeInstruction(OpCodes.Ret),
+                new CodeInstruction(OpCodes.Ldstr, "value").WithLabels(producer),
+                new CodeInstruction(OpCodes.Br, consumer),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        optimizer.SimpleDeadCodeElimination();
+        Optimizer.BasicBlock consumer = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Pop));
+        Optimizer.BasicBlock producer = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Ldstr));
+        Assert.That(optimizer.Blocks.ToList().IndexOf(consumer),
+            Is.LessThan(optimizer.Blocks.ToList().IndexOf(producer)));
+
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        Assert.That(consumer.entryStackVariables, Has.Count.EqualTo(1));
+        Assert.That(consumer.entryStackVariables[0].type, Is.EqualTo(typeof(string)));
+        Assert.That(consumer.ops[0].inputs, Is.EqualTo(consumer.entryStackVariables));
     }
 
     [Test]

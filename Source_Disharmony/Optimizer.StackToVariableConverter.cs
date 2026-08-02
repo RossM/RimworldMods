@@ -10,6 +10,7 @@ internal partial class Optimizer
         private readonly Dictionary<BasicBlock, List<Variable>> exitStackVariables = [];
         private readonly Dictionary<Op, Op.StackTransition> transitions = [];
         private readonly UniqueQueue<Block> worklist = [];
+        private readonly HashSet<Block> initializedEntries = [];
 
         public void ConvertStackToVariables()
         {
@@ -17,8 +18,13 @@ internal partial class Optimizer
                 throw new InvalidOperationException($"Cannot convert {optimizer.Form} form to variables");
 
             InitializeVariables();
-            foreach (var block in optimizer.allBlocks)
-                worklist.Enqueue(block);
+            // Region nodes supply region-entry state, including implicit handler stacks. Seeding
+            // them before any basic block makes that state independent of storage order.
+            foreach (var region in optimizer.allBlocks.OfType<Region>())
+            {
+                initializedEntries.Add(region);
+                worklist.Enqueue(region);
+            }
 
             while (worklist.Count > 0)
             {
@@ -27,9 +33,12 @@ internal partial class Optimizer
                 {
                     case Region region:
                     {
-                        List<Type> stack = region.harmonyBlock is { blockType: ExceptionBlockType.BeginCatchBlock }
-                            ? [region.harmonyBlock.catchType]
-                            : entryStacks[region];
+                        List<Type> stack = region.harmonyBlock?.blockType switch
+                        {
+                            ExceptionBlockType.BeginCatchBlock => [region.harmonyBlock.catchType],
+                            ExceptionBlockType.BeginExceptFilterBlock => [typeof(object)],
+                            _ => entryStacks[region],
+                        };
                         if (region.entry != null)
                             UpdateEntry(region.entry, entryLocals[region], stack);
                         break;
@@ -50,6 +59,14 @@ internal partial class Optimizer
                 }
             }
 
+            BasicBlock? uninitializedBlock = optimizer.basicBlocks
+                .FirstOrDefault(block => !initializedEntries.Contains(block));
+            if (uninitializedBlock != null)
+            {
+                throw new InvalidOperationException(
+                    $"Cannot convert unreachable basic block {uninitializedBlock.ID} to variable form");
+            }
+
             foreach (var block in optimizer.basicBlocks)
             {
                 block.entryStackVariables.Clear();
@@ -67,10 +84,16 @@ internal partial class Optimizer
 
             void UpdateEntry(Block successor, List<Type> outgoingLocals, List<Type> outgoingStack)
             {
+                if (initializedEntries.Add(successor))
+                {
+                    entryLocals[successor] = [.. outgoingLocals];
+                    entryStacks[successor] = [.. outgoingStack];
+                    worklist.Enqueue(successor);
+                    return;
+                }
+
                 List<Type> locals = CombineTypeLists(entryLocals[successor], outgoingLocals, true);
-                List<Type> stack = entryStacks[successor].Count == 0 && outgoingStack.Count > 0
-                    ? [.. outgoingStack]
-                    : CombineTypeLists(entryStacks[successor], outgoingStack);
+                List<Type> stack = CombineTypeLists(entryStacks[successor], outgoingStack);
 
                 if (locals.SequenceEqual(entryLocals[successor]) && stack.SequenceEqual(entryStacks[successor]))
                     return;
