@@ -36,7 +36,7 @@ internal partial class Optimizer
 
     private struct AnyType;
 
-    private class Op(OpCode opcode, object? operand = null)
+    internal class Op(OpCode opcode, object? operand = null)
     {
         public bool IsLeave => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
         public bool ClearsStack => Opcode == OpCodes.Ret || Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
@@ -128,7 +128,7 @@ internal partial class Optimizer
         public static readonly Op Pop = new(OpCodes.Pop);
     }
 
-    private class Block
+    internal class Block
     {
         public bool EntryPoint => parent == null || parent.entry == this;
         public virtual string ID => $"#{id}";
@@ -163,7 +163,7 @@ internal partial class Optimizer
         }
     }
 
-    private class Region : Block
+    internal class Region : Block
     {
         public override string ID => parent == null ? "Root" : $"{harmonyBlock!.blockType} #{id}";
         public ExceptionBlock? harmonyBlock;
@@ -174,6 +174,8 @@ internal partial class Optimizer
     public readonly InstructionList output = [];
     private readonly List<Block> allBlocks = [];
     private List<BasicBlock> basicBlocks = [];
+    internal IReadOnlyList<Block> Blocks => allBlocks;
+    internal IReadOnlyList<BasicBlock> BasicBlocks => basicBlocks;
     private readonly Region root = new();
     private int nextBlockId = 1;
     private bool valid = false;
@@ -359,7 +361,7 @@ internal partial class Optimizer
         return output.instructions;
     }
 
-    private void Emit()
+    internal void Emit()
     {
         Stack<Region> regionStack = new();
         List<ExceptionBlock> harmonyBlocks = [];
@@ -427,7 +429,7 @@ internal partial class Optimizer
     /// <summary>
     ///     Generate basic blocks.
     /// </summary>
-    private void MakeBasicBlocks()
+    internal void MakeBasicBlocks()
     {
         Dictionary<Label, BasicBlock> labelToBlock = [];
 
@@ -585,13 +587,13 @@ internal partial class Optimizer
             basicBlock.ops.Count == 0 || basicBlock.ops[^1].CanFallThrough;
     }
 
-    private void NopElimination()
+    internal void NopElimination()
     {
         foreach (var block in basicBlocks)
             block.ops.RemoveAll(i => i.Opcode == OpCodes.Nop);
     }
 
-    private void BranchElimination()
+    internal void BranchElimination()
     {
         bool changed = false;
 
@@ -639,7 +641,7 @@ internal partial class Optimizer
             UpdatePredecessors();
     }
 
-    private void JumpThreading()
+    internal void JumpThreading()
     {
         foreach (var block in basicBlocks)
         {
@@ -663,7 +665,7 @@ internal partial class Optimizer
         UpdatePredecessors();
     }
 
-    private void MergeBlocks()
+    internal void MergeBlocks()
     {
         for (int i = basicBlocks.Count - 1; i >= 0; i--)
         {
@@ -684,7 +686,7 @@ internal partial class Optimizer
         UpdatePredecessors();
     }
 
-    private void SimpleDeadCodeElimination()
+    internal void SimpleDeadCodeElimination()
     {
         Queue<Block> queue = new();
         HashSet<Block> liveBlocks = [];
@@ -710,9 +712,9 @@ internal partial class Optimizer
         UpdatePredecessors();
     }
 
-    private void AggressiveDeadCodeEliminationAndReorder()
+    internal void AggressiveDeadCodeEliminationAndReorder()
     {
-        List<Block> outputBlocks = [];
+        List<Block> outputBlocks = [root];
         HashSet<Block> visited = [];
         Stack<(Region region, LinkedList<Block> queue)> stack = [];
         List<Block> leavingBlocks = [];
@@ -785,7 +787,7 @@ internal partial class Optimizer
         basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
     }
 
-    private void DeduceTypes()
+    internal void DeduceTypes()
     {
         UniqueQueue<Block> worklist = [];
         foreach (var block in allBlocks)
@@ -840,7 +842,7 @@ internal partial class Optimizer
         }
     }
 
-    private void BranchInversion()
+    internal void BranchInversion()
     {
         foreach (var block in basicBlocks)
         {
@@ -870,7 +872,7 @@ internal partial class Optimizer
         }
     }
 
-    private void InsertBranches()
+    internal void InsertBranches()
     {
         for (int i = 0; i < basicBlocks.Count; i++)
         {

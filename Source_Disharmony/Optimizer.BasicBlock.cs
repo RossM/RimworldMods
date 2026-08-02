@@ -2,7 +2,7 @@
 
 internal partial class Optimizer
 {
-    private class BasicBlock : Block
+    internal class BasicBlock : Block
     {
         public readonly List<Op> ops = [];
 
