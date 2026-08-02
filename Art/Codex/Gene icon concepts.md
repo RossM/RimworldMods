@@ -30,7 +30,7 @@ Match the composition of `Gene_StrongArtistic`, replacing the paintbrush with a 
 
 ### Super-specialist (`XylSuperSpecialist`)
 
-Reuse the specialist die, but place it over a larger double-stepped green up arrow. The stronger arrow distinguishes the higher aptitude tier without adding a separate passion symbol.
+Reuse the specialist die and standard green up-arrow shape, but make the arrow substantially taller. RimWorld uses increased arrow height, rather than extra steps, to distinguish a larger effect. Keep the die the same size and position so the two genes remain a clear family.
 
 ### Scaleborn lineage (`XylScalebornLineage`)
 
@@ -40,7 +40,7 @@ A single neutral olive dragon egg with a few broad scales and one prominent crac
 
 ### Lithoid (`XylLithoid`)
 
-A faceted slate-gray heart with a violet crystal at its center. It should look like a living organ made from stone, emphasizing mineral biochemistry without trying to summarize its mixed drug interactions.
+A simple drug flask in the established gene-icon vocabulary, containing one large gray-purple crystal in place of ordinary liquid. Keep the crystal broad and geometric rather than adding smaller facets or loose pieces. The combined flask-and-mineral silhouette communicates lithoid-specific biochemistry without an anatomical organ or arrow.
 
 ### Torpor (`XylTorpor`)
 
@@ -104,22 +104,22 @@ Reuse the same teal DNA helix with a broad red down arrow behind it. Keep the sc
 
 ### Parthenogenic (`XylParthenogenic`)
 
-A large pink female symbol with one small white egg held inside its circular center.
+A single muted cyan-blue ovum visibly pinching into two matching lobes, like the first stage of cell division. The self-dividing egg communicates reproduction beginning without fertilization more directly than a female symbol paired with an egg.
 
 ### Love euphoria (`XylLoveEuphoria`)
 
-A heart-shaped potion bottle half-filled with violet liquid, with one bubble rising inside the neck. The heart and drug vessel are one combined silhouette.
+Two overlapping hearts: a larger pink heart and a smaller lavender heart. Their shared outline should make the pair read as one compact symbol for a love-induced effect passing between partners, without bottles, bubbles, arrows, or addiction imagery.
 
 ### Youthful (`XylYouthful`)
 
-A smooth white young face in front of an offset gray copy of the same face bearing two simple wrinkles. Show the old face only as a narrow shadow around one edge, communicating that age remains present while the visible appearance stays young.
+Use a normal rounded pawn head, not the gaunt-head silhouette. Place three small gray wrinkle lines at one temple and cover only those wrinkles with a compact red X, following the same visual vocabulary as `Gene_GreylessHair`. The face itself remains unobscured, communicating the absence of visible aging rather than immortality.
 
 ## Diet and mood genes
 
 ### Voracious (`XylVoracious`)
 
-A large open mouth with a red up arrow behind it, representing a harmful increase in appetite. A simple pointed tooth can hint at cannibalism without adding a separate food object.
+Retain the open-mouth and red up-arrow concept, but base the mouth directly on the flat silhouette and restrained detail of `Gene_Bloodfeeder`. Use a simple muted-red mouth, broad 75%-gray teeth, and the standard red up arrow; no circular maw, heavy interior modeling, or extra food object.
 
 ### Shameless (`XylShameless`)
 
-Reuse the olive shirt silhouette from `Gene_NakedSpeed`, but replace its superimposed gray weight with a broad green down arrow. The familiar clothing motif plus beneficial reduction communicates reduced shame around being unclothed without depicting a nude body.
+An olive shirt bearing a large, simple unhappy face: two dark eyes and a downturned mouth. The shirt itself making the wearer unhappy focuses on the gene's mood effect and avoids relying on the ambiguous layered symbolism of `Gene_NakedSpeed`.
