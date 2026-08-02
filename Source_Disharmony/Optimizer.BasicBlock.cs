@@ -13,9 +13,9 @@ internal partial class Optimizer
         public ControlFlowEdge? fallthroughEdge;
 
         // Convenience projections only; CFG mutations must operate on the edge collections.
-        public BasicBlock? next => fallthroughEdge?.Target;
-        public IEnumerable<BasicBlock> predecessors => incomingEdges.Select(edge => edge.Source);
-        public IEnumerable<BasicBlock> successors => outgoingEdges.Select(edge => edge.Target);
+        public BasicBlock? Next => fallthroughEdge?.Target;
+        public IEnumerable<BasicBlock> Predecessors => incomingEdges.Select(edge => edge.Source);
+        public IEnumerable<BasicBlock> Successors => outgoingEdges.Select(edge => edge.Target);
 
         // Canonical in Variables form and empty in Stack form. An entry stack slot acts like a
         // block parameter. Each incoming edge assigns its corresponding exit value to it; these

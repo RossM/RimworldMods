@@ -81,6 +81,7 @@ internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
     public override bool IsStatic => FieldInfo.IsStatic;
     public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [] : [InstanceParameterName];
     public override Type InstanceType => FieldInfo.DeclaringType;
+    // ReSharper disable once MemberCanBeProtected.Global
     public FieldInfo FieldInfo { get; } = fieldInfo;
 
 

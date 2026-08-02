@@ -296,7 +296,7 @@ internal partial class Optimizer
     internal IReadOnlyDictionary<int, Variable> ArgumentVariables => argumentVariables;
     internal IReadOnlyDictionary<int, Variable> LocalVariables => localVariables;
 
-    public readonly InstructionList output = [];
+    public readonly InstructionList outputInstructions = [];
     private readonly List<Block> allBlocks = [];
     private List<BasicBlock> basicBlocks = [];
 
@@ -376,8 +376,8 @@ internal partial class Optimizer
             FileLog.LogBuffered($"## Block:        {block.ID}");
             if (block is BasicBlock basicBlock)
             {
-                FileLog.LogBuffered($"## Predecessors: {string.Join(", ", basicBlock.predecessors.Select(b => b.ID))}");
-                FileLog.LogBuffered($"## Successors:   {string.Join(", ", basicBlock.successors.Select(b => b.ID))}");
+                FileLog.LogBuffered($"## Predecessors: {string.Join(", ", basicBlock.Predecessors.Select(b => b.ID))}");
+                FileLog.LogBuffered($"## Successors:   {string.Join(", ", basicBlock.Successors.Select(b => b.ID))}");
             }
 
             if (block is { EntryPoint: true, parent: not null })
@@ -424,8 +424,8 @@ internal partial class Optimizer
                 }
             }
 
-            if (block is BasicBlock { next: not null } bb2)
-                FileLog.LogBuffered($"IL_{codePos:X4}: // fallthrough => {bb2.next.ID}");
+            if (block is BasicBlock { Next: not null } bb2)
+                FileLog.LogBuffered($"IL_{codePos:X4}: // fallthrough => {bb2.Next.ID}");
         }
 
         while (regionStack.Count > 0)
@@ -531,9 +531,9 @@ internal partial class Optimizer
         LogBlocks(nameof(InsertBranches));
 
         Emit();
-        LogInstructions("Output", output.instructions);
+        LogInstructions("Output", outputInstructions.instructions);
 
-        return output.instructions;
+        return outputInstructions.instructions;
     }
 
     internal void Emit()
@@ -547,7 +547,7 @@ internal partial class Optimizer
             while (regionStack.Count >= 1 && block.parent != regionStack.Peek())
             {
                 if (regionStack.Peek().harmonyBlock != null && regionStack.Peek().next == null)
-                    output.instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+                    outputInstructions.instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
                 regionStack.Pop();
             }
 
@@ -575,7 +575,7 @@ internal partial class Optimizer
                     labels.Clear();
                     instructions[0].blocks.AddRange(harmonyBlocks);
                     harmonyBlocks.Clear();
-                    output.instructions.AddRange(instructions);
+                    outputInstructions.instructions.AddRange(instructions);
                     break;
                 }
             }
@@ -584,7 +584,7 @@ internal partial class Optimizer
         while (regionStack.Count > 0)
         {
             if (regionStack.Peek().harmonyBlock != null)
-                output.instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+                outputInstructions.instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
             regionStack.Pop();
         }
     }
@@ -916,14 +916,13 @@ internal partial class Optimizer
             if (block.ops.Count > 0 && block.ops[^1].CanBranch)
                 continue;
             BasicBlock successor = successorEdge.Target;
-            if (successor.incomingEdges.Count != 1 || successor.parent != block.parent ||
-                successor is not { EntryPoint: false } bb)
+            if (successor.incomingEdges.Count != 1 || successor.parent != block.parent || successor is not { EntryPoint: false })
                 continue;
 
-            block.ops.AddRange(bb.ops);
+            block.ops.AddRange(successor.ops);
             RemoveControlFlowEdge(successorEdge);
 
-            foreach (var edge in bb.outgoingEdges.ToArray())
+            foreach (var edge in successor.outgoingEdges.ToArray())
                 MoveControlFlowEdgeSource(edge, block);
         }
     }

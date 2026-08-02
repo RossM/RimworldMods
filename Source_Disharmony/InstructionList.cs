@@ -11,6 +11,7 @@ internal class InstructionList : IEnumerable<CodeInstruction>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public void Add(CodeInstruction instruction) => instructions.Add(instruction);
+    // ReSharper disable once ParameterHidesMember
     public void AddRange(IEnumerable<CodeInstruction> instructions) => this.instructions.AddRange(instructions); 
 
     public void EmitLocalInitializer(int localIndex)

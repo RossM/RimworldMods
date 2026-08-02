@@ -31,14 +31,14 @@ public sealed class OptimizerPassTests
         Optimizer.BasicBlock condition = optimizer.BasicBlocks[0];
         Optimizer.BasicBlock fallthrough = optimizer.BasicBlocks[1];
         Optimizer.BasicBlock target = optimizer.BasicBlocks[2];
-        Assert.That(condition.next, Is.SameAs(fallthrough));
+        Assert.That(condition.Next, Is.SameAs(fallthrough));
         Assert.That(condition.fallthroughEdge, Is.Not.Null);
         Assert.That(condition.fallthroughEdge!.Target, Is.SameAs(fallthrough));
         Assert.That(condition.ops[^1].Operand, Is.TypeOf<Optimizer.ControlFlowEdge>());
         Assert.That(((Optimizer.ControlFlowEdge)condition.ops[^1].Operand!).Target, Is.SameAs(target));
-        Assert.That(condition.successors, Is.EqualTo(new[] { fallthrough, target }));
-        Assert.That(fallthrough.predecessors, Is.EqualTo(new[] { condition }));
-        Assert.That(target.predecessors, Is.EqualTo(new[] { condition, fallthrough }));
+        Assert.That(condition.Successors, Is.EqualTo(new[] { fallthrough, target }));
+        Assert.That(fallthrough.Predecessors, Is.EqualTo(new[] { condition }));
+        Assert.That(target.Predecessors, Is.EqualTo(new[] { condition, fallthrough }));
         Assert.That(condition.outgoingEdges, Has.All.Matches<Optimizer.ControlFlowEdge>(edge => edge.assignments.Count == 0));
     }
 
@@ -86,9 +86,9 @@ public sealed class OptimizerPassTests
 
         Assert.That(empty.ops, Is.Empty);
         Assert.That(condition.fallthroughEdge, Is.SameAs(fallthroughEdge));
-        Assert.That(condition.next, Is.SameAs(afterEmpty));
-        Assert.That(condition.successors, Does.Not.Contain(empty));
-        Assert.That(empty.predecessors, Is.Empty);
+        Assert.That(condition.Next, Is.SameAs(afterEmpty));
+        Assert.That(condition.Successors, Does.Not.Contain(empty));
+        Assert.That(empty.Predecessors, Is.Empty);
     }
 
     [Test]
@@ -135,8 +135,8 @@ public sealed class OptimizerPassTests
         optimizer.BranchElimination();
 
         Assert.That(OpCodesIn(condition), Is.EqualTo(new[] { OpCodes.Ldc_I4_0, OpCodes.Pop }));
-        Assert.That(condition.successors.Count(), Is.EqualTo(1));
-        Assert.That(condition.successors.Single(), Is.SameAs(condition.next));
+        Assert.That(condition.Successors.Count(), Is.EqualTo(1));
+        Assert.That(condition.Successors.Single(), Is.SameAs(condition.Next));
         Assert.That(target.incomingEdges, Is.EqualTo(new[] { condition.fallthroughEdge }));
     }
 
@@ -160,9 +160,9 @@ public sealed class OptimizerPassTests
         optimizer.MergeBlocks();
 
         Assert.That(OpCodesIn(first), Is.EqualTo(new[] { OpCodes.Ldc_I4_1, OpCodes.Pop, OpCodes.Ret }));
-        Assert.That(first.next, Is.Null);
-        Assert.That(first.successors, Is.Empty);
-        Assert.That(merged.predecessors, Is.Empty);
+        Assert.That(first.Next, Is.Null);
+        Assert.That(first.Successors, Is.Empty);
+        Assert.That(merged.Predecessors, Is.Empty);
     }
 
     [Test]
@@ -294,7 +294,7 @@ public sealed class OptimizerPassTests
 
         optimizer.InsertBranches();
         optimizer.Emit();
-        Assert.That(optimizer.output.instructions, Has.None.Matches<CodeInstruction>(instruction =>
+        Assert.That(optimizer.outputInstructions.instructions, Has.None.Matches<CodeInstruction>(instruction =>
             instruction.IsLdloc() || instruction.IsStloc()));
     }
 
@@ -367,7 +367,7 @@ public sealed class OptimizerPassTests
 
         optimizer.ConvertStackToVariables();
         optimizer.Emit();
-        Assert.That(optimizer.output.instructions.Select(instruction => instruction.opcode), Is.EqualTo(new[]
+        Assert.That(optimizer.outputInstructions.instructions.Select(instruction => instruction.opcode), Is.EqualTo(new[]
         {
             OpCodes.Volatile,
             OpCodes.Ldsfld,
@@ -460,7 +460,7 @@ public sealed class OptimizerPassTests
         Assert.That(condition.ops[^1].Opcode, Is.EqualTo(OpCodes.Brtrue_S));
         Assert.That(condition.ops[^1].Operand, Is.TypeOf<Optimizer.ControlFlowEdge>());
         Assert.That(((Optimizer.ControlFlowEdge)condition.ops[^1].Operand!).Target, Is.SameAs(shared));
-        Assert.That(condition.next, Is.SameAs(unique));
+        Assert.That(condition.Next, Is.SameAs(unique));
     }
 
     [Test]
@@ -483,7 +483,7 @@ public sealed class OptimizerPassTests
 
         optimizer.InsertBranches();
 
-        Assert.That(entry.next, Is.Null);
+        Assert.That(entry.Next, Is.Null);
         Assert.That(entry.ops, Has.Count.EqualTo(1));
         Assert.That(entry.ops[0].Opcode, Is.EqualTo(OpCodes.Br_S));
         Assert.That(entry.ops[0].Operand, Is.SameAs(fallthroughEdge));
@@ -510,11 +510,11 @@ public sealed class OptimizerPassTests
 
         optimizer.Emit();
 
-        CodeInstruction branch = optimizer.output.instructions[0];
+        CodeInstruction branch = optimizer.outputInstructions.instructions[0];
         Assert.That(branch.opcode, Is.EqualTo(OpCodes.Br_S));
         Assert.That(branch.operand, Is.TypeOf<Label>());
         Assert.That(branch.operand, Is.EqualTo(target.label));
-        CodeInstruction emittedTarget = optimizer.output.instructions.Single(instruction =>
+        CodeInstruction emittedTarget = optimizer.outputInstructions.instructions.Single(instruction =>
             instruction.labels.Contains((Label)branch.operand));
         Assert.That(emittedTarget.opcode, Is.EqualTo(OpCodes.Ret));
     }
