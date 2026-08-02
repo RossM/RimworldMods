@@ -3,88 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Disharmony;
 
-internal partial class Optimizer
-{
-    internal sealed class ControlFlowEdge(BasicBlock source, BasicBlock target)
-    {
-        // Mutated only by the optimizer's edge helpers, which keep both endpoint collections in sync.
-        public BasicBlock Source { get; internal set; } = source;
-        public BasicBlock Target { get; internal set; } = target;
-
-        // Populated when stack values are materialized as variables. All assignments occur in
-        // parallel and remain logical until SSA destruction decides whether any copies are needed.
-        public readonly List<VariableAssignment> assignments = [];
-    }
-}
-
-internal partial class Optimizer
-{
-    internal sealed class Variable
-    {
-        // Stable optimizer identity; unlike index, this is unique across all variable kinds.
-        public required int id;
-        public required VariableKind kind;
-
-        // For a Local this is set only from authoritative local metadata or a LocalBuilder, never
-        // inferred from stores. EntryStackSlot and Temporary types come from symbolic stack analysis.
-        public Type? type;
-
-        // Argument/local index, or stack position for an EntryStackSlot. Temporaries leave this at -1.
-        public int index = -1;
-
-        // Only EntryStackSlots have an owning block.
-        public BasicBlock? block;
-
-        // Preserves both the identity and authoritative type of transpiler-created locals when known.
-        public LocalBuilder? localBuilder;
-
-        public bool pinned;
-
-        // Address-taken arguments and locals cannot be promoted as ordinary SSA values.
-        public bool addressTaken;
-
-        public string Name => kind switch
-        {
-            VariableKind.Argument => $"a{index}",
-            VariableKind.Local => $"l{index}",
-            VariableKind.EntryStackSlot => $"s{block!.id}_{index}",
-            VariableKind.Temporary => $"v{id}",
-            _ => throw new ArgumentOutOfRangeException(),
-        };
-
-        public override string ToString() => Name;
-    }
-}
-
-internal partial class Optimizer
-{
-    /// <summary>Identifies the storage or logical value represented by a variable.</summary>
-    internal enum VariableKind
-    {
-        /// <summary>A mutable CIL argument slot, including <c>this</c> at index zero.</summary>
-        Argument,
-
-        /// <summary>A mutable CIL local. Its declared type may be unavailable.</summary>
-        Local,
-
-        /// <summary>A basic-block entry stack position, analogous to a block parameter.</summary>
-        EntryStackSlot,
-
-        /// <summary>A value produced by an operation within a basic block.</summary>
-        Temporary,
-    }
-}
-
-internal partial class Optimizer
-{
-    internal sealed class VariableAssignment(Variable source, Variable destination)
-    {
-        // This is a logical value transfer on a CFG edge, not an instruction to emit.
-        public Variable Source { get; } = source;
-        public Variable Destination { get; } = destination;
-    }
-}
-
 internal class UniqueQueue<T> : IEnumerable<T>
 {
     public int Count => queue.Count;
@@ -113,6 +31,76 @@ internal class UniqueQueue<T> : IEnumerable<T>
 
 internal partial class Optimizer
 {
+    internal sealed class ControlFlowEdge(BasicBlock source, BasicBlock target)
+    {
+        // Populated when stack values are materialized as variables. All assignments occur in
+        // parallel and remain logical until SSA destruction decides whether any copies are needed.
+        public readonly List<VariableAssignment> assignments = [];
+
+        // Mutated only by the optimizer's edge helpers, which keep both endpoint collections in sync.
+        public BasicBlock Source { get; internal set; } = source;
+        public BasicBlock Target { get; internal set; } = target;
+    }
+
+    internal sealed class Variable
+    {
+        public string Name => kind switch
+        {
+            VariableKind.Argument => $"a{index}",
+            VariableKind.Local => $"l{index}",
+            VariableKind.EntryStackSlot => $"s{block!.id}_{index}",
+            VariableKind.Temporary => $"v{id}",
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+
+        // Stable optimizer identity; unlike index, this is unique across all variable kinds.
+        public required int id;
+        public required VariableKind kind;
+
+        // For a Local this is set only from authoritative local metadata or a LocalBuilder, never
+        // inferred from stores. EntryStackSlot and Temporary types come from symbolic stack analysis.
+        public Type? type;
+
+        // Argument/local index, or stack position for an EntryStackSlot. Temporaries leave this at -1.
+        public int index = -1;
+
+        // Only EntryStackSlots have an owning block.
+        public BasicBlock? block;
+
+        // Preserves both the identity and authoritative type of transpiler-created locals when known.
+        public LocalBuilder? localBuilder;
+
+        public bool pinned;
+
+        // Address-taken arguments and locals cannot be promoted as ordinary SSA values.
+        public bool addressTaken;
+
+        public override string ToString() => Name;
+    }
+
+    /// <summary>Identifies the storage or logical value represented by a variable.</summary>
+    internal enum VariableKind
+    {
+        /// <summary>A mutable CIL argument slot, including <c>this</c> at index zero.</summary>
+        Argument,
+
+        /// <summary>A mutable CIL local. Its declared type may be unavailable.</summary>
+        Local,
+
+        /// <summary>A basic-block entry stack position, analogous to a block parameter.</summary>
+        EntryStackSlot,
+
+        /// <summary>A value produced by an operation within a basic block.</summary>
+        Temporary,
+    }
+
+    internal sealed class VariableAssignment(Variable source, Variable destination)
+    {
+        // This is a logical value transfer on a CFG edge, not an instruction to emit.
+        public Variable Source { get; } = source;
+        public Variable Destination { get; } = destination;
+    }
+
     /// <summary>Which interpretation of the shared block and operation data is currently valid.</summary>
     internal enum IrForm
     {
@@ -120,8 +108,8 @@ internal partial class Optimizer
         Stack,
 
         /// <summary>
-        /// Operations and CFG edges also have explicit variables. The original stack schedule is
-        /// retained for emission, so entering this form does not introduce runtime copies.
+        ///     Operations and CFG edges also have explicit variables. The original stack schedule is
+        ///     retained for emission, so entering this form does not introduce runtime copies.
         /// </summary>
         Variables,
     }
@@ -163,14 +151,6 @@ internal partial class Optimizer
             public bool clearsStack;
         }
 
-        // Prefixes remain attached to the operation they govern so no later pass can separate them.
-        public readonly List<Op> prefixes = [];
-
-        // Canonical in Variables form and empty before conversion. These include both evaluation-
-        // stack values and argument/local accesses.
-        public readonly List<Variable> inputs = [];
-        public readonly List<Variable> outputs = [];
-
         public bool IsLeave => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
         public bool ClearsStack => Opcode == OpCodes.Ret || Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
         public bool IsUnconditionalBranch => Opcode == OpCodes.Br_S || Opcode == OpCodes.Br;
@@ -209,22 +189,6 @@ internal partial class Optimizer
                 _ => throw new ArgumentOutOfRangeException(),
             };
 
-        public int GetStackPops(Type returnType)
-        {
-            if (Opcode == OpCodes.Ret)
-                return returnType == typeof(void) ? 0 : 1;
-            if (Opcode == OpCodes.Jmp)
-                return 0;
-            if (Opcode.StackBehaviourPop != StackBehaviour.Varpop || Operand is not MethodBase calledMethod)
-                return StackPops;
-
-            int receiverCount = Opcode != OpCodes.Newobj && !calledMethod.IsStatic ? 1 : 0;
-            return calledMethod.GetParameters().Length + receiverCount;
-        }
-
-        public OpCode Opcode { get; } = opcode;
-        public object? Operand { get; } = operand;
-
         public int Index => unchecked((ushort)Opcode.Value) switch
         {
             OpCodeValues.Ldarg_0 => 0,
@@ -245,8 +209,32 @@ internal partial class Optimizer
             OpCodeValues.Stloc_2 => 2,
             OpCodeValues.Stloc_3 => 3,
             OpCodeValues.Stloc or OpCodeValues.Stloc_S => ToLocalIndex(Operand),
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(),
         };
+
+        // Prefixes remain attached to the operation they govern so no later pass can separate them.
+        public readonly List<Op> prefixes = [];
+
+        // Canonical in Variables form and empty before conversion. These include both evaluation-
+        // stack values and argument/local accesses.
+        public readonly List<Variable> inputs = [];
+        public readonly List<Variable> outputs = [];
+
+        public OpCode Opcode { get; } = opcode;
+        public object? Operand { get; } = operand;
+
+        public int GetStackPops(Type returnType)
+        {
+            if (Opcode == OpCodes.Ret)
+                return returnType == typeof(void) ? 0 : 1;
+            if (Opcode == OpCodes.Jmp)
+                return 0;
+            if (Opcode.StackBehaviourPop != StackBehaviour.Varpop || Operand is not MethodBase calledMethod)
+                return StackPops;
+
+            int receiverCount = Opcode != OpCodes.Newobj && !calledMethod.IsStatic ? 1 : 0;
+            return calledMethod.GetParameters().Length + receiverCount;
+        }
 
         private static int ToLocalIndex(object? value)
         {
@@ -302,6 +290,12 @@ internal partial class Optimizer
         public int depth;
     }
 
+    internal IReadOnlyList<Block> Blocks => allBlocks;
+    internal IReadOnlyList<BasicBlock> BasicBlocks => basicBlocks;
+    internal IReadOnlyList<Variable> Variables => variables;
+    internal IReadOnlyDictionary<int, Variable> ArgumentVariables => argumentVariables;
+    internal IReadOnlyDictionary<int, Variable> LocalVariables => localVariables;
+
     public readonly InstructionList output = [];
     private readonly List<Block> allBlocks = [];
     private List<BasicBlock> basicBlocks = [];
@@ -312,21 +306,14 @@ internal partial class Optimizer
     private readonly Dictionary<int, Variable> argumentVariables = [];
     private readonly Dictionary<int, Variable> localVariables = [];
     private int nextVariableId;
-
-    internal IReadOnlyList<Block> Blocks => allBlocks;
-    internal IReadOnlyList<BasicBlock> BasicBlocks => basicBlocks;
-    internal IrForm Form { get; private set; }
-    internal IReadOnlyList<Variable> Variables => variables;
-    internal IReadOnlyDictionary<int, Variable> ArgumentVariables => argumentVariables;
-    internal IReadOnlyDictionary<int, Variable> LocalVariables => localVariables;
     private readonly Region root = new();
     private int nextBlockId = 1;
-    private bool valid = false;
+    private readonly bool valid = false;
     private readonly MethodBase method;
     private readonly List<CodeInstruction> inputInstructions;
     private readonly ILGenerator generator;
     private readonly bool debug;
-    private List<Type> parameterTypes;
+    private readonly List<Type> parameterTypes;
     private readonly Type returnType;
 
     public Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator, bool debug)
@@ -345,6 +332,8 @@ internal partial class Optimizer
 
         valid = true;
     }
+
+    internal IrForm Form { get; private set; }
 
     private static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
     private static bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
