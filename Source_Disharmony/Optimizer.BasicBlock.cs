@@ -6,13 +6,33 @@ internal partial class Optimizer
     {
         public readonly List<Op> ops = [];
 
-        public void SymbolicExecute(List<Type> parameterTypes)
+        // Canonical in Variables form and empty in Stack form. An entry stack slot acts like a
+        // block parameter. Each incoming edge assigns its corresponding exit value to it; these
+        // assignments are logical and emit no CIL copies.
+        public readonly List<Variable> entryStackVariables = [];
+        public readonly List<Variable> exitStackVariables = [];
+
+        // These are a Variables-form dataflow overlay, not yet the canonical CFG. Block.successors,
+        // Block.predecessors and Block.next remain authoritative until the planned edge refactor.
+        public readonly List<ControlFlowEdge> incomingEdges = [];
+        public readonly List<ControlFlowEdge> outgoingEdges = [];
+
+        public void SymbolicExecute(List<Type> parameterTypes, Type returnType)
         {
             List<Type> locals = [.. entryLocals];
             List<Type> stack = [.. entryStack];
 
             foreach (var op in ops)
             {
+                op.variableAccesses.Clear();
+                List<Type> inputStack = [.. stack];
+                int popCount = op.GetStackPops(returnType);
+                if (popCount > inputStack.Count)
+                    throw new InvalidOperationException($"{op.Opcode} pops {popCount} values from a stack of {inputStack.Count}");
+
+                op.inputTypes.Clear();
+                op.inputTypes.AddRange(inputStack.Skip(inputStack.Count - popCount));
+
                 switch (unchecked((ushort)op.Opcode.Value))
                 {
                     case OpCodeValues.Ldloc_0:
@@ -24,6 +44,7 @@ internal partial class Optimizer
                     {
                         int index = op.Index;
                         ExpandLocals(index);
+                        op.variableAccesses.Add(new(VariableKind.Local, index, Op.VariableAccessKind.Read));
                         stack.Add(locals[index]);
                         break;
                     }
@@ -36,6 +57,7 @@ internal partial class Optimizer
                     {
                         int index = op.Index;
                         ExpandLocals(index);
+                        op.variableAccesses.Add(new(VariableKind.Local, index, Op.VariableAccessKind.Write));
                         locals[index] = stack[^1];
                         stack.RemoveAt(stack.Count - 1);
                         break;
@@ -45,6 +67,7 @@ internal partial class Optimizer
                     {
                         int index = op.Index;
                         ExpandLocals(index);
+                        op.variableAccesses.Add(new(VariableKind.Local, index, Op.VariableAccessKind.Address));
                         stack.Add(ToRef(locals[index]));
                         // Can't be bothered to do fancy analysis here
                         if (!locals[index].IsValueType)
@@ -59,6 +82,7 @@ internal partial class Optimizer
                     case OpCodeValues.Ldarg_S:
                     {
                         int index = op.Index;
+                        op.variableAccesses.Add(new(VariableKind.Argument, index, Op.VariableAccessKind.Read));
                         stack.Add(parameterTypes[index]);
                         break;
                     }
@@ -66,7 +90,16 @@ internal partial class Optimizer
                     case OpCodeValues.Ldarga_S:
                     {
                         int index = op.Index;
+                        op.variableAccesses.Add(new(VariableKind.Argument, index, Op.VariableAccessKind.Address));
                         stack.Add(ToRef(parameterTypes[index]));
+                        break;
+                    }
+                    case OpCodeValues.Starg:
+                    case OpCodeValues.Starg_S:
+                    {
+                        int index = op.Index;
+                        op.variableAccesses.Add(new(VariableKind.Argument, index, Op.VariableAccessKind.Write));
+                        stack.RemoveAt(stack.Count - 1);
                         break;
                     }
                     case OpCodeValues.Dup:
@@ -114,7 +147,6 @@ internal partial class Optimizer
                     }
                     default:
                     {
-                        int popCount = op.StackPops;
                         for (int i = 0; i < popCount; i++)
                             stack.RemoveAt(stack.Count - 1);
 
@@ -143,10 +175,25 @@ internal partial class Optimizer
                         break;
                     }
                 }
-            }
 
-            if (ops is [.., { ClearsStack: true }])
-                stack = [];
+                op.stackOutputs.Clear();
+                op.clearsStack = op.ClearsStack;
+                if (op.clearsStack)
+                {
+                    stack.Clear();
+                }
+                else
+                {
+                    int pushCount = stack.Count - (inputStack.Count - popCount);
+                    if (pushCount < 0)
+                        throw new InvalidOperationException($"Invalid stack effect for {op.Opcode}");
+
+                    int inputIndex = op.Opcode == OpCodes.Dup ? 0 : -1;
+                    op.stackOutputs.AddRange(stack
+                        .Skip(stack.Count - pushCount)
+                        .Select(type => new Op.StackOutput(type, inputIndex)));
+                }
+            }
 
             exitLocals = locals;
             exitStack = stack;

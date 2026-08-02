@@ -218,6 +218,200 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
+    public void ConvertStackToVariablesRepresentsCrossBlockStackWithoutCilCopies()
+    {
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label alternative = generator.DefineLabel();
+            Label join = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldstr, "value"),
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brfalse, alternative),
+                new CodeInstruction(OpCodes.Br, join),
+                new CodeInstruction(OpCodes.Nop).WithLabels(alternative),
+                new CodeInstruction(OpCodes.Pop).WithLabels(join),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        optimizer.DeduceTypes();
+        int operationCount = optimizer.BasicBlocks.Sum(block => block.ops.Count);
+        Optimizer.BasicBlock entry = optimizer.BasicBlocks[0];
+        Optimizer.BasicBlock join = optimizer.BasicBlocks[3];
+        Assert.That(join.entryStack, Is.EqualTo(new[] { typeof(string) }));
+
+        optimizer.ConvertStackToVariables();
+
+        Assert.That(optimizer.Form, Is.EqualTo(Optimizer.IrForm.Variables));
+        Assert.That(entry.ops[2].inputs, Is.EqualTo(new[] { entry.ops[1].outputs.Single() }));
+        Assert.That(entry.exitStackVariables, Is.EqualTo(new[] { entry.ops[0].outputs.Single() }));
+        Assert.That(join.entryStackVariables, Has.Count.EqualTo(1));
+        Assert.That(join.incomingEdges, Has.Count.EqualTo(2));
+        Assert.That(join.incomingEdges.SelectMany(edge => edge.assignments), Has.All.Matches<Optimizer.VariableAssignment>(
+            assignment => assignment.Destination == join.entryStackVariables[0]));
+        Assert.That(optimizer.BasicBlocks.Sum(block => block.ops.Count), Is.EqualTo(operationCount));
+        Assert.That(optimizer.Blocks.SelectMany(block =>
+            block.entryLocals.Concat(block.entryStack).Concat(block.exitLocals).Concat(block.exitStack)), Is.Empty);
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops), Has.All.Matches<Optimizer.Op>(op =>
+            op.inputTypes.Count == 0 && op.stackOutputs.Count == 0 && op.variableAccesses.Count == 0 && !op.clearsStack));
+
+        optimizer.InsertBranches();
+        optimizer.Emit();
+        Assert.That(optimizer.output.instructions, Has.None.Matches<CodeInstruction>(instruction =>
+            instruction.IsLdloc() || instruction.IsStloc()));
+    }
+
+    [Test]
+    public void ConvertStackToVariablesUsesLocalBuilderIdentityAndDeclaredType()
+    {
+        LocalBuilder? declaredLocal = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            declaredLocal = generator.DeclareLocal(typeof(string));
+            return
+            [
+                new CodeInstruction(OpCodes.Ldstr, "value"),
+                new CodeInstruction(OpCodes.Stloc, declaredLocal),
+                new CodeInstruction(OpCodes.Ldloc, declaredLocal),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        optimizer.DeduceTypes();
+
+        optimizer.ConvertStackToVariables();
+
+        Optimizer.Variable local = optimizer.LocalVariables[declaredLocal!.LocalIndex];
+        Optimizer.Op store = optimizer.BasicBlocks[0].ops[1];
+        Optimizer.Op load = optimizer.BasicBlocks[0].ops[2];
+        Assert.That(local.kind, Is.EqualTo(Optimizer.VariableKind.Local));
+        Assert.That(local.type, Is.EqualTo(typeof(string)));
+        Assert.That(local.localBuilder, Is.SameAs(declaredLocal));
+        Assert.That(store.outputs, Is.EqualTo(new[] { local }));
+        Assert.That(load.inputs, Is.EqualTo(new[] { local }));
+    }
+
+    [Test]
+    public void ConvertStackToVariablesDoesNotGuessUnknownNumericLocalType()
+    {
+        Optimizer optimizer = CreateOptimizer(_ =>
+        [
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Stloc_S, (byte)4),
+            new CodeInstruction(OpCodes.Ldloc_S, (byte)4),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+        optimizer.DeduceTypes();
+
+        optimizer.ConvertStackToVariables();
+
+        Optimizer.Variable local = optimizer.LocalVariables[4];
+        Assert.That(local.type, Is.Null);
+        Assert.That(local.localBuilder, Is.Null);
+        Assert.That(optimizer.BasicBlocks[0].ops[1].outputs, Is.EqualTo(new[] { local }));
+        Assert.That(optimizer.BasicBlocks[0].ops[2].inputs, Is.EqualTo(new[] { local }));
+    }
+
+    [Test]
+    public void MakeBasicBlocksBundlesPrefixesWithTheirOperation()
+    {
+        FieldInfo field = typeof(OptimizerPatches).GetField(nameof(OptimizerPatches.PatchCalls))!;
+        Optimizer optimizer = CreateOptimizer(_ =>
+        [
+            new CodeInstruction(OpCodes.Volatile),
+            new CodeInstruction(OpCodes.Ldsfld, field),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+
+        Optimizer.Op fieldLoad = optimizer.BasicBlocks[0].ops[0];
+        Assert.That(fieldLoad.Opcode, Is.EqualTo(OpCodes.Ldsfld));
+        Assert.That(fieldLoad.prefixes.Select(prefix => prefix.Opcode), Is.EqualTo(new[] { OpCodes.Volatile }));
+
+        optimizer.DeduceTypes();
+        optimizer.ConvertStackToVariables();
+        optimizer.Emit();
+        Assert.That(optimizer.output.instructions.Select(instruction => instruction.opcode), Is.EqualTo(new[]
+        {
+            OpCodes.Volatile,
+            OpCodes.Ldsfld,
+            OpCodes.Pop,
+            OpCodes.Ret,
+        }));
+    }
+
+    [Test]
+    public void ConvertStackToVariablesMakesReturnValueAnExplicitInput()
+    {
+        MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntResult))!;
+        Optimizer optimizer = CreateOptimizer(targetMethod, _ =>
+        [
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+        optimizer.DeduceTypes();
+
+        optimizer.ConvertStackToVariables();
+
+        Optimizer.Op value = optimizer.BasicBlocks[0].ops[0];
+        Optimizer.Op returnOperation = optimizer.BasicBlocks[0].ops[1];
+        Assert.That(returnOperation.inputs, Is.EqualTo(new[] { value.outputs.Single() }));
+        Assert.That(optimizer.BasicBlocks[0].exitStackVariables, Is.Empty);
+    }
+
+    [Test]
+    public void ConvertStackToVariablesTracksMutableArgumentIdentity()
+    {
+        MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        Optimizer optimizer = CreateOptimizer(targetMethod, _ =>
+        [
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Starg_S, (byte)0),
+            new CodeInstruction(OpCodes.Ldarg_0),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+        optimizer.DeduceTypes();
+
+        optimizer.ConvertStackToVariables();
+
+        Optimizer.Variable argument = optimizer.ArgumentVariables[0];
+        Assert.That(argument.type, Is.EqualTo(typeof(int)));
+        Assert.That(optimizer.BasicBlocks[0].ops[1].outputs, Is.EqualTo(new[] { argument }));
+        Assert.That(optimizer.BasicBlocks[0].ops[2].inputs, Is.EqualTo(new[] { argument }));
+    }
+
+    [Test]
+    public void ConvertStackToVariablesUsesSymbolicStackAliasingForDup()
+    {
+        Optimizer optimizer = CreateOptimizer(_ =>
+        [
+            new CodeInstruction(OpCodes.Ldstr, "value"),
+            new CodeInstruction(OpCodes.Dup),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+        optimizer.DeduceTypes();
+
+        optimizer.ConvertStackToVariables();
+
+        Optimizer.Op load = optimizer.BasicBlocks[0].ops[0];
+        Optimizer.Op duplicate = optimizer.BasicBlocks[0].ops[1];
+        Assert.That(duplicate.inputs, Is.EqualTo(new[] { load.outputs.Single() }));
+        Assert.That(duplicate.outputs, Is.EqualTo(new[] { load.outputs.Single(), load.outputs.Single() }));
+    }
+
+    [Test]
     public void BranchInversionMakesSinglePredecessorTargetFallThrough()
     {
         Optimizer optimizer = CreateOptimizer(generator =>
@@ -298,10 +492,15 @@ public sealed class OptimizerPassTests
     }
 
     private static Optimizer CreateOptimizer(Func<ILGenerator, List<CodeInstruction>> createInstructions)
+        => CreateOptimizer(TargetMethod, createInstructions);
+
+    private static Optimizer CreateOptimizer(
+        MethodBase targetMethod,
+        Func<ILGenerator, List<CodeInstruction>> createInstructions)
     {
         var dynamicMethod = new DynamicMethod("OptimizerPassTest", typeof(void), Type.EmptyTypes);
         ILGenerator generator = dynamicMethod.GetILGenerator();
-        return new Optimizer(TargetMethod, createInstructions(generator), generator, debug: false);
+        return new Optimizer(targetMethod, createInstructions(generator), generator, debug: false);
     }
 
     private static OpCode[] OpCodesIn(Optimizer.BasicBlock block) => [.. block.ops.Select(op => op.Opcode)];

@@ -13,6 +13,8 @@ internal static class OpCodeValues
     public const int Ldarg_S  =   0x0E;
     public const int Ldarga   = 0xFE0A;
     public const int Ldarga_S =   0x0F;
+    public const int Starg    = 0xFE0B;
+    public const int Starg_S  =   0x10;
     public const int Ldloc    = 0xFE0C;
     public const int Ldloc_0  =   0x06;
     public const int Ldloc_1  =   0x07;

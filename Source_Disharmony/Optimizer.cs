@@ -31,6 +31,19 @@ internal class UniqueQueue<T> : IEnumerable<T>
 
 internal partial class Optimizer
 {
+    /// <summary>Which interpretation of the shared block and operation data is currently valid.</summary>
+    internal enum IrForm
+    {
+        /// <summary>Only the original CIL evaluation-stack representation is available.</summary>
+        Stack,
+
+        /// <summary>
+        /// Operations and CFG edges also have explicit variables. The original stack schedule is
+        /// retained for emission, so entering this form does not introduce runtime copies.
+        /// </summary>
+        Variables,
+    }
+
     // These two types are used to track special cases in type analysis
     private struct UnknownType;
 
@@ -38,6 +51,40 @@ internal partial class Optimizer
 
     internal class Op(OpCode opcode, object? operand = null)
     {
+        /// <summary>How an instruction accesses storage outside the evaluation stack.</summary>
+        internal enum VariableAccessKind
+        {
+            /// <summary>Loads the current value of an argument or local.</summary>
+            Read,
+            /// <summary>Replaces the current value of an argument or local.</summary>
+            Write,
+            /// <summary>Takes the storage location's address, preventing ordinary SSA promotion.</summary>
+            Address,
+        }
+
+        // InputIndex identifies an output which aliases a popped input, as with both outputs of dup.
+        // A negative index means that executing the instruction produces a new value.
+        internal readonly record struct StackOutput(Type Type, int InputIndex = -1);
+
+        // This is recorded during symbolic execution so later passes do not reinterpret CIL opcodes.
+        internal readonly record struct VariableAccess(VariableKind VariableKind, int Index, VariableAccessKind Kind);
+
+        // Canonical only in Stack form. SymbolicExecute records the complete evaluation-stack
+        // transition here; ConvertStackToVariables consumes and then clears it. Inputs are ordered
+        // from the deepest popped value to the top of the stack.
+        internal readonly List<Type> inputTypes = [];
+        internal readonly List<StackOutput> stackOutputs = [];
+        internal readonly List<VariableAccess> variableAccesses = [];
+        internal bool clearsStack;
+
+        // Prefixes remain attached to the operation they govern so no later pass can separate them.
+        public readonly List<Op> prefixes = [];
+
+        // Canonical in Variables form and empty before conversion. These include both evaluation-
+        // stack values and argument/local accesses.
+        public readonly List<Variable> inputs = [];
+        public readonly List<Variable> outputs = [];
+
         public bool IsLeave => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
         public bool ClearsStack => Opcode == OpCodes.Ret || Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
         public bool IsUnconditionalBranch => Opcode == OpCodes.Br_S || Opcode == OpCodes.Br;
@@ -76,6 +123,19 @@ internal partial class Optimizer
                 _ => throw new ArgumentOutOfRangeException(),
             };
 
+        public int GetStackPops(Type returnType)
+        {
+            if (Opcode == OpCodes.Ret)
+                return returnType == typeof(void) ? 0 : 1;
+            if (Opcode == OpCodes.Jmp)
+                return 0;
+            if (Opcode.StackBehaviourPop != StackBehaviour.Varpop || Operand is not MethodBase calledMethod)
+                return StackPops;
+
+            int receiverCount = Opcode != OpCodes.Newobj && !calledMethod.IsStatic ? 1 : 0;
+            return calledMethod.GetParameters().Length + receiverCount;
+        }
+
         public OpCode Opcode { get; } = opcode;
         public object? Operand { get; } = operand;
         public int Index => unchecked((ushort)Opcode.Value) switch
@@ -86,11 +146,7 @@ internal partial class Optimizer
             OpCodeValues.Ldarg_3 => 3,
             OpCodeValues.Ldarg or OpCodeValues.Ldarg_S => ToLocalIndex(Operand),
             OpCodeValues.Ldarga or OpCodeValues.Ldarga_S => ToLocalIndex(Operand),
-            //OpCodeValues.Starg_0 => 0,
-            //OpCodeValues.Starg_1 => 1,
-            //OpCodeValues.Starg_2 => 2,
-            //OpCodeValues.Starg_3 => 3,
-            //OpCodeValues.Starg or OpCodeValues.Starg_S => Convert.ToInt32(Operand),
+            OpCodeValues.Starg or OpCodeValues.Starg_S => ToLocalIndex(Operand),
             OpCodeValues.Ldloc_0 => 0,
             OpCodeValues.Ldloc_1 => 1,
             OpCodeValues.Ldloc_2 => 2,
@@ -123,9 +179,9 @@ internal partial class Optimizer
 
     private static class Ops
     {
-        public static readonly Op Nop = new(OpCodes.Nop);
-        public static readonly Op Ret = new(OpCodes.Ret);
-        public static readonly Op Pop = new(OpCodes.Pop);
+        public static Op Nop => new(OpCodes.Nop);
+        public static Op Ret => new(OpCodes.Ret);
+        public static Op Pop => new(OpCodes.Pop);
     }
 
     internal class Block
@@ -138,6 +194,8 @@ internal partial class Optimizer
         public readonly List<Block> predecessors = [];
         public Region? parent;
 
+        // Canonical only in Stack form. DeduceTypes computes these facts; variable conversion
+        // consumes and clears them so later analysis cannot accidentally use stale type state.
         public List<Type> entryLocals = [];
         public List<Type> entryStack = [];
         public List<Type> exitLocals = [];
@@ -174,8 +232,20 @@ internal partial class Optimizer
     public readonly InstructionList output = [];
     private readonly List<Block> allBlocks = [];
     private List<BasicBlock> basicBlocks = [];
+
+    // One canonical object represents each physical argument/local; logical stack values receive
+    // distinct identities in variables as they are discovered.
+    private readonly List<Variable> variables = [];
+    private readonly Dictionary<int, Variable> argumentVariables = [];
+    private readonly Dictionary<int, Variable> localVariables = [];
+    private int nextVariableId;
+
     internal IReadOnlyList<Block> Blocks => allBlocks;
     internal IReadOnlyList<BasicBlock> BasicBlocks => basicBlocks;
+    internal IrForm Form { get; private set; }
+    internal IReadOnlyList<Variable> Variables => variables;
+    internal IReadOnlyDictionary<int, Variable> ArgumentVariables => argumentVariables;
+    internal IReadOnlyDictionary<int, Variable> LocalVariables => localVariables;
     private readonly Region root = new();
     private int nextBlockId = 1;
     private bool valid = false;
@@ -184,6 +254,7 @@ internal partial class Optimizer
     private readonly ILGenerator generator;
     private readonly bool debug;
     private List<Type> parameterTypes;
+    private readonly Type returnType;
 
     public Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator, bool debug)
     {
@@ -196,6 +267,8 @@ internal partial class Optimizer
             parameterTypes = [method.DeclaringType.CallableType, .. method.GetParameters().Types()];
         else
             parameterTypes = [.. method.GetParameters().Types()];
+
+        returnType = method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
 
         valid = true;
     }
@@ -263,9 +336,26 @@ internal partial class Optimizer
                 case BasicBlock bb:
                 {
                     foreach (var op in bb.ops)
-                        LogInstruction(ConvertToCodeInstruction(op), ref codePos);
+                    {
+                        foreach (var prefix in op.prefixes)
+                            LogInstruction(ConvertToCodeInstruction(prefix), ref codePos);
+                        if (Form == IrForm.Variables)
+                            LogVariableInstruction(op, ref codePos);
+                        else
+                            LogInstruction(ConvertToCodeInstruction(op), ref codePos);
+                    }
                     if (bb.ops.Count == 0)
                         LogInstruction(Ops.Nop.ToCodeInstruction(), ref codePos);
+
+                    if (Form == IrForm.Variables)
+                    {
+                        foreach (var edge in bb.outgoingEdges.Where(edge => edge.assignments.Count > 0))
+                        {
+                            string assignments = string.Join(", ", edge.assignments.Select(assignment =>
+                                $"{assignment.Destination} = {assignment.Source}"));
+                            FileLog.LogBuffered($"## Edge {edge.Source.ID} => {edge.Target.ID}: {assignments}");
+                        }
+                    }
                     break;
                 }
             }
@@ -283,6 +373,27 @@ internal partial class Optimizer
 
         FileLog.LogBuffered("");
         FileLog.FlushBuffer();
+    }
+
+    private static void LogVariableInstruction(Op op, ref int codePos)
+    {
+        string opcode = op.Opcode.ToString();
+        if (op.Opcode.FlowControl is FlowControl.Branch or FlowControl.Cond_Branch)
+            opcode += " =>";
+        opcode = opcode.PadRight(10);
+
+        string inputs = string.Join(", ", op.inputs);
+        string outputs = string.Join(", ", op.outputs);
+        string variables = (inputs.Length, outputs.Length) switch
+        {
+            (0, 0) => "",
+            (0, _) => $"=> {outputs}",
+            (_, 0) => inputs,
+            _ => $"{inputs} => {outputs}",
+        };
+        string separator = variables.Length > 0 ? " " : "";
+        FileLog.LogBuffered($"IL_{codePos:X4}: {opcode}{separator}{variables}");
+        codePos += ReflectionTools.ILSize(op.Opcode);
     }
 
     private static void LogInstruction(CodeInstruction codeInstruction, ref int codePos)
@@ -352,6 +463,9 @@ internal partial class Optimizer
         DeduceTypes();
         LogBlocks(nameof(DeduceTypes));
 
+        ConvertStackToVariables();
+        LogBlocks(nameof(ConvertStackToVariables));
+
         InsertBranches();
         LogBlocks(nameof(InsertBranches));
 
@@ -390,7 +504,10 @@ internal partial class Optimizer
                 }
                 case BasicBlock bb:
                 {
-                    List<CodeInstruction> instructions = [.. bb.ops.Select(ConvertToCodeInstruction)];
+                    List<CodeInstruction> instructions =
+                    [
+                        .. bb.ops.SelectMany(op => op.prefixes.Append(op)).Select(ConvertToCodeInstruction),
+                    ];
                     if (instructions.Count == 0)
                         instructions.Add(Ops.Nop.ToCodeInstruction());
                     instructions[0].labels.AddRange(labels);
@@ -534,6 +651,7 @@ internal partial class Optimizer
         }
 
         UpdatePredecessors();
+        BundlePrefixes();
 
         return;
 
@@ -585,6 +703,34 @@ internal partial class Optimizer
 
         static bool CanFallThrough(BasicBlock basicBlock) =>
             basicBlock.ops.Count == 0 || basicBlock.ops[^1].CanFallThrough;
+    }
+
+    private void BundlePrefixes()
+    {
+        foreach (var block in basicBlocks)
+        {
+            List<Op> operations = [];
+            List<Op> prefixes = [];
+            foreach (var op in block.ops)
+            {
+                if (op.Opcode.OpCodeType == OpCodeType.Prefix)
+                {
+                    prefixes.Add(op);
+                    continue;
+                }
+
+                op.prefixes.Clear();
+                op.prefixes.AddRange(prefixes);
+                prefixes.Clear();
+                operations.Add(op);
+            }
+
+            if (prefixes.Count > 0)
+                throw new InvalidOperationException($"Basic block {block.ID} ends in a CIL prefix");
+
+            block.ops.Clear();
+            block.ops.AddRange(operations);
+        }
     }
 
     internal void NopElimination()
@@ -813,7 +959,7 @@ internal partial class Optimizer
                 }
                 case BasicBlock bb:
                 {
-                    bb.SymbolicExecute(parameterTypes);
+                    bb.SymbolicExecute(parameterTypes, returnType);
 
                     foreach (var successor in block.successors)
                         UpdateSuccessor(block, successor);
@@ -841,6 +987,248 @@ internal partial class Optimizer
             worklist.Enqueue(successor);
         }
     }
+
+    internal void ConvertStackToVariables()
+    {
+        if (Form != IrForm.Stack)
+            throw new InvalidOperationException($"Cannot convert {Form} form to variables");
+
+        InitializeVariables();
+
+        foreach (var block in basicBlocks)
+        {
+            block.entryStackVariables.Clear();
+            for (int index = 0; index < block.entryStack.Count; index++)
+                block.entryStackVariables.Add(NewVariable(VariableKind.EntryStackSlot, block.entryStack[index], index, block));
+        }
+
+        foreach (var block in basicBlocks)
+            MaterializeBlockVariables(block);
+
+        BuildVariableEdges();
+        DiscardStackAnalysis();
+        Form = IrForm.Variables;
+    }
+
+    private void DiscardStackAnalysis()
+    {
+        foreach (var block in allBlocks)
+        {
+            block.entryLocals.Clear();
+            block.entryStack.Clear();
+            block.exitLocals.Clear();
+            block.exitStack.Clear();
+        }
+
+        foreach (var op in basicBlocks.SelectMany(block => block.ops))
+        {
+            op.inputTypes.Clear();
+            op.stackOutputs.Clear();
+            op.variableAccesses.Clear();
+            op.clearsStack = false;
+        }
+    }
+
+    private void InitializeVariables()
+    {
+        variables.Clear();
+        argumentVariables.Clear();
+        localVariables.Clear();
+        nextVariableId = 0;
+
+        for (int index = 0; index < parameterTypes.Count; index++)
+            argumentVariables.Add(index, NewVariable(VariableKind.Argument, parameterTypes[index], index));
+
+        MethodBody? methodBody = GetMethodBodyOrNull();
+        if (methodBody != null)
+        {
+            foreach (var local in methodBody.LocalVariables)
+            {
+                localVariables.Add(local.LocalIndex,
+                    NewVariable(VariableKind.Local, local.LocalType, local.LocalIndex, pinned: local.IsPinned));
+            }
+        }
+
+        foreach (var op in basicBlocks.SelectMany(block => block.ops))
+        {
+            if (!ReferencesLocal(op) || op.Operand is not LocalBuilder localBuilder)
+                continue;
+
+            if (localVariables.TryGetValue(localBuilder.LocalIndex, out var local))
+            {
+                if (local.type != localBuilder.LocalType)
+                    throw new InvalidOperationException($"Conflicting types for local #{localBuilder.LocalIndex}");
+                local.localBuilder ??= localBuilder;
+                local.pinned |= localBuilder.IsPinned;
+            }
+            else
+            {
+                localVariables.Add(localBuilder.LocalIndex,
+                    NewVariable(VariableKind.Local, localBuilder.LocalType, localBuilder.LocalIndex,
+                        localBuilder: localBuilder, pinned: localBuilder.IsPinned));
+            }
+        }
+    }
+
+    private MethodBody? GetMethodBodyOrNull()
+    {
+        try
+        {
+            return method.GetMethodBody();
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+        catch (NotSupportedException)
+        {
+            return null;
+        }
+    }
+
+    private void MaterializeBlockVariables(BasicBlock block)
+    {
+        List<Variable> stack = [.. block.entryStackVariables];
+
+        foreach (var op in block.ops)
+        {
+            op.inputs.Clear();
+            op.outputs.Clear();
+
+            int inputCount = op.inputTypes.Count;
+            if (inputCount > stack.Count)
+                throw new InvalidOperationException($"{op.Opcode} reads {inputCount} values from a stack of {stack.Count}");
+
+            int firstInput = stack.Count - inputCount;
+            op.inputs.AddRange(stack.Skip(firstInput));
+            stack.RemoveRange(firstInput, inputCount);
+
+            foreach (var output in op.stackOutputs)
+            {
+                Variable variable = output.InputIndex >= 0
+                    ? op.inputs[output.InputIndex]
+                    : NewVariable(VariableKind.Temporary, output.Type);
+                op.outputs.Add(variable);
+                stack.Add(variable);
+            }
+
+            if (op.clearsStack)
+                stack.Clear();
+
+            foreach (var access in op.variableAccesses)
+            {
+                Variable variable = access.VariableKind switch
+                {
+                    VariableKind.Argument => GetArgumentVariable(access.Index),
+                    VariableKind.Local => GetLocalVariable(access.Index),
+                    _ => throw new InvalidOperationException($"Invalid explicit variable kind {access.VariableKind}"),
+                };
+
+                switch (access.Kind)
+                {
+                    case Op.VariableAccessKind.Read:
+                        op.inputs.Add(variable);
+                        break;
+                    case Op.VariableAccessKind.Write:
+                        op.outputs.Add(variable);
+                        break;
+                    case Op.VariableAccessKind.Address:
+                        variable.addressTaken = true;
+                        op.inputs.Add(variable);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        block.exitStackVariables.Clear();
+        block.exitStackVariables.AddRange(stack);
+        if (block.exitStackVariables.Count != block.exitStack.Count)
+            throw new InvalidOperationException($"Variable stack disagrees with type stack at the exit of {block.ID}");
+    }
+
+    private void BuildVariableEdges()
+    {
+        foreach (var block in basicBlocks)
+        {
+            block.incomingEdges.Clear();
+            block.outgoingEdges.Clear();
+        }
+
+        foreach (var source in basicBlocks)
+        {
+            bool emittedFallThrough = false;
+            foreach (Block successor in source.successors)
+            {
+                if (successor is not BasicBlock target)
+                    throw new InvalidOperationException($"Basic block {source.ID} has non-basic successor {successor.ID}");
+
+                bool isFallThrough = !emittedFallThrough && source.next == target;
+                emittedFallThrough |= isFallThrough;
+                var edge = new ControlFlowEdge(source, target,
+                    isFallThrough ? ControlFlowEdgeKind.FallThrough : ControlFlowEdgeKind.Branch);
+
+                if (source.exitStackVariables.Count != target.entryStackVariables.Count)
+                {
+                    throw new InvalidOperationException(
+                        $"Stack depth mismatch on edge {source.ID} => {target.ID}: " +
+                        $"{source.exitStackVariables.Count} != {target.entryStackVariables.Count}");
+                }
+
+                for (int index = 0; index < source.exitStackVariables.Count; index++)
+                {
+                    edge.assignments.Add(new VariableAssignment(
+                        source.exitStackVariables[index], target.entryStackVariables[index]));
+                }
+
+                source.outgoingEdges.Add(edge);
+                target.incomingEdges.Add(edge);
+            }
+        }
+    }
+
+    private Variable GetArgumentVariable(int index) => argumentVariables.TryGetValue(index, out var variable)
+        ? variable
+        : throw new InvalidOperationException($"Unknown argument #{index}");
+
+    private Variable GetLocalVariable(int index)
+    {
+        if (localVariables.TryGetValue(index, out var variable))
+            return variable;
+
+        variable = NewVariable(VariableKind.Local, null, index);
+        localVariables.Add(index, variable);
+        return variable;
+    }
+
+    private Variable NewVariable(
+        VariableKind kind,
+        Type? type,
+        int index = -1,
+        BasicBlock? block = null,
+        LocalBuilder? localBuilder = null,
+        bool pinned = false)
+    {
+        var variable = new Variable
+        {
+            id = nextVariableId++,
+            kind = kind,
+            type = type,
+            index = index,
+            block = block,
+            localBuilder = localBuilder,
+            pinned = pinned,
+        };
+        variables.Add(variable);
+        return variable;
+    }
+
+    private static bool ReferencesLocal(Op op) => unchecked((ushort)op.Opcode.Value) is
+        OpCodeValues.Ldloc_0 or OpCodeValues.Ldloc_1 or OpCodeValues.Ldloc_2 or OpCodeValues.Ldloc_3 or
+        OpCodeValues.Ldloc or OpCodeValues.Ldloc_S or OpCodeValues.Ldloca or OpCodeValues.Ldloca_S or
+        OpCodeValues.Stloc_0 or OpCodeValues.Stloc_1 or OpCodeValues.Stloc_2 or OpCodeValues.Stloc_3 or
+        OpCodeValues.Stloc or OpCodeValues.Stloc_S;
 
     internal void BranchInversion()
     {
