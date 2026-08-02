@@ -29,8 +29,29 @@ internal class UniqueQueue<T> : IEnumerable<T>
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)queue).GetEnumerator();
 }
 
-internal partial class Optimizer
+internal class Optimizer
 {
+    internal class BasicBlock : Block
+    {
+        // Convenience projections only; CFG mutations must operate on the edge collections.
+        public BasicBlock? Next => fallthroughEdge?.Target;
+        public IEnumerable<BasicBlock> Predecessors => incomingEdges.Select(edge => edge.Source);
+        public IEnumerable<BasicBlock> Successors => outgoingEdges.Select(edge => edge.Target);
+        public readonly List<Op> ops = [];
+
+        // The canonical normal-control-flow graph. fallthroughEdge is null when the final
+        // instruction always transfers control; otherwise it identifies the default continuation.
+        public readonly List<ControlFlowEdge> incomingEdges = [];
+        public readonly List<ControlFlowEdge> outgoingEdges = [];
+        public ControlFlowEdge? fallthroughEdge;
+
+        // Canonical in Variables form and empty in Stack form. An entry stack slot acts like a
+        // block parameter. Each incoming edge assigns its corresponding exit value to it; these
+        // assignments are logical and emit no CIL copies.
+        public readonly List<Variable> entryStackVariables = [];
+        public readonly List<Variable> exitStackVariables = [];
+    }
+
     internal sealed class ControlFlowEdge(BasicBlock source, BasicBlock target)
     {
         // Populated when stack values are materialized as variables. All assignments occur in
@@ -334,6 +355,9 @@ internal partial class Optimizer
     }
 
     internal IrForm Form { get; private set; }
+
+    private static bool IsSpecialType(Type type) => type == typeof(AnyType) || type == typeof(UnknownType);
+    private static Type FromRef(Type type) => IsSpecialType(type) ? type : type.GetElementType() ?? throw new InvalidOperationException();
 
     private static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
     private static bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
@@ -1075,8 +1099,11 @@ internal partial class Optimizer
                 }
                 case BasicBlock basicBlock:
                 {
-                    (List<Type> locals, List<Type> stack) = basicBlock.SymbolicExecute(
-                        entryLocals[basicBlock], entryStacks[basicBlock], parameterTypes, returnType, transitions);
+                    List<Type> locals = [.. entryLocals[basicBlock]];
+                    List<Type> stack = [.. entryStacks[basicBlock]];
+
+                    SymbolicExecute(basicBlock, locals, stack, transitions);
+
                     exitStacks[basicBlock] = stack;
                     foreach (var edge in basicBlock.outgoingEdges)
                         UpdateEntry(edge.Target, locals, stack);
@@ -1116,6 +1143,189 @@ internal partial class Optimizer
             entryLocals[successor] = locals;
             entryStacks[successor] = stack;
             worklist.Enqueue(successor);
+        }
+    }
+
+    private void SymbolicExecute(BasicBlock basicBlock, List<Type> locals, List<Type> stack, Dictionary<Op, Op.StackTransition> transitions)
+    {
+        foreach (var op in basicBlock.ops)
+        {
+            var transition = new Op.StackTransition();
+            transitions[op] = transition;
+            List<Type> inputStack = [.. stack];
+            int popCount = op.GetStackPops(returnType);
+            if (popCount > inputStack.Count)
+                throw new InvalidOperationException($"{op.Opcode} pops {popCount} values from a stack of {inputStack.Count}");
+
+            transition.inputTypes.AddRange(inputStack.Skip(inputStack.Count - popCount));
+
+            switch (unchecked((ushort)op.Opcode.Value))
+            {
+                case OpCodeValues.Ldloc_0:
+                case OpCodeValues.Ldloc_1:
+                case OpCodeValues.Ldloc_2:
+                case OpCodeValues.Ldloc_3:
+                case OpCodeValues.Ldloc:
+                case OpCodeValues.Ldloc_S:
+                {
+                    int index = op.Index;
+                    ExpandLocals(index);
+                    transition.variableAccesses.Add(new(VariableKind.Local, index, Op.VariableAccessKind.Read));
+                    stack.Add(locals[index]);
+                    break;
+                }
+                case OpCodeValues.Stloc_0:
+                case OpCodeValues.Stloc_1:
+                case OpCodeValues.Stloc_2:
+                case OpCodeValues.Stloc_3:
+                case OpCodeValues.Stloc:
+                case OpCodeValues.Stloc_S:
+                {
+                    int index = op.Index;
+                    while (locals.Count < index + 1)
+                        locals.Add(typeof(UnknownType));
+                    transition.variableAccesses.Add(new(VariableKind.Local, index, Op.VariableAccessKind.Write));
+                    locals[index] = stack[^1];
+                    stack.RemoveAt(stack.Count - 1);
+                    break;
+                }
+                case OpCodeValues.Ldloca:
+                case OpCodeValues.Ldloca_S:
+                {
+                    int index = op.Index;
+                    while (locals.Count < index + 1)
+                        locals.Add(typeof(UnknownType));
+                    transition.variableAccesses.Add(new(VariableKind.Local, index, Op.VariableAccessKind.Address));
+                    stack.Add(ToRef(locals[index]));
+                    // Can't be bothered to do fancy analysis here
+                    if (!locals[index].IsValueType)
+                        locals[index] = typeof(object);
+                    break;
+                }
+                case OpCodeValues.Ldarg_0:
+                case OpCodeValues.Ldarg_1:
+                case OpCodeValues.Ldarg_2:
+                case OpCodeValues.Ldarg_3:
+                case OpCodeValues.Ldarg:
+                case OpCodeValues.Ldarg_S:
+                {
+                    int index = op.Index;
+                    transition.variableAccesses.Add(new(VariableKind.Argument, index, Op.VariableAccessKind.Read));
+                    stack.Add(((IReadOnlyList<Type>)parameterTypes)[index]);
+                    break;
+                }
+                case OpCodeValues.Ldarga:
+                case OpCodeValues.Ldarga_S:
+                {
+                    int index = op.Index;
+                    transition.variableAccesses.Add(new(VariableKind.Argument, index, Op.VariableAccessKind.Address));
+                    stack.Add(ToRef(((IReadOnlyList<Type>)parameterTypes)[index]));
+                    break;
+                }
+                case OpCodeValues.Starg:
+                case OpCodeValues.Starg_S:
+                {
+                    int index = op.Index;
+                    transition.variableAccesses.Add(new(VariableKind.Argument, index, Op.VariableAccessKind.Write));
+                    stack.RemoveAt(stack.Count - 1);
+                    break;
+                }
+                case OpCodeValues.Dup:
+                {
+                    stack.Add(stack[^1]);
+                    break;
+                }
+                case OpCodeValues.Ldobj:
+                {
+                    stack[^1] = FromRef(stack[^1]);
+                    break;
+                }
+                case OpCodeValues.Ldstr:
+                {
+                    stack.Add(typeof(string));
+                    break;
+                }
+                case OpCodeValues.Ldfld when op.Operand is FieldInfo field:
+                {
+                    stack[^1] = field.FieldType;
+                    break;
+                }
+                case OpCodeValues.Ldflda when op.Operand is FieldInfo field:
+                {
+                    stack[^1] = ToRef(field.FieldType);
+                    break;
+                }
+                case OpCodeValues.Ldsfld when op.Operand is FieldInfo field:
+                {
+                    stack.Add(field.FieldType);
+                    break;
+                }
+                case OpCodeValues.Ldsflda when op.Operand is FieldInfo field:
+                {
+                    stack.Add(ToRef(field.FieldType));
+                    break;
+                }
+                case OpCodeValues.NewObj when op.Operand is ConstructorInfo constructor:
+                {
+                    var count = constructor.GetParameters().Length;
+                    for (int i = 0; i < count; i++)
+                        stack.RemoveAt(stack.Count - 1);
+                    stack.Add(constructor.DeclaringType);
+                    break;
+                }
+                default:
+                {
+                    for (int i = 0; i < popCount; i++)
+                        stack.RemoveAt(stack.Count - 1);
+
+                    switch (op.Opcode.StackBehaviourPush)
+                    {
+                        case StackBehaviour.Push0: break;
+                        case StackBehaviour.Push1: stack.Add(typeof(AnyType)); break;
+                        case StackBehaviour.Push1_push1:
+                            stack.Add(typeof(AnyType));
+                            stack.Add(typeof(AnyType));
+                            break;
+                        case StackBehaviour.Pushi: stack.Add(typeof(AnyType)); break;
+                        case StackBehaviour.Pushi8: stack.Add(typeof(long)); break;
+                        case StackBehaviour.Pushr4: stack.Add(typeof(float)); break;
+                        case StackBehaviour.Pushr8: stack.Add(typeof(double)); break;
+                        case StackBehaviour.Pushref: stack.Add(typeof(object)); break;
+                        case StackBehaviour.Varpush when op.Operand is MethodInfo methodInfo:
+                        {
+                            if (methodInfo.ReturnType != typeof(void))
+                                stack.Add(methodInfo.ReturnType);
+                            break;
+                        }
+                        default: throw new ArgumentException();
+                    }
+
+                    break;
+                }
+            }
+
+            transition.clearsStack = op.ClearsStack;
+            if (transition.clearsStack)
+            {
+                stack.Clear();
+            }
+            else
+            {
+                int pushCount = stack.Count - (inputStack.Count - popCount);
+                if (pushCount < 0)
+                    throw new InvalidOperationException($"Invalid stack effect for {op.Opcode}");
+
+                int inputIndex = op.Opcode == OpCodes.Dup ? 0 : -1;
+                transition.outputs.AddRange(stack
+                    .Skip(stack.Count - pushCount)
+                    .Select(type => new Op.StackOutput(type, inputIndex)));
+            }
+        }
+
+        void ExpandLocals(int index)
+        {
+            while (locals.Count < index + 1)
+                locals.Add(typeof(UnknownType));
         }
     }
 
@@ -1406,4 +1616,6 @@ internal partial class Optimizer
 
         return output;
     }
+
+    private static Type ToRef(Type type) => IsSpecialType(type) ? type : type.MakeByRefType();
 }
