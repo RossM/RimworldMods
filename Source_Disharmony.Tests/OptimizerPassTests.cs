@@ -21,7 +21,7 @@ public sealed class OptimizerPassTests
                 new CodeInstruction(OpCodes.Brfalse, target),
                 new CodeInstruction(OpCodes.Ldc_I4_1),
                 new CodeInstruction(OpCodes.Pop),
-                WithLabel(new CodeInstruction(OpCodes.Ret), target),
+                new CodeInstruction(OpCodes.Ret).WithLabels(target),
             ];
         });
 
@@ -66,9 +66,9 @@ public sealed class OptimizerPassTests
                 new CodeInstruction(OpCodes.Ldc_I4_0),
                 new CodeInstruction(OpCodes.Brfalse, exit),
                 new CodeInstruction(OpCodes.Nop),
-                WithLabel(new CodeInstruction(OpCodes.Ldc_I4_1), afterEmptyBlock),
+                new CodeInstruction(OpCodes.Ldc_I4_1).WithLabels(afterEmptyBlock),
                 new CodeInstruction(OpCodes.Pop),
-                WithLabel(new CodeInstruction(OpCodes.Ret), exit),
+                new CodeInstruction(OpCodes.Ret).WithLabels(exit),
             ];
         });
         optimizer.MakeBasicBlocks();
@@ -96,7 +96,7 @@ public sealed class OptimizerPassTests
                 new CodeInstruction(OpCodes.Br, target),
                 new CodeInstruction(OpCodes.Ldc_I4_1),
                 new CodeInstruction(OpCodes.Pop),
-                WithLabel(new CodeInstruction(OpCodes.Ret), target),
+                new CodeInstruction(OpCodes.Ret).WithLabels(target),
             ];
         });
         optimizer.MakeBasicBlocks();
@@ -119,7 +119,7 @@ public sealed class OptimizerPassTests
             [
                 new CodeInstruction(OpCodes.Ldc_I4_0),
                 new CodeInstruction(OpCodes.Brfalse, target),
-                WithLabel(new CodeInstruction(OpCodes.Ret), target),
+                new CodeInstruction(OpCodes.Ret).WithLabels(target),
             ];
         });
         optimizer.MakeBasicBlocks();
@@ -141,7 +141,7 @@ public sealed class OptimizerPassTests
             return
             [
                 new CodeInstruction(OpCodes.Ldc_I4_1),
-                WithLabel(new CodeInstruction(OpCodes.Pop), secondBlock),
+                new CodeInstruction(OpCodes.Pop).WithLabels(secondBlock),
                 new CodeInstruction(OpCodes.Ret),
             ];
         });
@@ -169,7 +169,7 @@ public sealed class OptimizerPassTests
                 new CodeInstruction(OpCodes.Ldc_I4_1),
                 new CodeInstruction(OpCodes.Pop),
                 new CodeInstruction(OpCodes.Ret),
-                WithLabel(new CodeInstruction(OpCodes.Ret), target),
+                new CodeInstruction(OpCodes.Ret).WithLabels(target),
             ];
         });
         optimizer.MakeBasicBlocks();
@@ -200,9 +200,9 @@ public sealed class OptimizerPassTests
                 new CodeInstruction(OpCodes.Ldstr, "first"),
                 new CodeInstruction(OpCodes.Stloc, local),
                 new CodeInstruction(OpCodes.Br, join),
-                WithLabel(new CodeInstruction(OpCodes.Ldstr, "second"), alternative),
+                new CodeInstruction(OpCodes.Ldstr, "second").WithLabels(alternative),
                 new CodeInstruction(OpCodes.Stloc, local),
-                WithLabel(new CodeInstruction(OpCodes.Ldloc, local), join),
+                new CodeInstruction(OpCodes.Ldloc, local).WithLabels(join),
                 new CodeInstruction(OpCodes.Pop),
                 new CodeInstruction(OpCodes.Ret),
             ];
@@ -228,8 +228,8 @@ public sealed class OptimizerPassTests
             [
                 new CodeInstruction(OpCodes.Ldc_I4_0),
                 new CodeInstruction(OpCodes.Brfalse, unique),
-                WithLabel(new CodeInstruction(OpCodes.Ret), shared),
-                WithLabel(new CodeInstruction(OpCodes.Br, shared), unique),
+                new CodeInstruction(OpCodes.Ret).WithLabels(shared),
+                new CodeInstruction(OpCodes.Br, shared).WithLabels(unique),
             ];
         });
         optimizer.MakeBasicBlocks();
@@ -254,7 +254,7 @@ public sealed class OptimizerPassTests
             [
                 new CodeInstruction(OpCodes.Br, target),
                 new CodeInstruction(OpCodes.Ret),
-                WithLabel(new CodeInstruction(OpCodes.Ret), target),
+                new CodeInstruction(OpCodes.Ret).WithLabels(target),
             ];
         });
         optimizer.MakeBasicBlocks();
@@ -279,7 +279,7 @@ public sealed class OptimizerPassTests
             [
                 new CodeInstruction(OpCodes.Br, target),
                 new CodeInstruction(OpCodes.Ret),
-                WithLabel(new CodeInstruction(OpCodes.Ret), target),
+                new CodeInstruction(OpCodes.Ret).WithLabels(target),
             ];
         });
         optimizer.MakeBasicBlocks();
@@ -302,12 +302,6 @@ public sealed class OptimizerPassTests
         var dynamicMethod = new DynamicMethod("OptimizerPassTest", typeof(void), Type.EmptyTypes);
         ILGenerator generator = dynamicMethod.GetILGenerator();
         return new Optimizer(TargetMethod, createInstructions(generator), generator, debug: false);
-    }
-
-    private static CodeInstruction WithLabel(CodeInstruction instruction, Label label)
-    {
-        instruction.labels.Add(label);
-        return instruction;
     }
 
     private static OpCode[] OpCodesIn(Optimizer.BasicBlock block) => [.. block.ops.Select(op => op.Opcode)];
