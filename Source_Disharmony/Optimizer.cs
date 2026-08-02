@@ -3,6 +3,88 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Disharmony;
 
+internal partial class Optimizer
+{
+    internal sealed class ControlFlowEdge(BasicBlock source, BasicBlock target)
+    {
+        // Mutated only by the optimizer's edge helpers, which keep both endpoint collections in sync.
+        public BasicBlock Source { get; internal set; } = source;
+        public BasicBlock Target { get; internal set; } = target;
+
+        // Populated when stack values are materialized as variables. All assignments occur in
+        // parallel and remain logical until SSA destruction decides whether any copies are needed.
+        public readonly List<VariableAssignment> assignments = [];
+    }
+}
+
+internal partial class Optimizer
+{
+    internal sealed class Variable
+    {
+        // Stable optimizer identity; unlike index, this is unique across all variable kinds.
+        public required int id;
+        public required VariableKind kind;
+
+        // For a Local this is set only from authoritative local metadata or a LocalBuilder, never
+        // inferred from stores. EntryStackSlot and Temporary types come from symbolic stack analysis.
+        public Type? type;
+
+        // Argument/local index, or stack position for an EntryStackSlot. Temporaries leave this at -1.
+        public int index = -1;
+
+        // Only EntryStackSlots have an owning block.
+        public BasicBlock? block;
+
+        // Preserves both the identity and authoritative type of transpiler-created locals when known.
+        public LocalBuilder? localBuilder;
+
+        public bool pinned;
+
+        // Address-taken arguments and locals cannot be promoted as ordinary SSA values.
+        public bool addressTaken;
+
+        public string Name => kind switch
+        {
+            VariableKind.Argument => $"a{index}",
+            VariableKind.Local => $"l{index}",
+            VariableKind.EntryStackSlot => $"s{block!.id}_{index}",
+            VariableKind.Temporary => $"v{id}",
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+
+        public override string ToString() => Name;
+    }
+}
+
+internal partial class Optimizer
+{
+    /// <summary>Identifies the storage or logical value represented by a variable.</summary>
+    internal enum VariableKind
+    {
+        /// <summary>A mutable CIL argument slot, including <c>this</c> at index zero.</summary>
+        Argument,
+
+        /// <summary>A mutable CIL local. Its declared type may be unavailable.</summary>
+        Local,
+
+        /// <summary>A basic-block entry stack position, analogous to a block parameter.</summary>
+        EntryStackSlot,
+
+        /// <summary>A value produced by an operation within a basic block.</summary>
+        Temporary,
+    }
+}
+
+internal partial class Optimizer
+{
+    internal sealed class VariableAssignment(Variable source, Variable destination)
+    {
+        // This is a logical value transfer on a CFG edge, not an instruction to emit.
+        public Variable Source { get; } = source;
+        public Variable Destination { get; } = destination;
+    }
+}
+
 internal class UniqueQueue<T> : IEnumerable<T>
 {
     public int Count => queue.Count;
@@ -56,8 +138,10 @@ internal partial class Optimizer
         {
             /// <summary>Loads the current value of an argument or local.</summary>
             Read,
+
             /// <summary>Replaces the current value of an argument or local.</summary>
             Write,
+
             /// <summary>Takes the storage location's address, preventing ordinary SSA promotion.</summary>
             Address,
         }
@@ -140,6 +224,7 @@ internal partial class Optimizer
 
         public OpCode Opcode { get; } = opcode;
         public object? Operand { get; } = operand;
+
         public int Index => unchecked((ushort)Opcode.Value) switch
         {
             OpCodeValues.Ldarg_0 => 0,
@@ -305,6 +390,7 @@ internal partial class Optimizer
                 FileLog.LogBuffered($"## Predecessors: {string.Join(", ", basicBlock.predecessors.Select(b => b.ID))}");
                 FileLog.LogBuffered($"## Successors:   {string.Join(", ", basicBlock.successors.Select(b => b.ID))}");
             }
+
             if (block is { EntryPoint: true, parent: not null })
                 FileLog.LogBuffered($"## Entry Point:  {block.parent.ID}");
 
@@ -331,6 +417,7 @@ internal partial class Optimizer
                         else
                             LogInstruction(ConvertToCodeInstruction(op), ref codePos);
                     }
+
                     if (bb.ops.Count == 0)
                         LogInstruction(Ops.Nop.ToCodeInstruction(), ref codePos);
 
@@ -343,6 +430,7 @@ internal partial class Optimizer
                             FileLog.LogBuffered($"## Edge {edge.Source.ID} => {edge.Target.ID}: {assignments}");
                         }
                     }
+
                     break;
                 }
             }
@@ -879,6 +967,7 @@ internal partial class Optimizer
             foreach (var edge in deadBlock.incomingEdges.Concat(deadBlock.outgoingEdges).Distinct().ToArray())
                 RemoveControlFlowEdge(edge);
         }
+
         allBlocks.RemoveAll(b => b is BasicBlock && !liveBlocks.Contains(b));
         basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
     }
@@ -927,12 +1016,8 @@ internal partial class Optimizer
 
             switch (block)
             {
-                case Region { next: not null } chainedRegion:
-                    queue.AddFirst(chainedRegion.next);
-                    break;
-                case BasicBlock { fallthroughEdge: not null } basicBlock:
-                    queue.AddFirst(basicBlock.fallthroughEdge.Target);
-                    break;
+                case Region { next: not null } chainedRegion: queue.AddFirst(chainedRegion.next); break;
+                case BasicBlock { fallthroughEdge: not null } basicBlock: queue.AddFirst(basicBlock.fallthroughEdge.Target); break;
             }
 
             switch (block)
@@ -967,6 +1052,7 @@ internal partial class Optimizer
             foreach (var edge in deadBlock.incomingEdges.Concat(deadBlock.outgoingEdges).Distinct().ToArray())
                 RemoveControlFlowEdge(edge);
         }
+
         allBlocks.Clear();
         allBlocks.AddRange(outputBlocks);
         basicBlocks = [.. allBlocks.OfType<BasicBlock>()];
@@ -1008,8 +1094,7 @@ internal partial class Optimizer
                         UpdateEntry(edge.Target, locals, stack);
                     break;
                 }
-                default:
-                    throw new ArgumentOutOfRangeException();
+                default: throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -1147,18 +1232,13 @@ internal partial class Optimizer
 
                 switch (access.Kind)
                 {
-                    case Op.VariableAccessKind.Read:
-                        op.inputs.Add(variable);
-                        break;
-                    case Op.VariableAccessKind.Write:
-                        op.outputs.Add(variable);
-                        break;
+                    case Op.VariableAccessKind.Read: op.inputs.Add(variable); break;
+                    case Op.VariableAccessKind.Write: op.outputs.Add(variable); break;
                     case Op.VariableAccessKind.Address:
                         variable.addressTaken = true;
                         op.inputs.Add(variable);
                         break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    default: throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -1335,6 +1415,7 @@ internal partial class Optimizer
             Type rightType = i < right.Count ? right[i] : typeof(UnknownType);
             output.Add(CombineTypes(leftType, rightType));
         }
+
         return output;
     }
 }
