@@ -77,7 +77,7 @@ internal partial class Optimizer
             }
 
             foreach (var block in optimizer.basicBlocks)
-                exitStackVariables[block] = MaterializeBlockVariables(block, exitStacks[block].Count, transitions);
+                exitStackVariables[block] = MaterializeBlockVariables(block, exitStacks[block].Count);
 
             MergeCrossBlockStackSlots();
             optimizer.Form = IrForm.Variables;
@@ -311,7 +311,7 @@ internal partial class Optimizer
                     case OpCodeValues.Isinst:
                     case OpCodeValues.Castclass:
                     {
-                        Type type = op.Operand is Type testedType && !testedType.IsValueType
+                        Type type = op.Operand is Type { IsValueType: false } testedType
                             ? testedType
                             : typeof(object);
                         PopInputsAndPush(type, popCount);
@@ -560,8 +560,7 @@ internal partial class Optimizer
 
         public List<Variable> MaterializeBlockVariables(
             BasicBlock block,
-            int expectedExitStackSize,
-            IReadOnlyDictionary<Op, Op.StackTransition> transitions)
+            int expectedExitStackSize)
         {
             List<Variable> stack = [.. block.entryStackVariables];
 

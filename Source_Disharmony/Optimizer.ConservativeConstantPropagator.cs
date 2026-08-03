@@ -457,7 +457,7 @@ internal partial class Optimizer
         // storage type, while ldind selects sign- or zero-extension through its opcode. Stores only
         // truncate, and 4-byte-or-larger loads have no signedness-dependent extension.
         private static bool IndirectTypeMatchesStorage(Op operation, Type storageType) =>
-            unchecked((ushort)operation.Opcode.Value) switch
+            operation.OpcodeValue switch
             {
                 OpCodeValues.Ldobj or OpCodeValues.Stobj => operation.Operand is Type type && type == storageType,
                 OpCodeValues.Ldind_I1 => storageType == typeof(sbyte),
@@ -476,7 +476,7 @@ internal partial class Optimizer
                     storageType == typeof(IntPtr) || storageType == typeof(UIntPtr),
                 OpCodeValues.Ldind_R4 or OpCodeValues.Stind_R4 => storageType == typeof(float),
                 OpCodeValues.Ldind_R8 or OpCodeValues.Stind_R8 => storageType == typeof(double),
-                OpCodeValues.Ldind_Ref or OpCodeValues.Stind_Ref => !storageType.IsValueType && !storageType.IsByRef,
+                OpCodeValues.Ldind_Ref or OpCodeValues.Stind_Ref => storageType is { IsValueType: false, IsByRef: false },
                 _ => false,
             };
 

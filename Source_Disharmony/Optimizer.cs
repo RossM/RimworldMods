@@ -476,6 +476,7 @@ internal partial class Optimizer
         public static Op Nop => new(OpCodes.Nop);
         public static Op Ret => new(OpCodes.Ret);
         public static Op Pop => new(OpCodes.Pop);
+        public static Op Dup => new(OpCodes.Dup);
     }
 
     /// <summary>

@@ -122,7 +122,7 @@ internal partial class Optimizer
             for (int index = 0; index < reversePostorder.Length; index++)
                 reversePostorderIndex[reversePostorder[index]] = index;
 
-            int[] immediateDominators = Enumerable.Repeat(-1, blockCount + 1).ToArray();
+            int[] immediateDominators = [.. Enumerable.Repeat(-1, blockCount + 1)];
             immediateDominators[artificialRoot] = artificialRoot;
 
             bool changed;
