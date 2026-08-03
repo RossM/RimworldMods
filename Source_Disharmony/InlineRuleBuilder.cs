@@ -57,16 +57,16 @@ internal class InlineRuleBuilder : RuleBuilder
                 OpCodeValues.Ldloc_1  => CodeInstruction.LoadLocal(GetLocal(1)),
                 OpCodeValues.Ldloc_2  => CodeInstruction.LoadLocal(GetLocal(2)),
                 OpCodeValues.Ldloc_3  => CodeInstruction.LoadLocal(GetLocal(3)),
-                OpCodeValues.Ldloc    => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand))),
-                OpCodeValues.Ldloc_S  => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand))),
-                OpCodeValues.Ldloca   => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand)), true),
-                OpCodeValues.Ldloca_S => CodeInstruction.LoadLocal(GetLocal(Convert.ToInt32(inst.operand)), true),
+                OpCodeValues.Ldloc    => CodeInstruction.LoadLocal(GetLocal(GetLocalIndex(inst.operand))),
+                OpCodeValues.Ldloc_S  => CodeInstruction.LoadLocal(GetLocal(GetLocalIndex(inst.operand))),
+                OpCodeValues.Ldloca   => CodeInstruction.LoadLocal(GetLocal(GetLocalIndex(inst.operand)), true),
+                OpCodeValues.Ldloca_S => CodeInstruction.LoadLocal(GetLocal(GetLocalIndex(inst.operand)), true),
                 OpCodeValues.Stloc_0  => CodeInstruction.StoreLocal(GetLocal(0)),
                 OpCodeValues.Stloc_1  => CodeInstruction.StoreLocal(GetLocal(1)),
                 OpCodeValues.Stloc_2  => CodeInstruction.StoreLocal(GetLocal(2)),
                 OpCodeValues.Stloc_3  => CodeInstruction.StoreLocal(GetLocal(3)),
-                OpCodeValues.Stloc    => CodeInstruction.StoreLocal(GetLocal(Convert.ToInt32(inst.operand))),
-                OpCodeValues.Stloc_S  => CodeInstruction.StoreLocal(GetLocal(Convert.ToInt32(inst.operand))),
+                OpCodeValues.Stloc    => CodeInstruction.StoreLocal(GetLocal(GetLocalIndex(inst.operand))),
+                OpCodeValues.Stloc_S  => CodeInstruction.StoreLocal(GetLocal(GetLocalIndex(inst.operand))),
                 OpCodeValues.Ret      => new(OpCodes.Br, returnLabel),
                 _ => inst,
                 // @formatter:on
@@ -101,6 +101,10 @@ internal class InlineRuleBuilder : RuleBuilder
             localMap[index] = value = output.AddLocal(locals[index].LocalType);
         return value;
     }
+
+    private static int GetLocalIndex(object? operand) => operand is LocalBuilder localBuilder
+        ? localBuilder.LocalIndex
+        : Convert.ToInt32(operand);
 
     public override IEnumerable<Rule> BuildRules()
     {

@@ -27,6 +27,36 @@ public sealed class InstructionMatcherTests
     }
 
     [Test]
+    public void ReplacementPreservesExceptionBlockMarkersFromOutput()
+    {
+        var tryStart = new CodeInstruction(OpCodes.Nop);
+        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var finallyStart = new CodeInstruction(OpCodes.Nop);
+        finallyStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
+        var finallyEnd = new CodeInstruction(OpCodes.Endfinally);
+        finallyEnd.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var rule = new InstructionMatcher.Rule
+        {
+            mode = InstructionMatcher.OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [tryStart, finallyStart, finallyEnd],
+        };
+
+        List<CodeInstruction> result = Run(
+            [rule],
+            [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Ret)]);
+
+        Assert.That(
+            result.SelectMany(instruction => instruction.blocks).Select(block => block.blockType),
+            Is.EqualTo(new[]
+            {
+                ExceptionBlockType.BeginExceptionBlock,
+                ExceptionBlockType.BeginFinallyBlock,
+                ExceptionBlockType.EndExceptionBlock,
+            }));
+    }
+
+    [Test]
     public void InsertBeforePreservesMatchedInstructions()
     {
         var rule = new InstructionMatcher.Rule

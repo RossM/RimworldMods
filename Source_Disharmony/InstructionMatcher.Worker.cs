@@ -403,6 +403,9 @@ public partial class InstructionMatcher
 
         private void EmitReplacement(CodeInstruction replaceInst, MatchData match)
         {
+            if (replaceInst.blocks.Count > 0)
+                extraBlocks.AddRange(replaceInst.blocks);
+
             if (replaceInst.labels.Count > 0)
                 extraLabels.AddRange(replaceInst.labels.Select(label => GetReplacementLabel(label, match)));
 
