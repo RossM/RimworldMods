@@ -60,7 +60,7 @@ internal partial class Optimizer
             OperationEffects.MayThrow |
             OperationEffects.Unknown;
 
-        private const OperationEffects PreventsDiscard =
+        public const OperationEffects PreventsDiscard =
             OperationEffects.WritesStorage |
             OperationEffects.WritesMemory |
             OperationEffects.Calls |
@@ -69,9 +69,6 @@ internal partial class Optimizer
             OperationEffects.Volatile |
             OperationEffects.Observable |
             OperationEffects.Unknown;
-
-        public static bool CanDiscardIfUnused(OperationEffects effects) =>
-            (effects & PreventsDiscard) == 0;
 
         public static OperationEffects Classify(Op op)
         {
