@@ -4,6 +4,7 @@ internal class InlineRuleBuilder : RuleBuilder
 {
     private readonly MethodBase method;
     private readonly int[] argumentLocals;
+    private int returnLocal = -1;
     private readonly Dictionary<int, int> localMap = new();
     private readonly Type[] parameterTypes;
     private readonly List<LocalVariableInfo>? locals;
@@ -27,6 +28,9 @@ internal class InlineRuleBuilder : RuleBuilder
             argumentLocals[i] = output.AddLocal(parameterTypes[i]);
             output.Add(CodeInstruction.StoreLocal(argumentLocals[i]));
         }
+
+        if (method is MethodInfo m && m.ReturnType != typeof(void))
+            returnLocal = output.AddLocal(m.ReturnType);
 
         var instructions = PatchProcessor.GetOriginalInstructions(method, generator);
         if (instructions == null)
@@ -77,6 +81,13 @@ internal class InlineRuleBuilder : RuleBuilder
         output.Add(CodeInstruction.Annotation("End inlined method body"));
 
         output.Add(new(OpCodes.Nop) { labels = [returnLabel] });
+
+        // It's necessary to do a type conversion here to simulate a return correctly. For now, do it by storing to a local.
+        if (returnLocal >= 0)
+        {
+            output.Add(CodeInstruction.StoreArgument(returnLocal));
+            output.Add(CodeInstruction.LoadLocal(returnLocal));
+        }
 
         return true;
     }
