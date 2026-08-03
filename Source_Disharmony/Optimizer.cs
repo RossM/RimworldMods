@@ -311,7 +311,7 @@ internal partial class Optimizer
                 _ => throw new ArgumentOutOfRangeException(),
             };
 
-        public int Index => unchecked((ushort)Opcode.Value) switch
+        public int Index => OpcodeValue switch
         {
             OpCodeValues.Ldarg_0 => 0,
             OpCodeValues.Ldarg_1 => 1,
@@ -339,6 +339,8 @@ internal partial class Optimizer
         // prefix from the operation it governs.
         public IReadOnlyList<OpCode> Prefixes => prefixes;
 
+        public ushort OpcodeValue => unchecked((ushort)Opcode.Value);
+
         private OperationEffects? effectsCached;
 
         // Canonical only in Variables form and empty/defaulted in Stack form. Evaluation-stack
@@ -353,7 +355,7 @@ internal partial class Optimizer
 
         // Canonical in both forms. After MakeBasicBlocks, branch operands are ControlFlowEdge
         // objects rather than labels. In Variables form a storage opcode's encoded Operand may be
-        // stale after rewriting; GetStorageAccess().Variable is then the canonical storage target.
+        // stale after rewriting; GetStorageAccess().Variable is the canonical storage target.
         public OpCode Opcode { get; } = opcode;
         public object? Operand { get; } = operand;
 
@@ -365,8 +367,7 @@ internal partial class Optimizer
         /// </summary>
         internal StorageAccess? GetStorageAccess()
         {
-            ushort opcode = unchecked((ushort)Opcode.Value);
-            return opcode switch
+            return OpcodeValue switch
             {
                 OpCodeValues.Ldarg_0 or OpCodeValues.Ldarg_1 or OpCodeValues.Ldarg_2 or OpCodeValues.Ldarg_3 or
                     OpCodeValues.Ldarg or OpCodeValues.Ldarg_S =>
@@ -392,7 +393,7 @@ internal partial class Optimizer
         ///     families. Other memory operations are not indirect value accesses for this purpose.
         /// </summary>
         internal IndirectAccessKind? GetIndirectAccessKind() =>
-            unchecked((ushort)Opcode.Value) switch
+            OpcodeValue switch
             {
                 OpCodeValues.Ldobj or
                     OpCodeValues.Ldind_I1 or OpCodeValues.Ldind_U1 or
@@ -445,7 +446,7 @@ internal partial class Optimizer
         /// </summary>
         public bool TryGetLiteral([NotNullWhen(true)] out ConstantValue? constant)
         {
-            constant = unchecked((ushort)Opcode.Value) switch
+            constant = OpcodeValue switch
             {
                 OpCodeValues.Ldnull => ConstantValue.Null,
                 OpCodeValues.Ldstr when Operand is string text => ConstantValue.FromString(text),
