@@ -60,8 +60,7 @@ internal partial class Optimizer
         public IEnumerable<BasicBlock> Successors => outgoingEdges.Select(edge => edge.Target);
 
         // Canonical operation sequence in both IR forms. In Stack form the CIL evaluation stack is
-        // implicit; in Variables form each operation's inputs/outputs are canonical. An absorbed
-        // block may temporarily share these Op instances with its merger until dead-block removal.
+        // implicit; in Variables form each operation's inputs/outputs are canonical.
         public readonly List<Op> ops = [];
 
         // Non-canonical emission metadata. This preserves one input label when available and is
@@ -1516,6 +1515,7 @@ internal partial class Optimizer
                 continue;
 
             block.ops.AddRange(successor.ops);
+            successor.ops.Clear();
             RemoveControlFlowEdge(successorEdge);
 
             foreach (var edge in successor.outgoingEdges.ToArray())
