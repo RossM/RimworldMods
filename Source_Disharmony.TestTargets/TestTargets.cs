@@ -10,6 +10,23 @@ namespace Disharmony.Tests
         public int Value;
     }
 
+    public static class InlinePatchPatches
+    {
+        public static void InlinePrefixExecutesInlinedBranchAndRefWrite(ref int value)
+        {
+            if (value < 0)
+                value = -value;
+        }
+    }
+
+    public static class AutopatcherRegistrationInlinePatches
+    {
+        public static MethodBase? ObservedMethod;
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void Patch_AllInformation_UsesInlineOption() => ObservedMethod = MethodBase.GetCurrentMethod();
+    }
+
     public static class StaticMethodTargets
     {
         public static int MutableProperty

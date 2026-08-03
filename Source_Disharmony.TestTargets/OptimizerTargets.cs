@@ -692,6 +692,233 @@ public static class OptimizerExceptionTargets
     }
 }
 
+public static class OptimizerInlineTargets
+{
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int PrimitiveIdentity(int value) => value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static OptimizerDataObject ReferenceIdentity(OptimizerDataObject value) => value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static OptimizerDataStruct StructIdentity(OptimizerDataStruct value) => value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int PrimitiveResult() => 7;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static OptimizerDataObject ReferenceResult() =>
+        new() { Number = 7, Text = "original" };
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static OptimizerDataStruct StructResult() =>
+        new() { Number = 7, Text = "original" };
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int RefPrimitiveIdentity(ref int value)
+    {
+        value++;
+        return value;
+    }
+}
+
+public static class OptimizerInlinePatches
+{
+    public static int PatchCalls;
+    public static int PrimitiveObserved;
+    public static OptimizerDataObject? ReferenceObserved;
+    public static OptimizerDataStruct StructObserved;
+    public static int FinallyExecutions;
+    public static int StateObserved;
+    public static int ResultObserved;
+
+    private static void RecordPatch() => PatchCalls++;
+
+    public static bool Prefix_AlwaysFalse_SkipsTarget(ref int __result)
+    {
+        RecordPatch();
+        __result = 42;
+        return false;
+    }
+
+    public static bool Prefix_AlwaysTrue_RunsTarget()
+    {
+        RecordPatch();
+        return true;
+    }
+
+    public static bool InnerPrefix_AlwaysFalse_SkipsInnerTarget(ref int __result)
+    {
+        RecordPatch();
+        __result = 42;
+        return false;
+    }
+
+    public static bool InnerPrefix_AlwaysTrue_RunsInnerTarget()
+    {
+        RecordPatch();
+        return true;
+    }
+
+    public static bool Prefix_ArgumentControlsWhetherTargetIsSkipped(bool skip, ref int __result)
+    {
+        RecordPatch();
+        __result = 42;
+        return !skip;
+    }
+
+    public static bool InnerPrefix_OuterArgumentControlsWhetherInnerTargetIsSkipped(bool skip, ref int __result)
+    {
+        RecordPatch();
+        __result = 42;
+        return !skip;
+    }
+
+    public static void InlinePrefix_Is_Local_KnownSuccess(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = true;
+    }
+
+    public static void InlinePrefix_Is_Local_KnownFailure(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = false;
+    }
+
+    public static void InlinePrefix_Is_EvaluationStack_KnownSuccess(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = true;
+    }
+
+    public static void InlinePrefix_Is_EvaluationStack_KnownFailure(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = false;
+    }
+
+    public static void InlinePrefix_As_Local_KnownSuccess(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = true;
+    }
+
+    public static void InlinePrefix_As_Local_KnownFailure(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = false;
+    }
+
+    public static void InlinePrefix_As_EvaluationStack_KnownSuccess(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = true;
+    }
+
+    public static void InlinePrefix_As_EvaluationStack_KnownFailure(ref bool selectFirst)
+    {
+        RecordPatch();
+        selectFirst = false;
+    }
+
+    public static void InlinePrefix_Argument_Primitive_ReadWriteByReference(ref int value)
+    {
+        RecordPatch();
+        PrimitiveObserved = value;
+        value = 42;
+    }
+
+    public static void InlinePrefix_Argument_ReferenceType_ReadWriteByReference(ref OptimizerDataObject value)
+    {
+        RecordPatch();
+        ReferenceObserved = value;
+        value = new OptimizerDataObject { Number = 42, Text = "patched" };
+    }
+
+    public static void InlinePrefix_Argument_Struct_ReadWriteByReference(ref OptimizerDataStruct value)
+    {
+        RecordPatch();
+        StructObserved = value;
+        value = new OptimizerDataStruct { Number = 42, Text = "patched" };
+    }
+
+    public static void InlinePostfix_Result_Primitive_ReadWriteByReference(ref int __result)
+    {
+        RecordPatch();
+        PrimitiveObserved = __result;
+        __result = 42;
+    }
+
+    public static void InlinePostfix_Result_ReferenceType_ReadWriteByReference(ref OptimizerDataObject __result)
+    {
+        RecordPatch();
+        ReferenceObserved = __result;
+        __result = new OptimizerDataObject { Number = 42, Text = "patched" };
+    }
+
+    public static void InlinePostfix_Result_Struct_ReadWriteByReference(ref OptimizerDataStruct __result)
+    {
+        RecordPatch();
+        StructObserved = __result;
+        __result = new OptimizerDataStruct { Number = 42, Text = "patched" };
+    }
+
+    public static void InlinePrefix_TargetRefArgument_Primitive_ReadWriteByReference(ref int value)
+    {
+        RecordPatch();
+        PrimitiveObserved = value;
+        value = 42;
+    }
+
+    public static void InlinePrefix_ControlFlow_MultipleReturns(ref int value)
+    {
+        RecordPatch();
+        if (value < 0)
+        {
+            value = -1;
+            return;
+        }
+
+        if (value == 0)
+        {
+            value = 7;
+            return;
+        }
+
+        value = 42;
+    }
+
+    public static void InlinePrefix_ExceptionHandling_TryFinally(ref int value)
+    {
+        RecordPatch();
+        try
+        {
+            value = 42;
+        }
+        finally
+        {
+            FinallyExecutions++;
+        }
+    }
+
+    public static void InlinePrefixPostfix_StateAndResult_PreservesValues_Prefix(int value, out int __state)
+    {
+        RecordPatch();
+        __state = value;
+    }
+
+    public static void InlinePrefixPostfix_StateAndResult_PreservesValues_Postfix(
+        int __state,
+        ref int __result)
+    {
+        RecordPatch();
+        StateObserved = __state;
+        ResultObserved = __result;
+        __result = 42;
+    }
+}
+
 public static class OptimizerPrefixTargets
 {
     public static int PrefixTargetExecutions;

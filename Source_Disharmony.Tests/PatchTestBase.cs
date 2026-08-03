@@ -7,6 +7,7 @@ public abstract class PatchTestBase
     {
         Patcher.Instance.optimizerEnabled = false;
         Autopatcher.UnpatchAll(typeof(PatchTestBase).Assembly);
+        Autopatcher.UnpatchAll(typeof(StaticMethodTargets).Assembly);
     }
 
     protected static void ApplyPatch(Type patchMethodsType, string patchMethodName) =>

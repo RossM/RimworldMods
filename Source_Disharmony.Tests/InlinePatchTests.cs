@@ -1,24 +1,20 @@
 namespace Disharmony.Tests;
 
-public static class InlinePatchPatches
-{
-    [PatchOptions(PatchOptions.Inline)]
-    [Prefix]
-    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
-    public static void InlinePrefixExecutesInlinedBranchAndRefWrite(ref int value)
-    {
-        if (value < 0)
-            value = -value;
-    }
-}
-
 [TestFixture]
 public sealed class InlinePatchTests : PatchTestBase
 {
     [Test]
     public void InlinePrefixExecutesInlinedBranchAndRefWrite()
     {
-        ApplyPatch(typeof(InlinePatchPatches), nameof(InlinePatchPatches.InlinePrefixExecutesInlinedBranchAndRefWrite));
+        MethodInfo patch = typeof(InlinePatchPatches)
+            .GetMethod(nameof(InlinePatchPatches.InlinePrefixExecutesInlinedBranchAndRefWrite))!;
+        MethodInfo target = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.IntIdentity))!;
+        Autopatcher.Patch(
+            patch,
+            PatchType.Prefix,
+            options: PatchOptions.Inline,
+            targets: [target]);
 
         int negativeResult = StaticMethodTargets.IntIdentity(-42);
         int positiveResult = StaticMethodTargets.IntIdentity(7);

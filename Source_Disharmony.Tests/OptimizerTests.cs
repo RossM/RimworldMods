@@ -92,66 +92,6 @@ public static class OptimizerPatches
     public static void CatchAndRethrow_PreservesHandledAndRethrownPaths() => RecordPatch();
 
     [Prefix]
-    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixAlwaysFalseTarget))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static bool Prefix_AlwaysFalse_SkipsTarget(ref int __result)
-    {
-        RecordPatch();
-        __result = 42;
-        return false;
-    }
-
-    [Prefix]
-    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixAlwaysTrueTarget))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static bool Prefix_AlwaysTrue_RunsTarget()
-    {
-        RecordPatch();
-        return true;
-    }
-
-    [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerAlwaysFalseTarget))]
-    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerAlwaysFalseTarget))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static bool InnerPrefix_AlwaysFalse_SkipsInnerTarget(ref int __result)
-    {
-        RecordPatch();
-        __result = 42;
-        return false;
-    }
-
-    [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerAlwaysTrueTarget))]
-    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerAlwaysTrueTarget))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static bool InnerPrefix_AlwaysTrue_RunsInnerTarget()
-    {
-        RecordPatch();
-        return true;
-    }
-
-    [Prefix]
-    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixConditionallySkippedTarget))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static bool Prefix_ArgumentControlsWhetherTargetIsSkipped(bool skip, ref int __result)
-    {
-        RecordPatch();
-        __result = 42;
-        return !skip;
-    }
-
-    [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerConditionallySkippedTarget))]
-    [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static bool InnerPrefix_OuterArgumentControlsWhetherInnerTargetIsSkipped(
-        [Parameter("skip", Scope.Outer)] bool skip,
-        ref int __result)
-    {
-        RecordPatch();
-        __result = 42;
-        return !skip;
-    }
-
-    [Prefix]
     [Target(
         typeof(OptimizerDataTargets),
         nameof(OptimizerDataTargets.PrimitiveArithmeticAndNumericConversions))]
@@ -303,77 +243,6 @@ public static class OptimizerPatches
     [PatchOptions(PatchOptions.Optimize)]
     public static void AsInterface_Local_SuccessAndFailure() => RecordPatch();
 
-    [Prefix]
-    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.IsOperatorOnLocal))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static void InlinePrefix_Is_Local_KnownSuccess(ref bool selectFirst)
-    {
-        RecordPatch();
-        selectFirst = true;
-    }
-
-    [Prefix]
-    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.IsOperatorOnLocal))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static void InlinePrefix_Is_Local_KnownFailure(ref bool selectFirst)
-    {
-        RecordPatch();
-        selectFirst = false;
-    }
-
-    [Prefix]
-    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.IsOperatorOnEvaluationStack))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static void InlinePrefix_Is_EvaluationStack_KnownSuccess(ref bool selectFirst)
-    {
-        RecordPatch();
-        selectFirst = true;
-    }
-
-    [Prefix]
-    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.IsOperatorOnEvaluationStack))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static void InlinePrefix_Is_EvaluationStack_KnownFailure(ref bool selectFirst)
-    {
-        RecordPatch();
-        selectFirst = false;
-    }
-
-    [Prefix]
-    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.AsOperatorOnLocal))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static void InlinePrefix_As_Local_KnownSuccess(ref bool selectFirst)
-    {
-        RecordPatch();
-        selectFirst = true;
-    }
-
-    [Prefix]
-    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.AsOperatorOnLocal))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static void InlinePrefix_As_Local_KnownFailure(ref bool selectFirst)
-    {
-        RecordPatch();
-        selectFirst = false;
-    }
-
-    [Prefix]
-    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.AsOperatorOnEvaluationStack))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static void InlinePrefix_As_EvaluationStack_KnownSuccess(ref bool selectFirst)
-    {
-        RecordPatch();
-        selectFirst = true;
-    }
-
-    [Prefix]
-    [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.AsOperatorOnEvaluationStack))]
-    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
-    public static void InlinePrefix_As_EvaluationStack_KnownFailure(ref bool selectFirst)
-    {
-        RecordPatch();
-        selectFirst = false;
-    }
 }
 
 [TestFixture]
@@ -384,6 +253,7 @@ public sealed class OptimizerTests : PatchTestBase
     {
         Patcher.Instance.optimizerEnabled = true;
         OptimizerPatches.PatchCalls = 0;
+        OptimizerInlinePatches.PatchCalls = 0;
         OptimizerControlFlowTargets.RightOperandCalls = 0;
         OptimizerExceptionTargets.FinallyExecutions = 0;
         OptimizerExceptionTargets.DisposalCount = 0;
@@ -396,6 +266,21 @@ public sealed class OptimizerTests : PatchTestBase
     {
         Patcher.Instance.optimizerEnabled = false;
         Autopatcher.UnpatchAll(typeof(OptimizerTests).Assembly);
+    }
+
+    private static void ApplyInlinePatch(
+        string patchMethodName,
+        PatchType patchType,
+        MethodBase target,
+        MemberInfo? innerTarget = null)
+    {
+        MethodInfo patch = typeof(OptimizerInlinePatches).GetMethod(patchMethodName)!;
+        Autopatcher.Patch(
+            patch,
+            patchType,
+            innerTarget: innerTarget,
+            options: PatchOptions.Inline | PatchOptions.Optimize,
+            targets: [target]);
     }
 
     [Test]
@@ -619,69 +504,88 @@ public sealed class OptimizerTests : PatchTestBase
     [Test]
     public void Prefix_AlwaysFalse_SkipsTarget()
     {
-        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.Prefix_AlwaysFalse_SkipsTarget));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.Prefix_AlwaysFalse_SkipsTarget),
+            PatchType.Prefix,
+            typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.PrefixAlwaysFalseTarget))!);
 
         Assert.That(OptimizerPrefixTargets.PrefixAlwaysFalseTarget(-1), Is.EqualTo(42));
         Assert.That(OptimizerPrefixTargets.PrefixAlwaysFalseTarget(1), Is.EqualTo(42));
         Assert.That(OptimizerPrefixTargets.PrefixTargetExecutions, Is.Zero);
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 
     [Test]
     public void Prefix_AlwaysTrue_RunsTarget()
     {
-        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.Prefix_AlwaysTrue_RunsTarget));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.Prefix_AlwaysTrue_RunsTarget),
+            PatchType.Prefix,
+            typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.PrefixAlwaysTrueTarget))!);
 
         Assert.That(OptimizerPrefixTargets.PrefixAlwaysTrueTarget(-1), Is.EqualTo(-1));
         Assert.That(OptimizerPrefixTargets.PrefixAlwaysTrueTarget(1), Is.EqualTo(1));
         Assert.That(OptimizerPrefixTargets.PrefixTargetExecutions, Is.EqualTo(2));
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 
     [Test]
     public void InnerPrefix_AlwaysFalse_SkipsInnerTarget()
     {
-        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InnerPrefix_AlwaysFalse_SkipsInnerTarget));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InnerPrefix_AlwaysFalse_SkipsInnerTarget),
+            PatchType.InnerPrefix,
+            typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.CallInnerAlwaysFalseTarget))!,
+            typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.InnerAlwaysFalseTarget))!);
 
         Assert.That(OptimizerPrefixTargets.CallInnerAlwaysFalseTarget(-1), Is.EqualTo(-1));
         Assert.That(OptimizerPrefixTargets.CallInnerAlwaysFalseTarget(1), Is.EqualTo(42));
         Assert.That(OptimizerPrefixTargets.InnerTargetExecutions, Is.Zero);
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(1));
     }
 
     [Test]
     public void InnerPrefix_AlwaysTrue_RunsInnerTarget()
     {
-        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InnerPrefix_AlwaysTrue_RunsInnerTarget));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InnerPrefix_AlwaysTrue_RunsInnerTarget),
+            PatchType.InnerPrefix,
+            typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.CallInnerAlwaysTrueTarget))!,
+            typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.InnerAlwaysTrueTarget))!);
 
         Assert.That(OptimizerPrefixTargets.CallInnerAlwaysTrueTarget(-1), Is.EqualTo(-1));
         Assert.That(OptimizerPrefixTargets.CallInnerAlwaysTrueTarget(1), Is.EqualTo(1));
         Assert.That(OptimizerPrefixTargets.InnerTargetExecutions, Is.EqualTo(1));
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(1));
     }
 
     [Test]
     public void Prefix_ArgumentControlsWhetherTargetIsSkipped()
     {
-        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.Prefix_ArgumentControlsWhetherTargetIsSkipped));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.Prefix_ArgumentControlsWhetherTargetIsSkipped),
+            PatchType.Prefix,
+            typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.PrefixConditionallySkippedTarget))!);
 
         Assert.That(OptimizerPrefixTargets.PrefixConditionallySkippedTarget(false), Is.EqualTo(1));
         Assert.That(OptimizerPrefixTargets.PrefixConditionallySkippedTarget(true), Is.EqualTo(42));
         Assert.That(OptimizerPrefixTargets.PrefixTargetExecutions, Is.EqualTo(1));
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 
     [Test]
     public void InnerPrefix_OuterArgumentControlsWhetherInnerTargetIsSkipped()
     {
-        ApplyPatch(
-            typeof(OptimizerPatches),
-            nameof(OptimizerPatches.InnerPrefix_OuterArgumentControlsWhetherInnerTargetIsSkipped));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InnerPrefix_OuterArgumentControlsWhetherInnerTargetIsSkipped),
+            PatchType.InnerPrefix,
+            typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget))!,
+            typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.InnerConditionallySkippedTarget))!);
 
         Assert.That(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget(false), Is.EqualTo(1));
         Assert.That(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget(true), Is.EqualTo(42));
         Assert.That(OptimizerPrefixTargets.InnerTargetExecutions, Is.EqualTo(1));
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -1110,88 +1014,286 @@ public sealed class OptimizerTests : PatchTestBase
     [Test]
     public void InlinePrefix_Is_Local_KnownSuccess()
     {
-        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InlinePrefix_Is_Local_KnownSuccess));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_Is_Local_KnownSuccess),
+            PatchType.Prefix,
+            typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.IsOperatorOnLocal))!);
 
         Assert.That(OptimizerMixedTargets.IsOperatorOnLocal(false), Is.True);
         Assert.That(OptimizerMixedTargets.IsOperatorOnLocal(true), Is.True);
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 
     [Test]
     public void InlinePrefix_Is_Local_KnownFailure()
     {
-        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InlinePrefix_Is_Local_KnownFailure));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_Is_Local_KnownFailure),
+            PatchType.Prefix,
+            typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.IsOperatorOnLocal))!);
 
         Assert.That(OptimizerMixedTargets.IsOperatorOnLocal(false), Is.False);
         Assert.That(OptimizerMixedTargets.IsOperatorOnLocal(true), Is.False);
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 
     [Test]
     public void InlinePrefix_Is_EvaluationStack_KnownSuccess()
     {
-        ApplyPatch(
-            typeof(OptimizerPatches),
-            nameof(OptimizerPatches.InlinePrefix_Is_EvaluationStack_KnownSuccess));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_Is_EvaluationStack_KnownSuccess),
+            PatchType.Prefix,
+            typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.IsOperatorOnEvaluationStack))!);
 
         Assert.That(OptimizerMixedTargets.IsOperatorOnEvaluationStack(false), Is.True);
         Assert.That(OptimizerMixedTargets.IsOperatorOnEvaluationStack(true), Is.True);
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 
     [Test]
     public void InlinePrefix_Is_EvaluationStack_KnownFailure()
     {
-        ApplyPatch(
-            typeof(OptimizerPatches),
-            nameof(OptimizerPatches.InlinePrefix_Is_EvaluationStack_KnownFailure));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_Is_EvaluationStack_KnownFailure),
+            PatchType.Prefix,
+            typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.IsOperatorOnEvaluationStack))!);
 
         Assert.That(OptimizerMixedTargets.IsOperatorOnEvaluationStack(false), Is.False);
         Assert.That(OptimizerMixedTargets.IsOperatorOnEvaluationStack(true), Is.False);
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 
     [Test]
     public void InlinePrefix_As_Local_KnownSuccess()
     {
-        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InlinePrefix_As_Local_KnownSuccess));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_As_Local_KnownSuccess),
+            PatchType.Prefix,
+            typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.AsOperatorOnLocal))!);
 
         Assert.That(OptimizerMixedTargets.AsOperatorOnLocal(false), Is.EqualTo(7));
         Assert.That(OptimizerMixedTargets.AsOperatorOnLocal(true), Is.EqualTo(7));
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 
     [Test]
     public void InlinePrefix_As_Local_KnownFailure()
     {
-        ApplyPatch(typeof(OptimizerPatches), nameof(OptimizerPatches.InlinePrefix_As_Local_KnownFailure));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_As_Local_KnownFailure),
+            PatchType.Prefix,
+            typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.AsOperatorOnLocal))!);
 
         Assert.That(OptimizerMixedTargets.AsOperatorOnLocal(false), Is.Null);
         Assert.That(OptimizerMixedTargets.AsOperatorOnLocal(true), Is.Null);
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 
     [Test]
     public void InlinePrefix_As_EvaluationStack_KnownSuccess()
     {
-        ApplyPatch(
-            typeof(OptimizerPatches),
-            nameof(OptimizerPatches.InlinePrefix_As_EvaluationStack_KnownSuccess));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_As_EvaluationStack_KnownSuccess),
+            PatchType.Prefix,
+            typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.AsOperatorOnEvaluationStack))!);
 
         Assert.That(OptimizerMixedTargets.AsOperatorOnEvaluationStack(false), Is.EqualTo(7));
         Assert.That(OptimizerMixedTargets.AsOperatorOnEvaluationStack(true), Is.EqualTo(7));
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 
     [Test]
     public void InlinePrefix_As_EvaluationStack_KnownFailure()
     {
-        ApplyPatch(
-            typeof(OptimizerPatches),
-            nameof(OptimizerPatches.InlinePrefix_As_EvaluationStack_KnownFailure));
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_As_EvaluationStack_KnownFailure),
+            PatchType.Prefix,
+            typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.AsOperatorOnEvaluationStack))!);
 
         Assert.That(OptimizerMixedTargets.AsOperatorOnEvaluationStack(false), Is.Null);
         Assert.That(OptimizerMixedTargets.AsOperatorOnEvaluationStack(true), Is.Null);
-        Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InlinePrefix_Argument_Primitive_ReadWriteByReference()
+    {
+        OptimizerInlinePatches.PrimitiveObserved = 0;
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_Argument_Primitive_ReadWriteByReference),
+            PatchType.Prefix,
+            typeof(OptimizerInlineTargets).GetMethod(nameof(OptimizerInlineTargets.PrimitiveIdentity))!);
+
+        int result = OptimizerInlineTargets.PrimitiveIdentity(7);
+
+        Assert.That(OptimizerInlinePatches.PrimitiveObserved, Is.EqualTo(7));
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InlinePrefix_Argument_ReferenceType_ReadWriteByReference()
+    {
+        OptimizerInlinePatches.ReferenceObserved = null;
+        var original = new OptimizerDataObject { Number = 7, Text = "original" };
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_Argument_ReferenceType_ReadWriteByReference),
+            PatchType.Prefix,
+            typeof(OptimizerInlineTargets).GetMethod(nameof(OptimizerInlineTargets.ReferenceIdentity))!);
+
+        OptimizerDataObject result = OptimizerInlineTargets.ReferenceIdentity(original);
+
+        Assert.That(OptimizerInlinePatches.ReferenceObserved, Is.SameAs(original));
+        Assert.That(original.Number, Is.EqualTo(7));
+        Assert.That(original.Text, Is.EqualTo("original"));
+        Assert.That(result, Is.Not.SameAs(original));
+        Assert.That(result.Number, Is.EqualTo(42));
+        Assert.That(result.Text, Is.EqualTo("patched"));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InlinePrefix_Argument_Struct_ReadWriteByReference()
+    {
+        OptimizerInlinePatches.StructObserved = default;
+        var original = new OptimizerDataStruct { Number = 7, Text = "original" };
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_Argument_Struct_ReadWriteByReference),
+            PatchType.Prefix,
+            typeof(OptimizerInlineTargets).GetMethod(nameof(OptimizerInlineTargets.StructIdentity))!);
+
+        OptimizerDataStruct result = OptimizerInlineTargets.StructIdentity(original);
+
+        Assert.That(OptimizerInlinePatches.StructObserved.Number, Is.EqualTo(7));
+        Assert.That(OptimizerInlinePatches.StructObserved.Text, Is.EqualTo("original"));
+        Assert.That(original.Number, Is.EqualTo(7));
+        Assert.That(original.Text, Is.EqualTo("original"));
+        Assert.That(result.Number, Is.EqualTo(42));
+        Assert.That(result.Text, Is.EqualTo("patched"));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InlinePostfix_Result_Primitive_ReadWriteByReference()
+    {
+        OptimizerInlinePatches.PrimitiveObserved = 0;
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePostfix_Result_Primitive_ReadWriteByReference),
+            PatchType.Postfix,
+            typeof(OptimizerInlineTargets).GetMethod(nameof(OptimizerInlineTargets.PrimitiveResult))!);
+
+        int result = OptimizerInlineTargets.PrimitiveResult();
+
+        Assert.That(OptimizerInlinePatches.PrimitiveObserved, Is.EqualTo(7));
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InlinePostfix_Result_ReferenceType_ReadWriteByReference()
+    {
+        OptimizerInlinePatches.ReferenceObserved = null;
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePostfix_Result_ReferenceType_ReadWriteByReference),
+            PatchType.Postfix,
+            typeof(OptimizerInlineTargets).GetMethod(nameof(OptimizerInlineTargets.ReferenceResult))!);
+
+        OptimizerDataObject result = OptimizerInlineTargets.ReferenceResult();
+
+        Assert.That(OptimizerInlinePatches.ReferenceObserved, Is.Not.Null);
+        Assert.That(OptimizerInlinePatches.ReferenceObserved!.Number, Is.EqualTo(7));
+        Assert.That(OptimizerInlinePatches.ReferenceObserved.Text, Is.EqualTo("original"));
+        Assert.That(result, Is.Not.SameAs(OptimizerInlinePatches.ReferenceObserved));
+        Assert.That(result.Number, Is.EqualTo(42));
+        Assert.That(result.Text, Is.EqualTo("patched"));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InlinePostfix_Result_Struct_ReadWriteByReference()
+    {
+        OptimizerInlinePatches.StructObserved = default;
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePostfix_Result_Struct_ReadWriteByReference),
+            PatchType.Postfix,
+            typeof(OptimizerInlineTargets).GetMethod(nameof(OptimizerInlineTargets.StructResult))!);
+
+        OptimizerDataStruct result = OptimizerInlineTargets.StructResult();
+
+        Assert.That(OptimizerInlinePatches.StructObserved.Number, Is.EqualTo(7));
+        Assert.That(OptimizerInlinePatches.StructObserved.Text, Is.EqualTo("original"));
+        Assert.That(result.Number, Is.EqualTo(42));
+        Assert.That(result.Text, Is.EqualTo("patched"));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InlinePrefix_TargetRefArgument_Primitive_ReadWriteByReference()
+    {
+        OptimizerInlinePatches.PrimitiveObserved = 0;
+        int value = 7;
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_TargetRefArgument_Primitive_ReadWriteByReference),
+            PatchType.Prefix,
+            typeof(OptimizerInlineTargets).GetMethod(nameof(OptimizerInlineTargets.RefPrimitiveIdentity))!);
+
+        int result = OptimizerInlineTargets.RefPrimitiveIdentity(ref value);
+
+        Assert.That(OptimizerInlinePatches.PrimitiveObserved, Is.EqualTo(7));
+        Assert.That(value, Is.EqualTo(43));
+        Assert.That(result, Is.EqualTo(43));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InlinePrefix_ControlFlow_MultipleReturns()
+    {
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_ControlFlow_MultipleReturns),
+            PatchType.Prefix,
+            typeof(OptimizerInlineTargets).GetMethod(nameof(OptimizerInlineTargets.PrimitiveIdentity))!);
+
+        Assert.That(OptimizerInlineTargets.PrimitiveIdentity(-10), Is.EqualTo(-1));
+        Assert.That(OptimizerInlineTargets.PrimitiveIdentity(0), Is.EqualTo(7));
+        Assert.That(OptimizerInlineTargets.PrimitiveIdentity(1), Is.EqualTo(42));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(3));
+    }
+
+    [Test]
+    public void InlinePrefix_ExceptionHandling_TryFinally()
+    {
+        OptimizerInlinePatches.FinallyExecutions = 0;
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefix_ExceptionHandling_TryFinally),
+            PatchType.Prefix,
+            typeof(OptimizerInlineTargets).GetMethod(nameof(OptimizerInlineTargets.PrimitiveIdentity))!);
+
+        int result = OptimizerInlineTargets.PrimitiveIdentity(7);
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(OptimizerInlinePatches.FinallyExecutions, Is.EqualTo(1));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void InlinePrefixPostfix_StateAndResult_PreservesValues()
+    {
+        OptimizerInlinePatches.StateObserved = 0;
+        OptimizerInlinePatches.ResultObserved = 0;
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefixPostfix_StateAndResult_PreservesValues_Prefix),
+            PatchType.Prefix,
+            typeof(OptimizerInlineTargets).GetMethod(nameof(OptimizerInlineTargets.PrimitiveIdentity))!);
+        ApplyInlinePatch(
+            nameof(OptimizerInlinePatches.InlinePrefixPostfix_StateAndResult_PreservesValues_Postfix),
+            PatchType.Postfix,
+            typeof(OptimizerInlineTargets).GetMethod(nameof(OptimizerInlineTargets.PrimitiveIdentity))!);
+
+        int result = OptimizerInlineTargets.PrimitiveIdentity(7);
+
+        Assert.That(OptimizerInlinePatches.StateObserved, Is.EqualTo(7));
+        Assert.That(OptimizerInlinePatches.ResultObserved, Is.EqualTo(7));
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(OptimizerInlinePatches.PatchCalls, Is.EqualTo(2));
     }
 }

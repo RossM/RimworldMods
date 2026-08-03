@@ -5,7 +5,6 @@ namespace Disharmony.Tests;
 public static class AutopatcherRegistrationPatches
 {
     public static int OverloadPatchCalls;
-    public static MethodBase? ObservedMethod;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
@@ -40,8 +39,6 @@ public static class AutopatcherRegistrationPatches
 
     public static void Patch_AllInformation_UsesExplicitFieldSetter(ref int value) => value = 42;
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public static void Patch_AllInformation_UsesInlineOption() => ObservedMethod = MethodBase.GetCurrentMethod();
 }
 
 public static class PatchTypeProcessesEveryPatchMethodOnTypePatches
@@ -370,11 +367,11 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void Patch_AllInformation_UsesInlineOption()
     {
-        MethodInfo patch = typeof(AutopatcherRegistrationPatches)
-            .GetMethod(nameof(AutopatcherRegistrationPatches.Patch_AllInformation_UsesInlineOption))!;
+        MethodInfo patch = typeof(AutopatcherRegistrationInlinePatches)
+            .GetMethod(nameof(AutopatcherRegistrationInlinePatches.Patch_AllInformation_UsesInlineOption))!;
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.RegistrationResultA))!;
-        AutopatcherRegistrationPatches.ObservedMethod = null;
+        AutopatcherRegistrationInlinePatches.ObservedMethod = null;
 
         Autopatcher.Patch(
             patch,
@@ -384,8 +381,8 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
 
         StaticMethodTargets.RegistrationResultA();
 
-        Assert.That(AutopatcherRegistrationPatches.ObservedMethod, Is.Not.Null);
-        Assert.That(AutopatcherRegistrationPatches.ObservedMethod, Is.Not.EqualTo(patch));
+        Assert.That(AutopatcherRegistrationInlinePatches.ObservedMethod, Is.Not.Null);
+        Assert.That(AutopatcherRegistrationInlinePatches.ObservedMethod, Is.Not.EqualTo(patch));
     }
 
     [Test]
