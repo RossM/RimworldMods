@@ -192,7 +192,7 @@ internal partial class Optimizer
                     continue;
 
                 // A prefix belongs to the stloc and cannot be transferred to rematerialized values.
-                if (definition.prefixes.Count != 0)
+                if (definition.Prefixes.Count != 0)
                     continue;
 
                 // Storage writes recognized by this pass consume exactly one stack value.
@@ -208,7 +208,7 @@ internal partial class Optimizer
                     continue;
 
                 // A prefix belongs to the ldloc being replaced, not to the value substituted for it.
-                if (reads.Any(read => read.prefixes.Count != 0))
+                if (reads.Any(read => read.Prefixes.Count != 0))
                     continue;
 
                 candidates.Add(new(definition, value, reads));
@@ -247,7 +247,7 @@ internal partial class Optimizer
                 return false;
 
             // Producer prefixes cannot be copied onto every rematerialized use in general.
-            if (producer.prefixes.Count != 0)
+            if (producer.Prefixes.Count != 0)
                 return false;
 
             BasicBlock block = blockByOperation[definition];
@@ -377,7 +377,7 @@ internal partial class Optimizer
 
             // Indirect-access prefixes such as volatile. and unaligned. do not apply to locals or
             // arguments and cannot be transferred to the replacement.
-            if (indirect.prefixes.Count != 0)
+            if (indirect.Prefixes.Count != 0)
                 return false;
             if (storage.type is not Type storageType)
                 return false;
@@ -427,7 +427,7 @@ internal partial class Optimizer
             switch (access.Kind)
             {
                 case Op.IndirectAccessKind.Load:
-                    direct = new(storage.kind == VariableKind.Argument ? OpCodes.Ldarg : OpCodes.Ldloc, operand)
+                    direct = new(storage.kind == VariableKind.Argument ? OpCodes.Ldarg : OpCodes.Ldloc, operand, [])
                     {
                         stackInputCount = 0,
                         stackOutputCount = 1,
@@ -437,7 +437,7 @@ internal partial class Optimizer
                     break;
 
                 case Op.IndirectAccessKind.Store:
-                    direct = new(storage.kind == VariableKind.Argument ? OpCodes.Starg : OpCodes.Stloc, operand)
+                    direct = new(storage.kind == VariableKind.Argument ? OpCodes.Starg : OpCodes.Stloc, operand, [])
                     {
                         stackInputCount = 1,
                         stackOutputCount = 0,
@@ -482,7 +482,7 @@ internal partial class Optimizer
 
         private static Op Rematerialize(Op producer, Op read)
         {
-            var replacement = new Op(producer.Opcode, producer.Operand)
+            var replacement = new Op(producer.Opcode, producer.Operand, [])
             {
                 stackInputCount = producer.stackInputCount,
                 stackOutputCount = read.stackOutputCount,

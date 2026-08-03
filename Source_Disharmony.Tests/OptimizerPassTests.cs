@@ -810,7 +810,7 @@ public sealed class OptimizerPassTests
 
         Optimizer.Op fieldLoad = optimizer.BasicBlocks[0].ops[0];
         Assert.That(fieldLoad.Opcode, Is.EqualTo(OpCodes.Ldsfld));
-        Assert.That(fieldLoad.prefixes.Select(prefix => prefix.Opcode), Is.EqualTo(new[] { OpCodes.Volatile }));
+        Assert.That(fieldLoad.Prefixes.Select(prefix => prefix.Opcode), Is.EqualTo(new[] { OpCodes.Volatile }));
 
         new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
         new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
@@ -1433,7 +1433,7 @@ public sealed class OptimizerPassTests
 
         Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
         Assert.That(OpCodesIn(block), Is.EqualTo(new[] { OpCodes.Ldloca, OpCodes.Ldobj, OpCodes.Pop, OpCodes.Ret }));
-        Assert.That(block.ops[1].prefixes.Select(prefix => prefix.Opcode), Is.EqualTo(new[] { OpCodes.Volatile }));
+        Assert.That(block.ops[1].Prefixes.Select(prefix => prefix.Opcode), Is.EqualTo(new[] { OpCodes.Volatile }));
         Assert.That(optimizer.LocalVariables[target!.LocalIndex].addressTaken, Is.True);
     }
 

@@ -255,25 +255,24 @@ internal partial class Optimizer
             Op operation;
             if (access is not { } variableAccess)
             {
-                operation = new(op.Opcode, op.Operand);
+                operation = new(op.Opcode, op.Operand, op.Prefixes);
             }
             else if (IsOriginalStorage(variableAccess.EncodedVariableKind, variableAccess.Variable, op.Index))
             {
-                operation = new(op.Opcode, op.Operand);
+                operation = new(op.Opcode, op.Operand, op.Prefixes);
             }
             else
             {
                 Storage storage = GetStorage(variableAccess.Variable);
                 operation = variableAccess.Kind switch
                 {
-                    Op.VariableAccessKind.Read => LoadStorage(storage),
-                    Op.VariableAccessKind.Write => StoreStorage(storage),
-                    Op.VariableAccessKind.Address => LoadStorageAddress(storage),
+                    Op.VariableAccessKind.Read => LoadStorage(storage, op.Prefixes),
+                    Op.VariableAccessKind.Write => StoreStorage(storage, op.Prefixes),
+                    Op.VariableAccessKind.Address => LoadStorageAddress(storage, op.Prefixes),
                     _ => throw new ArgumentOutOfRangeException(),
                 };
             }
 
-            operation.prefixes.AddRange(op.prefixes);
             return operation;
         }
 
@@ -315,29 +314,29 @@ internal partial class Optimizer
                 return new Op(OpCodes.Ldnull);
             if (!HasStorage(variable))
                 throw new InvalidOperationException($"{variable} is not available when rebuilding the stack in {block.ID}");
-            return LoadStorage(GetStorage(variable));
+            return LoadStorage(GetStorage(variable), []);
         }
 
-        private Op StoreVariable(Variable variable) => StoreStorage(GetStorage(variable));
+        private Op StoreVariable(Variable variable) => StoreStorage(GetStorage(variable), []);
 
-        private static Op LoadStorage(Storage storage) => storage.Kind switch
+        private static Op LoadStorage(Storage storage, IReadOnlyList<Op> prefixes) => storage.Kind switch
         {
-            VariableKind.Argument => new(OpCodes.Ldarg, storage.Index),
-            VariableKind.Local => new(OpCodes.Ldloc, storage.Operand),
+            VariableKind.Argument => new(OpCodes.Ldarg, storage.Index, prefixes),
+            VariableKind.Local => new(OpCodes.Ldloc, storage.Operand, prefixes),
             _ => throw new ArgumentOutOfRangeException(),
         };
 
-        private static Op StoreStorage(Storage storage) => storage.Kind switch
+        private static Op StoreStorage(Storage storage, IReadOnlyList<Op> prefixes) => storage.Kind switch
         {
-            VariableKind.Argument => new(OpCodes.Starg, storage.Index),
-            VariableKind.Local => new(OpCodes.Stloc, storage.Operand),
+            VariableKind.Argument => new(OpCodes.Starg, storage.Index, prefixes),
+            VariableKind.Local => new(OpCodes.Stloc, storage.Operand, prefixes),
             _ => throw new ArgumentOutOfRangeException(),
         };
 
-        private static Op LoadStorageAddress(Storage storage) => storage.Kind switch
+        private static Op LoadStorageAddress(Storage storage, IReadOnlyList<Op> prefixes) => storage.Kind switch
         {
-            VariableKind.Argument => new(OpCodes.Ldarga, storage.Index),
-            VariableKind.Local => new(OpCodes.Ldloca, storage.Operand),
+            VariableKind.Argument => new(OpCodes.Ldarga, storage.Index, prefixes),
+            VariableKind.Local => new(OpCodes.Ldloca, storage.Operand, prefixes),
             _ => throw new ArgumentOutOfRangeException(),
         };
 

@@ -21,12 +21,12 @@ public sealed class OptimizerInfrastructureTests
     [Test]
     public void OperationEffectsIncludeBundledVolatilePrefixWithoutCaching()
     {
-        var operation = new Optimizer.Op(OpCodes.Ldfld);
+        var operation = new Optimizer.Op(OpCodes.Ldfld, null, []);
         Optimizer.OperationEffects ordinaryEffects =
             Optimizer.OperationEffects.ReadsMemory | Optimizer.OperationEffects.MayThrow;
         Assert.That(operation.Effects, Is.EqualTo(ordinaryEffects));
 
-        operation.prefixes.Add(new Optimizer.Op(OpCodes.Volatile));
+        operation = new Optimizer.Op(OpCodes.Ldfld, null, [new Optimizer.Op(OpCodes.Volatile)]);
 
         Assert.That(operation.Effects, Is.EqualTo(ordinaryEffects | Optimizer.OperationEffects.Volatile));
         Assert.That(operation.CanDiscardIfUnused, Is.False);

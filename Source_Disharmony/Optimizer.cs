@@ -220,8 +220,10 @@ internal partial class Optimizer
     /// </summary>
     internal struct NullType;
 
-    internal class Op(OpCode opcode, object? operand = null)
+    internal class Op(OpCode opcode, object? operand, IReadOnlyList<Op> prefixes)
     {
+        public Op(OpCode opcode) : this(opcode, null, []) { }
+
         /// <summary>How an instruction accesses storage outside the evaluation stack.</summary>
         internal enum VariableAccessKind
         {
@@ -338,7 +340,7 @@ internal partial class Optimizer
         // Canonical in both forms after MakeBasicBlocks bundles prefixes. Prefix Op objects do not
         // also occur in BasicBlock.ops; keeping them here prevents later passes from separating a
         // prefix from the operation it governs.
-        public readonly List<Op> prefixes = [];
+        public IReadOnlyList<Op> Prefixes => prefixes;
 
         // Canonical only in Variables form and empty/defaulted in Stack form. Evaluation-stack
         // values occupy inputs[0..stackInputCount) and outputs[0..stackOutputCount); explicit
@@ -758,7 +760,7 @@ internal partial class Optimizer
                 {
                     foreach (var op in bb.ops)
                     {
-                        foreach (var prefix in op.prefixes)
+                        foreach (var prefix in op.Prefixes)
                             LogInstruction(ConvertToCodeInstruction(prefix), ref codePos);
                         if (Form == IrForm.Variables)
                             LogVariableInstruction(op, ref codePos);
@@ -1104,7 +1106,7 @@ internal partial class Optimizer
                 {
                     List<CodeInstruction> instructions =
                     [
-                        .. bb.ops.SelectMany(op => op.prefixes.Append(op)).Select(ConvertToCodeInstruction),
+                        .. bb.ops.SelectMany(op => op.Prefixes.Append(op)).Select(ConvertToCodeInstruction),
                     ];
                     if (instructions.Count == 0)
                         instructions.Add(Ops.Nop.ToCodeInstruction());
@@ -1164,6 +1166,7 @@ internal partial class Optimizer
         BasicBlock curBlock = new() { id = nextBlockId++, parent = currentRegion };
         basicBlocks.Add(curBlock);
         currentRegion.entry ??= curBlock;
+        List<Op> prefixes = [];
 
         foreach (var inst in inputInstructions)
         {
@@ -1179,7 +1182,13 @@ internal partial class Optimizer
                     curBlock.label = inst.labels[0];
             }
 
-            curBlock.ops.Add(new(inst.opcode, inst.operand));
+            if (inst.opcode.OpCodeType == OpCodeType.Prefix)
+                prefixes.Add(new(inst.opcode, inst.operand, []));
+            else
+            {
+                curBlock.ops.Add(new(inst.opcode, inst.operand, prefixes));
+                prefixes = [];
+            }
 
             if (inst.CanBranch || inst.blocks.Any(IsBlockEnd))
             {
@@ -1212,8 +1221,8 @@ internal partial class Optimizer
                 Op? op = block.ops[index];
                 block.ops[index] = op.Operand switch
                 {
-                    Label label => new(op.Opcode, GetTarget(label)),
-                    Label[] labels => new(op.Opcode, labels.Select(GetTarget).ToArray()),
+                    Label label => new(op.Opcode, GetTarget(label), op.Prefixes),
+                    Label[] labels => new(op.Opcode, labels.Select(GetTarget).ToArray(), op.Prefixes),
                     _ => block.ops[index],
                 };
             }
@@ -1245,14 +1254,12 @@ internal partial class Optimizer
             Op finalOperation = block.ops[^1];
             block.ops[^1] = finalOperation.Operand switch
             {
-                BasicBlock target => new(finalOperation.Opcode, AddControlFlowEdge(block, target)),
+                BasicBlock target => new(finalOperation.Opcode, AddControlFlowEdge(block, target), finalOperation.Prefixes),
                 BasicBlock[] targets => new(finalOperation.Opcode,
-                    targets.Select(target => AddControlFlowEdge(block, target)).ToArray()),
+                    targets.Select(target => AddControlFlowEdge(block, target)).ToArray(), finalOperation.Prefixes),
                 _ => finalOperation,
             };
         }
-
-        BundlePrefixes();
 
         return;
 
@@ -1308,39 +1315,6 @@ internal partial class Optimizer
 
         static bool CanFallThrough(BasicBlock basicBlock) =>
             basicBlock.ops.Count == 0 || basicBlock.ops[^1].CanFallThrough;
-    }
-
-    /// <summary>
-    ///     Requires the initial Stack-form operations produced by MakeBasicBlocks. Removes prefix
-    ///     Ops from BasicBlock.ops and attaches each run to the following operation. On return every
-    ///     prefix has exactly one owner and no block ends in an unattached prefix.
-    /// </summary>
-    private void BundlePrefixes()
-    {
-        foreach (var block in basicBlocks)
-        {
-            List<Op> operations = [];
-            List<Op> prefixes = [];
-            foreach (var op in block.ops)
-            {
-                if (op.Opcode.OpCodeType == OpCodeType.Prefix)
-                {
-                    prefixes.Add(op);
-                    continue;
-                }
-
-                op.prefixes.Clear();
-                op.prefixes.AddRange(prefixes);
-                prefixes.Clear();
-                operations.Add(op);
-            }
-
-            if (prefixes.Count > 0)
-                throw new InvalidOperationException($"Basic block {block.ID} ends in a CIL prefix");
-
-            block.ops.Clear();
-            block.ops.AddRange(operations);
-        }
     }
 
     // CFG mutation primitives. They preserve the bidirectional endpoint-list invariant and keep
@@ -1818,13 +1792,13 @@ internal partial class Optimizer
             {
                 if (finalInstruction.Opcode == OpCodes.Brfalse || finalInstruction.Opcode == OpCodes.Brfalse_S)
                 {
-                    block.ops[^1] = new(OpCodes.Brtrue_S, fallthroughEdge);
+                    block.ops[^1] = new(OpCodes.Brtrue_S, fallthroughEdge, block.ops[^1].Prefixes);
                     block.fallthroughEdge = branchEdge;
                 }
 
                 if (finalInstruction.Opcode == OpCodes.Brtrue || finalInstruction.Opcode == OpCodes.Brtrue_S)
                 {
-                    block.ops[^1] = new(OpCodes.Brfalse_S, fallthroughEdge);
+                    block.ops[^1] = new(OpCodes.Brfalse_S, fallthroughEdge, block.ops[^1].Prefixes);
                     block.fallthroughEdge = branchEdge;
                 }
             }
@@ -1849,7 +1823,7 @@ internal partial class Optimizer
             ControlFlowEdge? fallthroughEdge = basicBlocks[i].fallthroughEdge;
             if (fallthroughEdge == null || i < basicBlocks.Count - 1 && fallthroughEdge.Target == basicBlocks[i + 1])
                 continue;
-            basicBlocks[i].ops.Add(new(OpCodes.Br_S, fallthroughEdge));
+            basicBlocks[i].ops.Add(new(OpCodes.Br_S, fallthroughEdge, []));
             basicBlocks[i].fallthroughEdge = null;
         }
     }
