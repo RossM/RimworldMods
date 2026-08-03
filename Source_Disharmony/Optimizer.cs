@@ -31,13 +31,14 @@ internal class UniqueQueue<T> : IEnumerable<T>
 
 internal partial class Optimizer
 {
-    internal class BasicBlock : LayoutItem
+    internal class BasicBlock : RegionNode
     {
         // Convenience projections only; CFG mutations must operate on the edge collections.
         public BasicBlock? Next => fallthroughEdge?.Target;
         public IEnumerable<BasicBlock> Predecessors => incomingEdges.Select(edge => edge.Source);
         public IEnumerable<BasicBlock> Successors => outgoingEdges.Select(edge => edge.Target);
         public readonly List<Op> ops = [];
+        public Label? label;
 
         // The canonical normal-control-flow graph. fallthroughEdge is null when the final
         // instruction always transfers control; otherwise it identifies the default continuation.
@@ -293,20 +294,19 @@ internal partial class Optimizer
         public static Op Pop => new(OpCodes.Pop);
     }
 
-    /// <summary>An item which can appear in the flattened order consumed by logging and emission.</summary>
-    internal class LayoutItem
+    /// <summary>A node in the lexical region-containment hierarchy.</summary>
+    internal class RegionNode
     {
         public bool EntryPoint => parent == null || parent.entry == this;
         public virtual string ID => $"#{id}";
         public int id = 0;
-        public Label? label;
         public Region? parent;
 
         public override string ToString() => ID;
 
         public bool HasAncestor(Region region)
         {
-            for (LayoutItem? b = this; b != null; b = b.parent)
+            for (RegionNode? b = this; b != null; b = b.parent)
             {
                 if (b == region)
                     return true;
@@ -318,11 +318,10 @@ internal partial class Optimizer
 
     /// <summary>
     ///     A synthetic root, protected region, filter region, or handler region. Regions form the
-    ///     lexical containment hierarchy. Their position in <see cref="Layout"/> is only the
-    ///     current flattened order for diagnostics and emission, and must not be used as the
-    ///     canonical representation of that hierarchy.
+    ///     lexical containment hierarchy. Their emission positions are derived from the ordered
+    ///     basic blocks and must not be treated as independently mutable state.
     /// </summary>
-    internal class Region : LayoutItem
+    internal class Region : RegionNode
     {
         public override string ID => parent == null ? "Root" : $"{harmonyBlock!.blockType} #{id}";
 
@@ -330,11 +329,11 @@ internal partial class Optimizer
         public ExceptionBlock? harmonyBlock;
 
         // The first nested region or basic block in this body. This is canonical hierarchy data,
-        // independent of where either item currently appears in flattened layout.
-        public LayoutItem? entry;
+        // independent of where either item currently appears in basic-block order.
+        public RegionNode? entry;
 
         // Null only for the synthetic root. This explicitly associates regions belonging to
-        // exception entries which share a protected region; order is not inferred from layout.
+        // exception entries which share a protected region; their order is stored by the group.
         public ExceptionEntryGroup? exceptionEntryGroup;
     }
 
@@ -369,7 +368,6 @@ internal partial class Optimizer
         // separate concern from those locals.
     }
 
-    internal IReadOnlyList<LayoutItem> Layout => layout;
     internal IReadOnlyList<BasicBlock> BasicBlocks => basicBlocks;
     internal IReadOnlyList<Region> Regions => regions;
     internal IReadOnlyList<ExceptionEntryGroup> ExceptionEntryGroups => exceptionEntryGroups;
@@ -378,12 +376,7 @@ internal partial class Optimizer
     internal IReadOnlyDictionary<int, Variable> LocalVariables => localVariables;
 
     public readonly InstructionList outputInstructions = [];
-    // The current flattened order for diagnostics and emission. Analyses use basicBlocks,
-    // regions, their parent/entry links, and CFG edges instead of this list's ordering.
-    private readonly List<LayoutItem> layout = [];
-
     // Canonical lexical hierarchy nodes, including the synthetic root.
-    // Unlike layout, this collection is intentionally independent of current emission order.
     private readonly List<Region> regions = [];
 
     // Canonical groupings of exception entries which share the same protected region.
@@ -460,7 +453,13 @@ internal partial class Optimizer
         FileLog.FlushBuffer();
     }
 
-    private void LogBlocks(string phase)
+    /// <summary>
+    ///     Before final reordering, logs basic blocks with their region paths without implying that
+    ///     their current order is legal CIL layout. After reordering, also logs derived region
+    ///     boundaries; <paramref name="structuredLayout"/> therefore requires the aggressive-pass
+    ///     postconditions.
+    /// </summary>
+    private void LogBlocks(string phase, bool structuredLayout = false)
     {
         if (!debug)
             return;
@@ -470,9 +469,10 @@ internal partial class Optimizer
 
         FileLog.LogBuffered($"### Optimizer {phase}: {method.FullDescription()}");
 
-        foreach (var block in layout)
+        IEnumerable<RegionNode> nodes = structuredLayout ? GetStructuredLayout() : basicBlocks;
+        foreach (var block in nodes)
         {
-            while (regionStack.Count >= 1 && block.parent != regionStack.Peek())
+            while (structuredLayout && regionStack.Count >= 1 && block.parent != regionStack.Peek())
             {
                 Region exitedRegion = regionStack.Peek();
                 if (exitedRegion.harmonyBlock != null &&
@@ -484,6 +484,10 @@ internal partial class Optimizer
             FileLog.LogBuffered($"## Block:        {block.ID}");
             if (block is BasicBlock basicBlock)
             {
+                if (!structuredLayout)
+                {
+                    FileLog.LogBuffered($"## Region Path:  {string.Join(" > ", GetRegionPath(basicBlock.parent).Select(r => r.ID))}");
+                }
                 FileLog.LogBuffered($"## Predecessors: {string.Join(", ", basicBlock.Predecessors.Select(b => b.ID))}");
                 FileLog.LogBuffered($"## Successors:   {string.Join(", ", basicBlock.Successors.Select(b => b.ID))}");
                 if (Form == IrForm.Variables)
@@ -501,7 +505,7 @@ internal partial class Optimizer
             if (block is { EntryPoint: true, parent: not null })
                 FileLog.LogBuffered($"## Entry Point:  {block.parent.ID}");
 
-            if (block.label is Label label)
+            if (block is BasicBlock { label: Label label })
                 FileLog.LogIL(codePos, label);
 
             switch (block)
@@ -536,7 +540,7 @@ internal partial class Optimizer
                 FileLog.LogBuffered($"IL_{codePos:X4}: // fallthrough => {bb2.Next.ID}");
         }
 
-        while (regionStack.Count > 0)
+        while (structuredLayout && regionStack.Count > 0)
         {
             if (regionStack.Peek().harmonyBlock != null)
                 FileLog.LogILBlockEnd(codePos, new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
@@ -545,6 +549,59 @@ internal partial class Optimizer
 
         FileLog.LogBuffered("");
         FileLog.FlushBuffer();
+    }
+
+    /// <summary>
+    ///     Derives region-start markers from region entries and basic-block order. Every region
+    ///     must begin with its recursive entry basic block, remain contiguous, and be followed by
+    ///     the next filter/handler region in its exception-entry group. The aggressive reorder
+    ///     pass establishes these preconditions.
+    /// </summary>
+    private List<RegionNode> GetStructuredLayout()
+    {
+        Dictionary<RegionNode, Region> regionByEntry = [];
+        foreach (var region in regions.Where(region => region != root))
+        {
+            if (region.entry == null)
+                throw new InvalidOperationException($"Region {region.ID} has no entry node");
+            if (regionByEntry.ContainsKey(region.entry))
+                throw new InvalidOperationException($"More than one region has entry node {region.entry.ID}");
+            regionByEntry.Add(region.entry, region);
+        }
+
+        HashSet<Region> emittedRegions = [root];
+        List<RegionNode> layout = [root];
+
+        foreach (var block in basicBlocks)
+        {
+            AddRegionsBefore(block);
+            layout.Add(block);
+        }
+
+        Region? missingRegion = regions.FirstOrDefault(region => !emittedRegions.Contains(region));
+        if (missingRegion != null)
+            throw new InvalidOperationException($"Region {missingRegion.ID} contains no retained basic block");
+
+        return layout;
+
+        void AddRegionsBefore(RegionNode entry)
+        {
+            if (!regionByEntry.TryGetValue(entry, out var region))
+                return;
+            if (!emittedRegions.Add(region))
+                throw new InvalidOperationException($"Region {region.ID} has a cyclic entry chain");
+            AddRegionsBefore(region);
+            layout.Add(region);
+        }
+    }
+
+    private static List<Region> GetRegionPath(Region? region)
+    {
+        List<Region> path = [];
+        for (; region != null; region = region.parent)
+            path.Add(region);
+        path.Reverse();
+        return path;
     }
 
     private static void LogVariableInstruction(Op op, ref int codePos)
@@ -639,10 +696,10 @@ internal partial class Optimizer
         LogBlocks(nameof(BranchInversion));
 
         AggressiveDeadCodeEliminationAndReorder();
-        LogBlocks(nameof(AggressiveDeadCodeEliminationAndReorder));
+        LogBlocks(nameof(AggressiveDeadCodeEliminationAndReorder), true);
 
         InsertBranches();
-        LogBlocks(nameof(InsertBranches));
+        LogBlocks(nameof(InsertBranches), true);
 
         Emit();
         LogInstructions("Output", outputInstructions.instructions);
@@ -660,16 +717,23 @@ internal partial class Optimizer
         new VariableToStackConverter(this).ConvertVariablesToStack();
     }
 
+    /// <summary>
+    ///     Emits stack-form operations in the current basic-block order. The order must satisfy the
+    ///     structured-region preconditions used by <see cref="GetStructuredLayout"/>.
+    /// </summary>
     internal void Emit()
     {
         if (Form != IrForm.Stack)
             throw new InvalidOperationException($"Cannot emit {Form} form; convert it to stack form first");
 
+        // Derive and materialize before mutating outputInstructions, so entry-chain errors cannot
+        // leave behind a partially emitted method.
+        List<RegionNode> emissionLayout = GetStructuredLayout();
         Stack<Region> regionStack = new();
         List<ExceptionBlock> harmonyBlocks = [];
         List<Label> labels = [];
 
-        foreach (var block in layout)
+        foreach (var block in emissionLayout)
         {
             while (regionStack.Count >= 1 && block.parent != regionStack.Peek())
             {
@@ -680,7 +744,7 @@ internal partial class Optimizer
                 regionStack.Pop();
             }
 
-            if (block.label is Label label)
+            if (block is BasicBlock { label: Label label })
                 labels.Add(label);
 
             switch (block)
@@ -734,18 +798,18 @@ internal partial class Optimizer
     }
 
     /// <summary>
-    ///     Generate basic blocks.
+    ///     Generates the canonical normal CFG and lexical-region hierarchy. Basic blocks initially
+    ///     remain in input order; after CFG edges are created, that order is not canonical analysis
+    ///     state and need not yet satisfy the final CIL layout restrictions.
     /// </summary>
     internal void MakeBasicBlocks()
     {
         Dictionary<Label, BasicBlock> labelToBlock = [];
 
         Region currentRegion = root;
-        layout.Add(root);
         regions.Add(root);
 
         BasicBlock curBlock = new() { id = nextBlockId++, parent = currentRegion };
-        layout.Add(curBlock);
         basicBlocks.Add(curBlock);
         currentRegion.entry ??= curBlock;
 
@@ -775,10 +839,7 @@ internal partial class Optimizer
         }
 
         if (curBlock.ops.Count == 0)
-        {
-            layout.Remove(curBlock);
             basicBlocks.Remove(curBlock);
-        }
 
         Dictionary<BasicBlock, BasicBlock> fallthroughTargets = [];
         for (int i = 0; i < basicBlocks.Count - 1; i++)
@@ -857,7 +918,6 @@ internal partial class Optimizer
                 newRegion.exceptionEntryGroup = newEntryGroup;
                 exceptionEntryGroups.Add(newEntryGroup);
                 regions.Add(newRegion);
-                layout.Add(newRegion);
                 currentRegion.entry ??= newRegion;
                 currentRegion = newRegion;
             }
@@ -874,7 +934,6 @@ internal partial class Optimizer
                 };
                 entryGroup.associatedRegions.Add(newRegion);
                 regions.Add(newRegion);
-                layout.Add(newRegion);
                 currentRegion = newRegion;
             }
         }
@@ -884,15 +943,10 @@ internal partial class Optimizer
             if (curBlock.ops.Count == 0)
             {
                 curBlock.parent = currentRegion;
-                // A block is allocated eagerly after a transfer. If exception markers precede its
-                // first instruction, move that same block after the markers in flattened layout.
-                layout.Remove(curBlock);
-                layout.Add(curBlock);
             }
             else
             {
                 BasicBlock newBlock = new() { id = nextBlockId++, parent = currentRegion };
-                layout.Add(newBlock);
                 basicBlocks.Add(newBlock);
                 curBlock = newBlock;
             }
@@ -1072,6 +1126,11 @@ internal partial class Optimizer
         }
     }
 
+    /// <summary>
+    ///     Merges eligible successor operations and outgoing edges into their predecessor. An
+    ///     absorbed successor remains in <c>basicBlocks</c> as an unreachable node until a later
+    ///     dead-code pass removes it; no pass may treat list membership as reachability.
+    /// </summary>
     internal void MergeBlocks()
     {
         for (int i = basicBlocks.Count - 1; i >= 0; i--)
@@ -1093,6 +1152,11 @@ internal partial class Optimizer
         }
     }
 
+    /// <summary>
+    ///     Removes basic blocks unreachable through the normal CFG while treating every lexical
+    ///     region entry as a root, since handler predecessors are intentionally absent from that
+    ///     CFG. Region and exception-entry metadata are pruned by the aggressive pass instead.
+    /// </summary>
     internal void SimpleDeadCodeElimination()
     {
         Queue<BasicBlock> queue = new();
@@ -1121,19 +1185,27 @@ internal partial class Optimizer
                 RemoveControlFlowEdge(edge);
         }
 
-        layout.RemoveAll(item => item is BasicBlock block && !liveBlocks.Contains(block));
         basicBlocks.RemoveAll(block => !liveBlocks.Contains(block));
     }
 
+    /// <summary>
+    ///     Removes every node unreachable from a method or region entry and orders the retained
+    ///     basic blocks for CIL emission. On return, every region begins with its recursive entry
+    ///     basic block and is contiguous, associated filter and handler regions immediately follow
+    ///     their protected region, and stack-carrying backward edges satisfy the CIL
+    ///     forward-predecessor requirement.
+    /// </summary>
     internal void AggressiveDeadCodeEliminationAndReorder()
     {
+        ValidateAggressiveReorderPreconditions();
+
         // CIL permits a backward edge carrying evaluation-stack values only when the target also
         // has a forward incoming edge. Earlier optimizer passes may temporarily violate that
         // restriction; ordering blocks by first control-flow visit restores it before emission.
-        List<LayoutItem> outputLayout = [root];
-        HashSet<LayoutItem> visited = [];
-        Stack<(Region region, LinkedList<LayoutItem> queue)> stack = [];
-        List<LayoutItem> leavingBlocks = [];
+        List<BasicBlock> outputBlocks = [];
+        HashSet<RegionNode> retainedNodes = [root];
+        Stack<(Region region, LinkedList<RegionNode> queue)> stack = [];
+        List<RegionNode> leavingBlocks = [];
 
         stack.Push((root, []));
         stack.Peek().queue.AddLast(root.entry!);
@@ -1163,9 +1235,10 @@ internal partial class Optimizer
             while (block.parent != region)
                 block = block.parent!;
 
-            if (!visited.Add(block))
+            if (!retainedNodes.Add(block))
                 continue;
-            outputLayout.Add(block);
+            if (block is BasicBlock retainedBlock)
+                outputBlocks.Add(retainedBlock);
 
             if (debug)
                 FileLog.LogBuffered($"{"".PadLeft(stack.Count * 2)}- {block.ID}");
@@ -1208,18 +1281,48 @@ internal partial class Optimizer
             }
         }
 
-        HashSet<LayoutItem> retainedBlocks = [.. outputLayout];
-        foreach (var deadBlock in basicBlocks.Where(block => !retainedBlocks.Contains(block)).ToArray())
+        foreach (var deadBlock in basicBlocks.Where(block => !retainedNodes.Contains(block)).ToArray())
         {
             foreach (var edge in deadBlock.incomingEdges.Concat(deadBlock.outgoingEdges).Distinct().ToArray())
                 RemoveControlFlowEdge(edge);
         }
 
-        layout.Clear();
-        layout.AddRange(outputLayout);
-        basicBlocks = [.. outputLayout.OfType<BasicBlock>()];
-        regions.RemoveAll(region => !retainedBlocks.Contains(region));
-        exceptionEntryGroups.RemoveAll(group => !retainedBlocks.Contains(group.ProtectedRegion));
+        basicBlocks = outputBlocks;
+        regions.RemoveAll(region => !retainedNodes.Contains(region));
+        exceptionEntryGroups.RemoveAll(group => !retainedNodes.Contains(group.ProtectedRegion));
+    }
+
+    private void ValidateAggressiveReorderPreconditions()
+    {
+        if (root.entry == null)
+            throw new InvalidOperationException("The root region has no entry node");
+
+        foreach (var region in regions)
+        {
+            if (region != root && region.parent == null)
+                throw new InvalidOperationException($"Region {region.ID} is not attached to the region hierarchy");
+            if (region.entry == null)
+                throw new InvalidOperationException($"Region {region.ID} has no entry node");
+            if (!region.entry.HasAncestor(region))
+                throw new InvalidOperationException($"Entry node {region.entry.ID} is outside region {region.ID}");
+        }
+
+        foreach (var block in basicBlocks)
+        {
+            if (block.parent == null || !regions.Contains(block.parent))
+                throw new InvalidOperationException($"Basic block {block.ID} has no retained parent region");
+        }
+
+        foreach (var group in exceptionEntryGroups)
+        {
+            if (!regions.Contains(group.ProtectedRegion) ||
+                group.ProtectedRegion.exceptionEntryGroup != group ||
+                group.associatedRegions.Any(region => !regions.Contains(region) || region.exceptionEntryGroup != group) ||
+                group.associatedRegions.Distinct().Count() != group.associatedRegions.Count)
+            {
+                throw new InvalidOperationException("Exception-entry group membership is inconsistent");
+            }
+        }
     }
 
     private MethodBody? GetMethodBodyOrNull()
@@ -1308,6 +1411,12 @@ internal partial class Optimizer
         }
     }
 
+    /// <summary>
+    ///     Treats the current basic-block order as the intended emission order. Converts every
+    ///     semantic fallthrough which does not target the next physical block into an explicit
+    ///     branch; afterward, remaining fallthrough edges match physical fallthrough. The normal
+    ///     pipeline calls this after <see cref="AggressiveDeadCodeEliminationAndReorder"/>.
+    /// </summary>
     internal void InsertBranches()
     {
         if (Form != IrForm.Stack)

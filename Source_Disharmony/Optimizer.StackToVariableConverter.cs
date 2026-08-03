@@ -4,15 +4,15 @@ internal partial class Optimizer
 {
     internal class StackToVariableConverter(Optimizer optimizer)
     {
-        private readonly Dictionary<LayoutItem, List<Type>> entryLocals = optimizer.regions.Cast<LayoutItem>()
+        private readonly Dictionary<RegionNode, List<Type>> entryLocals = optimizer.regions.Cast<RegionNode>()
             .Concat(optimizer.basicBlocks).ToDictionary(block => block, _ => new List<Type>());
-        private readonly Dictionary<LayoutItem, List<Type>> entryStacks = optimizer.regions.Cast<LayoutItem>()
+        private readonly Dictionary<RegionNode, List<Type>> entryStacks = optimizer.regions.Cast<RegionNode>()
             .Concat(optimizer.basicBlocks).ToDictionary(block => block, _ => new List<Type>());
         private readonly Dictionary<BasicBlock, List<Type>> exitStacks = [];
         private readonly Dictionary<BasicBlock, List<Variable>> exitStackVariables = [];
         private readonly Dictionary<Op, Op.StackTransition> transitions = [];
-        private readonly UniqueQueue<LayoutItem> worklist = [];
-        private readonly HashSet<LayoutItem> initializedEntries = [];
+        private readonly UniqueQueue<RegionNode> worklist = [];
+        private readonly HashSet<RegionNode> initializedEntries = [];
 
         public void ConvertStackToVariables()
         {
@@ -30,7 +30,7 @@ internal partial class Optimizer
 
             while (worklist.Count > 0)
             {
-                LayoutItem block = worklist.Dequeue();
+                RegionNode block = worklist.Dequeue();
                 switch (block)
                 {
                     case Region region:
@@ -84,7 +84,7 @@ internal partial class Optimizer
 
             return;
 
-            void UpdateEntry(LayoutItem successor, List<Type> outgoingLocals, List<Type> outgoingStack)
+            void UpdateEntry(RegionNode successor, List<Type> outgoingLocals, List<Type> outgoingStack)
             {
                 if (initializedEntries.Add(successor))
                 {

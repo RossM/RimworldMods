@@ -112,7 +112,6 @@ public sealed class OptimizerPassTests
 
         Assert.That(optimizer.BasicBlocks, Has.Count.EqualTo(2));
         Assert.That(optimizer.BasicBlocks, Does.Not.Contain(unreachable));
-        Assert.That(optimizer.Layout, Does.Not.Contain(unreachable));
     }
 
     [Test]
@@ -249,7 +248,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.LayoutItem root = optimizer.Layout[0];
+        Optimizer.Region root = optimizer.Regions[0];
         Optimizer.BasicBlock entry = optimizer.BasicBlocks[0];
         Optimizer.BasicBlock unreachable = optimizer.BasicBlocks[1];
         Optimizer.BasicBlock target = optimizer.BasicBlocks[2];
@@ -258,7 +257,7 @@ public sealed class OptimizerPassTests
 
         Assert.That(optimizer.BasicBlocks, Is.EqualTo(new[] { entry, target }));
         Assert.That(optimizer.BasicBlocks, Does.Not.Contain(unreachable));
-        Assert.That(optimizer.Layout, Is.EqualTo(new Optimizer.LayoutItem[] { root, entry, target }));
+        Assert.That(optimizer.Regions, Is.EqualTo(new[] { root }));
     }
 
     [Test]
@@ -383,6 +382,27 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
+    public void AggressiveReorderPlacesEachRegionEntryFirst()
+    {
+        Optimizer optimizer = CreateTwoBlockTryOptimizer();
+        optimizer.MakeBasicBlocks();
+        optimizer.AggressiveDeadCodeEliminationAndReorder();
+
+        foreach (var region in optimizer.Regions)
+        {
+            Optimizer.RegionNode entry = region.entry!;
+            while (entry is Optimizer.Region nestedRegion)
+                entry = nestedRegion.entry!;
+            int entryIndex = optimizer.BasicBlocks.ToList().IndexOf((Optimizer.BasicBlock)entry);
+            int firstRegionBlockIndex = optimizer.BasicBlocks
+                .Select((block, index) => (block, index))
+                .Where(item => item.block.HasAncestor(region))
+                .Min(item => item.index);
+            Assert.That(entryIndex, Is.EqualTo(firstRegionBlockIndex), region.ID);
+        }
+    }
+
+    [Test]
     public void ConvertStackToVariablesDoesNotDependOnBasicBlockOrder()
     {
         // A backward-only edge carrying a stack value is an allowed intermediate optimizer shape,
@@ -407,8 +427,8 @@ public sealed class OptimizerPassTests
             block.ops.Any(op => op.Opcode == OpCodes.Pop));
         Optimizer.BasicBlock producer = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => op.Opcode == OpCodes.Ldstr));
-        Assert.That(optimizer.Layout.ToList().IndexOf(consumer),
-            Is.LessThan(optimizer.Layout.ToList().IndexOf(producer)));
+        Assert.That(optimizer.BasicBlocks.ToList().IndexOf(consumer),
+            Is.LessThan(optimizer.BasicBlocks.ToList().IndexOf(producer)));
 
         new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
 
@@ -1009,6 +1029,27 @@ public sealed class OptimizerPassTests
 
     private static Optimizer CreateOptimizer(Func<ILGenerator, List<CodeInstruction>> createInstructions)
         => CreateOptimizer(TargetMethod, createInstructions);
+
+    private static Optimizer CreateTwoBlockTryOptimizer() => CreateOptimizer(generator =>
+    {
+        Label secondTryBlock = generator.DefineLabel();
+        Label exit = generator.DefineLabel();
+        var tryStart = new CodeInstruction(OpCodes.Nop);
+        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var catchStart = new CodeInstruction(OpCodes.Pop);
+        catchStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+        var catchLeave = new CodeInstruction(OpCodes.Leave, exit);
+        catchLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        return
+        [
+            tryStart,
+            new CodeInstruction(OpCodes.Br, secondTryBlock),
+            new CodeInstruction(OpCodes.Leave, exit).WithLabels(secondTryBlock),
+            catchStart,
+            catchLeave,
+            new CodeInstruction(OpCodes.Ret).WithLabels(exit),
+        ];
+    });
 
     private static Optimizer CreateOptimizer(
         MethodBase targetMethod,
