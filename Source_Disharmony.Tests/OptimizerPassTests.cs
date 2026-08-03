@@ -1640,7 +1640,50 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
-    public void ConvertVariablesToStackPreservesAValueUsedAfterItsStackCopyIsConsumed()
+    public void ConvertVariablesToStackPreservesAValueUsedAfterItsStackCopyIsConsumed_WithoutDup()
+    {
+        MethodInfo concat = typeof(string).GetMethod(nameof(string.Concat), [typeof(string), typeof(string)])!;
+        Optimizer optimizer = CreateOptimizer(_ =>
+        [
+            new CodeInstruction(OpCodes.Ldstr, "unused"),
+            new CodeInstruction(OpCodes.Ldstr, "reused"),
+            new CodeInstruction(OpCodes.Ldstr, "suffix"),
+            new CodeInstruction(OpCodes.Call, concat),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        Optimizer.BasicBlock block = optimizer.BasicBlocks[0];
+        block.ops[5].inputs[0] = block.ops[1].outputs[0];
+
+        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+
+        Assert.That(block.ops.Select(op => op.Opcode), Is.EqualTo(new[]
+        {
+            OpCodes.Ldstr,
+            OpCodes.Ldstr,
+            OpCodes.Ldstr,
+            OpCodes.Stloc,
+            OpCodes.Stloc,
+            OpCodes.Ldloc,
+            OpCodes.Ldloc,
+            OpCodes.Call,
+            OpCodes.Pop,
+            OpCodes.Pop,
+            OpCodes.Ldloc,
+            OpCodes.Pop,
+            OpCodes.Ret,
+        }));
+        Assert.That(block.ops[5].Operand, Is.SameAs(block.ops[4].Operand));
+        Assert.That(block.ops[6].Operand, Is.SameAs(block.ops[3].Operand));
+        Assert.That(block.ops[10].Operand, Is.SameAs(block.ops[4].Operand));
+    }
+
+    [Test]
+    public void ConvertVariablesToStackPreservesAValueUsedAfterItsStackCopyIsConsumed_WithDup()
     {
         Optimizer optimizer = CreateOptimizer(_ =>
         [
@@ -1662,16 +1705,14 @@ public sealed class OptimizerPassTests
         {
             OpCodes.Ldstr,
             OpCodes.Ldstr,
-            OpCodes.Stloc,
-            OpCodes.Ldloc,
+            OpCodes.Dup,
             OpCodes.Pop,
             OpCodes.Pop,
-            OpCodes.Ldloc,
             OpCodes.Pop,
             OpCodes.Ret,
         }));
-        Assert.That(block.ops[3].Operand, Is.SameAs(block.ops[2].Operand));
-        Assert.That(block.ops[6].Operand, Is.SameAs(block.ops[2].Operand));
+        Assert.That(block.ops, Has.None.Matches<Optimizer.Op>(op =>
+            op.Opcode == OpCodes.Ldloc || op.Opcode == OpCodes.Stloc));
     }
 
     [Test]
