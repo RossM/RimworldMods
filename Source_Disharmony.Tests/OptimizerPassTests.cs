@@ -112,7 +112,7 @@ public sealed class OptimizerPassTests
 
         Assert.That(optimizer.BasicBlocks, Has.Count.EqualTo(2));
         Assert.That(optimizer.BasicBlocks, Does.Not.Contain(unreachable));
-        Assert.That(optimizer.Blocks, Does.Not.Contain(unreachable));
+        Assert.That(optimizer.Layout, Does.Not.Contain(unreachable));
     }
 
     [Test]
@@ -249,7 +249,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.Block root = optimizer.Blocks[0];
+        Optimizer.LayoutItem root = optimizer.Layout[0];
         Optimizer.BasicBlock entry = optimizer.BasicBlocks[0];
         Optimizer.BasicBlock unreachable = optimizer.BasicBlocks[1];
         Optimizer.BasicBlock target = optimizer.BasicBlocks[2];
@@ -258,7 +258,7 @@ public sealed class OptimizerPassTests
 
         Assert.That(optimizer.BasicBlocks, Is.EqualTo(new[] { entry, target }));
         Assert.That(optimizer.BasicBlocks, Does.Not.Contain(unreachable));
-        Assert.That(optimizer.Blocks, Is.EqualTo(new Optimizer.Block[] { root, entry, target }));
+        Assert.That(optimizer.Layout, Is.EqualTo(new Optimizer.LayoutItem[] { root, entry, target }));
     }
 
     [Test]
@@ -294,7 +294,7 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
-    public void ConvertStackToVariablesSeedsCatchEntryBeforeProcessingItsBlock()
+    public void ConvertStackToVariablesSeedsCatchEntryWithImplicitExceptionValue()
     {
         Optimizer optimizer = CreateOptimizer(generator =>
         {
@@ -315,17 +315,71 @@ public sealed class OptimizerPassTests
         });
         optimizer.MakeBasicBlocks();
         optimizer.SimpleDeadCodeElimination();
-        Optimizer.Region catchRegion = optimizer.Blocks.OfType<Optimizer.Region>().Single(region =>
+        Optimizer.Region catchRegion = optimizer.Regions.Single(region =>
             region.harmonyBlock?.blockType == ExceptionBlockType.BeginCatchBlock);
         Optimizer.BasicBlock catchEntry = (Optimizer.BasicBlock)catchRegion.entry!;
-        Assert.That(optimizer.Blocks.ToList().IndexOf(catchEntry),
-            Is.LessThan(optimizer.Blocks.ToList().IndexOf(catchRegion)));
+        Optimizer.ExceptionEntryGroup entryGroup = catchRegion.exceptionEntryGroup!;
+        Assert.That(entryGroup.ProtectedRegion.harmonyBlock?.blockType,
+            Is.EqualTo(ExceptionBlockType.BeginExceptionBlock));
+        Assert.That(entryGroup.associatedRegions, Is.EqualTo(new[] { catchRegion }));
 
         new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
 
         Assert.That(catchEntry.entryStackVariables, Has.Count.EqualTo(1));
         Assert.That(catchEntry.entryStackVariables[0].type, Is.EqualTo(typeof(Exception)));
         Assert.That(catchEntry.ops[0].inputs, Is.EqualTo(catchEntry.entryStackVariables));
+    }
+
+    [Test]
+    public void MakeBasicBlocksGroupsProtectedRegionWithOrderedHandlers()
+    {
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label exit = generator.DefineLabel();
+            var tryLeave = new CodeInstruction(OpCodes.Leave, exit);
+            tryLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+            var firstCatch = new CodeInstruction(OpCodes.Pop);
+            firstCatch.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock,
+                typeof(InvalidOperationException)));
+            var secondCatch = new CodeInstruction(OpCodes.Pop);
+            secondCatch.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+            var secondLeave = new CodeInstruction(OpCodes.Leave, exit);
+            secondLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+            return
+            [
+                tryLeave,
+                firstCatch,
+                new CodeInstruction(OpCodes.Leave, exit),
+                secondCatch,
+                secondLeave,
+                new CodeInstruction(OpCodes.Ret).WithLabels(exit),
+            ];
+        });
+
+        optimizer.MakeBasicBlocks();
+
+        Optimizer.ExceptionEntryGroup entryGroup = optimizer.ExceptionEntryGroups.Single();
+        Assert.That(entryGroup.ProtectedRegion.harmonyBlock?.blockType,
+            Is.EqualTo(ExceptionBlockType.BeginExceptionBlock));
+        Assert.That(entryGroup.associatedRegions.Select(region => region.harmonyBlock?.catchType),
+            Is.EqualTo(new[] { typeof(InvalidOperationException), typeof(Exception) }));
+        Assert.That(entryGroup.NextRegion(entryGroup.ProtectedRegion),
+            Is.SameAs(entryGroup.associatedRegions[0]));
+        Assert.That(entryGroup.NextRegion(entryGroup.associatedRegions[0]),
+            Is.SameAs(entryGroup.associatedRegions[1]));
+        Assert.That(entryGroup.NextRegion(entryGroup.associatedRegions[1]), Is.Null);
+
+        optimizer.AggressiveDeadCodeEliminationAndReorder();
+        optimizer.Emit();
+        Assert.That(optimizer.outputInstructions.instructions.SelectMany(instruction => instruction.blocks)
+                .Select(block => block.blockType),
+            Is.EqualTo(new[]
+            {
+                ExceptionBlockType.BeginExceptionBlock,
+                ExceptionBlockType.BeginCatchBlock,
+                ExceptionBlockType.BeginCatchBlock,
+                ExceptionBlockType.EndExceptionBlock,
+            }));
     }
 
     [Test]
@@ -353,8 +407,8 @@ public sealed class OptimizerPassTests
             block.ops.Any(op => op.Opcode == OpCodes.Pop));
         Optimizer.BasicBlock producer = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => op.Opcode == OpCodes.Ldstr));
-        Assert.That(optimizer.Blocks.ToList().IndexOf(consumer),
-            Is.LessThan(optimizer.Blocks.ToList().IndexOf(producer)));
+        Assert.That(optimizer.Layout.ToList().IndexOf(consumer),
+            Is.LessThan(optimizer.Layout.ToList().IndexOf(producer)));
 
         new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
 

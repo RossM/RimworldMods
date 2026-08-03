@@ -4,13 +4,15 @@ internal partial class Optimizer
 {
     internal class StackToVariableConverter(Optimizer optimizer)
     {
-        private readonly Dictionary<Block, List<Type>> entryLocals = optimizer.allBlocks.ToDictionary(block => block, _ => new List<Type>());
-        private readonly Dictionary<Block, List<Type>> entryStacks = optimizer.allBlocks.ToDictionary(block => block, _ => new List<Type>());
+        private readonly Dictionary<LayoutItem, List<Type>> entryLocals = optimizer.regions.Cast<LayoutItem>()
+            .Concat(optimizer.basicBlocks).ToDictionary(block => block, _ => new List<Type>());
+        private readonly Dictionary<LayoutItem, List<Type>> entryStacks = optimizer.regions.Cast<LayoutItem>()
+            .Concat(optimizer.basicBlocks).ToDictionary(block => block, _ => new List<Type>());
         private readonly Dictionary<BasicBlock, List<Type>> exitStacks = [];
         private readonly Dictionary<BasicBlock, List<Variable>> exitStackVariables = [];
         private readonly Dictionary<Op, Op.StackTransition> transitions = [];
-        private readonly UniqueQueue<Block> worklist = [];
-        private readonly HashSet<Block> initializedEntries = [];
+        private readonly UniqueQueue<LayoutItem> worklist = [];
+        private readonly HashSet<LayoutItem> initializedEntries = [];
 
         public void ConvertStackToVariables()
         {
@@ -18,9 +20,9 @@ internal partial class Optimizer
                 throw new InvalidOperationException($"Cannot convert {optimizer.Form} form to variables");
 
             InitializeVariables();
-            // Region nodes supply region-entry state, including implicit handler stacks. Seeding
-            // them before any basic block makes that state independent of storage order.
-            foreach (var region in optimizer.allBlocks.OfType<Region>())
+            // Region nodes supply entry state, including implicit handler stacks. Seeding them
+            // before any basic block makes that state independent of storage order.
+            foreach (var region in optimizer.regions)
             {
                 initializedEntries.Add(region);
                 worklist.Enqueue(region);
@@ -28,7 +30,7 @@ internal partial class Optimizer
 
             while (worklist.Count > 0)
             {
-                Block block = worklist.Dequeue();
+                LayoutItem block = worklist.Dequeue();
                 switch (block)
                 {
                     case Region region:
@@ -82,7 +84,7 @@ internal partial class Optimizer
 
             return;
 
-            void UpdateEntry(Block successor, List<Type> outgoingLocals, List<Type> outgoingStack)
+            void UpdateEntry(LayoutItem successor, List<Type> outgoingLocals, List<Type> outgoingStack)
             {
                 if (initializedEntries.Add(successor))
                 {
