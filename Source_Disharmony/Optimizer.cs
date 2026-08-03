@@ -90,7 +90,9 @@ internal partial class Optimizer
 
         public bool pinned;
 
-        // Address-taken arguments and locals cannot be promoted as ordinary SSA values.
+        // Canonical summary of address operations still present in Variables form. Rewriting a
+        // known reference can remove every such operation, so passes which do that must recompute
+        // this field rather than treating it as a permanent historical fact.
         public bool addressTaken;
 
         public override string ToString() => Name;
@@ -174,12 +176,29 @@ internal partial class Optimizer
             Address,
         }
 
+        /// <summary>How an instruction accesses a value through its first stack operand.</summary>
+        internal enum IndirectAccessKind
+        {
+            Load,
+            Store,
+        }
+
         // InputIndex identifies an output which aliases a popped input, as with both outputs of dup.
         // A negative index means that executing the instruction produces a new value.
         internal readonly record struct StackOutput(Type Type, int InputIndex = -1);
 
         // Recorded during symbolic execution so variable materialization does not reinterpret CIL opcodes.
         internal readonly record struct VariableAccess(VariableKind VariableKind, int Index, VariableAccessKind Kind);
+
+        /// <summary>
+        ///     Describes the canonical variable operand of an argument/local access after stack
+        ///     conversion. <see cref="EncodedVariableKind"/> records what the original opcode
+        ///     names; an optimization may independently replace <see cref="Variable"/>.
+        /// </summary>
+        internal readonly record struct StorageAccess(
+            VariableAccessKind Kind,
+            VariableKind EncodedVariableKind,
+            Variable Variable);
 
         // Instances live only inside ConvertStackToVariables. Inputs are ordered from the deepest
         // popped value to the top of the evaluation stack.
@@ -269,6 +288,57 @@ internal partial class Optimizer
         public OpCode Opcode { get; } = opcode;
         public object? Operand { get; } = operand;
 
+        /// <summary>
+        ///     Returns the explicit storage operand attached by <see cref="StackToVariableConverter"/>,
+        ///     or <see langword="null"/> for an operation which does not directly access an argument
+        ///     or local. This is the canonical storage-opcode decoder for variable-form passes.
+        /// </summary>
+        internal StorageAccess? GetStorageAccess()
+        {
+            ushort opcode = unchecked((ushort)Opcode.Value);
+            return opcode switch
+            {
+                OpCodeValues.Ldarg_0 or OpCodeValues.Ldarg_1 or OpCodeValues.Ldarg_2 or OpCodeValues.Ldarg_3 or
+                    OpCodeValues.Ldarg or OpCodeValues.Ldarg_S =>
+                    new(VariableAccessKind.Read, VariableKind.Argument, inputs[stackInputCount]),
+                OpCodeValues.Ldarga or OpCodeValues.Ldarga_S =>
+                    new(VariableAccessKind.Address, VariableKind.Argument, inputs[stackInputCount]),
+                OpCodeValues.Starg or OpCodeValues.Starg_S =>
+                    new(VariableAccessKind.Write, VariableKind.Argument, outputs[stackOutputCount]),
+                OpCodeValues.Ldloc_0 or OpCodeValues.Ldloc_1 or OpCodeValues.Ldloc_2 or OpCodeValues.Ldloc_3 or
+                    OpCodeValues.Ldloc or OpCodeValues.Ldloc_S =>
+                    new(VariableAccessKind.Read, VariableKind.Local, inputs[stackInputCount]),
+                OpCodeValues.Ldloca or OpCodeValues.Ldloca_S =>
+                    new(VariableAccessKind.Address, VariableKind.Local, inputs[stackInputCount]),
+                OpCodeValues.Stloc_0 or OpCodeValues.Stloc_1 or OpCodeValues.Stloc_2 or OpCodeValues.Stloc_3 or
+                    OpCodeValues.Stloc or OpCodeValues.Stloc_S =>
+                    new(VariableAccessKind.Write, VariableKind.Local, outputs[stackOutputCount]),
+                _ => null,
+            };
+        }
+
+        /// <summary>
+        ///     Classifies the <c>ldobj</c>/<c>stobj</c> and <c>ldind</c>/<c>stind</c> opcode
+        ///     families. Other memory operations are not indirect value accesses for this purpose.
+        /// </summary>
+        internal IndirectAccessKind? GetIndirectAccessKind() =>
+            unchecked((ushort)Opcode.Value) switch
+            {
+                OpCodeValues.Ldobj or
+                    OpCodeValues.Ldind_I1 or OpCodeValues.Ldind_U1 or
+                    OpCodeValues.Ldind_I2 or OpCodeValues.Ldind_U2 or
+                    OpCodeValues.Ldind_I4 or OpCodeValues.Ldind_U4 or
+                    OpCodeValues.Ldind_I8 or OpCodeValues.Ldind_I or
+                    OpCodeValues.Ldind_R4 or OpCodeValues.Ldind_R8 or OpCodeValues.Ldind_Ref =>
+                    IndirectAccessKind.Load,
+                OpCodeValues.Stobj or
+                    OpCodeValues.Stind_I1 or OpCodeValues.Stind_I2 or OpCodeValues.Stind_I4 or
+                    OpCodeValues.Stind_I8 or OpCodeValues.Stind_I or
+                    OpCodeValues.Stind_R4 or OpCodeValues.Stind_R8 or OpCodeValues.Stind_Ref =>
+                    IndirectAccessKind.Store,
+                _ => null,
+            };
+
         public int GetStackPops(Type returnType)
         {
             if (Opcode == OpCodes.Ret)
@@ -295,6 +365,36 @@ internal partial class Optimizer
         {
             opcode = Opcode;
             operand = Operand;
+        }
+
+        /// <summary>
+        ///     Returns the value encoded by a CIL literal-loading opcode, or false when this
+        ///     operation is not a supported literal.
+        /// </summary>
+        public bool TryGetLiteral([NotNullWhen(true)] out ConstantValue? constant)
+        {
+            constant = unchecked((ushort)Opcode.Value) switch
+            {
+                OpCodeValues.Ldnull => ConstantValue.Null,
+                OpCodeValues.Ldstr when Operand is string text => ConstantValue.FromString(text),
+                OpCodeValues.Ldc_I4_M1 => ConstantValue.FromInt32(-1),
+                OpCodeValues.Ldc_I4_0 => ConstantValue.FromInt32(0),
+                OpCodeValues.Ldc_I4_1 => ConstantValue.FromInt32(1),
+                OpCodeValues.Ldc_I4_2 => ConstantValue.FromInt32(2),
+                OpCodeValues.Ldc_I4_3 => ConstantValue.FromInt32(3),
+                OpCodeValues.Ldc_I4_4 => ConstantValue.FromInt32(4),
+                OpCodeValues.Ldc_I4_5 => ConstantValue.FromInt32(5),
+                OpCodeValues.Ldc_I4_6 => ConstantValue.FromInt32(6),
+                OpCodeValues.Ldc_I4_7 => ConstantValue.FromInt32(7),
+                OpCodeValues.Ldc_I4_8 => ConstantValue.FromInt32(8),
+                OpCodeValues.Ldc_I4_S => ConstantValue.FromInt32(Convert.ToSByte(Operand)),
+                OpCodeValues.Ldc_I4 => ConstantValue.FromInt32(Convert.ToInt32(Operand)),
+                OpCodeValues.Ldc_I8 => ConstantValue.FromInt64(Convert.ToInt64(Operand)),
+                OpCodeValues.Ldc_R4 => ConstantValue.FromFloat32(Convert.ToSingle(Operand)),
+                OpCodeValues.Ldc_R8 => ConstantValue.FromFloat64(Convert.ToDouble(Operand)),
+                _ => null,
+            };
+            return constant != null;
         }
     }
 
@@ -700,6 +800,15 @@ internal partial class Optimizer
         MergeBlocks();
         LogBlocks(nameof(MergeBlocks));
 
+        // MergeBlocks deliberately leaves absorbed successors in the block list. Remove them
+        // before analyses which index operations by identity; the merged block and absorbed block
+        // temporarily share the same Op objects.
+        SimpleDeadCodeElimination();
+        LogBlocks(nameof(SimpleDeadCodeElimination));
+
+        ConservativeConstantPropagation();
+        LogBlocks(nameof(ConservativeConstantPropagation));
+
         ConvertVariablesToStack();
         LogBlocks(nameof(ConvertVariablesToStack));
 
@@ -726,6 +835,11 @@ internal partial class Optimizer
     private void ConvertVariablesToStack()
     {
         new VariableToStackConverter(this).ConvertVariablesToStack();
+    }
+
+    internal void ConservativeConstantPropagation()
+    {
+        new ConservativeConstantPropagator(this).Propagate();
     }
 
     /// <summary>

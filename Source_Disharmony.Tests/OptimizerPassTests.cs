@@ -721,6 +721,529 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
+    public void ConservativeConstantPropagationReplacesLocalLdobjWithDirectLoad()
+    {
+        LocalBuilder? target = null;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            target = generator.DeclareLocal(typeof(int));
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloca, target),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Ldobj, typeof(int)),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        Assert.That(OpCodesIn(block), Is.EqualTo(new[] { OpCodes.Ldloc, OpCodes.Pop, OpCodes.Ret }));
+        Assert.That(block.ops[0].inputs, Is.EqualTo(new[] { optimizer.LocalVariables[target!.LocalIndex] }));
+        Assert.That(optimizer.LocalVariables[target.LocalIndex].addressTaken, Is.False);
+        Assert.That(block.ops.SelectMany(op => op.inputs.Concat(op.outputs)),
+            Does.Not.Contain(optimizer.LocalVariables[reference!.LocalIndex]));
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationHandlesInterleavedPatchArgumentSetup()
+    {
+        MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        LocalBuilder? copiedArgument = null;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
+        {
+            copiedArgument = generator.DeclareLocal(typeof(int));
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            return
+            [
+                // Multiple patch arguments can be pushed before their temporary stores. The
+                // ordinary value argument remains between the address producer and its store.
+                new CodeInstruction(OpCodes.Ldarga, 0),
+                new CodeInstruction(OpCodes.Ldarg, 0),
+                new CodeInstruction(OpCodes.Stloc, copiedArgument),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Ldobj, typeof(int)),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        Assert.That(OpCodesIn(block), Is.EqualTo(new[]
+        {
+            OpCodes.Ldarg,
+            OpCodes.Stloc,
+            OpCodes.Ldarg,
+            OpCodes.Pop,
+            OpCodes.Ret,
+        }));
+        Assert.Multiple(() =>
+        {
+            Assert.That(block.ops[2].inputs,
+                Is.EqualTo(new[] { optimizer.ArgumentVariables[0] }));
+            Assert.That(optimizer.ArgumentVariables[0].addressTaken, Is.False);
+            Assert.That(block.ops.SelectMany(op => op.inputs.Concat(op.outputs)),
+                Does.Not.Contain(optimizer.LocalVariables[reference!.LocalIndex]));
+        });
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationReplacesLocalStobjWithDirectStore()
+    {
+        LocalBuilder? target = null;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            target = generator.DeclareLocal(typeof(int));
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloca, target),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Ldc_I4, 42),
+                new CodeInstruction(OpCodes.Stobj, typeof(int)),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        Assert.That(OpCodesIn(block), Is.EqualTo(new[] { OpCodes.Ldc_I4, OpCodes.Stloc, OpCodes.Ret }));
+        Assert.That(block.ops[1].outputs, Is.EqualTo(new[] { optimizer.LocalVariables[target!.LocalIndex] }));
+        Assert.That(optimizer.LocalVariables[target.LocalIndex].addressTaken, Is.False);
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationReplacesArgumentObjectAccesses()
+    {
+        MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
+        {
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            return
+            [
+                new CodeInstruction(OpCodes.Ldarga, 0),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Ldobj, typeof(int)),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Ldc_I4, 42),
+                new CodeInstruction(OpCodes.Stobj, typeof(int)),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        Assert.That(OpCodesIn(block), Is.EqualTo(new[]
+        {
+            OpCodes.Ldarg,
+            OpCodes.Pop,
+            OpCodes.Ldc_I4,
+            OpCodes.Starg,
+            OpCodes.Ret,
+        }));
+        Assert.That(block.ops[0].inputs, Is.EqualTo(new[] { optimizer.ArgumentVariables[0] }));
+        Assert.That(block.ops[3].outputs, Is.EqualTo(new[] { optimizer.ArgumentVariables[0] }));
+        Assert.That(optimizer.ArgumentVariables[0].addressTaken, Is.False);
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationHandlesCompilerIndirectOpcodes()
+    {
+        MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
+        {
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            return
+            [
+                new CodeInstruction(OpCodes.Ldarga, 0),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Ldind_I4),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Ldc_I4, 42),
+                new CodeInstruction(OpCodes.Stind_I4),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Assert.That(OpCodesIn(optimizer.BasicBlocks.Single()), Is.EqualTo(new[]
+        {
+            OpCodes.Ldarg,
+            OpCodes.Pop,
+            OpCodes.Ldc_I4,
+            OpCodes.Starg,
+            OpCodes.Ret,
+        }));
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationIgnoresSignednessForFourByteIndirectLoad()
+    {
+        LocalBuilder? target = null;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            target = generator.DeclareLocal(typeof(uint));
+            reference = generator.DeclareLocal(typeof(uint).MakeByRefType());
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloca, target),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Ldind_I4),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        Assert.That(OpCodesIn(block), Is.EqualTo(new[] { OpCodes.Ldloc, OpCodes.Pop, OpCodes.Ret }));
+        Assert.That(block.ops[0].inputs,
+            Is.EqualTo(new[] { optimizer.LocalVariables[target!.LocalIndex] }));
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationPreservesSmallIntegerSignExtension()
+    {
+        LocalBuilder? target = null;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            target = generator.DeclareLocal(typeof(byte));
+            reference = generator.DeclareLocal(typeof(byte).MakeByRefType());
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloca, target),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Ldind_I1),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Assert.That(OpCodesIn(optimizer.BasicBlocks.Single()),
+            Is.EqualTo(new[] { OpCodes.Ldloca, OpCodes.Ldind_I1, OpCodes.Pop, OpCodes.Ret }));
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationRematerializesReferenceForUnsupportedUse()
+    {
+        LocalBuilder? target = null;
+        LocalBuilder? reference = null;
+        MethodInfo consumeReference = typeof(OptimizerPassTests).GetMethod(
+            nameof(ConsumeReference), BindingFlags.Static | BindingFlags.NonPublic)!;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            target = generator.DeclareLocal(typeof(int));
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloca, target),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Call, consumeReference),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        Assert.That(OpCodesIn(block), Is.EqualTo(new[] { OpCodes.Ldloca, OpCodes.Call, OpCodes.Ret }));
+        Assert.That(block.ops[0].inputs, Is.EqualTo(new[] { optimizer.LocalVariables[target!.LocalIndex] }));
+        Assert.That(optimizer.LocalVariables[target.LocalIndex].addressTaken, Is.True);
+        Assert.That(block.ops.SelectMany(op => op.inputs.Concat(op.outputs)),
+            Does.Not.Contain(optimizer.LocalVariables[reference!.LocalIndex]));
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationRematerializesPrimitiveConstant()
+    {
+        LocalBuilder? local = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            local = generator.DeclareLocal(typeof(int));
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4, 42),
+                new CodeInstruction(OpCodes.Stloc, local),
+                new CodeInstruction(OpCodes.Ldloc, local),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Assert.That(OpCodesIn(optimizer.BasicBlocks.Single()),
+            Is.EqualTo(new[] { OpCodes.Ldc_I4, OpCodes.Pop, OpCodes.Ret }));
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationRematerializesNullThroughManagedReferenceLocal()
+    {
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            return
+            [
+                new CodeInstruction(OpCodes.Ldnull),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Assert.That(OpCodesIn(optimizer.BasicBlocks.Single()),
+            Is.EqualTo(new[] { OpCodes.Ldnull, OpCodes.Pop, OpCodes.Ret }));
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationHandlesDominatingDefinitionInAnotherBlock()
+    {
+        LocalBuilder? target = null;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            target = generator.DeclareLocal(typeof(int));
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            Label use = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloca, target),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Br, use),
+                new CodeInstruction(OpCodes.Ldloc, reference).WithLabels(use),
+                new CodeInstruction(OpCodes.Ldobj, typeof(int)),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops).Select(op => op.Opcode),
+            Is.EqualTo(new[] { OpCodes.Ldloc, OpCodes.Pop, OpCodes.Ret }));
+        Assert.That(optimizer.LocalVariables[target!.LocalIndex].addressTaken, Is.False);
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationDoesNotUseDefinitionBypassedByBranch()
+    {
+        LocalBuilder? target = null;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            target = generator.DeclareLocal(typeof(int));
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            Label use = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brtrue, use),
+                new CodeInstruction(OpCodes.Ldloca, target),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Ldloc, reference).WithLabels(use),
+                new CodeInstruction(OpCodes.Ldobj, typeof(int)),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops).Select(op => op.Opcode),
+            Does.Contain(OpCodes.Stloc));
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops).Select(op => op.Opcode),
+            Does.Contain(OpCodes.Ldobj));
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationDoesNotUseDefinitionAfterEarlierRead()
+    {
+        LocalBuilder? local = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            local = generator.DeclareLocal(typeof(int));
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloc, local),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ldc_I4, 42),
+                new CodeInstruction(OpCodes.Stloc, local),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Assert.That(OpCodesIn(optimizer.BasicBlocks.Single()), Is.EqualTo(new[]
+        {
+            OpCodes.Ldloc,
+            OpCodes.Pop,
+            OpCodes.Ldc_I4,
+            OpCodes.Stloc,
+            OpCodes.Ret,
+        }));
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationDoesNotUseMultiplyAssignedLocal()
+    {
+        LocalBuilder? local = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            local = generator.DeclareLocal(typeof(int));
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Stloc, local),
+                new CodeInstruction(OpCodes.Ldc_I4_2),
+                new CodeInstruction(OpCodes.Stloc, local),
+                new CodeInstruction(OpCodes.Ldloc, local),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Assert.That(OpCodesIn(optimizer.BasicBlocks.Single()), Is.EqualTo(new[]
+        {
+            OpCodes.Ldc_I4_1,
+            OpCodes.Stloc,
+            OpCodes.Ldc_I4_2,
+            OpCodes.Stloc,
+            OpCodes.Ldloc,
+            OpCodes.Pop,
+            OpCodes.Ret,
+        }));
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationPreservesPrefixedIndirectAccess()
+    {
+        LocalBuilder? target = null;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            target = generator.DeclareLocal(typeof(int));
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloca, target),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Volatile),
+                new CodeInstruction(OpCodes.Ldobj, typeof(int)),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        Assert.That(OpCodesIn(block), Is.EqualTo(new[] { OpCodes.Ldloca, OpCodes.Ldobj, OpCodes.Pop, OpCodes.Ret }));
+        Assert.That(block.ops[1].prefixes.Select(prefix => prefix.Opcode), Is.EqualTo(new[] { OpCodes.Volatile }));
+        Assert.That(optimizer.LocalVariables[target!.LocalIndex].addressTaken, Is.True);
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationRejectsStackForm()
+    {
+        Optimizer optimizer = CreateOptimizer(_ => [new CodeInstruction(OpCodes.Ret)]);
+        optimizer.MakeBasicBlocks();
+
+        Assert.That(
+            () => optimizer.ConservativeConstantPropagation(),
+            Throws.InvalidOperationException.With.Message.Contains("regular variable form"));
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationRejectsSsaEdgeAssignments()
+    {
+        MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
+        {
+            Label target = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Br, target),
+                new CodeInstruction(OpCodes.Ret).WithLabels(target),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        Optimizer.ControlFlowEdge edge = optimizer.BasicBlocks[0].outgoingEdges.Single();
+        Optimizer.Variable argument = optimizer.ArgumentVariables[0];
+        edge.assignments.Add(new Optimizer.VariableAssignment(argument, argument));
+
+        Assert.That(
+            () => optimizer.ConservativeConstantPropagation(),
+            Throws.InvalidOperationException.With.Message.Contains("requires empty edge"));
+    }
+
+    [Test]
     public void ConvertStackToVariablesUsesSymbolicStackAliasingForDup()
     {
         Optimizer optimizer = CreateOptimizer(_ =>
@@ -1102,6 +1625,8 @@ public sealed class OptimizerPassTests
         ILGenerator generator = dynamicMethod.GetILGenerator();
         return new Optimizer(targetMethod, createInstructions(generator), generator, debug: false);
     }
+
+    private static void ConsumeReference(ref int value) { }
 
     private static OpCode[] OpCodesIn(Optimizer.BasicBlock block) => [.. block.ops.Select(op => op.Opcode)];
 }

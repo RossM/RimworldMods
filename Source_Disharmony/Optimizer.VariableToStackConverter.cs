@@ -48,12 +48,12 @@ internal partial class Optimizer
             {
                 foreach (var op in block.ops)
                 {
-                    if (op.stackInputCount < 0 || op.stackInputCount > op.inputs.Count ||
-                        op.stackOutputCount < 0 || op.stackOutputCount > op.outputs.Count)
-                    {
+                    if (op.stackInputCount < 0 || op.stackInputCount > op.inputs.Count)
                         throw new InvalidOperationException(
-                            $"Invalid variable operand counts on {op.Opcode} in {block.ID}");
-                    }
+                            $"Invalid variable input count on {op.Opcode} in {block.ID}");
+                    if (op.stackOutputCount < 0 || op.stackOutputCount > op.outputs.Count)
+                        throw new InvalidOperationException(
+                            $"Invalid variable output count on {op.Opcode} in {block.ID}");
                 }
 
                 List<Variable> exitStack = GetNaturalExitStack(block);
@@ -251,10 +251,13 @@ internal partial class Optimizer
         // have changed independently of the original instruction's numeric operand.
         private Op ConvertOperation(Op op)
         {
-            (Op.VariableAccessKind Kind, bool Argument, Variable Variable)? access = GetStorageAccess(op);
+            Op.StorageAccess? access = op.GetStorageAccess();
             Op operation;
-            if (access is not { } variableAccess ||
-                IsOriginalStorage(variableAccess.Argument, variableAccess.Variable, op.Index))
+            if (access is not { } variableAccess)
+            {
+                operation = new(op.Opcode, op.Operand);
+            }
+            else if (IsOriginalStorage(variableAccess.EncodedVariableKind, variableAccess.Variable, op.Index))
             {
                 operation = new(op.Opcode, op.Operand);
             }
@@ -274,34 +277,8 @@ internal partial class Optimizer
             return operation;
         }
 
-        // Evaluation-stack variables occupy the front of each operand list; the following variable
-        // identifies the argument or local storage accessed by this opcode.
-        private static (Op.VariableAccessKind Kind, bool Argument, Variable Variable)? GetStorageAccess(Op op)
-        {
-            ushort opcode = unchecked((ushort)op.Opcode.Value);
-            return opcode switch
-            {
-                OpCodeValues.Ldarg_0 or OpCodeValues.Ldarg_1 or OpCodeValues.Ldarg_2 or OpCodeValues.Ldarg_3 or
-                    OpCodeValues.Ldarg or OpCodeValues.Ldarg_S =>
-                    (Op.VariableAccessKind.Read, true, op.inputs[op.stackInputCount]),
-                OpCodeValues.Ldarga or OpCodeValues.Ldarga_S =>
-                    (Op.VariableAccessKind.Address, true, op.inputs[op.stackInputCount]),
-                OpCodeValues.Starg or OpCodeValues.Starg_S =>
-                    (Op.VariableAccessKind.Write, true, op.outputs[op.stackOutputCount]),
-                OpCodeValues.Ldloc_0 or OpCodeValues.Ldloc_1 or OpCodeValues.Ldloc_2 or OpCodeValues.Ldloc_3 or
-                    OpCodeValues.Ldloc or OpCodeValues.Ldloc_S =>
-                    (Op.VariableAccessKind.Read, false, op.inputs[op.stackInputCount]),
-                OpCodeValues.Ldloca or OpCodeValues.Ldloca_S =>
-                    (Op.VariableAccessKind.Address, false, op.inputs[op.stackInputCount]),
-                OpCodeValues.Stloc_0 or OpCodeValues.Stloc_1 or OpCodeValues.Stloc_2 or OpCodeValues.Stloc_3 or
-                    OpCodeValues.Stloc or OpCodeValues.Stloc_S =>
-                    (Op.VariableAccessKind.Write, false, op.outputs[op.stackOutputCount]),
-                _ => null,
-            };
-        }
-
-        private static bool IsOriginalStorage(bool argument, Variable variable, int originalIndex) =>
-            variable.index == originalIndex && variable.kind == (argument ? VariableKind.Argument : VariableKind.Local);
+        private static bool IsOriginalStorage(VariableKind encodedKind, Variable variable, int originalIndex) =>
+            variable.index == originalIndex && variable.kind == encodedKind;
 
         private bool HasStorage(Variable variable) =>
             variable.kind is VariableKind.Argument or VariableKind.Local || spillLocals.ContainsKey(variable);

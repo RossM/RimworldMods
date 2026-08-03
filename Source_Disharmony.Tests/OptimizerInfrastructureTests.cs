@@ -45,6 +45,17 @@ public sealed class OptimizerInfrastructureTests
         Assert.That(operation.CanDiscardIfUnused, Is.False);
     }
 
+    [TestCaseSource(nameof(IndirectAccessCases))]
+    public void OpClassifiesIndirectValueAccessOpcodes(OpCode opcode, int expectedValue)
+    {
+        var operation = new Optimizer.Op(opcode);
+        Optimizer.Op.IndirectAccessKind? expected = expectedValue < 0
+            ? null
+            : (Optimizer.Op.IndirectAccessKind)expectedValue;
+
+        Assert.That(operation.GetIndirectAccessKind(), Is.EqualTo(expected));
+    }
+
     [Test]
     public void ConstantValuePreservesCilKind()
     {
@@ -250,6 +261,39 @@ public sealed class OptimizerInfrastructureTests
         yield return EffectCase(OpCodes.Break, Optimizer.OperationEffects.Observable, false);
         yield return EffectCase(OpCodes.Throw,
             Optimizer.OperationEffects.ControlFlow | Optimizer.OperationEffects.MayThrow, false);
+    }
+
+    private static IEnumerable<TestCaseData> IndirectAccessCases()
+    {
+        OpCode[] loads =
+        [
+            OpCodes.Ldobj,
+            OpCodes.Ldind_I1, OpCodes.Ldind_U1,
+            OpCodes.Ldind_I2, OpCodes.Ldind_U2,
+            OpCodes.Ldind_I4, OpCodes.Ldind_U4,
+            OpCodes.Ldind_I8, OpCodes.Ldind_I,
+            OpCodes.Ldind_R4, OpCodes.Ldind_R8, OpCodes.Ldind_Ref,
+        ];
+        foreach (OpCode opcode in loads)
+        {
+            yield return new TestCaseData(opcode, (int)Optimizer.Op.IndirectAccessKind.Load)
+                .SetName($"IndirectAccess_{opcode}_Load");
+        }
+
+        OpCode[] stores =
+        [
+            OpCodes.Stobj,
+            OpCodes.Stind_I1, OpCodes.Stind_I2, OpCodes.Stind_I4,
+            OpCodes.Stind_I8, OpCodes.Stind_I,
+            OpCodes.Stind_R4, OpCodes.Stind_R8, OpCodes.Stind_Ref,
+        ];
+        foreach (OpCode opcode in stores)
+        {
+            yield return new TestCaseData(opcode, (int)Optimizer.Op.IndirectAccessKind.Store)
+                .SetName($"IndirectAccess_{opcode}_Store");
+        }
+
+        yield return new TestCaseData(OpCodes.Ldfld, -1).SetName("IndirectAccess_ldfld_None");
     }
 
     private static IEnumerable<TestCaseData> CliReferenceTypes()
