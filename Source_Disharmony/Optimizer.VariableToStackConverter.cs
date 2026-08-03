@@ -176,7 +176,7 @@ internal partial class Optimizer
             int keepCount = exact ? 0 : Math.Max(prefixCount, 0);
             foreach (var variable in required.Distinct())
             {
-                if (HasStorage(variable))
+                if (CanReload(variable))
                     continue;
 
                 int availableIndex = stack.LastIndexOf(variable);
@@ -213,7 +213,7 @@ internal partial class Optimizer
             foreach (var variable in consumedVariables.Distinct())
             {
                 futureUses.TryGetValue(variable, out int useCount);
-                if (HasStorage(variable))
+                if (CanReload(variable))
                     continue;
 
                 int remainingStackCopies = stack.Take(prefixCount).Count(candidate => candidate == variable) +
@@ -238,7 +238,7 @@ internal partial class Optimizer
             for (int index = stack.Count - 1; index >= keepCount; index--)
             {
                 Variable variable = stack[index];
-                if (needed.Contains(variable) && !HasStorage(variable))
+                if (needed.Contains(variable) && !CanReload(variable))
                     operations.Add(StoreVariable(variable));
                 else
                     operations.Add(Ops.Pop);
@@ -306,6 +306,9 @@ internal partial class Optimizer
         private bool HasStorage(Variable variable) =>
             variable.kind is VariableKind.Argument or VariableKind.Local || spillLocals.ContainsKey(variable);
 
+        private bool CanReload(Variable variable) =>
+            variable.type == typeof(NullType) || HasStorage(variable);
+
         // Original arguments and locals retain their storage identity. Logical values share one
         // lazily declared spill local across all blocks that preserve or reload that value.
         private Storage GetStorage(Variable variable)
@@ -329,6 +332,10 @@ internal partial class Optimizer
 
         private Op LoadVariable(Variable variable, BasicBlock block)
         {
+            // The transient null type has no corresponding local signature. Since every definition
+            // of a NullType variable is the same value, rematerialization is both exact and cheaper.
+            if (variable.type == typeof(NullType))
+                return new Op(OpCodes.Ldnull);
             if (!HasStorage(variable))
                 throw new InvalidOperationException($"{variable} is not available when rebuilding the stack in {block.ID}");
             return LoadStorage(GetStorage(variable));

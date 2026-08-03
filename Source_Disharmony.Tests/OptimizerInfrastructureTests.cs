@@ -162,6 +162,53 @@ public sealed class OptimizerInfrastructureTests
         }
     }
 
+    [TestCaseSource(nameof(CliReferenceTypes))]
+    public void TypeLatticeCoalescesNullWithEveryCliReferenceType(Type referenceType)
+    {
+        Type nullType = typeof(Optimizer.NullType);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(Optimizer.CombineTypes(nullType, referenceType), Is.EqualTo(referenceType));
+            Assert.That(Optimizer.CombineTypes(referenceType, nullType), Is.EqualTo(referenceType));
+        });
+    }
+
+    [Test]
+    public void TypeLatticeCoalescesTwoNullValuesAsNull()
+    {
+        Assert.That(Optimizer.CombineTypes(typeof(Optimizer.NullType), typeof(Optimizer.NullType)),
+            Is.EqualTo(typeof(Optimizer.NullType)));
+    }
+
+    [Test]
+    public void TypeLatticeCoalescesNullWithItsGlobalBounds()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(Optimizer.CombineTypes(typeof(Optimizer.NullType), typeof(Optimizer.UnknownType)),
+                Is.EqualTo(typeof(Optimizer.NullType)));
+            Assert.That(Optimizer.CombineTypes(typeof(Optimizer.UnknownType), typeof(Optimizer.NullType)),
+                Is.EqualTo(typeof(Optimizer.NullType)));
+            Assert.That(Optimizer.CombineTypes(typeof(Optimizer.NullType), typeof(Optimizer.AnyType)),
+                Is.EqualTo(typeof(Optimizer.AnyType)));
+            Assert.That(Optimizer.CombineTypes(typeof(Optimizer.AnyType), typeof(Optimizer.NullType)),
+                Is.EqualTo(typeof(Optimizer.AnyType)));
+        });
+    }
+
+    [TestCaseSource(nameof(CliNonReferenceTypes))]
+    public void TypeLatticeRejectsNullCoalescedWithNonReferenceType(Type nonReferenceType)
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(Optimizer.CombineTypes(typeof(Optimizer.NullType), nonReferenceType),
+                Is.EqualTo(typeof(void)));
+            Assert.That(Optimizer.CombineTypes(nonReferenceType, typeof(Optimizer.NullType)),
+                Is.EqualTo(typeof(void)));
+        });
+    }
+
     private static IEnumerable<TestCaseData> OperationEffectCases()
     {
         yield return EffectCase(OpCodes.Ldc_I4_1, Optimizer.OperationEffects.None, true);
@@ -205,6 +252,37 @@ public sealed class OptimizerInfrastructureTests
             Optimizer.OperationEffects.ControlFlow | Optimizer.OperationEffects.MayThrow, false);
     }
 
+    private static IEnumerable<TestCaseData> CliReferenceTypes()
+    {
+        yield return TypeCase(typeof(object), "Object");
+        yield return TypeCase(typeof(string), "BuiltInString");
+        yield return TypeCase(typeof(IDisposable), "Interface");
+        yield return TypeCase(typeof(int[]), "Array");
+        yield return TypeCase(typeof(Action), "Delegate");
+        yield return TypeCase(typeof(int).MakeByRefType(), "ManagedPointerToValue");
+        yield return TypeCase(typeof(string).MakeByRefType(), "ManagedPointerToObjectReference");
+        yield return TypeCase(typeof(Optimizer.UnknownType).MakeByRefType(), "ManagedPointerToUnknownType");
+        yield return TypeCase(typeof(Optimizer.AnyType).MakeByRefType(), "ManagedPointerToAnyType");
+        yield return TypeCase(typeof(int).MakePointerType(), "UnmanagedPointer");
+    }
+
+    private static IEnumerable<TestCaseData> CliNonReferenceTypes()
+    {
+        yield return TypeCase(typeof(int), "ValueType");
+        yield return TypeCase(typeof(int?), "NullableValueType");
+        yield return TypeCase(typeof(IntPtr), "NativeInt");
+        yield return TypeCase(typeof(TypedReference), "TypedReference");
+        yield return TypeCase(typeof(RuntimeArgumentHandle), "RuntimeArgumentHandle");
+        Type[] genericParameters = typeof(GenericParameters<,,,>).GetGenericArguments();
+        yield return TypeCase(genericParameters[0], "UnconstrainedGenericParameter");
+        yield return TypeCase(genericParameters[1], "ReferenceConstrainedGenericParameter");
+        yield return TypeCase(genericParameters[2], "ValueConstrainedGenericParameter");
+        yield return TypeCase(genericParameters[3], "BaseClassConstrainedGenericParameter");
+    }
+
+    private static TestCaseData TypeCase(Type type, string name) =>
+        new TestCaseData(type).SetName($"TypeLattice_Null_{name}");
+
     private static TestCaseData EffectCase(
         OpCode opcode,
         Optimizer.OperationEffects effects,
@@ -212,4 +290,11 @@ public sealed class OptimizerInfrastructureTests
         new TestCaseData(opcode, (int)effects, canDiscardIfUnused).SetName($"OperationEffects_{opcode}");
 
     private static float FloatFromBits(int bits) => BitConverter.ToSingle(BitConverter.GetBytes(bits), 0);
+
+    private sealed class GenericParameters<T, TReference, TValue, TBase>
+        where TReference : class
+        where TValue : struct
+        where TBase : Exception
+    {
+    }
 }

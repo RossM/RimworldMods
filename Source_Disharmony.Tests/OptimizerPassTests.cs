@@ -871,6 +871,23 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
+    public void ConvertStackToVariablesTracksLdnullAsTheTransientNullType()
+    {
+        Optimizer optimizer = CreateOptimizer(_ =>
+        [
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        Assert.That(optimizer.BasicBlocks[0].ops[0].outputs.Single().type,
+            Is.EqualTo(typeof(Optimizer.NullType)));
+    }
+
+    [Test]
     public void ConvertVariablesToStackPreservesAValueUsedAfterItsStackCopyIsConsumed()
     {
         Optimizer optimizer = CreateOptimizer(_ =>
@@ -903,6 +920,32 @@ public sealed class OptimizerPassTests
         }));
         Assert.That(block.ops[3].Operand, Is.SameAs(block.ops[2].Operand));
         Assert.That(block.ops[6].Operand, Is.SameAs(block.ops[2].Operand));
+    }
+
+    [Test]
+    public void ConvertVariablesToStackRematerializesNullInsteadOfSpillingIt()
+    {
+        Optimizer optimizer = CreateOptimizer(_ =>
+        [
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Ldstr, "discarded"),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        Optimizer.BasicBlock block = optimizer.BasicBlocks[0];
+        Optimizer.Variable nullValue = block.ops[0].outputs.Single();
+        block.ops[2].inputs[0] = nullValue;
+        block.ops[3].inputs[0] = nullValue;
+
+        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+
+        Assert.That(block.ops.Count(op => op.Opcode == OpCodes.Ldnull), Is.EqualTo(2));
+        Assert.That(block.ops, Has.None.Matches<Optimizer.Op>(op =>
+            op.Opcode == OpCodes.Ldloc || op.Opcode == OpCodes.Stloc));
     }
 
     [Test]

@@ -137,20 +137,27 @@ internal partial class Optimizer
     }
 
     // Symbolic stack analysis treats types as a lattice joined by CombineTypes.
-    // Both sentinels can also be used as the element type of a managed pointer, preserving the
-    // known byref shape even when the referent type is imprecise.
+    // UnknownType and AnyType can also be used as the element type of a managed pointer,
+    // preserving the known byref shape even when the referent type is imprecise. NullType is the
+    // CLI's transient null verification type and is the bottom of the reference-type sublattice.
     /// <summary>
     ///     The bottom type: no type evidence has reached this value yet. Joining it with another
     ///     type yields that type, so later control-flow information can refine it.
     /// </summary>
-    private struct UnknownType;
+    internal struct UnknownType;
 
     /// <summary>
     ///     The top type: a value exists, but its compatible CIL type is unavailable. Joining it with
     ///     any other type remains <see cref="AnyType"/>; missing metadata uses this rather than
     ///     <see cref="UnknownType"/> because additional control-flow evidence cannot restore it.
     /// </summary>
-    private struct AnyType;
+    internal struct AnyType;
+
+    /// <summary>
+    ///     A null value produced directly by <c>ldnull</c>. It exists only on the evaluation stack
+    ///     and is verifier-assignable to every CLI reference type, including managed pointers.
+    /// </summary>
+    internal struct NullType;
 
     internal class Op(OpCode opcode, object? operand = null)
     {
@@ -426,7 +433,7 @@ internal partial class Optimizer
     internal IrForm Form { get; private set; }
 
     private static bool IsSpecialType(Type type) =>
-        type == typeof(AnyType) || type == typeof(UnknownType) ||
+        type == typeof(AnyType) || type == typeof(UnknownType) || type == typeof(NullType) ||
         type.IsByRef && IsSpecialType(type.GetElementType()!);
 
     private static Type FromRef(Type type)
@@ -1449,12 +1456,20 @@ internal partial class Optimizer
         return output;
     }
 
-    private static Type CombineTypes(Type left, Type right)
+    internal static Type CombineTypes(Type left, Type right)
     {
         if (left == typeof(UnknownType) || right == typeof(AnyType) || left == right)
             return right;
         if (right == typeof(UnknownType) || left == typeof(AnyType))
             return left;
+
+        // ECMA-335 III.1.8.1.2.3 makes the transient null type verifier-assignable to every
+        // reference type. Pointer types, including managed pointers, are reference types in the
+        // CTS even though they are not object types.
+        if (left == typeof(NullType))
+            return IsReferenceType(right) ? right : typeof(void);
+        if (right == typeof(NullType))
+            return IsReferenceType(left) ? left : typeof(void);
 
         // Interfaces and their implementations have a direct least upper bound that is not visible
         // in either type's BaseType chain. Value types are excluded because CIL requires an explicit
@@ -1488,6 +1503,16 @@ internal partial class Optimizer
 
         // No value is possible
         return typeof(void);
+    }
+
+    private static bool IsReferenceType(Type type)
+    {
+        if (type == typeof(NullType) || type.IsByRef || type.IsPointer)
+            return true;
+        if (type.IsGenericParameter)
+            return false;
+
+        return !type.IsValueType && !IsSpecialType(type);
     }
 
     private static bool TryGetCommonInterface(Type left, Type right, [NotNullWhen(true)] out Type? value)

@@ -331,6 +331,10 @@ internal partial class Optimizer
                         break;
                     }
                     case OpCodeValues.Ldnull:
+                    {
+                        PopInputsAndPush(typeof(NullType), popCount);
+                        break;
+                    }
                     case OpCodeValues.Box:
                     {
                         PopInputsAndPush(typeof(object), popCount);
