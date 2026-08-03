@@ -3,6 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Disharmony;
 
+/// <summary>
+///     FIFO worklist which contains each value at most once. queue and hashSet always describe the
+///     same membership; dequeuing permits the value to be enqueued again later.
+/// </summary>
 internal class UniqueQueue<T> : IEnumerable<T>
 {
     public int Count => queue.Count;
@@ -29,41 +33,70 @@ internal class UniqueQueue<T> : IEnumerable<T>
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)queue).GetEnumerator();
 }
 
+/// <summary>
+///     Owns one shared IR whose canonical interpretation changes over the pipeline. The normal state
+///     sequence is: no IR; unordered Stack form after MakeBasicBlocks; regular Variables form after
+///     ConvertStackToVariables; Stack form again after ConvertVariablesToStack; emission-ordered
+///     Stack form after AggressiveDeadCodeEliminationAndReorder and InsertBranches; then canonical
+///     output after Emit. Future SSA form belongs between regular Variables form and lowering and
+///     will use the same blocks/operations with an explicit additional <see cref="IrForm"/> state.
+///     These are pass-boundary invariants: conversion workers temporarily build the destination
+///     representation before changing Form, but no other pass may observe that mixed state.
+/// </summary>
 internal partial class Optimizer
 {
     /// <summary>
-    ///     A basic block represents a group of instructions that always execute consecutively,
-    ///     except for control flow due to exceptions. Only the last instruction in a basic
-    ///     block can be a branch, return, or explicit throw.
+    ///     A node in the normal CFG containing operations which execute consecutively unless an
+    ///     operation throws. Normal branches, returns, explicit throws, and leaves occur only as
+    ///     the final operation. Exceptional transfers are represented by the region hierarchy,
+    ///     not by <see cref="incomingEdges"/> or <see cref="outgoingEdges"/>.
     /// </summary>
     internal class BasicBlock : RegionNode
     {
-        // Convenience projections only; CFG mutations must operate on the edge collections.
+        // Non-canonical read-only projections of the edge fields below. They may contain the same
+        // block more than once when distinct CFG edges share an endpoint. CFG mutations must use
+        // the optimizer's edge helpers, not these projections or either endpoint collection.
         public BasicBlock? Next => fallthroughEdge?.Target;
         public IEnumerable<BasicBlock> Predecessors => incomingEdges.Select(edge => edge.Source);
         public IEnumerable<BasicBlock> Successors => outgoingEdges.Select(edge => edge.Target);
+
+        // Canonical operation sequence in both IR forms. In Stack form the CIL evaluation stack is
+        // implicit; in Variables form each operation's inputs/outputs are canonical. An absorbed
+        // block may temporarily share these Op instances with its merger until dead-block removal.
         public readonly List<Op> ops = [];
+
+        // Non-canonical emission metadata. This preserves one input label when available and is
+        // otherwise assigned lazily if Emit needs a label. CFG edges, never labels, are canonical.
         public Label? label;
 
-        // The canonical normal-control-flow graph. fallthroughEdge is null when the final
-        // instruction always transfers control; otherwise it identifies the default continuation.
+        // The canonical normal CFG after MakeBasicBlocks. Every edge occurs exactly once in its
+        // source's outgoingEdges and target's incomingEdges, and its endpoints agree with those
+        // collections. Every edge referenced by a branch Op is also in that Op's block's
+        // outgoingEdges. fallthroughEdge is either null or one member of outgoingEdges identifying
+        // the default continuation not encoded by the final operation. InsertBranches may turn a
+        // non-adjacent default continuation into an explicit branch and clear fallthroughEdge.
         public readonly List<ControlFlowEdge> incomingEdges = [];
         public readonly List<ControlFlowEdge> outgoingEdges = [];
         public ControlFlowEdge? fallthroughEdge;
 
-        // Canonical in Variables form and empty in Stack form. These are the mutable logical stack
-        // slots present on entry. A slot may be defined by operations in several predecessor blocks;
-        // that deliberate non-SSA representation keeps ordinary control-flow edges empty.
+        // Canonical only in Variables form and deliberately empty in Stack form. In regular
+        // Variables form these are shared mutable logical stack slots: every predecessor's natural
+        // exit stack is identical by object identity to its target's entryStackVariables, and edge
+        // assignments are empty. In future SSA Variables form these become block-entry SSA names;
+        // predecessor-specific values may then be supplied by parallel incoming-edge assignments.
         public readonly List<Variable> entryStackVariables = [];
     }
 
     internal sealed class ControlFlowEdge(BasicBlock source, BasicBlock target)
     {
-        // Reserved for SSA construction and destruction. Stack form and regular Variables form
-        // require this list to be empty; assignments, when present, occur in parallel.
+        // Canonical only in SSA Variables form and during conversion into or out of it. Stack form
+        // and regular Variables form require every edge's list to be empty. Assignments on one edge
+        // execute in parallel and are logical value transfers, not emitted CIL instructions.
         public readonly List<VariableAssignment> assignments = [];
 
-        // Mutated only by the optimizer's edge helpers, which keep both endpoint collections in sync.
+        // Canonical endpoints after MakeBasicBlocks. Mutated only by the optimizer's edge helpers,
+        // which also update endpoint collections, preserve fallthroughEdge, and invalidate cached
+        // control-flow analyses.
         public BasicBlock Source { get; internal set; } = source;
         public BasicBlock Target { get; internal set; } = target;
     }
@@ -79,25 +112,35 @@ internal partial class Optimizer
             _ => throw new ArgumentOutOfRangeException(),
         };
 
-        // Stable optimizer identity; unlike index, this is unique across all variable kinds.
+        // Stable identity within one Variables-form interval. Unlike index, this is unique across
+        // all variable kinds. IDs and the variable registry are reset when Variables form is built
+        // or discarded; Variable objects are not canonical in Stack form.
         public required int id;
         public required VariableKind kind;
 
-        // For a Local this is set only from authoritative local metadata or a LocalBuilder, never
-        // inferred from stores. StackSlot and Temporary types come from symbolic stack analysis.
+        // Canonical Variables-form type information. Argument types come from the method signature.
+        // A Local type is set only from MethodBody metadata or a LocalBuilder, never inferred from
+        // stores, and may therefore be null. StackSlot and Temporary types come from symbolic stack
+        // analysis and may contain the special lattice-marker types below.
         public Type? type;
 
-        // Argument/local index. Logical evaluation-stack variables leave this at -1.
+        // Canonical physical slot index for Argument and Local; -1 for logical StackSlot and
+        // Temporary values. Distinct argument/local variables never represent the same slot.
         public int index = -1;
 
-        // Preserves both the identity and authoritative type of transpiler-created locals when known.
+        // Optional canonical metadata for a Local created by a transpiler. When present, its index
+        // and type agree with this Variable; pinned combines all authoritative metadata seen for the
+        // slot. Null means only that no LocalBuilder was supplied, since the original MethodBody may
+        // still provide authoritative type metadata.
         public LocalBuilder? localBuilder;
 
+        // Canonical Variables-form pinned flag for Local; false for other variable kinds. It is
+        // populated only from authoritative local metadata or a LocalBuilder.
         public bool pinned;
 
-        // Canonical summary of address operations still present in Variables form. Rewriting a
-        // known reference can remove every such operation, so passes which do that must recompute
-        // this field rather than treating it as a permanent historical fact.
+        // Canonical only in Variables form. True exactly when a remaining operation takes this
+        // argument/local's address. Rewriting address operations can change the value, so such a
+        // pass must recompute it; this is a current-IR summary, not historical escape information.
         public bool addressTaken;
 
         public override string ToString() => Name;
@@ -113,8 +156,9 @@ internal partial class Optimizer
         Local,
 
         /// <summary>
-        ///     A mutable logical evaluation-stack slot. Before SSA, the same slot may be defined in
-        ///     several predecessor blocks and used as an entry value by their common successor.
+        ///     A logical evaluation-stack slot crossing a basic-block boundary. In regular
+        ///     Variables form the same mutable slot may be defined by several predecessors; SSA
+        ///     construction replaces that interpretation with single-definition values.
         /// </summary>
         StackSlot,
 
@@ -124,21 +168,31 @@ internal partial class Optimizer
 
     internal sealed class VariableAssignment(Variable source, Variable destination)
     {
-        // This is a logical value transfer on a CFG edge, not an instruction to emit.
+        // Valid only as an element of ControlFlowEdge.assignments in SSA Variables form. Source and
+        // Destination participate in one parallel logical transfer; this is never emitted directly.
         public Variable Source { get; } = source;
         public Variable Destination { get; } = destination;
     }
 
-    /// <summary>Which interpretation of the shared block and operation data is currently valid.</summary>
+    /// <summary>
+    ///     Which interpretation of the shared block and operation data is canonical. The current
+    ///     values describe Stack form and regular (non-SSA) Variables form. Future SSA will use the
+    ///     same block/operation structures but must add an explicit state here: an SSA function with
+    ///     no joins can have no edge assignments, so assignment-list contents are not a sufficient
+    ///     form discriminator.
+    /// </summary>
     internal enum IrForm
     {
-        /// <summary>Only the original CIL evaluation-stack representation is available.</summary>
+        /// <summary>
+        ///     Operations are executable CIL stack operations. Variable operands, counts, block
+        ///     entry stacks, the variable registry, and edge assignments are empty/non-canonical.
+        /// </summary>
         Stack,
 
         /// <summary>
-        ///     Operation operands are canonical explicit variables and CFG edges are empty. Stack
-        ///     operand counts retain enough CIL semantics to schedule these variables back onto the
-        ///     evaluation stack without maintaining a separate operation representation.
+        ///     Regular, non-SSA Variables form. Operation operands are canonical explicit variables,
+        ///     stack operand counts retain the original CIL stack arity needed to lower back to Stack
+        ///     form, and every CFG edge assignment list is empty.
         /// </summary>
         Variables,
     }
@@ -188,11 +242,12 @@ internal partial class Optimizer
             Store,
         }
 
-        // InputIndex identifies an output which aliases a popped input, as with both outputs of dup.
-        // A negative index means that executing the instruction produces a new value.
+        // Transient StackToVariableConverter result. InputIndex identifies an output which aliases
+        // a popped input, as with both outputs of dup; a negative index denotes a new value.
         internal readonly record struct StackOutput(Type Type, int InputIndex = -1);
 
-        // Recorded during symbolic execution so variable materialization does not reinterpret CIL opcodes.
+        // Transient StackToVariableConverter result recorded by symbolic execution so variable
+        // materialization does not reinterpret the opcode or its original storage operand.
         internal readonly record struct VariableAccess(VariableKind VariableKind, int Index, VariableAccessKind Kind);
 
         /// <summary>
@@ -205,8 +260,8 @@ internal partial class Optimizer
             VariableKind EncodedVariableKind,
             Variable Variable);
 
-        // Instances live only inside ConvertStackToVariables. Inputs are ordered from the deepest
-        // popped value to the top of the evaluation stack.
+        // Non-canonical transient state owned only by one ConvertStackToVariables invocation.
+        // Inputs are ordered from the deepest popped value to the top of the evaluation stack.
         internal sealed class StackTransition
         {
             public readonly List<Type> inputTypes = [];
@@ -220,7 +275,7 @@ internal partial class Optimizer
         public bool IsUnconditionalBranch => Opcode == OpCodes.Br_S || Opcode == OpCodes.Br;
         public bool CanBranch => Opcode.FlowControl is FlowControl.Branch or FlowControl.Cond_Branch;
 
-        // Computed rather than cached because prefixes remain mutable while the IR is assembled.
+        // Valid in both forms and computed rather than cached because prefixes remain mutable.
         public OperationEffects Effects => OperationEffectClassifier.Classify(this);
         public bool CanDiscardIfUnused => OperationEffectClassifier.CanDiscardIfUnused(Effects);
 
@@ -280,23 +335,31 @@ internal partial class Optimizer
             _ => throw new ArgumentOutOfRangeException(),
         };
 
-        // Prefixes remain attached to the operation they govern so no later pass can separate them.
+        // Canonical in both forms after MakeBasicBlocks bundles prefixes. Prefix Op objects do not
+        // also occur in BasicBlock.ops; keeping them here prevents later passes from separating a
+        // prefix from the operation it governs.
         public readonly List<Op> prefixes = [];
 
-        // Canonical in Variables form and empty in Stack form. Evaluation-stack values precede
-        // argument/local accesses in each list; the counts identify the boundary between them.
+        // Canonical only in Variables form and empty/defaulted in Stack form. Evaluation-stack
+        // values occupy inputs[0..stackInputCount) and outputs[0..stackOutputCount); explicit
+        // argument/local operands follow them. The counts retain the operation's intrinsic CIL
+        // stack arity even if a Variables-form optimization rewrites which values are used.
         public readonly List<Variable> inputs = [];
         public readonly List<Variable> outputs = [];
         public int stackInputCount;
         public int stackOutputCount;
 
+        // Canonical in both forms. After MakeBasicBlocks, branch operands are ControlFlowEdge
+        // objects rather than labels. In Variables form a storage opcode's encoded Operand may be
+        // stale after rewriting; GetStorageAccess().Variable is then the canonical storage target.
         public OpCode Opcode { get; } = opcode;
         public object? Operand { get; } = operand;
 
         /// <summary>
-        ///     Returns the explicit storage operand attached by <see cref="StackToVariableConverter"/>,
-        ///     or <see langword="null"/> for an operation which does not directly access an argument
-        ///     or local. This is the canonical storage-opcode decoder for variable-form passes.
+        ///     Requires Variables form with valid stack counts. Returns the explicit storage operand
+        ///     attached by <see cref="StackToVariableConverter"/>, or <see langword="null"/> for an
+        ///     operation which does not directly access an argument or local. This is the canonical
+        ///     storage-opcode decoder for variable-form passes.
         /// </summary>
         internal StorageAccess? GetStorageAccess()
         {
@@ -364,6 +427,8 @@ internal partial class Optimizer
             return Convert.ToInt32(value);
         }
 
+        // Copies only opcode/encoded operand. It is suitable for Stack form and prefix logging, but
+        // does not lower canonical Variables-form operands back to storage instructions.
         public CodeInstruction ToCodeInstruction() => new(Opcode, Operand);
 
         public void Deconstruct(out OpCode opcode, out object? operand)
@@ -403,6 +468,8 @@ internal partial class Optimizer
         }
     }
 
+    // Factories rather than shared instances: passes freely attach variable operands and prefixes
+    // to returned Ops, so every use must receive a fresh object.
     private static class Ops
     {
         public static Op Nop => new(OpCodes.Nop);
@@ -410,12 +477,23 @@ internal partial class Optimizer
         public static Op Pop => new(OpCodes.Pop);
     }
 
-    /// <summary>A node in the lexical region-containment hierarchy.</summary>
+    /// <summary>
+    ///     A node in the canonical lexical region-containment hierarchy built by MakeBasicBlocks.
+    ///     This hierarchy is independent of normal CFG reachability and basic-block list order.
+    /// </summary>
     internal class RegionNode
     {
+        // Lexical-entry predicate only: true when this is the first child recorded by its parent.
+        // It does not imply normal CFG reachability and is not the dominator-root predicate.
         public bool EntryPoint => parent == null || parent.entry == this;
+
+        // Stable identity shared by Regions and BasicBlocks. IDs are unique after MakeBasicBlocks;
+        // the synthetic root alone retains zero.
         public virtual string ID => $"#{id}";
         public int id = 0;
+
+        // Canonical lexical parent after MakeBasicBlocks. A BasicBlock's parent is its immediate
+        // containing Region; a non-root Region's parent is the surrounding Region.
         public Region? parent;
 
         public override string ToString() => ID;
@@ -434,22 +512,25 @@ internal partial class Optimizer
 
     /// <summary>
     ///     A synthetic root, protected region, filter region, or handler region. Regions form the
-    ///     lexical containment hierarchy. Their emission positions are derived from the ordered
-    ///     basic blocks and must not be treated as independently mutable state.
+    ///     canonical lexical containment hierarchy after MakeBasicBlocks. They do not form CFG
+    ///     nodes. Their eventual emission positions are derived from entries and basic-block order,
+    ///     not stored as a second independently mutable layout.
     /// </summary>
     internal class Region : RegionNode
     {
         public override string ID => parent == null ? "Root" : $"{harmonyBlock!.blockType} #{id}";
 
-        // The Harmony marker which begins this lexical body; null only for the synthetic root.
+        // Canonical region kind and catch type after MakeBasicBlocks; null only for the synthetic
+        // root. The marker's eventual output position is derived rather than stored here.
         public ExceptionBlock? harmonyBlock;
 
-        // The first nested region or basic block in this body. This is canonical hierarchy data,
-        // independent of where either item currently appears in basic-block order.
+        // Canonical first lexical child after MakeBasicBlocks. It may be a nested Region, so callers
+        // needing a block follow the recursive entry chain. Before aggressive reorder this child
+        // need not be the earliest member of the Region in basicBlocks; afterward it is.
         public RegionNode? entry;
 
-        // Null only for the synthetic root. This explicitly associates regions belonging to
-        // exception entries which share a protected region; their order is stored by the group.
+        // Canonical exception-group membership after MakeBasicBlocks. Null only for the synthetic
+        // root; protected, filter, and handler Regions all point to their shared group.
         public ExceptionEntryGroup? exceptionEntryGroup;
     }
 
@@ -459,11 +540,16 @@ internal partial class Optimizer
     /// </summary>
     internal sealed class ExceptionEntryGroup(Region protectedRegion)
     {
+        // Canonical protected body for this group. It is not repeated in associatedRegions.
         public Region ProtectedRegion { get; } = protectedRegion;
 
-        // A filtered entry contributes both its filter region and handler region to this list.
+        // Canonical CIL layout order of the filters/handlers associated with ProtectedRegion. A
+        // filtered entry contributes both its filter Region and its handler Region. This order is
+        // independent of basicBlocks order until aggressive reorder reestablishes emission layout.
         public readonly List<Region> associatedRegions = [];
 
+        // Returns the next Region in the group's required CIL layout chain. The argument must be
+        // ProtectedRegion or a current associatedRegions member; null means the exception group ends.
         public Region? NextRegion(Region region)
         {
             if (region == ProtectedRegion)
@@ -484,6 +570,8 @@ internal partial class Optimizer
         // separate concern from those locals.
     }
 
+    // Read-only collection views for passes and tests. Their elements remain mutable optimizer IR;
+    // callers must respect the canonical-state and pass-precondition comments on the backing fields.
     internal IReadOnlyList<BasicBlock> BasicBlocks => basicBlocks;
     internal IReadOnlyList<Region> Regions => regions;
     internal IReadOnlyList<ExceptionEntryGroup> ExceptionEntryGroups => exceptionEntryGroups;
@@ -491,30 +579,55 @@ internal partial class Optimizer
     internal IReadOnlyDictionary<int, Variable> ArgumentVariables => argumentVariables;
     internal IReadOnlyDictionary<int, Variable> LocalVariables => localVariables;
 
+    // Canonical output only after Emit completes. Emit appends to this collection and therefore
+    // requires it to be empty on entry; earlier passes must use the block/operation IR instead.
     public readonly InstructionList outputInstructions = [];
-    // Canonical lexical hierarchy nodes, including the synthetic root.
+
+    // Canonical lexical hierarchy nodes after MakeBasicBlocks, including root exactly once. This
+    // list records membership, not nesting or layout; parent/entry record nesting and the aggressive
+    // reorder postcondition gives basicBlocks its eventual emission layout.
     private readonly List<Region> regions = [];
 
-    // Canonical groupings of exception entries which share the same protected region.
+    // Canonical exception-group membership and handler/filter order after MakeBasicBlocks. The
+    // normal CFG intentionally contains no implicit exceptional edges represented by these groups.
     private readonly List<ExceptionEntryGroup> exceptionEntryGroups = [];
 
-    // Canonical normal-control-flow nodes. Their ordering changes only when a pass deliberately
-    // establishes a new layout order; CFG relationships live on ControlFlowEdge instead.
+    // Canonical normal-CFG node set after MakeBasicBlocks. Membership does not imply reachability:
+    // CFG rewrites such as JumpThreading and MergeBlocks deliberately leave dead blocks for a later
+    // removal pass. List order is initially input order and is non-canonical for analysis; only
+    // AggressiveDeadCodeEliminationAndReorder establishes the final canonical emission order.
     private List<BasicBlock> basicBlocks = [];
 
-    // Block dominance is valid until the block set, normal edges, or implicit exception entries
-    // change. It is computed explicitly at the start of passes which need it, never by a property.
+    // Null means block dominance has not been computed or has been invalidated. A non-null tree is
+    // canonical for the current block set, edge endpoints, and implicit exception-entry roots;
+    // operation, IR-form, and block-order changes do not invalidate it. Edge mutations must use the
+    // helpers below; block-set or implicit-root mutations must explicitly clear this cache.
+    // Computation is explicit at pass entry, never hidden in a property.
     private DominatorTree? dominatorTree;
 
-    // One canonical object represents each physical argument/local; logical stack values receive
-    // distinct identities in variables as they are discovered.
+    // Canonical only in Variables form and empty in Stack form. variables owns every current
+    // Variable. The two dictionaries are consistent subsets: each maps a physical slot index to
+    // the one Argument/Local Variable for that slot, and every mapped value occurs in variables.
+    // Logical values occur only in variables. nextVariableId is the next identity in this interval.
     private readonly List<Variable> variables = [];
     private readonly Dictionary<int, Variable> argumentVariables = [];
     private readonly Dictionary<int, Variable> localVariables = [];
     private int nextVariableId;
+
+    // Stable synthetic hierarchy root. It becomes canonical when MakeBasicBlocks adds it to regions
+    // and sets its entry; it has no parent, Harmony marker, or exception-entry group.
     private readonly Region root = new();
+
+    // Shared ID allocator for BasicBlock and non-root Region nodes. IDs are stable and never reused.
     private int nextBlockId = 1;
+
+    // Guard checked by Optimize. The current constructor sets it after deriving signature state, so
+    // it is true for every successfully constructed instance; the false value is presently only a
+    // reserved/legacy state rather than an observable optimizer phase.
     private readonly bool valid = false;
+
+    // Immutable input/context. inputInstructions is authoritative only until MakeBasicBlocks builds
+    // the IR. parameterTypes includes the instance receiver at index zero when method.HasThis.
     private readonly MethodBase method;
     private readonly List<CodeInstruction> inputInstructions;
     private readonly ILGenerator generator;
@@ -539,6 +652,9 @@ internal partial class Optimizer
         valid = true;
     }
 
+    // Meaningful once MakeBasicBlocks has created the IR. Defaults to Stack, changes to Variables
+    // only after conversion completes, and changes back only after all variable state is discarded.
+    // SSA construction must eventually add and set a distinct value rather than infer SSA from data.
     internal IrForm Form { get; private set; }
 
     private static bool IsSpecialType(Type type) =>
@@ -574,10 +690,11 @@ internal partial class Optimizer
     }
 
     /// <summary>
-    ///     Before final reordering, logs basic blocks with their region paths without implying that
-    ///     their current order is legal CIL layout. After reordering, also logs derived region
-    ///     boundaries; <paramref name="structuredLayout"/> therefore requires the aggressive-pass
-    ///     postconditions.
+    ///     Logs whichever IR interpretation <see cref="Form"/> makes canonical. Before final
+    ///     reordering, blocks are shown in their current non-canonical list order with region paths.
+    ///     With <paramref name="structuredLayout"/>, derived region boundaries are also shown, so
+    ///     that mode requires the aggressive-reorder postconditions. Logging never mutates the IR;
+    ///     a displayed nop for an empty block is only a placeholder.
     /// </summary>
     private void LogBlocks(string phase, bool structuredLayout = false)
     {
@@ -672,10 +789,12 @@ internal partial class Optimizer
     }
 
     /// <summary>
-    ///     Derives region-start markers from region entries and basic-block order. Every region
-    ///     must begin with its recursive entry basic block, remain contiguous, and be followed by
-    ///     the next filter/handler region in its exception-entry group. The aggressive reorder
-    ///     pass establishes these preconditions.
+    ///     Derives a structured emission layout without storing a second canonical layout list.
+    ///     Preconditions: aggressive reorder has removed dead regions and ordered basicBlocks so
+    ///     every Region begins with its recursive entry block and is contiguous, and each associated
+    ///     filter/handler immediately follows the preceding Region in its exception-entry group.
+    ///     The returned list interleaves canonical Region nodes with the existing BasicBlocks; it
+    ///     does not change either hierarchy or block order.
     /// </summary>
     private List<RegionNode> GetStructuredLayout()
     {
@@ -778,6 +897,12 @@ internal partial class Optimizer
             codePos += ReflectionTools.ILSize(codeInstruction.opcode);
     }
 
+    /// <summary>
+    ///     Runs the complete pipeline exactly once on a newly constructed optimizer. It builds Stack
+    ///     form, temporarily converts to regular Variables form for variable-aware optimization,
+    ///     lowers back to Stack form, restores dead-code and CIL layout invariants, and emits the
+    ///     canonical output instruction list.
+    /// </summary>
     public List<CodeInstruction> Optimize()
     {
         if (!valid)
@@ -836,21 +961,51 @@ internal partial class Optimizer
         return outputInstructions.instructions;
     }
 
+    /// <summary>
+    ///     Preconditions: Stack form with a complete CFG, empty edge assignments, and no block
+    ///     unreachable from every lexical Region entry. Postconditions: regular Variables form;
+    ///     operation operands/counts, entryStackVariables, the variable registry, and addressTaken
+    ///     are canonical, every edge assignment list is empty, and CFG, regions, and block order are
+    ///     unchanged. Any cached dominator tree remains valid. The normal pipeline's first
+    ///     SimpleDeadCodeElimination establishes the reachability precondition.
+    /// </summary>
     private void ConvertStackToVariables()
     {
         new StackToVariableConverter(this).ConvertStackToVariables();
     }
 
+    /// <summary>
+    ///     Preconditions: regular Variables form with empty edge assignments, valid operation stack
+    ///     counts, and identical natural exit/target entry stacks on every edge. Postconditions:
+    ///     executable Stack form; variable operands, entry stacks, registries, and counts are
+    ///     cleared/non-canonical. CFG, regions, block order, and cached dominance are unchanged.
+    /// </summary>
     private void ConvertVariablesToStack()
     {
         new VariableToStackConverter(this).ConvertVariablesToStack();
     }
 
+    /// <summary>
+    ///     Requires regular Variables form, empty edge assignments, unique ownership of every Op,
+    ///     and every retained block to be reachable from GetDominatorRoots. In the normal pipeline,
+    ///     SimpleDeadCodeElimination immediately after MergeBlocks removes ordinary stranded blocks
+    ///     and restores unique Op ownership; dominator computation enforces its narrower root-
+    ///     reachability requirement. This pass computes and caches dominators if unavailable. It
+    ///     changes only operation and variable data: CFG, regions, block order, and dominance remain
+    ///     valid, edge assignments remain empty, and addressTaken is canonical on return.
+    /// </summary>
     internal void ConservativeConstantPropagation()
     {
         new ConservativeConstantPropagator(this).Propagate();
     }
 
+    /// <summary>
+    ///     Explicitly returns the cached dominance result or computes it if absent. Requires a
+    ///     complete CFG in either IR form and every retained block to be reachable from at least one
+    ///     root returned by <see cref="GetDominatorRoots"/>. Block order, operation ownership, and
+    ///     SSA edge assignments do not affect block dominance. The result remains valid until a CFG
+    ///     or implicit-entry mutation calls <see cref="InvalidateControlFlowAnalyses"/>.
+    /// </summary>
     private DominatorTree ComputeDominatorTreeIfNeeded()
     {
         return dominatorTree ??= DominatorTree.Compute(basicBlocks, GetDominatorRoots());
@@ -859,7 +1014,9 @@ internal partial class Optimizer
     /// <summary>
     ///     Returns the explicit entries used for normal-CFG dominance: the recursive method entry
     ///     plus every filter and handler entry whose exceptional predecessor is absent from the
-    ///     edge graph. A protected-region entry is reached normally and is not an extra root.
+    ///     edge graph. A protected-region entry is reached normally and is not an extra root. This
+    ///     root set is intentionally narrower than the lexical-entry root set used by
+    ///     SimpleDeadCodeElimination.
     /// </summary>
     private List<BasicBlock> GetDominatorRoots()
     {
@@ -873,6 +1030,8 @@ internal partial class Optimizer
         return roots;
     }
 
+    // Requires a complete, acyclic Region entry chain. This is hierarchy data and does not inspect
+    // basicBlocks order; aggressive reorder is not required.
     private static BasicBlock GetRecursiveEntryBlock(Region region)
     {
         HashSet<Region> visited = [];
@@ -888,14 +1047,23 @@ internal partial class Optimizer
                throw new InvalidOperationException($"Region {region.ID} has no recursive entry block");
     }
 
+    /// <summary>
+    ///     Invalidates all cached facts derived from CFG topology or implicit entry roots. This
+    ///     cannot revoke a DominatorTree reference already held by a worker; a pass must not mutate
+    ///     the CFG and then continue using such a captured analysis.
+    /// </summary>
     private void InvalidateControlFlowAnalyses()
     {
         dominatorTree = null;
     }
 
     /// <summary>
-    ///     Emits stack-form operations in the current basic-block order. The order must satisfy the
-    ///     structured-region preconditions used by <see cref="GetStructuredLayout"/>.
+    ///     Emits the canonical output from Stack form without changing CFG or operation state.
+    ///     Preconditions: aggressive reorder's structured-region ordering, InsertBranches' guarantee
+    ///     that every remaining fallthrough targets the next physical block, bundled prefixes, empty
+    ///     edge assignments, and an empty outputInstructions list. Empty blocks receive an emitted
+    ///     nop because labels and exception markers require a physical CIL instruction. On return,
+    ///     outputInstructions is canonical; BasicBlock.label may also have been assigned lazily.
     /// </summary>
     internal void Emit()
     {
@@ -958,6 +1126,9 @@ internal partial class Optimizer
         }
     }
 
+    // Stack-form/emission conversion. It is also safe for prefix Ops during Variables-form logging,
+    // because prefixes have no canonical variable operands. Branch operands remain CFG edges in the
+    // IR and are replaced with lazily allocated labels only in the returned CodeInstruction.
     private CodeInstruction ConvertToCodeInstruction(Op i)
     {
         var codeInstruction = i.ToCodeInstruction();
@@ -974,9 +1145,13 @@ internal partial class Optimizer
     }
 
     /// <summary>
-    ///     Generates the canonical normal CFG and lexical-region hierarchy. Basic blocks initially
-    ///     remain in input order; after CFG edges are created, that order is not canonical analysis
-    ///     state and need not yet satisfy the final CIL layout restrictions.
+    ///     Converts inputInstructions into the initial Stack-form IR. Preconditions: a freshly
+    ///     constructed optimizer with empty block, region, variable, edge-assignment, and output
+    ///     state. Postconditions: canonical normal CFG and lexical-region hierarchy; labels in
+    ///     branch operands are replaced by edges, unconditional branches are represented as default
+    ///     continuations, prefixes are bundled with their operations, and variable-form fields are
+    ///     empty/non-canonical. Blocks remain in input order, may include dead code, and are not yet
+    ///     guaranteed to satisfy final CIL emission order. Dominance is unavailable.
     /// </summary>
     internal void MakeBasicBlocks()
     {
@@ -1135,6 +1310,11 @@ internal partial class Optimizer
             basicBlock.ops.Count == 0 || basicBlock.ops[^1].CanFallThrough;
     }
 
+    /// <summary>
+    ///     Requires the initial Stack-form operations produced by MakeBasicBlocks. Removes prefix
+    ///     Ops from BasicBlock.ops and attaches each run to the following operation. On return every
+    ///     prefix has exactly one owner and no block ends in an unattached prefix.
+    /// </summary>
     private void BundlePrefixes()
     {
         foreach (var block in basicBlocks)
@@ -1163,6 +1343,10 @@ internal partial class Optimizer
         }
     }
 
+    // CFG mutation primitives. They preserve the bidirectional endpoint-list invariant and keep
+    // cached analysis state coherent by invalidating it. MoveControlFlowEdgeSource additionally
+    // transfers fallthrough classification; redirecting a target does not change whether the edge
+    // is its source's default continuation.
     private ControlFlowEdge AddControlFlowEdge(BasicBlock source, BasicBlock target)
     {
         var edge = new ControlFlowEdge(source, target);
@@ -1214,12 +1398,25 @@ internal partial class Optimizer
         InvalidateControlFlowAnalyses();
     }
 
+    /// <summary>
+    ///     May run after MakeBasicBlocks in Stack, regular Variables, or SSA Variables form. It
+    ///     removes only zero-effect nop operations, so variable/edge invariants, CFG topology,
+    ///     dominance, regions, and block order remain unchanged. Empty blocks may remain.
+    /// </summary>
     internal void NopElimination()
     {
         foreach (var block in basicBlocks)
             block.ops.RemoveAll(i => i.Opcode == OpCodes.Nop);
     }
 
+    /// <summary>
+    ///     Requires the complete CFG produced by MakeBasicBlocks in Stack form or regular Variables
+    ///     form; every edge assignment list must be empty. It removes a conditional branch when all
+    ///     of the block's outgoing edges target its default continuation, replacing the condition
+    ///     consumption with equivalent pops. In Variables form those pops retain canonical variable
+    ///     operands and stack counts. Removed edges invalidate dominance; region membership and
+    ///     block order are unchanged.
+    /// </summary>
     internal void BranchElimination()
     {
         foreach (var block in basicBlocks)
@@ -1288,6 +1485,14 @@ internal partial class Optimizer
         }
     }
 
+    /// <summary>
+    ///     Requires a complete CFG in Stack form or regular Variables form after empty blocks have
+    ///     acquired compatible entry/exit stack state; SSA edge assignments must be absent. It
+    ///     redirects default edges through short chains of empty, non-entry blocks within one
+    ///     Region. Redirected edges invalidate dominance and may leave skipped blocks unreachable, so
+    ///     SimpleDeadCodeElimination must run afterward before dominator computation or any pass
+    ///     requiring every listed block to be live. Block order and region data are unchanged.
+    /// </summary>
     internal void JumpThreading()
     {
         foreach (var block in basicBlocks)
@@ -1308,9 +1513,14 @@ internal partial class Optimizer
     }
 
     /// <summary>
-    ///     Merges eligible successor operations and outgoing edges into their predecessor. An
-    ///     absorbed successor remains in <c>basicBlocks</c> as an unreachable node until a later
-    ///     dead-code pass removes it; no pass may treat list membership as reachability.
+    ///     Requires a complete CFG in Stack form or regular Variables form with empty edge
+    ///     assignments. It merges a same-Region, non-entry successor having one incoming edge into
+    ///     its predecessor. CFG edge changes invalidate dominance. The absorbed successor remains
+    ///     in basicBlocks as an unreachable node and temporarily shares its Op instances with the
+    ///     merged predecessor.
+    ///     SimpleDeadCodeElimination must run before dominator computation or any pass which indexes
+    ///     operations by identity; the normal pipeline runs it immediately next. Region data and
+    ///     block order are otherwise unchanged.
     /// </summary>
     internal void MergeBlocks()
     {
@@ -1334,9 +1544,15 @@ internal partial class Optimizer
     }
 
     /// <summary>
-    ///     Removes basic blocks unreachable through the normal CFG while treating every lexical
-    ///     region entry as a root, since handler predecessors are intentionally absent from that
-    ///     CFG. Region and exception-entry metadata are pruned by the aggressive pass instead.
+    ///     May run in Stack, regular Variables, or SSA Variables form after MakeBasicBlocks. It
+    ///     removes blocks unreachable through normal edges from every lexical Region entry, because
+    ///     handler/filter predecessors are absent from the CFG. Protected-region entries are also
+    ///     roots here even though they are ordinary-flow entries for dominance. It removes attached
+    ///     edges and their assignments, invalidating dominance when the graph changes. Relative block
+    ///     order, operation/variable form, and Region metadata are unchanged; unreachable Regions
+    ///     and exception groups are retained until AggressiveDeadCodeEliminationAndReorder.
+    ///     Postcondition: every retained block is reachable from some lexical entry, but not
+    ///     necessarily from the narrower root set used by dominator computation.
     /// </summary>
     internal void SimpleDeadCodeElimination()
     {
@@ -1371,11 +1587,15 @@ internal partial class Optimizer
     }
 
     /// <summary>
-    ///     Removes every node unreachable from a method or region entry and orders the retained
-    ///     basic blocks for CIL emission. On return, every region begins with its recursive entry
-    ///     basic block and is contiguous, associated filter and handler regions immediately follow
-    ///     their protected region, and stack-carrying backward edges satisfy the CIL
-    ///     forward-predecessor requirement.
+    ///     May run in either IR form, but the normal pipeline runs it in Stack form after
+    ///     BranchInversion and before InsertBranches. Preconditions: a complete, bidirectionally
+    ///     consistent CFG and a valid Region/exception-group hierarchy; no prior block ordering is
+    ///     required. It removes unreachable blocks, Regions, and exception groups, invalidating
+    ///     dominance if topology or implicit roots change, and establishes canonical emission order.
+    ///     On return every Region begins with its recursive entry block and is contiguous, each
+    ///     associated filter/handler immediately follows the preceding Region in its group, and a
+    ///     stack-carrying backward edge has the forward predecessor required by CIL. Form-specific
+    ///     operation and variable data, edge assignments, and CFG semantics are preserved.
     /// </summary>
     internal void AggressiveDeadCodeEliminationAndReorder()
     {
@@ -1477,6 +1697,8 @@ internal partial class Optimizer
             InvalidateControlFlowAnalyses();
     }
 
+    // Validates hierarchy membership and exception-group consistency before any reordering or
+    // pruning occurs. It intentionally imposes no preexisting basicBlocks layout requirement.
     private void ValidateAggressiveReorderPreconditions()
     {
         if (root.entry == null)
@@ -1526,6 +1748,9 @@ internal partial class Optimizer
         }
     }
 
+    // Variables-form registry helpers used while StackToVariableConverter materializes canonical
+    // operands. ArgumentVariables must already be initialized from parameterTypes. A previously
+    // unseen local is created with unknown declared type; later stores never refine that metadata.
     private Variable GetArgumentVariable(int index) => argumentVariables.TryGetValue(index, out var variable)
         ? variable
         : throw new InvalidOperationException($"Unknown argument #{index}");
@@ -1540,6 +1765,8 @@ internal partial class Optimizer
         return variable;
     }
 
+    // Adds one canonical Variables-form object to the owning registry. Callers adding an Argument
+    // or Local must also add the same object to the corresponding index dictionary.
     private Variable NewVariable(
         VariableKind kind,
         Type? type,
@@ -1566,6 +1793,14 @@ internal partial class Optimizer
         OpCodeValues.Stloc_0 or OpCodeValues.Stloc_1 or OpCodeValues.Stloc_2 or OpCodeValues.Stloc_3 or
         OpCodeValues.Stloc or OpCodeValues.Stloc_S;
 
+    /// <summary>
+    ///     Requires Stack form with absent variable operands and empty edge assignments. The normal
+    ///     pipeline runs it immediately after Variables-to-Stack lowering and before aggressive
+    ///     reorder. It inverts brtrue or brfalse when doing so makes a single-predecessor target the
+    ///     semantic fallthrough, helping the subsequent reorder choose a useful layout. Edge objects
+    ///     and endpoints are unchanged, so CFG topology, dominance, Regions, and current block order
+    ///     remain valid; only the explicit/default classification of two outgoing edges changes.
+    /// </summary>
     internal void BranchInversion()
     {
         foreach (var block in basicBlocks)
@@ -1597,10 +1832,12 @@ internal partial class Optimizer
     }
 
     /// <summary>
-    ///     Treats the current basic-block order as the intended emission order. Converts every
-    ///     semantic fallthrough which does not target the next physical block into an explicit
-    ///     branch; afterward, remaining fallthrough edges match physical fallthrough. The normal
-    ///     pipeline calls this after <see cref="AggressiveDeadCodeEliminationAndReorder"/>.
+    ///     Requires Stack form, empty edge assignments, and the canonical emission order established
+    ///     by AggressiveDeadCodeEliminationAndReorder; it runs immediately before Emit. It converts
+    ///     every default continuation which does not target the next physical block into an explicit
+    ///     branch. On return each remaining fallthroughEdge targets the following block, so Emit may
+    ///     rely on physical fallthrough. CFG endpoints, dominance, Regions, and block order are
+    ///     unchanged, but fallthroughEdge is cleared for each materialized branch.
     /// </summary>
     internal void InsertBranches()
     {
