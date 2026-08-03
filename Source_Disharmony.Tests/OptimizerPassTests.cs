@@ -115,6 +115,149 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
+    public void DominatorTreeComputesImmediateDominatorsAcrossDiamond()
+    {
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label alternative = generator.DefineLabel();
+            Label join = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brfalse, alternative),
+                new CodeInstruction(OpCodes.Ldstr, "first"),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Br, join),
+                new CodeInstruction(OpCodes.Ldstr, "second").WithLabels(alternative),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret).WithLabels(join),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        Optimizer.BasicBlock entry = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Brfalse));
+        Optimizer.BasicBlock first = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => Equals(op.Operand, "first")));
+        Optimizer.BasicBlock second = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => Equals(op.Operand, "second")));
+        Optimizer.BasicBlock join = optimizer.BasicBlocks.Single(block =>
+            block.ops.Count == 1 && block.ops[0].Opcode == OpCodes.Ret);
+
+        Optimizer.DominatorTree dominators =
+            Optimizer.DominatorTree.Compute(optimizer.BasicBlocks, [entry]);
+
+        Assert.That(dominators.Roots, Is.EqualTo(new[] { entry }));
+        Assert.That(dominators.GetImmediateDominator(entry), Is.Null);
+        Assert.That(dominators.GetImmediateDominator(first), Is.SameAs(entry));
+        Assert.That(dominators.GetImmediateDominator(second), Is.SameAs(entry));
+        Assert.That(dominators.GetImmediateDominator(join), Is.SameAs(entry));
+        Assert.That(dominators.Dominates(entry, join), Is.True);
+        Assert.That(dominators.Dominates(first, join), Is.False);
+        Assert.That(dominators.Dominates(second, join), Is.False);
+        Assert.That(dominators.GetChildren(entry), Is.EquivalentTo(new[] { first, second, join }));
+    }
+
+    [Test]
+    public void DominatorTreeHandlesLoopBackedge()
+    {
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label header = generator.DefineLabel();
+            Label exit = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Nop),
+                new CodeInstruction(OpCodes.Br, header),
+                new CodeInstruction(OpCodes.Ldc_I4_0).WithLabels(header),
+                new CodeInstruction(OpCodes.Brfalse, exit),
+                new CodeInstruction(OpCodes.Ldstr, "body"),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Br, header),
+                new CodeInstruction(OpCodes.Ret).WithLabels(exit),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        Optimizer.BasicBlock entry = optimizer.BasicBlocks.Single(block =>
+            block.ops.Count == 1 && block.ops[0].Opcode == OpCodes.Nop);
+        Optimizer.BasicBlock header = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Brfalse));
+        Optimizer.BasicBlock body = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => Equals(op.Operand, "body")));
+        Optimizer.BasicBlock exit = optimizer.BasicBlocks.Single(block =>
+            block.ops.Count == 1 && block.ops[0].Opcode == OpCodes.Ret);
+
+        Optimizer.DominatorTree dominators =
+            Optimizer.DominatorTree.Compute(optimizer.BasicBlocks, [entry]);
+
+        Assert.That(dominators.GetImmediateDominator(header), Is.SameAs(entry));
+        Assert.That(dominators.GetImmediateDominator(body), Is.SameAs(header));
+        Assert.That(dominators.GetImmediateDominator(exit), Is.SameAs(header));
+        Assert.That(dominators.Dominates(header, body), Is.True);
+        Assert.That(dominators.Dominates(body, header), Is.False);
+    }
+
+    [Test]
+    public void DominatorTreeUsesArtificialRootForExceptionEntryAndSharedExit()
+    {
+        Optimizer optimizer = CreateTwoBlockTryOptimizer();
+        optimizer.MakeBasicBlocks();
+        Optimizer.Region root = optimizer.Regions.Single(region => region.parent == null);
+        Optimizer.Region protectedRegion = optimizer.ExceptionEntryGroups.Single().ProtectedRegion;
+        Optimizer.Region catchRegion = optimizer.ExceptionEntryGroups.Single().associatedRegions.Single();
+        Optimizer.BasicBlock methodEntry = RecursiveEntry(root);
+        Optimizer.BasicBlock trySecondBlock = optimizer.BasicBlocks.Single(block =>
+            block.parent == protectedRegion && block != methodEntry);
+        Optimizer.BasicBlock catchEntry = RecursiveEntry(catchRegion);
+        Optimizer.BasicBlock exit = optimizer.BasicBlocks.Single(block =>
+            block.ops.Count == 1 && block.ops[0].Opcode == OpCodes.Ret);
+
+        Optimizer.DominatorTree dominators =
+            Optimizer.DominatorTree.Compute(optimizer.BasicBlocks, [methodEntry, catchEntry]);
+
+        Assert.That(dominators.GetImmediateDominator(trySecondBlock), Is.SameAs(methodEntry));
+        Assert.That(dominators.GetImmediateDominator(catchEntry), Is.Null);
+        Assert.That(dominators.GetImmediateDominator(exit), Is.Null);
+        Assert.That(dominators.Roots, Is.EquivalentTo(new[] { methodEntry, catchEntry, exit }));
+        Assert.That(dominators.Dominates(methodEntry, catchEntry), Is.False);
+        Assert.That(dominators.Dominates(methodEntry, exit), Is.False);
+
+        static Optimizer.BasicBlock RecursiveEntry(Optimizer.Region region)
+        {
+            Optimizer.RegionNode entry = region;
+            while (entry is Optimizer.Region entryRegion)
+                entry = entryRegion.entry!;
+            return (Optimizer.BasicBlock)entry;
+        }
+    }
+
+    [Test]
+    public void DominatorTreeCacheIsReusedAndInvalidatedByEdgeMutation()
+    {
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label target = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brfalse, target),
+                new CodeInstruction(OpCodes.Ret).WithLabels(target),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        MethodInfo compute = typeof(Optimizer).GetMethod(
+            "ComputeDominatorTreeIfNeeded",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+        var first = (Optimizer.DominatorTree)compute.Invoke(optimizer, null)!;
+        var second = (Optimizer.DominatorTree)compute.Invoke(optimizer, null)!;
+        optimizer.BranchElimination();
+        var afterMutation = (Optimizer.DominatorTree)compute.Invoke(optimizer, null)!;
+
+        Assert.That(second, Is.SameAs(first));
+        Assert.That(afterMutation, Is.Not.SameAs(first));
+    }
+
+    [Test]
     public void BranchEliminationReplacesRedundantConditionWithPop()
     {
         Optimizer optimizer = CreateOptimizer(generator =>
@@ -1076,6 +1219,92 @@ public sealed class OptimizerPassTests
         Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops).Select(op => op.Opcode),
             Is.EqualTo(new[] { OpCodes.Ldloc, OpCodes.Pop, OpCodes.Ret }));
         Assert.That(optimizer.LocalVariables[target!.LocalIndex].addressTaken, Is.False);
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationTreatsProtectedRegionEntryAsNormalControlFlow()
+    {
+        LocalBuilder? target = null;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            target = generator.DeclareLocal(typeof(int));
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            Label exit = generator.DefineLabel();
+            var tryLoad = new CodeInstruction(OpCodes.Ldloc, reference);
+            tryLoad.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+            var catchPop = new CodeInstruction(OpCodes.Pop);
+            catchPop.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+            var catchLeave = new CodeInstruction(OpCodes.Leave, exit);
+            catchLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloca, target),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                tryLoad,
+                new CodeInstruction(OpCodes.Ldobj, typeof(int)),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Leave, exit),
+                catchPop,
+                catchLeave,
+                new CodeInstruction(OpCodes.Ret).WithLabels(exit),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        optimizer.SimpleDeadCodeElimination();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops).Select(op => op.Opcode),
+            Does.Not.Contain(OpCodes.Stloc));
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops).Select(op => op.Opcode),
+            Does.Not.Contain(OpCodes.Ldobj));
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops).Select(op => op.Opcode),
+            Does.Contain(OpCodes.Ldloc));
+        Assert.That(optimizer.LocalVariables[target!.LocalIndex].addressTaken, Is.False);
+    }
+
+    [Test]
+    public void ConservativeConstantPropagationDoesNotPropagateTryDefinitionIntoCatch()
+    {
+        LocalBuilder? target = null;
+        LocalBuilder? reference = null;
+        Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            target = generator.DeclareLocal(typeof(int));
+            reference = generator.DeclareLocal(typeof(int).MakeByRefType());
+            Label exit = generator.DefineLabel();
+            var call = new CodeInstruction(OpCodes.Call, TargetMethod);
+            call.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+            var catchPop = new CodeInstruction(OpCodes.Pop);
+            catchPop.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+            var catchLeave = new CodeInstruction(OpCodes.Leave, exit);
+            catchLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+            return
+            [
+                call,
+                new CodeInstruction(OpCodes.Ldloca, target),
+                new CodeInstruction(OpCodes.Stloc, reference),
+                new CodeInstruction(OpCodes.Leave, exit),
+                catchPop,
+                new CodeInstruction(OpCodes.Ldloc, reference),
+                new CodeInstruction(OpCodes.Ldobj, typeof(int)),
+                new CodeInstruction(OpCodes.Pop),
+                catchLeave,
+                new CodeInstruction(OpCodes.Ret).WithLabels(exit),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        optimizer.SimpleDeadCodeElimination();
+        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+
+        optimizer.ConservativeConstantPropagation();
+
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops).Select(op => op.Opcode),
+            Does.Contain(OpCodes.Stloc));
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops).Select(op => op.Opcode),
+            Does.Contain(OpCodes.Ldobj));
     }
 
     [Test]

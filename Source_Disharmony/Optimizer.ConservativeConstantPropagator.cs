@@ -46,11 +46,12 @@ internal partial class Optimizer
         public void Propagate()
         {
             CheckPreconditions();
+            DominatorTree dominators = optimizer.ComputeDominatorTreeIfNeeded();
 
             // A propagated reference can expose another singleton reference local. Rebuilding the
             // deliberately small conservative index is simpler and safer than incrementally
             // maintaining it while operations are removed and replaced.
-            while (PropagateOnce()) { }
+            while (PropagateOnce(dominators)) { }
 
             RecomputeAddressTaken();
         }
@@ -83,10 +84,10 @@ internal partial class Optimizer
             }
         }
 
-        private bool PropagateOnce()
+        private bool PropagateOnce(DominatorTree dominators)
         {
             BuildConservativeIndex();
-            List<Candidate> candidates = FindCandidates();
+            List<Candidate> candidates = FindCandidates(dominators);
             if (candidates.Count == 0)
                 return false;
 
@@ -129,8 +130,9 @@ internal partial class Optimizer
         /// <summary>
         ///     Builds intentionally conservative def-use information: every syntactic definition
         ///     is considered capable of reaching every use. This loses opportunities in exchange
-        ///     for avoiding reaching-definition or dominance machinery before SSA; candidates are
-        ///     accepted only when that conservative view still finds one definition.
+        ///     for avoiding a full reaching-definitions analysis before SSA; candidates are
+        ///     accepted only when that conservative view finds one definition and that definition
+        ///     dominates every read.
         /// </summary>
         private void BuildConservativeIndex()
         {
@@ -162,7 +164,7 @@ internal partial class Optimizer
             }
         }
 
-        private List<Candidate> FindCandidates()
+        private List<Candidate> FindCandidates(DominatorTree dominators)
         {
             List<Candidate> candidates = [];
             foreach (var storage in optimizer.localVariables.Values)
@@ -202,7 +204,7 @@ internal partial class Optimizer
 
                 // One syntactic assignment does not imply that it reaches every read: a normal
                 // entry path or an exception handler may observe the local's entry value instead.
-                if (EntryValueCanReachRead(storage, definition))
+                if (!DefinitionDominatesEveryRead(definition, reads, dominators))
                     continue;
 
                 // A prefix belongs to the ldloc being replaced, not to the value substituted for it.
@@ -277,48 +279,32 @@ internal partial class Optimizer
         }
 
         /// <summary>
-        ///     Returns true if some normal or implicit exception-entry path can read the local
-        ///     without first executing its unique definition. With one definition this is the
-        ///     required dominance check, expressed as a reachability search which stops at that
-        ///     definition instead of constructing a general dominator tree.
+        ///     Returns whether the unique definition executes before every read. Block dominance
+        ///     handles reads in other blocks; operation order supplies the stronger instruction-
+        ///     level fact required for reads in the definition's own block.
         /// </summary>
-        private bool EntryValueCanReachRead(Variable storage, Op definition)
+        private bool DefinitionDominatesEveryRead(
+            Op definition,
+            IReadOnlyList<Op> reads,
+            DominatorTree dominators)
         {
-            Queue<BasicBlock> pending = new(optimizer.basicBlocks.Where(block => block.EntryPoint));
-            HashSet<BasicBlock> visited = [];
-            while (pending.Count > 0)
+            BasicBlock definitionBlock = blockByOperation[definition];
+            int definitionIndex = definitionBlock.ops.IndexOf(definition);
+            foreach (var read in reads)
             {
-                BasicBlock block = pending.Dequeue();
-                if (!visited.Add(block))
+                BasicBlock readBlock = blockByOperation[read];
+                if (readBlock != definitionBlock)
+                {
+                    if (!dominators.Dominates(definitionBlock, readBlock))
+                        return false;
                     continue;
-
-                bool reachedDefinition = false;
-                foreach (var operation in block.ops)
-                {
-                    if (operation == definition)
-                    {
-                        reachedDefinition = true;
-                        break;
-                    }
-
-                    if (operation.GetStorageAccess() is not { } access)
-                        continue;
-
-                    // Reading the value or taking its address observes the current local contents.
-                    if (access.Variable != storage)
-                        continue;
-                    if (access.Kind is Op.VariableAccessKind.Read or Op.VariableAccessKind.Address)
-                        return true;
                 }
 
-                if (!reachedDefinition)
-                {
-                    foreach (var successor in block.Successors)
-                        pending.Enqueue(successor);
-                }
+                if (definitionIndex >= readBlock.ops.IndexOf(read))
+                    return false;
             }
 
-            return false;
+            return true;
         }
 
         // CIL stores can truncate or otherwise normalize values according to the declared local

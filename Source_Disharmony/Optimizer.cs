@@ -497,6 +497,10 @@ internal partial class Optimizer
     // establishes a new layout order; CFG relationships live on ControlFlowEdge instead.
     private List<BasicBlock> basicBlocks = [];
 
+    // Block dominance is valid until the block set, normal edges, or implicit exception entries
+    // change. It is computed explicitly at the start of passes which need it, never by a property.
+    private DominatorTree? dominatorTree;
+
     // One canonical object represents each physical argument/local; logical stack values receive
     // distinct identities in variables as they are discovered.
     private readonly List<Variable> variables = [];
@@ -842,6 +846,48 @@ internal partial class Optimizer
         new ConservativeConstantPropagator(this).Propagate();
     }
 
+    private DominatorTree ComputeDominatorTreeIfNeeded()
+    {
+        return dominatorTree ??= DominatorTree.Compute(basicBlocks, GetDominatorRoots());
+    }
+
+    /// <summary>
+    ///     Returns the explicit entries used for normal-CFG dominance: the recursive method entry
+    ///     plus every filter and handler entry whose exceptional predecessor is absent from the
+    ///     edge graph. A protected-region entry is reached normally and is not an extra root.
+    /// </summary>
+    private List<BasicBlock> GetDominatorRoots()
+    {
+        List<BasicBlock> roots = [GetRecursiveEntryBlock(root)];
+        foreach (var entryGroup in exceptionEntryGroups)
+        {
+            foreach (var associatedRegion in entryGroup.associatedRegions)
+                roots.Add(GetRecursiveEntryBlock(associatedRegion));
+        }
+
+        return roots;
+    }
+
+    private static BasicBlock GetRecursiveEntryBlock(Region region)
+    {
+        HashSet<Region> visited = [];
+        RegionNode? entry = region;
+        while (entry is Region entryRegion)
+        {
+            if (!visited.Add(entryRegion))
+                throw new InvalidOperationException($"Region {entryRegion.ID} has a cyclic entry chain");
+            entry = entryRegion.entry;
+        }
+
+        return entry as BasicBlock ??
+               throw new InvalidOperationException($"Region {region.ID} has no recursive entry block");
+    }
+
+    private void InvalidateControlFlowAnalyses()
+    {
+        dominatorTree = null;
+    }
+
     /// <summary>
     ///     Emits stack-form operations in the current basic-block order. The order must satisfy the
     ///     structured-region preconditions used by <see cref="GetStructuredLayout"/>.
@@ -929,6 +975,7 @@ internal partial class Optimizer
     /// </summary>
     internal void MakeBasicBlocks()
     {
+        InvalidateControlFlowAnalyses();
         Dictionary<Label, BasicBlock> labelToBlock = [];
 
         Region currentRegion = root;
@@ -1111,31 +1158,34 @@ internal partial class Optimizer
         }
     }
 
-    private static ControlFlowEdge AddControlFlowEdge(BasicBlock source, BasicBlock target)
+    private ControlFlowEdge AddControlFlowEdge(BasicBlock source, BasicBlock target)
     {
         var edge = new ControlFlowEdge(source, target);
         source.outgoingEdges.Add(edge);
         target.incomingEdges.Add(edge);
+        InvalidateControlFlowAnalyses();
         return edge;
     }
 
-    private static void RemoveControlFlowEdge(ControlFlowEdge edge)
+    private void RemoveControlFlowEdge(ControlFlowEdge edge)
     {
         if (!edge.Source.outgoingEdges.Remove(edge) || !edge.Target.incomingEdges.Remove(edge))
             throw new InvalidOperationException("Control-flow edge is not attached to both endpoint blocks");
         if (edge.Source.fallthroughEdge == edge)
             edge.Source.fallthroughEdge = null;
+        InvalidateControlFlowAnalyses();
     }
 
-    private static void RedirectControlFlowEdge(ControlFlowEdge edge, BasicBlock target)
+    private void RedirectControlFlowEdge(ControlFlowEdge edge, BasicBlock target)
     {
         if (!edge.Target.incomingEdges.Remove(edge))
             throw new InvalidOperationException("Control-flow edge is not attached to its target block");
         edge.Target = target;
         target.incomingEdges.Add(edge);
+        InvalidateControlFlowAnalyses();
     }
 
-    private static void MoveControlFlowEdgeSource(ControlFlowEdge edge, BasicBlock source)
+    private void MoveControlFlowEdgeSource(ControlFlowEdge edge, BasicBlock source)
     {
         BasicBlock oldSource = edge.Source;
         if (oldSource == source)
@@ -1156,6 +1206,7 @@ internal partial class Optimizer
         source.outgoingEdges.Add(edge);
         if (isFallthrough)
             source.fallthroughEdge = edge;
+        InvalidateControlFlowAnalyses();
     }
 
     internal void NopElimination()
@@ -1310,7 +1361,8 @@ internal partial class Optimizer
                 RemoveControlFlowEdge(edge);
         }
 
-        basicBlocks.RemoveAll(block => !liveBlocks.Contains(block));
+        if (basicBlocks.RemoveAll(block => !liveBlocks.Contains(block)) > 0)
+            InvalidateControlFlowAnalyses();
     }
 
     /// <summary>
@@ -1412,9 +1464,12 @@ internal partial class Optimizer
                 RemoveControlFlowEdge(edge);
         }
 
+        if (basicBlocks.Count != outputBlocks.Count)
+            InvalidateControlFlowAnalyses();
         basicBlocks = outputBlocks;
         regions.RemoveAll(region => !retainedNodes.Contains(region));
-        exceptionEntryGroups.RemoveAll(group => !retainedNodes.Contains(group.ProtectedRegion));
+        if (exceptionEntryGroups.RemoveAll(group => !retainedNodes.Contains(group.ProtectedRegion)) > 0)
+            InvalidateControlFlowAnalyses();
     }
 
     private void ValidateAggressiveReorderPreconditions()
