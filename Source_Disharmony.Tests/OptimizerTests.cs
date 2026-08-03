@@ -93,7 +93,7 @@ public static class OptimizerPatches
 
     [Prefix]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixAlwaysFalseTarget))]
-    [PatchOptions(PatchOptions.Optimize)]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
     public static bool Prefix_AlwaysFalse_SkipsTarget(ref int __result)
     {
         RecordPatch();
@@ -103,7 +103,7 @@ public static class OptimizerPatches
 
     [Prefix]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixAlwaysTrueTarget))]
-    [PatchOptions(PatchOptions.Optimize)]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
     public static bool Prefix_AlwaysTrue_RunsTarget()
     {
         RecordPatch();
@@ -112,7 +112,7 @@ public static class OptimizerPatches
 
     [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerAlwaysFalseTarget))]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerAlwaysFalseTarget))]
-    [PatchOptions(PatchOptions.Optimize)]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
     public static bool InnerPrefix_AlwaysFalse_SkipsInnerTarget(ref int __result)
     {
         RecordPatch();
@@ -122,7 +122,7 @@ public static class OptimizerPatches
 
     [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerAlwaysTrueTarget))]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerAlwaysTrueTarget))]
-    [PatchOptions(PatchOptions.Optimize)]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
     public static bool InnerPrefix_AlwaysTrue_RunsInnerTarget()
     {
         RecordPatch();
@@ -131,7 +131,7 @@ public static class OptimizerPatches
 
     [Prefix]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.PrefixConditionallySkippedTarget))]
-    [PatchOptions(PatchOptions.Optimize)]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
     public static bool Prefix_ArgumentControlsWhetherTargetIsSkipped(bool skip, ref int __result)
     {
         RecordPatch();
@@ -141,7 +141,7 @@ public static class OptimizerPatches
 
     [InnerPrefix(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.InnerConditionallySkippedTarget))]
     [Target(typeof(OptimizerPrefixTargets), nameof(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget))]
-    [PatchOptions(PatchOptions.Optimize)]
+    [PatchOptions(PatchOptions.Inline | PatchOptions.Optimize)]
     public static bool InnerPrefix_OuterArgumentControlsWhetherInnerTargetIsSkipped(
         [Parameter("skip", Scope.Outer)] bool skip,
         ref int __result)
