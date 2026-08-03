@@ -85,7 +85,7 @@ internal class InlineRuleBuilder : RuleBuilder
         // It's necessary to do a type conversion here to simulate a return correctly. For now, do it by storing to a local.
         if (returnLocal >= 0)
         {
-            output.Add(CodeInstruction.StoreArgument(returnLocal));
+            output.Add(CodeInstruction.StoreLocal(returnLocal));
             output.Add(CodeInstruction.LoadLocal(returnLocal));
         }
 
