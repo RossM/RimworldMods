@@ -54,8 +54,7 @@ internal partial class Optimizer
     internal class BasicBlock : RegionNode
     {
         // Non-canonical read-only projections of the edge fields below. They may contain the same
-        // block more than once when distinct CFG edges share an endpoint. CFG mutations must use
-        // the optimizer's edge helpers, not these projections or either endpoint collection.
+        // block more than once when distinct CFG edges share an endpoint.
         public BasicBlock? Next => fallthroughEdge?.Target;
         public IEnumerable<BasicBlock> Predecessors => incomingEdges.Select(edge => edge.Source);
         public IEnumerable<BasicBlock> Successors => outgoingEdges.Select(edge => edge.Target);
