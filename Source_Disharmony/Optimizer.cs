@@ -39,7 +39,7 @@ internal class UniqueQueue<T> : IEnumerable<T>
 ///     ConvertStackToVariables; Stack form again after ConvertVariablesToStack; emission-ordered
 ///     Stack form after AggressiveDeadCodeEliminationAndReorder and InsertBranches; then canonical
 ///     output after Emit. Future SSA form belongs between regular Variables form and lowering and
-///     will use the same blocks/operations with an explicit additional <see cref="IrForm"/> state.
+///     will use the same blocks/operations with an explicit additional <see cref="IrForm" /> state.
 ///     These are pass-boundary invariants: conversion workers temporarily build the destination
 ///     representation before changing Form, but no other pass may observe that mixed state.
 /// </summary>
@@ -49,7 +49,7 @@ internal partial class Optimizer
     ///     A node in the normal CFG containing operations which execute consecutively unless an
     ///     operation throws. Normal branches, returns, explicit throws, and leaves occur only as
     ///     the final operation. Exceptional transfers are represented by the region hierarchy,
-    ///     not by <see cref="incomingEdges"/> or <see cref="outgoingEdges"/>.
+    ///     not by <see cref="incomingEdges" /> or <see cref="outgoingEdges" />.
     /// </summary>
     internal class BasicBlock : RegionNode
     {
@@ -209,8 +209,8 @@ internal partial class Optimizer
 
     /// <summary>
     ///     The top type: a value exists, but its compatible CIL type is unavailable. Joining it with
-    ///     any other type remains <see cref="AnyType"/>; missing metadata uses this rather than
-    ///     <see cref="UnknownType"/> because additional control-flow evidence cannot restore it.
+    ///     any other type remains <see cref="AnyType" />; missing metadata uses this rather than
+    ///     <see cref="UnknownType" /> because additional control-flow evidence cannot restore it.
     /// </summary>
     internal struct AnyType;
 
@@ -222,8 +222,6 @@ internal partial class Optimizer
 
     internal class Op(OpCode opcode, object? operand, IReadOnlyList<OpCode> prefixes)
     {
-        public Op(OpCode opcode) : this(opcode, null, []) { }
-
         /// <summary>How an instruction accesses storage outside the evaluation stack.</summary>
         internal enum VariableAccessKind
         {
@@ -254,8 +252,8 @@ internal partial class Optimizer
 
         /// <summary>
         ///     Describes the canonical variable operand of an argument/local access after stack
-        ///     conversion. <see cref="EncodedVariableKind"/> records what the original opcode
-        ///     names; an optimization may independently replace <see cref="Variable"/>.
+        ///     conversion. <see cref="EncodedVariableKind" /> records what the original opcode
+        ///     names; an optimization may independently replace <see cref="Variable" />.
         /// </summary>
         internal readonly record struct StorageAccess(
             VariableAccessKind Kind,
@@ -278,7 +276,6 @@ internal partial class Optimizer
         public bool CanBranch => Opcode.FlowControl is FlowControl.Branch or FlowControl.Cond_Branch;
 
         public OperationEffects Effects => effectsCached ??= OperationEffectClassifier.Classify(this);
-        private OperationEffects? effectsCached;
         public bool CanDiscardIfUnused => (Effects & OperationEffectClassifier.PreventsDiscard) == 0;
 
         public bool CanFallThrough =>
@@ -342,6 +339,8 @@ internal partial class Optimizer
         // prefix from the operation it governs.
         public IReadOnlyList<OpCode> Prefixes => prefixes;
 
+        private OperationEffects? effectsCached;
+
         // Canonical only in Variables form and empty/defaulted in Stack form. Evaluation-stack
         // values occupy inputs[0..stackInputCount) and outputs[0..stackOutputCount); explicit
         // argument/local operands follow them. The counts retain the operation's intrinsic CIL
@@ -350,6 +349,7 @@ internal partial class Optimizer
         public readonly List<Variable> outputs = [];
         public int stackInputCount;
         public int stackOutputCount;
+        public Op(OpCode opcode) : this(opcode, null, []) { }
 
         // Canonical in both forms. After MakeBasicBlocks, branch operands are ControlFlowEdge
         // objects rather than labels. In Variables form a storage opcode's encoded Operand may be
@@ -359,7 +359,7 @@ internal partial class Optimizer
 
         /// <summary>
         ///     Requires Variables form with valid stack counts. Returns the explicit storage operand
-        ///     attached by <see cref="StackToVariableConverter"/>, or <see langword="null"/> for an
+        ///     attached by <see cref="StackToVariableConverter" />, or <see langword="null" /> for an
         ///     operation which does not directly access an argument or local. This is the canonical
         ///     storage-opcode decoder for variable-form passes.
         /// </summary>
@@ -542,13 +542,13 @@ internal partial class Optimizer
     /// </summary>
     internal sealed class ExceptionEntryGroup(Region protectedRegion)
     {
-        // Canonical protected body for this group. It is not repeated in associatedRegions.
-        public Region ProtectedRegion { get; } = protectedRegion;
-
         // Canonical CIL layout order of the filters/handlers associated with ProtectedRegion. A
         // filtered entry contributes both its filter Region and its handler Region. This order is
         // independent of basicBlocks order until aggressive reorder reestablishes emission layout.
         public readonly List<Region> associatedRegions = [];
+
+        // Canonical protected body for this group. It is not repeated in associatedRegions.
+        public Region ProtectedRegion { get; } = protectedRegion;
 
         // Returns the next Region in the group's required CIL layout chain. The argument must be
         // ProtectedRegion or a current associatedRegions member; null means the exception group ends.
@@ -692,9 +692,9 @@ internal partial class Optimizer
     }
 
     /// <summary>
-    ///     Logs whichever IR interpretation <see cref="Form"/> makes canonical. Before final
+    ///     Logs whichever IR interpretation <see cref="Form" /> makes canonical. Before final
     ///     reordering, blocks are shown in their current non-canonical list order with region paths.
-    ///     With <paramref name="structuredLayout"/>, derived region boundaries are also shown, so
+    ///     With <paramref name="structuredLayout" />, derived region boundaries are also shown, so
     ///     that mode requires the aggressive-reorder postconditions. Logging never mutates the IR;
     ///     a displayed nop for an empty block is only a placeholder.
     /// </summary>
@@ -727,6 +727,7 @@ internal partial class Optimizer
                 {
                     FileLog.LogBuffered($"## Region Path:  {string.Join(" > ", GetRegionPath(basicBlock.parent).Select(r => r.ID))}");
                 }
+
                 FileLog.LogBuffered($"## Predecessors: {string.Join(", ", basicBlock.Predecessors.Select(b => b.ID))}");
                 FileLog.LogBuffered($"## Successors:   {string.Join(", ", basicBlock.Successors.Select(b => b.ID))}");
                 if (Form == IrForm.Variables)
@@ -1004,9 +1005,9 @@ internal partial class Optimizer
     /// <summary>
     ///     Explicitly returns the cached dominance result or computes it if absent. Requires a
     ///     complete CFG in either IR form and every retained block to be reachable from at least one
-    ///     root returned by <see cref="GetDominatorRoots"/>. Block order, operation ownership, and
+    ///     root returned by <see cref="GetDominatorRoots" />. Block order, operation ownership, and
     ///     SSA edge assignments do not affect block dominance. The result remains valid until a CFG
-    ///     or implicit-entry mutation calls <see cref="InvalidateControlFlowAnalyses"/>.
+    ///     or implicit-entry mutation calls <see cref="InvalidateControlFlowAnalyses" />.
     /// </summary>
     private DominatorTree ComputeDominatorTreeIfNeeded()
     {
@@ -1287,7 +1288,8 @@ internal partial class Optimizer
             else
             {
                 ExceptionEntryGroup entryGroup = currentRegion.exceptionEntryGroup ??
-                    throw new InvalidOperationException("Handler marker does not follow a protected or handler region");
+                                                 throw new InvalidOperationException(
+                                                     "Handler marker does not follow a protected or handler region");
                 var newRegion = new Region
                 {
                     id = nextBlockId++,
@@ -1907,8 +1909,11 @@ internal partial class Optimizer
     private static bool TryGetCommonInterface(Type left, Type right, [NotNullWhen(true)] out Type? value)
     {
         HashSet<Type> interfaces = [.. left.GetInterfaces().Intersect(right.GetInterfaces())];
-        List<Type> mostSpecific = [.. interfaces.Where(i =>
-            !interfaces.Any(i2 => i != i2 && i.IsAssignableFrom(i2)))];
+        List<Type> mostSpecific =
+        [
+            .. interfaces.Where(i =>
+                !interfaces.Any(i2 => i != i2 && i.IsAssignableFrom(i2))),
+        ];
         value = mostSpecific.Count == 1 ? mostSpecific[0] : null;
         return mostSpecific.Count == 1;
     }
