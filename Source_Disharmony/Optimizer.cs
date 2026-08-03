@@ -31,6 +31,11 @@ internal class UniqueQueue<T> : IEnumerable<T>
 
 internal partial class Optimizer
 {
+    /// <summary>
+    ///     A basic block represents a group of instructions that always execute consecutively,
+    ///     except for control flow due to exceptions. Only the last instruction in a basic
+    ///     block can be a branch, return, or explicit throw.
+    /// </summary>
     internal class BasicBlock : RegionNode
     {
         // Convenience projections only; CFG mutations must operate on the edge collections.
