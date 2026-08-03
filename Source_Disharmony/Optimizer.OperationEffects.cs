@@ -72,7 +72,7 @@ internal partial class Optimizer
 
         public static OperationEffects Classify(Op op)
         {
-            OperationEffects prefixEffects = op.Prefixes.Any(prefix => prefix.Opcode == OpCodes.Volatile)
+            OperationEffects prefixEffects = op.Prefixes.Any(prefix => prefix == OpCodes.Volatile)
                 ? OperationEffects.Volatile
                 : OperationEffects.None;
 

@@ -220,7 +220,7 @@ internal partial class Optimizer
     /// </summary>
     internal struct NullType;
 
-    internal class Op(OpCode opcode, object? operand, IReadOnlyList<Op> prefixes)
+    internal class Op(OpCode opcode, object? operand, IReadOnlyList<OpCode> prefixes)
     {
         public Op(OpCode opcode) : this(opcode, null, []) { }
 
@@ -340,7 +340,7 @@ internal partial class Optimizer
         // Canonical in both forms after MakeBasicBlocks bundles prefixes. Prefix Op objects do not
         // also occur in BasicBlock.ops; keeping them here prevents later passes from separating a
         // prefix from the operation it governs.
-        public IReadOnlyList<Op> Prefixes => prefixes;
+        public IReadOnlyList<OpCode> Prefixes => prefixes;
 
         // Canonical only in Variables form and empty/defaulted in Stack form. Evaluation-stack
         // values occupy inputs[0..stackInputCount) and outputs[0..stackOutputCount); explicit
@@ -761,7 +761,7 @@ internal partial class Optimizer
                     foreach (var op in bb.ops)
                     {
                         foreach (var prefix in op.Prefixes)
-                            LogInstruction(ConvertToCodeInstruction(prefix), ref codePos);
+                            LogInstruction(new(prefix), ref codePos);
                         if (Form == IrForm.Variables)
                             LogVariableInstruction(op, ref codePos);
                         else
@@ -1104,10 +1104,7 @@ internal partial class Optimizer
                 }
                 case BasicBlock bb:
                 {
-                    List<CodeInstruction> instructions =
-                    [
-                        .. bb.ops.SelectMany(op => op.Prefixes.Append(op)).Select(ConvertToCodeInstruction),
-                    ];
+                    List<CodeInstruction> instructions = [.. bb.ops.SelectMany(GetCodeInstructions)];
                     if (instructions.Count == 0)
                         instructions.Add(Ops.Nop.ToCodeInstruction());
                     instructions[0].labels.AddRange(labels);
@@ -1126,6 +1123,13 @@ internal partial class Optimizer
                 outputInstructions.instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
             regionStack.Pop();
         }
+    }
+
+    private IEnumerable<CodeInstruction> GetCodeInstructions(Op op)
+    {
+        foreach (var prefix in op.Prefixes)
+            yield return new(prefix);
+        yield return ConvertToCodeInstruction(op);
     }
 
     // Stack-form/emission conversion. It is also safe for prefix Ops during Variables-form logging,
@@ -1166,7 +1170,7 @@ internal partial class Optimizer
         BasicBlock curBlock = new() { id = nextBlockId++, parent = currentRegion };
         basicBlocks.Add(curBlock);
         currentRegion.entry ??= curBlock;
-        List<Op> prefixes = [];
+        List<OpCode> prefixes = [];
 
         foreach (var inst in inputInstructions)
         {
@@ -1183,7 +1187,7 @@ internal partial class Optimizer
             }
 
             if (inst.opcode.OpCodeType == OpCodeType.Prefix)
-                prefixes.Add(new(inst.opcode, inst.operand, []));
+                prefixes.Add(inst.opcode);
             else
             {
                 curBlock.ops.Add(new(inst.opcode, inst.operand, prefixes));
