@@ -189,6 +189,10 @@ internal partial class Optimizer
         public bool IsUnconditionalBranch => Opcode == OpCodes.Br_S || Opcode == OpCodes.Br;
         public bool CanBranch => Opcode.FlowControl is FlowControl.Branch or FlowControl.Cond_Branch;
 
+        // Computed rather than cached because prefixes remain mutable while the IR is assembled.
+        public OperationEffects Effects => OperationEffectClassifier.Classify(this);
+        public bool CanDiscardIfUnused => OperationEffectClassifier.CanDiscardIfUnused(Effects);
+
         public bool CanFallThrough =>
             Opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch or FlowControl.Break;
 
