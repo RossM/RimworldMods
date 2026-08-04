@@ -311,6 +311,8 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         {
             if (variable.type == null || TypeLattice.IsSpecialType(variable.type))
                 throw new InvalidOperationException($"Cannot spill {variable}: its exact CIL type is unknown");
+            // TODO: We can't count on the JIT to eliminate unused locals, so if possible we should reuse an existing
+            //       local that has no uses. Ideally we could reuse locals whenever their liveness doesn't overlap.
             local = optimizer.generator.DeclareLocal(variable.type);
             spillLocals.Add(variable, local);
         }
