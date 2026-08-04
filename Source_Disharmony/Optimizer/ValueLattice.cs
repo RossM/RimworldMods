@@ -109,7 +109,7 @@ internal sealed class ConstantValue : IEquatable<ConstantValue>
     {
         if (variable == null)
             throw new ArgumentNullException(nameof(variable));
-        if (variable.kind is not (VariableKind.Argument or VariableKind.Local))
+        if (variable.Kind is not (VariableKind.Argument or VariableKind.Local))
         {
             throw new ArgumentException(
                 "A known managed reference must identify argument or local storage",
@@ -223,13 +223,13 @@ internal sealed class ConstantValue : IEquatable<ConstantValue>
 
     private static Op MaterializeManagedReference(Variable storage)
     {
-        object operand = storage.kind switch
+        object operand = storage switch
         {
-            VariableKind.Argument => storage.index,
-            VariableKind.Local => (object?)storage.localBuilder ?? storage.index,
+            ArgumentVariable argumentVariable => argumentVariable.index,
+            LocalVariable localVariable => (object?)localVariable.localBuilder ?? localVariable.index,
             _ => throw new InvalidOperationException($"Known reference targets non-storage variable {storage}"),
         };
-        return new(storage.kind == VariableKind.Argument ? OpCodes.Ldarga : OpCodes.Ldloca, operand, []);
+        return new(storage.Kind == VariableKind.Argument ? OpCodes.Ldarga : OpCodes.Ldloca, operand, []);
     }
 }
 

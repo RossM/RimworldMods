@@ -347,8 +347,8 @@ public sealed class OptimizerPassTests
             Assert.That(reaching, Has.Length.EqualTo(3));
             Assert.That(reaching, Has.None.Matches<Variable>(phiResults.Contains));
             Assert.That(reaching, Has.All.Matches<Variable>(variable =>
-                variable.kind == VariableKind.Constant));
-            Assert.That(reaching.Select(variable => variable.constantValue?.GetInt32()),
+                variable.Kind == VariableKind.Constant));
+            Assert.That(reaching.Select(variable => (variable as ConstantVariable)?.constantValue?.GetInt32()),
                 Is.EquivalentTo(new int?[] { 1, 2, 3 }));
             Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
                 Has.None.Matches<Op>(op => op.Opcode == OpCodes.Stloc));
@@ -807,7 +807,7 @@ public sealed class OptimizerPassTests
             .SelectMany(edge => edge.assignments), Is.Empty);
         Assert.That(join.entryStackVariables, Has.Count.EqualTo(1));
         Assert.That(join.entryStackVariables[0], Is.SameAs(entry.ops[0].outputs.Single()));
-        Assert.That(join.entryStackVariables[0].kind, Is.EqualTo(VariableKind.StackSlot));
+        Assert.That(join.entryStackVariables[0].Kind, Is.EqualTo(VariableKind.StackSlot));
         Assert.That(join.entryStackVariables[0].type, Is.EqualTo(typeof(string)));
         Assert.That(join.incomingEdges, Has.Count.EqualTo(2));
         Assert.That(optimizer.BasicBlocks.Sum(block => block.ops.Count), Is.EqualTo(operationCount));
@@ -870,10 +870,10 @@ public sealed class OptimizerPassTests
         optimizer.MakeBasicBlocks();
         new StackToVariableConversion(optimizer).Run();
 
-        Variable local = optimizer.LocalVariables[declaredLocal!.LocalIndex];
+        LocalVariable local = optimizer.LocalVariables[declaredLocal!.LocalIndex];
         Op store = optimizer.BasicBlocks[0].ops[1];
         Op load = optimizer.BasicBlocks[0].ops[2];
-        Assert.That(local.kind, Is.EqualTo(VariableKind.Local));
+        Assert.That(local.Kind, Is.EqualTo(VariableKind.Local));
         Assert.That(local.type, Is.EqualTo(typeof(string)));
         Assert.That(local.localBuilder, Is.SameAs(declaredLocal));
         Assert.That(store.outputs, Is.EqualTo(new[] { local }));
@@ -894,7 +894,7 @@ public sealed class OptimizerPassTests
         optimizer.MakeBasicBlocks();
         new StackToVariableConversion(optimizer).Run();
 
-        Variable local = optimizer.LocalVariables[4];
+        LocalVariable local = optimizer.LocalVariables[4];
         Assert.That(local.type, Is.Null);
         Assert.That(local.localBuilder, Is.Null);
         Assert.That(optimizer.BasicBlocks[0].ops[1].outputs, Is.EqualTo(new[] { local }));
@@ -1933,8 +1933,8 @@ public sealed class OptimizerPassTests
             Assert.That(definitions, Has.Length.EqualTo(2));
             Assert.That(definitions[0], Is.Not.SameAs(definitions[1]));
             Assert.That(definitions, Has.All.Matches<Variable>(definition =>
-                definition.kind == VariableKind.Constant));
-            Assert.That(definitions.Select(definition => definition.constantValue?.GetInt32()),
+                definition.Kind == VariableKind.Constant));
+            Assert.That(definitions.Select(definition => (definition as ConstantVariable)?.constantValue?.GetInt32()),
                 Is.EquivalentTo(new int?[] { 1, 2 }));
             Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
                 Has.None.Matches<Op>(op => op.Opcode == OpCodes.Stloc));
@@ -1985,8 +1985,8 @@ public sealed class OptimizerPassTests
             Assert.That(block.ops, Has.None.Matches<Op>(op =>
                 op.Opcode == OpCodes.Ldloc || op.Opcode == OpCodes.Stloc));
             Variable value = block.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
-            Assert.That(value.kind, Is.EqualTo(VariableKind.Constant));
-            Assert.That(value.constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
+            Assert.That(value.Kind, Is.EqualTo(VariableKind.Constant));
+            Assert.That((value as ConstantVariable)?.constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
         });
     }
 
@@ -2046,7 +2046,7 @@ public sealed class OptimizerPassTests
                 Has.None.Matches<Op>(op => op.GetStorageAccess()?.Variable == local));
             Assert.That(optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges)
                 .SelectMany(edge => edge.assignments)
-                .Where(assignment => assignment.Destination.ssaOrigin?.kind == VariableKind.StackSlot)
+                .Where(assignment => assignment.Destination.ssaOrigin?.Kind == VariableKind.StackSlot)
                 .Select(assignment => assignment.Source),
                 Has.None.SameAs(local));
         });
@@ -2107,8 +2107,8 @@ public sealed class OptimizerPassTests
         Variable value = block.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
         Assert.Multiple(() =>
         {
-            Assert.That(value.kind, Is.EqualTo(VariableKind.Constant));
-            Assert.That(value.constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
+            Assert.That(value.Kind, Is.EqualTo(VariableKind.Constant));
+            Assert.That((value as ConstantVariable)?.constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
             Assert.That(optimizer.ArgumentVariables[0].ssaOrigin,
                 Is.SameAs(optimizer.ArgumentVariables[0]));
         });
@@ -2142,14 +2142,14 @@ public sealed class OptimizerPassTests
         [
             .. optimizer.BasicBlocks.SelectMany(block => block.ops)
                 .SelectMany(op => op.inputs)
-                .Where(variable => variable.kind == VariableKind.Constant)
+                .Where(variable => variable.Kind == VariableKind.Constant)
                 .Distinct(),
         ];
         Assert.Multiple(() =>
         {
             Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
                 Has.None.Matches<Op>(op => op.TryGetLiteral(out _)));
-            Assert.That(constants.Select(variable => variable.constantValue!.Kind), Is.EquivalentTo(new[]
+            Assert.That(constants.Select(variable => (variable as ConstantVariable)?.constantValue!.Kind), Is.EquivalentTo(new[]
             {
                 ConstantValueKind.Int32,
                 ConstantValueKind.Int64,
@@ -2159,7 +2159,7 @@ public sealed class OptimizerPassTests
                 ConstantValueKind.Null,
             }));
             Assert.That(constants, Has.All.Matches<Variable>(variable =>
-                variable.type == variable.constantValue!.StackType));
+                variable.type == (variable as ConstantVariable)?.constantValue!.StackType));
         });
 
         optimizer.SplitSsaEdges();
@@ -2207,7 +2207,7 @@ public sealed class OptimizerPassTests
 
         Op pop = optimizer.BasicBlocks.SelectMany(block => block.ops)
             .Single(op => op.Opcode == OpCodes.Pop);
-        Assert.That(pop.inputs.Single().kind, Is.EqualTo(VariableKind.Constant));
+        Assert.That(pop.inputs.Single().Kind, Is.EqualTo(VariableKind.Constant));
         Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
             Has.None.Matches<Op>(op => op.TryGetLiteral(out _)));
 

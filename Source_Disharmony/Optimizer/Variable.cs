@@ -37,15 +37,7 @@ internal enum VariableKind
 internal abstract class Variable
 {
 
-    private string BaseName => kind switch
-    {
-        VariableKind.Argument => $"A{index}",
-        VariableKind.Local => $"L{index}",
-        VariableKind.StackSlot => $"S{id}",
-        VariableKind.Temporary => $"V{id}",
-        VariableKind.Constant => constantValue == null ? $"C{id}" : $"C{id}({constantValue})",
-        _ => throw new ArgumentOutOfRangeException(),
-    };
+    public abstract string BaseName { get; }
 
     public string Name => ssaOrigin switch
     {
@@ -63,30 +55,13 @@ internal abstract class Variable
     ///     therefore promotable without further renaming. Whether a mutable family has already
     ///     been renamed is recorded separately by <see cref="ssaOrigin" />.
     /// </summary>
-    public bool IsPromotable
-    {
-        get
-        {
-            return kind switch
-            {
-                VariableKind.Argument or VariableKind.Local =>
-                    type != null && !TypeLattice.IsSpecialType(type) &&
-                    !addressTaken && !pinned && !exceptionExposed &&
-                    !TypeLattice.StorageNarrowsStackValue(type),
-                // TODO: ConditionalStructCopy currently produces an imprecisely typed join slot.
-                // Preserve its concrete stack type so it can become promotable too.
-                VariableKind.StackSlot => type != null && !TypeLattice.IsSpecialType(type),
-                VariableKind.Temporary or VariableKind.Constant => true,
-                _ => throw new ArgumentOutOfRangeException(),
-            };
-        }
-    }
+    public abstract bool IsPromotable { get; }
 
     // Stable identity within one Variables-form interval. Unlike index, this is unique across
     // all variable kinds. IDs and the variable registry are reset when Variables form is built
     // or discarded; Variable objects are not canonical in Stack form.
     public int id;
-    public abstract VariableKind kind { get; }
+    public abstract VariableKind Kind { get; }
 
     // Canonical Variables-form type information. Argument types come from the method signature.
     // A Local type is set only from MethodBody metadata or a LocalBuilder, never inferred from
@@ -94,21 +69,6 @@ internal abstract class Variable
     // analysis and may contain the special lattice-marker types below. A Constant's type is the
     // CIL stack type implied by constantValue.
     public Type? type;
-
-    // Canonical and non-null exactly when kind is Constant. This describes the complete,
-    // side-effect-free instruction sequence used to materialize the value; constants never have
-    // physical storage and must never be spilled.
-    public ConstantValue? constantValue;
-
-    // Canonical physical slot index for Argument and Local; -1 for logical StackSlot and
-    // Temporary values. Distinct argument/local variables never represent the same slot.
-    public int index = -1;
-
-    // Optional canonical metadata for a Local created by a transpiler. When present, its index
-    // and type agree with this Variable; pinned combines all authoritative metadata seen for the
-    // slot. Null means only that no LocalBuilder was supplied, since the original MethodBody may
-    // still provide authoritative type metadata.
-    public LocalBuilder? localBuilder;
 
     // Canonical Variables-form pinned flag for Local; false for other variable kinds. It is
     // populated only from authoritative local metadata or a LocalBuilder.
@@ -140,31 +100,68 @@ internal abstract class Variable
     public override string ToString() => Name;
 }
 
-internal class LocalVariable : Variable
+internal abstract class InMemoryVariable : Variable
 {
-    public override VariableKind kind => VariableKind.Local;
+    public override bool IsPromotable =>
+        type != null && !TypeLattice.IsSpecialType(type) &&
+        !addressTaken && !pinned && !exceptionExposed &&
+        !TypeLattice.StorageNarrowsStackValue(type);
+
+    // Canonical physical slot index for Argument and Local; -1 for logical StackSlot and
+    // Temporary values. Distinct argument/local variables never represent the same slot.
+    public int index = -1;
+}
+
+internal class LocalVariable : InMemoryVariable
+{
+    public override string BaseName => $"L{index}";
+
+    public override VariableKind Kind => VariableKind.Local;
+
+    // Optional canonical metadata for a Local created by a transpiler. When present, its index
+    // and type agree with this Variable; pinned combines all authoritative metadata seen for the
+    // slot. Null means only that no LocalBuilder was supplied, since the original MethodBody may
+    // still provide authoritative type metadata.
+    public LocalBuilder? localBuilder;
 }
 
 internal class ConstantVariable : Variable
 {
-    public override VariableKind kind => VariableKind.Constant;
+    public override string BaseName => $"C{id}({constantValue})";
+
+    public override VariableKind Kind => VariableKind.Constant;
+
+    public override bool IsPromotable => true;
+
+    // Canonical and non-null exactly when kind is Constant. This describes the complete,
+    // side-effect-free instruction sequence used to materialize the value; constants never have
+    // physical storage and must never be spilled.
+    public required ConstantValue constantValue;
 
 }
 
 internal class TemporaryVariable : Variable
 {
-    public override VariableKind kind => VariableKind.Temporary;
+    public override string BaseName => $"V{id}";
 
+    public override VariableKind Kind => VariableKind.Temporary;
+
+    public override bool IsPromotable => true;
 }
 
-internal class ArgumentVariable : Variable
+internal class ArgumentVariable : InMemoryVariable
 {
-    public override VariableKind kind => VariableKind.Argument;
+    public override string BaseName => $"A{index}";
+
+    public override VariableKind Kind => VariableKind.Argument;
 
 }
 
 internal class StackSlotVariable : Variable
 {
-    public override VariableKind kind => VariableKind.StackSlot;
+    public override string BaseName => $"S{id}";
 
+    public override VariableKind Kind => VariableKind.StackSlot;
+
+    public override bool IsPromotable => type != null && !TypeLattice.IsSpecialType(type);
 }

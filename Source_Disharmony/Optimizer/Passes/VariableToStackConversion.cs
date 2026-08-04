@@ -110,16 +110,12 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
 
         foreach (Variable variable in optimizer.variables)
         {
-            if (variable.kind == VariableKind.Constant)
+            if (variable is ConstantVariable constantVariable)
             {
-                if (variable.constantValue == null)
-                    throw new InvalidOperationException($"Constant {variable} has no value");
-                if (variable.type != variable.constantValue.StackType)
-                    throw new InvalidOperationException($"Constant {variable} has an inconsistent stack type");
-            }
-            else if (variable.constantValue != null)
-            {
-                throw new InvalidOperationException($"Non-constant {variable} has a constant value");
+                if (constantVariable.constantValue == null)
+                    throw new InvalidOperationException($"Constant {constantVariable} has no value");
+                if (constantVariable.type != constantVariable.constantValue.StackType)
+                    throw new InvalidOperationException($"Constant {constantVariable} has an inconsistent stack type");
             }
         }
 
@@ -471,16 +467,17 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
     }
 
     private static bool IsOriginalStorage(VariableKind encodedKind, Variable variable, int originalIndex) =>
-        variable.index == originalIndex && variable.kind == encodedKind;
+        variable is InMemoryVariable mem &&
+        mem.index == originalIndex && mem.Kind == encodedKind;
 
     private bool HasStorage(Variable variable) =>
-        variable.kind is VariableKind.Argument or VariableKind.Local ||
+        variable.Kind is VariableKind.Argument or VariableKind.Local ||
         storedVariables.Contains(variable) ||
         crossBlockSpills.Contains(variable) ||
         spillStorage.ContainsKey(variable);
 
     private bool CanReload(Variable variable) =>
-        variable.kind == VariableKind.Constant ||
+        variable.Kind == VariableKind.Constant ||
         variable.type == typeof(TypeLattice.NullType) ||
         HasStorage(variable);
 
@@ -488,22 +485,26 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
     // lazily declared spill local across all blocks that preserve or reload that value.
     private Storage GetStorage(Variable variable)
     {
-        switch (variable.kind)
+        switch (variable)
         {
-            case VariableKind.Argument: return new(VariableKind.Argument, variable.index, null);
-            case VariableKind.Local: return new(VariableKind.Local, variable.index, variable.localBuilder);
-            case VariableKind.Constant:
-                throw new InvalidOperationException($"Constant {variable} cannot have storage");
+            case ArgumentVariable argumentVariable: return new(VariableKind.Argument, argumentVariable.index, null);
+            case LocalVariable localVariable: return new(VariableKind.Local, localVariable.index, localVariable.localBuilder);
+            case ConstantVariable: throw new InvalidOperationException($"Constant {variable} cannot have storage");
         }
 
         if (spillStorage.TryGetValue(variable, out Storage storage))
             return storage;
 
         if (variable.preferredStorage is { } preferred &&
-            preferred.kind is VariableKind.Argument or VariableKind.Local &&
+            preferred.Kind is VariableKind.Argument or VariableKind.Local &&
             !occupiedPreferredStorage.Contains(preferred))
         {
-            storage = new(preferred.kind, preferred.index, preferred.localBuilder);
+            storage = preferred switch
+            {
+                ArgumentVariable argumentVariable => new Storage(VariableKind.Argument, argumentVariable.index, null),
+                LocalVariable localVariable => new Storage(VariableKind.Local, localVariable.index, localVariable.localBuilder),
+                _ => throw new InvalidOperationException($"Preferred storage {preferred} is not an argument or local"),
+            };
             occupiedPreferredStorage.Add(preferred);
             spillStorage.Add(variable, storage);
             return storage;
@@ -521,11 +522,11 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
 
     private IReadOnlyList<Op> LoadVariable(Variable variable, BasicBlock block)
     {
-        if (variable.kind == VariableKind.Constant)
+        if (variable is ConstantVariable constantVariable)
         {
-            if (variable.constantValue == null)
-                throw new InvalidOperationException($"Constant {variable} has no materialization value");
-            return variable.constantValue.Materialize();
+            if (constantVariable.constantValue == null)
+                throw new InvalidOperationException($"Constant {constantVariable} has no materialization value");
+            return constantVariable.constantValue.Materialize();
         }
 
         // The transient null type has no corresponding local signature. Since every definition

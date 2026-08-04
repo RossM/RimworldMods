@@ -23,7 +23,7 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
         candidates =
         [
             .. optimizer.variables.Where(variable =>
-                variable.kind is VariableKind.Argument or VariableKind.Local or VariableKind.StackSlot &&
+                variable.Kind is VariableKind.Argument or VariableKind.Local or VariableKind.StackSlot &&
                 variable.ssaOrigin == null && variable.IsPromotable),
         ];
 
@@ -178,7 +178,7 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
         foreach (BasicBlock entry in optimizer.GetExceptionEntryBlocks())
         {
             bool hasNonescapingStorage = liveIn[entry].Any(variable =>
-                variable.kind is VariableKind.Argument or VariableKind.Local);
+                variable.Kind is VariableKind.Argument or VariableKind.Local);
             if (hasNonescapingStorage)
             {
                 throw new InvalidOperationException(
@@ -323,7 +323,7 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
 
     private Variable NewVersion(Variable origin)
     {
-        Type? type = origin.kind is VariableKind.Argument or VariableKind.Local
+        Type? type = origin.Kind is VariableKind.Argument or VariableKind.Local
             ? TypeLattice.ToStackType(origin.type!)
             : origin.type;
         Variable version = optimizer.CreateTemporary(type);
@@ -337,8 +337,8 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
     // needs a spill. A value shared by several promoted variables keeps its first compatible hint.
     private static void PreferOriginalStorage(Variable value, Variable origin)
     {
-        if (origin.kind is not (VariableKind.Argument or VariableKind.Local) ||
-            value.kind is VariableKind.Argument or VariableKind.Local or VariableKind.Constant ||
+        if (origin.Kind is not (VariableKind.Argument or VariableKind.Local) ||
+            value.Kind is VariableKind.Argument or VariableKind.Local or VariableKind.Constant ||
             value.preferredStorage != null)
         {
             return;

@@ -53,8 +53,8 @@ internal class Optimizer
     internal IReadOnlyList<Region> Regions => regions;
     internal IReadOnlyList<ExceptionEntryGroup> ExceptionEntryGroups => exceptionEntryGroups;
     internal IReadOnlyList<Variable> Variables => variables;
-    internal IReadOnlyDictionary<int, Variable> ArgumentVariables => argumentVariables;
-    internal IReadOnlyDictionary<int, Variable> LocalVariables => localVariables;
+    internal IReadOnlyDictionary<int, ArgumentVariable> ArgumentVariables => argumentVariables;
+    internal IReadOnlyDictionary<int, LocalVariable> LocalVariables => localVariables;
 
     // Canonical output only after Emit completes. Emit appends to this collection and therefore
     // requires it to be empty on entry; earlier passes must use the block/operation IR instead.
@@ -88,8 +88,8 @@ internal class Optimizer
     // variables. Logical values occur only in variables. nextVariableId is the next identity in
     // this interval.
     internal readonly List<Variable> variables = [];
-    internal readonly Dictionary<int, Variable> argumentVariables = [];
-    internal readonly Dictionary<int, Variable> localVariables = [];
+    internal readonly Dictionary<int, ArgumentVariable> argumentVariables = [];
+    internal readonly Dictionary<int, LocalVariable> localVariables = [];
     internal int nextVariableId;
 
     // Stable synthetic hierarchy root. It becomes canonical when MakeBasicBlocks adds it to regions
@@ -145,7 +145,6 @@ internal class Optimizer
                 id = nextVariableId++,
                 type = type,
                 index = index,
-                localBuilder = null,
                 pinned = false,
             };
             variables.Add(variable);
@@ -1451,8 +1450,6 @@ internal class Optimizer
         {
             id = nextVariableId++,
             type = type,
-            index = -1,
-            localBuilder = null,
             pinned = false,
         };
         variables.Add(variable);
@@ -1465,8 +1462,6 @@ internal class Optimizer
         {
             id = nextVariableId++,
             type = type,
-            index = -1,
-            localBuilder = null,
             pinned = false,
         };
         variables.Add(variable);
@@ -1484,9 +1479,8 @@ internal class Optimizer
             pinned = localBuilder.IsPinned,
         };
         variables.Add(variable);
-        Variable local = variable;
-        localVariables.Add(localBuilder.LocalIndex, local);
-        return local;
+        localVariables.Add(localBuilder.LocalIndex, variable);
+        return variable;
     }
 
     // Adds one canonical Variables-form object to the owning registry. Callers adding an Argument
@@ -1505,8 +1499,6 @@ internal class Optimizer
         {
             id = nextVariableId++,
             type = constant.StackType,
-            index = -1,
-            localBuilder = null,
             pinned = false,
             constantValue = constant,
         };

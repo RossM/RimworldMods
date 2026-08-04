@@ -31,7 +31,7 @@ internal sealed class SsaDestruction(Optimizer optimizer) : Pass
         {
             Variable? origin = variable.ssaOrigin;
             if (origin != null && origin != variable &&
-                origin.kind is VariableKind.Argument or VariableKind.Local)
+                origin.Kind is VariableKind.Argument or VariableKind.Local)
             {
                 variable.preferredStorage = origin;
             }

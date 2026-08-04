@@ -413,10 +413,10 @@ internal sealed class ConservativeConstantPropagation(Optimizer optimizer) : Pas
     {
         Op indirect = access.Indirect;
         Variable storage = access.Storage;
-        object operand = storage.kind switch
+        object operand = storage switch
         {
-            VariableKind.Argument => storage.index,
-            VariableKind.Local => (object?)storage.localBuilder ?? storage.index,
+            ArgumentVariable argumentVariable => argumentVariable.index,
+            LocalVariable localVariable => (object?)localVariable.localBuilder ?? localVariable.index,
             _ => throw new InvalidOperationException($"Known reference targets non-storage variable {storage}"),
         };
 
@@ -424,7 +424,7 @@ internal sealed class ConservativeConstantPropagation(Optimizer optimizer) : Pas
         switch (access.Kind)
         {
             case Op.VariableAccessKind.Read:
-                direct = new(storage.kind == VariableKind.Argument ? OpCodes.Ldarg : OpCodes.Ldloc, operand, [])
+                direct = new(storage.Kind == VariableKind.Argument ? OpCodes.Ldarg : OpCodes.Ldloc, operand, [])
                 {
                     stackInputCount = 0,
                     stackOutputCount = 1,
@@ -434,7 +434,7 @@ internal sealed class ConservativeConstantPropagation(Optimizer optimizer) : Pas
                 break;
 
             case Op.VariableAccessKind.Write:
-                direct = new(storage.kind == VariableKind.Argument ? OpCodes.Starg : OpCodes.Stloc, operand, [])
+                direct = new(storage.Kind == VariableKind.Argument ? OpCodes.Starg : OpCodes.Stloc, operand, [])
                 {
                     stackInputCount = 1,
                     stackOutputCount = 0,
@@ -491,7 +491,7 @@ internal sealed class ConservativeConstantPropagation(Optimizer optimizer) : Pas
 
     private void RecomputeAddressTaken()
     {
-        foreach (var variable in optimizer.argumentVariables.Values.Concat(optimizer.localVariables.Values))
+        foreach (var variable in optimizer.argumentVariables.Values.Concat<Variable>(optimizer.localVariables.Values))
             variable.addressTaken = false;
         foreach (var operation in optimizer.Ops)
         {

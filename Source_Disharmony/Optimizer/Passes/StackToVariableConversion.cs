@@ -173,7 +173,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 {
                     int index = op.Index;
                     transition.variableAccesses.Add(new(Op.VariableAccessKind.Read, VariableKind.Local, index));
-                    Type declaredType = optimizer.localVariables.TryGetValue(index, out Variable? local)
+                    Type declaredType = optimizer.localVariables.TryGetValue(index, out LocalVariable? local)
                         ? local.type ?? typeof(TypeLattice.AnyType)
                         : typeof(TypeLattice.AnyType);
                     stack.Add(declaredType);
@@ -196,7 +196,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 {
                     int index = op.Index;
                     transition.variableAccesses.Add(new(Op.VariableAccessKind.Address, VariableKind.Local, index));
-                    Type declaredType = optimizer.localVariables.TryGetValue(index, out Variable? local)
+                    Type declaredType = optimizer.localVariables.TryGetValue(index, out LocalVariable? local)
                         ? local.type ?? typeof(TypeLattice.AnyType)
                         : typeof(TypeLattice.AnyType);
                     stack.Add(TypeLattice.ToRef(declaredType));
