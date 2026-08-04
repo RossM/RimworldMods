@@ -311,8 +311,6 @@ internal class Optimizer
     private static void LogVariableInstruction(Op op, ref int codePos)
     {
         string opcode = op.Opcode.ToString();
-        if (op.Opcode.FlowControl is FlowControl.Branch or FlowControl.Cond_Branch)
-            opcode += " =>";
         opcode = opcode.PadRight(10);
 
         string inputs = string.Join(", ", op.inputs);
@@ -320,10 +318,14 @@ internal class Optimizer
         string variables = (inputs.Length, outputs.Length) switch
         {
             (0, 0) => "",
-            (0, _) => $"=> {outputs}",
+            (0, _) => $"-> {outputs}",
             (_, 0) => inputs,
-            _ => $"{inputs} => {outputs}",
+            _ => $"{inputs} -> {outputs}",
         };
+        if (op.Operand is ControlFlowEdge e)
+            variables = $"{inputs} => {e.Target}";
+        else if (op.Operand is ControlFlowEdge[] a)
+            variables = $"{inputs} => [{string.Join(", ", a.Select(e => e.Target.ID))}]";
         string separator = variables.Length > 0 ? " " : "";
         FileLog.LogBuffered($"IL_{codePos:X4}: {opcode}{separator}{variables}");
         codePos += ReflectionTools.ILSize(op.Opcode);
@@ -1522,7 +1524,7 @@ internal sealed class Variable
         VariableKind.Temporary => $"v{id}",
         VariableKind.Constant => constantValue == null ? $"c{id}" : $"c{id}({constantValue})",
         _ => throw new ArgumentOutOfRangeException(),
-    };
+    } + (type is Type t ? $"[{t}]" : "");
 
     public string Name => ssaOrigin switch
     {
