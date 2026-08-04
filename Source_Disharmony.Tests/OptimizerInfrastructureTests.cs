@@ -49,9 +49,9 @@ public sealed class OptimizerInfrastructureTests
     public void OpClassifiesIndirectValueAccessOpcodes(OpCode opcode, int expectedValue)
     {
         var operation = new Optimizer.Op(opcode);
-        Optimizer.Op.IndirectAccessKind? expected = expectedValue < 0
+        Optimizer.Op.VariableAccessKind? expected = expectedValue < 0
             ? null
-            : (Optimizer.Op.IndirectAccessKind)expectedValue;
+            : (Optimizer.Op.VariableAccessKind)expectedValue;
 
         Assert.That(operation.GetIndirectAccessKind(), Is.EqualTo(expected));
     }
@@ -276,7 +276,7 @@ public sealed class OptimizerInfrastructureTests
         ];
         foreach (OpCode opcode in loads)
         {
-            yield return new TestCaseData(opcode, (int)Optimizer.Op.IndirectAccessKind.Load)
+            yield return new TestCaseData(opcode, (int)Optimizer.Op.VariableAccessKind.Read)
                 .SetName($"IndirectAccess_{opcode}_Load");
         }
 
@@ -289,7 +289,7 @@ public sealed class OptimizerInfrastructureTests
         ];
         foreach (OpCode opcode in stores)
         {
-            yield return new TestCaseData(opcode, (int)Optimizer.Op.IndirectAccessKind.Store)
+            yield return new TestCaseData(opcode, (int)Optimizer.Op.VariableAccessKind.Write)
                 .SetName($"IndirectAccess_{opcode}_Store");
         }
 

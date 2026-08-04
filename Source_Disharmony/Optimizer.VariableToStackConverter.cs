@@ -271,7 +271,7 @@ internal partial class Optimizer
             {
                 operation = new(op.Opcode, op.Operand, op.Prefixes);
             }
-            else if (IsOriginalStorage(variableAccess.EncodedVariableKind, variableAccess.Variable, op.Index))
+            else if (IsOriginalStorage(variableAccess.VariableKind, variableAccess.Variable, op.Index))
             {
                 operation = new(op.Opcode, op.Operand, op.Prefixes);
             }

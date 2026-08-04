@@ -233,40 +233,15 @@ internal partial class Optimizer
             Address,
         }
 
-        /// <summary>How an instruction accesses a value through its first stack operand.</summary>
-        internal enum IndirectAccessKind
-        {
-            Load,
-            Store,
-        }
-
-        // Transient StackToVariableConverter result. InputIndex identifies an output which aliases
-        // a popped input, as with both outputs of dup; a negative index denotes a new value.
-        internal readonly record struct StackOutput(Type Type, int InputIndex = -1);
-
-        // Transient StackToVariableConverter result recorded by symbolic execution so variable
-        // materialization does not reinterpret the opcode or its original storage operand.
-        internal readonly record struct VariableAccess(VariableKind VariableKind, int Index, VariableAccessKind Kind);
-
         /// <summary>
         ///     Describes the canonical variable operand of an argument/local access after stack
-        ///     conversion. <see cref="EncodedVariableKind" /> records what the original opcode
+        ///     conversion. <see cref="VariableKind" /> records what the original opcode
         ///     names; an optimization may independently replace <see cref="Variable" />.
         /// </summary>
         internal readonly record struct StorageAccess(
             VariableAccessKind Kind,
-            VariableKind EncodedVariableKind,
+            VariableKind VariableKind,
             Variable Variable);
-
-        // Non-canonical transient state owned only by one ConvertStackToVariables invocation.
-        // Inputs are ordered from the deepest popped value to the top of the evaluation stack.
-        internal sealed class StackTransition
-        {
-            public readonly List<Type> inputTypes = [];
-            public readonly List<StackOutput> outputs = [];
-            public readonly List<VariableAccess> variableAccesses = [];
-            public bool clearsStack;
-        }
 
         public bool IsLeave => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
         public bool ClearsStack => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
@@ -390,7 +365,7 @@ internal partial class Optimizer
         ///     Classifies the <c>ldobj</c>/<c>stobj</c> and <c>ldind</c>/<c>stind</c> opcode
         ///     families. Other memory operations are not indirect value accesses for this purpose.
         /// </summary>
-        internal IndirectAccessKind? GetIndirectAccessKind() =>
+        internal VariableAccessKind? GetIndirectAccessKind() =>
             OpcodeValue switch
             {
                 OpCodeValues.Ldobj or
@@ -399,12 +374,12 @@ internal partial class Optimizer
                     OpCodeValues.Ldind_I4 or OpCodeValues.Ldind_U4 or
                     OpCodeValues.Ldind_I8 or OpCodeValues.Ldind_I or
                     OpCodeValues.Ldind_R4 or OpCodeValues.Ldind_R8 or OpCodeValues.Ldind_Ref =>
-                    IndirectAccessKind.Load,
+                    VariableAccessKind.Read,
                 OpCodeValues.Stobj or
                     OpCodeValues.Stind_I1 or OpCodeValues.Stind_I2 or OpCodeValues.Stind_I4 or
                     OpCodeValues.Stind_I8 or OpCodeValues.Stind_I or
                     OpCodeValues.Stind_R4 or OpCodeValues.Stind_R8 or OpCodeValues.Stind_Ref =>
-                    IndirectAccessKind.Store,
+                    VariableAccessKind.Write,
                 _ => null,
             };
 

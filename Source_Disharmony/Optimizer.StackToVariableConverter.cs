@@ -4,13 +4,44 @@ internal partial class Optimizer
 {
     internal class StackToVariableConverter(Optimizer optimizer)
     {
+        /// <summary>
+        ///     Non-canonical transient state owned only by one ConvertStackToVariables invocation.
+        ///     Inputs are ordered from the deepest popped value to the top of the evaluation stack.
+        /// </summary>
+        internal sealed class StackTransition
+        {
+            public readonly List<Type> inputTypes = [];
+            public readonly List<StackOutput> outputs = [];
+            public readonly List<VariableAccess> variableAccesses = [];
+            public bool clearsStack;
+        }
+
+        /// <summary>
+        ///     Transient StackToVariableConverter result. InputIndex identifies an output which aliases
+        ///     a popped input, as with both outputs of dup; a negative index denotes a new value.
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="InputIndex"></param>
+        internal readonly record struct StackOutput(Type Type, int InputIndex = -1);
+
+        /// <summary>
+        ///     Transient StackToVariableConverter result recorded by symbolic execution so variable
+        ///     materialization does not reinterpret the opcode or its original storage operand.
+        /// </summary>
+        /// <param name="Kind"></param>
+        /// <param name="VariableKind"></param>
+        /// <param name="Index"></param>
+        internal readonly record struct VariableAccess(Op.VariableAccessKind Kind, VariableKind VariableKind, int Index);
+
         private readonly Dictionary<RegionNode, List<Type>> entryLocals = optimizer.regions.Cast<RegionNode>()
             .Concat(optimizer.basicBlocks).ToDictionary(block => block, _ => new List<Type>());
+
         private readonly Dictionary<RegionNode, List<Type>> entryStacks = optimizer.regions.Cast<RegionNode>()
             .Concat(optimizer.basicBlocks).ToDictionary(block => block, _ => new List<Type>());
+
         private readonly Dictionary<BasicBlock, List<Type>> exitStacks = [];
         private readonly Dictionary<BasicBlock, List<Variable>> exitStackVariables = [];
-        private readonly Dictionary<Op, Op.StackTransition> transitions = [];
+        private readonly Dictionary<Op, StackTransition> transitions = [];
         private readonly UniqueQueue<RegionNode> worklist = [];
         private readonly HashSet<RegionNode> initializedEntries = [];
 
@@ -110,7 +141,7 @@ internal partial class Optimizer
         {
             foreach (var op in basicBlock.ops)
             {
-                var transition = new Op.StackTransition();
+                var transition = new StackTransition();
                 transitions[op] = transition;
                 List<Type> inputStack = [.. stack];
                 int popCount = op.GetStackPops(optimizer.returnType);
@@ -130,7 +161,7 @@ internal partial class Optimizer
                     {
                         int index = op.Index;
                         ExpandLocals(index);
-                        transition.variableAccesses.Add(new(VariableKind.Local, index, Op.VariableAccessKind.Read));
+                        transition.variableAccesses.Add(new(Op.VariableAccessKind.Read, VariableKind.Local, index));
                         stack.Add(locals[index]);
                         break;
                     }
@@ -144,7 +175,7 @@ internal partial class Optimizer
                         int index = op.Index;
                         while (locals.Count < index + 1)
                             locals.Add(typeof(UnknownType));
-                        transition.variableAccesses.Add(new(VariableKind.Local, index, Op.VariableAccessKind.Write));
+                        transition.variableAccesses.Add(new(Op.VariableAccessKind.Write, VariableKind.Local, index));
                         locals[index] = stack[^1];
                         stack.RemoveAt(stack.Count - 1);
                         break;
@@ -155,7 +186,7 @@ internal partial class Optimizer
                         int index = op.Index;
                         while (locals.Count < index + 1)
                             locals.Add(typeof(UnknownType));
-                        transition.variableAccesses.Add(new(VariableKind.Local, index, Op.VariableAccessKind.Address));
+                        transition.variableAccesses.Add(new(Op.VariableAccessKind.Address, VariableKind.Local, index));
                         Type declaredType = optimizer.localVariables.TryGetValue(index, out Variable? local)
                             ? local.type ?? typeof(AnyType)
                             : typeof(AnyType);
@@ -173,7 +204,7 @@ internal partial class Optimizer
                     case OpCodeValues.Ldarg_S:
                     {
                         int index = op.Index;
-                        transition.variableAccesses.Add(new(VariableKind.Argument, index, Op.VariableAccessKind.Read));
+                        transition.variableAccesses.Add(new(Op.VariableAccessKind.Read, VariableKind.Argument, index));
                         stack.Add(((IReadOnlyList<Type>)optimizer.parameterTypes)[index]);
                         break;
                     }
@@ -181,7 +212,7 @@ internal partial class Optimizer
                     case OpCodeValues.Ldarga_S:
                     {
                         int index = op.Index;
-                        transition.variableAccesses.Add(new(VariableKind.Argument, index, Op.VariableAccessKind.Address));
+                        transition.variableAccesses.Add(new(Op.VariableAccessKind.Address, VariableKind.Argument, index));
                         stack.Add(ToRef(((IReadOnlyList<Type>)optimizer.parameterTypes)[index]));
                         break;
                     }
@@ -189,7 +220,7 @@ internal partial class Optimizer
                     case OpCodeValues.Starg_S:
                     {
                         int index = op.Index;
-                        transition.variableAccesses.Add(new(VariableKind.Argument, index, Op.VariableAccessKind.Write));
+                        transition.variableAccesses.Add(new(Op.VariableAccessKind.Write, VariableKind.Argument, index));
                         stack.RemoveAt(stack.Count - 1);
                         break;
                     }
@@ -442,7 +473,7 @@ internal partial class Optimizer
                     int inputIndex = op.Opcode == OpCodes.Dup ? 0 : -1;
                     transition.outputs.AddRange(stack
                         .Skip(stack.Count - pushCount)
-                        .Select(type => new Op.StackOutput(type, inputIndex)));
+                        .Select(type => new StackOutput(type, inputIndex)));
                 }
             }
 
@@ -470,14 +501,16 @@ internal partial class Optimizer
             optimizer.nextVariableId = 0;
 
             for (int index = 0; index < optimizer.parameterTypes.Count; index++)
-                optimizer.argumentVariables.Add(index, optimizer.NewVariable(VariableKind.Argument, optimizer.parameterTypes[index], index));
+                optimizer.argumentVariables.Add(index,
+                    optimizer.NewVariable(VariableKind.Argument, optimizer.parameterTypes[index], index));
 
             MethodBody? methodBody = optimizer.GetMethodBodyOrNull();
             if (methodBody != null)
             {
                 foreach (var local in methodBody.LocalVariables)
                 {
-                    optimizer.localVariables.Add(local.LocalIndex, optimizer.NewVariable(VariableKind.Local, local.LocalType, local.LocalIndex, pinned: local.IsPinned));
+                    optimizer.localVariables.Add(local.LocalIndex,
+                        optimizer.NewVariable(VariableKind.Local, local.LocalType, local.LocalIndex, pinned: local.IsPinned));
                 }
             }
 
@@ -495,8 +528,8 @@ internal partial class Optimizer
                 }
                 else
                 {
-                    optimizer.localVariables.Add(localBuilder.LocalIndex, optimizer.NewVariable(VariableKind.Local, localBuilder.LocalType, localBuilder.LocalIndex,
-                        localBuilder: localBuilder, pinned: localBuilder.IsPinned));
+                    optimizer.localVariables.Add(localBuilder.LocalIndex, optimizer.NewVariable(VariableKind.Local, localBuilder.LocalType,
+                        localBuilder.LocalIndex, localBuilder: localBuilder, pinned: localBuilder.IsPinned));
                 }
             }
         }
@@ -540,6 +573,7 @@ internal partial class Optimizer
 
                 return typeof(AnyType);
             }
+
             if (left == typeof(IntPtr) || left == typeof(UIntPtr))
                 return left;
             if (right == typeof(IntPtr) || right == typeof(UIntPtr))
@@ -568,7 +602,7 @@ internal partial class Optimizer
             {
                 op.inputs.Clear();
                 op.outputs.Clear();
-                Op.StackTransition transition = transitions[op];
+                StackTransition transition = transitions[op];
 
                 int inputCount = transition.inputTypes.Count;
                 op.stackInputCount = inputCount;
@@ -680,8 +714,10 @@ internal partial class Optimizer
                     if (variable.id < representative.id)
                         representative = variable;
                 }
+
                 Type type = component.Select(variable => variable.type ??
-                        throw new InvalidOperationException($"Cross-block stack variable {variable} has no type"))
+                                                         throw new InvalidOperationException(
+                                                             $"Cross-block stack variable {variable} has no type"))
                     .Aggregate(CombineTypes);
                 if (type == typeof(void))
                     throw new InvalidOperationException("Incompatible types in a cross-block stack slot");
@@ -714,6 +750,7 @@ internal partial class Optimizer
                     values = [];
                     connections.Add(variable, values);
                 }
+
                 return values;
             }
 

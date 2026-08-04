@@ -18,7 +18,7 @@ internal partial class Optimizer
         ///     The result of recognizing an indirect access through a known managed reference.
         ///     Instances have passed all checks required by <see cref="MakeDirectStorageAccess"/>.
         /// </summary>
-        private readonly record struct DirectAccess(Op Indirect, Variable Storage, Op.IndirectAccessKind Kind);
+        private readonly record struct DirectAccess(Op Indirect, Variable Storage, Op.VariableAccessKind Kind);
 
         private sealed class Candidate(
             Op definition,
@@ -355,7 +355,7 @@ internal partial class Optimizer
                 return false;
 
             Variable storage = candidate.Value.Constant.GetReferencedVariable();
-            if (!TryClassifyDirectAccess(operation, address, storage, out Op.IndirectAccessKind kind))
+            if (!TryClassifyDirectAccess(operation, address, storage, out Op.VariableAccessKind kind))
                 return false;
 
             directAccess = new(operation, storage, kind);
@@ -370,7 +370,7 @@ internal partial class Optimizer
             Op indirect,
             Variable address,
             Variable storage,
-            out Op.IndirectAccessKind kind)
+            out Op.VariableAccessKind kind)
         {
             kind = default;
 
@@ -393,7 +393,7 @@ internal partial class Optimizer
             if (indirect.inputs[0] != address)
                 return false;
 
-            if (accessKind == Op.IndirectAccessKind.Load)
+            if (accessKind == Op.VariableAccessKind.Read)
             {
                 if (indirect.stackInputCount != 1 || indirect.stackOutputCount != 1)
                     return false;
@@ -425,7 +425,7 @@ internal partial class Optimizer
             Op direct;
             switch (access.Kind)
             {
-                case Op.IndirectAccessKind.Load:
+                case Op.VariableAccessKind.Read:
                     direct = new(storage.kind == VariableKind.Argument ? OpCodes.Ldarg : OpCodes.Ldloc, operand, [])
                     {
                         stackInputCount = 0,
@@ -435,7 +435,7 @@ internal partial class Optimizer
                     direct.outputs.AddRange(indirect.outputs);
                     break;
 
-                case Op.IndirectAccessKind.Store:
+                case Op.VariableAccessKind.Write:
                     direct = new(storage.kind == VariableKind.Argument ? OpCodes.Starg : OpCodes.Stloc, operand, [])
                     {
                         stackInputCount = 1,
