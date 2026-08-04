@@ -393,6 +393,14 @@ internal class Optimizer
         ConvertStackToVariables();
         LogBlocks(nameof(ConvertStackToVariables));
 
+        // Remove pop and dup instructions with reloadable arguments
+        PopElimination();
+        LogBlocks(nameof(PopElimination));
+
+        // Eliminate trivially dead blocks
+        SimpleDeadCodeElimination();
+        LogBlocks(nameof(SimpleDeadCodeElimination));
+
         // Replace edges leading to empty blocks with direct edges to their successors
         JumpThreading();
         LogBlocks(nameof(JumpThreading));
@@ -956,6 +964,17 @@ internal class Optimizer
     {
         foreach (var block in basicBlocks)
             block.ops.RemoveAll(i => i.Opcode == OpCodes.Nop);
+    }
+
+    /// <summary>
+    ///     Removes pop operations, which are unnecessary in stack form.
+    /// </summary>
+    internal void PopElimination()
+    {
+        // TODO: Dup should also be unnecessary in stack form, but currently some dups get replaced
+        //       with spills generating stloc, ldloc, ldloc sequences.
+        foreach (var block in basicBlocks)
+            block.ops.RemoveAll(i => i.Opcode == OpCodes.Pop);
     }
 
     /// <summary>
