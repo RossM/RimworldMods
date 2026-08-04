@@ -483,8 +483,8 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
     {
         switch (variable)
         {
-            case ArgumentVariable argumentVariable: return new(VariableKind.Argument, argumentVariable.index, null);
-            case LocalVariable localVariable: return new(VariableKind.Local, localVariable.index, localVariable.localBuilder);
+            case ArgumentVariable argumentVariable: return new(VariableKind.Argument, argumentVariable.index);
+            case LocalVariable localVariable: return new(VariableKind.Local, (object?)localVariable.localBuilder ?? localVariable.index);
             case ConstantVariable: throw new InvalidOperationException($"Constant {variable} cannot have storage");
         }
 
@@ -497,8 +497,8 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         {
             storage = preferred switch
             {
-                ArgumentVariable argumentVariable => new Storage(VariableKind.Argument, argumentVariable.index, null),
-                LocalVariable localVariable => new Storage(VariableKind.Local, localVariable.index, localVariable.localBuilder),
+                ArgumentVariable argumentVariable => new Storage(VariableKind.Argument, argumentVariable.index),
+                LocalVariable localVariable => new Storage(VariableKind.Local, (object?)localVariable.localBuilder ?? localVariable.index),
                 _ => throw new InvalidOperationException($"Preferred storage {preferred} is not an argument or local"),
             };
             occupiedPreferredStorage.Add(preferred);
@@ -511,7 +511,8 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         // TODO: Extend the conservative original-slot reuse above with liveness-based coalescing so
         //       noninterfering SSA versions can share it, then reuse other dead locals as well.
         LocalBuilder local = optimizer.generator.DeclareLocal(variable.type);
-        storage = new(VariableKind.Local, local.LocalIndex, local);
+        int index = local.LocalIndex;
+        storage = new(VariableKind.Local, (object?)local ?? index);
         spillStorage.Add(variable, storage);
         return storage;
     }
@@ -557,8 +558,5 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         _ => throw new ArgumentOutOfRangeException(),
     };
 
-    private readonly record struct Storage(VariableKind Kind, int Index, LocalBuilder? LocalBuilder)
-    {
-        public object Operand => (object?)LocalBuilder ?? Index;
-    }
+    private readonly record struct Storage(VariableKind Kind, object Operand);
 }
