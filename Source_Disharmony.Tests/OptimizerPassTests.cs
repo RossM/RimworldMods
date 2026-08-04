@@ -1938,7 +1938,7 @@ public sealed class OptimizerPassTests
 
         Assert.That(optimizer.BasicBlocks.Single().ops.Select(op => op.Opcode), Is.EqualTo(new[]
         {
-            OpCodes.Ldc_I4,
+            OpCodes.Ldc_I4_S,
             OpCodes.Pop,
             OpCodes.Ldc_I8,
             OpCodes.Pop,

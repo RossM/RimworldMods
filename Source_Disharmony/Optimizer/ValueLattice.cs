@@ -210,6 +210,7 @@ internal sealed class ConstantValue : IEquatable<ConstantValue>
         6 => new(OpCodes.Ldc_I4_6),
         7 => new(OpCodes.Ldc_I4_7),
         8 => new(OpCodes.Ldc_I4_8),
+        >= -128 and <= 127 => new(OpCodes.Ldc_I4_S, value, []),
         _ => new(OpCodes.Ldc_I4, value, []),
     };
 
