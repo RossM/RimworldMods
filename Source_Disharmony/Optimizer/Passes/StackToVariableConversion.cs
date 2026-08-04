@@ -449,10 +449,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 {
                     var left = transition.inputTypes[0];
                     var right = transition.inputTypes[1];
-                    if (left == typeof(Optimizer.UnknownType) || right == typeof(Optimizer.UnknownType))
-                        PopInputsAndPush(typeof(Optimizer.UnknownType), popCount);
-                    else
-                        PopInputsAndPush(transition.inputTypes[0], popCount);
+                    PopInputsAndPush(left == typeof(Optimizer.UnknownType) ? right : left, popCount);
                     break;
                 }
                 case OpCodeValues.Neg:
