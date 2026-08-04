@@ -126,6 +126,7 @@ internal class Op(OpCode opcode, object? operand, IReadOnlyList<Op> prefixes)
     public readonly List<Variable> outputs = [];
     public int stackInputCount;
     public int stackOutputCount;
+
     public Op(OpCode opcode) : this(opcode, null, []) { }
 
     // Canonical in both forms. After MakeBasicBlocks, branch operands are ControlFlowEdge
