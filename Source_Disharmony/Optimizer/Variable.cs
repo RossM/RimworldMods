@@ -68,7 +68,7 @@ internal abstract class Variable
     // stores, and may therefore be null. StackSlot and Temporary types come from symbolic stack
     // analysis and may contain the special lattice-marker types below. A Constant's type is the
     // CIL stack type implied by constantValue.
-    public Type? type;
+    public required Type type;
 
     // Canonical in regular and SSA Variables forms. True exactly when a remaining operation takes this
     // argument/local's address. Rewriting address operations can change the value, so such a
@@ -99,7 +99,7 @@ internal abstract class Variable
 internal abstract class InMemoryVariable : Variable
 {
     public override bool IsPromotable =>
-        type != null && !TypeLattice.IsSpecialType(type) &&
+        !TypeLattice.IsSpecialType(type) &&
         !addressTaken && !exceptionExposed &&
         !TypeLattice.StorageNarrowsStackValue(type);
 
@@ -165,5 +165,5 @@ internal class StackSlotVariable : Variable
 
     public override VariableKind Kind => VariableKind.StackSlot;
 
-    public override bool IsPromotable => type != null && !TypeLattice.IsSpecialType(type);
+    public override bool IsPromotable => !TypeLattice.IsSpecialType(type);
 }

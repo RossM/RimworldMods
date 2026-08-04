@@ -144,7 +144,7 @@ internal class Optimizer
     {
         for (int index = 0; index < parameterTypes.Count; index++)
         {
-            Type? type = parameterTypes[index];
+            Type type = parameterTypes[index];
             var variable = new ArgumentVariable
             {
                 id = nextVariableId++,
@@ -164,7 +164,7 @@ internal class Optimizer
                 var variable = new LocalVariable
                 {
                     id = nextVariableId++,
-                    type = local.LocalType,
+                    type = local.LocalType ?? typeof(TypeLattice.AnyType),
                     index = local.LocalIndex,
                     localBuilder = null,
                     pinned = local.IsPinned,
@@ -177,6 +177,8 @@ internal class Optimizer
 
         foreach (var op in inputInstructions)
         {
+            if (!op.IsLdloc() && !op.IsStloc())
+                continue;
             if (op.operand is not LocalBuilder localBuilder)
                 continue;
 
@@ -184,14 +186,44 @@ internal class Optimizer
             {
                 if (local1.type != localBuilder.LocalType)
                     throw new InvalidOperationException($"Conflicting types for local #{localBuilder.LocalIndex}");
-                local1.localBuilder ??= localBuilder;
-                local1.pinned |= localBuilder.IsPinned;
             }
             else
             {
-                CreateLocal(localBuilder);
+                var variable = new LocalVariable
+                {
+                    id = nextVariableId++,
+                    type = localBuilder.LocalType,
+                    index = localBuilder.LocalIndex,
+                    localBuilder = localBuilder,
+                    pinned = localBuilder.IsPinned,
+                };
+                variables.Add(variable);
+                localVariables.Add(localBuilder.LocalIndex, variable);
             }
         }
+
+        foreach (var op in inputInstructions)
+        {
+            if (!op.IsLdloc() && !op.IsStloc())
+                continue;
+            if (op.operand is LocalBuilder)
+                continue;
+
+            var index = op.LocalIndex();
+            if (localVariables.ContainsKey(index))
+                continue;
+            var variable = new LocalVariable
+            {
+                id = nextVariableId++,
+                type = typeof(TypeLattice.AnyType),
+                index = index,
+                localBuilder = null,
+                pinned = false,
+            };
+            variables.Add(variable);
+            localVariables.Add(index, variable);
+        }
+
     }
 
     // Meaningful once MakeBasicBlocks has created the IR. Defaults to Stack; each conversion pass
@@ -1443,30 +1475,13 @@ internal class Optimizer
     // Variables-form registry helpers used while StackToVariableConverter materializes canonical
     // operands. ArgumentVariables must already be initialized from parameterTypes. A previously
     // unseen local is created with unknown declared type; later stores never refine that metadata.
-    internal ArgumentVariable GetArgumentVariable(int index) => argumentVariables.TryGetValue(index, out var variable)
-        ? variable
-        : throw new InvalidOperationException($"Unknown argument #{index}");
+    internal ArgumentVariable GetArgumentVariable(int index) => 
+        argumentVariables.TryGetValue(index, out var variable) ? variable : throw new InvalidOperationException($"Unknown argument #{index}");
 
-    internal LocalVariable GetLocalVariable(int index)
-    {
-        if (localVariables.TryGetValue(index, out var variable))
-            return variable;
+    internal LocalVariable GetLocalVariable(int index) => 
+        localVariables.TryGetValue(index, out var variable) ? variable : throw new InvalidOperationException($"Unknown local #{index}");
 
-        var variable1 = new LocalVariable
-        {
-            id = nextVariableId++,
-            type = null,
-            index = index,
-            localBuilder = null,
-            pinned = false,
-        };
-        variables.Add(variable1);
-        variable = variable1;
-        localVariables.Add(index, variable);
-        return variable;
-    }
-
-    internal Variable CreateTemporary(Type? type)
+    internal Variable CreateTemporary(Type type)
     {
         var variable = new TemporaryVariable
         {
@@ -1477,7 +1492,7 @@ internal class Optimizer
         return variable;
     }
 
-    internal Variable CreateStackSlot(Type? type)
+    internal Variable CreateStackSlot(Type type)
     {
         var variable = new StackSlotVariable
         {
@@ -1485,21 +1500,6 @@ internal class Optimizer
             type = type,
         };
         variables.Add(variable);
-        return variable;
-    }
-
-    internal Variable CreateLocal(LocalBuilder localBuilder)
-    {
-        var variable = new LocalVariable
-        {
-            id = nextVariableId++,
-            type = localBuilder.LocalType,
-            index = localBuilder.LocalIndex,
-            localBuilder = localBuilder,
-            pinned = localBuilder.IsPinned,
-        };
-        variables.Add(variable);
-        localVariables.Add(localBuilder.LocalIndex, variable);
         return variable;
     }
 

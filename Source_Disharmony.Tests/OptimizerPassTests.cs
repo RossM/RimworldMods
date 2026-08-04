@@ -895,7 +895,7 @@ public sealed class OptimizerPassTests
         new StackToVariableConversion(optimizer).Run();
 
         LocalVariable local = optimizer.LocalVariables[4];
-        Assert.That(local.type, Is.Null);
+        Assert.That(local.type, Is.EqualTo(typeof(TypeLattice.AnyType)));
         Assert.That(local.localBuilder, Is.Null);
         Assert.That(optimizer.BasicBlocks[0].ops[1].outputs, Is.EqualTo(new[] { local }));
         Assert.That(optimizer.BasicBlocks[0].ops[2].inputs, Is.EqualTo(new[] { local }));

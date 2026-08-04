@@ -27,8 +27,6 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
     ///     materialization does not reinterpret the opcode or its original storage operand.
     /// </summary>
     /// <param name="Kind"></param>
-    /// <param name="VariableKind"></param>
-    /// <param name="Index"></param>
     internal readonly record struct VariableAccess(Op.VariableAccessKind Kind, InMemoryVariable Variable);
 
     private readonly Dictionary<RegionNode, List<Type>> entryStacks = optimizer.regions.Cast<RegionNode>()
@@ -174,7 +172,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                     InMemoryVariable variable = optimizer.GetLocalVariable(index);
                     transition.variableAccesses.Add(new VariableAccess(Op.VariableAccessKind.Read, variable));
                     Type declaredType = optimizer.localVariables.TryGetValue(index, out LocalVariable? local)
-                        ? local.type ?? typeof(TypeLattice.AnyType)
+                        ? local.type
                         : typeof(TypeLattice.AnyType);
                     stack.Add(declaredType);
                     break;
@@ -199,7 +197,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                     InMemoryVariable variable = optimizer.GetLocalVariable(index);
                     transition.variableAccesses.Add(new VariableAccess(Op.VariableAccessKind.Address, variable));
                     Type declaredType = optimizer.localVariables.TryGetValue(index, out LocalVariable? local)
-                        ? local.type ?? typeof(TypeLattice.AnyType)
+                        ? local.type
                         : typeof(TypeLattice.AnyType);
                     stack.Add(TypeLattice.ToRef(declaredType));
                     break;
@@ -641,7 +639,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 }
             }
 
-            Variable representative = optimizer.CreateStackSlot(component.Select(v => v.type ?? typeof(TypeLattice.AnyType)).Aggregate(TypeLattice.CombineTypes));
+            Variable representative = optimizer.CreateStackSlot(component.Select(v => v.type).Aggregate(TypeLattice.CombineTypes));
             foreach (var variable in component)
                 replacements[variable] = representative;
         }

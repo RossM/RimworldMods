@@ -99,10 +99,9 @@ public sealed class OptimizerInfrastructureTests
     [Test]
     public void ConstantValueCanIdentifyArgumentOrLocalStorageByIdentity()
     {
-        var firstLocal = new LocalVariable { id = 1, index = 0 };
-        var sameIndexDifferentLocal = new LocalVariable
-            { id = 2, index = 0 };
-        var temporary = new TemporaryVariable { id = 3 };
+        var firstLocal = new LocalVariable { id = 1, index = 0, type = typeof(int) };
+        var sameIndexDifferentLocal = new LocalVariable { id = 2, index = 0, type = typeof(int) };
+        var temporary = new TemporaryVariable { id = 3, type = typeof(int) };
 
         ConstantValue reference = ConstantValue.ReferenceTo(firstLocal);
 

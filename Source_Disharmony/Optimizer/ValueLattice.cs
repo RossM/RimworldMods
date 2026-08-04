@@ -89,8 +89,7 @@ internal sealed class ConstantValue : IEquatable<ConstantValue>
         ConstantValueKind.NativeInt => typeof(IntPtr),
         ConstantValueKind.Float32 or ConstantValueKind.Float64 => typeof(double),
         ConstantValueKind.String => typeof(string),
-        ConstantValueKind.ManagedReference => TypeLattice.ToRef(
-            GetReferencedVariable().type ?? typeof(TypeLattice.AnyType)),
+        ConstantValueKind.ManagedReference => TypeLattice.ToRef(GetReferencedVariable().type),
         _ => throw new ArgumentOutOfRangeException(),
     };
 

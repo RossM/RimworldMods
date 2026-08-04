@@ -443,11 +443,7 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
     {
         Op.StorageAccess? access = op.GetStorageAccess();
         Op operation;
-        if (access is not { } variableAccess)
-        {
-            operation = new(op.Opcode, op.Operand, op.Prefixes);
-        }
-        else if (IsOriginalStorage(variableAccess.VariableKind, variableAccess.Variable, op.Index))
+        if (access is not { } variableAccess || IsOriginalStorage(variableAccess.VariableKind, variableAccess.Variable, op.Index))
         {
             operation = new(op.Opcode, op.Operand, op.Prefixes);
         }
@@ -510,7 +506,7 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
             return storage;
         }
 
-        if (variable.type == null || TypeLattice.IsSpecialType(variable.type))
+        if (TypeLattice.IsSpecialType(variable.type))
             throw new InvalidOperationException($"Cannot spill {variable}: its exact CIL type is unknown");
         // TODO: Extend the conservative original-slot reuse above with liveness-based coalescing so
         //       noninterfering SSA versions can share it, then reuse other dead locals as well.
