@@ -710,6 +710,151 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
+    public void ConvertStackToVariablesNormalizesSmallIntegerTypesToInt32StackType()
+    {
+        Type[] smallIntegerTypes =
+        [
+            typeof(sbyte),
+            typeof(byte),
+            typeof(bool),
+            typeof(short),
+            typeof(ushort),
+            typeof(char),
+            typeof(int),
+            typeof(uint),
+        ];
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
+        {
+            List<CodeInstruction> instructions = [];
+            foreach (Type type in smallIntegerTypes)
+            {
+                instructions.Add(new(OpCodes.Ldnull));
+                instructions.Add(new(OpCodes.Unbox_Any, type));
+                instructions.Add(new(OpCodes.Pop));
+            }
+            instructions.Add(new(OpCodes.Ret));
+            return instructions;
+        });
+        optimizer.MakeBasicBlocks();
+
+        new StackToVariableConversion(optimizer).Run();
+
+        Assert.That(
+            optimizer.BasicBlocks[0].ops
+                .Where(op => op.Opcode == OpCodes.Unbox_Any)
+                .Select(op => op.outputs.Single().type),
+            Is.All.EqualTo(typeof(int)));
+    }
+
+    [Test]
+    public void ConvertStackToVariablesNormalizesOtherNumericTypesToClrStackTypes()
+    {
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
+        [
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Unbox_Any, typeof(ulong)),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Unbox_Any, typeof(float)),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Unbox_Any, typeof(UIntPtr)),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+
+        new StackToVariableConversion(optimizer).Run();
+
+        Op[] unboxes = [.. optimizer.BasicBlocks[0].ops.Where(op => op.Opcode == OpCodes.Unbox_Any)];
+        Assert.That(unboxes.Select(op => op.outputs.Single().type), Is.EqualTo(new[]
+        {
+            typeof(long),
+            typeof(double),
+            typeof(IntPtr),
+        }));
+    }
+
+    [Test]
+    public void ConvertStackToVariablesNormalizesUnsignedNativeIntegerOperationsToIntPtrStackType()
+    {
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
+        [
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Conv_U),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Conv_Ovf_U),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Conv_Ovf_U_Un),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Ldlen),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+
+        new StackToVariableConversion(optimizer).Run();
+
+        BasicBlock block = optimizer.BasicBlocks[0];
+        Assert.That(new[]
+        {
+            block.ops[1].outputs.Single().type,
+            block.ops[4].outputs.Single().type,
+            block.ops[7].outputs.Single().type,
+            block.ops[10].outputs.Single().type,
+        }, Is.All.EqualTo(typeof(IntPtr)));
+    }
+
+    [Test]
+    public void ConvertStackToVariablesPreservesClrStackTypesThroughArithmetic()
+    {
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
+        [
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Unbox_Any, typeof(uint)),
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Unbox_Any, typeof(uint)),
+            new CodeInstruction(OpCodes.Add),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Unbox_Any, typeof(ulong)),
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Unbox_Any, typeof(ulong)),
+            new CodeInstruction(OpCodes.Mul),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Unbox_Any, typeof(float)),
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Unbox_Any, typeof(float)),
+            new CodeInstruction(OpCodes.Div),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Conv_U),
+            new CodeInstruction(OpCodes.Ldc_I4_2),
+            new CodeInstruction(OpCodes.Conv_U),
+            new CodeInstruction(OpCodes.Xor),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+
+        new StackToVariableConversion(optimizer).Run();
+
+        BasicBlock block = optimizer.BasicBlocks[0];
+        Assert.That(block.ops.Single(op => op.Opcode == OpCodes.Add).outputs.Single().type,
+            Is.EqualTo(typeof(int)));
+        Assert.That(block.ops.Single(op => op.Opcode == OpCodes.Mul).outputs.Single().type,
+            Is.EqualTo(typeof(long)));
+        Assert.That(block.ops.Single(op => op.Opcode == OpCodes.Div).outputs.Single().type,
+            Is.EqualTo(typeof(double)));
+        Assert.That(block.ops.Single(op => op.Opcode == OpCodes.Xor).outputs.Single().type,
+            Is.EqualTo(typeof(IntPtr)));
+    }
+
+    [Test]
     public void ConvertStackToVariablesPreservesUnknownTypeThroughArithmetic()
     {
         Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
