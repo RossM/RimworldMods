@@ -29,7 +29,7 @@ public sealed class OptimizerInfrastructureTests
             OperationEffects.ReadsMemory | OperationEffects.MayThrow;
         Assert.That(operation.Effects, Is.EqualTo(ordinaryEffects));
 
-        operation = new Op(OpCodes.Ldfld, null, [OpCodes.Volatile]);
+        operation = new Op(OpCodes.Ldfld, null, [new(OpCodes.Volatile)]);
 
         Assert.That(operation.Effects, Is.EqualTo(ordinaryEffects | OperationEffects.Volatile));
         Assert.That(operation.CanDiscardIfUnused, Is.False);

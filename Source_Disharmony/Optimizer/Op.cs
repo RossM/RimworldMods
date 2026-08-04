@@ -11,7 +11,7 @@ internal static class Ops
     public static Op Dup => new(OpCodes.Dup);
 }
 
-internal class Op(OpCode opcode, object? operand, IReadOnlyList<OpCode> prefixes)
+internal class Op(OpCode opcode, object? operand, IReadOnlyList<Op> prefixes)
 {
     /// <summary>How an instruction accesses storage outside the evaluation stack.</summary>
     internal enum VariableAccessKind
@@ -103,7 +103,7 @@ internal class Op(OpCode opcode, object? operand, IReadOnlyList<OpCode> prefixes
     // Canonical in both forms after MakeBasicBlocks bundles prefixes. Prefix Op objects do not
     // also occur in BasicBlock.ops; keeping them here prevents later passes from separating a
     // prefix from the operation it governs.
-    public IReadOnlyList<OpCode> Prefixes => prefixes;
+    public IReadOnlyList<Op> Prefixes => prefixes;
 
     public ushort OpcodeValue => unchecked((ushort)Opcode.Value);
 

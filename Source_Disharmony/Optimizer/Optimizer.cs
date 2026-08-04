@@ -224,7 +224,7 @@ internal class Optimizer
                     foreach (var op in bb.ops)
                     {
                         foreach (var prefix in op.Prefixes)
-                            LogInstruction(new(prefix), ref codePos);
+                            LogInstruction(ConvertToCodeInstruction(prefix), ref codePos);
                         if (Form != IrForm.Stack)
                             LogVariableInstruction(op, ref codePos);
                         else
@@ -670,7 +670,7 @@ internal class Optimizer
     private IEnumerable<CodeInstruction> GetCodeInstructions(Op op)
     {
         foreach (var prefix in op.Prefixes)
-            yield return new(prefix);
+            yield return ConvertToCodeInstruction(prefix);
         yield return ConvertToCodeInstruction(op);
     }
 
@@ -712,7 +712,7 @@ internal class Optimizer
         BasicBlock curBlock = new() { id = nextBlockId++, parent = currentRegion };
         basicBlocks.Add(curBlock);
         currentRegion.entry ??= curBlock;
-        List<OpCode> prefixes = [];
+        List<Op> prefixes = [];
 
         foreach (var inst in inputInstructions)
         {
@@ -729,7 +729,7 @@ internal class Optimizer
             }
 
             if (inst.opcode.OpCodeType == OpCodeType.Prefix)
-                prefixes.Add(inst.opcode);
+                prefixes.Add(new(inst.opcode, inst.operand, []));
             else
             {
                 curBlock.ops.Add(new(inst.opcode, inst.operand, prefixes));
