@@ -248,9 +248,12 @@ public static class OptimizerPatches
 [TestFixture]
 public sealed class OptimizerTests : PatchTestBase
 {
+    private static readonly Action<Exception> ThrowRuntimeException = exception => throw exception;
+
     [SetUp]
     public void EnableOptimizer()
     {
+        Autopatcher.RuntimeExceptionHandler += ThrowRuntimeException;
         Patcher.Instance.optimizerEnabled = true;
         OptimizerPatches.PatchCalls = 0;
         OptimizerInlinePatches.PatchCalls = 0;
@@ -264,8 +267,15 @@ public sealed class OptimizerTests : PatchTestBase
     [TearDown]
     public void DisableOptimizer()
     {
-        Patcher.Instance.optimizerEnabled = false;
-        Autopatcher.UnpatchAll(typeof(OptimizerTests).Assembly);
+        try
+        {
+            Patcher.Instance.optimizerEnabled = false;
+            Autopatcher.UnpatchAll(typeof(OptimizerTests).Assembly);
+        }
+        finally
+        {
+            Autopatcher.RuntimeExceptionHandler -= ThrowRuntimeException;
+        }
     }
 
     private static void ApplyInlinePatch(
