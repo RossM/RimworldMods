@@ -160,5 +160,5 @@ internal class StackSlotVariable : Variable
 
     public override VariableKind Kind => VariableKind.StackSlot;
 
-    public override bool IsPromotable => !TypeLattice.IsSpecialType(type);
+    public override bool IsPromotable => !TypeLattice.IsSpecialType(type) || type == typeof(TypeLattice.NullType);
 }

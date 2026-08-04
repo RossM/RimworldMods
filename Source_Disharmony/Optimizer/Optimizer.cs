@@ -257,7 +257,7 @@ internal class Optimizer
     ///     that mode requires the aggressive-reorder postconditions. Logging never mutates the IR;
     ///     a displayed nop for an empty block is only a placeholder.
     /// </summary>
-    private void LogBlocks(string phase, bool structuredLayout = false)
+    internal void LogBlocks(string phase, bool structuredLayout = false)
     {
         if (!debug)
             return;

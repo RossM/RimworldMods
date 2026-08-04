@@ -1,4 +1,6 @@
-﻿namespace Disharmony.Optimizer.Passes;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Disharmony.Optimizer.Passes;
 
 /// <summary>
 ///     Incrementally renames newly promotable mutable variables into SSA values. Phi functions use
@@ -204,7 +206,6 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
         Dictionary<Variable, Stack<Variable>> current = candidates.ToDictionary(
             variable => variable,
             variable => new Stack<Variable>([variable]));
-        Dictionary<Variable, Variable> replacements = [];
 
         foreach (BasicBlock root in dominators.Roots)
             RenameSubtree(root);
@@ -224,21 +225,21 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
                     Variable output = op.outputs[0];
                     Variable constant = optimizer.NewConstantVariable(literal);
                     if (candidates.Contains(output))
+                    {
                         Push(output, constant);
-                    else
-                        replacements[output] = constant;
-                    continue;
+                        continue;
+                    }
                 }
 
                 if (op.HasCopySemantics && op is { inputs: [{ IsPromotable: true }], outputs: [{ IsPromotable: true }] })
                 {
-                    Variable value = Resolve(op.inputs[0]);
                     Variable output = op.outputs[0];
+                    Variable value = Resolve(op.inputs[0]);
                     if (candidates.Contains(output))
+                    {
                         Push(output, value);
-                    else
-                        replacements[output] = value;
-                    continue;
+                        continue;
+                    }
                 }
 
                 ReplaceUses(op.inputs);
@@ -301,24 +302,11 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
 
         Variable Current(Variable origin) => current[origin].Peek();
 
-        Variable Resolve(Variable variable)
-        {
-            HashSet<Variable>? visited = null;
-            bool replaced = false;
-            while (replacements.TryGetValue(variable, out Variable? replacement))
-            {
-                visited ??= [];
-                if (!visited.Add(variable))
-                    throw new InvalidOperationException("Cyclic SSA value replacement");
-                variable = replacement;
-                replaced = true;
-            }
-
+        Variable Resolve(Variable variable) =>
             // A replacement captures the value which a removed load produced at that point. Its
             // result may be another family's version-zero object; looking that object up again as
             // a mutable name would incorrectly substitute a later definition of the other family.
-            return !replaced && candidates.Contains(variable) ? Current(variable) : variable;
-        }
+            candidates.Contains(variable) ? Current(variable) : variable;
     }
 
     private Variable NewVersion(Variable origin)
@@ -354,7 +342,7 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
     // prefixed literal operation is the conservative choice for malformed-but-processable input.
     private static bool TryGetRemovableLiteral(
         Op op,
-        [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ConstantValue? literal)
+        [NotNullWhen(true)] out ConstantValue? literal)
     {
         literal = null;
         if (op.Prefixes.Count != 0 || !op.TryGetLiteral(out ConstantValue? value))
