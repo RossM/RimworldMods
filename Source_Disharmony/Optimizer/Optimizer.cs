@@ -1,37 +1,7 @@
-﻿using System.Collections;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using Disharmony.Optimizer.Passes;
 
-namespace Disharmony;
-
-/// <summary>
-///     FIFO worklist which contains each value at most once. queue and hashSet always describe the
-///     same membership; dequeuing permits the value to be enqueued again later.
-/// </summary>
-internal class UniqueQueue<T> : IEnumerable<T>
-{
-    public int Count => queue.Count;
-    private readonly Queue<T> queue = [];
-    private readonly HashSet<T> hashSet = [];
-
-    public bool Enqueue(T item)
-    {
-        if (!hashSet.Add(item))
-            return false;
-        queue.Enqueue(item);
-        return true;
-    }
-
-    public T Dequeue()
-    {
-        T item = queue.Dequeue();
-        hashSet.Remove(item);
-        return item;
-    }
-
-    public IEnumerator<T> GetEnumerator() => queue.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)queue).GetEnumerator();
-}
+namespace Disharmony.Optimizer;
 
 /// <summary>
 ///     Owns one shared IR whose canonical interpretation changes over the pipeline. The normal state
@@ -45,133 +15,6 @@ internal class UniqueQueue<T> : IEnumerable<T>
 /// </summary>
 internal partial class Optimizer
 {
-    /// <summary>
-    ///     A node in the normal CFG containing operations which execute consecutively unless an
-    ///     operation throws. Normal branches, returns, explicit throws, and leaves occur only as
-    ///     the final operation. Exceptional transfers are represented by the region hierarchy,
-    ///     not by <see cref="incomingEdges" /> or <see cref="outgoingEdges" />.
-    /// </summary>
-    internal class BasicBlock : RegionNode
-    {
-        // Non-canonical read-only projections of the edge fields below. They may contain the same
-        // block more than once when distinct CFG edges share an endpoint.
-        public BasicBlock? Next => fallthroughEdge?.Target;
-        public IEnumerable<BasicBlock> Predecessors => incomingEdges.Select(edge => edge.Source);
-        public IEnumerable<BasicBlock> Successors => outgoingEdges.Select(edge => edge.Target);
-
-        // Canonical operation sequence in both IR forms. In Stack form the CIL evaluation stack is
-        // implicit; in Variables form each operation's inputs/outputs are canonical.
-        public readonly List<Op> ops = [];
-
-        // Non-canonical emission metadata. This preserves one input label when available and is
-        // otherwise assigned lazily if Emit needs a label. CFG edges, never labels, are canonical.
-        public Label? label;
-
-        // The canonical normal CFG after MakeBasicBlocks. Every edge occurs exactly once in its
-        // source's outgoingEdges and target's incomingEdges, and its endpoints agree with those
-        // collections. Every edge referenced by a branch Op is also in that Op's block's
-        // outgoingEdges. fallthroughEdge is either null or one member of outgoingEdges identifying
-        // the default continuation not encoded by the final operation. InsertBranches may turn a
-        // non-adjacent default continuation into an explicit branch and clear fallthroughEdge.
-        public readonly List<ControlFlowEdge> incomingEdges = [];
-        public readonly List<ControlFlowEdge> outgoingEdges = [];
-        public ControlFlowEdge? fallthroughEdge;
-
-        // Canonical only in Variables form and deliberately empty in Stack form. In regular
-        // Variables form these are shared mutable logical stack slots: every predecessor's natural
-        // exit stack is identical by object identity to its target's entryStackVariables, and edge
-        // assignments are empty. In future SSA Variables form these become block-entry SSA names;
-        // predecessor-specific values may then be supplied by parallel incoming-edge assignments.
-        public readonly List<Variable> entryStackVariables = [];
-    }
-
-    internal sealed class ControlFlowEdge(BasicBlock source, BasicBlock target)
-    {
-        // Canonical only in SSA Variables form and during conversion into or out of it. Stack form
-        // and regular Variables form require every edge's list to be empty. Assignments on one edge
-        // execute in parallel and are logical value transfers, not emitted CIL instructions.
-        public readonly List<VariableAssignment> assignments = [];
-
-        // Canonical endpoints after MakeBasicBlocks. Mutated only by the optimizer's edge helpers,
-        // which also update endpoint collections, preserve fallthroughEdge, and invalidate cached
-        // control-flow analyses.
-        public BasicBlock Source { get; internal set; } = source;
-        public BasicBlock Target { get; internal set; } = target;
-    }
-
-    internal sealed class Variable
-    {
-        public string Name => kind switch
-        {
-            VariableKind.Argument => $"a{index}",
-            VariableKind.Local => $"l{index}",
-            VariableKind.StackSlot => $"s{id}",
-            VariableKind.Temporary => $"v{id}",
-            _ => throw new ArgumentOutOfRangeException(),
-        };
-
-        // Stable identity within one Variables-form interval. Unlike index, this is unique across
-        // all variable kinds. IDs and the variable registry are reset when Variables form is built
-        // or discarded; Variable objects are not canonical in Stack form.
-        public required int id;
-        public required VariableKind kind;
-
-        // Canonical Variables-form type information. Argument types come from the method signature.
-        // A Local type is set only from MethodBody metadata or a LocalBuilder, never inferred from
-        // stores, and may therefore be null. StackSlot and Temporary types come from symbolic stack
-        // analysis and may contain the special lattice-marker types below.
-        public Type? type;
-
-        // Canonical physical slot index for Argument and Local; -1 for logical StackSlot and
-        // Temporary values. Distinct argument/local variables never represent the same slot.
-        public int index = -1;
-
-        // Optional canonical metadata for a Local created by a transpiler. When present, its index
-        // and type agree with this Variable; pinned combines all authoritative metadata seen for the
-        // slot. Null means only that no LocalBuilder was supplied, since the original MethodBody may
-        // still provide authoritative type metadata.
-        public LocalBuilder? localBuilder;
-
-        // Canonical Variables-form pinned flag for Local; false for other variable kinds. It is
-        // populated only from authoritative local metadata or a LocalBuilder.
-        public bool pinned;
-
-        // Canonical only in Variables form. True exactly when a remaining operation takes this
-        // argument/local's address. Rewriting address operations can change the value, so such a
-        // pass must recompute it; this is a current-IR summary, not historical escape information.
-        public bool addressTaken;
-
-        public override string ToString() => Name;
-    }
-
-    /// <summary>Identifies the storage or logical value represented by a variable.</summary>
-    internal enum VariableKind
-    {
-        /// <summary>A mutable CIL argument slot, including <c>this</c> at index zero.</summary>
-        Argument,
-
-        /// <summary>A mutable CIL local. Its declared type may be unavailable.</summary>
-        Local,
-
-        /// <summary>
-        ///     A logical evaluation-stack slot crossing a basic-block boundary. In regular
-        ///     Variables form the same mutable slot may be defined by several predecessors; SSA
-        ///     construction replaces that interpretation with single-definition values.
-        /// </summary>
-        StackSlot,
-
-        /// <summary>A value produced by an operation within a basic block.</summary>
-        Temporary,
-    }
-
-    internal sealed class VariableAssignment(Variable source, Variable destination)
-    {
-        // Valid only as an element of ControlFlowEdge.assignments in SSA Variables form. Source and
-        // Destination participate in one parallel logical transfer; this is never emitted directly.
-        public Variable Source { get; } = source;
-        public Variable Destination { get; } = destination;
-    }
-
     /// <summary>
     ///     Which interpretation of the shared block and operation data is canonical. The current
     ///     values describe Stack form and regular (non-SSA) Variables form. Future SSA will use the
@@ -218,336 +61,8 @@ internal partial class Optimizer
     /// </summary>
     internal struct NullType;
 
-    internal class Op(OpCode opcode, object? operand, IReadOnlyList<OpCode> prefixes)
-    {
-        /// <summary>How an instruction accesses storage outside the evaluation stack.</summary>
-        internal enum VariableAccessKind
-        {
-            /// <summary>Loads the current value of an argument or local.</summary>
-            Read,
-
-            /// <summary>Replaces the current value of an argument or local.</summary>
-            Write,
-
-            /// <summary>Takes the storage location's address, preventing ordinary SSA promotion.</summary>
-            Address,
-        }
-
-        /// <summary>
-        ///     Describes the canonical variable operand of an argument/local access after stack
-        ///     conversion. <see cref="VariableKind" /> records what the original opcode
-        ///     names; an optimization may independently replace <see cref="Variable" />.
-        /// </summary>
-        internal readonly record struct StorageAccess(
-            VariableAccessKind Kind,
-            VariableKind VariableKind,
-            Variable Variable);
-
-        public bool IsLeave => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
-        public bool ClearsStack => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
-        public bool IsUnconditionalBranch => Opcode == OpCodes.Br_S || Opcode == OpCodes.Br;
-        public bool CanBranch => Opcode.FlowControl is FlowControl.Branch or FlowControl.Cond_Branch;
-
-        public OperationEffects Effects => effectsCached ??= OperationEffectClassifier.Classify(this);
-        public bool CanDiscardIfUnused => (Effects & OperationEffectClassifier.PreventsDiscard) == 0;
-
-        public bool CanFallThrough =>
-            Opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch or FlowControl.Break;
-
-        public int StackPops =>
-            Opcode.StackBehaviourPop switch
-            {
-                StackBehaviour.Pop0 => 0,
-                StackBehaviour.Pop1 => 1,
-                StackBehaviour.Pop1_pop1 => 2,
-                StackBehaviour.Popi => 1,
-                StackBehaviour.Popi_pop1 => 2,
-                StackBehaviour.Popi_popi => 2,
-                StackBehaviour.Popi_popi8 => 2,
-                StackBehaviour.Popi_popi_popi => 3,
-                StackBehaviour.Popi_popr4 => 2,
-                StackBehaviour.Popi_popr8 => 2,
-                StackBehaviour.Popref => 1,
-                StackBehaviour.Popref_pop1 => 2,
-                StackBehaviour.Popref_popi => 2,
-                StackBehaviour.Popref_popi_popi => 3,
-                StackBehaviour.Popref_popi_popi8 => 3,
-                StackBehaviour.Popref_popi_popr4 => 3,
-                StackBehaviour.Popref_popi_popr8 => 3,
-                StackBehaviour.Popref_popi_popref => 3,
-                StackBehaviour.Varpop => Operand switch
-                {
-                    MethodBase method => method.GetParameters().Length + (method is MethodInfo { IsStatic: false } ? 1 : 0),
-                    _ => 0,
-                },
-                StackBehaviour.Popref_popi_pop1 => 3,
-                _ => throw new ArgumentOutOfRangeException(),
-            };
-
-        public int Index => OpcodeValue switch
-        {
-            OpCodeValues.Ldarg_0 => 0,
-            OpCodeValues.Ldarg_1 => 1,
-            OpCodeValues.Ldarg_2 => 2,
-            OpCodeValues.Ldarg_3 => 3,
-            OpCodeValues.Ldarg or OpCodeValues.Ldarg_S => ToLocalIndex(Operand),
-            OpCodeValues.Ldarga or OpCodeValues.Ldarga_S => ToLocalIndex(Operand),
-            OpCodeValues.Starg or OpCodeValues.Starg_S => ToLocalIndex(Operand),
-            OpCodeValues.Ldloc_0 => 0,
-            OpCodeValues.Ldloc_1 => 1,
-            OpCodeValues.Ldloc_2 => 2,
-            OpCodeValues.Ldloc_3 => 3,
-            OpCodeValues.Ldloc or OpCodeValues.Ldloc_S => ToLocalIndex(Operand),
-            OpCodeValues.Ldloca or OpCodeValues.Ldloca_S => ToLocalIndex(Operand),
-            OpCodeValues.Stloc_0 => 0,
-            OpCodeValues.Stloc_1 => 1,
-            OpCodeValues.Stloc_2 => 2,
-            OpCodeValues.Stloc_3 => 3,
-            OpCodeValues.Stloc or OpCodeValues.Stloc_S => ToLocalIndex(Operand),
-            _ => throw new ArgumentOutOfRangeException(),
-        };
-
-        // Canonical in both forms after MakeBasicBlocks bundles prefixes. Prefix Op objects do not
-        // also occur in BasicBlock.ops; keeping them here prevents later passes from separating a
-        // prefix from the operation it governs.
-        public IReadOnlyList<OpCode> Prefixes => prefixes;
-
-        public ushort OpcodeValue => unchecked((ushort)Opcode.Value);
-
-        private OperationEffects? effectsCached;
-
-        // Canonical only in Variables form and empty/defaulted in Stack form. Evaluation-stack
-        // values occupy inputs[0..stackInputCount) and outputs[0..stackOutputCount); explicit
-        // argument/local operands follow them. The counts retain the operation's intrinsic CIL
-        // stack arity even if a Variables-form optimization rewrites which values are used.
-        public readonly List<Variable> inputs = [];
-        public readonly List<Variable> outputs = [];
-        public int stackInputCount;
-        public int stackOutputCount;
-        public Op(OpCode opcode) : this(opcode, null, []) { }
-
-        // Canonical in both forms. After MakeBasicBlocks, branch operands are ControlFlowEdge
-        // objects rather than labels. In Variables form a storage opcode's encoded Operand may be
-        // stale after rewriting; GetStorageAccess().Variable is the canonical storage target.
-        public OpCode Opcode { get; } = opcode;
-        public object? Operand { get; } = operand;
-
-        /// <summary>
-        ///     Requires Variables form with valid stack counts. Returns the explicit storage operand
-        ///     attached by <see cref="StackToVariableConverter" />, or <see langword="null" /> for an
-        ///     operation which does not directly access an argument or local. This is the canonical
-        ///     storage-opcode decoder for variable-form passes.
-        /// </summary>
-        internal StorageAccess? GetStorageAccess()
-        {
-            return OpcodeValue switch
-            {
-                OpCodeValues.Ldarg_0 or OpCodeValues.Ldarg_1 or OpCodeValues.Ldarg_2 or OpCodeValues.Ldarg_3 or
-                    OpCodeValues.Ldarg or OpCodeValues.Ldarg_S =>
-                    new(VariableAccessKind.Read, VariableKind.Argument, inputs[stackInputCount]),
-                OpCodeValues.Ldarga or OpCodeValues.Ldarga_S =>
-                    new(VariableAccessKind.Address, VariableKind.Argument, inputs[stackInputCount]),
-                OpCodeValues.Starg or OpCodeValues.Starg_S =>
-                    new(VariableAccessKind.Write, VariableKind.Argument, outputs[stackOutputCount]),
-                OpCodeValues.Ldloc_0 or OpCodeValues.Ldloc_1 or OpCodeValues.Ldloc_2 or OpCodeValues.Ldloc_3 or
-                    OpCodeValues.Ldloc or OpCodeValues.Ldloc_S =>
-                    new(VariableAccessKind.Read, VariableKind.Local, inputs[stackInputCount]),
-                OpCodeValues.Ldloca or OpCodeValues.Ldloca_S =>
-                    new(VariableAccessKind.Address, VariableKind.Local, inputs[stackInputCount]),
-                OpCodeValues.Stloc_0 or OpCodeValues.Stloc_1 or OpCodeValues.Stloc_2 or OpCodeValues.Stloc_3 or
-                    OpCodeValues.Stloc or OpCodeValues.Stloc_S =>
-                    new(VariableAccessKind.Write, VariableKind.Local, outputs[stackOutputCount]),
-                _ => null,
-            };
-        }
-
-        /// <summary>
-        ///     Classifies the <c>ldobj</c>/<c>stobj</c> and <c>ldind</c>/<c>stind</c> opcode
-        ///     families. Other memory operations are not indirect value accesses for this purpose.
-        /// </summary>
-        internal VariableAccessKind? GetIndirectAccessKind() =>
-            OpcodeValue switch
-            {
-                OpCodeValues.Ldobj or
-                    OpCodeValues.Ldind_I1 or OpCodeValues.Ldind_U1 or
-                    OpCodeValues.Ldind_I2 or OpCodeValues.Ldind_U2 or
-                    OpCodeValues.Ldind_I4 or OpCodeValues.Ldind_U4 or
-                    OpCodeValues.Ldind_I8 or OpCodeValues.Ldind_I or
-                    OpCodeValues.Ldind_R4 or OpCodeValues.Ldind_R8 or OpCodeValues.Ldind_Ref =>
-                    VariableAccessKind.Read,
-                OpCodeValues.Stobj or
-                    OpCodeValues.Stind_I1 or OpCodeValues.Stind_I2 or OpCodeValues.Stind_I4 or
-                    OpCodeValues.Stind_I8 or OpCodeValues.Stind_I or
-                    OpCodeValues.Stind_R4 or OpCodeValues.Stind_R8 or OpCodeValues.Stind_Ref =>
-                    VariableAccessKind.Write,
-                _ => null,
-            };
-
-        public int GetStackPops(Type returnType)
-        {
-            if (Opcode == OpCodes.Ret)
-                return returnType == typeof(void) ? 0 : 1;
-            if (Opcode == OpCodes.Jmp)
-                return 0;
-            if (Opcode.StackBehaviourPop != StackBehaviour.Varpop || Operand is not MethodBase calledMethod)
-                return StackPops;
-
-            int receiverCount = Opcode != OpCodes.Newobj && !calledMethod.IsStatic ? 1 : 0;
-            return calledMethod.GetParameters().Length + receiverCount;
-        }
-
-        private static int ToLocalIndex(object? value)
-        {
-            if (value is LocalBuilder lb)
-                return lb.LocalIndex;
-            return Convert.ToInt32(value);
-        }
-
-        // Copies only opcode/encoded operand. It is suitable for Stack form and prefix logging, but
-        // does not lower canonical Variables-form operands back to storage instructions.
-        public CodeInstruction ToCodeInstruction() => new(Opcode, Operand);
-
-        public void Deconstruct(out OpCode opcode, out object? operand)
-        {
-            opcode = Opcode;
-            operand = Operand;
-        }
-
-        /// <summary>
-        ///     Returns the value encoded by a CIL literal-loading opcode, or false when this
-        ///     operation is not a supported literal.
-        /// </summary>
-        public bool TryGetLiteral([NotNullWhen(true)] out ConstantValue? constant)
-        {
-            constant = OpcodeValue switch
-            {
-                OpCodeValues.Ldnull => ConstantValue.Null,
-                OpCodeValues.Ldstr when Operand is string text => ConstantValue.FromString(text),
-                OpCodeValues.Ldc_I4_M1 => ConstantValue.FromInt32(-1),
-                OpCodeValues.Ldc_I4_0 => ConstantValue.FromInt32(0),
-                OpCodeValues.Ldc_I4_1 => ConstantValue.FromInt32(1),
-                OpCodeValues.Ldc_I4_2 => ConstantValue.FromInt32(2),
-                OpCodeValues.Ldc_I4_3 => ConstantValue.FromInt32(3),
-                OpCodeValues.Ldc_I4_4 => ConstantValue.FromInt32(4),
-                OpCodeValues.Ldc_I4_5 => ConstantValue.FromInt32(5),
-                OpCodeValues.Ldc_I4_6 => ConstantValue.FromInt32(6),
-                OpCodeValues.Ldc_I4_7 => ConstantValue.FromInt32(7),
-                OpCodeValues.Ldc_I4_8 => ConstantValue.FromInt32(8),
-                OpCodeValues.Ldc_I4_S => ConstantValue.FromInt32(Convert.ToSByte(Operand)),
-                OpCodeValues.Ldc_I4 => ConstantValue.FromInt32(Convert.ToInt32(Operand)),
-                OpCodeValues.Ldc_I8 => ConstantValue.FromInt64(Convert.ToInt64(Operand)),
-                OpCodeValues.Ldc_R4 => ConstantValue.FromFloat32(Convert.ToSingle(Operand)),
-                OpCodeValues.Ldc_R8 => ConstantValue.FromFloat64(Convert.ToDouble(Operand)),
-                _ => null,
-            };
-            return constant != null;
-        }
-    }
-
     // Factories rather than shared instances: passes freely attach variable operands and prefixes
     // to returned Ops, so every use must receive a fresh object.
-    private static class Ops
-    {
-        public static Op Nop => new(OpCodes.Nop);
-        public static Op Ret => new(OpCodes.Ret);
-        public static Op Pop => new(OpCodes.Pop);
-        public static Op Dup => new(OpCodes.Dup);
-    }
-
-    /// <summary>
-    ///     A node in the canonical lexical region-containment hierarchy built by MakeBasicBlocks.
-    ///     This hierarchy is independent of normal CFG reachability and basic-block list order.
-    /// </summary>
-    internal class RegionNode
-    {
-        // Lexical-entry predicate only: true when this is the first child recorded by its parent.
-        // It does not imply normal CFG reachability and is not the dominator-root predicate.
-        public bool EntryPoint => parent == null || parent.entry == this;
-
-        // Stable identity shared by Regions and BasicBlocks. IDs are unique after MakeBasicBlocks;
-        // the synthetic root alone retains zero.
-        public virtual string ID => $"#{id}";
-        public int id = 0;
-
-        // Canonical lexical parent after MakeBasicBlocks. A BasicBlock's parent is its immediate
-        // containing Region; a non-root Region's parent is the surrounding Region.
-        public Region? parent;
-
-        public override string ToString() => ID;
-
-        public bool HasAncestor(Region region)
-        {
-            for (RegionNode? b = this; b != null; b = b.parent)
-            {
-                if (b == region)
-                    return true;
-            }
-
-            return false;
-        }
-    }
-
-    /// <summary>
-    ///     A synthetic root, protected region, filter region, or handler region. Regions form the
-    ///     canonical lexical containment hierarchy after MakeBasicBlocks. They do not form CFG
-    ///     nodes. Their eventual emission positions are derived from entries and basic-block order,
-    ///     not stored as a second independently mutable layout.
-    /// </summary>
-    internal class Region : RegionNode
-    {
-        public override string ID => parent == null ? "Root" : $"{harmonyBlock!.blockType} #{id}";
-
-        // Canonical region kind and catch type after MakeBasicBlocks; null only for the synthetic
-        // root. The marker's eventual output position is derived rather than stored here.
-        public ExceptionBlock? harmonyBlock;
-
-        // Canonical first lexical child after MakeBasicBlocks. It may be a nested Region, so callers
-        // needing a block follow the recursive entry chain. Before aggressive reorder this child
-        // need not be the earliest member of the Region in basicBlocks; afterward it is.
-        public RegionNode? entry;
-
-        // Canonical exception-group membership after MakeBasicBlocks. Null only for the synthetic
-        // root; protected, filter, and handler Regions all point to their shared group.
-        public ExceptionEntryGroup? exceptionEntryGroup;
-
-        public Region? Next => field ??= exceptionEntryGroup?.NextRegion(this);
-    }
-
-    /// <summary>
-    ///     Exception entries which share a protected region, with their filter and handler regions
-    ///     in CIL layout order.
-    /// </summary>
-    internal sealed class ExceptionEntryGroup(Region protectedRegion)
-    {
-        // Canonical CIL layout order of the filters/handlers associated with ProtectedRegion. A
-        // filtered entry contributes both its filter Region and its handler Region. This order is
-        // independent of basicBlocks order until aggressive reorder reestablishes emission layout.
-        public readonly List<Region> associatedRegions = [];
-
-        // Canonical protected body for this group. It is not repeated in associatedRegions.
-        public Region ProtectedRegion { get; } = protectedRegion;
-
-        // Returns the next Region in the group's required CIL layout chain. The argument must be
-        // ProtectedRegion or a current associatedRegions member; null means the exception group ends.
-        public Region? NextRegion(Region region)
-        {
-            if (region == ProtectedRegion)
-                return associatedRegions.FirstOrDefault();
-
-            int index = associatedRegions.IndexOf(region);
-            if (index < 0)
-                throw new ArgumentException("Region is not a member of this exception-entry group", nameof(region));
-            return index + 1 < associatedRegions.Count ? associatedRegions[index + 1] : null;
-        }
-
-        // Exceptional local dataflow does not follow the normal block CFG. A handler may observe
-        // a local written at any potentially throwing instruction in ProtectedRegion, and a store
-        // whose value computation throws leaves the old local value visible. Consequently, future
-        // SSA construction must either model instruction-level exceptional predecessors (and
-        // their unsplittable transfers), or leave exception-exposed arguments and locals in
-        // physical storage. Catch/filter entry stack values are supplied by the runtime and are a
-        // separate concern from those locals.
-    }
 
     // Read-only collection views for passes and tests. Their elements remain mutable optimizer IR;
     // callers must respect the canonical-state and pass-precondition comments on the backing fields.
@@ -565,7 +80,7 @@ internal partial class Optimizer
     // Canonical lexical hierarchy nodes after MakeBasicBlocks, including root exactly once. This
     // list records membership, not nesting or layout; parent/entry record nesting and the aggressive
     // reorder postcondition gives basicBlocks its eventual emission layout.
-    private readonly List<Region> regions = [];
+    internal readonly List<Region> regions = [];
 
     // Canonical exception-group membership and handler/filter order after MakeBasicBlocks. The
     // normal CFG intentionally contains no implicit exceptional edges represented by these groups.
@@ -575,7 +90,7 @@ internal partial class Optimizer
     // CFG rewrites such as JumpThreading and MergeBlocks deliberately leave dead blocks for a later
     // removal pass. List order is initially input order and is non-canonical for analysis; only
     // AggressiveDeadCodeEliminationAndReorder establishes the final canonical emission order.
-    private List<BasicBlock> basicBlocks = [];
+    internal List<BasicBlock> basicBlocks = [];
 
     // Null means block dominance has not been computed or has been invalidated. A non-null tree is
     // canonical for the current block set, edge endpoints, and implicit exception-entry roots;
@@ -588,10 +103,10 @@ internal partial class Optimizer
     // Variable. The two dictionaries are consistent subsets: each maps a physical slot index to
     // the one Argument/Local Variable for that slot, and every mapped value occurs in variables.
     // Logical values occur only in variables. nextVariableId is the next identity in this interval.
-    private readonly List<Variable> variables = [];
-    private readonly Dictionary<int, Variable> argumentVariables = [];
-    private readonly Dictionary<int, Variable> localVariables = [];
-    private int nextVariableId;
+    internal readonly List<Variable> variables = [];
+    internal readonly Dictionary<int, Variable> argumentVariables = [];
+    internal readonly Dictionary<int, Variable> localVariables = [];
+    internal int nextVariableId;
 
     // Stable synthetic hierarchy root. It becomes canonical when MakeBasicBlocks adds it to regions
     // and sets its entry; it has no parent, Harmony marker, or exception-entry group.
@@ -609,10 +124,10 @@ internal partial class Optimizer
     // the IR. parameterTypes includes the instance receiver at index zero when method.HasThis.
     private readonly MethodBase method;
     private readonly List<CodeInstruction> inputInstructions;
-    private readonly ILGenerator generator;
+    internal readonly ILGenerator generator;
     private readonly bool debug;
-    private readonly List<Type> parameterTypes;
-    private readonly Type returnType;
+    internal readonly List<Type> parameterTypes;
+    internal readonly Type returnType;
 
     public Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator, bool debug)
     {
@@ -634,13 +149,13 @@ internal partial class Optimizer
     // Meaningful once MakeBasicBlocks has created the IR. Defaults to Stack, changes to Variables
     // only after conversion completes, and changes back only after all variable state is discarded.
     // SSA construction must eventually add and set a distinct value rather than infer SSA from data.
-    internal IrForm Form { get; private set; }
+    internal IrForm Form { get; set; }
 
-    private static bool IsSpecialType(Type type) =>
+    internal static bool IsSpecialType(Type type) =>
         type == typeof(AnyType) || type == typeof(UnknownType) || type == typeof(NullType) ||
         type.IsByRef && IsSpecialType(type.GetElementType()!);
 
-    private static Type FromRef(Type type)
+    internal static Type FromRef(Type type)
     {
         if (type.IsByRef)
             return type.GetElementType()!;
@@ -950,7 +465,7 @@ internal partial class Optimizer
     /// </summary>
     private void ConvertStackToVariables()
     {
-        new StackToVariableConverter(this).ConvertStackToVariables();
+        new StackToVariableConversion(this).Run();
     }
 
     /// <summary>
@@ -961,7 +476,7 @@ internal partial class Optimizer
     /// </summary>
     private void ConvertVariablesToStack()
     {
-        new VariableToStackConverter(this).ConvertVariablesToStack();
+        new VariableToStackConversion(this).Run();
     }
 
     /// <summary>
@@ -975,7 +490,7 @@ internal partial class Optimizer
     /// </summary>
     internal void ConservativeConstantPropagation()
     {
-        new ConservativeConstantPropagator(this).Propagate();
+        new ConservativeConstantPropagation(this).Run();
     }
 
     /// <summary>
@@ -985,7 +500,7 @@ internal partial class Optimizer
     ///     SSA edge assignments do not affect block dominance. The result remains valid until a CFG
     ///     or implicit-entry mutation calls <see cref="InvalidateControlFlowAnalyses" />.
     /// </summary>
-    private DominatorTree ComputeDominatorTreeIfNeeded()
+    internal DominatorTree ComputeDominatorTreeIfNeeded()
     {
         return dominatorTree ??= DominatorTree.Compute(basicBlocks, GetDominatorRoots());
     }
@@ -1687,7 +1202,7 @@ internal partial class Optimizer
         }
     }
 
-    private MethodBody? GetMethodBodyOrNull()
+    internal MethodBody? GetMethodBodyOrNull()
     {
         try
         {
@@ -1706,11 +1221,11 @@ internal partial class Optimizer
     // Variables-form registry helpers used while StackToVariableConverter materializes canonical
     // operands. ArgumentVariables must already be initialized from parameterTypes. A previously
     // unseen local is created with unknown declared type; later stores never refine that metadata.
-    private Variable GetArgumentVariable(int index) => argumentVariables.TryGetValue(index, out var variable)
+    internal Variable GetArgumentVariable(int index) => argumentVariables.TryGetValue(index, out var variable)
         ? variable
         : throw new InvalidOperationException($"Unknown argument #{index}");
 
-    private Variable GetLocalVariable(int index)
+    internal Variable GetLocalVariable(int index)
     {
         if (localVariables.TryGetValue(index, out var variable))
             return variable;
@@ -1722,7 +1237,7 @@ internal partial class Optimizer
 
     // Adds one canonical Variables-form object to the owning registry. Callers adding an Argument
     // or Local must also add the same object to the corresponding index dictionary.
-    private Variable NewVariable(
+    internal Variable NewVariable(
         VariableKind kind,
         Type? type,
         int index = -1,
@@ -1742,7 +1257,7 @@ internal partial class Optimizer
         return variable;
     }
 
-    private static bool ReferencesLocal(Op op) => unchecked((ushort)op.Opcode.Value) is
+    internal static bool ReferencesLocal(Op op) => unchecked((ushort)op.Opcode.Value) is
         OpCodeValues.Ldloc_0 or OpCodeValues.Ldloc_1 or OpCodeValues.Ldloc_2 or OpCodeValues.Ldloc_3 or
         OpCodeValues.Ldloc or OpCodeValues.Ldloc_S or OpCodeValues.Ldloca or OpCodeValues.Ldloca_S or
         OpCodeValues.Stloc_0 or OpCodeValues.Stloc_1 or OpCodeValues.Stloc_2 or OpCodeValues.Stloc_3 or
@@ -1894,7 +1409,7 @@ internal partial class Optimizer
     }
 
 
-    private static List<Type> CombineTypeLists(
+    internal static List<Type> CombineTypeLists(
         IReadOnlyList<Type> left,
         IReadOnlyList<Type> right,
         bool padIfNeeded = false)
@@ -1916,5 +1431,466 @@ internal partial class Optimizer
 
     // Even when the referent type is imprecise, taking its address establishes that the stack value
     // is a managed pointer. Keeping the lattice marker as the element type retains both facts.
-    private static Type ToRef(Type type) => type.MakeByRefType();
+    internal static Type ToRef(Type type) => type.MakeByRefType();
+}
+
+/// <summary>
+///     Exception entries which share a protected region, with their filter and handler regions
+///     in CIL layout order.
+/// </summary>
+internal sealed class ExceptionEntryGroup(Region protectedRegion)
+{
+    // Canonical CIL layout order of the filters/handlers associated with ProtectedRegion. A
+    // filtered entry contributes both its filter Region and its handler Region. This order is
+    // independent of basicBlocks order until aggressive reorder reestablishes emission layout.
+    public readonly List<Region> associatedRegions = [];
+
+    // Canonical protected body for this group. It is not repeated in associatedRegions.
+    public Region ProtectedRegion { get; } = protectedRegion;
+
+    // Returns the next Region in the group's required CIL layout chain. The argument must be
+    // ProtectedRegion or a current associatedRegions member; null means the exception group ends.
+    public Region? NextRegion(Region region)
+    {
+        if (region == ProtectedRegion)
+            return associatedRegions.FirstOrDefault();
+
+        int index = associatedRegions.IndexOf(region);
+        if (index < 0)
+            throw new ArgumentException("Region is not a member of this exception-entry group", nameof(region));
+        return index + 1 < associatedRegions.Count ? associatedRegions[index + 1] : null;
+    }
+
+    // Exceptional local dataflow does not follow the normal block CFG. A handler may observe
+    // a local written at any potentially throwing instruction in ProtectedRegion, and a store
+    // whose value computation throws leaves the old local value visible. Consequently, future
+    // SSA construction must either model instruction-level exceptional predecessors (and
+    // their unsplittable transfers), or leave exception-exposed arguments and locals in
+    // physical storage. Catch/filter entry stack values are supplied by the runtime and are a
+    // separate concern from those locals.
+}
+
+/// <summary>
+///     A synthetic root, protected region, filter region, or handler region. Regions form the
+///     canonical lexical containment hierarchy after MakeBasicBlocks. They do not form CFG
+///     nodes. Their eventual emission positions are derived from entries and basic-block order,
+///     not stored as a second independently mutable layout.
+/// </summary>
+internal class Region : RegionNode
+{
+    public override string ID => parent == null ? "Root" : $"{harmonyBlock!.blockType} #{id}";
+
+    // Canonical region kind and catch type after MakeBasicBlocks; null only for the synthetic
+    // root. The marker's eventual output position is derived rather than stored here.
+    public ExceptionBlock? harmonyBlock;
+
+    // Canonical first lexical child after MakeBasicBlocks. It may be a nested Region, so callers
+    // needing a block follow the recursive entry chain. Before aggressive reorder this child
+    // need not be the earliest member of the Region in basicBlocks; afterward it is.
+    public RegionNode? entry;
+
+    // Canonical exception-group membership after MakeBasicBlocks. Null only for the synthetic
+    // root; protected, filter, and handler Regions all point to their shared group.
+    public ExceptionEntryGroup? exceptionEntryGroup;
+
+    public Region? Next => field ??= exceptionEntryGroup?.NextRegion(this);
+}
+
+internal static class Ops
+{
+    public static Op Nop => new(OpCodes.Nop);
+    public static Op Ret => new(OpCodes.Ret);
+    public static Op Pop => new(OpCodes.Pop);
+    public static Op Dup => new(OpCodes.Dup);
+}
+
+internal class Op(OpCode opcode, object? operand, IReadOnlyList<OpCode> prefixes)
+{
+    /// <summary>How an instruction accesses storage outside the evaluation stack.</summary>
+    internal enum VariableAccessKind
+    {
+        /// <summary>Loads the current value of an argument or local.</summary>
+        Read,
+
+        /// <summary>Replaces the current value of an argument or local.</summary>
+        Write,
+
+        /// <summary>Takes the storage location's address, preventing ordinary SSA promotion.</summary>
+        Address,
+    }
+
+    /// <summary>
+    ///     Describes the canonical variable operand of an argument/local access after stack
+    ///     conversion. <see cref="Disharmony.Optimizer.VariableKind" /> records what the original opcode
+    ///     names; an optimization may independently replace <see cref="Disharmony.Optimizer.Variable" />.
+    /// </summary>
+    internal readonly record struct StorageAccess(
+        VariableAccessKind Kind,
+        VariableKind VariableKind,
+        Variable Variable);
+
+    public bool IsLeave => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
+    public bool ClearsStack => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
+    public bool IsUnconditionalBranch => Opcode == OpCodes.Br_S || Opcode == OpCodes.Br;
+    public bool CanBranch => Opcode.FlowControl is FlowControl.Branch or FlowControl.Cond_Branch;
+
+    public OperationEffects Effects => effectsCached ??= OperationEffectClassifier.Classify(this);
+    public bool CanDiscardIfUnused => (Effects & OperationEffectClassifier.PreventsDiscard) == 0;
+
+    public bool CanFallThrough =>
+        Opcode.FlowControl is FlowControl.Next or FlowControl.Call or FlowControl.Meta or FlowControl.Cond_Branch or FlowControl.Break;
+
+    public int StackPops =>
+        Opcode.StackBehaviourPop switch
+        {
+            StackBehaviour.Pop0 => 0,
+            StackBehaviour.Pop1 => 1,
+            StackBehaviour.Pop1_pop1 => 2,
+            StackBehaviour.Popi => 1,
+            StackBehaviour.Popi_pop1 => 2,
+            StackBehaviour.Popi_popi => 2,
+            StackBehaviour.Popi_popi8 => 2,
+            StackBehaviour.Popi_popi_popi => 3,
+            StackBehaviour.Popi_popr4 => 2,
+            StackBehaviour.Popi_popr8 => 2,
+            StackBehaviour.Popref => 1,
+            StackBehaviour.Popref_pop1 => 2,
+            StackBehaviour.Popref_popi => 2,
+            StackBehaviour.Popref_popi_popi => 3,
+            StackBehaviour.Popref_popi_popi8 => 3,
+            StackBehaviour.Popref_popi_popr4 => 3,
+            StackBehaviour.Popref_popi_popr8 => 3,
+            StackBehaviour.Popref_popi_popref => 3,
+            StackBehaviour.Varpop => Operand switch
+            {
+                MethodBase method => method.GetParameters().Length + (method is MethodInfo { IsStatic: false } ? 1 : 0),
+                _ => 0,
+            },
+            StackBehaviour.Popref_popi_pop1 => 3,
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+
+    public int Index => OpcodeValue switch
+    {
+        OpCodeValues.Ldarg_0 => 0,
+        OpCodeValues.Ldarg_1 => 1,
+        OpCodeValues.Ldarg_2 => 2,
+        OpCodeValues.Ldarg_3 => 3,
+        OpCodeValues.Ldarg or OpCodeValues.Ldarg_S => ToLocalIndex(Operand),
+        OpCodeValues.Ldarga or OpCodeValues.Ldarga_S => ToLocalIndex(Operand),
+        OpCodeValues.Starg or OpCodeValues.Starg_S => ToLocalIndex(Operand),
+        OpCodeValues.Ldloc_0 => 0,
+        OpCodeValues.Ldloc_1 => 1,
+        OpCodeValues.Ldloc_2 => 2,
+        OpCodeValues.Ldloc_3 => 3,
+        OpCodeValues.Ldloc or OpCodeValues.Ldloc_S => ToLocalIndex(Operand),
+        OpCodeValues.Ldloca or OpCodeValues.Ldloca_S => ToLocalIndex(Operand),
+        OpCodeValues.Stloc_0 => 0,
+        OpCodeValues.Stloc_1 => 1,
+        OpCodeValues.Stloc_2 => 2,
+        OpCodeValues.Stloc_3 => 3,
+        OpCodeValues.Stloc or OpCodeValues.Stloc_S => ToLocalIndex(Operand),
+        _ => throw new ArgumentOutOfRangeException(),
+    };
+
+    // Canonical in both forms after MakeBasicBlocks bundles prefixes. Prefix Op objects do not
+    // also occur in BasicBlock.ops; keeping them here prevents later passes from separating a
+    // prefix from the operation it governs.
+    public IReadOnlyList<OpCode> Prefixes => prefixes;
+
+    public ushort OpcodeValue => unchecked((ushort)Opcode.Value);
+
+    private OperationEffects? effectsCached;
+
+    // Canonical only in Variables form and empty/defaulted in Stack form. Evaluation-stack
+    // values occupy inputs[0..stackInputCount) and outputs[0..stackOutputCount); explicit
+    // argument/local operands follow them. The counts retain the operation's intrinsic CIL
+    // stack arity even if a Variables-form optimization rewrites which values are used.
+    public readonly List<Variable> inputs = [];
+    public readonly List<Variable> outputs = [];
+    public int stackInputCount;
+    public int stackOutputCount;
+    public Op(OpCode opcode) : this(opcode, null, []) { }
+
+    // Canonical in both forms. After MakeBasicBlocks, branch operands are ControlFlowEdge
+    // objects rather than labels. In Variables form a storage opcode's encoded Operand may be
+    // stale after rewriting; GetStorageAccess().Variable is the canonical storage target.
+    public OpCode Opcode { get; } = opcode;
+    public object? Operand { get; } = operand;
+
+    /// <summary>
+    ///     Requires Variables form with valid stack counts. Returns the explicit storage operand
+    ///     attached by <see cref="StackToVariableConversion" />, or <see langword="null" /> for an
+    ///     operation which does not directly access an argument or local. This is the canonical
+    ///     storage-opcode decoder for variable-form passes.
+    /// </summary>
+    internal StorageAccess? GetStorageAccess()
+    {
+        return OpcodeValue switch
+        {
+            OpCodeValues.Ldarg_0 or OpCodeValues.Ldarg_1 or OpCodeValues.Ldarg_2 or OpCodeValues.Ldarg_3 or
+                OpCodeValues.Ldarg or OpCodeValues.Ldarg_S =>
+                new(VariableAccessKind.Read, VariableKind.Argument, inputs[stackInputCount]),
+            OpCodeValues.Ldarga or OpCodeValues.Ldarga_S =>
+                new(VariableAccessKind.Address, VariableKind.Argument, inputs[stackInputCount]),
+            OpCodeValues.Starg or OpCodeValues.Starg_S =>
+                new(VariableAccessKind.Write, VariableKind.Argument, outputs[stackOutputCount]),
+            OpCodeValues.Ldloc_0 or OpCodeValues.Ldloc_1 or OpCodeValues.Ldloc_2 or OpCodeValues.Ldloc_3 or
+                OpCodeValues.Ldloc or OpCodeValues.Ldloc_S =>
+                new(VariableAccessKind.Read, VariableKind.Local, inputs[stackInputCount]),
+            OpCodeValues.Ldloca or OpCodeValues.Ldloca_S =>
+                new(VariableAccessKind.Address, VariableKind.Local, inputs[stackInputCount]),
+            OpCodeValues.Stloc_0 or OpCodeValues.Stloc_1 or OpCodeValues.Stloc_2 or OpCodeValues.Stloc_3 or
+                OpCodeValues.Stloc or OpCodeValues.Stloc_S =>
+                new(VariableAccessKind.Write, VariableKind.Local, outputs[stackOutputCount]),
+            _ => null,
+        };
+    }
+
+    /// <summary>
+    ///     Classifies the <c>ldobj</c>/<c>stobj</c> and <c>ldind</c>/<c>stind</c> opcode
+    ///     families. Other memory operations are not indirect value accesses for this purpose.
+    /// </summary>
+    internal VariableAccessKind? GetIndirectAccessKind() =>
+        OpcodeValue switch
+        {
+            OpCodeValues.Ldobj or
+                OpCodeValues.Ldind_I1 or OpCodeValues.Ldind_U1 or
+                OpCodeValues.Ldind_I2 or OpCodeValues.Ldind_U2 or
+                OpCodeValues.Ldind_I4 or OpCodeValues.Ldind_U4 or
+                OpCodeValues.Ldind_I8 or OpCodeValues.Ldind_I or
+                OpCodeValues.Ldind_R4 or OpCodeValues.Ldind_R8 or OpCodeValues.Ldind_Ref =>
+                VariableAccessKind.Read,
+            OpCodeValues.Stobj or
+                OpCodeValues.Stind_I1 or OpCodeValues.Stind_I2 or OpCodeValues.Stind_I4 or
+                OpCodeValues.Stind_I8 or OpCodeValues.Stind_I or
+                OpCodeValues.Stind_R4 or OpCodeValues.Stind_R8 or OpCodeValues.Stind_Ref =>
+                VariableAccessKind.Write,
+            _ => null,
+        };
+
+    public int GetStackPops(Type returnType)
+    {
+        if (Opcode == OpCodes.Ret)
+            return returnType == typeof(void) ? 0 : 1;
+        if (Opcode == OpCodes.Jmp)
+            return 0;
+        if (Opcode.StackBehaviourPop != StackBehaviour.Varpop || Operand is not MethodBase calledMethod)
+            return StackPops;
+
+        int receiverCount = Opcode != OpCodes.Newobj && !calledMethod.IsStatic ? 1 : 0;
+        return calledMethod.GetParameters().Length + receiverCount;
+    }
+
+    private static int ToLocalIndex(object? value)
+    {
+        if (value is LocalBuilder lb)
+            return lb.LocalIndex;
+        return Convert.ToInt32(value);
+    }
+
+    // Copies only opcode/encoded operand. It is suitable for Stack form and prefix logging, but
+    // does not lower canonical Variables-form operands back to storage instructions.
+    public CodeInstruction ToCodeInstruction() => new(Opcode, Operand);
+
+    public void Deconstruct(out OpCode opcode, out object? operand)
+    {
+        opcode = Opcode;
+        operand = Operand;
+    }
+
+    /// <summary>
+    ///     Returns the value encoded by a CIL literal-loading opcode, or false when this
+    ///     operation is not a supported literal.
+    /// </summary>
+    public bool TryGetLiteral([NotNullWhen(true)] out ConstantValue? constant)
+    {
+        constant = OpcodeValue switch
+        {
+            OpCodeValues.Ldnull => ConstantValue.Null,
+            OpCodeValues.Ldstr when Operand is string text => ConstantValue.FromString(text),
+            OpCodeValues.Ldc_I4_M1 => ConstantValue.FromInt32(-1),
+            OpCodeValues.Ldc_I4_0 => ConstantValue.FromInt32(0),
+            OpCodeValues.Ldc_I4_1 => ConstantValue.FromInt32(1),
+            OpCodeValues.Ldc_I4_2 => ConstantValue.FromInt32(2),
+            OpCodeValues.Ldc_I4_3 => ConstantValue.FromInt32(3),
+            OpCodeValues.Ldc_I4_4 => ConstantValue.FromInt32(4),
+            OpCodeValues.Ldc_I4_5 => ConstantValue.FromInt32(5),
+            OpCodeValues.Ldc_I4_6 => ConstantValue.FromInt32(6),
+            OpCodeValues.Ldc_I4_7 => ConstantValue.FromInt32(7),
+            OpCodeValues.Ldc_I4_8 => ConstantValue.FromInt32(8),
+            OpCodeValues.Ldc_I4_S => ConstantValue.FromInt32(Convert.ToSByte(Operand)),
+            OpCodeValues.Ldc_I4 => ConstantValue.FromInt32(Convert.ToInt32(Operand)),
+            OpCodeValues.Ldc_I8 => ConstantValue.FromInt64(Convert.ToInt64(Operand)),
+            OpCodeValues.Ldc_R4 => ConstantValue.FromFloat32(Convert.ToSingle(Operand)),
+            OpCodeValues.Ldc_R8 => ConstantValue.FromFloat64(Convert.ToDouble(Operand)),
+            _ => null,
+        };
+        return constant != null;
+    }
+}
+
+internal sealed class VariableAssignment(Variable source, Variable destination)
+{
+    // Valid only as an element of ControlFlowEdge.assignments in SSA Variables form. Source and
+    // Destination participate in one parallel logical transfer; this is never emitted directly.
+    public Variable Source { get; } = source;
+    public Variable Destination { get; } = destination;
+}
+
+/// <summary>Identifies the storage or logical value represented by a variable.</summary>
+internal enum VariableKind
+{
+    /// <summary>A mutable CIL argument slot, including <c>this</c> at index zero.</summary>
+    Argument,
+
+    /// <summary>A mutable CIL local. Its declared type may be unavailable.</summary>
+    Local,
+
+    /// <summary>
+    ///     A logical evaluation-stack slot crossing a basic-block boundary. In regular
+    ///     Variables form the same mutable slot may be defined by several predecessors; SSA
+    ///     construction replaces that interpretation with single-definition values.
+    /// </summary>
+    StackSlot,
+
+    /// <summary>A value produced by an operation within a basic block.</summary>
+    Temporary,
+}
+
+internal sealed class Variable
+{
+    public string Name => kind switch
+    {
+        VariableKind.Argument => $"a{index}",
+        VariableKind.Local => $"l{index}",
+        VariableKind.StackSlot => $"s{id}",
+        VariableKind.Temporary => $"v{id}",
+        _ => throw new ArgumentOutOfRangeException(),
+    };
+
+    // Stable identity within one Variables-form interval. Unlike index, this is unique across
+    // all variable kinds. IDs and the variable registry are reset when Variables form is built
+    // or discarded; Variable objects are not canonical in Stack form.
+    public required int id;
+    public required VariableKind kind;
+
+    // Canonical Variables-form type information. Argument types come from the method signature.
+    // A Local type is set only from MethodBody metadata or a LocalBuilder, never inferred from
+    // stores, and may therefore be null. StackSlot and Temporary types come from symbolic stack
+    // analysis and may contain the special lattice-marker types below.
+    public Type? type;
+
+    // Canonical physical slot index for Argument and Local; -1 for logical StackSlot and
+    // Temporary values. Distinct argument/local variables never represent the same slot.
+    public int index = -1;
+
+    // Optional canonical metadata for a Local created by a transpiler. When present, its index
+    // and type agree with this Variable; pinned combines all authoritative metadata seen for the
+    // slot. Null means only that no LocalBuilder was supplied, since the original MethodBody may
+    // still provide authoritative type metadata.
+    public LocalBuilder? localBuilder;
+
+    // Canonical Variables-form pinned flag for Local; false for other variable kinds. It is
+    // populated only from authoritative local metadata or a LocalBuilder.
+    public bool pinned;
+
+    // Canonical only in Variables form. True exactly when a remaining operation takes this
+    // argument/local's address. Rewriting address operations can change the value, so such a
+    // pass must recompute it; this is a current-IR summary, not historical escape information.
+    public bool addressTaken;
+
+    public override string ToString() => Name;
+}
+
+internal sealed class ControlFlowEdge(BasicBlock source, BasicBlock target)
+{
+    // Canonical only in SSA Variables form and during conversion into or out of it. Stack form
+    // and regular Variables form require every edge's list to be empty. Assignments on one edge
+    // execute in parallel and are logical value transfers, not emitted CIL instructions.
+    public readonly List<VariableAssignment> assignments = [];
+
+    // Canonical endpoints after MakeBasicBlocks. Mutated only by the optimizer's edge helpers,
+    // which also update endpoint collections, preserve fallthroughEdge, and invalidate cached
+    // control-flow analyses.
+    public BasicBlock Source { get; internal set; } = source;
+    public BasicBlock Target { get; internal set; } = target;
+}
+
+/// <summary>
+///     A node in the normal CFG containing operations which execute consecutively unless an
+///     operation throws. Normal branches, returns, explicit throws, and leaves occur only as
+///     the final operation. Exceptional transfers are represented by the region hierarchy,
+///     not by <see cref="incomingEdges" /> or <see cref="outgoingEdges" />.
+/// </summary>
+internal class BasicBlock : RegionNode
+{
+    // Non-canonical read-only projections of the edge fields below. They may contain the same
+    // block more than once when distinct CFG edges share an endpoint.
+    public BasicBlock? Next => fallthroughEdge?.Target;
+    public IEnumerable<BasicBlock> Predecessors => incomingEdges.Select(edge => edge.Source);
+    public IEnumerable<BasicBlock> Successors => outgoingEdges.Select(edge => edge.Target);
+
+    // Canonical operation sequence in both IR forms. In Stack form the CIL evaluation stack is
+    // implicit; in Variables form each operation's inputs/outputs are canonical.
+    public readonly List<Op> ops = [];
+
+    // Non-canonical emission metadata. This preserves one input label when available and is
+    // otherwise assigned lazily if Emit needs a label. CFG edges, never labels, are canonical.
+    public Label? label;
+
+    // The canonical normal CFG after MakeBasicBlocks. Every edge occurs exactly once in its
+    // source's outgoingEdges and target's incomingEdges, and its endpoints agree with those
+    // collections. Every edge referenced by a branch Op is also in that Op's block's
+    // outgoingEdges. fallthroughEdge is either null or one member of outgoingEdges identifying
+    // the default continuation not encoded by the final operation. InsertBranches may turn a
+    // non-adjacent default continuation into an explicit branch and clear fallthroughEdge.
+    public readonly List<ControlFlowEdge> incomingEdges = [];
+    public readonly List<ControlFlowEdge> outgoingEdges = [];
+    public ControlFlowEdge? fallthroughEdge;
+
+    // Canonical only in Variables form and deliberately empty in Stack form. In regular
+    // Variables form these are shared mutable logical stack slots: every predecessor's natural
+    // exit stack is identical by object identity to its target's entryStackVariables, and edge
+    // assignments are empty. In future SSA Variables form these become block-entry SSA names;
+    // predecessor-specific values may then be supplied by parallel incoming-edge assignments.
+    public readonly List<Variable> entryStackVariables = [];
+}
+
+/// <summary>
+///     A node in the canonical lexical region-containment hierarchy built by MakeBasicBlocks.
+///     This hierarchy is independent of normal CFG reachability and basic-block list order.
+/// </summary>
+internal class RegionNode
+{
+    // Lexical-entry predicate only: true when this is the first child recorded by its parent.
+    // It does not imply normal CFG reachability and is not the dominator-root predicate.
+    public bool EntryPoint => parent == null || parent.entry == this;
+
+    // Stable identity shared by Regions and BasicBlocks. IDs are unique after MakeBasicBlocks;
+    // the synthetic root alone retains zero.
+    public virtual string ID => $"#{id}";
+    public int id = 0;
+
+    // Canonical lexical parent after MakeBasicBlocks. A BasicBlock's parent is its immediate
+    // containing Region; a non-root Region's parent is the surrounding Region.
+    public Region? parent;
+
+    public override string ToString() => ID;
+
+    public bool HasAncestor(Region region)
+    {
+        for (RegionNode? b = this; b != null; b = b.parent)
+        {
+            if (b == region)
+                return true;
+        }
+
+        return false;
+    }
+}
+
+internal abstract class Pass
+{
+    public abstract void Run();
 }

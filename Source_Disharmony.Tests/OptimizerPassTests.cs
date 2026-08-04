@@ -1,4 +1,6 @@
 using System.Reflection.Emit;
+using Disharmony.Optimizer;
+using Disharmony.Optimizer.Passes;
 using HarmonyLib;
 
 namespace Disharmony.Tests;
@@ -12,7 +14,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void MakeBasicBlocksBuildsEdgesAndResolvesLabels()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label target = generator.DefineLabel();
             return
@@ -28,24 +30,24 @@ public sealed class OptimizerPassTests
         optimizer.MakeBasicBlocks();
 
         Assert.That(optimizer.BasicBlocks, Has.Count.EqualTo(3));
-        Optimizer.BasicBlock condition = optimizer.BasicBlocks[0];
-        Optimizer.BasicBlock fallthrough = optimizer.BasicBlocks[1];
-        Optimizer.BasicBlock target = optimizer.BasicBlocks[2];
+        BasicBlock condition = optimizer.BasicBlocks[0];
+        BasicBlock fallthrough = optimizer.BasicBlocks[1];
+        BasicBlock target = optimizer.BasicBlocks[2];
         Assert.That(condition.Next, Is.SameAs(fallthrough));
         Assert.That(condition.fallthroughEdge, Is.Not.Null);
         Assert.That(condition.fallthroughEdge!.Target, Is.SameAs(fallthrough));
-        Assert.That(condition.ops[^1].Operand, Is.TypeOf<Optimizer.ControlFlowEdge>());
-        Assert.That(((Optimizer.ControlFlowEdge)condition.ops[^1].Operand!).Target, Is.SameAs(target));
+        Assert.That(condition.ops[^1].Operand, Is.TypeOf<ControlFlowEdge>());
+        Assert.That(((ControlFlowEdge)condition.ops[^1].Operand!).Target, Is.SameAs(target));
         Assert.That(condition.Successors, Is.EqualTo(new[] { fallthrough, target }));
         Assert.That(fallthrough.Predecessors, Is.EqualTo(new[] { condition }));
         Assert.That(target.Predecessors, Is.EqualTo(new[] { condition, fallthrough }));
-        Assert.That(condition.outgoingEdges, Has.All.Matches<Optimizer.ControlFlowEdge>(edge => edge.assignments.Count == 0));
+        Assert.That(condition.outgoingEdges, Has.All.Matches<ControlFlowEdge>(edge => edge.assignments.Count == 0));
     }
 
     [Test]
     public void NopEliminationRemovesEveryNop()
     {
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Nop),
             new CodeInstruction(OpCodes.Nop),
@@ -61,7 +63,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void JumpThreadingSkipsEmptyFallthroughBlock()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label afterEmptyBlock = generator.DefineLabel();
             Label exit = generator.DefineLabel();
@@ -76,10 +78,10 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.BasicBlock condition = optimizer.BasicBlocks[0];
-        Optimizer.BasicBlock empty = optimizer.BasicBlocks[1];
-        Optimizer.BasicBlock afterEmpty = optimizer.BasicBlocks[2];
-        Optimizer.ControlFlowEdge fallthroughEdge = condition.fallthroughEdge!;
+        BasicBlock condition = optimizer.BasicBlocks[0];
+        BasicBlock empty = optimizer.BasicBlocks[1];
+        BasicBlock afterEmpty = optimizer.BasicBlocks[2];
+        ControlFlowEdge fallthroughEdge = condition.fallthroughEdge!;
         optimizer.NopElimination();
 
         optimizer.JumpThreading();
@@ -94,7 +96,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void SimpleDeadCodeEliminationRemovesUnreachableBlock()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label target = generator.DefineLabel();
             return
@@ -106,7 +108,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.BasicBlock unreachable = optimizer.BasicBlocks[1];
+        BasicBlock unreachable = optimizer.BasicBlocks[1];
 
         optimizer.SimpleDeadCodeElimination();
 
@@ -117,7 +119,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void DominatorTreeComputesImmediateDominatorsAcrossDiamond()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label alternative = generator.DefineLabel();
             Label join = generator.DefineLabel();
@@ -134,17 +136,17 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.BasicBlock entry = optimizer.BasicBlocks.Single(block =>
+        BasicBlock entry = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => op.Opcode == OpCodes.Brfalse));
-        Optimizer.BasicBlock first = optimizer.BasicBlocks.Single(block =>
+        BasicBlock first = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => Equals(op.Operand, "first")));
-        Optimizer.BasicBlock second = optimizer.BasicBlocks.Single(block =>
+        BasicBlock second = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => Equals(op.Operand, "second")));
-        Optimizer.BasicBlock join = optimizer.BasicBlocks.Single(block =>
+        BasicBlock join = optimizer.BasicBlocks.Single(block =>
             block.ops.Count == 1 && block.ops[0].Opcode == OpCodes.Ret);
 
-        Optimizer.DominatorTree dominators =
-            Optimizer.DominatorTree.Compute(optimizer.BasicBlocks, [entry]);
+        DominatorTree dominators =
+            DominatorTree.Compute(optimizer.BasicBlocks, [entry]);
 
         Assert.That(dominators.Roots, Is.EqualTo(new[] { entry }));
         Assert.That(dominators.GetImmediateDominator(entry), Is.Null);
@@ -160,7 +162,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void DominatorTreeHandlesLoopBackedge()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label header = generator.DefineLabel();
             Label exit = generator.DefineLabel();
@@ -177,17 +179,17 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.BasicBlock entry = optimizer.BasicBlocks.Single(block =>
+        BasicBlock entry = optimizer.BasicBlocks.Single(block =>
             block.ops.Count == 1 && block.ops[0].Opcode == OpCodes.Nop);
-        Optimizer.BasicBlock header = optimizer.BasicBlocks.Single(block =>
+        BasicBlock header = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => op.Opcode == OpCodes.Brfalse));
-        Optimizer.BasicBlock body = optimizer.BasicBlocks.Single(block =>
+        BasicBlock body = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => Equals(op.Operand, "body")));
-        Optimizer.BasicBlock exit = optimizer.BasicBlocks.Single(block =>
+        BasicBlock exit = optimizer.BasicBlocks.Single(block =>
             block.ops.Count == 1 && block.ops[0].Opcode == OpCodes.Ret);
 
-        Optimizer.DominatorTree dominators =
-            Optimizer.DominatorTree.Compute(optimizer.BasicBlocks, [entry]);
+        DominatorTree dominators =
+            DominatorTree.Compute(optimizer.BasicBlocks, [entry]);
 
         Assert.That(dominators.GetImmediateDominator(header), Is.SameAs(entry));
         Assert.That(dominators.GetImmediateDominator(body), Is.SameAs(header));
@@ -199,20 +201,20 @@ public sealed class OptimizerPassTests
     [Test]
     public void DominatorTreeUsesArtificialRootForExceptionEntryAndSharedExit()
     {
-        Optimizer optimizer = CreateTwoBlockTryOptimizer();
+        Optimizer.Optimizer optimizer = CreateTwoBlockTryOptimizer();
         optimizer.MakeBasicBlocks();
-        Optimizer.Region root = optimizer.Regions.Single(region => region.parent == null);
-        Optimizer.Region protectedRegion = optimizer.ExceptionEntryGroups.Single().ProtectedRegion;
-        Optimizer.Region catchRegion = optimizer.ExceptionEntryGroups.Single().associatedRegions.Single();
-        Optimizer.BasicBlock methodEntry = RecursiveEntry(root);
-        Optimizer.BasicBlock trySecondBlock = optimizer.BasicBlocks.Single(block =>
+        Region root = optimizer.Regions.Single(region => region.parent == null);
+        Region protectedRegion = optimizer.ExceptionEntryGroups.Single().ProtectedRegion;
+        Region catchRegion = optimizer.ExceptionEntryGroups.Single().associatedRegions.Single();
+        BasicBlock methodEntry = RecursiveEntry(root);
+        BasicBlock trySecondBlock = optimizer.BasicBlocks.Single(block =>
             block.parent == protectedRegion && block != methodEntry);
-        Optimizer.BasicBlock catchEntry = RecursiveEntry(catchRegion);
-        Optimizer.BasicBlock exit = optimizer.BasicBlocks.Single(block =>
+        BasicBlock catchEntry = RecursiveEntry(catchRegion);
+        BasicBlock exit = optimizer.BasicBlocks.Single(block =>
             block.ops.Count == 1 && block.ops[0].Opcode == OpCodes.Ret);
 
-        Optimizer.DominatorTree dominators =
-            Optimizer.DominatorTree.Compute(optimizer.BasicBlocks, [methodEntry, catchEntry]);
+        DominatorTree dominators =
+            DominatorTree.Compute(optimizer.BasicBlocks, [methodEntry, catchEntry]);
 
         Assert.That(dominators.GetImmediateDominator(trySecondBlock), Is.SameAs(methodEntry));
         Assert.That(dominators.GetImmediateDominator(catchEntry), Is.Null);
@@ -221,19 +223,19 @@ public sealed class OptimizerPassTests
         Assert.That(dominators.Dominates(methodEntry, catchEntry), Is.False);
         Assert.That(dominators.Dominates(methodEntry, exit), Is.False);
 
-        static Optimizer.BasicBlock RecursiveEntry(Optimizer.Region region)
+        static BasicBlock RecursiveEntry(Region region)
         {
-            Optimizer.RegionNode entry = region;
-            while (entry is Optimizer.Region entryRegion)
+            RegionNode entry = region;
+            while (entry is Region entryRegion)
                 entry = entryRegion.entry!;
-            return (Optimizer.BasicBlock)entry;
+            return (BasicBlock)entry;
         }
     }
 
     [Test]
     public void DominatorTreeCacheIsReusedAndInvalidatedByEdgeMutation()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label target = generator.DefineLabel();
             return
@@ -244,14 +246,14 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        MethodInfo compute = typeof(Optimizer).GetMethod(
+        MethodInfo compute = typeof(Optimizer.Optimizer).GetMethod(
             "ComputeDominatorTreeIfNeeded",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
 
-        var first = (Optimizer.DominatorTree)compute.Invoke(optimizer, null)!;
-        var second = (Optimizer.DominatorTree)compute.Invoke(optimizer, null)!;
+        var first = (DominatorTree)compute.Invoke(optimizer, null)!;
+        var second = (DominatorTree)compute.Invoke(optimizer, null)!;
         optimizer.BranchElimination();
-        var afterMutation = (Optimizer.DominatorTree)compute.Invoke(optimizer, null)!;
+        var afterMutation = (DominatorTree)compute.Invoke(optimizer, null)!;
 
         Assert.That(second, Is.SameAs(first));
         Assert.That(afterMutation, Is.Not.SameAs(first));
@@ -260,7 +262,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void BranchEliminationReplacesRedundantConditionWithPop()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label target = generator.DefineLabel();
             return
@@ -271,8 +273,8 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.BasicBlock condition = optimizer.BasicBlocks[0];
-        Optimizer.BasicBlock target = optimizer.BasicBlocks[1];
+        BasicBlock condition = optimizer.BasicBlocks[0];
+        BasicBlock target = optimizer.BasicBlocks[1];
 
         optimizer.BranchElimination();
 
@@ -285,7 +287,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void BranchEliminationPreservesVariableInputsInPopOrder()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label target = generator.DefineLabel();
             return
@@ -297,20 +299,20 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
-        Optimizer.BasicBlock condition = optimizer.BasicBlocks[0];
-        Optimizer.Variable first = condition.ops[0].outputs.Single();
-        Optimizer.Variable second = condition.ops[1].outputs.Single();
+        new StackToVariableConversion(optimizer).Run();
+        BasicBlock condition = optimizer.BasicBlocks[0];
+        Variable first = condition.ops[0].outputs.Single();
+        Variable second = condition.ops[1].outputs.Single();
 
         optimizer.BranchElimination();
 
-        Optimizer.Op[] pops = [.. condition.ops.Where(op => op.Opcode == OpCodes.Pop)];
+        Op[] pops = [.. condition.ops.Where(op => op.Opcode == OpCodes.Pop)];
         Assert.That(pops, Has.Length.EqualTo(2));
         Assert.That(pops.Select(pop => pop.stackInputCount), Is.EqualTo(new[] { 1, 1 }));
         Assert.That(pops[0].inputs, Is.EqualTo(new[] { second }));
         Assert.That(pops[1].inputs, Is.EqualTo(new[] { first }));
 
-        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+        new VariableToStackConversion(optimizer).Run();
         Assert.That(OpCodesIn(condition), Is.EqualTo(new[]
         {
             OpCodes.Ldstr,
@@ -323,7 +325,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void MergeBlocksAppendsSinglePredecessorSuccessor()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label secondBlock = generator.DefineLabel();
             return
@@ -334,8 +336,8 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.BasicBlock first = optimizer.BasicBlocks[0];
-        Optimizer.BasicBlock merged = optimizer.BasicBlocks[1];
+        BasicBlock first = optimizer.BasicBlocks[0];
+        BasicBlock merged = optimizer.BasicBlocks[1];
 
         optimizer.MergeBlocks();
 
@@ -348,7 +350,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void MergeBlocksTransfersSuccessorFallthroughEdge()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label condition = generator.DefineLabel();
             Label target = generator.DefineLabel();
@@ -362,9 +364,9 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.BasicBlock first = optimizer.BasicBlocks[0];
-        Optimizer.BasicBlock merged = optimizer.BasicBlocks[1];
-        Optimizer.ControlFlowEdge fallthroughEdge = merged.fallthroughEdge!;
+        BasicBlock first = optimizer.BasicBlocks[0];
+        BasicBlock merged = optimizer.BasicBlocks[1];
+        ControlFlowEdge fallthroughEdge = merged.fallthroughEdge!;
 
         optimizer.MergeBlocks();
 
@@ -378,7 +380,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void AggressiveDeadCodeEliminationAndReorderFollowsControlFlowOrder()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label target = generator.DefineLabel();
             return
@@ -391,10 +393,10 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.Region root = optimizer.Regions[0];
-        Optimizer.BasicBlock entry = optimizer.BasicBlocks[0];
-        Optimizer.BasicBlock unreachable = optimizer.BasicBlocks[1];
-        Optimizer.BasicBlock target = optimizer.BasicBlocks[2];
+        Region root = optimizer.Regions[0];
+        BasicBlock entry = optimizer.BasicBlocks[0];
+        BasicBlock unreachable = optimizer.BasicBlocks[1];
+        BasicBlock target = optimizer.BasicBlocks[2];
 
         optimizer.AggressiveDeadCodeEliminationAndReorder();
 
@@ -406,7 +408,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void ConvertStackToVariablesPropagatesLocalTypeThroughJoin()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             LocalBuilder local = generator.DeclareLocal(typeof(string));
             Label alternative = generator.DefineLabel();
@@ -426,19 +428,19 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.BasicBlock join = optimizer.BasicBlocks.Single(block =>
+        BasicBlock join = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => op.Opcode == OpCodes.Ldloc));
 
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.Op load = join.ops.Single(op => op.Opcode == OpCodes.Ldloc);
+        Op load = join.ops.Single(op => op.Opcode == OpCodes.Ldloc);
         Assert.That(load.outputs.Single().type, Is.EqualTo(typeof(string)));
     }
 
     [Test]
     public void ConvertStackToVariablesSeedsCatchEntryWithImplicitExceptionValue()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label exit = generator.DefineLabel();
             var tryLeave = new CodeInstruction(OpCodes.Leave, exit);
@@ -457,15 +459,15 @@ public sealed class OptimizerPassTests
         });
         optimizer.MakeBasicBlocks();
         optimizer.SimpleDeadCodeElimination();
-        Optimizer.Region catchRegion = optimizer.Regions.Single(region =>
+        Region catchRegion = optimizer.Regions.Single(region =>
             region.harmonyBlock?.blockType == ExceptionBlockType.BeginCatchBlock);
-        Optimizer.BasicBlock catchEntry = (Optimizer.BasicBlock)catchRegion.entry!;
-        Optimizer.ExceptionEntryGroup entryGroup = catchRegion.exceptionEntryGroup!;
+        BasicBlock catchEntry = (BasicBlock)catchRegion.entry!;
+        ExceptionEntryGroup entryGroup = catchRegion.exceptionEntryGroup!;
         Assert.That(entryGroup.ProtectedRegion.harmonyBlock?.blockType,
             Is.EqualTo(ExceptionBlockType.BeginExceptionBlock));
         Assert.That(entryGroup.associatedRegions, Is.EqualTo(new[] { catchRegion }));
 
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         Assert.That(catchEntry.entryStackVariables, Has.Count.EqualTo(1));
         Assert.That(catchEntry.entryStackVariables[0].type, Is.EqualTo(typeof(Exception)));
@@ -475,7 +477,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void MakeBasicBlocksGroupsProtectedRegionWithOrderedHandlers()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label exit = generator.DefineLabel();
             var tryLeave = new CodeInstruction(OpCodes.Leave, exit);
@@ -500,7 +502,7 @@ public sealed class OptimizerPassTests
 
         optimizer.MakeBasicBlocks();
 
-        Optimizer.ExceptionEntryGroup entryGroup = optimizer.ExceptionEntryGroups.Single();
+        ExceptionEntryGroup entryGroup = optimizer.ExceptionEntryGroups.Single();
         Assert.That(entryGroup.ProtectedRegion.harmonyBlock?.blockType,
             Is.EqualTo(ExceptionBlockType.BeginExceptionBlock));
         Assert.That(entryGroup.associatedRegions.Select(region => region.harmonyBlock?.catchType),
@@ -527,16 +529,16 @@ public sealed class OptimizerPassTests
     [Test]
     public void AggressiveReorderPlacesEachRegionEntryFirst()
     {
-        Optimizer optimizer = CreateTwoBlockTryOptimizer();
+        Optimizer.Optimizer optimizer = CreateTwoBlockTryOptimizer();
         optimizer.MakeBasicBlocks();
         optimizer.AggressiveDeadCodeEliminationAndReorder();
 
         foreach (var region in optimizer.Regions)
         {
-            Optimizer.RegionNode entry = region.entry!;
-            while (entry is Optimizer.Region nestedRegion)
+            RegionNode entry = region.entry!;
+            while (entry is Region nestedRegion)
                 entry = nestedRegion.entry!;
-            int entryIndex = optimizer.BasicBlocks.ToList().IndexOf((Optimizer.BasicBlock)entry);
+            int entryIndex = optimizer.BasicBlocks.ToList().IndexOf((BasicBlock)entry);
             int firstRegionBlockIndex = optimizer.BasicBlocks
                 .Select((block, index) => (block, index))
                 .Where(item => item.block.HasAncestor(region))
@@ -551,7 +553,7 @@ public sealed class OptimizerPassTests
         // A backward-only edge carrying a stack value is an allowed intermediate optimizer shape,
         // although CIL emission requires another forward edge. The final aggressive reorder
         // restores that CIL invariant; variable conversion must not depend on it already holding.
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label consumer = generator.DefineLabel();
             Label producer = generator.DefineLabel();
@@ -566,14 +568,14 @@ public sealed class OptimizerPassTests
         });
         optimizer.MakeBasicBlocks();
         optimizer.SimpleDeadCodeElimination();
-        Optimizer.BasicBlock consumer = optimizer.BasicBlocks.Single(block =>
+        BasicBlock consumer = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => op.Opcode == OpCodes.Pop));
-        Optimizer.BasicBlock producer = optimizer.BasicBlocks.Single(block =>
+        BasicBlock producer = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => op.Opcode == OpCodes.Ldstr));
         Assert.That(optimizer.BasicBlocks.ToList().IndexOf(consumer),
             Is.LessThan(optimizer.BasicBlocks.ToList().IndexOf(producer)));
 
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         Assert.That(consumer.entryStackVariables, Has.Count.EqualTo(1));
         Assert.That(consumer.entryStackVariables[0].type, Is.EqualTo(typeof(string)));
@@ -583,7 +585,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void ConvertStackToVariablesUsesMutableVariablesForCrossBlockStack()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label alternative = generator.DefineLabel();
             Label join = generator.DefineLabel();
@@ -600,25 +602,25 @@ public sealed class OptimizerPassTests
         });
         optimizer.MakeBasicBlocks();
         int operationCount = optimizer.BasicBlocks.Sum(block => block.ops.Count);
-        Optimizer.BasicBlock entry = optimizer.BasicBlocks[0];
-        Optimizer.BasicBlock join = optimizer.BasicBlocks[3];
+        BasicBlock entry = optimizer.BasicBlocks[0];
+        BasicBlock join = optimizer.BasicBlocks[3];
         Assert.That(join.incomingEdges, Has.Count.EqualTo(2));
         Assert.That(join.incomingEdges.SelectMany(edge => edge.assignments), Is.Empty);
 
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Assert.That(optimizer.Form, Is.EqualTo(Optimizer.IrForm.Variables));
+        Assert.That(optimizer.Form, Is.EqualTo(Optimizer.Optimizer.IrForm.Variables));
         Assert.That(entry.ops[2].inputs, Is.EqualTo(new[] { entry.ops[1].outputs.Single() }));
         Assert.That(optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges)
             .SelectMany(edge => edge.assignments), Is.Empty);
         Assert.That(join.entryStackVariables, Has.Count.EqualTo(1));
         Assert.That(join.entryStackVariables[0], Is.SameAs(entry.ops[0].outputs.Single()));
-        Assert.That(join.entryStackVariables[0].kind, Is.EqualTo(Optimizer.VariableKind.StackSlot));
+        Assert.That(join.entryStackVariables[0].kind, Is.EqualTo(VariableKind.StackSlot));
         Assert.That(join.entryStackVariables[0].type, Is.EqualTo(typeof(string)));
         Assert.That(join.incomingEdges, Has.Count.EqualTo(2));
         Assert.That(optimizer.BasicBlocks.Sum(block => block.ops.Count), Is.EqualTo(operationCount));
 
-        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+        new VariableToStackConversion(optimizer).Run();
         optimizer.InsertBranches();
         optimizer.Emit();
         Assert.That(optimizer.outputInstructions.instructions, Has.None.Matches<CodeInstruction>(instruction =>
@@ -630,7 +632,7 @@ public sealed class OptimizerPassTests
     {
         ConstructorInfo firstConstructor = typeof(OptimizerDataReader).GetConstructor([typeof(int)])!;
         ConstructorInfo secondConstructor = typeof(OptimizerAlternateDataReader).GetConstructor([typeof(int)])!;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label alternative = generator.DefineLabel();
             Label join = generator.DefineLabel();
@@ -649,9 +651,9 @@ public sealed class OptimizerPassTests
         });
         optimizer.MakeBasicBlocks();
 
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.BasicBlock join = optimizer.BasicBlocks.Single(block =>
+        BasicBlock join = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => op.Opcode == OpCodes.Pop));
         Assert.That(join.entryStackVariables.Single().type, Is.EqualTo(typeof(IOptimizerDataReader)));
         Assert.That(join.incomingEdges.SelectMany(edge => edge.assignments), Is.Empty);
@@ -661,7 +663,7 @@ public sealed class OptimizerPassTests
     public void ConvertStackToVariablesUsesLocalBuilderIdentityAndDeclaredType()
     {
         LocalBuilder? declaredLocal = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             declaredLocal = generator.DeclareLocal(typeof(string));
             return
@@ -674,12 +676,12 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.Variable local = optimizer.LocalVariables[declaredLocal!.LocalIndex];
-        Optimizer.Op store = optimizer.BasicBlocks[0].ops[1];
-        Optimizer.Op load = optimizer.BasicBlocks[0].ops[2];
-        Assert.That(local.kind, Is.EqualTo(Optimizer.VariableKind.Local));
+        Variable local = optimizer.LocalVariables[declaredLocal!.LocalIndex];
+        Op store = optimizer.BasicBlocks[0].ops[1];
+        Op load = optimizer.BasicBlocks[0].ops[2];
+        Assert.That(local.kind, Is.EqualTo(VariableKind.Local));
         Assert.That(local.type, Is.EqualTo(typeof(string)));
         Assert.That(local.localBuilder, Is.SameAs(declaredLocal));
         Assert.That(store.outputs, Is.EqualTo(new[] { local }));
@@ -689,7 +691,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void ConvertStackToVariablesDoesNotGuessUnknownNumericLocalType()
     {
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Ldc_I4_1),
             new CodeInstruction(OpCodes.Stloc_S, (byte)4),
@@ -698,9 +700,9 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.Variable local = optimizer.LocalVariables[4];
+        Variable local = optimizer.LocalVariables[4];
         Assert.That(local.type, Is.Null);
         Assert.That(local.localBuilder, Is.Null);
         Assert.That(optimizer.BasicBlocks[0].ops[1].outputs, Is.EqualTo(new[] { local }));
@@ -710,7 +712,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void ConvertStackToVariablesPreservesUnknownTypeThroughArithmetic()
     {
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Ldloc_S, (byte)4),
             new CodeInstruction(OpCodes.Ldc_I4_1),
@@ -720,9 +722,9 @@ public sealed class OptimizerPassTests
         ]);
         optimizer.MakeBasicBlocks();
 
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks[0];
+        BasicBlock block = optimizer.BasicBlocks[0];
         Assert.That(block.ops[2].outputs.Single().type, Is.SameAs(block.ops[0].outputs.Single().type));
     }
 
@@ -730,7 +732,7 @@ public sealed class OptimizerPassTests
     public void ConvertStackToVariablesInfersUnsignedOverflowPointerArithmeticTypes()
     {
         LocalBuilder? local = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             local = generator.DeclareLocal(typeof(int));
             return
@@ -756,9 +758,9 @@ public sealed class OptimizerPassTests
         });
         optimizer.MakeBasicBlocks();
 
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks[0];
+        BasicBlock block = optimizer.BasicBlocks[0];
         Type pointerType = block.ops[0].outputs.Single().type!;
         Assert.That(pointerType, Is.EqualTo(typeof(int).MakeByRefType()));
         Assert.That(block.ops[2].outputs.Single().type, Is.SameAs(pointerType));
@@ -770,7 +772,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void ConvertStackToVariablesPreservesPointerCategoryForLocalWithoutMetadata()
     {
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Ldloca_S, (byte)4),
             new CodeInstruction(OpCodes.Ldc_I4_1),
@@ -784,10 +786,10 @@ public sealed class OptimizerPassTests
         ]);
         optimizer.MakeBasicBlocks();
 
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks[0];
-        Type anyType = typeof(Optimizer).GetNestedType("AnyType", BindingFlags.NonPublic)!;
+        BasicBlock block = optimizer.BasicBlocks[0];
+        Type anyType = typeof(Optimizer.Optimizer).GetNestedType("AnyType", BindingFlags.NonPublic)!;
         Type pointerType = block.ops[0].outputs.Single().type!;
         Assert.That(pointerType.IsByRef, Is.True);
         Assert.That(pointerType.GetElementType(), Is.SameAs(anyType));
@@ -799,7 +801,7 @@ public sealed class OptimizerPassTests
     public void MakeBasicBlocksBundlesPrefixesWithTheirOperation()
     {
         FieldInfo field = typeof(OptimizerPatches).GetField(nameof(OptimizerPatches.PatchCalls))!;
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Volatile),
             new CodeInstruction(OpCodes.Ldsfld, field),
@@ -808,12 +810,12 @@ public sealed class OptimizerPassTests
         ]);
         optimizer.MakeBasicBlocks();
 
-        Optimizer.Op fieldLoad = optimizer.BasicBlocks[0].ops[0];
+        Op fieldLoad = optimizer.BasicBlocks[0].ops[0];
         Assert.That(fieldLoad.Opcode, Is.EqualTo(OpCodes.Ldsfld));
         Assert.That(fieldLoad.Prefixes, Is.EqualTo(new[] { OpCodes.Volatile }));
 
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
-        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+        new StackToVariableConversion(optimizer).Run();
+        new VariableToStackConversion(optimizer).Run();
         optimizer.Emit();
         Assert.That(optimizer.outputInstructions.instructions.Select(instruction => instruction.opcode), Is.EqualTo(new[]
         {
@@ -828,16 +830,16 @@ public sealed class OptimizerPassTests
     public void ConvertStackToVariablesMakesReturnValueAnExplicitInput()
     {
         MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntResult))!;
-        Optimizer optimizer = CreateOptimizer(targetMethod, _ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, _ =>
         [
             new CodeInstruction(OpCodes.Ldc_I4_1),
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.Op value = optimizer.BasicBlocks[0].ops[0];
-        Optimizer.Op returnOperation = optimizer.BasicBlocks[0].ops[1];
+        Op value = optimizer.BasicBlocks[0].ops[0];
+        Op returnOperation = optimizer.BasicBlocks[0].ops[1];
         Assert.That(returnOperation.inputs, Is.EqualTo(new[] { value.outputs.Single() }));
         Assert.That(optimizer.BasicBlocks[0].outgoingEdges, Is.Empty);
     }
@@ -846,7 +848,7 @@ public sealed class OptimizerPassTests
     public void ConvertStackToVariablesTracksMutableArgumentIdentity()
     {
         MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
-        Optimizer optimizer = CreateOptimizer(targetMethod, _ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, _ =>
         [
             new CodeInstruction(OpCodes.Ldc_I4_1),
             new CodeInstruction(OpCodes.Starg_S, (byte)0),
@@ -855,9 +857,9 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.Variable argument = optimizer.ArgumentVariables[0];
+        Variable argument = optimizer.ArgumentVariables[0];
         Assert.That(argument.type, Is.EqualTo(typeof(int)));
         Assert.That(optimizer.BasicBlocks[0].ops[1].outputs, Is.EqualTo(new[] { argument }));
         Assert.That(optimizer.BasicBlocks[0].ops[2].inputs, Is.EqualTo(new[] { argument }));
@@ -868,7 +870,7 @@ public sealed class OptimizerPassTests
     {
         LocalBuilder? target = null;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             target = generator.DeclareLocal(typeof(int));
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
@@ -883,11 +885,11 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        BasicBlock block = optimizer.BasicBlocks.Single();
         Assert.That(OpCodesIn(block), Is.EqualTo(new[] { OpCodes.Ldloc, OpCodes.Pop, OpCodes.Ret }));
         Assert.That(block.ops[0].inputs, Is.EqualTo(new[] { optimizer.LocalVariables[target!.LocalIndex] }));
         Assert.That(optimizer.LocalVariables[target.LocalIndex].addressTaken, Is.False);
@@ -901,7 +903,7 @@ public sealed class OptimizerPassTests
         MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
         LocalBuilder? copiedArgument = null;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
         {
             copiedArgument = generator.DeclareLocal(typeof(int));
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
@@ -920,11 +922,11 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        BasicBlock block = optimizer.BasicBlocks.Single();
         Assert.That(OpCodesIn(block), Is.EqualTo(new[]
         {
             OpCodes.Ldarg,
@@ -948,7 +950,7 @@ public sealed class OptimizerPassTests
     {
         LocalBuilder? target = null;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             target = generator.DeclareLocal(typeof(int));
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
@@ -963,11 +965,11 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        BasicBlock block = optimizer.BasicBlocks.Single();
         Assert.That(OpCodesIn(block), Is.EqualTo(new[] { OpCodes.Ldc_I4, OpCodes.Stloc, OpCodes.Ret }));
         Assert.That(block.ops[1].outputs, Is.EqualTo(new[] { optimizer.LocalVariables[target!.LocalIndex] }));
         Assert.That(optimizer.LocalVariables[target.LocalIndex].addressTaken, Is.False);
@@ -978,7 +980,7 @@ public sealed class OptimizerPassTests
     {
         MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
         {
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
             return
@@ -995,11 +997,11 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        BasicBlock block = optimizer.BasicBlocks.Single();
         Assert.That(OpCodesIn(block), Is.EqualTo(new[]
         {
             OpCodes.Ldarg,
@@ -1018,7 +1020,7 @@ public sealed class OptimizerPassTests
     {
         MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
         {
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
             return
@@ -1035,7 +1037,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
@@ -1054,7 +1056,7 @@ public sealed class OptimizerPassTests
     {
         LocalBuilder? target = null;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             target = generator.DeclareLocal(typeof(uint));
             reference = generator.DeclareLocal(typeof(uint).MakeByRefType());
@@ -1069,11 +1071,11 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        BasicBlock block = optimizer.BasicBlocks.Single();
         Assert.That(OpCodesIn(block), Is.EqualTo(new[] { OpCodes.Ldloc, OpCodes.Pop, OpCodes.Ret }));
         Assert.That(block.ops[0].inputs,
             Is.EqualTo(new[] { optimizer.LocalVariables[target!.LocalIndex] }));
@@ -1084,7 +1086,7 @@ public sealed class OptimizerPassTests
     {
         LocalBuilder? target = null;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             target = generator.DeclareLocal(typeof(byte));
             reference = generator.DeclareLocal(typeof(byte).MakeByRefType());
@@ -1099,7 +1101,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
@@ -1114,7 +1116,7 @@ public sealed class OptimizerPassTests
         LocalBuilder? reference = null;
         MethodInfo consumeReference = typeof(OptimizerPassTests).GetMethod(
             nameof(ConsumeReference), BindingFlags.Static | BindingFlags.NonPublic)!;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             target = generator.DeclareLocal(typeof(int));
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
@@ -1128,11 +1130,11 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        BasicBlock block = optimizer.BasicBlocks.Single();
         Assert.That(OpCodesIn(block), Is.EqualTo(new[] { OpCodes.Ldloca, OpCodes.Call, OpCodes.Ret }));
         Assert.That(block.ops[0].inputs, Is.EqualTo(new[] { optimizer.LocalVariables[target!.LocalIndex] }));
         Assert.That(optimizer.LocalVariables[target.LocalIndex].addressTaken, Is.True);
@@ -1144,7 +1146,7 @@ public sealed class OptimizerPassTests
     public void ConservativeConstantPropagationRematerializesPrimitiveConstant()
     {
         LocalBuilder? local = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             local = generator.DeclareLocal(typeof(int));
             return
@@ -1157,7 +1159,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
@@ -1169,7 +1171,7 @@ public sealed class OptimizerPassTests
     public void ConservativeConstantPropagationRematerializesNullThroughManagedReferenceLocal()
     {
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
             return
@@ -1182,7 +1184,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
@@ -1195,7 +1197,7 @@ public sealed class OptimizerPassTests
     {
         LocalBuilder? target = null;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             target = generator.DeclareLocal(typeof(int));
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
@@ -1212,7 +1214,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
@@ -1226,7 +1228,7 @@ public sealed class OptimizerPassTests
     {
         LocalBuilder? target = null;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             target = generator.DeclareLocal(typeof(int));
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
@@ -1252,7 +1254,7 @@ public sealed class OptimizerPassTests
         });
         optimizer.MakeBasicBlocks();
         optimizer.SimpleDeadCodeElimination();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
@@ -1270,7 +1272,7 @@ public sealed class OptimizerPassTests
     {
         LocalBuilder? target = null;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             target = generator.DeclareLocal(typeof(int));
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
@@ -1297,7 +1299,7 @@ public sealed class OptimizerPassTests
         });
         optimizer.MakeBasicBlocks();
         optimizer.SimpleDeadCodeElimination();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
@@ -1312,7 +1314,7 @@ public sealed class OptimizerPassTests
     {
         LocalBuilder? target = null;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             target = generator.DeclareLocal(typeof(int));
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
@@ -1330,7 +1332,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
@@ -1344,7 +1346,7 @@ public sealed class OptimizerPassTests
     public void ConservativeConstantPropagationDoesNotUseDefinitionAfterEarlierRead()
     {
         LocalBuilder? local = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             local = generator.DeclareLocal(typeof(int));
             return
@@ -1357,7 +1359,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
@@ -1375,7 +1377,7 @@ public sealed class OptimizerPassTests
     public void ConservativeConstantPropagationDoesNotUseMultiplyAssignedLocal()
     {
         LocalBuilder? local = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             local = generator.DeclareLocal(typeof(int));
             return
@@ -1390,7 +1392,7 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
@@ -1411,7 +1413,7 @@ public sealed class OptimizerPassTests
     {
         LocalBuilder? target = null;
         LocalBuilder? reference = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             target = generator.DeclareLocal(typeof(int));
             reference = generator.DeclareLocal(typeof(int).MakeByRefType());
@@ -1427,11 +1429,11 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         optimizer.ConservativeConstantPropagation();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks.Single();
+        BasicBlock block = optimizer.BasicBlocks.Single();
         Assert.That(OpCodesIn(block), Is.EqualTo(new[] { OpCodes.Ldloca, OpCodes.Ldobj, OpCodes.Pop, OpCodes.Ret }));
         Assert.That(block.ops[1].Prefixes, Is.EqualTo(new[] { OpCodes.Volatile }));
         Assert.That(optimizer.LocalVariables[target!.LocalIndex].addressTaken, Is.True);
@@ -1440,7 +1442,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void ConservativeConstantPropagationRejectsStackForm()
     {
-        Optimizer optimizer = CreateOptimizer(_ => [new CodeInstruction(OpCodes.Ret)]);
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ => [new CodeInstruction(OpCodes.Ret)]);
         optimizer.MakeBasicBlocks();
 
         Assert.That(
@@ -1452,7 +1454,7 @@ public sealed class OptimizerPassTests
     public void ConservativeConstantPropagationRejectsSsaEdgeAssignments()
     {
         MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
-        Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
         {
             Label target = generator.DefineLabel();
             return
@@ -1462,10 +1464,10 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
-        Optimizer.ControlFlowEdge edge = optimizer.BasicBlocks[0].outgoingEdges.Single();
-        Optimizer.Variable argument = optimizer.ArgumentVariables[0];
-        edge.assignments.Add(new Optimizer.VariableAssignment(argument, argument));
+        new StackToVariableConversion(optimizer).Run();
+        ControlFlowEdge edge = optimizer.BasicBlocks[0].outgoingEdges.Single();
+        Variable argument = optimizer.ArgumentVariables[0];
+        edge.assignments.Add(new VariableAssignment(argument, argument));
 
         Assert.That(
             () => optimizer.ConservativeConstantPropagation(),
@@ -1475,7 +1477,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void ConvertStackToVariablesUsesSymbolicStackAliasingForDup()
     {
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Ldstr, "value"),
             new CodeInstruction(OpCodes.Dup),
@@ -1484,14 +1486,14 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.Op load = optimizer.BasicBlocks[0].ops[0];
-        Optimizer.Op duplicate = optimizer.BasicBlocks[0].ops[1];
+        Op load = optimizer.BasicBlocks[0].ops[0];
+        Op duplicate = optimizer.BasicBlocks[0].ops[1];
         Assert.That(duplicate.inputs, Is.EqualTo(new[] { load.outputs.Single() }));
         Assert.That(duplicate.outputs, Is.EqualTo(new[] { load.outputs.Single(), load.outputs.Single() }));
 
-        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+        new VariableToStackConversion(optimizer).Run();
         Assert.That(optimizer.BasicBlocks[0].ops.Select(op => op.Opcode), Is.EqualTo(new[]
         {
             OpCodes.Ldstr,
@@ -1507,7 +1509,7 @@ public sealed class OptimizerPassTests
     {
         LocalBuilder? firstLocal = null;
         LocalBuilder? secondLocal = null;
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             firstLocal = generator.DeclareLocal(typeof(string));
             secondLocal = generator.DeclareLocal(typeof(string));
@@ -1523,15 +1525,15 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.Op load = optimizer.BasicBlocks[0].ops[4];
+        Op load = optimizer.BasicBlocks[0].ops[4];
         load.inputs[load.stackInputCount] = optimizer.LocalVariables[firstLocal!.LocalIndex];
 
-        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+        new VariableToStackConversion(optimizer).Run();
 
-        Optimizer.Op loweredLoad = optimizer.BasicBlocks[0].ops[4];
-        Assert.That(optimizer.Form, Is.EqualTo(Optimizer.IrForm.Stack));
+        Op loweredLoad = optimizer.BasicBlocks[0].ops[4];
+        Assert.That(optimizer.Form, Is.EqualTo(Optimizer.Optimizer.IrForm.Stack));
         Assert.That(loweredLoad.Opcode, Is.EqualTo(OpCodes.Ldloc));
         Assert.That(loweredLoad.Index, Is.EqualTo(firstLocal.LocalIndex));
         Assert.That(loweredLoad.Index, Is.Not.EqualTo(secondLocal!.LocalIndex));
@@ -1541,7 +1543,7 @@ public sealed class OptimizerPassTests
     public void ConvertVariablesToStackSpillsOnlyWhenCanonicalInputsRequireReordering()
     {
         MethodInfo concat = typeof(string).GetMethod(nameof(string.Concat), [typeof(string), typeof(string)])!;
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Ldstr, "first"),
             new CodeInstruction(OpCodes.Ldstr, "second"),
@@ -1550,14 +1552,14 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.Op call = optimizer.BasicBlocks[0].ops[2];
+        Op call = optimizer.BasicBlocks[0].ops[2];
         (call.inputs[0], call.inputs[1]) = (call.inputs[1], call.inputs[0]);
 
-        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+        new VariableToStackConversion(optimizer).Run();
 
-        Optimizer.Op[] operations = [.. optimizer.BasicBlocks[0].ops];
+        Op[] operations = [.. optimizer.BasicBlocks[0].ops];
         Assert.That(operations.Select(op => op.Opcode), Is.EqualTo(new[]
         {
             OpCodes.Ldstr,
@@ -1577,7 +1579,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void ConvertVariablesToStackCanSpillOpcodeTypedIntegerTemporaries()
     {
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Ldc_I4_1),
             new CodeInstruction(OpCodes.Ldc_I4_2),
@@ -1586,14 +1588,14 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.Op subtract = optimizer.BasicBlocks[0].ops[2];
+        Op subtract = optimizer.BasicBlocks[0].ops[2];
         Assert.That(subtract.inputs.Select(variable => variable.type), Is.All.EqualTo(typeof(int)));
         Assert.That(subtract.outputs.Single().type, Is.EqualTo(typeof(int)));
         (subtract.inputs[0], subtract.inputs[1]) = (subtract.inputs[1], subtract.inputs[0]);
 
-        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+        new VariableToStackConversion(optimizer).Run();
 
         LocalBuilder[] spills =
         [
@@ -1608,7 +1610,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void ConvertStackToVariablesInfersIsinstResultTypeFromOperand()
     {
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Ldstr, "value"),
             new CodeInstruction(OpCodes.Isinst, typeof(string)),
@@ -1617,7 +1619,7 @@ public sealed class OptimizerPassTests
         ]);
         optimizer.MakeBasicBlocks();
 
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         Assert.That(optimizer.BasicBlocks[0].ops[1].outputs.Single().type, Is.EqualTo(typeof(string)));
     }
@@ -1625,7 +1627,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void ConvertStackToVariablesTracksLdnullAsTheTransientNullType()
     {
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Ldnull),
             new CodeInstruction(OpCodes.Pop),
@@ -1633,17 +1635,17 @@ public sealed class OptimizerPassTests
         ]);
         optimizer.MakeBasicBlocks();
 
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         Assert.That(optimizer.BasicBlocks[0].ops[0].outputs.Single().type,
-            Is.EqualTo(typeof(Optimizer.NullType)));
+            Is.EqualTo(typeof(Optimizer.Optimizer.NullType)));
     }
 
     [Test]
     public void ConvertVariablesToStackPreservesAValueUsedAfterItsStackCopyIsConsumed_WithoutDup()
     {
         MethodInfo concat = typeof(string).GetMethod(nameof(string.Concat), [typeof(string), typeof(string)])!;
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Ldstr, "unused"),
             new CodeInstruction(OpCodes.Ldstr, "reused"),
@@ -1654,12 +1656,12 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks[0];
+        BasicBlock block = optimizer.BasicBlocks[0];
         block.ops[5].inputs[0] = block.ops[1].outputs[0];
 
-        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+        new VariableToStackConversion(optimizer).Run();
 
         Assert.That(block.ops.Select(op => op.Opcode), Is.EqualTo(new[]
         {
@@ -1685,7 +1687,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void ConvertVariablesToStackPreservesAValueUsedAfterItsStackCopyIsConsumed_WithDup()
     {
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Ldstr, "unused"),
             new CodeInstruction(OpCodes.Ldstr, "reused"),
@@ -1694,12 +1696,12 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks[0];
+        BasicBlock block = optimizer.BasicBlocks[0];
         block.ops[3].inputs[0] = block.ops[1].outputs[0];
 
-        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+        new VariableToStackConversion(optimizer).Run();
 
         Assert.That(block.ops.Select(op => op.Opcode), Is.EqualTo(new[]
         {
@@ -1711,14 +1713,14 @@ public sealed class OptimizerPassTests
             OpCodes.Pop,
             OpCodes.Ret,
         }));
-        Assert.That(block.ops, Has.None.Matches<Optimizer.Op>(op =>
+        Assert.That(block.ops, Has.None.Matches<Op>(op =>
             op.Opcode == OpCodes.Ldloc || op.Opcode == OpCodes.Stloc));
     }
 
     [Test]
     public void ConvertVariablesToStackRematerializesNullInsteadOfSpillingIt()
     {
-        Optimizer optimizer = CreateOptimizer(_ =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
         [
             new CodeInstruction(OpCodes.Ldnull),
             new CodeInstruction(OpCodes.Ldstr, "discarded"),
@@ -1727,24 +1729,24 @@ public sealed class OptimizerPassTests
             new CodeInstruction(OpCodes.Ret),
         ]);
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.BasicBlock block = optimizer.BasicBlocks[0];
-        Optimizer.Variable nullValue = block.ops[0].outputs.Single();
+        BasicBlock block = optimizer.BasicBlocks[0];
+        Variable nullValue = block.ops[0].outputs.Single();
         block.ops[2].inputs[0] = nullValue;
         block.ops[3].inputs[0] = nullValue;
 
-        new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack();
+        new VariableToStackConversion(optimizer).Run();
 
         Assert.That(block.ops.Count(op => op.Opcode == OpCodes.Ldnull), Is.EqualTo(2));
-        Assert.That(block.ops, Has.None.Matches<Optimizer.Op>(op =>
+        Assert.That(block.ops, Has.None.Matches<Op>(op =>
             op.Opcode == OpCodes.Ldloc || op.Opcode == OpCodes.Stloc));
     }
 
     [Test]
     public void ConvertVariablesToStackRejectsSsaEdgeAssignments()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label target = generator.DefineLabel();
             return
@@ -1756,23 +1758,23 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
-        Optimizer.ControlFlowEdge edge = optimizer.BasicBlocks[0].outgoingEdges.Single();
-        Optimizer.Variable stackSlot = edge.Target.entryStackVariables.Single();
-        edge.assignments.Add(new Optimizer.VariableAssignment(stackSlot, stackSlot));
+        ControlFlowEdge edge = optimizer.BasicBlocks[0].outgoingEdges.Single();
+        Variable stackSlot = edge.Target.entryStackVariables.Single();
+        edge.assignments.Add(new VariableAssignment(stackSlot, stackSlot));
 
         Assert.That(
-            () => new Optimizer.VariableToStackConverter(optimizer).ConvertVariablesToStack(),
+            () => new VariableToStackConversion(optimizer).Run(),
             Throws.InvalidOperationException.With.Message.Contains("still has SSA assignments"));
     }
 
     [Test]
     public void EmitRejectsCanonicalVariableForm()
     {
-        Optimizer optimizer = CreateOptimizer(_ => [new CodeInstruction(OpCodes.Ret)]);
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ => [new CodeInstruction(OpCodes.Ret)]);
         optimizer.MakeBasicBlocks();
-        new Optimizer.StackToVariableConverter(optimizer).ConvertStackToVariables();
+        new StackToVariableConversion(optimizer).Run();
 
         Assert.That(
             () => optimizer.Emit(),
@@ -1782,7 +1784,7 @@ public sealed class OptimizerPassTests
     [Test]
     public void BranchInversionMakesSinglePredecessorTargetFallThrough()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label shared = generator.DefineLabel();
             Label unique = generator.DefineLabel();
@@ -1795,22 +1797,22 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.BasicBlock condition = optimizer.BasicBlocks[0];
-        Optimizer.BasicBlock shared = optimizer.BasicBlocks[1];
-        Optimizer.BasicBlock unique = optimizer.BasicBlocks[2];
+        BasicBlock condition = optimizer.BasicBlocks[0];
+        BasicBlock shared = optimizer.BasicBlocks[1];
+        BasicBlock unique = optimizer.BasicBlocks[2];
 
         optimizer.BranchInversion();
 
         Assert.That(condition.ops[^1].Opcode, Is.EqualTo(OpCodes.Brtrue_S));
-        Assert.That(condition.ops[^1].Operand, Is.TypeOf<Optimizer.ControlFlowEdge>());
-        Assert.That(((Optimizer.ControlFlowEdge)condition.ops[^1].Operand!).Target, Is.SameAs(shared));
+        Assert.That(condition.ops[^1].Operand, Is.TypeOf<ControlFlowEdge>());
+        Assert.That(((ControlFlowEdge)condition.ops[^1].Operand!).Target, Is.SameAs(shared));
         Assert.That(condition.Next, Is.SameAs(unique));
     }
 
     [Test]
     public void InsertBranchesRestoresNonAdjacentFallThroughBranch()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label target = generator.DefineLabel();
             return
@@ -1821,9 +1823,9 @@ public sealed class OptimizerPassTests
             ];
         });
         optimizer.MakeBasicBlocks();
-        Optimizer.BasicBlock entry = optimizer.BasicBlocks[0];
-        Optimizer.BasicBlock target = optimizer.BasicBlocks[2];
-        Optimizer.ControlFlowEdge fallthroughEdge = entry.fallthroughEdge!;
+        BasicBlock entry = optimizer.BasicBlocks[0];
+        BasicBlock target = optimizer.BasicBlocks[2];
+        ControlFlowEdge fallthroughEdge = entry.fallthroughEdge!;
 
         optimizer.InsertBranches();
 
@@ -1831,14 +1833,14 @@ public sealed class OptimizerPassTests
         Assert.That(entry.ops, Has.Count.EqualTo(1));
         Assert.That(entry.ops[0].Opcode, Is.EqualTo(OpCodes.Br_S));
         Assert.That(entry.ops[0].Operand, Is.SameAs(fallthroughEdge));
-        Assert.That(entry.ops[0].Operand, Is.TypeOf<Optimizer.ControlFlowEdge>());
-        Assert.That(((Optimizer.ControlFlowEdge)entry.ops[0].Operand!).Target, Is.SameAs(target));
+        Assert.That(entry.ops[0].Operand, Is.TypeOf<ControlFlowEdge>());
+        Assert.That(((ControlFlowEdge)entry.ops[0].Operand!).Target, Is.SameAs(target));
     }
 
     [Test]
     public void EmitConvertsBlockTargetsBackToLabels()
     {
-        Optimizer optimizer = CreateOptimizer(generator =>
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
             Label target = generator.DefineLabel();
             return
@@ -1850,7 +1852,7 @@ public sealed class OptimizerPassTests
         });
         optimizer.MakeBasicBlocks();
         optimizer.InsertBranches();
-        Optimizer.BasicBlock target = optimizer.BasicBlocks[2];
+        BasicBlock target = optimizer.BasicBlocks[2];
 
         optimizer.Emit();
 
@@ -1863,10 +1865,10 @@ public sealed class OptimizerPassTests
         Assert.That(emittedTarget.opcode, Is.EqualTo(OpCodes.Ret));
     }
 
-    private static Optimizer CreateOptimizer(Func<ILGenerator, List<CodeInstruction>> createInstructions)
+    private static Optimizer.Optimizer CreateOptimizer(Func<ILGenerator, List<CodeInstruction>> createInstructions)
         => CreateOptimizer(TargetMethod, createInstructions);
 
-    private static Optimizer CreateTwoBlockTryOptimizer() => CreateOptimizer(generator =>
+    private static Optimizer.Optimizer CreateTwoBlockTryOptimizer() => CreateOptimizer(generator =>
     {
         Label secondTryBlock = generator.DefineLabel();
         Label exit = generator.DefineLabel();
@@ -1887,16 +1889,16 @@ public sealed class OptimizerPassTests
         ];
     });
 
-    private static Optimizer CreateOptimizer(
+    private static Optimizer.Optimizer CreateOptimizer(
         MethodBase targetMethod,
         Func<ILGenerator, List<CodeInstruction>> createInstructions)
     {
         var dynamicMethod = new DynamicMethod("OptimizerPassTest", typeof(void), Type.EmptyTypes);
         ILGenerator generator = dynamicMethod.GetILGenerator();
-        return new Optimizer(targetMethod, createInstructions(generator), generator, debug: false);
+        return new Optimizer.Optimizer(targetMethod, createInstructions(generator), generator, debug: false);
     }
 
     private static void ConsumeReference(ref int value) { }
 
-    private static OpCode[] OpCodesIn(Optimizer.BasicBlock block) => [.. block.ops.Select(op => op.Opcode)];
+    private static OpCode[] OpCodesIn(BasicBlock block) => [.. block.ops.Select(op => op.Opcode)];
 }

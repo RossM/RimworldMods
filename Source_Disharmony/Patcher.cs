@@ -169,7 +169,7 @@ internal class Patcher
 
         if (Instance.optimizerEnabled && patch.optimize)
         {
-            var optimizer = new Optimizer(method, instructionsList, generator, debug: patch.debug);
+            var optimizer = new Optimizer.Optimizer(method, instructionsList, generator, debug: patch.debug);
             return optimizer.Optimize();
         }
 
