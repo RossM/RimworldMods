@@ -413,7 +413,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                     else if (right.IsPointerLike && left.IsPointerCompatibleNumeric)
                         PopInputsAndPush(right, popCount);
                     else
-                        PopInputsAndPush(((IReadOnlyList<Type>)transition.inputTypes)[0], popCount);
+                        PopInputsAndPush(transition.inputTypes[0], popCount);
                     break;
                 }
                 case OpCodeValues.Sub:
@@ -428,7 +428,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                     else if (right.IsPointerCompatibleNumeric)
                         PopInputsAndPush(left, popCount);
                     else
-                        PopInputsAndPush(((IReadOnlyList<Type>)transition.inputTypes)[0], popCount);
+                        PopInputsAndPush(transition.inputTypes[0], popCount);
                     break;
                 }
                 case OpCodeValues.Add_Ovf:
@@ -452,7 +452,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                     if (left == typeof(Optimizer.UnknownType) || right == typeof(Optimizer.UnknownType))
                         PopInputsAndPush(typeof(Optimizer.UnknownType), popCount);
                     else
-                        PopInputsAndPush(((IReadOnlyList<Type>)transition.inputTypes)[0], popCount);
+                        PopInputsAndPush(transition.inputTypes[0], popCount);
                     break;
                 }
                 case OpCodeValues.Neg:
