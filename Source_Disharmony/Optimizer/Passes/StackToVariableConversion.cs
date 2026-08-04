@@ -123,8 +123,8 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 return;
             }
 
-            List<Type> locals = Optimizer.CombineTypeLists(entryLocals[successor], outgoingLocals, true);
-            List<Type> stack = Optimizer.CombineTypeLists(entryStacks[successor], outgoingStack);
+            List<Type> locals = TypeLattice.CombineTypeLists(entryLocals[successor], outgoingLocals, true);
+            List<Type> stack = TypeLattice.CombineTypeLists(entryStacks[successor], outgoingStack);
 
             if (locals.SequenceEqual(entryLocals[successor]) && stack.SequenceEqual(entryStacks[successor]))
                 return;
@@ -172,7 +172,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 {
                     int index = op.Index;
                     while (locals.Count < index + 1)
-                        locals.Add(typeof(Optimizer.UnknownType));
+                        locals.Add(typeof(TypeLattice.UnknownType));
                     transition.variableAccesses.Add(new(Op.VariableAccessKind.Write, VariableKind.Local, index));
                     locals[index] = stack[^1];
                     stack.RemoveAt(stack.Count - 1);
@@ -183,12 +183,12 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 {
                     int index = op.Index;
                     while (locals.Count < index + 1)
-                        locals.Add(typeof(Optimizer.UnknownType));
+                        locals.Add(typeof(TypeLattice.UnknownType));
                     transition.variableAccesses.Add(new(Op.VariableAccessKind.Address, VariableKind.Local, index));
                     Type declaredType = optimizer.localVariables.TryGetValue(index, out Variable? local)
-                        ? local.type ?? typeof(Optimizer.AnyType)
-                        : typeof(Optimizer.AnyType);
-                    stack.Add(Optimizer.ToRef(declaredType));
+                        ? local.type ?? typeof(TypeLattice.AnyType)
+                        : typeof(TypeLattice.AnyType);
+                    stack.Add(TypeLattice.ToRef(declaredType));
                     // Can't be bothered to do fancy analysis here
                     if (!locals[index].IsValueType)
                         locals[index] = typeof(object);
@@ -211,7 +211,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 {
                     int index = op.Index;
                     transition.variableAccesses.Add(new(Op.VariableAccessKind.Address, VariableKind.Argument, index));
-                    stack.Add(Optimizer.ToRef(((IReadOnlyList<Type>)optimizer.parameterTypes)[index]));
+                    stack.Add(TypeLattice.ToRef(((IReadOnlyList<Type>)optimizer.parameterTypes)[index]));
                     break;
                 }
                 case OpCodeValues.Starg:
@@ -229,7 +229,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 }
                 case OpCodeValues.Ldobj:
                 {
-                    stack[^1] = Optimizer.FromRef(stack[^1]);
+                    stack[^1] = TypeLattice.FromRef(stack[^1]);
                     break;
                 }
                 case OpCodeValues.Ldstr:
@@ -244,7 +244,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 }
                 case OpCodeValues.Ldflda when op.Operand is FieldInfo field:
                 {
-                    stack[^1] = Optimizer.ToRef(field.FieldType);
+                    stack[^1] = TypeLattice.ToRef(field.FieldType);
                     break;
                 }
                 case OpCodeValues.Ldsfld when op.Operand is FieldInfo field:
@@ -254,7 +254,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 }
                 case OpCodeValues.Ldsflda when op.Operand is FieldInfo field:
                 {
-                    stack.Add(Optimizer.ToRef(field.FieldType));
+                    stack.Add(TypeLattice.ToRef(field.FieldType));
                     break;
                 }
                 case OpCodeValues.Newobj when op.Operand is ConstructorInfo constructor:
@@ -349,19 +349,19 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Unbox_Any:
                 case OpCodeValues.Ldelem:
                 {
-                    PopInputsAndPush(op.Operand as Type ?? typeof(Optimizer.AnyType), popCount);
+                    PopInputsAndPush(op.Operand as Type ?? typeof(TypeLattice.AnyType), popCount);
                     break;
                 }
                 case OpCodeValues.Unbox:
                 case OpCodeValues.Ldelema:
                 case OpCodeValues.Refanyval:
                 {
-                    PopInputsAndPush(op.Operand is Type type ? Optimizer.ToRef(type) : typeof(Optimizer.AnyType), popCount);
+                    PopInputsAndPush(op.Operand is Type type ? TypeLattice.ToRef(type) : typeof(TypeLattice.AnyType), popCount);
                     break;
                 }
                 case OpCodeValues.Ldnull:
                 {
-                    PopInputsAndPush(typeof(Optimizer.NullType), popCount);
+                    PopInputsAndPush(typeof(TypeLattice.NullType), popCount);
                     break;
                 }
                 case OpCodeValues.Box:
@@ -371,7 +371,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 }
                 case OpCodeValues.Newarr:
                 {
-                    PopInputsAndPush(op.Operand is Type elementType ? elementType.MakeArrayType() : typeof(Optimizer.AnyType), popCount);
+                    PopInputsAndPush(op.Operand is Type elementType ? elementType.MakeArrayType() : typeof(TypeLattice.AnyType), popCount);
                     break;
                 }
                 case OpCodeValues.Arglist:
@@ -396,7 +396,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                         Type => typeof(RuntimeTypeHandle),
                         MethodBase => typeof(RuntimeMethodHandle),
                         FieldInfo => typeof(RuntimeFieldHandle),
-                        _ => typeof(Optimizer.AnyType),
+                        _ => typeof(TypeLattice.AnyType),
                     };
                     PopInputsAndPush(type, popCount);
                     break;
@@ -406,8 +406,8 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 {
                     var left = transition.inputTypes[0];
                     var right = transition.inputTypes[1];
-                    if (left == typeof(Optimizer.UnknownType) || right == typeof(Optimizer.UnknownType))
-                        PopInputsAndPush(typeof(Optimizer.UnknownType), popCount);
+                    if (left == typeof(TypeLattice.UnknownType) || right == typeof(TypeLattice.UnknownType))
+                        PopInputsAndPush(typeof(TypeLattice.UnknownType), popCount);
                     else if (left.IsPointerLike && right.IsPointerCompatibleNumeric)
                         PopInputsAndPush(left, popCount);
                     else if (right.IsPointerLike && left.IsPointerCompatibleNumeric)
@@ -421,8 +421,8 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 {
                     var left = transition.inputTypes[0];
                     var right = transition.inputTypes[1];
-                    if (left == typeof(Optimizer.UnknownType) || right == typeof(Optimizer.UnknownType))
-                        PopInputsAndPush(typeof(Optimizer.UnknownType), popCount);
+                    if (left == typeof(TypeLattice.UnknownType) || right == typeof(TypeLattice.UnknownType))
+                        PopInputsAndPush(typeof(TypeLattice.UnknownType), popCount);
                     else if (left.IsPointerLike && right.IsPointerLike)
                         PopInputsAndPush(typeof(IntPtr), popCount);
                     else if (right.IsPointerCompatibleNumeric)
@@ -449,7 +449,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 {
                     var left = transition.inputTypes[0];
                     var right = transition.inputTypes[1];
-                    PopInputsAndPush(left == typeof(Optimizer.UnknownType) ? right : left, popCount);
+                    PopInputsAndPush(left == typeof(TypeLattice.UnknownType) ? right : left, popCount);
                     break;
                 }
                 case OpCodeValues.Neg:
@@ -466,12 +466,12 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                     switch (op.Opcode.StackBehaviourPush)
                     {
                         case StackBehaviour.Push0: break;
-                        case StackBehaviour.Push1: stack.Add(typeof(Optimizer.AnyType)); break;
+                        case StackBehaviour.Push1: stack.Add(typeof(TypeLattice.AnyType)); break;
                         case StackBehaviour.Push1_push1:
-                            stack.Add(typeof(Optimizer.AnyType));
-                            stack.Add(typeof(Optimizer.AnyType));
+                            stack.Add(typeof(TypeLattice.AnyType));
+                            stack.Add(typeof(TypeLattice.AnyType));
                             break;
-                        case StackBehaviour.Pushi: stack.Add(typeof(Optimizer.AnyType)); break;
+                        case StackBehaviour.Pushi: stack.Add(typeof(TypeLattice.AnyType)); break;
                         case StackBehaviour.Pushi8: stack.Add(typeof(long)); break;
                         case StackBehaviour.Pushr4: stack.Add(typeof(float)); break;
                         case StackBehaviour.Pushr8: stack.Add(typeof(double)); break;
@@ -512,7 +512,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
         void ExpandLocals(int index)
         {
             while (locals.Count < index + 1)
-                locals.Add(typeof(Optimizer.UnknownType));
+                locals.Add(typeof(TypeLattice.UnknownType));
         }
 
         void PopInputsAndPush(Type type, int inputCount)
@@ -711,7 +711,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
             Type type = component.Select(variable => variable.type ??
                                                      throw new InvalidOperationException(
                                                          $"Cross-block stack variable {variable} has no type"))
-                .Aggregate(Optimizer.CombineTypes);
+                .Aggregate(TypeLattice.CombineTypes);
             if (type == typeof(void))
                 throw new InvalidOperationException("Incompatible types in a cross-block stack slot");
 

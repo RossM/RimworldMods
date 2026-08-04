@@ -295,7 +295,7 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         variable.kind is VariableKind.Argument or VariableKind.Local || spillLocals.ContainsKey(variable);
 
     private bool CanReload(Variable variable) =>
-        variable.type == typeof(Optimizer.NullType) || HasStorage(variable);
+        variable.type == typeof(TypeLattice.NullType) || HasStorage(variable);
 
     // Original arguments and locals retain their storage identity. Logical values share one
     // lazily declared spill local across all blocks that preserve or reload that value.
@@ -309,7 +309,7 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
 
         if (!spillLocals.TryGetValue(variable, out LocalBuilder? local))
         {
-            if (variable.type == null || Optimizer.IsSpecialType(variable.type))
+            if (variable.type == null || TypeLattice.IsSpecialType(variable.type))
                 throw new InvalidOperationException($"Cannot spill {variable}: its exact CIL type is unknown");
             local = optimizer.generator.DeclareLocal(variable.type);
             spillLocals.Add(variable, local);
@@ -322,7 +322,7 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
     {
         // The transient null type has no corresponding local signature. Since every definition
         // of a NullType variable is the same value, rematerialization is both exact and cheaper.
-        if (variable.type == typeof(Optimizer.NullType))
+        if (variable.type == typeof(TypeLattice.NullType))
             return new Op(OpCodes.Ldnull);
         if (!HasStorage(variable))
             throw new InvalidOperationException($"{variable} is not available when rebuilding the stack in {block.ID}");

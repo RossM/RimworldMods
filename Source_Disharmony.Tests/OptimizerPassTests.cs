@@ -1783,7 +1783,7 @@ public sealed class OptimizerPassTests
         new StackToVariableConversion(optimizer).Run();
 
         Assert.That(optimizer.BasicBlocks[0].ops[0].outputs.Single().type,
-            Is.EqualTo(typeof(Optimizer.Optimizer.NullType)));
+            Is.EqualTo(typeof(Optimizer.TypeLattice.NullType)));
     }
 
     [Test]

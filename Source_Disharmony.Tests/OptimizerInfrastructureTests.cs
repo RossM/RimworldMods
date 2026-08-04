@@ -177,20 +177,20 @@ public sealed class OptimizerInfrastructureTests
     [TestCaseSource(nameof(CliReferenceTypes))]
     public void TypeLatticeCoalescesNullWithEveryCliReferenceType(Type referenceType)
     {
-        Type nullType = typeof(Optimizer.Optimizer.NullType);
+        Type nullType = typeof(Optimizer.TypeLattice.NullType);
 
         Assert.Multiple(() =>
         {
-            Assert.That(Optimizer.Optimizer.CombineTypes(nullType, referenceType), Is.EqualTo(referenceType));
-            Assert.That(Optimizer.Optimizer.CombineTypes(referenceType, nullType), Is.EqualTo(referenceType));
+            Assert.That(Optimizer.TypeLattice.CombineTypes(nullType, referenceType), Is.EqualTo(referenceType));
+            Assert.That(Optimizer.TypeLattice.CombineTypes(referenceType, nullType), Is.EqualTo(referenceType));
         });
     }
 
     [Test]
     public void TypeLatticeCoalescesTwoNullValuesAsNull()
     {
-        Assert.That(Optimizer.Optimizer.CombineTypes(typeof(Optimizer.Optimizer.NullType), typeof(Optimizer.Optimizer.NullType)),
-            Is.EqualTo(typeof(Optimizer.Optimizer.NullType)));
+        Assert.That(Optimizer.TypeLattice.CombineTypes(typeof(Optimizer.TypeLattice.NullType), typeof(Optimizer.TypeLattice.NullType)),
+            Is.EqualTo(typeof(Optimizer.TypeLattice.NullType)));
     }
 
     [Test]
@@ -198,14 +198,14 @@ public sealed class OptimizerInfrastructureTests
     {
         Assert.Multiple(() =>
         {
-            Assert.That(Optimizer.Optimizer.CombineTypes(typeof(Optimizer.Optimizer.NullType), typeof(Optimizer.Optimizer.UnknownType)),
-                Is.EqualTo(typeof(Optimizer.Optimizer.NullType)));
-            Assert.That(Optimizer.Optimizer.CombineTypes(typeof(Optimizer.Optimizer.UnknownType), typeof(Optimizer.Optimizer.NullType)),
-                Is.EqualTo(typeof(Optimizer.Optimizer.NullType)));
-            Assert.That(Optimizer.Optimizer.CombineTypes(typeof(Optimizer.Optimizer.NullType), typeof(Optimizer.Optimizer.AnyType)),
-                Is.EqualTo(typeof(Optimizer.Optimizer.AnyType)));
-            Assert.That(Optimizer.Optimizer.CombineTypes(typeof(Optimizer.Optimizer.AnyType), typeof(Optimizer.Optimizer.NullType)),
-                Is.EqualTo(typeof(Optimizer.Optimizer.AnyType)));
+            Assert.That(Optimizer.TypeLattice.CombineTypes(typeof(Optimizer.TypeLattice.NullType), typeof(Optimizer.TypeLattice.UnknownType)),
+                Is.EqualTo(typeof(Optimizer.TypeLattice.NullType)));
+            Assert.That(Optimizer.TypeLattice.CombineTypes(typeof(Optimizer.TypeLattice.UnknownType), typeof(Optimizer.TypeLattice.NullType)),
+                Is.EqualTo(typeof(Optimizer.TypeLattice.NullType)));
+            Assert.That(Optimizer.TypeLattice.CombineTypes(typeof(Optimizer.TypeLattice.NullType), typeof(Optimizer.TypeLattice.AnyType)),
+                Is.EqualTo(typeof(Optimizer.TypeLattice.AnyType)));
+            Assert.That(Optimizer.TypeLattice.CombineTypes(typeof(Optimizer.TypeLattice.AnyType), typeof(Optimizer.TypeLattice.NullType)),
+                Is.EqualTo(typeof(Optimizer.TypeLattice.AnyType)));
         });
     }
 
@@ -214,9 +214,9 @@ public sealed class OptimizerInfrastructureTests
     {
         Assert.Multiple(() =>
         {
-            Assert.That(Optimizer.Optimizer.CombineTypes(typeof(Optimizer.Optimizer.NullType), nonReferenceType),
+            Assert.That(Optimizer.TypeLattice.CombineTypes(typeof(Optimizer.TypeLattice.NullType), nonReferenceType),
                 Is.EqualTo(typeof(void)));
-            Assert.That(Optimizer.Optimizer.CombineTypes(nonReferenceType, typeof(Optimizer.Optimizer.NullType)),
+            Assert.That(Optimizer.TypeLattice.CombineTypes(nonReferenceType, typeof(Optimizer.TypeLattice.NullType)),
                 Is.EqualTo(typeof(void)));
         });
     }
@@ -306,8 +306,8 @@ public sealed class OptimizerInfrastructureTests
         yield return TypeCase(typeof(Action), "Delegate");
         yield return TypeCase(typeof(int).MakeByRefType(), "ManagedPointerToValue");
         yield return TypeCase(typeof(string).MakeByRefType(), "ManagedPointerToObjectReference");
-        yield return TypeCase(typeof(Optimizer.Optimizer.UnknownType).MakeByRefType(), "ManagedPointerToUnknownType");
-        yield return TypeCase(typeof(Optimizer.Optimizer.AnyType).MakeByRefType(), "ManagedPointerToAnyType");
+        yield return TypeCase(typeof(Optimizer.TypeLattice.UnknownType).MakeByRefType(), "ManagedPointerToUnknownType");
+        yield return TypeCase(typeof(Optimizer.TypeLattice.AnyType).MakeByRefType(), "ManagedPointerToAnyType");
         yield return TypeCase(typeof(int).MakePointerType(), "UnmanagedPointer");
     }
 
