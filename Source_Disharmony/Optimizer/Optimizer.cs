@@ -367,48 +367,63 @@ internal class Optimizer
 
         LogInstructions("Input", inputInstructions);
 
+        // Convert from raw instructions to basic blocks
         MakeBasicBlocks();
         LogBlocks(nameof(MakeBasicBlocks));
 
+        // Remove nop instructions
         NopElimination();
         LogBlocks(nameof(NopElimination));
 
+        // Eliminate trivially dead blocks
         SimpleDeadCodeElimination();
         LogBlocks(nameof(SimpleDeadCodeElimination));
 
+        // Convert from stack-based operations to explicit input and output variables
         ConvertStackToVariables();
         LogBlocks(nameof(ConvertStackToVariables));
 
+        // Replace edges leading to empty blocks with direct edges to their successors
         JumpThreading();
         LogBlocks(nameof(JumpThreading));
 
+        // Eliminate dead blocks produced by jump threading
         SimpleDeadCodeElimination();
         LogBlocks(nameof(SimpleDeadCodeElimination));
 
+        // Remove conditional branches with the same target as the fallthrough block
         BranchElimination();
         LogBlocks(nameof(BranchElimination));
 
+        // Merge blocks that are each other's only predecessor/successor
         MergeBlocks();
         LogBlocks(nameof(MergeBlocks));
 
+        // Eliminate dead blocks produced by block merging
         SimpleDeadCodeElimination();
         LogBlocks(nameof(SimpleDeadCodeElimination));
 
+        // Do simple constant propagation to expose further optimization opportunities
         ConservativeConstantPropagation();
         LogBlocks(nameof(ConservativeConstantPropagation));
 
+        // Convert from variable based operations back to stack based operations
         ConvertVariablesToStack();
         LogBlocks(nameof(ConvertVariablesToStack));
 
+        // Reverse the sense of conditional branches to increase reordering opportunities
         BranchInversion();
         LogBlocks(nameof(BranchInversion));
 
+        // Remove all dead blocks and regions, and put blocks in a valid order for IL emission
         AggressiveDeadCodeEliminationAndReorder();
         LogBlocks(nameof(AggressiveDeadCodeEliminationAndReorder), true);
 
+        // Insert unconditional branches after blocks whose fallthrough is not the next in order
         InsertBranches();
         LogBlocks(nameof(InsertBranches), true);
 
+        // Emit IL
         Emit();
         LogInstructions("Output", outputInstructions.instructions);
 
