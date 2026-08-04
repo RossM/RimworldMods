@@ -563,6 +563,7 @@ internal class Optimizer
         if (!variables.Contains(variable))
             throw new ArgumentException("Variable is not part of this optimizer", nameof(variable));
 
+        // TODO: Not having use-def chains readily available defeats the point of using SSA
         Dictionary<Variable, List<Variable>> phis = [];
         foreach (ControlFlowEdge edge in basicBlocks.SelectMany(block => block.outgoingEdges))
         {
