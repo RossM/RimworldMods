@@ -136,6 +136,41 @@ internal class Optimizer
         returnType = method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
 
         valid = true;
+
+        for (int index = 0; index < parameterTypes.Count; index++)
+        {
+            Type? type = parameterTypes[index];
+            var variable = new ArgumentVariable
+            {
+                id = nextVariableId++,
+                type = type,
+                index = index,
+                localBuilder = null,
+                pinned = false,
+            };
+            variables.Add(variable);
+            argumentVariables.Add(index,
+                variable);
+        }
+
+        MethodBody? methodBody = GetMethodBodyOrNull();
+        if (methodBody != null)
+        {
+            foreach (var local in methodBody.LocalVariables)
+            {
+                var variable = new LocalVariable
+                {
+                    id = nextVariableId++,
+                    type = local.LocalType,
+                    index = local.LocalIndex,
+                    localBuilder = null,
+                    pinned = local.IsPinned,
+                };
+                variables.Add(variable);
+                localVariables.Add(local.LocalIndex,
+                    variable);
+            }
+        }
     }
 
     // Meaningful once MakeBasicBlocks has created the IR. Defaults to Stack; each conversion pass
@@ -1396,32 +1431,66 @@ internal class Optimizer
         if (localVariables.TryGetValue(index, out var variable))
             return variable;
 
-        variable = NewVariable(VariableKind.Local, null, index);
+        var variable1 = new LocalVariable
+        {
+            id = nextVariableId++,
+            type = null,
+            index = index,
+            localBuilder = null,
+            pinned = false,
+        };
+        variables.Add(variable1);
+        variable = variable1;
         localVariables.Add(index, variable);
         return variable;
     }
 
-    // Adds one canonical Variables-form object to the owning registry. Callers adding an Argument
-    // or Local must also add the same object to the corresponding index dictionary.
-    internal Variable NewVariable(
-        VariableKind kind,
-        Type? type,
-        int index = -1,
-        LocalBuilder? localBuilder = null,
-        bool pinned = false)
+    internal Variable CreateTemporary(Type? type)
     {
-        var variable = new Variable
+        var variable = new TemporaryVariable
         {
             id = nextVariableId++,
-            kind = kind,
             type = type,
-            index = index,
-            localBuilder = localBuilder,
-            pinned = pinned,
+            index = -1,
+            localBuilder = null,
+            pinned = false,
         };
         variables.Add(variable);
         return variable;
     }
+
+    internal Variable CreateStackSlot(Type? type)
+    {
+        var variable = new StackSlotVariable
+        {
+            id = nextVariableId++,
+            type = type,
+            index = -1,
+            localBuilder = null,
+            pinned = false,
+        };
+        variables.Add(variable);
+        return variable;
+    }
+
+    internal Variable CreateLocal(LocalBuilder localBuilder)
+    {
+        var variable = new LocalVariable
+        {
+            id = nextVariableId++,
+            type = localBuilder.LocalType,
+            index = localBuilder.LocalIndex,
+            localBuilder = localBuilder,
+            pinned = localBuilder.IsPinned,
+        };
+        variables.Add(variable);
+        Variable local = variable;
+        localVariables.Add(localBuilder.LocalIndex, local);
+        return local;
+    }
+
+    // Adds one canonical Variables-form object to the owning registry. Callers adding an Argument
+    // or Local must also add the same object to the corresponding index dictionary.
 
     /// <summary>
     ///     Creates a storage-free value whose CIL materialization is completely described by
@@ -1432,8 +1501,16 @@ internal class Optimizer
     {
         if (constant == null)
             throw new ArgumentNullException(nameof(constant));
-        Variable variable = NewVariable(VariableKind.Constant, constant.StackType);
-        variable.constantValue = constant;
+        var variable = new ConstantVariable
+        {
+            id = nextVariableId++,
+            type = constant.StackType,
+            index = -1,
+            localBuilder = null,
+            pinned = false,
+            constantValue = constant,
+        };
+        variables.Add(variable);
         return variable;
     }
 

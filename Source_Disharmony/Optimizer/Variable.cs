@@ -34,8 +34,9 @@ internal enum VariableKind
     Constant,
 }
 
-internal sealed class Variable
+internal abstract class Variable
 {
+
     private string BaseName => kind switch
     {
         VariableKind.Argument => $"A{index}",
@@ -84,8 +85,8 @@ internal sealed class Variable
     // Stable identity within one Variables-form interval. Unlike index, this is unique across
     // all variable kinds. IDs and the variable registry are reset when Variables form is built
     // or discarded; Variable objects are not canonical in Stack form.
-    public required int id;
-    public required VariableKind kind;
+    public int id;
+    public abstract VariableKind kind { get; }
 
     // Canonical Variables-form type information. Argument types come from the method signature.
     // A Local type is set only from MethodBody metadata or a LocalBuilder, never inferred from
@@ -137,4 +138,33 @@ internal sealed class Variable
     public Variable? preferredStorage;
 
     public override string ToString() => Name;
+}
+
+internal class LocalVariable : Variable
+{
+    public override VariableKind kind => VariableKind.Local;
+}
+
+internal class ConstantVariable : Variable
+{
+    public override VariableKind kind => VariableKind.Constant;
+
+}
+
+internal class TemporaryVariable : Variable
+{
+    public override VariableKind kind => VariableKind.Temporary;
+
+}
+
+internal class ArgumentVariable : Variable
+{
+    public override VariableKind kind => VariableKind.Argument;
+
+}
+
+internal class StackSlotVariable : Variable
+{
+    public override VariableKind kind => VariableKind.StackSlot;
+
 }

@@ -98,7 +98,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
         {
             block.entryStackVariables.Clear();
             for (int index = 0; index < entryStacks[block].Count; index++)
-                block.entryStackVariables.Add(optimizer.NewVariable(VariableKind.StackSlot, entryStacks[block][index]));
+                block.entryStackVariables.Add(optimizer.CreateStackSlot(entryStacks[block][index]));
         }
 
         foreach (var block in optimizer.basicBlocks)
@@ -211,7 +211,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 {
                     int index = op.Index;
                     transition.variableAccesses.Add(new(Op.VariableAccessKind.Read, VariableKind.Argument, index));
-                    stack.Add(((IReadOnlyList<Type>)optimizer.parameterTypes)[index]);
+                    stack.Add(optimizer.parameterTypes[index]);
                     break;
                 }
                 case OpCodeValues.Ldarga:
@@ -219,7 +219,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 {
                     int index = op.Index;
                     transition.variableAccesses.Add(new(Op.VariableAccessKind.Address, VariableKind.Argument, index));
-                    stack.Add(TypeLattice.ToRef(((IReadOnlyList<Type>)optimizer.parameterTypes)[index]));
+                    stack.Add(TypeLattice.ToRef(optimizer.parameterTypes[index]));
                     break;
                 }
                 case OpCodeValues.Starg:
@@ -527,25 +527,6 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
 
     public void InitializeVariables()
     {
-        optimizer.variables.Clear();
-        optimizer.argumentVariables.Clear();
-        optimizer.localVariables.Clear();
-        optimizer.nextVariableId = 0;
-
-        for (int index = 0; index < optimizer.parameterTypes.Count; index++)
-            optimizer.argumentVariables.Add(index,
-                optimizer.NewVariable(VariableKind.Argument, optimizer.parameterTypes[index], index));
-
-        MethodBody? methodBody = optimizer.GetMethodBodyOrNull();
-        if (methodBody != null)
-        {
-            foreach (var local in methodBody.LocalVariables)
-            {
-                optimizer.localVariables.Add(local.LocalIndex,
-                    optimizer.NewVariable(VariableKind.Local, local.LocalType, local.LocalIndex, pinned: local.IsPinned));
-            }
-        }
-
         foreach (var op in optimizer.Ops)
         {
             if (!Optimizer.ReferencesLocal(op) || op.Operand is not LocalBuilder localBuilder)
@@ -560,8 +541,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
             }
             else
             {
-                optimizer.localVariables.Add(localBuilder.LocalIndex, optimizer.NewVariable(VariableKind.Local, localBuilder.LocalType,
-                    localBuilder.LocalIndex, localBuilder: localBuilder, pinned: localBuilder.IsPinned));
+                optimizer.CreateLocal(localBuilder);
             }
         }
     }
@@ -592,7 +572,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
             {
                 Variable variable = output.InputIndex >= 0
                     ? op.inputs[output.InputIndex]
-                    : optimizer.NewVariable(VariableKind.Temporary, output.Type);
+                    : optimizer.CreateTemporary(output.Type);
                 op.outputs.Add(variable);
                 stack.Add(variable);
             }
@@ -682,22 +662,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 }
             }
 
-            Variable representative = component[0];
-            foreach (var variable in component.Skip(1))
-            {
-                if (variable.id < representative.id)
-                    representative = variable;
-            }
-
-            Type type = component.Select(variable => variable.type ??
-                                                     throw new InvalidOperationException(
-                                                         $"Cross-block stack variable {variable} has no type"))
-                .Aggregate(TypeLattice.CombineTypes);
-            if (type == typeof(void))
-                throw new InvalidOperationException("Incompatible types in a cross-block stack slot");
-
-            representative.kind = VariableKind.StackSlot;
-            representative.type = type;
+            Variable representative = optimizer.CreateStackSlot(component.Select(v => v.type ?? typeof(TypeLattice.AnyType)).Aggregate(TypeLattice.CombineTypes));
             foreach (var variable in component)
                 replacements[variable] = representative;
         }

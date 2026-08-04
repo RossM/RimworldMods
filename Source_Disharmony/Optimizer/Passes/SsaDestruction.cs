@@ -85,7 +85,7 @@ internal sealed class SsaDestruction(Optimizer optimizer) : Pass
         List<(VariableAssignment Assignment, Variable Value)> loadedAssignments = [];
         foreach (VariableAssignment assignment in storageAssignments)
         {
-            Variable value = optimizer.NewVariable(VariableKind.Temporary, assignment.Source.type);
+            Variable value = optimizer.CreateTemporary(assignment.Source.type);
             copies.Add(MakeLoad(assignment.Source, value));
             loadedAssignments.Add((assignment, value));
         }

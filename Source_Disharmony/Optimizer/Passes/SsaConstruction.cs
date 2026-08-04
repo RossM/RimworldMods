@@ -326,7 +326,7 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
         Type? type = origin.kind is VariableKind.Argument or VariableKind.Local
             ? TypeLattice.ToStackType(origin.type!)
             : origin.type;
-        Variable version = optimizer.NewVariable(VariableKind.Temporary, type);
+        Variable version = optimizer.CreateTemporary(type);
         version.ssaOrigin = origin;
         version.ssaVersion = nextVersion[origin]++;
         PreferOriginalStorage(version, origin);

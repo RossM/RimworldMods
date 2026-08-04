@@ -1876,12 +1876,10 @@ public sealed class OptimizerPassTests
         optimizer.MakeBasicBlocks();
         new StackToVariableConversion(optimizer).Run();
 
-        Variable preciseStackSlot = optimizer.NewVariable(VariableKind.StackSlot, typeof(int));
-        Variable unknownStackSlot = optimizer.NewVariable(
-            VariableKind.StackSlot, typeof(TypeLattice.UnknownType));
-        Variable nullStackSlot = optimizer.NewVariable(
-            VariableKind.StackSlot, typeof(TypeLattice.NullType));
-        Variable temporary = optimizer.NewVariable(VariableKind.Temporary, typeof(int));
+        Variable preciseStackSlot = optimizer.CreateStackSlot(typeof(int));
+        Variable unknownStackSlot = optimizer.CreateStackSlot(typeof(TypeLattice.UnknownType));
+        Variable nullStackSlot = optimizer.CreateStackSlot(typeof(TypeLattice.NullType));
+        Variable temporary = optimizer.CreateTemporary(typeof(int));
         Variable constant = optimizer.NewConstantVariable(ConstantValue.FromInt32(1));
         Variable nullConstant = optimizer.NewConstantVariable(ConstantValue.Null);
 
