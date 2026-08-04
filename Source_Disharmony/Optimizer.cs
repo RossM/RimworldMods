@@ -269,7 +269,7 @@ internal partial class Optimizer
         }
 
         public bool IsLeave => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
-        public bool ClearsStack => Opcode == OpCodes.Ret || Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
+        public bool ClearsStack => Opcode == OpCodes.Leave_S || Opcode == OpCodes.Leave;
         public bool IsUnconditionalBranch => Opcode == OpCodes.Br_S || Opcode == OpCodes.Br;
         public bool CanBranch => Opcode.FlowControl is FlowControl.Branch or FlowControl.Cond_Branch;
 

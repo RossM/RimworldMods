@@ -86,13 +86,18 @@ internal partial class Optimizer
                 foreach (var input in inputs)
                     RemoveUse(remainingUses, input);
 
+                // For a return, the stack must be empty when the instruction completes;
+                // we can't clean it up afterwards.
+                bool exact = op.Opcode == OpCodes.Ret;
+
                 ArrangeStack(
                     stack,
                     inputs,
                     remainingUses,
                     operations,
                     block,
-                    op.outputs.Take(op.stackOutputCount));
+                    op.outputs.Take(op.stackOutputCount),
+                    exact);
 
                 stack.RemoveRange(stack.Count - inputs.Count, inputs.Count);
                 operations.Add(ConvertOperation(op));
@@ -172,6 +177,14 @@ internal partial class Optimizer
                     stack, prefixCount, required, producedVariables ?? [], futureUses))
                 return;
 
+            // If there is one input which is already on top of the stack, but will be needed later, just 'dup' it.
+            if (inputsAlreadyOnTop && required.Count == 1)
+            {
+                stack.Add(stack[^1]);
+                operations.Add(Ops.Dup);
+                return;
+            }
+
             HashSet<Variable> needed = [.. required, .. futureUses.Keys];
             int keepCount = exact ? 0 : Math.Max(prefixCount, 0);
             foreach (var variable in required.Distinct())
@@ -210,6 +223,7 @@ internal partial class Optimizer
             IEnumerable<Variable> producedVariables,
             IReadOnlyDictionary<Variable, int> futureUses)
         {
+            var produced = producedVariables.ToList();
             foreach (var variable in consumedVariables.Distinct())
             {
                 futureUses.TryGetValue(variable, out int useCount);
@@ -217,7 +231,7 @@ internal partial class Optimizer
                     continue;
 
                 int remainingStackCopies = stack.Take(prefixCount).Count(candidate => candidate == variable) +
-                                           producedVariables.Count(candidate => candidate == variable);
+                                           produced.Count(candidate => candidate == variable);
                 // One surviving copy is sufficient even for several later uses: a later dup may
                 // create those copies, and preserving the existing stack schedule should not spill.
                 if (useCount > 0 && remainingStackCopies == 0)
