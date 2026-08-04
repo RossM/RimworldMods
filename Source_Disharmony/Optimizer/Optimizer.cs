@@ -1607,20 +1607,20 @@ internal sealed class Variable
 {
     private string BaseName => kind switch
     {
-        VariableKind.Argument => $"a{index}",
-        VariableKind.Local => $"l{index}",
-        VariableKind.StackSlot => $"s{id}",
-        VariableKind.Temporary => $"v{id}",
-        VariableKind.Constant => constantValue == null ? $"c{id}" : $"c{id}({constantValue})",
+        VariableKind.Argument => $"A{index}",
+        VariableKind.Local => $"L{index}",
+        VariableKind.StackSlot => $"S{id}",
+        VariableKind.Temporary => $"V{id}",
+        VariableKind.Constant => constantValue == null ? $"C{id}" : $"C{id}({constantValue})",
         _ => throw new ArgumentOutOfRangeException(),
-    } + (type is Type t ? $"[{t}]" : "");
+    };
 
     public string Name => ssaOrigin switch
     {
         null => BaseName,
         { } origin when origin == this => $"{BaseName}.{ssaVersion}",
         { } origin => $"{origin.BaseName}.{ssaVersion}",
-    };
+    } + (type is Type t ? $"[{t}]" : "");
 
     /// <summary>
     ///     The authoritative decision whether this value may participate in SSA substitution and
