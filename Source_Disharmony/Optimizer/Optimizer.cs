@@ -1283,10 +1283,6 @@ internal partial class Optimizer
             basicBlocks[i].fallthroughEdge = null;
         }
     }
-
-
-    // Even when the referent type is imprecise, taking its address establishes that the stack value
-    // is a managed pointer. Keeping the lattice marker as the element type retains both facts.
 }
 
 /// <summary>

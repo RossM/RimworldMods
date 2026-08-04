@@ -145,5 +145,7 @@ internal static class TypeLattice
         return output;
     }
 
+    // Even when the referent type is imprecise, taking its address establishes that the stack value
+    // is a managed pointer. Keeping the lattice marker as the element type retains both facts.
     internal static Type ToRef(Type type) => type.MakeByRefType();
 }
