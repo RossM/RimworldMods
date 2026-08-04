@@ -541,6 +541,9 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
         if (type == typeof(float) || type == typeof(double))
             return typeof(double);
 
+        if (type == typeof(IntPtr) || type == typeof(UIntPtr))
+            return typeof(IntPtr);
+
         return type;
     }
 
