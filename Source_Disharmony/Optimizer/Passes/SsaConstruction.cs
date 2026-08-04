@@ -102,7 +102,7 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
 
                 foreach (Variable variable in op.outputs)
                 {
-                    if (!candidates.Contains(variable) || IsAliasedStackOutput(op, variable))
+                    if (!candidates.Contains(variable) || op.Opcode == OpCodes.Dup)
                         continue;
                     blockDefinitions.Add(variable);
                 }
@@ -292,26 +292,22 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
 
                 ReplaceUses(op.inputs);
 
-                Dictionary<Variable, Variable> operationDefinitions = [];
                 for (int index = 0; index < op.outputs.Count; index++)
                 {
                     Variable output = op.outputs[index];
                     if (!candidates.Contains(output))
                         continue;
-                    if (IsAliasedStackOutput(op, output))
+                    if (op.Opcode == OpCodes.Dup)
                     {
                         op.outputs[index] = Current(output);
                         continue;
                     }
 
-                    if (!operationDefinitions.TryGetValue(output, out Variable? version))
-                    {
-                        version = NewVersion(output);
-                        operationDefinitions.Add(output, version);
-                        Push(output, version);
-                    }
+                    var version = NewVersion(output);
+                    Push(output, version);
                     op.outputs[index] = version;
                 }
+
                 retainedOperations.Add(op);
             }
             block.ops.Clear();
@@ -402,12 +398,6 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
         // storage whose store/load boundary performs a narrowing conversion.
         value.preferredStorage = origin;
     }
-
-    // Dup's output is another name for its input, not a new definition. Stack-slot merging can
-    // make that shared value a promotion candidate when the duplicate crosses a block boundary.
-    private static bool IsAliasedStackOutput(Op op, Variable variable) =>
-        op.Opcode == OpCodes.Dup &&
-        op.outputs.Take(op.stackOutputCount).Contains(variable);
 
     // Well-formed literal loads have no prefixes and exactly one new stack result. Keeping a
     // prefixed literal operation is the conservative choice for malformed-but-processable input.
