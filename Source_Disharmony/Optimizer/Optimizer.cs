@@ -521,18 +521,6 @@ internal class Optimizer
         ConservativeConstantPropagation();
         LogBlocks(nameof(ConservativeConstantPropagation));
 
-        // Rename promotable storage and cross-block stack slots into SSA values.
-        ConstructSsa();
-        LogBlocks(nameof(ConstructSsa));
-
-        // Give edge-specific stack phi transfers dedicated paths before materializing them.
-        SplitSsaEdges();
-        LogBlocks(nameof(SplitSsaEdges));
-
-        // Materialize phi transfers and return to regular Variables form for stack lowering.
-        DestructSsa();
-        LogBlocks(nameof(DestructSsa));
-
         // Convert from variable based operations back to stack based operations
         ConvertVariablesToStack();
         LogBlocks(nameof(ConvertVariablesToStack));
@@ -597,43 +585,6 @@ internal class Optimizer
     }
 
     /// <summary>
-    ///     Promotes every currently eligible mutable storage variable and every precisely typed
-    ///     cross-block stack slot not promoted by an earlier invocation. Literal-producing
-    ///     operations are also replaced by storage-free Constant variables. Requires regular or
-    ///     SSA Variables form, a complete CFG, empty edge assignments in regular form, and dead
-    ///     blocks removed. The pass computes dominance explicitly if necessary. It may be rerun
-    ///     after an optimization makes additional storage eligible; existing SSA families and phi
-    ///     assignments are preserved, and existing constants require no further processing.
-    /// </summary>
-    internal void ConstructSsa()
-    {
-        new SsaConstruction(this).Run();
-    }
-
-    /// <summary>
-    ///     Requires SplitSsaEdges' guarantee that edges carrying evaluation-stack assignments have
-    ///     a unique-successor source. Eliminates all SSA edge assignments and returns to regular
-    ///     Variables form. SSA variables remain ordinary logical Variables; versions derived from
-    ///     a local retain that physical slot as a conservative spill hint.
-    /// </summary>
-    internal void DestructSsa()
-    {
-        new SsaDestruction(this).Run();
-    }
-
-    /// <summary>
-    ///     Requires SSA Variables form. Splits every stack-assignment edge whose source has another
-    ///     successor, so rebuilding a predecessor-specific evaluation stack occurs only on the
-    ///     selected edge. Storage assignments may remain on multi-successor sources because their
-    ///     nonescaping destinations can be written speculatively. The pass preserves SSA form but
-    ///     mutates the CFG and therefore invalidates dominance.
-    /// </summary>
-    internal void SplitSsaEdges()
-    {
-        new SsaEdgeSplitting(this).Run();
-    }
-
-    /// <summary>
     ///     Explicitly returns the cached dominance result or computes it if absent. Requires a
     ///     complete CFG in either IR form and every retained block to be reachable from at least one
     ///     root returned by <see cref="GetDominatorRoots" />. Block order, operation ownership, and
@@ -643,55 +594,6 @@ internal class Optimizer
     internal DominatorTree ComputeDominatorTreeIfNeeded()
     {
         return dominatorTree ??= DominatorTree.Compute(basicBlocks, GetDominatorRoots());
-    }
-
-    /// <summary>
-    ///     Recursively replaces an SSA phi result with its incoming values and yields every
-    ///     distinct non-phi value which can reach it. Ordinary operation inputs are not traversed.
-    ///     A synthetic method entry makes the invocation operand of an entry-loop phi an ordinary
-    ///     source, so no implicit root case is needed here. Requires unsplit SSA form and becomes
-    ///     invalid if the IR is mutated while the result is being enumerated.
-    /// </summary>
-    internal IEnumerable<Variable> GetReachingDefinitions(Variable variable)
-    {
-        if (Form != IrForm.Ssa)
-            throw new InvalidOperationException($"Reaching definitions require SSA form, not {Form}");
-        if (!variables.Contains(variable))
-            throw new ArgumentException("Variable is not part of this optimizer", nameof(variable));
-
-        // TODO: Not having use-def chains readily available defeats the point of using SSA
-        Dictionary<Variable, List<Variable>> phis = [];
-        foreach (ControlFlowEdge edge in Edges)
-        {
-            foreach (VariableAssignment assignment in edge.assignments)
-            {
-                if (!phis.TryGetValue(assignment.Destination, out List<Variable>? sources))
-                {
-                    sources = [];
-                    phis.Add(assignment.Destination, sources);
-                }
-                sources.Add(assignment.Source);
-            }
-        }
-
-        HashSet<Variable> visitedPhis = [];
-        HashSet<Variable> yielded = [];
-        Stack<Variable> pending = new([variable]);
-        while (pending.Count != 0)
-        {
-            Variable current = pending.Pop();
-            if (!phis.TryGetValue(current, out List<Variable>? sources))
-            {
-                if (yielded.Add(current))
-                    yield return current;
-                continue;
-            }
-            if (!visitedPhis.Add(current))
-                continue;
-
-            for (int index = sources.Count - 1; index >= 0; index--)
-                pending.Push(sources[index]);
-        }
     }
 
     /// <summary>
