@@ -31,9 +31,6 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
     /// <param name="Index"></param>
     internal readonly record struct VariableAccess(Op.VariableAccessKind Kind, VariableKind VariableKind, int Index);
 
-    private readonly Dictionary<RegionNode, List<Type>> entryLocals = optimizer.regions.Cast<RegionNode>()
-        .Concat(optimizer.basicBlocks).ToDictionary(block => block, _ => new List<Type>());
-
     private readonly Dictionary<RegionNode, List<Type>> entryStacks = optimizer.regions.Cast<RegionNode>()
         .Concat(optimizer.basicBlocks).ToDictionary(block => block, _ => new List<Type>());
 
@@ -71,19 +68,18 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                         _ => entryStacks[region],
                     };
                     if (region.entry != null)
-                        UpdateEntry(region.entry, entryLocals[region], stack);
+                        UpdateEntry(region.entry, stack);
                     break;
                 }
                 case BasicBlock basicBlock:
                 {
-                    List<Type> locals = [.. entryLocals[basicBlock]];
                     List<Type> stack = [.. entryStacks[basicBlock]];
 
-                    SymbolicExecute(basicBlock, locals, stack);
+                    SymbolicExecute(basicBlock, stack);
 
                     exitStacks[basicBlock] = stack;
                     foreach (var edge in basicBlock.outgoingEdges)
-                        UpdateEntry(edge.Target, locals, stack);
+                        UpdateEntry(edge.Target, stack);
                     break;
                 }
                 default: throw new ArgumentOutOfRangeException();
@@ -113,29 +109,26 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
 
         return;
 
-        void UpdateEntry(RegionNode successor, List<Type> outgoingLocals, List<Type> outgoingStack)
+        void UpdateEntry(RegionNode successor, List<Type> outgoingStack)
         {
             if (initializedEntries.Add(successor))
             {
-                entryLocals[successor] = [.. outgoingLocals];
                 entryStacks[successor] = [.. outgoingStack];
                 worklist.Enqueue(successor);
                 return;
             }
 
-            List<Type> locals = TypeLattice.CombineTypeLists(entryLocals[successor], outgoingLocals, true);
             List<Type> stack = TypeLattice.CombineTypeLists(entryStacks[successor], outgoingStack);
 
-            if (locals.SequenceEqual(entryLocals[successor]) && stack.SequenceEqual(entryStacks[successor]))
+            if (stack.SequenceEqual(entryStacks[successor]))
                 return;
 
-            entryLocals[successor] = locals;
             entryStacks[successor] = stack;
             worklist.Enqueue(successor);
         }
     }
 
-    public void SymbolicExecute(BasicBlock basicBlock, List<Type> locals, List<Type> stack)
+    public void SymbolicExecute(BasicBlock basicBlock, List<Type> stack)
     {
         foreach (var op in basicBlock.ops)
         {
@@ -158,9 +151,11 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Ldloc_S:
                 {
                     int index = op.Index;
-                    ExpandLocals(index);
                     transition.variableAccesses.Add(new(Op.VariableAccessKind.Read, VariableKind.Local, index));
-                    stack.Add(locals[index]);
+                    Type declaredType = optimizer.localVariables.TryGetValue(index, out Variable? local)
+                        ? local.type ?? typeof(TypeLattice.AnyType)
+                        : typeof(TypeLattice.AnyType);
+                    stack.Add(declaredType);
                     break;
                 }
                 case OpCodeValues.Stloc_0:
@@ -171,10 +166,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Stloc_S:
                 {
                     int index = op.Index;
-                    while (locals.Count < index + 1)
-                        locals.Add(typeof(TypeLattice.UnknownType));
                     transition.variableAccesses.Add(new(Op.VariableAccessKind.Write, VariableKind.Local, index));
-                    locals[index] = stack[^1];
                     stack.RemoveAt(stack.Count - 1);
                     break;
                 }
@@ -182,16 +174,11 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Ldloca_S:
                 {
                     int index = op.Index;
-                    while (locals.Count < index + 1)
-                        locals.Add(typeof(TypeLattice.UnknownType));
                     transition.variableAccesses.Add(new(Op.VariableAccessKind.Address, VariableKind.Local, index));
                     Type declaredType = optimizer.localVariables.TryGetValue(index, out Variable? local)
                         ? local.type ?? typeof(TypeLattice.AnyType)
                         : typeof(TypeLattice.AnyType);
                     stack.Add(TypeLattice.ToRef(declaredType));
-                    // Can't be bothered to do fancy analysis here
-                    if (!locals[index].IsValueType)
-                        locals[index] = typeof(object);
                     break;
                 }
                 case OpCodeValues.Ldarg_0:
@@ -508,12 +495,6 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
         }
 
         return;
-
-        void ExpandLocals(int index)
-        {
-            while (locals.Count < index + 1)
-                locals.Add(typeof(TypeLattice.UnknownType));
-        }
 
         void PopInputsAndPush(Type type, int inputCount)
         {
