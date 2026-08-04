@@ -338,28 +338,27 @@ internal partial class Optimizer
             Variable address = read.outputs[0];
             if (!uses.TryGetValues(address, out var addressUses))
                 return false;
-            if (addressUses is not [var addressUse])
+            if (addressUses is not [var (operation, inputIndex)])
                 return false;
 
             // The sole consumer must use this value as its address, which is the first stack input
             // of every ldobj/stobj and ldind/stind operation.
-            if (addressUse.InputIndex != 0)
+            if (inputIndex != 0)
                 return false;
 
-            Op indirect = addressUse.Operation;
             // Require straight-line execution from the load to its consumer rather than reasoning
             // about an address crossing the CFG or flowing around a loop.
             BasicBlock block = blockByOperation[read];
-            if (blockByOperation[indirect] != block)
+            if (blockByOperation[operation] != block)
                 return false;
-            if (block.ops.IndexOf(read) >= block.ops.IndexOf(indirect))
+            if (block.ops.IndexOf(read) >= block.ops.IndexOf(operation))
                 return false;
 
             Variable storage = candidate.Value.Constant.GetReferencedVariable();
-            if (!TryClassifyDirectAccess(indirect, address, storage, out Op.IndirectAccessKind kind))
+            if (!TryClassifyDirectAccess(operation, address, storage, out Op.IndirectAccessKind kind))
                 return false;
 
-            directAccess = new(indirect, storage, kind);
+            directAccess = new(operation, storage, kind);
             return true;
         }
 
