@@ -493,11 +493,10 @@ internal sealed class ConservativeConstantPropagation(Optimizer optimizer) : Pas
     {
         foreach (var variable in optimizer.argumentVariables.Values.Concat(optimizer.localVariables.Values))
             variable.addressTaken = false;
-        foreach (var operation in optimizer.basicBlocks.SelectMany(block => block.ops))
+        foreach (var operation in optimizer.Ops)
         {
             if (operation.GetStorageAccess() is { Kind: Op.VariableAccessKind.Address, Variable: var variable })
                 variable.addressTaken = true;
         }
     }
-
 }

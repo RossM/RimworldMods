@@ -35,7 +35,7 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
     // visited that defining write. Recording this up front keeps lowering independent of block order.
     private void FindStoredVariables()
     {
-        foreach (Op op in optimizer.basicBlocks.SelectMany(block => block.ops))
+        foreach (Op op in optimizer.Ops)
         {
             if (op.GetStorageAccess() is { Kind: Op.VariableAccessKind.Write } access)
                 storedVariables.Add(access.Variable);
@@ -123,8 +123,7 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
             }
         }
 
-        ControlFlowEdge? assignedEdge = optimizer.basicBlocks.SelectMany(block => block.outgoingEdges)
-            .FirstOrDefault(edge => edge.assignments.Count != 0);
+        ControlFlowEdge? assignedEdge = optimizer.Edges.FirstOrDefault(edge => edge.assignments.Count != 0);
         if (assignedEdge != null)
         {
             throw new InvalidOperationException(

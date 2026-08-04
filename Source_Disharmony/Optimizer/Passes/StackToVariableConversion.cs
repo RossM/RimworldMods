@@ -546,7 +546,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
             }
         }
 
-        foreach (var op in optimizer.basicBlocks.SelectMany(block => block.ops))
+        foreach (var op in optimizer.Ops)
         {
             if (!Optimizer.ReferencesLocal(op) || op.Operand is not LocalBuilder localBuilder)
                 continue;

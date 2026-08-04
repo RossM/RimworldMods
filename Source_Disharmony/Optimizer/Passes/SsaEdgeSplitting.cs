@@ -14,7 +14,7 @@ internal sealed class SsaEdgeSplitting(Optimizer optimizer) : Pass
 
         List<ControlFlowEdge> edges =
         [
-            .. optimizer.basicBlocks.SelectMany(block => block.outgoingEdges)
+            .. optimizer.Edges
                 .Where(edge => HasStackAssignments(edge) && edge.Source.outgoingEdges.Count > 1),
         ];
 

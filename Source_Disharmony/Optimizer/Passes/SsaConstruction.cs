@@ -27,8 +27,7 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
                 variable.ssaOrigin == null && variable.IsPromotable),
         ];
 
-        bool hasRemovableLiterals = optimizer.basicBlocks.SelectMany(block => block.ops)
-            .Any(op => TryGetRemovableLiteral(op, out _));
+        bool hasRemovableLiterals = optimizer.Ops.Any(op => TryGetRemovableLiteral(op, out _));
         if (candidates.Count == 0 && !hasRemovableLiterals)
         {
             optimizer.Form = Optimizer.IrForm.Ssa;
@@ -61,7 +60,7 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
         if (optimizer.Form is not (Optimizer.IrForm.Variables or Optimizer.IrForm.Ssa))
             throw new InvalidOperationException($"Cannot construct SSA from {optimizer.Form} form");
 
-        foreach (ControlFlowEdge edge in optimizer.basicBlocks.SelectMany(block => block.outgoingEdges))
+        foreach (ControlFlowEdge edge in optimizer.Edges)
         {
             if (optimizer.Form == Optimizer.IrForm.Variables && edge.assignments.Count != 0)
                 throw new InvalidOperationException("Regular Variables form contains SSA edge assignments");

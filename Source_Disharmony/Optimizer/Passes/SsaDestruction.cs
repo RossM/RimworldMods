@@ -11,7 +11,7 @@ internal sealed class SsaDestruction(Optimizer optimizer) : Pass
     {
         CheckPreconditions();
 
-        foreach (ControlFlowEdge edge in optimizer.basicBlocks.SelectMany(block => block.outgoingEdges).ToList())
+        foreach (ControlFlowEdge edge in optimizer.Edges)
         {
             if (edge.Source.isSyntheticMethodEntry)
             {

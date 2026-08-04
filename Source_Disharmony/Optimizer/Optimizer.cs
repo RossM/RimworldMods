@@ -240,7 +240,7 @@ internal class Optimizer
                     }
 
                     if (bb.ops.Count == 0)
-                        LogInstruction(Ops.Nop.ToCodeInstruction(), ref codePos);
+                        LogInstruction(Disharmony.Optimizer.Ops.Nop.ToCodeInstruction(), ref codePos);
 
                     break;
                 }
@@ -573,7 +573,7 @@ internal class Optimizer
 
         // TODO: Not having use-def chains readily available defeats the point of using SSA
         Dictionary<Variable, List<Variable>> phis = [];
-        foreach (ControlFlowEdge edge in basicBlocks.SelectMany(block => block.outgoingEdges))
+        foreach (ControlFlowEdge edge in Edges)
         {
             foreach (VariableAssignment assignment in edge.assignments)
             {
@@ -727,7 +727,7 @@ internal class Optimizer
                 {
                     List<CodeInstruction> instructions = [.. bb.ops.SelectMany(GetCodeInstructions)];
                     if (instructions.Count == 0)
-                        instructions.Add(Ops.Nop.ToCodeInstruction());
+                        instructions.Add(Disharmony.Optimizer.Ops.Nop.ToCodeInstruction());
                     instructions[0].labels.AddRange(labels);
                     labels.Clear();
                     instructions[0].blocks.AddRange(harmonyBlocks);
@@ -836,7 +836,7 @@ internal class Optimizer
 
         // Add a ret to the last basic block if one is missing (perhaps because of a poorly behaved transpiler)
         if (CanFallThrough(basicBlocks[^1]))
-            basicBlocks[^1].ops.Add(Ops.Ret);
+            basicBlocks[^1].ops.Add(Disharmony.Optimizer.Ops.Ret);
 
         // Convert branch instructions to point directly at the basic block
         foreach (var block in basicBlocks)
@@ -1095,7 +1095,7 @@ internal class Optimizer
                 if (Form == IrForm.Stack)
                 {
                     for (int index = 0; index < popCount; index++)
-                        block.ops.Add(Ops.Pop);
+                        block.ops.Add(Disharmony.Optimizer.Ops.Pop);
                     return;
                 }
 
@@ -1106,7 +1106,7 @@ internal class Optimizer
                 // must consume them in the reverse order in which they occur on the CIL stack.
                 for (int index = popCount - 1; index >= 0; index--)
                 {
-                    Op pop = Ops.Pop;
+                    Op pop = Disharmony.Optimizer.Ops.Pop;
                     pop.inputs.Add(branch.inputs[index]);
                     pop.stackInputCount = 1;
                     block.ops.Add(pop);
@@ -1503,6 +1503,10 @@ internal class Optimizer
             basicBlocks[i].fallthroughEdge = null;
         }
     }
+
+    public IEnumerable<ControlFlowEdge> Edges => basicBlocks.SelectMany(block => block.outgoingEdges);
+
+    public IEnumerable<Op> Ops => basicBlocks.SelectMany(block => block.ops);
 }
 
 /// <summary>
