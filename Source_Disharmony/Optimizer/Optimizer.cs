@@ -12,7 +12,7 @@ namespace Disharmony.Optimizer;
 ///     These are pass-boundary invariants: conversion workers temporarily build the destination
 ///     representation before changing Form, but no other pass may observe that mixed state.
 /// </summary>
-internal partial class Optimizer
+internal class Optimizer
 {
     /// <summary>
     ///     Which interpretation of the shared block and operation data is canonical. The current
