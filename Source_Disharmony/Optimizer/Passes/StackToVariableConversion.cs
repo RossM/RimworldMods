@@ -118,13 +118,16 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
 
         return;
 
-        bool IsExceptionRegion(Region? region)
+        static bool IsExceptionRegion(Region? region)
         {
-            if (region == null)
-                return false;
-            if (region.exceptionEntryGroup != null && region.exceptionEntryGroup.associatedRegions.Contains(region))
-                return true;
-            return IsExceptionRegion(region.parent);
+            while (true)
+            {
+                if (region == null)
+                    return false;
+                if (region.exceptionEntryGroup != null && region.exceptionEntryGroup.associatedRegions.Contains(region))
+                    return true;
+                region = region.parent;
+            }
         }
 
         void UpdateEntry(RegionNode successor, List<Type> outgoingStack)
