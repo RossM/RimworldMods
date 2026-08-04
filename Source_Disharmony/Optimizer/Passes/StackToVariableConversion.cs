@@ -402,11 +402,37 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                     break;
                 }
                 case OpCodeValues.Add:
-                case OpCodeValues.Add_Ovf:
                 case OpCodeValues.Add_Ovf_Un:
+                {
+                    var left = transition.inputTypes[0];
+                    var right = transition.inputTypes[1];
+                    if (left == typeof(Optimizer.UnknownType) || right == typeof(Optimizer.UnknownType))
+                        PopInputsAndPush(typeof(Optimizer.UnknownType), popCount);
+                    else if (left.IsPointerLike && right.IsPointerCompatibleNumeric)
+                        PopInputsAndPush(left, popCount);
+                    else if (right.IsPointerLike && left.IsPointerCompatibleNumeric)
+                        PopInputsAndPush(right, popCount);
+                    else
+                        PopInputsAndPush(((IReadOnlyList<Type>)transition.inputTypes)[0], popCount);
+                    break;
+                }
                 case OpCodeValues.Sub:
-                case OpCodeValues.Sub_Ovf:
                 case OpCodeValues.Sub_Ovf_Un:
+                {
+                    var left = transition.inputTypes[0];
+                    var right = transition.inputTypes[1];
+                    if (left == typeof(Optimizer.UnknownType) || right == typeof(Optimizer.UnknownType))
+                        PopInputsAndPush(typeof(Optimizer.UnknownType), popCount);
+                    else if (left.IsPointerLike && right.IsPointerLike)
+                        PopInputsAndPush(typeof(IntPtr), popCount);
+                    else if (right.IsPointerCompatibleNumeric)
+                        PopInputsAndPush(left, popCount);
+                    else
+                        PopInputsAndPush(((IReadOnlyList<Type>)transition.inputTypes)[0], popCount);
+                    break;
+                }
+                case OpCodeValues.Add_Ovf:
+                case OpCodeValues.Sub_Ovf:
                 case OpCodeValues.Mul:
                 case OpCodeValues.Mul_Ovf:
                 case OpCodeValues.Mul_Ovf_Un:
@@ -420,10 +446,19 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Shl:
                 case OpCodeValues.Shr:
                 case OpCodeValues.Shr_Un:
+                {
+                    var left = transition.inputTypes[0];
+                    var right = transition.inputTypes[1];
+                    if (left == typeof(Optimizer.UnknownType) || right == typeof(Optimizer.UnknownType))
+                        PopInputsAndPush(typeof(Optimizer.UnknownType), popCount);
+                    else
+                        PopInputsAndPush(((IReadOnlyList<Type>)transition.inputTypes)[0], popCount);
+                    break;
+                }
                 case OpCodeValues.Neg:
                 case OpCodeValues.Not:
                 {
-                    PopInputsAndPush(InferArithmeticType(op.Opcode, transition.inputTypes), popCount);
+                    PopInputsAndPush(transition.inputTypes[0], popCount);
                     break;
                 }
                 default:
@@ -471,7 +506,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 int inputIndex = op.Opcode == OpCodes.Dup ? 0 : -1;
                 transition.outputs.AddRange(stack
                     .Skip(stack.Count - pushCount)
-                    .Select(type => new StackOutput(type, inputIndex)));
+                    .Select(type => new StackOutput(ClrTypeToStackType(type), inputIndex)));
             }
         }
 
@@ -489,6 +524,24 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 stack.RemoveAt(stack.Count - 1);
             stack.Add(type);
         }
+    }
+
+    private Type ClrTypeToStackType(Type type)
+    {
+        if (type == typeof(sbyte) || type == typeof(byte) || type == typeof(bool) ||
+            type == typeof(short) || type == typeof(ushort) || type == typeof(char) ||
+            type == typeof(int) || type == typeof(uint))
+        {
+            return typeof(int);
+        }
+
+        if (type == typeof(long) || type == typeof(ulong))
+            return typeof(long);
+
+        if (type == typeof(float) || type == typeof(double))
+            return typeof(double);
+
+        return type;
     }
 
     public void InitializeVariables()
@@ -531,64 +584,6 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
             }
         }
     }
-
-    private static Type InferArithmeticType(OpCode opcode, IReadOnlyList<Type> inputs)
-    {
-        Type left = inputs[0];
-        if (left == typeof(Optimizer.AnyType))
-            return typeof(Optimizer.AnyType);
-        if (inputs.Count == 1)
-            return left;
-
-        Type right = inputs[1];
-        if (right == typeof(Optimizer.AnyType))
-            return typeof(Optimizer.AnyType);
-        if (left == typeof(Optimizer.UnknownType) || right == typeof(Optimizer.UnknownType))
-            return typeof(Optimizer.UnknownType);
-        bool leftIsPointer = left.IsByRef || left.IsPointer;
-        bool rightIsPointer = right.IsByRef || right.IsPointer;
-        if (leftIsPointer || rightIsPointer)
-        {
-            bool isPointerAddition = opcode == OpCodes.Add || opcode == OpCodes.Add_Ovf_Un;
-            bool isPointerSubtraction = opcode == OpCodes.Sub || opcode == OpCodes.Sub_Ovf_Un;
-
-            // CIL permits only the unchecked and unsigned-overflow forms for pointer arithmetic.
-            // A pointer may be offset by int32 or native int; only subtraction permits two pointers.
-            if (isPointerAddition)
-            {
-                if (leftIsPointer && IsPointerOffset(right))
-                    return left;
-                if (rightIsPointer && IsPointerOffset(left))
-                    return right;
-            }
-            else if (isPointerSubtraction && leftIsPointer)
-            {
-                if (rightIsPointer)
-                    return typeof(IntPtr);
-                if (IsPointerOffset(right))
-                    return left;
-            }
-
-            return typeof(Optimizer.AnyType);
-        }
-
-        if (left == typeof(IntPtr) || left == typeof(UIntPtr))
-            return left;
-        if (right == typeof(IntPtr) || right == typeof(UIntPtr))
-            return right;
-        if (left == right)
-            return left;
-        if (left == typeof(double) || right == typeof(double))
-            return typeof(double);
-        if (left == typeof(float) || right == typeof(float))
-            return typeof(float);
-        if (left == typeof(long) || right == typeof(long) || left == typeof(ulong) || right == typeof(ulong))
-            return typeof(long);
-        return typeof(int);
-    }
-
-    private static bool IsPointerOffset(Type type) =>
-        type == typeof(int) || type == typeof(uint) || type == typeof(IntPtr) || type == typeof(UIntPtr);
 
     public List<Variable> MaterializeBlockVariables(
         BasicBlock block,

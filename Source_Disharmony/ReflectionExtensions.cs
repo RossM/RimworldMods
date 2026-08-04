@@ -30,6 +30,10 @@ public static class ReflectionExtensions
             }
         }
 
+        public bool IsPointerLike => type.IsByRef || type.IsPointer;
+        public bool IsPointerCompatibleNumeric => type == typeof(int) || type == typeof(uint) || type == typeof(IntPtr) || type == typeof(UIntPtr);
+
+
         public Type NoRefType => type.IsByRef ? type.GetElementType() : type;
 
         public Type CallableType => type.IsValueType ? type.MakeByRefType() : type;
