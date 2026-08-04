@@ -36,8 +36,7 @@ internal enum VariableKind
 
 internal abstract class Variable
 {
-
-    public abstract string BaseName { get; }
+    protected abstract string BaseName { get; }
 
     public string Name => ssaOrigin switch
     {
@@ -75,10 +74,6 @@ internal abstract class Variable
     // pass must recompute it; this is a current-IR summary, not historical escape information.
     public bool addressTaken;
 
-    // Canonical in both Variables forms for Argument and Local; false for other kinds. Until
-    // exceptional storage dataflow is represented explicitly, every argument/local in a method
-    // with a filter or handler is conservatively exception-exposed. This is immutable throughout a
-    // Variables-form interval and is one of the facts consumed by IsPromotable.
     public bool exceptionExposed;
 
     // Canonical only in SSA Variables form. A promoted mutable variable points to itself with
@@ -110,7 +105,7 @@ internal abstract class InMemoryVariable : Variable
 
 internal class LocalVariable : InMemoryVariable
 {
-    public override string BaseName => $"L{index}";
+    protected override string BaseName => $"L{index}";
 
     public override bool IsPromotable => base.IsPromotable && !pinned;
 
@@ -129,7 +124,7 @@ internal class LocalVariable : InMemoryVariable
 
 internal class ConstantVariable : Variable
 {
-    public override string BaseName => $"C{id}({constantValue})";
+    protected override string BaseName => $"C{id}({constantValue})";
 
     public override VariableKind Kind => VariableKind.Constant;
 
@@ -144,7 +139,7 @@ internal class ConstantVariable : Variable
 
 internal class TemporaryVariable : Variable
 {
-    public override string BaseName => $"V{id}";
+    protected override string BaseName => $"V{id}";
 
     public override VariableKind Kind => VariableKind.Temporary;
 
@@ -153,7 +148,7 @@ internal class TemporaryVariable : Variable
 
 internal class ArgumentVariable : InMemoryVariable
 {
-    public override string BaseName => $"A{index}";
+    protected override string BaseName => $"A{index}";
 
     public override VariableKind Kind => VariableKind.Argument;
 
@@ -161,7 +156,7 @@ internal class ArgumentVariable : InMemoryVariable
 
 internal class StackSlotVariable : Variable
 {
-    public override string BaseName => $"S{id}";
+    protected override string BaseName => $"S{id}";
 
     public override VariableKind Kind => VariableKind.StackSlot;
 

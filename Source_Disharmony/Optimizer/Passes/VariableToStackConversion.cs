@@ -538,21 +538,21 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
 
     private static Op LoadStorage(Storage storage, IReadOnlyList<Op> prefixes) => storage.Kind switch
     {
-        VariableKind.Argument => new(OpCodes.Ldarg, storage.Index, prefixes),
+        VariableKind.Argument => new(OpCodes.Ldarg, storage.Operand, prefixes),
         VariableKind.Local => new(OpCodes.Ldloc, storage.Operand, prefixes),
         _ => throw new ArgumentOutOfRangeException(),
     };
 
     private static Op StoreStorage(Storage storage, IReadOnlyList<Op> prefixes) => storage.Kind switch
     {
-        VariableKind.Argument => new(OpCodes.Starg, storage.Index, prefixes),
+        VariableKind.Argument => new(OpCodes.Starg, storage.Operand, prefixes),
         VariableKind.Local => new(OpCodes.Stloc, storage.Operand, prefixes),
         _ => throw new ArgumentOutOfRangeException(),
     };
 
     private static Op LoadStorageAddress(Storage storage, IReadOnlyList<Op> prefixes) => storage.Kind switch
     {
-        VariableKind.Argument => new(OpCodes.Ldarga, storage.Index, prefixes),
+        VariableKind.Argument => new(OpCodes.Ldarga, storage.Operand, prefixes),
         VariableKind.Local => new(OpCodes.Ldloca, storage.Operand, prefixes),
         _ => throw new ArgumentOutOfRangeException(),
     };

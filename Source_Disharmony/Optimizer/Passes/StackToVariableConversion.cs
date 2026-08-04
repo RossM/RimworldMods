@@ -8,19 +8,11 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
     /// </summary>
     internal sealed class StackTransition
     {
-        public readonly List<Type> inputTypes = [];
-        public readonly List<StackOutput> outputs = [];
+        public readonly List<Type> inputs = [];
+        public readonly List<Type> outputs = [];
         public readonly List<VariableAccess> variableAccesses = [];
         public bool clearsStack;
     }
-
-    /// <summary>
-    ///     Transient StackToVariableConverter result. InputIndex identifies an output which aliases
-    ///     a popped input, as with both outputs of dup; a negative index denotes a new value.
-    /// </summary>
-    /// <param name="Type"></param>
-    /// <param name="InputIndex"></param>
-    internal readonly record struct StackOutput(Type Type, int InputIndex = -1);
 
     /// <summary>
     ///     Transient StackToVariableConverter result recorded by symbolic execution so variable
@@ -157,7 +149,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
             if (popCount > inputStack.Count)
                 throw new InvalidOperationException($"{op.Opcode} pops {popCount} values from a stack of {inputStack.Count}");
 
-            transition.inputTypes.AddRange(inputStack.Skip(inputStack.Count - popCount));
+            transition.inputs.AddRange(inputStack.Skip(inputStack.Count - popCount));
 
             switch (unchecked((ushort)op.Opcode.Value))
             {
@@ -415,8 +407,8 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Add:
                 case OpCodeValues.Add_Ovf_Un:
                 {
-                    var left = transition.inputTypes[0];
-                    var right = transition.inputTypes[1];
+                    var left = transition.inputs[0];
+                    var right = transition.inputs[1];
                     if (left == typeof(TypeLattice.UnknownType) || right == typeof(TypeLattice.UnknownType))
                         PopInputsAndPush(typeof(TypeLattice.UnknownType), popCount);
                     else if (left.IsPointerLike && right.IsPointerCompatibleNumeric)
@@ -424,14 +416,14 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                     else if (right.IsPointerLike && left.IsPointerCompatibleNumeric)
                         PopInputsAndPush(right, popCount);
                     else
-                        PopInputsAndPush(transition.inputTypes[0], popCount);
+                        PopInputsAndPush(transition.inputs[0], popCount);
                     break;
                 }
                 case OpCodeValues.Sub:
                 case OpCodeValues.Sub_Ovf_Un:
                 {
-                    var left = transition.inputTypes[0];
-                    var right = transition.inputTypes[1];
+                    var left = transition.inputs[0];
+                    var right = transition.inputs[1];
                     if (left == typeof(TypeLattice.UnknownType) || right == typeof(TypeLattice.UnknownType))
                         PopInputsAndPush(typeof(TypeLattice.UnknownType), popCount);
                     else if (left.IsPointerLike && right.IsPointerLike)
@@ -439,7 +431,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                     else if (right.IsPointerCompatibleNumeric)
                         PopInputsAndPush(left, popCount);
                     else
-                        PopInputsAndPush(transition.inputTypes[0], popCount);
+                        PopInputsAndPush(transition.inputs[0], popCount);
                     break;
                 }
                 case OpCodeValues.Add_Ovf:
@@ -458,15 +450,15 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Shr:
                 case OpCodeValues.Shr_Un:
                 {
-                    var left = transition.inputTypes[0];
-                    var right = transition.inputTypes[1];
+                    var left = transition.inputs[0];
+                    var right = transition.inputs[1];
                     PopInputsAndPush(left == typeof(TypeLattice.UnknownType) ? right : left, popCount);
                     break;
                 }
                 case OpCodeValues.Neg:
                 case OpCodeValues.Not:
                 {
-                    PopInputsAndPush(transition.inputTypes[0], popCount);
+                    PopInputsAndPush(transition.inputs[0], popCount);
                     break;
                 }
                 default:
@@ -511,10 +503,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 if (pushCount < 0)
                     throw new InvalidOperationException($"Invalid stack effect for {op.Opcode}");
 
-                int inputIndex = op.Opcode == OpCodes.Dup ? 0 : -1;
-                transition.outputs.AddRange(stack
-                    .Skip(stack.Count - pushCount)
-                    .Select(type => new StackOutput(TypeLattice.ToStackType(type), inputIndex)));
+                transition.outputs.AddRange(stack.Skip(stack.Count - pushCount).Select(TypeLattice.ToStackType));
             }
         }
 
@@ -540,7 +529,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
             op.outputs.Clear();
             StackTransition transition = transitions[op];
 
-            int inputCount = transition.inputTypes.Count;
+            int inputCount = transition.inputs.Count;
             op.stackInputCount = inputCount;
             op.stackOutputCount = transition.outputs.Count;
             if (inputCount > stack.Count)
@@ -552,9 +541,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
 
             foreach (var output in transition.outputs)
             {
-                Variable variable = output.InputIndex >= 0
-                    ? op.inputs[output.InputIndex]
-                    : optimizer.CreateTemporary(output.Type);
+                Variable variable = op.OpcodeValue == OpCodeValues.Dup ? op.inputs[0] : optimizer.CreateStackSlot(output);
                 op.outputs.Add(variable);
                 stack.Add(variable);
             }
