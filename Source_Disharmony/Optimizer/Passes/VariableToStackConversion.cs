@@ -200,8 +200,13 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
                 }
 
                 // Store a duplicate so the operation's natural evaluation-stack result is
-                // unchanged while later blocks gain a reloadable representation.
-                operations.Add(Ops.Dup);
+                // unchanged when this block still consumes it. If only another block uses the
+                // value, consume the existing stack copy: retaining it merely forces later
+                // operands to be spilled while the block restores its required exit stack.
+                if (remainingUses.ContainsKey(output))
+                    operations.Add(Ops.Dup);
+                else
+                    stack.RemoveAt(stack.Count - 1);
                 operations.Add(StoreVariable(output));
             }
             if (op.ClearsStack)
@@ -292,6 +297,51 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         if (inputsAlreadyOnTop && CanConsumeWithoutLosingValues(
                 stack, prefixCount, required, producedVariables ?? [], futureUses))
             return;
+
+        if (!exact)
+        {
+            // Existing values below an operation's inputs may remain on the evaluation stack. Find
+            // the longest prefix of the required inputs already at the top, then append a suffix
+            // which can be reloaded. This covers both [saved] + [argument] and [managed pointer] +
+            // [argument] without spilling the values which are already in their final positions.
+            int maximumMatched = Math.Min(stack.Count, required.Count);
+            for (int matched = maximumMatched; matched >= 0; matched--)
+            {
+                IEnumerable<Variable> stackSuffix = stack.Skip(stack.Count - matched);
+                if (!stackSuffix.SequenceEqual(required.Take(matched)))
+                    continue;
+
+                IReadOnlyList<Variable> appended = [.. required.Skip(matched)];
+                if (appended.Any(variable => !CanReload(variable)))
+                    continue;
+
+                List<Variable> extendedStack = [.. stack, .. appended];
+                int extendedPrefixCount = stack.Count - matched;
+                if (extendedPrefixCount > 0 &&
+                    !futureUses.ContainsKey(stack[extendedPrefixCount - 1]))
+                {
+                    // A dead value at the top of the preserved prefix can be discarded now. Keeping
+                    // it only postpones cleanup and may obstruct the next operation's stack layout.
+                    continue;
+                }
+                if (!CanConsumeWithoutLosingValues(
+                        extendedStack,
+                        extendedPrefixCount,
+                        required,
+                        producedVariables ?? [],
+                        futureUses))
+                {
+                    continue;
+                }
+
+                foreach (Variable variable in appended)
+                {
+                    operations.Add(LoadVariable(variable, block));
+                    stack.Add(variable);
+                }
+                return;
+            }
+        }
 
         // If there is one input which is already on top of the stack, but will be needed later, just 'dup' it.
         if (inputsAlreadyOnTop && required.Count == 1)

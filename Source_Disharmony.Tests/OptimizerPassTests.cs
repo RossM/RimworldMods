@@ -2307,6 +2307,78 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
+    public void ConvertVariablesToStackAppendsReloadableInputAboveExistingPrefix()
+    {
+        MethodInfo targetMethod = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, _ =>
+        [
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Ldarg_0),
+            new CodeInstruction(OpCodes.Conv_I4),
+            new CodeInstruction(OpCodes.Add),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+
+        BasicBlock block = optimizer.BasicBlocks.Single();
+        Op argumentLoad = block.ops[1];
+        block.ops[2].inputs[0] = optimizer.ArgumentVariables[0];
+        block.ops.Remove(argumentLoad);
+
+        new VariableToStackConversion(optimizer).Run();
+
+        Assert.That(block.ops.Select(op => op.Opcode), Is.EqualTo(new[]
+        {
+            OpCodes.Ldc_I4_1,
+            OpCodes.Ldarg,
+            OpCodes.Conv_I4,
+            OpCodes.Add,
+            OpCodes.Pop,
+            OpCodes.Ret,
+        }));
+        Assert.That(block.ops, Has.None.Matches<Op>(op =>
+            op.Opcode == OpCodes.Ldloc || op.Opcode == OpCodes.Stloc));
+    }
+
+    [Test]
+    public void ConvertVariablesToStackConsumesDeadCopyWhenSpillingForCrossBlockUse()
+    {
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label target = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Br, target),
+                new CodeInstruction(OpCodes.Ldc_I4_0).WithLabels(target),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+
+        BasicBlock source = optimizer.BasicBlocks[0];
+        BasicBlock target = optimizer.BasicBlocks[1];
+        Variable value = source.ops[0].outputs.Single();
+        source.ops.RemoveAt(1);
+        target.ops[1].inputs[0] = value;
+
+        new VariableToStackConversion(optimizer).Run();
+
+        Assert.That(source.ops.Select(op => op.Opcode), Is.EqualTo(new[]
+        {
+            OpCodes.Ldc_I4_1,
+            OpCodes.Stloc,
+        }));
+        Assert.That(source.ops, Has.None.Matches<Op>(op => op.Opcode == OpCodes.Dup));
+    }
+
+    [Test]
     public void ConvertVariablesToStackCanSpillOpcodeTypedIntegerTemporaries()
     {
         Optimizer.Optimizer optimizer = CreateOptimizer(_ =>

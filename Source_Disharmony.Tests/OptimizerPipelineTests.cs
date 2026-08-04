@@ -117,8 +117,9 @@ public sealed class OptimizerPipelineTests
             ];
         });
 
-        // TODO: SSA destruction emits a long chain of local-to-local phi copies here. Coalescing
-        //       noninterfering loop values should substantially reduce the spill traffic.
+        // TODO: SSA destruction materializes every phi transfer, while spill allocation permits
+        //       only one logical value to reclaim each original local. Liveness-based coalescing of
+        //       noninterfering phi sources and destinations should remove most of these copies.
         AssertOpCodes(output,
             OpCodes.Ldc_I4_0, OpCodes.Ldc_I4_0, OpCodes.Stloc, OpCodes.Stloc,
             OpCodes.Ldloc, OpCodes.Ldloc, OpCodes.Stloc, OpCodes.Stloc,
@@ -237,8 +238,9 @@ public sealed class OptimizerPipelineTests
             ];
         });
 
-        // TODO: The double constants could be loaded immediately after the argument instead of
-        //       being spilled and reloaded for Add and Mul.
+        // TODO: SSA removes the reloadable argument read, so the forward stack scheduler emits the
+        //       literal before discovering that Add/Mul needs the argument below it. Deferred or
+        //       rematerializable pure producers should reconstruct the original load order.
         AssertOpCodes(output,
             OpCodes.Ldarg, OpCodes.Switch,
             OpCodes.Ldarg, OpCodes.Neg, OpCodes.Ret,
@@ -269,15 +271,12 @@ public sealed class OptimizerPipelineTests
             new CodeInstruction(OpCodes.Ret),
         ]);
 
-        // TODO: The two native-int values could remain on the evaluation stack instead of being
-        //       spilled and immediately reloaded before Add.
         AssertOpCodes(output,
-            OpCodes.Ldarg, OpCodes.Conv_U, OpCodes.Stloc,
-            OpCodes.Ldarg, OpCodes.Conv_U, OpCodes.Stloc,
-            OpCodes.Ldloc, OpCodes.Ldloc, OpCodes.Add,
+            OpCodes.Ldarg, OpCodes.Conv_U,
+            OpCodes.Ldarg, OpCodes.Conv_U, OpCodes.Add,
             OpCodes.Ldc_I4_1, OpCodes.Conv_U, OpCodes.Xor, OpCodes.Ret);
-        Assert.That(output.Where(instruction => instruction.IsStloc() || instruction.IsLdloc())
-            .Select(instruction => ((LocalBuilder)instruction.operand).LocalType), Is.All.EqualTo(typeof(IntPtr)));
+        Assert.That(output, Has.None.Matches<CodeInstruction>(instruction =>
+            instruction.IsStloc() || instruction.IsLdloc()));
     }
 
     [Test]
@@ -392,7 +391,9 @@ public sealed class OptimizerPipelineTests
             ];
         });
 
-        // TODO: Re-running branch elimination after constant propagation could reduce this to Ret.
+        // TODO: SCCP or a dedicated constant-branch fold should remove the untaken edge and expose
+        //       its block to dead-code elimination. BranchElimination only handles branches whose
+        //       explicit and fallthrough edges already have the same target.
         AssertOpCodes(output, OpCodes.Ldc_I4_0, OpCodes.Brtrue, OpCodes.Ret, OpCodes.Ldnull, OpCodes.Throw);
         AssertAllBranchTargetsAreEmitted(output);
     }
@@ -575,11 +576,9 @@ public sealed class OptimizerPipelineTests
             ];
         });
 
-        // TODO: The bool condition is currently stored, popped, and reloaded before Brfalse; the
-        //       original stack value can feed the branch directly.
         AssertOpCodes(output,
-            OpCodes.Ldarg, OpCodes.Ldind_I4, OpCodes.Dup, OpCodes.Stloc,
-            OpCodes.Ldarg_1, OpCodes.Stloc, OpCodes.Pop, OpCodes.Ldloc, OpCodes.Brfalse,
+            OpCodes.Ldarg, OpCodes.Ldind_I4, OpCodes.Stloc,
+            OpCodes.Ldarg_1, OpCodes.Brfalse,
             OpCodes.Ldc_I4_1, OpCodes.Stloc,
             OpCodes.Ldloc, OpCodes.Ldloc, OpCodes.Add, OpCodes.Stloc,
             OpCodes.Ldarg, OpCodes.Ldloc, OpCodes.Stind_I4,
@@ -903,11 +902,9 @@ public sealed class OptimizerPipelineTests
             ];
         });
 
-        // TODO: The managed pointer from Ldloca can remain on the stack until Stfld instead of
-        //       being stored and immediately reloaded.
         AssertOpCodes(output,
             OpCodes.Ldloca, OpCodes.Initobj,
-            OpCodes.Ldloca, OpCodes.Stloc, OpCodes.Ldloc, OpCodes.Ldarg, OpCodes.Stfld,
+            OpCodes.Ldloca, OpCodes.Ldarg, OpCodes.Stfld,
             OpCodes.Ldloc, OpCodes.Box, OpCodes.Call, OpCodes.Ret);
         Assert.That(output.Single(instruction => instruction.opcode == OpCodes.Initobj).operand,
             Is.EqualTo(typeof(OptimizerDataStruct)));
