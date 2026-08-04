@@ -42,9 +42,10 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         }
     }
 
-    // A promoted local's live-in version is still represented by the original Local Variable. If
-    // that value remains in the IR, assigning its physical slot to a later SSA value could clobber
-    // it before a logical reload. Reserve such slots; otherwise one derived value may reclaim them.
+    // A promoted argument/local's live-in version is still represented by the original Variable.
+    // If that value remains in the IR, assigning its physical slot to a later SSA value could
+    // clobber it before a logical reload. Reserve such slots; otherwise one derived value may
+    // reclaim them.
     private void ReserveLiveOriginalStorage()
     {
         HashSet<Variable> preferredStorage =
@@ -499,10 +500,11 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         if (spillStorage.TryGetValue(variable, out Storage storage))
             return storage;
 
-        if (variable.preferredStorage is { kind: VariableKind.Local } preferred &&
+        if (variable.preferredStorage is { } preferred &&
+            preferred.kind is VariableKind.Argument or VariableKind.Local &&
             !occupiedPreferredStorage.Contains(preferred))
         {
-            storage = new(VariableKind.Local, preferred.index, preferred.localBuilder);
+            storage = new(preferred.kind, preferred.index, preferred.localBuilder);
             occupiedPreferredStorage.Add(preferred);
             spillStorage.Add(variable, storage);
             return storage;

@@ -18,6 +18,7 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
     public override void Run()
     {
         CheckPreconditions();
+        optimizer.AddSsaEntryBlockIfNeeded();
         dominators = optimizer.ComputeDominatorTreeIfNeeded();
         candidates =
         [
@@ -34,18 +35,22 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
             return;
         }
 
+        if (candidates.Count != 0)
+        {
+            ComputeLiveness();
+            ValidateExceptionEntryLiveness();
+        }
+
         // The original mutable object is version zero and represents the value entering a
         // dominator root. Keeping it in the same family also makes later invocations recognize
-        // that this storage has already been promoted.
+        // that this storage has already been promoted. Do this only after validation, so a rejected
+        // pass does not leave partially versioned variables behind.
         foreach (Variable candidate in candidates)
         {
             candidate.ssaOrigin = candidate;
             candidate.ssaVersion = 0;
             nextVersion.Add(candidate, 1);
         }
-
-        if (candidates.Count != 0)
-            ComputeLiveness();
         PlacePhis();
         Rename();
         optimizer.Form = Optimizer.IrForm.Ssa;
@@ -164,16 +169,40 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
                     if (!liveIn[frontier].Contains(variable) || phis[frontier].ContainsKey(variable))
                         continue;
 
-                    // A dominator root with a backedge merges an implicit entry value with its
-                    // explicit predecessors. Version zero is that phi destination, so the initial
-                    // entry needs no synthetic predecessor or copy.
-                    Variable destination = dominators.Roots.Contains(frontier)
-                        ? variable
-                        : NewVersion(variable);
+                    // The phi result is distinct from version zero. At a looped method entry, the
+                    // new entry block supplies version zero just like every other operand; no
+                    // definition is hidden outside the CFG.
+                    Variable destination = NewVersion(variable);
                     phis[frontier].Add(variable, destination);
                     if (queuedDefinitions.Add(frontier))
                         work.Enqueue(frontier);
                 }
+            }
+        }
+    }
+
+    // Exceptional transfers do not identify the particular throwing instruction whose storage
+    // state reaches a handler. Such storage must remain escaping until that dataflow is modeled;
+    // silently treating a live argument/local as an ordinary dominator-root value would be wrong.
+    private void ValidateExceptionEntryLiveness()
+    {
+        foreach (BasicBlock entry in optimizer.GetExceptionEntryBlocks())
+        {
+            bool hasNonescapingStorage = liveIn[entry].Any(variable =>
+                variable.kind is VariableKind.Argument or VariableKind.Local);
+            if (hasNonescapingStorage)
+            {
+                throw new InvalidOperationException(
+                    $"Exception entry {entry.ID} has nonescaping storage live on entry");
+            }
+
+            // The runtime-supplied catch/filter stack value may be a root definition. It becomes
+            // unsupported only if normal predecessors also turn the exception entry into a join;
+            // unlike the method entry, exception entries must not gain synthetic predecessors.
+            if (entry.incomingEdges.Count != 0 && liveIn[entry].Count != 0)
+            {
+                throw new InvalidOperationException(
+                    $"Exception entry {entry.ID} has nonescaping values and normal predecessors");
             }
         }
     }
@@ -214,9 +243,10 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
 
                 Op.StorageAccess? storageAccess = op.GetStorageAccess();
 
-                // Promoted storage is a name for the value, not an operation on physical memory.
-                // Remove its copies and update the current SSA value directly. The original local
-                // or argument remains available as version zero for a live-in read.
+                // Promoted storage operations no longer access physical memory. Loads disappear,
+                // while each write remains as a logical copy defining a fresh SSA name. Keeping
+                // that definition distinct from its source is required by SSA; copy elimination
+                // can remove it independently.
                 if (storageAccess is { } access && candidates.Contains(access.Variable))
                 {
                     switch (access.Kind)
@@ -247,9 +277,11 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
                         {
                             if (op.stackInputCount != 1 || op.stackOutputCount != 0)
                                 throw new InvalidOperationException("Promoted storage write has an invalid stack shape");
-                            Variable value = Resolve(op.inputs[0]);
-                            Push(access.Variable, value);
-                            PreferOriginalLocal(value, access.Variable);
+                            op.inputs[0] = Resolve(op.inputs[0]);
+                            Variable version = NewVersion(access.Variable);
+                            op.outputs[op.stackOutputCount] = version;
+                            Push(access.Variable, version);
+                            retainedOperations.Add(op);
                             continue;
                         }
                         case Op.VariableAccessKind.Address:
@@ -350,15 +382,15 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
         Variable version = optimizer.NewVariable(VariableKind.Temporary, type);
         version.ssaOrigin = origin;
         version.ssaVersion = nextVersion[origin]++;
-        PreferOriginalLocal(version, origin);
+        PreferOriginalStorage(version, origin);
         return version;
     }
 
-    // The first logical value derived from a promoted local can reclaim that local if lowering
-    // needs a spill. A value shared by several promoted locals keeps its first compatible hint.
-    private static void PreferOriginalLocal(Variable value, Variable origin)
+    // The first logical value derived from promoted storage can reclaim that slot if lowering
+    // needs a spill. A value shared by several promoted variables keeps its first compatible hint.
+    private static void PreferOriginalStorage(Variable value, Variable origin)
     {
-        if (origin.kind != VariableKind.Local ||
+        if (origin.kind is not (VariableKind.Argument or VariableKind.Local) ||
             value.kind is VariableKind.Argument or VariableKind.Local or VariableKind.Constant ||
             value.preferredStorage != null)
         {

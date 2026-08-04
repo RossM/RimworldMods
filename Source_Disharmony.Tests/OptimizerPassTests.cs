@@ -263,6 +263,197 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
+    public void ReachingDefinitionsReturnsANonPhiValueItself()
+    {
+        MethodInfo targetMethod = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, _ =>
+        [
+            new CodeInstruction(OpCodes.Ldarg_0),
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Add),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        optimizer.ConstructSsa();
+
+        BasicBlock block = optimizer.BasicBlocks.Single();
+        Op add = block.ops.Single(op => op.Opcode == OpCodes.Add);
+        Assert.Multiple(() =>
+        {
+            Assert.That(optimizer.GetReachingDefinitions(add.inputs[0]),
+                Is.EqualTo(new[] { add.inputs[0] }));
+            Assert.That(optimizer.GetReachingDefinitions(add.inputs[1]),
+                Is.EqualTo(new[] { add.inputs[1] }));
+            Assert.That(optimizer.GetReachingDefinitions(add.outputs[0]),
+                Is.EqualTo(new[] { add.outputs[0] }));
+        });
+    }
+
+    [Test]
+    public void ReachingDefinitionsRecursivelyFlattensNestedPhis()
+    {
+        LocalBuilder? result = null;
+        MethodInfo targetMethod = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
+        {
+            result = generator.DeclareLocal(typeof(int));
+            Label outerAlternative = generator.DefineLabel();
+            Label innerAlternative = generator.DefineLabel();
+            Label innerJoin = generator.DefineLabel();
+            Label finalJoin = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Brfalse, outerAlternative),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Stloc, result),
+                new CodeInstruction(OpCodes.Br, finalJoin),
+                new CodeInstruction(OpCodes.Ldarg_0).WithLabels(outerAlternative),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Add),
+                new CodeInstruction(OpCodes.Brfalse, innerAlternative),
+                new CodeInstruction(OpCodes.Ldc_I4_2),
+                new CodeInstruction(OpCodes.Stloc, result),
+                new CodeInstruction(OpCodes.Br, innerJoin),
+                new CodeInstruction(OpCodes.Ldc_I4_3).WithLabels(innerAlternative),
+                new CodeInstruction(OpCodes.Stloc, result),
+                new CodeInstruction(OpCodes.Br, finalJoin).WithLabels(innerJoin),
+                new CodeInstruction(OpCodes.Ldloc, result).WithLabels(finalJoin),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        optimizer.ConstructSsa();
+
+        BasicBlock finalJoinBlock = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Pop));
+        Variable value = finalJoinBlock.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
+        Variable[] reaching = [.. optimizer.GetReachingDefinitions(value)];
+        Op[] definingWrites =
+        [
+            .. optimizer.BasicBlocks.SelectMany(block => block.ops)
+                .Where(op => op.Opcode == OpCodes.Stloc && reaching.Contains(op.outputs.Single())),
+        ];
+        HashSet<Variable> phiResults =
+        [
+            .. optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges)
+                .SelectMany(edge => edge.assignments)
+                .Select(assignment => assignment.Destination),
+        ];
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(reaching, Has.Length.EqualTo(3));
+            Assert.That(reaching, Has.None.Matches<Variable>(phiResults.Contains));
+            Assert.That(reaching, Has.All.Matches<Variable>(variable =>
+                variable.ssaOrigin == optimizer.LocalVariables[result!.LocalIndex]));
+            Assert.That(definingWrites.Select(op => op.outputs.Single()), Is.EquivalentTo(reaching));
+            Assert.That(definingWrites.Select(op => op.inputs.Single().constantValue?.GetInt32()),
+                Is.EquivalentTo(new int?[] { 1, 2, 3 }));
+        });
+    }
+
+    [Test]
+    public void RootPhiForAssignedArgumentHasExplicitEntryAndBackedgeOperands()
+    {
+        MethodInfo targetMethod = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
+        {
+            Label header = generator.DefineLabel();
+            Label exit = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldarg_0).WithLabels(header),
+                new CodeInstruction(OpCodes.Brfalse, exit),
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Sub),
+                new CodeInstruction(OpCodes.Starg_S, (byte)0),
+                new CodeInstruction(OpCodes.Br, header),
+                new CodeInstruction(OpCodes.Ret).WithLabels(exit),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        optimizer.ConstructSsa();
+
+        BasicBlock header = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Brfalse));
+        Variable value = header.ops.Single(op => op.Opcode == OpCodes.Brfalse).inputs[0];
+        Variable[] reaching = [.. optimizer.GetReachingDefinitions(value)];
+        Variable entry = optimizer.ArgumentVariables[0];
+        BasicBlock syntheticEntry = optimizer.BasicBlocks.Single(block => block.isSyntheticMethodEntry);
+        Variable assignment = header.incomingEdges
+            .Where(edge => edge.Source != syntheticEntry)
+            .SelectMany(edge => edge.assignments)
+            .Single(item => item.Destination == value).Source;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(syntheticEntry.parent!.parent, Is.Null);
+            Assert.That(syntheticEntry.EntryPoint, Is.True);
+            Assert.That(syntheticEntry.ops, Is.Empty);
+            Assert.That(syntheticEntry.incomingEdges, Is.Empty);
+            Assert.That(syntheticEntry.outgoingEdges.Single().Target, Is.SameAs(header));
+            Assert.That(syntheticEntry.outgoingEdges.Single().assignments.Single().Source, Is.SameAs(entry));
+            Assert.That(syntheticEntry.outgoingEdges.Single().assignments.Single().Destination, Is.SameAs(value));
+            Assert.That(value, Is.Not.SameAs(entry));
+            Assert.That(value.ssaOrigin, Is.SameAs(entry));
+            Assert.That(reaching, Has.Length.EqualTo(2));
+            Assert.That(reaching, Does.Contain(entry));
+            Assert.That(reaching, Does.Contain(assignment));
+            Assert.That(assignment, Is.Not.SameAs(entry));
+            Assert.That(assignment.ssaOrigin, Is.SameAs(entry));
+        });
+
+        optimizer.ConstructSsa();
+        Assert.That(optimizer.BasicBlocks.Count(block => block.isSyntheticMethodEntry), Is.EqualTo(1));
+
+        optimizer.SplitSsaEdges();
+        optimizer.DestructSsa();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(optimizer.BasicBlocks, Does.Contain(syntheticEntry));
+            Assert.That(syntheticEntry.EntryPoint, Is.True);
+            Assert.That(header.incomingEdges, Has.Count.EqualTo(2));
+            Assert.That(optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges)
+                .SelectMany(edge => edge.assignments), Is.Empty);
+        });
+    }
+
+    [Test]
+    public void ReachingDefinitionsTreatsUnpromotedMutableStorageAsALeaf()
+    {
+        LocalBuilder? local = null;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            local = generator.DeclareLocal(typeof(int));
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloca, local),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ldloc, local),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        optimizer.ConstructSsa();
+
+        Variable storage = optimizer.LocalVariables[local!.LocalIndex];
+        Assert.That(optimizer.GetReachingDefinitions(storage), Is.EqualTo(new[] { storage }));
+    }
+
+    [Test]
     public void BranchEliminationReplacesRedundantConditionWithPop()
     {
         Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
@@ -1715,6 +1906,11 @@ public sealed class OptimizerPassTests
             Assert.That(optimizer.Form, Is.EqualTo(Optimizer.Optimizer.IrForm.Ssa));
             Assert.That(definitions, Has.Length.EqualTo(2));
             Assert.That(definitions[0], Is.Not.SameAs(definitions[1]));
+            Assert.That(definitions, Has.All.Matches<Variable>(definition =>
+                definition.ssaOrigin == optimizer.LocalVariables[result!.LocalIndex]));
+            Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops)
+                .Where(op => op.Opcode == OpCodes.Stloc)
+                .Select(op => op.outputs.Single()), Is.EquivalentTo(definitions));
             Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
                 Has.None.Matches<Op>(op => op.GetStorageAccess()?.Variable ==
                                            optimizer.LocalVariables[result!.LocalIndex]));
@@ -1722,6 +1918,7 @@ public sealed class OptimizerPassTests
                 edge.assignments.Count == 1 && edge.assignments[0].Destination == phi));
             Assert.That(join.incomingEdges.Select(edge => edge.assignments[0].Source),
                 Is.EquivalentTo(definitions));
+            Assert.That(optimizer.GetReachingDefinitions(phi), Is.EquivalentTo(definitions));
         });
     }
 
@@ -1758,11 +1955,13 @@ public sealed class OptimizerPassTests
         Assert.Multiple(() =>
         {
             Assert.That(local.ssaOrigin, Is.SameAs(local));
-            Assert.That(block.ops, Has.None.Matches<Op>(op =>
-                op.Opcode == OpCodes.Stloc || op.Opcode == OpCodes.Ldloc));
+            Assert.That(block.ops, Has.None.Matches<Op>(op => op.Opcode == OpCodes.Ldloc));
+            Op write = block.ops.Single(op => op.Opcode == OpCodes.Stloc);
             Variable value = block.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
-            Assert.That(value.kind, Is.EqualTo(VariableKind.Constant));
-            Assert.That(value.constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
+            Assert.That(value, Is.SameAs(write.outputs.Single()));
+            Assert.That(value.ssaOrigin, Is.SameAs(local));
+            Assert.That(value, Is.Not.SameAs(write.inputs.Single()));
+            Assert.That(write.inputs.Single().constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
         });
     }
 
@@ -1861,7 +2060,7 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
-    public void ConstructSsaEliminatesPromotedArgumentCopies()
+    public void ConstructSsaGivesPromotedArgumentAssignmentAFreshName()
     {
         MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
         Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, _ =>
@@ -1877,11 +2076,17 @@ public sealed class OptimizerPassTests
 
         optimizer.ConstructSsa();
 
-        Assert.That(optimizer.BasicBlocks.Single().ops,
-            Has.None.Matches<Op>(op => op.GetStorageAccess()?.VariableKind == VariableKind.Argument));
-        Variable value = optimizer.BasicBlocks.Single().ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
-        Assert.That(value.kind, Is.EqualTo(VariableKind.Constant));
-        Assert.That(value.constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
+        BasicBlock block = optimizer.BasicBlocks.Single();
+        Assert.That(block.ops, Has.None.Matches<Op>(op => op.Opcode == OpCodes.Ldarg));
+        Op write = block.ops.Single(op => op.Opcode == OpCodes.Starg);
+        Variable value = block.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
+        Assert.Multiple(() =>
+        {
+            Assert.That(value, Is.SameAs(write.outputs.Single()));
+            Assert.That(value.ssaOrigin, Is.SameAs(optimizer.ArgumentVariables[0]));
+            Assert.That(value, Is.Not.SameAs(write.inputs.Single()));
+            Assert.That(write.inputs.Single().constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
+        });
     }
 
     [Test]
@@ -2104,6 +2309,44 @@ public sealed class OptimizerPassTests
         Assert.That(
             optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[localBuilder!.LocalIndex]),
             Is.False);
+    }
+
+    [Test]
+    public void ConstructSsaRejectsExceptionEntryJoinWithLiveStackValue()
+    {
+        MethodInfo targetMethod = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
+        {
+            Label catchEntry = generator.DefineLabel();
+            Label catchExit = generator.DefineLabel();
+            Label exit = generator.DefineLabel();
+            var tryStart = new CodeInstruction(OpCodes.Nop);
+            tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+            var catchStart = new CodeInstruction(OpCodes.Pop).WithLabels(catchEntry);
+            catchStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+            var catchLeave = new CodeInstruction(OpCodes.Leave, exit).WithLabels(catchExit);
+            catchLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+            return
+            [
+                tryStart,
+                new CodeInstruction(OpCodes.Leave, exit),
+                catchStart,
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Brfalse, catchExit),
+                new CodeInstruction(OpCodes.Ldnull),
+                new CodeInstruction(OpCodes.Br, catchEntry),
+                catchLeave,
+                new CodeInstruction(OpCodes.Ret).WithLabels(exit),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+
+        Assert.That(() => optimizer.ConstructSsa(), Throws.InvalidOperationException
+            .With.Message.Contains("nonescaping values and normal predecessors"));
+        Assert.That(optimizer.BasicBlocks, Has.None.Matches<BasicBlock>(block =>
+            block.isSyntheticMethodEntry));
     }
 
     [Test]

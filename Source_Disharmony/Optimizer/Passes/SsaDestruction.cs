@@ -10,25 +10,109 @@ internal sealed class SsaDestruction(Optimizer optimizer) : Pass
     public override void Run()
     {
         CheckPreconditions();
+        EliminatePromotedStorageCopies();
 
         foreach (ControlFlowEdge edge in optimizer.basicBlocks.SelectMany(block => block.outgoingEdges).ToList())
         {
+            if (edge.Source.isSyntheticMethodEntry)
+            {
+                // Version zero already occupies the original argument/local slot on invocation.
+                // The entry phi retains that slot as its lowering preference, so materializing its
+                // conceptual initial assignment would only add a redundant load/store pair.
+                edge.assignments.Clear();
+                continue;
+            }
             if (edge.assignments.Count != 0)
                 MaterializeAssignments(edge);
         }
 
-        // The family relationship is no longer canonical, but retaining the physical local as a
+        // The family relationship is no longer canonical, but retaining the physical storage as a
         // lowering preference lets one compatible spill reclaim a slot made free by promotion.
         foreach (Variable variable in optimizer.variables)
         {
             Variable? origin = variable.ssaOrigin;
-            if (origin != null && origin != variable && origin.kind == VariableKind.Local)
+            if (origin != null && origin != variable &&
+                origin.kind is VariableKind.Argument or VariableKind.Local)
+            {
                 variable.preferredStorage = origin;
+            }
             variable.ssaOrigin = null;
             variable.ssaVersion = -1;
         }
 
         optimizer.Form = Optimizer.IrForm.Variables;
+    }
+
+    // SSA construction retains promoted stloc/starg operations because each assignment must have
+    // its own name. Once SSA optimizations are complete, those logical copies are no longer needed:
+    // promoted storage cannot escape, so replacing the assigned name by its source is exact. Do
+    // this before materializing phis so edge sources also use the replacement directly.
+    private void EliminatePromotedStorageCopies()
+    {
+        Dictionary<Variable, Variable> replacements = [];
+        HashSet<Op> copies = [];
+        foreach (Op op in optimizer.basicBlocks.SelectMany(block => block.ops))
+        {
+            if (op.GetStorageAccess() is not { Kind: Op.VariableAccessKind.Write } access ||
+                access.Variable.ssaOrigin == null)
+            {
+                continue;
+            }
+            if (op.stackInputCount != 1 || op.stackOutputCount != 0)
+                throw new InvalidOperationException("Promoted storage copy has an invalid stack shape");
+
+            replacements.Add(access.Variable, op.inputs[0]);
+            copies.Add(op);
+        }
+
+        if (copies.Count == 0)
+            return;
+
+        foreach (BasicBlock block in optimizer.basicBlocks)
+        {
+            Replace(block.entryStackVariables);
+            for (int index = block.ops.Count - 1; index >= 0; index--)
+            {
+                Op op = block.ops[index];
+                if (copies.Contains(op))
+                {
+                    block.ops.RemoveAt(index);
+                    continue;
+                }
+                Replace(op.inputs);
+                Replace(op.outputs);
+            }
+
+            foreach (ControlFlowEdge edge in block.outgoingEdges)
+            {
+                for (int index = 0; index < edge.assignments.Count; index++)
+                {
+                    VariableAssignment assignment = edge.assignments[index];
+                    Variable source = Resolve(assignment.Source);
+                    if (source != assignment.Source)
+                        edge.assignments[index] = new(source, assignment.Destination);
+                }
+            }
+        }
+
+        void Replace(List<Variable> values)
+        {
+            for (int index = 0; index < values.Count; index++)
+                values[index] = Resolve(values[index]);
+        }
+
+        Variable Resolve(Variable value)
+        {
+            HashSet<Variable>? visited = null;
+            while (replacements.TryGetValue(value, out Variable? replacement))
+            {
+                visited ??= [];
+                if (!visited.Add(value))
+                    throw new InvalidOperationException("Cyclic promoted-storage copies");
+                value = replacement;
+            }
+            return value;
+        }
     }
 
     private void CheckPreconditions()

@@ -36,9 +36,9 @@ internal class Optimizer
         Variables,
 
         /// <summary>
-        ///     SSA Variables form. Reads and writes of promoted storage have been removed and their
-        ///     producers are wired directly to consumers; incoming-edge assignments encode phi
-        ///     operands in parallel. Unpromoted storage and imprecisely typed stack slots remain
+        ///     SSA Variables form. Reads of promoted storage have been removed; each promoted write
+        ///     is a logical copy whose output is a fresh SSA name. Incoming-edge assignments encode
+        ///     phi operands in parallel. Unpromoted storage and imprecisely typed stack slots remain
         ///     mutable and may still have several definitions.
         /// </summary>
         Ssa,
@@ -568,6 +568,86 @@ internal class Optimizer
     }
 
     /// <summary>
+    ///     Recursively replaces an SSA phi result with its incoming values and yields every
+    ///     distinct non-phi value which can reach it. Ordinary operation inputs are not traversed.
+    ///     A synthetic method entry makes the invocation operand of an entry-loop phi an ordinary
+    ///     source, so no implicit root case is needed here. Requires unsplit SSA form and becomes
+    ///     invalid if the IR is mutated while the result is being enumerated.
+    /// </summary>
+    internal IEnumerable<Variable> GetReachingDefinitions(Variable variable)
+    {
+        if (Form != IrForm.Ssa)
+            throw new InvalidOperationException($"Reaching definitions require SSA form, not {Form}");
+        if (!variables.Contains(variable))
+            throw new ArgumentException("Variable is not part of this optimizer", nameof(variable));
+
+        Dictionary<Variable, List<Variable>> phis = [];
+        foreach (ControlFlowEdge edge in basicBlocks.SelectMany(block => block.outgoingEdges))
+        {
+            foreach (VariableAssignment assignment in edge.assignments)
+            {
+                if (!phis.TryGetValue(assignment.Destination, out List<Variable>? sources))
+                {
+                    sources = [];
+                    phis.Add(assignment.Destination, sources);
+                }
+                sources.Add(assignment.Source);
+            }
+        }
+
+        HashSet<Variable> visitedPhis = [];
+        HashSet<Variable> yielded = [];
+        Stack<Variable> pending = new([variable]);
+        while (pending.Count != 0)
+        {
+            Variable current = pending.Pop();
+            if (!phis.TryGetValue(current, out List<Variable>? sources))
+            {
+                if (yielded.Add(current))
+                    yield return current;
+                continue;
+            }
+            if (!visitedPhis.Add(current))
+                continue;
+
+            for (int index = sources.Count - 1; index >= 0; index--)
+                pending.Push(sources[index]);
+        }
+    }
+
+    /// <summary>
+    ///     Gives an invocation entry with normal predecessors an explicit predecessor for SSA
+    ///     construction. The new block becomes the real method entry and belongs directly to the
+    ///     synthetic root, so it is outside every exception region. Its edge is the otherwise
+    ///     implicit path on which version-zero argument/local values live. The block is retained
+    ///     after SSA so later transformations may put executable code there. Repeated calls are
+    ///     idempotent because the new entry itself has no predecessors.
+    /// </summary>
+    internal void AddSsaEntryBlockIfNeeded()
+    {
+        BasicBlock entry = GetRecursiveEntryBlock(root);
+        if (entry.incomingEdges.Count == 0)
+            return;
+        if (entry.entryStackVariables.Count != 0)
+            throw new InvalidOperationException("A method entry cannot have an evaluation stack");
+
+        BasicBlock newEntry = new()
+        {
+            id = nextBlockId++,
+            parent = root,
+            isSyntheticMethodEntry = true,
+        };
+        int entryIndex = basicBlocks.IndexOf(entry);
+        if (entryIndex < 0)
+            throw new InvalidOperationException($"Entry block {entry.ID} is not part of the optimizer");
+        basicBlocks.Insert(entryIndex, newEntry);
+        root.entry = newEntry;
+
+        ControlFlowEdge edge = AddControlFlowEdge(newEntry, entry);
+        newEntry.fallthroughEdge = edge;
+    }
+
+    /// <summary>
     ///     Returns the explicit entries used for normal-CFG dominance: the recursive method entry
     ///     plus every filter and handler entry whose exceptional predecessor is absent from the
     ///     edge graph. A protected-region entry is reached normally and is not an extra root. This
@@ -576,15 +656,12 @@ internal class Optimizer
     /// </summary>
     private List<BasicBlock> GetDominatorRoots()
     {
-        List<BasicBlock> roots = [GetRecursiveEntryBlock(root)];
-        foreach (var entryGroup in exceptionEntryGroups)
-        {
-            foreach (var associatedRegion in entryGroup.associatedRegions)
-                roots.Add(GetRecursiveEntryBlock(associatedRegion));
-        }
-
-        return roots;
+        return [GetRecursiveEntryBlock(root), .. GetExceptionEntryBlocks()];
     }
+
+    internal IEnumerable<BasicBlock> GetExceptionEntryBlocks() =>
+        exceptionEntryGroups.SelectMany(entryGroup => entryGroup.associatedRegions)
+            .Select(GetRecursiveEntryBlock);
 
     // Requires a complete, acyclic Region entry chain. This is hierarchy data and does not inspect
     // basicBlocks order; aggressive reorder is not required.
@@ -1591,14 +1668,14 @@ internal sealed class Variable
 
     // Canonical only in SSA Variables form. A promoted mutable variable points to itself with
     // version zero, letting incremental construction recognize it without a second registry. Phi
-    // destinations generated for that name point to the original with a positive version. Ordinary
-    // operation results need no origin: after copy removal they can directly be the name's value.
+    // destinations and promoted-storage assignments generated for that name point to the original
+    // with a positive version. Unrelated operation results have no origin.
     public Variable? ssaOrigin;
     public int ssaVersion = -1;
 
     // Canonical from SSA construction through Variables-to-Stack lowering. Null means no preference.
-    // When a logical value assigned to a promoted local requires a spill, lowering may reuse this
-    // physical local if it has not already granted the slot to an incompatible value.
+    // When a logical value derived from promoted argument/local storage requires a spill, lowering
+    // may reuse that physical slot if it has not already granted it to an incompatible value.
     public Variable? preferredStorage;
 
     public override string ToString() => Name;
@@ -1649,6 +1726,11 @@ internal class BasicBlock : RegionNode
     public readonly List<ControlFlowEdge> incomingEdges = [];
     public readonly List<ControlFlowEdge> outgoingEdges = [];
     public ControlFlowEdge? fallthroughEdge;
+
+    // True only for the real method-entry block inserted by SSA construction when the original
+    // entry also had normal predecessors. It belongs directly to the synthetic root, remains in
+    // every later IR form, and provides an executable home for code moved above the former entry.
+    public bool isSyntheticMethodEntry;
 
     // Canonical in both Variables forms and deliberately empty in Stack form. In regular
     // Variables form these are shared mutable logical stack slots: every predecessor's natural
