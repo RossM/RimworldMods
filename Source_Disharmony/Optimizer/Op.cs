@@ -107,6 +107,15 @@ internal class Op(OpCode opcode, object? operand, IReadOnlyList<Op> prefixes)
 
     public ushort OpcodeValue => unchecked((ushort)Opcode.Value);
 
+    internal bool HasCopySemantics => OpcodeValue is
+        OpCodeValues.Ldarg or OpCodeValues.Ldarg_0 or OpCodeValues.Ldarg_1 or OpCodeValues.Ldarg_2 or OpCodeValues.Ldarg_3 or
+        OpCodeValues.Ldarg_S or
+        OpCodeValues.Starg or OpCodeValues.Starg_S or
+        OpCodeValues.Ldloc or OpCodeValues.Ldloc_0 or OpCodeValues.Ldloc_1 or OpCodeValues.Ldloc_2 or OpCodeValues.Ldloc_3 or
+        OpCodeValues.Ldloc_S or
+        OpCodeValues.Stloc or OpCodeValues.Stloc_0 or OpCodeValues.Stloc_1 or OpCodeValues.Stloc_2 or OpCodeValues.Stloc_3 or
+        OpCodeValues.Stloc_S;
+
     private OperationEffects? effectsCached;
 
     // Canonical only in Variables form and empty/defaulted in Stack form. Evaluation-stack

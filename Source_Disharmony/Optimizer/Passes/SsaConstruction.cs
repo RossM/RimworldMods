@@ -23,8 +23,8 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
         candidates =
         [
             .. optimizer.variables.Where(variable =>
-                variable.ssaOrigin == null &&
-                (IsPromotableStackSlot(variable) || optimizer.IsEligibleForSsaPromotion(variable))),
+                variable.kind is VariableKind.Argument or VariableKind.Local or VariableKind.StackSlot &&
+                variable.ssaOrigin == null && variable.IsPromotable),
         ];
 
         bool hasRemovableLiterals = optimizer.basicBlocks.SelectMany(block => block.ops)
@@ -55,16 +55,6 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
         Rename();
         optimizer.Form = Optimizer.IrForm.Ssa;
     }
-
-    // An imprecisely typed cross-block slot remains in the regular mutable representation. Phi
-    // destruction may need to spill a predecessor-specific value, and the CLI has no local
-    // signature that can represent a lattice marker or absent type metadata.
-    // TODO: Trace why ConditionalStructCopy currently produces such a slot at its join. The goal is
-    //       to preserve its concrete stack type and remove this exemption, not to spill AnyType.
-    private static bool IsPromotableStackSlot(Variable variable) =>
-        variable.kind == VariableKind.StackSlot &&
-        variable.type != null &&
-        !TypeLattice.IsSpecialType(variable.type);
 
     private void CheckPreconditions()
     {
@@ -241,53 +231,15 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
                     continue;
                 }
 
-                Op.StorageAccess? storageAccess = op.GetStorageAccess();
-
-                // Promoted storage operations no longer access physical memory. Loads disappear,
-                // while each write remains as a logical copy defining a fresh SSA name. Keeping
-                // that definition distinct from its source is required by SSA; copy elimination
-                // can remove it independently.
-                if (storageAccess is { } access && candidates.Contains(access.Variable))
+                if (op.HasCopySemantics && op is { inputs: [{ IsPromotable: true }], outputs: [{ IsPromotable: true }] })
                 {
-                    switch (access.Kind)
-                    {
-                        case Op.VariableAccessKind.Read:
-                        {
-                            if (op.stackInputCount != 0 || op.stackOutputCount != 1)
-                                throw new InvalidOperationException("Promoted storage read has an invalid stack shape");
-                            Variable value = Current(access.Variable);
-                            Variable loadedValue = op.outputs[0];
-                            if (loadedValue.kind == VariableKind.StackSlot &&
-                                !candidates.Contains(loadedValue))
-                            {
-                                // An imprecisely typed cross-block slot is deliberately not in SSA.
-                                // Keep this path-specific logical copy; replacing the shared slot
-                                // globally would make the last visited predecessor win the join.
-                                op.inputs[op.stackInputCount] = value;
-                                retainedOperations.Add(op);
-                                continue;
-                            }
-                            if (candidates.Contains(loadedValue))
-                                Push(loadedValue, value);
-                            else
-                                replacements[loadedValue] = value;
-                            continue;
-                        }
-                        case Op.VariableAccessKind.Write:
-                        {
-                            if (op.stackInputCount != 1 || op.stackOutputCount != 0)
-                                throw new InvalidOperationException("Promoted storage write has an invalid stack shape");
-                            op.inputs[0] = Resolve(op.inputs[0]);
-                            Variable version = NewVersion(access.Variable);
-                            op.outputs[op.stackOutputCount] = version;
-                            Push(access.Variable, version);
-                            retainedOperations.Add(op);
-                            continue;
-                        }
-                        case Op.VariableAccessKind.Address:
-                            throw new InvalidOperationException("Address-taken storage was promoted to SSA");
-                        default: throw new ArgumentOutOfRangeException();
-                    }
+                    Variable value = Resolve(op.inputs[0]);
+                    Variable output = op.outputs[0];
+                    if (candidates.Contains(output))
+                        Push(output, value);
+                    else
+                        replacements[output] = value;
+                    continue;
                 }
 
                 ReplaceUses(op.inputs);

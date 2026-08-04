@@ -538,24 +538,6 @@ internal class Optimizer
     }
 
     /// <summary>
-    ///     The authoritative eligibility predicate for mutable argument/local storage. Unknown
-    ///     metadata cannot prove that a store/load boundary is lossless. Pinned storage, address-
-    ///     taken storage, and storage whose declared representation narrows its stack value remain
-    ///     physical. Until exceptional local dataflow is represented in the CFG, all storage in a
-    ///     method with exception entries is conservatively considered exception-exposed.
-    /// </summary>
-    internal bool IsEligibleForSsaPromotion(Variable variable)
-    {
-        if (variable.kind is not (VariableKind.Argument or VariableKind.Local))
-            return false;
-        if (variable.addressTaken || variable.pinned || exceptionEntryGroups.Count != 0)
-            return false;
-        if (variable.type == null || TypeLattice.IsSpecialType(variable.type))
-            return false;
-        return !TypeLattice.StorageNarrowsStackValue(variable.type);
-    }
-
-    /// <summary>
     ///     Explicitly returns the cached dominance result or computes it if absent. Requires a
     ///     complete CFG in either IR form and every retained block to be reachable from at least one
     ///     root returned by <see cref="GetDominatorRoots" />. Block order, operation ownership, and
@@ -1427,6 +1409,8 @@ internal class Optimizer
             index = index,
             localBuilder = localBuilder,
             pinned = pinned,
+            exceptionExposed = kind is VariableKind.Argument or VariableKind.Local &&
+                               exceptionEntryGroups.Count != 0,
         };
         variables.Add(variable);
         return variable;
@@ -1629,6 +1613,34 @@ internal sealed class Variable
         { } origin => $"{origin.BaseName}.{ssaVersion}",
     };
 
+    /// <summary>
+    ///     The authoritative decision whether this value may participate in SSA substitution and
+    ///     copy elimination. Mutable arguments/locals are promotable only when their storage
+    ///     boundary is a lossless copy and cannot be observed indirectly or by an exception
+    ///     handler. Cross-block stack slots require a precise type because phi destruction may
+    ///     spill them. Temporaries and constants are already single-definition SSA values and are
+    ///     therefore promotable without further renaming. Whether a mutable family has already
+    ///     been renamed is recorded separately by <see cref="ssaOrigin" />.
+    /// </summary>
+    public bool IsPromotable
+    {
+        get
+        {
+            return kind switch
+            {
+                VariableKind.Argument or VariableKind.Local =>
+                    type != null && !TypeLattice.IsSpecialType(type) &&
+                    !addressTaken && !pinned && !exceptionExposed &&
+                    !TypeLattice.StorageNarrowsStackValue(type),
+                // TODO: ConditionalStructCopy currently produces an imprecisely typed join slot.
+                // Preserve its concrete stack type so it can become promotable too.
+                VariableKind.StackSlot => type != null && !TypeLattice.IsSpecialType(type),
+                VariableKind.Temporary or VariableKind.Constant => true,
+                _ => throw new ArgumentOutOfRangeException(),
+            };
+        }
+    }
+
     // Stable identity within one Variables-form interval. Unlike index, this is unique across
     // all variable kinds. IDs and the variable registry are reset when Variables form is built
     // or discarded; Variable objects are not canonical in Stack form.
@@ -1665,6 +1677,12 @@ internal sealed class Variable
     // argument/local's address. Rewriting address operations can change the value, so such a
     // pass must recompute it; this is a current-IR summary, not historical escape information.
     public bool addressTaken;
+
+    // Canonical in both Variables forms for Argument and Local; false for other kinds. Until
+    // exceptional storage dataflow is represented explicitly, every argument/local in a method
+    // with a filter or handler is conservatively exception-exposed. This is immutable throughout a
+    // Variables-form interval and is one of the facts consumed by IsPromotable.
+    public bool exceptionExposed;
 
     // Canonical only in SSA Variables form. A promoted mutable variable points to itself with
     // version zero, letting incremental construction recognize it without a second registry. Phi

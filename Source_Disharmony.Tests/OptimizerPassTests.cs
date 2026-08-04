@@ -335,11 +335,6 @@ public sealed class OptimizerPassTests
             block.ops.Any(op => op.Opcode == OpCodes.Pop));
         Variable value = finalJoinBlock.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
         Variable[] reaching = [.. optimizer.GetReachingDefinitions(value)];
-        Op[] definingWrites =
-        [
-            .. optimizer.BasicBlocks.SelectMany(block => block.ops)
-                .Where(op => op.Opcode == OpCodes.Stloc && reaching.Contains(op.outputs.Single())),
-        ];
         HashSet<Variable> phiResults =
         [
             .. optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges)
@@ -352,10 +347,11 @@ public sealed class OptimizerPassTests
             Assert.That(reaching, Has.Length.EqualTo(3));
             Assert.That(reaching, Has.None.Matches<Variable>(phiResults.Contains));
             Assert.That(reaching, Has.All.Matches<Variable>(variable =>
-                variable.ssaOrigin == optimizer.LocalVariables[result!.LocalIndex]));
-            Assert.That(definingWrites.Select(op => op.outputs.Single()), Is.EquivalentTo(reaching));
-            Assert.That(definingWrites.Select(op => op.inputs.Single().constantValue?.GetInt32()),
+                variable.kind == VariableKind.Constant));
+            Assert.That(reaching.Select(variable => variable.constantValue?.GetInt32()),
                 Is.EquivalentTo(new int?[] { 1, 2, 3 }));
+            Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
+                Has.None.Matches<Op>(op => op.Opcode == OpCodes.Stloc));
         });
     }
 
@@ -410,7 +406,9 @@ public sealed class OptimizerPassTests
             Assert.That(reaching, Does.Contain(entry));
             Assert.That(reaching, Does.Contain(assignment));
             Assert.That(assignment, Is.Not.SameAs(entry));
-            Assert.That(assignment.ssaOrigin, Is.SameAs(entry));
+            Assert.That(assignment, Is.SameAs(header.incomingEdges
+                .Single(edge => edge.Source != syntheticEntry).Source.ops
+                .Single(op => op.Opcode == OpCodes.Sub).outputs.Single()));
         });
 
         optimizer.ConstructSsa();
@@ -1818,7 +1816,7 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
-    public void SsaEligibilityCentralizesStorageEscapeAndNormalizationRules()
+    public void VariablePromotabilityCentralizesStorageEscapeAndNormalizationRules()
     {
         LocalBuilder? ordinary = null;
         LocalBuilder? narrow = null;
@@ -1859,12 +1857,42 @@ public sealed class OptimizerPassTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[ordinary!.LocalIndex]), Is.True);
-            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[narrow!.LocalIndex]), Is.False);
-            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[singlePrecision!.LocalIndex]), Is.False);
-            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[pinned!.LocalIndex]), Is.False);
-            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[addressed!.LocalIndex]), Is.False);
-            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[unknownIndex]), Is.False);
+            Assert.That(optimizer.LocalVariables[ordinary!.LocalIndex].IsPromotable, Is.True);
+            Assert.That(optimizer.LocalVariables[narrow!.LocalIndex].IsPromotable, Is.False);
+            Assert.That(optimizer.LocalVariables[singlePrecision!.LocalIndex].IsPromotable, Is.False);
+            Assert.That(optimizer.LocalVariables[pinned!.LocalIndex].IsPromotable, Is.False);
+            Assert.That(optimizer.LocalVariables[addressed!.LocalIndex].IsPromotable, Is.False);
+            Assert.That(optimizer.LocalVariables[unknownIndex].IsPromotable, Is.False);
+        });
+    }
+
+    [Test]
+    public void VariablePromotabilityIncludesExistingSsaValues()
+    {
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
+        [
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+
+        Variable preciseStackSlot = optimizer.NewVariable(VariableKind.StackSlot, typeof(int));
+        Variable unknownStackSlot = optimizer.NewVariable(
+            VariableKind.StackSlot, typeof(TypeLattice.UnknownType));
+        Variable nullStackSlot = optimizer.NewVariable(
+            VariableKind.StackSlot, typeof(TypeLattice.NullType));
+        Variable temporary = optimizer.NewVariable(VariableKind.Temporary, typeof(int));
+        Variable constant = optimizer.NewConstantVariable(ConstantValue.FromInt32(1));
+        Variable nullConstant = optimizer.NewConstantVariable(ConstantValue.Null);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(preciseStackSlot.IsPromotable, Is.True);
+            Assert.That(unknownStackSlot.IsPromotable, Is.False);
+            Assert.That(nullStackSlot.IsPromotable, Is.False);
+            Assert.That(temporary.IsPromotable, Is.True);
+            Assert.That(constant.IsPromotable, Is.True);
+            Assert.That(nullConstant.IsPromotable, Is.True);
         });
     }
 
@@ -1907,10 +1935,11 @@ public sealed class OptimizerPassTests
             Assert.That(definitions, Has.Length.EqualTo(2));
             Assert.That(definitions[0], Is.Not.SameAs(definitions[1]));
             Assert.That(definitions, Has.All.Matches<Variable>(definition =>
-                definition.ssaOrigin == optimizer.LocalVariables[result!.LocalIndex]));
-            Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops)
-                .Where(op => op.Opcode == OpCodes.Stloc)
-                .Select(op => op.outputs.Single()), Is.EquivalentTo(definitions));
+                definition.kind == VariableKind.Constant));
+            Assert.That(definitions.Select(definition => definition.constantValue?.GetInt32()),
+                Is.EquivalentTo(new int?[] { 1, 2 }));
+            Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
+                Has.None.Matches<Op>(op => op.Opcode == OpCodes.Stloc));
             Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
                 Has.None.Matches<Op>(op => op.GetStorageAccess()?.Variable ==
                                            optimizer.LocalVariables[result!.LocalIndex]));
@@ -1955,13 +1984,11 @@ public sealed class OptimizerPassTests
         Assert.Multiple(() =>
         {
             Assert.That(local.ssaOrigin, Is.SameAs(local));
-            Assert.That(block.ops, Has.None.Matches<Op>(op => op.Opcode == OpCodes.Ldloc));
-            Op write = block.ops.Single(op => op.Opcode == OpCodes.Stloc);
+            Assert.That(block.ops, Has.None.Matches<Op>(op =>
+                op.Opcode == OpCodes.Ldloc || op.Opcode == OpCodes.Stloc));
             Variable value = block.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
-            Assert.That(value, Is.SameAs(write.outputs.Single()));
-            Assert.That(value.ssaOrigin, Is.SameAs(local));
-            Assert.That(value, Is.Not.SameAs(write.inputs.Single()));
-            Assert.That(write.inputs.Single().constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
+            Assert.That(value.kind, Is.EqualTo(VariableKind.Constant));
+            Assert.That(value.constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
         });
     }
 
@@ -2060,7 +2087,7 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
-    public void ConstructSsaGivesPromotedArgumentAssignmentAFreshName()
+    public void ConstructSsaEliminatesPromotedArgumentCopies()
     {
         MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
         Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, _ =>
@@ -2077,15 +2104,15 @@ public sealed class OptimizerPassTests
         optimizer.ConstructSsa();
 
         BasicBlock block = optimizer.BasicBlocks.Single();
-        Assert.That(block.ops, Has.None.Matches<Op>(op => op.Opcode == OpCodes.Ldarg));
-        Op write = block.ops.Single(op => op.Opcode == OpCodes.Starg);
+        Assert.That(block.ops, Has.None.Matches<Op>(op =>
+            op.Opcode == OpCodes.Ldarg || op.Opcode == OpCodes.Starg));
         Variable value = block.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
         Assert.Multiple(() =>
         {
-            Assert.That(value, Is.SameAs(write.outputs.Single()));
-            Assert.That(value.ssaOrigin, Is.SameAs(optimizer.ArgumentVariables[0]));
-            Assert.That(value, Is.Not.SameAs(write.inputs.Single()));
-            Assert.That(write.inputs.Single().constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
+            Assert.That(value.kind, Is.EqualTo(VariableKind.Constant));
+            Assert.That(value.constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
+            Assert.That(optimizer.ArgumentVariables[0].ssaOrigin,
+                Is.SameAs(optimizer.ArgumentVariables[0]));
         });
     }
 
@@ -2307,7 +2334,7 @@ public sealed class OptimizerPassTests
         new StackToVariableConversion(optimizer).Run();
 
         Assert.That(
-            optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[localBuilder!.LocalIndex]),
+            optimizer.LocalVariables[localBuilder!.LocalIndex].IsPromotable,
             Is.False);
     }
 
@@ -2545,8 +2572,6 @@ public sealed class OptimizerPassTests
         optimizer.DestructSsa();
 
         Variable originalVariable = optimizer.LocalVariables[original!.LocalIndex];
-        Assert.That(optimizer.Variables, Has.Some.Matches<Variable>(variable =>
-            variable.preferredStorage == originalVariable));
         Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops)
             .SelectMany(op => op.inputs.Concat(op.outputs)), Does.Contain(originalVariable));
 
