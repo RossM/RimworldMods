@@ -505,11 +505,11 @@ public sealed class OptimizerPassTests
             Is.EqualTo(ExceptionBlockType.BeginExceptionBlock));
         Assert.That(entryGroup.associatedRegions.Select(region => region.harmonyBlock?.catchType),
             Is.EqualTo(new[] { typeof(InvalidOperationException), typeof(Exception) }));
-        Assert.That(entryGroup.NextRegion(entryGroup.ProtectedRegion),
+        Assert.That(entryGroup.ProtectedRegion.Next,
             Is.SameAs(entryGroup.associatedRegions[0]));
-        Assert.That(entryGroup.NextRegion(entryGroup.associatedRegions[0]),
+        Assert.That(entryGroup.associatedRegions[0].Next,
             Is.SameAs(entryGroup.associatedRegions[1]));
-        Assert.That(entryGroup.NextRegion(entryGroup.associatedRegions[1]), Is.Null);
+        Assert.That(entryGroup.associatedRegions[1].Next, Is.Null);
 
         optimizer.AggressiveDeadCodeEliminationAndReorder();
         optimizer.Emit();

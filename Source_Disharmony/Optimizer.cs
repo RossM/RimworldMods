@@ -534,6 +534,8 @@ internal partial class Optimizer
         // Canonical exception-group membership after MakeBasicBlocks. Null only for the synthetic
         // root; protected, filter, and handler Regions all point to their shared group.
         public ExceptionEntryGroup? exceptionEntryGroup;
+
+        public Region? Next => field ??= exceptionEntryGroup?.NextRegion(this);
     }
 
     /// <summary>
@@ -714,8 +716,7 @@ internal partial class Optimizer
             while (structuredLayout && regionStack.Count >= 1 && block.parent != regionStack.Peek())
             {
                 Region exitedRegion = regionStack.Peek();
-                if (exitedRegion.harmonyBlock != null &&
-                    exitedRegion.exceptionEntryGroup?.NextRegion(exitedRegion) == null)
+                if (exitedRegion.harmonyBlock != null && exitedRegion.Next == null)
                     FileLog.LogILBlockEnd(codePos, new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
                 regionStack.Pop();
             }
@@ -1085,8 +1086,7 @@ internal partial class Optimizer
             while (regionStack.Count >= 1 && block.parent != regionStack.Peek())
             {
                 Region exitedRegion = regionStack.Peek();
-                if (exitedRegion.harmonyBlock != null &&
-                    exitedRegion.exceptionEntryGroup?.NextRegion(exitedRegion) == null)
+                if (exitedRegion.harmonyBlock != null && exitedRegion.Next == null)
                     outputInstructions.instructions[^1].blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
                 regionStack.Pop();
             }
@@ -1630,9 +1630,8 @@ internal partial class Optimizer
             {
                 case Region chainedRegion:
                 {
-                    Region? nextRegion = chainedRegion.exceptionEntryGroup?.NextRegion(chainedRegion);
-                    if (nextRegion != null)
-                        queue.AddFirst(nextRegion);
+                    if (chainedRegion.Next != null)
+                        queue.AddFirst(chainedRegion.Next);
                     break;
                 }
                 case BasicBlock { fallthroughEdge: not null } basicBlock: queue.AddFirst(basicBlock.fallthroughEdge.Target); break;
