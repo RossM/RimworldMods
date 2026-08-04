@@ -1386,9 +1386,10 @@ public sealed class OptimizerPipelineTests
     private static List<CodeInstruction> Optimize(
         Type returnType,
         Type[] parameterTypes,
-        Func<ILGenerator, List<CodeInstruction>> createInstructions)
+        Func<ILGenerator, List<CodeInstruction>> createInstructions,
+        [CallerMemberName] string methodName = "OptimizerPipelineTarget")
     {
-        var target = new DynamicMethod("OptimizerPipelineTarget", returnType, parameterTypes);
+        var target = new DynamicMethod(methodName, returnType, parameterTypes);
         ILGenerator generator = target.GetILGenerator();
         var optimizer = new Optimizer.Optimizer(target, createInstructions(generator), generator, debug: false);
         return optimizer.Optimize();
