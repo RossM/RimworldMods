@@ -32,6 +32,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Optimizer\Passes\" />
+  </ItemGroup>
+
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\Disharmony.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\Disharmony.dll&quot;" />
     <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\Disharmony.dll&quot; &quot;..\XylXenos\Assemblies\Disharmony.dll&quot;" />
