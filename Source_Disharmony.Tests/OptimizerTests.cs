@@ -248,7 +248,7 @@ public static class OptimizerPatches
 [TestFixture]
 public sealed class OptimizerTests : PatchTestBase
 {
-    private static readonly Action<Exception> ThrowRuntimeException = exception => throw exception;
+    private static void ThrowRuntimeException(Exception exception) => throw new InvalidOperationException("Runtime exception", exception);
 
     [SetUp]
     public void EnableOptimizer()
