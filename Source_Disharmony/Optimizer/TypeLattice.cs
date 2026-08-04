@@ -32,6 +32,49 @@ internal static class TypeLattice
         type == typeof(AnyType) || type == typeof(UnknownType) || type == typeof(NullType) ||
         type.IsByRef && IsSpecialType(type.GetElementType()!);
 
+    /// <summary>
+    ///     Converts a declared CLI storage type to the type carried by the evaluation stack.
+    ///     Signedness is not represented on the stack, and the short integer and floating-point
+    ///     storage forms are widened as required by ECMA-335 I.12.1.3.
+    /// </summary>
+    internal static Type ToStackType(Type type)
+    {
+        if (type.IsEnum)
+            return ToStackType(Enum.GetUnderlyingType(type));
+
+        if (type == typeof(sbyte) || type == typeof(byte) || type == typeof(bool) ||
+            type == typeof(short) || type == typeof(ushort) || type == typeof(char) ||
+            type == typeof(int) || type == typeof(uint))
+        {
+            return typeof(int);
+        }
+
+        if (type == typeof(long) || type == typeof(ulong))
+            return typeof(long);
+
+        if (type == typeof(float) || type == typeof(double))
+            return typeof(double);
+
+        if (type == typeof(IntPtr) || type == typeof(UIntPtr))
+            return typeof(IntPtr);
+
+        return type;
+    }
+
+    /// <summary>
+    ///     Returns whether storing and reloading a stack value through this declared type may
+    ///     truncate or otherwise normalize it. Such a store/load boundary is semantically visible
+    ///     and cannot be erased merely by renaming the storage into an SSA value.
+    /// </summary>
+    internal static bool StorageNarrowsStackValue(Type type)
+    {
+        if (type.IsEnum)
+            return StorageNarrowsStackValue(Enum.GetUnderlyingType(type));
+        return type == typeof(sbyte) || type == typeof(byte) || type == typeof(bool) ||
+               type == typeof(short) || type == typeof(ushort) || type == typeof(char) ||
+               type == typeof(float);
+    }
+
     internal static Type FromRef(Type type)
     {
         if (type.IsByRef)

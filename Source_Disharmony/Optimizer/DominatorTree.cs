@@ -15,6 +15,7 @@ internal sealed class DominatorTree
     {
         public BasicBlock? immediateDominator;
         public BasicBlock[] children = [];
+        public BasicBlock[] dominanceFrontier = [];
 
         // A node's dominator-tree descendants occupy [interval.Start, interval.End). This is the
         // canonical representation used by Dominates; full dominator sets are not retained.
@@ -52,6 +53,13 @@ internal sealed class DominatorTree
 
     /// <summary>Returns the block's children in the dominator tree.</summary>
     public IReadOnlyList<BasicBlock> GetChildren(BasicBlock block) => GetNode(block).children;
+
+    /// <summary>
+    ///     Returns blocks at which paths leaving the block's dominated subtree first reconverge.
+    ///     This is the conventional dominance frontier used for iterated phi placement.
+    /// </summary>
+    public IReadOnlyList<BasicBlock> GetDominanceFrontier(BasicBlock block) =>
+        GetNode(block).dominanceFrontier;
 
     private Node GetNode(BasicBlock block)
     {
@@ -176,7 +184,38 @@ internal sealed class DominatorTree
         }
 
         BasicBlock[] roots = [.. children[artificialRoot].Select(index => blocks[index])];
+        PopulateDominanceFrontiers();
         return new(nodes, roots);
+
+        void PopulateDominanceFrontiers()
+        {
+            Dictionary<BasicBlock, HashSet<BasicBlock>> frontiers =
+                blocks.ToDictionary(block => block, _ => new HashSet<BasicBlock>());
+
+            foreach (BasicBlock join in blocks)
+            {
+                int implicitEntryCount = roots.Contains(join) ? 1 : 0;
+                if (join.incomingEdges.Count + implicitEntryCount < 2)
+                    continue;
+
+                BasicBlock? joinDominator = nodes[join].immediateDominator;
+                foreach (BasicBlock predecessor in join.Predecessors.Distinct())
+                {
+                    BasicBlock? runner = predecessor;
+                    while (runner != joinDominator)
+                    {
+                        if (runner == null)
+                            throw new InvalidOperationException("A CFG predecessor has no path to its join dominator");
+                        frontiers[runner].Add(join);
+                        runner = nodes[runner].immediateDominator;
+                    }
+                }
+            }
+
+            foreach (BasicBlock block in blocks)
+                nodes[block].dominanceFrontier =
+                    [.. frontiers[block].OrderBy(candidate => indexByBlock[candidate])];
+        }
 
         int Intersect(int first, int second)
         {

@@ -5,21 +5,20 @@ namespace Disharmony.Optimizer;
 /// <summary>
 ///     Owns one shared IR whose canonical interpretation changes over the pipeline. The normal state
 ///     sequence is: no IR; unordered Stack form after MakeBasicBlocks; regular Variables form after
-///     ConvertStackToVariables; Stack form again after ConvertVariablesToStack; emission-ordered
+///     ConvertStackToVariables; SSA Variables form between ConstructSsa and DestructSsa; regular
+///     Variables form again after DestructSsa; Stack form after ConvertVariablesToStack; emission-ordered
 ///     Stack form after AggressiveDeadCodeEliminationAndReorder and InsertBranches; then canonical
-///     output after Emit. Future SSA form belongs between regular Variables form and lowering and
-///     will use the same blocks/operations with an explicit additional <see cref="IrForm" /> state.
+///     output after Emit. Every form uses the same blocks and operations; <see cref="IrForm" />
+///     selects which fields are canonical at each pass boundary.
 ///     These are pass-boundary invariants: conversion workers temporarily build the destination
 ///     representation before changing Form, but no other pass may observe that mixed state.
 /// </summary>
 internal class Optimizer
 {
     /// <summary>
-    ///     Which interpretation of the shared block and operation data is canonical. The current
-    ///     values describe Stack form and regular (non-SSA) Variables form. Future SSA will use the
-    ///     same block/operation structures but must add an explicit state here: an SSA function with
-    ///     no joins can have no edge assignments, so assignment-list contents are not a sufficient
-    ///     form discriminator.
+    ///     Which interpretation of the shared block and operation data is canonical. The same
+    ///     structures are used in every form. An SSA function with no joins can have no edge
+    ///     assignments, so assignment-list contents are not a sufficient form discriminator.
     /// </summary>
     internal enum IrForm
     {
@@ -35,6 +34,14 @@ internal class Optimizer
         ///     form, and every CFG edge assignment list is empty.
         /// </summary>
         Variables,
+
+        /// <summary>
+        ///     SSA Variables form. Reads and writes of promoted storage have been removed and their
+        ///     producers are wired directly to consumers; incoming-edge assignments encode phi
+        ///     operands in parallel. Unpromoted storage and imprecisely typed stack slots remain
+        ///     mutable and may still have several definitions.
+        /// </summary>
+        Ssa,
     }
 
     // Factories rather than shared instances: passes freely attach variable operands and prefixes
@@ -75,10 +82,11 @@ internal class Optimizer
     // Computation is explicit at pass entry, never hidden in a property.
     private DominatorTree? dominatorTree;
 
-    // Canonical only in Variables form and empty in Stack form. variables owns every current
-    // Variable. The two dictionaries are consistent subsets: each maps a physical slot index to
-    // the one Argument/Local Variable for that slot, and every mapped value occurs in variables.
-    // Logical values occur only in variables. nextVariableId is the next identity in this interval.
+    // Canonical in regular and SSA Variables forms and empty in Stack form. variables owns every
+    // current Variable. The two dictionaries are consistent subsets: each maps a physical slot
+    // index to the one Argument/Local Variable for that slot, and every mapped value occurs in
+    // variables. Logical values occur only in variables. nextVariableId is the next identity in
+    // this interval.
     internal readonly List<Variable> variables = [];
     internal readonly Dictionary<int, Variable> argumentVariables = [];
     internal readonly Dictionary<int, Variable> localVariables = [];
@@ -122,9 +130,9 @@ internal class Optimizer
         valid = true;
     }
 
-    // Meaningful once MakeBasicBlocks has created the IR. Defaults to Stack, changes to Variables
-    // only after conversion completes, and changes back only after all variable state is discarded.
-    // SSA construction must eventually add and set a distinct value rather than infer SSA from data.
+    // Meaningful once MakeBasicBlocks has created the IR. Defaults to Stack; each conversion pass
+    // changes it only after completing the destination representation. It is the authoritative
+    // regular-versus-SSA discriminator even when SSA happens to contain no phi assignments.
     internal IrForm Form { get; set; }
 
     private static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
@@ -184,7 +192,7 @@ internal class Optimizer
 
                 FileLog.LogBuffered($"## Predecessors: {string.Join(", ", basicBlock.Predecessors.Select(b => b.ID))}");
                 FileLog.LogBuffered($"## Successors:   {string.Join(", ", basicBlock.Successors.Select(b => b.ID))}");
-                if (Form == IrForm.Variables)
+                if (Form != IrForm.Stack)
                 {
                     FileLog.LogBuffered($"## Entry Stack:  {string.Join(", ", basicBlock.entryStackVariables)}");
                     foreach (var edge in basicBlock.incomingEdges)
@@ -217,7 +225,7 @@ internal class Optimizer
                     {
                         foreach (var prefix in op.Prefixes)
                             LogInstruction(new(prefix), ref codePos);
-                        if (Form == IrForm.Variables)
+                        if (Form != IrForm.Stack)
                             LogVariableInstruction(op, ref codePos);
                         else
                             LogInstruction(ConvertToCodeInstruction(op), ref codePos);
@@ -356,7 +364,7 @@ internal class Optimizer
 
     /// <summary>
     ///     Runs the complete pipeline exactly once on a newly constructed optimizer. It builds Stack
-    ///     form, temporarily converts to regular Variables form for variable-aware optimization,
+    ///     form, converts through regular and SSA Variables forms for variable-aware optimization,
     ///     lowers back to Stack form, restores dead-code and CIL layout invariants, and emits the
     ///     canonical output instruction list.
     /// </summary>
@@ -407,6 +415,18 @@ internal class Optimizer
         ConservativeConstantPropagation();
         LogBlocks(nameof(ConservativeConstantPropagation));
 
+        // Rename promotable storage and cross-block stack slots into SSA values.
+        ConstructSsa();
+        LogBlocks(nameof(ConstructSsa));
+
+        // Give edge-specific stack phi transfers dedicated paths before materializing them.
+        SplitSsaEdges();
+        LogBlocks(nameof(SplitSsaEdges));
+
+        // Materialize phi transfers and return to regular Variables form for stack lowering.
+        DestructSsa();
+        LogBlocks(nameof(DestructSsa));
+
         // Convert from variable based operations back to stack based operations
         ConvertVariablesToStack();
         LogBlocks(nameof(ConvertVariablesToStack));
@@ -445,9 +465,11 @@ internal class Optimizer
 
     /// <summary>
     ///     Preconditions: regular Variables form with empty edge assignments, valid operation stack
-    ///     counts, and identical natural exit/target entry stacks on every edge. Postconditions:
-    ///     executable Stack form; variable operands, entry stacks, registries, and counts are
-    ///     cleared/non-canonical. CFG, regions, block order, and cached dominance are unchanged.
+    ///     counts, and one common required entry stack across all successors of each block.
+    ///     Operations need not retain the original natural stack schedule: SSA may have removed
+    ///     storage copies. Postconditions: executable Stack form; variable operands, entry stacks,
+    ///     registries, and counts are cleared/non-canonical. CFG, regions, block order, and cached
+    ///     dominance are unchanged.
     /// </summary>
     private void ConvertVariablesToStack()
     {
@@ -466,6 +488,60 @@ internal class Optimizer
     internal void ConservativeConstantPropagation()
     {
         new ConservativeConstantPropagation(this).Run();
+    }
+
+    /// <summary>
+    ///     Promotes every currently eligible mutable storage variable and every precisely typed
+    ///     cross-block stack slot not promoted by an earlier invocation. Requires regular or SSA
+    ///     Variables form, a complete CFG, empty edge assignments in regular form, and dead blocks
+    ///     removed. The pass computes dominance explicitly if necessary. It may be rerun after an
+    ///     optimization makes additional storage eligible; existing SSA families and phi
+    ///     assignments are preserved.
+    /// </summary>
+    internal void ConstructSsa()
+    {
+        new SsaConstruction(this).Run();
+    }
+
+    /// <summary>
+    ///     Requires SplitSsaEdges' guarantee that edges carrying evaluation-stack assignments have
+    ///     a unique-successor source. Eliminates all SSA edge assignments and returns to regular
+    ///     Variables form. SSA variables remain ordinary logical Variables; versions derived from
+    ///     a local retain that physical slot as a conservative spill hint.
+    /// </summary>
+    internal void DestructSsa()
+    {
+        new SsaDestruction(this).Run();
+    }
+
+    /// <summary>
+    ///     Requires SSA Variables form. Splits every stack-assignment edge whose source has another
+    ///     successor, so rebuilding a predecessor-specific evaluation stack occurs only on the
+    ///     selected edge. Storage assignments may remain on multi-successor sources because their
+    ///     nonescaping destinations can be written speculatively. The pass preserves SSA form but
+    ///     mutates the CFG and therefore invalidates dominance.
+    /// </summary>
+    internal void SplitSsaEdges()
+    {
+        new SsaEdgeSplitting(this).Run();
+    }
+
+    /// <summary>
+    ///     The authoritative eligibility predicate for mutable argument/local storage. Unknown
+    ///     metadata cannot prove that a store/load boundary is lossless. Pinned storage, address-
+    ///     taken storage, and storage whose declared representation narrows its stack value remain
+    ///     physical. Until exceptional local dataflow is represented in the CFG, all storage in a
+    ///     method with exception entries is conservatively considered exception-exposed.
+    /// </summary>
+    internal bool IsEligibleForSsaPromotion(Variable variable)
+    {
+        if (variable.kind is not (VariableKind.Argument or VariableKind.Local))
+            return false;
+        if (variable.addressTaken || variable.pinned || exceptionEntryGroups.Count != 0)
+            return false;
+        if (variable.type == null || TypeLattice.IsSpecialType(variable.type))
+            return false;
+        return !TypeLattice.StorageNarrowsStackValue(variable.type);
     }
 
     /// <summary>
@@ -792,7 +868,7 @@ internal class Optimizer
     // cached analysis state coherent by invalidating it. MoveControlFlowEdgeSource additionally
     // transfers fallthrough classification; redirecting a target does not change whether the edge
     // is its source's default continuation.
-    private ControlFlowEdge AddControlFlowEdge(BasicBlock source, BasicBlock target)
+    internal ControlFlowEdge AddControlFlowEdge(BasicBlock source, BasicBlock target)
     {
         var edge = new ControlFlowEdge(source, target);
         source.outgoingEdges.Add(edge);
@@ -810,7 +886,7 @@ internal class Optimizer
         InvalidateControlFlowAnalyses();
     }
 
-    private void RedirectControlFlowEdge(ControlFlowEdge edge, BasicBlock target)
+    internal void RedirectControlFlowEdge(ControlFlowEdge edge, BasicBlock target)
     {
         if (!edge.Target.incomingEdges.Remove(edge))
             throw new InvalidOperationException("Control-flow edge is not attached to its target block");
@@ -841,6 +917,31 @@ internal class Optimizer
         if (isFallthrough)
             source.fallthroughEdge = edge;
         InvalidateControlFlowAnalyses();
+    }
+
+    /// <summary>
+    ///     Inserts an empty fallthrough block on an existing edge and moves the edge's parallel
+    ///     assignments to the new second edge. The new block belongs to the source's lexical Region;
+    ///     callers must ensure that this is legal for the edge (in particular, a <c>leave</c> edge
+    ///     never requires splitting because it is its source's sole successor).
+    /// </summary>
+    internal ControlFlowEdge SplitControlFlowEdge(ControlFlowEdge edge)
+    {
+        BasicBlock source = edge.Source;
+        BasicBlock target = edge.Target;
+        BasicBlock split = new() { id = nextBlockId++, parent = source.parent };
+        int sourceIndex = basicBlocks.IndexOf(source);
+        if (sourceIndex < 0)
+            throw new InvalidOperationException("Control-flow edge source is not part of the optimizer");
+        basicBlocks.Insert(sourceIndex + 1, split);
+
+        List<VariableAssignment> assignments = [.. edge.assignments];
+        edge.assignments.Clear();
+        RedirectControlFlowEdge(edge, split);
+        ControlFlowEdge second = AddControlFlowEdge(split, target);
+        second.assignments.AddRange(assignments);
+        split.fallthroughEdge = second;
+        return second;
     }
 
     /// <summary>
@@ -1392,13 +1493,20 @@ internal enum VariableKind
 
 internal sealed class Variable
 {
-    public string Name => kind switch
+    private string BaseName => kind switch
     {
         VariableKind.Argument => $"a{index}",
         VariableKind.Local => $"l{index}",
         VariableKind.StackSlot => $"s{id}",
         VariableKind.Temporary => $"v{id}",
         _ => throw new ArgumentOutOfRangeException(),
+    };
+
+    public string Name => ssaOrigin switch
+    {
+        null => BaseName,
+        { } origin when origin == this => $"{BaseName}.{ssaVersion}",
+        { } origin => $"{origin.BaseName}.{ssaVersion}",
     };
 
     // Stable identity within one Variables-form interval. Unlike index, this is unique across
@@ -1427,10 +1535,22 @@ internal sealed class Variable
     // populated only from authoritative local metadata or a LocalBuilder.
     public bool pinned;
 
-    // Canonical only in Variables form. True exactly when a remaining operation takes this
+    // Canonical in regular and SSA Variables forms. True exactly when a remaining operation takes this
     // argument/local's address. Rewriting address operations can change the value, so such a
     // pass must recompute it; this is a current-IR summary, not historical escape information.
     public bool addressTaken;
+
+    // Canonical only in SSA Variables form. A promoted mutable variable points to itself with
+    // version zero, letting incremental construction recognize it without a second registry. Phi
+    // destinations generated for that name point to the original with a positive version. Ordinary
+    // operation results need no origin: after copy removal they can directly be the name's value.
+    public Variable? ssaOrigin;
+    public int ssaVersion = -1;
+
+    // Canonical from SSA construction through Variables-to-Stack lowering. Null means no preference.
+    // When a logical value assigned to a promoted local requires a spill, lowering may reuse this
+    // physical local if it has not already granted the slot to an incompatible value.
+    public Variable? preferredStorage;
 
     public override string ToString() => Name;
 }
@@ -1463,8 +1583,8 @@ internal class BasicBlock : RegionNode
     public IEnumerable<BasicBlock> Predecessors => incomingEdges.Select(edge => edge.Source);
     public IEnumerable<BasicBlock> Successors => outgoingEdges.Select(edge => edge.Target);
 
-    // Canonical operation sequence in both IR forms. In Stack form the CIL evaluation stack is
-    // implicit; in Variables form each operation's inputs/outputs are canonical.
+    // Canonical operation sequence in every IR form. In Stack form the CIL evaluation stack is
+    // implicit; in both Variables forms each operation's inputs/outputs are canonical.
     public readonly List<Op> ops = [];
 
     // Non-canonical emission metadata. This preserves one input label when available and is
@@ -1481,11 +1601,12 @@ internal class BasicBlock : RegionNode
     public readonly List<ControlFlowEdge> outgoingEdges = [];
     public ControlFlowEdge? fallthroughEdge;
 
-    // Canonical only in Variables form and deliberately empty in Stack form. In regular
+    // Canonical in both Variables forms and deliberately empty in Stack form. In regular
     // Variables form these are shared mutable logical stack slots: every predecessor's natural
     // exit stack is identical by object identity to its target's entryStackVariables, and edge
-    // assignments are empty. In future SSA Variables form these become block-entry SSA names;
-    // predecessor-specific values may then be supplied by parallel incoming-edge assignments.
+    // assignments are empty. In SSA Variables form precisely typed slots are block-entry SSA names
+    // whose predecessor-specific values are supplied by parallel incoming-edge assignments;
+    // imprecisely typed slots temporarily retain the regular shared-slot interpretation.
     public readonly List<Variable> entryStackVariables = [];
 }
 

@@ -157,6 +157,8 @@ public sealed class OptimizerPassTests
         Assert.That(dominators.Dominates(first, join), Is.False);
         Assert.That(dominators.Dominates(second, join), Is.False);
         Assert.That(dominators.GetChildren(entry), Is.EquivalentTo(new[] { first, second, join }));
+        Assert.That(dominators.GetDominanceFrontier(first), Is.EqualTo(new[] { join }));
+        Assert.That(dominators.GetDominanceFrontier(second), Is.EqualTo(new[] { join }));
     }
 
     [Test]
@@ -196,6 +198,7 @@ public sealed class OptimizerPassTests
         Assert.That(dominators.GetImmediateDominator(exit), Is.SameAs(header));
         Assert.That(dominators.Dominates(header, body), Is.True);
         Assert.That(dominators.Dominates(body, header), Is.False);
+        Assert.That(dominators.GetDominanceFrontier(body), Is.EqualTo(new[] { header }));
     }
 
     [Test]
@@ -1617,6 +1620,584 @@ public sealed class OptimizerPassTests
         Assert.That(
             () => optimizer.ConservativeConstantPropagation(),
             Throws.InvalidOperationException.With.Message.Contains("requires empty edge"));
+    }
+
+    [Test]
+    public void SsaEligibilityCentralizesStorageEscapeAndNormalizationRules()
+    {
+        LocalBuilder? ordinary = null;
+        LocalBuilder? narrow = null;
+        LocalBuilder? singlePrecision = null;
+        LocalBuilder? pinned = null;
+        LocalBuilder? addressed = null;
+        int unknownIndex = -1;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            ordinary = generator.DeclareLocal(typeof(int));
+            narrow = generator.DeclareLocal(typeof(byte));
+            singlePrecision = generator.DeclareLocal(typeof(float));
+            pinned = generator.DeclareLocal(typeof(int), true);
+            addressed = generator.DeclareLocal(typeof(int));
+            unknownIndex = generator.DeclareLocal(typeof(int)).LocalIndex;
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Stloc, ordinary),
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Stloc, narrow),
+                new CodeInstruction(OpCodes.Ldc_R4, 0f),
+                new CodeInstruction(OpCodes.Stloc, singlePrecision),
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Stloc, pinned),
+                new CodeInstruction(OpCodes.Ldloca, addressed),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Stloc, unknownIndex),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        // DynamicMethod's ILGenerator does not preserve the pinned bit on every target runtime;
+        // exercise the optimizer's canonical metadata field directly.
+        optimizer.LocalVariables[pinned!.LocalIndex].pinned = true;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[ordinary!.LocalIndex]), Is.True);
+            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[narrow!.LocalIndex]), Is.False);
+            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[singlePrecision!.LocalIndex]), Is.False);
+            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[pinned!.LocalIndex]), Is.False);
+            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[addressed!.LocalIndex]), Is.False);
+            Assert.That(optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[unknownIndex]), Is.False);
+        });
+    }
+
+    [Test]
+    public void ConstructSsaPlacesPhiForLocalAtDiamondJoin()
+    {
+        LocalBuilder? result = null;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            result = generator.DeclareLocal(typeof(int));
+            Label alternative = generator.DefineLabel();
+            Label join = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brfalse, alternative),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Stloc, result),
+                new CodeInstruction(OpCodes.Br, join),
+                new CodeInstruction(OpCodes.Ldc_I4_2).WithLabels(alternative),
+                new CodeInstruction(OpCodes.Stloc, result),
+                new CodeInstruction(OpCodes.Ldloc, result).WithLabels(join),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+
+        optimizer.ConstructSsa();
+
+        BasicBlock join = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Pop));
+        Variable phi = join.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
+        Variable[] definitions = [.. join.incomingEdges.Select(edge => edge.assignments[0].Source)];
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(optimizer.Form, Is.EqualTo(Optimizer.Optimizer.IrForm.Ssa));
+            Assert.That(definitions, Has.Length.EqualTo(2));
+            Assert.That(definitions[0], Is.Not.SameAs(definitions[1]));
+            Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
+                Has.None.Matches<Op>(op => op.GetStorageAccess()?.Variable ==
+                                           optimizer.LocalVariables[result!.LocalIndex]));
+            Assert.That(join.incomingEdges, Has.All.Matches<ControlFlowEdge>(edge =>
+                edge.assignments.Count == 1 && edge.assignments[0].Destination == phi));
+            Assert.That(join.incomingEdges.Select(edge => edge.assignments[0].Source),
+                Is.EquivalentTo(definitions));
+        });
+    }
+
+    [Test]
+    public void ConstructSsaCanPromoteNewlyEligibleLocalIncrementally()
+    {
+        LocalBuilder? localBuilder = null;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            localBuilder = generator.DeclareLocal(typeof(int));
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloca, localBuilder),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Stloc, localBuilder),
+                new CodeInstruction(OpCodes.Ldloc, localBuilder),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        Variable local = optimizer.LocalVariables[localBuilder!.LocalIndex];
+
+        optimizer.ConstructSsa();
+        Assert.That(local.ssaOrigin, Is.Null);
+
+        BasicBlock block = optimizer.BasicBlocks.Single();
+        block.ops.RemoveRange(0, 2);
+        local.addressTaken = false;
+        optimizer.ConstructSsa();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(local.ssaOrigin, Is.SameAs(local));
+            Assert.That(block.ops, Has.None.Matches<Op>(op =>
+                op.Opcode == OpCodes.Stloc || op.Opcode == OpCodes.Ldloc));
+            Assert.That(block.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0],
+                Is.SameAs(block.ops.Single(op => op.Opcode == OpCodes.Ldc_I4_1).outputs[0]));
+        });
+    }
+
+    [Test]
+    public void IncrementalSsaRenamesSourcesOnExistingPhiEdges()
+    {
+        LocalBuilder? localBuilder = null;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            localBuilder = generator.DeclareLocal(typeof(int));
+            Label alternative = generator.DefineLabel();
+            Label join = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloca, localBuilder),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brfalse, alternative),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Dup),
+                new CodeInstruction(OpCodes.Stloc, localBuilder),
+                new CodeInstruction(OpCodes.Br, join),
+                new CodeInstruction(OpCodes.Ldc_I4_2).WithLabels(alternative),
+                new CodeInstruction(OpCodes.Dup),
+                new CodeInstruction(OpCodes.Stloc, localBuilder),
+                new CodeInstruction(OpCodes.Pop).WithLabels(join),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        Variable local = optimizer.LocalVariables[localBuilder!.LocalIndex];
+
+        optimizer.ConstructSsa();
+        Assert.That(local.ssaOrigin, Is.Null);
+        VariableAssignment[] existingAssignments =
+        [
+            .. optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges)
+                .SelectMany(edge => edge.assignments),
+        ];
+        Assert.That(existingAssignments, Is.Not.Empty);
+        foreach (ControlFlowEdge edge in optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges))
+        {
+            for (int index = 0; index < edge.assignments.Count; index++)
+                edge.assignments[index] = new(local, edge.assignments[index].Destination);
+        }
+
+        BasicBlock addressBlock = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Ldloca));
+        addressBlock.ops.RemoveRange(0, 2);
+        local.addressTaken = false;
+        optimizer.ConstructSsa();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
+                Has.None.Matches<Op>(op => op.GetStorageAccess()?.Variable == local));
+            Assert.That(optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges)
+                .SelectMany(edge => edge.assignments)
+                .Where(assignment => assignment.Destination.ssaOrigin?.kind == VariableKind.StackSlot)
+                .Select(assignment => assignment.Source),
+                Has.None.SameAs(local));
+        });
+    }
+
+    [Test]
+    public void SsaRoundTripEliminatesStraightLineLocalCopies()
+    {
+        LocalBuilder? localBuilder = null;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            localBuilder = generator.DeclareLocal(typeof(int));
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Stloc, localBuilder),
+                new CodeInstruction(OpCodes.Ldloc, localBuilder),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        optimizer.ConstructSsa();
+
+        Assert.That(optimizer.BasicBlocks.Single().ops,
+            Has.None.Matches<Op>(op => op.GetStorageAccess()?.Variable ==
+                                       optimizer.LocalVariables[localBuilder!.LocalIndex]));
+
+        optimizer.SplitSsaEdges();
+        optimizer.DestructSsa();
+        new VariableToStackConversion(optimizer).Run();
+
+        Assert.That(optimizer.BasicBlocks.Single().ops,
+            Has.None.Matches<Op>(op => op.Opcode == OpCodes.Ldloc || op.Opcode == OpCodes.Stloc));
+    }
+
+    [Test]
+    public void ConstructSsaEliminatesPromotedArgumentCopies()
+    {
+        MethodInfo targetMethod = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, _ =>
+        [
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Starg, 0),
+            new CodeInstruction(OpCodes.Ldarg, 0),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+
+        optimizer.ConstructSsa();
+
+        Assert.That(optimizer.BasicBlocks.Single().ops,
+            Has.None.Matches<Op>(op => op.GetStorageAccess()?.VariableKind == VariableKind.Argument));
+        Assert.That(optimizer.BasicBlocks.Single().ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0],
+            Is.SameAs(optimizer.BasicBlocks.Single().ops.Single(op => op.Opcode == OpCodes.Ldc_I4_1).outputs[0]));
+    }
+
+    [Test]
+    public void ConstructSsaPlacesPhiForConcreteCrossBlockStackSlot()
+    {
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label alternative = generator.DefineLabel();
+            Label join = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brfalse, alternative),
+                new CodeInstruction(OpCodes.Ldstr, "first"),
+                new CodeInstruction(OpCodes.Br, join),
+                new CodeInstruction(OpCodes.Ldstr, "second").WithLabels(alternative),
+                new CodeInstruction(OpCodes.Pop).WithLabels(join),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        BasicBlock join = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Pop));
+
+        optimizer.ConstructSsa();
+
+        Variable phi = join.entryStackVariables.Single();
+        Assert.Multiple(() =>
+        {
+            Assert.That(phi.ssaOrigin, Is.Not.Null);
+            Assert.That(join.ops[0].inputs.Single(), Is.SameAs(phi));
+            Assert.That(join.incomingEdges, Has.All.Matches<ControlFlowEdge>(edge =>
+                edge.assignments.Any(assignment => assignment.Destination == phi)));
+        });
+
+        optimizer.SplitSsaEdges();
+        optimizer.DestructSsa();
+        Assert.That(() => new VariableToStackConversion(optimizer).Run(), Throws.Nothing);
+    }
+
+    [Test]
+    public void ConstructSsaPlacesLoopHeaderPhiForLocal()
+    {
+        LocalBuilder? counter = null;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            counter = generator.DeclareLocal(typeof(int));
+            Label body = generator.DefineLabel();
+            Label header = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Stloc, counter),
+                new CodeInstruction(OpCodes.Br, header),
+                new CodeInstruction(OpCodes.Ldloc, counter).WithLabels(body),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Add),
+                new CodeInstruction(OpCodes.Stloc, counter),
+                new CodeInstruction(OpCodes.Ldloc, counter).WithLabels(header),
+                new CodeInstruction(OpCodes.Ldc_I4, 10),
+                new CodeInstruction(OpCodes.Blt, body),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+
+        optimizer.ConstructSsa();
+
+        BasicBlock header = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Blt));
+        Variable phi = header.ops.Single(op => op.Opcode == OpCodes.Blt).inputs[0];
+        Assert.That(header.incomingEdges, Has.Count.EqualTo(2));
+        Assert.That(header.incomingEdges, Has.All.Matches<ControlFlowEdge>(edge =>
+            edge.assignments.Count == 1 && edge.assignments[0].Destination == phi));
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
+            Has.None.Matches<Op>(op => op.GetStorageAccess()?.Variable ==
+                                       optimizer.LocalVariables[counter!.LocalIndex]));
+
+        optimizer.SplitSsaEdges();
+        optimizer.DestructSsa();
+        Assert.That(() => new VariableToStackConversion(optimizer).Run(), Throws.Nothing);
+    }
+
+    [Test]
+    public void SsaEligibilityConservativelyExcludesLocalsInMethodWithExceptionEntries()
+    {
+        LocalBuilder? localBuilder = null;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            localBuilder = generator.DeclareLocal(typeof(int));
+            Label exit = generator.DefineLabel();
+            var tryStart = new CodeInstruction(OpCodes.Ldc_I4_0);
+            tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+            var catchStart = new CodeInstruction(OpCodes.Pop);
+            catchStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+            var catchLeave = new CodeInstruction(OpCodes.Leave, exit);
+            catchLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+            return
+            [
+                tryStart,
+                new CodeInstruction(OpCodes.Stloc, localBuilder),
+                new CodeInstruction(OpCodes.Leave, exit),
+                catchStart,
+                catchLeave,
+                new CodeInstruction(OpCodes.Ret).WithLabels(exit),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+
+        Assert.That(
+            optimizer.IsEligibleForSsaPromotion(optimizer.LocalVariables[localBuilder!.LocalIndex]),
+            Is.False);
+    }
+
+    [Test]
+    public void SplitSsaEdgesSeparatesConditionalPhiTransfer()
+    {
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label join = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldstr, "first"),
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brfalse, join),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ldstr, "second"),
+                new CodeInstruction(OpCodes.Pop).WithLabels(join),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        optimizer.ConstructSsa();
+        int oldBlockCount = optimizer.BasicBlocks.Count;
+        ControlFlowEdge[] conditionalEdges =
+        [
+            .. optimizer.BasicBlocks
+            .SelectMany(block => block.outgoingEdges)
+            .Where(edge => edge.assignments.Count != 0 && edge.Source.outgoingEdges.Count > 1),
+        ];
+        Assert.That(conditionalEdges, Is.Not.Empty);
+        BasicBlock[] oldSources = [.. conditionalEdges.Select(edge => edge.Source).Distinct()];
+
+        optimizer.SplitSsaEdges();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(optimizer.BasicBlocks, Has.Count.EqualTo(oldBlockCount + conditionalEdges.Length));
+            Assert.That(conditionalEdges, Has.All.Matches<ControlFlowEdge>(edge => edge.assignments.Count == 0));
+            Assert.That(oldSources, Has.All.Matches<BasicBlock>(block =>
+                block.outgoingEdges.All(edge => edge.assignments.Count == 0)));
+            Assert.That(optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges)
+                .Where(edge => edge.assignments.Count != 0),
+                Has.All.Matches<ControlFlowEdge>(edge => edge.Source.outgoingEdges.Count == 1));
+        });
+    }
+
+    [Test]
+    public void DestructSsaRemovesAssignmentsAndCanLowerToStack()
+    {
+        LocalBuilder? result = null;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            result = generator.DeclareLocal(typeof(int));
+            Label alternative = generator.DefineLabel();
+            Label join = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brfalse, alternative),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Stloc, result),
+                new CodeInstruction(OpCodes.Br, join),
+                new CodeInstruction(OpCodes.Ldc_I4_2).WithLabels(alternative),
+                new CodeInstruction(OpCodes.Stloc, result),
+                new CodeInstruction(OpCodes.Ldloc, result).WithLabels(join),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        optimizer.ConstructSsa();
+        optimizer.SplitSsaEdges();
+
+        optimizer.DestructSsa();
+
+        Assert.That(optimizer.Form, Is.EqualTo(Optimizer.Optimizer.IrForm.Variables));
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges)
+            .SelectMany(edge => edge.assignments), Is.Empty);
+        Assert.That(() => new VariableToStackConversion(optimizer).Run(), Throws.Nothing);
+        Assert.That(optimizer.Form, Is.EqualTo(Optimizer.Optimizer.IrForm.Stack));
+    }
+
+    [Test]
+    public void VariablesToStackSpillsLogicalValueUsedByPhiFromAnotherBlock()
+    {
+        LocalBuilder? result = null;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            result = generator.DeclareLocal(typeof(int));
+            Label alternative = generator.DefineLabel();
+            Label join = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brfalse, alternative),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Stloc, result),
+                new CodeInstruction(OpCodes.Br, join),
+                new CodeInstruction(OpCodes.Ldc_I4_2).WithLabels(alternative),
+                new CodeInstruction(OpCodes.Stloc, result),
+                new CodeInstruction(OpCodes.Ldloc, result).WithLabels(join),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        optimizer.ConstructSsa();
+
+        BasicBlock condition = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Brfalse));
+        Variable conditionValue = condition.ops.Single(op => op.Opcode == OpCodes.Ldc_I4_0).outputs[0];
+        ControlFlowEdge phiEdge = optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges)
+            .First(edge => edge.assignments.Count != 0 && edge.Source != condition);
+        phiEdge.assignments[0] = new VariableAssignment(
+            conditionValue, phiEdge.assignments[0].Destination);
+
+        optimizer.SplitSsaEdges();
+        optimizer.DestructSsa();
+
+        Assert.That(() => new VariableToStackConversion(optimizer).Run(), Throws.Nothing);
+        Assert.That(condition.ops, Has.Some.Matches<Op>(op => op.Opcode == OpCodes.Stloc));
+    }
+
+    [Test]
+    public void SsaSpillCanReusePromotedLocalSlot()
+    {
+        LocalBuilder? localBuilder = null;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            localBuilder = generator.DeclareLocal(typeof(int));
+            Label alternative = generator.DefineLabel();
+            Label join = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brfalse, alternative),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Stloc, localBuilder),
+                new CodeInstruction(OpCodes.Br, join),
+                new CodeInstruction(OpCodes.Ldc_I4_2).WithLabels(alternative),
+                new CodeInstruction(OpCodes.Stloc, localBuilder),
+                new CodeInstruction(OpCodes.Ldloc, localBuilder).WithLabels(join),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        optimizer.ConstructSsa();
+        optimizer.SplitSsaEdges();
+        optimizer.DestructSsa();
+
+        new VariableToStackConversion(optimizer).Run();
+
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops)
+            .Where(op => op.Opcode == OpCodes.Stloc)
+            .Select(op => op.Index), Does.Contain(localBuilder!.LocalIndex));
+    }
+
+    [Test]
+    public void SsaSpillDoesNotReuseLocalSlotWhileItsLiveInVersionIsUsed()
+    {
+        LocalBuilder? original = null;
+        LocalBuilder? alias = null;
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            original = generator.DeclareLocal(typeof(int));
+            alias = generator.DeclareLocal(typeof(int));
+            Label join = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldloc, original),
+                new CodeInstruction(OpCodes.Stloc, alias),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Stloc, original),
+                new CodeInstruction(OpCodes.Br, join),
+                new CodeInstruction(OpCodes.Ldloc, alias).WithLabels(join),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ldloc, original),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+        optimizer.ConstructSsa();
+        optimizer.SplitSsaEdges();
+        optimizer.DestructSsa();
+
+        Variable originalVariable = optimizer.LocalVariables[original!.LocalIndex];
+        Assert.That(optimizer.Variables, Has.Some.Matches<Variable>(variable =>
+            variable.preferredStorage == originalVariable));
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops)
+            .SelectMany(op => op.inputs.Concat(op.outputs)), Does.Contain(originalVariable));
+
+        new VariableToStackConversion(optimizer).Run();
+
+        BasicBlock source = optimizer.BasicBlocks.Single(block =>
+            block.ops.Any(op => op.Opcode == OpCodes.Ldc_I4_1));
+        Assert.That(source.ops.Where(op => op.Opcode == OpCodes.Stloc).Select(op => op.Index),
+            Has.None.EqualTo(original!.LocalIndex),
+            string.Join(", ", source.ops.Select(op =>
+                op.Opcode == OpCodes.Ldloc || op.Opcode == OpCodes.Stloc
+                    ? $"{op.Opcode}:{op.Index}"
+                    : op.Opcode.ToString())));
     }
 
     [Test]

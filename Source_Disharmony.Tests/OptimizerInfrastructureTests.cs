@@ -6,6 +6,8 @@ namespace Disharmony.Tests;
 [TestFixture]
 public sealed class OptimizerInfrastructureTests
 {
+    private enum ByteEnum : byte { Zero }
+
     [TestCaseSource(nameof(OperationEffectCases))]
     public void OperationEffectsClassifyRepresentativeCilOperations(
         OpCode opcode,
@@ -191,6 +193,16 @@ public sealed class OptimizerInfrastructureTests
     {
         Assert.That(Optimizer.TypeLattice.CombineTypes(typeof(Optimizer.TypeLattice.NullType), typeof(Optimizer.TypeLattice.NullType)),
             Is.EqualTo(typeof(Optimizer.TypeLattice.NullType)));
+    }
+
+    [Test]
+    public void TypeLatticeRecognizesNarrowEnumStorage()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(Optimizer.TypeLattice.ToStackType(typeof(ByteEnum)), Is.EqualTo(typeof(int)));
+            Assert.That(Optimizer.TypeLattice.StorageNarrowsStackValue(typeof(ByteEnum)), Is.True);
+        });
     }
 
     [Test]

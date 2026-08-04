@@ -2,13 +2,19 @@
 
 internal class VariableToStackConversion(Optimizer optimizer) : Pass
 {
-    private readonly Dictionary<Variable, LocalBuilder> spillLocals = [];
+    private readonly Dictionary<Variable, Storage> spillStorage = [];
+    private readonly HashSet<Variable> occupiedPreferredStorage = [];
+    private readonly HashSet<Variable> storedVariables = [];
+    private readonly HashSet<Variable> crossBlockSpills = [];
 
     // Replaces canonical variable operands with an executable CIL stack schedule, then
     // invalidates the variable-form data that no longer describes the operations.
     public override void Run()
     {
         Dictionary<BasicBlock, List<Variable>> exitStacks = CheckPreconditions();
+        FindStoredVariables();
+        ReserveLiveOriginalStorage();
+        FindCrossBlockUses();
 
         foreach (var block in optimizer.basicBlocks)
             ConvertBlock(block, exitStacks[block]);
@@ -25,8 +31,77 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         optimizer.Form = Optimizer.IrForm.Stack;
     }
 
-    // Validate the complete input before mutating any block. In particular, edge assignments
-    // belong only to the future SSA forms and must already have been eliminated before lowering.
+    // A logical variable named by a storage write has storage even if block conversion has not yet
+    // visited that defining write. Recording this up front keeps lowering independent of block order.
+    private void FindStoredVariables()
+    {
+        foreach (Op op in optimizer.basicBlocks.SelectMany(block => block.ops))
+        {
+            if (op.GetStorageAccess() is { Kind: Op.VariableAccessKind.Write } access)
+                storedVariables.Add(access.Variable);
+        }
+    }
+
+    // A promoted local's live-in version is still represented by the original Local Variable. If
+    // that value remains in the IR, assigning its physical slot to a later SSA value could clobber
+    // it before a logical reload. Reserve such slots; otherwise one derived value may reclaim them.
+    private void ReserveLiveOriginalStorage()
+    {
+        HashSet<Variable> preferredStorage =
+        [
+            .. optimizer.variables.Select(variable => variable.preferredStorage)
+                .OfType<Variable>(),
+        ];
+        if (preferredStorage.Count == 0)
+            return;
+
+        IEnumerable<Variable> referencedVariables = optimizer.basicBlocks
+            .SelectMany(block => block.entryStackVariables.Concat(
+                block.ops.SelectMany(op => op.inputs.Concat(op.outputs))));
+        foreach (Variable variable in referencedVariables)
+        {
+            if (preferredStorage.Contains(variable))
+                occupiedPreferredStorage.Add(variable);
+        }
+    }
+
+    // Into-SSA can wire a producer directly to an operation in a dominated block. Unless that value
+    // is one of the target's real entry-stack slots, regular CFG edges do not carry it. Spill once
+    // at its defining operation so every body use in another block can reload it.
+    private void FindCrossBlockUses()
+    {
+        Dictionary<Variable, BasicBlock> definitions = [];
+        foreach (BasicBlock block in optimizer.basicBlocks)
+        {
+            foreach (Variable output in block.ops.SelectMany(op =>
+                         op.outputs.Take(op.stackOutputCount)).Distinct())
+            {
+                if (definitions.ContainsKey(output))
+                    continue;
+                definitions.Add(output, block);
+            }
+        }
+
+        foreach (BasicBlock block in optimizer.basicBlocks)
+        {
+            foreach (Op op in block.ops)
+            {
+                foreach (Variable input in op.inputs.Distinct())
+                {
+                    if (CanReload(input) || block.entryStackVariables.Contains(input))
+                        continue;
+
+                    if (!definitions.TryGetValue(input, out BasicBlock? definition))
+                        throw new InvalidOperationException($"Use of {input} has no available definition");
+                    if (definition != block)
+                        crossBlockSpills.Add(input);
+                }
+            }
+        }
+    }
+
+    // Validate the complete input before mutating any block. In particular, edge assignments are
+    // canonical only in SSA form and must already have been eliminated before regular lowering.
     private Dictionary<BasicBlock, List<Variable>> CheckPreconditions()
     {
         if (optimizer.Form != Optimizer.IrForm.Variables)
@@ -54,13 +129,15 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
                         $"Invalid variable output count on {op.Opcode} in {block.ID}");
             }
 
-            List<Variable> exitStack = GetNaturalExitStack(block);
-            foreach (var edge in block.outgoingEdges)
+            List<Variable> exitStack = block.outgoingEdges.Count == 0
+                ? []
+                : [.. block.outgoingEdges[0].Target.entryStackVariables];
+            foreach (ControlFlowEdge edge in block.outgoingEdges.Skip(1))
             {
                 if (!exitStack.SequenceEqual(edge.Target.entryStackVariables))
                 {
                     throw new InvalidOperationException(
-                        $"Natural exit stack of {block.ID} does not match the entry stack of {edge.Target.ID}");
+                        $"Successors of {block.ID} require different exit stacks");
                 }
             }
 
@@ -78,28 +155,55 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         Dictionary<Variable, int> remainingUses = CountRemainingUses(block, exitStack);
         List<Op> operations = [];
 
-        foreach (var op in block.ops)
+        for (int operationIndex = 0; operationIndex < block.ops.Count; operationIndex++)
         {
+            Op op = block.ops[operationIndex];
             List<Variable> inputs = [.. op.inputs.Take(op.stackInputCount)];
-            foreach (var input in inputs)
+            foreach (Variable input in op.inputs)
                 RemoveUse(remainingUses, input);
 
-            // For a return, the stack must be empty when the instruction completes;
-            // we can't clean it up afterwards.
-            bool exact = op.Opcode == OpCodes.Ret;
+            if (TryConvertLogicalLoad(op, stack, remainingUses, operations, block))
+                continue;
+
+            // No operation appended after a non-fallthrough terminator executes on every outgoing
+            // path. Arrange both its surviving exit stack and consumed operands before it.
+            bool finalControlTransfer = operationIndex == block.ops.Count - 1 &&
+                                        (op.CanBranch || !op.CanFallThrough);
+            List<Variable> required = finalControlTransfer
+                ? [.. exitStack, .. inputs]
+                : inputs;
+            IEnumerable<Variable> produced = finalControlTransfer
+                ? exitStack.Concat(op.outputs.Take(op.stackOutputCount))
+                : op.outputs.Take(op.stackOutputCount);
 
             ArrangeStack(
                 stack,
-                inputs,
+                required,
                 remainingUses,
                 operations,
                 block,
-                op.outputs.Take(op.stackOutputCount),
-                exact);
+                produced,
+                finalControlTransfer);
 
             stack.RemoveRange(stack.Count - inputs.Count, inputs.Count);
             operations.Add(ConvertOperation(op));
             stack.AddRange(op.outputs.Take(op.stackOutputCount));
+
+            foreach (Variable output in op.outputs.Take(op.stackOutputCount).Distinct())
+            {
+                if (!crossBlockSpills.Contains(output))
+                    continue;
+                if (stack.Count == 0 || stack[^1] != output)
+                {
+                    throw new NotSupportedException(
+                        $"Cannot spill non-top multi-output value {output} at its definition");
+                }
+
+                // Store a duplicate so the operation's natural evaluation-stack result is
+                // unchanged while later blocks gain a reloadable representation.
+                operations.Add(Ops.Dup);
+                operations.Add(StoreVariable(output));
+            }
             if (op.ClearsStack)
                 stack.Clear();
         }
@@ -115,24 +219,6 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         block.ops.AddRange(operations);
     }
 
-    // Replay only the recorded CIL stack arities. Canonical operand rewrites may change which
-    // variables an operation consumes, but they do not change its intrinsic stack effect.
-    private static List<Variable> GetNaturalExitStack(BasicBlock block)
-    {
-        List<Variable> stack = [.. block.entryStackVariables];
-        foreach (var op in block.ops)
-        {
-            if (op.stackInputCount > stack.Count)
-                throw new InvalidOperationException($"{op.Opcode} reads past the natural stack in {block.ID}");
-            stack.RemoveRange(stack.Count - op.stackInputCount, op.stackInputCount);
-            stack.AddRange(op.outputs.Take(op.stackOutputCount));
-            if (op.ClearsStack)
-                stack.Clear();
-        }
-
-        return stack;
-    }
-
     // These counts are scheduling obligations: the final available copy of a value cannot be
     // consumed or popped while any operation or exit slot still needs it.
     private static Dictionary<Variable, int> CountRemainingUses(
@@ -140,10 +226,42 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         IEnumerable<Variable> exitStack)
     {
         Dictionary<Variable, int> uses = [];
-        foreach (var variable in block.ops.SelectMany(op => op.inputs.Take(op.stackInputCount))
+        foreach (var variable in block.ops.SelectMany(op => op.inputs)
                      .Concat(exitStack))
             uses[variable] = uses.GetValueSafe(variable) + 1;
         return uses;
+    }
+
+    // A Variables-form rewrite may make ldloc/ldarg name a pure logical temporary. There is no
+    // physical storage to load in that case. Schedule the source value onto the stack and reinterpret
+    // the value already there as the load's output; ArrangeStack performs any required dup/spill/load.
+    private bool TryConvertLogicalLoad(
+        Op op,
+        List<Variable> stack,
+        IReadOnlyDictionary<Variable, int> remainingUses,
+        List<Op> operations,
+        BasicBlock block)
+    {
+        if (op.GetStorageAccess() is not { Kind: Op.VariableAccessKind.Read } access ||
+            HasStorage(access.Variable))
+        {
+            return false;
+        }
+
+        if (op.stackInputCount != 0 || op.stackOutputCount != 1)
+            throw new InvalidOperationException("A logical storage load has an unexpected stack shape");
+
+        Variable output = op.outputs[0];
+        ArrangeStack(
+            stack,
+            [access.Variable],
+            remainingUses,
+            operations,
+            block,
+            [output]);
+        stack.RemoveAt(stack.Count - 1);
+        stack.Add(output);
+        return true;
     }
 
     private static void RemoveUse(Dictionary<Variable, int> uses, Variable variable)
@@ -292,7 +410,10 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         variable.index == originalIndex && variable.kind == encodedKind;
 
     private bool HasStorage(Variable variable) =>
-        variable.kind is VariableKind.Argument or VariableKind.Local || spillLocals.ContainsKey(variable);
+        variable.kind is VariableKind.Argument or VariableKind.Local ||
+        storedVariables.Contains(variable) ||
+        crossBlockSpills.Contains(variable) ||
+        spillStorage.ContainsKey(variable);
 
     private bool CanReload(Variable variable) =>
         variable.type == typeof(TypeLattice.NullType) || HasStorage(variable);
@@ -307,17 +428,26 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
             case VariableKind.Local: return new(VariableKind.Local, variable.index, variable.localBuilder);
         }
 
-        if (!spillLocals.TryGetValue(variable, out LocalBuilder? local))
+        if (spillStorage.TryGetValue(variable, out Storage storage))
+            return storage;
+
+        if (variable.preferredStorage is { kind: VariableKind.Local } preferred &&
+            !occupiedPreferredStorage.Contains(preferred))
         {
-            if (variable.type == null || TypeLattice.IsSpecialType(variable.type))
-                throw new InvalidOperationException($"Cannot spill {variable}: its exact CIL type is unknown");
-            // TODO: We can't count on the JIT to eliminate unused locals, so if possible we should reuse an existing
-            //       local that has no uses. Ideally we could reuse locals whenever their liveness doesn't overlap.
-            local = optimizer.generator.DeclareLocal(variable.type);
-            spillLocals.Add(variable, local);
+            storage = new(VariableKind.Local, preferred.index, preferred.localBuilder);
+            occupiedPreferredStorage.Add(preferred);
+            spillStorage.Add(variable, storage);
+            return storage;
         }
 
-        return new(VariableKind.Local, local.LocalIndex, local);
+        if (variable.type == null || TypeLattice.IsSpecialType(variable.type))
+            throw new InvalidOperationException($"Cannot spill {variable}: its exact CIL type is unknown");
+        // TODO: Extend the conservative original-slot reuse above with liveness-based coalescing so
+        //       noninterfering SSA versions can share it, then reuse other dead locals as well.
+        LocalBuilder local = optimizer.generator.DeclareLocal(variable.type);
+        storage = new(VariableKind.Local, local.LocalIndex, local);
+        spillStorage.Add(variable, storage);
+        return storage;
     }
 
     private Op LoadVariable(Variable variable, BasicBlock block)

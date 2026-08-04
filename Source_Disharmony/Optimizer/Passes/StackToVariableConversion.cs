@@ -503,7 +503,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 int inputIndex = op.Opcode == OpCodes.Dup ? 0 : -1;
                 transition.outputs.AddRange(stack
                     .Skip(stack.Count - pushCount)
-                    .Select(type => new StackOutput(ClrTypeToStackType(type), inputIndex)));
+                    .Select(type => new StackOutput(TypeLattice.ToStackType(type), inputIndex)));
             }
         }
 
@@ -521,27 +521,6 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 stack.RemoveAt(stack.Count - 1);
             stack.Add(type);
         }
-    }
-
-    private Type ClrTypeToStackType(Type type)
-    {
-        if (type == typeof(sbyte) || type == typeof(byte) || type == typeof(bool) ||
-            type == typeof(short) || type == typeof(ushort) || type == typeof(char) ||
-            type == typeof(int) || type == typeof(uint))
-        {
-            return typeof(int);
-        }
-
-        if (type == typeof(long) || type == typeof(ulong))
-            return typeof(long);
-
-        if (type == typeof(float) || type == typeof(double))
-            return typeof(double);
-
-        if (type == typeof(IntPtr) || type == typeof(UIntPtr))
-            return typeof(IntPtr);
-
-        return type;
     }
 
     public void InitializeVariables()
