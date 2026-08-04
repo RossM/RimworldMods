@@ -1760,8 +1760,9 @@ public sealed class OptimizerPassTests
             Assert.That(local.ssaOrigin, Is.SameAs(local));
             Assert.That(block.ops, Has.None.Matches<Op>(op =>
                 op.Opcode == OpCodes.Stloc || op.Opcode == OpCodes.Ldloc));
-            Assert.That(block.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0],
-                Is.SameAs(block.ops.Single(op => op.Opcode == OpCodes.Ldc_I4_1).outputs[0]));
+            Variable value = block.ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
+            Assert.That(value.kind, Is.EqualTo(VariableKind.Constant));
+            Assert.That(value.constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
         });
     }
 
@@ -1878,8 +1879,116 @@ public sealed class OptimizerPassTests
 
         Assert.That(optimizer.BasicBlocks.Single().ops,
             Has.None.Matches<Op>(op => op.GetStorageAccess()?.VariableKind == VariableKind.Argument));
-        Assert.That(optimizer.BasicBlocks.Single().ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0],
-            Is.SameAs(optimizer.BasicBlocks.Single().ops.Single(op => op.Opcode == OpCodes.Ldc_I4_1).outputs[0]));
+        Variable value = optimizer.BasicBlocks.Single().ops.Single(op => op.Opcode == OpCodes.Pop).inputs[0];
+        Assert.That(value.kind, Is.EqualTo(VariableKind.Constant));
+        Assert.That(value.constantValue, Is.EqualTo(ConstantValue.FromInt32(1)));
+    }
+
+    [Test]
+    public void ConstructSsaReplacesLiteralOperationsWithConstantVariables()
+    {
+        Optimizer.Optimizer optimizer = CreateOptimizer(_ =>
+        [
+            new CodeInstruction(OpCodes.Ldc_I4, 42),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldc_I8, 43L),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldc_R4, 1.25f),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldc_R8, 2.5),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldstr, "constant"),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ldnull),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ]);
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+
+        optimizer.ConstructSsa();
+
+        Variable[] constants =
+        [
+            .. optimizer.BasicBlocks.SelectMany(block => block.ops)
+                .SelectMany(op => op.inputs)
+                .Where(variable => variable.kind == VariableKind.Constant)
+                .Distinct(),
+        ];
+        Assert.Multiple(() =>
+        {
+            Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
+                Has.None.Matches<Op>(op => op.TryGetLiteral(out _)));
+            Assert.That(constants.Select(variable => variable.constantValue!.Kind), Is.EquivalentTo(new[]
+            {
+                ConstantValueKind.Int32,
+                ConstantValueKind.Int64,
+                ConstantValueKind.Float32,
+                ConstantValueKind.Float64,
+                ConstantValueKind.String,
+                ConstantValueKind.Null,
+            }));
+            Assert.That(constants, Has.All.Matches<Variable>(variable =>
+                variable.type == variable.constantValue!.StackType));
+        });
+
+        optimizer.SplitSsaEdges();
+        optimizer.DestructSsa();
+        new VariableToStackConversion(optimizer).Run();
+
+        Assert.That(optimizer.BasicBlocks.Single().ops.Select(op => op.Opcode), Is.EqualTo(new[]
+        {
+            OpCodes.Ldc_I4,
+            OpCodes.Pop,
+            OpCodes.Ldc_I8,
+            OpCodes.Pop,
+            OpCodes.Ldc_R4,
+            OpCodes.Pop,
+            OpCodes.Ldc_R8,
+            OpCodes.Pop,
+            OpCodes.Ldstr,
+            OpCodes.Pop,
+            OpCodes.Ldnull,
+            OpCodes.Pop,
+            OpCodes.Ret,
+        }));
+        Assert.That(optimizer.BasicBlocks.Single().ops, Has.None.Matches<Op>(op =>
+            op.Opcode == OpCodes.Ldloc || op.Opcode == OpCodes.Stloc));
+    }
+
+    [Test]
+    public void SsaRoundTripRematerializesConstantAcrossBasicBlockBoundary()
+    {
+        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        {
+            Label target = generator.DefineLabel();
+            return
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Br, target),
+                new CodeInstruction(OpCodes.Pop).WithLabels(target),
+                new CodeInstruction(OpCodes.Ret),
+            ];
+        });
+        optimizer.MakeBasicBlocks();
+        new StackToVariableConversion(optimizer).Run();
+
+        optimizer.ConstructSsa();
+
+        Op pop = optimizer.BasicBlocks.SelectMany(block => block.ops)
+            .Single(op => op.Opcode == OpCodes.Pop);
+        Assert.That(pop.inputs.Single().kind, Is.EqualTo(VariableKind.Constant));
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
+            Has.None.Matches<Op>(op => op.TryGetLiteral(out _)));
+
+        optimizer.SplitSsaEdges();
+        optimizer.DestructSsa();
+        new VariableToStackConversion(optimizer).Run();
+
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
+            Has.None.Matches<Op>(op => op.Opcode == OpCodes.Ldloc || op.Opcode == OpCodes.Stloc));
+        Assert.That(optimizer.BasicBlocks.SelectMany(block => block.ops),
+            Has.Some.Matches<Op>(op => op.Opcode == OpCodes.Ldc_I4_1));
     }
 
     [Test]
@@ -2082,14 +2191,17 @@ public sealed class OptimizerPassTests
     public void VariablesToStackSpillsLogicalValueUsedByPhiFromAnotherBlock()
     {
         LocalBuilder? result = null;
-        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        MethodInfo targetMethod = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
         {
             result = generator.DeclareLocal(typeof(int));
             Label alternative = generator.DefineLabel();
             Label join = generator.DefineLabel();
             return
             [
-                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Neg),
                 new CodeInstruction(OpCodes.Brfalse, alternative),
                 new CodeInstruction(OpCodes.Ldc_I4_1),
                 new CodeInstruction(OpCodes.Stloc, result),
@@ -2107,7 +2219,7 @@ public sealed class OptimizerPassTests
 
         BasicBlock condition = optimizer.BasicBlocks.Single(block =>
             block.ops.Any(op => op.Opcode == OpCodes.Brfalse));
-        Variable conditionValue = condition.ops.Single(op => op.Opcode == OpCodes.Ldc_I4_0).outputs[0];
+        Variable conditionValue = condition.ops.Single(op => op.Opcode == OpCodes.Neg).outputs[0];
         ControlFlowEdge phiEdge = optimizer.BasicBlocks.SelectMany(block => block.outgoingEdges)
             .First(edge => edge.assignments.Count != 0 && edge.Source != condition);
         phiEdge.assignments[0] = new VariableAssignment(
@@ -2161,7 +2273,9 @@ public sealed class OptimizerPassTests
     {
         LocalBuilder? original = null;
         LocalBuilder? alias = null;
-        Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
+        MethodInfo targetMethod = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.IntArgument))!;
+        Optimizer.Optimizer optimizer = CreateOptimizer(targetMethod, generator =>
         {
             original = generator.DeclareLocal(typeof(int));
             alias = generator.DeclareLocal(typeof(int));
@@ -2170,7 +2284,8 @@ public sealed class OptimizerPassTests
             [
                 new CodeInstruction(OpCodes.Ldloc, original),
                 new CodeInstruction(OpCodes.Stloc, alias),
-                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Neg),
                 new CodeInstruction(OpCodes.Stloc, original),
                 new CodeInstruction(OpCodes.Br, join),
                 new CodeInstruction(OpCodes.Ldloc, alias).WithLabels(join),
@@ -2195,7 +2310,7 @@ public sealed class OptimizerPassTests
         new VariableToStackConversion(optimizer).Run();
 
         BasicBlock source = optimizer.BasicBlocks.Single(block =>
-            block.ops.Any(op => op.Opcode == OpCodes.Ldc_I4_1));
+            block.ops.Any(op => op.Opcode == OpCodes.Neg));
         Assert.That(source.ops.Where(op => op.Opcode == OpCodes.Stloc).Select(op => op.Index),
             Has.None.EqualTo(original!.LocalIndex),
             string.Join(", ", source.ops.Select(op =>

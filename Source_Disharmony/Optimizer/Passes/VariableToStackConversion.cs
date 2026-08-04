@@ -107,6 +107,21 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         if (optimizer.Form != Optimizer.IrForm.Variables)
             throw new InvalidOperationException($"Cannot convert {optimizer.Form} form to stack");
 
+        foreach (Variable variable in optimizer.variables)
+        {
+            if (variable.kind == VariableKind.Constant)
+            {
+                if (variable.constantValue == null)
+                    throw new InvalidOperationException($"Constant {variable} has no value");
+                if (variable.type != variable.constantValue.StackType)
+                    throw new InvalidOperationException($"Constant {variable} has an inconsistent stack type");
+            }
+            else if (variable.constantValue != null)
+            {
+                throw new InvalidOperationException($"Non-constant {variable} has a constant value");
+            }
+        }
+
         ControlFlowEdge? assignedEdge = optimizer.basicBlocks.SelectMany(block => block.outgoingEdges)
             .FirstOrDefault(edge => edge.assignments.Count != 0);
         if (assignedEdge != null)
@@ -298,49 +313,48 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
                 stack, prefixCount, required, producedVariables ?? [], futureUses))
             return;
 
-        if (!exact)
+        // Existing values below an operation's inputs may remain on the evaluation stack. Find
+        // the longest prefix of the required inputs already at the top, then append a suffix which
+        // can be reloaded. Exact arrangements may use the same shortcut only when there is no
+        // unrelated preserved prefix.
+        int maximumMatched = Math.Min(stack.Count, required.Count);
+        for (int matched = maximumMatched; matched >= 0; matched--)
         {
-            // Existing values below an operation's inputs may remain on the evaluation stack. Find
-            // the longest prefix of the required inputs already at the top, then append a suffix
-            // which can be reloaded. This covers both [saved] + [argument] and [managed pointer] +
-            // [argument] without spilling the values which are already in their final positions.
-            int maximumMatched = Math.Min(stack.Count, required.Count);
-            for (int matched = maximumMatched; matched >= 0; matched--)
+            IEnumerable<Variable> stackSuffix = stack.Skip(stack.Count - matched);
+            if (!stackSuffix.SequenceEqual(required.Take(matched)))
+                continue;
+
+            IReadOnlyList<Variable> appended = [.. required.Skip(matched)];
+            if (appended.Any(variable => !CanReload(variable)))
+                continue;
+
+            List<Variable> extendedStack = [.. stack, .. appended];
+            int extendedPrefixCount = stack.Count - matched;
+            if (exact && extendedPrefixCount != 0)
+                continue;
+            if (extendedPrefixCount > 0 &&
+                !futureUses.ContainsKey(stack[extendedPrefixCount - 1]))
             {
-                IEnumerable<Variable> stackSuffix = stack.Skip(stack.Count - matched);
-                if (!stackSuffix.SequenceEqual(required.Take(matched)))
-                    continue;
-
-                IReadOnlyList<Variable> appended = [.. required.Skip(matched)];
-                if (appended.Any(variable => !CanReload(variable)))
-                    continue;
-
-                List<Variable> extendedStack = [.. stack, .. appended];
-                int extendedPrefixCount = stack.Count - matched;
-                if (extendedPrefixCount > 0 &&
-                    !futureUses.ContainsKey(stack[extendedPrefixCount - 1]))
-                {
-                    // A dead value at the top of the preserved prefix can be discarded now. Keeping
-                    // it only postpones cleanup and may obstruct the next operation's stack layout.
-                    continue;
-                }
-                if (!CanConsumeWithoutLosingValues(
-                        extendedStack,
-                        extendedPrefixCount,
-                        required,
-                        producedVariables ?? [],
-                        futureUses))
-                {
-                    continue;
-                }
-
-                foreach (Variable variable in appended)
-                {
-                    operations.Add(LoadVariable(variable, block));
-                    stack.Add(variable);
-                }
-                return;
+                // A dead value at the top of the preserved prefix can be discarded now. Keeping
+                // it only postpones cleanup and may obstruct the next operation's stack layout.
+                continue;
             }
+            if (!CanConsumeWithoutLosingValues(
+                    extendedStack,
+                    extendedPrefixCount,
+                    required,
+                    producedVariables ?? [],
+                    futureUses))
+            {
+                continue;
+            }
+
+            foreach (Variable variable in appended)
+            {
+                operations.AddRange(LoadVariable(variable, block));
+                stack.Add(variable);
+            }
+            return;
         }
 
         // If there is one input which is already on top of the stack, but will be needed later, just 'dup' it.
@@ -375,7 +389,7 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         }
         foreach (var variable in required)
         {
-            operations.Add(LoadVariable(variable, block));
+            operations.AddRange(LoadVariable(variable, block));
             stack.Add(variable);
         }
     }
@@ -466,7 +480,9 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         spillStorage.ContainsKey(variable);
 
     private bool CanReload(Variable variable) =>
-        variable.type == typeof(TypeLattice.NullType) || HasStorage(variable);
+        variable.kind == VariableKind.Constant ||
+        variable.type == typeof(TypeLattice.NullType) ||
+        HasStorage(variable);
 
     // Original arguments and locals retain their storage identity. Logical values share one
     // lazily declared spill local across all blocks that preserve or reload that value.
@@ -476,6 +492,8 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         {
             case VariableKind.Argument: return new(VariableKind.Argument, variable.index, null);
             case VariableKind.Local: return new(VariableKind.Local, variable.index, variable.localBuilder);
+            case VariableKind.Constant:
+                throw new InvalidOperationException($"Constant {variable} cannot have storage");
         }
 
         if (spillStorage.TryGetValue(variable, out Storage storage))
@@ -500,15 +518,22 @@ internal class VariableToStackConversion(Optimizer optimizer) : Pass
         return storage;
     }
 
-    private Op LoadVariable(Variable variable, BasicBlock block)
+    private IReadOnlyList<Op> LoadVariable(Variable variable, BasicBlock block)
     {
+        if (variable.kind == VariableKind.Constant)
+        {
+            if (variable.constantValue == null)
+                throw new InvalidOperationException($"Constant {variable} has no materialization value");
+            return variable.constantValue.Materialize();
+        }
+
         // The transient null type has no corresponding local signature. Since every definition
         // of a NullType variable is the same value, rematerialization is both exact and cheaper.
         if (variable.type == typeof(TypeLattice.NullType))
-            return new Op(OpCodes.Ldnull);
+            return [new Op(OpCodes.Ldnull)];
         if (!HasStorage(variable))
             throw new InvalidOperationException($"{variable} is not available when rebuilding the stack in {block.ID}");
-        return LoadStorage(GetStorage(variable), []);
+        return [LoadStorage(GetStorage(variable), [])];
     }
 
     private Op StoreVariable(Variable variable) => StoreStorage(GetStorage(variable), []);

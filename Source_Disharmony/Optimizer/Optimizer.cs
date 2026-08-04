@@ -492,11 +492,12 @@ internal class Optimizer
 
     /// <summary>
     ///     Promotes every currently eligible mutable storage variable and every precisely typed
-    ///     cross-block stack slot not promoted by an earlier invocation. Requires regular or SSA
-    ///     Variables form, a complete CFG, empty edge assignments in regular form, and dead blocks
-    ///     removed. The pass computes dominance explicitly if necessary. It may be rerun after an
-    ///     optimization makes additional storage eligible; existing SSA families and phi
-    ///     assignments are preserved.
+    ///     cross-block stack slot not promoted by an earlier invocation. Literal-producing
+    ///     operations are also replaced by storage-free Constant variables. Requires regular or
+    ///     SSA Variables form, a complete CFG, empty edge assignments in regular form, and dead
+    ///     blocks removed. The pass computes dominance explicitly if necessary. It may be rerun
+    ///     after an optimization makes additional storage eligible; existing SSA families and phi
+    ///     assignments are preserved, and existing constants require no further processing.
     /// </summary>
     internal void ConstructSsa()
     {
@@ -1333,6 +1334,20 @@ internal class Optimizer
         return variable;
     }
 
+    /// <summary>
+    ///     Creates a storage-free value whose CIL materialization is completely described by
+    ///     <paramref name="constant"/>. Constant variables are always rematerialized at their uses
+    ///     and therefore never receive a spill slot.
+    /// </summary>
+    internal Variable NewConstantVariable(ConstantValue constant)
+    {
+        if (constant == null)
+            throw new ArgumentNullException(nameof(constant));
+        Variable variable = NewVariable(VariableKind.Constant, constant.StackType);
+        variable.constantValue = constant;
+        return variable;
+    }
+
     internal static bool ReferencesLocal(Op op) => unchecked((ushort)op.Opcode.Value) is
         OpCodeValues.Ldloc_0 or OpCodeValues.Ldloc_1 or OpCodeValues.Ldloc_2 or OpCodeValues.Ldloc_3 or
         OpCodeValues.Ldloc or OpCodeValues.Ldloc_S or OpCodeValues.Ldloca or OpCodeValues.Ldloca_S or
@@ -1489,6 +1504,12 @@ internal enum VariableKind
 
     /// <summary>A value produced by an operation within a basic block.</summary>
     Temporary,
+
+    /// <summary>
+    ///     A storage-free CIL constant. It has no defining operation in SSA form and is
+    ///     rematerialized directly at every stack use.
+    /// </summary>
+    Constant,
 }
 
 internal sealed class Variable
@@ -1499,6 +1520,7 @@ internal sealed class Variable
         VariableKind.Local => $"l{index}",
         VariableKind.StackSlot => $"s{id}",
         VariableKind.Temporary => $"v{id}",
+        VariableKind.Constant => constantValue == null ? $"c{id}" : $"c{id}({constantValue})",
         _ => throw new ArgumentOutOfRangeException(),
     };
 
@@ -1518,8 +1540,14 @@ internal sealed class Variable
     // Canonical Variables-form type information. Argument types come from the method signature.
     // A Local type is set only from MethodBody metadata or a LocalBuilder, never inferred from
     // stores, and may therefore be null. StackSlot and Temporary types come from symbolic stack
-    // analysis and may contain the special lattice-marker types below.
+    // analysis and may contain the special lattice-marker types below. A Constant's type is the
+    // CIL stack type implied by constantValue.
     public Type? type;
+
+    // Canonical and non-null exactly when kind is Constant. This describes the complete,
+    // side-effect-free instruction sequence used to materialize the value; constants never have
+    // physical storage and must never be spilled.
+    public ConstantValue? constantValue;
 
     // Canonical physical slot index for Argument and Local; -1 for logical StackSlot and
     // Temporary values. Distinct argument/local variables never represent the same slot.

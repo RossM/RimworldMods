@@ -80,6 +80,20 @@ internal sealed class ConstantValue : IEquatable<ConstantValue>
 
     public ConstantValueKind Kind { get; }
 
+    /// <summary>The CIL evaluation-stack type produced when this value is materialized.</summary>
+    public Type StackType => Kind switch
+    {
+        ConstantValueKind.Null => typeof(TypeLattice.NullType),
+        ConstantValueKind.Int32 => typeof(int),
+        ConstantValueKind.Int64 => typeof(long),
+        ConstantValueKind.NativeInt => typeof(IntPtr),
+        ConstantValueKind.Float32 or ConstantValueKind.Float64 => typeof(double),
+        ConstantValueKind.String => typeof(string),
+        ConstantValueKind.ManagedReference => TypeLattice.ToRef(
+            GetReferencedVariable().type ?? typeof(TypeLattice.AnyType)),
+        _ => throw new ArgumentOutOfRangeException(),
+    };
+
     public static ConstantValue Null { get; } = new(ConstantValueKind.Null);
     public static ConstantValue FromInt32(int value) => new(ConstantValueKind.Int32, value);
     public static ConstantValue FromInt64(long value) => new(ConstantValueKind.Int64, value);
@@ -133,6 +147,24 @@ internal sealed class ConstantValue : IEquatable<ConstantValue>
         ? referencedVariable!
         : throw WrongKind(ConstantValueKind.ManagedReference);
 
+    /// <summary>
+    ///     Returns a fresh, side-effect-free CIL sequence which pushes this value. The target JIT
+    ///     does not eliminate local copies, so callers must always use this sequence rather than
+    ///     spilling a constant. Int32 uses its compact canonical opcode where one exists.
+    /// </summary>
+    public IReadOnlyList<Op> Materialize() => Kind switch
+    {
+        ConstantValueKind.Null => [new Op(OpCodes.Ldnull)],
+        ConstantValueKind.Int32 => [MaterializeInt32(GetInt32())],
+        ConstantValueKind.Int64 => [new Op(OpCodes.Ldc_I8, GetInt64(), [])],
+        ConstantValueKind.NativeInt => MaterializeNativeInt(GetNativeInt()),
+        ConstantValueKind.Float32 => [new Op(OpCodes.Ldc_R4, GetFloat32(), [])],
+        ConstantValueKind.Float64 => [new Op(OpCodes.Ldc_R8, GetFloat64(), [])],
+        ConstantValueKind.String => [new Op(OpCodes.Ldstr, GetString(), [])],
+        ConstantValueKind.ManagedReference => [MaterializeManagedReference(GetReferencedVariable())],
+        _ => throw new ArgumentOutOfRangeException(),
+    };
+
     public bool Equals(ConstantValue? other) =>
         other != null && Kind == other.Kind && bits == other.bits &&
         string.Equals(text, other.text, StringComparison.Ordinal) && ReferenceEquals(referencedVariable, other.referencedVariable);
@@ -165,6 +197,39 @@ internal sealed class ConstantValue : IEquatable<ConstantValue>
 
     private InvalidOperationException WrongKind(ConstantValueKind expected) =>
         new($"Constant is {Kind}, not {expected}");
+
+    private static Op MaterializeInt32(int value) => value switch
+    {
+        -1 => new(OpCodes.Ldc_I4_M1),
+        0 => new(OpCodes.Ldc_I4_0),
+        1 => new(OpCodes.Ldc_I4_1),
+        2 => new(OpCodes.Ldc_I4_2),
+        3 => new(OpCodes.Ldc_I4_3),
+        4 => new(OpCodes.Ldc_I4_4),
+        5 => new(OpCodes.Ldc_I4_5),
+        6 => new(OpCodes.Ldc_I4_6),
+        7 => new(OpCodes.Ldc_I4_7),
+        8 => new(OpCodes.Ldc_I4_8),
+        _ => new(OpCodes.Ldc_I4, value, []),
+    };
+
+    private static IReadOnlyList<Op> MaterializeNativeInt(IntPtr value) => IntPtr.Size switch
+    {
+        4 => [MaterializeInt32(value.ToInt32()), new Op(OpCodes.Conv_I)],
+        8 => [new Op(OpCodes.Ldc_I8, value.ToInt64(), []), new Op(OpCodes.Conv_I)],
+        _ => throw new PlatformNotSupportedException($"Unsupported native integer size {IntPtr.Size}"),
+    };
+
+    private static Op MaterializeManagedReference(Variable storage)
+    {
+        object operand = storage.kind switch
+        {
+            VariableKind.Argument => storage.index,
+            VariableKind.Local => (object?)storage.localBuilder ?? storage.index,
+            _ => throw new InvalidOperationException($"Known reference targets non-storage variable {storage}"),
+        };
+        return new(storage.kind == VariableKind.Argument ? OpCodes.Ldarga : OpCodes.Ldloca, operand, []);
+    }
 }
 
 /// <summary>The representation category of a known abstract value.</summary>

@@ -26,7 +26,9 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
                 (IsPromotableStackSlot(variable) || optimizer.IsEligibleForSsaPromotion(variable))),
         ];
 
-        if (candidates.Count == 0)
+        bool hasRemovableLiterals = optimizer.basicBlocks.SelectMany(block => block.ops)
+            .Any(op => TryGetRemovableLiteral(op, out _));
+        if (candidates.Count == 0 && !hasRemovableLiterals)
         {
             optimizer.Form = Optimizer.IrForm.Ssa;
             return;
@@ -42,7 +44,8 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
             nextVersion.Add(candidate, 1);
         }
 
-        ComputeLiveness();
+        if (candidates.Count != 0)
+            ComputeLiveness();
         PlacePhis();
         Rename();
         optimizer.Form = Optimizer.IrForm.Ssa;
@@ -198,6 +201,17 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
             List<Op> retainedOperations = [];
             foreach (Op op in block.ops)
             {
+                if (TryGetRemovableLiteral(op, out ConstantValue? literal))
+                {
+                    Variable output = op.outputs[0];
+                    Variable constant = optimizer.NewConstantVariable(literal);
+                    if (candidates.Contains(output))
+                        Push(output, constant);
+                    else
+                        replacements[output] = constant;
+                    continue;
+                }
+
                 Op.StorageAccess? storageAccess = op.GetStorageAccess();
 
                 // Promoted storage is a name for the value, not an operation on physical memory.
@@ -345,7 +359,7 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
     private static void PreferOriginalLocal(Variable value, Variable origin)
     {
         if (origin.kind != VariableKind.Local ||
-            value.kind is VariableKind.Argument or VariableKind.Local ||
+            value.kind is VariableKind.Argument or VariableKind.Local or VariableKind.Constant ||
             value.preferredStorage != null)
         {
             return;
@@ -362,4 +376,23 @@ internal sealed class SsaConstruction(Optimizer optimizer) : Pass
     private static bool IsAliasedStackOutput(Op op, Variable variable) =>
         op.Opcode == OpCodes.Dup &&
         op.outputs.Take(op.stackOutputCount).Contains(variable);
+
+    // Well-formed literal loads have no prefixes and exactly one new stack result. Keeping a
+    // prefixed literal operation is the conservative choice for malformed-but-processable input.
+    private static bool TryGetRemovableLiteral(
+        Op op,
+        [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ConstantValue? literal)
+    {
+        literal = null;
+        if (op.Prefixes.Count != 0 || !op.TryGetLiteral(out ConstantValue? value))
+            return false;
+        if (op.stackInputCount != 0 || op.inputs.Count != 0 ||
+            op.stackOutputCount != 1 || op.outputs.Count != 1)
+        {
+            throw new InvalidOperationException($"Literal {op.Opcode} has an invalid variable shape");
+        }
+
+        literal = value;
+        return true;
+    }
 }

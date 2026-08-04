@@ -122,11 +122,10 @@ public sealed class OptimizerPipelineTests
         //       noninterfering phi sources and destinations should remove most of these copies.
         AssertOpCodes(output,
             OpCodes.Ldc_I4_0, OpCodes.Ldc_I4_0, OpCodes.Stloc, OpCodes.Stloc,
-            OpCodes.Ldloc, OpCodes.Ldloc, OpCodes.Stloc, OpCodes.Stloc,
             OpCodes.Ldloc, OpCodes.Ldarg, OpCodes.Blt, OpCodes.Ldloc, OpCodes.Ret,
-            OpCodes.Ldloc, OpCodes.Ldloc, OpCodes.Add, OpCodes.Ldc_I4_1,
-            OpCodes.Stloc, OpCodes.Stloc, OpCodes.Ldloc, OpCodes.Ldloc,
-            OpCodes.Add, OpCodes.Ldloc, OpCodes.Stloc, OpCodes.Stloc, OpCodes.Br_S);
+            OpCodes.Ldloc, OpCodes.Ldloc, OpCodes.Add, OpCodes.Ldloc, OpCodes.Ldc_I4_1,
+            OpCodes.Add, OpCodes.Stloc, OpCodes.Stloc, OpCodes.Ldloc,
+            OpCodes.Stloc, OpCodes.Ldloc, OpCodes.Stloc, OpCodes.Br_S);
         Assert.That(output.Select(instruction => instruction.opcode), Does.Contain(OpCodes.Add));
         Assert.That(output.Count(instruction => instruction.opcode.FlowControl == FlowControl.Cond_Branch),
             Is.EqualTo(1));
@@ -164,8 +163,7 @@ public sealed class OptimizerPipelineTests
         AssertOpCodes(output,
             OpCodes.Ldc_I8, OpCodes.Stloc, OpCodes.Ldarg, OpCodes.Conv_I8, OpCodes.Stloc,
             OpCodes.Ldloc, OpCodes.Ldloc, OpCodes.Blt, OpCodes.Ldloc, OpCodes.Ret,
-            OpCodes.Ldc_I8, OpCodes.Stloc, OpCodes.Ldloc, OpCodes.Ldloc,
-            OpCodes.Add, OpCodes.Stloc, OpCodes.Br_S);
+            OpCodes.Ldloc, OpCodes.Ldc_I8, OpCodes.Add, OpCodes.Stloc, OpCodes.Br_S);
         Assert.That(output.Select(instruction => instruction.opcode), Does.Contain(OpCodes.Conv_I8));
         Assert.That(output.Select(instruction => instruction.opcode), Does.Contain(OpCodes.Ldc_I8));
         Assert.That(output.Where(instruction => instruction.IsStloc() || instruction.IsLdloc())
@@ -238,14 +236,11 @@ public sealed class OptimizerPipelineTests
             ];
         });
 
-        // TODO: SSA removes the reloadable argument read, so the forward stack scheduler emits the
-        //       literal before discovering that Add/Mul needs the argument below it. Deferred or
-        //       rematerializable pure producers should reconstruct the original load order.
         AssertOpCodes(output,
             OpCodes.Ldarg, OpCodes.Switch,
             OpCodes.Ldarg, OpCodes.Neg, OpCodes.Ret,
-            OpCodes.Ldc_R8, OpCodes.Stloc, OpCodes.Ldarg, OpCodes.Ldloc, OpCodes.Add, OpCodes.Ret,
-            OpCodes.Ldc_R8, OpCodes.Stloc, OpCodes.Ldarg, OpCodes.Ldloc, OpCodes.Mul, OpCodes.Ret);
+            OpCodes.Ldarg, OpCodes.Ldc_R8, OpCodes.Add, OpCodes.Ret,
+            OpCodes.Ldarg, OpCodes.Ldc_R8, OpCodes.Mul, OpCodes.Ret);
         Assert.That(output.Single(instruction => instruction.opcode == OpCodes.Switch).operand,
             Is.TypeOf<Label[]>().And.Length.EqualTo(2));
         Assert.That(output.Count(instruction => instruction.opcode == OpCodes.Ret), Is.EqualTo(3));
@@ -579,8 +574,7 @@ public sealed class OptimizerPipelineTests
         AssertOpCodes(output,
             OpCodes.Ldarg, OpCodes.Ldind_I4, OpCodes.Stloc,
             OpCodes.Ldarg_1, OpCodes.Brfalse,
-            OpCodes.Ldc_I4_1, OpCodes.Stloc,
-            OpCodes.Ldloc, OpCodes.Ldloc, OpCodes.Add, OpCodes.Stloc,
+            OpCodes.Ldloc, OpCodes.Ldc_I4_1, OpCodes.Add, OpCodes.Stloc,
             OpCodes.Ldarg, OpCodes.Ldloc, OpCodes.Stind_I4,
             OpCodes.Ldarg, OpCodes.Ldind_I4, OpCodes.Ret);
         Assert.That(output.Count(instruction => instruction.opcode == OpCodes.Ldind_I4), Is.EqualTo(2));
