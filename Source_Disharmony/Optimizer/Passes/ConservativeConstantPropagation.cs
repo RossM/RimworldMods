@@ -491,7 +491,7 @@ internal sealed class ConservativeConstantPropagation(Optimizer optimizer) : Pas
 
     private void RecomputeAddressTaken()
     {
-        foreach (var variable in optimizer.argumentVariables.Values.Concat<Variable>(optimizer.localVariables.Values))
+        foreach (var variable in optimizer.argumentVariables.Values.Concat<InMemoryVariable>(optimizer.localVariables.Values))
             variable.addressTaken = false;
         foreach (var operation in optimizer.Ops)
         {

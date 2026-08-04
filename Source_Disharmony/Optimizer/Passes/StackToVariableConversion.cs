@@ -29,7 +29,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
     /// <param name="Kind"></param>
     /// <param name="VariableKind"></param>
     /// <param name="Index"></param>
-    internal readonly record struct VariableAccess(Op.VariableAccessKind Kind, VariableKind VariableKind, int Index);
+    internal readonly record struct VariableAccess(Op.VariableAccessKind Kind, InMemoryVariable Variable);
 
     private readonly Dictionary<RegionNode, List<Type>> entryStacks = optimizer.regions.Cast<RegionNode>()
         .Concat(optimizer.basicBlocks).ToDictionary(block => block, _ => new List<Type>());
@@ -45,7 +45,6 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
         if (optimizer.Form != Optimizer.IrForm.Stack)
             throw new InvalidOperationException($"Cannot convert {optimizer.Form} form to variables");
 
-        InitializeVariables();
         // Region nodes supply entry state, including implicit handler stacks. Seeding them
         // before any basic block makes that state independent of storage order.
         foreach (var region in optimizer.regions)
@@ -172,7 +171,8 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Ldloc_S:
                 {
                     int index = op.Index;
-                    transition.variableAccesses.Add(new(Op.VariableAccessKind.Read, VariableKind.Local, index));
+                    InMemoryVariable variable = optimizer.GetLocalVariable(index);
+                    transition.variableAccesses.Add(new VariableAccess(Op.VariableAccessKind.Read, variable));
                     Type declaredType = optimizer.localVariables.TryGetValue(index, out LocalVariable? local)
                         ? local.type ?? typeof(TypeLattice.AnyType)
                         : typeof(TypeLattice.AnyType);
@@ -187,7 +187,8 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Stloc_S:
                 {
                     int index = op.Index;
-                    transition.variableAccesses.Add(new(Op.VariableAccessKind.Write, VariableKind.Local, index));
+                    InMemoryVariable variable = optimizer.GetLocalVariable(index);
+                    transition.variableAccesses.Add(new VariableAccess(Op.VariableAccessKind.Write, variable));
                     stack.RemoveAt(stack.Count - 1);
                     break;
                 }
@@ -195,7 +196,8 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Ldloca_S:
                 {
                     int index = op.Index;
-                    transition.variableAccesses.Add(new(Op.VariableAccessKind.Address, VariableKind.Local, index));
+                    InMemoryVariable variable = optimizer.GetLocalVariable(index);
+                    transition.variableAccesses.Add(new VariableAccess(Op.VariableAccessKind.Address, variable));
                     Type declaredType = optimizer.localVariables.TryGetValue(index, out LocalVariable? local)
                         ? local.type ?? typeof(TypeLattice.AnyType)
                         : typeof(TypeLattice.AnyType);
@@ -210,7 +212,8 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Ldarg_S:
                 {
                     int index = op.Index;
-                    transition.variableAccesses.Add(new(Op.VariableAccessKind.Read, VariableKind.Argument, index));
+                    InMemoryVariable variable = optimizer.GetArgumentVariable(index);
+                    transition.variableAccesses.Add(new VariableAccess(Op.VariableAccessKind.Read, variable));
                     stack.Add(optimizer.parameterTypes[index]);
                     break;
                 }
@@ -218,7 +221,8 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Ldarga_S:
                 {
                     int index = op.Index;
-                    transition.variableAccesses.Add(new(Op.VariableAccessKind.Address, VariableKind.Argument, index));
+                    InMemoryVariable variable = optimizer.GetArgumentVariable(index);
+                    transition.variableAccesses.Add(new VariableAccess(Op.VariableAccessKind.Address, variable));
                     stack.Add(TypeLattice.ToRef(optimizer.parameterTypes[index]));
                     break;
                 }
@@ -226,7 +230,8 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
                 case OpCodeValues.Starg_S:
                 {
                     int index = op.Index;
-                    transition.variableAccesses.Add(new(Op.VariableAccessKind.Write, VariableKind.Argument, index));
+                    InMemoryVariable variable = optimizer.GetArgumentVariable(index);
+                    transition.variableAccesses.Add(new VariableAccess(Op.VariableAccessKind.Write, variable));
                     stack.RemoveAt(stack.Count - 1);
                     break;
                 }
@@ -525,27 +530,6 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
         }
     }
 
-    public void InitializeVariables()
-    {
-        foreach (var op in optimizer.Ops)
-        {
-            if (!Optimizer.ReferencesLocal(op) || op.Operand is not LocalBuilder localBuilder)
-                continue;
-
-            if (optimizer.localVariables.TryGetValue(localBuilder.LocalIndex, out var local))
-            {
-                if (local.type != localBuilder.LocalType)
-                    throw new InvalidOperationException($"Conflicting types for local #{localBuilder.LocalIndex}");
-                local.localBuilder ??= localBuilder;
-                local.pinned |= localBuilder.IsPinned;
-            }
-            else
-            {
-                optimizer.CreateLocal(localBuilder);
-            }
-        }
-    }
-
     public List<Variable> MaterializeBlockVariables(
         BasicBlock block,
         int expectedExitStackSize)
@@ -582,12 +566,7 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
 
             foreach (var access in transition.variableAccesses)
             {
-                Variable variable = access.VariableKind switch
-                {
-                    VariableKind.Argument => optimizer.GetArgumentVariable(access.Index),
-                    VariableKind.Local => optimizer.GetLocalVariable(access.Index),
-                    _ => throw new InvalidOperationException($"Invalid explicit variable kind {access.VariableKind}"),
-                };
+                Variable variable = access.Variable;
 
                 switch (access.Kind)
                 {

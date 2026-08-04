@@ -135,8 +135,13 @@ internal class Optimizer
 
         returnType = method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
 
-        valid = true;
+        InitializeVariables();
 
+        valid = true;
+    }
+
+    private void InitializeVariables()
+    {
         for (int index = 0; index < parameterTypes.Count; index++)
         {
             Type? type = parameterTypes[index];
@@ -145,7 +150,6 @@ internal class Optimizer
                 id = nextVariableId++,
                 type = type,
                 index = index,
-                pinned = false,
             };
             variables.Add(variable);
             argumentVariables.Add(index,
@@ -168,6 +172,24 @@ internal class Optimizer
                 variables.Add(variable);
                 localVariables.Add(local.LocalIndex,
                     variable);
+            }
+        }
+
+        foreach (var op in inputInstructions)
+        {
+            if (op.operand is not LocalBuilder localBuilder)
+                continue;
+
+            if (localVariables.TryGetValue(localBuilder.LocalIndex, out var local1))
+            {
+                if (local1.type != localBuilder.LocalType)
+                    throw new InvalidOperationException($"Conflicting types for local #{localBuilder.LocalIndex}");
+                local1.localBuilder ??= localBuilder;
+                local1.pinned |= localBuilder.IsPinned;
+            }
+            else
+            {
+                CreateLocal(localBuilder);
             }
         }
     }
@@ -1421,11 +1443,11 @@ internal class Optimizer
     // Variables-form registry helpers used while StackToVariableConverter materializes canonical
     // operands. ArgumentVariables must already be initialized from parameterTypes. A previously
     // unseen local is created with unknown declared type; later stores never refine that metadata.
-    internal Variable GetArgumentVariable(int index) => argumentVariables.TryGetValue(index, out var variable)
+    internal ArgumentVariable GetArgumentVariable(int index) => argumentVariables.TryGetValue(index, out var variable)
         ? variable
         : throw new InvalidOperationException($"Unknown argument #{index}");
 
-    internal Variable GetLocalVariable(int index)
+    internal LocalVariable GetLocalVariable(int index)
     {
         if (localVariables.TryGetValue(index, out var variable))
             return variable;
@@ -1450,7 +1472,6 @@ internal class Optimizer
         {
             id = nextVariableId++,
             type = type,
-            pinned = false,
         };
         variables.Add(variable);
         return variable;
@@ -1462,7 +1483,6 @@ internal class Optimizer
         {
             id = nextVariableId++,
             type = type,
-            pinned = false,
         };
         variables.Add(variable);
         return variable;
@@ -1499,18 +1519,11 @@ internal class Optimizer
         {
             id = nextVariableId++,
             type = constant.StackType,
-            pinned = false,
             constantValue = constant,
         };
         variables.Add(variable);
         return variable;
     }
-
-    internal static bool ReferencesLocal(Op op) => unchecked((ushort)op.Opcode.Value) is
-        OpCodeValues.Ldloc_0 or OpCodeValues.Ldloc_1 or OpCodeValues.Ldloc_2 or OpCodeValues.Ldloc_3 or
-        OpCodeValues.Ldloc or OpCodeValues.Ldloc_S or OpCodeValues.Ldloca or OpCodeValues.Ldloca_S or
-        OpCodeValues.Stloc_0 or OpCodeValues.Stloc_1 or OpCodeValues.Stloc_2 or OpCodeValues.Stloc_3 or
-        OpCodeValues.Stloc or OpCodeValues.Stloc_S;
 
     /// <summary>
     ///     Requires Stack form with absent variable operands and empty edge assignments. The normal

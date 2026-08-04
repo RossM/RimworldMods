@@ -70,10 +70,6 @@ internal abstract class Variable
     // CIL stack type implied by constantValue.
     public Type? type;
 
-    // Canonical Variables-form pinned flag for Local; false for other variable kinds. It is
-    // populated only from authoritative local metadata or a LocalBuilder.
-    public bool pinned;
-
     // Canonical in regular and SSA Variables forms. True exactly when a remaining operation takes this
     // argument/local's address. Rewriting address operations can change the value, so such a
     // pass must recompute it; this is a current-IR summary, not historical escape information.
@@ -104,7 +100,7 @@ internal abstract class InMemoryVariable : Variable
 {
     public override bool IsPromotable =>
         type != null && !TypeLattice.IsSpecialType(type) &&
-        !addressTaken && !pinned && !exceptionExposed &&
+        !addressTaken && !exceptionExposed &&
         !TypeLattice.StorageNarrowsStackValue(type);
 
     // Canonical physical slot index for Argument and Local; -1 for logical StackSlot and
@@ -116,6 +112,8 @@ internal class LocalVariable : InMemoryVariable
 {
     public override string BaseName => $"L{index}";
 
+    public override bool IsPromotable => base.IsPromotable && !pinned;
+
     public override VariableKind Kind => VariableKind.Local;
 
     // Optional canonical metadata for a Local created by a transpiler. When present, its index
@@ -123,6 +121,10 @@ internal class LocalVariable : InMemoryVariable
     // slot. Null means only that no LocalBuilder was supplied, since the original MethodBody may
     // still provide authoritative type metadata.
     public LocalBuilder? localBuilder;
+
+    // Canonical Variables-form pinned flag for Local; false for other variable kinds. It is
+    // populated only from authoritative local metadata or a LocalBuilder.
+    public bool pinned;
 }
 
 internal class ConstantVariable : Variable
