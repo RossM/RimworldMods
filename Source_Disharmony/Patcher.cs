@@ -169,8 +169,15 @@ internal class Patcher
 
         if (Instance.optimizerEnabled && patch.optimize)
         {
-            var optimizer = new Optimizer.Optimizer(method, instructionsList, generator, debug: patch.debug);
-            return optimizer.Optimize();
+            try
+            {
+                var optimizer = new Optimizer.Optimizer(method, instructionsList, generator, debug: patch.debug);
+                return optimizer.Optimize();
+            }
+            catch (Exception e)
+            {
+                Autopatcher.ReportException(e);
+            }
         }
 
         return instructionsList;
