@@ -934,7 +934,7 @@ public sealed class OptimizerPassTests
         new StackToVariableConversion(optimizer).Run();
 
         BasicBlock block = optimizer.BasicBlocks[0];
-        Type anyType = typeof(Optimizer.Optimizer).GetNestedType("AnyType", BindingFlags.NonPublic)!;
+        Type anyType = typeof(TypeLattice.AnyType);
         Type pointerType = block.ops[0].outputs.Single().type!;
         Assert.That(pointerType.IsByRef, Is.True);
         Assert.That(pointerType.GetElementType(), Is.SameAs(anyType));
