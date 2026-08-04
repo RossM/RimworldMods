@@ -1398,7 +1398,7 @@ public sealed class OptimizerPipelineTests
         Func<ILGenerator, List<CodeInstruction>> createInstructions)
     {
         var target = new DynamicMethod("OptimizerPipelineTarget", returnType, parameterTypes);
-        ILGenerator generator = PatchProcessor.CreateILGenerator();
+        ILGenerator generator = target.GetILGenerator();
         var optimizer = new Optimizer.Optimizer(target, createInstructions(generator), generator, debug: false);
         return optimizer.Optimize();
     }
