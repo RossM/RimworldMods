@@ -2307,12 +2307,14 @@ public sealed class OptimizerPassTests
     }
 
     [Test]
-    public void SsaEligibilityConservativelyExcludesLocalsInMethodWithExceptionEntries()
+    public void SsaEligibilityExcludesOnlyLocalsAccessedByExceptionHandler()
     {
-        LocalBuilder? localBuilder = null;
+        LocalBuilder? unexposed = null;
+        LocalBuilder? exposed = null;
         Optimizer.Optimizer optimizer = CreateOptimizer(generator =>
         {
-            localBuilder = generator.DeclareLocal(typeof(int));
+            unexposed = generator.DeclareLocal(typeof(int));
+            exposed = generator.DeclareLocal(typeof(int));
             Label exit = generator.DefineLabel();
             var tryStart = new CodeInstruction(OpCodes.Ldc_I4_0);
             tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
@@ -2323,9 +2325,11 @@ public sealed class OptimizerPassTests
             return
             [
                 tryStart,
-                new CodeInstruction(OpCodes.Stloc, localBuilder),
+                new CodeInstruction(OpCodes.Stloc, unexposed),
                 new CodeInstruction(OpCodes.Leave, exit),
                 catchStart,
+                new CodeInstruction(OpCodes.Ldloc, exposed),
+                new CodeInstruction(OpCodes.Pop),
                 catchLeave,
                 new CodeInstruction(OpCodes.Ret).WithLabels(exit),
             ];
@@ -2333,9 +2337,11 @@ public sealed class OptimizerPassTests
         optimizer.MakeBasicBlocks();
         new StackToVariableConversion(optimizer).Run();
 
-        Assert.That(
-            optimizer.LocalVariables[localBuilder!.LocalIndex].IsPromotable,
-            Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(optimizer.LocalVariables[unexposed!.LocalIndex].IsPromotable, Is.True);
+            Assert.That(optimizer.LocalVariables[exposed!.LocalIndex].IsPromotable, Is.False);
+        });
     }
 
     [Test]

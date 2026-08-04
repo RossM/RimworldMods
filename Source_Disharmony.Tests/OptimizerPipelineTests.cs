@@ -772,7 +772,7 @@ public sealed class OptimizerPipelineTests
         });
 
         AssertOpCodes(output,
-            OpCodes.Ldarg_0, OpCodes.Ldarg_1, OpCodes.Div, OpCodes.Stloc, OpCodes.Leave,
+            OpCodes.Ldarg, OpCodes.Ldarg, OpCodes.Div, OpCodes.Stloc, OpCodes.Leave,
             OpCodes.Pop, OpCodes.Ldc_I4_M1, OpCodes.Stloc, OpCodes.Leave,
             OpCodes.Ldloc, OpCodes.Ret);
         Assert.That(output.Select(instruction => instruction.opcode), Does.Contain(OpCodes.Div));
@@ -861,7 +861,7 @@ public sealed class OptimizerPipelineTests
         });
 
         AssertOpCodes(output,
-            OpCodes.Ldarg_0, OpCodes.Unbox_Any, OpCodes.Ldfld, OpCodes.Stloc, OpCodes.Leave,
+            OpCodes.Ldarg, OpCodes.Unbox_Any, OpCodes.Ldfld, OpCodes.Stloc, OpCodes.Leave,
             OpCodes.Pop, OpCodes.Ldc_I4_0, OpCodes.Stloc, OpCodes.Leave,
             OpCodes.Ldloc, OpCodes.Ret);
         Assert.That(output.Single(instruction => instruction.opcode == OpCodes.Unbox_Any).operand,
@@ -1186,9 +1186,9 @@ public sealed class OptimizerPipelineTests
 
         AssertOpCodes(output,
             OpCodes.Ldarg_1, OpCodes.Brfalse,
-            OpCodes.Ldarg_0, OpCodes.Ldc_R8, OpCodes.Mul, OpCodes.Stloc,
+            OpCodes.Ldarg, OpCodes.Ldc_R8, OpCodes.Mul, OpCodes.Stloc,
             OpCodes.Ldloc, OpCodes.Stloc, OpCodes.Leave,
-            OpCodes.Ldarg_0, OpCodes.Ldc_R8, OpCodes.Add, OpCodes.Stloc, OpCodes.Ldloc, OpCodes.Br_S,
+            OpCodes.Ldarg, OpCodes.Ldc_R8, OpCodes.Add, OpCodes.Stloc, OpCodes.Ldloc, OpCodes.Br_S,
             OpCodes.Ldloc, OpCodes.Box, OpCodes.Call, OpCodes.Endfinally,
             OpCodes.Ldloc, OpCodes.Ret);
         Assert.That(output.Select(instruction => instruction.opcode), Does.Contain(OpCodes.Mul));
@@ -1367,10 +1367,14 @@ public sealed class OptimizerPipelineTests
         });
 
         AssertOpCodes(output,
-            OpCodes.Ldc_I4_0, OpCodes.Stloc, OpCodes.Ldc_I4_0, OpCodes.Stloc,
-            OpCodes.Ldloc, OpCodes.Ldc_I4_3, OpCodes.Blt, OpCodes.Leave,
-            OpCodes.Ldloc, OpCodes.Ldarg_0, OpCodes.Ldarg_1, OpCodes.Div, OpCodes.Add, OpCodes.Stloc,
-            OpCodes.Ldloc, OpCodes.Ldc_I4_1, OpCodes.Add, OpCodes.Stloc, OpCodes.Br_S,
+            OpCodes.Ldc_I4_0, OpCodes.Ldc_I4_0, OpCodes.Stloc, OpCodes.Stloc,
+            OpCodes.Ldloc, OpCodes.Ldc_I4_3, OpCodes.Blt,
+            OpCodes.Ldloc, OpCodes.Stloc, OpCodes.Leave,
+            OpCodes.Ldarg, OpCodes.Ldarg, OpCodes.Div, OpCodes.Stloc,
+            OpCodes.Ldloc, OpCodes.Ldloc, OpCodes.Add,
+            OpCodes.Ldloc, OpCodes.Ldc_I4_1, OpCodes.Add,
+            OpCodes.Stloc, OpCodes.Stloc,
+            OpCodes.Ldloc, OpCodes.Stloc, OpCodes.Ldloc, OpCodes.Stloc, OpCodes.Br_S,
             OpCodes.Pop, OpCodes.Ldc_I4_M1, OpCodes.Stloc, OpCodes.Leave,
             OpCodes.Ldloc, OpCodes.Ret);
         Assert.That(output.Select(instruction => instruction.opcode), Does.Contain(OpCodes.Div));

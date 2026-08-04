@@ -1418,8 +1418,6 @@ internal class Optimizer
             index = index,
             localBuilder = localBuilder,
             pinned = pinned,
-            exceptionExposed = kind is VariableKind.Argument or VariableKind.Local &&
-                               exceptionEntryGroups.Count != 0,
         };
         variables.Add(variable);
         return variable;

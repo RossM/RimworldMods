@@ -104,10 +104,28 @@ internal class StackToVariableConversion(Optimizer optimizer) : Pass
         foreach (var block in optimizer.basicBlocks)
             exitStackVariables[block] = MaterializeBlockVariables(block, exitStacks[block].Count);
 
+        // Mark all variables which are potentially accessed inside an exception handling region as exception exposed
+        foreach (var block in optimizer.basicBlocks)
+        {
+            if (!IsExceptionRegion(block.parent))
+                continue;
+            foreach (var input in block.ops.SelectMany(o => o.inputs))
+                input.exceptionExposed = true;
+        }
+
         MergeCrossBlockStackSlots();
         optimizer.Form = Optimizer.IrForm.Variables;
 
         return;
+
+        bool IsExceptionRegion(Region? region)
+        {
+            if (region == null)
+                return false;
+            if (region.exceptionEntryGroup != null && region.exceptionEntryGroup.associatedRegions.Contains(region))
+                return true;
+            return IsExceptionRegion(region.parent);
+        }
 
         void UpdateEntry(RegionNode successor, List<Type> outgoingStack)
         {
