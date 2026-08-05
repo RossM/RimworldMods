@@ -9,8 +9,7 @@ public partial class InstructionMatcher
         ILGenerator generator,
         bool debug)
     {
-        private readonly Dictionary<int, int> localMap_Method = [];
-        private readonly Dictionary<int, LocalBuilder> localBuilderMap_Method = [];
+        private readonly Dictionary<int, LocalBuilder> localMap_Method = [];
         private readonly Dictionary<Label, Label> labelMap_Method = [];
         private readonly List<MatchData> matches = [];
         private readonly List<ExceptionBlock> extraBlocks = [];
@@ -30,10 +29,6 @@ public partial class InstructionMatcher
 
                 switch (rule)
                 {
-                    case { mode: OutputMode.MatchOnly, output: not null }:
-                        throw new InvalidOperationException($"{rule.mode} rule must have Output = null");
-                    case { mode: not OutputMode.MatchOnly, output: null }:
-                        throw new InvalidOperationException($"{rule.mode} rule cannot have Output = null");
                     case { mode: OutputMode.MethodPrefix or OutputMode.MethodPostfix, pattern.Length: > 0 }:
                         throw new InvalidOperationException($"{rule.mode} cannot have a Pattern");
                     case { mode: not (OutputMode.MethodPrefix or OutputMode.MethodPostfix), pattern: not { Length: > 0 } }:
@@ -74,7 +69,7 @@ public partial class InstructionMatcher
                 if (rule.pattern is null)
                     throw new InvalidOperationException();
 
-                for (int instructionIndex = rule.chained && matches.Count > 0 ? matches[^1].end : 0;
+                for (int instructionIndex = 0;
                      instructionIndex <= inInstructions.Count - rule.pattern.Length;
                      instructionIndex++)
                 {
@@ -94,12 +89,6 @@ public partial class InstructionMatcher
 
                     if (rule.output != null)
                         matches.Add(matchData);
-
-                    if (rule.saveLocals)
-                    {
-                        foreach (var kvp in localIndex_Match)
-                            localMap_Method.Add(kvp.Key, kvp.Value);
-                    }
 
                     matchCount++;
                     if (rule.max > 0 && matchCount >= rule.max)
@@ -336,8 +325,7 @@ public partial class InstructionMatcher
                 int localIndex = patternInst.LocalIndex();
                 int targetIndex = inst.LocalIndex();
 
-                if (localMap_Method.TryGetValue(localIndex, out int substituteIndex) ||
-                    localIndex_Match.TryGetValue(localIndex, out substituteIndex))
+                if (localIndex_Match.TryGetValue(localIndex, out int substituteIndex))
                 {
                     if (targetIndex != substituteIndex)
                         return false;
@@ -367,8 +355,7 @@ public partial class InstructionMatcher
                 // There is something very weird going on here. This may be a Harmony bug.
                 int targetIndex = inst.operand is LocalBuilder lb ? lb.LocalIndex : inst.LocalIndex();
 
-                if (localMap_Method.TryGetValue(localIndex, out int substituteIndex) ||
-                    localIndex_Match.TryGetValue(localIndex, out substituteIndex))
+                if (localIndex_Match.TryGetValue(localIndex, out int substituteIndex))
                 {
                     if (targetIndex != substituteIndex)
                         return false;
@@ -478,16 +465,14 @@ public partial class InstructionMatcher
 
         private object GetReplacementLocal(int localIndex, MatchData match)
         {
-            if (localMap_Method.TryGetValue(localIndex, out var substituteIndex))
-                return substituteIndex;
-            if (localBuilderMap_Method.TryGetValue(localIndex, out var substituteBuilder))
+            if (localMap_Method.TryGetValue(localIndex, out var substituteBuilder))
                 return substituteBuilder;
-            if (match.localMap_Match.TryGetValue(localIndex, out substituteIndex))
+            if (match.localMap_Match.TryGetValue(localIndex, out int substituteIndex))
                 return substituteIndex;
             if (localIndex < instructionMatcher.crossRuleLocalTypes.Count)
             {
                 substituteBuilder = generator.DeclareLocal(instructionMatcher.crossRuleLocalTypes[localIndex]);
-                localBuilderMap_Method.Add(localIndex, substituteBuilder);
+                localMap_Method.Add(localIndex, substituteBuilder);
                 return substituteBuilder;
             }
 

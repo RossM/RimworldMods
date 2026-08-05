@@ -2,8 +2,6 @@
 
 internal class Optimizer
 {
-    private readonly bool valid = false;
-
     private readonly MethodBase method;
     private readonly List<CodeInstruction> inputInstructions;
     internal readonly ILGenerator generator;
@@ -32,8 +30,6 @@ internal class Optimizer
             parameterTypes = [.. method.GetParameters().Types()];
 
         returnType = method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
-
-        valid = true;
     }
 
     public List<CodeInstruction> Optimize()

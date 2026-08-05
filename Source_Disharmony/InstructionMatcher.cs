@@ -5,11 +5,6 @@ public partial class InstructionMatcher
     public enum OutputMode
     {
         /// <summary>
-        ///     <see cref="Rule.pattern" /> is matched against, but no instruction changes are made.
-        /// </summary>
-        MatchOnly,
-
-        /// <summary>
         ///     <see cref="Rule.output" /> replaces the instructions that match <see cref="Rule.pattern" />.
         /// </summary>
         Replace,
@@ -40,11 +35,9 @@ public partial class InstructionMatcher
     {
         public int min = 1, max = 1;
         public int priority = 0;
-        public OutputMode mode = OutputMode.MatchOnly;
-        public bool saveLocals = false;
-        public bool chained = false;
+        public OutputMode mode = OutputMode.Replace;
         public CodeInstruction[]? pattern;
-        public CodeInstruction[]? output;
+        public required CodeInstruction[] output;
         public string? name;
     }
 

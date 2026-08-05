@@ -108,30 +108,6 @@ public sealed class InstructionMatcherTests
     }
 
     [Test]
-    public void MatchOnlyCanCaptureLocalForLaterRule()
-    {
-        var captureLocal = new InstructionMatcher.Rule
-        {
-            mode = InstructionMatcher.OutputMode.MatchOnly,
-            pattern = [CodeInstruction.StoreLocal(0)],
-            saveLocals = true,
-        };
-        var replaceMappedLoad = new InstructionMatcher.Rule
-        {
-            mode = InstructionMatcher.OutputMode.Replace,
-            pattern = [CodeInstruction.LoadLocal(0)],
-            output = [CodeInstruction.LoadLocal(0)],
-        };
-
-        List<CodeInstruction> result = Run(
-            [captureLocal, replaceMappedLoad],
-            [CodeInstruction.StoreLocal(3), CodeInstruction.LoadLocal(3), new CodeInstruction(OpCodes.Pop)]);
-
-        CodeInstruction localLoad = result.Single(instruction => instruction.IsLdloc());
-        Assert.That(localLoad.LocalIndex(), Is.EqualTo(3));
-    }
-
-    [Test]
     public void MakeRedirectRuleMatchesCallvirtAndEmitsCall()
     {
         MethodInfo oldMethod = typeof(object).GetMethod(nameof(ToString))!;
