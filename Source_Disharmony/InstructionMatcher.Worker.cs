@@ -23,10 +23,8 @@ public partial class InstructionMatcher
                 FileLog.Log($"## InfixPatcher {method.FullName}");
 
             // Check and make sure that all the substitutions apply. Also work out the indexes of all locals.
-            for (var ruleIndex = 0; ruleIndex < instructionMatcher.rules.Count; ruleIndex++)
+            foreach (Rule rule in instructionMatcher.rules)
             {
-                Rule rule = instructionMatcher.rules[ruleIndex];
-
                 switch (rule)
                 {
                     case { mode: OutputMode.MethodPrefix or OutputMode.MethodPostfix, pattern.Length: > 0 }:
@@ -85,7 +83,7 @@ public partial class InstructionMatcher
                         labelMap_Match = [],
                     };
                     if (debug || forceDebug)
-                        FileLog.Log($"MATCH #{ruleIndex} ({matchData.start} .. {matchData.end - 1})");
+                        FileLog.Log($"MATCH {rule.name} ({matchData.start} .. {matchData.end - 1})");
 
                     if (rule.output != null)
                         matches.Add(matchData);
@@ -97,7 +95,7 @@ public partial class InstructionMatcher
 
                 if (matchCount < rule.min)
                 {
-                    throw new InvalidOperationException($"Not enough matches found for substitution #{ruleIndex}");
+                    throw new InvalidOperationException($"Not enough matches found for substitution {rule.name}");
                 }
             }
 
