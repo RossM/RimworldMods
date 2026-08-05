@@ -1,205 +1,34 @@
-﻿using System.Reflection;
-using System.Reflection.Emit;
-
-namespace XylXenos.Patches;
+﻿namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(StatWorker))]
 public static class Patch_StatWorker
 {
-    private static readonly InstructionMatcher Fixup_GetOffsetsAndFactorsExplanation = new()
-    {
-        crossRuleLocalTypes =
-        {
-            typeof(Pawn),
-            typeof(PawnCapacityDef),
-            typeof(Hediff_SubstituteCapacity),
-        },
-        rules =
-        {
-            new()
-            {
-                saveLocals = true,
-                pattern =
-                [
-                    // Match to find the local "pawn" is stored in
-                    new CodeInstruction(OpCodes.Isinst, typeof(Pawn)),
-                    CodeInstruction.StoreLocal(0),
-                ],
-            },
-
-            new()
-            {
-                min = 1, max = 0,
-                mode = InstructionMatcher.OutputMode.InsertAfter,
-                pattern =
-                [
-                    CodeInstruction.LoadField(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity)),
-                ],
-                output =
-                [
-                    CodeInstruction.StoreLocal(1),
-                    // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
-                    // Load pawn
-                    CodeInstruction.LoadLocal(0),
-                    // Load capacity
-                    CodeInstruction.LoadLocal(1),
-                    // Load this.stat
-                    CodeInstruction.LoadArgument(0),
-                    CodeInstruction.LoadField(typeof(StatWorker), "stat"),
-                    // Call FindHediffFor
-                    CodeInstruction.Call(() => Hediff_SubstituteCapacity.FindHediffFor),
-                    // Save a copy of the hediff
-                    new CodeInstruction(OpCodes.Dup),
-                    CodeInstruction.StoreLocal(2),
-                    // capacity = ConditionalSetCapacity(foundHediff, capacity);
-                    // Load the capacity
-                    CodeInstruction.LoadLocal(1),
-                    // Call ConditionalSetCapacity (because I don't want to emit an if)
-                    CodeInstruction.Call(() => ConditionalSetCapacity),
-                ],
-            },
-            new()
-            {
-                min = 1, max = 1,
-                chained = true,
-                mode = InstructionMatcher.OutputMode.InsertAfter,
-                pattern =
-                [
-                    // sb.AppendLine(whitespace + "    " + text + ": " + offset.ToStringSign() + text2 + " (" + text3 + ")");
-                    CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]),
-                ],
-                output =
-                [
-                    // AppendSubstitutionDescription(sb, whitespace, foundHediff);
-                    // sb
-                    CodeInstruction.LoadArgument(2),
-                    // whitespace
-                    CodeInstruction.LoadArgument(4),
-                    // foundHediff
-                    CodeInstruction.LoadLocal(2),
-                    // Call
-                    CodeInstruction.Call(() => AppendSubstitutionDescription),
-                ],
-            },
-            new()
-            {
-                min = 1, max = 0,
-                mode = InstructionMatcher.OutputMode.InsertAfter,
-                pattern =
-                [
-                    CodeInstruction.LoadField(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity)),
-                ],
-                output =
-                [
-                    CodeInstruction.StoreLocal(1),
-                    // Hediff_SubstituteCapacity foundHediff = FindHediffFor(pawn, capacity, stat);
-                    // Load pawn
-                    CodeInstruction.LoadLocal(0),
-                    // Load capacity
-                    CodeInstruction.LoadLocal(1),
-                    // Load this.stat
-                    CodeInstruction.LoadArgument(0),
-                    CodeInstruction.LoadField(typeof(StatWorker), "stat"),
-                    // Call FindHediffFor
-                    CodeInstruction.Call(() => Hediff_SubstituteCapacity.FindHediffFor),
-                    // Save a copy of the hediff
-                    new CodeInstruction(OpCodes.Dup),
-                    CodeInstruction.StoreLocal(2),
-                    // capacity = ConditionalSetCapacity(foundHediff, capacity);
-                    // Load the capacity
-                    CodeInstruction.LoadLocal(1),
-                    // Call ConditionalSetCapacity (because I don't want to emit an if)
-                    CodeInstruction.Call(() => ConditionalSetCapacity),
-                ],
-            },
-            new()
-            {
-                min = 1, max = 1,
-                chained = true,
-                mode = InstructionMatcher.OutputMode.InsertAfter,
-                pattern =
-                [
-                    // sb.AppendLine(whitespace + "    " + text8 + ": x" + text9 + " (" + text10 + ")");
-                    CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]),
-                ],
-                output =
-                [
-                    // AppendSubstitutionDescription(sb, whitespace, foundHediff);
-                    // sb
-                    CodeInstruction.LoadArgument(2),
-                    // whitespace
-                    CodeInstruction.LoadArgument(4),
-                    // foundHediff
-                    CodeInstruction.LoadLocal(2),
-                    // Call
-                    CodeInstruction.Call(() => AppendSubstitutionDescription),
-                ],
-            },
-        },
-    };
-
     [Feature(typeof(Hediff_SubstituteCapacity))]
-    [HarmonyTranspiler]
-    [HarmonyPatch(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
-    public static IEnumerable<CodeInstruction> GetOffsetsAndFactorsExplanation_Transpiler(
-        IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator,
-        MethodBase method)
-    {
-        var instructionsList = new List<CodeInstruction>(instructions);
-        Fixup_GetOffsetsAndFactorsExplanation.MatchAndReplace(method, ref instructionsList, generator);
-        return instructionsList;
-    }
-
-    public static void AppendSubstitutionDescription(
-        StringBuilder sb,
+    [InnerPostfix(typeof(StringBuilder), nameof(StringBuilder.AppendLine), typeof(string))]
+    [Target(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
+    public static void AppendLine_Postfix(
+        StringBuilder __instance,
         string whitespace,
-        Hediff_SubstituteCapacity? foundHediff)
+        [State] ref Hediff_SubstituteCapacity? foundHediff)
     {
         if (foundHediff != null)
-            sb.AppendLine($"{whitespace}        {foundHediff.GetDescription()}");
+            __instance.AppendLine($"{whitespace}        {foundHediff.GetDescription()}");
+        foundHediff = null;
     }
 
-    public static PawnCapacityDef ConditionalSetCapacity(Hediff_SubstituteCapacity? foundHediff, PawnCapacityDef capacity)
+    [Feature(typeof(Hediff_SubstituteCapacity))]
+    [InnerPrefix(typeof(PawnCapacitiesHandler), nameof(PawnCapacitiesHandler.GetLevel))]
+    [Target(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
+    public static void GetLevel_Prefix(
+        StatRequest req,
+        ref PawnCapacityDef capacity,
+        StatDef ___stat,
+        [State] ref Hediff_SubstituteCapacity? foundHediff)
     {
+        var pawn = req.Thing as Pawn;
+        foundHediff = Hediff_SubstituteCapacity.FindHediffFor(pawn, capacity, ___stat);
         if (foundHediff != null)
             capacity = foundHediff.DefExt.substituteCapacity;
-        return capacity;
-    }
-
-    [Feature(typeof(Hediff_SubstituteCapacity))]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [InnerPostfix(typeof(PawnCapacityFactor), nameof(PawnCapacityFactor.capacity))]
-    [Target(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
-    public static void PawnCapacityFactor_capacity_Postfix(
-        PawnCapacityFactor __instance,
-        StatWorker __caller,
-        StatDef ___stat,
-        StatRequest req,
-        ref PawnCapacityDef __result)
-    {
-        DebugAssert.NotNull(__instance.capacity);
-
-        if (Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, ___stat) is { } foundHediff)
-            __result = foundHediff.DefExt.substituteCapacity;
-    }
-
-    // Note: this patch is performance-sensitive
-    [Feature(typeof(Hediff_SubstituteCapacity))]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [InnerPostfix(typeof(PawnCapacityOffset), nameof(PawnCapacityOffset.capacity))]
-    [Target(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
-    public static void PawnCapacityOffset_capacity_Postfix(
-        PawnCapacityOffset __instance,
-        StatWorker __caller,
-        StatDef ___stat,
-        StatRequest req,
-        ref PawnCapacityDef __result)
-    {
-        DebugAssert.NotNull(__instance.capacity);
-
-        if (Hediff_SubstituteCapacity.FindHediffFor(req.Thing as Pawn, __instance.capacity, ___stat) is { } foundHediff)
-            __result = foundHediff.DefExt.substituteCapacity;
     }
 
     [Feature(typeof(Psycast))]
