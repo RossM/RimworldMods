@@ -3,8 +3,7 @@
 namespace Disharmony.Optimizer;
 
 /// <summary>
-///     FIFO worklist which contains each value at most once. queue and hashSet always describe the
-///     same membership; dequeuing permits the value to be enqueued again later.
+///     FIFO worklist which contains each value at most once.
 /// </summary>
 internal class UniqueQueue<T> : IEnumerable<T>
 {
