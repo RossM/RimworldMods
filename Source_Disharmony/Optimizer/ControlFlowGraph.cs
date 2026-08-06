@@ -1,4 +1,6 @@
-﻿namespace Disharmony.Optimizer;
+﻿using System.Diagnostics;
+
+namespace Disharmony.Optimizer;
 
 internal class ControlFlowGraph
 {
@@ -38,7 +40,7 @@ internal class ControlFlowGraph
     public IEnumerable<Edge> IncomingEdges(BasicBlock block) => edgesTo[block.Label];
 
     /// <summary>
-    ///     Returns all incoming edges for the block with the given label.
+    ///     Returns all incoming edges for the block with the given <see cref="BlockLabel"/>.
     /// </summary>
     /// <param name="label"></param>
     /// <returns></returns>
@@ -52,14 +54,42 @@ internal class ControlFlowGraph
     public IEnumerable<Edge> OutgoingEdges(BasicBlock block) => edgesFrom[block.Label];
 
     /// <summary>
-    ///     Returns all outgoing edges for the block with the given label.
+    ///     Returns all outgoing edges for the block with the given <see cref="BlockLabel"/>.
     /// </summary>
     /// <param name="label"></param>
     /// <returns></returns>
     public IEnumerable<Edge> OutgoingEdges(BlockLabel label) => edgesFrom[label];
 
     /// <summary>
-    ///     Gets the edge from the block with the given source label to the block with the given destination label.
+    ///     Gets all <see cref="BasicBlock"/>s with edges to <paramref name="block"/>.
+    /// </summary>
+    /// <param name="block"></param>
+    /// <returns></returns>
+    public IEnumerable<BasicBlock> Predecessors(BasicBlock block) => edgesTo[block.Label].Select(edge => basicBlocks[edge.Source]);
+
+    /// <summary>
+    ///     Gets the <see cref="BlockLabel"/>s of all <see cref="BasicBlock"/>s with edges to the block with <see cref="BlockLabel"/> <paramref name="label"/>.
+    /// </summary>
+    /// <param name="label"></param>
+    /// <returns></returns>
+    public IEnumerable<BlockLabel> Predecessors(BlockLabel label) => edgesTo[label].Select(edge => edge.Source);
+
+    /// <summary>
+    ///     Gets all <see cref="BasicBlock"/>s with edges from <paramref name="block"/>.
+    /// </summary>
+    /// <param name="block"></param>
+    /// <returns></returns>
+    public IEnumerable<BasicBlock> Successors(BasicBlock block) => edgesFrom[block.Label].Select(edge => basicBlocks[edge.Destination]);
+
+    /// <summary>
+    ///     Gets the <see cref="BlockLabel"/>s of all <see cref="BasicBlock"/>s with edges from the block with <see cref="BlockLabel"/> <paramref name="label"/>.
+    /// </summary>
+    /// <param name="label"></param>
+    /// <returns></returns>
+    public IEnumerable<BlockLabel> Successors(BlockLabel label) => edgesFrom[label].Select(edge => edge.Destination);
+
+    /// <summary>
+    ///     Gets the edge from the block with the given source <see cref="BlockLabel"/> to the block with the given destination <see cref="BlockLabel"/>.
     /// </summary>
     /// <param name="source"></param>
     /// <param name="destination"></param>
@@ -67,7 +97,36 @@ internal class ControlFlowGraph
     public Edge GetEdge(BlockLabel source, BlockLabel destination) => edges[(source, destination)];
 
     /// <summary>
-    ///     Gets the block with the givene label.
+    ///     Gets the edge from the given source block to the given destination block.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="destination"></param>
+    /// <returns></returns>
+    public Edge GetEdge(BasicBlock source, BasicBlock destination) => edges[(source.Label, destination.Label)];
+
+    /// <summary>
+    ///     Gets the edge from the block with the given source <see cref="BlockLabel"/> to the block with the given destination <see cref="BlockLabel"/>,
+    ///     or null if no edge exists.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="destination"></param>
+    /// <returns></returns>
+    public Edge? GetEdgeOrNull(BlockLabel source, BlockLabel destination)
+    {
+        edges.TryGetValue((source, destination), out Edge? result);
+        return result;
+    }
+    /// <summary>
+    ///     Gets the edge from the given source block to the given destination block, or null if no edge exists.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="destination"></param>
+    /// <returns></returns>
+
+    public Edge? GetEdgeOrNull(BasicBlock source, BasicBlock destination) => GetEdgeOrNull(source.Label, destination.Label);
+
+    /// <summary>
+    ///     Gets the block with the given <see cref="BlockLabel"/>.
     /// </summary>
     /// <param name="label"></param>
     /// <returns></returns>
@@ -92,7 +151,7 @@ internal class ControlFlowGraph
     ///     Adds a basic block to the control flow graph.
     /// </summary>
     /// <remarks>
-    ///     It is the caller's responsibility to add the <see cref="Edge"/>s for the new block.
+    ///     It is the caller's responsibility to add the <see cref="Edge" />s for the new block.
     /// </remarks>
     /// <param name="block"></param>
     public void AddBlock(BasicBlock block)
@@ -101,10 +160,10 @@ internal class ControlFlowGraph
     }
 
     /// <summary>
-    ///     Replaces an existing block with a new block with the same label.
+    ///     Replaces an existing block with a new block with the same <see cref="BlockLabel"/>.
     /// </summary>
     /// <remarks>
-    ///     It is the caller's responsibility to update the <see cref="Edge"/>s for the replaced block if necessary.
+    ///     It is the caller's responsibility to update the <see cref="Edge" />s for the replaced block if necessary.
     /// </remarks>
     /// <param name="block"></param>
     /// <exception cref="KeyNotFoundException"></exception>
@@ -118,7 +177,7 @@ internal class ControlFlowGraph
     ///     Removes a block from the control flow graph.
     /// </summary>
     /// <remarks>
-    ///     It is the caller's responsibility to remove the <see cref="Edge"/>s for the removed block.
+    ///     It is the caller's responsibility to remove the <see cref="Edge" />s for the removed block.
     /// </remarks>
     /// <param name="block"></param>
     /// <exception cref="InvalidOperationException"></exception>
@@ -130,10 +189,10 @@ internal class ControlFlowGraph
     }
 
     /// <summary>
-    ///     Removes the block with the given label from the control flow graph
+    ///     Removes the block with the given <see cref="BlockLabel"/> from the control flow graph
     /// </summary>
     /// <remarks>
-    ///     It is the caller's responsibility to remove the <see cref="Edge"/>s for the removed block.
+    ///     It is the caller's responsibility to remove the <see cref="Edge" />s for the removed block.
     /// </remarks>
     /// <param name="label"></param>
     public void RemoveBlock(BlockLabel label) => basicBlocks.Remove(label);
@@ -207,6 +266,27 @@ internal class ControlFlowGraph
             var next = i + 1 < regions.Length ? regions[i + 1] : null;
             exceptionGroupsByRegion[region] = group;
             nextRegion[region] = next;
+        }
+    }
+
+    /// <summary>
+    ///     Validates the current state.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    [Conditional("DEBUG")]
+    public void Validate()
+    {
+        foreach (var block in BasicBlocks)
+        foreach (var successor in block.Branch.Labels)
+        {
+            if (!edges.ContainsKey((block.Label, successor)))
+                throw new InvalidOperationException("Edge not found");
+        }
+
+        foreach (var edge in Edges)
+        {
+            if (!basicBlocks[edge.Source].Branch.Labels.Contains(edge.Destination))
+                throw new InvalidOperationException("Edge not referenced");
         }
     }
 }
