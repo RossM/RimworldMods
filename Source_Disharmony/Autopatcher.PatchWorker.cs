@@ -15,19 +15,19 @@ public static partial class Autopatcher
                 return;
             }
 
-            List<Ruleset> matchers = [];
+            List<Ruleset> rulesets = [];
 
-            Ruleset patchMatcher = MakePatchInstructionMatcher();
-            matchers.Add(patchMatcher);
+            Ruleset patchRuleset = MakePatchRuleset();
+            rulesets.Add(patchRuleset);
 
-            Ruleset? inlineMatcher = MakeInlineInstructionMatcher();
-            if (inlineMatcher != null)
-                matchers.Add(inlineMatcher);
+            Ruleset? inlineRuleset = MakeInlineRuleset();
+            if (inlineRuleset != null)
+                rulesets.Add(inlineRuleset);
 
-            patcher.ApplyPatch(patchedMethod, [.. matchers], useTrampolines);
+            patcher.ApplyPatch(patchedMethod, [.. rulesets], useTrampolines);
         }
 
-        private Ruleset? MakeInlineInstructionMatcher()
+        private Ruleset? MakeInlineRuleset()
         {
             List<Rule> rules = [];
 
@@ -41,20 +41,20 @@ public static partial class Autopatcher
                 rules.AddRange(inlineRuleBuilder.BuildRules());
             }
 
-            Ruleset? inlineMatcher = null;
+            Ruleset? ruleset = null;
             if (rules.Count > 0)
             {
-                inlineMatcher = new Ruleset
+                ruleset = new Ruleset
                 {
                     rules = rules,
                     crossRuleLocalTypes = context.localTypes,
                 };
             }
 
-            return inlineMatcher;
+            return ruleset;
         }
 
-        private Ruleset MakePatchInstructionMatcher()
+        private Ruleset MakePatchRuleset()
         {
             List<RuleBuilder> ruleBuilders = [];
 
@@ -84,14 +84,14 @@ public static partial class Autopatcher
             if (rules.Count == 0)
                 throw new InvalidOperationException("No rules generated");
 
-            var patchMatcher = new Ruleset
+            var ruleset = new Ruleset
             {
                 rules = rules,
                 crossRuleLocalTypes = context.localTypes,
                 crossRuleLabels = labels,
             };
 
-            return patchMatcher;
+            return ruleset;
         }
     }
 }
