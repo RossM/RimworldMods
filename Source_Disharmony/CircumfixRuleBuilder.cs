@@ -88,43 +88,43 @@ internal class CircumfixRuleBuilder : RuleBuilder
             };
         }
 
-        if (skipLabel != null || returnLabel != null || postfixes.Count > 0)
+        if (skipLabel == null && returnLabel == null && postfixes.Count == 0)
+            yield break;
+
+        if (returnLabel is { } label)
         {
-            if (returnLabel is { } label)
-            {
-                output.Add(new(OpCodes.Nop) { labels = [label] });
-
-                if (resultLocalIndex >= 0)
-                    output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
-            }
-
-            if (skipLabel is { } label2)
-                output.Add(new(OpCodes.Nop) { labels = [label2] });
-
-            foreach (var postfix in postfixes)
-            {
-                foreach (var parameter in postfix.parameters)
-                    EmitParameterValue(parameter);
-
-                output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
-                output.AddRange(postfix.patch.GetCodeInstructions());
-
-                if (postfix.patch.ReturnType != typeof(void))
-                    output.Add(new(OpCodes.Pop));
-            }
+            output.Add(new(OpCodes.Nop) { labels = [label] });
 
             if (resultLocalIndex >= 0)
-                output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
-
-            output.Add(new(OpCodes.Ret));
-
-            yield return new Rule
-            {
-                mode = OutputMode.MethodPostfix,
-                output = [.. output.instructions],
-                name = "postfixes",
-            };
-            output.instructions.Clear();
+                output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
         }
+
+        if (skipLabel is { } label2)
+            output.Add(new(OpCodes.Nop) { labels = [label2] });
+
+        foreach (var postfix in postfixes)
+        {
+            foreach (var parameter in postfix.parameters)
+                EmitParameterValue(parameter);
+
+            output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
+            output.AddRange(postfix.patch.GetCodeInstructions());
+
+            if (postfix.patch.ReturnType != typeof(void))
+                output.Add(new(OpCodes.Pop));
+        }
+
+        if (resultLocalIndex >= 0)
+            output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
+
+        output.Add(new(OpCodes.Ret));
+
+        yield return new Rule
+        {
+            mode = OutputMode.MethodPostfix,
+            output = [.. output.instructions],
+            name = "postfixes",
+        };
+        output.instructions.Clear();
     }
 }
