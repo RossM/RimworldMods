@@ -5,17 +5,17 @@ namespace Disharmony.Optimizer;
 internal class ControlFlowGraph
 {
     /// <summary>
-    ///     Returns all basic blocks in the control flow graph.
+    ///     Returns all <see cref="BasicBlock" />s in the control flow graph.
     /// </summary>
     public IEnumerable<BasicBlock> BasicBlocks => basicBlocks.Values;
 
     /// <summary>
-    ///     Returns all edges in the control flow graph.
+    ///     Returns all <see cref="Edge" />s in the control flow graph.
     /// </summary>
     public IEnumerable<Edge> Edges => edges.Values;
 
     /// <summary>
-    ///     Returns all exception groups in the control flow graph.
+    ///     Returns all <see cref="ExceptionGroup" />s in the control flow graph.
     /// </summary>
     public IEnumerable<ExceptionGroup> ExceptionGroups => exceptionGroups;
 
@@ -33,42 +33,44 @@ internal class ControlFlowGraph
     public RootRegion RootRegion { get; } = new RootRegion(new BlockLabel());
 
     /// <summary>
-    ///     Returns all incoming edges for a basic block.
+    ///     Returns all incoming <see cref="Edge" />s for a <see cref="BasicBlock" />.
     /// </summary>
-    /// <param name="block">The block whose incoming edges to return.</param>
-    /// <returns>The edges whose destination is <paramref name="block" />.</returns>
+    /// <param name="block">The <see cref="BasicBlock" /> whose incoming <see cref="Edge" />s to return.</param>
+    /// <returns>The <see cref="Edge" />s whose destination is <paramref name="block" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="block" /> is not present in the graph.</exception>
     public IEnumerable<Edge> IncomingEdges(BasicBlock block) => edgesTo[block.Label];
 
     /// <summary>
-    ///     Returns all incoming edges for the block with the given <see cref="BlockLabel" />.
+    ///     Returns all incoming <see cref="Edge" />s for the <see cref="BasicBlock" /> with the given
+    ///     <see cref="BlockLabel" />.
     /// </summary>
-    /// <param name="label">The label of the block whose incoming edges to return.</param>
-    /// <returns>The edges whose destination is <paramref name="label" />.</returns>
+    /// <param name="label">The label of the <see cref="BasicBlock" /> whose incoming <see cref="Edge" />s to return.</param>
+    /// <returns>The <see cref="Edge" />s whose destination is <paramref name="label" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="label" /> is not present in the graph.</exception>
     public IEnumerable<Edge> IncomingEdges(BlockLabel label) => edgesTo[label];
 
     /// <summary>
-    ///     Returns all outgoing edges for a basic block.
+    ///     Returns all outgoing <see cref="Edge" />s for a <see cref="BasicBlock" />.
     /// </summary>
-    /// <param name="block">The block whose outgoing edges to return.</param>
-    /// <returns>The edges whose source is <paramref name="block" />.</returns>
+    /// <param name="block">The <see cref="BasicBlock" /> whose outgoing <see cref="Edge" />s to return.</param>
+    /// <returns>The <see cref="Edge" />s whose source is <paramref name="block" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="block" /> is not present in the graph.</exception>
     public IEnumerable<Edge> OutgoingEdges(BasicBlock block) => edgesFrom[block.Label];
 
     /// <summary>
-    ///     Returns all outgoing edges for the block with the given <see cref="BlockLabel" />.
+    ///     Returns all outgoing <see cref="Edge" />s for the <see cref="BasicBlock" /> with the given
+    ///     <see cref="BlockLabel" />.
     /// </summary>
-    /// <param name="label">The label of the block whose outgoing edges to return.</param>
-    /// <returns>The edges whose source is <paramref name="label" />.</returns>
+    /// <param name="label">The label of the <see cref="BasicBlock" /> whose outgoing <see cref="Edge" />s to return.</param>
+    /// <returns>The <see cref="Edge" />s whose source is <paramref name="label" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="label" /> is not present in the graph.</exception>
     public IEnumerable<Edge> OutgoingEdges(BlockLabel label) => edgesFrom[label];
 
     /// <summary>
     ///     Gets all <see cref="BasicBlock" />s with edges to <paramref name="block" />.
     /// </summary>
-    /// <param name="block">The block whose predecessors to return.</param>
-    /// <returns>The blocks with edges to <paramref name="block" />.</returns>
+    /// <param name="block">The <see cref="BasicBlock" /> whose predecessors to return.</param>
+    /// <returns>The <see cref="BasicBlock" />s with <see cref="Edge" />s to <paramref name="block" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="block" /> is not present in the graph.</exception>
     public IEnumerable<BasicBlock> Predecessors(BasicBlock block) => edgesTo[block.Label].Select(edge => basicBlocks[edge.Source]);
 
@@ -77,15 +79,18 @@ internal class ControlFlowGraph
     ///     <see cref="BlockLabel" /> <paramref name="label" />.
     /// </summary>
     /// <param name="label">The label of the block whose predecessor labels to return.</param>
-    /// <returns>The labels of the blocks with edges to the block identified by <paramref name="label" />.</returns>
+    /// <returns>
+    ///     The labels of the <see cref="BasicBlock" />s with <see cref="Edge" />s to the block identified by
+    ///     <paramref name="label" />.
+    /// </returns>
     /// <exception cref="KeyNotFoundException"><paramref name="label" /> is not present in the graph.</exception>
     public IEnumerable<BlockLabel> Predecessors(BlockLabel label) => edgesTo[label].Select(edge => edge.Source);
 
     /// <summary>
     ///     Gets all <see cref="BasicBlock" />s with edges from <paramref name="block" />.
     /// </summary>
-    /// <param name="block">The block whose successors to return.</param>
-    /// <returns>The blocks with edges from <paramref name="block" />.</returns>
+    /// <param name="block">The <see cref="BasicBlock" /> whose successors to return.</param>
+    /// <returns>The <see cref="BasicBlock" />s with <see cref="Edge" />s from <paramref name="block" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="block" /> is not present in the graph.</exception>
     public IEnumerable<BasicBlock> Successors(BasicBlock block) => edgesFrom[block.Label].Select(edge => basicBlocks[edge.Destination]);
 
@@ -94,7 +99,10 @@ internal class ControlFlowGraph
     ///     <see cref="BlockLabel" /> <paramref name="label" />.
     /// </summary>
     /// <param name="label">The label of the block whose successor labels to return.</param>
-    /// <returns>The labels of the blocks with edges from the block identified by <paramref name="label" />.</returns>
+    /// <returns>
+    ///     The labels of the <see cref="BasicBlock" />s with <see cref="Edge" />s from the block identified by
+    ///     <paramref name="label" />.
+    /// </returns>
     /// <exception cref="KeyNotFoundException"><paramref name="label" /> is not present in the graph.</exception>
     public IEnumerable<BlockLabel> Successors(BlockLabel label) => edgesFrom[label].Select(edge => edge.Destination);
 
@@ -104,16 +112,17 @@ internal class ControlFlowGraph
     /// </summary>
     /// <param name="source">The source block label.</param>
     /// <param name="destination">The destination block label.</param>
-    /// <returns>The edge from <paramref name="source" /> to <paramref name="destination" />.</returns>
+    /// <returns>The <see cref="Edge" /> from <paramref name="source" /> to <paramref name="destination" />.</returns>
     /// <exception cref="KeyNotFoundException">No edge exists between the specified blocks.</exception>
     public Edge GetEdge(BlockLabel source, BlockLabel destination) => edges[(source, destination)];
 
     /// <summary>
-    ///     Gets the edge from the given source block to the given destination block.
+    ///     Gets the <see cref="Edge" /> from the given source <see cref="BasicBlock" /> to the given destination
+    ///     <see cref="BasicBlock" />.
     /// </summary>
-    /// <param name="source">The source block.</param>
-    /// <param name="destination">The destination block.</param>
-    /// <returns>The edge from <paramref name="source" /> to <paramref name="destination" />.</returns>
+    /// <param name="source">The source <see cref="BasicBlock" />.</param>
+    /// <param name="destination">The destination <see cref="BasicBlock" />.</param>
+    /// <returns>The <see cref="Edge" /> from <paramref name="source" /> to <paramref name="destination" />.</returns>
     /// <exception cref="KeyNotFoundException">No edge exists between the specified blocks.</exception>
     public Edge GetEdge(BasicBlock source, BasicBlock destination) => edges[(source.Label, destination.Label)];
 
@@ -124,7 +133,7 @@ internal class ControlFlowGraph
     /// </summary>
     /// <param name="source">The source block label.</param>
     /// <param name="destination">The destination block label.</param>
-    /// <returns>The edge between the specified blocks, or <see langword="null" /> if no such edge exists.</returns>
+    /// <returns>The <see cref="Edge" /> between the specified blocks, or <see langword="null" /> if no such edge exists.</returns>
     public Edge? GetEdgeOrNull(BlockLabel source, BlockLabel destination)
     {
         edges.TryGetValue((source, destination), out Edge? result);
@@ -132,34 +141,34 @@ internal class ControlFlowGraph
     }
 
     /// <summary>
-    ///     Gets the edge from the given source block to the given destination block, or <see langword="null" /> if no edge
+    ///     Gets the <see cref="Edge" /> from the given source <see cref="BasicBlock" /> to the given destination
+    ///     <see cref="BasicBlock" />, or <see langword="null" /> if no edge
     ///     exists.
     /// </summary>
-    /// <param name="source">The source block.</param>
-    /// <param name="destination">The destination block.</param>
-    /// <returns>The edge between the specified blocks, or <see langword="null" /> if no such edge exists.</returns>
+    /// <param name="source">The source <see cref="BasicBlock" />.</param>
+    /// <param name="destination">The destination <see cref="BasicBlock" />.</param>
+    /// <returns>The <see cref="Edge" /> between the specified blocks, or <see langword="null" /> if no such edge exists.</returns>
     public Edge? GetEdgeOrNull(BasicBlock source, BasicBlock destination) => GetEdgeOrNull(source.Label, destination.Label);
 
     /// <summary>
-    ///     Gets the block with the given <see cref="BlockLabel" />.
+    ///     Gets the <see cref="BasicBlock" /> with the given <see cref="BlockLabel" />.
     /// </summary>
     /// <param name="label">The label of the block to return.</param>
-    /// <returns>The block identified by <paramref name="label" />.</returns>
+    /// <returns>The <see cref="BasicBlock" /> identified by <paramref name="label" />.</returns>
     /// <exception cref="KeyNotFoundException">No block with the specified label exists.</exception>
     public BasicBlock GetBlock(BlockLabel label) => basicBlocks[label];
 
     /// <summary>
-    ///     Gets the exception group containing the given region.
+    ///     Gets the <see cref="ExceptionGroup" /> containing the given <see cref="ExceptionRegion" />.
     /// </summary>
     /// <param name="region">The exception region whose group to return.</param>
-    /// <returns>The exception group containing <paramref name="region" />.</returns>
+    /// <returns>The <see cref="ExceptionGroup" /> containing <paramref name="region" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="region" /> does not belong to a group in the graph.</exception>
     public ExceptionGroup GetExceptionGroup(ExceptionRegion region) => exceptionGroupsByRegion[region];
 
     /// <summary>
-    ///     Gets the next region in order in the exception group containing the given region, or <see langword="null" /> if it
-    ///     is the last region
-    ///     in the group.
+    ///     Gets the next <see cref="ExceptionRegion" /> in order in the <see cref="ExceptionGroup" /> containing the given
+    ///     <see cref="ExceptionRegion" />, or <see langword="null" /> if it is the last region in the group.
     /// </summary>
     /// <param name="region">The exception region whose successor to return.</param>
     /// <returns>The next region in the group, or <see langword="null" /> if <paramref name="region" /> is the last region.</returns>
@@ -167,12 +176,12 @@ internal class ControlFlowGraph
     public ExceptionRegion? GetNextRegion(ExceptionRegion region) => nextRegion[region];
 
     /// <summary>
-    ///     Adds a basic block to the control flow graph.
+    ///     Adds a <see cref="BasicBlock" /> to the control flow graph.
     /// </summary>
     /// <remarks>
     ///     It is the caller's responsibility to add the <see cref="Edge" />s for the new block.
     /// </remarks>
-    /// <param name="block">The block to add.</param>
+    /// <param name="block">The <see cref="BasicBlock" /> to add.</param>
     /// <exception cref="ArgumentException">A block with the same <see cref="BasicBlock.Label" /> already exists.</exception>
     public void AddBlock(BasicBlock block)
     {
@@ -180,12 +189,12 @@ internal class ControlFlowGraph
     }
 
     /// <summary>
-    ///     Replaces an existing block with a new block with the same <see cref="BlockLabel" />.
+    ///     Replaces an existing <see cref="BasicBlock" /> with a new one with the same <see cref="BlockLabel" />.
     /// </summary>
     /// <remarks>
     ///     It is the caller's responsibility to update the <see cref="Edge" />s for the replaced block if necessary.
     /// </remarks>
-    /// <param name="block">The replacement block.</param>
+    /// <param name="block">The replacement <see cref="BasicBlock" />.</param>
     /// <exception cref="KeyNotFoundException">No block with the same <see cref="BasicBlock.Label" /> exists.</exception>
     public void ReplaceBlock(BasicBlock block)
     {
@@ -194,12 +203,12 @@ internal class ControlFlowGraph
     }
 
     /// <summary>
-    ///     Removes a block from the control flow graph.
+    ///     Removes a <see cref="BasicBlock" /> from the control flow graph.
     /// </summary>
     /// <remarks>
     ///     It is the caller's responsibility to remove the <see cref="Edge" />s for the removed block.
     /// </remarks>
-    /// <param name="block">The block to remove.</param>
+    /// <param name="block">The <see cref="BasicBlock" /> to remove.</param>
     /// <exception cref="KeyNotFoundException">No block with the same <see cref="BasicBlock.Label" /> exists.</exception>
     /// <exception cref="InvalidOperationException">
     ///     The graph contains a different block with the same
@@ -213,7 +222,7 @@ internal class ControlFlowGraph
     }
 
     /// <summary>
-    ///     Removes the block with the given <see cref="BlockLabel" /> from the control flow graph.
+    ///     Removes the <see cref="BasicBlock" /> with the given <see cref="BlockLabel" /> from the control flow graph.
     /// </summary>
     /// <remarks>
     ///     It is the caller's responsibility to remove the <see cref="Edge" />s for the removed block.
@@ -222,9 +231,9 @@ internal class ControlFlowGraph
     public void RemoveBlock(BlockLabel label) => basicBlocks.Remove(label);
 
     /// <summary>
-    ///     Adds an edge to the control flow graph.
+    ///     Adds an <see cref="Edge" /> to the control flow graph.
     /// </summary>
-    /// <param name="edge">The edge to add.</param>
+    /// <param name="edge">The <see cref="Edge" /> to add.</param>
     /// <exception cref="InvalidOperationException">An edge with the same source and destination already exists.</exception>
     public void AddEdge(Edge edge)
     {
@@ -242,9 +251,9 @@ internal class ControlFlowGraph
     }
 
     /// <summary>
-    ///     Replaces an existing edge with a new edge with the same source and destination labels.
+    ///     Replaces an existing <see cref="Edge" /> with a new one with the same source and destination labels.
     /// </summary>
-    /// <param name="edge">The replacement edge.</param>
+    /// <param name="edge">The replacement <see cref="Edge" />.</param>
     /// <exception cref="KeyNotFoundException">No edge with the same source and destination exists.</exception>
     public void ReplaceEdge(Edge edge)
     {
@@ -253,9 +262,9 @@ internal class ControlFlowGraph
     }
 
     /// <summary>
-    ///     Removes an edge from the control flow graph.
+    ///     Removes an <see cref="Edge" /> from the control flow graph.
     /// </summary>
-    /// <param name="edge">The edge to remove.</param>
+    /// <param name="edge">The <see cref="Edge" /> to remove.</param>
     /// <exception cref="KeyNotFoundException">No edge with the same source and destination exists.</exception>
     /// <exception cref="InvalidOperationException">The graph contains a different edge with the same source and destination.</exception>
     public void RemoveEdge(Edge edge)
@@ -269,7 +278,7 @@ internal class ControlFlowGraph
     }
 
     /// <summary>
-    ///     Removes the edge with the given source and destination labels.
+    ///     Removes the <see cref="Edge" /> with the given source and destination labels.
     /// </summary>
     /// <param name="source">The source block label.</param>
     /// <param name="destination">The destination block label.</param>
@@ -277,9 +286,9 @@ internal class ControlFlowGraph
     public void RemoveEdge(BlockLabel source, BlockLabel destination) => RemoveEdge(GetEdge(source, destination));
 
     /// <summary>
-    ///     Adds an exception group to the control flow graph.
+    ///     Adds an <see cref="ExceptionGroup" /> to the control flow graph.
     /// </summary>
-    /// <param name="group">The exception group to add.</param>
+    /// <param name="group">The <see cref="ExceptionGroup" /> to add.</param>
     /// <exception cref="InvalidOperationException"><paramref name="group" /> is already present in the graph.</exception>
     public void AddExceptionGroup(ExceptionGroup group)
     {
@@ -325,61 +334,65 @@ internal class ControlFlowGraph
 ///     Represents a region, which can be the root region or an exception region.
 /// </summary>
 /// <remarks>
-///     Every basic block belongs to a region, and all regions except the root region are contained in a parent region.
+///     Every <see cref="BasicBlock" /> belongs to a <see cref="Region" />, and all regions except the
+///     <see cref="ControlFlowGraph.RootRegion" /> are contained in a parent region.
 /// </remarks>
-/// <param name="EntryLabel">The label of the region's entry block.</param>
+/// <param name="EntryLabel">The <see cref="BlockLabel" /> of the region's entry <see cref="BasicBlock" />.</param>
 internal abstract record Region(BlockLabel EntryLabel);
 
 /// <summary>
-///     The root region which all blocks ultimately belong to.
+///     The root region which all <see cref="BasicBlock" />s ultimately belong to.
 /// </summary>
 /// <remarks>
-///     The <paramref name="EntryLabel" /> of the root region is the entry block for the method.
+///     The <paramref name="EntryLabel" /> of the root region is the entry <see cref="BasicBlock" /> for the method.
 /// </remarks>
-/// <param name="EntryLabel">The label of the method's entry block.</param>
+/// <param name="EntryLabel">The <see cref="BlockLabel" /> of the method's entry <see cref="BasicBlock" />.</param>
 internal sealed record RootRegion(BlockLabel EntryLabel) : Region(EntryLabel);
 
 /// <summary>
 ///     Base class for exception regions.
 /// </summary>
-/// <param name="EntryLabel">The label of the region's entry block.</param>
-/// <param name="Parent">The region that contains this region.</param>
+/// <param name="EntryLabel">The <see cref="BlockLabel" /> of the region's entry <see cref="BasicBlock" />.</param>
+/// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
 internal abstract record ExceptionRegion(BlockLabel EntryLabel, Region Parent) : Region(EntryLabel);
 
 /// <summary>
-///     Represents a try block.
+///     Represents a protected region of a try block.
 /// </summary>
 /// <remarks>
-///     It is valid for the entry block of a try region to have incoming edges from outside the try region,
-///     but all other blocks in the try region must only have incoming edges from within the try region.
+///     It is valid for the entry <see cref="BasicBlock" /> of a <see cref="TryRegion" /> to have incoming
+///     <see cref="Edge" />s from outside that region, but all other <see cref="BasicBlock" />s in the region must only
+///     have incoming <see cref="Edge" />s from within the region.
 /// </remarks>
-/// <param name="EntryLabel">The label of the try region's entry block.</param>
-/// <param name="Parent">The region that contains this region.</param>
+/// <param name="EntryLabel">The <see cref="BlockLabel" /> of the try region's entry <see cref="BasicBlock" />.</param>
+/// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
 internal sealed record TryRegion(BlockLabel EntryLabel, Region Parent) : ExceptionRegion(EntryLabel, Parent);
 
 /// <summary>
-///     Represents a catch block.
+///     Represents a catch handler region.
 /// </summary>
 /// <remarks>
-///     It is invalid for any block in a catch region to have incoming edges from outside the catch region.
+///     It is invalid for any <see cref="BasicBlock" /> in a <see cref="CatchRegion" /> to have incoming
+///     <see cref="Edge" />s from outside that region.
 ///     On entry to the catch region, <paramref name="IncomingException" /> is the exception object that was thrown.
 /// </remarks>
-/// <param name="EntryLabel">The label of the catch region's entry block.</param>
-/// <param name="Parent">The region that contains this region.</param>
-/// <param name="IncomingException">The stack slot containing the exception on entry to the handler.</param>
+/// <param name="EntryLabel">The <see cref="BlockLabel" /> of the catch region's entry <see cref="BasicBlock" />.</param>
+/// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
+/// <param name="IncomingException">The <see cref="StackSlot" /> containing the exception on entry to the handler.</param>
 internal sealed record CatchRegion(BlockLabel EntryLabel, Region Parent, StackSlot IncomingException) : ExceptionRegion(EntryLabel, Parent)
 {
     public Type ExceptionType => IncomingException.Type;
 }
 
 /// <summary>
-///     Represents a finally block.
+///     Represents a finally handler region.
 /// </summary>
 /// <remarks>
-///     It is invalid for any block in a finally region to have incoming edges from outside the finally region.
+///     It is invalid for any <see cref="BasicBlock" /> in a <see cref="FinallyRegion" /> to have incoming
+///     <see cref="Edge" />s from outside that region.
 /// </remarks>
-/// <param name="EntryLabel">The label of the finally region's entry block.</param>
-/// <param name="Parent">The region that contains this region.</param>
+/// <param name="EntryLabel">The <see cref="BlockLabel" /> of the finally region's entry <see cref="BasicBlock" />.</param>
+/// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
 internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : ExceptionRegion(EntryLabel, Parent);
 
 /// <summary>
@@ -390,24 +403,24 @@ internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : Exc
 internal sealed record ExceptionGroup(TryRegion TryRegion, IReadOnlyList<ExceptionRegion> HandlerRegions);
 
 /// <summary>
-///     Provides a name for a block.
+///     Provides a name for a <see cref="BasicBlock" />.
 /// </summary>
 /// <remarks>
-///     In order to allow most data elements to be immutable, references to a block are stored as the block's label
-///     rather than as a direct reference to a block. This allows a block to be replaced with a new block with the same
-///     label without updating other data structures.
+///     In order to allow most data elements to be immutable, references to a <see cref="BasicBlock" /> are stored as the
+///     block's label rather than as a direct reference to the block. This allows a <see cref="BasicBlock" /> to be
+///     replaced with a new block with the same label without updating other data structures.
 /// </remarks>
 /// <param name="Label">The original IL label, or <see langword="null" /> if the block did not have an IL label.</param>
 internal sealed record BlockLabel(Label? Label = null);
 
 /// <summary>
-///     Represents the transfer of control to the next block at the end of a block.
+///     Represents the transfer of control to the next <see cref="BasicBlock" /> at the end of a <see cref="BasicBlock" />.
 /// </summary>
 /// <remarks>
-///     Branch-type IL ops must be represented as a branch. Exceptions are not represented in the basic block structure,
-///     except for unconditional throw.
+///     Branch-type <see cref="ILOp" />s must be represented as a <see cref="Branch" />. Exceptions are not represented in
+///     the <see cref="BasicBlock" /> structure, except for unconditional throws.
 /// </remarks>
-/// <param name="Labels">The labels of the possible successor blocks.</param>
+/// <param name="Labels">The <see cref="BlockLabel" />s of the possible successor <see cref="BasicBlock" />s.</param>
 internal abstract record Branch(IReadOnlyList<BlockLabel> Labels);
 
 /// <summary>
@@ -415,11 +428,11 @@ internal abstract record Branch(IReadOnlyList<BlockLabel> Labels);
 /// </summary>
 internal record UnconditionalBranch : Branch
 {
-    /// <summary>Gets the label of the branch target.</summary>
+    /// <summary>Gets the <see cref="BlockLabel" /> of the branch target.</summary>
     public BlockLabel Label => Labels[0];
 
     /// <summary>Initializes a branch to the specified target.</summary>
-    /// <param name="label">The label of the branch target.</param>
+    /// <param name="label">The <see cref="BlockLabel" /> of the branch target.</param>
     public UnconditionalBranch(BlockLabel label) : base([label]) { }
 }
 
@@ -428,9 +441,9 @@ internal record UnconditionalBranch : Branch
 /// </summary>
 /// <remarks>
 ///     Unlike regular transfer of control, <see cref="OpCodes.Leave" /> is permitted to exit an exception handler region.
-///     No stack slots can be live when a leave is taken.
+///     No <see cref="StackSlot" />s can be live when a leave is taken.
 /// </remarks>
-/// <param name="Label">The label of the branch target.</param>
+/// <param name="Label">The <see cref="BlockLabel" /> of the branch target.</param>
 internal record Leave(BlockLabel Label) : UnconditionalBranch(Label);
 
 /// <summary>
@@ -441,7 +454,7 @@ internal record Leave(BlockLabel Label) : UnconditionalBranch(Label);
 ///     <c>Labels[1]</c> represents the taken branch target, while for a switch, the remaining
 ///     elements of <paramref name="Labels" /> represent switch targets.
 /// </remarks>
-/// <param name="Labels">The fallthrough and branch-target labels.</param>
+/// <param name="Labels">The fallthrough and branch-target <see cref="BlockLabel" />s.</param>
 /// <param name="OpCode">The conditional branch or switch opcode.</param>
 internal sealed record ConditionalBranch(IReadOnlyList<BlockLabel> Labels, OpCode OpCode) : Branch(Labels);
 
@@ -449,28 +462,29 @@ internal sealed record ConditionalBranch(IReadOnlyList<BlockLabel> Labels, OpCod
 ///     Represents throwing an exception.
 /// </summary>
 /// <remarks>
-///     Exceptional control transfer is not represented as edges, so a block ending in a throw has no outgoing edges.
+///     Exceptional control transfer is not represented as <see cref="Edge" />s, so a <see cref="BasicBlock" /> ending in a
+///     <see cref="Throw" /> has no outgoing edges.
 /// </remarks>
-/// <param name="Exception">The operation that produces the exception to throw.</param>
+/// <param name="Exception">The <see cref="Op" /> that produces the exception to throw.</param>
 internal sealed record Throw(Op Exception) : Branch([]);
 
 /// <summary>
 ///     Represents returning from a method.
 /// </summary>
-/// <param name="Value">The operation that produces the return value, or a <see cref="VoidOp" /> for a void return.</param>
+/// <param name="Value">The <see cref="Op" /> that produces the return value, or a <see cref="VoidOp" /> for a void return.</param>
 internal sealed record Return(Op Value) : Branch([]);
 
 /// <summary>
 ///     Represents a basic block.
 /// </summary>
-/// <param name="Label">The block's label.</param>
-/// <param name="Ops">The operations executed by the block.</param>
-/// <param name="Region">The region containing the block.</param>
+/// <param name="Label">The block's <see cref="BlockLabel" />.</param>
+/// <param name="Ops">The <see cref="Op" />s executed by the block.</param>
+/// <param name="Region">The <see cref="Region" /> containing the block.</param>
 /// <param name="Branch">The transfer of control at the end of the block.</param>
 internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Region Region, Branch Branch);
 
 /// <summary>
-///     Represents an edge between basic blocks.
+///     Represents an edge between <see cref="BasicBlock" />s.
 /// </summary>
 /// <remarks>
 ///     <para>
@@ -483,7 +497,7 @@ internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Regio
 ///         <see cref="BasicBlock" /> to also update the edges.
 ///     </para>
 /// </remarks>
-/// <param name="Source">The label of the source block.</param>
-/// <param name="Destination">The label of the destination block.</param>
-/// <param name="EdgeAssignments">The assignments performed while control transfers across the edge.</param>
+/// <param name="Source">The <see cref="BlockLabel" /> of the source block.</param>
+/// <param name="Destination">The <see cref="BlockLabel" /> of the destination block.</param>
+/// <param name="EdgeAssignments">The <see cref="AssignmentOp" />s performed while control transfers across the edge.</param>
 internal sealed record Edge(BlockLabel Source, BlockLabel Destination, IReadOnlyList<AssignmentOp> EdgeAssignments);
