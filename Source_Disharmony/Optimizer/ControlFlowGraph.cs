@@ -110,9 +110,8 @@ internal class ControlFlowGraph
     /// <exception cref="KeyNotFoundException"></exception>
     public void ReplaceBlock(BasicBlock block)
     {
-        if (!basicBlocks.ContainsKey(block.Label))
-            throw new KeyNotFoundException();
-        basicBlocks[block.Label] = block;
+        RemoveBlock(block.Label);
+        AddBlock(block);
     }
 
     /// <summary>
