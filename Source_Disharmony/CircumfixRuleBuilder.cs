@@ -66,7 +66,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
         {
             yield return new Rule
             {
-                mode = InstructionMatcher.OutputMode.MethodPrefix,
+                mode = OutputMode.MethodPrefix,
                 output = [.. output.instructions],
                 name = "prefixes",
             };
@@ -81,7 +81,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
             {
                 min = 0,
                 max = 0,
-                mode = InstructionMatcher.OutputMode.Replace,
+                mode = OutputMode.Replace,
                 pattern = [new(OpCodes.Ret)],
                 output = [new(OpCodes.Br, returnLabel)],
                 name = "return",
@@ -120,7 +120,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
 
             yield return new Rule
             {
-                mode = InstructionMatcher.OutputMode.MethodPostfix,
+                mode = OutputMode.MethodPostfix,
                 output = [.. output.instructions],
                 name = "postfixes",
             };

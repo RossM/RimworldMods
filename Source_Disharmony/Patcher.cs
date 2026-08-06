@@ -48,7 +48,7 @@ internal class Patcher
 
     private struct MethodPatch
     {
-        public required InstructionMatcher[] matchers;
+        public required Ruleset[] matchers;
         public bool optimize;
         public bool debug;
     }
@@ -223,7 +223,7 @@ internal class Patcher
             generator.Emit(OpCodes.Ldarg_S, i);
     }
 
-    public void ApplyPatch(MethodBaseInvocation original, InstructionMatcher[] matchers, bool useTrampolines)
+    public void ApplyPatch(MethodBaseInvocation original, Ruleset[] matchers, bool useTrampolines)
     {
         if (matchers.Length == 0)
             Unpatch(original.MethodBase);

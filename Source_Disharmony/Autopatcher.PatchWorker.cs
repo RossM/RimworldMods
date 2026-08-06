@@ -15,19 +15,19 @@ public static partial class Autopatcher
                 return;
             }
 
-            List<InstructionMatcher> matchers = [];
+            List<Ruleset> matchers = [];
 
-            InstructionMatcher patchMatcher = MakePatchInstructionMatcher();
+            Ruleset patchMatcher = MakePatchInstructionMatcher();
             matchers.Add(patchMatcher);
 
-            InstructionMatcher? inlineMatcher = MakeInlineInstructionMatcher();
+            Ruleset? inlineMatcher = MakeInlineInstructionMatcher();
             if (inlineMatcher != null)
                 matchers.Add(inlineMatcher);
 
             patcher.ApplyPatch(patchedMethod, [.. matchers], useTrampolines);
         }
 
-        private InstructionMatcher? MakeInlineInstructionMatcher()
+        private Ruleset? MakeInlineInstructionMatcher()
         {
             List<Rule> rules = [];
 
@@ -41,10 +41,10 @@ public static partial class Autopatcher
                 rules.AddRange(inlineRuleBuilder.BuildRules());
             }
 
-            InstructionMatcher? inlineMatcher = null;
+            Ruleset? inlineMatcher = null;
             if (rules.Count > 0)
             {
-                inlineMatcher = new InstructionMatcher
+                inlineMatcher = new Ruleset
                 {
                     rules = rules,
                     crossRuleLocalTypes = context.localTypes,
@@ -54,7 +54,7 @@ public static partial class Autopatcher
             return inlineMatcher;
         }
 
-        private InstructionMatcher MakePatchInstructionMatcher()
+        private Ruleset MakePatchInstructionMatcher()
         {
             List<RuleBuilder> ruleBuilders = [];
 
@@ -84,7 +84,7 @@ public static partial class Autopatcher
             if (rules.Count == 0)
                 throw new InvalidOperationException("No rules generated");
 
-            var patchMatcher = new InstructionMatcher
+            var patchMatcher = new Ruleset
             {
                 rules = rules,
                 crossRuleLocalTypes = context.localTypes,

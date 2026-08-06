@@ -1,10 +1,11 @@
 using System.Reflection.Emit;
+using Disharmony.RuleEngine;
 using HarmonyLib;
 
 namespace Disharmony.Tests;
 
 [TestFixture]
-public sealed class InstructionMatcherTests
+public sealed class RuleEngineTests
 {
     private static readonly MethodInfo TargetMethod =
         typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.Void))!;
@@ -12,9 +13,9 @@ public sealed class InstructionMatcherTests
     [Test]
     public void ReplaceSubstitutesMatchedInstructions()
     {
-        var rule = new InstructionMatcher.Rule
+        var rule = new Rule
         {
-            mode = InstructionMatcher.OutputMode.Replace,
+            mode = OutputMode.Replace,
             pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
             output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
@@ -35,9 +36,9 @@ public sealed class InstructionMatcherTests
         finallyStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
         var finallyEnd = new CodeInstruction(OpCodes.Endfinally);
         finallyEnd.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
-        var rule = new InstructionMatcher.Rule
+        var rule = new Rule
         {
-            mode = InstructionMatcher.OutputMode.Replace,
+            mode = OutputMode.Replace,
             pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
             output = [tryStart, finallyStart, finallyEnd],
         };
@@ -59,9 +60,9 @@ public sealed class InstructionMatcherTests
     [Test]
     public void InsertBeforePreservesMatchedInstructions()
     {
-        var rule = new InstructionMatcher.Rule
+        var rule = new Rule
         {
-            mode = InstructionMatcher.OutputMode.InsertBefore,
+            mode = OutputMode.InsertBefore,
             pattern = [new CodeInstruction(OpCodes.Ret)],
             output = [new CodeInstruction(OpCodes.Nop)],
         };
@@ -74,9 +75,9 @@ public sealed class InstructionMatcherTests
     [Test]
     public void InsertAfterPreservesMatchedInstructions()
     {
-        var rule = new InstructionMatcher.Rule
+        var rule = new Rule
         {
-            mode = InstructionMatcher.OutputMode.InsertAfter,
+            mode = OutputMode.InsertAfter,
             pattern = [new CodeInstruction(OpCodes.Nop)],
             output = [new CodeInstruction(OpCodes.Pop)],
         };
@@ -91,14 +92,14 @@ public sealed class InstructionMatcherTests
     [Test]
     public void MethodPrefixAndPostfixWrapInstructionSequence()
     {
-        var prefix = new InstructionMatcher.Rule
+        var prefix = new Rule
         {
-            mode = InstructionMatcher.OutputMode.MethodPrefix,
+            mode = OutputMode.MethodPrefix,
             output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
         };
-        var postfix = new InstructionMatcher.Rule
+        var postfix = new Rule
         {
-            mode = InstructionMatcher.OutputMode.MethodPostfix,
+            mode = OutputMode.MethodPostfix,
             output = [new CodeInstruction(OpCodes.Pop)],
         };
 
@@ -112,7 +113,15 @@ public sealed class InstructionMatcherTests
     {
         MethodInfo oldMethod = typeof(object).GetMethod(nameof(ToString))!;
         MethodInfo newMethod = typeof(Convert).GetMethod(nameof(Convert.ToString), [typeof(object)])!;
-        InstructionMatcher.Rule rule = InstructionMatcher.MakeRedirectRule(oldMethod, newMethod);
+        Rule rule = new Rule
+        {
+            min = 1,
+            max = 0,
+            mode = OutputMode.Replace,
+            pattern = [new(OpCodes.Call, oldMethod)],
+            output = [new(OpCodes.Call, newMethod)],
+            name = oldMethod.FullName,
+        };
 
         List<CodeInstruction> result = Run(
             [rule],
@@ -125,9 +134,9 @@ public sealed class InstructionMatcherTests
     [Test]
     public void ReplacementReusesLocalMatchedByPattern()
     {
-        var rule = new InstructionMatcher.Rule
+        var rule = new Rule
         {
-            mode = InstructionMatcher.OutputMode.Replace,
+            mode = OutputMode.Replace,
             pattern = [CodeInstruction.StoreLocal(0), CodeInstruction.LoadLocal(0)],
             output = [CodeInstruction.LoadLocal(0)],
         };
@@ -285,11 +294,11 @@ public sealed class InstructionMatcherTests
     }
 
     private static List<CodeInstruction> Run(
-        List<InstructionMatcher.Rule> rules,
+        List<Rule> rules,
         IEnumerable<CodeInstruction> instructions)
     {
         var dynamicMethod = new DynamicMethod("InstructionMatcherTest", typeof(void), Type.EmptyTypes);
-        return InstructionMatcher.MatchAndReplace(rules, TargetMethod, instructions, dynamicMethod.GetILGenerator());
+        return Ruleset.MatchAndReplace(rules, TargetMethod, instructions, dynamicMethod.GetILGenerator());
     }
 
     private static List<CodeInstruction> RunWithNewLocal(CodeInstruction replacement, int precedingLocalCount = 4) =>
@@ -305,9 +314,9 @@ public sealed class InstructionMatcherTests
         for (int i = 0; i < precedingLocalCount; i++)
             generator.DeclareLocal(typeof(int));
 
-        var matcher = new InstructionMatcher(new InstructionMatcher.Rule
+        var matcher = new Ruleset(new Rule
         {
-            mode = InstructionMatcher.OutputMode.MethodPrefix,
+            mode = OutputMode.MethodPrefix,
             output = replacements,
         });
         matcher.crossRuleLocalTypes.Add(typeof(string));

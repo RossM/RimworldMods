@@ -140,7 +140,7 @@ internal class InfixRuleBuilder : RuleBuilder
         {
             min = 1,
             max = 0,
-            mode = InstructionMatcher.OutputMode.Replace,
+            mode = OutputMode.Replace,
             pattern = [.. pattern],
             output = [.. output.instructions],
             name = inner.FullName,

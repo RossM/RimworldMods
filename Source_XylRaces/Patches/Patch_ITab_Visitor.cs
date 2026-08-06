@@ -1,22 +1,29 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
+using Disharmony.RuleEngine;
 
 namespace XylXenos.Patches;
 
 [HarmonyPatch(typeof(ITab_Pawn_Visitor))]
 public static class Patch_ITab_Pawn_Visitor
 {
-    private static readonly InstructionMatcher Fixup = new()
+    private static readonly Ruleset fixup = new()
     {
         rules =
         {
-            InstructionMatcher.MakeRedirectRule(
-                SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate o) => o.GetExplanationForTooltip(default)),
-                SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate_Fixed o) => o.GetExplanationForTooltip(default))),
+            new Rule
+            {
+                min = 1,
+                max = 0,
+                mode = OutputMode.Replace,
+                pattern = [new(OpCodes.Call, SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate o) => o.GetExplanationForTooltip(default)))],
+                output = [new(OpCodes.Call, SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate_Fixed o) => o.GetExplanationForTooltip(default)))],
+                name = "GetExplanationForTooltip",
+            },
             new()
             {
                 min = 1, max = 0,
-                mode = InstructionMatcher.OutputMode.Replace,
+                mode = OutputMode.Replace,
                 pattern =
                 [
                     new(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate)),
@@ -38,7 +45,7 @@ public static class Patch_ITab_Pawn_Visitor
         MethodBase method)
     {
         var instructionsList = new List<CodeInstruction>(instructions);
-        Fixup.MatchAndReplace(method, ref instructionsList, generator);
+        fixup.MatchAndReplace(method, ref instructionsList, generator);
         return instructionsList;
     }
 }
