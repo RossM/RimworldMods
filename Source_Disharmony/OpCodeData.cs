@@ -116,6 +116,10 @@ internal enum OpCodeFlags
     TypeFromOperand = 0x20000,
 
     ResultTypeMask = Arithmetic | Shift | Load | Store | LoadAddress | TypeFromOperand,
+
+    SideEffectMask = CanThrow | HasSideEffects,
+
+    VariableOperationMask = Load | Store | LoadAddress | Local | Argument | Indirect,
 }
 
 internal struct OpCodeData
@@ -126,9 +130,10 @@ internal struct OpCodeData
 
     private static readonly OpCodeData[] data = new OpCodeData[0x200];
 
-    public static OpCodeData Get(int value) => data[GetIndex(value)];
+    public static OpCodeData Get(ushort value) => data[GetIndex(value)];
+    public static OpCodeData Get(OpCode opCode) => Get(unchecked((ushort)opCode.Value));
 
-    private static int GetIndex(int value) => value >= 0xFE00 ? value - (0xFE00 - 0x100) : value;
+    private static int GetIndex(ushort value) => value >= 0xFE00 ? value - (0xFE00 - 0x100) : value;
 
     static OpCodeData()
     {
@@ -141,7 +146,7 @@ internal struct OpCodeData
         }
     }
 
-    private static readonly (int Value, OpCodeData Data)[] initValues =
+    private static readonly (ushort Value, OpCodeData Data)[] initValues =
     [
         // @formatter:off
         (OpCodeValues.Add,            new OpCodeData { flags = OpCodeFlags.Arithmetic }),
@@ -319,6 +324,7 @@ internal struct OpCodeData
         (OpCodeValues.Sub_Ovf_Un,     new OpCodeData { flags = OpCodeFlags.Arithmetic | OpCodeFlags.CanThrow }),
         (OpCodeValues.Unbox,          new OpCodeData { flags = OpCodeFlags.CanThrow }),
         (OpCodeValues.Unbox_Any,      new OpCodeData { flags = OpCodeFlags.TypeFromOperand | OpCodeFlags.CanThrow }),
+        (OpCodeValues.Xor,            new OpCodeData { flags = OpCodeFlags.Arithmetic }),
         // @formatter:on
     ];
 }
