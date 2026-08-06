@@ -10,6 +10,9 @@ internal static class OpCodeValues
     public const int And            =   0x5F;
     public const int Arglist        = 0xFE00;
     public const int Box            =   0x8C;
+    public const int Call           =   0x28;
+    public const int Calli          =   0x29;
+    public const int Callvirt       =   0x6F;
     public const int Castclass      =   0x74;
     public const int Ceq            = 0xFE01;
     public const int Cgt            = 0xFE02;
@@ -58,6 +61,7 @@ internal static class OpCodeValues
     public const int Initblk        = 0xFE18;
     public const int Initobj        = 0xFE15;
     public const int Isinst         =   0x75;
+    public const int Jmp            =   0x27;
     public const int Ldarg          = 0xFE09;
     public const int Ldarg_0        =   0x02;
     public const int Ldarg_1        =   0x03;

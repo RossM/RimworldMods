@@ -11,4 +11,9 @@ internal static class TypeLattice
     ///     Represents a type that has no known information. This is used in the type lattice to represent the bottom of the lattice.
     /// </summary>
     public static class UnknownType;
+
+    /// <summary>
+    ///     Represents a null pointer. The CLI treats this as an IntPtr, but allows it to be compatible with any reference type.
+    /// </summary>
+    public static class NullPtr;
 }
