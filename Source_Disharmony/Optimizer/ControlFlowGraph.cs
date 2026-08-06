@@ -413,9 +413,19 @@ internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : Han
 internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent);
 
 /// <summary>
-///     Represents a group of exception regions, consisting of a <see cref="ProtectedRegion" /> and one or more
+///     Represents a group of exception regions, consisting of a <see cref="Disharmony.Optimizer.ProtectedRegion" /> and one or more
 ///     <see cref="HandlerRegion" />s.
 /// </summary>
+/// <remarks>
+///     The CLI enforces a number rules around exception regions and control flow. Control flow can only enter
+///     a <see cref="Disharmony.Optimizer.ProtectedRegion" /> through its <see cref="Region.EntryLabel" />. Control flow can only
+///     enter a <see cref="HandlerRegion" /> through the action of the exception system; there can't be any
+///     explicit <see cref="Edge" />s into a handler region. Control flow can only leave a <see cref="HandlerRegion" />
+///     or <see cref="CatchRegion" /> through a <see cref="Leave" />, and control flow can only leave a
+///     <see cref="FinallyRegion" /> or <see cref="FaultRegion" /> through a <see cref="Return" /> with a
+///     <see cref="Return.IL" /> of <see cref="OpCodes.Endfinally" />. However, a <see cref="Leave"/> <i>can</i> transfer control from
+///     a <see cref="CatchRegion"/> to any <see cref="BasicBlock"/> in the associated <see cref="ProtectedRegion"/>.
+/// </remarks>
 /// <param name="ProtectedRegion">The protected region.</param>
 /// <param name="HandlerRegions">The handlers associated with <paramref name="ProtectedRegion" />.</param>
 internal sealed record ExceptionGroup(ProtectedRegion ProtectedRegion, IReadOnlyList<HandlerRegion> HandlerRegions);
