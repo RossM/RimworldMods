@@ -27,6 +27,14 @@ internal sealed record AssignmentOp(Variable Output, Op Input) : Op(typeof(void)
 internal sealed record Prefix(OpCode OpCode, object Operand);
 
 /// <summary>
+///     Represents an IL instruction.
+/// </summary>
+/// <param name="OpCode"></param>
+/// <param name="Operand"></param>
+/// <param name="Prefixes"></param>
+internal sealed record ILInstruction(OpCode OpCode, object Operand, IReadOnlyList<Prefix> Prefixes);
+
+/// <summary>
 ///     Represents an IL operation.
 /// </summary>
 /// <remarks>
@@ -40,7 +48,7 @@ internal sealed record Prefix(OpCode OpCode, object Operand);
 /// <param name="Prefixes">The prefixes applied to the instruction.</param>
 /// <param name="Inputs">The <see cref="Op" />s that produce the instruction's stack inputs.</param>
 /// <param name="Type">The type of value produced by the instruction.</param>
-internal sealed record ILOp(OpCode OpCode, object Operand, IReadOnlyList<Prefix> Prefixes, IReadOnlyList<Op> Inputs, Type Type) : Op(Type);
+internal sealed record ILOp(ILInstruction IL, IReadOnlyList<Op> Inputs, Type Type) : Op(Type);
 
 /// <summary>
 ///     Represents a variable which can store a value during execution, including <see cref="Local" />s,

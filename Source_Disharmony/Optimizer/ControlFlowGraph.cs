@@ -295,7 +295,7 @@ internal class ControlFlowGraph
         if (!exceptionGroups.Add(group))
             throw new InvalidOperationException();
 
-        ExceptionRegion[] regions = [group.TryRegion, .. group.HandlerRegions];
+        ExceptionRegion[] regions = [group.ProtectedRegion, .. group.HandlerRegions];
         for (int i = 0; i < regions.Length; i++)
         {
             var region = regions[i];
@@ -360,13 +360,15 @@ internal abstract record ExceptionRegion(BlockLabel EntryLabel, Region Parent) :
 ///     Represents a protected region of a try block.
 /// </summary>
 /// <remarks>
-///     It is valid for the entry <see cref="BasicBlock" /> of a <see cref="TryRegion" /> to have incoming
+///     It is valid for the entry <see cref="BasicBlock" /> of a <see cref="ProtectedRegion" /> to have incoming
 ///     <see cref="Edge" />s from outside that region, but all other <see cref="BasicBlock" />s in the region must only
 ///     have incoming <see cref="Edge" />s from within the region.
 /// </remarks>
 /// <param name="EntryLabel">The <see cref="BlockLabel" /> of the try region's entry <see cref="BasicBlock" />.</param>
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
-internal sealed record TryRegion(BlockLabel EntryLabel, Region Parent) : ExceptionRegion(EntryLabel, Parent);
+internal sealed record ProtectedRegion(BlockLabel EntryLabel, Region Parent) : ExceptionRegion(EntryLabel, Parent);
+
+internal abstract record HandlerRegion(BlockLabel EntryLabel, Region Parent) : ExceptionRegion(EntryLabel, Parent);
 
 /// <summary>
 ///     Represents a catch handler region.
@@ -379,28 +381,44 @@ internal sealed record TryRegion(BlockLabel EntryLabel, Region Parent) : Excepti
 /// <param name="EntryLabel">The <see cref="BlockLabel" /> of the catch region's entry <see cref="BasicBlock" />.</param>
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
 /// <param name="IncomingException">The <see cref="StackSlot" /> containing the exception on entry to the handler.</param>
-internal sealed record CatchRegion(BlockLabel EntryLabel, Region Parent, StackSlot IncomingException) : ExceptionRegion(EntryLabel, Parent)
+internal sealed record CatchRegion(BlockLabel EntryLabel, Region Parent, StackSlot IncomingException) : HandlerRegion(EntryLabel, Parent)
 {
     public Type ExceptionType => IncomingException.Type;
 }
+
+// Note that there is no FilterRegion, because Harmony's filter handling is broken.
 
 /// <summary>
 ///     Represents a finally handler region.
 /// </summary>
 /// <remarks>
 ///     It is invalid for any <see cref="BasicBlock" /> in a <see cref="FinallyRegion" /> to have incoming
-///     <see cref="Edge" />s from outside that region.
+///     <see cref="Edge" />s from outside that region. Control flow can only exit a finally region using the
+///     <see cref="OpCodes.Endfinally" /> instruction.
 /// </remarks>
 /// <param name="EntryLabel">The <see cref="BlockLabel" /> of the finally region's entry <see cref="BasicBlock" />.</param>
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
-internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : ExceptionRegion(EntryLabel, Parent);
+internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent);
 
 /// <summary>
-///     Represents a group of exception regions, consisting of a try region and one or more handler regions.
+///     Represents a fault handler region.
 /// </summary>
-/// <param name="TryRegion">The protected try region.</param>
-/// <param name="HandlerRegions">The handlers associated with <paramref name="TryRegion" />.</param>
-internal sealed record ExceptionGroup(TryRegion TryRegion, IReadOnlyList<ExceptionRegion> HandlerRegions);
+/// <remarks>
+///     It is invalid for any <see cref="BasicBlock" /> in a <see cref="FinallyRegion" /> to have incoming
+///     <see cref="Edge" />s from outside that region. Control flow can only exit a fault region using the
+///     <see cref="OpCodes.Endfinally" /> instruction.
+/// </remarks>
+/// <param name="EntryLabel">The <see cref="BlockLabel" /> of the fault region's entry <see cref="BasicBlock" />.</param>
+/// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
+internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent);
+
+/// <summary>
+///     Represents a group of exception regions, consisting of a <see cref="ProtectedRegion" /> and one or more
+///     <see cref="HandlerRegion" />s.
+/// </summary>
+/// <param name="ProtectedRegion">The protected region.</param>
+/// <param name="HandlerRegions">The handlers associated with <paramref name="ProtectedRegion" />.</param>
+internal sealed record ExceptionGroup(ProtectedRegion ProtectedRegion, IReadOnlyList<HandlerRegion> HandlerRegions);
 
 /// <summary>
 ///     Provides a name for a <see cref="BasicBlock" />.
@@ -456,7 +474,7 @@ internal record Leave(BlockLabel Label) : UnconditionalBranch(Label);
 /// </remarks>
 /// <param name="Labels">The fallthrough and branch-target <see cref="BlockLabel" />s.</param>
 /// <param name="OpCode">The conditional branch or switch opcode.</param>
-internal sealed record ConditionalBranch(IReadOnlyList<BlockLabel> Labels, OpCode OpCode) : Branch(Labels);
+internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<BlockLabel> Labels) : Branch(Labels);
 
 /// <summary>
 ///     Represents throwing an exception.
@@ -471,8 +489,12 @@ internal sealed record Throw(Op Exception) : Branch([]);
 /// <summary>
 ///     Represents returning from a method.
 /// </summary>
+/// <param name="IL">
+///     The instruction that generated the return, which can be <see cref="OpCodes.Ret" /> or
+///     <see cref="OpCodes.Endfinally" />.
+/// </param>
 /// <param name="Value">The <see cref="Op" /> that produces the return value, or a <see cref="VoidOp" /> for a void return.</param>
-internal sealed record Return(Op Value) : Branch([]);
+internal sealed record Return(ILInstruction IL, Op Value) : Branch([]);
 
 /// <summary>
 ///     Represents a basic block.
