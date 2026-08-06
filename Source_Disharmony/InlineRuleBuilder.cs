@@ -123,6 +123,7 @@ internal class InlineRuleBuilder : RuleBuilder
         {
             min = 1,
             max = 0,
+            phase = 2,
             mode = OutputMode.Replace,
             pattern = [.. pattern],
             output = [.. output.instructions],

@@ -73,6 +73,7 @@ public class Rule
 {
     public int min = 1, max = 1;
     public int priority = 0;
+    public int phase = 1;
     public OutputMode mode = OutputMode.Replace;
     public CodeInstruction[]? pattern;
     public required CodeInstruction[] output;

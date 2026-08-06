@@ -48,7 +48,7 @@ internal class Patcher
 
     private struct MethodPatch
     {
-        public required Ruleset[] rulesets;
+        public required Ruleset ruleset;
         public bool optimize;
         public bool debug;
     }
@@ -162,10 +162,7 @@ internal class Patcher
     {
         var instructionsList = instructions.ToList();
         var patch = Instance.methodPatches[method];
-        foreach (var ruleset in patch.rulesets)
-        {
-            ruleset.MatchAndReplace(method, ref instructionsList, generator);
-        }
+        patch.ruleset.MatchAndReplace(method, ref instructionsList, generator);
 
         if (Instance.optimizerEnabled && patch.optimize)
         {
@@ -223,11 +220,8 @@ internal class Patcher
             generator.Emit(OpCodes.Ldarg_S, i);
     }
 
-    public void ApplyPatch(MethodBaseInvocation original, Ruleset[] rulesets, bool useTrampolines)
+    public void ApplyPatch(MethodBaseInvocation original, Ruleset ruleset, bool useTrampolines)
     {
-        if (rulesets.Length == 0)
-            Unpatch(original.MethodBase);
-
         lock (HarmonyInternals.locker)
         {
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
@@ -248,7 +242,7 @@ internal class Patcher
 
             methodPatches[original.MethodBase] = new()
             {
-                rulesets = rulesets,
+                ruleset = ruleset,
                 optimize = optimize,
                 debug = debug,
             };

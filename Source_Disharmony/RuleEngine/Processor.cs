@@ -22,201 +22,212 @@ internal class Processor(
     private readonly List<ExceptionBlock> extraBlocks = [];
     private readonly List<Label> extraLabels = [];
 
-    public readonly List<CodeInstruction> outInstructions = [];
+    public List<CodeInstruction> outInstructions = [];
+    private List<CodeInstruction> instructions = inInstructions;
 
     public void MatchAndReplace()
     {
         if (debug || Ruleset.forceDebug)
             FileLog.Log($"## InfixPatcher {method.FullName}");
 
-        // Check and make sure that all the substitutions apply. Also work out the indexes of all locals.
-        foreach (Rule rule in ruleset.rules)
+        foreach (var phase in ruleset.rules.GroupBy(r => r.phase).OrderBy(p => p.Key))
         {
-            switch (rule)
-            {
-                case { mode: OutputMode.MethodPrefix or OutputMode.MethodPostfix, pattern.Length: > 0 }:
-                    throw new InvalidOperationException($"{rule.mode} cannot have a Pattern");
-                case { mode: not (OutputMode.MethodPrefix or OutputMode.MethodPostfix), pattern: not { Length: > 0 } }:
-                    throw new InvalidOperationException($"{rule.mode} rule must have a Pattern");
-            }
+            matches.Clear();
+            extraBlocks.Clear();
+            extraLabels.Clear();
+            outInstructions = [];
 
-            switch (rule.mode)
+            // Check and make sure that all the substitutions apply. Also work out the indexes of all locals.
+            foreach (Rule rule in phase)
             {
-                case OutputMode.MethodPrefix:
+                switch (rule)
                 {
-                    matches.Add(new MatchData
+                    case { mode: OutputMode.MethodPrefix or OutputMode.MethodPostfix, pattern.Length: > 0 }:
+                        throw new InvalidOperationException($"{rule.mode} cannot have a Pattern");
+                    case { mode: not (OutputMode.MethodPrefix or OutputMode.MethodPostfix), pattern: not { Length: > 0 } }:
+                        throw new InvalidOperationException($"{rule.mode} rule must have a Pattern");
+                }
+
+                switch (rule.mode)
+                {
+                    case OutputMode.MethodPrefix:
+                    {
+                        matches.Add(new MatchData
+                        {
+                            rule = rule,
+                            start = 0,
+                            end = 0,
+                            localMap_Match = [],
+                            labelMap_Match = [],
+                        });
+                        continue;
+                    }
+                    case OutputMode.MethodPostfix:
+                    {
+                        matches.Add(new MatchData
+                        {
+                            rule = rule,
+                            start = instructions.Count,
+                            end = instructions.Count,
+                            localMap_Match = [],
+                            labelMap_Match = [],
+                        });
+                        continue;
+                    }
+                }
+
+                var matchCount = 0;
+
+                // rule.Pattern was checked to be non-null during the error checking above
+                if (rule.pattern is null)
+                    throw new InvalidOperationException();
+
+                for (int instructionIndex = 0;
+                     instructionIndex <= instructions.Count - rule.pattern.Length;
+                     instructionIndex++)
+                {
+                    if (!MatchPattern(rule, instructionIndex, out Dictionary<int, int> localIndex_Match))
+                        continue;
+
+                    var matchData = new MatchData
                     {
                         rule = rule,
-                        start = 0,
-                        end = 0,
-                        localMap_Match = [],
+                        start = instructionIndex,
+                        end = instructionIndex + rule.pattern.Length,
+                        localMap_Match = localIndex_Match,
                         labelMap_Match = [],
-                    });
+                    };
+                    if (debug || Ruleset.forceDebug)
+                        FileLog.Log($"MATCH {rule.name} ({matchData.start} .. {matchData.end - 1})");
+
+                    if (rule.output != null)
+                        matches.Add(matchData);
+
+                    matchCount++;
+                    if (rule.max > 0 && matchCount >= rule.max)
+                        break;
+                }
+
+                if (matchCount < rule.min)
+                {
+                    throw new InvalidOperationException($"Not enough matches found for substitution {rule.name}");
+                }
+            }
+
+            var sortedMatches = matches.OrderBy(m => m.start).ThenByDescending(m => m.rule.priority).ToList();
+            for (var i = 0; i < sortedMatches.Count - 1; i++)
+            {
+                if (sortedMatches[i].end > sortedMatches[i + 1].start)
+                {
+                    throw new InvalidOperationException("Overlapping matches");
+                }
+            }
+
+            if (matches.Count == 0)
+            {
+                throw new InvalidOperationException("No matches");
+            }
+
+            // Make the substitutions
+            for (var instructionIndex = 0;; instructionIndex++)
+            {
+                int index = instructionIndex;
+                var match = sortedMatches.FirstOrDefault(r => r.start == index && !r.emitted);
+
+                if (match == null)
+                {
+                    if (instructionIndex >= instructions.Count)
+                        break;
+
+                    Emit(instructions[instructionIndex]);
+
                     continue;
                 }
-                case OutputMode.MethodPostfix:
+
+                match.emitted = true;
+                instructionIndex = match.end - 1;
+
+                if (match.start == match.end)
                 {
-                    matches.Add(new MatchData
-                    {
-                        rule = rule,
-                        start = inInstructions.Count,
-                        end = inInstructions.Count,
-                        localMap_Match = [],
-                        labelMap_Match = [],
-                    });
-                    continue;
-                }
-            }
-
-            var matchCount = 0;
-
-            // rule.Pattern was checked to be non-null during the error checking above
-            if (rule.pattern is null)
-                throw new InvalidOperationException();
-
-            for (int instructionIndex = 0;
-                 instructionIndex <= inInstructions.Count - rule.pattern.Length;
-                 instructionIndex++)
-            {
-                if (!MatchPattern(rule, instructionIndex, out Dictionary<int, int> localIndex_Match))
-                    continue;
-
-                var matchData = new MatchData
-                {
-                    rule = rule,
-                    start = instructionIndex,
-                    end = instructionIndex + rule.pattern.Length,
-                    localMap_Match = localIndex_Match,
-                    labelMap_Match = [],
-                };
-                if (debug || Ruleset.forceDebug)
-                    FileLog.Log($"MATCH {rule.name} ({matchData.start} .. {matchData.end - 1})");
-
-                if (rule.output != null)
-                    matches.Add(matchData);
-
-                matchCount++;
-                if (rule.max > 0 && matchCount >= rule.max)
-                    break;
-            }
-
-            if (matchCount < rule.min)
-            {
-                throw new InvalidOperationException($"Not enough matches found for substitution {rule.name}");
-            }
-        }
-
-        var sortedMatches = matches.OrderBy(m => m.start).ThenByDescending(m => m.rule.priority).ToList();
-        for (var i = 0; i < sortedMatches.Count - 1; i++)
-        {
-            if (sortedMatches[i].end > sortedMatches[i + 1].start)
-            {
-                throw new InvalidOperationException("Overlapping matches");
-            }
-        }
-
-        if (matches.Count == 0)
-        {
-            throw new InvalidOperationException("No matches");
-        }
-
-        // Make the substitutions
-        for (var instructionIndex = 0;; instructionIndex++)
-        {
-            int index = instructionIndex;
-            var match = sortedMatches.FirstOrDefault(r => r.start == index && !r.emitted);
-
-            if (match == null)
-            {
-                if (instructionIndex >= inInstructions.Count)
-                    break;
-
-                Emit(inInstructions[instructionIndex]);
-
-                continue;
-            }
-
-            match.emitted = true;
-            instructionIndex = match.end - 1;
-
-            if (match.start == match.end)
-            {
-                EmitReplacement(match);
-                continue;
-            }
-
-            static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
-            static bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
-
-            switch (match.rule.mode)
-            {
-                case OutputMode.Replace:
-                {
-                    if (inInstructions[match.start].labels.Count > 0 || inInstructions[match.start].blocks.Any(IsBlockStart))
-                    {
-                        Emit(OpCodes.Nop,
-                            labels: inInstructions[match.start].labels,
-                            blocks: [.. inInstructions[match.start].blocks.Where(IsBlockStart)]);
-                    }
-
                     EmitReplacement(match);
-
-                    if (inInstructions[match.end - 1].blocks.Any(IsBlockEnd))
-                    {
-                        Emit(OpCodes.Nop,
-                            blocks: [.. inInstructions[match.end - 1].blocks.Where(IsBlockEnd)]);
-                    }
-
-                    break;
+                    continue;
                 }
-                case OutputMode.InsertBefore:
+
+                static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
+                static bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
+
+                switch (match.rule.mode)
                 {
-                    if (inInstructions[match.start].labels.Count > 0 || inInstructions[match.start].blocks.Any(IsBlockStart))
+                    case OutputMode.Replace:
                     {
-                        Emit(OpCodes.Nop,
-                            labels: inInstructions[match.start].labels,
-                            blocks: [.. inInstructions[match.start].blocks.Where(IsBlockStart)]);
-                    }
-
-                    EmitReplacement(match);
-
-                    for (int i = match.start; i < match.end; i++)
-                    {
-                        Emit(inInstructions[i]);
-
-                        if (i == match.start)
+                        if (instructions[match.start].labels.Count > 0 || instructions[match.start].blocks.Any(IsBlockStart))
                         {
-                            outInstructions[^1].labels.Clear();
-                            outInstructions[^1].blocks.RemoveAll(IsBlockStart);
+                            Emit(OpCodes.Nop,
+                                labels: instructions[match.start].labels,
+                                blocks: [.. instructions[match.start].blocks.Where(IsBlockStart)]);
                         }
-                    }
 
-                    break;
-                }
-                case OutputMode.InsertAfter:
-                {
-                    for (int i = match.start; i < match.end; i++)
-                    {
-                        Emit(inInstructions[i]);
+                        EmitReplacement(match);
 
-                        if (i == match.end - 1)
+                        if (instructions[match.end - 1].blocks.Any(IsBlockEnd))
                         {
-                            outInstructions[^1].blocks.RemoveAll(IsBlockEnd);
+                            Emit(OpCodes.Nop,
+                                blocks: [.. instructions[match.end - 1].blocks.Where(IsBlockEnd)]);
                         }
+
+                        break;
                     }
-
-                    EmitReplacement(match);
-
-                    if (inInstructions[match.end - 1].blocks.Any(IsBlockEnd))
+                    case OutputMode.InsertBefore:
                     {
-                        Emit(OpCodes.Nop,
-                            blocks: [.. inInstructions[match.end - 1].blocks.Where(IsBlockEnd)]);
-                    }
+                        if (instructions[match.start].labels.Count > 0 || instructions[match.start].blocks.Any(IsBlockStart))
+                        {
+                            Emit(OpCodes.Nop,
+                                labels: instructions[match.start].labels,
+                                blocks: [.. instructions[match.start].blocks.Where(IsBlockStart)]);
+                        }
 
-                    break;
+                        EmitReplacement(match);
+
+                        for (int i = match.start; i < match.end; i++)
+                        {
+                            Emit(instructions[i]);
+
+                            if (i == match.start)
+                            {
+                                outInstructions[^1].labels.Clear();
+                                outInstructions[^1].blocks.RemoveAll(IsBlockStart);
+                            }
+                        }
+
+                        break;
+                    }
+                    case OutputMode.InsertAfter:
+                    {
+                        for (int i = match.start; i < match.end; i++)
+                        {
+                            Emit(instructions[i]);
+
+                            if (i == match.end - 1)
+                            {
+                                outInstructions[^1].blocks.RemoveAll(IsBlockEnd);
+                            }
+                        }
+
+                        EmitReplacement(match);
+
+                        if (instructions[match.end - 1].blocks.Any(IsBlockEnd))
+                        {
+                            Emit(OpCodes.Nop,
+                                blocks: [.. instructions[match.end - 1].blocks.Where(IsBlockEnd)]);
+                        }
+
+                        break;
+                    }
+                    default: throw new InvalidOperationException();
                 }
-                default: throw new InvalidOperationException();
             }
+
+            instructions = outInstructions;
         }
 
         if (debug || Ruleset.forceDebug)
@@ -296,13 +307,13 @@ internal class Processor(
 
         for (var patternIndex = 0; patternIndex < rule.pattern.Length; patternIndex++)
         {
-            if (!MatchInstruction(inInstructions[instructionIndex + patternIndex], rule.pattern[patternIndex], localIndex_Match))
+            if (!MatchInstruction(instructions[instructionIndex + patternIndex], rule.pattern[patternIndex], localIndex_Match))
                 return false;
 
             if (rule.mode == OutputMode.Replace)
             {
                 // Check for exception blocks or labels not at the start (or end, for EndExceptionBlock) of the match
-                CodeInstruction inst = inInstructions[instructionIndex + patternIndex];
+                CodeInstruction inst = instructions[instructionIndex + patternIndex];
                 if ((patternIndex > 0 || noOutput) && inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
                     return false;
                 if ((patternIndex > 0 || noOutput) && inst.labels.Count > 0)

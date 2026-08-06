@@ -15,46 +15,12 @@ public static partial class Autopatcher
                 return;
             }
 
-            List<Ruleset> rulesets = [];
+            Ruleset ruleset = MakeRuleset();
 
-            Ruleset patchRuleset = MakePatchRuleset();
-            rulesets.Add(patchRuleset);
-
-            Ruleset? inlineRuleset = MakeInlineRuleset();
-            if (inlineRuleset != null)
-                rulesets.Add(inlineRuleset);
-
-            patcher.ApplyPatch(patchedMethod, [.. rulesets], useTrampolines);
+            patcher.ApplyPatch(patchedMethod, ruleset, useTrampolines);
         }
 
-        private Ruleset? MakeInlineRuleset()
-        {
-            List<Rule> rules = [];
-
-            var context = new RuleBuilderContext();
-
-            foreach (var patch in patches.Where(p => p.Inline))
-            {
-                if (patch.patch is not MethodInvocation method)
-                    continue;
-                var inlineRuleBuilder = new InlineRuleBuilder(context, method);
-                rules.AddRange(inlineRuleBuilder.BuildRules());
-            }
-
-            Ruleset? ruleset = null;
-            if (rules.Count > 0)
-            {
-                ruleset = new Ruleset
-                {
-                    rules = rules,
-                    crossRuleLocalTypes = context.localTypes,
-                };
-            }
-
-            return ruleset;
-        }
-
-        private Ruleset MakePatchRuleset()
+        private Ruleset MakeRuleset()
         {
             List<RuleBuilder> ruleBuilders = [];
 
@@ -71,6 +37,13 @@ public static partial class Autopatcher
             {
                 Invocation inner = targetGroup.Key;
                 ruleBuilders.Add(new InfixRuleBuilder(context, outer, inner, [.. targetGroup]));
+            }
+
+            foreach (var patch in patches.Where(p => p.Inline))
+            {
+                if (patch.patch is not MethodInvocation method)
+                    continue;
+                ruleBuilders.Add(new InlineRuleBuilder(context, method));
             }
 
             List<Rule> rules = [];
