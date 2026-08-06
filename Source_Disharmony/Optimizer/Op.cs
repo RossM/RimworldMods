@@ -1,28 +1,28 @@
 ﻿namespace Disharmony.Optimizer;
 
 /// <summary>
-///     Represents an abstract operation,
+///     Represents an abstract operation.
 /// </summary>
 /// <remarks>
 ///     Unlike CIL instructions, operations are represented as a tree of operations, where each operation has multiple
 ///     inputs and a single output. Assignments to variables, including arguments, locals, and stack slots, are represented
 ///     explicitly. Operations which might throw are only allowed as the input to an assignment operation or branch.
 /// </remarks>
-/// <param name="Type"></param>
+/// <param name="Type">The type of value produced by the operation.</param>
 internal abstract record Op(Type Type);
 
 /// <summary>
 ///     Represents an assignment to a variable.
 /// </summary>
-/// <param name="Output"></param>
-/// <param name="Input"></param>
+/// <param name="Output">The variable that receives the value.</param>
+/// <param name="Input">The operation that produces the value.</param>
 internal sealed record AssignmentOp(Variable Output, Op Input) : Op(typeof(void));
 
 /// <summary>
 ///     Represents an IL prefix.
 /// </summary>
-/// <param name="OpCode"></param>
-/// <param name="Operand"></param>
+/// <param name="OpCode">The prefix opcode.</param>
+/// <param name="Operand">The prefix operand.</param>
 internal sealed record Prefix(OpCode OpCode, object Operand);
 
 /// <summary>
@@ -30,40 +30,41 @@ internal sealed record Prefix(OpCode OpCode, object Operand);
 /// </summary>
 /// <remarks>
 ///     There is one input per stack slot popped by the IL opcode, and the output type is the type of the value pushed by the IL opcode,
-///     or void if it does not push a value. Numeric values are always of type int, long, IntPtr, or double, representing the IL stack types.
+///     or <see cref="void"/> if it does not push a value. Numeric values use <see cref="int"/>, <see cref="long"/>,
+///     <see cref="IntPtr"/>, or <see cref="double"/> to represent the IL stack types.
 /// </remarks>
-/// <param name="OpCode"></param>
-/// <param name="Operand"></param>
-/// <param name="Prefixes"></param>
-/// <param name="Inputs"></param>
-/// <param name="Type"></param>
+/// <param name="OpCode">The IL opcode.</param>
+/// <param name="Operand">The opcode operand.</param>
+/// <param name="Prefixes">The prefixes applied to the instruction.</param>
+/// <param name="Inputs">The operations that produce the instruction's stack inputs.</param>
+/// <param name="Type">The type of value produced by the instruction.</param>
 internal sealed record ILOp(OpCode OpCode, object Operand, IReadOnlyList<Prefix> Prefixes, IReadOnlyList<Op> Inputs, Type Type) : Op(Type);
 
 /// <summary>
 ///     Represents a variable which can store a value during execution, including locals, arguments, stack slots, and temporaries.
 /// </summary>
-/// <param name="Type"></param>
+/// <param name="Type">The type of value stored by the variable.</param>
 internal abstract record Variable(Type Type) : Op(Type);
 
 /// <summary>
 ///     Represents a stack slot from the incoming IL.
 /// </summary>
-/// <param name="Depth"></param>
-/// <param name="Type"></param>
+/// <param name="Depth">The stack depth, where zero is the bottom of the stack.</param>
+/// <param name="Type">The type of value stored in the slot.</param>
 internal sealed record StackSlot(int Depth, Type Type) : Variable(Type);
 
 /// <summary>
 ///     Base class for argument and local variables.
 /// </summary>
-/// <param name="Index"></param>
-/// <param name="Type"></param>
+/// <param name="Index">The argument or local index.</param>
+/// <param name="Type">The type of value stored by the variable.</param>
 internal abstract record MemoryVariable(int Index, Type Type) : Variable(Type);
 
 /// <summary>
 ///     Represents an IL argument.
 /// </summary>
-/// <param name="Index"></param>
-/// <param name="Type"></param>
+/// <param name="Index">The argument index.</param>
+/// <param name="Type">The argument type.</param>
 internal sealed record Argument(int Index, Type Type) : MemoryVariable(Index, Type);
 
 /// <summary>
@@ -73,9 +74,9 @@ internal sealed record Argument(int Index, Type Type) : MemoryVariable(Index, Ty
 ///     The type may be <see cref="TypeLattice.AnyType"/> if the method's metadata does not specify a type for the local. In this
 ///     case, the local has to be optimized conservatively, retaining all loads and stores.
 /// </remarks>
-/// <param name="Index"></param>
-/// <param name="Type"></param>
-/// <param name="LocalBuilder"></param>
+/// <param name="Index">The local index.</param>
+/// <param name="Type">The local type.</param>
+/// <param name="LocalBuilder">The builder for the emitted local, or <see langword="null"/> if one has not been created.</param>
 internal sealed record Local(int Index, Type Type, LocalBuilder? LocalBuilder) : MemoryVariable(Index, Type);
 
 /// <summary>
@@ -85,7 +86,7 @@ internal sealed record Local(int Index, Type Type, LocalBuilder? LocalBuilder) :
 ///     This might be something that didn't exist in the original IL, or a replacement for a stack slot or local that was removed
 ///     during optimization but needs to be recreated during IL emission.
 /// </remarks>
-/// <param name="Type"></param>
+/// <param name="Type">The type of value stored by the temporary.</param>
 internal sealed record Temporary(Type Type) : Variable(Type);
 
 /// <summary>
