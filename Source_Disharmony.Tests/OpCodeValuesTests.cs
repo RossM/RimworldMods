@@ -11,15 +11,25 @@ public sealed class OpCodeValuesTests
     {
         const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
 
+        Dictionary<string, OpCode> opCodes = [];
+        HashSet<OpCode> seenOpCodes = [];
+
+        foreach (FieldInfo opCodeField in typeof(OpCodes).GetFields(flags))
+            opCodes[opCodeField.Name] = (OpCode)opCodeField.GetValue(null)!;
+
         foreach (FieldInfo valueField in typeof(OpCodeValues).GetFields(flags))
         {
-            FieldInfo? opCodeField = typeof(OpCodes).GetField(valueField.Name, flags);
-            Assert.That(opCodeField, Is.Not.Null, $"OpCodes.{valueField.Name} does not exist");
-            Assert.That(opCodeField!.FieldType, Is.EqualTo(typeof(OpCode)));
+            var opCode = opCodes[valueField.Name];
+            seenOpCodes.Add(opCode);
 
-            int expected = unchecked((ushort)((OpCode)opCodeField.GetValue(null)!).Value);
+            int expected = unchecked((ushort)opCode.Value);
             Assert.That(valueField.GetRawConstantValue(), Is.EqualTo(expected),
                 $"OpCodeValues.{valueField.Name} does not match OpCodes.{valueField.Name}.Value");
+        }
+
+        foreach (var opCode in opCodes.Values.Where(o => o.FlowControl == FlowControl.Next))
+        {
+            Assert.That(seenOpCodes.Contains(opCode), Is.True);
         }
     }
 }
