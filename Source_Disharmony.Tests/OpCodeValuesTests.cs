@@ -28,7 +28,7 @@ public sealed class OpCodeValuesTests
 
         foreach (var opCode in opCodes.Values.Where(o => o.FlowControl == FlowControl.Next))
         {
-            Assert.That(seenOpCodes.Contains(opCode), Is.True);
+            Assert.That(seenOpCodes.Contains(opCode), Is.True, $"{opCode.Name} is missing an OpCodeValues constant");
         }
     }
 }
