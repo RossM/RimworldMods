@@ -27,7 +27,7 @@ internal class Processor(
 
     public void MatchAndReplace()
     {
-        if (debug || Ruleset.forceDebug)
+        if (debug)
             FileLog.Log($"## InfixPatcher {method.FullName}");
 
         foreach (var phase in ruleset.rules.GroupBy(r => r.phase).OrderBy(p => p.Key))
@@ -97,7 +97,7 @@ internal class Processor(
                         localMap_Match = localIndex_Match,
                         labelMap_Match = [],
                     };
-                    if (debug || Ruleset.forceDebug)
+                    if (debug)
                         FileLog.Log($"MATCH {rule.name} ({matchData.start} .. {matchData.end - 1})");
 
                     if (rule.output != null)
@@ -230,7 +230,7 @@ internal class Processor(
             instructions = outInstructions;
         }
 
-        if (debug || Ruleset.forceDebug)
+        if (debug)
         {
             LogInstructions();
             FileLog.Log("");

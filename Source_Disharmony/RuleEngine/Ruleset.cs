@@ -19,10 +19,9 @@ public class Ruleset
         MethodBase method,
         ref List<CodeInstruction> instructionsList,
         ILGenerator generator,
-        [CallerMemberName] string? methodName = null,
         bool debug = false)
     {
-        var worker = new Processor(this, method, instructionsList, generator, debug);
+        var worker = new Processor(this, method, instructionsList, generator, debug || forceDebug);
         worker.MatchAndReplace();
         instructionsList = worker.outInstructions;
     }

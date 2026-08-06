@@ -34,9 +34,9 @@ internal class InfixRuleBuilder : RuleBuilder
 
         var prefixesUsingResult = innerPrefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
         var postfixesUsingResult = innerPostfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
-        bool canSkip = innerPrefixes.Any(patch => !patch.patch.ReturnType.IsVoid());
+        bool canSkip = innerPrefixes.Any(patch => patch.patch.ReturnType != typeof(void));
 
-        if (canSkip && !targetType.IsVoid() || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
+        if (canSkip && targetType != typeof(void) || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
         {
             resultLocalIndex = output.AddLocal(targetType);
 
@@ -56,7 +56,7 @@ internal class InfixRuleBuilder : RuleBuilder
             output.Add(CodeInstruction.Annotation($"{prefix.patchType} {prefix.patch.FullName}"));
             output.AddRange(prefix.patch.GetCodeInstructions());
 
-            if (!prefix.patch.ReturnType.IsVoid())
+            if (prefix.patch.ReturnType != typeof(void))
             {
                 output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
             }
@@ -85,7 +85,7 @@ internal class InfixRuleBuilder : RuleBuilder
 
                 output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
                 output.AddRange(postfix.patch.GetCodeInstructions());
-                if (!postfix.patch.ReturnType.IsVoid())
+                if (postfix.patch.ReturnType != typeof(void))
                     output.Add(new(OpCodes.Pop));
             }
 

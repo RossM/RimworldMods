@@ -137,7 +137,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private ParameterBinding BindReturnValue(ParameterInfo parameter, Invocation invocation, Scope scope)
     {
-        if (invocation.ReturnType.IsVoid())
+        if (invocation.ReturnType == typeof(void))
             throw new ParameterBindingException(parameter.Name, "Method returns void");
         ValidateCast(parameter.ParameterType, invocation.ReturnType, parameter.Name);
         return new() { parameter = parameter, bindingType = BindingType.Result, scope = scope };

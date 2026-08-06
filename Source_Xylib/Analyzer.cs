@@ -77,7 +77,7 @@ public static class Analyzer
                 if (hasTarget != (hasPrefix || hasPostfix || hasInnerPrefix || hasInnerPostfix))
                 {
                     Log.Warning(
-                        $"[{name}] {type.FullName}::{method.Name} has should have both [Target] and a patch typee");
+                        $"[{name}] {type.FullName}::{method.Name} has should have both [Target] and a patch type");
                 }
 
                 // Enforce a naming convention for patch methods. This makes it more obvious at a glance when a patch will run
@@ -99,7 +99,7 @@ public static class Analyzer
 
                     // If a prefix patch returns void, it will always go on to the main method, and the value of
                     // __result won't be used. This almost certainly indicates a bug.
-                    if (method.ReturnType.IsVoid() && resultParameter != null)
+                    if (method.ReturnType == typeof(void) && resultParameter != null)
                         Log.Warning($"[{name}] {type.FullName}::{method.Name} returns void but uses __result");
                 }
 
