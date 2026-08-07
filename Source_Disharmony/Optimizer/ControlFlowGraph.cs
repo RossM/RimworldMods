@@ -186,6 +186,11 @@ internal class ControlFlowGraph
     public void AddBlock(BasicBlock block)
     {
         basicBlocks.Add(block.Label, block);
+
+        if (!edgesFrom.ContainsKey(block.Label))
+            edgesFrom[block.Label] = [];
+        if (!edgesTo.ContainsKey(block.Label))
+            edgesTo[block.Label] = [];
     }
 
     /// <summary>
@@ -239,11 +244,6 @@ internal class ControlFlowGraph
     {
         if (edges.ContainsKey((edge.Source, edge.Destination)))
             throw new InvalidOperationException();
-
-        if (!edgesFrom.ContainsKey(edge.Source))
-            edgesFrom[edge.Source] = [];
-        if (!edgesTo.ContainsKey(edge.Destination))
-            edgesTo[edge.Destination] = [];
 
         edges[(edge.Source, edge.Destination)] = edge;
         edgesFrom[edge.Source].Add(edge);
@@ -484,7 +484,7 @@ internal record Leave(BlockLabel Label) : UnconditionalBranch(Label);
 /// </remarks>
 /// <param name="Labels">The fallthrough and branch-target <see cref="BlockLabel" />s.</param>
 /// <param name="OpCode">The conditional branch or switch opcode.</param>
-internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<BlockLabel> Labels) : Branch(Labels);
+internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<Op> Inputs, IReadOnlyList<BlockLabel> Labels) : Branch(Labels);
 
 /// <summary>
 ///     Represents throwing an exception.
@@ -495,6 +495,8 @@ internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<BlockLabel
 /// </remarks>
 /// <param name="Exception">The <see cref="Op" /> that produces the exception to throw.</param>
 internal sealed record Throw(Op Exception) : Branch([]);
+
+internal sealed record Rethrow() : Branch([]);
 
 /// <summary>
 ///     Represents returning from a method.
