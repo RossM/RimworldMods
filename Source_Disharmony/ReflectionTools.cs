@@ -1,6 +1,6 @@
 namespace Disharmony;
 
-public static class ReflectionTools
+internal static class ReflectionTools
 {
     public static readonly BindingFlags DeclaredOnly = AccessTools.all | BindingFlags.DeclaredOnly;
 
