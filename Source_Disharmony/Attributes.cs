@@ -127,14 +127,14 @@ public enum PatchOptions
 /// </param>
 /// <remarks>
 ///     <para>
-///         <see cref="Autopatcher.PatchAll" />, <see cref="Autopatcher.RegisterAll" />,
-///         <see cref="Autopatcher.PatchCategory" />, and <see cref="Autopatcher.RegisterCategory" /> discover classes marked
+///         <see cref="Patcher.PatchAll" />, <see cref="Patcher.RegisterAll" />,
+///         <see cref="Patcher.PatchCategory" />, and <see cref="Patcher.RegisterCategory" /> discover classes marked
 ///         with this attribute. Direct registration by type or method does not require it.
 ///     </para>
 ///     <para>
 ///         A type specified directly by <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" /> takes precedence.
 ///         Harmony's <see cref="HarmonyLib.HarmonyPatch" /> is also recognized for compatibility, but this attribute is
-///         preferred for new patch classes. See <see cref="Autopatcher" /> for the complete authoring and targeting model.
+///         preferred for new patch classes. See <see cref="Patcher" /> for the complete authoring and targeting model.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -151,8 +151,8 @@ public class PatchAttribute(Type? type = null) : Attribute
 /// <param name="category">The category name used to select the patch class.</param>
 /// <remarks>
 ///     <para>
-///         <see cref="Autopatcher.PatchCategory" /> and <see cref="Autopatcher.RegisterCategory" /> compare this name with
-///         the requested category. <see cref="Autopatcher.PatchAll" /> and <see cref="Autopatcher.RegisterAll" /> ignore
+///         <see cref="Patcher.PatchCategory" /> and <see cref="Patcher.RegisterCategory" /> compare this name with
+///         the requested category. <see cref="Patcher.PatchAll" /> and <see cref="Patcher.RegisterAll" /> ignore
 ///         categories.
 ///     </para>
 ///     <para>
@@ -191,7 +191,7 @@ public abstract class PatchTypeAttribute(
 /// </summary>
 /// <remarks>
 ///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. See
-///     <see cref="Autopatcher" /> for patch structure, targeting, and parameter binding.
+///     <see cref="Patcher" /> for patch structure, targeting, and parameter binding.
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -204,7 +204,7 @@ public class PrefixAttribute() : PatchTypeAttribute(PatchType.Prefix);
 /// <remarks>
 ///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. Bind the outer return
 ///     value with <see cref="ReturnValueAttribute" /> or the conventional parameter name <c>__result</c>; pass it by
-///     reference to replace it. See <see cref="Autopatcher" /> for the complete patch model.
+///     reference to replace it. See <see cref="Patcher" /> for the complete patch model.
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -232,7 +232,7 @@ public class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
 /// </param>
 /// <remarks>
 ///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. See
-///     <see cref="Autopatcher" /> for member-name syntax, overload selection, and inner-versus-outer parameter binding.
+///     <see cref="Patcher" /> for member-name syntax, overload selection, and inner-versus-outer parameter binding.
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -290,7 +290,7 @@ public class InnerPrefixAttribute(
 /// <remarks>
 ///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. Bind the inner result
 ///     with <see cref="ReturnValueAttribute" /> or the conventional parameter name <c>__result</c>; pass it by reference
-///     to replace it. See <see cref="Autopatcher" /> for member-name syntax, overload selection, and inner-versus-outer
+///     to replace it. See <see cref="Patcher" /> for member-name syntax, overload selection, and inner-versus-outer
 ///     parameter binding.
 /// </remarks>
 [PublicAPI]
@@ -334,7 +334,7 @@ public class InnerPostfixAttribute(
 /// <remarks>
 ///     Bind the constant value with <see cref="ReturnValueAttribute" /> or the conventional parameter name
 ///     <c>__result</c>; pass it by reference to replace it. Select outer members with <see cref="TargetAttribute" /> or
-///     <see cref="TargetsAttribute" />. See <see cref="Autopatcher" /> for the complete patch model.
+///     <see cref="TargetsAttribute" />. See <see cref="Patcher" /> for the complete patch model.
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -439,7 +439,7 @@ public class PatchOptionsAttribute(PatchOptions options) : Attribute
 ///         Constructed generic methods can be identified during lookup but are not currently supported as outer targets.
 ///     </para>
 ///     <para>
-///         See <see cref="Autopatcher" /> for declaring-type precedence, member-name syntax, and overload selection.
+///         See <see cref="Patcher" /> for declaring-type precedence, member-name syntax, and overload selection.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -551,7 +551,7 @@ public class TargetAttribute(
 ///         targets.
 ///     </para>
 ///     <para>
-///         See <see cref="Autopatcher" /> for declaring-type precedence, member-name syntax, and overload selection.
+///         See <see cref="Patcher" /> for declaring-type precedence, member-name syntax, and overload selection.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -639,7 +639,7 @@ public abstract class ParameterBindingAttribute(Scope scope) : Attribute
 /// <remarks>
 ///     Patch parameters bind by name without this attribute. Use it when the patch parameter has a different name, when
 ///     positional binding is more stable, or when an inner patch must select a specific scope. See
-///     <see cref="Autopatcher" /> for implicit binding conventions.
+///     <see cref="Patcher" /> for implicit binding conventions.
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]

@@ -62,8 +62,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 
@@ -77,8 +77,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 
@@ -92,8 +92,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Autopatcher.Register(patch, PatchType.Postfix, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, PatchType.Postfix, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 
@@ -107,8 +107,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 
@@ -122,8 +122,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 
@@ -137,8 +137,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Autopatcher.Register(patch, (PatchType)int.MaxValue, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, (PatchType)int.MaxValue, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 
@@ -152,8 +152,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 
@@ -167,8 +167,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 
@@ -182,8 +182,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
-        Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
-        Autopatcher.ForceApply();
+        Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+        Patcher.ForceApply();
 
         StaticMethodTargets.Void();
 
@@ -200,8 +200,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 
@@ -215,8 +215,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.DoesNotThrow(() =>
         {
-            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 
@@ -230,8 +230,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 
@@ -247,12 +247,12 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Autopatcher.Register(
+            Patcher.Register(
                 patch,
                 PatchType.InnerPrefix,
                 innerTarget: innerTarget,
                 targets: [outerTarget]);
-            Autopatcher.ForceApply();
+            Patcher.ForceApply();
         });
     }
 
@@ -266,13 +266,13 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo outerTarget = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.IntResult))!;
 
-        Autopatcher.Register(
+        Patcher.Register(
             patch,
             PatchType.InnerPrefix,
             innerTarget: innerTarget,
             targets: [outerTarget]);
 
-        Assert.Throws<RuntimePatchException>(() => Autopatcher.ForceApply());
+        Assert.Throws<RuntimePatchException>(() => Patcher.ForceApply());
         Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
     }
 
@@ -286,14 +286,14 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo outerTarget = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.IntResult))!;
 
-        Autopatcher.Register(
+        Patcher.Register(
             patch,
             PatchType.InnerPrefix,
             innerTarget: innerTarget,
             targets: [outerTarget]);
-        Autopatcher.Apply();
+        Patcher.Apply();
 
-        Assert.Throws<RuntimePatchException>(() => Autopatcher.ForceApply());
+        Assert.Throws<RuntimePatchException>(() => Patcher.ForceApply());
         Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
     }
 
@@ -308,16 +308,16 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
             .GetMethod(nameof(StaticMethodTargets.IntResult))!;
         List<Exception> reportedExceptions = [];
         Action<Exception> handler = reportedExceptions.Add;
-        Autopatcher.RuntimeExceptionHandler += handler;
+        Patcher.RuntimeExceptionHandler += handler;
 
         try
         {
-            Autopatcher.Register(
+            Patcher.Register(
                 patch,
                 PatchType.InnerPrefix,
                 innerTarget: innerTarget,
                 targets: [outerTarget]);
-            Autopatcher.Apply();
+            Patcher.Apply();
 
             Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
             Assert.That(reportedExceptions, Has.Count.EqualTo(1));
@@ -327,7 +327,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         }
         finally
         {
-            Autopatcher.RuntimeExceptionHandler -= handler;
+            Patcher.RuntimeExceptionHandler -= handler;
         }
     }
 
@@ -341,8 +341,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.DoesNotThrow(() =>
         {
-            Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
-            Autopatcher.ForceApply();
+            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.ForceApply();
         });
     }
 }

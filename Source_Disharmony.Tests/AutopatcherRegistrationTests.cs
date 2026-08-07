@@ -137,11 +137,11 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
         MethodInfo patch = typeof(AutopatcherRegistrationPatches)
             .GetMethod(nameof(AutopatcherRegistrationPatches.RegisterMethodDefersPatchUntilApply))!;
 
-        Autopatcher.Register(patch);
+        Patcher.Register(patch);
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(1));
 
-        Autopatcher.Apply();
+        Patcher.Apply();
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
     }
@@ -152,8 +152,8 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
         MethodInfo patch = typeof(AutopatcherRegistrationPatches)
             .GetMethod(nameof(AutopatcherRegistrationPatches.ForceApplyAppliesRegisteredMethod))!;
 
-        Autopatcher.Register(patch);
-        Autopatcher.ForceApply();
+        Patcher.Register(patch);
+        Patcher.ForceApply();
 
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
     }
@@ -161,7 +161,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchTypeProcessesEveryPatchMethodOnType()
     {
-        Autopatcher.Patch(typeof(PatchTypeProcessesEveryPatchMethodOnTypePatches));
+        Patcher.Patch(typeof(PatchTypeProcessesEveryPatchMethodOnTypePatches));
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
@@ -170,7 +170,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchAttributeMarksClassForAssemblyProcessing()
     {
-        Autopatcher.PatchAll(TestAssembly);
+        Patcher.PatchAll(TestAssembly);
 
         Assert.That(StaticMethodTargets.IntIdentity(1), Is.EqualTo(42));
     }
@@ -178,7 +178,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void CategoryAttributeMarksClassForCategoryProcessing()
     {
-        Autopatcher.PatchCategory(TestAssembly, "preferred-attributes");
+        Patcher.PatchCategory(TestAssembly, "preferred-attributes");
 
         Assert.That(StaticMethodTargets.StringIdentity("original"), Is.EqualTo("patched"));
     }
@@ -188,7 +188,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     {
         ClassTargetAttributePatches.FirstPatchCalls = 0;
         ClassTargetAttributePatches.SecondPatchCalls = 0;
-        Autopatcher.Patch(typeof(ClassTargetAttributePatches));
+        Patcher.Patch(typeof(ClassTargetAttributePatches));
 
         StaticMethodTargets.RegistrationResultA();
 
@@ -201,7 +201,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     {
         ClassTargetsAttributePatches.FirstPatchCalls = 0;
         ClassTargetsAttributePatches.SecondPatchCalls = 0;
-        Autopatcher.Patch(typeof(ClassTargetsAttributePatches));
+        Patcher.Patch(typeof(ClassTargetsAttributePatches));
 
         StaticMethodTargets.OverloadedVoid(1);
         StaticMethodTargets.OverloadedVoid("value");
@@ -216,7 +216,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
         MethodInfo patch = typeof(AutopatcherRegistrationPatches)
             .GetMethod(nameof(AutopatcherRegistrationPatches.MultipleTargetAttributesPatchEachTarget))!;
 
-        Autopatcher.Patch(patch);
+        Patcher.Patch(patch);
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
@@ -228,7 +228,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
         AutopatcherRegistrationPatches.OverloadPatchCalls = 0;
         MethodInfo patch = typeof(AutopatcherRegistrationPatches)
             .GetMethod(nameof(AutopatcherRegistrationPatches.TargetsAttributePatchesEveryOverload))!;
-        Autopatcher.Patch(patch);
+        Patcher.Patch(patch);
 
         StaticMethodTargets.OverloadedVoid(1);
         StaticMethodTargets.OverloadedVoid("value");
@@ -246,12 +246,12 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
         MethodInfo secondTarget = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.RegistrationResultB))!;
 
-        Autopatcher.Register(patch, [firstTarget, secondTarget]);
+        Patcher.Register(patch, [firstTarget, secondTarget]);
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(1));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(2));
 
-        Autopatcher.Apply();
+        Patcher.Apply();
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
@@ -265,7 +265,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
         MethodInfo target = typeof(OuterStaticMethodTargets)
             .GetMethod(nameof(OuterStaticMethodTargets.IntResult))!;
 
-        Autopatcher.Patch(patch, target);
+        Patcher.Patch(patch, target);
 
         Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(42));
     }
@@ -278,11 +278,11 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.RegistrationResultA))!;
 
-        Autopatcher.Register(patch, PatchType.Prefix, targets: [target]);
+        Patcher.Register(patch, PatchType.Prefix, targets: [target]);
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(1));
 
-        Autopatcher.Apply();
+        Patcher.Apply();
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.Zero);
     }
@@ -297,7 +297,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
         MethodInfo secondTarget = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.RegistrationResultB))!;
 
-        Autopatcher.Patch(patch, PatchType.Postfix, targets: [firstTarget, secondTarget]);
+        Patcher.Patch(patch, PatchType.Postfix, targets: [firstTarget, secondTarget]);
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
@@ -313,7 +313,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
         MethodInfo outerTarget = typeof(OuterStaticMethodTargets)
             .GetMethod(nameof(OuterStaticMethodTargets.IntResult))!;
 
-        Autopatcher.Patch(
+        Patcher.Patch(
             patch,
             PatchType.InnerPrefix,
             innerTarget: innerTarget,
@@ -332,7 +332,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
         MethodInfo outerTarget = typeof(OuterStaticMethodTargets)
             .GetMethod(nameof(OuterStaticMethodTargets.IntResult))!;
 
-        Autopatcher.Patch(
+        Patcher.Patch(
             patch,
             PatchType.InnerPostfix,
             innerTarget: innerTarget,
@@ -352,7 +352,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
             .GetMethod(nameof(OuterStaticMethodTargets.SetStaticField))!;
         InnerStaticMethodTargets.Field = 0;
 
-        Autopatcher.Patch(
+        Patcher.Patch(
             patch,
             PatchType.InnerPrefix,
             innerTarget: innerTarget,
@@ -373,7 +373,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
             .GetMethod(nameof(StaticMethodTargets.RegistrationResultA))!;
         AutopatcherRegistrationInlinePatches.ObservedMethod = null;
 
-        Autopatcher.Patch(
+        Patcher.Patch(
             patch,
             PatchType.Prefix,
             options: PatchOptions.Inline,
@@ -388,7 +388,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchCategoryProcessesOnlyMatchingCategory()
     {
-        Autopatcher.PatchCategory(TestAssembly, "included");
+        Patcher.PatchCategory(TestAssembly, "included");
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(2));
@@ -397,12 +397,12 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void RegisterAllDefersAssemblyPatchesUntilApply()
     {
-        Autopatcher.RegisterAll(TestAssembly);
+        Patcher.RegisterAll(TestAssembly);
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(1));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(2));
 
-        Autopatcher.Apply();
+        Patcher.Apply();
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
@@ -411,7 +411,7 @@ public sealed class AutopatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchAllProcessesAllAssemblyPatchCategories()
     {
-        Autopatcher.PatchAll(TestAssembly);
+        Patcher.PatchAll(TestAssembly);
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));

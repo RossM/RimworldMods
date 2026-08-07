@@ -253,8 +253,8 @@ public sealed class OptimizerTests : PatchTestBase
     [SetUp]
     public void EnableOptimizer()
     {
-        Autopatcher.RuntimeExceptionHandler += ThrowRuntimeException;
-        Patcher.Instance.optimizerEnabled = true;
+        Patcher.RuntimeExceptionHandler += ThrowRuntimeException;
+        HarmonyInterface.Instance.optimizerEnabled = true;
         OptimizerPatches.PatchCalls = 0;
         OptimizerInlinePatches.PatchCalls = 0;
         OptimizerControlFlowTargets.RightOperandCalls = 0;
@@ -269,12 +269,12 @@ public sealed class OptimizerTests : PatchTestBase
     {
         try
         {
-            Patcher.Instance.optimizerEnabled = false;
-            Autopatcher.UnpatchAll(typeof(OptimizerTests).Assembly);
+            HarmonyInterface.Instance.optimizerEnabled = false;
+            Patcher.UnpatchAll(typeof(OptimizerTests).Assembly);
         }
         finally
         {
-            Autopatcher.RuntimeExceptionHandler -= ThrowRuntimeException;
+            Patcher.RuntimeExceptionHandler -= ThrowRuntimeException;
         }
     }
 
@@ -285,7 +285,7 @@ public sealed class OptimizerTests : PatchTestBase
         MemberInfo? innerTarget = null)
     {
         MethodInfo patch = typeof(OptimizerInlinePatches).GetMethod(patchMethodName)!;
-        Autopatcher.Patch(
+        Patcher.Patch(
             patch,
             patchType,
             innerTarget: innerTarget,

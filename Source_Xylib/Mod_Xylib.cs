@@ -34,8 +34,8 @@ public static class LateInit
     {
         using (new ProfileBlock("Xylib apply patches"))
         {
-            Autopatcher.Apply();
-            Task.Factory.StartNew(Autopatcher.ForceApply, TaskCreationOptions.LongRunning);
+            Patcher.Apply();
+            Task.Factory.StartNew(Patcher.ForceApply, TaskCreationOptions.LongRunning);
         }
     }
 }
@@ -51,7 +51,7 @@ public class Mod_Xylib : Mod
             harmony.PatchCategory(null);
 
         using (new ProfileBlock("Xylib Disharmony patching"))
-            Autopatcher.PatchAll(Assembly.GetExecutingAssembly());
+            Patcher.PatchAll(Assembly.GetExecutingAssembly());
 
         using (new ProfileBlock("Xylib Check coding style"))
             Analyzer.CheckCodingStyle(typeof(Mod_Xylib).Assembly);

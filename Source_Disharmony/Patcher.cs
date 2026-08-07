@@ -1,294 +1,434 @@
-using JetBrains.Annotations;
-using HarmonyPatch = HarmonyLib.PatchInfo;
+﻿using JetBrains.Annotations;
 
 namespace Disharmony;
 
-internal class Patcher
+/// <summary>
+///     Identifies where a patch runs relative to an outer member or an operation within it.
+/// </summary>
+public enum PatchType
 {
-    private static class InfoOf
+    /// <summary>
+    ///     Runs before an outer member.
+    /// </summary>
+    Prefix,
+
+    /// <summary>
+    ///     Runs after an outer member.
+    /// </summary>
+    Postfix,
+
+    /// <summary>
+    ///     Runs before a matching operation within an outer member.
+    /// </summary>
+    InnerPrefix,
+
+    /// <summary>
+    ///     Runs after a matching operation within an outer member.
+    /// </summary>
+    InnerPostfix,
+}
+
+/// <summary>
+///     Provides entry points for discovering, registering, applying, and removing Disharmony patches.
+/// </summary>
+/// <remarks>
+///     <para>
+///         A patch definition consists of a static patch method with one patch-kind attribute and at least one target.
+///         <see cref="PrefixAttribute" /> and <see cref="PostfixAttribute" /> run around the selected target member, called
+///         the outer member. <see cref="InnerPrefixAttribute" />, <see cref="InnerPostfixAttribute" />, and
+///         <see cref="InnerPostfixConstantAttribute" /> instead run around matching calls, member accesses, or constants
+///         within the outer member; the matched operation is called the inner member.
+///     </para>
+///     <para>
+///         Use <see cref="PatchOptionsAttribute" /> to enable optional behavior for an attributed patch. An attribute on a
+///         patch class provides options for all of its patch methods; an attribute on an individual method replaces those
+///         options for that method.
+///     </para>
+///     <para>
+///         For assembly discovery, place patch methods in a class marked with <see cref="PatchAttribute" />.
+///         <see cref="PatchAttribute.type" /> can provide a default declaring type for the class's targets, and
+///         <see cref="CategoryAttribute" /> can restrict category-specific discovery. Harmony's
+///         <see cref="HarmonyLib.HarmonyPatch" /> and <see cref="HarmonyLib.HarmonyPatchCategory" /> attributes are also
+///         recognized for compatibility, but the Disharmony attributes are preferred for new patches. Direct
+///         registration by <see cref="Type" /> or <see cref="MethodInfo" /> does not require a class-level patch marker.
+///     </para>
+///     <para>
+///         Use <see cref="TargetAttribute" /> when the selection must resolve to one outer member and
+///         <see cref="TargetsAttribute" /> when every match should be patched. Target attributes on a class apply to every
+///         patch method declared by that class; method-level targets are added to any class-level targets. Repeating
+///         <see cref="TargetAttribute" /> applies the same patch method to multiple outer members.
+///     </para>
+///     <para>
+///         When the patch method uses attributes to describe how it runs but the outer targets are chosen in code, pass
+///         those targets to the method-level overloads of
+///         <see cref="Register(MethodInfo, IEnumerable{MethodBase})" /> and
+///         <see cref="Patch(MethodInfo, IEnumerable{MethodBase})" /> instead of adding target attributes. To configure the
+///         entire patch in code, use an overload that also accepts a <see cref="PatchType" />. Parameter-binding
+///         attributes on the patch method work with either approach.
+///     </para>
+///     <para>
+///         A target's declaring type is resolved from the target attribute first, then from the containing
+///         <see cref="PatchAttribute" /> or Harmony patch metadata, and finally from the member name. When the name must
+///         supply the type, write the type and member as a dotted name, such as <c>Namespace.Type.Member</c>. The
+///         Harmony-style spelling <c>Namespace.Type:Member</c> is also accepted. Additional dotted segments can traverse
+///         nested types, select a local function as <c>OuterMethod.LocalFunction</c>, or select compiler-generated lambdas
+///         as <c>OuterMethod.*</c>. Member lookup considers only members declared directly by the resolved type.
+///     </para>
+///     <para>
+///         Use <see cref="MemberType" /> to distinguish methods, constructors, property accessors, and, for inner patches,
+///         field accesses. Supply parameter types to select an overload; use <see cref="Ref{T}" />,
+///         <see cref="In{T}" />, and <see cref="Out{T}" /> for by-reference parameter types. Generic type arguments can
+///         identify a constructed generic inner member, but constructed generic methods are not currently supported as
+///         outer targets.
+///     </para>
+///     <para>
+///         Patch method parameters bind to source parameters with the same name by default. Pass a value by reference to
+///         replace it where the patch kind permits. The conventional names <c>__instance</c>, <c>__result</c>,
+///         <c>__state</c>, <c>__base</c>, and <c>___fieldName</c> bind the target instance, return value, shared state,
+///         nearest base implementation, and an instance field, respectively. In an inner patch, <c>__instance</c> and
+///         <c>__result</c> refer to the inner member, <c>__caller</c> binds the outer instance, and ordinary parameter and
+///         field lookup searches the inner member before the outer member. State and base-method bindings remain
+///         associated with the outer member. The explicit
+///         <see cref="ParameterAttribute" />, <see cref="InstanceAttribute" />, <see cref="ReturnValueAttribute" />,
+///         <see cref="StateAttribute" />, <see cref="FieldAttribute" />, and <see cref="BaseMethodAttribute" /> attributes
+///         provide the same bindings without relying on parameter-name conventions.
+///     </para>
+///     <para>
+///         Registration records patch definitions but does not change target behavior. The <c>Patch</c> methods combine
+///         registration with <see cref="Apply" />. Applying processes all pending changes in the process-wide registry,
+///         not only the definitions registered by the immediately preceding call. <see cref="Apply" /> installs lazy
+///         trampolines that finish patch generation when each target is next invoked; <see cref="ForceApply" /> generates
+///         and installs all pending patches immediately.
+///     </para>
+///     <example>
+///         A patch class can provide a default target type and then select members by name:
+///         <code>
+/// [Patch(typeof(Widget))]
+/// public static class WidgetPatches
+/// {
+///     [Prefix]
+///     [Target(nameof(Widget.Update))]
+///     public static void UpdatePrefix(Widget __instance, ref int amount)
+///     {
+///         amount = Math.Max(amount, 0);
+///     }
+///
+///     [Postfix]
+///     [Target(nameof(Widget.GetValue))]
+///     public static void GetValuePostfix(ref int __result)
+///     {
+///         __result *= 2;
+///     }
+/// }
+///
+/// Autopatcher.PatchAll(typeof(WidgetPatches).Assembly);
+///         </code>
+///     </example>
+/// </remarks>
+[PublicAPI]
+public static partial class Patcher
+{
+    // Lock order: applyLock, PatchRegistry.SyncRoot, Harmony's lock.
+    private static readonly object applyLock = new();
+    private static readonly PatchRegistry registry = PatchRegistry.Instance;
+    private static readonly HarmonyInterface harmonyInterface = HarmonyInterface.Instance;
+
+    public static event Action<Exception>? RuntimeExceptionHandler;
+
+    internal static void ReportException(Exception exception)
     {
-        // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-        public static readonly MethodInfo GetMethodFromHandle
-            = SymbolExtensions.GetMethodInfo(() => MethodBase.GetMethodFromHandle(new RuntimeMethodHandle()));
-
-        // ReSharper disable once MemberHidesStaticFromOuterClass
-        public static readonly MethodInfo ResolveTrampoline = SymbolExtensions.GetMethodInfo(() => Patcher.ResolveTrampoline);
-
-        // ReSharper disable once MemberHidesStaticFromOuterClass
-        public static readonly MethodInfo Transpiler = SymbolExtensions.GetMethodInfo(() => Patcher.Transpiler);
-    }
-
-    private static class HarmonyInternals
-    {
-        public static readonly object locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
-
-        public static readonly Func<MethodBase, HarmonyPatch> GetPatchInfo
-            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatch>>("HarmonyLib.HarmonySharedState:GetPatchInfo");
-
-        public static readonly Action<MethodBase, MethodBase> DetourMethod
-            = AccessTools.MethodDelegate<Action<MethodBase, MethodBase>>("HarmonyLib.PatchTools:DetourMethod");
-
-        public static readonly Action<MethodBase, MethodInfo, HarmonyPatch> UpdatePatchInfo
-            = AccessTools.MethodDelegate<Action<MethodBase, MethodInfo, HarmonyPatch>>(
-                "HarmonyLib.HarmonySharedState:UpdatePatchInfo");
-
-        public static readonly Func<MethodBase, HarmonyPatch, MethodInfo> UpdateWrapper
-            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatch, MethodInfo>>("HarmonyLib.PatchFunctions:UpdateWrapper");
-    }
-
-    private const string HarmonyID = "Xylthixlm.Disharmony.Autopatcher";
-
-    public static readonly Patcher Instance = new();
-
-    private readonly Module module;
-
-    // These variables must only be accessed while HarmonyInternals.locker is held
-    private readonly Dictionary<MethodBase, MethodInfo> trampolines = [];
-    private int trampolineCount;
-
-    private struct MethodPatch
-    {
-        public required Ruleset ruleset;
-        public bool optimize;
-        public bool debug;
-    }
-
-    private readonly Dictionary<MethodBase, MethodPatch> methodPatches = [];
-
-    public bool optimizerEnabled = false;
-
-    public Patcher()
-    {
-        module = GetType().Module;
+        if (RuntimeExceptionHandler != null)
+            RuntimeExceptionHandler(exception);
+        else
+            FileLog.Log($"!!! Unhandled exception: {exception}");
     }
 
     /// <summary>
-    ///     This does the same thing as <see cref="Harmony.Patch" />> but must be called
-    ///     while we are already holding <see cref="HarmonyInternals.locker" />.
+    ///     Discovers and registers every patch class in an assembly, then applies all pending patch changes.
     /// </summary>
-    /// <param name="original"></param>
-    private static Exception? PatchDirectly(MethodBase original)
+    /// <param name="assembly">The assembly to scan for classes marked with <see cref="PatchAttribute" /> or
+    ///     <see cref="HarmonyLib.HarmonyPatch" />.</param>
+    /// <remarks>
+    ///     Categories are ignored. Use <see cref="PatchCategory" /> to select a single category.
+    /// </remarks>
+    public static void PatchAll(Assembly assembly)
     {
-        HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
-
-        MethodInfo replacement;
-        try
-        {
-            replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
-#if ENABLE_DISASSEMBLY
-            if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
-                JitAssemblyLogger.TryLog(original, replacement);
-#endif
-        }
-        catch (Exception e)
-        {
-            patchInfo.transpilers =
-            [
-                .. patchInfo.transpilers.Where(t => t.owner != HarmonyID),
-            ];
-
-            replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
-
-            HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
-            return e;
-        }
-
-        HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
-        return null;
+        RegisterAll(assembly);
+        Apply();
     }
 
-    public void ResolveTrampolineImpl(MethodBase method)
+    /// <summary>
+    ///     Discovers and registers every patch class in an assembly without applying the pending changes.
+    /// </summary>
+    /// <param name="assembly">The assembly to scan for classes marked with <see cref="PatchAttribute" /> or
+    ///     <see cref="HarmonyLib.HarmonyPatch" />.</param>
+    /// <remarks>
+    ///     Categories are ignored. Call <see cref="Apply" /> or <see cref="ForceApply" /> after completing registration.
+    /// </remarks>
+    public static void RegisterAll(Assembly assembly)
     {
-        Exception? e;
-        lock (HarmonyInternals.locker)
-        {
-            // If we can't remove the method, we lost a race and some other thread has
-            // already replaced the trampoline
-            if (!trampolines.Remove(method))
-                return;
-
-            e = PatchDirectly(method);
-        }
-
-        if (e != null)
-            Autopatcher.ReportException(e);
+        registry.ProcessAssembly(assembly);
     }
 
-    [UsedImplicitly]
-    public static void ResolveTrampoline(MethodBase method)
+    /// <summary>
+    ///     Discovers and registers patch classes in one category, then applies all pending patch changes.
+    /// </summary>
+    /// <param name="assembly">The assembly to scan for patch classes.</param>
+    /// <param name="category">
+    ///     The category to select, or <see langword="null" /> to select classes without a category.
+    /// </param>
+    /// <remarks>
+    ///     Categories are supplied by <see cref="CategoryAttribute" /> or
+    ///     <see cref="HarmonyLib.HarmonyPatchCategory" />. Classes must also have a recognized patch marker.
+    /// </remarks>
+    public static void PatchCategory(Assembly assembly, string? category)
     {
-        Instance.ResolveTrampolineImpl(method);
+        RegisterCategory(assembly, category);
+        Apply();
     }
 
-    public void ResolveAllTrampolines()
+    /// <summary>
+    ///     Discovers and registers patch classes in one category without applying the pending changes.
+    /// </summary>
+    /// <param name="assembly">The assembly to scan for patch classes.</param>
+    /// <param name="category">
+    ///     The category to select, or <see langword="null" /> to select classes without a category.
+    /// </param>
+    /// <remarks>
+    ///     Categories are supplied by <see cref="CategoryAttribute" /> or
+    ///     <see cref="HarmonyLib.HarmonyPatchCategory" />. Classes must also have a recognized patch marker. Call
+    ///     <see cref="Apply" /> or <see cref="ForceApply" /> after completing registration.
+    /// </remarks>
+    public static void RegisterCategory(Assembly assembly, string? category)
     {
-        while (true)
-        {
-            Exception? e;
-            lock (HarmonyInternals.locker)
-            {
-                if (trampolines.Count == 0)
-                    return;
-                var method = trampolines.Keys.First();
-
-                e = PatchDirectly(method);
-                trampolines.Remove(method);
-            }
-            if (e != null)
-                throw new RuntimePatchException("Patch error", e);
-        }
+        registry.ProcessAssembly(assembly, category);
     }
 
-    // Must hold HarmonyInternals.locker
-    public MethodInfo ApplyTrampoline(MethodBaseInvocation method)
+    /// <summary>
+    ///     Registers every patch method declared by a type without applying the pending changes.
+    /// </summary>
+    /// <param name="type">The type that declares the patch methods to register.</param>
+    /// <remarks>
+    ///     The type does not need a <see cref="PatchAttribute" /> when registered directly. Inherited methods are not
+    ///     processed. Call <see cref="Apply" /> or <see cref="ForceApply" /> after completing registration.
+    /// </remarks>
+    public static void Register(Type type)
     {
-        if (trampolines.TryGetValue(method.MethodBase, out var existingTrampoline))
-            return existingTrampoline;
-
-        MethodInfo trampoline = MakeTrampoline(method);
-
-        HarmonyInternals.DetourMethod(method.MethodBase, trampoline);
-
-        trampolines[method.MethodBase] = trampoline;
-
-        return trampoline;
+        registry.ProcessType(type.GetTypeInfo());
     }
 
-    [UsedImplicitly]
-    private static List<CodeInstruction> Transpiler(
-        MethodBase method,
-        IEnumerable<CodeInstruction> instructions,
-        ILGenerator generator)
+    /// <summary>
+    ///     Registers every patch method declared by a type, then applies all pending patch changes.
+    /// </summary>
+    /// <param name="type">The type that declares the patch methods to register.</param>
+    /// <remarks>
+    ///     The type does not need a <see cref="PatchAttribute" /> when patched directly. Inherited methods are not
+    ///     processed.
+    /// </remarks>
+    public static void Patch(Type type)
     {
-        var instructionsList = instructions.ToList();
-        var patch = Instance.methodPatches[method];
-        patch.ruleset.MatchAndReplace(method, ref instructionsList, generator);
-
-        if (Instance.optimizerEnabled && patch.optimize)
-        {
-            try
-            {
-                var optimizer = new Optimizer.Optimizer(method, instructionsList, generator, debug: patch.debug);
-                return optimizer.Optimize();
-            }
-            catch (Exception e)
-            {
-                Autopatcher.ReportException(e);
-            }
-        }
-
-        return instructionsList;
+        Register(type);
+        Apply();
     }
 
-    private MethodInfo MakeTrampoline(MethodBaseInvocation target)
+    /// <summary>
+    ///     Registers one patch method without applying the pending changes.
+    /// </summary>
+    /// <param name="method">The patch method to register.</param>
+    /// <remarks>
+    ///     Attributes on the method and its declaring type are both considered. The declaring type does not need a
+    ///     <see cref="PatchAttribute" /> when the method is registered directly. Call <see cref="Apply" /> or
+    ///     <see cref="ForceApply" /> after completing registration.
+    /// </remarks>
+    public static void Register(MethodInfo method)
     {
-        Type[] parameterTypes = target.ParameterTypes;
-
-        trampolineCount++;
-        var method = new DynamicMethod($"{target.FullName}_Trampoline{trampolineCount}", target.ReturnType,
-            parameterTypes, module, true);
-
-        ILGenerator generator = method.GetILGenerator();
-
-        EmitLoadArguments(generator, parameterTypes);
-
-        // Call ResolveTrampoline(), which generates the real patch and applies a detour
-        generator.Emit(OpCodes.Ldtoken, target);
-        generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle);
-        generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
-
-        // Do a tail call to the original method, which will actually go to the newly installed patch
-        generator.Emit(OpCodes.Tailcall);
-        generator.Emit(OpCodes.Call, target);
-        generator.Emit(OpCodes.Ret);
-
-        return method;
+        registry.ProcessMethod(method);
     }
 
-    private static void EmitLoadArguments(ILGenerator generator, Type[] parameterTypes)
+    /// <summary>
+    ///     Registers an attributed patch method for the supplied outer targets without making the patch take effect.
+    /// </summary>
+    /// <param name="method">The static method that implements the patch.</param>
+    /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
+    /// <remarks>
+    ///     Use this overload when attributes such as <see cref="PrefixAttribute" /> or
+    ///     <see cref="InnerPostfixAttribute" /> describe how the patch runs, but the targets are chosen in code.
+    ///     <see cref="TargetAttribute" /> and <see cref="TargetsAttribute" /> are not needed and are ignored.
+    ///     <see cref="PatchOptionsAttribute" /> and parameter-binding attributes still apply. Call <see cref="Apply" /> or
+    ///     <see cref="ForceApply" /> when all patches have been registered.
+    /// </remarks>
+    public static void Register(MethodInfo method, params IEnumerable<MethodBase> targets)
     {
-        // Load all arguments onto the stack
-        if (parameterTypes.Length >= 1)
-            generator.Emit(OpCodes.Ldarg_0);
-        if (parameterTypes.Length >= 2)
-            generator.Emit(OpCodes.Ldarg_1);
-        if (parameterTypes.Length >= 3)
-            generator.Emit(OpCodes.Ldarg_2);
-        if (parameterTypes.Length >= 4)
-            generator.Emit(OpCodes.Ldarg_3);
-        for (int i = 4; i < parameterTypes.Length; i++)
-            generator.Emit(OpCodes.Ldarg_S, i);
+        registry.ProcessMethod(method, targets);
     }
 
-    public void ApplyPatch(MethodBaseInvocation original, Ruleset ruleset, bool useTrampolines)
+    /// <summary>
+    ///     Registers a patch described in code without making it take effect.
+    /// </summary>
+    /// <param name="method">The static method that implements the patch.</param>
+    /// <param name="patchType">
+    ///     Whether the patch runs before or after each outer target, or before or after a matching operation within it.
+    /// </param>
+    /// <param name="innerTarget">
+    ///     For an inner patch, the method call, constructor call, or field access to match within each outer target. This
+    ///     is required for <see cref="PatchType.InnerPrefix" /> and <see cref="PatchType.InnerPostfix" /> and has no effect
+    ///     on other patch types.
+    /// </param>
+    /// <param name="innerMemberType">
+    ///     For an inner field, use <see cref="MemberType.Setter" /> to match writes; any other value matches reads. This has
+    ///     no effect on inner methods or constructors, or on non-inner patches.
+    /// </param>
+    /// <param name="options">Additional behaviors, such as inlining the patch or producing debug output.</param>
+    /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
+    /// <remarks>
+    ///     Use this overload when the patch kind, targets, and options are chosen in code. The patch method does not need
+    ///     patch-kind, target, or <see cref="PatchOptionsAttribute" /> attributes; if present, they are ignored. Attributes
+    ///     that bind patch parameters remain effective. Call <see cref="Apply" /> or <see cref="ForceApply" /> when all
+    ///     patches have been registered.
+    /// </remarks>
+    public static void Register(
+        MethodInfo method,
+        PatchType patchType,
+        MemberInfo? innerTarget = null,
+        MemberType innerMemberType = MemberType.Any,
+        PatchOptions options = PatchOptions.Default,
+        params IEnumerable<MethodBase> targets)
     {
-        lock (HarmonyInternals.locker)
-        {
-            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
-
-            bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.Debug);
-            bool optimize = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.Optimize);
-
-            if (!methodPatches.ContainsKey(original.MethodBase))
-            {
-                HarmonyMethod patcher = new(InfoOf.Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
-
-                patchInfo.transpilers =
-                [
-                    .. patchInfo.transpilers,
-                    new Patch(patcher, patchInfo.transpilers.Length, HarmonyID),
-                ];
-            }
-
-            methodPatches[original.MethodBase] = new()
-            {
-                ruleset = ruleset,
-                optimize = optimize,
-                debug = debug,
-            };
-
-            MethodInfo replacement;
-            if (useTrampolines)
-                replacement = ApplyTrampoline(original);
-            else
-            {
-                try
-                {
-                    replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
-#if ENABLE_DISASSEMBLY
-                    if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
-                        JitAssemblyLogger.TryLog(original.MethodBase, replacement);
-#endif
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimePatchException("Patch error", e);
-                }
-            }
-
-            HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);
-        }
+        registry.ProcessMethod(method, patchType, innerTarget, innerMemberType, options, targets);
     }
 
-    public void Unpatch(MethodBase methodBase)
+    /// <summary>
+    ///     Registers one patch method, then applies all pending patch changes.
+    /// </summary>
+    /// <param name="method">The patch method to register.</param>
+    /// <remarks>
+    ///     Attributes on the method and its declaring type are both considered. The declaring type does not need a
+    ///     <see cref="PatchAttribute" /> when the method is patched directly.
+    /// </remarks>
+    public static void Patch(MethodInfo method)
     {
-        lock (HarmonyInternals.locker)
-        {
-            if (!methodPatches.Remove(methodBase))
-                return;
+        Register(method);
+        Apply();
+    }
 
-            trampolines.Remove(methodBase);
+    /// <summary>
+    ///     Patches the supplied outer targets using an attributed patch method.
+    /// </summary>
+    /// <param name="method">The static method that implements the patch.</param>
+    /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
+    /// <remarks>
+    ///     Use this overload when attributes such as <see cref="PrefixAttribute" /> or
+    ///     <see cref="InnerPostfixAttribute" /> describe how the patch runs, but the targets are chosen in code.
+    ///     <see cref="TargetAttribute" /> and <see cref="TargetsAttribute" /> are not needed and are ignored.
+    ///     <see cref="PatchOptionsAttribute" /> and parameter-binding attributes still apply. This call also makes all
+    ///     patches registered so far take effect. Use <see cref="Register(MethodInfo, IEnumerable{MethodBase})" /> when
+    ///     more patches will be registered before applying them together.
+    /// </remarks>
+    public static void Patch(MethodInfo method, params IEnumerable<MethodBase> targets)
+    {
+        Register(method, targets);
+        Apply();
+    }
 
-            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(methodBase) ?? new HarmonyPatch();
+    /// <summary>
+    ///     Applies a patch whose behavior and targets are described in code.
+    /// </summary>
+    /// <param name="method">The static method that implements the patch.</param>
+    /// <param name="patchType">
+    ///     Whether the patch runs before or after each outer target, or before or after a matching operation within it.
+    /// </param>
+    /// <param name="innerTarget">
+    ///     For an inner patch, the method call, constructor call, or field access to match within each outer target. This
+    ///     is required for <see cref="PatchType.InnerPrefix" /> and <see cref="PatchType.InnerPostfix" /> and has no effect
+    ///     on other patch types.
+    /// </param>
+    /// <param name="innerMemberType">
+    ///     For an inner field, use <see cref="MemberType.Setter" /> to match writes; any other value matches reads. This has
+    ///     no effect on inner methods or constructors, or on non-inner patches.
+    /// </param>
+    /// <param name="options">Additional behaviors, such as inlining the patch or producing debug output.</param>
+    /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
+    /// <remarks>
+    ///     Use this overload when the patch kind, targets, and options are chosen in code. The patch method does not need
+    ///     patch-kind, target, or <see cref="PatchOptionsAttribute" /> attributes; if present, they are ignored. Attributes
+    ///     that bind patch parameters remain effective. This call also makes all patches registered so far take effect. Use
+    ///     <see cref="Register(MethodInfo, PatchType, MemberInfo, MemberType, PatchOptions, IEnumerable{MethodBase})" />
+    ///     when more patches will be registered before applying them together.
+    /// </remarks>
+    public static void Patch(
+        MethodInfo method,
+        PatchType patchType,
+        MemberInfo? innerTarget = null,
+        MemberType innerMemberType = MemberType.Any,
+        PatchOptions options = PatchOptions.Default,
+        params IEnumerable<MethodBase> targets)
+    {
+        Register(method, patchType, innerTarget, innerMemberType, options, targets);
+        Apply();
+    }
 
-            patchInfo.transpilers =
-            [
-                .. patchInfo.transpilers.Where(t => t.owner != HarmonyID),
-            ];
+    /// <summary>
+    ///     Activates all pending patch changes while deferring their expensive preparation until needed.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Patches are effective when this method returns; calling <see cref="ForceApply" /> afterward is not required
+    ///         for correctness. Most preparation is postponed until each affected method is first called, which keeps
+    ///         initialization fast but can make that first call take longer.
+    ///     </para>
+    ///     <para>
+    ///         Deferred preparation can also combine patches registered by multiple mods before the target is used. Call
+    ///         <see cref="ForceApply" /> when the application would rather complete the deferred work during a chosen idle
+    ///         period than during first use. Its remarks describe the just-in-time behavior and scheduling considerations
+    ///         in more detail.
+    ///     </para>
+    /// </remarks>
+    public static void Apply()
+    {
+        registry.ApplyImpl(useTrampolines: true);
+    }
 
-            MethodInfo replacement = HarmonyInternals.UpdateWrapper(methodBase, patchInfo);
+    /// <summary>
+    ///     Applies all pending patch changes immediately and resolves any lazy trampolines installed by earlier calls.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         <see cref="Apply" /> is designed to return quickly during mod initialization. It makes each patch active
+    ///         through a lightweight placeholder called a trampoline and postpones the more expensive work of producing
+    ///         the completed patch. Disharmony finishes that work automatically when the target method is first called.
+    ///         This is normally transparent, although the first call can take longer than later calls.
+    ///     </para>
+    ///     <para>
+    ///         Call <see cref="ForceApply" /> to complete all currently deferred patching at a time chosen by the
+    ///         application. For example, a mod can run it on a worker thread after initialization while the user is at a
+    ///         menu, trading background work during an idle period for predictable performance when gameplay begins.
+    ///         Disharmony does not choose that time or start a background thread itself.
+    ///     </para>
+    ///     <para>
+    ///         Deferral also allows patches from different mods to accumulate. If several mods target the same method
+    ///         before that method is first used, Disharmony can prepare it once with the complete set of patches instead of
+    ///         preparing it again after each mod. For the greatest benefit, call <see cref="ForceApply" /> after other mods
+    ///         have had an opportunity to register their patches. The method returns when all patching known at that time
+    ///         is complete; patches registered later may create new deferred work.
+    ///     </para>
+    /// </remarks>
+    public static void ForceApply()
+    {
+        registry.ApplyImpl(useTrampolines: false);
+        harmonyInterface.ResolveAllTrampolines();
+    }
 
-            HarmonyInternals.UpdatePatchInfo(methodBase, replacement, patchInfo);
-        }
+    /// <summary>
+    ///     Removes every registered Disharmony patch declared in an assembly and reapplies the affected targets.
+    /// </summary>
+    /// <param name="assembly">The assembly that declares the patch methods to remove.</param>
+    /// <remarks>
+    ///     This removes patches by the assembly containing each patch method, regardless of how those methods were
+    ///     registered. It does not remove patches installed independently through Harmony.
+    /// </remarks>
+    public static void UnpatchAll(Assembly assembly)
+    {
+        registry.UnpatchAll(assembly);
+        registry.ApplyImpl(useTrampolines: true);
     }
 }

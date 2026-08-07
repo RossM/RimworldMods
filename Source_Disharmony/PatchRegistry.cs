@@ -409,7 +409,7 @@ internal class PatchRegistry
                 var patchedMethod = methodsToUpdate.First();
                 try
                 {
-                    var worker = new Autopatcher.PatchWorker(this, patchedMethod, useTrampolines);
+                    var worker = new Patcher.Worker(this, patchedMethod, useTrampolines);
 
                     worker.UpdateMethod();
                 }

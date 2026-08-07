@@ -10,7 +10,7 @@ public sealed class InlinePatchTests : PatchTestBase
             .GetMethod(nameof(InlinePatchPatches.InlinePrefixExecutesInlinedBranchAndRefWrite))!;
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.IntIdentity))!;
-        Autopatcher.Patch(
+        Patcher.Patch(
             patch,
             PatchType.Prefix,
             options: PatchOptions.Inline,

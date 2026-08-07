@@ -1,8 +1,8 @@
 ﻿namespace Disharmony;
 
-public static partial class Autopatcher
+public static partial class Patcher
 {
-    internal class PatchWorker(PatchRegistry registry, MethodBaseInvocation patchedMethod, bool useTrampolines = true)
+    internal class Worker(PatchRegistry registry, MethodBaseInvocation patchedMethod, bool useTrampolines = true)
     {
         private readonly Invocation outer = patchedMethod;
         private readonly List<PatchInfo> patches = registry.GetPatchesFor(patchedMethod);
@@ -11,13 +11,13 @@ public static partial class Autopatcher
         {
             if (patches.Count == 0)
             {
-                patcher.Unpatch(patchedMethod.MethodBase);
+                harmonyInterface.Unpatch(patchedMethod.MethodBase);
                 return;
             }
 
             Ruleset ruleset = MakeRuleset();
 
-            patcher.ApplyPatch(patchedMethod, ruleset, useTrampolines);
+            harmonyInterface.ApplyPatch(patchedMethod, ruleset, useTrampolines);
         }
 
         private Ruleset MakeRuleset()
