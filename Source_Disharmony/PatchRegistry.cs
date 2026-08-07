@@ -409,9 +409,18 @@ internal class PatchRegistry
                 var patchedMethod = methodsToUpdate.First();
                 try
                 {
-                    var worker = new Patcher.Worker(this, patchedMethod, useTrampolines);
+                    var patches = GetPatchesFor(patchedMethod);
 
-                    worker.UpdateMethod();
+                    if (patches.Count == 0)
+                    {
+                        Patcher.harmonyInterface.Unpatch(patchedMethod.MethodBase);
+                    }
+                    else
+                    {
+                        Ruleset ruleset = RulesetGenerator.MakeRuleset(patchedMethod, patches);
+
+                        Patcher.harmonyInterface.ApplyPatch(patchedMethod, ruleset, useTrampolines);
+                    }
                 }
                 catch (Exception e)
                 {

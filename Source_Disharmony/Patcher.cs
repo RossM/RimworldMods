@@ -131,7 +131,7 @@ public static partial class Patcher
     // Lock order: applyLock, PatchRegistry.SyncRoot, Harmony's lock.
     private static readonly object applyLock = new();
     private static readonly PatchRegistry registry = PatchRegistry.Instance;
-    private static readonly HarmonyInterface harmonyInterface = HarmonyInterface.Instance;
+    internal static readonly HarmonyInterface harmonyInterface = HarmonyInterface.Instance;
 
     public static event Action<Exception>? RuntimeExceptionHandler;
 
