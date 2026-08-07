@@ -8,7 +8,7 @@ public class ParameterBindingException(string argumentName, string message) : Ex
     public override string Message => $"{argumentName}: {base.Message}";
 }
 
-internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, string className)
+internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, string stateGroupKey)
 {
     private readonly bool infix = patchType is PatchType.InnerPrefix or PatchType.InnerPostfix;
     private readonly bool isIterator = outer != target;
@@ -97,7 +97,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private ParameterBinding BindState(ParameterInfo parameter, string key)
     {
-        string stateKey = $"{className}#{parameter.ParameterType.NoRefType.FullName}#{key}";
+        string stateKey = $"{stateGroupKey}#{parameter.ParameterType.NoRefType.FullName}#{key}";
 
         // ValidateCast not needed, the type will be checked in StateBuilder
         return new() { parameter = parameter, bindingType = BindingType.State, scope = Scope.Outer, stateKey = stateKey };

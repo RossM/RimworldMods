@@ -294,7 +294,7 @@ public static partial class Patcher
         PatchOptions options = PatchOptions.Default,
         params IEnumerable<MethodBase> targets)
     {
-        registry.ProcessMethod(method, patchType, innerTarget, innerMemberType, options, targets);
+        registry.ProcessMethod(method, patchType, innerTarget, innerMemberType, options, targets, method.DeclaringType!.FullName);
     }
 
     /// <summary>

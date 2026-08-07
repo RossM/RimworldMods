@@ -186,7 +186,7 @@ internal class PatchRegistry
                     {
                         MethodBase target = result as MethodBase ??
                                             throw new InvalidOperationException($"{nameForErrors}: Couldn't locate method");
-                        AddPatch(method, patchType, target, inner, options);
+                        AddPatch(method, patchType, target, inner, options, method.DeclaringType!.FullName);
                     }
                 }
             }
@@ -220,7 +220,7 @@ internal class PatchRegistry
 
                 foreach (var target in targets)
                 {
-                    AddPatch(method, patchType, target, inner, options);
+                    AddPatch(method, patchType, target, inner, options, method.DeclaringType!.FullName);
                 }
             }
             catch (Exception e)
@@ -236,7 +236,8 @@ internal class PatchRegistry
         MemberInfo? innerTarget,
         MemberType innerMemberType,
         PatchOptions options,
-        IEnumerable<MethodBase> targets)
+        IEnumerable<MethodBase> targets,
+        string stateGroupKey)
     {
         lock (syncRoot)
         {
@@ -248,7 +249,7 @@ internal class PatchRegistry
 
                 foreach (var target in targets)
                 {
-                    AddPatch(method, patchType, target, inner, options);
+                    AddPatch(method, patchType, target, inner, options, stateGroupKey);
                 }
             }
             catch (Exception e)
@@ -294,7 +295,7 @@ internal class PatchRegistry
         };
     }
 
-    private void AddPatch(MethodInfo method, PatchType patchType, MethodBase target, Invocation inner, PatchOptions options)
+    private void AddPatch(MethodInfo method, PatchType patchType, MethodBase target, Invocation inner, PatchOptions options, string stateGroupKey)
     {
         if (method.ContainsGenericParameters)
             throw new NotSupportedException($"{method.FullName}: Generic patch functions are not supported");
@@ -323,7 +324,7 @@ internal class PatchRegistry
             throw new InvalidOperationException($"{target.FullName}: Can't patch instantiated generic method");
 
         MethodBaseInvocation outer = GetOuterInvocation(target);
-        AddPatch(method, patchType, outer, inner, options);
+        AddPatch(method, patchType, outer, inner, options, stateGroupKey);
     }
 
     private static MethodBaseInvocation GetOuterInvocation(MethodBase target)
@@ -342,7 +343,8 @@ internal class PatchRegistry
         PatchType patchType,
         MethodBaseInvocation target,
         Invocation inner,
-        PatchOptions options)
+        PatchOptions options,
+        string stateGroupKey)
     {
         MethodBaseInvocation outer = target;
         bool isIterator = false;
@@ -357,7 +359,7 @@ internal class PatchRegistry
             }
         }
 
-        var parameterBinder = new ParameterBinder(target, outer, inner, patchType, patchMethod.MethodInfo.DeclaringType!.FullName);
+        var parameterBinder = new ParameterBinder(target, outer, inner, patchType, stateGroupKey);
 
         var arguments = patchMethod.MethodInfo.GetParameters().Select(parameterBinder.Bind).ToArray();
 
