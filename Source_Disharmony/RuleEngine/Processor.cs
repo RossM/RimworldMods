@@ -1,5 +1,28 @@
 ﻿namespace Disharmony.RuleEngine;
 
+// This wrapper is necessary because the LocalBuilder constructor is internal
+internal abstract record LocalTracker
+{
+    public abstract int Index { get; }
+
+    public static LocalTracker From(CodeInstruction instruction)
+    {
+        return instruction.operand is LocalBuilder builder
+            ? new LocalTrackerBuilder(builder)
+            : new LocalTrackerIndex(instruction.LocalIndex());
+    }
+}
+
+internal record LocalTrackerBuilder(LocalBuilder Builder) : LocalTracker
+{
+    public override int Index => Builder.LocalIndex;
+}
+
+internal record LocalTrackerIndex(int Index) : LocalTracker
+{
+    public override int Index { get; } = Index;
+}
+
 internal class Processor(
     Ruleset ruleset,
     MethodBase method,
@@ -11,12 +34,12 @@ internal class Processor(
     {
         public required Rule rule;
         public int start, end;
-        public required Dictionary<int, int> localMap_Match;
+        public required Dictionary<int, LocalTracker> localMap_Match;
         public required Dictionary<Label, Label> labelMap_Match;
         public bool emitted = false;
     }
 
-    private readonly Dictionary<int, LocalBuilder> localMap_Method = [];
+    private readonly Dictionary<int, LocalTracker> localMap_Method = [];
     private readonly Dictionary<Label, Label> labelMap_Method = [];
     private readonly List<MatchData> matches = [];
     private readonly List<ExceptionBlock> extraBlocks = [];
@@ -86,7 +109,7 @@ internal class Processor(
                      instructionIndex <= instructions.Count - rule.pattern.Length;
                      instructionIndex++)
                 {
-                    if (!MatchPattern(rule, instructionIndex, out Dictionary<int, int> localIndex_Match))
+                    if (!MatchPattern(rule, instructionIndex, out Dictionary<int, LocalTracker> localIndex_Match))
                         continue;
 
                     var matchData = new MatchData
@@ -295,9 +318,9 @@ internal class Processor(
         Emit(CodeInstruction.Annotation($"End {match.rule.name}"));
     }
 
-    private bool MatchPattern(Rule rule, int instructionIndex, out Dictionary<int, int> localIndex_Match)
+    private bool MatchPattern(Rule rule, int instructionIndex, out Dictionary<int, LocalTracker> localMap_Match)
     {
-        localIndex_Match = [];
+        localMap_Match = [];
 
         bool noOutput = rule.output is not { Length: > 0 };
 
@@ -307,7 +330,7 @@ internal class Processor(
 
         for (var patternIndex = 0; patternIndex < rule.pattern.Length; patternIndex++)
         {
-            if (!MatchInstruction(instructions[instructionIndex + patternIndex], rule.pattern[patternIndex], localIndex_Match))
+            if (!MatchInstruction(instructions[instructionIndex + patternIndex], rule.pattern[patternIndex], localMap_Match))
                 return false;
 
             if (rule.mode == OutputMode.Replace)
@@ -329,7 +352,7 @@ internal class Processor(
         return true;
     }
 
-    private bool MatchInstruction(CodeInstruction inst, CodeInstruction patternInst, Dictionary<int, int> localIndex_Match)
+    private bool MatchInstruction(CodeInstruction inst, CodeInstruction patternInst, Dictionary<int, LocalTracker> localMap_Match)
     {
         // For a load or store, map the local indexes in the pattern to the actual local indexes used
         // in the function
@@ -338,17 +361,17 @@ internal class Processor(
             if (!inst.IsStloc())
                 return false;
 
-            int localIndex = patternInst.LocalIndex();
-            int targetIndex = inst.LocalIndex();
+            int localIndex = LocalTracker.From(patternInst).Index;
+            var targetLocal = LocalTracker.From(inst);
 
-            if (localIndex_Match.TryGetValue(localIndex, out int substituteIndex))
+            if (localMap_Match.TryGetValue(localIndex, out var substitute))
             {
-                if (targetIndex != substituteIndex)
+                if (targetLocal != substitute)
                     return false;
             }
             else
             {
-                localIndex_Match.Add(localIndex, targetIndex);
+                localMap_Match.Add(localIndex, targetLocal);
             }
         }
         else if (patternInst.opcode.Value == OpCodes.Ldloca.Value ||
@@ -366,18 +389,17 @@ internal class Processor(
                 inst.opcode.Value == OpCodes.Ldloca_S.Value)
                 return false;
 
-            int localIndex = patternInst.LocalIndex();
+            int localIndex = LocalTracker.From(patternInst).Index;
+            var targetLocal = LocalTracker.From(inst);
 
-            int targetIndex = inst.operand is LocalBuilder lb ? lb.LocalIndex : inst.LocalIndex();
-
-            if (localIndex_Match.TryGetValue(localIndex, out int substituteIndex))
+            if (localMap_Match.TryGetValue(localIndex, out var substitute))
             {
-                if (targetIndex != substituteIndex)
+                if (targetLocal != substitute)
                     return false;
             }
             else
             {
-                localIndex_Match.Add(localIndex, targetIndex);
+                localMap_Match.Add(localIndex, targetLocal);
             }
         }
         // For convenience, let call also match callvirt. Nobody wants to worry about
@@ -478,16 +500,16 @@ internal class Processor(
         return replacementLabel;
     }
 
-    private object GetReplacementLocal(CodeInstruction replaceInst, MatchData match)
+    private LocalTracker GetReplacementLocal(CodeInstruction replaceInst, MatchData match)
     {
-        int localIndex = replaceInst.LocalIndex();
+        int localIndex = LocalTracker.From(replaceInst).Index;
         if (localMap_Method.TryGetValue(localIndex, out var substituteBuilder))
             return substituteBuilder;
-        if (match.localMap_Match.TryGetValue(localIndex, out int substituteIndex))
+        if (match.localMap_Match.TryGetValue(localIndex, out var substituteIndex))
             return substituteIndex;
         if (localIndex < ruleset.crossRuleLocalTypes.Count)
         {
-            substituteBuilder = generator.DeclareLocal(ruleset.crossRuleLocalTypes[localIndex]);
+            substituteBuilder = new LocalTrackerBuilder(generator.DeclareLocal(ruleset.crossRuleLocalTypes[localIndex]));
             localMap_Method.Add(localIndex, substituteBuilder);
             return substituteBuilder;
         }
@@ -495,24 +517,24 @@ internal class Processor(
         throw new InvalidOperationException($"Replacement pattern uses unknown local index #{localIndex}");
     }
 
-    private static CodeInstruction StoreLocal(object local) => local switch
+    private static CodeInstruction StoreLocal(LocalTracker local) => local switch
     {
-        LocalBuilder builder => new(
-            builder.LocalIndex <= byte.MaxValue ? OpCodes.Stloc_S : OpCodes.Stloc,
-            builder),
-        int index => CodeInstruction.StoreLocal(index),
+        LocalTrackerBuilder builder => new(
+            builder.Index <= byte.MaxValue ? OpCodes.Stloc_S : OpCodes.Stloc,
+            builder.Builder),
+        LocalTrackerIndex index => CodeInstruction.StoreLocal(index.Index),
         _ => throw new ArgumentOutOfRangeException(nameof(local)),
     };
 
-    private static CodeInstruction LoadLocal(object local, bool useAddress = false) => local switch
+    private static CodeInstruction LoadLocal(LocalTracker local, bool useAddress = false) => local switch
     {
-        LocalBuilder builder when useAddress => new(
-            builder.LocalIndex <= byte.MaxValue ? OpCodes.Ldloca_S : OpCodes.Ldloca,
-            builder),
-        LocalBuilder builder => new(
-            builder.LocalIndex <= byte.MaxValue ? OpCodes.Ldloc_S : OpCodes.Ldloc,
-            builder),
-        int index => CodeInstruction.LoadLocal(index, useAddress),
+        LocalTrackerBuilder builder when useAddress => new(
+            builder.Index <= byte.MaxValue ? OpCodes.Ldloca_S : OpCodes.Ldloca,
+            builder.Builder),
+        LocalTrackerBuilder builder => new(
+            builder.Index <= byte.MaxValue ? OpCodes.Ldloc_S : OpCodes.Ldloc,
+            builder.Builder),
+        LocalTrackerIndex index => CodeInstruction.LoadLocal(index.Index, useAddress),
         _ => throw new ArgumentOutOfRangeException(nameof(local)),
     };
 }
