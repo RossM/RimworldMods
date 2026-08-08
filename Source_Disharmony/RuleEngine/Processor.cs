@@ -1,6 +1,5 @@
 ﻿namespace Disharmony.RuleEngine;
 
-// This wrapper is necessary because the LocalBuilder constructor is internal
 internal abstract record LocalTracker
 {
     public abstract int Index { get; }
