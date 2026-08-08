@@ -27,9 +27,9 @@ public class RuntimePatchExceptionPatches
 
     public static BindingStruct Infix_InnerPrefixReturningStruct_IsRejectedBeforeUpdateMethod() => default;
 
-    public static void ForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod() { }
+    public static void ForceApply_ApplicationFailure_ReportsAndPreservesOriginalBehavior() { }
 
-    public static void ApplyThenForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod() { }
+    public static void ApplyThenForceApply_ApplicationFailure_ReportsAndPreservesOriginalBehavior() { }
 
     public static void TrampolineResolution_ApplicationFailure_ReportsAndRestoresOriginalMethod() { }
 
@@ -257,44 +257,71 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
     }
 
     [Test]
-    public void ForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod()
+    public void ForceApply_ApplicationFailure_ReportsAndPreservesOriginalBehavior()
     {
         MethodInfo patch = typeof(RuntimePatchExceptionPatches)
-            .GetMethod(nameof(RuntimePatchExceptionPatches.ForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod))!;
+            .GetMethod(nameof(RuntimePatchExceptionPatches.ForceApply_ApplicationFailure_ReportsAndPreservesOriginalBehavior))!;
         MethodInfo innerTarget = typeof(InnerStaticMethodTargets)
             .GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
         MethodInfo outerTarget = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.IntResult))!;
 
-        Patcher.Register(
-            patch,
-            PatchType.InnerPrefix,
-            innerTarget: innerTarget,
-            targets: [outerTarget]);
+        List<Exception> reportedExceptions = [];
+        Action<Exception> handler = reportedExceptions.Add;
+        Patcher.RuntimeExceptionHandler += handler;
 
-        Assert.Throws<RuntimePatchException>(() => Patcher.ForceApply());
-        Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
+        try
+        {
+            Patcher.Register(
+                patch,
+                PatchType.InnerPrefix,
+                innerTarget: innerTarget,
+                targets: [outerTarget]);
+
+            Assert.That(() => Patcher.ForceApply(), Throws.Nothing);
+            Assert.That(reportedExceptions, Has.Count.EqualTo(1));
+            Assert.That(reportedExceptions[0], Is.TypeOf<InvalidOperationException>());
+            Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
+        }
+        finally
+        {
+            Patcher.RuntimeExceptionHandler -= handler;
+        }
     }
 
     [Test]
-    public void ApplyThenForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod()
+    public void ApplyThenForceApply_ApplicationFailure_ReportsAndPreservesOriginalBehavior()
     {
         MethodInfo patch = typeof(RuntimePatchExceptionPatches)
-            .GetMethod(nameof(RuntimePatchExceptionPatches.ApplyThenForceApply_ApplicationFailure_ThrowsAndRestoresOriginalMethod))!;
+            .GetMethod(nameof(RuntimePatchExceptionPatches.ApplyThenForceApply_ApplicationFailure_ReportsAndPreservesOriginalBehavior))!;
         MethodInfo innerTarget = typeof(InnerStaticMethodTargets)
             .GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
         MethodInfo outerTarget = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.IntResult))!;
 
-        Patcher.Register(
-            patch,
-            PatchType.InnerPrefix,
-            innerTarget: innerTarget,
-            targets: [outerTarget]);
-        Patcher.Apply();
+        List<Exception> reportedExceptions = [];
+        Action<Exception> handler = reportedExceptions.Add;
+        Patcher.RuntimeExceptionHandler += handler;
 
-        Assert.Throws<RuntimePatchException>(() => Patcher.ForceApply());
-        Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
+        try
+        {
+            Patcher.Register(
+                patch,
+                PatchType.InnerPrefix,
+                innerTarget: innerTarget,
+                targets: [outerTarget]);
+            Patcher.Apply();
+
+            Assert.That(reportedExceptions, Is.Empty);
+            Assert.That(() => Patcher.ForceApply(), Throws.Nothing);
+            Assert.That(reportedExceptions, Has.Count.EqualTo(1));
+            Assert.That(reportedExceptions[0], Is.TypeOf<InvalidOperationException>());
+            Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
+        }
+        finally
+        {
+            Patcher.RuntimeExceptionHandler -= handler;
+        }
     }
 
     [Test]
