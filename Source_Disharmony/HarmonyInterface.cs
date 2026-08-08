@@ -162,7 +162,16 @@ internal class HarmonyInterface
     {
         var instructionsList = instructions.ToList();
         var patch = Instance.methodPatches[method];
-        patch.ruleset.MatchAndReplace(method, ref instructionsList, generator);
+
+        try
+        {
+            patch.ruleset.MatchAndReplace(method, ref instructionsList, generator);
+        }
+        catch (Exception e)
+        {
+            Patcher.ReportException(e);
+            return instructionsList;
+        }
 
         if (Instance.optimizerEnabled && patch.optimize)
         {
