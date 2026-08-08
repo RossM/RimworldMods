@@ -53,7 +53,8 @@ internal class InlineRuleBuilder : RuleBuilder
                 OpCodeValues.Ldarg_S  => argumentLocals[Convert.ToInt32(inst.operand)].Load(),
                 OpCodeValues.Ldarga   => argumentLocals[Convert.ToInt32(inst.operand)].Load(true),
                 OpCodeValues.Ldarga_S => argumentLocals[Convert.ToInt32(inst.operand)].Load(true),
-                // TODO Starg, Starg_S
+                OpCodeValues.Starg    => argumentLocals[Convert.ToInt32(inst.operand)].Store(),
+                OpCodeValues.Starg_S  => argumentLocals[Convert.ToInt32(inst.operand)].Store(),
                 OpCodeValues.Ldloc_0  => GetLocal(0).Load(),
                 OpCodeValues.Ldloc_1  => GetLocal(1).Load(),
                 OpCodeValues.Ldloc_2  => GetLocal(2).Load(),
