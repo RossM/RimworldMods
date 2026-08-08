@@ -503,10 +503,12 @@ internal class Processor(
     private LocalTracker GetReplacementLocal(CodeInstruction replaceInst, MatchData match)
     {
         int localIndex = LocalTracker.From(replaceInst).Index;
+
         if (localMap_Method.TryGetValue(localIndex, out var substituteLocal))
             return substituteLocal;
         if (match.localMap_Match.TryGetValue(localIndex, out substituteLocal))
             return substituteLocal;
+        
         if (localIndex < ruleset.crossRuleLocalTypes.Count)
         {
             substituteLocal = new LocalTrackerBuilder(generator.DeclareLocal(ruleset.crossRuleLocalTypes[localIndex]));
@@ -514,7 +516,14 @@ internal class Processor(
             return substituteLocal;
         }
 
-        throw new InvalidOperationException($"Replacement pattern uses unknown local index #{localIndex}");
+        if (replaceInst.operand is LocalBuilder { LocalType: Type type })
+        {
+            substituteLocal = new LocalTrackerBuilder(generator.DeclareLocal(type));
+            match.localMap_Match.Add(localIndex, substituteLocal);
+            return substituteLocal;
+        }
+
+        throw new InvalidOperationException($"Can't replace local #{localIndex} because its type is unknown");
     }
 
     private static CodeInstruction StoreLocal(LocalTracker local) => local switch
