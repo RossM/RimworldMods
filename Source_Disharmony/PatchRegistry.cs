@@ -146,10 +146,7 @@ internal class PatchRegistry
         {
             try
             {
-                var typeAttributes = method.DeclaringType?.GetCustomAttributes().ToList() ?? [];
-                var methodAttributes = method.GetCustomAttributes();
-
-                List<Attribute> attributes = [.. methodAttributes, .. typeAttributes];
+                List<Attribute> attributes = GetAttributes(method);
 
                 var defaultTargetType =
                     attributes.OfType<PatchAttribute>().Select(p => p.type).FirstOrDefault(t => t is not null) ??
@@ -203,10 +200,7 @@ internal class PatchRegistry
         {
             try
             {
-                var typeAttributes = method.DeclaringType?.GetCustomAttributes().ToList() ?? [];
-                var methodAttributes = method.GetCustomAttributes();
-
-                List<Attribute> attributes = [.. methodAttributes, .. typeAttributes];
+                List<Attribute> attributes = GetAttributes(method);
 
                 var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
                 var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.options ?? PatchOptions.Default;
@@ -228,6 +222,15 @@ internal class PatchRegistry
                 throw new InvalidOperationException($"Error processing {method.FullName}", e);
             }
         }
+    }
+
+    private static List<Attribute> GetAttributes(MethodInfo method)
+    {
+        var typeAttributes = method.DeclaringType?.GetCustomAttributes().ToList() ?? [];
+        var methodAttributes = method.GetCustomAttributes();
+
+        List<Attribute> attributes = [.. methodAttributes, .. typeAttributes];
+        return attributes;
     }
 
     public void ProcessMethod(
