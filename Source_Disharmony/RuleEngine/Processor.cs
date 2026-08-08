@@ -413,17 +413,17 @@ internal class Processor(
 
         if (replaceInst.IsStloc())
         {
-            var substituteLocal = GetReplacementLocal(replaceInst.LocalIndex(), match);
+            var substituteLocal = GetReplacementLocal(replaceInst, match);
             Emit(StoreLocal(substituteLocal));
         }
         else if (replaceInst.opcode == OpCodes.Ldloca || replaceInst.opcode == OpCodes.Ldloca_S)
         {
-            var substituteLocal = GetReplacementLocal(replaceInst.LocalIndex(), match);
+            var substituteLocal = GetReplacementLocal(replaceInst, match);
             Emit(LoadLocal(substituteLocal, true));
         }
         else if (replaceInst.IsLdloc())
         {
-            var substituteLocal = GetReplacementLocal(replaceInst.LocalIndex(), match);
+            var substituteLocal = GetReplacementLocal(replaceInst, match);
             Emit(LoadLocal(substituteLocal));
         }
         else if (replaceInst.operand is Label label)
@@ -478,8 +478,9 @@ internal class Processor(
         return replacementLabel;
     }
 
-    private object GetReplacementLocal(int localIndex, MatchData match)
+    private object GetReplacementLocal(CodeInstruction replaceInst, MatchData match)
     {
+        int localIndex = replaceInst.LocalIndex();
         if (localMap_Method.TryGetValue(localIndex, out var substituteBuilder))
             return substituteBuilder;
         if (match.localMap_Match.TryGetValue(localIndex, out int substituteIndex))
