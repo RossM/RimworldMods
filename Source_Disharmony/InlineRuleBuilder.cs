@@ -3,9 +3,9 @@
 internal class InlineRuleBuilder : RuleBuilder
 {
     private readonly MethodBase method;
-    private readonly int[] argumentLocals;
-    private int returnLocal = -1;
-    private readonly Dictionary<int, int> localMap = new();
+    private readonly LocalTracker[] argumentLocals;
+    private LocalTracker? returnLocal = null;
+    private readonly Dictionary<int, LocalTracker> localMap = new();
     private readonly Type[] parameterTypes;
     private readonly List<LocalVariableInfo>? locals;
 
@@ -14,7 +14,7 @@ internal class InlineRuleBuilder : RuleBuilder
         method = patch.MethodInfo;
 
         parameterTypes = patch.ParameterTypes;
-        argumentLocals = new int[parameterTypes.Length];
+        argumentLocals = new LocalTracker[parameterTypes.Length];
         locals = method.GetMethodBody()?.LocalVariables.ToList();
     }
 
@@ -26,7 +26,7 @@ internal class InlineRuleBuilder : RuleBuilder
         for (int i = parameterTypes.Length - 1; i >= 0; i--)
         {
             argumentLocals[i] = output.AddLocal(parameterTypes[i]);
-            output.Add(CodeInstruction.StoreLocal(argumentLocals[i]));
+            output.Add(argumentLocals[i].Store());
         }
 
         if (method is MethodInfo m && m.ReturnType != typeof(void))
@@ -45,28 +45,29 @@ internal class InlineRuleBuilder : RuleBuilder
             CodeInstruction translated = unchecked((ushort)inst.opcode.Value) switch
             {
                 // @formatter:off
-                OpCodeValues.Ldarg_0  => CodeInstruction.LoadLocal(argumentLocals[0]),
-                OpCodeValues.Ldarg_1  => CodeInstruction.LoadLocal(argumentLocals[1]),
-                OpCodeValues.Ldarg_2  => CodeInstruction.LoadLocal(argumentLocals[2]),
-                OpCodeValues.Ldarg_3  => CodeInstruction.LoadLocal(argumentLocals[3]),
-                OpCodeValues.Ldarg    => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)]),
-                OpCodeValues.Ldarg_S  => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)]),
-                OpCodeValues.Ldarga   => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)], true),
-                OpCodeValues.Ldarga_S => CodeInstruction.LoadLocal(argumentLocals[Convert.ToInt32(inst.operand)], true),
-                OpCodeValues.Ldloc_0  => CodeInstruction.LoadLocal(GetLocal(0)),
-                OpCodeValues.Ldloc_1  => CodeInstruction.LoadLocal(GetLocal(1)),
-                OpCodeValues.Ldloc_2  => CodeInstruction.LoadLocal(GetLocal(2)),
-                OpCodeValues.Ldloc_3  => CodeInstruction.LoadLocal(GetLocal(3)),
-                OpCodeValues.Ldloc    => CodeInstruction.LoadLocal(GetLocal(GetLocalIndex(inst.operand))),
-                OpCodeValues.Ldloc_S  => CodeInstruction.LoadLocal(GetLocal(GetLocalIndex(inst.operand))),
-                OpCodeValues.Ldloca   => CodeInstruction.LoadLocal(GetLocal(GetLocalIndex(inst.operand)), true),
-                OpCodeValues.Ldloca_S => CodeInstruction.LoadLocal(GetLocal(GetLocalIndex(inst.operand)), true),
-                OpCodeValues.Stloc_0  => CodeInstruction.StoreLocal(GetLocal(0)),
-                OpCodeValues.Stloc_1  => CodeInstruction.StoreLocal(GetLocal(1)),
-                OpCodeValues.Stloc_2  => CodeInstruction.StoreLocal(GetLocal(2)),
-                OpCodeValues.Stloc_3  => CodeInstruction.StoreLocal(GetLocal(3)),
-                OpCodeValues.Stloc    => CodeInstruction.StoreLocal(GetLocal(GetLocalIndex(inst.operand))),
-                OpCodeValues.Stloc_S  => CodeInstruction.StoreLocal(GetLocal(GetLocalIndex(inst.operand))),
+                OpCodeValues.Ldarg_0  => argumentLocals[0].Load(),
+                OpCodeValues.Ldarg_1  => argumentLocals[1].Load(),
+                OpCodeValues.Ldarg_2  => argumentLocals[2].Load(),
+                OpCodeValues.Ldarg_3  => argumentLocals[3].Load(),
+                OpCodeValues.Ldarg    => argumentLocals[Convert.ToInt32(inst.operand)].Load(),
+                OpCodeValues.Ldarg_S  => argumentLocals[Convert.ToInt32(inst.operand)].Load(),
+                OpCodeValues.Ldarga   => argumentLocals[Convert.ToInt32(inst.operand)].Load(true),
+                OpCodeValues.Ldarga_S => argumentLocals[Convert.ToInt32(inst.operand)].Load(true),
+                // TODO Starg, Starg_S
+                OpCodeValues.Ldloc_0  => GetLocal(0).Load(),
+                OpCodeValues.Ldloc_1  => GetLocal(1).Load(),
+                OpCodeValues.Ldloc_2  => GetLocal(2).Load(),
+                OpCodeValues.Ldloc_3  => GetLocal(3).Load(),
+                OpCodeValues.Ldloc    => GetLocal(GetLocalIndex(inst.operand)).Load(),
+                OpCodeValues.Ldloc_S  => GetLocal(GetLocalIndex(inst.operand)).Load(),
+                OpCodeValues.Ldloca   => GetLocal(GetLocalIndex(inst.operand)).Load(true),
+                OpCodeValues.Ldloca_S => GetLocal(GetLocalIndex(inst.operand)).Load(true),
+                OpCodeValues.Stloc_0  => GetLocal(0).Store(),
+                OpCodeValues.Stloc_1  => GetLocal(1).Store(),
+                OpCodeValues.Stloc_2  => GetLocal(2).Store(),
+                OpCodeValues.Stloc_3  => GetLocal(3).Store(),
+                OpCodeValues.Stloc    => GetLocal(GetLocalIndex(inst.operand)).Store(),
+                OpCodeValues.Stloc_S  => GetLocal(GetLocalIndex(inst.operand)).Store(),
                 OpCodeValues.Ret      => new(OpCodes.Br, returnLabel),
                 _ => inst,
                 // @formatter:on
@@ -83,21 +84,21 @@ internal class InlineRuleBuilder : RuleBuilder
         output.Add(new(OpCodes.Nop) { labels = [returnLabel] });
 
         // It's necessary to do a type conversion here to simulate a return correctly. For now, do it by storing to a local.
-        if (returnLocal >= 0)
+        if (returnLocal != null)
         {
-            output.Add(CodeInstruction.StoreLocal(returnLocal));
-            output.Add(CodeInstruction.LoadLocal(returnLocal));
+            output.Add(returnLocal.Store());
+            output.Add(returnLocal.Load());
         }
 
         return true;
     }
 
-    private int GetLocal(int index)
+    private LocalTracker GetLocal(int index)
     {
         if (locals is null)
             throw new InvalidOperationException();
 
-        if (!localMap.TryGetValue(index, out int value))
+        if (!localMap.TryGetValue(index, out var value))
             localMap[index] = value = output.AddLocal(locals[index].LocalType);
         return value;
     }

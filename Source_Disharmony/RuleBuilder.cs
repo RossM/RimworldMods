@@ -6,7 +6,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
     protected readonly Type[] outerParameterTypes = outer.ParameterTypes;
 
     protected readonly InstructionList output = context.NewInstructionList();
-    protected int resultLocalIndex = -1;
+    protected LocalTracker? resultLocal = null;
     protected readonly ILGenerator generator = context.generator;
 
     public abstract IEnumerable<Rule> BuildRules();
@@ -62,8 +62,8 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
             case BindingType.Result:
             {
-                output.Add(CodeInstruction.LoadLocal(resultLocalIndex, wantRef));
-                resultType = output.localTypes[resultLocalIndex];
+                output.Add(resultLocal!.Load(wantRef));
+                resultType = output.localTypes[resultLocal.Index];
                 if (wantRef)
                     resultType = resultType.MakeByRefType();
                 break;

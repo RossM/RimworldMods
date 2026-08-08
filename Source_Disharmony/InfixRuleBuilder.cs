@@ -9,7 +9,7 @@ internal class InfixRuleBuilder : RuleBuilder
     private readonly Invocation inner;
 
     private readonly Type[] innerParameterTypes;
-    private readonly int[] innerParameterLocals;
+    private readonly LocalTracker[] innerParameterLocals;
 
     public InfixRuleBuilder(
         RuleBuilderContext context,
@@ -23,7 +23,7 @@ internal class InfixRuleBuilder : RuleBuilder
         this.inner = inner;
 
         innerParameterTypes = this.inner.ParameterTypes;
-        innerParameterLocals = new int[innerParameterTypes.Length];
+        innerParameterLocals = new LocalTracker[innerParameterTypes.Length];
 
         targetType = this.inner.ReturnType;
     }
@@ -38,12 +38,12 @@ internal class InfixRuleBuilder : RuleBuilder
 
         if (canSkip && targetType != typeof(void) || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
         {
-            resultLocalIndex = output.AddLocal(targetType);
+            resultLocal = output.AddLocal(targetType);
 
             if (prefixesUsingResult.Count > 0 &&
                 !prefixesUsingResult[0].parameters.Where(a => a.bindingType == BindingType.Result).All(a => a.parameter.IsOut))
             {
-                output.EmitLocalInitializer(resultLocalIndex);
+                output.EmitLocalInitializer(resultLocal);
             }
         }
 
@@ -72,8 +72,8 @@ internal class InfixRuleBuilder : RuleBuilder
 
         if (skipLabel != null || innerPostfixes.Count > 0)
         {
-            if (resultLocalIndex >= 0)
-                output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
+            if (resultLocal != null)
+                output.Add(resultLocal.Store());
 
             if (skipLabel is Label label)
                 output.Add(new(OpCodes.Nop) { labels = [label] });
@@ -89,8 +89,8 @@ internal class InfixRuleBuilder : RuleBuilder
                     output.Add(new(OpCodes.Pop));
             }
 
-            if (resultLocalIndex >= 0)
-                output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
+            if (resultLocal != null)
+                output.Add(resultLocal.Load());
         }
     }
 
@@ -101,7 +101,7 @@ internal class InfixRuleBuilder : RuleBuilder
         for (int i = innerParameterTypes.Length - 1; i >= 0; i--)
         {
             innerParameterLocals[i] = output.AddLocal(innerParameterTypes[i]);
-            output.Add(CodeInstruction.StoreLocal(innerParameterLocals[i]));
+            output.Add(innerParameterLocals[i].Store());
         }
     }
 
@@ -150,7 +150,7 @@ internal class InfixRuleBuilder : RuleBuilder
     private void EmitInnerParameter(int index, Type resultType)
     {
         Type parameterType = innerParameterTypes[index];
-        output.Add(CodeInstruction.LoadLocal(innerParameterLocals[index], resultType.IsByRef && !parameterType.IsByRef));
+        output.Add(innerParameterLocals[index].Load(resultType.IsByRef && !parameterType.IsByRef));
         if (!resultType.IsByRef && parameterType.IsByRef)
             output.Add(new(OpCodes.Ldobj, parameterType.GetElementType()));
     }

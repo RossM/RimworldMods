@@ -32,7 +32,7 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
             yield break;
 
         for (int index = 0; index < LocalTypes.Count; index++)
-            output.EmitLocalInitializer(index);
+            output.EmitLocalInitializer(new LocalTrackerIndex(index));
 
         yield return new Rule
         {

@@ -14,9 +14,9 @@ internal class InstructionList : IEnumerable<CodeInstruction>
     // ReSharper disable once ParameterHidesMember
     public void AddRange(IEnumerable<CodeInstruction> instructions) => this.instructions.AddRange(instructions); 
 
-    public void EmitLocalInitializer(int localIndex)
+    public void EmitLocalInitializer(LocalTracker localIndex)
     {
-        Type type = localTypes[localIndex];
+        Type type = localTypes[localIndex.Index];
 
         if (type.IsByRef)
             throw new NotImplementedException($"IsByRef targetType {type}");
@@ -24,7 +24,7 @@ internal class InstructionList : IEnumerable<CodeInstruction>
         if (type.IsClass)
         {
             Add(new(OpCodes.Ldnull));
-            Add(CodeInstruction.StoreLocal(localIndex));
+            Add(localIndex.Store());
         }
         else if (type.IsPrimitive || type.IsEnum)
         {
@@ -39,21 +39,21 @@ internal class InstructionList : IEnumerable<CodeInstruction>
             else
                 Add(new(OpCodes.Ldc_I4_0));
 
-            Add(CodeInstruction.StoreLocal(localIndex));
+            Add(localIndex.Store());
         }
         else if (type.IsValueType)
         {
-            Add(CodeInstruction.LoadLocal(localIndex, true));
+            Add(localIndex.Load(true));
             Add(new(OpCodes.Initobj, type));
         }
         else
             throw new NotImplementedException($"targetType {type}");
     }
 
-    public int AddLocal(Type type)
+    public LocalTracker AddLocal(Type type)
     {
         var localIndex = localTypes.Count;
         localTypes.Add(type);
-        return localIndex;
+        return new LocalTrackerIndex(localIndex);
     }
 }

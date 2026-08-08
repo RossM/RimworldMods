@@ -39,12 +39,12 @@ internal class CircumfixRuleBuilder : RuleBuilder
 
         if (canSkip && targetType != typeof(void) || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
         {
-            resultLocalIndex = output.AddLocal(targetType);
+            resultLocal = output.AddLocal(targetType);
 
             if (prefixesUsingResult.Count > 0 &&
                 !prefixesUsingResult[0].parameters.Where(a => a.bindingType == BindingType.Result).All(a => a.parameter.IsOut))
             {
-                output.EmitLocalInitializer(resultLocalIndex);
+                output.EmitLocalInitializer(resultLocal);
             }
         }
 
@@ -95,8 +95,8 @@ internal class CircumfixRuleBuilder : RuleBuilder
         {
             output.Add(new(OpCodes.Nop) { labels = [label] });
 
-            if (resultLocalIndex >= 0)
-                output.Add(CodeInstruction.StoreLocal(resultLocalIndex));
+            if (resultLocal != null)
+                output.Add(resultLocal.Store());
         }
 
         if (skipLabel is { } label2)
@@ -114,8 +114,8 @@ internal class CircumfixRuleBuilder : RuleBuilder
                 output.Add(new(OpCodes.Pop));
         }
 
-        if (resultLocalIndex >= 0)
-            output.Add(CodeInstruction.LoadLocal(resultLocalIndex));
+        if (resultLocal != null)
+            output.Add(resultLocal.Load());
 
         output.Add(new(OpCodes.Ret));
 
