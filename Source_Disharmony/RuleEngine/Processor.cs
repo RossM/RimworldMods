@@ -368,7 +368,6 @@ internal class Processor(
 
             int localIndex = patternInst.LocalIndex();
 
-            // There is something very weird going on here. This may be a Harmony bug.
             int targetIndex = inst.operand is LocalBuilder lb ? lb.LocalIndex : inst.LocalIndex();
 
             if (localIndex_Match.TryGetValue(localIndex, out int substituteIndex))
