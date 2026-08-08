@@ -364,9 +364,9 @@ internal class Processor(
             int localIndex = LocalTracker.From(patternInst).Index;
             var targetLocal = LocalTracker.From(inst);
 
-            if (localMap_Match.TryGetValue(localIndex, out var substitute))
+            if (localMap_Match.TryGetValue(localIndex, out var substituteLocal))
             {
-                if (targetLocal != substitute)
+                if (targetLocal != substituteLocal)
                     return false;
             }
             else
@@ -392,9 +392,9 @@ internal class Processor(
             int localIndex = LocalTracker.From(patternInst).Index;
             var targetLocal = LocalTracker.From(inst);
 
-            if (localMap_Match.TryGetValue(localIndex, out var substitute))
+            if (localMap_Match.TryGetValue(localIndex, out var substituteLocal))
             {
-                if (targetLocal != substitute)
+                if (targetLocal != substituteLocal)
                     return false;
             }
             else
@@ -503,15 +503,15 @@ internal class Processor(
     private LocalTracker GetReplacementLocal(CodeInstruction replaceInst, MatchData match)
     {
         int localIndex = LocalTracker.From(replaceInst).Index;
-        if (localMap_Method.TryGetValue(localIndex, out var substituteBuilder))
-            return substituteBuilder;
-        if (match.localMap_Match.TryGetValue(localIndex, out var substituteIndex))
-            return substituteIndex;
+        if (localMap_Method.TryGetValue(localIndex, out var substituteLocal))
+            return substituteLocal;
+        if (match.localMap_Match.TryGetValue(localIndex, out substituteLocal))
+            return substituteLocal;
         if (localIndex < ruleset.crossRuleLocalTypes.Count)
         {
-            substituteBuilder = new LocalTrackerBuilder(generator.DeclareLocal(ruleset.crossRuleLocalTypes[localIndex]));
-            localMap_Method.Add(localIndex, substituteBuilder);
-            return substituteBuilder;
+            substituteLocal = new LocalTrackerBuilder(generator.DeclareLocal(ruleset.crossRuleLocalTypes[localIndex]));
+            localMap_Method.Add(localIndex, substituteLocal);
+            return substituteLocal;
         }
 
         throw new InvalidOperationException($"Replacement pattern uses unknown local index #{localIndex}");
