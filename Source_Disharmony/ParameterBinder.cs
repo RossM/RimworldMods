@@ -85,11 +85,11 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private ParameterBinding BindParameterByIndex(ParameterInfo parameter, Invocation invocation, Scope scope, int index)
     {
-        if (isIterator && scope == Scope.Outer)
-            return BindParameterByName(parameter, target.ParameterNames[index], scope);
-
         if (invocation.HasThis)
             index++;
+
+        if (isIterator && scope == Scope.Outer)
+            return BindParameterByName(parameter, target.ParameterNames[index], scope);
 
         Validate(parameter, invocation.ParameterTypes[index], scope, "parameter");
         return new() { parameter = parameter, bindingType = BindingType.Parameter, scope = scope, index = index };
