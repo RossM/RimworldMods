@@ -71,8 +71,8 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
             case BindingType.State:
             {
-                output.Add(CodeInstruction.LoadLocal(parameter.index, wantRef));
-                resultType = output.localTypes[parameter.index];
+                output.Add(parameter.local!.Load(wantRef));
+                resultType = output.localTypes[parameter.local.Index];
                 if (wantRef)
                     resultType = resultType.MakeByRefType();
                 break;

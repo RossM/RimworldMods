@@ -60,6 +60,8 @@ internal class ParameterBinding
     /// </remarks>
     public int index;
 
+    public LocalTracker? local;
+
     public FieldInfo[]? fields;
 
     public string? stateKey;

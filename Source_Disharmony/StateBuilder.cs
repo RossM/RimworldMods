@@ -2,36 +2,26 @@
 
 internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, EmptyInvocation.Instance)
 {
-    private List<Type> LocalTypes => output.localTypes;
-    private readonly Dictionary<string, (int index, Type type)> stateMap = new();
+    private readonly Dictionary<string, LocalTracker> stateMap = new();
 
-    private int GetOrAddStateLocal(string stateKey, Type localType, Invocation method)
+    private LocalTracker GetOrAddStateLocal(string stateKey, Type localType, Invocation method)
     {
         localType = localType.NoRefType;
 
-        if (stateMap.TryGetValue(stateKey, out var tuple))
-        {
-            (int index, Type existingType) = tuple;
+        if (stateMap.TryGetValue(stateKey, out var local))
+            return local;
 
-            if (existingType == localType)
-                return index;
-
-            throw new ArgumentException(
-                $"{method.FullName} declares __state of type {localType} which conflicts with existing type {existingType}");
-        }
-
-        int newIndex = LocalTypes.Count;
-        stateMap.Add(stateKey, (newIndex, localType));
-        LocalTypes.Add(localType);
-        return newIndex;
+        local = output.AddLocal(localType);
+        stateMap.Add(stateKey, local);
+        return local;
     }
 
     public override IEnumerable<Rule> BuildRules()
     {
-        if (LocalTypes.Count == 0)
+        if (output.localTypes.Count == 0)
             yield break;
 
-        for (int index = 0; index < LocalTypes.Count; index++)
+        for (int index = 0; index < output.localTypes.Count; index++)
             output.EmitLocalInitializer(new LocalTrackerIndex(index));
 
         yield return new Rule
@@ -54,7 +44,7 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
                 {
                     if (parameter.stateKey is null)
                         throw new InvalidOperationException("Null StateKey");
-                    parameter.index = GetOrAddStateLocal(parameter.stateKey, parameter.parameter.ParameterType, patch.patch);
+                    parameter.local = GetOrAddStateLocal(parameter.stateKey, parameter.parameter.ParameterType, patch.patch);
                 }
             }
         }
