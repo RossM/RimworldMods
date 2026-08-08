@@ -11,16 +11,31 @@ internal abstract record LocalTracker
             ? new LocalTrackerBuilder(builder)
             : new LocalTrackerIndex(instruction.LocalIndex());
     }
+
+    public abstract CodeInstruction Store();
+
+    public abstract CodeInstruction Load(bool useAddress = false);
 }
 
 internal record LocalTrackerBuilder(LocalBuilder Builder) : LocalTracker
 {
     public override int Index => Builder.LocalIndex;
+
+    public override CodeInstruction Store() =>
+        new(Index <= byte.MaxValue ? OpCodes.Stloc_S : OpCodes.Stloc, Builder);
+
+    public override CodeInstruction Load(bool useAddress = false) => useAddress 
+        ? new(Index <= byte.MaxValue ? OpCodes.Ldloca_S : OpCodes.Ldloca, Builder) 
+        : new(Index <= byte.MaxValue ? OpCodes.Ldloc_S : OpCodes.Ldloc, Builder);
 }
 
 internal record LocalTrackerIndex(int Index) : LocalTracker
 {
     public override int Index { get; } = Index;
+
+    public override CodeInstruction Store() => CodeInstruction.StoreLocal(Index);
+
+    public override CodeInstruction Load(bool useAddress = false) => CodeInstruction.LoadLocal(Index, useAddress);
 }
 
 internal class Processor(
@@ -436,17 +451,17 @@ internal class Processor(
         if (replaceInst.IsStloc())
         {
             var substituteLocal = GetReplacementLocal(replaceInst, match);
-            Emit(StoreLocal(substituteLocal));
+            Emit(substituteLocal.Store());
         }
         else if (replaceInst.opcode == OpCodes.Ldloca || replaceInst.opcode == OpCodes.Ldloca_S)
         {
             var substituteLocal = GetReplacementLocal(replaceInst, match);
-            Emit(LoadLocal(substituteLocal, true));
+            Emit(substituteLocal.Load(true));
         }
         else if (replaceInst.IsLdloc())
         {
             var substituteLocal = GetReplacementLocal(replaceInst, match);
-            Emit(LoadLocal(substituteLocal));
+            Emit(substituteLocal.Load());
         }
         else if (replaceInst.operand is Label label)
         {
@@ -525,25 +540,4 @@ internal class Processor(
 
         throw new InvalidOperationException($"Can't replace local #{localIndex} because its type is unknown");
     }
-
-    private static CodeInstruction StoreLocal(LocalTracker local) => local switch
-    {
-        LocalTrackerBuilder builder => new(
-            builder.Index <= byte.MaxValue ? OpCodes.Stloc_S : OpCodes.Stloc,
-            builder.Builder),
-        LocalTrackerIndex index => CodeInstruction.StoreLocal(index.Index),
-        _ => throw new ArgumentOutOfRangeException(nameof(local)),
-    };
-
-    private static CodeInstruction LoadLocal(LocalTracker local, bool useAddress = false) => local switch
-    {
-        LocalTrackerBuilder builder when useAddress => new(
-            builder.Index <= byte.MaxValue ? OpCodes.Ldloca_S : OpCodes.Ldloca,
-            builder.Builder),
-        LocalTrackerBuilder builder => new(
-            builder.Index <= byte.MaxValue ? OpCodes.Ldloc_S : OpCodes.Ldloc,
-            builder.Builder),
-        LocalTrackerIndex index => CodeInstruction.LoadLocal(index.Index, useAddress),
-        _ => throw new ArgumentOutOfRangeException(nameof(local)),
-    };
 }
