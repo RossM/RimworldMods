@@ -248,12 +248,9 @@ public static class OptimizerPatches
 [TestFixture]
 public sealed class OptimizerTests : PatchTestBase
 {
-    private static void ThrowRuntimeException(Exception exception) => throw new InvalidOperationException("Runtime exception", exception);
-
     [SetUp]
     public void EnableOptimizer()
     {
-        Patcher.RuntimeExceptionHandler += ThrowRuntimeException;
         HarmonyInterface.Instance.optimizerEnabled = true;
         OptimizerPatches.PatchCalls = 0;
         OptimizerInlinePatches.PatchCalls = 0;
@@ -267,15 +264,8 @@ public sealed class OptimizerTests : PatchTestBase
     [TearDown]
     public void DisableOptimizer()
     {
-        try
-        {
-            HarmonyInterface.Instance.optimizerEnabled = false;
-            Patcher.UnpatchAll(typeof(OptimizerTests).Assembly);
-        }
-        finally
-        {
-            Patcher.RuntimeExceptionHandler -= ThrowRuntimeException;
-        }
+        HarmonyInterface.Instance.optimizerEnabled = false;
+        Patcher.UnpatchAll(typeof(OptimizerTests).Assembly);
     }
 
     private static void ApplyInlinePatch(

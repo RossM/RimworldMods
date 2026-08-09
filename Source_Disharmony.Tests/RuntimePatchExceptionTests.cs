@@ -268,6 +268,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         List<Exception> reportedExceptions = [];
         Action<Exception> handler = reportedExceptions.Add;
+        Patcher.RuntimeExceptionHandler -= ThrowRuntimeException;
         Patcher.RuntimeExceptionHandler += handler;
 
         try
@@ -286,6 +287,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         finally
         {
             Patcher.RuntimeExceptionHandler -= handler;
+            Patcher.RuntimeExceptionHandler += ThrowRuntimeException;
         }
     }
 
@@ -301,6 +303,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         List<Exception> reportedExceptions = [];
         Action<Exception> handler = reportedExceptions.Add;
+        Patcher.RuntimeExceptionHandler -= ThrowRuntimeException;
         Patcher.RuntimeExceptionHandler += handler;
 
         try
@@ -321,6 +324,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         finally
         {
             Patcher.RuntimeExceptionHandler -= handler;
+            Patcher.RuntimeExceptionHandler += ThrowRuntimeException;
         }
     }
 
@@ -335,6 +339,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
             .GetMethod(nameof(StaticMethodTargets.IntResult))!;
         List<Exception> reportedExceptions = [];
         Action<Exception> handler = reportedExceptions.Add;
+        Patcher.RuntimeExceptionHandler -= ThrowRuntimeException;
         Patcher.RuntimeExceptionHandler += handler;
 
         try
@@ -355,6 +360,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         finally
         {
             Patcher.RuntimeExceptionHandler -= handler;
+            Patcher.RuntimeExceptionHandler += ThrowRuntimeException;
         }
     }
 

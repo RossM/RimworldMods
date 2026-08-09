@@ -23,12 +23,23 @@ public static class UnpatchPatches
 
 internal class UnpatchTests
 {
+    private static void ThrowRuntimeException(Exception exception) =>
+        throw new InvalidOperationException("Runtime exception", exception);
+
     private static void ApplyPatch(string patchMethodName) =>
         Patcher.Patch(typeof(UnpatchPatches).GetMethod(patchMethodName));
 
     [SetUp]
-    public void DisableOptimizer() =>
+    public void SetUp()
+    {
+        Patcher.RuntimeExceptionHandler -= ThrowRuntimeException;
+        Patcher.RuntimeExceptionHandler += ThrowRuntimeException;
         HarmonyInterface.Instance.optimizerEnabled = false;
+    }
+
+    [TearDown]
+    public void TearDown() =>
+        Patcher.RuntimeExceptionHandler -= ThrowRuntimeException;
 
     [Test]
     public void PrefixReturningFalseSkipsValueTypeTarget()
