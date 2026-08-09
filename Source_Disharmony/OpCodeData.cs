@@ -94,19 +94,19 @@ internal enum OpCodeFlags
     Argument = 0x0400,
 
     /// <summary>
+    ///     Indicates that the instruction is ldind or stind.
+    /// </summary>
+    Indirect = 0x0800,
+
+    /// <summary>
     ///     Indicates that the instruction is a macro whose operand is given by <see cref="OpCodeData.operand" />.
     /// </summary>
-    FixedOperand = 0x0800,
+    FixedOperand = 0x1000,
 
     /// <summary>
     ///     Indicates that the instruction pushes a constant onto the stack.
     /// </summary>
-    Constant = 0x1000,
-
-    /// <summary>
-    ///     Indicates that the instruction is ldind or stind.
-    /// </summary>
-    Indirect = 0x2000,
+    Constant = 0x2000,
 
     /// <summary>
     ///     Indicates that the result type of the instruction is given by a <see cref="Type" /> operand. Integer
