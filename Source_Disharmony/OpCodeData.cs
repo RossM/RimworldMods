@@ -141,6 +141,7 @@ internal struct OpCodeData
 
     public static ushort GetCanonicalOpcode(ushort value) => Get(value).canonical;
     public static ushort GetCanonicalOpcode(OpCode opCode) => Get(opCode).canonical;
+    public static ushort GetCanonicalOpcode(CodeInstruction inst) => Get(inst.opcode).canonical;
 
     public static int GetIntOperand(CodeInstruction inst) => GetIntOperand(inst.opcode, inst.operand);
     private static int GetIntOperand(OpCode opcode, object operand)
@@ -231,7 +232,7 @@ internal struct OpCodeData
         (OpCodeValues.Ldarg_3,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument | OpCodeFlags.FixedOperand, operand = 3, canonical = OpCodeValues.Ldarg }),
         (OpCodeValues.Ldarg_S,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument, canonical = OpCodeValues.Ldarg }),
         (OpCodeValues.Ldarga,         new OpCodeData { flags = OpCodeFlags.LoadAddress | OpCodeFlags.Argument }),
-        (OpCodeValues.Ldarga_S,       new OpCodeData { flags = OpCodeFlags.LoadAddress | OpCodeFlags.Argument }),
+        (OpCodeValues.Ldarga_S,       new OpCodeData { flags = OpCodeFlags.LoadAddress | OpCodeFlags.Argument, canonical = OpCodeValues.Ldarga }),
         (OpCodeValues.Ldc_I4,         new OpCodeData { flags = OpCodeFlags.Constant, resultType = typeof(int) }),
         (OpCodeValues.Ldc_I4_0,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 0, canonical = OpCodeValues.Ldc_I4 }),
         (OpCodeValues.Ldc_I4_1,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 1, canonical = OpCodeValues.Ldc_I4 }),

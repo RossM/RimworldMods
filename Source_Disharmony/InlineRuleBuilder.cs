@@ -43,33 +43,15 @@ internal class InlineRuleBuilder : RuleBuilder
 
         foreach (var inst in instructions)
         {
-            CodeInstruction translated = unchecked((ushort)inst.opcode.Value) switch
+            CodeInstruction translated = OpCodeData.GetCanonicalOpcode(inst) switch
             {
                 // @formatter:off
-                OpCodeValues.Ldarg_0  => argumentLocals[0].Load(),
-                OpCodeValues.Ldarg_1  => argumentLocals[1].Load(),
-                OpCodeValues.Ldarg_2  => argumentLocals[2].Load(),
-                OpCodeValues.Ldarg_3  => argumentLocals[3].Load(),
-                OpCodeValues.Ldarg    => argumentLocals[Convert.ToInt32(inst.operand)].Load(),
-                OpCodeValues.Ldarg_S  => argumentLocals[Convert.ToInt32(inst.operand)].Load(),
-                OpCodeValues.Ldarga   => argumentLocals[Convert.ToInt32(inst.operand)].Load(true),
-                OpCodeValues.Ldarga_S => argumentLocals[Convert.ToInt32(inst.operand)].Load(true),
-                OpCodeValues.Starg    => argumentLocals[Convert.ToInt32(inst.operand)].Store(),
-                OpCodeValues.Starg_S  => argumentLocals[Convert.ToInt32(inst.operand)].Store(),
-                OpCodeValues.Ldloc_0  => GetLocal(0).Load(),
-                OpCodeValues.Ldloc_1  => GetLocal(1).Load(),
-                OpCodeValues.Ldloc_2  => GetLocal(2).Load(),
-                OpCodeValues.Ldloc_3  => GetLocal(3).Load(),
-                OpCodeValues.Ldloc    => GetLocal(LocalTracker.IndexFrom(inst)).Load(),
-                OpCodeValues.Ldloc_S  => GetLocal(LocalTracker.IndexFrom(inst)).Load(),
-                OpCodeValues.Ldloca   => GetLocal(LocalTracker.IndexFrom(inst)).Load(true),
-                OpCodeValues.Ldloca_S => GetLocal(LocalTracker.IndexFrom(inst)).Load(true),
-                OpCodeValues.Stloc_0  => GetLocal(0).Store(),
-                OpCodeValues.Stloc_1  => GetLocal(1).Store(),
-                OpCodeValues.Stloc_2  => GetLocal(2).Store(),
-                OpCodeValues.Stloc_3  => GetLocal(3).Store(),
-                OpCodeValues.Stloc    => GetLocal(LocalTracker.IndexFrom(inst)).Store(),
-                OpCodeValues.Stloc_S  => GetLocal(LocalTracker.IndexFrom(inst)).Store(),
+                OpCodeValues.Ldarg    => GetArgument(inst).Load(),
+                OpCodeValues.Ldarga   => GetArgument(inst).Load(true),
+                OpCodeValues.Starg    => GetArgument(inst).Store(),
+                OpCodeValues.Ldloc    => GetLocal(inst).Load(),
+                OpCodeValues.Ldloca   => GetLocal(inst).Load(true),
+                OpCodeValues.Stloc    => GetLocal(inst).Store(),
                 OpCodeValues.Ret      => new(OpCodes.Br, returnLabel),
                 _ when inst.operand is Label label => new(inst.opcode, GetLabel(label)),
                 _ when inst.operand is Label[] labels => new(inst.opcode, labels.Select(GetLabel).ToArray()),
@@ -96,6 +78,10 @@ internal class InlineRuleBuilder : RuleBuilder
 
         return true;
     }
+
+    private LocalTracker GetArgument(CodeInstruction inst) => argumentLocals[OpCodeData.GetIntOperand(inst)];
+
+    private LocalTracker GetLocal(CodeInstruction inst) => GetLocal(LocalTracker.IndexFrom(inst));
 
     private LocalTracker GetLocal(int index)
     {

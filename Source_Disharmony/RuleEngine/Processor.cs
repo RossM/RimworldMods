@@ -331,8 +331,8 @@ internal class Processor(
 
     private bool MatchInstruction(CodeInstruction inst, CodeInstruction patternInst, Dictionary<int, LocalTracker> localMap_Match)
     {
-        var canonicalInst = OpCodeData.GetCanonicalOpcode(inst.opcode);
-        var canonicalPattern = OpCodeData.GetCanonicalOpcode(patternInst.opcode);
+        var canonicalInst = OpCodeData.GetCanonicalOpcode(inst);
+        var canonicalPattern = OpCodeData.GetCanonicalOpcode(patternInst);
 
         if (canonicalInst != canonicalPattern &&
             !(canonicalInst == OpCodeValues.Callvirt && canonicalPattern == OpCodeValues.Call))
