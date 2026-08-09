@@ -26,7 +26,7 @@ public sealed class OpCodeValuesTests
                 $"OpCodeValues.{valueField.Name} does not match OpCodes.{valueField.Name}.Value");
         }
 
-        foreach (var opCode in opCodes.Values.Where(o => o.FlowControl == FlowControl.Next))
+        foreach (var opCode in opCodes.Values.Where(o => o.OpCodeType != OpCodeType.Nternal))
         {
             Assert.That(seenOpCodes.Contains(opCode), Is.True, $"{opCode.Name} is missing an OpCodeValues constant");
         }
