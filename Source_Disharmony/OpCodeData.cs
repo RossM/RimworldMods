@@ -52,12 +52,12 @@ internal enum OpCodeFlags
     /// <summary>
     ///     Indicates that this instruction may have side effects other than control-flow changes.
     /// </summary>
-    HasSideEffects = 0x0080,
+    HasSideEffects = 0x0010,
 
     /// <summary>
     ///     Indicates that this instruction's output is the same as its input.
     /// </summary>
-    PushesInput = 0x0100,
+    PushesInput = 0x0020,
 
     /// <summary>
     ///     Indicates that the instruction is ldloc, ldarg, or ldind.
@@ -65,7 +65,7 @@ internal enum OpCodeFlags
     /// <remarks>
     ///     The result type is determined by the type of the local variable, argument, or reference operand.
     /// </remarks>
-    Load = 0x0200,
+    Load = 0x0040,
 
     /// <summary>
     ///     Indicates that the instruction is stloc, starg, or stind.
@@ -73,7 +73,7 @@ internal enum OpCodeFlags
     /// <remarks>
     ///     The result type is determined by the type of the local variable, argument, or reference operand.
     /// </remarks>
-    Store = 0x0400,
+    Store = 0x0080,
 
     /// <summary>
     ///     Indicates that the instruction is ldloca or ldarga.
@@ -81,39 +81,39 @@ internal enum OpCodeFlags
     /// <remarks>
     ///     The result type is determined by the type of the local variable or argument.
     /// </remarks>
-    LoadAddress = 0x0800,
+    LoadAddress = 0x0100,
 
     /// <summary>
     ///     Indicates that the instruction is ldloc, stloc, or ldloca.
     /// </summary>
-    Local = 0x1000,
+    Local = 0x0200,
 
     /// <summary>
     ///     Indicates that the instruction is ldarg, starg, or ldarga.
     /// </summary>
-    Argument = 0x2000,
+    Argument = 0x0400,
 
     /// <summary>
     ///     Indicates that the instruction is a macro whose operand is given by <see cref="OpCodeData.operand" />.
     /// </summary>
-    FixedOperand = 0x4000,
+    FixedOperand = 0x0800,
 
     /// <summary>
     ///     Indicates that the instruction pushes a constant onto the stack.
     /// </summary>
-    Constant = 0x8000,
+    Constant = 0x1000,
 
     /// <summary>
     ///     Indicates that the instruction is ldind or stind.
     /// </summary>
-    Indirect = 0x10000,
+    Indirect = 0x2000,
 
     /// <summary>
     ///     Indicates that the result type of the instruction is given by a <see cref="Type" /> operand. Integer
     ///     and floating-point types are converted to their CIL stack type which is one of
     ///     <see langword="int"/>, <see langword="long"/>, <see cref="IntPtr"/>, or <see langword="double"/>.
     /// </summary>
-    TypeFromOperand = 0x20000,
+    TypeFromOperand = 0x4000,
 
     ResultTypeMask = Arithmetic | Shift | Load | Store | LoadAddress | TypeFromOperand,
 
