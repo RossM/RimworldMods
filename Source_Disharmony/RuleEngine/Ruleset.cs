@@ -5,7 +5,7 @@ public class Ruleset
     public static bool forceDebug = false;
 
     public List<Rule> rules = [];
-    public List<Type> crossRuleLocalTypes = [];
+    public List<LocalBuilder> crossRuleLocals = [];
     public List<Label> crossRuleLabels = [];
 
     public Ruleset() { }

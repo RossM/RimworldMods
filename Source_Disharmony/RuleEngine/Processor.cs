@@ -531,17 +531,12 @@ internal class Processor(
         if (match.localMap_Match.TryGetValue(localIndex, out substituteLocal))
             return substituteLocal;
         
-        if (localIndex < ruleset.crossRuleLocalTypes.Count)
+        if (replaceInst.operand is LocalBuilder { LocalType: Type } builder)
         {
-            substituteLocal = new LocalTrackerBuilder(generator.DeclareLocal(ruleset.crossRuleLocalTypes[localIndex]));
-            localMap_Method.Add(localIndex, substituteLocal);
-            return substituteLocal;
-        }
+            var localMap = ruleset.crossRuleLocals.Contains(builder) ? localMap_Method : match.localMap_Match;
 
-        if (replaceInst.operand is LocalBuilder { LocalType: Type type })
-        {
-            substituteLocal = new LocalTrackerBuilder(generator.DeclareLocal(type));
-            match.localMap_Match.Add(localIndex, substituteLocal);
+            substituteLocal = new LocalTrackerBuilder(generator.DeclareLocal(builder.LocalType));
+            localMap.Add(localIndex, substituteLocal);
             return substituteLocal;
         }
 

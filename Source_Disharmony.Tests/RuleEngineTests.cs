@@ -152,7 +152,12 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementStoreForNewLocalAtShortIndexRetainsLocalBuilderOperand()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.StoreLocal(0));
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Stloc_S, local);
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, 4);
 
         CodeInstruction localStore = result.Single(instruction => instruction.IsStloc());
         Assert.That(localStore.opcode, Is.EqualTo(OpCodes.Stloc_S));
@@ -162,7 +167,12 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementLoadForNewLocalAtShortIndexRetainsLocalBuilderOperand()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0));
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Ldloc_S, local);
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, 4);
 
         CodeInstruction localLoad = result.Single(instruction =>
             instruction.IsLdloc() && instruction.opcode != OpCodes.Ldloca && instruction.opcode != OpCodes.Ldloca_S);
@@ -173,7 +183,12 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementAddressLoadForNewLocalAtShortIndexRetainsLocalBuilderOperand()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0, true));
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Ldloca_S, local);
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, 4);
 
         CodeInstruction localAddressLoad = result.Single(instruction =>
             instruction.opcode == OpCodes.Ldloca || instruction.opcode == OpCodes.Ldloca_S);
@@ -184,7 +199,12 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementStoreForNewLocalAtIndexZeroUsesOperandBearingShortOpcode()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.StoreLocal(0), precedingLocalCount: 0);
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Stloc_S, local);
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, 0);
 
         CodeInstruction localStore = result.Single(instruction => instruction.IsStloc());
         Assert.That(localStore.opcode, Is.EqualTo(OpCodes.Stloc_S));
@@ -194,7 +214,12 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementLoadForNewLocalAtIndexZeroUsesOperandBearingShortOpcode()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0), precedingLocalCount: 0);
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Ldloc_S, local);
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, 0);
 
         CodeInstruction localLoad = result.Single(instruction => instruction.IsLdloc());
         Assert.That(localLoad.opcode, Is.EqualTo(OpCodes.Ldloc_S));
@@ -204,7 +229,12 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementAddressLoadForNewLocalAtIndexZeroRetainsLocalBuilderOperand()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0, true), precedingLocalCount: 0);
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Ldloca_S, local);
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, 0);
 
         CodeInstruction localAddressLoad = result.Single(instruction =>
             instruction.opcode == OpCodes.Ldloca || instruction.opcode == OpCodes.Ldloca_S);
@@ -215,7 +245,13 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementStoreForNewLocalAtMaximumShortIndexRetainsLocalBuilderOperand()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.StoreLocal(0), precedingLocalCount: byte.MaxValue);
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Stloc_S, local);
+        int precedingLocalCount = byte.MaxValue;
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, precedingLocalCount);
 
         CodeInstruction localStore = result.Single(instruction => instruction.IsStloc());
         Assert.That(localStore.opcode, Is.EqualTo(OpCodes.Stloc_S));
@@ -225,7 +261,13 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementLoadForNewLocalAtMaximumShortIndexRetainsLocalBuilderOperand()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0), precedingLocalCount: byte.MaxValue);
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Ldloc_S, local);
+        int precedingLocalCount = byte.MaxValue;
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, precedingLocalCount);
 
         CodeInstruction localLoad = result.Single(instruction => instruction.IsLdloc());
         Assert.That(localLoad.opcode, Is.EqualTo(OpCodes.Ldloc_S));
@@ -235,7 +277,13 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementAddressLoadForNewLocalAtMaximumShortIndexRetainsLocalBuilderOperand()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0, true), precedingLocalCount: byte.MaxValue);
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Ldloca_S, local);
+        int precedingLocalCount = byte.MaxValue;
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, precedingLocalCount);
 
         CodeInstruction localAddressLoad = result.Single(instruction =>
             instruction.opcode == OpCodes.Ldloca || instruction.opcode == OpCodes.Ldloca_S);
@@ -246,7 +294,12 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementStoreForNewLocalAtLongIndexRetainsLocalBuilderOperand()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.StoreLocal(0), precedingLocalCount: 256);
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Stloc_S, local);
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, 256);
 
         CodeInstruction localStore = result.Single(instruction => instruction.IsStloc());
         Assert.That(localStore.opcode, Is.EqualTo(OpCodes.Stloc));
@@ -256,7 +309,12 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementLoadForNewLocalAtLongIndexRetainsLocalBuilderOperand()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0), precedingLocalCount: 256);
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Ldloc_S, local);
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, 256);
 
         CodeInstruction localLoad = result.Single(instruction => instruction.IsLdloc());
         Assert.That(localLoad.opcode, Is.EqualTo(OpCodes.Ldloc));
@@ -266,7 +324,12 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementAddressLoadForNewLocalAtLongIndexRetainsLocalBuilderOperand()
     {
-        List<CodeInstruction> result = RunWithNewLocal(CodeInstruction.LoadLocal(0, true), precedingLocalCount: 256);
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction replacement = new(OpCodes.Ldloca_S, local);
+        CodeInstruction[] replacements = new[] { replacement };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, 256);
 
         CodeInstruction localAddressLoad = result.Single(instruction =>
             instruction.opcode == OpCodes.Ldloca || instruction.opcode == OpCodes.Ldloca_S);
@@ -277,10 +340,16 @@ public sealed class RuleEngineTests
     [Test]
     public void ReplacementOperationsForNewLocalReuseSameLocalBuilder()
     {
-        List<CodeInstruction> result = RunWithNewLocal(
-            CodeInstruction.StoreLocal(0),
-            CodeInstruction.LoadLocal(0),
-            CodeInstruction.LoadLocal(0, true));
+        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
+        CodeInstruction[] replacements = new[]
+        {
+            new CodeInstruction(OpCodes.Stloc_S, local), 
+            new CodeInstruction(OpCodes.Ldloc_S, local), 
+            new CodeInstruction(OpCodes.Ldloca_S, local)
+        };
+        List<CodeInstruction> result = RunWithNewLocal(replacements, generator, local, 4);
 
         LocalBuilder[] localBuilders =
         [
@@ -301,16 +370,8 @@ public sealed class RuleEngineTests
         return Ruleset.MatchAndReplace(rules, TargetMethod, instructions, dynamicMethod.GetILGenerator());
     }
 
-    private static List<CodeInstruction> RunWithNewLocal(CodeInstruction replacement, int precedingLocalCount = 4) =>
-        RunWithNewLocal(precedingLocalCount, replacement);
-
-    private static List<CodeInstruction> RunWithNewLocal(params CodeInstruction[] replacements) =>
-        RunWithNewLocal(4, replacements);
-
-    private static List<CodeInstruction> RunWithNewLocal(int precedingLocalCount, params CodeInstruction[] replacements)
+    private static List<CodeInstruction> RunWithNewLocal(CodeInstruction[] replacements, ILGenerator generator, LocalBuilder localBuilder, int precedingLocalCount = 4)
     {
-        var dynamicMethod = new DynamicMethod("InstructionMatcherLocalTest", typeof(void), Type.EmptyTypes);
-        ILGenerator generator = dynamicMethod.GetILGenerator();
         for (int i = 0; i < precedingLocalCount; i++)
             generator.DeclareLocal(typeof(int));
 
@@ -319,7 +380,7 @@ public sealed class RuleEngineTests
             mode = OutputMode.MethodPrefix,
             output = replacements,
         });
-        matcher.crossRuleLocalTypes.Add(typeof(string));
+        matcher.crossRuleLocals.Add(localBuilder);
 
         List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
         matcher.MatchAndReplace(TargetMethod, ref instructions, generator);
