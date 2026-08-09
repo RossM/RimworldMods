@@ -399,10 +399,22 @@ internal class Processor(
         else if (patternInst.opcode.Value == OpCodes.Ldloca.Value ||
                  patternInst.opcode.Value == OpCodes.Ldloca_S.Value)
         {
-            if (inst.opcode != patternInst.opcode)
+            if (inst.opcode.Value != OpCodes.Ldloca.Value &&
+                inst.opcode.Value != OpCodes.Ldloca_S.Value)
                 return false;
 
-            throw new NotSupportedException();
+            int localIndex = LocalTracker.IndexFrom(patternInst);
+            var targetLocal = LocalTracker.From(inst);
+
+            if (localMap_Match.TryGetValue(localIndex, out var substituteLocal))
+            {
+                if (targetLocal != substituteLocal)
+                    return false;
+            }
+            else
+            {
+                localMap_Match.Add(localIndex, targetLocal);
+            }
         }
         else if (patternInst.IsLdloc())
         {
