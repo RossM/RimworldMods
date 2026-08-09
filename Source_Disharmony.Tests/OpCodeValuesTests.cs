@@ -31,4 +31,27 @@ public sealed class OpCodeValuesTests
             Assert.That(seenOpCodes.Contains(opCode), Is.True, $"{opCode.Name} is missing an OpCodeValues constant");
         }
     }
+
+    [Test]
+    public void OpCodeDataFilled()
+    {
+        const BindingFlags flags = BindingFlags.Public | BindingFlags.Static;
+
+        Dictionary<string, OpCode> opCodes = [];
+
+        foreach (FieldInfo opCodeField in typeof(OpCodes).GetFields(flags))
+            opCodes[opCodeField.Name] = (OpCode)opCodeField.GetValue(null)!;
+
+        foreach (FieldInfo valueField in typeof(OpCodeValues).GetFields(flags))
+        {
+            var opCode = opCodes[valueField.Name];
+
+            var value = (int)valueField.GetRawConstantValue();
+
+            var data = OpCodeData.Get((ushort)value);
+
+            if (opCode.FlowControl == FlowControl.Next)
+                Assert.That(data.flags != 0, Is.True, $"{valueField.Name} has no OpCodeData");
+        }
+    }
 }
