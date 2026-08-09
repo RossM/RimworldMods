@@ -417,7 +417,7 @@ internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : Handl
 ///     <see cref="HandlerRegion" />s.
 /// </summary>
 /// <remarks>
-///     The CLI enforces a number rules around exception regions and control flow. Control flow can only enter
+///     The CLI enforces a number of rules around exception regions and control flow. Control flow can only enter
 ///     a <see cref="Disharmony.Optimizer.ProtectedRegion" /> through its <see cref="Region.EntryLabel" />. Control flow can only
 ///     enter a <see cref="HandlerRegion" /> through the action of the exception system; there can't be any
 ///     explicit <see cref="Edge" />s into a handler region. Control flow can only leave a <see cref="HandlerRegion" />
