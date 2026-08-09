@@ -348,31 +348,33 @@ internal class Processor(
                 var targetLocal = LocalTracker.From(inst);
 
                 if (localMap_Match.TryGetValue(localIndex, out var substituteLocal))
-                {
-                    if (targetLocal != substituteLocal)
-                        return false;
-                }
-                else
-                {
-                    localMap_Match.Add(localIndex, targetLocal);
-                }
+                    return targetLocal == substituteLocal;
 
+                localMap_Match.Add(localIndex, targetLocal);
                 return true;
             }
+
             case OpCodeValues.Starg:
             case OpCodeValues.Ldarg:
             case OpCodeValues.Ldarga:
             case OpCodeValues.Ldc_I4:
-            {
                 return OpCodeData.GetIntOperand(inst) == OpCodeData.GetIntOperand(patternInst);
-            }
+
             default:
-            {
-                if (patternInst.operand == null)
-                    return inst.operand == null;
-                return inst.OperandIs(patternInst.operand);
-            }
+                return OperandsMatch(patternInst.operand, inst.operand);
         }
+    }
+
+    private static bool OperandsMatch(object? a, object? b)
+    {
+        if (a == null)
+            return b == null;
+        return Type.GetTypeCode(a.GetType()) switch
+        {
+            >= TypeCode.Boolean and <= TypeCode.Int64 => Convert.ToInt64(a) == Convert.ToInt64(b),
+            TypeCode.Single or TypeCode.Double => Convert.ToDouble(a) == Convert.ToDouble(b),
+            _ => Equals(a, b),
+        };
     }
 
     private void EmitReplacement(CodeInstruction replaceInst, MatchData match)
