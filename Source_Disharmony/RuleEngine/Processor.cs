@@ -86,7 +86,7 @@ internal class Processor(
                      instructionIndex <= instructions.Count - rule.pattern.Length;
                      instructionIndex++)
                 {
-                    if (!MatchPattern(rule, instructionIndex, out Dictionary<int, LocalTracker> localIndex_Match))
+                    if (!MatchPattern(rule, instructionIndex, out var localMap_Match, out var labelMap_Match))
                         continue;
 
                     var matchData = new MatchData
@@ -94,8 +94,8 @@ internal class Processor(
                         rule = rule,
                         start = instructionIndex,
                         end = instructionIndex + rule.pattern.Length,
-                        localMap_Match = localIndex_Match,
-                        labelMap_Match = [],
+                        localMap_Match = localMap_Match,
+                        labelMap_Match = labelMap_Match,
                     };
                     if (debug)
                         FileLog.Log($"MATCH {rule.name} ({matchData.start} .. {matchData.end - 1})");
@@ -295,9 +295,10 @@ internal class Processor(
         Emit(CodeInstruction.Annotation($"End {match.rule.name}"));
     }
 
-    private bool MatchPattern(Rule rule, int instructionIndex, out Dictionary<int, LocalTracker> localMap_Match)
+    private bool MatchPattern(Rule rule, int instructionIndex, out Dictionary<int, LocalTracker> localMap_Match, out Dictionary<Label, Label> labelMap_Match)
     {
         localMap_Match = [];
+        labelMap_Match = [];
 
         bool noOutput = rule.output is not { Length: > 0 };
 
@@ -307,7 +308,7 @@ internal class Processor(
 
         for (var patternIndex = 0; patternIndex < rule.pattern.Length; patternIndex++)
         {
-            if (!MatchInstruction(instructions[instructionIndex + patternIndex], rule.pattern[patternIndex], localMap_Match))
+            if (!MatchInstruction(instructions[instructionIndex + patternIndex], rule.pattern[patternIndex], localMap_Match, labelMap_Match))
                 return false;
 
             if (rule.mode == OutputMode.Replace)
@@ -329,7 +330,7 @@ internal class Processor(
         return true;
     }
 
-    private bool MatchInstruction(CodeInstruction inst, CodeInstruction patternInst, Dictionary<int, LocalTracker> localMap_Match)
+    private bool MatchInstruction(CodeInstruction inst, CodeInstruction patternInst, Dictionary<int, LocalTracker> localMap_Match, Dictionary<Label, Label> labelMap_Match)
     {
         var canonicalInst = OpCodeData.GetCanonicalOpcode(inst);
         var canonicalPattern = OpCodeData.GetCanonicalOpcode(patternInst);
@@ -359,6 +360,31 @@ internal class Processor(
             case OpCodeValues.Ldarga:
             case OpCodeValues.Ldc_I4:
                 return OpCodeData.GetIntOperand(inst) == OpCodeData.GetIntOperand(patternInst);
+
+            case var _ when patternInst.operand is Label label:
+            {
+                var targetLabel = (Label)inst.operand;
+                if (labelMap_Match.TryGetValue(label, out var substituteLabel))
+                    return targetLabel == substituteLabel;
+
+                labelMap_Match.Add(label, targetLabel);
+                return true;
+            }
+
+            case var _ when patternInst.operand is Label[] labels:
+            {
+                var targetLabels = (Label[])inst.operand;
+
+                for (int i = 0; i < labels.Length; i++)
+                {
+                    if (labelMap_Match.TryGetValue(labels[i], out var substituteLabel) && substituteLabel != targetLabels[i])
+                        return false;
+                }
+
+                for (int i = 0; i < labels.Length; i++)
+                    labelMap_Match[labels[i]] = targetLabels[i];
+                return true;
+            }
 
             default:
                 return OperandsMatch(patternInst.operand, inst.operand);
