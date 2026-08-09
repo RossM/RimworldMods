@@ -389,14 +389,14 @@ internal sealed record CatchRegion(BlockLabel EntryLabel, Region Parent, StackSl
 // Note that there is no FilterRegion, because Harmony's filter handling is broken.
 
 /// <summary>
-///     Represents a finally handler region.
+///     Represents a <see langword="finally"/> handler region.
 /// </summary>
 /// <remarks>
 ///     It is invalid for any <see cref="BasicBlock" /> in a <see cref="FinallyRegion" /> to have incoming
-///     <see cref="Edge" />s from outside that region. Control flow can only exit a finally region using the
+///     <see cref="Edge" />s from outside that region. Control flow can only exit a <see langword="finally"/> region using the
 ///     <see cref="OpCodes.Endfinally" /> instruction.
 /// </remarks>
-/// <param name="EntryLabel">The <see cref="BlockLabel" /> of the finally region's entry <see cref="BasicBlock" />.</param>
+/// <param name="EntryLabel">The <see cref="BlockLabel" /> of the <see langword="finally"/> region's entry <see cref="BasicBlock" />.</param>
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
 internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent);
 
