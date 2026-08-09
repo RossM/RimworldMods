@@ -1,4 +1,4 @@
-﻿namespace Disharmony.RuleEngine;
+﻿namespace Disharmony;
 
 internal abstract record LocalTracker
 {
