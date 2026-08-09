@@ -109,7 +109,7 @@ public sealed class RuleEngineTests
     }
 
     [Test]
-    public void MakeRedirectRuleMatchesCallvirtAndEmitsCall()
+    public void Pattern_Call_Instruction_Callvirt_Matches()
     {
         MethodInfo oldMethod = typeof(object).GetMethod(nameof(ToString))!;
         MethodInfo newMethod = typeof(Convert).GetMethod(nameof(Convert.ToString), [typeof(object)])!;
@@ -129,6 +129,23 @@ public sealed class RuleEngineTests
 
         CodeInstruction redirectedCall = result.Single(instruction => instruction.opcode == OpCodes.Call);
         Assert.That(redirectedCall.operand, Is.SameAs(newMethod));
+    }
+
+    [Test]
+    public void Pattern_Callvirt_Instruction_Call_DoesNotMatch()
+    {
+        MethodInfo method = typeof(object).GetMethod(nameof(ToString))!;
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Callvirt, method)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            Run([rule], [new CodeInstruction(OpCodes.Call, method)]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
     }
 
     [Test]
@@ -391,6 +408,292 @@ public sealed class RuleEngineTests
 
         CodeInstruction addressLoad = result.Single(instruction => instruction.opcode == OpCodes.Ldloca_S);
         Assert.That(addressLoad.operand, Is.SameAs(targetLocal));
+    }
+
+    [Test]
+    public void Pattern_LdlocS_Instruction_Ldloc_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldloc_S, 4)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldloc, 4)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_Ldloc1_Instruction_LdlocS_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldloc_1)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldloc_S, 1)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_StlocS_Instruction_Stloc1_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Stloc_S, 1)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Stloc_1)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_LdargS_Instruction_Ldarg_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldarg_S, 4)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldarg, 4)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_Ldarg1_Instruction_LdargS_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldarg_1)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldarg_S, 1)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_LdargaS_Instruction_Ldarga_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldarga_S, 4)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldarga, 4)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_StargS_Instruction_Starg_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Starg_S, 4)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Starg, 4)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_LdcI4_1_Instruction_LdcI4_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldc_I4, 1)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_LdcI4_Instruction_LdcI4_1_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4, 1)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldc_I4_1)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_LdcI4S_Instruction_LdcI4_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_S, (sbyte)42)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldc_I4, 42)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_BrS_Instruction_Br_Matches()
+    {
+        Label target = PatchProcessor.CreateILGenerator().DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Br_S, target)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Br, target)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_Br_Instruction_Br_WithSameLabel_Matches()
+    {
+        Label target = PatchProcessor.CreateILGenerator().DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Br, target)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Br, target)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_Br_Instruction_Br_BindsEquivalentTargetLabel()
+    {
+        ILGenerator sourceGenerator = PatchProcessor.CreateILGenerator();
+        Label patternTarget = sourceGenerator.DefineLabel();
+        Label instructionTarget = sourceGenerator.DefineLabel();
+        var targetInstruction = new CodeInstruction(OpCodes.Nop);
+        targetInstruction.labels.Add(instructionTarget);
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Br, patternTarget)],
+            output = [new CodeInstruction(OpCodes.Br, patternTarget)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [rule],
+            [new CodeInstruction(OpCodes.Br, instructionTarget), targetInstruction]);
+
+        Label emittedTarget = (Label)result.Single(instruction => instruction.opcode == OpCodes.Br).operand;
+        Assert.That(result.Single(instruction => instruction.labels.Contains(emittedTarget)).opcode, Is.EqualTo(OpCodes.Nop));
+    }
+
+    [Test]
+    public void Pattern_Switch_Instruction_Switch_BindsEquivalentTargetLabels()
+    {
+        ILGenerator sourceGenerator = PatchProcessor.CreateILGenerator();
+        Label patternCase0 = sourceGenerator.DefineLabel();
+        Label patternCase1 = sourceGenerator.DefineLabel();
+        Label instructionCase0 = sourceGenerator.DefineLabel();
+        Label instructionCase1 = sourceGenerator.DefineLabel();
+        var case0Target = new CodeInstruction(OpCodes.Ldc_I4_0);
+        case0Target.labels.Add(instructionCase0);
+        var case1Target = new CodeInstruction(OpCodes.Ldc_I4_1);
+        case1Target.labels.Add(instructionCase1);
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternCase0, patternCase1, patternCase0 })],
+            output = [new CodeInstruction(OpCodes.Switch, new[] { patternCase0, patternCase1, patternCase0 })],
+        };
+
+        List<CodeInstruction> result = Run(
+            [rule],
+            [
+                new CodeInstruction(OpCodes.Switch, new[] { instructionCase0, instructionCase1, instructionCase0 }),
+                case0Target,
+                case1Target,
+            ]);
+
+        var emittedTargets = (Label[])result.Single(instruction => instruction.opcode == OpCodes.Switch).operand;
+        Label emittedCase0 = result.Single(instruction => instruction.opcode == OpCodes.Ldc_I4_0).labels.Single();
+        Label emittedCase1 = result.Single(instruction => instruction.opcode == OpCodes.Ldc_I4_1).labels.Single();
+        Assert.That(emittedTargets, Is.EqualTo(new[] { emittedCase0, emittedCase1, emittedCase0 }));
+    }
+
+    [Test]
+    public void Pattern_BrtrueS_Instruction_Brtrue_Matches()
+    {
+        Label target = PatchProcessor.CreateILGenerator().DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Brtrue_S, target)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Brtrue, target)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_BeqS_Instruction_Beq_Matches()
+    {
+        Label target = PatchProcessor.CreateILGenerator().DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Beq_S, target)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Beq, target)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_LeaveS_Instruction_Leave_Matches()
+    {
+        Label target = PatchProcessor.CreateILGenerator().DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Leave_S, target)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Leave, target)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
     }
 
     [Test]
@@ -802,7 +1105,8 @@ public sealed class RuleEngineTests
     {
         var dynamicMethod = new DynamicMethod("InstructionMatcherTest", typeof(void), Type.EmptyTypes);
         ILGenerator generator = dynamicMethod.GetILGenerator();
-        generator.DefineLabel();
+        for (var i = 0; i < 16; i++)
+            generator.DefineLabel();
         return Ruleset.MatchAndReplace(rules, TargetMethod, instructions, generator);
     }
 
