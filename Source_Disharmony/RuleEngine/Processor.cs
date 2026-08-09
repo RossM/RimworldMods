@@ -383,31 +383,18 @@ internal class Processor(
         if (replaceInst.labels.Count > 0)
             extraLabels.AddRange(replaceInst.labels.Select(label => GetReplacementLabel(label, match)));
 
-        if (replaceInst.IsStloc())
+        CodeInstruction inst = OpCodeData.GetCanonicalOpcode(replaceInst) switch
         {
-            var substituteLocal = GetReplacementLocal(replaceInst, match);
-            Emit(substituteLocal.Store());
-        }
-        else if (replaceInst.opcode == OpCodes.Ldloca || replaceInst.opcode == OpCodes.Ldloca_S)
-        {
-            var substituteLocal = GetReplacementLocal(replaceInst, match);
-            Emit(substituteLocal.Load(true));
-        }
-        else if (replaceInst.IsLdloc())
-        {
-            var substituteLocal = GetReplacementLocal(replaceInst, match);
-            Emit(substituteLocal.Load());
-        }
-        else if (replaceInst.operand is Label label)
-        {
-            Emit(replaceInst.opcode, GetReplacementLabel(label, match));
-        }
-        else if (replaceInst.operand is Label[] labels)
-        {
-            Emit(replaceInst.opcode, labels.Select(label2 => GetReplacementLabel(label2, match)).ToArray());
-        }
-        else
-            Emit(replaceInst.opcode, replaceInst.operand);
+            OpCodeValues.Stloc => GetReplacementLocal(replaceInst, match).Store(),
+            OpCodeValues.Ldloca => GetReplacementLocal(replaceInst, match).Load(true),
+            OpCodeValues.Ldloc => GetReplacementLocal(replaceInst, match).Load(),
+            _ when replaceInst.operand is Label label => new(replaceInst.opcode, GetReplacementLabel(label, match)),
+            _ when replaceInst.operand is Label[] labels => new(replaceInst.opcode,
+                labels.Select(label2 => GetReplacementLabel(label2, match)).ToArray()),
+            _ => new(replaceInst.opcode, replaceInst.operand),
+        };
+
+        Emit(inst);
     }
 
     private void Emit(CodeInstruction instruction)
