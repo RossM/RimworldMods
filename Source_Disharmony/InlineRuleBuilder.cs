@@ -72,6 +72,7 @@ internal class InlineRuleBuilder : RuleBuilder
                 OpCodeValues.Stloc_S  => GetLocal(LocalTracker.IndexFrom(inst)).Store(),
                 OpCodeValues.Ret      => new(OpCodes.Br, returnLabel),
                 _ when inst.operand is Label label => new(inst.opcode, GetLabel(label)),
+                _ when inst.operand is Label[] labels => new(inst.opcode, labels.Select(GetLabel).ToArray()),
                 _ => inst,
                 // @formatter:on
             };

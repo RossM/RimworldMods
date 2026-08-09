@@ -474,6 +474,10 @@ internal class Processor(
         {
             Emit(replaceInst.opcode, GetReplacementLabel(label, match));
         }
+        else if (replaceInst.operand is Label[] labels)
+        {
+            Emit(replaceInst.opcode, labels.Select(label2 => GetReplacementLabel(label2, match)).ToArray());
+        }
         else
             Emit(replaceInst.opcode, replaceInst.operand);
     }
