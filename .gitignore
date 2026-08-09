@@ -12,3 +12,4 @@ Art/*.zip
 DataAnalysis/elo_ratings.csv
 /temp
 /TestResults
+/Source_Disharmony.Tests/TestResults

@@ -6,7 +6,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
     protected readonly Type[] outerParameterTypes = outer.ParameterTypes;
 
     protected readonly InstructionList output = context.NewInstructionList();
-    protected LocalTracker? resultLocal = null;
+    protected LocalTrackerBuilder? resultLocal = null;
     protected readonly ILGenerator generator = context.generator;
 
     public abstract IEnumerable<Rule> BuildRules();
@@ -63,7 +63,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
             case BindingType.Result:
             {
                 output.Add(resultLocal!.Load(wantRef));
-                resultType = output.localTypes[resultLocal.Index];
+                resultType = resultLocal.Type;
                 if (wantRef)
                     resultType = resultType.MakeByRefType();
                 break;
@@ -72,7 +72,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
             case BindingType.State:
             {
                 output.Add(parameter.local!.Load(wantRef));
-                resultType = output.localTypes[parameter.local.Index];
+                resultType = parameter.local.Type;
                 if (wantRef)
                     resultType = resultType.MakeByRefType();
                 break;
@@ -158,12 +158,14 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 internal class RuleBuilderContext
 {
     public readonly ILGenerator generator = PatchProcessor.CreateILGenerator();
-    public readonly List<Type> localTypes = [];
+    public readonly List<LocalTrackerBuilder> locals = [];
 
     public InstructionList NewInstructionList()
     {
-        InstructionList result = [];
-        result.localTypes = localTypes;
+        InstructionList result = new(generator)
+        {
+            locals = locals,
+        };
         return result;
     }
 }

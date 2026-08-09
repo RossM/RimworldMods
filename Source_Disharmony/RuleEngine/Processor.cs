@@ -11,6 +11,13 @@ internal abstract record LocalTracker
             : new LocalTrackerIndex(instruction.LocalIndex());
     }
 
+    public static int IndexFrom(CodeInstruction instruction)
+    {
+        return instruction.operand is LocalBuilder builder
+            ? builder.LocalIndex
+            : instruction.LocalIndex();
+    }
+
     public abstract CodeInstruction Store();
 
     public abstract CodeInstruction Load(bool useAddress = false);
@@ -19,6 +26,7 @@ internal abstract record LocalTracker
 internal record LocalTrackerBuilder(LocalBuilder Builder) : LocalTracker
 {
     public override int Index => Builder.LocalIndex;
+    public Type Type => Builder.LocalType;
 
     public override CodeInstruction Store() =>
         new(Index <= byte.MaxValue ? OpCodes.Stloc_S : OpCodes.Stloc, Builder);
@@ -375,7 +383,7 @@ internal class Processor(
             if (!inst.IsStloc())
                 return false;
 
-            int localIndex = LocalTracker.From(patternInst).Index;
+            int localIndex = LocalTracker.IndexFrom(patternInst);
             var targetLocal = LocalTracker.From(inst);
 
             if (localMap_Match.TryGetValue(localIndex, out var substituteLocal))
@@ -403,7 +411,7 @@ internal class Processor(
                 inst.opcode.Value == OpCodes.Ldloca_S.Value)
                 return false;
 
-            int localIndex = LocalTracker.From(patternInst).Index;
+            int localIndex = LocalTracker.IndexFrom(patternInst);
             var targetLocal = LocalTracker.From(inst);
 
             if (localMap_Match.TryGetValue(localIndex, out var substituteLocal))
@@ -516,7 +524,7 @@ internal class Processor(
 
     private LocalTracker GetReplacementLocal(CodeInstruction replaceInst, MatchData match)
     {
-        int localIndex = LocalTracker.From(replaceInst).Index;
+        int localIndex = LocalTracker.IndexFrom(replaceInst);
 
         if (localMap_Method.TryGetValue(localIndex, out var substituteLocal))
             return substituteLocal;

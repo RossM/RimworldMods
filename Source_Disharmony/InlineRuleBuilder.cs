@@ -6,6 +6,7 @@ internal class InlineRuleBuilder : RuleBuilder
     private readonly LocalTracker[] argumentLocals;
     private LocalTracker? returnLocal = null;
     private readonly Dictionary<int, LocalTracker> localMap = new();
+    private readonly Dictionary<Label, Label> labelMap = new();
     private readonly Type[] parameterTypes;
     private readonly List<LocalVariableInfo>? locals;
 
@@ -32,7 +33,7 @@ internal class InlineRuleBuilder : RuleBuilder
         if (method is MethodInfo m && m.ReturnType != typeof(void))
             returnLocal = output.AddLocal(m.ReturnType);
 
-        var instructions = PatchProcessor.GetOriginalInstructions(method, generator);
+        var instructions = PatchProcessor.GetOriginalInstructions(method);
         if (instructions == null)
             return false;
 
@@ -59,22 +60,23 @@ internal class InlineRuleBuilder : RuleBuilder
                 OpCodeValues.Ldloc_1  => GetLocal(1).Load(),
                 OpCodeValues.Ldloc_2  => GetLocal(2).Load(),
                 OpCodeValues.Ldloc_3  => GetLocal(3).Load(),
-                OpCodeValues.Ldloc    => GetLocal(GetLocalIndex(inst.operand)).Load(),
-                OpCodeValues.Ldloc_S  => GetLocal(GetLocalIndex(inst.operand)).Load(),
-                OpCodeValues.Ldloca   => GetLocal(GetLocalIndex(inst.operand)).Load(true),
-                OpCodeValues.Ldloca_S => GetLocal(GetLocalIndex(inst.operand)).Load(true),
+                OpCodeValues.Ldloc    => GetLocal(LocalTracker.IndexFrom(inst)).Load(),
+                OpCodeValues.Ldloc_S  => GetLocal(LocalTracker.IndexFrom(inst)).Load(),
+                OpCodeValues.Ldloca   => GetLocal(LocalTracker.IndexFrom(inst)).Load(true),
+                OpCodeValues.Ldloca_S => GetLocal(LocalTracker.IndexFrom(inst)).Load(true),
                 OpCodeValues.Stloc_0  => GetLocal(0).Store(),
                 OpCodeValues.Stloc_1  => GetLocal(1).Store(),
                 OpCodeValues.Stloc_2  => GetLocal(2).Store(),
                 OpCodeValues.Stloc_3  => GetLocal(3).Store(),
-                OpCodeValues.Stloc    => GetLocal(GetLocalIndex(inst.operand)).Store(),
-                OpCodeValues.Stloc_S  => GetLocal(GetLocalIndex(inst.operand)).Store(),
+                OpCodeValues.Stloc    => GetLocal(LocalTracker.IndexFrom(inst)).Store(),
+                OpCodeValues.Stloc_S  => GetLocal(LocalTracker.IndexFrom(inst)).Store(),
                 OpCodeValues.Ret      => new(OpCodes.Br, returnLabel),
+                _ when inst.operand is Label label => new(inst.opcode, GetLabel(label)),
                 _ => inst,
                 // @formatter:on
             };
 
-            translated.labels = inst.labels;
+            translated.labels = [.. inst.labels.Select(GetLabel)];
             translated.blocks = inst.blocks;
 
             output.Add(translated);
@@ -104,9 +106,12 @@ internal class InlineRuleBuilder : RuleBuilder
         return value;
     }
 
-    private static int GetLocalIndex(object? operand) => operand is LocalBuilder localBuilder
-        ? localBuilder.LocalIndex
-        : Convert.ToInt32(operand);
+    private Label GetLabel(Label label)
+    {
+        if (!labelMap.TryGetValue(label, out var value))
+            labelMap[label] = value = output.generator.DefineLabel();
+        return value;
+    }
 
     public override IEnumerable<Rule> BuildRules()
     {

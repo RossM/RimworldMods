@@ -2,10 +2,11 @@
 
 namespace Disharmony;
 
-internal class InstructionList : IEnumerable<CodeInstruction>
+internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruction>
 {
     public readonly List<CodeInstruction> instructions = [];
-    public List<Type> localTypes = [];
+    public List<LocalTrackerBuilder> locals = [];
+    public readonly ILGenerator generator = generator;
 
     public IEnumerator<CodeInstruction> GetEnumerator() => instructions.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -14,9 +15,9 @@ internal class InstructionList : IEnumerable<CodeInstruction>
     // ReSharper disable once ParameterHidesMember
     public void AddRange(IEnumerable<CodeInstruction> instructions) => this.instructions.AddRange(instructions); 
 
-    public void EmitLocalInitializer(LocalTracker localIndex)
+    public void EmitLocalInitializer(LocalTrackerBuilder localIndex)
     {
-        Type type = localTypes[localIndex.Index];
+        Type type = localIndex.Type;
 
         if (type.IsByRef)
             throw new NotImplementedException($"IsByRef targetType {type}");
@@ -50,10 +51,10 @@ internal class InstructionList : IEnumerable<CodeInstruction>
             throw new NotImplementedException($"targetType {type}");
     }
 
-    public LocalTracker AddLocal(Type type)
+    public LocalTrackerBuilder AddLocal(Type type)
     {
-        var localIndex = localTypes.Count;
-        localTypes.Add(type);
-        return new LocalTrackerIndex(localIndex);
+        var local = new LocalTrackerBuilder(generator.DeclareLocal(type));
+        locals.Add(local);
+        return local;
     }
 }

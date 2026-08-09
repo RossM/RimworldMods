@@ -2,9 +2,9 @@
 
 internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, EmptyInvocation.Instance)
 {
-    private readonly Dictionary<string, LocalTracker> stateMap = new();
+    private readonly Dictionary<string, LocalTrackerBuilder> stateMap = new();
 
-    private LocalTracker GetOrAddStateLocal(string stateKey, Type localType, Invocation method)
+    private LocalTrackerBuilder GetOrAddStateLocal(string stateKey, Type localType, Invocation method)
     {
         localType = localType.NoRefType;
 
@@ -18,11 +18,11 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
 
     public override IEnumerable<Rule> BuildRules()
     {
-        if (output.localTypes.Count == 0)
+        if (stateMap.Count == 0)
             yield break;
 
-        for (int index = 0; index < output.localTypes.Count; index++)
-            output.EmitLocalInitializer(new LocalTrackerIndex(index));
+        foreach (var local in stateMap.Values)
+            output.EmitLocalInitializer(local);
 
         yield return new Rule
         {
