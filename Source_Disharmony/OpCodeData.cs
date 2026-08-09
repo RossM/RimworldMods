@@ -127,11 +127,27 @@ internal struct OpCodeData
     public OpCodeFlags flags;
     public Type? resultType;
     public int operand;
+    public ushort canonical;
 
     private static readonly OpCodeData[] data = new OpCodeData[0x200];
 
-    public static OpCodeData Get(ushort value) => data[GetIndex(value)];
+    public static OpCodeData Get(ushort value)
+    {
+        var opCodeData = data[GetIndex(value)];
+        return opCodeData.flags != 0 ? opCodeData : new OpCodeData { canonical = value };
+    }
+
     public static OpCodeData Get(OpCode opCode) => Get(unchecked((ushort)opCode.Value));
+
+    public static ushort GetCanonicalOpcode(ushort value) => Get(value).canonical;
+    public static ushort GetCanonicalOpcode(OpCode opCode) => Get(opCode).canonical;
+
+    public static int GetIntOperand(CodeInstruction inst) => GetIntOperand(inst.opcode, inst.operand);
+    private static int GetIntOperand(OpCode opcode, object operand)
+    {
+        var opcodeData = Get(opcode);
+        return opcodeData.flags.HasFlag(OpCodeFlags.FixedOperand) ? opcodeData.operand : Convert.ToInt32(operand);
+    }
 
     private static int GetIndex(ushort value) => value >= 0xFE00 ? value - (0xFE00 - 0x100) : value;
 
@@ -139,10 +155,12 @@ internal struct OpCodeData
     {
         foreach (var initValue in initValues)
         {
+            var value = initValue.Data;
+            value.canonical = value.canonical != 0 ? value.canonical : initValue.Value;
             var index = GetIndex(initValue.Value);
             if (data[index].flags != 0)
                 throw new InvalidOperationException("Duplicate data");
-            data[index] = initValue.Data;
+            data[index] = value;
         }
     }
 
@@ -207,25 +225,25 @@ internal struct OpCodeData
         (OpCodeValues.Isinst,         new OpCodeData { flags = OpCodeFlags.Default }),
         (OpCodeValues.Jmp,            new OpCodeData { flags = OpCodeFlags.HasSideEffects }),
         (OpCodeValues.Ldarg,          new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument }),
-        (OpCodeValues.Ldarg_0,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument | OpCodeFlags.FixedOperand, operand = 0 }),
-        (OpCodeValues.Ldarg_1,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument | OpCodeFlags.FixedOperand, operand = 1 }),
-        (OpCodeValues.Ldarg_2,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument | OpCodeFlags.FixedOperand, operand = 2 }),
-        (OpCodeValues.Ldarg_3,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument | OpCodeFlags.FixedOperand, operand = 3 }),
-        (OpCodeValues.Ldarg_S,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument }),
+        (OpCodeValues.Ldarg_0,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument | OpCodeFlags.FixedOperand, operand = 0, canonical = OpCodeValues.Ldarg }),
+        (OpCodeValues.Ldarg_1,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument | OpCodeFlags.FixedOperand, operand = 1, canonical = OpCodeValues.Ldarg }),
+        (OpCodeValues.Ldarg_2,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument | OpCodeFlags.FixedOperand, operand = 2, canonical = OpCodeValues.Ldarg }),
+        (OpCodeValues.Ldarg_3,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument | OpCodeFlags.FixedOperand, operand = 3, canonical = OpCodeValues.Ldarg }),
+        (OpCodeValues.Ldarg_S,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument, canonical = OpCodeValues.Ldarg }),
         (OpCodeValues.Ldarga,         new OpCodeData { flags = OpCodeFlags.LoadAddress | OpCodeFlags.Argument }),
         (OpCodeValues.Ldarga_S,       new OpCodeData { flags = OpCodeFlags.LoadAddress | OpCodeFlags.Argument }),
         (OpCodeValues.Ldc_I4,         new OpCodeData { flags = OpCodeFlags.Constant, resultType = typeof(int) }),
-        (OpCodeValues.Ldc_I4_0,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 0 }),
-        (OpCodeValues.Ldc_I4_1,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 1 }),
-        (OpCodeValues.Ldc_I4_2,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 2 }),
-        (OpCodeValues.Ldc_I4_3,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 3 }),
-        (OpCodeValues.Ldc_I4_4,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 4 }),
-        (OpCodeValues.Ldc_I4_5,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 5 }),
-        (OpCodeValues.Ldc_I4_6,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 6 }),
-        (OpCodeValues.Ldc_I4_7,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 7 }),
-        (OpCodeValues.Ldc_I4_8,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 8 }),
-        (OpCodeValues.Ldc_I4_M1,      new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = -1 }),
-        (OpCodeValues.Ldc_I4_S,       new OpCodeData { flags = OpCodeFlags.Constant, resultType = typeof(int) }),
+        (OpCodeValues.Ldc_I4_0,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 0, canonical = OpCodeValues.Ldc_I4 }),
+        (OpCodeValues.Ldc_I4_1,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 1, canonical = OpCodeValues.Ldc_I4 }),
+        (OpCodeValues.Ldc_I4_2,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 2, canonical = OpCodeValues.Ldc_I4 }),
+        (OpCodeValues.Ldc_I4_3,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 3, canonical = OpCodeValues.Ldc_I4 }),
+        (OpCodeValues.Ldc_I4_4,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 4, canonical = OpCodeValues.Ldc_I4 }),
+        (OpCodeValues.Ldc_I4_5,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 5, canonical = OpCodeValues.Ldc_I4 }),
+        (OpCodeValues.Ldc_I4_6,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 6, canonical = OpCodeValues.Ldc_I4 }),
+        (OpCodeValues.Ldc_I4_7,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 7, canonical = OpCodeValues.Ldc_I4 }),
+        (OpCodeValues.Ldc_I4_8,       new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = 8, canonical = OpCodeValues.Ldc_I4 }),
+        (OpCodeValues.Ldc_I4_M1,      new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(int), operand = -1, canonical = OpCodeValues.Ldc_I4 }),
+        (OpCodeValues.Ldc_I4_S,       new OpCodeData { flags = OpCodeFlags.Constant, resultType = typeof(int), canonical = OpCodeValues.Ldc_I4 }),
         (OpCodeValues.Ldc_I8,         new OpCodeData { flags = OpCodeFlags.Constant, resultType = typeof(long) }),
         (OpCodeValues.Ldc_R4,         new OpCodeData { flags = OpCodeFlags.Constant, resultType = typeof(double) }),
         (OpCodeValues.Ldc_R8,         new OpCodeData { flags = OpCodeFlags.Constant, resultType = typeof(double) }),
@@ -258,13 +276,13 @@ internal struct OpCodeData
         (OpCodeValues.Ldind_U4,       new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Indirect | OpCodeFlags.CanThrow, resultType = typeof(int) }),
         (OpCodeValues.Ldlen,          new OpCodeData { flags = OpCodeFlags.CanThrow, resultType = typeof(IntPtr) }),
         (OpCodeValues.Ldloc,          new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Local }),
-        (OpCodeValues.Ldloc_0,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 0 }),
-        (OpCodeValues.Ldloc_1,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 1 }),
-        (OpCodeValues.Ldloc_2,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 2 }),
-        (OpCodeValues.Ldloc_3,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 3 }),
-        (OpCodeValues.Ldloc_S,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Local }),
+        (OpCodeValues.Ldloc_0,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 0, canonical = OpCodeValues.Ldloc }),
+        (OpCodeValues.Ldloc_1,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 1, canonical = OpCodeValues.Ldloc }),
+        (OpCodeValues.Ldloc_2,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 2, canonical = OpCodeValues.Ldloc }),
+        (OpCodeValues.Ldloc_3,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 3, canonical = OpCodeValues.Ldloc }),
+        (OpCodeValues.Ldloc_S,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Local, canonical = OpCodeValues.Ldloc }),
         (OpCodeValues.Ldloca,         new OpCodeData { flags = OpCodeFlags.LoadAddress | OpCodeFlags.Local }),
-        (OpCodeValues.Ldloca_S,       new OpCodeData { flags = OpCodeFlags.LoadAddress | OpCodeFlags.Local }),
+        (OpCodeValues.Ldloca_S,       new OpCodeData { flags = OpCodeFlags.LoadAddress | OpCodeFlags.Local, canonical = OpCodeValues.Ldloca }),
         (OpCodeValues.Ldnull,         new OpCodeData { flags = OpCodeFlags.Constant | OpCodeFlags.FixedOperand, resultType = typeof(TypeLattice.NullPtr), operand = 0 }),
         (OpCodeValues.Ldobj,          new OpCodeData { flags = OpCodeFlags.TypeFromOperand | OpCodeFlags.CanThrow }),
         (OpCodeValues.Ldsfld,         new OpCodeData { flags = OpCodeFlags.Default }),
@@ -292,7 +310,7 @@ internal struct OpCodeData
         (OpCodeValues.Shr_Un,         new OpCodeData { flags = OpCodeFlags.Shift }),
         (OpCodeValues.Sizeof,         new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(IntPtr) }),
         (OpCodeValues.Starg,          new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Argument }),
-        (OpCodeValues.Starg_S,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Argument }),
+        (OpCodeValues.Starg_S,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Argument, canonical = OpCodeValues.Starg }),
         (OpCodeValues.Stelem,         new OpCodeData { flags = OpCodeFlags.HasSideEffects | OpCodeFlags.CanThrow }),
         (OpCodeValues.Stelem_I,       new OpCodeData { flags = OpCodeFlags.HasSideEffects | OpCodeFlags.CanThrow }),
         (OpCodeValues.Stelem_I1,      new OpCodeData { flags = OpCodeFlags.HasSideEffects | OpCodeFlags.CanThrow }),
@@ -312,11 +330,11 @@ internal struct OpCodeData
         (OpCodeValues.Stind_R8,       new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Indirect | OpCodeFlags.CanThrow }),
         (OpCodeValues.Stind_Ref,      new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Indirect | OpCodeFlags.CanThrow }),
         (OpCodeValues.Stloc,          new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Local }),
-        (OpCodeValues.Stloc_0,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 0 }),
-        (OpCodeValues.Stloc_1,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 1 }),
-        (OpCodeValues.Stloc_2,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 2 }),
-        (OpCodeValues.Stloc_3,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 3 }),
-        (OpCodeValues.Stloc_S,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Local }),
+        (OpCodeValues.Stloc_0,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 0, canonical = OpCodeValues.Stloc }),
+        (OpCodeValues.Stloc_1,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 1, canonical = OpCodeValues.Stloc }),
+        (OpCodeValues.Stloc_2,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 2, canonical = OpCodeValues.Stloc }),
+        (OpCodeValues.Stloc_3,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Local | OpCodeFlags.FixedOperand, operand = 3, canonical = OpCodeValues.Stloc }),
+        (OpCodeValues.Stloc_S,        new OpCodeData { flags = OpCodeFlags.Store | OpCodeFlags.Local, canonical = OpCodeValues.Stloc }),
         (OpCodeValues.Stobj,          new OpCodeData { flags = OpCodeFlags.HasSideEffects | OpCodeFlags.CanThrow }),
         (OpCodeValues.Stsfld,         new OpCodeData { flags = OpCodeFlags.HasSideEffects }),
         (OpCodeValues.Sub,            new OpCodeData { flags = OpCodeFlags.Arithmetic }),

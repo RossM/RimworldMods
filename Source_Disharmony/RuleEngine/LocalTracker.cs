@@ -8,14 +8,14 @@ internal abstract record LocalTracker
     {
         return instruction.operand is LocalBuilder builder
             ? new LocalTrackerBuilder(builder)
-            : new LocalTrackerIndex(instruction.LocalIndex());
+            : new LocalTrackerIndex(OpCodeData.GetIntOperand(instruction));
     }
 
     public static int IndexFrom(CodeInstruction instruction)
     {
         return instruction.operand is LocalBuilder builder
             ? builder.LocalIndex
-            : instruction.LocalIndex();
+            : OpCodeData.GetIntOperand(instruction);
     }
 
     public abstract CodeInstruction Store();

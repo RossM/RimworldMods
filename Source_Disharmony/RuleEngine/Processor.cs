@@ -331,87 +331,48 @@ internal class Processor(
 
     private bool MatchInstruction(CodeInstruction inst, CodeInstruction patternInst, Dictionary<int, LocalTracker> localMap_Match)
     {
-        // For a load or store, map the local indexes in the pattern to the actual local indexes used
-        // in the function
-        if (patternInst.IsStloc())
+        var canonicalInst = OpCodeData.GetCanonicalOpcode(inst.opcode);
+        var canonicalPattern = OpCodeData.GetCanonicalOpcode(patternInst.opcode);
+
+        if (canonicalInst != canonicalPattern &&
+            !(canonicalInst == OpCodeValues.Callvirt && canonicalPattern == OpCodeValues.Call))
+            return false;
+
+        switch (canonicalPattern)
         {
-            if (!inst.IsStloc())
-                return false;
-
-            int localIndex = LocalTracker.IndexFrom(patternInst);
-            var targetLocal = LocalTracker.From(inst);
-
-            if (localMap_Match.TryGetValue(localIndex, out var substituteLocal))
+            case OpCodeValues.Stloc:
+            case OpCodeValues.Ldloc:
+            case OpCodeValues.Ldloca:
             {
-                if (targetLocal != substituteLocal)
-                    return false;
+                int localIndex = LocalTracker.IndexFrom(patternInst);
+                var targetLocal = LocalTracker.From(inst);
+
+                if (localMap_Match.TryGetValue(localIndex, out var substituteLocal))
+                {
+                    if (targetLocal != substituteLocal)
+                        return false;
+                }
+                else
+                {
+                    localMap_Match.Add(localIndex, targetLocal);
+                }
+
+                return true;
             }
-            else
+            case OpCodeValues.Starg:
+            case OpCodeValues.Ldarg:
+            case OpCodeValues.Ldarga:
+            case OpCodeValues.Ldc_I4:
             {
-                localMap_Match.Add(localIndex, targetLocal);
+                return OpCodeData.GetIntOperand(inst) == OpCodeData.GetIntOperand(patternInst);
             }
-        }
-        else if (patternInst.opcode.Value == OpCodes.Ldloca.Value ||
-                 patternInst.opcode.Value == OpCodes.Ldloca_S.Value)
-        {
-            if (inst.opcode.Value != OpCodes.Ldloca.Value &&
-                inst.opcode.Value != OpCodes.Ldloca_S.Value)
-                return false;
-
-            int localIndex = LocalTracker.IndexFrom(patternInst);
-            var targetLocal = LocalTracker.From(inst);
-
-            if (localMap_Match.TryGetValue(localIndex, out var substituteLocal))
+            default:
             {
-                if (targetLocal != substituteLocal)
-                    return false;
-            }
-            else
-            {
-                localMap_Match.Add(localIndex, targetLocal);
-            }
-        }
-        else if (patternInst.IsLdloc())
-        {
-            if (!inst.IsLdloc() ||
-                inst.opcode.Value == OpCodes.Ldloca.Value ||
-                inst.opcode.Value == OpCodes.Ldloca_S.Value)
-                return false;
-
-            int localIndex = LocalTracker.IndexFrom(patternInst);
-            var targetLocal = LocalTracker.From(inst);
-
-            if (localMap_Match.TryGetValue(localIndex, out var substituteLocal))
-            {
-                if (targetLocal != substituteLocal)
-                    return false;
-            }
-            else
-            {
-                localMap_Match.Add(localIndex, targetLocal);
+                if (patternInst.operand == null)
+                    return inst.operand == null;
+                return inst.OperandIs(patternInst.operand);
             }
         }
-        // For convenience, let call also match callvirt. Nobody wants to worry about
-        // the difference when writing patterns.
-        else if (patternInst.opcode.Value == OpCodes.Call.Value)
-        {
-            if (inst.opcode.Value != OpCodes.Call.Value &&
-                inst.opcode.Value != OpCodes.Callvirt.Value ||
-                !inst.operand.Equals(patternInst.operand))
-                return false;
-        }
-        else if (patternInst.operand == null)
-        {
-            if (inst.opcode.Value != patternInst.opcode.Value || inst.operand != null)
-                return false;
-        }
-        else
-        {
-            if (!inst.Is(patternInst.opcode, patternInst.operand))
-                return false;
-        }
-
-        return true;
     }
 
     private void EmitReplacement(CodeInstruction replaceInst, MatchData match)
