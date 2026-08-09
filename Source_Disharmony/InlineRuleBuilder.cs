@@ -5,8 +5,8 @@ internal class InlineRuleBuilder : RuleBuilder
     private readonly MethodBase method;
     private readonly LocalTracker[] argumentLocals;
     private LocalTracker? returnLocal = null;
-    private readonly Dictionary<int, LocalTracker> localMap = new();
-    private readonly Dictionary<Label, Label> labelMap = new();
+    private readonly Dictionary<int, LocalTracker> localMap = [];
+    private readonly Dictionary<Label, Label> labelMap = [];
     private readonly Type[] parameterTypes;
     private readonly List<LocalVariableInfo>? locals;
 

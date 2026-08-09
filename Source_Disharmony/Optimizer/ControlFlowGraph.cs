@@ -30,7 +30,7 @@ internal class ControlFlowGraph
     /// <summary>
     ///     Returns the root region of the control flow graph.
     /// </summary>
-    public RootRegion RootRegion { get; } = new RootRegion(new BlockLabel());
+    public RootRegion RootRegion { get; } = new(new BlockLabel());
 
     /// <summary>
     ///     Returns all incoming <see cref="Edge" />s for a <see cref="BasicBlock" />.

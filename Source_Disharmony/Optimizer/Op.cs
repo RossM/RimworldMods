@@ -7,7 +7,7 @@
 ///     Unlike CIL instructions, <see cref="Op" />s are represented as a tree, where each operation has multiple
 ///     inputs and a single output. Assignments to variables, including arguments, locals, and stack slots, are represented
 ///     explicitly. Operations which might throw are only allowed at top level or as the input to an
-///     an <see cref="AssignmentOp" /> or <see cref="Branch" />.
+///     <see cref="AssignmentOp" /> or <see cref="Branch" />.
 /// </remarks>
 /// <param name="Type">The type of value produced by the <see cref="Op" />.</param>
 internal abstract record Op(Type Type);

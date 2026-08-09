@@ -126,7 +126,7 @@ public enum PatchType
 ///     </example>
 /// </remarks>
 [PublicAPI]
-public static partial class Patcher
+public static class Patcher
 {
     // Lock order: applyLock, PatchRegistry.SyncRoot, Harmony's lock.
     private static readonly object applyLock = new();

@@ -2,9 +2,9 @@
 
 internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, EmptyInvocation.Instance)
 {
-    private readonly Dictionary<string, LocalTrackerBuilder> stateMap = new();
+    private readonly Dictionary<string, LocalTrackerBuilder> stateMap = [];
 
-    private LocalTrackerBuilder GetOrAddStateLocal(string stateKey, Type localType, Invocation method)
+    private LocalTrackerBuilder GetOrAddStateLocal(string stateKey, Type localType)
     {
         localType = localType.NoRefType;
 
@@ -44,7 +44,7 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
                 {
                     if (parameter.stateKey is null)
                         throw new InvalidOperationException("Null StateKey");
-                    parameter.local = GetOrAddStateLocal(parameter.stateKey, parameter.parameter.ParameterType, patch.patch);
+                    parameter.local = GetOrAddStateLocal(parameter.stateKey, parameter.parameter.ParameterType);
                 }
             }
         }

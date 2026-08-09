@@ -11,7 +11,7 @@ internal enum OpCodeFlags
     ///     Indicates that this operation can throw an exception.
     /// </summary>
     /// <remarks>
-    ///     Exceptions that indicate bad CIL (e.g. <see cref="TypeLoadException"/> are not included.
+    ///     Exceptions that indicate bad CIL (e.g. <see cref="TypeLoadException"/>) are not included.
     /// </remarks>
     CanThrow = 0x0002,
 
@@ -45,7 +45,7 @@ internal enum OpCodeFlags
     ///     and the result type is the same as the type of the first argument.
     /// </summary>
     /// <remarks>
-    ///     See ECMA 335 part III Table 6: Shift Operaations.
+    ///     See ECMA 335 part III Table 6: Shift Operations.
     /// </remarks>
     Shift = 0x0008,
 
