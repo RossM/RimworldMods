@@ -526,18 +526,21 @@ internal class Processor(
     {
         int localIndex = LocalTracker.IndexFrom(replaceInst);
 
-        if (localMap_Method.TryGetValue(localIndex, out var substituteLocal))
-            return substituteLocal;
-        if (match.localMap_Match.TryGetValue(localIndex, out substituteLocal))
-            return substituteLocal;
-        
         if (replaceInst.operand is LocalBuilder { LocalType: Type } builder)
         {
             var localMap = ruleset.crossRuleLocals.Contains(builder) ? localMap_Method : match.localMap_Match;
+            if (!localMap.TryGetValue(localIndex, out var substituteLocal))
+            {
+                substituteLocal = new LocalTrackerBuilder(generator.DeclareLocal(builder.LocalType));
+                localMap.Add(localIndex, substituteLocal);
+            }
 
-            substituteLocal = new LocalTrackerBuilder(generator.DeclareLocal(builder.LocalType));
-            localMap.Add(localIndex, substituteLocal);
             return substituteLocal;
+        }
+        else
+        {
+            if (match.localMap_Match.TryGetValue(localIndex, out var substituteLocal))
+                return substituteLocal;
         }
 
         throw new InvalidOperationException($"Can't replace local #{localIndex} because its type is unknown");
