@@ -207,6 +207,7 @@ internal class HarmonyInterface
         generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
 
         // Do a tail call to the original method, which will actually go to the newly installed patch
+        // Jmp doesn't work in the case where the target is an instance method
         generator.Emit(OpCodes.Tailcall);
         generator.Emit(OpCodes.Call, target);
         generator.Emit(OpCodes.Ret);
