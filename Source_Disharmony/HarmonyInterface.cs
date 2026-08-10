@@ -225,8 +225,10 @@ internal class HarmonyInterface
             generator.Emit(OpCodes.Ldarg_2);
         if (parameterTypes.Length >= 4)
             generator.Emit(OpCodes.Ldarg_3);
-        for (int i = 4; i < parameterTypes.Length; i++)
+        for (int i = 4; i < parameterTypes.Length && i < 256; i++)
             generator.Emit(OpCodes.Ldarg_S, i);
+        for (int i = 256; i < parameterTypes.Length; i++)
+            generator.Emit(OpCodes.Ldarg, i);
     }
 
     public void ApplyPatch(MethodBaseInvocation original, Ruleset ruleset, bool useTrampolines)
