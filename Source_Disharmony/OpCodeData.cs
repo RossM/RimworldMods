@@ -131,7 +131,7 @@ internal enum OpCodeFlags
     CanThrow_Arithmetic = 0x40000 | CanThrow,
 
     /// <summary>
-    ///     Indicates that the instruction can throw <see cref="OutOfMemoryException" /> or <see cref="StackOverflowException" />.
+    ///     Indicates that the instruction can throw <see cref="OutOfMemoryException" /> and/or <see cref="StackOverflowException" />.
     /// </summary>
     CanThrow_OutOfMemory = 0x80000 | CanThrow,
 
@@ -141,7 +141,7 @@ internal enum OpCodeFlags
     CanThrow_InvalidCast = 0x100000 | CanThrow,
 
     /// <summary>
-    ///     Indicates that the instruction can throw <see cref="IndexOutOfRangeException" /> or <see cref="NullReferenceException" />.
+    ///     Indicates that the instruction can throw <see cref="IndexOutOfRangeException" /> and/or <see cref="NullReferenceException" />.
     /// </summary>
     CanThrow_IndexOutOfRange = 0x200000 | CanThrow_NullReference,
 
@@ -237,7 +237,7 @@ internal struct OpCodeData
         (OpCodeValues.Ceq,            new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(int) }),
         (OpCodeValues.Cgt,            new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(int) }),
         (OpCodeValues.Cgt_Un,         new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(int) }),
-        (OpCodeValues.Ckfinite,       new OpCodeData { flags = OpCodeFlags.PushesInput | OpCodeFlags.CanThrow }),
+        (OpCodeValues.Ckfinite,       new OpCodeData { flags = OpCodeFlags.PushesInput | OpCodeFlags.CanThrow_Arithmetic }),
         (OpCodeValues.Clt,            new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(int) }),
         (OpCodeValues.Clt_Un,         new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(int) }),
         (OpCodeValues.Conv_I,         new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(IntPtr) }),
