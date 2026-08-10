@@ -50,8 +50,14 @@ public sealed class OpCodeValuesTests
 
             var data = OpCodeData.Get((ushort)value);
 
-            if (opCode.FlowControl == FlowControl.Next)
-                Assert.That(data.flags != 0, Is.True, $"{valueField.Name} has no OpCodeData");
+            if (opCode.FlowControl != FlowControl.Next)
+                continue;
+
+            Assert.That(data.flags != 0, Is.True, $"{valueField.Name} has no OpCodeData");
+            if (opCode.StackBehaviourPush == StackBehaviour.Push0)
+                Assert.That(data.resultType, Is.EqualTo(typeof(void)), $"{valueField.Name} has bad resultType");
+            else
+                Assert.That(data.resultType != typeof(void), $"{valueField.Name} has bad resultType");
         }
     }
 }
