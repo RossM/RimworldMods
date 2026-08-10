@@ -1,5 +1,8 @@
 ﻿namespace Disharmony;
 
+// This was originally intended to just be a way of keeping track of the LocalBuilder associated
+// with a local if we have one, but it turns out to dramatically simplify code dealing with locals.
+
 /// <summary>
 ///     Abstract base class representing a local variable where we may or may not have a LocalBuilder and
 ///     corresponding type information.
