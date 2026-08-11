@@ -1,4 +1,4 @@
-﻿namespace Disharmony.RuleEngine;
+﻿namespace Disharmony.RulesEngine;
 
 internal class Processor(
     Ruleset ruleset,

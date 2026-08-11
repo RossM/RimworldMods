@@ -1,4 +1,4 @@
-﻿namespace Disharmony.RuleEngine;
+﻿namespace Disharmony.RulesEngine;
 
 public class Ruleset
 {

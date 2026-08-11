@@ -1,11 +1,11 @@
 using System.Reflection.Emit;
-using Disharmony.RuleEngine;
+using Disharmony.RulesEngine;
 using HarmonyLib;
 
 namespace Disharmony.Tests;
 
 [TestFixture]
-public sealed class RuleEngineTests
+public sealed class RulesEngineTests
 {
     private static readonly MethodInfo TargetMethod =
         typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.Void))!;
