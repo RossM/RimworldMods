@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
-using Disharmony.RuleEngine;
+using Disharmony.RulesEngine;
 
 namespace XylXenos.Patches;
 
