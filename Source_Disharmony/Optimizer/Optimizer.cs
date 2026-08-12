@@ -114,6 +114,7 @@ internal class Optimizer
         regionStack.Push(rootRegion);
 
         Dictionary<BlockLabel, int> incomingStackSize = [];
+        Dictionary<BlockLabel, (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack)> stacks = [];
         foreach (var (label, instructions) in instructionBlocks)
         {
             foreach (var exceptionBlock in instructions[0].blocks)
@@ -161,10 +162,11 @@ internal class Optimizer
             }
 
             incomingStackSize.TryGetValue(label, out int blockStartStackSize);
-            BasicBlock block = ConvertBasicBlock(label, instructions, blockStartStackSize, out int blockEndStackSize);
+            BasicBlock block = ConvertBasicBlock(label, instructions, blockStartStackSize, out var stack);
             cfg.AddBlock(block);
+            stacks[label] = stack;
             foreach (var successor in block.Branch.Labels)
-                incomingStackSize[successor] = blockEndStackSize;
+                incomingStackSize[successor] = stack.OutgoingStack.Count;
 
             foreach (var exceptionBlock in instructions[^1].blocks)
             {
@@ -177,7 +179,20 @@ internal class Optimizer
             }
         }
 
-        // TODO: Create edges
+        foreach (var block in cfg.BasicBlocks)
+        {
+            var label = block.Label;
+            foreach (var successor in block.Branch.Labels)
+            {
+                if (cfg.GetEdgeOrNull(label, successor) != null)
+                    continue;
+
+                var edgeAssignments = stacks[successor].IncomingStack.Zip(stacks[label].OutgoingStack,
+                    (incoming, outgoing) => new AssignmentOp(incoming, outgoing)).ToList();
+                var edge = new Edge(label, successor, edgeAssignments);
+                cfg.AddEdge(edge);
+            }
+        }
     }
 
     private static bool EndsBasicBlock(CodeInstruction instruction) => instruction.opcode.FlowControl is
@@ -187,7 +202,7 @@ internal class Optimizer
         BlockLabel label,
         IReadOnlyList<CodeInstruction> instructions,
         int incomingStackSize,
-        out int blockEndStackSize)
+        out (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack) stack)
     {
         throw new NotImplementedException();
     }
