@@ -1,5 +1,8 @@
 ﻿namespace Disharmony;
 
+/// <summary>
+///     This class generates rules implementing <see cref="PatchType.Prefix" /> and <see cref="PatchType.Postfix" /> patches for a method.
+/// </summary>
 internal class CircumfixRuleBuilder : RuleBuilder
 {
     private readonly Type targetType;

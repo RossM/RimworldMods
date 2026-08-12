@@ -1,5 +1,9 @@
 ﻿namespace Disharmony;
 
+/// <summary>
+///     This class manages the state variables used by patches and generates rules to initialize them at the beginning of the method.
+/// </summary>
+/// <param name="context"></param>
 internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, EmptyInvocation.Instance)
 {
     private readonly Dictionary<string, LocalTrackerBuilder> stateMap = [];
