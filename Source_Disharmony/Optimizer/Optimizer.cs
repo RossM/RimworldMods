@@ -16,6 +16,8 @@ internal class Optimizer
     private static readonly bool forceDebug;
     private static readonly string forceDebugForMethod;
 
+    private readonly RootRegion rootRegion = new(new BlockLabel());
+
     static Optimizer()
     {
         forceDebug = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DISHARMONY_DEBUG"));
@@ -107,16 +109,72 @@ internal class Optimizer
                 newBlock = true;
         }
 
-        // TODO: Region handling
+        Stack<Region> regionStack = [];
+        Stack<(ProtectedRegion ProtectedRegion, List<HandlerRegion> HandlerRegions)> exceptionGroupStack = [];
+        regionStack.Push(rootRegion);
 
         Dictionary<BlockLabel, int> incomingStackSize = [];
         foreach (var (label, instructions) in instructionBlocks)
         {
+            foreach (var exceptionBlock in instructions[0].blocks)
+            {
+                switch (exceptionBlock.blockType)
+                {
+                    case ExceptionBlockType.BeginExceptionBlock:
+                    {
+                        var protectedRegion = new ProtectedRegion(label, regionStack.Peek());
+                        regionStack.Push(protectedRegion);
+                        exceptionGroupStack.Push((protectedRegion, []));
+                        break;
+                    }
+                    case ExceptionBlockType.BeginCatchBlock:
+                    {
+                        regionStack.Pop();
+                        var catchRegion = new CatchRegion(label, regionStack.Peek(), new StackSlot(0, exceptionBlock.catchType));
+                        regionStack.Push(catchRegion);
+                        exceptionGroupStack.Peek().HandlerRegions.Add(catchRegion);
+                        break;
+                    }
+                    case ExceptionBlockType.BeginExceptFilterBlock:
+                        throw new NotSupportedException();
+                    case ExceptionBlockType.BeginFaultBlock:
+                    {
+                        regionStack.Pop();
+                        var faultRegion = new FaultRegion(label, regionStack.Peek());
+                        regionStack.Push(faultRegion);
+                        exceptionGroupStack.Peek().HandlerRegions.Add(faultRegion);
+                        break;
+                    }
+                    case ExceptionBlockType.BeginFinallyBlock:
+                    {
+                        regionStack.Pop();
+                        var finallyRegion = new FinallyRegion(label, regionStack.Peek());
+                        regionStack.Push(finallyRegion);
+                        exceptionGroupStack.Peek().HandlerRegions.Add(finallyRegion);
+                        break;
+                    }
+                    case ExceptionBlockType.EndExceptionBlock:
+                        // Handled later
+                        break;
+                    default: throw new ArgumentOutOfRangeException();
+                }
+            }
+
             incomingStackSize.TryGetValue(label, out int blockStartStackSize);
             BasicBlock block = ConvertBasicBlock(label, instructions, blockStartStackSize, out int blockEndStackSize);
             cfg.AddBlock(block);
             foreach (var successor in block.Branch.Labels)
                 incomingStackSize[successor] = blockEndStackSize;
+
+            foreach (var exceptionBlock in instructions[^1].blocks)
+            {
+                if (exceptionBlock.blockType == ExceptionBlockType.EndExceptionBlock)
+                {
+                    regionStack.Pop();
+                    var (protectedRegion, handlerRegions) = exceptionGroupStack.Pop();
+                    cfg.AddExceptionGroup(new ExceptionGroup(protectedRegion, handlerRegions));
+                }
+            }
         }
 
         // TODO: Create edges
