@@ -1,5 +1,5 @@
 using System.Reflection.Emit;
-
+using System.Runtime.InteropServices;
 using Disharmony.Optimizer;
 using HarmonyLib;
 
@@ -203,8 +203,10 @@ public sealed class ControlFlowGraphGeneratorTests
                 [new CodeInstruction(OpCodes.Ldloca_S, longLocal), new CodeInstruction(OpCodes.Ldc_I8, 1L)],
                 new CodeInstruction(OpCodes.Stind_I8)),
             (StackBehaviour.Popi_popi_popi,
-                [new CodeInstruction(OpCodes.Ldloca_S, intLocal), new CodeInstruction(OpCodes.Ldloca_S, intLocal),
-                    new CodeInstruction(OpCodes.Ldc_I4_4)],
+                [
+                    new CodeInstruction(OpCodes.Ldloca_S, intLocal), new CodeInstruction(OpCodes.Ldloca_S, intLocal),
+                    new CodeInstruction(OpCodes.Ldc_I4_4),
+                ],
                 new CodeInstruction(OpCodes.Cpblk)),
             (StackBehaviour.Popi_popr4,
                 [new CodeInstruction(OpCodes.Ldloca_S, floatLocal), new CodeInstruction(OpCodes.Ldc_R4, 1f)],
@@ -218,32 +220,46 @@ public sealed class ControlFlowGraphGeneratorTests
                 [new CodeInstruction(OpCodes.Ldnull), new CodeInstruction(OpCodes.Ldc_I4_1)],
                 new CodeInstruction(OpCodes.Stfld, InstanceField)),
             (StackBehaviour.Popref_popi,
-                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(int)),
-                    new CodeInstruction(OpCodes.Ldc_I4_0)],
+                [
+                    new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(int)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0),
+                ],
                 new CodeInstruction(OpCodes.Ldelem_I4)),
             (StackBehaviour.Popref_popi_popi,
-                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(int)),
-                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_I4_1)],
+                [
+                    new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(int)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_I4_1),
+                ],
                 new CodeInstruction(OpCodes.Stelem_I4)),
             (StackBehaviour.Popref_popi_popi8,
-                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(long)),
-                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_I8, 1L)],
+                [
+                    new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(long)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_I8, 1L),
+                ],
                 new CodeInstruction(OpCodes.Stelem_I8)),
             (StackBehaviour.Popref_popi_popr4,
-                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(float)),
-                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_R4, 1f)],
+                [
+                    new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(float)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_R4, 1f),
+                ],
                 new CodeInstruction(OpCodes.Stelem_R4)),
             (StackBehaviour.Popref_popi_popr8,
-                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(double)),
-                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_R8, 1d)],
+                [
+                    new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(double)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_R8, 1d),
+                ],
                 new CodeInstruction(OpCodes.Stelem_R8)),
             (StackBehaviour.Popref_popi_popref,
-                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(object)),
-                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldnull)],
+                [
+                    new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(object)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldnull),
+                ],
                 new CodeInstruction(OpCodes.Stelem_Ref)),
             (StackBehaviour.Popref_popi_pop1,
-                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(int)),
-                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_I4_1)],
+                [
+                    new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(int)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_I4_1),
+                ],
                 new CodeInstruction(OpCodes.Stelem, typeof(int))),
         ];
         Assert.That(cases.Select(testCase => testCase.Behaviour).Distinct(), Is.EquivalentTo(
@@ -253,7 +269,7 @@ public sealed class ControlFlowGraphGeneratorTests
         foreach (var testCase in cases)
         {
             List<CodeInstruction> instructions =
-            [.. testCase.Inputs, testCase.Instruction];
+                [.. testCase.Inputs, testCase.Instruction];
             if (testCase.Instruction.opcode.StackBehaviourPush != StackBehaviour.Push0)
                 instructions.Add(new CodeInstruction(OpCodes.Pop));
             instructions.AddRange(ThrowTerminated());
@@ -288,7 +304,7 @@ public sealed class ControlFlowGraphGeneratorTests
         foreach (var testCase in cases)
         {
             List<CodeInstruction> instructions =
-            [.. testCase.Inputs, testCase.Instruction, new CodeInstruction(OpCodes.Pop), .. ThrowTerminated()];
+                [.. testCase.Inputs, testCase.Instruction, new CodeInstruction(OpCodes.Pop), .. ThrowTerminated()];
             var generator = CreateGenerator(VoidMethod, instructions);
             ILOp operation = GetILOp(generator, testCase.Instruction.opcode);
 
@@ -331,6 +347,7 @@ public sealed class ControlFlowGraphGeneratorTests
             {
                 instructions.Add(new CodeInstruction(OpCodes.Ret));
             }
+
             var generator = CreateGenerator(VoidTwoArgumentMethod, instructions);
             BasicBlock entry = FirstInstructionBlock(generator);
 
@@ -375,7 +392,7 @@ public sealed class ControlFlowGraphGeneratorTests
         // SignatureHelper is the InlineSig representation accepted by ILGenerator.Emit. Keep calli coverage separate from
         // ordinary MethodInfo-based calls because both its argument count and return behavior come from this signature.
         SignatureHelper signature = SignatureHelper.GetMethodSigHelper(
-            System.Runtime.InteropServices.CallingConvention.Cdecl,
+            CallingConvention.Cdecl,
             typeof(int));
         signature.AddArgument(typeof(int));
         var generator = CreateGenerator(
@@ -397,7 +414,7 @@ public sealed class ControlFlowGraphGeneratorTests
     public void StackBehaviour_VarpopAndVarpush_VoidCalliUsesSignature()
     {
         SignatureHelper signature = SignatureHelper.GetMethodSigHelper(
-            System.Runtime.InteropServices.CallingConvention.Cdecl,
+            CallingConvention.Cdecl,
             typeof(void));
         signature.AddArgument(typeof(int));
         var generator = CreateGenerator(
@@ -592,7 +609,7 @@ public sealed class ControlFlowGraphGeneratorTests
         var generator = CreateGenerator(
             VoidMethod,
             [
-                new CodeInstruction(OpCodes.Br, targetLabel), 
+                new CodeInstruction(OpCodes.Br, targetLabel),
                 new CodeInstruction(OpCodes.Ret).WithLabels(targetLabel),
             ]);
 
@@ -613,8 +630,8 @@ public sealed class ControlFlowGraphGeneratorTests
         var generator = CreateGenerator(
             VoidMethod,
             [
-                new CodeInstruction(OpCodes.Ldc_I4_1), 
-                new CodeInstruction(OpCodes.Br, targetLabel), 
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Br, targetLabel),
                 new CodeInstruction(OpCodes.Pop).WithLabels(targetLabel),
                 new CodeInstruction(OpCodes.Ret),
             ]);
@@ -638,7 +655,7 @@ public sealed class ControlFlowGraphGeneratorTests
         var generator = CreateGenerator(
             VoidMethod,
             [
-                new CodeInstruction(OpCodes.Br, loopLabel), 
+                new CodeInstruction(OpCodes.Br, loopLabel),
                 new CodeInstruction(OpCodes.Br, loopLabel).WithLabels(loopLabel),
             ]);
 
@@ -767,8 +784,8 @@ public sealed class ControlFlowGraphGeneratorTests
         var generator = CreateGenerator(
             VoidMethod,
             [
-                new CodeInstruction(OpCodes.Ldc_I4_0).WithLabels(loopLabel), 
-                new CodeInstruction(OpCodes.Brtrue, loopLabel), 
+                new CodeInstruction(OpCodes.Ldc_I4_0).WithLabels(loopLabel),
+                new CodeInstruction(OpCodes.Brtrue, loopLabel),
                 new CodeInstruction(OpCodes.Ret),
             ]);
 
@@ -815,7 +832,7 @@ public sealed class ControlFlowGraphGeneratorTests
         var generator = CreateGenerator(
             VoidMethod,
             [
-                new CodeInstruction(OpCodes.Br_S, targetLabel), 
+                new CodeInstruction(OpCodes.Br_S, targetLabel),
                 new CodeInstruction(OpCodes.Ret).WithLabels(targetLabel),
             ]);
 
@@ -938,8 +955,8 @@ public sealed class ControlFlowGraphGeneratorTests
         var generator = CreateGenerator(
             VoidMethod,
             [
-                new CodeInstruction(OpCodes.Ldc_I4_0), 
-                new CodeInstruction(OpCodes.Brtrue, nextLabel), 
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brtrue, nextLabel),
                 new CodeInstruction(OpCodes.Ret).WithLabels(nextLabel),
             ]);
 
@@ -985,9 +1002,9 @@ public sealed class ControlFlowGraphGeneratorTests
     {
         Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
         var generator = CreateGenerator(
-            VoidMethod, 
+            VoidMethod,
             [
-                new CodeInstruction(OpCodes.Nop), 
+                new CodeInstruction(OpCodes.Nop),
                 new CodeInstruction(OpCodes.Ret).WithLabels(targetLabel),
             ]);
 
@@ -1005,8 +1022,8 @@ public sealed class ControlFlowGraphGeneratorTests
         var generator = CreateGenerator(
             VoidMethod,
             [
-                new CodeInstruction(OpCodes.Ldc_I4_1), 
-                new CodeInstruction(OpCodes.Pop).WithLabels(targetLabel), 
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Pop).WithLabels(targetLabel),
                 new CodeInstruction(OpCodes.Ret),
             ]);
 
@@ -1083,10 +1100,10 @@ public sealed class ControlFlowGraphGeneratorTests
         var generator = CreateGenerator(
             VoidMethod,
             [
-                new CodeInstruction(OpCodes.Nop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock)), 
-                new CodeInstruction(OpCodes.Leave, endLabel), 
-                new CodeInstruction(OpCodes.Nop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock)), 
-                new CodeInstruction(OpCodes.Endfinally).WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)), 
+                new CodeInstruction(OpCodes.Nop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock)),
+                new CodeInstruction(OpCodes.Leave, endLabel),
+                new CodeInstruction(OpCodes.Nop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock)),
+                new CodeInstruction(OpCodes.Endfinally).WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)),
                 new CodeInstruction(OpCodes.Ret).WithLabels(endLabel),
             ]);
 
@@ -1143,9 +1160,11 @@ public sealed class ControlFlowGraphGeneratorTests
             [
                 new CodeInstruction(OpCodes.Nop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock)),
                 new CodeInstruction(OpCodes.Leave, endLabel),
-                new CodeInstruction(OpCodes.Pop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(InvalidOperationException))),
+                new CodeInstruction(OpCodes.Pop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock,
+                    typeof(InvalidOperationException))),
                 new CodeInstruction(OpCodes.Leave, endLabel),
-                new CodeInstruction(OpCodes.Pop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(ArgumentException))),
+                new CodeInstruction(OpCodes.Pop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock,
+                    typeof(ArgumentException))),
                 new CodeInstruction(OpCodes.Leave, endLabel).WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)),
                 new CodeInstruction(OpCodes.Ret).WithLabels(endLabel),
             ]);
@@ -1211,7 +1230,8 @@ public sealed class ControlFlowGraphGeneratorTests
                 new CodeInstruction(OpCodes.Ldc_I4_0),
                 new CodeInstruction(OpCodes.Brtrue, secondCatchBlockLabel),
                 new CodeInstruction(OpCodes.Leave, endLabel),
-                new CodeInstruction(OpCodes.Leave, endLabel).WithLabels(secondCatchBlockLabel).WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)),
+                new CodeInstruction(OpCodes.Leave, endLabel).WithLabels(secondCatchBlockLabel)
+                    .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)),
                 new CodeInstruction(OpCodes.Ret).WithLabels(endLabel),
             ]);
 

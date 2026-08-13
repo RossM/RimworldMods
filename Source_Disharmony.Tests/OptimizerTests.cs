@@ -242,7 +242,6 @@ public static class OptimizerPatches
     [Target(typeof(OptimizerMixedTargets), nameof(OptimizerMixedTargets.AsInterfaceOnLocal))]
     [PatchOptions(PatchOptions.Optimize)]
     public static void AsInterface_Local_SuccessAndFailure() => RecordPatch();
-
 }
 
 [TestFixture]
@@ -940,8 +939,7 @@ public sealed class OptimizerTests : PatchTestBase
             nameof(OptimizerPatches.ExplicitReferenceCast_EvaluationStack_SuccessAndFailure));
 
         Assert.That(OptimizerMixedTargets.ExplicitReferenceCastOnEvaluationStack(true), Is.EqualTo(7));
-        Assert.Throws<InvalidCastException>(
-            () => OptimizerMixedTargets.ExplicitReferenceCastOnEvaluationStack(false));
+        Assert.Throws<InvalidCastException>(() => OptimizerMixedTargets.ExplicitReferenceCastOnEvaluationStack(false));
         Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
     }
 
@@ -965,8 +963,7 @@ public sealed class OptimizerTests : PatchTestBase
             nameof(OptimizerPatches.ExplicitUnboxingCast_EvaluationStack_SuccessAndFailure));
 
         Assert.That(OptimizerMixedTargets.ExplicitUnboxingCastOnEvaluationStack(true), Is.EqualTo(42));
-        Assert.Throws<InvalidCastException>(
-            () => OptimizerMixedTargets.ExplicitUnboxingCastOnEvaluationStack(false));
+        Assert.Throws<InvalidCastException>(() => OptimizerMixedTargets.ExplicitUnboxingCastOnEvaluationStack(false));
         Assert.That(OptimizerPatches.PatchCalls, Is.EqualTo(2));
     }
 

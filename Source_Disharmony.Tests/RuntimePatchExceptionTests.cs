@@ -116,7 +116,8 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
     public void RuleBuilder_BaseMethodBindingWithoutBaseImplementation_IsRejectedBeforeUpdateMethod()
     {
         MethodInfo patch = typeof(RuntimePatchExceptionPatches)
-            .GetMethod(nameof(RuntimePatchExceptionPatches.RuleBuilder_BaseMethodBindingWithoutBaseImplementation_IsRejectedBeforeUpdateMethod))!;
+            .GetMethod(nameof(RuntimePatchExceptionPatches
+                .RuleBuilder_BaseMethodBindingWithoutBaseImplementation_IsRejectedBeforeUpdateMethod))!;
         MethodInfo target = typeof(InstanceMethodTargetsWithoutFields)
             .GetMethod(nameof(InstanceMethodTargetsWithoutFields.Void))!;
 

@@ -38,7 +38,6 @@ public static class AutopatcherRegistrationPatches
     public static void Patch_AllInformation_UsesExplicitInnerPostfix(ref int __result) => __result = 42;
 
     public static void Patch_AllInformation_UsesExplicitFieldSetter(ref int value) => value = 42;
-
 }
 
 public static class PatchTypeProcessesEveryPatchMethodOnTypePatches
