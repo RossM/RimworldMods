@@ -305,6 +305,25 @@ internal class ControlFlowGraph
         }
     }
 
+    public void RemoveExceptionGroup(ExceptionGroup group)
+    {
+        if (!exceptionGroups.Remove(group))
+            throw new InvalidOperationException();
+
+        ExceptionRegion[] regions = [group.ProtectedRegion, .. group.HandlerRegions];
+        foreach (ExceptionRegion region in regions)
+        {
+            exceptionGroupsByRegion.Remove(region);
+            nextRegion.Remove(region);
+        }
+    }
+
+    public void ReplaceExceptionGroup(ExceptionGroup group)
+    {
+        RemoveExceptionGroup(GetExceptionGroup(group.ProtectedRegion));
+        AddExceptionGroup(group);
+    }
+
     /// <summary>
     ///     Validates the current state.
     /// </summary>
@@ -326,6 +345,17 @@ internal class ControlFlowGraph
         {
             if (!basicBlocks[edge.Source].Branch.Labels.Contains(edge.Destination))
                 throw new InvalidOperationException("Edge not referenced");
+        }
+
+        foreach (var block in BasicBlocks)
+        {
+            var region = block.Region;
+            while (region is ExceptionRegion exceptionRegion)
+            {
+                if (!exceptionGroupsByRegion.ContainsKey(exceptionRegion))
+                    throw new InvalidOperationException("Region not in group");
+                region = exceptionRegion.Parent;
+            }
         }
     }
 }

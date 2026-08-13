@@ -2,6 +2,8 @@
 
 internal class Optimizer
 {
+    private static readonly bool forceDebug;
+    private static readonly string forceDebugForMethod;
     private readonly MethodBase method;
     private readonly List<CodeInstruction> inputInstructions;
     internal readonly ILGenerator generator;
@@ -9,12 +11,9 @@ internal class Optimizer
     internal readonly List<Type> parameterTypes;
     internal readonly Type returnType;
 
-    internal ControlFlowGraph? cfg;
+    internal ControlFlowGraph cfg = new();
     internal readonly Dictionary<int, Argument> arguments = [];
     internal readonly Dictionary<int, Local> locals = [];
-
-    private static readonly bool forceDebug;
-    private static readonly string forceDebugForMethod;
 
     private readonly RootRegion rootRegion = new(new BlockLabel());
 
@@ -45,6 +44,36 @@ internal class Optimizer
         controlFlowGraphGenerator.CreateControlFlowGraph();
         cfg = controlFlowGraphGenerator.ControlFlowGraph;
 
+        MergeStackSlots();
+
         return inputInstructions;
+    }
+
+    public void MergeStackSlots()
+    {
+        DisjointSetUnion<Op> tree = new();
+
+        foreach (var edge in cfg.Edges)
+        foreach (var assignment in edge.EdgeAssignments)
+        {
+            tree.Add(assignment.Input);
+            tree.Add(assignment.Output);
+        }
+
+        foreach (var edge in cfg.Edges)
+        foreach (var assignment in edge.EdgeAssignments)
+        {
+            tree.Merge(assignment.Output, assignment.Input);
+        }
+
+        ReplaceVisitor visitor = new();
+        foreach (var group in tree)
+        foreach (var op in group)
+        {
+            if (op != group.Key)
+                visitor.Replacements[op] = group.Key;
+        }
+
+        visitor.Visit(cfg);
     }
 }
