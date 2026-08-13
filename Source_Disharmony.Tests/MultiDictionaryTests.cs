@@ -1,3 +1,5 @@
+using Disharmony.Utilities;
+
 namespace Disharmony.Tests;
 
 [TestFixture]

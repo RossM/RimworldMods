@@ -1,10 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Disharmony;
+namespace Disharmony.Utilities;
 
 /// <summary>
-///     Associates each key with an insertion-ordered collection of values. The public API exposes
-///     no collection mutators, so additions remain centralized in <see cref="Add"/>.
+///     Associates each key with an insertion-ordered collection of values.
 /// </summary>
 internal sealed class MultiDictionary<TKey, TValue> where TKey : notnull
 {

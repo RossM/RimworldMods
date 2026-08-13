@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Disharmony.Optimizer;
+namespace Disharmony.Utilities;
 
 /// <summary>
 ///     FIFO worklist which contains each value at most once.

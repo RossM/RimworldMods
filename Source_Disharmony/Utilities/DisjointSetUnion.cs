@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Disharmony.Optimizer;
+namespace Disharmony.Utilities;
 
 internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>> where T : class
 {
