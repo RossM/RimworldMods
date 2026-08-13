@@ -284,6 +284,31 @@ public sealed class ControlFlowGraphGeneratorTests
         Assert.That(generator.BlockStacks[block.Label].OutgoingStack, Is.Empty);
     }
 
+    [Test]
+    public void ControlFlow_Throw_ConsumesExceptionAndHasNoSuccessor()
+    {
+        var generator = CreateGenerator(
+            VoidMethod,
+            [new CodeInstruction(OpCodes.Ldnull), new CodeInstruction(OpCodes.Throw)]);
+
+        BasicBlock block = generator.ControlFlowGraph.BasicBlocks.Single();
+        Assert.That(block.Branch, Is.TypeOf<Throw>());
+        Assert.That(((Throw)block.Branch).Exception, Is.TypeOf<StackSlot>());
+        Assert.That(block.Branch.Labels, Is.Empty);
+        Assert.That(generator.BlockStacks[block.Label].OutgoingStack, Is.Empty);
+    }
+
+    [Test]
+    public void ControlFlow_Rethrow_HasNoInputAndNoSuccessor()
+    {
+        var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Rethrow)]);
+
+        BasicBlock block = generator.ControlFlowGraph.BasicBlocks.Single();
+        Assert.That(block.Branch, Is.TypeOf<Rethrow>());
+        Assert.That(block.Branch.Labels, Is.Empty);
+        Assert.That(generator.BlockStacks[block.Label].OutgoingStack, Is.Empty);
+    }
+
     private static ControlFlowGraphGenerator CreateGenerator(MethodBase method, List<CodeInstruction> instructions)
     {
         var generator = new ControlFlowGraphGenerator(method, instructions);
