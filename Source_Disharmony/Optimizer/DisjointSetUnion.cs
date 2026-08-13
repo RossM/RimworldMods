@@ -29,7 +29,7 @@ internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>> where T : clas
     {
         var rootLeft = GetRoot(left);
         var rootRight = GetRoot(right);
-        if (rootLeft != rootRight)
+        if (!Equals(rootLeft, rootRight))
             parents[rootLeft] = rootRight;
     }
 
