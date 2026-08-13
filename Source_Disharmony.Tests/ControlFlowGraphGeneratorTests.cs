@@ -998,6 +998,72 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
+    public void ControlFlow_ForwardBranch_CarriesReturnValuePastUnreachableAnnotationToLocalStore()
+    {
+        // Patch rules emit annotations as real nops. The unreachable annotation block must not overwrite the one-slot
+        // stack established for the labelled destination by the preceding forward branch.
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        LocalBuilder result = il.DeclareLocal(typeof(int));
+        Label storeLabel = il.DefineLabel();
+
+        var generator = CreateGenerator(
+            IntMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_7),
+                new CodeInstruction(OpCodes.Br, storeLabel),
+                CodeInstruction.Annotation("Unreachable rule boundary"),
+                new CodeInstruction(OpCodes.Nop).WithLabels(storeLabel),
+                new CodeInstruction(OpCodes.Stloc_S, result),
+                new CodeInstruction(OpCodes.Ldloc_S, result),
+                new CodeInstruction(OpCodes.Ret),
+            ]);
+
+        BasicBlock destination = generator.ControlFlowGraph.GetBlock(generator.BlockLabels[storeLabel]);
+        Assert.That(generator.BlockStacks[destination.Label].IncomingStack, Has.Count.EqualTo(1));
+        Assert.That(generator.BlockStacks[destination.Label].OutgoingStack, Is.Empty);
+        Assert.That(GetILOp(generator, OpCodes.Stloc_S).Inputs,
+            Is.EqualTo(generator.BlockStacks[destination.Label].IncomingStack));
+    }
+
+    [Test]
+    public void ControlFlow_ForwardBranch_CarriesInlineBooleanPastUnreachableAnnotationToLocalStore()
+    {
+        // InlineRuleBuilder leaves an annotation between the branch returning from the inlined method and its return
+        // label. Prefix skip decisions use this exact shape before storing the returned bool to a local.
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        LocalBuilder result = il.DeclareLocal(typeof(int));
+        LocalBuilder runOriginal = il.DeclareLocal(typeof(bool));
+        Label storeBooleanLabel = il.DefineLabel();
+        Label skipOriginalLabel = il.DefineLabel();
+
+        var generator = CreateGenerator(
+            IntMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Stloc_S, result),
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Br, storeBooleanLabel),
+                CodeInstruction.Annotation("Unreachable end of inlined method"),
+                new CodeInstruction(OpCodes.Nop).WithLabels(storeBooleanLabel),
+                new CodeInstruction(OpCodes.Stloc_S, runOriginal),
+                new CodeInstruction(OpCodes.Ldloc_S, runOriginal),
+                new CodeInstruction(OpCodes.Brfalse, skipOriginalLabel),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Stloc_S, result),
+                new CodeInstruction(OpCodes.Nop).WithLabels(skipOriginalLabel),
+                new CodeInstruction(OpCodes.Ldloc_S, result),
+                new CodeInstruction(OpCodes.Ret),
+            ]);
+
+        BasicBlock booleanStore = generator.ControlFlowGraph.GetBlock(generator.BlockLabels[storeBooleanLabel]);
+        Assert.That(generator.BlockStacks[booleanStore.Label].IncomingStack, Has.Count.EqualTo(1));
+        Assert.That(generator.BlockStacks[booleanStore.Label].OutgoingStack, Is.Empty);
+        ILOp store = booleanStore.Ops.SelectMany(Flatten).OfType<ILOp>()
+            .First(operation => operation.IL.OpCode == OpCodes.Stloc_S);
+        Assert.That(store.Inputs, Has.Count.EqualTo(1));
+    }
+
+    [Test]
     public void ControlFlow_Fallthrough_WithoutCarriedStackCreatesImplicitEdge()
     {
         Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
