@@ -310,25 +310,25 @@ internal class ControlFlowGraphGenerator
 
     private Branch? ConvertBranch(CodeInstruction instruction, ILInstruction il, List<StackSlot> popped, BlockLabel? fallthroughLabel)
     {
-        Branch? branch;
-        branch = instruction.opcode.FlowControl switch
+        Branch? branch = OpCodeData.GetCanonicalOpcode(instruction) switch
         {
-            FlowControl.Branch => OpCodeData.GetCanonicalOpcode(instruction) switch
+            OpCodeValues.Br when instruction.operand is Label label => new UnconditionalBranch(BlockLabels[label]),
+            OpCodeValues.Leave when instruction.operand is Label label => new Leave(BlockLabels[label]),
+            OpCodeValues.Throw => new Throw(popped[0]),
+            OpCodeValues.Rethrow => new Rethrow(),
+            _ => instruction.opcode.FlowControl switch
             {
-                OpCodeValues.Br when instruction.operand is Label label => new UnconditionalBranch(BlockLabels[label]),
-                OpCodeValues.Leave when instruction.operand is Label label => new Leave(BlockLabels[label]),
+                FlowControl.Cond_Branch when instruction.operand is Label label =>
+                    new ConditionalBranch(instruction.opcode, popped,
+                        [fallthroughLabel ?? throw new InvalidOperationException(), BlockLabels[label]]),
+                FlowControl.Cond_Branch when instruction.operand is Label[] labels =>
+                    new ConditionalBranch(instruction.opcode, popped,
+                        [fallthroughLabel ?? throw new InvalidOperationException(), .. labels.Select(label => BlockLabels[label])]),
+                FlowControl.Return when popped.Count == 0 => new Return(il, new VoidOp()),
+                FlowControl.Return => new Return(il, popped[0]),
+                FlowControl.Throw => new Throw(popped[0]),
                 _ => throw new ArgumentOutOfRangeException(),
             },
-            FlowControl.Cond_Branch when instruction.operand is Label label =>
-                new ConditionalBranch(instruction.opcode, popped,
-                    [fallthroughLabel ?? throw new InvalidOperationException(), BlockLabels[label]]),
-            FlowControl.Cond_Branch when instruction.operand is Label[] labels =>
-                new ConditionalBranch(instruction.opcode, popped,
-                    [fallthroughLabel ?? throw new InvalidOperationException(), .. labels.Select(label => BlockLabels[label])]),
-            FlowControl.Return when popped.Count == 0 => new Return(il, new VoidOp()),
-            FlowControl.Return => new Return(il, popped[0]),
-            FlowControl.Throw => new Throw(popped[0]),
-            _ => throw new ArgumentOutOfRangeException(),
         };
         return branch;
     }
