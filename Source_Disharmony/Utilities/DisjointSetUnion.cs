@@ -13,10 +13,10 @@ namespace Disharmony.Utilities;
 ///     </para>
 /// </remarks>
 /// <typeparam name="T"></typeparam>
-internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>> where T : class
+internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>>
 {
     private IEnumerable<IGrouping<T, T>> Groups => parents.Keys.ToArray().GroupBy(GetRoot);
-    private readonly Dictionary<T, T?> parents = [];
+    private readonly Dictionary<T, T> parents = [];
 
     public T this[T value] => GetRoot(value);
 
@@ -25,15 +25,15 @@ internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>> where T : clas
         if (parents.ContainsKey(value))
             return false;
 
-        parents.Add(value, null);
+        parents.Add(value, value);
         return true;
     }
 
     private T GetRoot(T value)
     {
         T? parent = parents[value];
-        if (parent == null)
-            return value;
+        if (Equals(value, parent))
+            return parent;
         return parents[value] = GetRoot(parent);
     }
 
