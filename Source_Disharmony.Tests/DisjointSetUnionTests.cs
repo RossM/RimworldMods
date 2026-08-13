@@ -6,6 +6,8 @@ namespace Disharmony.Tests;
 [TestFixture]
 public sealed class DisjointSetUnionTests
 {
+    private sealed record ValueRecord(int Value);
+
     [Test]
     public void Add_NewAndExistingValues_ReturnsWhetherTheValueWasAdded()
     {
@@ -118,6 +120,70 @@ public sealed class DisjointSetUnionTests
             Assert.That(groups.Single(group => ReferenceEquals(group.Key, fourth)),
                 Is.EquivalentTo(new[] { third, fourth }));
             Assert.That(((IEnumerable)sets).Cast<object>().Count(), Is.EqualTo(2));
+        });
+    }
+
+    [Test]
+    public void CustomEquality_EqualValuesBelongToTheSameSet()
+    {
+        DisjointSetUnion<ValueRecord> sets = new();
+        ValueRecord canonical = new(1);
+        ValueRecord equalValue = new(1);
+
+        bool addedCanonical = sets.Add(canonical);
+        bool addedEqualValue = sets.Add(equalValue);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(addedCanonical, Is.True);
+            Assert.That(addedEqualValue, Is.False);
+            Assert.That(sets.GetRoot(canonical), Is.EqualTo(sets.GetRoot(equalValue)));
+            Assert.That(sets[canonical], Is.EqualTo(sets[equalValue]));
+            Assert.That(sets.Count(), Is.EqualTo(1));
+            Assert.That(sets.Single().Count(), Is.EqualTo(1));
+            Assert.That(sets.Single().Single(), Is.EqualTo(canonical));
+        });
+    }
+
+    [Test]
+    public void CustomEquality_MergeUsingEqualInstancesCombinesTheirSets()
+    {
+        DisjointSetUnion<ValueRecord> sets = new();
+        ValueRecord left = new(1);
+        ValueRecord equalLeft = new(1);
+        ValueRecord right = new(2);
+        ValueRecord equalRight = new(2);
+        sets.Add(left);
+        sets.Add(right);
+
+        sets.Merge(equalLeft, equalRight);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(sets.GetRoot(left), Is.EqualTo(sets.GetRoot(equalLeft)));
+            Assert.That(sets.GetRoot(left), Is.EqualTo(sets.GetRoot(right)));
+            Assert.That(sets.GetRoot(right), Is.EqualTo(sets.GetRoot(equalRight)));
+            Assert.That(sets.Count(), Is.EqualTo(1));
+            Assert.That(sets.Single(), Is.EquivalentTo(new[] { left, right }));
+        });
+    }
+
+    [Test]
+    public void CustomEquality_MergeEqualValuesLeavesTheSetUnchangedAndUsable()
+    {
+        DisjointSetUnion<ValueRecord> sets = new();
+        ValueRecord value = new(1);
+        ValueRecord equalValue = new(1);
+        sets.Add(value);
+
+        sets.Merge(value, equalValue);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(sets.GetRoot(value), Is.EqualTo(sets.GetRoot(equalValue)));
+            Assert.That(sets.Count(), Is.EqualTo(1));
+            Assert.That(sets.Single().Count(), Is.EqualTo(1));
+            Assert.That(sets.Single().Single(), Is.EqualTo(value));
         });
     }
 }
