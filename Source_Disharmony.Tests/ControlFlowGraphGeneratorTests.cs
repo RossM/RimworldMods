@@ -8,6 +8,11 @@ namespace Disharmony.Tests;
 [TestFixture]
 public sealed class ControlFlowGraphGeneratorTests
 {
+    // These tests describe valid CIL according to CLI semantics. ControlFlowGraphGenerator is not required to validate
+    // invalid CIL or provide predictable behavior for it, so do not add rejection tests for malformed instruction streams.
+    // Methods whose metadata is inspected belong in Disharmony.TestTargets so the compiler-generated metadata is always
+    // produced by the project's Release configuration rather than the test runner's current configuration.
+
     private static readonly MethodInfo VoidMethod =
         typeof(ControlFlowGraphTargets).GetMethod(nameof(ControlFlowGraphTargets.ReturnVoid))!;
 
@@ -17,11 +22,23 @@ public sealed class ControlFlowGraphGeneratorTests
     private static readonly MethodInfo TwoArgumentMethod =
         typeof(ControlFlowGraphTargets).GetMethod(nameof(ControlFlowGraphTargets.Add))!;
 
+    private static readonly MethodInfo OneArgumentMethod =
+        typeof(ControlFlowGraphTargets).GetMethod(nameof(ControlFlowGraphTargets.Increment))!;
+
+    private static readonly MethodInfo VoidOneArgumentMethod =
+        typeof(ControlFlowGraphTargets).GetMethod(nameof(ControlFlowGraphTargets.ConsumeOne))!;
+
     private static readonly MethodInfo VoidTwoArgumentMethod =
         typeof(ControlFlowGraphTargets).GetMethod(nameof(ControlFlowGraphTargets.Consume))!;
 
+    private static readonly MethodInfo ParameterShapesMethod =
+        typeof(ControlFlowGraphTargets).GetMethod(nameof(ControlFlowGraphTargets.ParameterShapes))!;
+
     private static readonly MethodInfo InstanceMethod =
         typeof(ControlFlowGraphInstanceTarget).GetMethod(nameof(ControlFlowGraphInstanceTarget.Add))!;
+
+    private static readonly MethodInfo StructInstanceMethod =
+        typeof(ControlFlowGraphStructTarget).GetMethod(nameof(ControlFlowGraphStructTarget.Add))!;
 
     private static readonly ConstructorInfo Constructor =
         typeof(ControlFlowGraphInstanceTarget).GetConstructor([typeof(int)])!;
@@ -48,6 +65,54 @@ public sealed class ControlFlowGraphGeneratorTests
         Assert.That(generator.Arguments.Keys, Is.EqualTo(new[] { 0, 1 }));
         Assert.That(generator.Arguments[0].Type, Is.EqualTo(typeof(ControlFlowGraphInstanceTarget)));
         Assert.That(generator.Arguments[1].Type, Is.EqualTo(typeof(int)));
+    }
+
+    [Test]
+    public void Metadata_StructInstanceMethod_UsesByRefThisBeforeDeclaredArguments()
+    {
+        var generator = CreateGenerator(StructInstanceMethod, ThrowTerminated());
+
+        Assert.That(generator.Arguments.Keys, Is.EqualTo(new[] { 0, 1 }));
+        Assert.That(generator.Arguments[0].Type, Is.EqualTo(typeof(ControlFlowGraphStructTarget).MakeByRefType()));
+        Assert.That(generator.Arguments[1].Type, Is.EqualTo(typeof(int)));
+    }
+
+    [Test]
+    public void Metadata_Constructor_IncludesThisAndHasVoidReturnType()
+    {
+        var generator = CreateGenerator(Constructor, ThrowTerminated());
+
+        Assert.That(generator.Arguments.Keys, Is.EqualTo(new[] { 0, 1 }));
+        Assert.That(generator.Arguments[0].Type, Is.EqualTo(typeof(ControlFlowGraphInstanceTarget)));
+        Assert.That(generator.Arguments[1].Type, Is.EqualTo(typeof(int)));
+        Assert.That(generator.ReturnType, Is.EqualTo(typeof(void)));
+    }
+
+    [Test]
+    public void Metadata_DynamicMethodWithoutMethodBodyStillCreatesArguments()
+    {
+        var method = new DynamicMethod("ControlFlowGraphDynamicMethod", typeof(void), [typeof(int)]);
+
+        var generator = CreateGenerator(method, [new CodeInstruction(OpCodes.Ret)]);
+
+        Assert.That(generator.MethodBody, Is.Null);
+        Assert.That(generator.Arguments.Keys, Is.EqualTo(new[] { 0 }));
+        Assert.That(generator.Arguments[0].Type, Is.EqualTo(typeof(int)));
+    }
+
+    [Test]
+    public void Metadata_ByRefParameterShapesArePreserved()
+    {
+        var generator = CreateGenerator(ParameterShapesMethod, ThrowTerminated());
+
+        Assert.That(generator.Arguments.Keys, Is.EqualTo(new[] { 0, 1, 2 }));
+        Assert.That(generator.Arguments.Values.Select(argument => argument.Type),
+            Is.EqualTo(new[]
+            {
+                typeof(int).MakeByRefType(),
+                typeof(long).MakeByRefType(),
+                typeof(object).MakeByRefType(),
+            }));
     }
 
     [Test]
@@ -78,6 +143,21 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
+    public void Locals_MetadataLocalCanBeReferencedWithoutLocalBuilder()
+    {
+        MethodInfo method = typeof(ControlFlowGraphTargets)
+            .GetMethod(nameof(ControlFlowGraphTargets.MethodWithLocal))!;
+
+        var generator = CreateGenerator(
+            method,
+            [new CodeInstruction(OpCodes.Ldloc_0), new CodeInstruction(OpCodes.Pop), .. ThrowTerminated()]);
+
+        Assert.That(generator.Locals[0].Type, Is.EqualTo(typeof(int)));
+        Assert.That(generator.Locals[0].LocalBuilder, Is.Null);
+        Assert.That(GetILOp(generator, OpCodes.Ldloc_0).Inputs, Is.Empty);
+    }
+
+    [Test]
     public void Locals_MetadataLocalAndMatchingBuilder_AreMerged()
     {
         MethodInfo method = typeof(ControlFlowGraphTargets)
@@ -97,47 +177,74 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
-    public void Locals_MetadataLocalAndConflictingBuilder_Throws()
-    {
-        MethodInfo method = typeof(ControlFlowGraphTargets)
-            .GetMethod(nameof(ControlFlowGraphTargets.MethodWithLocal))!;
-        LocalVariableInfo metadataLocal = method.GetMethodBody()!.LocalVariables[0];
-        Assert.That(metadataLocal.LocalType, Is.EqualTo(typeof(int)));
-        ILGenerator localGenerator = PatchProcessor.CreateILGenerator();
-        LocalBuilder builder = null!;
-        for (var index = 0; index <= metadataLocal.LocalIndex; index++)
-            builder = localGenerator.DeclareLocal(typeof(string));
-        var generator = new ControlFlowGraphGenerator(
-            method,
-            [new CodeInstruction(OpCodes.Ldloc_S, builder), new CodeInstruction(OpCodes.Pop), .. ThrowTerminated()]);
-
-        Assert.Throws<InvalidOperationException>(() => generator.CreateControlFlowGraph());
-    }
-
-    [Test]
     public void StackBehaviourPop_EveryFixedFormCreatesExpectedInputs()
     {
-        (StackBehaviour Behaviour, CodeInstruction Instruction, int InputCount)[] cases =
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        LocalBuilder intLocal = il.DeclareLocal(typeof(int));
+        LocalBuilder longLocal = il.DeclareLocal(typeof(long));
+        LocalBuilder floatLocal = il.DeclareLocal(typeof(float));
+        LocalBuilder doubleLocal = il.DeclareLocal(typeof(double));
+        (StackBehaviour Behaviour, CodeInstruction[] Inputs, CodeInstruction Instruction)[] cases =
         [
-            (StackBehaviour.Pop0, new CodeInstruction(OpCodes.Nop), 0),
-            (StackBehaviour.Pop1, new CodeInstruction(OpCodes.Pop), 1),
-            (StackBehaviour.Pop1_pop1, new CodeInstruction(OpCodes.Add), 2),
-            (StackBehaviour.Popi, new CodeInstruction(OpCodes.Initobj, typeof(int)), 1),
-            (StackBehaviour.Popi_pop1, new CodeInstruction(OpCodes.Stobj, typeof(int)), 2),
-            (StackBehaviour.Popi_popi, new CodeInstruction(OpCodes.Stind_I4), 2),
-            (StackBehaviour.Popi_popi8, new CodeInstruction(OpCodes.Stind_I8), 2),
-            (StackBehaviour.Popi_popi_popi, new CodeInstruction(OpCodes.Cpblk), 3),
-            (StackBehaviour.Popi_popr4, new CodeInstruction(OpCodes.Stind_R4), 2),
-            (StackBehaviour.Popi_popr8, new CodeInstruction(OpCodes.Stind_R8), 2),
-            (StackBehaviour.Popref, new CodeInstruction(OpCodes.Castclass, typeof(object)), 1),
-            (StackBehaviour.Popref_pop1, new CodeInstruction(OpCodes.Stfld, InstanceField), 2),
-            (StackBehaviour.Popref_popi, new CodeInstruction(OpCodes.Ldelem_I4), 2),
-            (StackBehaviour.Popref_popi_popi, new CodeInstruction(OpCodes.Stelem_I4), 3),
-            (StackBehaviour.Popref_popi_popi8, new CodeInstruction(OpCodes.Stelem_I8), 3),
-            (StackBehaviour.Popref_popi_popr4, new CodeInstruction(OpCodes.Stelem_R4), 3),
-            (StackBehaviour.Popref_popi_popr8, new CodeInstruction(OpCodes.Stelem_R8), 3),
-            (StackBehaviour.Popref_popi_popref, new CodeInstruction(OpCodes.Stelem_Ref), 3),
-            (StackBehaviour.Popref_popi_pop1, new CodeInstruction(OpCodes.Stelem, typeof(object)), 3),
+            (StackBehaviour.Pop0, [], new CodeInstruction(OpCodes.Nop)),
+            (StackBehaviour.Pop1, [new CodeInstruction(OpCodes.Ldc_I4_0)], new CodeInstruction(OpCodes.Pop)),
+            (StackBehaviour.Pop1_pop1,
+                [new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_I4_1)],
+                new CodeInstruction(OpCodes.Add)),
+            (StackBehaviour.Popi, [new CodeInstruction(OpCodes.Ldloca_S, intLocal)],
+                new CodeInstruction(OpCodes.Initobj, typeof(int))),
+            (StackBehaviour.Popi_pop1,
+                [new CodeInstruction(OpCodes.Ldloca_S, intLocal), new CodeInstruction(OpCodes.Ldc_I4_1)],
+                new CodeInstruction(OpCodes.Stobj, typeof(int))),
+            (StackBehaviour.Popi_popi,
+                [new CodeInstruction(OpCodes.Ldloca_S, intLocal), new CodeInstruction(OpCodes.Ldc_I4_1)],
+                new CodeInstruction(OpCodes.Stind_I4)),
+            (StackBehaviour.Popi_popi8,
+                [new CodeInstruction(OpCodes.Ldloca_S, longLocal), new CodeInstruction(OpCodes.Ldc_I8, 1L)],
+                new CodeInstruction(OpCodes.Stind_I8)),
+            (StackBehaviour.Popi_popi_popi,
+                [new CodeInstruction(OpCodes.Ldloca_S, intLocal), new CodeInstruction(OpCodes.Ldloca_S, intLocal),
+                    new CodeInstruction(OpCodes.Ldc_I4_4)],
+                new CodeInstruction(OpCodes.Cpblk)),
+            (StackBehaviour.Popi_popr4,
+                [new CodeInstruction(OpCodes.Ldloca_S, floatLocal), new CodeInstruction(OpCodes.Ldc_R4, 1f)],
+                new CodeInstruction(OpCodes.Stind_R4)),
+            (StackBehaviour.Popi_popr8,
+                [new CodeInstruction(OpCodes.Ldloca_S, doubleLocal), new CodeInstruction(OpCodes.Ldc_R8, 1d)],
+                new CodeInstruction(OpCodes.Stind_R8)),
+            (StackBehaviour.Popref, [new CodeInstruction(OpCodes.Ldnull)],
+                new CodeInstruction(OpCodes.Castclass, typeof(object))),
+            (StackBehaviour.Popref_pop1,
+                [new CodeInstruction(OpCodes.Ldnull), new CodeInstruction(OpCodes.Ldc_I4_1)],
+                new CodeInstruction(OpCodes.Stfld, InstanceField)),
+            (StackBehaviour.Popref_popi,
+                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(int)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0)],
+                new CodeInstruction(OpCodes.Ldelem_I4)),
+            (StackBehaviour.Popref_popi_popi,
+                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(int)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_I4_1)],
+                new CodeInstruction(OpCodes.Stelem_I4)),
+            (StackBehaviour.Popref_popi_popi8,
+                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(long)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_I8, 1L)],
+                new CodeInstruction(OpCodes.Stelem_I8)),
+            (StackBehaviour.Popref_popi_popr4,
+                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(float)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_R4, 1f)],
+                new CodeInstruction(OpCodes.Stelem_R4)),
+            (StackBehaviour.Popref_popi_popr8,
+                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(double)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_R8, 1d)],
+                new CodeInstruction(OpCodes.Stelem_R8)),
+            (StackBehaviour.Popref_popi_popref,
+                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(object)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldnull)],
+                new CodeInstruction(OpCodes.Stelem_Ref)),
+            (StackBehaviour.Popref_popi_pop1,
+                [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Newarr, typeof(int)),
+                    new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_I4_1)],
+                new CodeInstruction(OpCodes.Stelem, typeof(int))),
         ];
         Assert.That(cases.Select(testCase => testCase.Behaviour).Distinct(), Is.EquivalentTo(
             Enum.GetValues(typeof(StackBehaviour)).Cast<StackBehaviour>()
@@ -146,28 +253,42 @@ public sealed class ControlFlowGraphGeneratorTests
         foreach (var testCase in cases)
         {
             List<CodeInstruction> instructions =
-            [.. Enumerable.Repeat(new CodeInstruction(OpCodes.Ldc_I4_0), testCase.InputCount), testCase.Instruction, .. ThrowTerminated()];
+            [.. testCase.Inputs, testCase.Instruction];
+            if (testCase.Instruction.opcode.StackBehaviourPush != StackBehaviour.Push0)
+                instructions.Add(new CodeInstruction(OpCodes.Pop));
+            instructions.AddRange(ThrowTerminated());
             var generator = CreateGenerator(VoidMethod, instructions);
             ILOp operation = GetILOp(generator, testCase.Instruction.opcode);
+            int expectedInputCount = testCase.Behaviour switch
+            {
+                StackBehaviour.Pop0 => 0,
+                StackBehaviour.Pop1 or StackBehaviour.Popi or StackBehaviour.Popref => 1,
+                StackBehaviour.Pop1_pop1 or StackBehaviour.Popi_pop1 or StackBehaviour.Popi_popi or
+                    StackBehaviour.Popi_popi8 or StackBehaviour.Popi_popr4 or StackBehaviour.Popi_popr8 or
+                    StackBehaviour.Popref_pop1 or StackBehaviour.Popref_popi => 2,
+                _ => 3,
+            };
 
-            Assert.That(operation.Inputs, Has.Count.EqualTo(testCase.InputCount), testCase.Behaviour.ToString());
+            Assert.That(operation.Inputs, Has.Count.EqualTo(expectedInputCount), testCase.Behaviour.ToString());
         }
     }
 
     [Test]
     public void StackBehaviourPop_VarpopHandlesStaticInstanceAndConstructorOperands()
     {
-        (CodeInstruction Instruction, int InputCount)[] cases =
+        (CodeInstruction[] Inputs, CodeInstruction Instruction, int InputCount)[] cases =
         [
-            (new CodeInstruction(OpCodes.Call, TwoArgumentMethod), 2),
-            (new CodeInstruction(OpCodes.Callvirt, InstanceMethod), 2),
-            (new CodeInstruction(OpCodes.Newobj, Constructor), 1),
+            ([new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Ldc_I4_2)],
+                new CodeInstruction(OpCodes.Call, TwoArgumentMethod), 2),
+            ([new CodeInstruction(OpCodes.Ldnull), new CodeInstruction(OpCodes.Ldc_I4_1)],
+                new CodeInstruction(OpCodes.Callvirt, InstanceMethod), 2),
+            ([new CodeInstruction(OpCodes.Ldc_I4_1)], new CodeInstruction(OpCodes.Newobj, Constructor), 1),
         ];
 
         foreach (var testCase in cases)
         {
             List<CodeInstruction> instructions =
-            [.. Enumerable.Repeat(new CodeInstruction(OpCodes.Ldc_I4_0), testCase.InputCount), testCase.Instruction, .. ThrowTerminated()];
+            [.. testCase.Inputs, testCase.Instruction, new CodeInstruction(OpCodes.Pop), .. ThrowTerminated()];
             var generator = CreateGenerator(VoidMethod, instructions);
             ILOp operation = GetILOp(generator, testCase.Instruction.opcode);
 
@@ -190,10 +311,29 @@ public sealed class ControlFlowGraphGeneratorTests
             (StackBehaviour.Push1_push1,
                 [new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Dup)], 2),
         ];
+        Assert.That(cases.Select(testCase => testCase.Behaviour), Is.EquivalentTo(
+            Enum.GetValues(typeof(StackBehaviour)).Cast<StackBehaviour>()
+                .Where(behaviour => behaviour != StackBehaviour.Varpush && behaviour.ToString().StartsWith("Push"))));
 
         foreach (var testCase in cases)
         {
-            var generator = CreateGenerator(TwoArgumentMethod, BranchToThrowTarget(testCase.Instructions));
+            Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+            var target = new CodeInstruction(OpCodes.Pop);
+            target.labels.Add(targetLabel);
+            List<CodeInstruction> instructions = [.. testCase.Instructions, new CodeInstruction(OpCodes.Br, targetLabel)];
+            for (var index = 0; index < testCase.StackDepth; index++)
+                instructions.Add(index == 0 ? target : new CodeInstruction(OpCodes.Pop));
+            if (testCase.StackDepth == 0)
+            {
+                target = new CodeInstruction(OpCodes.Ret);
+                target.labels.Add(targetLabel);
+                instructions.Add(target);
+            }
+            else
+            {
+                instructions.Add(new CodeInstruction(OpCodes.Ret));
+            }
+            var generator = CreateGenerator(VoidTwoArgumentMethod, instructions);
             BasicBlock entry = FirstInstructionBlock(generator);
 
             Assert.That(generator.BlockStacks[entry.Label].OutgoingStack, Has.Count.EqualTo(testCase.StackDepth),
@@ -204,17 +344,30 @@ public sealed class ControlFlowGraphGeneratorTests
     [Test]
     public void StackBehaviourPush_VarpushUsesMethodReturnType()
     {
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        Label valueTargetLabel = il.DefineLabel();
+        Label voidTargetLabel = il.DefineLabel();
+        var valueTarget = new CodeInstruction(OpCodes.Pop);
+        valueTarget.labels.Add(valueTargetLabel);
+        var voidTarget = new CodeInstruction(OpCodes.Ret);
+        voidTarget.labels.Add(voidTargetLabel);
         var valueGenerator = CreateGenerator(
             VoidMethod,
-            BranchToThrowTarget([new CodeInstruction(OpCodes.Call, IntMethod)]));
+            [
+                new CodeInstruction(OpCodes.Call, IntMethod),
+                new CodeInstruction(OpCodes.Br, valueTargetLabel),
+                valueTarget,
+                new CodeInstruction(OpCodes.Ret),
+            ]);
         var voidGenerator = CreateGenerator(
             VoidMethod,
-            BranchToThrowTarget(
             [
                 new CodeInstruction(OpCodes.Ldc_I4_0),
                 new CodeInstruction(OpCodes.Ldc_I4_0),
                 new CodeInstruction(OpCodes.Call, VoidTwoArgumentMethod),
-            ]));
+                new CodeInstruction(OpCodes.Br, voidTargetLabel),
+                voidTarget,
+            ]);
 
         BasicBlock valueEntry = FirstInstructionBlock(valueGenerator);
         BasicBlock voidEntry = FirstInstructionBlock(voidGenerator);
@@ -223,11 +376,67 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
-    public void Dup_ReusesSameStackValueTwiceWithoutCreatingAnILOp()
+    public void StackBehaviour_VarpopAndVarpush_CalliUsesSignature()
     {
+        // SignatureHelper is the InlineSig representation accepted by ILGenerator.Emit. Keep calli coverage separate from
+        // ordinary MethodInfo-based calls because both its argument count and return behavior come from this signature.
+        SignatureHelper signature = SignatureHelper.GetMethodSigHelper(
+            System.Runtime.InteropServices.CallingConvention.Cdecl,
+            typeof(int));
+        signature.AddArgument(typeof(int));
+        var calli = new CodeInstruction(OpCodes.Calli, signature);
         var generator = CreateGenerator(
             VoidMethod,
-            BranchToThrowTarget([new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Dup)]));
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Ldftn, OneArgumentMethod),
+                calli,
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ]);
+
+        ILOp operation = GetILOp(generator, OpCodes.Calli);
+        Assert.That(operation.Inputs, Has.Count.EqualTo(2));
+        Assert.That(operation.Type, Is.Not.EqualTo(typeof(void)));
+    }
+
+    [Test]
+    public void StackBehaviour_VarpopAndVarpush_VoidCalliUsesSignature()
+    {
+        SignatureHelper signature = SignatureHelper.GetMethodSigHelper(
+            System.Runtime.InteropServices.CallingConvention.Cdecl,
+            typeof(void));
+        signature.AddArgument(typeof(int));
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Ldftn, VoidOneArgumentMethod),
+                new CodeInstruction(OpCodes.Calli, signature),
+                new CodeInstruction(OpCodes.Ret),
+            ]);
+
+        ILOp operation = GetILOp(generator, OpCodes.Calli);
+        Assert.That(operation.Inputs, Has.Count.EqualTo(2));
+        Assert.That(operation.Type, Is.EqualTo(typeof(void)));
+    }
+
+    [Test]
+    public void Dup_ReusesSameStackValueTwiceWithoutCreatingAnILOp()
+    {
+        Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var target = new CodeInstruction(OpCodes.Pop);
+        target.labels.Add(targetLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Dup),
+                new CodeInstruction(OpCodes.Br, targetLabel),
+                target,
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ]);
         BasicBlock entry = FirstInstructionBlock(generator);
         List<StackSlot> outgoing = generator.BlockStacks[entry.Label].OutgoingStack;
 
@@ -239,10 +448,11 @@ public sealed class ControlFlowGraphGeneratorTests
     [Test]
     public void Prefixes_AreAttachedInOrderToFollowingInstruction()
     {
+        LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(int));
         var generator = CreateGenerator(
             VoidMethod,
             [
-                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Ldloca_S, local),
                 new CodeInstruction(OpCodes.Unaligned, (byte)1),
                 new CodeInstruction(OpCodes.Volatile),
                 new CodeInstruction(OpCodes.Ldind_I4),
@@ -254,6 +464,72 @@ public sealed class ControlFlowGraphGeneratorTests
         Assert.That(load.IL.Prefixes.Select(prefix => prefix.OpCode),
             Is.EqualTo(new[] { OpCodes.Unaligned, OpCodes.Volatile }));
         Assert.That(load.IL.Prefixes[0].Operand, Is.EqualTo((byte)1));
+        Assert.That(GetILOp(generator, OpCodes.Pop).IL.Prefixes, Is.Empty);
+    }
+
+    [Test]
+    public void Prefixes_TailIsAttachedToCallAndNotFollowingReturn()
+    {
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Tailcall),
+                new CodeInstruction(OpCodes.Call, VoidMethod),
+                new CodeInstruction(OpCodes.Ret),
+            ]);
+
+        ILOp call = GetILOp(generator, OpCodes.Call);
+        Assert.That(call.IL.Prefixes.Select(prefix => prefix.OpCode), Is.EqualTo(new[] { OpCodes.Tailcall }));
+        Return branch = (Return)FirstInstructionBlock(generator).Branch;
+        Assert.That(branch.IL.Prefixes, Is.Empty);
+    }
+
+    [Test]
+    public void Prefixes_LabelOnConstrainedPrefixTargetsBlockContainingCall()
+    {
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        LocalBuilder local = il.DeclareLocal(typeof(ControlFlowGraphStructTarget));
+        Label targetLabel = il.DefineLabel();
+        var constrained = new CodeInstruction(OpCodes.Constrained, typeof(ControlFlowGraphStructTarget));
+        constrained.labels.Add(targetLabel);
+        MethodInfo toString = typeof(object).GetMethod(nameof(ToString))!;
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Ldloca_S, local),
+                new CodeInstruction(OpCodes.Br, targetLabel),
+                constrained,
+                new CodeInstruction(OpCodes.Callvirt, toString),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ]);
+
+        BasicBlock target = generator.ControlFlowGraph.GetBlock(generator.BlockLabels[targetLabel]);
+        ILOp call = GetILOp(generator, OpCodes.Callvirt);
+        Assert.That(target.Ops.SelectMany(Flatten), Does.Contain(call));
+        Assert.That(call.IL.Prefixes.Select(prefix => prefix.OpCode), Is.EqualTo(new[] { OpCodes.Constrained }));
+        Assert.That(call.IL.Prefixes[0].Operand, Is.EqualTo(typeof(ControlFlowGraphStructTarget)));
+    }
+
+    [Test]
+    public void StackInputs_PreserveBottomToTopOperandOrder()
+    {
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_4),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Sub),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ]);
+
+        ILOp subtract = GetILOp(generator, OpCodes.Sub);
+        Assert.That(subtract.Inputs.Cast<StackSlot>().Select(slot => slot.Depth), Is.EqualTo(new[] { 0, 1 }));
+        AssignmentOp[] constantAssignments = FirstInstructionBlock(generator).Ops.OfType<AssignmentOp>().Take(2).ToArray();
+        Assert.That(constantAssignments.Select(assignment => assignment.Output), Is.EqualTo(subtract.Inputs));
+        Assert.That(constantAssignments.Select(assignment => ((ILOp)assignment.Input).IL.OpCode),
+            Is.EqualTo(new[] { OpCodes.Ldc_I4_4, OpCodes.Ldc_I4_1 }));
     }
 
     [Test]
@@ -299,11 +575,21 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
-    public void ControlFlow_Rethrow_HasNoInputAndNoSuccessor()
+    public void ExceptionRegions_Catch_RethrowHasNoInputAndNoSuccessor()
     {
-        var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Rethrow)]);
+        var tryStart = new CodeInstruction(OpCodes.Ldnull);
+        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var catchStart = new CodeInstruction(OpCodes.Pop);
+        catchStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+        var rethrow = new CodeInstruction(OpCodes.Rethrow);
+        rethrow.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var generator = CreateGenerator(
+            VoidMethod,
+            [tryStart, new CodeInstruction(OpCodes.Throw), catchStart, rethrow, new CodeInstruction(OpCodes.Ret)]);
 
-        BasicBlock block = InstructionBlocks(generator).Single();
+        CatchRegion catchRegion = generator.ControlFlowGraph.ExceptionGroups.Single().HandlerRegions.Cast<CatchRegion>().Single();
+        BasicBlock syntheticEntry = generator.ControlFlowGraph.GetBlock(catchRegion.EntryLabel);
+        BasicBlock block = generator.ControlFlowGraph.GetBlock(((UnconditionalBranch)syntheticEntry.Branch).Label);
         Assert.That(block.Branch, Is.TypeOf<Rethrow>());
         Assert.That(block.Branch.Labels, Is.Empty);
         Assert.That(generator.BlockStacks[block.Label].OutgoingStack, Is.Empty);
@@ -369,8 +655,10 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
-    public void ControlFlow_UnconditionalBranch_BackwardWithCarriedStackCreatesAssignment()
+    public void ControlFlow_UnconditionalBranch_BackwardWithCarriedStackEstablishedByForwardEdgeCreatesAssignment()
     {
+        // The earlier forward branch is required by the CLI backward-branch constraint: it establishes that the loop
+        // header can have a non-empty evaluation stack before a later back edge carries a value to the same location.
         Label loopLabel = PatchProcessor.CreateILGenerator().DefineLabel();
         var loop = new CodeInstruction(OpCodes.Pop);
         loop.labels.Add(loopLabel);
@@ -434,6 +722,126 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
+    public void ControlFlow_ConditionalBranch_ForwardWithoutCarriedStackCreatesTwoEmptyEdges()
+    {
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        Label targetLabel = il.DefineLabel();
+        Label endLabel = il.DefineLabel();
+        var target = new CodeInstruction(OpCodes.Br, endLabel);
+        target.labels.Add(targetLabel);
+        var end = new CodeInstruction(OpCodes.Ret);
+        end.labels.Add(endLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Brtrue, targetLabel),
+                new CodeInstruction(OpCodes.Br, endLabel),
+                target,
+                end,
+            ]);
+
+        BasicBlock source = FirstInstructionBlock(generator);
+        Assert.That(generator.BlockStacks[source.Label].OutgoingStack, Is.Empty);
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(source), Has.Exactly(2).Items);
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(source),
+            Has.All.Matches<Edge>(edge => edge.EdgeAssignments.Count == 0));
+    }
+
+    [Test]
+    public void ControlFlow_ConditionalBranch_ForwardWithCarriedStackCreatesTwoAssignments()
+    {
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        Label targetLabel = il.DefineLabel();
+        Label endLabel = il.DefineLabel();
+        var target = new CodeInstruction(OpCodes.Pop);
+        target.labels.Add(targetLabel);
+        var end = new CodeInstruction(OpCodes.Ret);
+        end.labels.Add(endLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4, 42),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Brtrue, targetLabel),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Br, endLabel),
+                target,
+                new CodeInstruction(OpCodes.Br, endLabel),
+                end,
+            ]);
+
+        BasicBlock source = FirstInstructionBlock(generator);
+        Assert.That(generator.BlockStacks[source.Label].OutgoingStack, Has.Count.EqualTo(1));
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(source), Has.Exactly(2).Items);
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(source),
+            Has.All.Matches<Edge>(edge => edge.EdgeAssignments.Count == 1));
+    }
+
+    [Test]
+    public void ControlFlow_ConditionalBranch_BackwardWithoutCarriedStackCreatesEmptyBackEdge()
+    {
+        Label loopLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var loop = new CodeInstruction(OpCodes.Ldc_I4_0);
+        loop.labels.Add(loopLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [loop, new CodeInstruction(OpCodes.Brtrue, loopLabel), new CodeInstruction(OpCodes.Ret)]);
+
+        BasicBlock loopBlock = FirstInstructionBlock(generator);
+        Edge backEdge = generator.ControlFlowGraph.OutgoingEdges(loopBlock)
+            .Single(edge => edge.Destination == loopBlock.Label);
+        Assert.That(generator.BlockStacks[loopBlock.Label].IncomingStack, Is.Empty);
+        Assert.That(generator.BlockStacks[loopBlock.Label].OutgoingStack, Is.Empty);
+        Assert.That(backEdge.EdgeAssignments, Is.Empty);
+    }
+
+    [Test]
+    public void ControlFlow_ConditionalBranch_BackwardWithCarriedStackEstablishedByForwardEdgeCreatesAssignment()
+    {
+        // As above, the forward edge establishes the non-empty stack shape before the backward conditional edge uses it.
+        Label loopLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var loop = new CodeInstruction(OpCodes.Ldc_I4_0);
+        loop.labels.Add(loopLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4, 42),
+                new CodeInstruction(OpCodes.Br, loopLabel),
+                loop,
+                new CodeInstruction(OpCodes.Brtrue, loopLabel),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ]);
+
+        BasicBlock loopBlock = InstructionBlocks(generator).ElementAt(1);
+        Edge backEdge = generator.ControlFlowGraph.OutgoingEdges(loopBlock)
+            .Single(edge => edge.Destination == loopBlock.Label);
+        Assert.That(generator.BlockStacks[loopBlock.Label].IncomingStack, Has.Count.EqualTo(1));
+        Assert.That(generator.BlockStacks[loopBlock.Label].OutgoingStack, Has.Count.EqualTo(1));
+        Assert.That(backEdge.EdgeAssignments, Has.Count.EqualTo(1));
+        Assert.That(backEdge.EdgeAssignments[0].Output,
+            Is.EqualTo(generator.BlockStacks[loopBlock.Label].IncomingStack[0]));
+        Assert.That(backEdge.EdgeAssignments[0].Input,
+            Is.EqualTo(generator.BlockStacks[loopBlock.Label].OutgoingStack[0]));
+    }
+
+    [Test]
+    public void ControlFlow_BrShort_CreatesUnconditionalEdge()
+    {
+        Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var target = new CodeInstruction(OpCodes.Ret);
+        target.labels.Add(targetLabel);
+        var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Br_S, targetLabel), target]);
+
+        BasicBlock source = FirstInstructionBlock(generator);
+        Assert.That(source.Branch, Is.TypeOf<UnconditionalBranch>());
+        Assert.That(((UnconditionalBranch)source.Branch).Label, Is.EqualTo(generator.BlockLabels[targetLabel]));
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(source).Single().Destination,
+            Is.EqualTo(generator.BlockLabels[targetLabel]));
+    }
+
+    [Test]
     public void ControlFlow_Switch_CreatesFallthroughAndOneEdgePerDistinctTargetWithCarriedStack()
     {
         ILGenerator il = PatchProcessor.CreateILGenerator();
@@ -473,6 +881,135 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
+    public void ControlFlow_Merge_TwoPredecessorsAssignDistinctValuesToOneIncomingStackSlot()
+    {
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        Label secondPathLabel = il.DefineLabel();
+        Label mergeLabel = il.DefineLabel();
+        var secondPath = new CodeInstruction(OpCodes.Ldc_I4_2);
+        secondPath.labels.Add(secondPathLabel);
+        var merge = new CodeInstruction(OpCodes.Pop);
+        merge.labels.Add(mergeLabel);
+        var generator = CreateGenerator(
+            VoidTwoArgumentMethod,
+            [
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Brtrue, secondPathLabel),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Br, mergeLabel),
+                secondPath,
+                new CodeInstruction(OpCodes.Br, mergeLabel),
+                merge,
+                new CodeInstruction(OpCodes.Ret),
+            ]);
+
+        BasicBlock mergeBlock = generator.ControlFlowGraph.GetBlock(generator.BlockLabels[mergeLabel]);
+        StackSlot incoming = generator.BlockStacks[mergeBlock.Label].IncomingStack.Single();
+        Edge[] incomingEdges = generator.ControlFlowGraph.IncomingEdges(mergeBlock).ToArray();
+        Assert.That(incomingEdges, Has.Length.EqualTo(2));
+        Assert.That(incomingEdges, Has.All.Matches<Edge>(edge => edge.EdgeAssignments.Count == 1));
+        Assert.That(incomingEdges.Select(edge => edge.EdgeAssignments[0].Output),
+            Has.All.EqualTo(incoming));
+        Assert.That(incomingEdges.Select(edge => edge.EdgeAssignments[0].Input), Is.Unique);
+    }
+
+    [Test]
+    public void ControlFlow_MultipleLabelsOnOneInstructionShareBlockAndDuplicateSwitchTargetEdge()
+    {
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        Label firstAlias = il.DefineLabel();
+        Label secondAlias = il.DefineLabel();
+        Label endLabel = il.DefineLabel();
+        var sharedTarget = new CodeInstruction(OpCodes.Br, endLabel);
+        sharedTarget.labels.Add(firstAlias);
+        sharedTarget.labels.Add(secondAlias);
+        var end = new CodeInstruction(OpCodes.Ret);
+        end.labels.Add(endLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Switch, new[] { firstAlias, secondAlias }),
+                new CodeInstruction(OpCodes.Br, endLabel),
+                sharedTarget,
+                end,
+            ]);
+
+        BasicBlock source = FirstInstructionBlock(generator);
+        Assert.That(generator.BlockLabels[firstAlias], Is.SameAs(generator.BlockLabels[secondAlias]));
+        var branch = (ConditionalBranch)source.Branch;
+        Assert.That(branch.Labels[1], Is.SameAs(branch.Labels[2]));
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(source), Has.Exactly(2).Items);
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(source).Count(edge =>
+            edge.Destination == generator.BlockLabels[firstAlias]), Is.EqualTo(1));
+    }
+
+    [Test]
+    public void ControlFlow_SwitchWithNoCases_HasOnlyFallthroughEdge()
+    {
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Switch, Array.Empty<Label>()),
+                new CodeInstruction(OpCodes.Ret),
+            ]);
+
+        BasicBlock source = FirstInstructionBlock(generator);
+        var branch = (ConditionalBranch)source.Branch;
+        Assert.That(branch.Labels, Has.Count.EqualTo(1));
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(source), Has.Exactly(1).Items);
+    }
+
+    [Test]
+    public void ControlFlow_ConditionalTargetEqualToFallthroughCreatesOneEdge()
+    {
+        Label nextLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var next = new CodeInstruction(OpCodes.Ret);
+        next.labels.Add(nextLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Brtrue, nextLabel), next]);
+
+        BasicBlock source = FirstInstructionBlock(generator);
+        var branch = (ConditionalBranch)source.Branch;
+        Assert.That(branch.Labels, Has.Count.EqualTo(2));
+        Assert.That(branch.Labels[0], Is.SameAs(branch.Labels[1]));
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(source), Has.Exactly(1).Items);
+    }
+
+    [Test]
+    public void ControlFlow_ForwardBranchWithTwoCarriedStackSlotsCreatesOrderedAssignments()
+    {
+        Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var target = new CodeInstruction(OpCodes.Pop);
+        target.labels.Add(targetLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Ldc_I4_2),
+                new CodeInstruction(OpCodes.Br, targetLabel),
+                target,
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ret),
+            ]);
+
+        BasicBlock source = FirstInstructionBlock(generator);
+        BasicBlock destination = generator.ControlFlowGraph.GetBlock(generator.BlockLabels[targetLabel]);
+        Edge edge = generator.ControlFlowGraph.OutgoingEdges(source).Single();
+        Assert.That(generator.BlockStacks[source.Label].OutgoingStack.Select(slot => slot.Depth),
+            Is.EqualTo(new[] { 0, 1 }));
+        Assert.That(generator.BlockStacks[destination.Label].IncomingStack.Select(slot => slot.Depth),
+            Is.EqualTo(new[] { 0, 1 }));
+        Assert.That(edge.EdgeAssignments, Has.Count.EqualTo(2));
+        Assert.That(edge.EdgeAssignments.Select(assignment => assignment.Input),
+            Is.EqualTo(generator.BlockStacks[source.Label].OutgoingStack));
+        Assert.That(edge.EdgeAssignments.Select(assignment => assignment.Output),
+            Is.EqualTo(generator.BlockStacks[destination.Label].IncomingStack));
+    }
+
+    [Test]
     public void ControlFlow_Fallthrough_WithoutCarriedStackCreatesImplicitEdge()
     {
         Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
@@ -503,14 +1040,6 @@ public sealed class ControlFlowGraphGeneratorTests
         Assert.That(generator.BlockStacks[destination.Label].IncomingStack, Has.Count.EqualTo(1));
         Assert.That(generator.ControlFlowGraph.Edges.Single(edge => edge.Source == source.Label).EdgeAssignments,
             Has.Count.EqualTo(1));
-    }
-
-    [Test]
-    public void ControlFlow_LastInstructionWithoutTerminalControlFlow_Throws()
-    {
-        var generator = new ControlFlowGraphGenerator(VoidMethod, [new CodeInstruction(OpCodes.Nop)]);
-
-        Assert.Throws<InvalidOperationException>(() => generator.CreateControlFlowGraph());
     }
 
     [Test]
@@ -638,6 +1167,169 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
+    public void ExceptionRegions_MultipleCatchHandlersBelongToOneGroupAndHaveDistinctExceptionSlots()
+    {
+        Label endLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var tryStart = new CodeInstruction(OpCodes.Nop);
+        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var firstCatch = new CodeInstruction(OpCodes.Pop);
+        firstCatch.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(InvalidOperationException)));
+        var secondCatch = new CodeInstruction(OpCodes.Pop);
+        secondCatch.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(ArgumentException)));
+        var secondLeave = new CodeInstruction(OpCodes.Leave, endLabel);
+        secondLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret);
+        end.labels.Add(endLabel);
+
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                tryStart,
+                new CodeInstruction(OpCodes.Leave, endLabel),
+                firstCatch,
+                new CodeInstruction(OpCodes.Leave, endLabel),
+                secondCatch,
+                secondLeave,
+                end,
+            ]);
+
+        ExceptionGroup group = generator.ControlFlowGraph.ExceptionGroups.Single();
+        Assert.That(group.HandlerRegions, Has.Count.EqualTo(2));
+        var catches = group.HandlerRegions.Cast<CatchRegion>().ToArray();
+        Assert.That(catches.Select(region => region.ExceptionType),
+            Is.EqualTo(new[] { typeof(InvalidOperationException), typeof(ArgumentException) }));
+        // StackSlot is a record, but its Id is semantic identity: equal depth and type must not merge distinct values.
+        Assert.That(catches[0].IncomingException, Is.Not.EqualTo(catches[1].IncomingException));
+        Assert.That(catches.Select(region => region.IncomingException.Id), Is.Unique);
+        Assert.That(catches, Has.All.Matches<CatchRegion>(region => ReferenceEquals(region.Parent, group.ProtectedRegion.Parent)));
+    }
+
+    [Test]
+    public void ExceptionRegions_NestedGroupsPreserveParentRelationships()
+    {
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        Label afterInnerLabel = il.DefineLabel();
+        Label endLabel = il.DefineLabel();
+        var outerTryStart = new CodeInstruction(OpCodes.Nop);
+        outerTryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var innerTryStart = new CodeInstruction(OpCodes.Nop);
+        innerTryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var innerFinallyStart = new CodeInstruction(OpCodes.Nop);
+        innerFinallyStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
+        var innerEndfinally = new CodeInstruction(OpCodes.Endfinally);
+        innerEndfinally.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var afterInner = new CodeInstruction(OpCodes.Leave, endLabel);
+        afterInner.labels.Add(afterInnerLabel);
+        var outerCatchStart = new CodeInstruction(OpCodes.Pop);
+        outerCatchStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+        var outerCatchLeave = new CodeInstruction(OpCodes.Leave, endLabel);
+        outerCatchLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret);
+        end.labels.Add(endLabel);
+
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                outerTryStart,
+                innerTryStart,
+                new CodeInstruction(OpCodes.Leave, afterInnerLabel),
+                innerFinallyStart,
+                innerEndfinally,
+                afterInner,
+                outerCatchStart,
+                outerCatchLeave,
+                end,
+            ]);
+
+        ExceptionGroup outerGroup = generator.ControlFlowGraph.ExceptionGroups
+            .Single(group => group.HandlerRegions.Single() is CatchRegion);
+        ExceptionGroup innerGroup = generator.ControlFlowGraph.ExceptionGroups
+            .Single(group => group.HandlerRegions.Single() is FinallyRegion);
+        Assert.That(outerGroup.ProtectedRegion.Parent, Is.SameAs(generator.ControlFlowGraph.RootRegion));
+        Assert.That(innerGroup.ProtectedRegion.Parent, Is.SameAs(outerGroup.ProtectedRegion));
+        Assert.That(innerGroup.HandlerRegions.Single().Parent, Is.SameAs(outerGroup.ProtectedRegion));
+        Assert.That(outerGroup.HandlerRegions.Single().Parent, Is.SameAs(generator.ControlFlowGraph.RootRegion));
+    }
+
+    [Test]
+    public void ExceptionRegions_ProtectedAndCatchRegionsCanContainMultipleBasicBlocks()
+    {
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        Label secondTryBlockLabel = il.DefineLabel();
+        Label secondCatchBlockLabel = il.DefineLabel();
+        Label endLabel = il.DefineLabel();
+        var tryStart = new CodeInstruction(OpCodes.Ldc_I4_0);
+        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var secondTryBlock = new CodeInstruction(OpCodes.Leave, endLabel);
+        secondTryBlock.labels.Add(secondTryBlockLabel);
+        var catchStart = new CodeInstruction(OpCodes.Pop);
+        catchStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+        var secondCatchBlock = new CodeInstruction(OpCodes.Leave, endLabel);
+        secondCatchBlock.labels.Add(secondCatchBlockLabel);
+        secondCatchBlock.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret);
+        end.labels.Add(endLabel);
+
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                tryStart,
+                new CodeInstruction(OpCodes.Brtrue, secondTryBlockLabel),
+                new CodeInstruction(OpCodes.Leave, endLabel),
+                secondTryBlock,
+                catchStart,
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Brtrue, secondCatchBlockLabel),
+                new CodeInstruction(OpCodes.Leave, endLabel),
+                secondCatchBlock,
+                end,
+            ]);
+
+        ExceptionGroup group = generator.ControlFlowGraph.ExceptionGroups.Single();
+        CatchRegion catchRegion = group.HandlerRegions.Cast<CatchRegion>().Single();
+        Assert.That(generator.ControlFlowGraph.BasicBlocks.Count(block => ReferenceEquals(block.Region, group.ProtectedRegion)),
+            Is.EqualTo(3));
+        Assert.That(generator.ControlFlowGraph.BasicBlocks.Count(block => ReferenceEquals(block.Region, catchRegion)),
+            Is.EqualTo(4));
+        BasicBlock catchEntry = generator.ControlFlowGraph.GetBlock(catchRegion.EntryLabel);
+        Assert.That(generator.ControlFlowGraph.IncomingEdges(catchEntry), Is.Empty);
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(catchEntry), Has.Exactly(1).Items);
+    }
+
+    [Test]
+    // Harmony currently corrupts exception-filter metadata before it reaches Disharmony, so filter behavior cannot be
+    // tested end-to-end. Preserve the intended unit fixture, but keep it ignored until Harmony can supply usable input.
+    [Ignore("Exception filters cannot be tested because Harmony does not handle them correctly")]
+    public void ExceptionRegions_Filter_ThrowsNotSupportedException()
+    {
+        Label endLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var tryStart = new CodeInstruction(OpCodes.Nop);
+        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var filterStart = new CodeInstruction(OpCodes.Pop);
+        filterStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptFilterBlock));
+        var handlerStart = new CodeInstruction(OpCodes.Pop);
+        handlerStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, null));
+        var handlerLeave = new CodeInstruction(OpCodes.Leave, endLabel);
+        handlerLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret);
+        end.labels.Add(endLabel);
+        var generator = new ControlFlowGraphGenerator(
+            VoidMethod,
+            [
+                tryStart,
+                new CodeInstruction(OpCodes.Leave, endLabel),
+                filterStart,
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Endfilter),
+                handlerStart,
+                handlerLeave,
+                end,
+            ]);
+
+        Assert.Throws<NotSupportedException>(() => generator.CreateControlFlowGraph());
+    }
+
+    [Test]
     public void ControlFlow_Leave_LongAndShortFormsCreateLeaveWithEmptyStackEdge()
     {
         foreach (OpCode opcode in new[] { OpCodes.Leave, OpCodes.Leave_S })
@@ -661,18 +1353,55 @@ public sealed class ControlFlowGraphGeneratorTests
         var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Jmp, VoidMethod)]);
 
         BasicBlock block = FirstInstructionBlock(generator);
+        Assert.That(block.Branch, Is.TypeOf<Jump>());
+        var branch = (Jump)block.Branch;
+        Assert.That(branch.Value, Is.TypeOf<ILOp>());
+        var operation = (ILOp)branch.Value;
+        Assert.That(operation.IL.OpCode, Is.EqualTo(OpCodes.Jmp));
+        Assert.That(operation.IL.Operand, Is.SameAs(VoidMethod));
+        Assert.That(operation.Inputs, Is.Empty);
+        Assert.That(operation.Type, Is.EqualTo(typeof(void)));
         Assert.That(block.Branch.Labels, Is.Empty);
         Assert.That(generator.ControlFlowGraph.OutgoingEdges(block), Is.Empty);
         Assert.That(generator.BlockStacks[block.Label].OutgoingStack, Is.Empty);
+    }
+
+    [Test]
+    public void ControlFlow_Jmp_WithParametersDoesNotConsumeEvaluationStackValues()
+    {
+        var generator = CreateGenerator(
+            VoidTwoArgumentMethod,
+            [new CodeInstruction(OpCodes.Jmp, VoidTwoArgumentMethod)]);
+
+        var jump = (Jump)FirstInstructionBlock(generator).Branch;
+        Assert.That(((ILOp)jump.Value).Inputs, Is.Empty);
+        Assert.That(generator.BlockStacks[FirstInstructionBlock(generator).Label].OutgoingStack, Is.Empty);
+    }
+
+    [Test]
+    public void ControlFlow_Break_IsANonTerminalVoidOperation()
+    {
+        var generator = CreateGenerator(
+            VoidMethod,
+            [new CodeInstruction(OpCodes.Break), new CodeInstruction(OpCodes.Ret)]);
+
+        BasicBlock block = FirstInstructionBlock(generator);
+        ILOp operation = GetILOp(generator, OpCodes.Break);
+        Assert.That(operation.Inputs, Is.Empty);
+        Assert.That(operation.Type, Is.EqualTo(typeof(void)));
+        Assert.That(block.Branch, Is.TypeOf<Return>());
     }
 
     private static ControlFlowGraphGenerator CreateGenerator(MethodBase method, List<CodeInstruction> instructions)
     {
         var generator = new ControlFlowGraphGenerator(method, instructions);
         generator.CreateControlFlowGraph();
+        generator.ControlFlowGraph.Validate();
         return generator;
     }
 
+    // Root and handler regions have synthetic empty entry blocks. Tests inspecting input IL must deliberately step past
+    // the root entry rather than assuming that BasicBlocks.First() is the first translated instruction block.
     private static BasicBlock FirstInstructionBlock(ControlFlowGraphGenerator generator) =>
         generator.ControlFlowGraph.GetBlock(
             ((UnconditionalBranch)generator.ControlFlowGraph.GetBlock(generator.ControlFlowGraph.RootRegion.EntryLabel).Branch).Label);
@@ -682,14 +1411,6 @@ public sealed class ControlFlowGraphGeneratorTests
 
     private static List<CodeInstruction> ThrowTerminated() =>
         [new CodeInstruction(OpCodes.Ldnull), new CodeInstruction(OpCodes.Throw)];
-
-    private static List<CodeInstruction> BranchToThrowTarget(IEnumerable<CodeInstruction> body)
-    {
-        Label label = PatchProcessor.CreateILGenerator().DefineLabel();
-        var target = new CodeInstruction(OpCodes.Ldnull);
-        target.labels.Add(label);
-        return [.. body, new CodeInstruction(OpCodes.Br, label), target, new CodeInstruction(OpCodes.Throw)];
-    }
 
     private static ILOp GetILOp(ControlFlowGraphGenerator generator, OpCode opcode) =>
         generator.ControlFlowGraph.BasicBlocks
