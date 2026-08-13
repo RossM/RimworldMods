@@ -326,7 +326,6 @@ internal class ControlFlowGraphGenerator
                         [fallthroughLabel ?? throw new InvalidOperationException(), .. labels.Select(label => BlockLabels[label])]),
                 FlowControl.Return when popped.Count == 0 => new Return(il, new VoidOp()),
                 FlowControl.Return => new Return(il, popped[0]),
-                FlowControl.Throw => new Throw(popped[0]),
                 _ => throw new ArgumentOutOfRangeException(),
             },
         };
