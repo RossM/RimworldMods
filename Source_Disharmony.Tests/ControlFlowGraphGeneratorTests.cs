@@ -194,7 +194,7 @@ public sealed class ControlFlowGraphGeneratorTests
         foreach (var testCase in cases)
         {
             var generator = CreateGenerator(TwoArgumentMethod, BranchToThrowTarget(testCase.Instructions));
-            BasicBlock entry = generator.ControlFlowGraph.BasicBlocks.First();
+            BasicBlock entry = FirstInstructionBlock(generator);
 
             Assert.That(generator.BlockStacks[entry.Label].OutgoingStack, Has.Count.EqualTo(testCase.StackDepth),
                 testCase.Behaviour.ToString());
@@ -216,8 +216,8 @@ public sealed class ControlFlowGraphGeneratorTests
                 new CodeInstruction(OpCodes.Call, VoidTwoArgumentMethod),
             ]));
 
-        BasicBlock valueEntry = valueGenerator.ControlFlowGraph.BasicBlocks.First();
-        BasicBlock voidEntry = voidGenerator.ControlFlowGraph.BasicBlocks.First();
+        BasicBlock valueEntry = FirstInstructionBlock(valueGenerator);
+        BasicBlock voidEntry = FirstInstructionBlock(voidGenerator);
         Assert.That(valueGenerator.BlockStacks[valueEntry.Label].OutgoingStack, Has.Count.EqualTo(1));
         Assert.That(voidGenerator.BlockStacks[voidEntry.Label].OutgoingStack, Is.Empty);
     }
@@ -228,7 +228,7 @@ public sealed class ControlFlowGraphGeneratorTests
         var generator = CreateGenerator(
             VoidMethod,
             BranchToThrowTarget([new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Dup)]));
-        BasicBlock entry = generator.ControlFlowGraph.BasicBlocks.First();
+        BasicBlock entry = FirstInstructionBlock(generator);
         List<StackSlot> outgoing = generator.BlockStacks[entry.Label].OutgoingStack;
 
         Assert.That(outgoing, Has.Count.EqualTo(2));
@@ -261,7 +261,7 @@ public sealed class ControlFlowGraphGeneratorTests
     {
         var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Ret)]);
 
-        BasicBlock block = generator.ControlFlowGraph.BasicBlocks.Single();
+        BasicBlock block = InstructionBlocks(generator).Single();
         Assert.That(block.Branch, Is.TypeOf<Return>());
         var branch = (Return)block.Branch;
         Assert.That(branch.IL.OpCode, Is.EqualTo(OpCodes.Ret));
@@ -276,7 +276,7 @@ public sealed class ControlFlowGraphGeneratorTests
             IntMethod,
             [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Ret)]);
 
-        BasicBlock block = generator.ControlFlowGraph.BasicBlocks.Single();
+        BasicBlock block = InstructionBlocks(generator).Single();
         Assert.That(block.Branch, Is.TypeOf<Return>());
         var branch = (Return)block.Branch;
         Assert.That(branch.IL.OpCode, Is.EqualTo(OpCodes.Ret));
@@ -291,7 +291,7 @@ public sealed class ControlFlowGraphGeneratorTests
             VoidMethod,
             [new CodeInstruction(OpCodes.Ldnull), new CodeInstruction(OpCodes.Throw)]);
 
-        BasicBlock block = generator.ControlFlowGraph.BasicBlocks.Single();
+        BasicBlock block = InstructionBlocks(generator).Single();
         Assert.That(block.Branch, Is.TypeOf<Throw>());
         Assert.That(((Throw)block.Branch).Exception, Is.TypeOf<StackSlot>());
         Assert.That(block.Branch.Labels, Is.Empty);
@@ -303,7 +303,7 @@ public sealed class ControlFlowGraphGeneratorTests
     {
         var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Rethrow)]);
 
-        BasicBlock block = generator.ControlFlowGraph.BasicBlocks.Single();
+        BasicBlock block = InstructionBlocks(generator).Single();
         Assert.That(block.Branch, Is.TypeOf<Rethrow>());
         Assert.That(block.Branch.Labels, Is.Empty);
         Assert.That(generator.BlockStacks[block.Label].OutgoingStack, Is.Empty);
@@ -319,11 +319,11 @@ public sealed class ControlFlowGraphGeneratorTests
             VoidMethod,
             [new CodeInstruction(OpCodes.Br, targetLabel), target]);
 
-        BasicBlock source = generator.ControlFlowGraph.BasicBlocks.First();
-        BasicBlock destination = generator.ControlFlowGraph.BasicBlocks.Last();
+        BasicBlock source = InstructionBlocks(generator).First();
+        BasicBlock destination = InstructionBlocks(generator).Last();
         Assert.That(source.Branch, Is.TypeOf<UnconditionalBranch>());
         Assert.That(((UnconditionalBranch)source.Branch).Label, Is.EqualTo(destination.Label));
-        Edge edge = generator.ControlFlowGraph.Edges.Single();
+        Edge edge = generator.ControlFlowGraph.Edges.Single(candidate => candidate.Source == source.Label);
         Assert.That(edge.Source, Is.EqualTo(source.Label));
         Assert.That(edge.Destination, Is.EqualTo(destination.Label));
         Assert.That(edge.EdgeAssignments, Is.Empty);
@@ -340,9 +340,9 @@ public sealed class ControlFlowGraphGeneratorTests
             [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Br, targetLabel), target,
                 new CodeInstruction(OpCodes.Ret)]);
 
-        BasicBlock source = generator.ControlFlowGraph.BasicBlocks.First();
-        BasicBlock destination = generator.ControlFlowGraph.BasicBlocks.Last();
-        Edge edge = generator.ControlFlowGraph.Edges.Single();
+        BasicBlock source = InstructionBlocks(generator).First();
+        BasicBlock destination = InstructionBlocks(generator).Last();
+        Edge edge = generator.ControlFlowGraph.Edges.Single(candidate => candidate.Source == source.Label);
         Assert.That(generator.BlockStacks[source.Label].OutgoingStack, Has.Count.EqualTo(1));
         Assert.That(generator.BlockStacks[destination.Label].IncomingStack, Has.Count.EqualTo(1));
         Assert.That(edge.EdgeAssignments, Has.Count.EqualTo(1));
@@ -362,7 +362,7 @@ public sealed class ControlFlowGraphGeneratorTests
             VoidMethod,
             [new CodeInstruction(OpCodes.Br, loopLabel), loop]);
 
-        BasicBlock loopBlock = generator.ControlFlowGraph.BasicBlocks.Last();
+        BasicBlock loopBlock = InstructionBlocks(generator).Last();
         Assert.That(((UnconditionalBranch)loopBlock.Branch).Label, Is.EqualTo(loopBlock.Label));
         Assert.That(generator.ControlFlowGraph.Edges.Any(edge =>
             edge.Source == loopBlock.Label && edge.Destination == loopBlock.Label), Is.True);
@@ -384,7 +384,7 @@ public sealed class ControlFlowGraphGeneratorTests
                 new CodeInstruction(OpCodes.Br, loopLabel),
             ]);
 
-        BasicBlock loopBlock = generator.ControlFlowGraph.BasicBlocks.Last();
+        BasicBlock loopBlock = InstructionBlocks(generator).Last();
         Edge backEdge = generator.ControlFlowGraph.Edges.Single(edge => edge.Source == loopBlock.Label);
         Assert.That(generator.BlockStacks[loopBlock.Label].IncomingStack, Has.Count.EqualTo(1));
         Assert.That(generator.BlockStacks[loopBlock.Label].OutgoingStack, Has.Count.EqualTo(1));
@@ -423,7 +423,7 @@ public sealed class ControlFlowGraphGeneratorTests
             ];
 
             var generator = CreateGenerator(VoidMethod, instructions);
-            BasicBlock source = generator.ControlFlowGraph.BasicBlocks.First();
+            BasicBlock source = FirstInstructionBlock(generator);
             Assert.That(source.Branch, Is.TypeOf<ConditionalBranch>(), testCase.OpCode.Name);
             var branch = (ConditionalBranch)source.Branch;
             Assert.That(branch.OpCode, Is.EqualTo(testCase.OpCode), testCase.OpCode.Name);
@@ -461,7 +461,7 @@ public sealed class ControlFlowGraphGeneratorTests
                 end,
             ]);
 
-        BasicBlock source = generator.ControlFlowGraph.BasicBlocks.First();
+        BasicBlock source = FirstInstructionBlock(generator);
         Assert.That(source.Branch, Is.TypeOf<ConditionalBranch>());
         var branch = (ConditionalBranch)source.Branch;
         Assert.That(branch.OpCode, Is.EqualTo(OpCodes.Switch));
@@ -480,11 +480,11 @@ public sealed class ControlFlowGraphGeneratorTests
         target.labels.Add(targetLabel);
         var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Nop), target]);
 
-        BasicBlock source = generator.ControlFlowGraph.BasicBlocks.First();
-        BasicBlock destination = generator.ControlFlowGraph.BasicBlocks.Last();
+        BasicBlock source = InstructionBlocks(generator).First();
+        BasicBlock destination = InstructionBlocks(generator).Last();
         Assert.That(source.Branch, Is.TypeOf<UnconditionalBranch>());
         Assert.That(((UnconditionalBranch)source.Branch).Label, Is.EqualTo(destination.Label));
-        Assert.That(generator.ControlFlowGraph.Edges.Single().EdgeAssignments, Is.Empty);
+        Assert.That(generator.ControlFlowGraph.Edges.Single(edge => edge.Source == source.Label).EdgeAssignments, Is.Empty);
     }
 
     [Test]
@@ -497,11 +497,12 @@ public sealed class ControlFlowGraphGeneratorTests
             VoidMethod,
             [new CodeInstruction(OpCodes.Ldc_I4_1), target, new CodeInstruction(OpCodes.Ret)]);
 
-        BasicBlock source = generator.ControlFlowGraph.BasicBlocks.First();
-        BasicBlock destination = generator.ControlFlowGraph.BasicBlocks.Last();
+        BasicBlock source = InstructionBlocks(generator).First();
+        BasicBlock destination = InstructionBlocks(generator).Last();
         Assert.That(generator.BlockStacks[source.Label].OutgoingStack, Has.Count.EqualTo(1));
         Assert.That(generator.BlockStacks[destination.Label].IncomingStack, Has.Count.EqualTo(1));
-        Assert.That(generator.ControlFlowGraph.Edges.Single().EdgeAssignments, Has.Count.EqualTo(1));
+        Assert.That(generator.ControlFlowGraph.Edges.Single(edge => edge.Source == source.Label).EdgeAssignments,
+            Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -513,13 +514,55 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
-    public void Regions_OrdinaryBlocksBelongToGraphRootWhoseEntryIsFirstBlock()
+    public void Regions_SyntheticEntryAndOrdinaryBlocksBelongToGraphRoot()
     {
         var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Ret)]);
 
-        BasicBlock entry = generator.ControlFlowGraph.BasicBlocks.Single();
-        Assert.That(entry.Region, Is.SameAs(generator.ControlFlowGraph.RootRegion));
-        Assert.That(generator.ControlFlowGraph.RootRegion.EntryLabel, Is.SameAs(entry.Label));
+        RootRegion root = generator.ControlFlowGraph.RootRegion;
+        BasicBlock syntheticEntry = generator.ControlFlowGraph.GetBlock(root.EntryLabel);
+        BasicBlock instructionEntry = FirstInstructionBlock(generator);
+        Assert.That(syntheticEntry.Region, Is.SameAs(root));
+        Assert.That(syntheticEntry.Label, Is.SameAs(root.EntryLabel));
+        Assert.That(syntheticEntry.Ops, Is.Empty);
+        Assert.That(syntheticEntry.Branch, Is.TypeOf<UnconditionalBranch>());
+        Assert.That(((UnconditionalBranch)syntheticEntry.Branch).Label, Is.SameAs(instructionEntry.Label));
+        Assert.That(instructionEntry.Region, Is.SameAs(root));
+        Assert.That(generator.ControlFlowGraph.Edges.Any(edge =>
+            edge.Source == syntheticEntry.Label && edge.Destination == instructionEntry.Label), Is.True);
+    }
+
+    [Test]
+    public void ExceptionRegions_Catch_ReceivesImplicitExceptionOnStack()
+    {
+        Label endLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var tryStart = new CodeInstruction(OpCodes.Nop);
+        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var catchStart = new CodeInstruction(OpCodes.Pop);
+        catchStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(InvalidOperationException)));
+        var catchLeave = new CodeInstruction(OpCodes.Leave, endLabel);
+        catchLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret);
+        end.labels.Add(endLabel);
+
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                tryStart,
+                new CodeInstruction(OpCodes.Leave, endLabel),
+                catchStart,
+                catchLeave,
+                end,
+            ]);
+
+        ExceptionGroup group = generator.ControlFlowGraph.ExceptionGroups.Single();
+        Assert.That(group.HandlerRegions, Has.Count.EqualTo(1));
+        Assert.That(group.HandlerRegions[0], Is.TypeOf<CatchRegion>());
+        var catchRegion = (CatchRegion)group.HandlerRegions[0];
+        BasicBlock catchBlock = generator.ControlFlowGraph.GetBlock(catchRegion.EntryLabel);
+        Assert.That(catchRegion.ExceptionType, Is.EqualTo(typeof(InvalidOperationException)));
+        Assert.That(generator.BlockStacks[catchBlock.Label].IncomingStack, Has.Count.EqualTo(1));
+        Assert.That(generator.BlockStacks[catchBlock.Label].IncomingStack[0], Is.SameAs(catchRegion.IncomingException));
+        Assert.That(generator.BlockStacks[catchBlock.Label].OutgoingStack, Is.Empty);
     }
 
     private static ControlFlowGraphGenerator CreateGenerator(MethodBase method, List<CodeInstruction> instructions)
@@ -528,6 +571,13 @@ public sealed class ControlFlowGraphGeneratorTests
         generator.CreateControlFlowGraph();
         return generator;
     }
+
+    private static BasicBlock FirstInstructionBlock(ControlFlowGraphGenerator generator) =>
+        generator.ControlFlowGraph.GetBlock(
+            ((UnconditionalBranch)generator.ControlFlowGraph.GetBlock(generator.ControlFlowGraph.RootRegion.EntryLabel).Branch).Label);
+
+    private static IEnumerable<BasicBlock> InstructionBlocks(ControlFlowGraphGenerator generator) =>
+        generator.ControlFlowGraph.BasicBlocks.Where(block => block.Label != generator.ControlFlowGraph.RootRegion.EntryLabel);
 
     private static List<CodeInstruction> ThrowTerminated() =>
         [new CodeInstruction(OpCodes.Ldnull), new CodeInstruction(OpCodes.Throw)];
