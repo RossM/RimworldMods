@@ -387,14 +387,15 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
-    public void StackBehaviour_VarpopAndVarpush_CalliUsesSignature()
+    public void StackBehaviour_VarpopAndVarpush_CalliUsesInlineSignature()
     {
-        // SignatureHelper is the InlineSig representation accepted by ILGenerator.Emit. Keep calli coverage separate from
-        // ordinary MethodInfo-based calls because both its argument count and return behavior come from this signature.
-        SignatureHelper signature = SignatureHelper.GetMethodSigHelper(
-            CallingConvention.Cdecl,
-            typeof(int));
-        signature.AddArgument(typeof(int));
+        // Harmony decodes InlineSig operands to InlineSignature rather than SignatureHelper. Keep calli coverage separate
+        // from ordinary MethodInfo-based calls because both its argument count and return behavior come from this object.
+        Type signatureType = typeof(CodeInstruction).Assembly.GetType("HarmonyLib.InlineSignature")!;
+        object signature = Activator.CreateInstance(signatureType)!;
+        signatureType.GetProperty("CallingConvention")!.SetValue(signature, CallingConvention.Cdecl);
+        signatureType.GetProperty("Parameters")!.SetValue(signature, new List<object> { typeof(int) });
+        signatureType.GetProperty("ReturnType")!.SetValue(signature, typeof(int));
         var generator = CreateGenerator(
             VoidMethod,
             [
@@ -411,12 +412,13 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
-    public void StackBehaviour_VarpopAndVarpush_VoidCalliUsesSignature()
+    public void StackBehaviour_VarpopAndVarpush_VoidCalliUsesInlineSignature()
     {
-        SignatureHelper signature = SignatureHelper.GetMethodSigHelper(
-            CallingConvention.Cdecl,
-            typeof(void));
-        signature.AddArgument(typeof(int));
+        Type signatureType = typeof(CodeInstruction).Assembly.GetType("HarmonyLib.InlineSignature")!;
+        object signature = Activator.CreateInstance(signatureType)!;
+        signatureType.GetProperty("CallingConvention")!.SetValue(signature, CallingConvention.Cdecl);
+        signatureType.GetProperty("Parameters")!.SetValue(signature, new List<object> { typeof(int) });
+        signatureType.GetProperty("ReturnType")!.SetValue(signature, typeof(void));
         var generator = CreateGenerator(
             VoidMethod,
             [
