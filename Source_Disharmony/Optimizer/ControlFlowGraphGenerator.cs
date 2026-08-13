@@ -2,9 +2,6 @@
 
 internal class ControlFlowGraphGenerator
 {
-    public Dictionary<Label, BlockLabel> BlockLabels { get; } = [];
-    public Dictionary<BlockLabel, (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack)> BlockStacks { get; } = [];
-
     public ControlFlowGraphGenerator(MethodBase method, List<CodeInstruction> codeInstructions)
     {
         CodeInstructions = codeInstructions;
@@ -17,6 +14,19 @@ internal class ControlFlowGraphGenerator
         MethodBody = GetMethodBodyOrNull(method);
         ReturnType = method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
     }
+
+    public Dictionary<Label, BlockLabel> BlockLabels { get; } = [];
+    public Dictionary<BlockLabel, (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack)> BlockStacks { get; } = [];
+
+    public ControlFlowGraph ControlFlowGraph { get; } = new();
+    public RootRegion RootRegion { get; } = new(new BlockLabel());
+    public List<CodeInstruction> CodeInstructions { get; }
+    public Dictionary<int, Local> Locals { get; } = [];
+    public MethodBody? MethodBody { get; }
+    public Dictionary<int, Argument> Arguments { get; } = [];
+    public List<Type> ParameterTypes { get; }
+
+    public Type ReturnType { get; }
 
     private MethodBody? GetMethodBodyOrNull(MethodBase method)
     {
@@ -33,16 +43,6 @@ internal class ControlFlowGraphGenerator
             return null;
         }
     }
-
-    public ControlFlowGraph ControlFlowGraph { get; } = new();
-    public RootRegion RootRegion { get; } = new(new BlockLabel());
-    public List<CodeInstruction> CodeInstructions { get; }
-    public Dictionary<int, Local> Locals { get; } = [];
-    public MethodBody? MethodBody { get; }
-    public Dictionary<int, Argument> Arguments { get; } = [];
-    public List<Type> ParameterTypes { get; }
-
-    public Type ReturnType { get; }
 
     public void CreateControlFlowGraph()
     {
@@ -149,8 +149,9 @@ internal class ControlFlowGraphGenerator
 
         // Translate basic blocks
         Dictionary<BlockLabel, int> incomingStackSize = [];
-        foreach (var (label, instructions) in instructionBlocks)
+        for (var index = 0; index < instructionBlocks.Count; index++)
         {
+            var (label, instructions) = instructionBlocks[index];
             foreach (var exceptionBlock in instructions[0].blocks)
             {
                 switch (exceptionBlock.blockType)
@@ -170,8 +171,7 @@ internal class ControlFlowGraphGenerator
                         exceptionGroupStack.Peek().HandlerRegions.Add(catchRegion);
                         break;
                     }
-                    case ExceptionBlockType.BeginExceptFilterBlock:
-                        throw new NotSupportedException();
+                    case ExceptionBlockType.BeginExceptFilterBlock: throw new NotSupportedException();
                     case ExceptionBlockType.BeginFaultBlock:
                     {
                         regionStack.Pop();
@@ -195,8 +195,10 @@ internal class ControlFlowGraphGenerator
                 }
             }
 
+            var fallthroughLabel = index + 1 < instructionBlocks.Count ? instructionBlocks[index + 1].Label : null;
             incomingStackSize.TryGetValue(label, out int blockStartStackSize);
-            BasicBlock block = ConvertBasicBlock(label, instructions, blockStartStackSize, out var stacks);
+            BasicBlock block = ConvertBasicBlock(label, instructions, fallthroughLabel, regionStack.Peek(), blockStartStackSize,
+                out var stacks);
             ControlFlowGraph.AddBlock(block);
             BlockStacks[label] = stacks;
             foreach (var successor in block.Branch.Labels)
@@ -236,16 +238,117 @@ internal class ControlFlowGraphGenerator
         FlowControl.Branch or FlowControl.Cond_Branch or FlowControl.Return or FlowControl.Throw;
 
     private BasicBlock ConvertBasicBlock(
-        BlockLabel label,
+        BlockLabel blockLabel,
         IReadOnlyList<CodeInstruction> instructions,
+        BlockLabel? fallthroughLabel,
+        Region region,
         int incomingStackSize,
         out (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack) stacks)
     {
         List<StackSlot> incomingStack = [];
         for (int i = 0; i < incomingStackSize; i++)
-            incomingStack.Add(new StackSlot(i, typeof(TypeLattice.UnknownType)));
+            incomingStack.Add(new StackSlot(i, TypeLattice.Unknown));
         List<StackSlot> curStack = [.. incomingStack];
 
-        throw new NotImplementedException();
+        List<Op> ops = [];
+        List<Prefix> prefixes = [];
+        Branch? branch = null;
+        foreach (var instruction in instructions)
+        {
+            if (instruction.opcode.OpCodeType == OpCodeType.Prefix)
+            {
+                prefixes.Add(new(instruction.opcode, instruction.operand));
+                continue;
+            }
+
+            int popCount = PopCount(instruction);
+            List<StackSlot> popped = curStack.GetRange(curStack.Count - popCount, popCount);
+            curStack.RemoveRange(curStack.Count - popCount, popCount);
+
+            // Dup is the only instruction that pushes multiple values, handle it specially
+            if (instruction.opcode == OpCodes.Dup)
+            {
+                curStack.Add(popped[0]);
+                curStack.Add(popped[0]);
+                continue;
+            }
+
+            ILInstruction il = new ILInstruction(instruction.opcode, instruction.operand, prefixes);
+            prefixes = [];
+
+            if (EndsBasicBlock(instruction))
+            {
+                branch = ConvertBranch(instruction, il, popped, fallthroughLabel);
+                break;
+            }
+
+            if (instruction.opcode.StackBehaviourPush is StackBehaviour.Push0)
+                ops.Add(new ILOp(il, popped, typeof(void)));
+            else
+            {
+                StackSlot result = new StackSlot(curStack.Count, TypeLattice.Unknown);
+                ops.Add(new AssignmentOp(result, new ILOp(il, popped, TypeLattice.Unknown)));
+                curStack.Add(result);
+            }
+        }
+
+        branch ??= new UnconditionalBranch(fallthroughLabel ?? throw new InvalidOperationException());
+
+        stacks = (incomingStack, curStack);
+        return new BasicBlock(blockLabel, ops, region, branch);
+    }
+
+    private Branch? ConvertBranch(CodeInstruction instruction, ILInstruction il, List<StackSlot> popped, BlockLabel? fallthroughLabel)
+    {
+        Branch? branch;
+        branch = instruction.opcode.FlowControl switch
+        {
+            FlowControl.Branch => OpCodeData.GetCanonicalOpcode(instruction) switch
+            {
+                OpCodeValues.Br when instruction.operand is Label label => new UnconditionalBranch(BlockLabels[label]),
+                OpCodeValues.Leave when instruction.operand is Label label => new Leave(BlockLabels[label]),
+                _ => throw new ArgumentOutOfRangeException(),
+            },
+            FlowControl.Cond_Branch when instruction.operand is Label label =>
+                new ConditionalBranch(instruction.opcode, popped,
+                    [fallthroughLabel ?? throw new InvalidOperationException(), BlockLabels[label]]),
+            FlowControl.Cond_Branch when instruction.operand is Label[] labels =>
+                new ConditionalBranch(instruction.opcode, popped,
+                    [fallthroughLabel ?? throw new InvalidOperationException(), .. labels.Select(label => BlockLabels[label])]),
+            FlowControl.Return => new Return(il, popped[0]),
+            FlowControl.Throw => new Throw(popped[0]),
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+        return branch;
+    }
+
+    private static int PopCount(CodeInstruction instruction)
+    {
+        return instruction.opcode.StackBehaviourPop switch
+        {
+            StackBehaviour.Pop0 => 0,
+            StackBehaviour.Pop1 => 1,
+            StackBehaviour.Pop1_pop1 => 2,
+            StackBehaviour.Popi => 1,
+            StackBehaviour.Popi_pop1 => 2,
+            StackBehaviour.Popi_popi => 2,
+            StackBehaviour.Popi_popi8 => 2,
+            StackBehaviour.Popi_popi_popi => 3,
+            StackBehaviour.Popi_popr4 => 2,
+            StackBehaviour.Popi_popr8 => 2,
+            StackBehaviour.Popref => 1,
+            StackBehaviour.Popref_pop1 => 2,
+            StackBehaviour.Popref_popi => 2,
+            StackBehaviour.Popref_popi_popi => 3,
+            StackBehaviour.Popref_popi_popi8 => 3,
+            StackBehaviour.Popref_popi_popr4 => 3,
+            StackBehaviour.Popref_popi_popr8 => 3,
+            StackBehaviour.Popref_popi_popref => 3,
+            StackBehaviour.Popref_popi_pop1 => 3,
+            StackBehaviour.Varpop when instruction.operand is MethodInfo methodInfo => methodInfo.GetParameters().Length +
+                                                                                       (methodInfo.HasThis ? 1 : 0),
+            StackBehaviour.Varpop when instruction.operand is ConstructorInfo constructorInfo => constructorInfo.GetParameters().Length,
+            _ => throw new ArgumentOutOfRangeException(),
+        };
     }
 }

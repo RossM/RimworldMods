@@ -16,4 +16,8 @@ internal static class TypeLattice
     ///     Represents a null pointer. The CLI treats this as an IntPtr, but allows it to be compatible with any reference type.
     /// </summary>
     public static class NullPtr;
+
+    public static readonly Type Any = typeof(AnyType);
+    public static readonly Type Unknown = typeof(UnknownType);
+    public static readonly Type Null = typeof(NullPtr);
 }
