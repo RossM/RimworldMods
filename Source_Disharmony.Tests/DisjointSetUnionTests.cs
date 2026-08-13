@@ -19,7 +19,7 @@ public sealed class DisjointSetUnionTests
         {
             Assert.That(sets.Add(value), Is.True);
             Assert.That(sets.Add(value), Is.False);
-            Assert.That(sets.GetRoot(value), Is.SameAs(value));
+            Assert.That(sets[value], Is.SameAs(value));
             Assert.That(sets[value], Is.SameAs(value));
         });
     }
@@ -29,7 +29,7 @@ public sealed class DisjointSetUnionTests
     {
         DisjointSetUnion<object> sets = new();
 
-        Assert.That(() => sets.GetRoot(new object()), Throws.TypeOf<KeyNotFoundException>());
+        Assert.That(() => sets[new object()], Throws.TypeOf<KeyNotFoundException>());
     }
 
     [Test]
@@ -45,8 +45,8 @@ public sealed class DisjointSetUnionTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(sets.GetRoot(left), Is.SameAs(right));
-            Assert.That(sets.GetRoot(right), Is.SameAs(right));
+            Assert.That(sets[left], Is.SameAs(right));
+            Assert.That(sets[right], Is.SameAs(right));
         });
     }
 
@@ -69,10 +69,10 @@ public sealed class DisjointSetUnionTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(sets.GetRoot(first), Is.SameAs(fourth));
-            Assert.That(sets.GetRoot(second), Is.SameAs(fourth));
-            Assert.That(sets.GetRoot(third), Is.SameAs(fourth));
-            Assert.That(sets.GetRoot(fourth), Is.SameAs(fourth));
+            Assert.That(sets[first], Is.SameAs(fourth));
+            Assert.That(sets[second], Is.SameAs(fourth));
+            Assert.That(sets[third], Is.SameAs(fourth));
+            Assert.That(sets[fourth], Is.SameAs(fourth));
         });
     }
 
@@ -91,8 +91,8 @@ public sealed class DisjointSetUnionTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(sets.GetRoot(first), Is.SameAs(second));
-            Assert.That(sets.GetRoot(second), Is.SameAs(second));
+            Assert.That(sets[first], Is.SameAs(second));
+            Assert.That(sets[second], Is.SameAs(second));
         });
     }
 
@@ -138,7 +138,7 @@ public sealed class DisjointSetUnionTests
         {
             Assert.That(addedCanonical, Is.True);
             Assert.That(addedEqualValue, Is.False);
-            Assert.That(sets.GetRoot(canonical), Is.EqualTo(sets.GetRoot(equalValue)));
+            Assert.That(sets[canonical], Is.EqualTo(sets[equalValue]));
             Assert.That(sets[canonical], Is.EqualTo(sets[equalValue]));
             Assert.That(sets.Count(), Is.EqualTo(1));
             Assert.That(sets.Single().Count(), Is.EqualTo(1));
@@ -161,9 +161,9 @@ public sealed class DisjointSetUnionTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(sets.GetRoot(left), Is.EqualTo(sets.GetRoot(equalLeft)));
-            Assert.That(sets.GetRoot(left), Is.EqualTo(sets.GetRoot(right)));
-            Assert.That(sets.GetRoot(right), Is.EqualTo(sets.GetRoot(equalRight)));
+            Assert.That(sets[left], Is.EqualTo(sets[equalLeft]));
+            Assert.That(sets[left], Is.EqualTo(sets[right]));
+            Assert.That(sets[right], Is.EqualTo(sets[equalRight]));
             Assert.That(sets.Count(), Is.EqualTo(1));
             Assert.That(sets.Single(), Is.EquivalentTo(new[] { left, right }));
         });
@@ -181,7 +181,7 @@ public sealed class DisjointSetUnionTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(sets.GetRoot(value), Is.EqualTo(sets.GetRoot(equalValue)));
+            Assert.That(sets[value], Is.EqualTo(sets[equalValue]));
             Assert.That(sets.Count(), Is.EqualTo(1));
             Assert.That(sets.Single().Count(), Is.EqualTo(1));
             Assert.That(sets.Single().Single(), Is.EqualTo(value));

@@ -8,14 +8,17 @@ namespace Disharmony.Utilities;
 /// </summary>
 /// <remarks>
 ///     <para>
-///         Each set is identified by one representative member of the set, the root. The root is not stable
+///         Each set is identified by one representative member of the set. The representative is not stable
 ///         and may change after a merge operation.
 ///     </para>
 /// </remarks>
 /// <typeparam name="T"></typeparam>
 internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>> where T : class
 {
+    private IEnumerable<IGrouping<T, T>> Groups => parents.Keys.ToArray().GroupBy(GetRoot);
     private readonly Dictionary<T, T?> parents = [];
+
+    public T this[T value] => GetRoot(value);
 
     public bool Add(T value)
     {
@@ -26,15 +29,13 @@ internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>> where T : clas
         return true;
     }
 
-    public T GetRoot(T value)
+    private T GetRoot(T value)
     {
         T? parent = parents[value];
         if (parent == null)
             return value;
         return parents[value] = GetRoot(parent);
     }
-
-    public T this[T value] => GetRoot(value);
 
     public void Merge(T left, T right)
     {
@@ -44,6 +45,6 @@ internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>> where T : clas
             parents[rootLeft] = rootRight;
     }
 
-    public IEnumerator<IGrouping<T, T>> GetEnumerator() => parents.Keys.ToArray().GroupBy(GetRoot).GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)parents.Keys.ToArray().GroupBy(GetRoot)).GetEnumerator();
+    public IEnumerator<IGrouping<T, T>> GetEnumerator() => Groups.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Groups).GetEnumerator();
 }
