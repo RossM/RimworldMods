@@ -309,6 +309,130 @@ public sealed class ControlFlowGraphGeneratorTests
         Assert.That(generator.BlockStacks[block.Label].OutgoingStack, Is.Empty);
     }
 
+    [Test]
+    public void ControlFlow_UnconditionalBranch_ForwardWithoutCarriedStackCreatesEdge()
+    {
+        Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var target = new CodeInstruction(OpCodes.Ret);
+        target.labels.Add(targetLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [new CodeInstruction(OpCodes.Br, targetLabel), target]);
+
+        BasicBlock source = generator.ControlFlowGraph.BasicBlocks.First();
+        BasicBlock destination = generator.ControlFlowGraph.BasicBlocks.Last();
+        Assert.That(source.Branch, Is.TypeOf<UnconditionalBranch>());
+        Assert.That(((UnconditionalBranch)source.Branch).Label, Is.EqualTo(destination.Label));
+        Edge edge = generator.ControlFlowGraph.Edges.Single();
+        Assert.That(edge.Source, Is.EqualTo(source.Label));
+        Assert.That(edge.Destination, Is.EqualTo(destination.Label));
+        Assert.That(edge.EdgeAssignments, Is.Empty);
+    }
+
+    [Test]
+    public void ControlFlow_UnconditionalBranch_ForwardWithCarriedStackCreatesAssignment()
+    {
+        Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var target = new CodeInstruction(OpCodes.Pop);
+        target.labels.Add(targetLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Br, targetLabel), target,
+                new CodeInstruction(OpCodes.Ret)]);
+
+        BasicBlock source = generator.ControlFlowGraph.BasicBlocks.First();
+        BasicBlock destination = generator.ControlFlowGraph.BasicBlocks.Last();
+        Edge edge = generator.ControlFlowGraph.Edges.Single();
+        Assert.That(generator.BlockStacks[source.Label].OutgoingStack, Has.Count.EqualTo(1));
+        Assert.That(generator.BlockStacks[destination.Label].IncomingStack, Has.Count.EqualTo(1));
+        Assert.That(edge.EdgeAssignments, Has.Count.EqualTo(1));
+        Assert.That(edge.EdgeAssignments[0].Output,
+            Is.SameAs(generator.BlockStacks[destination.Label].IncomingStack[0]));
+        Assert.That(edge.EdgeAssignments[0].Input,
+            Is.SameAs(generator.BlockStacks[source.Label].OutgoingStack[0]));
+    }
+
+    [Test]
+    public void ControlFlow_UnconditionalBranch_BackwardWithoutCarriedStackCreatesEdge()
+    {
+        Label loopLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var loop = new CodeInstruction(OpCodes.Br, loopLabel);
+        loop.labels.Add(loopLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [new CodeInstruction(OpCodes.Br, loopLabel), loop]);
+
+        BasicBlock loopBlock = generator.ControlFlowGraph.BasicBlocks.Last();
+        Assert.That(((UnconditionalBranch)loopBlock.Branch).Label, Is.EqualTo(loopBlock.Label));
+        Assert.That(generator.ControlFlowGraph.Edges.Any(edge =>
+            edge.Source == loopBlock.Label && edge.Destination == loopBlock.Label), Is.True);
+    }
+
+    [Test]
+    public void ControlFlow_UnconditionalBranch_BackwardWithCarriedStackCreatesAssignment()
+    {
+        Label loopLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var loop = new CodeInstruction(OpCodes.Pop);
+        loop.labels.Add(loopLabel);
+        var generator = CreateGenerator(
+            VoidMethod,
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Br, loopLabel),
+                loop,
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Br, loopLabel),
+            ]);
+
+        BasicBlock loopBlock = generator.ControlFlowGraph.BasicBlocks.Last();
+        Edge backEdge = generator.ControlFlowGraph.Edges.Single(edge => edge.Source == loopBlock.Label);
+        Assert.That(generator.BlockStacks[loopBlock.Label].IncomingStack, Has.Count.EqualTo(1));
+        Assert.That(generator.BlockStacks[loopBlock.Label].OutgoingStack, Has.Count.EqualTo(1));
+        Assert.That(backEdge.EdgeAssignments, Has.Count.EqualTo(1));
+    }
+
+    [Test]
+    public void ControlFlow_ConditionalBranches_EachOpcodeCreatesTakenAndFallthroughEdges()
+    {
+        (OpCode OpCode, int InputCount)[] cases =
+        [
+            (OpCodes.Brfalse, 1), (OpCodes.Brfalse_S, 1), (OpCodes.Brtrue, 1), (OpCodes.Brtrue_S, 1),
+            (OpCodes.Beq, 2), (OpCodes.Beq_S, 2), (OpCodes.Bge, 2), (OpCodes.Bge_S, 2),
+            (OpCodes.Bge_Un, 2), (OpCodes.Bge_Un_S, 2), (OpCodes.Bgt, 2), (OpCodes.Bgt_S, 2),
+            (OpCodes.Bgt_Un, 2), (OpCodes.Bgt_Un_S, 2), (OpCodes.Ble, 2), (OpCodes.Ble_S, 2),
+            (OpCodes.Ble_Un, 2), (OpCodes.Ble_Un_S, 2), (OpCodes.Blt, 2), (OpCodes.Blt_S, 2),
+            (OpCodes.Blt_Un, 2), (OpCodes.Blt_Un_S, 2), (OpCodes.Bne_Un, 2), (OpCodes.Bne_Un_S, 2),
+        ];
+
+        foreach (var testCase in cases)
+        {
+            ILGenerator il = PatchProcessor.CreateILGenerator();
+            Label targetLabel = il.DefineLabel();
+            Label endLabel = il.DefineLabel();
+            var target = new CodeInstruction(OpCodes.Br, endLabel);
+            target.labels.Add(targetLabel);
+            var end = new CodeInstruction(OpCodes.Ret);
+            end.labels.Add(endLabel);
+            List<CodeInstruction> instructions =
+            [
+                .. Enumerable.Repeat(new CodeInstruction(OpCodes.Ldc_I4_0), testCase.InputCount),
+                new CodeInstruction(testCase.OpCode, targetLabel),
+                new CodeInstruction(OpCodes.Br, endLabel),
+                target,
+                end,
+            ];
+
+            var generator = CreateGenerator(VoidMethod, instructions);
+            BasicBlock source = generator.ControlFlowGraph.BasicBlocks.First();
+            Assert.That(source.Branch, Is.TypeOf<ConditionalBranch>(), testCase.OpCode.Name);
+            var branch = (ConditionalBranch)source.Branch;
+            Assert.That(branch.OpCode, Is.EqualTo(testCase.OpCode), testCase.OpCode.Name);
+            Assert.That(branch.Inputs, Has.Count.EqualTo(testCase.InputCount), testCase.OpCode.Name);
+            Assert.That(branch.Labels, Has.Count.EqualTo(2), testCase.OpCode.Name);
+            Assert.That(generator.ControlFlowGraph.OutgoingEdges(source), Has.Exactly(2).Items, testCase.OpCode.Name);
+        }
+    }
+
     private static ControlFlowGraphGenerator CreateGenerator(MethodBase method, List<CodeInstruction> instructions)
     {
         var generator = new ControlFlowGraphGenerator(method, instructions);
