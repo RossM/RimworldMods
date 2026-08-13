@@ -186,7 +186,7 @@ public sealed class ControlFlowGraphGeneratorTests
         LocalBuilder doubleLocal = il.DeclareLocal(typeof(double));
         (StackBehaviour Behaviour, CodeInstruction[] Inputs, CodeInstruction Instruction)[] cases =
         [
-            (StackBehaviour.Pop0, [], new CodeInstruction(OpCodes.Nop)),
+            (StackBehaviour.Pop0, [], new CodeInstruction(OpCodes.Break)),
             (StackBehaviour.Pop1, [new CodeInstruction(OpCodes.Ldc_I4_0)], new CodeInstruction(OpCodes.Pop)),
             (StackBehaviour.Pop1_pop1,
                 [new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Ldc_I4_1)],
@@ -1070,7 +1070,7 @@ public sealed class ControlFlowGraphGeneratorTests
         var generator = CreateGenerator(
             VoidMethod,
             [
-                new CodeInstruction(OpCodes.Nop),
+                new CodeInstruction(OpCodes.Break),
                 new CodeInstruction(OpCodes.Ret).WithLabels(targetLabel),
             ]);
 
