@@ -21,10 +21,10 @@ internal class RewriteVisitor : Visitor
 
     public override Op Visit(ILOp op)
     {
-        var inputs = op.Inputs.Select(input => input.Accept(this));
+        var inputs = op.Inputs.Select(input => input.Accept(this)).ToList();
         if (inputs.SequenceEqual(op.Inputs))
             return DefaultVisit(op);
-        return DefaultVisit(new ILOp(op.IL, op.Inputs, op.Type));
+        return DefaultVisit(new ILOp(op.IL, inputs, op.Type));
     }
 
     public override Op Visit(StackSlot op) => DefaultVisit(op);
@@ -81,10 +81,10 @@ internal class RewriteVisitor : Visitor
 
     public override Branch Visit(ConditionalBranch branch)
     {
-        var inputs = branch.Inputs.Select(input => input.Accept(this));
+        var inputs = branch.Inputs.Select(input => input.Accept(this)).ToList();
         if (inputs.SequenceEqual(branch.Inputs))
             return branch;
-        return new ConditionalBranch(branch.OpCode, branch.Inputs, branch.Labels);
+        return new ConditionalBranch(branch.OpCode, inputs, branch.Labels);
     }
 
     public override Branch Visit(Throw branch)
@@ -128,7 +128,7 @@ internal class RewriteVisitor : Visitor
         var edgeAssignments = edge.EdgeAssignments.Select(op => (AssignmentOp)op.Accept(this)).Where(op => op.Input != op.Output).ToList();
         if (edgeAssignments.SequenceEqual(edge.EdgeAssignments))
             return edge;
-        return new Edge(edge.Source, edge.Destination, edge.EdgeAssignments);
+        return new Edge(edge.Source, edge.Destination, edgeAssignments);
     }
 
     public void Visit(ControlFlowGraph controlFlowGraph)
