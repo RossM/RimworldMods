@@ -310,7 +310,9 @@ internal class ControlFlowGraphGenerator
             if (instruction.opcode == OpCodes.Dup)
             {
                 curStack.Add(popped[0]);
-                curStack.Add(popped[0]);
+                var result = CreateStackSlot(curStack.Count, TypeLattice.Unknown);
+                ops.Add(new AssignmentOp(result, popped[0]));
+                curStack.Add(result);
                 continue;
             }
 
