@@ -256,6 +256,34 @@ public sealed class ControlFlowGraphGeneratorTests
         Assert.That(load.IL.Prefixes[0].Operand, Is.EqualTo((byte)1));
     }
 
+    [Test]
+    public void ControlFlow_Ret_VoidMethodCreatesReturnWithVoidValue()
+    {
+        var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Ret)]);
+
+        BasicBlock block = generator.ControlFlowGraph.BasicBlocks.Single();
+        Assert.That(block.Branch, Is.TypeOf<Return>());
+        var branch = (Return)block.Branch;
+        Assert.That(branch.IL.OpCode, Is.EqualTo(OpCodes.Ret));
+        Assert.That(branch.Value, Is.TypeOf<VoidOp>());
+        Assert.That(generator.BlockStacks[block.Label].OutgoingStack, Is.Empty);
+    }
+
+    [Test]
+    public void ControlFlow_Ret_ValueMethodConsumesReturnValue()
+    {
+        var generator = CreateGenerator(
+            IntMethod,
+            [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Ret)]);
+
+        BasicBlock block = generator.ControlFlowGraph.BasicBlocks.Single();
+        Assert.That(block.Branch, Is.TypeOf<Return>());
+        var branch = (Return)block.Branch;
+        Assert.That(branch.IL.OpCode, Is.EqualTo(OpCodes.Ret));
+        Assert.That(branch.Value, Is.TypeOf<StackSlot>());
+        Assert.That(generator.BlockStacks[block.Label].OutgoingStack, Is.Empty);
+    }
+
     private static ControlFlowGraphGenerator CreateGenerator(MethodBase method, List<CodeInstruction> instructions)
     {
         var generator = new ControlFlowGraphGenerator(method, instructions);
