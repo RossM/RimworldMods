@@ -318,15 +318,13 @@ public sealed class ControlFlowGraphGeneratorTests
         foreach (var testCase in cases)
         {
             Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-            var target = new CodeInstruction(OpCodes.Pop);
-            target.labels.Add(targetLabel);
+            var target = new CodeInstruction(OpCodes.Pop).WithLabels(targetLabel);
             List<CodeInstruction> instructions = [.. testCase.Instructions, new CodeInstruction(OpCodes.Br, targetLabel)];
             for (var index = 0; index < testCase.StackDepth; index++)
                 instructions.Add(index == 0 ? target : new CodeInstruction(OpCodes.Pop));
             if (testCase.StackDepth == 0)
             {
-                target = new CodeInstruction(OpCodes.Ret);
-                target.labels.Add(targetLabel);
+                target = new CodeInstruction(OpCodes.Ret).WithLabels(targetLabel);
                 instructions.Add(target);
             }
             else
@@ -347,10 +345,8 @@ public sealed class ControlFlowGraphGeneratorTests
         ILGenerator il = PatchProcessor.CreateILGenerator();
         Label valueTargetLabel = il.DefineLabel();
         Label voidTargetLabel = il.DefineLabel();
-        var valueTarget = new CodeInstruction(OpCodes.Pop);
-        valueTarget.labels.Add(valueTargetLabel);
-        var voidTarget = new CodeInstruction(OpCodes.Ret);
-        voidTarget.labels.Add(voidTargetLabel);
+        var valueTarget = new CodeInstruction(OpCodes.Pop).WithLabels(valueTargetLabel);
+        var voidTarget = new CodeInstruction(OpCodes.Ret).WithLabels(voidTargetLabel);
         var valueGenerator = CreateGenerator(
             VoidMethod,
             [
@@ -425,8 +421,7 @@ public sealed class ControlFlowGraphGeneratorTests
     public void Dup_ReusesSameStackValueTwiceWithoutCreatingAnILOp()
     {
         Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var target = new CodeInstruction(OpCodes.Pop);
-        target.labels.Add(targetLabel);
+        var target = new CodeInstruction(OpCodes.Pop).WithLabels(targetLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [
@@ -490,8 +485,8 @@ public sealed class ControlFlowGraphGeneratorTests
         ILGenerator il = PatchProcessor.CreateILGenerator();
         LocalBuilder local = il.DeclareLocal(typeof(ControlFlowGraphStructTarget));
         Label targetLabel = il.DefineLabel();
-        var constrained = new CodeInstruction(OpCodes.Constrained, typeof(ControlFlowGraphStructTarget));
-        constrained.labels.Add(targetLabel);
+        var constrained = new CodeInstruction(OpCodes.Constrained, typeof(ControlFlowGraphStructTarget))
+            .WithLabels(targetLabel);
         MethodInfo toString = typeof(object).GetMethod(nameof(ToString))!;
         var generator = CreateGenerator(
             VoidMethod,
@@ -577,12 +572,12 @@ public sealed class ControlFlowGraphGeneratorTests
     [Test]
     public void ExceptionRegions_Catch_RethrowHasNoInputAndNoSuccessor()
     {
-        var tryStart = new CodeInstruction(OpCodes.Ldnull);
-        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
-        var catchStart = new CodeInstruction(OpCodes.Pop);
-        catchStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
-        var rethrow = new CodeInstruction(OpCodes.Rethrow);
-        rethrow.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var tryStart = new CodeInstruction(OpCodes.Ldnull)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var catchStart = new CodeInstruction(OpCodes.Pop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+        var rethrow = new CodeInstruction(OpCodes.Rethrow)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
         var generator = CreateGenerator(
             VoidMethod,
             [tryStart, new CodeInstruction(OpCodes.Throw), catchStart, rethrow, new CodeInstruction(OpCodes.Ret)]);
@@ -599,8 +594,7 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ControlFlow_UnconditionalBranch_ForwardWithoutCarriedStackCreatesEdge()
     {
         Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var target = new CodeInstruction(OpCodes.Ret);
-        target.labels.Add(targetLabel);
+        var target = new CodeInstruction(OpCodes.Ret).WithLabels(targetLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [new CodeInstruction(OpCodes.Br, targetLabel), target]);
@@ -619,8 +613,7 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ControlFlow_UnconditionalBranch_ForwardWithCarriedStackCreatesAssignment()
     {
         Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var target = new CodeInstruction(OpCodes.Pop);
-        target.labels.Add(targetLabel);
+        var target = new CodeInstruction(OpCodes.Pop).WithLabels(targetLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Br, targetLabel), target,
@@ -642,8 +635,7 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ControlFlow_UnconditionalBranch_BackwardWithoutCarriedStackCreatesEdge()
     {
         Label loopLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var loop = new CodeInstruction(OpCodes.Br, loopLabel);
-        loop.labels.Add(loopLabel);
+        var loop = new CodeInstruction(OpCodes.Br, loopLabel).WithLabels(loopLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [new CodeInstruction(OpCodes.Br, loopLabel), loop]);
@@ -660,8 +652,7 @@ public sealed class ControlFlowGraphGeneratorTests
         // The earlier forward branch is required by the CLI backward-branch constraint: it establishes that the loop
         // header can have a non-empty evaluation stack before a later back edge carries a value to the same location.
         Label loopLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var loop = new CodeInstruction(OpCodes.Pop);
-        loop.labels.Add(loopLabel);
+        var loop = new CodeInstruction(OpCodes.Pop).WithLabels(loopLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [
@@ -697,10 +688,8 @@ public sealed class ControlFlowGraphGeneratorTests
             ILGenerator il = PatchProcessor.CreateILGenerator();
             Label targetLabel = il.DefineLabel();
             Label endLabel = il.DefineLabel();
-            var target = new CodeInstruction(OpCodes.Br, endLabel);
-            target.labels.Add(targetLabel);
-            var end = new CodeInstruction(OpCodes.Ret);
-            end.labels.Add(endLabel);
+            var target = new CodeInstruction(OpCodes.Br, endLabel).WithLabels(targetLabel);
+            var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
             List<CodeInstruction> instructions =
             [
                 .. Enumerable.Repeat(new CodeInstruction(OpCodes.Ldc_I4_0), testCase.InputCount),
@@ -727,10 +716,8 @@ public sealed class ControlFlowGraphGeneratorTests
         ILGenerator il = PatchProcessor.CreateILGenerator();
         Label targetLabel = il.DefineLabel();
         Label endLabel = il.DefineLabel();
-        var target = new CodeInstruction(OpCodes.Br, endLabel);
-        target.labels.Add(targetLabel);
-        var end = new CodeInstruction(OpCodes.Ret);
-        end.labels.Add(endLabel);
+        var target = new CodeInstruction(OpCodes.Br, endLabel).WithLabels(targetLabel);
+        var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [
@@ -754,10 +741,8 @@ public sealed class ControlFlowGraphGeneratorTests
         ILGenerator il = PatchProcessor.CreateILGenerator();
         Label targetLabel = il.DefineLabel();
         Label endLabel = il.DefineLabel();
-        var target = new CodeInstruction(OpCodes.Pop);
-        target.labels.Add(targetLabel);
-        var end = new CodeInstruction(OpCodes.Ret);
-        end.labels.Add(endLabel);
+        var target = new CodeInstruction(OpCodes.Pop).WithLabels(targetLabel);
+        var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [
@@ -782,8 +767,7 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ControlFlow_ConditionalBranch_BackwardWithoutCarriedStackCreatesEmptyBackEdge()
     {
         Label loopLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var loop = new CodeInstruction(OpCodes.Ldc_I4_0);
-        loop.labels.Add(loopLabel);
+        var loop = new CodeInstruction(OpCodes.Ldc_I4_0).WithLabels(loopLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [loop, new CodeInstruction(OpCodes.Brtrue, loopLabel), new CodeInstruction(OpCodes.Ret)]);
@@ -801,8 +785,7 @@ public sealed class ControlFlowGraphGeneratorTests
     {
         // As above, the forward edge establishes the non-empty stack shape before the backward conditional edge uses it.
         Label loopLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var loop = new CodeInstruction(OpCodes.Ldc_I4_0);
-        loop.labels.Add(loopLabel);
+        var loop = new CodeInstruction(OpCodes.Ldc_I4_0).WithLabels(loopLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [
@@ -830,8 +813,7 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ControlFlow_BrShort_CreatesUnconditionalEdge()
     {
         Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var target = new CodeInstruction(OpCodes.Ret);
-        target.labels.Add(targetLabel);
+        var target = new CodeInstruction(OpCodes.Ret).WithLabels(targetLabel);
         var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Br_S, targetLabel), target]);
 
         BasicBlock source = FirstInstructionBlock(generator);
@@ -848,12 +830,9 @@ public sealed class ControlFlowGraphGeneratorTests
         Label firstTargetLabel = il.DefineLabel();
         Label secondTargetLabel = il.DefineLabel();
         Label endLabel = il.DefineLabel();
-        var firstTarget = new CodeInstruction(OpCodes.Pop);
-        firstTarget.labels.Add(firstTargetLabel);
-        var secondTarget = new CodeInstruction(OpCodes.Pop);
-        secondTarget.labels.Add(secondTargetLabel);
-        var end = new CodeInstruction(OpCodes.Ret);
-        end.labels.Add(endLabel);
+        var firstTarget = new CodeInstruction(OpCodes.Pop).WithLabels(firstTargetLabel);
+        var secondTarget = new CodeInstruction(OpCodes.Pop).WithLabels(secondTargetLabel);
+        var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [
@@ -886,10 +865,8 @@ public sealed class ControlFlowGraphGeneratorTests
         ILGenerator il = PatchProcessor.CreateILGenerator();
         Label secondPathLabel = il.DefineLabel();
         Label mergeLabel = il.DefineLabel();
-        var secondPath = new CodeInstruction(OpCodes.Ldc_I4_2);
-        secondPath.labels.Add(secondPathLabel);
-        var merge = new CodeInstruction(OpCodes.Pop);
-        merge.labels.Add(mergeLabel);
+        var secondPath = new CodeInstruction(OpCodes.Ldc_I4_2).WithLabels(secondPathLabel);
+        var merge = new CodeInstruction(OpCodes.Pop).WithLabels(mergeLabel);
         var generator = CreateGenerator(
             VoidTwoArgumentMethod,
             [
@@ -920,11 +897,8 @@ public sealed class ControlFlowGraphGeneratorTests
         Label firstAlias = il.DefineLabel();
         Label secondAlias = il.DefineLabel();
         Label endLabel = il.DefineLabel();
-        var sharedTarget = new CodeInstruction(OpCodes.Br, endLabel);
-        sharedTarget.labels.Add(firstAlias);
-        sharedTarget.labels.Add(secondAlias);
-        var end = new CodeInstruction(OpCodes.Ret);
-        end.labels.Add(endLabel);
+        var sharedTarget = new CodeInstruction(OpCodes.Br, endLabel).WithLabels(firstAlias, secondAlias);
+        var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [
@@ -965,8 +939,7 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ControlFlow_ConditionalTargetEqualToFallthroughCreatesOneEdge()
     {
         Label nextLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var next = new CodeInstruction(OpCodes.Ret);
-        next.labels.Add(nextLabel);
+        var next = new CodeInstruction(OpCodes.Ret).WithLabels(nextLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [new CodeInstruction(OpCodes.Ldc_I4_0), new CodeInstruction(OpCodes.Brtrue, nextLabel), next]);
@@ -982,8 +955,7 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ControlFlow_ForwardBranchWithTwoCarriedStackSlotsCreatesOrderedAssignments()
     {
         Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var target = new CodeInstruction(OpCodes.Pop);
-        target.labels.Add(targetLabel);
+        var target = new CodeInstruction(OpCodes.Pop).WithLabels(targetLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [
@@ -1013,8 +985,7 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ControlFlow_Fallthrough_WithoutCarriedStackCreatesImplicitEdge()
     {
         Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var target = new CodeInstruction(OpCodes.Ret);
-        target.labels.Add(targetLabel);
+        var target = new CodeInstruction(OpCodes.Ret).WithLabels(targetLabel);
         var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Nop), target]);
 
         BasicBlock source = InstructionBlocks(generator).First();
@@ -1028,8 +999,7 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ControlFlow_Fallthrough_WithCarriedStackCreatesAssignment()
     {
         Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var target = new CodeInstruction(OpCodes.Pop);
-        target.labels.Add(targetLabel);
+        var target = new CodeInstruction(OpCodes.Pop).WithLabels(targetLabel);
         var generator = CreateGenerator(
             VoidMethod,
             [new CodeInstruction(OpCodes.Ldc_I4_1), target, new CodeInstruction(OpCodes.Ret)]);
@@ -1064,14 +1034,13 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ExceptionRegions_Catch_ReceivesImplicitExceptionOnStack()
     {
         Label endLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var tryStart = new CodeInstruction(OpCodes.Nop);
-        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
-        var catchStart = new CodeInstruction(OpCodes.Pop);
-        catchStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(InvalidOperationException)));
-        var catchLeave = new CodeInstruction(OpCodes.Leave, endLabel);
-        catchLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
-        var end = new CodeInstruction(OpCodes.Ret);
-        end.labels.Add(endLabel);
+        var tryStart = new CodeInstruction(OpCodes.Nop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var catchStart = new CodeInstruction(OpCodes.Pop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(InvalidOperationException)));
+        var catchLeave = new CodeInstruction(OpCodes.Leave, endLabel)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
 
         var generator = CreateGenerator(
             VoidMethod,
@@ -1108,14 +1077,13 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ExceptionRegions_Finally_HasEmptySyntheticEntryAndEndsWithEndfinally()
     {
         Label endLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var tryStart = new CodeInstruction(OpCodes.Nop);
-        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
-        var finallyStart = new CodeInstruction(OpCodes.Nop);
-        finallyStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
-        var endfinally = new CodeInstruction(OpCodes.Endfinally);
-        endfinally.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
-        var end = new CodeInstruction(OpCodes.Ret);
-        end.labels.Add(endLabel);
+        var tryStart = new CodeInstruction(OpCodes.Nop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var finallyStart = new CodeInstruction(OpCodes.Nop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
+        var endfinally = new CodeInstruction(OpCodes.Endfinally)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
 
         var generator = CreateGenerator(
             VoidMethod,
@@ -1139,14 +1107,13 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ExceptionRegions_Fault_HasEmptySyntheticEntryAndEndsWithEndfinally()
     {
         Label endLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var tryStart = new CodeInstruction(OpCodes.Nop);
-        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
-        var faultStart = new CodeInstruction(OpCodes.Nop);
-        faultStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginFaultBlock));
-        var endfinally = new CodeInstruction(OpCodes.Endfinally);
-        endfinally.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
-        var end = new CodeInstruction(OpCodes.Ret);
-        end.labels.Add(endLabel);
+        var tryStart = new CodeInstruction(OpCodes.Nop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var faultStart = new CodeInstruction(OpCodes.Nop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginFaultBlock));
+        var endfinally = new CodeInstruction(OpCodes.Endfinally)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
 
         var generator = CreateGenerator(
             VoidMethod,
@@ -1170,16 +1137,15 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ExceptionRegions_MultipleCatchHandlersBelongToOneGroupAndHaveDistinctExceptionSlots()
     {
         Label endLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var tryStart = new CodeInstruction(OpCodes.Nop);
-        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
-        var firstCatch = new CodeInstruction(OpCodes.Pop);
-        firstCatch.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(InvalidOperationException)));
-        var secondCatch = new CodeInstruction(OpCodes.Pop);
-        secondCatch.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(ArgumentException)));
-        var secondLeave = new CodeInstruction(OpCodes.Leave, endLabel);
-        secondLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
-        var end = new CodeInstruction(OpCodes.Ret);
-        end.labels.Add(endLabel);
+        var tryStart = new CodeInstruction(OpCodes.Nop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var firstCatch = new CodeInstruction(OpCodes.Pop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(InvalidOperationException)));
+        var secondCatch = new CodeInstruction(OpCodes.Pop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(ArgumentException)));
+        var secondLeave = new CodeInstruction(OpCodes.Leave, endLabel)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
 
         var generator = CreateGenerator(
             VoidMethod,
@@ -1210,22 +1176,20 @@ public sealed class ControlFlowGraphGeneratorTests
         ILGenerator il = PatchProcessor.CreateILGenerator();
         Label afterInnerLabel = il.DefineLabel();
         Label endLabel = il.DefineLabel();
-        var outerTryStart = new CodeInstruction(OpCodes.Nop);
-        outerTryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
-        var innerTryStart = new CodeInstruction(OpCodes.Nop);
-        innerTryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
-        var innerFinallyStart = new CodeInstruction(OpCodes.Nop);
-        innerFinallyStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
-        var innerEndfinally = new CodeInstruction(OpCodes.Endfinally);
-        innerEndfinally.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
-        var afterInner = new CodeInstruction(OpCodes.Leave, endLabel);
-        afterInner.labels.Add(afterInnerLabel);
-        var outerCatchStart = new CodeInstruction(OpCodes.Pop);
-        outerCatchStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
-        var outerCatchLeave = new CodeInstruction(OpCodes.Leave, endLabel);
-        outerCatchLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
-        var end = new CodeInstruction(OpCodes.Ret);
-        end.labels.Add(endLabel);
+        var outerTryStart = new CodeInstruction(OpCodes.Nop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var innerTryStart = new CodeInstruction(OpCodes.Nop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var innerFinallyStart = new CodeInstruction(OpCodes.Nop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
+        var innerEndfinally = new CodeInstruction(OpCodes.Endfinally)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var afterInner = new CodeInstruction(OpCodes.Leave, endLabel).WithLabels(afterInnerLabel);
+        var outerCatchStart = new CodeInstruction(OpCodes.Pop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+        var outerCatchLeave = new CodeInstruction(OpCodes.Leave, endLabel)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
 
         var generator = CreateGenerator(
             VoidMethod,
@@ -1258,17 +1222,15 @@ public sealed class ControlFlowGraphGeneratorTests
         Label secondTryBlockLabel = il.DefineLabel();
         Label secondCatchBlockLabel = il.DefineLabel();
         Label endLabel = il.DefineLabel();
-        var tryStart = new CodeInstruction(OpCodes.Ldc_I4_0);
-        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
-        var secondTryBlock = new CodeInstruction(OpCodes.Leave, endLabel);
-        secondTryBlock.labels.Add(secondTryBlockLabel);
-        var catchStart = new CodeInstruction(OpCodes.Pop);
-        catchStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
-        var secondCatchBlock = new CodeInstruction(OpCodes.Leave, endLabel);
-        secondCatchBlock.labels.Add(secondCatchBlockLabel);
-        secondCatchBlock.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
-        var end = new CodeInstruction(OpCodes.Ret);
-        end.labels.Add(endLabel);
+        var tryStart = new CodeInstruction(OpCodes.Ldc_I4_0)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var secondTryBlock = new CodeInstruction(OpCodes.Leave, endLabel).WithLabels(secondTryBlockLabel);
+        var catchStart = new CodeInstruction(OpCodes.Pop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception)));
+        var secondCatchBlock = new CodeInstruction(OpCodes.Leave, endLabel)
+            .WithLabels(secondCatchBlockLabel)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
 
         var generator = CreateGenerator(
             VoidMethod,
@@ -1303,16 +1265,15 @@ public sealed class ControlFlowGraphGeneratorTests
     public void ExceptionRegions_Filter_ThrowsNotSupportedException()
     {
         Label endLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-        var tryStart = new CodeInstruction(OpCodes.Nop);
-        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
-        var filterStart = new CodeInstruction(OpCodes.Pop);
-        filterStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptFilterBlock));
-        var handlerStart = new CodeInstruction(OpCodes.Pop);
-        handlerStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, null));
-        var handlerLeave = new CodeInstruction(OpCodes.Leave, endLabel);
-        handlerLeave.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
-        var end = new CodeInstruction(OpCodes.Ret);
-        end.labels.Add(endLabel);
+        var tryStart = new CodeInstruction(OpCodes.Nop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var filterStart = new CodeInstruction(OpCodes.Pop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptFilterBlock));
+        var handlerStart = new CodeInstruction(OpCodes.Pop)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, null));
+        var handlerLeave = new CodeInstruction(OpCodes.Leave, endLabel)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret).WithLabels(endLabel);
         var generator = new ControlFlowGraphGenerator(
             VoidMethod,
             [
@@ -1335,8 +1296,7 @@ public sealed class ControlFlowGraphGeneratorTests
         foreach (OpCode opcode in new[] { OpCodes.Leave, OpCodes.Leave_S })
         {
             Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
-            var target = new CodeInstruction(OpCodes.Ret);
-            target.labels.Add(targetLabel);
+            var target = new CodeInstruction(OpCodes.Ret).WithLabels(targetLabel);
             var generator = CreateGenerator(VoidMethod, [new CodeInstruction(opcode, targetLabel), target]);
 
             BasicBlock source = FirstInstructionBlock(generator);
