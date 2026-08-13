@@ -2,6 +2,17 @@
 
 namespace Disharmony.Utilities;
 
+/// <summary>
+///     Implements a collection of disjoint sets which supports looking up which set an element
+///     is a member of, and merging sets given a member from each set.
+/// </summary>
+/// <remarks>
+///     <para>
+///         Each set is identified by one representative member of the set, the root. The root is not stable
+///         and may change after a merge operation.
+///     </para>
+/// </remarks>
+/// <typeparam name="T"></typeparam>
 internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>> where T : class
 {
     private readonly Dictionary<T, T?> parents = [];
