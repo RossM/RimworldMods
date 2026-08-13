@@ -558,11 +558,112 @@ public sealed class ControlFlowGraphGeneratorTests
         Assert.That(group.HandlerRegions, Has.Count.EqualTo(1));
         Assert.That(group.HandlerRegions[0], Is.TypeOf<CatchRegion>());
         var catchRegion = (CatchRegion)group.HandlerRegions[0];
-        BasicBlock catchBlock = generator.ControlFlowGraph.GetBlock(catchRegion.EntryLabel);
+        BasicBlock syntheticEntry = generator.ControlFlowGraph.GetBlock(catchRegion.EntryLabel);
+        BasicBlock catchBlock = generator.ControlFlowGraph.GetBlock(((UnconditionalBranch)syntheticEntry.Branch).Label);
+        Edge entryEdge = generator.ControlFlowGraph.OutgoingEdges(syntheticEntry).Single();
         Assert.That(catchRegion.ExceptionType, Is.EqualTo(typeof(InvalidOperationException)));
+        Assert.That(generator.BlockStacks[syntheticEntry.Label].IncomingStack,
+            Is.EqualTo(new[] { catchRegion.IncomingException }));
+        Assert.That(generator.BlockStacks[syntheticEntry.Label].OutgoingStack,
+            Is.EqualTo(new[] { catchRegion.IncomingException }));
         Assert.That(generator.BlockStacks[catchBlock.Label].IncomingStack, Has.Count.EqualTo(1));
-        Assert.That(generator.BlockStacks[catchBlock.Label].IncomingStack[0], Is.SameAs(catchRegion.IncomingException));
+        Assert.That(generator.BlockStacks[catchBlock.Label].IncomingStack[0], Is.Not.EqualTo(catchRegion.IncomingException));
+        Assert.That(entryEdge.EdgeAssignments, Has.Count.EqualTo(1));
+        Assert.That(entryEdge.EdgeAssignments[0].Input, Is.EqualTo(catchRegion.IncomingException));
+        Assert.That(entryEdge.EdgeAssignments[0].Output,
+            Is.EqualTo(generator.BlockStacks[catchBlock.Label].IncomingStack[0]));
         Assert.That(generator.BlockStacks[catchBlock.Label].OutgoingStack, Is.Empty);
+    }
+
+    [Test]
+    public void ExceptionRegions_Finally_HasEmptySyntheticEntryAndEndsWithEndfinally()
+    {
+        Label endLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var tryStart = new CodeInstruction(OpCodes.Nop);
+        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var finallyStart = new CodeInstruction(OpCodes.Nop);
+        finallyStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
+        var endfinally = new CodeInstruction(OpCodes.Endfinally);
+        endfinally.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret);
+        end.labels.Add(endLabel);
+
+        var generator = CreateGenerator(
+            VoidMethod,
+            [tryStart, new CodeInstruction(OpCodes.Leave, endLabel), finallyStart, endfinally, end]);
+
+        ExceptionGroup group = generator.ControlFlowGraph.ExceptionGroups.Single();
+        Assert.That(group.HandlerRegions.Single(), Is.TypeOf<FinallyRegion>());
+        var region = (FinallyRegion)group.HandlerRegions.Single();
+        BasicBlock syntheticEntry = generator.ControlFlowGraph.GetBlock(region.EntryLabel);
+        BasicBlock finallyBlock = generator.ControlFlowGraph.GetBlock(((UnconditionalBranch)syntheticEntry.Branch).Label);
+        Assert.That(generator.BlockStacks[syntheticEntry.Label].IncomingStack, Is.Empty);
+        Assert.That(generator.BlockStacks[syntheticEntry.Label].OutgoingStack, Is.Empty);
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(syntheticEntry).Single().EdgeAssignments, Is.Empty);
+        Assert.That(finallyBlock.Region, Is.SameAs(region));
+        Assert.That(finallyBlock.Branch, Is.TypeOf<Return>());
+        Assert.That(((Return)finallyBlock.Branch).IL.OpCode, Is.EqualTo(OpCodes.Endfinally));
+        Assert.That(((Return)finallyBlock.Branch).Value, Is.TypeOf<VoidOp>());
+    }
+
+    [Test]
+    public void ExceptionRegions_Fault_HasEmptySyntheticEntryAndEndsWithEndfinally()
+    {
+        Label endLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var tryStart = new CodeInstruction(OpCodes.Nop);
+        tryStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var faultStart = new CodeInstruction(OpCodes.Nop);
+        faultStart.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginFaultBlock));
+        var endfinally = new CodeInstruction(OpCodes.Endfinally);
+        endfinally.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
+        var end = new CodeInstruction(OpCodes.Ret);
+        end.labels.Add(endLabel);
+
+        var generator = CreateGenerator(
+            VoidMethod,
+            [tryStart, new CodeInstruction(OpCodes.Leave, endLabel), faultStart, endfinally, end]);
+
+        ExceptionGroup group = generator.ControlFlowGraph.ExceptionGroups.Single();
+        Assert.That(group.HandlerRegions.Single(), Is.TypeOf<FaultRegion>());
+        var region = (FaultRegion)group.HandlerRegions.Single();
+        BasicBlock syntheticEntry = generator.ControlFlowGraph.GetBlock(region.EntryLabel);
+        BasicBlock faultBlock = generator.ControlFlowGraph.GetBlock(((UnconditionalBranch)syntheticEntry.Branch).Label);
+        Assert.That(generator.BlockStacks[syntheticEntry.Label].IncomingStack, Is.Empty);
+        Assert.That(generator.BlockStacks[syntheticEntry.Label].OutgoingStack, Is.Empty);
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(syntheticEntry).Single().EdgeAssignments, Is.Empty);
+        Assert.That(faultBlock.Region, Is.SameAs(region));
+        Assert.That(faultBlock.Branch, Is.TypeOf<Return>());
+        Assert.That(((Return)faultBlock.Branch).IL.OpCode, Is.EqualTo(OpCodes.Endfinally));
+        Assert.That(((Return)faultBlock.Branch).Value, Is.TypeOf<VoidOp>());
+    }
+
+    [Test]
+    public void ControlFlow_Leave_LongAndShortFormsCreateLeaveWithEmptyStackEdge()
+    {
+        foreach (OpCode opcode in new[] { OpCodes.Leave, OpCodes.Leave_S })
+        {
+            Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+            var target = new CodeInstruction(OpCodes.Ret);
+            target.labels.Add(targetLabel);
+            var generator = CreateGenerator(VoidMethod, [new CodeInstruction(opcode, targetLabel), target]);
+
+            BasicBlock source = FirstInstructionBlock(generator);
+            Assert.That(source.Branch, Is.TypeOf<Leave>(), opcode.Name);
+            Assert.That(((Leave)source.Branch).Label, Is.EqualTo(target.labels.Select(label => generator.BlockLabels[label]).Single()),
+                opcode.Name);
+            Assert.That(generator.ControlFlowGraph.OutgoingEdges(source).Single().EdgeAssignments, Is.Empty, opcode.Name);
+        }
+    }
+
+    [Test]
+    public void ControlFlow_Jmp_CreatesTerminalTransferWithoutSuccessor()
+    {
+        var generator = CreateGenerator(VoidMethod, [new CodeInstruction(OpCodes.Jmp, VoidMethod)]);
+
+        BasicBlock block = FirstInstructionBlock(generator);
+        Assert.That(block.Branch.Labels, Is.Empty);
+        Assert.That(generator.ControlFlowGraph.OutgoingEdges(block), Is.Empty);
+        Assert.That(generator.BlockStacks[block.Label].OutgoingStack, Is.Empty);
     }
 
     private static ControlFlowGraphGenerator CreateGenerator(MethodBase method, List<CodeInstruction> instructions)
