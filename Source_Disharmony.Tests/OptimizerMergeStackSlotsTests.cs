@@ -194,4 +194,48 @@ public sealed class OptimizerMergeStackSlotsTests
             Assert.That(graph.Edges.SelectMany(edge => edge.EdgeAssignments), Is.Empty);
         });
     }
+
+    [Test]
+    public void MergeStackSlots_Dup_PreservesTheExplicitCopyBetweenDistinctSlots()
+    {
+        ILGenerator il = PatchProcessor.CreateILGenerator();
+        Label targetLabel = il.DefineLabel();
+        List<CodeInstruction> instructions =
+        [
+            new CodeInstruction(OpCodes.Ldc_I4_1),
+            new CodeInstruction(OpCodes.Dup),
+            new CodeInstruction(OpCodes.Br, targetLabel),
+            new CodeInstruction(OpCodes.Pop).WithLabels(targetLabel),
+            new CodeInstruction(OpCodes.Pop),
+            new CodeInstruction(OpCodes.Ret),
+        ];
+        ControlFlowGraphGenerator generator = new(VoidMethod, instructions);
+        generator.CreateControlFlowGraph();
+        ControlFlowGraph graph = generator.ControlFlowGraph;
+        BasicBlock source = graph.BasicBlocks.Single(block => block.Ops.OfType<AssignmentOp>()
+            .Any(assignment => assignment.Input is StackSlot));
+        AssignmentOp copyBeforeMerge = source.Ops.OfType<AssignmentOp>()
+            .Single(assignment => assignment.Input is StackSlot);
+        Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, instructions,
+            PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        optimizer.MergeStackSlots();
+
+        AssignmentOp copyAfterMerge = graph.GetBlock(source.Label).Ops.OfType<AssignmentOp>()
+            .Single(assignment => assignment.Input is StackSlot);
+        BasicBlock target = graph.BasicBlocks.Single(block =>
+            block.Ops.OfType<ILOp>().Count(operation => operation.IL.OpCode == OpCodes.Pop) == 2);
+        ILOp[] pops = target.Ops.OfType<ILOp>().Where(operation => operation.IL.OpCode == OpCodes.Pop).ToArray();
+        Assert.Multiple(() =>
+        {
+            Assert.That(copyAfterMerge, Is.SameAs(copyBeforeMerge));
+            Assert.That(copyAfterMerge.Input, Is.Not.EqualTo(copyAfterMerge.Output));
+            Assert.That(pops[0].Inputs.Single(), Is.SameAs(copyAfterMerge.Output));
+            Assert.That(pops[1].Inputs.Single(), Is.SameAs(copyAfterMerge.Input));
+            Assert.That(graph.Edges.SelectMany(edge => edge.EdgeAssignments), Is.Empty);
+        });
+    }
 }

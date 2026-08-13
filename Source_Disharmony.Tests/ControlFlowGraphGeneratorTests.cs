@@ -436,7 +436,7 @@ public sealed class ControlFlowGraphGeneratorTests
     }
 
     [Test]
-    public void Dup_ReusesSameStackValueTwiceWithoutCreatingAnILOp()
+    public void Dup_CreatesDistinctStackSlotsWithAnExplicitAssignment()
     {
         Label targetLabel = PatchProcessor.CreateILGenerator().DefineLabel();
         var generator = CreateGenerator(
@@ -452,9 +452,18 @@ public sealed class ControlFlowGraphGeneratorTests
         BasicBlock entry = FirstInstructionBlock(generator);
         List<StackSlot> outgoing = generator.BlockStacks[entry.Label].OutgoingStack;
 
-        Assert.That(outgoing, Has.Count.EqualTo(2));
-        Assert.That(outgoing[0], Is.SameAs(outgoing[1]));
-        Assert.That(entry.Ops.SelectMany(Flatten).OfType<ILOp>().Any(operation => operation.IL.OpCode == OpCodes.Dup), Is.False);
+        AssignmentOp copy = entry.Ops.OfType<AssignmentOp>()
+            .Single(assignment => ReferenceEquals(assignment.Output, outgoing[1]));
+        Assert.Multiple(() =>
+        {
+            Assert.That(outgoing, Has.Count.EqualTo(2));
+            Assert.That(outgoing[0], Is.Not.EqualTo(outgoing[1]));
+            Assert.That(outgoing.Select(slot => slot.Depth), Is.EqualTo(new[] { 0, 1 }));
+            Assert.That(copy.Input, Is.SameAs(outgoing[0]));
+            Assert.That(copy.Output, Is.SameAs(outgoing[1]));
+            Assert.That(entry.Ops.SelectMany(Flatten).OfType<ILOp>()
+                .Any(operation => operation.IL.OpCode == OpCodes.Dup), Is.False);
+        });
     }
 
     [Test]
