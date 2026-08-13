@@ -2,26 +2,26 @@
 
 internal class Visitor
 {
-    public Op Visit(AssignmentOp op) => op;
-    public Op Visit(ILOp op) => op;
-    public Op Visit(StackSlot op) => op;
-    public Op Visit(Argument op) => op;
-    public Op Visit(Local op) => op;
-    public Op Visit(Temporary op) => op;
-    public Op Visit(VoidOp op) => op;
-    public Region Visit(RootRegion region) => region;
-    public Region Visit(ProtectedRegion region) => region;
-    public Region Visit(CatchRegion region) => region;
-    public Region Visit(FinallyRegion region) => region;
-    public Region Visit(FaultRegion region) => region;
-    public ExceptionGroup Visit(ExceptionGroup group) => group;
-    public Branch Visit(UnconditionalBranch branch) => branch;
-    public Branch Visit(Leave branch) => branch;
-    public Branch Visit(ConditionalBranch branch) => branch;
-    public Branch Visit(Throw branch) => branch;
-    public Branch Visit(Rethrow branch) => branch;
-    public Branch Visit(Return branch) => branch;
-    public Branch Visit(Jump branch) => branch;
-    public BasicBlock Visit(BasicBlock block) => block;
-    public Edge Visit(Edge edge) => edge;
+    public virtual Op Visit(AssignmentOp op) => op;
+    public virtual Op Visit(ILOp op) => op;
+    public virtual Op Visit(StackSlot op) => op;
+    public virtual Op Visit(Argument op) => op;
+    public virtual Op Visit(Local op) => op;
+    public virtual Op Visit(Temporary op) => op;
+    public virtual Op Visit(VoidOp op) => op;
+    public virtual Region Visit(RootRegion region) => region;
+    public virtual Region Visit(ProtectedRegion region) => region;
+    public virtual Region Visit(CatchRegion region) => region;
+    public virtual Region Visit(FinallyRegion region) => region;
+    public virtual Region Visit(FaultRegion region) => region;
+    public virtual ExceptionGroup Visit(ExceptionGroup group) => group;
+    public virtual Branch Visit(UnconditionalBranch branch) => branch;
+    public virtual Branch Visit(Leave branch) => branch;
+    public virtual Branch Visit(ConditionalBranch branch) => branch;
+    public virtual Branch Visit(Throw branch) => branch;
+    public virtual Branch Visit(Rethrow branch) => branch;
+    public virtual Branch Visit(Return branch) => branch;
+    public virtual Branch Visit(Jump branch) => branch;
+    public virtual BasicBlock Visit(BasicBlock block) => block;
+    public virtual Edge Visit(Edge edge) => edge;
 }
