@@ -282,13 +282,21 @@ internal class ControlFlowGraphGenerator
                 break;
             }
 
-            if (instruction.opcode.StackBehaviourPush is StackBehaviour.Push0)
-                ops.Add(new ILOp(il, popped, typeof(void)));
-            else
+            switch (instruction.opcode.StackBehaviourPush)
             {
-                StackSlot result = new StackSlot(curStack.Count, TypeLattice.Unknown);
-                ops.Add(new AssignmentOp(result, new ILOp(il, popped, TypeLattice.Unknown)));
-                curStack.Add(result);
+                case StackBehaviour.Push0:
+                case StackBehaviour.Varpush when instruction.operand is MethodInfo method && method.ReturnType == typeof(void):
+                {
+                    ops.Add(new ILOp(il, popped, typeof(void))); 
+                    break;
+                }
+                default:
+                {
+                    StackSlot result = new StackSlot(curStack.Count, TypeLattice.Unknown);
+                    ops.Add(new AssignmentOp(result, new ILOp(il, popped, TypeLattice.Unknown)));
+                    curStack.Add(result);
+                    break;
+                }
             }
         }
 
