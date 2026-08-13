@@ -125,6 +125,10 @@ internal class ControlFlowGraphGenerator
         bool newBlock = true;
         foreach (CodeInstruction instruction in CodeInstructions)
         {
+            // Drop nops early so that annotations don't create spurious basic blocks
+            if (instruction.opcode == OpCodes.Nop && instruction.labels.Count == 0 && instruction.blocks.Count == 0)
+                continue;
+
             if (instruction.labels.Count > 0)
                 newBlock = true;
             if (instruction.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
@@ -218,7 +222,15 @@ internal class ControlFlowGraphGenerator
             ControlFlowGraph.AddBlock(block);
             BlockStacks[label] = stacks;
             foreach (var successor in block.Branch.Labels)
-                incomingStackSize[successor] = stacks.OutgoingStack.Count;
+            {
+                if (incomingStackSize.TryGetValue(successor, out int curValue))
+                {
+                    if (stacks.OutgoingStack.Count != curValue)
+                        throw new InvalidOperationException("Stack size mismatch");
+                }
+                else
+                    incomingStackSize[successor] = stacks.OutgoingStack.Count;
+            }
 
             foreach (var exceptionBlock in instructions[^1].blocks)
             {
