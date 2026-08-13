@@ -4,6 +4,7 @@ internal class ControlFlowGraphGenerator
 {
     public ControlFlowGraphGenerator(MethodBase method, List<CodeInstruction> codeInstructions)
     {
+        Method = method;
         CodeInstructions = codeInstructions;
 
         if (method.HasThis)
@@ -15,6 +16,7 @@ internal class ControlFlowGraphGenerator
         ReturnType = method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
     }
 
+    public MethodBase Method { get; }
     public Dictionary<Label, BlockLabel> BlockLabels { get; } = [];
     public Dictionary<BlockLabel, (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack)> BlockStacks { get; } = [];
 
@@ -323,6 +325,7 @@ internal class ControlFlowGraphGenerator
             FlowControl.Cond_Branch when instruction.operand is Label[] labels =>
                 new ConditionalBranch(instruction.opcode, popped,
                     [fallthroughLabel ?? throw new InvalidOperationException(), .. labels.Select(label => BlockLabels[label])]),
+            FlowControl.Return when popped.Count == 0 => new Return(il, new VoidOp()),
             FlowControl.Return => new Return(il, popped[0]),
             FlowControl.Throw => new Throw(popped[0]),
             _ => throw new ArgumentOutOfRangeException(),
@@ -330,7 +333,7 @@ internal class ControlFlowGraphGenerator
         return branch;
     }
 
-    private static int PopCount(CodeInstruction instruction)
+    private int PopCount(CodeInstruction instruction)
     {
         return instruction.opcode.StackBehaviourPop switch
         {
@@ -356,6 +359,11 @@ internal class ControlFlowGraphGenerator
             StackBehaviour.Varpop when instruction.operand is MethodInfo methodInfo => methodInfo.GetParameters().Length +
                                                                                        (methodInfo.HasThis ? 1 : 0),
             StackBehaviour.Varpop when instruction.operand is ConstructorInfo constructorInfo => constructorInfo.GetParameters().Length,
+            StackBehaviour.Varpop => OpCodeData.GetCanonicalOpcode(instruction) switch
+            {
+                OpCodeValues.Ret => ReturnType == typeof(void) ? 0 : 1,
+                _ => throw new ArgumentOutOfRangeException(),
+            },
             _ => throw new ArgumentOutOfRangeException(),
         };
     }
