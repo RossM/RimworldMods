@@ -26,7 +26,11 @@ public sealed class OptimizerMergeStackSlotsTests
 
         optimizer.MergeStackSlots();
 
-        Assert.That(graph.GetBlock(block.Label), Is.SameAs(block));
+        Assert.Multiple(() =>
+        {
+            Assert.That(graph.GetBlock(block.Label), Is.SameAs(block));
+            Assert.That(graph.Edges.SelectMany(edge => edge.EdgeAssignments), Is.Empty);
+        });
     }
 
     [Test]
@@ -52,7 +56,7 @@ public sealed class OptimizerMergeStackSlotsTests
         Assert.Multiple(() =>
         {
             Assert.That(((Return)graph.GetBlock(target.Label).Branch).Value, Is.SameAs(sourceSlot));
-            Assert.That(graph.GetEdge(source.Label, target.Label).EdgeAssignments, Is.Empty);
+            Assert.That(graph.Edges.SelectMany(edge => edge.EdgeAssignments), Is.Empty);
         });
     }
 
@@ -84,8 +88,7 @@ public sealed class OptimizerMergeStackSlotsTests
         Assert.Multiple(() =>
         {
             Assert.That(((Return)graph.GetBlock(target.Label).Branch).Value, Is.SameAs(sourceSlot));
-            Assert.That(graph.GetEdge(source.Label, middle.Label).EdgeAssignments, Is.Empty);
-            Assert.That(graph.GetEdge(middle.Label, target.Label).EdgeAssignments, Is.Empty);
+            Assert.That(graph.Edges.SelectMany(edge => edge.EdgeAssignments), Is.Empty);
         });
     }
 
@@ -111,7 +114,11 @@ public sealed class OptimizerMergeStackSlotsTests
         optimizer.MergeStackSlots();
 
         var rewritten = (ILOp)graph.GetBlock(target.Label).Ops.Single();
-        Assert.That(rewritten.Inputs.Single(), Is.SameAs(sourceSlot));
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewritten.Inputs.Single(), Is.SameAs(sourceSlot));
+            Assert.That(graph.Edges.SelectMany(edge => edge.EdgeAssignments), Is.Empty);
+        });
     }
 
     [Test]
@@ -144,7 +151,11 @@ public sealed class OptimizerMergeStackSlotsTests
         optimizer.MergeStackSlots();
 
         var rewritten = (ConditionalBranch)graph.GetBlock(condition.Label).Branch;
-        Assert.That(rewritten.Inputs.Single(), Is.SameAs(sourceSlot));
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewritten.Inputs.Single(), Is.SameAs(sourceSlot));
+            Assert.That(graph.Edges.SelectMany(edge => edge.EdgeAssignments), Is.Empty);
+        });
     }
 
     [Test]
@@ -180,6 +191,7 @@ public sealed class OptimizerMergeStackSlotsTests
             Assert.That(rewritten.Inputs[0], Is.SameAs(firstSource));
             Assert.That(rewritten.Inputs[1], Is.SameAs(secondSource));
             Assert.That(rewritten.Inputs[0], Is.Not.SameAs(rewritten.Inputs[1]));
+            Assert.That(graph.Edges.SelectMany(edge => edge.EdgeAssignments), Is.Empty);
         });
     }
 }
