@@ -337,7 +337,7 @@ internal class ControlFlowGraphGenerator
             OpCodeValues.Leave when instruction.operand is Label label => new Leave(BlockLabels[label]),
             OpCodeValues.Throw => new Throw(popped[0]),
             OpCodeValues.Rethrow => new Rethrow(),
-            OpCodeValues.Jmp => new Jump(new ILOp(il, popped, TypeLattice.Unknown)),
+            OpCodeValues.Jmp => new Jump(new ILOp(il, popped, typeof(void))),
             _ => instruction.opcode.FlowControl switch
             {
                 FlowControl.Cond_Branch when instruction.operand is Label label =>
