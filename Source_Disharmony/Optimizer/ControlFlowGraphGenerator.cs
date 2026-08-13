@@ -21,7 +21,6 @@ internal class ControlFlowGraphGenerator
     public Dictionary<BlockLabel, (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack)> BlockStacks { get; } = [];
 
     public ControlFlowGraph ControlFlowGraph { get; } = new();
-    public RootRegion RootRegion { get; } = new(new BlockLabel());
     public List<CodeInstruction> CodeInstructions { get; }
     public Dictionary<int, Local> Locals { get; } = [];
     public MethodBody? MethodBody { get; }
@@ -147,7 +146,7 @@ internal class ControlFlowGraphGenerator
         // Exception region data
         Stack<Region> regionStack = [];
         Stack<(ProtectedRegion ProtectedRegion, List<HandlerRegion> HandlerRegions)> exceptionGroupStack = [];
-        regionStack.Push(RootRegion);
+        regionStack.Push(ControlFlowGraph.RootRegion);
 
         // Translate basic blocks
         Dictionary<BlockLabel, int> incomingStackSize = [];
