@@ -29,6 +29,8 @@ internal class ControlFlowGraphGenerator
 
     public Type ReturnType { get; }
 
+    private int NextStackSlotId { get; set; }
+
     private MethodBody? GetMethodBodyOrNull(MethodBase method)
     {
         try
@@ -43,6 +45,11 @@ internal class ControlFlowGraphGenerator
         {
             return null;
         }
+    }
+
+    private StackSlot CreateStackSlot(int depth, Type type)
+    {
+        return new StackSlot(depth, type, NextStackSlotId++);
     }
 
     public void CreateControlFlowGraph()
@@ -149,9 +156,7 @@ internal class ControlFlowGraphGenerator
         RootRegion rootRegion = ControlFlowGraph.RootRegion;
         regionStack.Push(rootRegion);
 
-        // Add a synthetic entry block
-        ControlFlowGraph.AddBlock(new(rootRegion.EntryLabel, [], rootRegion, new UnconditionalBranch(instructionBlocks[0].Label)));
-        BlockStacks[rootRegion.EntryLabel] = ([], []);
+        AddSyntheticEntryBlock(rootRegion, instructionBlocks[0].Label, []);
 
         // Translate basic blocks
         Dictionary<BlockLabel, int> incomingStackSize = [];
@@ -167,31 +172,36 @@ internal class ControlFlowGraphGenerator
                         var protectedRegion = new ProtectedRegion(label, regionStack.Peek());
                         regionStack.Push(protectedRegion);
                         exceptionGroupStack.Push((protectedRegion, []));
+                        // A protected region can have real incoming edges and doesn't need a synthetic entry block
                         break;
                     }
                     case ExceptionBlockType.BeginCatchBlock:
                     {
                         regionStack.Pop();
-                        var catchRegion = new CatchRegion(label, regionStack.Peek(), new StackSlot(0, exceptionBlock.catchType));
-                        regionStack.Push(catchRegion);
-                        exceptionGroupStack.Peek().HandlerRegions.Add(catchRegion);
+                        var region = new CatchRegion(new BlockLabel(), regionStack.Peek(), CreateStackSlot(0, exceptionBlock.catchType));
+                        regionStack.Push(region);
+                        exceptionGroupStack.Peek().HandlerRegions.Add(region);
+                        incomingStackSize[label] = 1;
+                        AddSyntheticEntryBlock(region, label, region.IncomingException);
                         break;
                     }
                     case ExceptionBlockType.BeginExceptFilterBlock: throw new NotSupportedException();
                     case ExceptionBlockType.BeginFaultBlock:
                     {
                         regionStack.Pop();
-                        var faultRegion = new FaultRegion(label, regionStack.Peek());
-                        regionStack.Push(faultRegion);
-                        exceptionGroupStack.Peek().HandlerRegions.Add(faultRegion);
+                        var region = new FaultRegion(new BlockLabel(), regionStack.Peek());
+                        regionStack.Push(region);
+                        exceptionGroupStack.Peek().HandlerRegions.Add(region);
+                        AddSyntheticEntryBlock(region, label);
                         break;
                     }
                     case ExceptionBlockType.BeginFinallyBlock:
                     {
                         regionStack.Pop();
-                        var finallyRegion = new FinallyRegion(label, regionStack.Peek());
-                        regionStack.Push(finallyRegion);
-                        exceptionGroupStack.Peek().HandlerRegions.Add(finallyRegion);
+                        var region = new FinallyRegion(new BlockLabel(), regionStack.Peek());
+                        regionStack.Push(region);
+                        exceptionGroupStack.Peek().HandlerRegions.Add(region);
+                        AddSyntheticEntryBlock(region, label);
                         break;
                     }
                     case ExceptionBlockType.EndExceptionBlock:
@@ -220,6 +230,12 @@ internal class ControlFlowGraphGenerator
                 }
             }
         }
+    }
+
+    private void AddSyntheticEntryBlock(Region region, BlockLabel blockLabel, params StackSlot[] stackSlots)
+    {
+        ControlFlowGraph.AddBlock(new(region.EntryLabel, [], region, new UnconditionalBranch(blockLabel)));
+        BlockStacks[region.EntryLabel] = ([.. stackSlots], [.. stackSlots]);
     }
 
     private void CreateEdges()
@@ -253,7 +269,7 @@ internal class ControlFlowGraphGenerator
     {
         List<StackSlot> incomingStack = [];
         for (int i = 0; i < incomingStackSize; i++)
-            incomingStack.Add(new StackSlot(i, TypeLattice.Unknown));
+            incomingStack.Add(CreateStackSlot(i, TypeLattice.Unknown));
         List<StackSlot> curStack = [.. incomingStack];
 
         List<Op> ops = [];
@@ -298,7 +314,7 @@ internal class ControlFlowGraphGenerator
                 }
                 default:
                 {
-                    StackSlot result = new StackSlot(curStack.Count, TypeLattice.Unknown);
+                    StackSlot result = CreateStackSlot(curStack.Count, TypeLattice.Unknown);
                     ops.Add(new AssignmentOp(result, new ILOp(il, popped, TypeLattice.Unknown)));
                     curStack.Add(result);
                     break;

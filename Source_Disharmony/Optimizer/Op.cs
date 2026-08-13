@@ -62,7 +62,7 @@ internal abstract record Variable(Type Type) : Op(Type);
 /// </summary>
 /// <param name="Depth">The stack depth, where zero is the bottom of the stack.</param>
 /// <param name="Type">The type of value stored in the slot.</param>
-internal sealed record StackSlot(int Depth, Type Type) : Variable(Type);
+internal sealed record StackSlot(int Depth, Type Type, int Id = -1) : Variable(Type);
 
 /// <summary>
 ///     Base class for <see cref="Argument" /> and <see cref="Local" /> variables.
