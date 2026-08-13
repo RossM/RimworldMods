@@ -349,9 +349,9 @@ internal class ControlFlowGraphGenerator
         return new BasicBlock(blockLabel, ops, region, branch);
     }
 
-    private Branch? ConvertBranch(CodeInstruction instruction, ILInstruction il, List<StackSlot> popped, BlockLabel? fallthroughLabel)
+    private Branch ConvertBranch(CodeInstruction instruction, ILInstruction il, List<StackSlot> popped, BlockLabel? fallthroughLabel)
     {
-        Branch? branch = OpCodeData.GetCanonicalOpcode(instruction) switch
+        Branch branch = OpCodeData.GetCanonicalOpcode(instruction) switch
         {
             OpCodeValues.Br when instruction.operand is Label label => new UnconditionalBranch(BlockLabels[label]),
             OpCodeValues.Leave when instruction.operand is Label label => new Leave(BlockLabels[label]),
