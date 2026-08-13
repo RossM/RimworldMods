@@ -146,7 +146,12 @@ internal class ControlFlowGraphGenerator
         // Exception region data
         Stack<Region> regionStack = [];
         Stack<(ProtectedRegion ProtectedRegion, List<HandlerRegion> HandlerRegions)> exceptionGroupStack = [];
-        regionStack.Push(ControlFlowGraph.RootRegion);
+        RootRegion rootRegion = ControlFlowGraph.RootRegion;
+        regionStack.Push(rootRegion);
+
+        // Add a synthetic entry block
+        ControlFlowGraph.AddBlock(new(rootRegion.EntryLabel, [], rootRegion, new UnconditionalBranch(instructionBlocks[0].Label)));
+        BlockStacks[rootRegion.EntryLabel] = ([], []);
 
         // Translate basic blocks
         Dictionary<BlockLabel, int> incomingStackSize = [];
