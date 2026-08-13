@@ -51,6 +51,9 @@ internal class Optimizer
 
     public void MergeStackSlots()
     {
+        // Precondition: All edge assignments are between stack slots; no stack slot is live in multiple basic blocks
+        // Postcondition: There are no edge assignments
+
         DisjointSetUnion<Op> tree = new();
 
         foreach (var edge in cfg.Edges)
