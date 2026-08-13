@@ -338,7 +338,10 @@ internal class ControlFlowGraph
 ///     <see cref="ControlFlowGraph.RootRegion" /> are contained in a parent region.
 /// </remarks>
 /// <param name="EntryLabel">The <see cref="BlockLabel" /> of the region's entry <see cref="BasicBlock" />.</param>
-internal abstract record Region(BlockLabel EntryLabel);
+internal abstract record Region(BlockLabel EntryLabel)
+{
+    public abstract Region Accept(Visitor visitor);
+}
 
 /// <summary>
 ///     The root region which all <see cref="BasicBlock" />s ultimately belong to.
@@ -347,7 +350,10 @@ internal abstract record Region(BlockLabel EntryLabel);
 ///     The <paramref name="EntryLabel" /> of the root region is the entry <see cref="BasicBlock" /> for the method.
 /// </remarks>
 /// <param name="EntryLabel">The <see cref="BlockLabel" /> of the method's entry <see cref="BasicBlock" />.</param>
-internal sealed record RootRegion(BlockLabel EntryLabel) : Region(EntryLabel);
+internal sealed record RootRegion(BlockLabel EntryLabel) : Region(EntryLabel)
+{
+    public override Region Accept(Visitor visitor) => visitor.Visit(this);
+}
 
 /// <summary>
 ///     Base class for exception regions.
@@ -366,7 +372,10 @@ internal abstract record ExceptionRegion(BlockLabel EntryLabel, Region Parent) :
 /// </remarks>
 /// <param name="EntryLabel">The <see cref="BlockLabel" /> of the try region's entry <see cref="BasicBlock" />.</param>
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
-internal sealed record ProtectedRegion(BlockLabel EntryLabel, Region Parent) : ExceptionRegion(EntryLabel, Parent);
+internal sealed record ProtectedRegion(BlockLabel EntryLabel, Region Parent) : ExceptionRegion(EntryLabel, Parent)
+{
+    public override Region Accept(Visitor visitor) => visitor.Visit(this);
+}
 
 internal abstract record HandlerRegion(BlockLabel EntryLabel, Region Parent) : ExceptionRegion(EntryLabel, Parent);
 
@@ -384,6 +393,7 @@ internal abstract record HandlerRegion(BlockLabel EntryLabel, Region Parent) : E
 internal sealed record CatchRegion(BlockLabel EntryLabel, Region Parent, StackSlot IncomingException) : HandlerRegion(EntryLabel, Parent)
 {
     public Type ExceptionType => IncomingException.Type;
+    public override Region Accept(Visitor visitor) => visitor.Visit(this);
 }
 
 // Note that there is no FilterRegion, because Harmony's filter handling is broken.
@@ -398,7 +408,10 @@ internal sealed record CatchRegion(BlockLabel EntryLabel, Region Parent, StackSl
 /// </remarks>
 /// <param name="EntryLabel">The <see cref="BlockLabel" /> of the <see langword="finally"/> region's entry <see cref="BasicBlock" />.</param>
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
-internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent);
+internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent)
+{
+    public override Region Accept(Visitor visitor) => visitor.Visit(this);
+}
 
 /// <summary>
 ///     Represents a fault handler region.
@@ -410,7 +423,10 @@ internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : Han
 /// </remarks>
 /// <param name="EntryLabel">The <see cref="BlockLabel" /> of the fault region's entry <see cref="BasicBlock" />.</param>
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
-internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent);
+internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent)
+{
+    public override Region Accept(Visitor visitor) => visitor.Visit(this);
+}
 
 /// <summary>
 ///     Represents a group of exception regions, consisting of a <see cref="Disharmony.Optimizer.ProtectedRegion" /> and one or more
@@ -428,7 +444,10 @@ internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : Handl
 /// </remarks>
 /// <param name="ProtectedRegion">The protected region.</param>
 /// <param name="HandlerRegions">The handlers associated with <paramref name="ProtectedRegion" />.</param>
-internal sealed record ExceptionGroup(ProtectedRegion ProtectedRegion, IReadOnlyList<HandlerRegion> HandlerRegions);
+internal sealed record ExceptionGroup(ProtectedRegion ProtectedRegion, IReadOnlyList<HandlerRegion> HandlerRegions)
+{
+    public ExceptionGroup Accept(Visitor visitor) => visitor.Visit(this);
+}
 
 /// <summary>
 ///     Provides a name for a <see cref="BasicBlock" />.
@@ -452,7 +471,10 @@ internal sealed class BlockLabel(Label? label = null)
 ///     the <see cref="BasicBlock" /> structure, except for unconditional throws.
 /// </remarks>
 /// <param name="Labels">The <see cref="BlockLabel" />s of the possible successor <see cref="BasicBlock" />s.</param>
-internal abstract record Branch(IReadOnlyList<BlockLabel> Labels);
+internal abstract record Branch(IReadOnlyList<BlockLabel> Labels)
+{
+    public abstract Branch Accept(Visitor visitor);
+}
 
 /// <summary>
 ///     Represents unconditional transfer of control.
@@ -465,6 +487,8 @@ internal record UnconditionalBranch : Branch
     /// <summary>Initializes a branch to the specified target.</summary>
     /// <param name="label">The <see cref="BlockLabel" /> of the branch target.</param>
     public UnconditionalBranch(BlockLabel label) : base([label]) { }
+
+    public override Branch Accept(Visitor visitor) => visitor.Visit(this);
 }
 
 /// <summary>
@@ -475,7 +499,10 @@ internal record UnconditionalBranch : Branch
 ///     No <see cref="StackSlot" />s can be live when a leave is taken.
 /// </remarks>
 /// <param name="Label">The <see cref="BlockLabel" /> of the branch target.</param>
-internal record Leave(BlockLabel Label) : UnconditionalBranch(Label);
+internal record Leave(BlockLabel Label) : UnconditionalBranch(Label)
+{
+    public override Branch Accept(Visitor visitor) => visitor.Visit(this);
+}
 
 /// <summary>
 ///     Represents a conditional transfer of control.
@@ -487,7 +514,10 @@ internal record Leave(BlockLabel Label) : UnconditionalBranch(Label);
 /// </remarks>
 /// <param name="Labels">The fallthrough and branch-target <see cref="BlockLabel" />s.</param>
 /// <param name="OpCode">The conditional branch or switch opcode.</param>
-internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<Op> Inputs, IReadOnlyList<BlockLabel> Labels) : Branch(Labels);
+internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<Op> Inputs, IReadOnlyList<BlockLabel> Labels) : Branch(Labels)
+{
+    public override Branch Accept(Visitor visitor) => visitor.Visit(this);
+}
 
 /// <summary>
 ///     Represents throwing an exception.
@@ -497,9 +527,15 @@ internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<Op> Inputs
 ///     <see cref="Throw" /> has no outgoing edges.
 /// </remarks>
 /// <param name="Exception">The <see cref="Op" /> that produces the exception to throw.</param>
-internal sealed record Throw(Op Exception) : Branch([]);
+internal sealed record Throw(Op Exception) : Branch([])
+{
+    public override Branch Accept(Visitor visitor) => visitor.Visit(this);
+}
 
-internal sealed record Rethrow() : Branch([]);
+internal sealed record Rethrow() : Branch([])
+{
+    public override Branch Accept(Visitor visitor) => visitor.Visit(this);
+}
 
 /// <summary>
 ///     Represents returning from a method.
@@ -509,13 +545,19 @@ internal sealed record Rethrow() : Branch([]);
 ///     <see cref="OpCodes.Endfinally" />.
 /// </param>
 /// <param name="Value">The <see cref="Op" /> that produces the return value, or a <see cref="VoidOp" /> for a void return.</param>
-internal sealed record Return(ILInstruction IL, Op Value) : Branch([]);
+internal sealed record Return(ILInstruction IL, Op Value) : Branch([])
+{
+    public override Branch Accept(Visitor visitor) => visitor.Visit(this);
+}
 
 /// <summary>
 ///     Represents <see cref="OpCodes.Jmp" />.
 /// </summary>
 /// <param name="Value"></param>
-internal sealed record Jump(Op Value) : Branch([]);
+internal sealed record Jump(Op Value) : Branch([])
+{
+    public override Branch Accept(Visitor visitor) => visitor.Visit(this);
+}
 
 /// <summary>
 ///     Represents a basic block.
@@ -524,7 +566,10 @@ internal sealed record Jump(Op Value) : Branch([]);
 /// <param name="Ops">The <see cref="Op" />s executed by the block.</param>
 /// <param name="Region">The <see cref="Region" /> containing the block.</param>
 /// <param name="Branch">The transfer of control at the end of the block.</param>
-internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Region Region, Branch Branch);
+internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Region Region, Branch Branch)
+{
+    public BasicBlock Accept(Visitor visitor) => visitor.Visit(this);
+}
 
 /// <summary>
 ///     Represents an edge between <see cref="BasicBlock" />s.
@@ -543,4 +588,7 @@ internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Regio
 /// <param name="Source">The <see cref="BlockLabel" /> of the source block.</param>
 /// <param name="Destination">The <see cref="BlockLabel" /> of the destination block.</param>
 /// <param name="EdgeAssignments">The <see cref="AssignmentOp" />s performed while control transfers across the edge.</param>
-internal sealed record Edge(BlockLabel Source, BlockLabel Destination, IReadOnlyList<AssignmentOp> EdgeAssignments);
+internal sealed record Edge(BlockLabel Source, BlockLabel Destination, IReadOnlyList<AssignmentOp> EdgeAssignments)
+{
+    public Edge Accept(Visitor visitor) => visitor.Visit(this);
+}
