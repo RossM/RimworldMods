@@ -512,6 +512,12 @@ internal sealed record Rethrow() : Branch([]);
 internal sealed record Return(ILInstruction IL, Op Value) : Branch([]);
 
 /// <summary>
+///     Represents <see cref="OpCodes.Jmp" />.
+/// </summary>
+/// <param name="Value"></param>
+internal sealed record Jump(Op Value) : Branch([]);
+
+/// <summary>
 ///     Represents a basic block.
 /// </summary>
 /// <param name="Label">The block's <see cref="BlockLabel" />.</param>
