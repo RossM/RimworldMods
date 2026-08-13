@@ -438,8 +438,11 @@ internal sealed record ExceptionGroup(ProtectedRegion ProtectedRegion, IReadOnly
 ///     block's label rather than as a direct reference to the block. This allows a <see cref="BasicBlock" /> to be
 ///     replaced with a new block with the same label without updating other data structures.
 /// </remarks>
-/// <param name="Label">The original IL label, or <see langword="null" /> if the block did not have an IL label.</param>
-internal sealed record BlockLabel(Label? Label = null);
+/// <param name="label">The original IL label, or <see langword="null" /> if the block did not have an IL label.</param>
+internal sealed class BlockLabel(Label? label = null)
+{
+    public Label? Label { get; } = label;
+}
 
 /// <summary>
 ///     Represents the transfer of control to the next <see cref="BasicBlock" /> at the end of a <see cref="BasicBlock" />.
