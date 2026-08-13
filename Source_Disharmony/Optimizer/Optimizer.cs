@@ -9,7 +9,7 @@ internal class Optimizer
     internal readonly List<Type> parameterTypes;
     internal readonly Type returnType;
 
-    internal readonly ControlFlowGraph cfg = new();
+    internal ControlFlowGraph? cfg;
     internal readonly Dictionary<int, Argument> arguments = [];
     internal readonly Dictionary<int, Local> locals = [];
 
@@ -41,6 +41,10 @@ internal class Optimizer
 
     public List<CodeInstruction> Optimize()
     {
+        var controlFlowGraphGenerator = new ControlFlowGraphGenerator(method, inputInstructions);
+        controlFlowGraphGenerator.CreateControlFlowGraph();
+        cfg = controlFlowGraphGenerator.ControlFlowGraph;
+
         return inputInstructions;
     }
 }
