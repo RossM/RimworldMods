@@ -76,7 +76,7 @@ namespace Disharmony.Tests
         public static void FiveArguments(int first, int second, int third, int fourth, int fifth) { }
     }
 
-    public static class AutopatcherRegistrationInlinePatches
+    public static class PatcherRegistrationInlinePatches
     {
         public static MethodBase? ObservedMethod;
 
