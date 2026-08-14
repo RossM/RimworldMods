@@ -1,7 +1,8 @@
 ﻿namespace Disharmony;
 
 /// <summary>
-///     This class generates rules implementing <see cref="PatchType.Prefix" /> and <see cref="PatchType.Postfix" /> patches for a method.
+///     This class generates rules implementing <see cref="PatchType.Prefix" /> and <see cref="PatchType.Postfix" />
+///     patches for a method.
 /// </summary>
 internal class CircumfixRuleBuilder : RuleBuilder
 {
@@ -40,15 +41,13 @@ internal class CircumfixRuleBuilder : RuleBuilder
         var postfixesUsingResult = postfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
         bool canSkip = prefixes.Any(patch => patch.patch.ReturnType != typeof(void));
 
-        if (canSkip && targetType != typeof(void) || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
+        if ((canSkip && targetType != typeof(void)) || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
         {
             resultLocal = output.AddLocal(targetType);
 
             if (prefixesUsingResult.Count > 0 &&
                 !prefixesUsingResult[0].parameters.Where(a => a.bindingType == BindingType.Result).All(a => a.parameter.IsOut))
-            {
                 output.EmitLocalInitializer(resultLocal);
-            }
         }
 
         foreach (var prefix in prefixes)
@@ -60,9 +59,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
             output.AddRange(prefix.patch.GetCodeInstructions());
 
             if (prefix.patch.ReturnType != typeof(void))
-            {
                 output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
-            }
         }
 
         if (output.instructions.Count > 0)

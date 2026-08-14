@@ -132,7 +132,8 @@ public enum PatchOptions
 ///         with this attribute. Direct registration by type or method does not require it.
 ///     </para>
 ///     <para>
-///         A type specified directly by <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" /> takes precedence.
+///         A type specified directly by <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" /> takes
+///         precedence.
 ///         Harmony's <see cref="HarmonyLib.HarmonyPatch" /> is also recognized for compatibility, but this attribute is
 ///         preferred for new patch classes. See <see cref="Patcher" /> for the complete authoring and targeting model.
 ///     </para>
@@ -265,8 +266,7 @@ public class InnerPrefixAttribute(
     /// <param name="memberName">The name of the inner member to match.</param>
     /// <param name="parameterTypes">The parameter types that identify the overload.</param>
     public InnerPrefixAttribute(Type type, string? memberName, params Type[] parameterTypes) : this(type, memberName, MemberType.Any,
-        parameterTypes)
-    { }
+        parameterTypes) { }
 }
 
 /// <summary>
@@ -312,8 +312,7 @@ public class InnerPostfixAttribute(
     ///     <paramref name="memberName" />.
     /// </param>
     /// <param name="memberName">The name of the inner member to match.</param>
-    public InnerPostfixAttribute(Type type, string? memberName) : this(type, memberName, MemberType.Any)
-    { }
+    public InnerPostfixAttribute(Type type, string? memberName) : this(type, memberName, MemberType.Any) { }
 
     /// <summary>
     ///     Runs the patch after each call to the specified overload of the named inner member.

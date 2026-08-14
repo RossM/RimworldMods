@@ -50,7 +50,7 @@ internal abstract record LocalTracker
 }
 
 /// <summary>
-///    Represents a local variable that has a LocalBuilder available.
+///     Represents a local variable that has a LocalBuilder available.
 /// </summary>
 /// <param name="Builder"></param>
 internal record LocalTrackerBuilder(LocalBuilder Builder) : LocalTracker

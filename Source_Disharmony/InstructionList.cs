@@ -12,8 +12,9 @@ internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruct
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public void Add(CodeInstruction instruction) => instructions.Add(instruction);
+
     // ReSharper disable once ParameterHidesMember
-    public void AddRange(IEnumerable<CodeInstruction> instructions) => this.instructions.AddRange(instructions); 
+    public void AddRange(IEnumerable<CodeInstruction> instructions) => this.instructions.AddRange(instructions);
 
     public void EmitLocalInitializer(LocalTrackerBuilder localIndex)
     {
@@ -48,7 +49,9 @@ internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruct
             Add(new(OpCodes.Initobj, type));
         }
         else
+        {
             throw new NotImplementedException($"targetType {type}");
+        }
     }
 
     public LocalTrackerBuilder AddLocal(Type type)

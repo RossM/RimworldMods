@@ -34,7 +34,8 @@ public enum PatchType
 /// <remarks>
 ///     <para>
 ///         A patch definition consists of a static patch method with one patch-kind attribute and at least one target.
-///         <see cref="PrefixAttribute" /> and <see cref="PostfixAttribute" /> run around the selected target member, called
+///         <see cref="PrefixAttribute" /> and <see cref="PostfixAttribute" /> run around the selected target member,
+///         called
 ///         the outer member. <see cref="InnerPrefixAttribute" />, <see cref="InnerPostfixAttribute" />, and
 ///         <see cref="InnerPostfixConstantAttribute" /> instead run around matching calls, member accesses, or constants
 ///         within the outer member; the matched operation is called the inner member.
@@ -112,7 +113,7 @@ public enum PatchType
 ///     {
 ///         amount = Math.Max(amount, 0);
 ///     }
-///
+/// 
 ///     [Postfix]
 ///     [Target(nameof(Widget.GetValue))]
 ///     public static void GetValuePostfix(ref int __result)
@@ -120,7 +121,7 @@ public enum PatchType
 ///         __result *= 2;
 ///     }
 /// }
-///
+/// 
 /// Autopatcher.PatchAll(typeof(WidgetPatches).Assembly);
 ///         </code>
 ///     </example>
@@ -146,8 +147,10 @@ public static class Patcher
     /// <summary>
     ///     Discovers and registers every patch class in an assembly, then applies all pending patch changes.
     /// </summary>
-    /// <param name="assembly">The assembly to scan for classes marked with <see cref="PatchAttribute" /> or
-    ///     <see cref="HarmonyLib.HarmonyPatch" />.</param>
+    /// <param name="assembly">
+    ///     The assembly to scan for classes marked with <see cref="PatchAttribute" /> or
+    ///     <see cref="HarmonyLib.HarmonyPatch" />.
+    /// </param>
     /// <remarks>
     ///     Categories are ignored. Use <see cref="PatchCategory" /> to select a single category.
     /// </remarks>
@@ -160,8 +163,10 @@ public static class Patcher
     /// <summary>
     ///     Discovers and registers every patch class in an assembly without applying the pending changes.
     /// </summary>
-    /// <param name="assembly">The assembly to scan for classes marked with <see cref="PatchAttribute" /> or
-    ///     <see cref="HarmonyLib.HarmonyPatch" />.</param>
+    /// <param name="assembly">
+    ///     The assembly to scan for classes marked with <see cref="PatchAttribute" /> or
+    ///     <see cref="HarmonyLib.HarmonyPatch" />.
+    /// </param>
     /// <remarks>
     ///     Categories are ignored. Call <see cref="Apply" /> or <see cref="ForceApply" /> after completing registration.
     /// </remarks>

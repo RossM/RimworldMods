@@ -98,7 +98,9 @@ internal class PatchRegistry
     public List<PatchInfo> GetPatchesFor(MethodBaseInvocation method)
     {
         lock (syncRoot)
+        {
             return [.. patchesByMethod[method]];
+        }
     }
 
     public void ProcessAssembly(Assembly assembly)
@@ -136,9 +138,7 @@ internal class PatchRegistry
         lock (syncRoot)
         {
             foreach (MethodInfo method in type.DeclaredMethods)
-            {
                 ProcessMethod(method);
-            }
         }
     }
 
@@ -215,9 +215,7 @@ internal class PatchRegistry
                 Invocation inner = GetInnerInvocation(patchTypeAttribute);
 
                 foreach (var target in targets)
-                {
                     AddPatch(method, patchType, target, inner, options, method.DeclaringType!.FullName);
-                }
             }
             catch (Exception e)
             {
@@ -253,9 +251,7 @@ internal class PatchRegistry
                     : EmptyInvocation.Instance;
 
                 foreach (var target in targets)
-                {
                     AddPatch(method, patchType, target, inner, options, stateGroupKey);
-                }
             }
             catch (Exception e)
             {
@@ -300,7 +296,13 @@ internal class PatchRegistry
         };
     }
 
-    private void AddPatch(MethodInfo method, PatchType patchType, MethodBase target, Invocation inner, PatchOptions options, string stateGroupKey)
+    private void AddPatch(
+        MethodInfo method,
+        PatchType patchType,
+        MethodBase target,
+        Invocation inner,
+        PatchOptions options,
+        string stateGroupKey)
     {
         if (method.ContainsGenericParameters)
             throw new NotSupportedException($"{method.FullName}: Generic patch functions are not supported");

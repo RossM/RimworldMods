@@ -21,6 +21,8 @@ namespace Disharmony;
 /// </remarks>
 internal abstract class Invocation
 {
+    public virtual bool HasThis => !IsStatic;
+
     /// <summary>
     ///     A string for use as the parameter name of the instance argument of a non-static invocation.
     ///     Users should <b>not</b> depend on this value! It is only for use in error messages and so on.
@@ -31,12 +33,11 @@ internal abstract class Invocation
     public abstract Type ReturnType { get; }
     public abstract Type[] ParameterTypes { get; }
     public abstract bool IsStatic { get; }
-    public virtual bool HasThis => !IsStatic;
     public abstract string[] ParameterNames { get; }
 
     /// <summary>
-    ///     If <see cref="IsStatic"/> is false, this returns the type of the instance parameter to this invocation.
-    ///     If <see cref="IsStatic"/> is true, its behavior is subclass-specific.
+    ///     If <see cref="IsStatic" /> is false, this returns the type of the instance parameter to this invocation.
+    ///     If <see cref="IsStatic" /> is true, its behavior is subclass-specific.
     /// </summary>
     public abstract Type InstanceType { get; }
 
@@ -81,6 +82,7 @@ internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
     public override bool IsStatic => FieldInfo.IsStatic;
     public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [] : [InstanceParameterName];
     public override Type InstanceType => FieldInfo.DeclaringType;
+
     // ReSharper disable once MemberCanBeProtected.Global
     public FieldInfo FieldInfo { get; } = fieldInfo;
 
@@ -111,12 +113,14 @@ internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
 
 internal class SetFieldInvocation(FieldInfo fieldInfo) : FieldInvocation(fieldInfo)
 {
-    public const string ValueFieldName = "value";
-
     public override Type ReturnType => typeof(void);
-    public override Type[] ParameterTypes => field ??= FieldInfo.IsStatic ? [FieldInfo.FieldType] : [FieldInfo.DeclaringType.CallableType, FieldInfo.FieldType];
+
+    public override Type[] ParameterTypes =>
+        field ??= FieldInfo.IsStatic ? [FieldInfo.FieldType] : [FieldInfo.DeclaringType.CallableType, FieldInfo.FieldType];
+
     public override bool IsStatic => FieldInfo.IsStatic;
     public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [ValueFieldName] : [InstanceParameterName, ValueFieldName];
+    public const string ValueFieldName = "value";
 
     protected override CodeInstruction GetCodeInstruction() => new(FieldInfo.IsStatic ? OpCodes.Stsfld : OpCodes.Stfld, FieldInfo);
 }
@@ -136,7 +140,6 @@ internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
     public override bool IsStatic => MethodInfo.IsStatic;
     public override bool HasThis => MethodInfo.HasThis;
     public override Type InstanceType => MethodInfo.DeclaringType;
-    public MethodInfo MethodInfo { get; } = methodInfo;
 
     public override MethodBase MethodBase => MethodInfo;
 
@@ -149,6 +152,8 @@ internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
         MethodInfo.HasThis
             ? [InstanceParameterName, .. MethodInfo.GetParameters().Select(p => p.Name)]
             : [.. MethodInfo.GetParameters().Select(p => p.Name)];
+
+    public MethodInfo MethodInfo { get; } = methodInfo;
 
     public static implicit operator MethodInvocation(MethodInfo method) => new(method);
 
@@ -175,7 +180,7 @@ internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
 }
 
 /// <summary>
-///     This class represents a <see cref="OpCodes.Newobj"/> call of a constructor.
+///     This class represents a <see cref="OpCodes.Newobj" /> call of a constructor.
 /// </summary>
 /// <param name="constructorInfo"></param>
 internal class ConstructorInvocation(ConstructorInfo constructorInfo) : MethodBaseInvocation
@@ -187,9 +192,9 @@ internal class ConstructorInvocation(ConstructorInfo constructorInfo) : MethodBa
     public override bool IsStatic => true;
     public override string[] ParameterNames => field ??= [.. ConstructorInfo.GetParameters().Select(p => p.Name)];
     public override Type InstanceType => ConstructorInfo.DeclaringType;
-    public ConstructorInfo ConstructorInfo { get; } = constructorInfo;
 
     public override MethodBase MethodBase => ConstructorInfo;
+    public ConstructorInfo ConstructorInfo { get; } = constructorInfo;
 
     protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Newobj, ConstructorInfo);
 
@@ -228,6 +233,7 @@ internal class PatchableConstructorInvocation(ConstructorInfo constructorInfo) :
         ConstructorInfo.HasThis
             ? [ConstructorInfo.DeclaringType.CallableType, .. ConstructorInfo.GetParameters().Select(p => p.ParameterType)]
             : [.. ConstructorInfo.GetParameters().Select(p => p.ParameterType)];
+
     public override string[] ParameterNames => field ??=
         ConstructorInfo.HasThis
             ? [InstanceParameterName, .. ConstructorInfo.GetParameters().Select(p => p.Name)]

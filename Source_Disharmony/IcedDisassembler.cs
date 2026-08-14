@@ -137,7 +137,7 @@ internal sealed class IcedDisassembler
             "X86" => 32,
             "X64" => 64,
             null => IntPtr.Size * 8,
-            _ => throw new PlatformNotSupportedException($"Iced cannot decode {architecture} machine code")
+            _ => throw new PlatformNotSupportedException($"Iced cannot decode {architecture} machine code"),
         };
     }
 

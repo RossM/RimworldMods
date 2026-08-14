@@ -36,6 +36,13 @@ internal class HarmonyInterface
             = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatch, MethodInfo>>("HarmonyLib.PatchFunctions:UpdateWrapper");
     }
 
+    private struct MethodPatch
+    {
+        public required Ruleset ruleset;
+        public bool optimize;
+        public bool debug;
+    }
+
     private const string HarmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
     public static readonly HarmonyInterface Instance = new();
@@ -45,13 +52,6 @@ internal class HarmonyInterface
     // These variables must only be accessed while HarmonyInternals.locker is held
     private readonly Dictionary<MethodBase, MethodInfo> trampolines = [];
     private int trampolineCount;
-
-    private struct MethodPatch
-    {
-        public required Ruleset ruleset;
-        public bool optimize;
-        public bool debug;
-    }
 
     private readonly Dictionary<MethodBase, MethodPatch> methodPatches = [];
 
@@ -134,6 +134,7 @@ internal class HarmonyInterface
                 e = PatchDirectly(method);
                 trampolines.Remove(method);
             }
+
             if (e != null)
                 throw new RuntimePatchException("Patch error", e);
         }
@@ -174,7 +175,6 @@ internal class HarmonyInterface
         }
 
         if (Instance.optimizerEnabled && patch.optimize)
-        {
             try
             {
                 var optimizer = new Optimizer.Optimizer(method, instructionsList, generator, debug: patch.debug);
@@ -184,7 +184,6 @@ internal class HarmonyInterface
             {
                 Patcher.ReportException(e);
             }
-        }
 
         return instructionsList;
     }
@@ -263,7 +262,6 @@ internal class HarmonyInterface
             if (useTrampolines)
                 replacement = ApplyTrampoline(original);
             else
-            {
                 try
                 {
                     replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
@@ -276,7 +274,6 @@ internal class HarmonyInterface
                 {
                     throw new RuntimePatchException("Patch error", e);
                 }
-            }
 
             HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);
         }

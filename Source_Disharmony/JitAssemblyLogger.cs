@@ -27,7 +27,8 @@ internal static class JitAssemblyLogger
             {
                 FileLog.LogBuffered($"### Mono JIT assembly for {original.FullName}");
                 FileLog.LogBuffered($"### Replacement: {replacement.FullName}");
-                FileLog.LogBuffered($"### Native range: 0x{codeStart.ToInt64():X} - 0x{codeStart.ToInt64() + code.Length:X} ({code.Length} bytes)");
+                FileLog.LogBuffered(
+                    $"### Native range: 0x{codeStart.ToInt64():X} - 0x{codeStart.ToInt64() + code.Length:X} ({code.Length} bytes)");
                 foreach (string instruction in instructions)
                     FileLog.LogBuffered(instruction);
                 FileLog.LogBuffered("");

@@ -28,7 +28,7 @@ internal class Optimizer
         this.method = method;
         this.inputInstructions = inputInstructions;
         this.generator = generator;
-        this.debug = debug || forceDebug || !string.IsNullOrEmpty(forceDebugForMethod) && method.Name == forceDebugForMethod;
+        this.debug = debug || forceDebug || (!string.IsNullOrEmpty(forceDebugForMethod) && method.Name == forceDebugForMethod);
 
         if (method.HasThis)
             parameterTypes = [method.DeclaringType.CallableType, .. method.GetParameters().Types()];
@@ -65,9 +65,7 @@ internal class Optimizer
 
         foreach (var edge in cfg.Edges)
         foreach (var assignment in edge.EdgeAssignments)
-        {
             tree.Merge(assignment.Output, assignment.Input);
-        }
 
         ReplaceVisitor visitor = new();
         foreach (var group in tree)

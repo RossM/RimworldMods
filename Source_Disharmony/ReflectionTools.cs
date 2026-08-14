@@ -33,7 +33,7 @@ internal static class ReflectionTools
         if (name?.Split([':'], 2) is [string typeName, string memberName])
         {
             type = AccessTools.TypeByName(typeName) ??
-                throw new InvalidOperationException($"Type not found: {typeName}");
+                   throw new InvalidOperationException($"Type not found: {typeName}");
             name = memberName;
         }
 
@@ -41,7 +41,6 @@ internal static class ReflectionTools
 
         // Search for the type by considering foo, then foo.bar, then foo.bar.baz, etc.
         if (type is null)
-        {
             for (int i = 1; i <= nameParts.Count - 1; i++)
             {
                 typeName = string.Join(".", nameParts.Take(i));
@@ -52,7 +51,6 @@ internal static class ReflectionTools
                     break;
                 }
             }
-        }
 
         if (type is null)
             throw new InvalidOperationException($"type not found: {name}");
@@ -133,7 +131,9 @@ internal static class ReflectionTools
                 }
             }
             else if (genericTypes is not null)
+            {
                 continue;
+            }
 
             if (parameterTypes != null)
             {
@@ -150,22 +150,16 @@ internal static class ReflectionTools
             static bool ParameterTypeMatcher(ParameterInfo parameter, Type type)
             {
                 if (parameter.IsOut)
-                {
                     return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Out<>) &&
                            type.GetGenericArguments()[0] == parameter.ParameterType.GetElementType();
-                }
 
                 if (parameter.IsIn)
-                {
                     return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(In<>) &&
                            type.GetGenericArguments()[0] == parameter.ParameterType.GetElementType();
-                }
 
                 if (parameter.ParameterType.IsByRef)
-                {
                     return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Ref<>) &&
                            type.GetGenericArguments()[0] == parameter.ParameterType.GetElementType();
-                }
 
                 return parameter.ParameterType == type;
             }

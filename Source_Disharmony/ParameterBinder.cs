@@ -112,7 +112,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
         // Validate the delegate type has the right parameter types
         var delegateInvoke = parameter.ParameterType.GetMethod("Invoke") ??
-            throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
+                             throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
         if (!delegateInvoke.GetParameters().Types().SequenceEqual(method.MethodInfo.GetParameters().Types()))
             throw new ParameterBindingException(parameter.Name, "Parameter type mismatch");
         if (delegateInvoke.ReturnType != method.MethodInfo.ReturnType)
@@ -220,17 +220,13 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
         // Look in closure fields
         if (scope is Scope.Inner or Scope.Any)
-        {
             if (TryBindClosureByName(parameter, name, inner.ParameterTypes, Scope.Inner, out var parameterBinding))
                 return parameterBinding;
-        }
 
         // Look in closure fields
         if (scope is Scope.Outer or Scope.Any)
-        {
             if (TryBindClosureByName(parameter, name, outer.ParameterTypes, Scope.Outer, out var parameterBinding))
                 return parameterBinding;
-        }
 
         throw new ParameterBindingException(parameter.Name, "Parameter not found");
     }

@@ -429,14 +429,18 @@ internal sealed record CatchRegion(BlockLabel EntryLabel, Region Parent, StackSl
 // Note that there is no FilterRegion, because Harmony's filter handling is broken.
 
 /// <summary>
-///     Represents a <see langword="finally"/> handler region.
+///     Represents a <see langword="finally" /> handler region.
 /// </summary>
 /// <remarks>
 ///     It is invalid for any <see cref="BasicBlock" /> in a <see cref="FinallyRegion" /> to have incoming
-///     <see cref="Edge" />s from outside that region. Control flow can only exit a <see langword="finally"/> region using the
+///     <see cref="Edge" />s from outside that region. Control flow can only exit a <see langword="finally" /> region using
+///     the
 ///     <see cref="OpCodes.Endfinally" /> instruction.
 /// </remarks>
-/// <param name="EntryLabel">The <see cref="BlockLabel" /> of the <see langword="finally"/> region's entry <see cref="BasicBlock" />.</param>
+/// <param name="EntryLabel">
+///     The <see cref="BlockLabel" /> of the <see langword="finally" /> region's entry
+///     <see cref="BasicBlock" />.
+/// </param>
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
 internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent)
 {
@@ -459,18 +463,21 @@ internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : Handl
 }
 
 /// <summary>
-///     Represents a group of exception regions, consisting of a <see cref="Disharmony.Optimizer.ProtectedRegion" /> and one or more
+///     Represents a group of exception regions, consisting of a <see cref="Disharmony.Optimizer.ProtectedRegion" /> and
+///     one or more
 ///     <see cref="HandlerRegion" />s.
 /// </summary>
 /// <remarks>
 ///     The CLI enforces a number of rules around exception regions and control flow. Control flow can only enter
-///     a <see cref="Disharmony.Optimizer.ProtectedRegion" /> through its <see cref="Region.EntryLabel" />. Control flow can only
+///     a <see cref="Disharmony.Optimizer.ProtectedRegion" /> through its <see cref="Region.EntryLabel" />. Control flow
+///     can only
 ///     enter a <see cref="HandlerRegion" /> through the action of the exception system; there can't be any
 ///     explicit <see cref="Edge" />s into a handler region. Control flow can only leave a <see cref="HandlerRegion" />
 ///     or <see cref="CatchRegion" /> through a <see cref="Leave" />, and control flow can only leave a
 ///     <see cref="FinallyRegion" /> or <see cref="FaultRegion" /> through a <see cref="Return" /> with a
-///     <see cref="Return.IL" /> of <see cref="OpCodes.Endfinally" />. However, a <see cref="Leave"/> <i>can</i> transfer control from
-///     a <see cref="CatchRegion"/> to any <see cref="BasicBlock"/> in the associated <see cref="ProtectedRegion"/>.
+///     <see cref="Return.IL" /> of <see cref="OpCodes.Endfinally" />. However, a <see cref="Leave" /> <i>can</i> transfer
+///     control from
+///     a <see cref="CatchRegion" /> to any <see cref="BasicBlock" /> in the associated <see cref="ProtectedRegion" />.
 /// </remarks>
 /// <param name="ProtectedRegion">The protected region.</param>
 /// <param name="HandlerRegions">The handlers associated with <paramref name="ProtectedRegion" />.</param>

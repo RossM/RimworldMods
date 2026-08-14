@@ -78,10 +78,8 @@ internal class ControlFlowGraphGenerator
     {
         // Get locals from MethodInfo
         if (MethodBody != null)
-        {
             foreach (var local in MethodBody.LocalVariables)
                 Locals.Add(local.LocalIndex, new Local(local.LocalIndex, local.LocalType, null));
-        }
 
         // Get locals from LocalBuilders
         foreach (var instruction in CodeInstructions)
@@ -235,7 +233,9 @@ internal class ControlFlowGraphGenerator
                         throw new InvalidOperationException("Stack size mismatch");
                 }
                 else
+                {
                     incomingStackSize[successor] = stacks.OutgoingStack.Count;
+                }
             }
 
             foreach (var exceptionBlock in instructions[^1].blocks)
@@ -330,7 +330,7 @@ internal class ControlFlowGraphGenerator
                 case StackBehaviour.Push0:
                 case StackBehaviour.Varpush when instruction.operand is MethodInfo method && method.ReturnType == typeof(void):
                 {
-                    ops.Add(new ILOp(il, popped, typeof(void))); 
+                    ops.Add(new ILOp(il, popped, typeof(void)));
                     break;
                 }
                 default:

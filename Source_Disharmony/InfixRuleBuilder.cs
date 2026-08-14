@@ -1,7 +1,8 @@
 ﻿namespace Disharmony;
 
 /// <summary>
-///     This class generates rules implementing <see cref="PatchType.InnerPrefix" /> and <see cref="PatchType.InnerPostfix" /> patches for a method.
+///     This class generates rules implementing <see cref="PatchType.InnerPrefix" /> and
+///     <see cref="PatchType.InnerPostfix" /> patches for a method.
 /// </summary>
 internal class InfixRuleBuilder : RuleBuilder
 {
@@ -39,15 +40,13 @@ internal class InfixRuleBuilder : RuleBuilder
         var postfixesUsingResult = innerPostfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
         bool canSkip = innerPrefixes.Any(patch => patch.patch.ReturnType != typeof(void));
 
-        if (canSkip && targetType != typeof(void) || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
+        if ((canSkip && targetType != typeof(void)) || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
         {
             resultLocal = output.AddLocal(targetType);
 
             if (prefixesUsingResult.Count > 0 &&
                 !prefixesUsingResult[0].parameters.Where(a => a.bindingType == BindingType.Result).All(a => a.parameter.IsOut))
-            {
                 output.EmitLocalInitializer(resultLocal);
-            }
         }
 
         Label? skipLabel = null;
@@ -60,9 +59,7 @@ internal class InfixRuleBuilder : RuleBuilder
             output.AddRange(prefix.patch.GetCodeInstructions());
 
             if (prefix.patch.ReturnType != typeof(void))
-            {
                 output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
-            }
         }
 
         for (int i = 0; i < innerParameterTypes.Length; i++)
@@ -114,7 +111,7 @@ internal class InfixRuleBuilder : RuleBuilder
         {
             Scope.Outer => outerParameterTypes[parameter.index],
             Scope.Inner => innerParameterTypes[parameter.index],
-            _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope))
+            _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope)),
         };
     }
 
@@ -125,7 +122,8 @@ internal class InfixRuleBuilder : RuleBuilder
             case Scope.Outer: EmitOuterParameter(parameter.index, resultType); break;
             case Scope.Inner: EmitInnerParameter(parameter.index, resultType); break;
             case Scope.Any:
-            default: throw new ArgumentOutOfRangeException(nameof(parameter.scope));
+            default:
+                throw new ArgumentOutOfRangeException(nameof(parameter.scope));
         }
     }
 

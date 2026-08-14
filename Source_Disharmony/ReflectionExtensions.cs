@@ -9,18 +9,28 @@ public static class ReflectionExtensions
 
     extension(MethodBase method)
     {
+        public bool HasThis => (method.CallingConvention & CallingConventions.HasThis) != 0;
+
         public MethodInfo? GetIteratorImplementation()
         {
             // Check if the method is an iterator state machine wrapper. If so, look at the iterator's MoveNext method.
             Type? stateMachineType = method.GetCustomAttribute<IteratorStateMachineAttribute>()?.StateMachineType;
             return stateMachineType?.GetMethod("MoveNext", AccessTools.all);
         }
-
-        public bool HasThis => (method.CallingConvention & CallingConventions.HasThis) != 0;
     }
 
     extension(Type type)
     {
+        public bool IsPointerLike => type.IsByRef || type.IsPointer;
+
+        public bool IsPointerCompatibleNumeric =>
+            type == typeof(int) || type == typeof(uint) || type == typeof(IntPtr) || type == typeof(UIntPtr);
+
+
+        public Type NoRefType => type.IsByRef ? type.GetElementType() : type;
+
+        public Type CallableType => type.IsValueType ? type.MakeByRefType() : type;
+
         public bool IsClosureType
         {
             get
@@ -29,14 +39,6 @@ public static class ReflectionExtensions
                 return type.Name.StartsWith("<>c") && Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute));
             }
         }
-
-        public bool IsPointerLike => type.IsByRef || type.IsPointer;
-        public bool IsPointerCompatibleNumeric => type == typeof(int) || type == typeof(uint) || type == typeof(IntPtr) || type == typeof(UIntPtr);
-
-
-        public Type NoRefType => type.IsByRef ? type.GetElementType() : type;
-
-        public Type CallableType => type.IsValueType ? type.MakeByRefType() : type;
     }
 
     extension(ILGenerator generator)

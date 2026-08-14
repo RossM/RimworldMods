@@ -56,7 +56,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
                 EmitParameterLookup(parameter, desiredType);
                 resultType = desiredType;
-                
+
                 break;
             }
 
@@ -133,7 +133,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         return parameter.scope switch
         {
             Scope.Outer => outerParameterTypes[parameter.index],
-            _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope))
+            _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope)),
         };
     }
 

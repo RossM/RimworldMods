@@ -13,7 +13,8 @@
   <member name="F:HarmonyLib.HarmonyAttribute.info">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
-  <member name="M:HarmonyLib.CollectionExtensions.Do``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+  <member
+    name="M:HarmonyLib.CollectionExtensions.Do``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
     <parameter name="sequence">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
       <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute.#ctor"/>

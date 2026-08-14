@@ -11,7 +11,7 @@ internal enum OpCodeFlags
     ///     Indicates that this operation can throw an exception.
     /// </summary>
     /// <remarks>
-    ///     Exceptions that indicate bad CIL (e.g. <see cref="TypeLoadException"/>) are not included.
+    ///     Exceptions that indicate bad CIL (e.g. <see cref="TypeLoadException" />) are not included.
     /// </remarks>
     CanThrow = 0x0002,
 
@@ -111,7 +111,7 @@ internal enum OpCodeFlags
     /// <summary>
     ///     Indicates that the result type of the instruction is given by a <see cref="Type" /> operand. Integer
     ///     and floating-point types are converted to their CIL stack type which is one of
-    ///     <see langword="int"/>, <see langword="long"/>, <see cref="IntPtr"/>, or <see langword="double"/>.
+    ///     <see langword="int" />, <see langword="long" />, <see cref="IntPtr" />, or <see langword="double" />.
     /// </summary>
     TypeFromOperand = 0x4000,
 
@@ -126,12 +126,14 @@ internal enum OpCodeFlags
     CanThrow_Overflow = 0x20000 | CanThrow,
 
     /// <summary>
-    ///     Indicates that the instruction can throw <see cref="ArithmeticException" /> and/or <see cref="DivideByZeroException" />.
+    ///     Indicates that the instruction can throw <see cref="ArithmeticException" /> and/or
+    ///     <see cref="DivideByZeroException" />.
     /// </summary>
     CanThrow_Arithmetic = 0x40000 | CanThrow,
 
     /// <summary>
-    ///     Indicates that the instruction can throw <see cref="OutOfMemoryException" /> and/or <see cref="StackOverflowException" />.
+    ///     Indicates that the instruction can throw <see cref="OutOfMemoryException" /> and/or
+    ///     <see cref="StackOverflowException" />.
     /// </summary>
     CanThrow_OutOfMemory = 0x80000 | CanThrow,
 
@@ -141,7 +143,8 @@ internal enum OpCodeFlags
     CanThrow_InvalidCast = 0x100000 | CanThrow,
 
     /// <summary>
-    ///     Indicates that the instruction can throw <see cref="IndexOutOfRangeException" /> and/or <see cref="NullReferenceException" />.
+    ///     Indicates that the instruction can throw <see cref="IndexOutOfRangeException" /> and/or
+    ///     <see cref="NullReferenceException" />.
     /// </summary>
     CanThrow_IndexOutOfRange = 0x200000 | CanThrow_NullReference,
 
@@ -174,6 +177,7 @@ internal struct OpCodeData
     public static ushort GetCanonicalOpcode(CodeInstruction inst) => Get(inst.opcode).canonical;
 
     public static int GetIntOperand(CodeInstruction inst) => GetIntOperand(inst.opcode, inst.operand);
+
     private static int GetIntOperand(OpCode opcode, object operand)
     {
         var opcodeData = Get(opcode);

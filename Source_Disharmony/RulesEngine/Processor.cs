@@ -109,24 +109,18 @@ internal class Processor(
                 }
 
                 if (matchCount < rule.min)
-                {
                     throw new InvalidOperationException($"Not enough matches found for substitution {rule.name}");
-                }
             }
 
             var sortedMatches = matches.OrderBy(m => m.start).ThenByDescending(m => m.rule.priority).ToList();
             for (var i = 0; i < sortedMatches.Count - 1; i++)
             {
                 if (sortedMatches[i].end > sortedMatches[i + 1].start)
-                {
                     throw new InvalidOperationException("Overlapping matches");
-                }
             }
 
             if (matches.Count == 0)
-            {
                 throw new InvalidOperationException("No matches");
-            }
 
             // Make the substitutions
             for (var instructionIndex = 0;; instructionIndex++)
@@ -161,30 +155,24 @@ internal class Processor(
                     case OutputMode.Replace:
                     {
                         if (instructions[match.start].labels.Count > 0 || instructions[match.start].blocks.Any(IsBlockStart))
-                        {
                             Emit(OpCodes.Nop,
                                 labels: instructions[match.start].labels,
                                 blocks: [.. instructions[match.start].blocks.Where(IsBlockStart)]);
-                        }
 
                         EmitReplacement(match);
 
                         if (instructions[match.end - 1].blocks.Any(IsBlockEnd))
-                        {
                             Emit(OpCodes.Nop,
                                 blocks: [.. instructions[match.end - 1].blocks.Where(IsBlockEnd)]);
-                        }
 
                         break;
                     }
                     case OutputMode.InsertBefore:
                     {
                         if (instructions[match.start].labels.Count > 0 || instructions[match.start].blocks.Any(IsBlockStart))
-                        {
                             Emit(OpCodes.Nop,
                                 labels: instructions[match.start].labels,
                                 blocks: [.. instructions[match.start].blocks.Where(IsBlockStart)]);
-                        }
 
                         EmitReplacement(match);
 
@@ -208,18 +196,14 @@ internal class Processor(
                             Emit(instructions[i]);
 
                             if (i == match.end - 1)
-                            {
                                 outInstructions[^1].blocks.RemoveAll(IsBlockEnd);
-                            }
                         }
 
                         EmitReplacement(match);
 
                         if (instructions[match.end - 1].blocks.Any(IsBlockEnd))
-                        {
                             Emit(OpCodes.Nop,
                                 blocks: [.. instructions[match.end - 1].blocks.Where(IsBlockEnd)]);
-                        }
 
                         break;
                     }
@@ -261,7 +245,9 @@ internal class Processor(
                         realCode = false;
                     }
                     else
+                    {
                         FileLog.LogIL(codePos, code);
+                    }
 
                     break;
 
@@ -295,7 +281,11 @@ internal class Processor(
         Emit(CodeInstruction.Annotation($"End {match.rule.name}"));
     }
 
-    private bool MatchPattern(Rule rule, int instructionIndex, out Dictionary<int, LocalTracker> localMap_Match, out Dictionary<Label, Label> labelMap_Match)
+    private bool MatchPattern(
+        Rule rule,
+        int instructionIndex,
+        out Dictionary<int, LocalTracker> localMap_Match,
+        out Dictionary<Label, Label> labelMap_Match)
     {
         localMap_Match = [];
         labelMap_Match = [];
@@ -308,7 +298,8 @@ internal class Processor(
 
         for (var patternIndex = 0; patternIndex < rule.pattern.Length; patternIndex++)
         {
-            if (!MatchInstruction(instructions[instructionIndex + patternIndex], rule.pattern[patternIndex], localMap_Match, labelMap_Match))
+            if (!MatchInstruction(instructions[instructionIndex + patternIndex], rule.pattern[patternIndex], localMap_Match,
+                    labelMap_Match))
                 return false;
 
             if (rule.mode == OutputMode.Replace)
@@ -321,16 +312,18 @@ internal class Processor(
                     return false;
                 if ((patternIndex < rule.pattern.Length - 1 || noOutput) &&
                     inst.blocks.Any(b => b.blockType == ExceptionBlockType.EndExceptionBlock))
-                {
                     return false;
-                }
             }
         }
 
         return true;
     }
 
-    private bool MatchInstruction(CodeInstruction inst, CodeInstruction patternInst, Dictionary<int, LocalTracker> localMap_Match, Dictionary<Label, Label> labelMap_Match)
+    private bool MatchInstruction(
+        CodeInstruction inst,
+        CodeInstruction patternInst,
+        Dictionary<int, LocalTracker> localMap_Match,
+        Dictionary<Label, Label> labelMap_Match)
     {
         var canonicalInst = OpCodeData.GetCanonicalOpcode(inst);
         var canonicalPattern = OpCodeData.GetCanonicalOpcode(patternInst);
@@ -386,8 +379,7 @@ internal class Processor(
                 return true;
             }
 
-            default:
-                return OperandsMatch(patternInst.operand, inst.operand);
+            default: return OperandsMatch(patternInst.operand, inst.operand);
         }
     }
 
