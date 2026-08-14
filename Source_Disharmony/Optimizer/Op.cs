@@ -30,7 +30,7 @@ internal sealed record AssignmentOp(Variable Output, Op Input) : Op(typeof(void)
 /// </summary>
 /// <param name="OpCode">The prefix opcode.</param>
 /// <param name="Operand">The prefix operand.</param>
-internal sealed record Prefix(OpCode OpCode, object Operand);
+internal sealed record Prefix(OpCode OpCode, object? Operand);
 
 /// <summary>
 ///     Represents an IL instruction.
@@ -38,7 +38,7 @@ internal sealed record Prefix(OpCode OpCode, object Operand);
 /// <param name="OpCode"></param>
 /// <param name="Operand"></param>
 /// <param name="Prefixes"></param>
-internal sealed record ILInstruction(OpCode OpCode, object Operand, IReadOnlyList<Prefix> Prefixes);
+internal sealed record ILInstruction(OpCode OpCode, object? Operand, IReadOnlyList<Prefix> Prefixes);
 
 /// <summary>
 ///     Represents an IL operation.
