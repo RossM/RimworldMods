@@ -45,6 +45,15 @@ internal sealed class GetOutputTypeTests
     // Numeric expectations use the CLI stack types int, long, native int (IntPtr), and float (represented by double).
     private static readonly OutputTypeCase[] Cases =
     [
+        // Unknown and Any are interpreted globally for every opcode, including when nested in managed-reference types.
+        // First apply the opcode's type rules: an input whose type cannot affect the output type is irrelevant to this
+        // calculation. For example, a shift's output type depends on its value but not on its shift count. Then:
+        // 1. If every valid assignment to the relevant lattice inputs produces exactly one output type, return that type.
+        // 2. Otherwise, if a relevant input contains Unknown, return Unknown.
+        // 3. Otherwise, return the most specific type common to all possibilities, or Any when none exists.
+        // As a useful special case, known managed-reference structure is preserved: an output known to be a managed
+        // reference is ref-to-Unknown rather than plain Unknown.
+
         // Arithmetic and comparison opcodes. The first case for each opcode provides explicit opcode coverage;
         // later cases exercise the ECMA-335 numeric and managed-pointer result table without a full cross product.
         new("Add_Int_Int", OpCodes.Add, [typeof(int), typeof(int)], typeof(int)),
@@ -106,6 +115,10 @@ internal sealed class GetOutputTypeTests
         new("Dup_Null", OpCodes.Dup, [TypeLattice.Null], TypeLattice.Null),
         new("Dup_Unknown", OpCodes.Dup, [TypeLattice.Unknown], TypeLattice.Unknown),
         new("Dup_Any", OpCodes.Dup, [TypeLattice.Any], TypeLattice.Any),
+        new("Dup_UnknownRef", OpCodes.Dup,
+            [TypeLattice.Unknown.MakeByRefType()], TypeLattice.Unknown.MakeByRefType()),
+        new("Dup_AnyRef", OpCodes.Dup,
+            [TypeLattice.Any.MakeByRefType()], TypeLattice.Any.MakeByRefType()),
         new("Ckfinite_Double", OpCodes.Ckfinite, [typeof(double)], typeof(double)),
 
         // Conversion opcodes.
@@ -207,6 +220,10 @@ internal sealed class GetOutputTypeTests
         new("LdindI1_IntRef", OpCodes.Ldind_I1, [typeof(int).MakeByRefType()], typeof(int)),
         new("LdindI2_IntRef", OpCodes.Ldind_I2, [typeof(int).MakeByRefType()], typeof(int)),
         new("LdindI4_IntRef", OpCodes.Ldind_I4, [typeof(int).MakeByRefType()], typeof(int)),
+        new("LdindI4_UnknownRef", OpCodes.Ldind_I4,
+            [TypeLattice.Unknown.MakeByRefType()], typeof(int)),
+        new("LdindI4_AnyRef", OpCodes.Ldind_I4,
+            [TypeLattice.Any.MakeByRefType()], typeof(int)),
         new("LdindI8_LongRef", OpCodes.Ldind_I8, [typeof(long).MakeByRefType()], typeof(long)),
         new("LdindU1_IntRef", OpCodes.Ldind_U1, [typeof(int).MakeByRefType()], typeof(int)),
         new("LdindU2_IntRef", OpCodes.Ldind_U2, [typeof(int).MakeByRefType()], typeof(int)),
@@ -223,6 +240,10 @@ internal sealed class GetOutputTypeTests
         new("LdelemI1_IntArray_Int", OpCodes.Ldelem_I1, [typeof(int[]), typeof(int)], typeof(int)),
         new("LdelemI2_IntArray_Int", OpCodes.Ldelem_I2, [typeof(int[]), typeof(int)], typeof(int)),
         new("LdelemI4_IntArray_Int", OpCodes.Ldelem_I4, [typeof(int[]), typeof(int)], typeof(int)),
+        new("LdelemI4_Unknown_Int", OpCodes.Ldelem_I4,
+            [TypeLattice.Unknown, typeof(int)], typeof(int)),
+        new("LdelemI4_Any_Unknown", OpCodes.Ldelem_I4,
+            [TypeLattice.Any, TypeLattice.Unknown], typeof(int)),
         new("LdelemI8_LongArray_Int", OpCodes.Ldelem_I8, [typeof(long[]), typeof(int)], typeof(long)),
         new("LdelemU1_IntArray_Int", OpCodes.Ldelem_U1, [typeof(int[]), typeof(int)], typeof(int)),
         new("LdelemU2_IntArray_Int", OpCodes.Ldelem_U2, [typeof(int[]), typeof(int)], typeof(int)),
@@ -238,6 +259,10 @@ internal sealed class GetOutputTypeTests
 
         // Type-operand instructions with representative numeric, struct, class, and managed-reference cases.
         new("Ldobj_Int_IntRef", OpCodes.Ldobj, [typeof(int).MakeByRefType()], typeof(int), Operand: typeof(int)),
+        new("Ldobj_Int_UnknownRef", OpCodes.Ldobj,
+            [TypeLattice.Unknown.MakeByRefType()], typeof(int), Operand: typeof(int)),
+        new("Ldobj_Int_AnyRef", OpCodes.Ldobj,
+            [TypeLattice.Any.MakeByRefType()], typeof(int), Operand: typeof(int)),
         new("Ldobj_Long_LongRef", OpCodes.Ldobj, [typeof(long).MakeByRefType()], typeof(long), Operand: typeof(long)),
         new("Ldobj_IntPtr_IntPtrRef", OpCodes.Ldobj,
             [typeof(IntPtr).MakeByRefType()], typeof(IntPtr), Operand: typeof(IntPtr)),
@@ -260,6 +285,8 @@ internal sealed class GetOutputTypeTests
             [TypeLattice.Unknown, typeof(int)], TypeLattice.Unknown.MakeByRefType(), Operand: TypeLattice.Unknown),
         new("Ldelema_Any_Any_Int", OpCodes.Ldelema,
             [TypeLattice.Any, typeof(int)], TypeLattice.Any.MakeByRefType(), Operand: TypeLattice.Any),
+        new("Ldelema_Struct_Unknown_Int", OpCodes.Ldelema,
+            [TypeLattice.Unknown, typeof(int)], StructType.MakeByRefType(), Operand: StructType),
         new("Newarr_Int_Int", OpCodes.Newarr, [typeof(int)], typeof(int[]), Operand: typeof(int)),
         new("Newarr_Struct_Int", OpCodes.Newarr,
             [typeof(int)], StructType.MakeArrayType(), Operand: StructType),
@@ -335,10 +362,14 @@ internal sealed class GetOutputTypeTests
         new("Ldtoken_ReturnInt", OpCodes.Ldtoken, [], typeof(RuntimeMethodHandle), Operand: ReturnInt),
         new("Ldtoken_IntField", OpCodes.Ldtoken, [], typeof(RuntimeFieldHandle), Operand: IntField),
 
-        // Arithmetic lattice propagation uses the broad compatibility rules documented on OpCodeData.Arithmetic, not
-        // the more restrictive valid-input table for any one ECMA opcode. A concrete double uniquely constrains the
-        // other operand to double. Integer, native-integer, and reference operands do not uniquely constrain it because
-        // the other operand might select a different valid result rule.
+        // These arithmetic cases apply the global lattice rules using the broad compatibility rules documented on
+        // OpCodeData.Arithmetic, not the more restrictive valid-input table for any one ECMA opcode. A concrete double
+        // uniquely constrains the other operand to double. Integer, native-integer, and reference operands do not
+        // uniquely constrain it because the other operand might select a different valid result rule.
+        new("Ceq_Unknown_Any", OpCodes.Ceq,
+            [TypeLattice.Unknown, TypeLattice.Any], typeof(int)),
+        new("ConvI8_Unknown", OpCodes.Conv_I8,
+            [TypeLattice.Unknown], typeof(long)),
         new("Add_Double_Any", OpCodes.Add,
             [typeof(double), TypeLattice.Any], typeof(double)),
         new("Add_Any_Double", OpCodes.Add,
@@ -359,6 +390,12 @@ internal sealed class GetOutputTypeTests
             [ClassType, TypeLattice.Any], TypeLattice.Any),
         new("Add_StructRef_Any", OpCodes.Add,
             [StructType.MakeByRefType(), TypeLattice.Any], TypeLattice.Any),
+        new("Add_AnyRef_Int", OpCodes.Add,
+            [TypeLattice.Any.MakeByRefType(), typeof(int)], TypeLattice.Any.MakeByRefType()),
+        new("Add_UnknownRef_Int", OpCodes.Add,
+            [TypeLattice.Unknown.MakeByRefType(), typeof(int)], TypeLattice.Unknown.MakeByRefType()),
+        new("Sub_UnknownRef_AnyRef", OpCodes.Sub,
+            [TypeLattice.Unknown.MakeByRefType(), TypeLattice.Any.MakeByRefType()], typeof(IntPtr)),
         new("Add_Int_Unknown", OpCodes.Add,
             [typeof(int), TypeLattice.Unknown], TypeLattice.Unknown),
         new("Add_Unknown_Int", OpCodes.Add,
@@ -372,17 +409,17 @@ internal sealed class GetOutputTypeTests
         new("Add_StructRef_Unknown", OpCodes.Add,
             [StructType.MakeByRefType(), TypeLattice.Unknown], TypeLattice.Unknown),
         new("Add_Any_Unknown", OpCodes.Add,
-            [TypeLattice.Any, TypeLattice.Unknown], TypeLattice.Any),
+            [TypeLattice.Any, TypeLattice.Unknown], TypeLattice.Unknown),
         new("Add_Unknown_Any", OpCodes.Add,
-            [TypeLattice.Unknown, TypeLattice.Any], TypeLattice.Any),
+            [TypeLattice.Unknown, TypeLattice.Any], TypeLattice.Unknown),
         new("Add_Unknown_Unknown", OpCodes.Add,
             [TypeLattice.Unknown, TypeLattice.Unknown], TypeLattice.Unknown),
         new("Neg_Any", OpCodes.Neg, [TypeLattice.Any], TypeLattice.Any),
         new("Neg_Unknown", OpCodes.Neg,
             [TypeLattice.Unknown], TypeLattice.Unknown),
 
-        // Shift results are always the type of the first operand. A concrete first operand therefore wins before the
-        // Any/Unknown fallback rules are considered; a lattice-valued first operand is not uniquely determined.
+        // Shift results are always the type of the first operand. The second operand is therefore irrelevant to the
+        // output type: even Unknown there does not propagate. A lattice-valued first operand is not uniquely determined.
         new("Shl_Int_Any", OpCodes.Shl,
             [typeof(int), TypeLattice.Any], typeof(int)),
         new("Shl_Long_Unknown", OpCodes.Shl,
@@ -400,7 +437,7 @@ internal sealed class GetOutputTypeTests
         new("Shl_Any_Unknown", OpCodes.Shl,
             [TypeLattice.Any, TypeLattice.Unknown], TypeLattice.Any),
         new("Shl_Unknown_Any", OpCodes.Shl,
-            [TypeLattice.Unknown, TypeLattice.Any], TypeLattice.Any),
+            [TypeLattice.Unknown, TypeLattice.Any], TypeLattice.Unknown),
         new("Shl_Unknown_Unknown", OpCodes.Shl,
             [TypeLattice.Unknown, TypeLattice.Unknown], TypeLattice.Unknown),
 
