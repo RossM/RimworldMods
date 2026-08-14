@@ -79,7 +79,7 @@ internal static class OpcodeUtilities
             OpCodeValues.Ldtoken when op.Operand is MethodBase => typeof(RuntimeMethodHandle),
             OpCodeValues.Ldtoken when op.Operand is Type => typeof(RuntimeTypeHandle),
             OpCodeValues.Newarr when op.Operand is Type type => type.MakeArrayType(),
-            OpCodeValues.Newobj when op.Operand is ConstructorInfo constructor => constructor.DeclaringType,
+            OpCodeValues.Newobj when op.Operand is ConstructorInfo constructor => constructor.DeclaringType!,
             _ => throw new NotImplementedException(),
         };
     }
