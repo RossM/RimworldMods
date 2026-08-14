@@ -1,7 +1,4 @@
-using System.Reflection.Emit;
-using Disharmony.Optimizer;
 using Disharmony.Optimizer.Passes;
-using HarmonyLib;
 
 namespace Disharmony.Tests;
 

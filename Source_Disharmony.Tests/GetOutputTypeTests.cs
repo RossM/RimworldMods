@@ -1,7 +1,5 @@
-using System.Reflection.Emit;
 using System.Runtime.InteropServices;
-using Disharmony.Optimizer;
-using HarmonyLib;
+
 // ReSharper disable StringLiteralTypo
 
 namespace Disharmony.Tests;

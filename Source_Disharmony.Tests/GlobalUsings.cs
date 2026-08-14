@@ -2,5 +2,8 @@ global using System;
 global using System.Collections.Generic;
 global using System.Linq;
 global using System.Reflection;
+global using System.Reflection.Emit;
 global using System.Runtime.CompilerServices;
+global using Disharmony.Optimizer;
+global using HarmonyLib;
 global using NUnit.Framework;

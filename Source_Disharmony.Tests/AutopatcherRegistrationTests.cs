@@ -1,5 +1,3 @@
-using HarmonyLib;
-
 namespace Disharmony.Tests;
 
 public static class AutopatcherRegistrationPatches

@@ -1,5 +1,4 @@
 using System.Collections;
-using Disharmony.Optimizer;
 using Disharmony.Utilities;
 
 namespace Disharmony.Tests;

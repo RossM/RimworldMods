@@ -1,6 +1,3 @@
-using System.Reflection.Emit;
-using Disharmony.Optimizer;
-
 namespace Disharmony.Tests;
 
 [TestFixture]
