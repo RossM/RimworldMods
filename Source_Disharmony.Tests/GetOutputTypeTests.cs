@@ -323,9 +323,9 @@ internal sealed class GetOutputTypeTests
             Operand: ClassType.GetMethod(nameof(OpcodeUtilitiesClass.ReturnClassByReference))!),
         new("Callvirt_ReturnInstanceVoid_Class", OpCodes.Callvirt, [ClassType], typeof(void), Operand: ReturnInstanceVoid),
         new("Callvirt_ReturnInstanceInt_Class", OpCodes.Callvirt, [ClassType], typeof(int), Operand: ReturnInstanceInt),
-        new("Calli_VoidSignature", OpCodes.Calli, [], typeof(void), Operand: CreateInlineSignature(typeof(void)), Prefixes: null,
+        new("Calli_VoidSignature", OpCodes.Calli, [], typeof(void), Operand: CreateInlineSignature(typeof(void)),
             IgnoreReason: "The optimizer does not currently support calli instructions"),
-        new("Calli_IntSignature", OpCodes.Calli, [], typeof(int), Operand: CreateInlineSignature(typeof(int)), Prefixes: null,
+        new("Calli_IntSignature", OpCodes.Calli, [], typeof(int), Operand: CreateInlineSignature(typeof(int)),
             IgnoreReason: "The optimizer does not currently support calli instructions"),
         new("Newobj_ClassConstructor", OpCodes.Newobj, [], ClassType, Operand: ClassConstructor),
         new("Newobj_StructConstructor_Int", OpCodes.Newobj, [typeof(int)], StructType, Operand: StructConstructor),
@@ -406,15 +406,15 @@ internal sealed class GetOutputTypeTests
 
         // Prefixes affect execution semantics but not the type pushed by these instructions.
         new("LdindI4_Volatile_Unaligned_IntRef", OpCodes.Ldind_I4,
-            [typeof(int).MakeByRefType()], typeof(int), Operand: null,
-            Prefixes: [new Prefix(OpCodes.Unaligned, (byte)1), new Prefix(OpCodes.Volatile, null!)]),
+            [typeof(int).MakeByRefType()], typeof(int),
+            Prefixes: [new Prefix(OpCodes.Unaligned, (byte)1), new Prefix(OpCodes.Volatile, null)]),
         new("Ldelema_Struct_Readonly_StructArray_Int", OpCodes.Ldelema,
             [StructType.MakeArrayType(), typeof(int)], StructType.MakeByRefType(), Operand: StructType,
-            Prefixes: [new Prefix(OpCodes.Readonly, null!)]),
+            Prefixes: [new Prefix(OpCodes.Readonly, null)]),
         new("Callvirt_ReturnInstanceInt_Constrained_Class", OpCodes.Callvirt,
             [ClassType], typeof(int), Operand: ReturnInstanceInt, Prefixes: [new Prefix(OpCodes.Constrained, ClassType)]),
         new("Call_ReturnInt_Tail", OpCodes.Call,
-            [], typeof(int), Operand: ReturnInt, Prefixes: [new Prefix(OpCodes.Tailcall, null!)]),
+            [], typeof(int), Operand: ReturnInt, Prefixes: [new Prefix(OpCodes.Tailcall, null)]),
     ];
 
     private static IEnumerable<TestCaseData> OutputTypeCases()
