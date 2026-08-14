@@ -256,6 +256,14 @@ internal sealed class GetOutputTypeTests
             [ClassType.MakeArrayType(), typeof(int)], ClassType),
         new("LdelemRef_NullArray_Int", OpCodes.Ldelem_Ref,
             [TypeLattice.Null, typeof(int)], TypeLattice.Unknown),
+        new("LdelemRef_Unknown_Int", OpCodes.Ldelem_Ref,
+            [TypeLattice.Unknown, typeof(int)], TypeLattice.Unknown),
+        new("LdelemRef_Any_Int", OpCodes.Ldelem_Ref,
+            [TypeLattice.Any, typeof(int)], TypeLattice.Any),
+        new("LdelemRef_ClassArray_Any", OpCodes.Ldelem_Ref,
+            [ClassType.MakeArrayType(), TypeLattice.Any], ClassType),
+        new("LdelemRef_Any_Unknown", OpCodes.Ldelem_Ref,
+            [TypeLattice.Any, TypeLattice.Unknown], TypeLattice.Any),
 
         // Type-operand instructions with representative numeric, struct, class, and managed-reference cases.
         new("Ldobj_Int_IntRef", OpCodes.Ldobj, [typeof(int).MakeByRefType()], typeof(int), Operand: typeof(int)),
@@ -290,6 +298,8 @@ internal sealed class GetOutputTypeTests
         new("Newarr_Int_Int", OpCodes.Newarr, [typeof(int)], typeof(int[]), Operand: typeof(int)),
         new("Newarr_Struct_Int", OpCodes.Newarr,
             [typeof(int)], StructType.MakeArrayType(), Operand: StructType),
+        new("Newarr_Struct_Any", OpCodes.Newarr,
+            [TypeLattice.Any], StructType.MakeArrayType(), Operand: StructType),
         new("Newarr_Class_Int", OpCodes.Newarr,
             [typeof(int)], ClassType.MakeArrayType(), Operand: ClassType),
         new("Castclass_Class_Object", OpCodes.Castclass, [typeof(object)], ClassType, Operand: ClassType),
@@ -310,6 +320,7 @@ internal sealed class GetOutputTypeTests
 
         // Field operands.
         new("Ldfld_IntField_Class", OpCodes.Ldfld, [ClassType], typeof(int), Operand: IntField),
+        new("Ldfld_IntField_Any", OpCodes.Ldfld, [TypeLattice.Any], typeof(int), Operand: IntField),
         new("Ldfld_StructField_Class", OpCodes.Ldfld, [ClassType], StructType, Operand: StructField),
         new("Ldfld_ClassField_Class", OpCodes.Ldfld, [ClassType], ClassType, Operand: ClassField),
         new("Ldflda_IntField_Class", OpCodes.Ldflda,
@@ -350,6 +361,8 @@ internal sealed class GetOutputTypeTests
             Operand: ClassType.GetMethod(nameof(OpcodeUtilitiesClass.ReturnClassByReference))!),
         new("Callvirt_ReturnInstanceVoid_Class", OpCodes.Callvirt, [ClassType], typeof(void), Operand: ReturnInstanceVoid),
         new("Callvirt_ReturnInstanceInt_Class", OpCodes.Callvirt, [ClassType], typeof(int), Operand: ReturnInstanceInt),
+        new("Callvirt_ReturnInstanceInt_Any", OpCodes.Callvirt,
+            [TypeLattice.Any], typeof(int), Operand: ReturnInstanceInt),
         new("Calli_VoidSignature", OpCodes.Calli, [], typeof(void), Operand: CreateInlineSignature(typeof(void)),
             IgnoreReason: "The optimizer does not currently support calli instructions"),
         new("Calli_IntSignature", OpCodes.Calli, [], typeof(int), Operand: CreateInlineSignature(typeof(int)),
