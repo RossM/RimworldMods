@@ -24,7 +24,7 @@ internal static class OpcodeUtilities
         {
             if (inputTypes[0] == TypeLattice.Null)
                 return TypeLattice.Unknown;
-            if (IsSpecialType(inputTypes[0]))
+            if (inputTypes[0] == TypeLattice.Any || inputTypes[0] == TypeLattice.Unknown)
                 return inputTypes[0];
             return inputTypes[0].GetElementType();
         }
@@ -49,11 +49,11 @@ internal static class OpcodeUtilities
             if (inputTypes.Contains(TypeLattice.Any))
                 return TypeLattice.Any;
 
-            if (IsReferenceType(inputTypes[0]) && IsReferenceType(inputTypes[1]))
+            if (!inputTypes[0].IsValueType && !inputTypes[1].IsValueType)
                 return typeof(IntPtr);
-            if (IsReferenceType(inputTypes[0]))
+            if (!inputTypes[0].IsValueType)
                 return inputTypes[0];
-            if (IsReferenceType(inputTypes[1]))
+            if (!inputTypes[1].IsValueType)
                 return inputTypes[1];
 
             if (inputTypes.Contains(typeof(IntPtr)))
@@ -83,8 +83,4 @@ internal static class OpcodeUtilities
             _ => throw new NotImplementedException(),
         };
     }
-
-    public static bool IsSpecialType(Type type) => type == TypeLattice.Any || type == TypeLattice.Unknown || type == TypeLattice.Null;
-
-    public static bool IsReferenceType(Type type) => type.IsByRef || (!type.IsValueType && !IsSpecialType(type)) || type == TypeLattice.Null;
 }
