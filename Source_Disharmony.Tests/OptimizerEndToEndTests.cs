@@ -245,7 +245,7 @@ public static class OptimizerPatches
 }
 
 [TestFixture]
-public sealed class OptimizerTests : PatchTestBase
+public sealed class OptimizerEndToEndTests : PatchTestBase
 {
     [SetUp]
     public void EnableOptimizer()
@@ -264,7 +264,7 @@ public sealed class OptimizerTests : PatchTestBase
     public void DisableOptimizer()
     {
         HarmonyInterface.Instance.optimizerEnabled = false;
-        Patcher.UnpatchAll(typeof(OptimizerTests).Assembly);
+        Patcher.UnpatchAll(typeof(OptimizerEndToEndTests).Assembly);
     }
 
     private static void ApplyInlinePatch(
@@ -449,7 +449,7 @@ public sealed class OptimizerTests : PatchTestBase
     }
 
     [Test]
-    [Ignore("Harmony cannot transpile methods containing exception filters")]
+    [Ignore("Exception filters are unsupported due to a Harmony bug")]
     public void ExceptionFilter_PreservesFilterAndFallbackHandlers()
     {
         Assert.That(OptimizerExceptionTargets.ExceptionFilter(true), Is.EqualTo(1));

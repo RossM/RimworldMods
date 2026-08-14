@@ -382,7 +382,7 @@ public sealed class CreateControlFlowGraphTests
     }
 
     [Test]
-    [Ignore("The optimizer does not currently support calli instructions")]
+    [Ignore("calli is unsupported")]
     public void StackBehaviour_VarpopAndVarpush_CalliUsesInlineSignature()
     {
         // Harmony decodes InlineSig operands to InlineSignature rather than SignatureHelper. Keep calli coverage separate
@@ -407,7 +407,7 @@ public sealed class CreateControlFlowGraphTests
     }
 
     [Test]
-    [Ignore("The optimizer does not currently support calli instructions")]
+    [Ignore("calli is unsupported")]
     public void StackBehaviour_VarpopAndVarpush_VoidCalliUsesInlineSignature()
     {
         Type signatureType = typeof(CodeInstruction).Assembly.GetType("HarmonyLib.InlineSignature")!;
@@ -1305,7 +1305,7 @@ public sealed class CreateControlFlowGraphTests
     [Test]
     // Harmony currently corrupts exception-filter metadata before it reaches Disharmony, so filter behavior cannot be
     // tested end-to-end. Preserve the intended unit fixture, but keep it ignored until Harmony can supply usable input.
-    [Ignore("Exception filters cannot be tested because Harmony does not handle them correctly")]
+    [Ignore("Exception filters are unsupported due to a Harmony bug")]
     public void ExceptionRegions_Filter_ThrowsNotSupportedException()
     {
         ILGenerator ilGenerator = PatchProcessor.CreateILGenerator();
