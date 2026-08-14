@@ -116,6 +116,12 @@ internal enum OpCodeFlags
     TypeFromOperand = 0x4000,
 
     /// <summary>
+    ///     Indicates that the result type of the instruction is given by a <see cref="Type" /> operand's ByRef
+    ///     version.
+    /// </summary>
+    TypeFromOperandRef = 0x8000,
+
+    /// <summary>
     ///     Indicates that the instruction can throw <see cref="NullReferenceException" />.
     /// </summary>
     CanThrow_NullReference = 0x10000 | CanThrow,
@@ -227,7 +233,7 @@ internal struct OpCodeData
         (OpCodeValues.Blt_Un_S,       new OpCodeData { flags = OpCodeFlags.Default, canonical = OpCodeValues.Blt_Un }),
         (OpCodeValues.Bne_Un,         new OpCodeData { flags = OpCodeFlags.Default }),
         (OpCodeValues.Bne_Un_S,       new OpCodeData { flags = OpCodeFlags.Default, canonical = OpCodeValues.Bne_Un }),
-        (OpCodeValues.Box,            new OpCodeData { flags = OpCodeFlags.CanThrow_OutOfMemory }),
+        (OpCodeValues.Box,            new OpCodeData { flags = OpCodeFlags.CanThrow_OutOfMemory, resultType = typeof(object) }),
         (OpCodeValues.Br,             new OpCodeData { flags = OpCodeFlags.Default }),
         (OpCodeValues.Br_S,           new OpCodeData { flags = OpCodeFlags.Default, canonical = OpCodeValues.Br }),
         (OpCodeValues.Brfalse,        new OpCodeData { flags = OpCodeFlags.Default }),
@@ -284,7 +290,7 @@ internal struct OpCodeData
         (OpCodeValues.Dup,            new OpCodeData { flags = OpCodeFlags.PushesInput }),
         (OpCodeValues.Initblk,        new OpCodeData { flags = OpCodeFlags.HasSideEffects | OpCodeFlags.CanThrow_NullReference, resultType = typeof(void) }),
         (OpCodeValues.Initobj,        new OpCodeData { flags = OpCodeFlags.HasSideEffects, resultType = typeof(void) }),
-        (OpCodeValues.Isinst,         new OpCodeData { flags = OpCodeFlags.Default }),
+        (OpCodeValues.Isinst,         new OpCodeData { flags = OpCodeFlags.TypeFromOperand }),
         (OpCodeValues.Jmp,            new OpCodeData { flags = OpCodeFlags.HasSideEffects }),
         (OpCodeValues.Ldarg,          new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument }),
         (OpCodeValues.Ldarg_0,        new OpCodeData { flags = OpCodeFlags.Load | OpCodeFlags.Argument | OpCodeFlags.FixedOperand, operand = 0, canonical = OpCodeValues.Ldarg }),
@@ -321,7 +327,7 @@ internal struct OpCodeData
         (OpCodeValues.Ldelem_U1,      new OpCodeData { flags = OpCodeFlags.CanThrow_IndexOutOfRange, resultType = typeof(int) }),
         (OpCodeValues.Ldelem_U2,      new OpCodeData { flags = OpCodeFlags.CanThrow_IndexOutOfRange, resultType = typeof(int) }),
         (OpCodeValues.Ldelem_U4,      new OpCodeData { flags = OpCodeFlags.CanThrow_IndexOutOfRange, resultType = typeof(int) }),
-        (OpCodeValues.Ldelema,        new OpCodeData { flags = OpCodeFlags.CanThrow }),
+        (OpCodeValues.Ldelema,        new OpCodeData { flags = OpCodeFlags.TypeFromOperandRef | OpCodeFlags.CanThrow }),
         (OpCodeValues.Ldfld,          new OpCodeData { flags = OpCodeFlags.CanThrow_NullReference }),
         (OpCodeValues.Ldflda,         new OpCodeData { flags = OpCodeFlags.CanThrow_NullReference }),
         (OpCodeValues.Ldftn,          new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(IntPtr) }),
@@ -354,7 +360,7 @@ internal struct OpCodeData
         (OpCodeValues.Ldvirtftn,      new OpCodeData { flags = OpCodeFlags.CanThrow_NullReference, resultType = typeof(IntPtr) }),
         (OpCodeValues.Leave,          new OpCodeData { flags = OpCodeFlags.Default }),
         (OpCodeValues.Leave_S,        new OpCodeData { flags = OpCodeFlags.Default, canonical = OpCodeValues.Leave }),
-        (OpCodeValues.Localloc,       new OpCodeData { flags = OpCodeFlags.CanThrow_OutOfMemory }),
+        (OpCodeValues.Localloc,       new OpCodeData { flags = OpCodeFlags.CanThrow_OutOfMemory, resultType = typeof(IntPtr) }),
         (OpCodeValues.Mkrefany,       new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(TypedReference) }),
         (OpCodeValues.Mul,            new OpCodeData { flags = OpCodeFlags.Arithmetic }),
         (OpCodeValues.Mul_Ovf,        new OpCodeData { flags = OpCodeFlags.Arithmetic | OpCodeFlags.CanThrow_Overflow }),
@@ -367,7 +373,7 @@ internal struct OpCodeData
         (OpCodeValues.Or,             new OpCodeData { flags = OpCodeFlags.Arithmetic }),
         (OpCodeValues.Pop,            new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(void) }),
         (OpCodeValues.Refanytype,     new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(TypeToken) }),
-        (OpCodeValues.Refanyval,      new OpCodeData { flags = OpCodeFlags.CanThrow_InvalidCast }),
+        (OpCodeValues.Refanyval,      new OpCodeData { flags = OpCodeFlags.TypeFromOperandRef | OpCodeFlags.CanThrow_InvalidCast }),
         (OpCodeValues.Rem,            new OpCodeData { flags = OpCodeFlags.Arithmetic | OpCodeFlags.CanThrow_Arithmetic }),
         (OpCodeValues.Rem_Un,         new OpCodeData { flags = OpCodeFlags.Arithmetic | OpCodeFlags.CanThrow_Arithmetic }),
         (OpCodeValues.Shl,            new OpCodeData { flags = OpCodeFlags.Shift }),
@@ -405,7 +411,7 @@ internal struct OpCodeData
         (OpCodeValues.Sub,            new OpCodeData { flags = OpCodeFlags.Arithmetic }),
         (OpCodeValues.Sub_Ovf,        new OpCodeData { flags = OpCodeFlags.Arithmetic | OpCodeFlags.CanThrow_Overflow }),
         (OpCodeValues.Sub_Ovf_Un,     new OpCodeData { flags = OpCodeFlags.Arithmetic | OpCodeFlags.CanThrow_Overflow }),
-        (OpCodeValues.Unbox,          new OpCodeData { flags = OpCodeFlags.CanThrow_NullReference | OpCodeFlags.CanThrow_InvalidCast }),
+        (OpCodeValues.Unbox,          new OpCodeData { flags = OpCodeFlags.TypeFromOperandRef | OpCodeFlags.CanThrow_NullReference | OpCodeFlags.CanThrow_InvalidCast }),
         (OpCodeValues.Unbox_Any,      new OpCodeData { flags = OpCodeFlags.TypeFromOperand | OpCodeFlags.CanThrow_NullReference | OpCodeFlags.CanThrow_InvalidCast }),
         (OpCodeValues.Xor,            new OpCodeData { flags = OpCodeFlags.Arithmetic }),
         // @formatter:on
