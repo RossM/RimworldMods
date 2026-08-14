@@ -153,7 +153,5 @@ internal class RewriteVisitor : Visitor
             if (newEdge != edge)
                 controlFlowGraph.ReplaceEdge(newEdge);
         }
-
-        controlFlowGraph.Validate();
     }
 }

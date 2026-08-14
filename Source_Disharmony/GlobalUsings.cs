@@ -4,6 +4,7 @@ global using System.Linq;
 global using System.Reflection;
 global using System.Reflection.Emit;
 global using System.Runtime.CompilerServices;
+global using Disharmony.Optimizer.Passes;
 global using Disharmony.RulesEngine;
 global using Disharmony.Utilities;
 global using HarmonyLib;

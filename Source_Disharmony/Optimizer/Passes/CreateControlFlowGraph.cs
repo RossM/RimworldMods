@@ -1,27 +1,23 @@
-﻿namespace Disharmony.Optimizer;
+﻿namespace Disharmony.Optimizer.Passes;
 
-internal class ControlFlowGraphGenerator
+internal class CreateControlFlowGraph : Pass
 {
-    public ControlFlowGraphGenerator(MethodBase method, List<CodeInstruction> codeInstructions)
+    public MethodBase Method => Optimizer.Method;
+    public IReadOnlyList<CodeInstruction> CodeInstructions => Optimizer.Instructions;
+
+    public CreateControlFlowGraph(Optimizer optimizer) : base(optimizer)
     {
-        Method = method;
-        CodeInstructions = codeInstructions;
-
-        if (method.HasThis)
-            ParameterTypes = [method.DeclaringType.CallableType, .. method.GetParameters().Types()];
+        if (Method.HasThis)
+            ParameterTypes = [Method.DeclaringType.CallableType, .. Method.GetParameters().Types()];
         else
-            ParameterTypes = [.. method.GetParameters().Types()];
+            ParameterTypes = [.. Method.GetParameters().Types()];
 
-        MethodBody = GetMethodBodyOrNull(method);
-        ReturnType = method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
+        MethodBody = GetMethodBodyOrNull(Method);
+        ReturnType = Method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
     }
 
-    public MethodBase Method { get; }
     public Dictionary<Label, BlockLabel> BlockLabels { get; } = [];
     public Dictionary<BlockLabel, (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack)> BlockStacks { get; } = [];
-
-    public ControlFlowGraph ControlFlowGraph { get; } = new();
-    public List<CodeInstruction> CodeInstructions { get; }
     public Dictionary<int, Local> Locals { get; } = [];
     public MethodBody? MethodBody { get; }
     public Dictionary<int, Argument> Arguments { get; } = [];
@@ -52,7 +48,7 @@ internal class ControlFlowGraphGenerator
         return new StackSlot(depth, type, NextStackSlotId++);
     }
 
-    public void CreateControlFlowGraph()
+    protected internal override void RunInternal()
     {
         CreateArguments();
 

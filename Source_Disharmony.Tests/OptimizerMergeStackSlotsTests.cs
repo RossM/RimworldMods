@@ -1,5 +1,6 @@
 using System.Reflection.Emit;
 using Disharmony.Optimizer;
+using Disharmony.Optimizer.Passes;
 using HarmonyLib;
 
 namespace Disharmony.Tests;
@@ -24,7 +25,7 @@ public sealed class OptimizerMergeStackSlotsTests
             cfg = graph
         };
 
-        optimizer.MergeStackSlots();
+        new MergeStackSlots(optimizer).RunInternal();
 
         Assert.Multiple(() =>
         {
@@ -51,7 +52,7 @@ public sealed class OptimizerMergeStackSlotsTests
             cfg = graph
         };
 
-        optimizer.MergeStackSlots();
+        new MergeStackSlots(optimizer).RunInternal();
 
         Assert.Multiple(() =>
         {
@@ -83,7 +84,7 @@ public sealed class OptimizerMergeStackSlotsTests
             cfg = graph
         };
 
-        optimizer.MergeStackSlots();
+        new MergeStackSlots(optimizer).RunInternal();
 
         Assert.Multiple(() =>
         {
@@ -111,7 +112,7 @@ public sealed class OptimizerMergeStackSlotsTests
             cfg = graph
         };
 
-        optimizer.MergeStackSlots();
+        new MergeStackSlots(optimizer).RunInternal();
 
         var rewritten = (ILOp)graph.GetBlock(target.Label).Ops.Single();
         Assert.Multiple(() =>
@@ -148,7 +149,7 @@ public sealed class OptimizerMergeStackSlotsTests
             cfg = graph
         };
 
-        optimizer.MergeStackSlots();
+        new MergeStackSlots(optimizer).RunInternal();
 
         var rewritten = (ConditionalBranch)graph.GetBlock(condition.Label).Branch;
         Assert.Multiple(() =>
@@ -183,7 +184,7 @@ public sealed class OptimizerMergeStackSlotsTests
             cfg = graph
         };
 
-        optimizer.MergeStackSlots();
+        new MergeStackSlots(optimizer).RunInternal();
 
         var rewritten = (ILOp)graph.GetBlock(third.Label).Ops.Single();
         Assert.Multiple(() =>
@@ -209,20 +210,16 @@ public sealed class OptimizerMergeStackSlotsTests
             new CodeInstruction(OpCodes.Pop),
             new CodeInstruction(OpCodes.Ret),
         ];
-        ControlFlowGraphGenerator generator = new(VoidMethod, instructions);
-        generator.CreateControlFlowGraph();
+        var optimizer = new Optimizer.Optimizer(VoidMethod, instructions, il, false);
+        CreateControlFlowGraph generator = new(optimizer);
+        generator.RunInternal();
         ControlFlowGraph graph = generator.ControlFlowGraph;
         BasicBlock source = graph.BasicBlocks.Single(block => block.Ops.OfType<AssignmentOp>()
             .Any(assignment => assignment.Input is StackSlot));
         AssignmentOp copyBeforeMerge = source.Ops.OfType<AssignmentOp>()
             .Single(assignment => assignment.Input is StackSlot);
-        Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, instructions,
-            PatchProcessor.CreateILGenerator(), false)
-        {
-            cfg = graph
-        };
 
-        optimizer.MergeStackSlots();
+        new MergeStackSlots(optimizer).RunInternal();
 
         AssignmentOp copyAfterMerge = graph.GetBlock(source.Label).Ops.OfType<AssignmentOp>()
             .Single(assignment => assignment.Input is StackSlot);

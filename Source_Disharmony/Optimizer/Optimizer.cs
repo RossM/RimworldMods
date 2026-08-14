@@ -4,7 +4,6 @@ internal class Optimizer
 {
     private static readonly bool forceDebug;
     private static readonly string forceDebugForMethod;
-    private readonly MethodBase method;
     private readonly List<CodeInstruction> inputInstructions;
     internal readonly ILGenerator generator;
     private readonly bool debug;
@@ -17,6 +16,9 @@ internal class Optimizer
 
     private readonly RootRegion rootRegion = new(new BlockLabel());
 
+    public MethodBase Method { get; }
+
+    public IReadOnlyList<CodeInstruction> Instructions => inputInstructions;
     static Optimizer()
     {
         forceDebug = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DISHARMONY_DEBUG"));
@@ -25,7 +27,7 @@ internal class Optimizer
 
     public Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator, bool debug)
     {
-        this.method = method;
+        this.Method = method;
         this.inputInstructions = inputInstructions;
         this.generator = generator;
         this.debug = debug || forceDebug || (!string.IsNullOrEmpty(forceDebugForMethod) && method.Name == forceDebugForMethod);
@@ -40,41 +42,10 @@ internal class Optimizer
 
     public List<CodeInstruction> Optimize()
     {
-        var controlFlowGraphGenerator = new ControlFlowGraphGenerator(method, inputInstructions);
-        controlFlowGraphGenerator.CreateControlFlowGraph();
-        cfg = controlFlowGraphGenerator.ControlFlowGraph;
+        new CreateControlFlowGraph(this).Run();
 
-        MergeStackSlots();
+        new MergeStackSlots(this).Run();
 
         return inputInstructions;
-    }
-
-    public void MergeStackSlots()
-    {
-        // Precondition: All edge assignments are between stack slots; no stack slot is live in multiple basic blocks
-        // Postcondition: There are no edge assignments
-
-        DisjointSetUnion<Op> tree = new();
-
-        foreach (var edge in cfg.Edges)
-        foreach (var assignment in edge.EdgeAssignments)
-        {
-            tree.Add(assignment.Input);
-            tree.Add(assignment.Output);
-        }
-
-        foreach (var edge in cfg.Edges)
-        foreach (var assignment in edge.EdgeAssignments)
-            tree.Merge(assignment.Output, assignment.Input);
-
-        ReplaceVisitor visitor = new();
-        foreach (var group in tree)
-        foreach (var op in group)
-        {
-            if (op != group.Key)
-                visitor.Replacements[op] = group.Key;
-        }
-
-        visitor.Visit(cfg);
     }
 }
