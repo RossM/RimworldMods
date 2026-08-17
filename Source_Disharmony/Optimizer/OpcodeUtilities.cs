@@ -6,15 +6,38 @@ internal static class OpcodeUtilities
     ///     Gets the output type of a CIL operation, given its input types.
     /// </summary>
     /// <remarks>
-    ///     For operations with the <see cref="OpCodeFlags.Argument" /> or <see cref="OpCodeFlags.Local" /> flags,
-    ///     the type of the corresponding argument or local should be the first element of <paramref name="inputTypes"/>,
-    ///     with the types of values popped from the stack following it.
+    ///     <para>
+    ///         Numeric results should be normalized to the corresponding CIL stack type.
+    ///     </para>
+    ///     <para>
+    ///         For operations with the <see cref="OpCodeFlags.Argument" /> or <see cref="OpCodeFlags.Local" /> flags,
+    ///         the type of the corresponding argument or local should be the first element of <paramref name="inputTypes" />,
+    ///         with the types of values popped from the stack following it.
+    ///     </para>
     /// </remarks>
     /// <param name="op"></param>
     /// <param name="inputTypes"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
     public static Type GetOutputType(ILInstruction op, params Type[] inputTypes)
+    {
+        Type outputType = GetOutputTypeCore(op, inputTypes);
+        return GetStackType(outputType);
+    }
+
+    public static Type GetStackType(Type type)
+    {
+        return Type.GetTypeCode(type) switch
+        {
+            >= TypeCode.Boolean and <= TypeCode.UInt32 => typeof(int),
+            TypeCode.Int64 or TypeCode.UInt64 => typeof(long),
+            TypeCode.Single or TypeCode.Double => typeof(double),
+            _ when type == typeof(IntPtr) || type == typeof(UIntPtr) => typeof(IntPtr),
+            _ => type,
+        };
+    }
+
+    private static Type GetOutputTypeCore(ILInstruction op, Type[] inputTypes)
     {
         OpCodeData data = OpCodeData.Get(op.OpCode);
         if (data.resultType is { } resultType)
