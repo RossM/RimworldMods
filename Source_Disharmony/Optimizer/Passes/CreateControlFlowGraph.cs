@@ -268,7 +268,7 @@ internal class CreateControlFlowGraph : Pass
 
     private void CreateEdges()
     {
-        foreach (var block in ControlFlowGraph.BasicBlocks)
+        foreach (var block in BasicBlocks)
         {
             var label = block.Label;
             foreach (var successor in block.Branch.Labels.Distinct())
