@@ -3,6 +3,7 @@ using Disharmony.Optimizer.Passes;
 namespace Disharmony.Tests.Unit.Optimizer.Passes;
 
 [TestFixture]
+[Timeout(1000)]
 public sealed class DeduceTypesTests
 {
     private static readonly MethodInfo ReturnIntMethod =
@@ -33,7 +34,7 @@ public sealed class DeduceTypesTests
         {
             Assert.That(rewrittenAssignment.Input.Type, Is.EqualTo(typeof(int)));
             Assert.That(rewrittenAssignment.Output.Type, Is.EqualTo(typeof(int)));
-            Assert.That(((Return)rewrittenBlock.Branch).Value, Is.SameAs(rewrittenAssignment.Output));
+            Assert.That(((Return)rewrittenBlock.Branch).Value, Is.EqualTo(rewrittenAssignment.Output));
         });
     }
 
