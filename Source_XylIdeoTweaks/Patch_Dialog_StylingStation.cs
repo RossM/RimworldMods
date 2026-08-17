@@ -23,7 +23,7 @@ public static class Patch_Dialog_StylingStation
     }
 
     [Feature(Features.AutoColorApparel)]
-    [InnerPostfix(typeof(Widgets), nameof(Widgets.ColorSelector))]
+    [Postfix] [Inner(typeof(Widgets), nameof(Widgets.ColorSelector))]
     [Target("DrawApparelColor")]
     public static void ColorSelector_Postfix(Pawn ___pawn, ref bool __result)
     {

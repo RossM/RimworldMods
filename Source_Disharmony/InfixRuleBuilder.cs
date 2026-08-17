@@ -21,8 +21,8 @@ internal class InfixRuleBuilder : RuleBuilder
         Invocation inner,
         List<PatchInfo> patches) : base(context, outer)
     {
-        innerPrefixes = [.. patches.Where(patch => patch.patchType == PatchType.InnerPrefix)];
-        innerPostfixes = [.. patches.Where(patch => patch.patchType == PatchType.InnerPostfix)];
+        innerPrefixes = [.. patches.Where(patch => patch is { patchType: PatchType.Prefix, inner: not EmptyInvocation })];
+        innerPostfixes = [.. patches.Where(patch => patch is { patchType: PatchType.Postfix, inner: not EmptyInvocation })];
 
         this.inner = inner;
 

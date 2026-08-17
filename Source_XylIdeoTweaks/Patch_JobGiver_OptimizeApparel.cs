@@ -13,7 +13,7 @@ public static class MyTraitDefOf
 public static class Patch_JobGiver_OptimizeApparel
 {
     [Feature(Features.MasochistsCanWearCollars)]
-    [InnerPostfix(typeof(ApparelProperties), nameof(ApparelProperties.slaveApparel))]
+    [Postfix] [Inner(typeof(ApparelProperties), nameof(ApparelProperties.slaveApparel))]
     [Target(nameof(JobGiver_OptimizeApparel.ApparelScoreRaw))]
     public static void slaveApparel_Postfix(Pawn pawn, Apparel ap, ref bool __result)
     {

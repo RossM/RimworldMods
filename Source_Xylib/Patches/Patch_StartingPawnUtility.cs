@@ -4,7 +4,7 @@ namespace Xylib.Patches;
 internal static class Patch_StartingPawnUtility
 {
     [Feature(typeof(CompProperties_Drug))]
-    [InnerPrefix(typeof(List<ThingDefCount>), "Add")]
+    [Prefix] [Inner(typeof(List<ThingDefCount>), "Add")]
     [Target("GeneratePossessions")]
     public static bool List_Add_Prefix(List<ThingDefCount> __instance, ThingDefCount item, Pawn pawn)
     {
@@ -13,7 +13,7 @@ internal static class Patch_StartingPawnUtility
     }
 
     [Feature(nameof(EventDefOf.InGeneratePossessions))]
-    [InnerPostfix(typeof(Rand), nameof(Rand.Value), MemberType.Getter)]
+    [Postfix] [Inner(typeof(Rand), nameof(Rand.Value), MemberType.Getter)]
     [Target("GeneratePossessions")]
     public static void Rand_Value_Postfix(Pawn pawn, [State] ref bool sentEvent)
     {

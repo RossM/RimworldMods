@@ -73,108 +73,108 @@ public static partial class ArgumentBindingPatches
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RefStringArgument))]
     public static void Postfix_Argument_ReferenceType_WriteByReference(ref string value) => value = "patched";
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void InnerPrefix_OuterArgument_Primitive_ReadByValue_WhenInnerHasNoMatch(int outerValue) => InnerObserved = outerValue;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterReferenceTypeArgument))]
     public static void InnerPrefix_OuterArgument_ReferenceType_ReadByValue_WhenInnerHasNoMatch(string outerValue) =>
         ReferenceObserved = outerValue;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterStructArgument))]
     public static void InnerPrefix_OuterArgument_Struct_ReadByValue_WhenInnerHasNoMatch(BindingStruct outerValue) =>
         StructObserved = outerValue;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void InnerPostfix_OuterArgument_Primitive_ReadByValue_WhenInnerHasNoMatch(int outerValue) => InnerObserved = outerValue;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void InnerPrefix_OuterArgument_Primitive_WriteByReference_Rejected(ref int outerValue) => outerValue = 42;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterReferenceTypeArgument))]
     public static void InnerPrefix_OuterArgument_ReferenceType_WriteByReference_Rejected(ref string outerValue) =>
         outerValue = "patched";
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterStructArgument))]
     public static void InnerPrefix_OuterArgument_Struct_WriteByReference_Rejected(ref BindingStruct outerValue) =>
         outerValue = new BindingStruct { Value = 42 };
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void InnerPostfix_OuterArgument_Primitive_WriteByReference_Rejected(ref int outerValue) => outerValue = 42;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
     public static void InnerPrefix_InnerArgument_Primitive_ReadByValue_WhenOuterHasSameName(int value) => InnerObserved = value;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedReferenceTypeArgument))]
     public static void InnerPrefix_InnerArgument_ReferenceType_ReadByValue_WhenOuterHasSameName(string value) =>
         ReferenceObserved = value;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedStructArgument))]
     public static void InnerPrefix_InnerArgument_Struct_ReadByValue_WhenOuterHasSameName(BindingStruct value) =>
         StructObserved = value;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
     public static void InnerPostfix_InnerArgument_Primitive_ReadByValue_WhenOuterHasSameName(int value) => InnerObserved = value;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
     public static void InnerPrefix_InnerArgument_Primitive_WriteByReference_WhenOuterHasSameName(ref int value) => value = 42;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStringArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStringArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefReferenceTypeArgument))]
     public static void InnerPrefix_InnerArgument_ReferenceType_WriteByReference_WhenOuterHasSameName(ref string value) =>
         value = "patched";
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStructArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStructArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefStructArgument))]
     public static void InnerPrefix_InnerArgument_Struct_WriteByReference_WhenOuterHasSameName(ref BindingStruct value) =>
         value = new BindingStruct { Value = 42 };
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
     public static void InnerPostfix_InnerArgument_Primitive_WriteByReference_WhenOuterHasSameName(ref int value) => value = 42;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntArgument))]
     public static void InnerPrefix_InnerArgument_Primitive_ReadByValue(int value) => InnerObserved = value;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringArgument))]
     public static void InnerPrefix_InnerArgument_ReferenceType_ReadByValue(string value) => ReferenceObserved = value;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructArgument))]
     public static void InnerPrefix_InnerArgument_Struct_ReadByValue(BindingStruct value) => StructObserved = value;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntArgument))]
     public static void InnerPostfix_InnerArgument_Primitive_ReadByValue(int value) => InnerObserved = value;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntIdentity))]
     public static void InnerPrefix_InnerArgument_Primitive_WriteByReference(ref int value) => value = 42;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringIdentity))]
     public static void InnerPrefix_InnerArgument_ReferenceType_WriteByReference(ref string value) => value = "patched";
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructIdentity))]
     public static void InnerPrefix_InnerArgument_Struct_WriteByReference(ref BindingStruct value) =>
         value = new BindingStruct { Value = 42 };
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.RefIntArgument))]
     public static void InnerPostfix_InnerArgument_Primitive_WriteByReference(ref int value) => value = 42;
 
@@ -233,12 +233,12 @@ public static partial class ArgumentBindingPatches
     public static void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_WriteByReference([Parameter(0)] ref BindingStruct argument) =>
         argument = new BindingStruct { Value = 42 };
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
     public static void InnerPrefix_ParameterAttribute_OuterScope_Primitive_ReadByValue(
         [Parameter("value", Scope.Outer)] int outerValue) => InnerObserved = outerValue;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
     public static void InnerPrefix_ParameterAttribute_InnerScope_Primitive_ReadByValue(
         [Parameter("value", Scope.Inner)] int innerValue) => InnerObserved = innerValue;
@@ -261,22 +261,22 @@ public static partial class ArgumentBindingPatches
     public static void Postfix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByReference_Rejected(
         [Parameter(0)] ref int argument) => ValueObserved = argument;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void InnerPrefix_ParameterAttribute_OuterArgument_Primitive_ReadByReference_Rejected(
         [Parameter(0, Scope.Outer)] ref int outerValue) => InnerObserved = outerValue;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void InnerPostfix_ParameterAttribute_OuterArgument_Primitive_WriteByReference_Rejected(
         [Parameter(0, Scope.Outer)] ref int outerValue) => outerValue = 42;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntArgument))]
     public static void InnerPostfix_InnerValueArgument_Primitive_ReadByReference_Rejected(ref int value) =>
         InnerObserved = value;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntArgument))]
     public static void InnerPostfix_InnerValueArgument_Primitive_WriteByReference_Rejected(ref int value) =>
         value = 42;
@@ -526,58 +526,58 @@ public sealed partial class ArgumentBindingTests
 
 public static partial class ArgumentBindingPatches
 {
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void InnerPrefix_OuterArgument_Primitive_ReadByReference_Rejected(ref int outerValue) => InnerObserved = outerValue;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterReferenceTypeArgument))]
     public static void InnerPrefix_OuterArgument_ReferenceType_ReadByReference_Rejected(ref string outerValue) =>
         ReferenceObserved = outerValue;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterStructArgument))]
     public static void InnerPrefix_OuterArgument_Struct_ReadByReference_Rejected(ref BindingStruct outerValue) =>
         StructObserved = outerValue;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void InnerPostfix_OuterArgument_Primitive_ReadByReference_Rejected(ref int outerValue) => InnerObserved = outerValue;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
     public static void InnerPrefix_InnerArgument_Primitive_ReadByReference_WhenOuterHasSameName(ref int value) =>
         InnerObserved = value;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStringArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStringArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefReferenceTypeArgument))]
     public static void InnerPrefix_InnerArgument_ReferenceType_ReadByReference_WhenOuterHasSameName(
         ref string value) => ReferenceObserved = value;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStructArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefStructArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefStructArgument))]
     public static void InnerPrefix_InnerArgument_Struct_ReadByReference_WhenOuterHasSameName(
         ref BindingStruct value) => StructObserved = value;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
     public static void InnerPostfix_InnerArgument_Primitive_ReadByReference_WhenOuterHasSameName(ref int value) =>
         InnerObserved = value;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntIdentity))]
     public static void InnerPrefix_InnerArgument_Primitive_ReadByReference(ref int value) => InnerObserved = value;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringIdentity))]
     public static void InnerPrefix_InnerArgument_ReferenceType_ReadByReference(ref string value) =>
         ReferenceObserved = value;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructIdentity))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructIdentity))]
     public static void InnerPrefix_InnerArgument_Struct_ReadByReference(ref BindingStruct value) => StructObserved = value;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.RefIntArgument))]
     public static void InnerPostfix_InnerArgument_Primitive_ReadByReference(ref int value) => InnerObserved = value;
 }

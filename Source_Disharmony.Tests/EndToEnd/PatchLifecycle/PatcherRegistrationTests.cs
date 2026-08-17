@@ -24,7 +24,7 @@ public static class PatcherRegistrationPatches
     [Postfix]
     public static void Register_TargetsOnly_UsesAttributesAndDefersUntilApply(ref int __result) => __result = 42;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     public static void Patch_TargetsOnly_UsesAttributesForInnerPatch(ref int __result) => __result = 42;
 
     public static bool Register_AllInformation_UsesExplicitPrefixAndDefersUntilApply() => false;
@@ -312,7 +312,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
 
         Patcher.Patch(
             patch,
-            PatchType.InnerPrefix,
+            PatchType.Prefix,
             innerTarget: innerTarget,
             targets: [outerTarget]);
 
@@ -331,7 +331,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
 
         Patcher.Patch(
             patch,
-            PatchType.InnerPostfix,
+            PatchType.Postfix,
             innerTarget: innerTarget,
             targets: [outerTarget]);
 
@@ -351,7 +351,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
 
         Patcher.Patch(
             patch,
-            PatchType.InnerPrefix,
+            PatchType.Prefix,
             innerTarget: innerTarget,
             innerMemberType: MemberType.Setter,
             targets: [outerTarget]);

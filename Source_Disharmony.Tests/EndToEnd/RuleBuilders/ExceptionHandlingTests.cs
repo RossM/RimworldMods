@@ -4,15 +4,15 @@ public static class ExceptionHandlingPatches
 {
     public static int ExecutionCount;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ExceptionHandlingTargets), nameof(ExceptionHandlingTargets.CallInTryBlock))]
     public static void InnerPrefix_TryBlock_ExecutesOnlyWhenExceptionIsNotThrown() => ExecutionCount++;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ExceptionHandlingTargets), nameof(ExceptionHandlingTargets.CallInCatchBlock))]
     public static void InnerPrefix_CatchBlock_ExecutesOnlyWhenExceptionIsThrown() => ExecutionCount++;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ExceptionHandlingTargets), nameof(ExceptionHandlingTargets.CallInFinallyBlock))]
     public static void InnerPrefix_FinallyBlock_ExecutesWhetherExceptionIsThrownOrNot() => ExecutionCount++;
 }

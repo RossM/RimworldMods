@@ -42,7 +42,7 @@ public static class PatchMethodCombinationPatches
         return false;
     }
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static void InnerPostfix_DuplicateResultBinding_ReadByValueThenWriteByReference(
         [ReturnValue] int original,
@@ -52,7 +52,7 @@ public static class PatchMethodCombinationPatches
         replacement = 42;
     }
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static bool InnerPrefix_DuplicateResultBinding_ReadByValueThenWriteByReference_SkipsTarget(
         [ReturnValue] int original,
@@ -79,7 +79,7 @@ public static class PatchMethodCombinationPatches
         return false;
     }
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
     public static void InnerPrefix_CombinedScopes_SameNamedRefArgument_WritesInnerOnly(
         [Parameter("value", Scope.Outer)] int outerValue,

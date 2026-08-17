@@ -10,7 +10,7 @@ public class ParameterBindingException(string argumentName, string message) : Ex
 
 internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, string stateGroupKey)
 {
-    private readonly bool infix = patchType is PatchType.InnerPrefix or PatchType.InnerPostfix;
+    private readonly bool infix = inner is not EmptyInvocation;
     private readonly bool isIterator = outer != target;
 
     public ParameterBinding Bind(ParameterInfo parameter)
@@ -324,9 +324,9 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
         if (parameter.ParameterType.IsByRef && !type.IsByRef)
         {
-            if (scope == Scope.Outer && patchType != PatchType.Prefix)
+            if (scope == Scope.Outer && !(patchType == PatchType.Prefix && inner is EmptyInvocation))
                 throw new ParameterBindingException(parameter.Name, $"{patchType} can't access outer method {bindingType} by reference");
-            if (scope == Scope.Inner && patchType != PatchType.InnerPrefix)
+            if (scope == Scope.Inner && !(patchType == PatchType.Prefix && inner is not EmptyInvocation))
                 throw new ParameterBindingException(parameter.Name, $"{patchType} can't access inner method {bindingType} by reference");
         }
     }

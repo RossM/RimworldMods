@@ -154,6 +154,7 @@ internal class PatchRegistry
                     attributes.OfType<PatchAttribute>().Select(p => p.type).FirstOrDefault(t => t is not null) ??
                     attributes.OfType<HarmonyPatch>().Select(p => p.info.declaringType).FirstOrDefault(t => t is not null);
                 var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
+                var innerAttribute = attributes.OfType<InnerAttributeBase>().SingleOrDefault();
                 var targetAttributes = attributes.OfType<TargetAttribute>().ToList();
                 var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.options ?? PatchOptions.Default;
 
@@ -162,7 +163,7 @@ internal class PatchRegistry
 
                 PatchType patchType = patchTypeAttribute.patchType;
 
-                Invocation inner = GetInnerInvocation(patchTypeAttribute);
+                Invocation inner = GetInnerInvocation(innerAttribute);
 
                 foreach (var targetAttribute in targetAttributes)
                 {
@@ -205,6 +206,7 @@ internal class PatchRegistry
                 List<Attribute> attributes = GetAttributes(method);
 
                 var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
+                var innerAttribute = attributes.OfType<InnerAttributeBase>().SingleOrDefault();
                 var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.options ?? PatchOptions.Default;
 
                 if (patchTypeAttribute == null)
@@ -212,7 +214,7 @@ internal class PatchRegistry
 
                 PatchType patchType = patchTypeAttribute.patchType;
 
-                Invocation inner = GetInnerInvocation(patchTypeAttribute);
+                Invocation inner = GetInnerInvocation(innerAttribute);
 
                 foreach (var target in targets)
                     AddPatch(method, patchType, target, inner, options, method.DeclaringType!.FullName);
@@ -246,7 +248,7 @@ internal class PatchRegistry
         {
             try
             {
-                Invocation inner = patchType is PatchType.InnerPrefix or PatchType.InnerPostfix
+                Invocation inner = innerTarget != null
                     ? InnerInvocation(innerTarget, innerMemberType)
                     : EmptyInvocation.Instance;
 
@@ -260,26 +262,26 @@ internal class PatchRegistry
         }
     }
 
-    private static Invocation GetInnerInvocation(PatchTypeAttribute patchTypeAttribute)
+    private static Invocation GetInnerInvocation(InnerAttributeBase? patchTypeAttribute)
     {
-        if (patchTypeAttribute.patchType is not (PatchType.InnerPrefix or PatchType.InnerPostfix))
+        if (patchTypeAttribute == null)
             return EmptyInvocation.Instance;
 
         switch (patchTypeAttribute)
         {
-            case InnerPostfixConstantAttribute { value: int value }: return new ConstantIntInvocation(value);
-            case InnerPostfixConstantAttribute { value: long value }: return new ConstantLongInvocation(value);
-            case InnerPostfixConstantAttribute { value: float value }: return new ConstantFloatInvocation(value);
-            case InnerPostfixConstantAttribute { value: double value }: return new ConstantDoubleInvocation(value);
-            case InnerPostfixConstantAttribute { value: string value }: return new ConstantStringInvocation(value);
-            case { memberName: string } or { memberType: MemberType.Constructor }:
+            case InnerConstantAttribute { value: int value }: return new ConstantIntInvocation(value);
+            case InnerConstantAttribute { value: long value }: return new ConstantLongInvocation(value);
+            case InnerConstantAttribute { value: float value }: return new ConstantFloatInvocation(value);
+            case InnerConstantAttribute { value: double value }: return new ConstantDoubleInvocation(value);
+            case InnerConstantAttribute { value: string value }: return new ConstantStringInvocation(value);
+            case InnerAttribute innerMember:
             {
-                MemberInfo inner = ReflectionTools.GetMember(patchTypeAttribute.type, patchTypeAttribute.memberName,
-                    patchTypeAttribute.memberType, patchTypeAttribute.parameterTypes, patchTypeAttribute.genericTypes);
+                MemberInfo inner = ReflectionTools.GetMember(innerMember.type, innerMember.memberName,
+                    innerMember.memberType, innerMember.parameterTypes, innerMember.genericTypes);
 
-                return InnerInvocation(inner, patchTypeAttribute.memberType);
+                return InnerInvocation(inner, innerMember.memberType);
             }
-            default: throw new InvalidOperationException($"{patchTypeAttribute.patchType} patch must have an inner target");
+            default: throw new InvalidOperationException();
         }
     }
 
@@ -311,14 +313,12 @@ internal class PatchRegistry
         switch (patchType)
         {
             case PatchType.Prefix:
-            case PatchType.InnerPrefix:
             {
                 if (method.ReturnType != typeof(void) && method.ReturnType != typeof(bool))
                     throw new InvalidOperationException($"{method.FullName}: {patchType} must return 'bool' or 'void'");
                 break;
             }
             case PatchType.Postfix:
-            case PatchType.InnerPostfix:
             {
                 if (method.ReturnType != typeof(void))
                     throw new InvalidOperationException($"{method.FullName}: {patchType} must return 'void'");
@@ -356,7 +356,7 @@ internal class PatchRegistry
         MethodBaseInvocation outer = target;
         bool isIterator = false;
 
-        if (patchType is PatchType.InnerPrefix or PatchType.InnerPostfix && outer is MethodInvocation outerMethod)
+        if (inner is not EmptyInvocation && outer is MethodInvocation outerMethod)
         {
             var iterator = outerMethod.MethodInfo.GetIteratorImplementation();
             if (iterator != null)

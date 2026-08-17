@@ -50,11 +50,11 @@ public static class ExecutionControlPatches
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingStringResult))]
     public static bool PrefixReturningFalseSkipsReferenceTypeTarget() => false;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static bool InnerPrefixReturningTrueRunsInnerTarget() => true;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static bool InnerPrefixReturningFalseSkipsInnerTarget() => false;
 }

@@ -23,14 +23,14 @@ public static class BaseMethodBindingPatches
         ref string __result) =>
         __result = $"{__result}|{__base(value)}";
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.DescribeWithInnerCall))]
     public static void InnerPrefix_BaseMethod_Parameter_Primitive_Result_ReferenceType_Invokes(
         int value,
         Func<int, string> __base) =>
         ResultObserved = __base(value);
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.DescribeWithInnerCall))]
     public static void InnerPostfix_BaseMethod_Parameter_Primitive_Result_ReferenceType_Invokes(
         int value,

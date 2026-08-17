@@ -46,30 +46,30 @@ public static partial class InstanceBindingPatches
         __result = __instance;
     }
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoid))]
     public static void InnerPrefix_CallerParameter_ReferenceType_ReadByValue(ClassMethodTargets __caller) => CallerObserved = __caller;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoid))]
     public static void InnerPostfix_CallerParameter_ReferenceType_ReadByValue(ClassMethodTargets __caller) => CallerObserved = __caller;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
     public static void InnerPrefix_CallerParameter_ReferenceType_WriteByReference_Rejected(ref ClassMethodTargets __caller) =>
         __caller = ReplacementCaller!;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_CallerParameter_Struct_ReadByValue(StructMethodTargets __caller) =>
         StructInstanceFieldObserved = __caller.foo;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_CallerParameter_Struct_WriteByReference(ref StructMethodTargets __caller) =>
         __caller.foo = 42;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
     public static void InnerPostfix_CallerParameter_ReferenceType_WriteByReference_Rejected(ref ClassMethodTargets __caller) =>
         __caller = ReplacementCaller!;
@@ -84,18 +84,18 @@ public static partial class InstanceBindingPatches
     public static void Prefix_InstanceAttribute_ReferenceType_WriteByReference(
         [Instance] ref ClassMethodTargets target) => target = ReplacementInstance!;
 
-    [InnerPrefix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPrefix_InstanceAttribute_OuterScope_ReferenceType_ReadByValue(
         [Instance(Scope.Outer)] ClassMethodTargets target) =>
         InstanceObserved = target;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByValue(
         [Instance(Scope.Outer)] StructMethodTargets target) => StructInstanceFieldObserved = target.foo;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_InstanceAttribute_OuterScope_Struct_WriteByReference(
         [Instance(Scope.Outer)] ref StructMethodTargets target) => target.foo = 42;
@@ -129,17 +129,17 @@ public static partial class InstanceBindingPatches
         ref ClassMethodTargets __instance,
         ref ClassMethodTargets __result) => InstanceObserved = __instance;
 
-    [InnerPrefix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
     public static void InnerPrefix_CallerParameter_ReferenceType_ReadByReference_Rejected(ref ClassMethodTargets __caller) =>
         CallerObserved = __caller;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_CallerParameter_Struct_ReadByReference(ref StructMethodTargets __caller) =>
         StructInstanceFieldObserved = __caller.foo;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallStaticVoidAndReturnValue))]
     public static void InnerPostfix_CallerParameter_ReferenceType_ReadByReference_Rejected(ref ClassMethodTargets __caller) =>
         CallerObserved = __caller;
@@ -149,7 +149,7 @@ public static partial class InstanceBindingPatches
     public static void Prefix_InstanceAttribute_ReferenceType_ReadByReference(
         [Instance] ref ClassMethodTargets target) => InstanceObserved = target;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_InstanceAttribute_OuterScope_Struct_ReadByReference(
         [Instance(Scope.Outer)] ref StructMethodTargets target) => StructInstanceFieldObserved = target.foo;
@@ -367,12 +367,12 @@ public static partial class InstanceBindingPatches
     public static void Postfix_InstanceAttribute_Struct_WriteByReference(
         [Instance] ref StructMethodTargets instance) => instance.foo = 42;
 
-    [InnerPostfix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_ReadByReference_Rejected(
         [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) => _ = instance.foo;
 
-    [InnerPostfix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_WriteByReference_Rejected(
         [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) =>

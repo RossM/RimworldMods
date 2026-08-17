@@ -4,7 +4,7 @@
 public static class Patch_GeneUtility
 {
     [Feature("TODO")]
-    [InnerPostfix(typeof(GenCollection), nameof(GenCollection.SortBy),
+    [Postfix] [Inner(typeof(GenCollection), nameof(GenCollection.SortBy),
         genericTypes: [typeof(GeneDef), typeof(float), typeof(string), typeof(float)])]
     [Target(typeof(GeneUtility), "get_GenesInOrder")]
     public static void SortBy_Postfix(List<GeneDef> list)

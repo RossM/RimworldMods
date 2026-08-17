@@ -533,7 +533,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(OptimizerInlinePatches.InnerPrefix_AlwaysFalse_SkipsInnerTarget),
-            PatchType.InnerPrefix,
+            PatchType.Prefix,
             typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.CallInnerAlwaysFalseTarget))!,
             typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.InnerAlwaysFalseTarget))!);
 
@@ -548,7 +548,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(OptimizerInlinePatches.InnerPrefix_AlwaysTrue_RunsInnerTarget),
-            PatchType.InnerPrefix,
+            PatchType.Prefix,
             typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.CallInnerAlwaysTrueTarget))!,
             typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.InnerAlwaysTrueTarget))!);
 
@@ -577,7 +577,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(OptimizerInlinePatches.InnerPrefix_OuterArgumentControlsWhetherInnerTargetIsSkipped),
-            PatchType.InnerPrefix,
+            PatchType.Prefix,
             typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.CallInnerConditionallySkippedTarget))!,
             typeof(OptimizerPrefixTargets).GetMethod(nameof(OptimizerPrefixTargets.InnerConditionallySkippedTarget))!);
 

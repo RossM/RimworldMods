@@ -6,7 +6,7 @@ public static class PatchReturnTypeValidationPatches
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static int PostfixReturningNonVoidIsRejected() => 42;
 
-    [InnerPostfix(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
     public static int InnerPostfixReturningNonVoidIsRejected() => 42;
 }
@@ -39,6 +39,6 @@ public sealed partial class PatchReturnTypeValidationTests
                 nameof(PatchReturnTypeValidationPatches.InnerPostfixReturningNonVoidIsRejected)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<InvalidOperationException>());
-        Assert.That(exception.InnerException!.Message, Does.EndWith("InnerPostfix must return 'void'"));
+        Assert.That(exception.InnerException!.Message, Does.EndWith("Postfix must return 'void'"));
     }
 }

@@ -250,7 +250,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         {
             Patcher.Register(
                 patch,
-                PatchType.InnerPrefix,
+                PatchType.Prefix,
                 innerTarget: innerTarget,
                 targets: [outerTarget]);
             Patcher.ForceApply();
@@ -276,7 +276,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         {
             Patcher.Register(
                 patch,
-                PatchType.InnerPrefix,
+                PatchType.Prefix,
                 innerTarget: innerTarget,
                 targets: [outerTarget]);
 
@@ -311,7 +311,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         {
             Patcher.Register(
                 patch,
-                PatchType.InnerPrefix,
+                PatchType.Prefix,
                 innerTarget: innerTarget,
                 targets: [outerTarget]);
             Patcher.Apply();
@@ -347,7 +347,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         {
             Patcher.Register(
                 patch,
-                PatchType.InnerPrefix,
+                PatchType.Prefix,
                 innerTarget: innerTarget,
                 targets: [outerTarget]);
             Patcher.Apply();

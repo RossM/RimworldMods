@@ -14,7 +14,7 @@ internal static class Patch_GeneDef
     }
 
     [Feature(typeof(DefModExtension_GeneWithComps))]
-    [InnerPostfix(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
+    [Postfix] [Inner(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
     [Target("GetDescriptionFull")]
     public static void GeneDef_customEffectDescriptions_Postfix(GeneDef __instance, ref List<string> __result)
     {

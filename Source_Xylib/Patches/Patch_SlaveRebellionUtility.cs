@@ -19,7 +19,7 @@ internal static class Patch_SlaveRebellionUtility
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
-    [InnerPostfix(typeof(StringBuilder), memberType: MemberType.Constructor, parameterTypes: [])]
+    [Postfix] [Inner(typeof(StringBuilder), memberType: MemberType.Constructor, parameterTypes: [])]
     [Target("GetSlaveRebellionMtbCalculationExplanation")]
     public static void StringBuilder_ctor_Postfix(StringBuilder __result, [State] out StringBuilder sb)
     {
@@ -27,7 +27,7 @@ internal static class Patch_SlaveRebellionUtility
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
-    [InnerPostfixConstant("SuppressionFinalInterval")]
+    [Postfix] [InnerConstant("SuppressionFinalInterval")]
     [Target("GetSlaveRebellionMtbCalculationExplanation")]
     public static void SuppressionFinalInterval_Postfix(Pawn? pawn, [State] StringBuilder sb)
     {
@@ -35,7 +35,7 @@ internal static class Patch_SlaveRebellionUtility
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]
-    [InnerPostfix(typeof(GenDate), nameof(GenDate.ToStringTicksToPeriod))]
+    [Postfix] [Inner(typeof(GenDate), nameof(GenDate.ToStringTicksToPeriod))]
     [Target("GetSlaveRebellionMtbCalculationExplanation")]
     public static void ToStringTicksToPeriod_Postfix(int numTicks, ref string __result)
     {

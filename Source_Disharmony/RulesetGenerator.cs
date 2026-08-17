@@ -15,7 +15,7 @@ internal static class RulesetGenerator
         ruleBuilders.Add(new CircumfixRuleBuilder(context, outer, patches));
 
         foreach (IGrouping<Invocation, PatchInfo> targetGroup in patches
-                     .Where(patch => patch.patchType is PatchType.InnerPrefix or PatchType.InnerPostfix).GroupBy(patch => patch.inner))
+                     .Where(patch => patch.inner is not EmptyInvocation).GroupBy(patch => patch.inner))
         {
             Invocation inner = targetGroup.Key;
             ruleBuilders.Add(new InfixRuleBuilder(context, outer, inner, [.. targetGroup]));

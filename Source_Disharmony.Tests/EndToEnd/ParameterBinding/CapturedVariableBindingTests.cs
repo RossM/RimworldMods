@@ -23,21 +23,21 @@ public static partial class CapturedVariableBindingPatches
     [Target(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     public static void Postfix_LocalFunctionCapturedVariable_Primitive_ReadByValue(int captured) => Observed = captured;
 
-    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    [Prefix] [Inner(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedVariableMethod))]
     public static void InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_ReadByValue(int captured) => Observed = captured;
 
-    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedReferenceVariableMethod.LocalMethod")]
+    [Prefix] [Inner(typeof(LocalFunctionTargets), "CapturedReferenceVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedReferenceVariableMethod))]
     public static void InnerPrefix_LocalFunctionCallCapturedVariable_ReferenceType_ReadByValue(BindingReference captured) =>
         ReferenceObserved = captured;
 
-    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedStructVariableMethod.LocalMethod")]
+    [Prefix] [Inner(typeof(LocalFunctionTargets), "CapturedStructVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedStructVariableMethod))]
     public static void InnerPrefix_LocalFunctionCallCapturedVariable_Struct_ReadByValue(BindingStruct captured) =>
         StructObserved = captured;
 
-    [InnerPostfix(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    [Postfix] [Inner(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedVariableMethod))]
     public static void InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_ReadByValue(int captured) => Observed = captured;
 
@@ -59,21 +59,21 @@ public static partial class CapturedVariableBindingPatches
     [Target(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     public static void Postfix_LocalFunctionCapturedVariable_Primitive_WriteByReference(ref int captured) => captured = 42;
 
-    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    [Prefix] [Inner(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedVariableMethod))]
     public static void InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_WriteByReference(ref int captured) => captured = 42;
 
-    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedReferenceVariableMethod.LocalMethod")]
+    [Prefix] [Inner(typeof(LocalFunctionTargets), "CapturedReferenceVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedReferenceVariableMethod))]
     public static void InnerPrefix_LocalFunctionCallCapturedVariable_ReferenceType_WriteByReference(ref BindingReference captured) =>
         captured = new BindingReference { Value = 42 };
 
-    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedStructVariableMethod.LocalMethod")]
+    [Prefix] [Inner(typeof(LocalFunctionTargets), "CapturedStructVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedStructVariableMethod))]
     public static void InnerPrefix_LocalFunctionCallCapturedVariable_Struct_WriteByReference(ref BindingStruct captured) =>
         captured = new BindingStruct { Value = 42 };
 
-    [InnerPostfix(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    [Postfix] [Inner(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedVariableMethod))]
     public static void InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_WriteByReference(ref int captured) => captured = 42;
 }
@@ -292,22 +292,22 @@ public static partial class CapturedVariableBindingPatches
     [Target(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     public static void Postfix_LocalFunctionCapturedVariable_Primitive_ReadByReference(ref int captured) => Observed = captured;
 
-    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    [Prefix] [Inner(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedVariableMethod))]
     public static void InnerPrefix_LocalFunctionCallCapturedVariable_Primitive_ReadByReference(ref int captured) =>
         Observed = captured;
 
-    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedReferenceVariableMethod.LocalMethod")]
+    [Prefix] [Inner(typeof(LocalFunctionTargets), "CapturedReferenceVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedReferenceVariableMethod))]
     public static void InnerPrefix_LocalFunctionCallCapturedVariable_ReferenceType_ReadByReference(
         ref BindingReference captured) => ReferenceObserved = captured;
 
-    [InnerPrefix(typeof(LocalFunctionTargets), "CapturedStructVariableMethod.LocalMethod")]
+    [Prefix] [Inner(typeof(LocalFunctionTargets), "CapturedStructVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedStructVariableMethod))]
     public static void InnerPrefix_LocalFunctionCallCapturedVariable_Struct_ReadByReference(ref BindingStruct captured) =>
         StructObserved = captured;
 
-    [InnerPostfix(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
+    [Postfix] [Inner(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     [Target(typeof(LocalFunctionTargets), nameof(LocalFunctionTargets.CapturedVariableMethod))]
     public static void InnerPostfix_LocalFunctionCallCapturedVariable_Primitive_ReadByReference(ref int captured) =>
         Observed = captured;

@@ -4,7 +4,7 @@
 public static class Patch_ApparelUtility
 {
     [Feature(Features.NudityIsGenderSpecific)]
-    [InnerPostfix(typeof(IdeoUtility), nameof(IdeoUtility.IdeoPrefersNudity))]
+    [Postfix] [Inner(typeof(IdeoUtility), nameof(IdeoUtility.IdeoPrefersNudity))]
     [Target(nameof(ApparelUtility.IsRequirementActive))]
     public static void IdeoPrefersNudity_Postfix(Ideo ideo, Pawn pawn, ref bool __result)
     {

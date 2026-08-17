@@ -48,61 +48,61 @@ public static class FieldBindingPatches
     public static void Prefix_TripleUnderscoreField_Struct_ReadByReference(ref BindingStruct ___structField) =>
         StructObserved = ___structField;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_TripleUnderscoreField_OuterClassInstance_Primitive_ReadByValue(int ___foo) => Observed = ___foo;
 
-    [InnerPostfix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPostfix_TripleUnderscoreField_InnerClassInstance_Primitive_ReadByValue_WhenBothScopesMatch(int ___foo) =>
         Observed = ___foo;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_TripleUnderscoreField_OuterClassInstance_Primitive_WriteByReference(ref int ___foo) => ___foo = 42;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_TripleUnderscoreField_OuterClassInstance_Primitive_ReadByReference(ref int ___foo) => Observed = ___foo;
 
-    [InnerPostfix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPostfix_TripleUnderscoreField_InnerClassInstance_Primitive_WriteByReference(ref int ___foo) => ___foo = 42;
 
-    [InnerPostfix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPostfix_TripleUnderscoreField_InnerClassInstance_Primitive_ReadByReference(ref int ___foo) => Observed = ___foo;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_TripleUnderscoreField_OuterStructInstance_Primitive_ReadByValue(int ___foo) => Observed = ___foo;
 
-    [InnerPostfix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
+    [Postfix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithField))]
     public static void InnerPostfix_TripleUnderscoreField_InnerStructInstance_Primitive_ReadByValue_WhenBothScopesMatch(int ___foo) =>
         Observed = ___foo;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_TripleUnderscoreField_OuterStructInstance_Primitive_WriteByReference(ref int ___foo) => ___foo = 42;
 
-    [InnerPrefix(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
+    [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
     public static void InnerPrefix_TripleUnderscoreField_OuterStructInstance_Primitive_ReadByReference(ref int ___foo) => Observed = ___foo;
 
-    [InnerPrefix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithField))]
     public static void InnerPrefix_TripleUnderscoreField_InnerStructInstance_Primitive_WriteByReference(ref int ___foo) => ___foo = 42;
 
-    [InnerPrefix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithField))]
     public static void InnerPrefix_TripleUnderscoreField_InnerStructInstance_Primitive_ReadByReference(ref int ___foo) => Observed = ___foo;
 
-    [InnerPrefix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithFieldByValue))]
     public static void InnerPrefix_TripleUnderscoreField_InnerStructPassedByValue_Primitive_WriteByReference(ref int ___foo) => ___foo = 42;
 
-    [InnerPrefix(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithFieldByValue))]
     public static void InnerPrefix_TripleUnderscoreField_InnerStructPassedByValue_Primitive_ReadByReference(ref int ___foo) =>
         Observed = ___foo;
@@ -148,12 +148,12 @@ public static class FieldBindingPatches
     public static void Prefix_FieldAttribute_Struct_ReadByReference([Field("structField")] ref BindingStruct field) =>
         StructObserved = field;
 
-    [InnerPrefix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPrefix_FieldAttribute_OuterScope_Primitive_ReadByValue([Field("foo", Scope.Outer)] int field) =>
         Observed = field;
 
-    [InnerPrefix(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPrefix_FieldAttribute_InnerScope_Primitive_ReadByValue([Field("foo", Scope.Inner)] int field) =>
         Observed = field;

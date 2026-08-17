@@ -15,14 +15,14 @@ public static class ConstructorPatchingPatches
     [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
     public static void Postfix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
 
-    [InnerPrefix(
+    [Prefix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [])]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [])]
     public static void InnerPrefix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
 
-    [InnerPostfix(
+    [Postfix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [])]
@@ -51,21 +51,21 @@ public static class ConstructorPatchingPatches
     public static void Postfix_Constructor_ReferenceType_Parameter_Primitive_ReadByReference_Rejected(ref int value) =>
         ParameterObserved = value;
 
-    [InnerPrefix(
+    [Prefix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [typeof(int)])]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [typeof(int)])]
     public static void InnerPrefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => ParameterObserved = value;
 
-    [InnerPostfix(
+    [Postfix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [typeof(int)])]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [typeof(int)])]
     public static void InnerPostfix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => ParameterObserved = value;
 
-    [InnerPostfix(
+    [Postfix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [typeof(int)])]
@@ -93,7 +93,7 @@ public static class ConstructorPatchingPatches
     public static void Postfix_Constructor_ReferenceType_Parameterless_Instance_WriteByReference_Rejected(
         ref ConstructorTargets __instance) => __instance = null!;
 
-    [InnerPrefix(
+    [Prefix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [])]
@@ -101,7 +101,7 @@ public static class ConstructorPatchingPatches
     public static void InnerPrefix_Constructor_ReferenceType_Parameterless_Result_ReadByValue(ConstructorTargets? __result) =>
         ResultObserved = __result;
 
-    [InnerPostfix(
+    [Postfix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [])]

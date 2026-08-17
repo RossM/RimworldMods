@@ -18,8 +18,8 @@ internal class CircumfixRuleBuilder : RuleBuilder
         Invocation outer,
         List<PatchInfo> patches) : base(context, outer)
     {
-        prefixes = [.. patches.Where(patch => patch.patchType == PatchType.Prefix)];
-        postfixes = [.. patches.Where(patch => patch.patchType == PatchType.Postfix)];
+        prefixes = [.. patches.Where(patch => patch is { patchType: PatchType.Prefix, inner: EmptyInvocation })];
+        postfixes = [.. patches.Where(patch => patch is { patchType: PatchType.Postfix, inner: EmptyInvocation })];
 
         targetType = outer.ReturnType;
     }

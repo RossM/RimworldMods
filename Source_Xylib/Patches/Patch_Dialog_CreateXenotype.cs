@@ -5,7 +5,7 @@ internal static class Patch_Dialog_CreateXenotype
 {
     [Feature(nameof(DefModExtension_GeneWithComps.showInXenotypeCreation))]
     [Feature(nameof(DefModExtension_GeneWithComps.geneType))]
-    [InnerPostfix(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder))]
+    [Postfix] [Inner(typeof(GeneUtility), nameof(GeneUtility.GenesInOrder))]
     [Target("DrawGenes")]
     public static void GenesInOrder_Postfix(ref List<GeneDef> __result, bool ___inheritable, bool ___ignoreRestrictions)
     {

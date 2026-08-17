@@ -54,8 +54,7 @@ public static class Analyzer
                 var hasTarget = method.HasAttribute<TargetAttribute>();
                 var hasPrefix = method.HasAttribute<PrefixAttribute>();
                 var hasPostfix = method.HasAttribute<PostfixAttribute>();
-                var hasInnerPrefix = method.HasAttribute<InnerPrefixAttribute>();
-                var hasInnerPostfix = method.HasAttribute<InnerPostfixAttribute>();
+                var hasInner = method.HasAttribute<InnerAttribute>() || method.HasAttribute<InnerConstantAttribute>();
 
                 // A patch class without [HarmonyPatch] won't get processed, so this almost certainly indicates a bug
                 if ((hasHarmonyPrefix || hasHarmonyPostfix || hasTranspiler || hasTarget) && !typeHasHarmony)
@@ -74,23 +73,23 @@ public static class Analyzer
                     Log.Warning($"[{name}] {type.FullName}::{method.Name} has [Feature] but no Harmony attribute");
 
                 // Applying [InfixPatch] without [InfixPrefix] or [InfixPostfix], or vice versa, won't do anything, so is probably a bug
-                if (hasTarget != (hasPrefix || hasPostfix || hasInnerPrefix || hasInnerPostfix))
+                if (hasTarget != (hasPrefix || hasPostfix))
                 {
                     Log.Warning(
                         $"[{name}] {type.FullName}::{method.Name} has should have both [Target] and a patch type");
                 }
 
                 // Enforce a naming convention for patch methods. This makes it more obvious at a glance when a patch will run
-                if ((hasHarmonyPrefix || hasPrefix || hasInnerPrefix) && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
+                if ((hasHarmonyPrefix || hasPrefix) && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
                     Log.Warning($"[{name}] {type.FullName}::{method.Name} should be named with _Prefix");
-                if ((hasHarmonyPostfix || hasPostfix || hasInnerPostfix) && !(method.Name == "Postfix" || method.Name.EndsWith("_Postfix")))
+                if ((hasHarmonyPostfix || hasPostfix) && !(method.Name == "Postfix" || method.Name.EndsWith("_Postfix")))
                     Log.Warning($"[{name}] {type.FullName}::{method.Name} should be named with _Postfix");
                 if (hasTranspiler && !(method.Name == "Transpiler" || method.Name.EndsWith("_Transpiler")))
                     Log.Warning($"[{name}] {type.FullName}::{method.Name} should be named with _Transpiler");
 
                 var parameters = method.GetParameters();
                 ParameterInfo? resultParameter = parameters.SingleOrDefault(p => p.Name == "__result");
-                if (hasHarmonyPrefix || hasInnerPrefix)
+                if (hasHarmonyPrefix)
                 {
                     // A prefix __result parameter without 'out' might not be initialized, which results in the default
                     // value being used if the prefix returns false. This is confusing and potentially indicates a bug.
@@ -103,7 +102,7 @@ public static class Analyzer
                         Log.Warning($"[{name}] {type.FullName}::{method.Name} returns void but uses __result");
                 }
 
-                if (hasHarmonyPostfix || hasInnerPostfix)
+                if (hasHarmonyPostfix)
                 {
                     // Postfix patches taking __result usually want to modify it, which won't work without 'ref',
                     // so a missing 'ref' modifier potentially indicates a bug.

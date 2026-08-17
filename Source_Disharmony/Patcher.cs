@@ -16,16 +16,6 @@ public enum PatchType
     ///     Runs after an outer member.
     /// </summary>
     Postfix,
-
-    /// <summary>
-    ///     Runs before a matching operation within an outer member.
-    /// </summary>
-    InnerPrefix,
-
-    /// <summary>
-    ///     Runs after a matching operation within an outer member.
-    /// </summary>
-    InnerPostfix,
 }
 
 /// <summary>
@@ -36,7 +26,7 @@ public enum PatchType
 ///         A patch definition consists of a static patch method with one patch-kind attribute and at least one target.
 ///         <see cref="PrefixAttribute" /> and <see cref="PostfixAttribute" /> run around the selected target member,
 ///         called
-///         the outer member. <see cref="InnerPrefixAttribute" />, <see cref="InnerPostfixAttribute" />, and
+///         the outer member. <see cref="InnerAttribute" />, <see cref="InnerPostfixAttribute" />, and
 ///         <see cref="InnerPostfixConstantAttribute" /> instead run around matching calls, member accesses, or constants
 ///         within the outer member; the matched operation is called the inner member.
 ///     </para>

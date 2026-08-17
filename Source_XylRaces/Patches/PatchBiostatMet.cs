@@ -4,7 +4,7 @@
 public static class PatchBiostatMet
 {
     [Feature(typeof(GeneComp_BonusGenes))]
-    [InnerPostfix(typeof(GeneDef), nameof(GeneDef.biostatMet))]
+    [Postfix] [Inner(typeof(GeneDef), nameof(GeneDef.biostatMet))]
     [Target(typeof(Dialog_CreateXenotype), "DrawGene")]
     [Target(typeof(GeneCreationDialogBase), "OnGenesChanged")]
     [Target(typeof(GeneDef), "GetDescriptionFull")]

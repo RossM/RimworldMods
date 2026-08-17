@@ -4,7 +4,7 @@
 public static class PatchLovin
 {
     [Feature(typeof(GeneCompProperties_Youthful))]
-    [InnerPostfix(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AgeBiologicalYearsFloat))]
+    [Postfix] [Inner(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AgeBiologicalYearsFloat))]
     [Target(typeof(LovePartnerRelationUtility), "LovinMtbSinglePawnFactor")]
     [Target(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.LovinAgeFactor))]
     [Target(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.CompatibilityWith))]

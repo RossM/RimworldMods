@@ -170,20 +170,9 @@ public class CategoryAttribute(string category) : Attribute
     public readonly string category = category;
 }
 
-public abstract class PatchTypeAttribute(
-    PatchType patchType,
-    Type? type = null,
-    string? memberName = null,
-    MemberType memberType = MemberType.Any,
-    Type[]? parameterTypes = null,
-    Type[]? genericTypes = null) : Attribute
+public abstract class PatchTypeAttribute(PatchType patchType) : Attribute
 {
     public readonly PatchType patchType = patchType;
-    public readonly Type? type = type;
-    public readonly string? memberName = memberName;
-    public readonly MemberType memberType = memberType;
-    public readonly Type[]? parameterTypes = parameterTypes;
-    public readonly Type[]? genericTypes = genericTypes;
 }
 
 /// <summary>
@@ -212,6 +201,8 @@ public class PrefixAttribute() : PatchTypeAttribute(PatchType.Prefix);
 [AttributeUsage(AttributeTargets.Method)]
 public class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
 
+public abstract class InnerAttributeBase : Attribute;
+
 /// <summary>
 ///     Marks a patch method to run before each matching inner member access or call within the selected outer methods.
 ///     A prefix that returns <see langword="false" /> skips the matched access or call.
@@ -238,14 +229,19 @@ public class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
-public class InnerPrefixAttribute(
+public class InnerAttribute(
     Type type,
     string? memberName = null,
     MemberType memberType = MemberType.Any,
     Type[]? parameterTypes = null,
-    Type[]? genericTypes = null)
-    : PatchTypeAttribute(PatchType.InnerPrefix, type, memberName, memberType, parameterTypes, genericTypes)
+    Type[]? genericTypes = null) : InnerAttributeBase
 {
+    public readonly Type type = type;
+    public readonly string? memberName = memberName;
+    public readonly MemberType memberType = memberType;
+    public readonly Type[]? parameterTypes = parameterTypes;
+    public readonly Type[]? genericTypes = genericTypes;
+
     /// <summary>
     ///     Runs the patch before each access or call to the named inner member.
     /// </summary>
@@ -254,7 +250,7 @@ public class InnerPrefixAttribute(
     ///     <paramref name="memberName" />.
     /// </param>
     /// <param name="memberName">The name of the inner member to match.</param>
-    public InnerPrefixAttribute(Type type, string? memberName) : this(type, memberName, MemberType.Any) { }
+    public InnerAttribute(Type type, string? memberName) : this(type, memberName, MemberType.Any) { }
 
     /// <summary>
     ///     Runs the patch before each call to the specified overload of the named inner member.
@@ -265,65 +261,7 @@ public class InnerPrefixAttribute(
     /// </param>
     /// <param name="memberName">The name of the inner member to match.</param>
     /// <param name="parameterTypes">The parameter types that identify the overload.</param>
-    public InnerPrefixAttribute(Type type, string? memberName, params Type[] parameterTypes) : this(type, memberName, MemberType.Any,
-        parameterTypes) { }
-}
-
-/// <summary>
-///     Marks a patch method to run after each matching inner member access or call within the selected outer methods.
-/// </summary>
-/// <param name="type">
-///     The type that declares the inner member, or <see langword="null" /> to resolve it from
-///     <paramref name="memberName" />.
-/// </param>
-/// <param name="memberName">
-///     The name of the inner member to match, or <see langword="null" /> when matching a constructor.
-/// </param>
-/// <param name="memberType">The kind of member access or call to match.</param>
-/// <param name="parameterTypes">
-///     The parameter types used to select an overload, or <see langword="null" /> to match without a parameter signature.
-/// </param>
-/// <param name="genericTypes">
-///     The generic type arguments used to select a constructed generic method, or <see langword="null" /> when not
-///     selecting one.
-/// </param>
-/// <remarks>
-///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. Bind the inner result
-///     with <see cref="ReturnValueAttribute" /> or the conventional parameter name <c>__result</c>; pass it by reference
-///     to replace it. See <see cref="Patcher" /> for member-name syntax, overload selection, and inner-versus-outer
-///     parameter binding.
-/// </remarks>
-[PublicAPI]
-[MeansImplicitUse]
-[AttributeUsage(AttributeTargets.Method)]
-public class InnerPostfixAttribute(
-    Type type,
-    string? memberName = null,
-    MemberType memberType = MemberType.Any,
-    Type[]? parameterTypes = null,
-    Type[]? genericTypes = null)
-    : PatchTypeAttribute(PatchType.InnerPostfix, type, memberName, memberType, parameterTypes, genericTypes)
-{
-    /// <summary>
-    ///     Runs the patch after each access or call to the named inner member.
-    /// </summary>
-    /// <param name="type">
-    ///     The type that declares the inner member, or <see langword="null" /> to resolve it from
-    ///     <paramref name="memberName" />.
-    /// </param>
-    /// <param name="memberName">The name of the inner member to match.</param>
-    public InnerPostfixAttribute(Type type, string? memberName) : this(type, memberName, MemberType.Any) { }
-
-    /// <summary>
-    ///     Runs the patch after each call to the specified overload of the named inner member.
-    /// </summary>
-    /// <param name="type">
-    ///     The type that declares the inner member, or <see langword="null" /> to resolve it from
-    ///     <paramref name="memberName" />.
-    /// </param>
-    /// <param name="memberName">The name of the inner member to match.</param>
-    /// <param name="parameterTypes">The parameter types that identify the overload.</param>
-    public InnerPostfixAttribute(Type type, string? memberName, params Type[] parameterTypes) : this(type, memberName, MemberType.Any,
+    public InnerAttribute(Type type, string? memberName, params Type[] parameterTypes) : this(type, memberName, MemberType.Any,
         parameterTypes) { }
 }
 
@@ -338,7 +276,7 @@ public class InnerPostfixAttribute(
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
-public class InnerPostfixConstantAttribute : PatchTypeAttribute
+public class InnerConstantAttribute : InnerAttributeBase
 {
     public readonly object value;
 
@@ -352,7 +290,7 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
     ///     <see langword="bool" /> values introduced by the compiler.
     /// </remarks>
     /// <param name="value">The constant value to match.</param>
-    public InnerPostfixConstantAttribute(int value) : base(PatchType.InnerPostfix)
+    public InnerConstantAttribute(int value)
     {
         this.value = value;
     }
@@ -361,7 +299,7 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
     ///     Runs the patch after each matching 64-bit integer constant.
     /// </summary>
     /// <param name="value">The constant value to match.</param>
-    public InnerPostfixConstantAttribute(long value) : base(PatchType.InnerPostfix)
+    public InnerConstantAttribute(long value)
     {
         this.value = value;
     }
@@ -370,7 +308,7 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
     ///     Runs the patch after each matching single-precision floating-point constant.
     /// </summary>
     /// <param name="value">The constant value to match.</param>
-    public InnerPostfixConstantAttribute(float value) : base(PatchType.InnerPostfix)
+    public InnerConstantAttribute(float value)
     {
         this.value = value;
     }
@@ -379,7 +317,7 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
     ///     Runs the patch after each matching double-precision floating-point constant.
     /// </summary>
     /// <param name="value">The constant value to match.</param>
-    public InnerPostfixConstantAttribute(double value) : base(PatchType.InnerPostfix)
+    public InnerConstantAttribute(double value)
     {
         this.value = value;
     }
@@ -388,7 +326,7 @@ public class InnerPostfixConstantAttribute : PatchTypeAttribute
     ///     Runs the patch after each matching string constant.
     /// </summary>
     /// <param name="value">The constant value to match.</param>
-    public InnerPostfixConstantAttribute(string value) : base(PatchType.InnerPostfix)
+    public InnerConstantAttribute(string value)
     {
         this.value = value;
     }
