@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 
 namespace Disharmony.Tests.Unit.Optimizer;
@@ -210,8 +209,8 @@ internal sealed class TypeLatticeMergeTests
         // cannot track that distinction, and every Nullable<T> below represents the unboxed value type.
         new("NullableInt_Object", typeof(int?), typeof(object), Any),
         new("Object_NullableInt", typeof(object), typeof(int?), Any),
-        new("NullableInt_ValueType", typeof(int?), typeof(System.ValueType), Any),
-        new("ValueType_NullableInt", typeof(System.ValueType), typeof(int?), Any),
+        new("NullableInt_ValueType", typeof(int?), typeof(ValueType), Any),
+        new("ValueType_NullableInt", typeof(ValueType), typeof(int?), Any),
         new("NullableInt_Int", typeof(int?), typeof(int), Any),
         new("Int_NullableInt", typeof(int), typeof(int?), Any),
         new("NullableInt_NullableLong", typeof(int?), typeof(long?), Any),
@@ -223,8 +222,8 @@ internal sealed class TypeLatticeMergeTests
         new("IComparable_DateTime", typeof(IComparable), typeof(DateTime), Any),
         new("Int_Object", typeof(int), typeof(object), Any),
         new("Object_Int", typeof(object), typeof(int), Any),
-        new("Int_ValueType", typeof(int), typeof(System.ValueType), Any),
-        new("ValueType_Int", typeof(System.ValueType), typeof(int), Any),
+        new("Int_ValueType", typeof(int), typeof(ValueType), Any),
+        new("ValueType_Int", typeof(ValueType), typeof(int), Any),
 
         // Bare enum values have already become I4 stack slots before Merge is called. Arrays retain their signature
         // type while using underlying/reduced element types; managed pointers expose the normalized element type.
