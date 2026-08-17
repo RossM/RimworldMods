@@ -80,16 +80,21 @@ internal sealed record StackSlot(int Depth, Type Type, int Id) : Variable(Type)
 /// </summary>
 /// <param name="Index">The argument or local index.</param>
 /// <param name="Type">The type of value stored by the variable.</param>
-internal abstract record MemoryVariable(int Index, Type Type) : Variable(Type);
+internal abstract record MemoryVariable(Type Type) : Variable(Type)
+{
+    public abstract int Index { get; }
+}
 
 /// <summary>
 ///     Represents an IL argument.
 /// </summary>
 /// <param name="Index">The argument index.</param>
 /// <param name="Type">The argument type.</param>
-internal sealed record Argument(int Index, Type Type) : MemoryVariable(Index, Type)
+internal sealed record Argument(int Index, Type Type) : MemoryVariable(Type)
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override int Index { get; } = Index;
 }
 
 /// <summary>
@@ -118,12 +123,14 @@ internal sealed record Local : MemoryVariable
     /// </remarks>
     /// <param name="Type">The local type.</param>
     /// <param name="Tracker"></param>
-    private Local(Type Type, LocalTracker Tracker) : base(Tracker.Index, Type)
+    private Local(Type Type, LocalTracker Tracker) : base(Type)
     {
         this.Tracker = Tracker;
     }
 
-    public LocalTracker Tracker { get; init; }
+    public LocalTracker Tracker { get; }
+
+    public override int Index => Tracker.Index;
 }
 
 /// <summary>
