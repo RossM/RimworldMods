@@ -9,10 +9,12 @@ public struct OpcodeUtilitiesStruct
 
 public sealed class OpcodeUtilitiesClass
 {
+    public byte ByteField;
     public int IntField;
     public OpcodeUtilitiesStruct StructField;
     public OpcodeUtilitiesClass ClassField = null!;
 
+    public static byte StaticByteField;
     public static int StaticIntField;
     public static OpcodeUtilitiesStruct StaticStructField;
     public static OpcodeUtilitiesClass StaticClassField = null!;
@@ -23,11 +25,15 @@ public sealed class OpcodeUtilitiesClass
 
     public int ReturnInstanceInt() => IntField;
 
+    public byte ReturnInstanceByte() => ByteField;
+
     public void ReturnInstanceVoid() { }
 
     public static void ReturnVoid() { }
 
     public static int ReturnInt() => 0;
+
+    public static byte ReturnByte() => 0;
 
     public static long ReturnLong() => 0;
 

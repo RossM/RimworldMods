@@ -20,17 +20,23 @@ internal sealed class GetOutputTypeTests
     private static readonly Type StructType = typeof(OpcodeUtilitiesStruct);
 
     private static readonly MethodInfo ReturnVoid = ClassType.GetMethod(nameof(OpcodeUtilitiesClass.ReturnVoid))!;
+    private static readonly MethodInfo ReturnByte = ClassType.GetMethod(nameof(OpcodeUtilitiesClass.ReturnByte))!;
     private static readonly MethodInfo ReturnInt = ClassType.GetMethod(nameof(OpcodeUtilitiesClass.ReturnInt))!;
     private static readonly MethodInfo ReturnInstanceVoid =
         ClassType.GetMethod(nameof(OpcodeUtilitiesClass.ReturnInstanceVoid))!;
     private static readonly MethodInfo ReturnInstanceInt =
         ClassType.GetMethod(nameof(OpcodeUtilitiesClass.ReturnInstanceInt))!;
+    private static readonly MethodInfo ReturnInstanceByte =
+        ClassType.GetMethod(nameof(OpcodeUtilitiesClass.ReturnInstanceByte))!;
     private static readonly ConstructorInfo ClassConstructor = ClassType.GetConstructor(Type.EmptyTypes)!;
     private static readonly ConstructorInfo StructConstructor = StructType.GetConstructor([typeof(int)])!;
 
+    private static readonly FieldInfo ByteField = ClassType.GetField(nameof(OpcodeUtilitiesClass.ByteField))!;
     private static readonly FieldInfo IntField = ClassType.GetField(nameof(OpcodeUtilitiesClass.IntField))!;
     private static readonly FieldInfo StructField = ClassType.GetField(nameof(OpcodeUtilitiesClass.StructField))!;
     private static readonly FieldInfo ClassField = ClassType.GetField(nameof(OpcodeUtilitiesClass.ClassField))!;
+    private static readonly FieldInfo StaticByteField =
+        ClassType.GetField(nameof(OpcodeUtilitiesClass.StaticByteField))!;
     private static readonly FieldInfo StaticIntField =
         ClassType.GetField(nameof(OpcodeUtilitiesClass.StaticIntField))!;
     private static readonly FieldInfo StaticStructField =
@@ -185,7 +191,18 @@ internal sealed class GetOutputTypeTests
         new("Sizeof_Struct", OpCodes.Sizeof, [], typeof(IntPtr), Operand: StructType),
 
         // Variable loads. The declared variable type is the synthetic first input described above.
-        new("Ldarg_0_Int", OpCodes.Ldarg, [typeof(int)], typeof(int), Operand: 0),
+        new("Ldarg_0_Byte", OpCodes.Ldarg, [typeof(byte)], typeof(int), Operand: 0),
+        new("Ldarg_0_SByte", OpCodes.Ldarg, [typeof(sbyte)], typeof(int), Operand: 0),
+        new("Ldarg_0_Bool", OpCodes.Ldarg, [typeof(bool)], typeof(int), Operand: 0),
+        new("Ldarg_0_Int16", OpCodes.Ldarg, [typeof(short)], typeof(int), Operand: 0),
+        new("Ldarg_0_UInt16", OpCodes.Ldarg, [typeof(ushort)], typeof(int), Operand: 0),
+        new("Ldarg_0_Char", OpCodes.Ldarg, [typeof(char)], typeof(int), Operand: 0),
+        new("Ldarg_0_Int32", OpCodes.Ldarg, [typeof(int)], typeof(int), Operand: 0),
+        new("Ldarg_0_UInt32", OpCodes.Ldarg, [typeof(uint)], typeof(int), Operand: 0),
+        new("Ldarg_0_Int64", OpCodes.Ldarg, [typeof(long)], typeof(long), Operand: 0),
+        new("Ldarg_0_UInt64", OpCodes.Ldarg, [typeof(ulong)], typeof(long), Operand: 0),
+        new("Ldarg_0_Single", OpCodes.Ldarg, [typeof(float)], typeof(double), Operand: 0),
+        new("Ldarg_0_Double", OpCodes.Ldarg, [typeof(double)], typeof(double), Operand: 0),
         new("LdargS_1_Long", OpCodes.Ldarg_S, [typeof(long)], typeof(long), Operand: 1),
         new("Ldarg0_Struct", OpCodes.Ldarg_0, [StructType], StructType),
         new("Ldarg1_Class", OpCodes.Ldarg_1, [ClassType], ClassType),
@@ -193,14 +210,27 @@ internal sealed class GetOutputTypeTests
             [typeof(int).MakeByRefType()], typeof(int).MakeByRefType()),
         new("Ldarg3_ClassRef", OpCodes.Ldarg_3, [ClassType.MakeByRefType()],
             ClassType.MakeByRefType()),
+        new("Ldarga_0_Byte", OpCodes.Ldarga, [typeof(byte)], typeof(byte).MakeByRefType(), Operand: 0),
         new("Ldarga_0_Int", OpCodes.Ldarga, [typeof(int)], typeof(int).MakeByRefType(), Operand: 0),
         new("LdargaS_1_Struct", OpCodes.Ldarga_S, [StructType], StructType.MakeByRefType(), Operand: 1),
-        new("Ldloc_0_Int", OpCodes.Ldloc, [typeof(int)], typeof(int), Operand: 0),
+        new("Ldloc_0_Byte", OpCodes.Ldloc, [typeof(byte)], typeof(int), Operand: 0),
+        new("Ldloc_0_SByte", OpCodes.Ldloc, [typeof(sbyte)], typeof(int), Operand: 0),
+        new("Ldloc_0_Bool", OpCodes.Ldloc, [typeof(bool)], typeof(int), Operand: 0),
+        new("Ldloc_0_Int16", OpCodes.Ldloc, [typeof(short)], typeof(int), Operand: 0),
+        new("Ldloc_0_UInt16", OpCodes.Ldloc, [typeof(ushort)], typeof(int), Operand: 0),
+        new("Ldloc_0_Char", OpCodes.Ldloc, [typeof(char)], typeof(int), Operand: 0),
+        new("Ldloc_0_Int32", OpCodes.Ldloc, [typeof(int)], typeof(int), Operand: 0),
+        new("Ldloc_0_UInt32", OpCodes.Ldloc, [typeof(uint)], typeof(int), Operand: 0),
+        new("Ldloc_0_Int64", OpCodes.Ldloc, [typeof(long)], typeof(long), Operand: 0),
+        new("Ldloc_0_UInt64", OpCodes.Ldloc, [typeof(ulong)], typeof(long), Operand: 0),
+        new("Ldloc_0_Single", OpCodes.Ldloc, [typeof(float)], typeof(double), Operand: 0),
+        new("Ldloc_0_Double", OpCodes.Ldloc, [typeof(double)], typeof(double), Operand: 0),
         new("LdlocS_1_Long", OpCodes.Ldloc_S, [typeof(long)], typeof(long), Operand: 1),
         new("Ldloc0_IntPtr", OpCodes.Ldloc_0, [typeof(IntPtr)], typeof(IntPtr)),
         new("Ldloc1_Double", OpCodes.Ldloc_1, [typeof(double)], typeof(double)),
         new("Ldloc2_Struct", OpCodes.Ldloc_2, [StructType], StructType),
         new("Ldloc3_Class", OpCodes.Ldloc_3, [ClassType], ClassType),
+        new("Ldloca_0_Byte", OpCodes.Ldloca, [typeof(byte)], typeof(byte).MakeByRefType(), Operand: 0),
         new("Ldloca_0_Class", OpCodes.Ldloca, [ClassType], ClassType.MakeByRefType(), Operand: 0),
         new("LdlocaS_1_Struct", OpCodes.Ldloca_S, [StructType], StructType.MakeByRefType(), Operand: 1),
         new("Ldarg_0_Unknown", OpCodes.Ldarg, [TypeLattice.Unknown], TypeLattice.Unknown, Operand: 0),
@@ -242,6 +272,18 @@ internal sealed class GetOutputTypeTests
         new("LdindR8_DoubleRef", OpCodes.Ldind_R8, [typeof(double).MakeByRefType()], typeof(double)),
         new("LdindR8_Null", OpCodes.Ldind_R8, [TypeLattice.Null], typeof(double)),
         new("LdindRef_ClassRef", OpCodes.Ldind_Ref, [ClassType.MakeByRefType()], ClassType),
+        new("LdindRef_ByteRef", OpCodes.Ldind_Ref, [typeof(byte).MakeByRefType()], typeof(int)),
+        new("LdindRef_SByteRef", OpCodes.Ldind_Ref, [typeof(sbyte).MakeByRefType()], typeof(int)),
+        new("LdindRef_BoolRef", OpCodes.Ldind_Ref, [typeof(bool).MakeByRefType()], typeof(int)),
+        new("LdindRef_Int16Ref", OpCodes.Ldind_Ref, [typeof(short).MakeByRefType()], typeof(int)),
+        new("LdindRef_UInt16Ref", OpCodes.Ldind_Ref, [typeof(ushort).MakeByRefType()], typeof(int)),
+        new("LdindRef_CharRef", OpCodes.Ldind_Ref, [typeof(char).MakeByRefType()], typeof(int)),
+        new("LdindRef_Int32Ref", OpCodes.Ldind_Ref, [typeof(int).MakeByRefType()], typeof(int)),
+        new("LdindRef_UInt32Ref", OpCodes.Ldind_Ref, [typeof(uint).MakeByRefType()], typeof(int)),
+        new("LdindRef_Int64Ref", OpCodes.Ldind_Ref, [typeof(long).MakeByRefType()], typeof(long)),
+        new("LdindRef_UInt64Ref", OpCodes.Ldind_Ref, [typeof(ulong).MakeByRefType()], typeof(long)),
+        new("LdindRef_SingleRef", OpCodes.Ldind_Ref, [typeof(float).MakeByRefType()], typeof(double)),
+        new("LdindRef_DoubleRef", OpCodes.Ldind_Ref, [typeof(double).MakeByRefType()], typeof(double)),
         new("LdindRef_UnknownRef", OpCodes.Ldind_Ref,
             [TypeLattice.Unknown.MakeByRefType()], TypeLattice.Unknown),
         new("LdindRef_AnyRef", OpCodes.Ldind_Ref,
@@ -285,6 +327,8 @@ internal sealed class GetOutputTypeTests
             [TypeLattice.Any, TypeLattice.Unknown], TypeLattice.Any),
 
         // Type-operand instructions with representative numeric, struct, class, and managed-reference cases.
+        new("Ldobj_Byte_ByteRef", OpCodes.Ldobj,
+            [typeof(byte).MakeByRefType()], typeof(int), Operand: typeof(byte)),
         new("Ldobj_Int_IntRef", OpCodes.Ldobj, [typeof(int).MakeByRefType()], typeof(int), Operand: typeof(int)),
         new("Ldobj_Int_Null", OpCodes.Ldobj, [TypeLattice.Null], typeof(int), Operand: typeof(int)),
         new("Ldobj_Int_UnknownRef", OpCodes.Ldobj,
@@ -302,11 +346,15 @@ internal sealed class GetOutputTypeTests
             [TypeLattice.Unknown.MakeByRefType()], TypeLattice.Unknown, Operand: TypeLattice.Unknown),
         new("Ldobj_Any_AnyRef", OpCodes.Ldobj,
             [TypeLattice.Any.MakeByRefType()], TypeLattice.Any, Operand: TypeLattice.Any),
+        new("Ldelem_Byte_ByteArray_Int", OpCodes.Ldelem,
+            [typeof(byte[]), typeof(int)], typeof(int), Operand: typeof(byte)),
         new("Ldelem_Int_IntArray_Int", OpCodes.Ldelem, [typeof(int[]), typeof(int)], typeof(int), Operand: typeof(int)),
         new("Ldelem_Struct_StructArray_Int", OpCodes.Ldelem,
             [StructType.MakeArrayType(), typeof(int)], StructType, Operand: StructType),
         new("Ldelem_Class_ClassArray_Int", OpCodes.Ldelem,
             [ClassType.MakeArrayType(), typeof(int)], ClassType, Operand: ClassType),
+        new("Ldelema_Byte_ByteArray_Int", OpCodes.Ldelema,
+            [typeof(byte[]), typeof(int)], typeof(byte).MakeByRefType(), Operand: typeof(byte)),
         new("Ldelema_Struct_StructArray_Int", OpCodes.Ldelema,
             [StructType.MakeArrayType(), typeof(int)], StructType.MakeByRefType(), Operand: StructType),
         new("Ldelema_Unknown_Unknown_Int", OpCodes.Ldelema,
@@ -328,30 +376,41 @@ internal sealed class GetOutputTypeTests
         new("Isinst_Class_Null", OpCodes.Isinst, [TypeLattice.Null], ClassType, Operand: ClassType),
         new("Box_Int_Int", OpCodes.Box, [typeof(int)], typeof(object), Operand: typeof(int)),
         new("Box_Struct_Struct", OpCodes.Box, [StructType], typeof(object), Operand: StructType),
+        new("Unbox_Byte_Object", OpCodes.Unbox,
+            [typeof(object)], typeof(byte).MakeByRefType(), Operand: typeof(byte)),
         new("Unbox_Int_Object", OpCodes.Unbox,
             [typeof(object)], typeof(int).MakeByRefType(), Operand: typeof(int)),
         new("Unbox_Struct_Object", OpCodes.Unbox,
             [typeof(object)], StructType.MakeByRefType(), Operand: StructType),
+        new("UnboxAny_Byte_Object", OpCodes.Unbox_Any, [typeof(object)], typeof(int), Operand: typeof(byte)),
         new("UnboxAny_Int_Object", OpCodes.Unbox_Any, [typeof(object)], typeof(int), Operand: typeof(int)),
         new("UnboxAny_Struct_Object", OpCodes.Unbox_Any, [typeof(object)], StructType, Operand: StructType),
         new("UnboxAny_Class_Object", OpCodes.Unbox_Any, [typeof(object)], ClassType, Operand: ClassType),
+        new("Refanyval_Byte_TypedReference", OpCodes.Refanyval,
+            [typeof(TypedReference)], typeof(byte).MakeByRefType(), Operand: typeof(byte)),
         new("Refanyval_Struct_TypedReference", OpCodes.Refanyval,
             [typeof(TypedReference)], StructType.MakeByRefType(), Operand: StructType),
 
         // Field operands.
+        new("Ldfld_ByteField_Class", OpCodes.Ldfld, [ClassType], typeof(int), Operand: ByteField),
         new("Ldfld_IntField_Class", OpCodes.Ldfld, [ClassType], typeof(int), Operand: IntField),
         new("Ldfld_IntField_Any", OpCodes.Ldfld, [TypeLattice.Any], typeof(int), Operand: IntField),
         new("Ldfld_StructField_Class", OpCodes.Ldfld, [ClassType], StructType, Operand: StructField),
         new("Ldfld_ClassField_Class", OpCodes.Ldfld, [ClassType], ClassType, Operand: ClassField),
+        new("Ldflda_ByteField_Class", OpCodes.Ldflda,
+            [ClassType], typeof(byte).MakeByRefType(), Operand: ByteField),
         new("Ldflda_IntField_Class", OpCodes.Ldflda,
             [ClassType], typeof(int).MakeByRefType(), Operand: IntField),
         new("Ldflda_StructField_Class", OpCodes.Ldflda,
             [ClassType], StructType.MakeByRefType(), Operand: StructField),
         new("Ldflda_ClassField_Class", OpCodes.Ldflda,
             [ClassType], ClassType.MakeByRefType(), Operand: ClassField),
+        new("Ldsfld_StaticByteField", OpCodes.Ldsfld, [], typeof(int), Operand: StaticByteField),
         new("Ldsfld_StaticIntField", OpCodes.Ldsfld, [], typeof(int), Operand: StaticIntField),
         new("Ldsfld_StaticStructField", OpCodes.Ldsfld, [], StructType, Operand: StaticStructField),
         new("Ldsfld_StaticClassField", OpCodes.Ldsfld, [], ClassType, Operand: StaticClassField),
+        new("Ldsflda_StaticByteField", OpCodes.Ldsflda,
+            [], typeof(byte).MakeByRefType(), Operand: StaticByteField),
         new("Ldsflda_StaticIntField", OpCodes.Ldsflda,
             [], typeof(int).MakeByRefType(), Operand: StaticIntField),
         new("Ldsflda_StaticStructField", OpCodes.Ldsflda,
@@ -362,6 +421,7 @@ internal sealed class GetOutputTypeTests
         // Varpush opcodes use method/signature metadata. Both void and value cases are explicit because Push0 handling is
         // already tested separately in OpCodeValuesTests.
         new("Call_ReturnVoid", OpCodes.Call, [], typeof(void), Operand: ReturnVoid),
+        new("Call_ReturnByte", OpCodes.Call, [], typeof(int), Operand: ReturnByte),
         new("Call_ReturnInt", OpCodes.Call, [], typeof(int), Operand: ReturnInt),
         new("Call_ReturnLong", OpCodes.Call, [], typeof(long),
             Operand: ClassType.GetMethod(nameof(OpcodeUtilitiesClass.ReturnLong))!),
@@ -380,6 +440,8 @@ internal sealed class GetOutputTypeTests
         new("Call_ReturnClassByReference", OpCodes.Call, [], ClassType.MakeByRefType(),
             Operand: ClassType.GetMethod(nameof(OpcodeUtilitiesClass.ReturnClassByReference))!),
         new("Callvirt_ReturnInstanceVoid_Class", OpCodes.Callvirt, [ClassType], typeof(void), Operand: ReturnInstanceVoid),
+        new("Callvirt_ReturnInstanceByte_Class", OpCodes.Callvirt,
+            [ClassType], typeof(int), Operand: ReturnInstanceByte),
         new("Callvirt_ReturnInstanceInt_Class", OpCodes.Callvirt, [ClassType], typeof(int), Operand: ReturnInstanceInt),
         new("Callvirt_ReturnInstanceInt_Any", OpCodes.Callvirt,
             [TypeLattice.Any], typeof(int), Operand: ReturnInstanceInt),
