@@ -100,12 +100,30 @@ internal sealed record Argument(int Index, Type Type) : MemoryVariable(Index, Ty
 ///     In this
 ///     case, the local has to be optimized conservatively, retaining all loads and stores.
 /// </remarks>
-/// <param name="Index">The local index.</param>
-/// <param name="Type">The local type.</param>
-/// <param name="LocalBuilder">The builder for the emitted local, or <see langword="null" /> if one has not been created.</param>
-internal sealed record Local(int Index, Type Type, LocalBuilder? LocalBuilder) : MemoryVariable(Index, Type)
+internal sealed record Local : MemoryVariable
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public Local(LocalBuilder builder) : this(builder.LocalType ?? TypeLattice.Any, new LocalTrackerBuilder(builder)) { }
+    public Local(Type type, int index) : this(type, new LocalTrackerIndex(index)) { }
+    public Local(LocalVariableInfo info) : this(info.LocalType ?? TypeLattice.Any, new LocalTrackerIndex(info.LocalIndex)) { }
+
+    /// <summary>
+    ///     Represents an IL local.
+    /// </summary>
+    /// <remarks>
+    ///     The type may be <see cref="TypeLattice.AnyType" /> if the method's metadata does not specify a type for the local.
+    ///     In this
+    ///     case, the local has to be optimized conservatively, retaining all loads and stores.
+    /// </remarks>
+    /// <param name="Type">The local type.</param>
+    /// <param name="Tracker"></param>
+    private Local(Type Type, LocalTracker Tracker) : base(Tracker.Index, Type)
+    {
+        this.Tracker = Tracker;
+    }
+
+    public LocalTracker Tracker { get; init; }
 }
 
 /// <summary>

@@ -88,7 +88,7 @@ internal class CreateControlFlowGraph : Pass
         // Get locals from MethodInfo
         if (MethodBody != null)
             foreach (var local in MethodBody.LocalVariables)
-                locals.Add(local.LocalIndex, new Local(local.LocalIndex, local.LocalType, null));
+                locals.Add(local.LocalIndex, new Local(local));
 
         // Get locals from LocalBuilders
         foreach (var instruction in CodeInstructions)
@@ -96,24 +96,16 @@ internal class CreateControlFlowGraph : Pass
             if (instruction.operand is not LocalBuilder localBuilder)
                 continue;
 
-            if (locals.TryGetValue(localBuilder.LocalIndex, out var local))
-            {
-                if (local.Type != localBuilder.LocalType)
-                    throw new InvalidOperationException($"Conflicting types for local #{localBuilder.LocalIndex}");
+            if (locals.TryGetValue(localBuilder.LocalIndex, out var local) && local.Type != localBuilder.LocalType)
+                throw new InvalidOperationException($"Conflicting types for local #{localBuilder.LocalIndex}");
 
-                locals[localBuilder.LocalIndex] = local with { LocalBuilder = localBuilder };
-            }
-            else
-            {
-                locals.Add(localBuilder.LocalIndex,
-                    new Local(localBuilder.LocalIndex, localBuilder.LocalType, localBuilder));
-            }
+            locals[localBuilder.LocalIndex] = new Local(localBuilder);
         }
 
         if (locals.Count > 0)
         {
             for (int i = 0; i <= locals.Keys.Max(); i++)
-                Locals.Add(locals.TryGetValue(i, out Local local) ? local : new Local(i, TypeLattice.Any, null));
+                Locals.Add(locals.TryGetValue(i, out Local local) ? local : new Local(TypeLattice.Any, i));
         }
     }
 

@@ -124,7 +124,7 @@ public sealed class CreateControlFlowGraphTests
         var generator = CreateGenerator(method, PatchProcessor.CreateILGenerator(), ThrowTerminated());
 
         Assert.That(generator.Locals[metadataLocal.LocalIndex].Type, Is.EqualTo(typeof(int)));
-        Assert.That(generator.Locals[metadataLocal.LocalIndex].LocalBuilder, Is.Null);
+        Assert.That(generator.Locals[metadataLocal.LocalIndex].Tracker, Is.TypeOf(typeof(LocalTrackerIndex)));
     }
 
     [Test]
@@ -137,7 +137,8 @@ public sealed class CreateControlFlowGraphTests
             VoidMethod, ilGenerator, [new CodeInstruction(OpCodes.Ldloc_S, builder), new CodeInstruction(OpCodes.Pop), .. ThrowTerminated()]);
 
         Assert.That(generator.Locals[builder.LocalIndex].Type, Is.EqualTo(typeof(string)));
-        Assert.That(generator.Locals[builder.LocalIndex].LocalBuilder, Is.SameAs(builder));
+        Assert.That(generator.Locals[builder.LocalIndex].Tracker, Is.TypeOf(typeof(LocalTrackerBuilder)));
+        Assert.That(((LocalTrackerBuilder)generator.Locals[builder.LocalIndex].Tracker).Builder, Is.SameAs(builder));
     }
 
     [Test]
@@ -150,7 +151,7 @@ public sealed class CreateControlFlowGraphTests
             method, PatchProcessor.CreateILGenerator(), [new CodeInstruction(OpCodes.Ldloc_0), new CodeInstruction(OpCodes.Pop), .. ThrowTerminated()]);
 
         Assert.That(generator.Locals[0].Type, Is.EqualTo(typeof(int)));
-        Assert.That(generator.Locals[0].LocalBuilder, Is.Null);
+        Assert.That(generator.Locals[0].Tracker, Is.TypeOf(typeof(LocalTrackerIndex)));
         Assert.That(GetILOp(generator, OpCodes.Ldloc_0).Inputs, Is.Empty);
     }
 
@@ -169,7 +170,8 @@ public sealed class CreateControlFlowGraphTests
         var generator = CreateGenerator(
             method, localGenerator, [new CodeInstruction(OpCodes.Ldloc_S, builder), new CodeInstruction(OpCodes.Pop), .. ThrowTerminated()]);
 
-        Assert.That(generator.Locals[metadataLocal.LocalIndex].LocalBuilder, Is.SameAs(builder));
+        Assert.That(generator.Locals[metadataLocal.LocalIndex].Tracker, Is.TypeOf(typeof(LocalTrackerBuilder)));
+        Assert.That(((LocalTrackerBuilder)generator.Locals[metadataLocal.LocalIndex].Tracker).Builder, Is.SameAs(builder));
     }
 
     [Test]
