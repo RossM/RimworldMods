@@ -181,10 +181,12 @@ internal struct OpCodeData
     public static ushort GetCanonicalOpcode(ushort value) => Get(value).canonical;
     public static ushort GetCanonicalOpcode(OpCode opCode) => Get(opCode).canonical;
     public static ushort GetCanonicalOpcode(CodeInstruction inst) => Get(inst.opcode).canonical;
+    public static ushort GetCanonicalOpcode(ILInstruction inst) => Get(inst.OpCode).canonical;
 
     public static int GetIntOperand(CodeInstruction inst) => GetIntOperand(inst.opcode, inst.operand);
+    public static int GetIntOperand(ILInstruction inst) => GetIntOperand(inst.OpCode, inst.Operand);
 
-    private static int GetIntOperand(OpCode opcode, object operand)
+    private static int GetIntOperand(OpCode opcode, object? operand)
     {
         var opcodeData = Get(opcode);
         return opcodeData.flags.HasFlag(OpCodeFlags.FixedOperand) ? opcodeData.operand : Convert.ToInt32(operand);

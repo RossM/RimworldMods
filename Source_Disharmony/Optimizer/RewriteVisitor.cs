@@ -2,7 +2,8 @@
 
 internal class ReplaceVisitor : RewriteVisitor
 {
-    public Dictionary<Op, Op> Replacements { get; } = [];
+    public Dictionary<Op, Op> Replacements { get; init; } = [];
+
     protected override Op DefaultVisit(Op op) => Replacements.TryGetValue(op, out var replacement) ? replacement : op;
 }
 
