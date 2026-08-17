@@ -66,7 +66,9 @@ internal class CreateControlFlowGraph : Pass
 
         CreateEdges();
 
-        Optimizer.cfg = new ControlFlowGraph(RootRegion, BasicBlocks, Edges);
+        // The initial CFG has invalid exception information because we haven't yet rewritten the protected regions,
+        // so disable validation.
+        Optimizer.cfg = new ControlFlowGraph(RootRegion, BasicBlocks, Edges, validate: false);
 
         ProtectedRegionRewriteVisitor visitor = new ProtectedRegionRewriteVisitor(ExceptionGroups);
         Optimizer.cfg = (ControlFlowGraph)visitor.Visit(Optimizer.cfg);
@@ -166,10 +168,9 @@ internal class CreateControlFlowGraph : Pass
         // Exception region data
         Stack<Region> regionStack = [];
         Stack<(ProtectedRegion ProtectedRegion, List<HandlerRegion> HandlerRegions)> exceptionGroupStack = [];
-        RootRegion rootRegion = ControlFlowGraph.RootRegion;
-        regionStack.Push(rootRegion);
+        regionStack.Push(RootRegion);
 
-        AddSyntheticEntryBlock(rootRegion, instructionBlocks[0].Label, []);
+        AddSyntheticEntryBlock(RootRegion, instructionBlocks[0].Label, []);
 
         // Translate basic blocks
         Dictionary<BlockLabel, int> incomingStackSize = [];

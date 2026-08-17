@@ -28,6 +28,6 @@ internal class MergeStackSlots(Optimizer optimizer) : Pass(optimizer)
                 visitor.Replacements[op] = group.Key;
         }
 
-        optimizer.cfg = (ControlFlowGraph)visitor.Visit(Optimizer.cfg);
+        Optimizer.cfg = (ControlFlowGraph)visitor.Visit(Optimizer.cfg);
     }
 }

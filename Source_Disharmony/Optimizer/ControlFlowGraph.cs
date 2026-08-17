@@ -17,7 +17,7 @@ internal record ControlFlowGraph : Node
     private readonly Dictionary<BlockLabel, HashSet<Edge>> edgesTo = [];
     private readonly Dictionary<BlockLabel, BasicBlock> basicBlocks = [];
 
-    public ControlFlowGraph(RootRegion RootRegion, IList<BasicBlock> BasicBlocks, IList<Edge> Edges)
+    public ControlFlowGraph(RootRegion RootRegion, IList<BasicBlock> BasicBlocks, IList<Edge> Edges, bool validate = true)
     {
         this.RootRegion = RootRegion;
         this.BasicBlocks = BasicBlocks;
@@ -28,7 +28,8 @@ internal record ControlFlowGraph : Node
         foreach (var edge in Edges)
             AddEdge(edge);
 
-        Validate();
+        if (validate)
+            Validate();
     }
 
     /// <summary>
