@@ -16,7 +16,7 @@ internal class CreateControlFlowGraph : Pass
         ReturnType = Method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
     }
 
-    public readonly RootRegion RootRegion = new(new());
+    public RootRegion RootRegion { get; } = new(new());
     public Dictionary<Label, BlockLabel> BlockLabels { get; } = [];
     public Dictionary<BlockLabel, (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack)> BlockStacks { get; } = [];
     public Dictionary<int, Local> Locals { get; } = [];
@@ -25,7 +25,7 @@ internal class CreateControlFlowGraph : Pass
     public List<Type> ParameterTypes { get; }
     public List<BasicBlock> BasicBlocks { get; } = [];
     public List<Edge> Edges { get; } = [];
-    public Dictionary<ProtectedRegion, ExceptionGroup> ExceptionGroups = [];
+    public Dictionary<ProtectedRegion, ExceptionGroup> ExceptionGroups { get; } = [];
 
     public Type ReturnType { get; }
 
