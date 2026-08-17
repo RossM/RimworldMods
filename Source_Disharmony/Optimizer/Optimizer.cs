@@ -11,8 +11,8 @@ internal class Optimizer
     internal readonly Type returnType;
 
     internal ControlFlowGraph cfg = new(new RootRegion(new BlockLabel()), [], [], [], []);
-    internal Dictionary<int, Argument> Arguments => cfg.Arguments;
-    internal Dictionary<int, Local> Locals => cfg.Locals;
+    internal IList<Argument> Arguments => cfg.Arguments;
+    internal IList<Local> Locals => cfg.Locals;
 
     private readonly RootRegion rootRegion = new(new BlockLabel());
 

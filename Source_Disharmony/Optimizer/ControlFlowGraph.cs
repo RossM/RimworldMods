@@ -8,8 +8,8 @@ internal record ControlFlowGraph : Node
     public RootRegion RootRegion { get; }
     public IList<BasicBlock> BasicBlocks { get; }
     public IList<Edge> Edges { get; }
-    public Dictionary<int, Argument> Arguments { get; }
-    public Dictionary<int, Local> Locals { get; }
+    public IList<Argument> Arguments { get; }
+    public IList<Local> Locals { get; }
 
     private readonly HashSet<ExceptionGroup> exceptionGroups = [];
     private readonly Dictionary<ExceptionRegion, ExceptionGroup> exceptionGroupsByRegion = [];
@@ -19,7 +19,7 @@ internal record ControlFlowGraph : Node
     private readonly Dictionary<BlockLabel, HashSet<Edge>> edgesTo = [];
     private readonly Dictionary<BlockLabel, BasicBlock> basicBlocks = [];
 
-    public ControlFlowGraph(RootRegion RootRegion, IList<BasicBlock> BasicBlocks, IList<Edge> Edges, Dictionary<int, Argument> Arguments, Dictionary<int, Local> Locals, bool validate = true)
+    public ControlFlowGraph(RootRegion RootRegion, IList<BasicBlock> BasicBlocks, IList<Edge> Edges, IList<Argument> Arguments, IList<Local> Locals, bool validate = true)
     {
         this.RootRegion = RootRegion;
         this.BasicBlocks = BasicBlocks;

@@ -19,9 +19,9 @@ internal class CreateControlFlowGraph : Pass
     public RootRegion RootRegion { get; } = new(new());
     public Dictionary<Label, BlockLabel> BlockLabels { get; } = [];
     public Dictionary<BlockLabel, (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack)> BlockStacks { get; } = [];
-    public Dictionary<int, Local> Locals { get; } = [];
+    public List<Local> Locals { get; } = [];
     public MethodBody? MethodBody { get; }
-    public Dictionary<int, Argument> Arguments { get; } = [];
+    public List<Argument> Arguments { get; } = [];
     public List<Type> ParameterTypes { get; }
     public List<BasicBlock> BasicBlocks { get; } = [];
     public List<Edge> Edges { get; } = [];
@@ -78,15 +78,17 @@ internal class CreateControlFlowGraph : Pass
     {
         // Get arguments from MethodInfo
         for (int index = 0; index < ParameterTypes.Count; index++)
-            Arguments.Add(index, new Argument(index, ParameterTypes[index]));
+            Arguments.Add(new Argument(index, ParameterTypes[index]));
     }
 
     private void CreateLocals()
     {
+        Dictionary<int, Local> locals = [];
+
         // Get locals from MethodInfo
         if (MethodBody != null)
             foreach (var local in MethodBody.LocalVariables)
-                Locals.Add(local.LocalIndex, new Local(local.LocalIndex, local.LocalType, null));
+                locals.Add(local.LocalIndex, new Local(local.LocalIndex, local.LocalType, null));
 
         // Get locals from LocalBuilders
         foreach (var instruction in CodeInstructions)
@@ -94,18 +96,24 @@ internal class CreateControlFlowGraph : Pass
             if (instruction.operand is not LocalBuilder localBuilder)
                 continue;
 
-            if (Locals.TryGetValue(localBuilder.LocalIndex, out var local))
+            if (locals.TryGetValue(localBuilder.LocalIndex, out var local))
             {
                 if (local.Type != localBuilder.LocalType)
                     throw new InvalidOperationException($"Conflicting types for local #{localBuilder.LocalIndex}");
 
-                Locals[localBuilder.LocalIndex] = local with { LocalBuilder = localBuilder };
+                locals[localBuilder.LocalIndex] = local with { LocalBuilder = localBuilder };
             }
             else
             {
-                Locals.Add(localBuilder.LocalIndex,
+                locals.Add(localBuilder.LocalIndex,
                     new Local(localBuilder.LocalIndex, localBuilder.LocalType, localBuilder));
             }
+        }
+
+        if (locals.Count > 0)
+        {
+            for (int i = 0; i <= locals.Keys.Max(); i++)
+                Locals.Add(locals.TryGetValue(i, out Local local) ? local : new Local(i, TypeLattice.Any, null));
         }
     }
 

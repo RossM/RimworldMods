@@ -49,7 +49,7 @@ public sealed class CreateControlFlowGraphTests
     {
         var generator = CreateGenerator(TwoArgumentMethod, PatchProcessor.CreateILGenerator(), ThrowTerminated());
 
-        Assert.That(generator.Arguments.Keys, Is.EqualTo(new[] { 0, 1 }));
+        Assert.That(generator.Arguments.Count, Is.EqualTo(2));
         Assert.That(generator.Arguments[0].Type, Is.EqualTo(typeof(int)));
         Assert.That(generator.Arguments[1].Type, Is.EqualTo(typeof(int)));
         Assert.That(generator.ReturnType, Is.EqualTo(typeof(int)));
@@ -60,7 +60,7 @@ public sealed class CreateControlFlowGraphTests
     {
         var generator = CreateGenerator(InstanceMethod, PatchProcessor.CreateILGenerator(), ThrowTerminated());
 
-        Assert.That(generator.Arguments.Keys, Is.EqualTo(new[] { 0, 1 }));
+        Assert.That(generator.Arguments.Count, Is.EqualTo(2));
         Assert.That(generator.Arguments[0].Type, Is.EqualTo(typeof(ControlFlowGraphInstanceTarget)));
         Assert.That(generator.Arguments[1].Type, Is.EqualTo(typeof(int)));
     }
@@ -70,7 +70,7 @@ public sealed class CreateControlFlowGraphTests
     {
         var generator = CreateGenerator(StructInstanceMethod, PatchProcessor.CreateILGenerator(), ThrowTerminated());
 
-        Assert.That(generator.Arguments.Keys, Is.EqualTo(new[] { 0, 1 }));
+        Assert.That(generator.Arguments.Count, Is.EqualTo(2));
         Assert.That(generator.Arguments[0].Type, Is.EqualTo(typeof(ControlFlowGraphStructTarget).MakeByRefType()));
         Assert.That(generator.Arguments[1].Type, Is.EqualTo(typeof(int)));
     }
@@ -80,7 +80,7 @@ public sealed class CreateControlFlowGraphTests
     {
         var generator = CreateGenerator(Constructor, PatchProcessor.CreateILGenerator(), ThrowTerminated());
 
-        Assert.That(generator.Arguments.Keys, Is.EqualTo(new[] { 0, 1 }));
+        Assert.That(generator.Arguments.Count, Is.EqualTo(2));
         Assert.That(generator.Arguments[0].Type, Is.EqualTo(typeof(ControlFlowGraphInstanceTarget)));
         Assert.That(generator.Arguments[1].Type, Is.EqualTo(typeof(int)));
         Assert.That(generator.ReturnType, Is.EqualTo(typeof(void)));
@@ -94,7 +94,7 @@ public sealed class CreateControlFlowGraphTests
         var generator = CreateGenerator(method, PatchProcessor.CreateILGenerator(), [new CodeInstruction(OpCodes.Ret)]);
 
         Assert.That(generator.MethodBody, Is.Null);
-        Assert.That(generator.Arguments.Keys, Is.EqualTo(new[] { 0 }));
+        Assert.That(generator.Arguments.Count, Is.EqualTo(1));
         Assert.That(generator.Arguments[0].Type, Is.EqualTo(typeof(int)));
     }
 
@@ -103,8 +103,8 @@ public sealed class CreateControlFlowGraphTests
     {
         var generator = CreateGenerator(ParameterShapesMethod, PatchProcessor.CreateILGenerator(), ThrowTerminated());
 
-        Assert.That(generator.Arguments.Keys, Is.EqualTo(new[] { 0, 1, 2 }));
-        Assert.That(generator.Arguments.Values.Select(argument => argument.Type),
+        Assert.That(generator.Arguments.Count, Is.EqualTo(3));
+        Assert.That(generator.Arguments.Select(argument => argument.Type),
             Is.EqualTo(new[]
             {
                 typeof(int).MakeByRefType(),

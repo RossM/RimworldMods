@@ -52,7 +52,7 @@ public sealed class DeduceTypesTests
         {
             cfg = graph
         };
-        optimizer.Arguments[0] = new Argument(0, typeof(int));
+        optimizer.Arguments.Add(new Argument(0, typeof(int)));
 
         new DeduceTypes(optimizer).RunInternal();
 
@@ -78,7 +78,7 @@ public sealed class DeduceTypesTests
         {
             cfg = graph
         };
-        optimizer.Locals[0] = new Local(0, typeof(byte), null);
+        optimizer.Locals.Add(new Local(0, typeof(byte), null));
 
         new DeduceTypes(optimizer).RunInternal();
 
