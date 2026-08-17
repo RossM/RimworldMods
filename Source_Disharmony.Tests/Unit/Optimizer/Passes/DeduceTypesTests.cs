@@ -163,4 +163,54 @@ public sealed class DeduceTypesTests
             Assert.That(((Return)rewrittenTarget.Branch).Value.Type, Is.EqualTo(typeof(int)));
         });
     }
+
+    [Test]
+    public void Loop_BackEdgeTypesReachFixedPoint()
+    {
+        RootRegion root = new(new BlockLabel());
+        BlockLabel loopLabel = new();
+        BlockLabel exitLabel = new();
+        StackSlot initialValue = new(0, TypeLattice.Unknown, 0);
+        StackSlot loopValue = new(0, TypeLattice.Unknown, 1);
+        StackSlot nextValue = new(0, TypeLattice.Unknown, 2);
+        StackSlot exitValue = new(0, TypeLattice.Unknown, 3);
+        StackSlot condition = new(0, typeof(int), 4);
+
+        ILOp constant = new(new ILInstruction(OpCodes.Ldc_I4_1, null!, []), [], TypeLattice.Unknown);
+        BasicBlock entry = new(root.EntryLabel, [new AssignmentOp(initialValue, constant)], root,
+            new UnconditionalBranch(loopLabel));
+
+        ILOp negate = new(new ILInstruction(OpCodes.Neg, null!, []), [loopValue], TypeLattice.Unknown);
+        BasicBlock loop = new(loopLabel, [new AssignmentOp(nextValue, negate)], root,
+            new ConditionalBranch(OpCodes.Brtrue, [condition], [exitLabel, loopLabel]));
+        BasicBlock exit = new(exitLabel, [], root, new Return(Ret, exitValue));
+
+        ControlFlowGraph graph = new(root, [entry, loop, exit],
+        [
+            new Edge(entry.Label, loop.Label, [new AssignmentOp(loopValue, initialValue)]),
+            new Edge(loop.Label, exit.Label, [new AssignmentOp(exitValue, nextValue)]),
+            new Edge(loop.Label, loop.Label, [new AssignmentOp(loopValue, nextValue)]),
+        ]);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(
+            ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new DeduceTypes(optimizer).RunInternal();
+
+        ControlFlowGraph rewritten = optimizer.cfg;
+        BasicBlock rewrittenLoop = rewritten.GetBlock(loop.Label);
+        AssignmentOp rewrittenLoopAssignment = rewrittenLoop.Ops.OfType<AssignmentOp>().Single();
+        Edge rewrittenBackEdge = rewritten.GetEdge(loop.Label, loop.Label);
+        Assert.Multiple(() =>
+        {
+            Assert.That(((ILOp)rewrittenLoopAssignment.Input).Inputs.Single().Type, Is.EqualTo(typeof(int)));
+            Assert.That(rewrittenLoopAssignment.Input.Type, Is.EqualTo(typeof(int)));
+            Assert.That(rewrittenLoopAssignment.Output.Type, Is.EqualTo(typeof(int)));
+            Assert.That(rewrittenBackEdge.EdgeAssignments.Single().Input.Type, Is.EqualTo(typeof(int)));
+            Assert.That(rewrittenBackEdge.EdgeAssignments.Single().Output.Type, Is.EqualTo(typeof(int)));
+            Assert.That(((Return)rewritten.GetBlock(exit.Label).Branch).Value.Type, Is.EqualTo(typeof(int)));
+        });
+    }
 }
