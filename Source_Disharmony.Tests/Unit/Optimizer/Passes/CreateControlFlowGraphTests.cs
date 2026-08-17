@@ -796,7 +796,7 @@ public sealed class CreateControlFlowGraphTests
     }
 
     [Test]
-    public void ControlFlow_ConditionalBranch_BackwardWithCarriedStackEstablishedByForwardEdgeCreatesAssignment()
+    public void ControlFlow_ConditionalBranch_BackwardWithCarriedStackEstablishedByForwardEdgeReusesIncomingSlot()
     {
         // As above, the forward edge establishes the non-empty stack shape before the backward conditional edge uses it.
         ILGenerator ilGenerator = PatchProcessor.CreateILGenerator();
@@ -812,15 +812,16 @@ public sealed class CreateControlFlowGraphTests
             ]);
 
         BasicBlock loopBlock = InstructionBlocks(generator).ElementAt(1);
+        Edge forwardEdge = generator.ControlFlowGraph.IncomingEdges(loopBlock)
+            .Single(edge => edge.Source != loopBlock.Label);
         Edge backEdge = generator.ControlFlowGraph.OutgoingEdges(loopBlock)
             .Single(edge => edge.Destination == loopBlock.Label);
         Assert.That(generator.BlockStacks[loopBlock.Label].IncomingStack, Has.Count.EqualTo(1));
         Assert.That(generator.BlockStacks[loopBlock.Label].OutgoingStack, Has.Count.EqualTo(1));
-        Assert.That(backEdge.EdgeAssignments, Has.Count.EqualTo(1));
-        Assert.That(backEdge.EdgeAssignments[0].Output,
-            Is.EqualTo(generator.BlockStacks[loopBlock.Label].IncomingStack[0]));
-        Assert.That(backEdge.EdgeAssignments[0].Input,
-            Is.EqualTo(generator.BlockStacks[loopBlock.Label].OutgoingStack[0]));
+        Assert.That(forwardEdge.EdgeAssignments, Has.Count.EqualTo(1));
+        Assert.That(generator.BlockStacks[loopBlock.Label].OutgoingStack[0],
+            Is.SameAs(generator.BlockStacks[loopBlock.Label].IncomingStack[0]));
+        Assert.That(backEdge.EdgeAssignments, Is.Empty);
     }
 
     [Test]
@@ -1301,9 +1302,9 @@ public sealed class CreateControlFlowGraphTests
         ProtectedRegion protectedRegion = generator.ControlFlowGraph.BasicBlocks.Select(block => block.Region)
             .OfType<ProtectedRegion>().First(region => ReferenceEquals(region.Group, group));
         CatchRegion catchRegion = group.HandlerRegions.Cast<CatchRegion>().Single();
-        Assert.That(generator.ControlFlowGraph.BasicBlocks.Count(block => ReferenceEquals(block.Region, protectedRegion)),
+        Assert.That(generator.ControlFlowGraph.BasicBlocks.Count(block => block.Region == protectedRegion),
             Is.EqualTo(3));
-        Assert.That(generator.ControlFlowGraph.BasicBlocks.Count(block => ReferenceEquals(block.Region, catchRegion)),
+        Assert.That(generator.ControlFlowGraph.BasicBlocks.Count(block => block.Region == catchRegion),
             Is.EqualTo(4));
         BasicBlock catchEntry = generator.ControlFlowGraph.GetBlock(catchRegion.EntryLabel);
         Assert.That(generator.ControlFlowGraph.IncomingEdges(catchEntry), Is.Empty);
