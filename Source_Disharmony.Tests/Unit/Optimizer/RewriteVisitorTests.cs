@@ -156,13 +156,12 @@ public sealed class RewriteVisitorTests
     public void ExceptionGroup_RewritesCatchIncomingException()
     {
         RootRegion root = new(new BlockLabel());
-        ProtectedRegion protectedRegion = new(new BlockLabel(), root);
         StackSlot original = new(0, typeof(Exception), 0);
         StackSlot replacement = new(0, typeof(Exception), 1);
         CatchRegion catchRegion = new(new BlockLabel(), root, original);
         FinallyRegion finallyRegion = new(new BlockLabel(), root);
         FaultRegion faultRegion = new(new BlockLabel(), root);
-        ExceptionGroup group = new(protectedRegion, [catchRegion, finallyRegion, faultRegion]);
+        ExceptionGroup group = new([catchRegion, finallyRegion, faultRegion]);
         ReplaceVisitor visitor = new();
         visitor.Replacements[original] = replacement;
 
@@ -171,7 +170,6 @@ public sealed class RewriteVisitorTests
         Assert.Multiple(() =>
         {
             Assert.That(rewritten, Is.Not.SameAs(group));
-            Assert.That(rewritten.ProtectedRegion, Is.SameAs(protectedRegion));
             Assert.That(((CatchRegion)rewritten.HandlerRegions[0]).IncomingException, Is.SameAs(replacement));
             Assert.That(rewritten.HandlerRegions[1], Is.SameAs(finallyRegion));
             Assert.That(rewritten.HandlerRegions[2], Is.SameAs(faultRegion));
@@ -183,7 +181,7 @@ public sealed class RewriteVisitorTests
     {
         RootRegion originalParent = new(new BlockLabel());
         RootRegion replacementParent = new(new BlockLabel());
-        ProtectedRegion protectedRegion = new(new BlockLabel(), originalParent);
+        ProtectedRegion protectedRegion = new(new BlockLabel(), originalParent, new ExceptionGroup([]));
         CatchRegion catchRegion = new(new BlockLabel(), originalParent,
             new StackSlot(0, typeof(Exception), 0));
         FinallyRegion finallyRegion = new(new BlockLabel(), originalParent);
@@ -234,33 +232,30 @@ public sealed class RewriteVisitorTests
     [Test]
     public void ControlFlowGraph_ReplacesChangedBlocksEdgesAndExceptionGroups()
     {
-        ControlFlowGraph graph = new();
+        RootRegion root = new(new BlockLabel());
         BlockLabel destination = new();
         StackSlot original = new(0, typeof(Exception), 0);
         StackSlot replacement = new(0, typeof(Exception), 1);
-        ProtectedRegion protectedRegion = new(graph.RootRegion.EntryLabel, graph.RootRegion);
-        CatchRegion catchRegion = new(new BlockLabel(), graph.RootRegion, original);
-        ExceptionGroup group = new(protectedRegion, [catchRegion]);
-        BasicBlock source = new(graph.RootRegion.EntryLabel, [], protectedRegion,
+        CatchRegion catchRegion = new(new BlockLabel(), root, original);
+        ExceptionGroup group = new([catchRegion]);
+        ProtectedRegion protectedRegion = new(root.EntryLabel, root, group);
+        BasicBlock source = new(root.EntryLabel, [], protectedRegion,
             new UnconditionalBranch(destination));
-        BasicBlock target = new(destination, [], graph.RootRegion, new Return(Ret, original));
+        BasicBlock target = new(destination, [], root, new Return(Ret, original));
         Edge edge = new(source.Label, target.Label, [new AssignmentOp(replacement, original)]);
-        graph.AddExceptionGroup(group);
-        graph.AddBlock(source);
-        graph.AddBlock(target);
-        graph.AddEdge(edge);
+        ControlFlowGraph graph = new(root, [source, target], [edge]);
         ReplaceVisitor visitor = new();
         visitor.Replacements[original] = replacement;
 
-        visitor.Visit(graph);
+        var rewritten = (ControlFlowGraph)visitor.Visit(graph);
 
         Assert.Multiple(() =>
         {
-            Assert.That(graph.GetBlock(source.Label), Is.SameAs(source));
-            Assert.That(graph.GetBlock(target.Label), Is.Not.SameAs(target));
-            Assert.That(((Return)graph.GetBlock(target.Label).Branch).Value, Is.SameAs(replacement));
-            Assert.That(graph.GetEdge(source.Label, target.Label).EdgeAssignments, Is.Empty);
-            Assert.That(((CatchRegion)graph.ExceptionGroups.Single().HandlerRegions.Single()).IncomingException,
+            Assert.That(rewritten.GetBlock(source.Label), Is.Not.SameAs(source));
+            Assert.That(rewritten.GetBlock(target.Label), Is.Not.SameAs(target));
+            Assert.That(((Return)rewritten.GetBlock(target.Label).Branch).Value, Is.SameAs(replacement));
+            Assert.That(rewritten.GetEdge(source.Label, target.Label).EdgeAssignments, Is.Empty);
+            Assert.That(((CatchRegion)rewritten.ExceptionGroups.Single().HandlerRegions.Single()).IncomingException,
                 Is.SameAs(replacement));
         });
     }

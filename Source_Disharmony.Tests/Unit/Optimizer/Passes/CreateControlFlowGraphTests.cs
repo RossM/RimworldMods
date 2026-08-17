@@ -1228,6 +1228,8 @@ public sealed class CreateControlFlowGraphTests
             ]);
 
         ExceptionGroup group = generator.ControlFlowGraph.ExceptionGroups.Single();
+        ProtectedRegion protectedRegion = generator.ControlFlowGraph.BasicBlocks.Select(block => block.Region)
+            .OfType<ProtectedRegion>().First(region => ReferenceEquals(region.Group, group));
         Assert.That(group.HandlerRegions, Has.Count.EqualTo(2));
         var catches = group.HandlerRegions.Cast<CatchRegion>().ToArray();
         Assert.That(catches.Select(region => region.ExceptionType),
@@ -1235,7 +1237,7 @@ public sealed class CreateControlFlowGraphTests
         // StackSlot is a record, but its Id is semantic identity: equal depth and type must not merge distinct values.
         Assert.That(catches[0].IncomingException, Is.Not.EqualTo(catches[1].IncomingException));
         Assert.That(catches.Select(region => region.IncomingException.Id), Is.Unique);
-        Assert.That(catches, Has.All.Matches<CatchRegion>(region => ReferenceEquals(region.Parent, group.ProtectedRegion.Parent)));
+        Assert.That(catches, Has.All.Matches<CatchRegion>(region => ReferenceEquals(region.Parent, protectedRegion.Parent)));
     }
 
     [Test]
@@ -1262,9 +1264,13 @@ public sealed class CreateControlFlowGraphTests
             .Single(group => group.HandlerRegions.Single() is CatchRegion);
         ExceptionGroup innerGroup = generator.ControlFlowGraph.ExceptionGroups
             .Single(group => group.HandlerRegions.Single() is FinallyRegion);
-        Assert.That(outerGroup.ProtectedRegion.Parent, Is.SameAs(generator.ControlFlowGraph.RootRegion));
-        Assert.That(innerGroup.ProtectedRegion.Parent, Is.SameAs(outerGroup.ProtectedRegion));
-        Assert.That(innerGroup.HandlerRegions.Single().Parent, Is.SameAs(outerGroup.ProtectedRegion));
+        ProtectedRegion outerProtectedRegion = generator.ControlFlowGraph.BasicBlocks.Select(block => block.Region)
+            .OfType<ProtectedRegion>().First(region => ReferenceEquals(region.Group, outerGroup));
+        ProtectedRegion innerProtectedRegion = generator.ControlFlowGraph.BasicBlocks.Select(block => block.Region)
+            .OfType<ProtectedRegion>().First(region => ReferenceEquals(region.Group, innerGroup));
+        Assert.That(outerProtectedRegion.Parent, Is.SameAs(generator.ControlFlowGraph.RootRegion));
+        Assert.That(innerProtectedRegion.Parent, Is.SameAs(outerProtectedRegion));
+        Assert.That(innerGroup.HandlerRegions.Single().Parent, Is.SameAs(outerProtectedRegion));
         Assert.That(outerGroup.HandlerRegions.Single().Parent, Is.SameAs(generator.ControlFlowGraph.RootRegion));
     }
 
@@ -1292,8 +1298,10 @@ public sealed class CreateControlFlowGraphTests
             ]);
 
         ExceptionGroup group = generator.ControlFlowGraph.ExceptionGroups.Single();
+        ProtectedRegion protectedRegion = generator.ControlFlowGraph.BasicBlocks.Select(block => block.Region)
+            .OfType<ProtectedRegion>().First(region => ReferenceEquals(region.Group, group));
         CatchRegion catchRegion = group.HandlerRegions.Cast<CatchRegion>().Single();
-        Assert.That(generator.ControlFlowGraph.BasicBlocks.Count(block => ReferenceEquals(block.Region, group.ProtectedRegion)),
+        Assert.That(generator.ControlFlowGraph.BasicBlocks.Count(block => ReferenceEquals(block.Region, protectedRegion)),
             Is.EqualTo(3));
         Assert.That(generator.ControlFlowGraph.BasicBlocks.Count(block => ReferenceEquals(block.Region, catchRegion)),
             Is.EqualTo(4));
@@ -1393,7 +1401,6 @@ public sealed class CreateControlFlowGraphTests
         var optimizer = new global::Disharmony.Optimizer.Optimizer(method, instructions, ilGenerator, false);
         var generator = new CreateControlFlowGraph(optimizer);
         generator.RunInternal();
-        generator.ControlFlowGraph.Validate();
         return generator;
     }
 
