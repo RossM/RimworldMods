@@ -121,7 +121,7 @@ internal static class TypeLattice
     ///         The rules for merging stack slots are given in ECMA 335 III.1.8.2.3 and III.1.8.3. When
     ///         merging types which are not verifier-compatible, the result is the underlying CIL stack
     ///         slot type: <see langword="int" /> (I4), <see langword="long" /> (I8), <see cref="IntPtr" /> (I),
-    ///         <see langword="double" />> (F), <see langword="object" /> (O), or <see cref="AnyRef" /> (&).
+    ///         <see langword="double" /> (F), <see langword="object" /> (O), or <see cref="AnyRef" /> (&amp;).
     ///     </para>
     ///     <para>
     ///         We use a type lattice extended with Any and Unknown types. The result of a merge involving
@@ -133,7 +133,7 @@ internal static class TypeLattice
     ///     <para>
     ///         Numeric stack types that are inputs to this function should already have been normalized to
     ///         <see langword="int" /> (I4), <see langword="long" /> (I8), <see cref="IntPtr" /> (I), and
-    ///         <see langword="double" />> (F).
+    ///         <see langword="double" /> (F).
     ///     </para>
     /// </remarks>
     /// <param name="left"></param>
