@@ -420,8 +420,16 @@ internal class CreateControlFlowGraph : Pass
 
 internal class ProtectedRegionRewriteVisitor(Dictionary<ProtectedRegion, ExceptionGroup> exceptionGroups) : RewriteVisitor
 {
+    private readonly Dictionary<ProtectedRegion, ProtectedRegion> replacements = [];
+
     public override Node Visit(ProtectedRegion region)
     {
-        return new ProtectedRegion(region.EntryLabel, region.Parent, exceptionGroups[region]);
+        if (replacements.TryGetValue(region, out var value))
+            return value;
+
+        var parent = (Region)region.Parent.Accept(this);
+        var exceptionGroup = (ExceptionGroup)exceptionGroups[region].Accept(this);
+
+        return replacements[region] = new ProtectedRegion(region.EntryLabel, parent, exceptionGroup);
     }
 }
