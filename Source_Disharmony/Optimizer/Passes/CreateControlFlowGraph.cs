@@ -186,7 +186,7 @@ internal class CreateControlFlowGraph : Pass
                         // We don't have all the handler regions yet, so we create the ProtectedRegion with an empty ExceptionGroup,
                         // then rewrite it later to have the correct handler regions.
                         var protectedRegion = new ProtectedRegion(label, regionStack.Peek(), new ExceptionGroup([]));
-                        
+
                         regionStack.Push(protectedRegion);
                         exceptionGroupStack.Push((protectedRegion, []));
 
@@ -275,7 +275,7 @@ internal class CreateControlFlowGraph : Pass
             foreach (var successor in block.Branch.Labels.Distinct())
             {
                 var edgeAssignments = BlockStacks[successor].IncomingStack.Zip(BlockStacks[label].OutgoingStack,
-                    (incoming, outgoing) => new AssignmentOp(incoming, outgoing)).ToList();
+                    (incoming, outgoing) => new AssignmentOp(incoming, outgoing)).Where(op => op.Input != op.Output).ToList();
                 var edge = new Edge(label, successor, edgeAssignments);
                 Edges.Add(edge);
             }
