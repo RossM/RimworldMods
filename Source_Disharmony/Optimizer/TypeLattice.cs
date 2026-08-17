@@ -44,6 +44,24 @@ internal static class TypeLattice
         return typeCode is >= TypeCode.Boolean and <= TypeCode.UInt64;
     }
 
+    /// <summary>
+    ///     Calculates the result type of merging two stack slots of the given type.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         The rules for merging stack slots are given in ECMA 335 III.1.8.2.3 and III.1.8.3.
+    ///     </para>
+    ///     <para>
+    ///         We use a type lattice extended with Any and Unknown types. The result of a merge involving
+    ///         Any is the best (most specific) available representation of the union of all possible results
+    ///         from replacing Any with a concrete type. The result of a merge involving Unknown is the best
+    ///         available representation of the intersection of all possible results from replacing Unknown
+    ///         with a concrete type.
+    ///     </para>
+    /// </remarks>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
     public static Type Merge(Type left, Type right)
     {
         if (left == Any || right == Any)
