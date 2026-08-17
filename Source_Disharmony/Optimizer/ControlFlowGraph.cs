@@ -2,35 +2,34 @@
 
 namespace Disharmony.Optimizer;
 
-internal class ControlFlowGraph
+internal record ControlFlowGraph : Node
 {
-    /// <summary>
-    ///     Returns all <see cref="BasicBlock" />s in the control flow graph.
-    /// </summary>
-    public IEnumerable<BasicBlock> BasicBlocks => basicBlocks.Values;
-
-    /// <summary>
-    ///     Returns all <see cref="Edge" />s in the control flow graph.
-    /// </summary>
-    public IEnumerable<Edge> Edges => edges.Values;
-
-    /// <summary>
-    ///     Returns all <see cref="ExceptionGroup" />s in the control flow graph.
-    /// </summary>
     public IEnumerable<ExceptionGroup> ExceptionGroups => exceptionGroups;
+    public RootRegion RootRegion { get; }
+    public IList<BasicBlock> BasicBlocks { get; }
+    public IList<Edge> Edges { get; }
 
     private readonly HashSet<ExceptionGroup> exceptionGroups = [];
     private readonly Dictionary<ExceptionRegion, ExceptionGroup> exceptionGroupsByRegion = [];
     private readonly Dictionary<ExceptionRegion, ExceptionRegion?> nextRegion = [];
-    private readonly Dictionary<BlockLabel, BasicBlock> basicBlocks = [];
     private readonly Dictionary<(BlockLabel Source, BlockLabel Destination), Edge> edges = [];
     private readonly Dictionary<BlockLabel, HashSet<Edge>> edgesFrom = [];
     private readonly Dictionary<BlockLabel, HashSet<Edge>> edgesTo = [];
+    private readonly Dictionary<BlockLabel, BasicBlock> basicBlocks = [];
 
-    /// <summary>
-    ///     Returns the root region of the control flow graph.
-    /// </summary>
-    public RootRegion RootRegion { get; } = new(new BlockLabel());
+    public ControlFlowGraph(RootRegion RootRegion, IList<BasicBlock> BasicBlocks, IList<Edge> Edges)
+    {
+        this.RootRegion = RootRegion;
+        this.BasicBlocks = BasicBlocks;
+        this.Edges = Edges;
+
+        foreach (var block in BasicBlocks)
+            AddBlock(block);
+        foreach (var edge in Edges)
+            AddEdge(edge);
+
+        Validate();
+    }
 
     /// <summary>
     ///     Returns all incoming <see cref="Edge" />s for a <see cref="BasicBlock" />.
@@ -175,15 +174,7 @@ internal class ControlFlowGraph
     /// <exception cref="KeyNotFoundException"><paramref name="region" /> does not belong to a group in the graph.</exception>
     public ExceptionRegion? GetNextRegion(ExceptionRegion region) => nextRegion[region];
 
-    /// <summary>
-    ///     Adds a <see cref="BasicBlock" /> to the control flow graph.
-    /// </summary>
-    /// <remarks>
-    ///     It is the caller's responsibility to add the <see cref="Edge" />s for the new block.
-    /// </remarks>
-    /// <param name="block">The <see cref="BasicBlock" /> to add.</param>
-    /// <exception cref="ArgumentException">A block with the same <see cref="BasicBlock.Label" /> already exists.</exception>
-    public void AddBlock(BasicBlock block)
+    private void AddBlock(BasicBlock block)
     {
         basicBlocks.Add(block.Label, block);
 
@@ -191,56 +182,15 @@ internal class ControlFlowGraph
             edgesFrom[block.Label] = [];
         if (!edgesTo.ContainsKey(block.Label))
             edgesTo[block.Label] = [];
+
+        for (ExceptionRegion? region = block.Region as ExceptionRegion; region != null; region = region.Parent as ExceptionRegion)
+        {
+            if (region is ProtectedRegion protectedRegion && !exceptionGroupsByRegion.ContainsKey(protectedRegion))
+                AddProtectedRegion(protectedRegion);
+        }
     }
 
-    /// <summary>
-    ///     Replaces an existing <see cref="BasicBlock" /> with a new one with the same <see cref="BlockLabel" />.
-    /// </summary>
-    /// <remarks>
-    ///     It is the caller's responsibility to update the <see cref="Edge" />s for the replaced block if necessary.
-    /// </remarks>
-    /// <param name="block">The replacement <see cref="BasicBlock" />.</param>
-    /// <exception cref="KeyNotFoundException">No block with the same <see cref="BasicBlock.Label" /> exists.</exception>
-    public void ReplaceBlock(BasicBlock block)
-    {
-        RemoveBlock(block.Label);
-        AddBlock(block);
-    }
-
-    /// <summary>
-    ///     Removes a <see cref="BasicBlock" /> from the control flow graph.
-    /// </summary>
-    /// <remarks>
-    ///     It is the caller's responsibility to remove the <see cref="Edge" />s for the removed block.
-    /// </remarks>
-    /// <param name="block">The <see cref="BasicBlock" /> to remove.</param>
-    /// <exception cref="KeyNotFoundException">No block with the same <see cref="BasicBlock.Label" /> exists.</exception>
-    /// <exception cref="InvalidOperationException">
-    ///     The graph contains a different block with the same
-    ///     <see cref="BasicBlock.Label" />.
-    /// </exception>
-    public void RemoveBlock(BasicBlock block)
-    {
-        if (basicBlocks[block.Label] != block)
-            throw new InvalidOperationException();
-        basicBlocks.Remove(block.Label);
-    }
-
-    /// <summary>
-    ///     Removes the <see cref="BasicBlock" /> with the given <see cref="BlockLabel" /> from the control flow graph.
-    /// </summary>
-    /// <remarks>
-    ///     It is the caller's responsibility to remove the <see cref="Edge" />s for the removed block.
-    /// </remarks>
-    /// <param name="label">The label of the block to remove.</param>
-    public void RemoveBlock(BlockLabel label) => basicBlocks.Remove(label);
-
-    /// <summary>
-    ///     Adds an <see cref="Edge" /> to the control flow graph.
-    /// </summary>
-    /// <param name="edge">The <see cref="Edge" /> to add.</param>
-    /// <exception cref="InvalidOperationException">An edge with the same source and destination already exists.</exception>
-    public void AddEdge(Edge edge)
+    private void AddEdge(Edge edge)
     {
         if (edges.ContainsKey((edge.Source, edge.Destination)))
             throw new InvalidOperationException();
@@ -250,52 +200,12 @@ internal class ControlFlowGraph
         edgesTo[edge.Destination].Add(edge);
     }
 
-    /// <summary>
-    ///     Replaces an existing <see cref="Edge" /> with a new one with the same source and destination labels.
-    /// </summary>
-    /// <param name="edge">The replacement <see cref="Edge" />.</param>
-    /// <exception cref="KeyNotFoundException">No edge with the same source and destination exists.</exception>
-    public void ReplaceEdge(Edge edge)
+    private void AddProtectedRegion(ProtectedRegion protectedRegion)
     {
-        RemoveEdge(edges[(edge.Source, edge.Destination)]);
-        AddEdge(edge);
-    }
-
-    /// <summary>
-    ///     Removes an <see cref="Edge" /> from the control flow graph.
-    /// </summary>
-    /// <param name="edge">The <see cref="Edge" /> to remove.</param>
-    /// <exception cref="KeyNotFoundException">No edge with the same source and destination exists.</exception>
-    /// <exception cref="InvalidOperationException">The graph contains a different edge with the same source and destination.</exception>
-    public void RemoveEdge(Edge edge)
-    {
-        if (edges[(edge.Source, edge.Destination)] != edge)
-            throw new InvalidOperationException();
-
-        edges.Remove((edge.Source, edge.Destination));
-        edgesFrom[edge.Source].Remove(edge);
-        edgesTo[edge.Destination].Remove(edge);
-    }
-
-    /// <summary>
-    ///     Removes the <see cref="Edge" /> with the given source and destination labels.
-    /// </summary>
-    /// <param name="source">The source block label.</param>
-    /// <param name="destination">The destination block label.</param>
-    /// <exception cref="KeyNotFoundException">No edge exists between the specified blocks.</exception>
-    public void RemoveEdge(BlockLabel source, BlockLabel destination) => RemoveEdge(GetEdge(source, destination));
-
-    /// <summary>
-    ///     Adds an <see cref="ExceptionGroup" /> to the control flow graph.
-    /// </summary>
-    /// <param name="group">The <see cref="ExceptionGroup" /> to add.</param>
-    /// <exception cref="InvalidOperationException"><paramref name="group" /> is already present in the graph.</exception>
-    public void AddExceptionGroup(ExceptionGroup group)
-    {
-        if (!exceptionGroups.Add(group))
-            throw new InvalidOperationException();
-
-        ExceptionRegion[] regions = [group.ProtectedRegion, .. group.HandlerRegions];
+        var group = protectedRegion.Group;
+        exceptionGroups.Add(group);
+        
+        ExceptionRegion[] regions = [protectedRegion, .. group.HandlerRegions];
         for (int i = 0; i < regions.Length; i++)
         {
             var region = regions[i];
@@ -303,25 +213,6 @@ internal class ControlFlowGraph
             exceptionGroupsByRegion[region] = group;
             nextRegion[region] = next;
         }
-    }
-
-    public void RemoveExceptionGroup(ExceptionGroup group)
-    {
-        if (!exceptionGroups.Remove(group))
-            throw new InvalidOperationException();
-
-        ExceptionRegion[] regions = [group.ProtectedRegion, .. group.HandlerRegions];
-        foreach (ExceptionRegion region in regions)
-        {
-            exceptionGroupsByRegion.Remove(region);
-            nextRegion.Remove(region);
-        }
-    }
-
-    public void ReplaceExceptionGroup(ExceptionGroup group)
-    {
-        RemoveExceptionGroup(GetExceptionGroup(group.ProtectedRegion));
-        AddExceptionGroup(group);
     }
 
     /// <summary>
@@ -332,7 +223,7 @@ internal class ControlFlowGraph
     ///     its source block.
     /// </exception>
     [Conditional("DEBUG")]
-    public void Validate()
+    private void Validate()
     {
         foreach (var block in BasicBlocks)
         foreach (var successor in block.Branch.Labels)
@@ -356,6 +247,28 @@ internal class ControlFlowGraph
                     throw new InvalidOperationException("Region not in group");
                 region = exceptionRegion.Parent;
             }
+        }
+    }
+
+    public virtual bool Equals(ControlFlowGraph? other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return RootRegion.Equals(other.RootRegion) && BasicBlocks.Equals(other.BasicBlocks) && Edges.Equals(other.Edges);
+    }
+
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hashCode = RootRegion.GetHashCode();
+            hashCode = (hashCode * 397) ^ BasicBlocks.GetHashCode();
+            hashCode = (hashCode * 397) ^ Edges.GetHashCode();
+            return hashCode;
         }
     }
 }

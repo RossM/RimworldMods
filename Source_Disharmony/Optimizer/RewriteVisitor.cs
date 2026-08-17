@@ -37,9 +37,10 @@ internal class RewriteVisitor : Visitor
     public override Node Visit(ProtectedRegion region)
     {
         var parent = (Region)region.Parent.Accept(this);
-        if (parent == region.Parent)
+        var group = (ExceptionGroup)region.Group.Accept(this);
+        if (parent == region.Parent && group == region.Group)
             return region;
-        return new ProtectedRegion(region.EntryLabel, parent);
+        return new ProtectedRegion(region.EntryLabel, parent, group);
     }
 
     public override Node Visit(CatchRegion region)
@@ -69,11 +70,10 @@ internal class RewriteVisitor : Visitor
 
     public override Node Visit(ExceptionGroup group)
     {
-        var protectedRegion = (ProtectedRegion)group.ProtectedRegion.Accept(this);
         var handlerRegions = group.HandlerRegions.Select(region => (HandlerRegion)region.Accept(this)).ToList();
-        if (protectedRegion == group.ProtectedRegion && handlerRegions.SequenceEqual(group.HandlerRegions))
+        if (handlerRegions.SequenceEqual(group.HandlerRegions))
             return group;
-        return new ExceptionGroup(protectedRegion, handlerRegions);
+        return new ExceptionGroup(handlerRegions);
     }
 
     public override Node Visit(UnconditionalBranch branch) => branch;
@@ -131,27 +131,15 @@ internal class RewriteVisitor : Visitor
         return new Edge(edge.Source, edge.Destination, edgeAssignments);
     }
 
-    public void Visit(ControlFlowGraph controlFlowGraph)
+    public override Node Visit(ControlFlowGraph cfg)
     {
-        foreach (var block in controlFlowGraph.BasicBlocks.ToList())
-        {
-            var newBlock = (BasicBlock)block.Accept(this);
-            if (newBlock != block)
-                controlFlowGraph.ReplaceBlock(newBlock);
-        }
+        var blocks = cfg.BasicBlocks.Select(block => (BasicBlock)block.Accept(this)).ToList();
+        var edges = cfg.Edges.Select(edge => (Edge)edge.Accept(this)).ToList();
+        var rootRegion = (RootRegion)cfg.RootRegion.Accept(this);
 
-        foreach (var group in controlFlowGraph.ExceptionGroups.ToList())
-        {
-            var newGroup = (ExceptionGroup)group.Accept(this);
-            if (newGroup != group)
-                controlFlowGraph.ReplaceExceptionGroup(newGroup);
-        }
+        if (blocks.SequenceEqual(cfg.BasicBlocks) && edges.SequenceEqual(cfg.Edges) && rootRegion == cfg.RootRegion)
+            return cfg;
 
-        foreach (var edge in controlFlowGraph.Edges.ToList())
-        {
-            var newEdge = (Edge)edge.Accept(this);
-            if (newEdge != edge)
-                controlFlowGraph.ReplaceEdge(newEdge);
-        }
+        return new ControlFlowGraph(rootRegion, blocks, edges);
     }
 }

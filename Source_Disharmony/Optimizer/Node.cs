@@ -45,7 +45,7 @@ internal abstract record ExceptionRegion(BlockLabel EntryLabel, Region Parent) :
 /// </remarks>
 /// <param name="EntryLabel">The <see cref="BlockLabel" /> of the try region's entry <see cref="BasicBlock" />.</param>
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
-internal sealed record ProtectedRegion(BlockLabel EntryLabel, Region Parent) : ExceptionRegion(EntryLabel, Parent)
+internal sealed record ProtectedRegion(BlockLabel EntryLabel, Region Parent, ExceptionGroup Group) : ExceptionRegion(EntryLabel, Parent)
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 }
@@ -122,9 +122,8 @@ internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : Handl
 ///     control from
 ///     a <see cref="CatchRegion" /> to any <see cref="BasicBlock" /> in the associated <see cref="ProtectedRegion" />.
 /// </remarks>
-/// <param name="ProtectedRegion">The protected region.</param>
-/// <param name="HandlerRegions">The handlers associated with <paramref name="ProtectedRegion" />.</param>
-internal sealed record ExceptionGroup(ProtectedRegion ProtectedRegion, IReadOnlyList<HandlerRegion> HandlerRegions) : Node
+/// <param name="HandlerRegions"></param>
+internal sealed record ExceptionGroup(IReadOnlyList<HandlerRegion> HandlerRegions) : Node
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 }

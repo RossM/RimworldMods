@@ -1,6 +1,6 @@
 ﻿namespace Disharmony.Optimizer;
 
-internal interface IVisitor<T>
+internal interface IVisitor<out T>
 {
     T Visit(AssignmentOp op);
     T Visit(ILOp op);
@@ -24,6 +24,7 @@ internal interface IVisitor<T>
     T Visit(Jump branch);
     T Visit(BasicBlock block);
     T Visit(Edge edge);
+    T Visit(ControlFlowGraph cfg);
 }
 
 internal class Visitor : IVisitor<Node>
@@ -50,4 +51,5 @@ internal class Visitor : IVisitor<Node>
     public virtual Node Visit(Jump branch) => branch;
     public virtual Node Visit(BasicBlock block) => block;
     public virtual Node Visit(Edge edge) => edge;
+    public virtual Node Visit(ControlFlowGraph cfg) => cfg;
 }

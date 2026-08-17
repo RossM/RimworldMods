@@ -16,12 +16,16 @@ internal class CreateControlFlowGraph : Pass
         ReturnType = Method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
     }
 
+    public readonly RootRegion RootRegion = new(new());
     public Dictionary<Label, BlockLabel> BlockLabels { get; } = [];
     public Dictionary<BlockLabel, (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack)> BlockStacks { get; } = [];
     public Dictionary<int, Local> Locals { get; } = [];
     public MethodBody? MethodBody { get; }
     public Dictionary<int, Argument> Arguments { get; } = [];
     public List<Type> ParameterTypes { get; }
+    public List<BasicBlock> BasicBlocks { get; } = [];
+    public List<Edge> Edges { get; } = [];
+    public Dictionary<ProtectedRegion, ExceptionGroup> ExceptionGroups = [];
 
     public Type ReturnType { get; }
 
@@ -61,6 +65,10 @@ internal class CreateControlFlowGraph : Pass
         CreateBasicBlocks(instructionBlocks);
 
         CreateEdges();
+
+        Optimizer.cfg = new ControlFlowGraph(RootRegion, BasicBlocks, Edges);
+
+        ProtectedRegionRewriteVisitor visitor = new ProtectedRegionRewriteVisitor(ExceptionGroups);
     }
 
     private void CreateArguments()
@@ -173,7 +181,7 @@ internal class CreateControlFlowGraph : Pass
                 {
                     case ExceptionBlockType.BeginExceptionBlock:
                     {
-                        var protectedRegion = new ProtectedRegion(label, regionStack.Peek());
+                        var protectedRegion = new ProtectedRegion(label, regionStack.Peek(), new ExceptionGroup([]));
                         regionStack.Push(protectedRegion);
                         exceptionGroupStack.Push((protectedRegion, []));
                         // A protected region can have real incoming edges and doesn't need a synthetic entry block
@@ -219,7 +227,7 @@ internal class CreateControlFlowGraph : Pass
             incomingStackSize.TryGetValue(label, out int blockStartStackSize);
             BasicBlock block = ConvertBasicBlock(label, instructions, fallthroughLabel, regionStack.Peek(), blockStartStackSize,
                 out var stacks);
-            ControlFlowGraph.AddBlock(block);
+            BasicBlocks.Add(block);
             BlockStacks[label] = stacks;
             foreach (var successor in block.Branch.Labels)
             {
@@ -240,7 +248,7 @@ internal class CreateControlFlowGraph : Pass
                 {
                     regionStack.Pop();
                     var (protectedRegion, handlerRegions) = exceptionGroupStack.Pop();
-                    ControlFlowGraph.AddExceptionGroup(new ExceptionGroup(protectedRegion, handlerRegions));
+                    ExceptionGroups[protectedRegion] = new ExceptionGroup(handlerRegions);
                 }
             }
         }
@@ -248,7 +256,7 @@ internal class CreateControlFlowGraph : Pass
 
     private void AddSyntheticEntryBlock(Region region, BlockLabel blockLabel, params StackSlot[] stackSlots)
     {
-        ControlFlowGraph.AddBlock(new(region.EntryLabel, [], region, new UnconditionalBranch(blockLabel)));
+        BasicBlocks.Add(new(region.EntryLabel, [], region, new UnconditionalBranch(blockLabel)));
         BlockStacks[region.EntryLabel] = ([.. stackSlots], [.. stackSlots]);
     }
 
@@ -257,15 +265,12 @@ internal class CreateControlFlowGraph : Pass
         foreach (var block in ControlFlowGraph.BasicBlocks)
         {
             var label = block.Label;
-            foreach (var successor in block.Branch.Labels)
+            foreach (var successor in block.Branch.Labels.Distinct())
             {
-                if (ControlFlowGraph.GetEdgeOrNull(label, successor) != null)
-                    continue;
-
                 var edgeAssignments = BlockStacks[successor].IncomingStack.Zip(BlockStacks[label].OutgoingStack,
                     (incoming, outgoing) => new AssignmentOp(incoming, outgoing)).ToList();
                 var edge = new Edge(label, successor, edgeAssignments);
-                ControlFlowGraph.AddEdge(edge);
+                Edges.Add(edge);
             }
         }
     }
@@ -403,5 +408,13 @@ internal class CreateControlFlowGraph : Pass
             },
             _ => throw new ArgumentOutOfRangeException(),
         };
+    }
+}
+
+internal class ProtectedRegionRewriteVisitor(Dictionary<ProtectedRegion, ExceptionGroup> exceptionGroups) : RewriteVisitor
+{
+    public override Node Visit(ProtectedRegion region)
+    {
+        return new ProtectedRegion(region.EntryLabel, region.Parent, exceptionGroups[region]);
     }
 }
