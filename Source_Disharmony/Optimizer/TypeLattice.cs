@@ -46,7 +46,7 @@ internal static class TypeLattice
 
     private static bool IsObjectReference(Type type)
     {
-        return !type.IsValueType && !type.IsByRef && !type.IsPointer;
+        return type is { IsValueType: false, IsByRef: false, IsPointer: false };
     }
 
     private static Type GetReducedType(Type type)
