@@ -69,6 +69,7 @@ internal class CreateControlFlowGraph : Pass
         Optimizer.cfg = new ControlFlowGraph(RootRegion, BasicBlocks, Edges);
 
         ProtectedRegionRewriteVisitor visitor = new ProtectedRegionRewriteVisitor(ExceptionGroups);
+        Optimizer.cfg = (ControlFlowGraph)visitor.Visit(Optimizer.cfg);
     }
 
     private void CreateArguments()
@@ -181,10 +182,15 @@ internal class CreateControlFlowGraph : Pass
                 {
                     case ExceptionBlockType.BeginExceptionBlock:
                     {
+                        // We don't have all the handler regions yet, so we create the ProtectedRegion with an empty ExceptionGroup,
+                        // then rewrite it later to have the correct handler regions.
                         var protectedRegion = new ProtectedRegion(label, regionStack.Peek(), new ExceptionGroup([]));
+                        
                         regionStack.Push(protectedRegion);
                         exceptionGroupStack.Push((protectedRegion, []));
+
                         // A protected region can have real incoming edges and doesn't need a synthetic entry block
+
                         break;
                     }
                     case ExceptionBlockType.BeginCatchBlock:
