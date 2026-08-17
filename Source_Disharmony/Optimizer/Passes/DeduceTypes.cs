@@ -47,9 +47,9 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
         
         Type[] types;
         if (data.flags.HasFlag(OpCodeFlags.Argument))
-            types = [optimizer.arguments[OpCodeData.GetIntOperand(op.IL)].Type, .. inputTypes];
+            types = [optimizer.Arguments[OpCodeData.GetIntOperand(op.IL)].Type, .. inputTypes];
         else if (data.flags.HasFlag(OpCodeFlags.Local))
-            types = [optimizer.locals[OpCodeData.GetIntOperand(op.IL)].Type, .. inputTypes];
+            types = [optimizer.Locals[OpCodeData.GetIntOperand(op.IL)].Type, .. inputTypes];
         else
             types = [.. inputTypes];
 
@@ -74,7 +74,7 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
             var edges = cfg.Edges.Select(edge => (Edge)edge.Accept(this)).ToList();
 
             if (!dirty)
-                return new ControlFlowGraph(cfg.RootRegion, blocks, edges);
+                return new ControlFlowGraph(cfg.RootRegion, blocks, edges, cfg.Arguments, cfg.Locals);
         }
     }
 }

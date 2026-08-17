@@ -243,7 +243,7 @@ public sealed class RewriteVisitorTests
             new UnconditionalBranch(destination));
         BasicBlock target = new(destination, [], root, new Return(Ret, original));
         Edge edge = new(source.Label, target.Label, [new AssignmentOp(replacement, original)]);
-        ControlFlowGraph graph = new(root, [source, target], [edge]);
+        ControlFlowGraph graph = new(root, [source, target], [edge], [], []);
         ReplaceVisitor visitor = new();
         visitor.Replacements[original] = replacement;
 

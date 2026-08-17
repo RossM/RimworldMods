@@ -16,7 +16,7 @@ public sealed class MergeStackSlotsTests
         RootRegion root = new(new BlockLabel());
         BasicBlock block = new(root.EntryLabel, [], root,
             new Return(Ret, new VoidOp()));
-        ControlFlowGraph graph = new(root, [block], []);
+        ControlFlowGraph graph = new(root, [block], [], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
             cfg = graph
@@ -43,7 +43,7 @@ public sealed class MergeStackSlotsTests
             new UnconditionalBranch(destination));
         BasicBlock target = new(destination, [], root, new Return(Ret, targetSlot));
         ControlFlowGraph graph = new(root, [source, target],
-            [new Edge(source.Label, target.Label, [new AssignmentOp(targetSlot, sourceSlot)])]);
+            [new Edge(source.Label, target.Label, [new AssignmentOp(targetSlot, sourceSlot)])], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
             cfg = graph
@@ -76,7 +76,7 @@ public sealed class MergeStackSlotsTests
         [
             new Edge(source.Label, middle.Label, [new AssignmentOp(middleSlot, sourceSlot)]),
             new Edge(middle.Label, target.Label, [new AssignmentOp(targetSlot, middleSlot)]),
-        ]);
+        ], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
             cfg = graph
@@ -104,7 +104,7 @@ public sealed class MergeStackSlotsTests
             new UnconditionalBranch(destination));
         BasicBlock target = new(destination, [pop], root, new Return(Ret, new VoidOp()));
         ControlFlowGraph graph = new(root, [source, target],
-            [new Edge(source.Label, target.Label, [new AssignmentOp(targetSlot, sourceSlot)])]);
+            [new Edge(source.Label, target.Label, [new AssignmentOp(targetSlot, sourceSlot)])], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
             cfg = graph
@@ -141,7 +141,7 @@ public sealed class MergeStackSlotsTests
             new Edge(source.Label, condition.Label, [new AssignmentOp(conditionSlot, sourceSlot)]),
             new Edge(condition.Label, fallthrough.Label, []),
             new Edge(condition.Label, taken.Label, []),
-        ]);
+        ], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
             cfg = graph
@@ -177,7 +177,7 @@ public sealed class MergeStackSlotsTests
         [
             new Edge(first.Label, second.Label, [new AssignmentOp(firstTarget, firstSource)]),
             new Edge(second.Label, third.Label, [new AssignmentOp(secondTarget, secondSource)]),
-        ]);
+        ], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
             cfg = graph

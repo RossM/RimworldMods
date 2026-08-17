@@ -68,9 +68,7 @@ internal class CreateControlFlowGraph : Pass
 
         // The initial CFG has invalid exception information because we haven't yet rewritten the protected regions,
         // so disable validation.
-        Optimizer.cfg = new ControlFlowGraph(RootRegion, BasicBlocks, Edges, validate: false);
-        Optimizer.arguments = Arguments;
-        Optimizer.locals = Locals;
+        Optimizer.cfg = new ControlFlowGraph(RootRegion, BasicBlocks, Edges, Arguments, Locals, validate: false);
 
         ProtectedRegionRewriteVisitor visitor = new ProtectedRegionRewriteVisitor(ExceptionGroups);
         Optimizer.cfg = (ControlFlowGraph)visitor.Visit(Optimizer.cfg);

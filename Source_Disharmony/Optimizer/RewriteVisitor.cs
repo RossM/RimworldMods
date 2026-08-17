@@ -134,13 +134,13 @@ internal class RewriteVisitor : Visitor
 
     public override Node Visit(ControlFlowGraph cfg)
     {
+        var rootRegion = (RootRegion)cfg.RootRegion.Accept(this);
         var blocks = cfg.BasicBlocks.Select(block => (BasicBlock)block.Accept(this)).ToList();
         var edges = cfg.Edges.Select(edge => (Edge)edge.Accept(this)).ToList();
-        var rootRegion = (RootRegion)cfg.RootRegion.Accept(this);
 
-        if (blocks.SequenceEqual(cfg.BasicBlocks) && edges.SequenceEqual(cfg.Edges) && rootRegion == cfg.RootRegion)
+        if (rootRegion == cfg.RootRegion && blocks.SequenceEqual(cfg.BasicBlocks) && edges.SequenceEqual(cfg.Edges))
             return cfg;
 
-        return new ControlFlowGraph(rootRegion, blocks, edges);
+        return new ControlFlowGraph(rootRegion, blocks, edges, cfg.Arguments, cfg.Locals);
     }
 }

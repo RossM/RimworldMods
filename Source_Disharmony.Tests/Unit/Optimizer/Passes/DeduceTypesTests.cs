@@ -19,7 +19,7 @@ public sealed class DeduceTypesTests
         ILOp constant = new(new ILInstruction(OpCodes.Ldc_I4_1, null!, []), [], TypeLattice.Unknown);
         BasicBlock block = new(root.EntryLabel, [new AssignmentOp(result, constant)], root,
             new Return(Ret, result));
-        ControlFlowGraph graph = new(root, [block], []);
+        ControlFlowGraph graph = new(root, [block], [], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(
             ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
@@ -46,13 +46,13 @@ public sealed class DeduceTypesTests
         ILOp load = new(new ILInstruction(OpCodes.Ldarg_0, null!, []), [], TypeLattice.Unknown);
         BasicBlock block = new(root.EntryLabel, [new AssignmentOp(result, load)], root,
             new Return(Ret, result));
-        ControlFlowGraph graph = new(root, [block], []);
+        ControlFlowGraph graph = new(root, [block], [], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(
             ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
             cfg = graph
         };
-        optimizer.arguments[0] = new Argument(0, typeof(int));
+        optimizer.Arguments[0] = new Argument(0, typeof(int));
 
         new DeduceTypes(optimizer).RunInternal();
 
@@ -72,13 +72,13 @@ public sealed class DeduceTypesTests
         ILOp load = new(new ILInstruction(OpCodes.Ldloc_0, null!, []), [], TypeLattice.Unknown);
         BasicBlock block = new(root.EntryLabel, [new AssignmentOp(result, load)], root,
             new Return(Ret, result));
-        ControlFlowGraph graph = new(root, [block], []);
+        ControlFlowGraph graph = new(root, [block], [], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(
             ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
             cfg = graph
         };
-        optimizer.locals[0] = new Local(0, typeof(byte), null);
+        optimizer.Locals[0] = new Local(0, typeof(byte), null);
 
         new DeduceTypes(optimizer).RunInternal();
 
@@ -106,7 +106,7 @@ public sealed class DeduceTypesTests
         [
             new Edge(first.Label, target.Label, [new AssignmentOp(mergedValue, stringValue)]),
             new Edge(second.Label, target.Label, [new AssignmentOp(mergedValue, classValue)]),
-        ]);
+        ], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(
             ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
@@ -144,7 +144,7 @@ public sealed class DeduceTypesTests
         BasicBlock target = new(targetLabel, [new AssignmentOp(result, negate)], root,
             new Return(Ret, result));
         ControlFlowGraph graph = new(root, [source, target],
-            [new Edge(source.Label, target.Label, [new AssignmentOp(targetValue, sourceValue)])]);
+            [new Edge(source.Label, target.Label, [new AssignmentOp(targetValue, sourceValue)])], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(
             ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
@@ -190,7 +190,7 @@ public sealed class DeduceTypesTests
             new Edge(entry.Label, loop.Label, [new AssignmentOp(loopValue, initialValue)]),
             new Edge(loop.Label, exit.Label, [new AssignmentOp(exitValue, nextValue)]),
             new Edge(loop.Label, loop.Label, [new AssignmentOp(loopValue, nextValue)]),
-        ]);
+        ], [], []);
         global::Disharmony.Optimizer.Optimizer optimizer = new(
             ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
         {
