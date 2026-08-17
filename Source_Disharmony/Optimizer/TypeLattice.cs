@@ -44,6 +44,75 @@ internal static class TypeLattice
         return typeCode is >= TypeCode.Boolean and <= TypeCode.UInt64;
     }
 
+    private static bool IsObjectReference(Type type)
+    {
+        return !type.IsValueType && !type.IsByRef && !type.IsPointer;
+    }
+
+    private static Type GetReducedType(Type type)
+    {
+        if (type.IsEnum)
+            type = type.GetEnumUnderlyingType();
+
+        return Type.GetTypeCode(type) switch
+        {
+            TypeCode.Boolean or TypeCode.SByte or TypeCode.Byte => typeof(sbyte),
+            TypeCode.Char or TypeCode.Int16 or TypeCode.UInt16 => typeof(short),
+            TypeCode.Int32 or TypeCode.UInt32 => typeof(int),
+            TypeCode.Int64 or TypeCode.UInt64 => typeof(long),
+            _ when type == typeof(UIntPtr) => typeof(IntPtr),
+            _ => type,
+        };
+    }
+
+    private static bool IsVector(Type type)
+    {
+        return type.IsArray && type == type.GetElementType()!.MakeArrayType();
+    }
+
+    private static bool IsArrayElementAssignableTo(Type source, Type target)
+    {
+        if (GetReducedType(source) == GetReducedType(target))
+            return true;
+
+        return IsObjectReference(source) && IsObjectReference(target) && IsAssignableTo(source, target);
+    }
+
+    private static bool IsArrayAssignableTo(Type source, Type target)
+    {
+        if (source.IsArray && target.IsArray && source.GetArrayRank() == target.GetArrayRank())
+            return IsArrayElementAssignableTo(source.GetElementType()!, target.GetElementType()!);
+
+        if (!IsVector(source) || !target.IsGenericType ||
+            target.GetGenericTypeDefinition() != typeof(IList<>))
+            return false;
+
+        return IsArrayElementAssignableTo(source.GetElementType()!, target.GetGenericArguments()[0]);
+    }
+
+    private static bool IsAssignableTo(Type source, Type target)
+    {
+        if (source == target)
+            return true;
+
+        // The stack-state rules treat I4 and native int as mutually assignable.
+        if ((source == typeof(int) && target == typeof(IntPtr)) ||
+            (source == typeof(IntPtr) && target == typeof(int)))
+            return true;
+
+        if (!IsObjectReference(source) || !IsObjectReference(target))
+            return false;
+
+        return target.IsAssignableFrom(source) || IsArrayAssignableTo(source, target);
+    }
+
+    private static Type MergeManagedPointers(Type left, Type right)
+    {
+        Type leftElement = GetReducedType(left.GetElementType()!);
+        Type rightElement = GetReducedType(right.GetElementType()!);
+        return leftElement == rightElement ? leftElement.MakeByRefType() : AnyRef;
+    }
+
     /// <summary>
     ///     Calculates the result type of merging two stack slots of the given type.
     /// </summary>
@@ -72,6 +141,9 @@ internal static class TypeLattice
     /// <returns></returns>
     public static Type Merge(Type left, Type right)
     {
+        if (left == right)
+            return left;
+
         if (left == Any || right == Any)
             return Any;
 
@@ -83,15 +155,34 @@ internal static class TypeLattice
         if ((left == AnyRef && right.IsByRef) || (right == AnyRef && left.IsByRef))
             return AnyRef;
 
-        if (left == Null && (!right.IsValueType || IsInteger(right)))
-            return right;
-        if (right == Null && (!left.IsValueType || IsInteger(left)))
-            return left;
-
         if (left == UnknownRef && right.IsByRef)
             return right;
         if (right == UnknownRef && left.IsByRef)
             return left;
+
+        if (left == Null && IsObjectReference(right))
+            return right;
+        if (right == Null && IsObjectReference(left))
+            return left;
+
+        // Null has stack category O when its special verifier compatibility does not apply.
+        if (left == Null)
+            left = typeof(object);
+        if (right == Null)
+            right = typeof(object);
+
+        if (left.IsByRef && right.IsByRef)
+            return MergeManagedPointers(left, right);
+
+        // ECMA's merge is ordered: retain the existing (left) type when both
+        // assignment directions are valid.
+        if (IsAssignableTo(right, left))
+            return left;
+        if (IsAssignableTo(left, right))
+            return right;
+
+        if (!IsObjectReference(left) || !IsObjectReference(right))
+            return Any;
 
         List<Type> leftBaseTypes = GetBaseTypes(left);
         List<Type> rightBaseTypes = GetBaseTypes(right);
@@ -102,8 +193,6 @@ internal static class TypeLattice
                 return leftBaseTypes[i];
         }
 
-        if (left.IsByRef && right.IsByRef)
-            return AnyRef;
         return Any;
     }
 }
