@@ -8,7 +8,7 @@ public sealed class RewriteVisitorTests
 
     private sealed class RootRegionReplacingVisitor(RootRegion original, RootRegion replacement) : RewriteVisitor
     {
-        public override Region Visit(RootRegion region) => ReferenceEquals(region, original) ? replacement : region;
+        public override Node Visit(RootRegion region) => ReferenceEquals(region, original) ? replacement : region;
     }
 
     [Test]
@@ -118,7 +118,7 @@ public sealed class RewriteVisitorTests
         ReplaceVisitor visitor = new();
         visitor.Replacements[original] = replacement;
 
-        var rewritten = block.Accept(visitor);
+        var rewritten = (BasicBlock)block.Accept(visitor);
 
         Assert.Multiple(() =>
         {
@@ -141,7 +141,7 @@ public sealed class RewriteVisitorTests
         ReplaceVisitor visitor = new();
         visitor.Replacements[original] = replacement;
 
-        var rewritten = edge.Accept(visitor);
+        var rewritten = (Edge)edge.Accept(visitor);
 
         Assert.Multiple(() =>
         {
@@ -166,7 +166,7 @@ public sealed class RewriteVisitorTests
         ReplaceVisitor visitor = new();
         visitor.Replacements[original] = replacement;
 
-        var rewritten = group.Accept(visitor);
+        var rewritten = (ExceptionGroup)group.Accept(visitor);
 
         Assert.Multiple(() =>
         {

@@ -10,9 +10,8 @@
 ///     <see cref="AssignmentOp" /> or <see cref="Branch" />.
 /// </remarks>
 /// <param name="Type">The type of value produced by the <see cref="Op" />.</param>
-internal abstract record Op(Type Type)
+internal abstract record Op(Type Type) : Node
 {
-    public abstract Op Accept(Visitor visitor);
 }
 
 /// <summary>
@@ -22,7 +21,7 @@ internal abstract record Op(Type Type)
 /// <param name="Input">The <see cref="Op" /> that produces the value.</param>
 internal sealed record AssignmentOp(Variable Output, Op Input) : Op(typeof(void))
 {
-    public override Op Accept(Visitor visitor) => visitor.Visit(this);
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 }
 
 /// <summary>
@@ -56,7 +55,7 @@ internal sealed record ILInstruction(OpCode OpCode, object? Operand, IReadOnlyLi
 /// <param name="Type">The type of value produced by the instruction.</param>
 internal sealed record ILOp(ILInstruction IL, IReadOnlyList<Op> Inputs, Type Type) : Op(Type)
 {
-    public override Op Accept(Visitor visitor) => visitor.Visit(this);
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 }
 
 /// <summary>
@@ -73,7 +72,7 @@ internal abstract record Variable(Type Type) : Op(Type);
 /// <param name="Type">The type of value stored in the slot.</param>
 internal sealed record StackSlot(int Depth, Type Type, int Id) : Variable(Type)
 {
-    public override Op Accept(Visitor visitor) => visitor.Visit(this);
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 }
 
 /// <summary>
@@ -90,7 +89,7 @@ internal abstract record MemoryVariable(int Index, Type Type) : Variable(Type);
 /// <param name="Type">The argument type.</param>
 internal sealed record Argument(int Index, Type Type) : MemoryVariable(Index, Type)
 {
-    public override Op Accept(Visitor visitor) => visitor.Visit(this);
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 }
 
 /// <summary>
@@ -106,7 +105,7 @@ internal sealed record Argument(int Index, Type Type) : MemoryVariable(Index, Ty
 /// <param name="LocalBuilder">The builder for the emitted local, or <see langword="null" /> if one has not been created.</param>
 internal sealed record Local(int Index, Type Type, LocalBuilder? LocalBuilder) : MemoryVariable(Index, Type)
 {
-    public override Op Accept(Visitor visitor) => visitor.Visit(this);
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 }
 
 /// <summary>
@@ -120,7 +119,7 @@ internal sealed record Local(int Index, Type Type, LocalBuilder? LocalBuilder) :
 /// <param name="Type">The type of value stored by the temporary.</param>
 internal sealed record Temporary(Type Type) : Variable(Type)
 {
-    public override Op Accept(Visitor visitor) => visitor.Visit(this);
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 }
 
 /// <summary>
@@ -128,5 +127,5 @@ internal sealed record Temporary(Type Type) : Variable(Type)
 /// </summary>
 internal sealed record VoidOp() : Op(typeof(void))
 {
-    public override Op Accept(Visitor visitor) => visitor.Visit(this);
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 }
