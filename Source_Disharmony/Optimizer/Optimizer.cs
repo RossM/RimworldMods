@@ -47,6 +47,7 @@ internal class Optimizer
 
         if (debug)
         {
+            FileLog.LogBuffered($"# {Method.FullName}");
             cfg.DebugPrint();
             FileLog.LogBuffered("");
             FileLog.FlushBuffer();

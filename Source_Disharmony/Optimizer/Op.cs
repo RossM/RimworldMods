@@ -41,7 +41,25 @@ internal sealed record Prefix(OpCode OpCode, object? Operand);
 /// <param name="Prefixes"></param>
 internal sealed record ILInstruction(OpCode OpCode, object? Operand, IReadOnlyList<Prefix> Prefixes)
 {
-    public override string ToString() => Operand != null ? $"{OpCode} {Operand}" : $"{OpCode}";
+    private string OperandDescription(object operand)
+    {
+        var data = OpCodeData.Get(OpCode);
+        return operand switch
+        {
+            LocalBuilder b => $"Local{b.LocalIndex} @{b.LocalType}",
+            _ when data.flags.HasFlag(OpCodeFlags.Argument) => $"Arg{OpCodeData.GetIntOperand(this)}",
+            _ when data.flags.HasFlag(OpCodeFlags.Local) => $"Local{OpCodeData.GetIntOperand(this)}",
+            _ => operand.ToString(),
+        };
+    }
+
+    public override string ToString()
+    {
+        if (Operand != null)
+            return $"{OpCode} {{{OperandDescription(Operand)}}}";
+        else
+            return $"{OpCode}";
+    }
 }
 
 /// <summary>
