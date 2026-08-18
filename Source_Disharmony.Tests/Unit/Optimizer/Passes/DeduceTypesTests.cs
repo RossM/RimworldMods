@@ -347,7 +347,7 @@ public sealed class DeduceTypesTests
     public void AssignmentToTemporary_DeducesInputWithoutChangingDestinationType()
     {
         RootRegion root = new(new BlockLabel());
-        Temporary destination = new(typeof(object));
+        Temporary destination = new(typeof(object), 0);
         ILOp constant = new(new ILInstruction(OpCodes.Ldc_I4_1, null!, []), [], TypeLattice.Unknown);
         AssignmentOp assignment = new(destination, constant);
         BasicBlock block = new(root.EntryLabel, [assignment], root, new Return(Ret, new VoidOp()));

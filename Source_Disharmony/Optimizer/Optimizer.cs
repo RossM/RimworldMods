@@ -46,6 +46,13 @@ internal class Optimizer
 
         new DeduceTypes(this).Run();
 
+        if (debug)
+        {
+            cfg.DebugPrint();
+            FileLog.LogBuffered("");
+            FileLog.FlushBuffer();
+        }
+
         return inputInstructions;
     }
 }

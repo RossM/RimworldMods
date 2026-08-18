@@ -139,9 +139,12 @@ internal sealed record ExceptionGroup(IReadOnlyList<HandlerRegion> HandlerRegion
 ///     replaced with a new block with the same label without updating other data structures.
 /// </remarks>
 /// <param name="label">The original IL label, or <see langword="null" /> if the block did not have an IL label.</param>
-internal sealed class BlockLabel(Label? label = null)
+internal sealed class BlockLabel(Label? label = null, int id = -1)
 {
     public Label? Label { get; } = label;
+    public int Id { get; } = id;
+
+    public override string ToString() => $"Block{Id}";
 }
 
 /// <summary>
@@ -167,6 +170,8 @@ internal record UnconditionalBranch : Branch
     public UnconditionalBranch(BlockLabel label) : base([label]) { }
 
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => $"br {Labels[0]}";
 }
 
 /// <summary>
@@ -180,6 +185,8 @@ internal record UnconditionalBranch : Branch
 internal record Leave(BlockLabel Label) : UnconditionalBranch(Label)
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => $"leave {Labels[0]}";
 }
 
 /// <summary>
@@ -195,6 +202,8 @@ internal record Leave(BlockLabel Label) : UnconditionalBranch(Label)
 internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<Op> Inputs, IReadOnlyList<BlockLabel> Labels) : Branch(Labels)
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => $"{OpCode} ({string.Join(", ", Inputs)}) {{ {string.Join(", ", Labels)} }}";
 }
 
 /// <summary>
@@ -208,11 +217,15 @@ internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<Op> Inputs
 internal sealed record Throw(Op Exception) : Branch([])
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => $"throw {Exception}";
 }
 
 internal sealed record Rethrow() : Branch([])
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => "rethrow";
 }
 
 /// <summary>
@@ -226,6 +239,8 @@ internal sealed record Rethrow() : Branch([])
 internal sealed record Return(ILInstruction IL, Op Value) : Branch([])
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => $"{IL.OpCode} {Value}";
 }
 
 /// <summary>
@@ -235,6 +250,8 @@ internal sealed record Return(ILInstruction IL, Op Value) : Branch([])
 internal sealed record Jump(Op Value) : Branch([])
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => $"jmp {Value}";
 }
 
 /// <summary>
@@ -247,6 +264,16 @@ internal sealed record Jump(Op Value) : Branch([])
 internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Region Region, Branch Branch) : Node
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override void DebugPrint()
+    {
+        FileLog.ChangeIndent(-1);
+        FileLog.LogBuffered($"{Label}:");
+        FileLog.ChangeIndent(1);
+        foreach (var op in Ops)
+            op.DebugPrint();
+        Branch.DebugPrint();
+    }
 }
 
 /// <summary>

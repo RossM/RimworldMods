@@ -16,7 +16,7 @@ internal class CreateControlFlowGraph : Pass
         ReturnType = Method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
     }
 
-    public RootRegion RootRegion { get; } = new(new());
+    public RootRegion RootRegion { get; } = new(new(id: 0));
     public Dictionary<Label, BlockLabel> BlockLabels { get; } = [];
     public Dictionary<BlockLabel, (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack)> BlockStacks { get; } = [];
     public List<Local> Locals { get; } = [];
@@ -30,6 +30,7 @@ internal class CreateControlFlowGraph : Pass
     public Type ReturnType { get; }
 
     private int NextStackSlotId { get; set; }
+    private int NextBlockLabelId { get; set; } = 1;
 
     private MethodBody? GetMethodBodyOrNull(MethodBase method)
     {
@@ -57,8 +58,6 @@ internal class CreateControlFlowGraph : Pass
         CreateArguments();
 
         CreateLocals();
-
-        CreateBlockLabels();
 
         List<(BlockLabel Label, List<CodeInstruction> Instructions)> instructionBlocks = FindBasicBlocks();
 
@@ -109,18 +108,17 @@ internal class CreateControlFlowGraph : Pass
         }
     }
 
-    private void CreateBlockLabels()
-    {
-        // Generate BlockLabels
-        foreach (var instruction in CodeInstructions)
-        {
-            if (instruction.labels.Count == 0)
-                continue;
+    private BlockLabel CreateBlockLabel() => new(id: NextBlockLabelId++);
 
-            var blockLabel = new BlockLabel(instruction.labels[0]);
-            foreach (var label in instruction.labels)
-                BlockLabels.Add(label, blockLabel);
-        }
+    private BlockLabel CreateBlockLabel(CodeInstruction instruction)
+    {
+        if (instruction.labels.Count <= 0)
+            return CreateBlockLabel();
+
+        var blockLabel = new BlockLabel(instruction.labels[0], NextBlockLabelId++);
+        foreach (var label in instruction.labels)
+            BlockLabels.Add(label, blockLabel);
+        return blockLabel;
     }
 
     private List<(BlockLabel Label, List<CodeInstruction> Instructions)> FindBasicBlocks()
@@ -147,7 +145,7 @@ internal class CreateControlFlowGraph : Pass
 
             if (newBlock)
             {
-                var label = instruction.labels.Count > 0 ? BlockLabels[instruction.labels[0]] : new BlockLabel();
+                var label = CreateBlockLabel(instruction);
                 instructionBlocks.Add(new(label, []));
                 newBlock = false;
             }
@@ -197,7 +195,7 @@ internal class CreateControlFlowGraph : Pass
                     case ExceptionBlockType.BeginCatchBlock:
                     {
                         regionStack.Pop();
-                        var region = new CatchRegion(new BlockLabel(), regionStack.Peek(), CreateStackSlot(0, exceptionBlock.catchType));
+                        var region = new CatchRegion(CreateBlockLabel(), regionStack.Peek(), CreateStackSlot(0, exceptionBlock.catchType));
                         regionStack.Push(region);
                         exceptionGroupStack.Peek().HandlerRegions.Add(region);
                         incomingStackSize[label] = 1;
@@ -208,7 +206,7 @@ internal class CreateControlFlowGraph : Pass
                     case ExceptionBlockType.BeginFaultBlock:
                     {
                         regionStack.Pop();
-                        var region = new FaultRegion(new BlockLabel(), regionStack.Peek());
+                        var region = new FaultRegion(CreateBlockLabel(), regionStack.Peek());
                         regionStack.Push(region);
                         exceptionGroupStack.Peek().HandlerRegions.Add(region);
                         AddSyntheticEntryBlock(region, label);
@@ -217,7 +215,7 @@ internal class CreateControlFlowGraph : Pass
                     case ExceptionBlockType.BeginFinallyBlock:
                     {
                         regionStack.Pop();
-                        var region = new FinallyRegion(new BlockLabel(), regionStack.Peek());
+                        var region = new FinallyRegion(CreateBlockLabel(), regionStack.Peek());
                         regionStack.Push(region);
                         exceptionGroupStack.Peek().HandlerRegions.Add(region);
                         AddSyntheticEntryBlock(region, label);

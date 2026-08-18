@@ -31,8 +31,8 @@ public sealed class RewriteVisitorTests
     {
         StackSlot originalInput = new(0, typeof(int), 0);
         StackSlot replacementInput = new(0, typeof(int), 1);
-        Temporary originalOutput = new(typeof(int));
-        Temporary replacementOutput = new(typeof(int));
+        Temporary originalOutput = new(typeof(int), 0);
+        Temporary replacementOutput = new(typeof(int), 1);
         AssignmentOp assignment = new(originalOutput, originalInput);
         ReplaceVisitor visitor = new();
         visitor.Replacements[originalInput] = replacementInput;
@@ -113,7 +113,7 @@ public sealed class RewriteVisitorTests
         RootRegion region = new(new BlockLabel());
         StackSlot original = new(0, typeof(int), 0);
         StackSlot replacement = new(0, typeof(int), 1);
-        AssignmentOp assignment = new(new Temporary(typeof(int)), original);
+        AssignmentOp assignment = new(new Temporary(typeof(int), 0), original);
         BasicBlock block = new(region.EntryLabel, [assignment], region, new Return(Ret, original));
         ReplaceVisitor visitor = new();
         visitor.Replacements[original] = replacement;
@@ -134,7 +134,7 @@ public sealed class RewriteVisitorTests
     {
         StackSlot original = new(0, typeof(int), 0);
         StackSlot replacement = new(0, typeof(int), 1);
-        Temporary retainedOutput = new(typeof(int));
+        Temporary retainedOutput = new(typeof(int), 0);
         AssignmentOp becomesIdentity = new(replacement, original);
         AssignmentOp retained = new(retainedOutput, original);
         Edge edge = new(new BlockLabel(), new BlockLabel(), [becomesIdentity, retained]);
@@ -207,7 +207,7 @@ public sealed class RewriteVisitorTests
     {
         RootRegion root = new(new BlockLabel());
         StackSlot value = new(0, typeof(int), 0);
-        AssignmentOp assignment = new(new Temporary(typeof(int)), value);
+        AssignmentOp assignment = new(new Temporary(typeof(int), 0), value);
         ILOp operation = new(Nop, [value], typeof(void));
         ConditionalBranch conditional = new(OpCodes.Brtrue, [value], [new BlockLabel(), new BlockLabel()]);
         BasicBlock block = new(root.EntryLabel, [assignment, operation], root, conditional);

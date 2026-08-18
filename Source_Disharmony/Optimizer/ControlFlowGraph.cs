@@ -264,6 +264,63 @@ internal record ControlFlowGraph : Node
 
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
+    public override void DebugPrint()
+    {
+        FileLog.LogBuffered("ControlFlowGraph {");
+        FileLog.ChangeIndent(1);
+
+        FileLog.LogBuffered("Arguments {");
+        FileLog.ChangeIndent(1);
+        foreach (var argument in Arguments)
+            argument.DebugPrint();
+        FileLog.ChangeIndent(-1);
+        FileLog.LogBuffered("}");
+
+        FileLog.LogBuffered("Locals {");
+        FileLog.ChangeIndent(1);
+        foreach (var local in Locals)
+            local.DebugPrint();
+        FileLog.ChangeIndent(-1);
+        FileLog.LogBuffered("}");
+
+        DebugPrintRegion(RootRegion);
+
+        FileLog.ChangeIndent(-1);
+        FileLog.LogBuffered("}");
+    }
+
+    private void DebugPrintBlock(BasicBlock basicBlock)
+    {
+        basicBlock.DebugPrint();
+        foreach (var edge in OutgoingEdges(basicBlock))
+        {
+            FileLog.LogBuffered(edge.EdgeAssignments.Count > 0
+                ? $"-> {edge.Destination} {{ {string.Join(", ", edge.EdgeAssignments)} }}"
+                : $"-> {edge.Destination}");
+        }
+    }
+
+    private void DebugPrintRegion(Region region)
+    {
+        if (region is CatchRegion catchRegion)
+            FileLog.LogBuffered($"{region.GetType().Name} ({catchRegion.IncomingException}) -> { region.EntryLabel } {{");
+        else
+            FileLog.LogBuffered($"{region.GetType().Name}-> {region.EntryLabel} {{");
+        FileLog.ChangeIndent(1);
+
+        foreach (var block in BasicBlocks.Where(b => b.Region == region))
+            DebugPrintBlock(block);
+
+        foreach (var child in exceptionGroupsByRegion.Keys.OfType<ProtectedRegion>().Where(r => r.Parent == region))
+            DebugPrintRegion(child);
+
+        FileLog.ChangeIndent(-1);
+        FileLog.LogBuffered("}");
+
+        if (region is ExceptionRegion e && GetNextRegion(e) is { } next)
+            DebugPrintRegion(next);
+    }
+
     public virtual bool Equals(ControlFlowGraph? other)
     {
         if (other is null)

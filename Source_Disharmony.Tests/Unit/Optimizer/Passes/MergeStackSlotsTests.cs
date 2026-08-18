@@ -270,7 +270,7 @@ public sealed class MergeStackSlotsTests
         BlockLabel targetLabel = new();
         StackSlot sourceSlot = new(0, typeof(int), 0);
         StackSlot targetSlot = new(0, typeof(int), 1);
-        Temporary temporary = new(typeof(int));
+        Temporary temporary = new(typeof(int), 0);
         BasicBlock source = new(root.EntryLabel, [], root, new UnconditionalBranch(targetLabel));
         BasicBlock target = new(targetLabel, [new AssignmentOp(temporary, targetSlot)], root,
             new Return(Ret, new VoidOp()));
@@ -380,7 +380,7 @@ public sealed class MergeStackSlotsTests
         ProtectedRegion protectedRegion = new(root.EntryLabel, root, group);
         StackSlot sourceSlot = new(0, typeof(int).MakeByRefType(), 0);
         StackSlot targetSlot = new(0, typeof(int).MakeByRefType(), 1);
-        Temporary loadedValue = new(typeof(int));
+        Temporary loadedValue = new(typeof(int), 0);
         Prefix[] prefixes = [new(OpCodes.Unaligned, (byte)1), new(OpCodes.Volatile, null)];
         ILInstruction instruction = new(OpCodes.Ldind_I4, null!, prefixes);
         ILOp load = new(instruction, [targetSlot], typeof(int));
