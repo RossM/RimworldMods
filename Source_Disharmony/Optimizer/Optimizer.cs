@@ -44,6 +44,8 @@ internal class Optimizer
 
         new MergeStackSlots(this).Run();
 
+        new DeduceTypes(this).Run();
+
         return inputInstructions;
     }
 }

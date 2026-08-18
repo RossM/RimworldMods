@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using Disharmony.Optimizer;
+
+namespace Disharmony;
 
 // This was originally intended to just be a way of keeping track of the LocalBuilder associated
 // with a local if we have one, but it turns out to dramatically simplify code dealing with locals.
@@ -23,6 +25,13 @@ internal abstract record LocalTracker
             : new LocalTrackerIndex(OpCodeData.GetIntOperand(instruction));
     }
 
+    public static LocalTracker From(ILInstruction instruction)
+    {
+        return instruction.Operand is LocalBuilder builder
+            ? new LocalTrackerBuilder(builder)
+            : new LocalTrackerIndex(OpCodeData.GetIntOperand(instruction));
+    }
+
     /// <summary>
     ///     Gives the same result as <c>LocalTracker.From(instruction).Index</c>, but without creating a LocalTracker object.
     /// </summary>
@@ -31,6 +40,13 @@ internal abstract record LocalTracker
     public static int IndexFrom(CodeInstruction instruction)
     {
         return instruction.operand is LocalBuilder builder
+            ? builder.LocalIndex
+            : OpCodeData.GetIntOperand(instruction);
+    }
+
+    public static int IndexFrom(ILInstruction instruction)
+    {
+        return instruction.Operand is LocalBuilder builder
             ? builder.LocalIndex
             : OpCodeData.GetIntOperand(instruction);
     }
