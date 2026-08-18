@@ -3,6 +3,8 @@
 internal abstract record Node
 {
     public abstract T Accept<T>(IVisitor<T> visitor);
+
+    public virtual void DebugPrint() => FileLog.LogBuffered(ToString());
 }
 
 
