@@ -148,12 +148,9 @@ internal sealed record ExceptionGroup(IReadOnlyList<HandlerRegion> HandlerRegion
 ///     block's label rather than as a direct reference to the block. This allows a <see cref="BasicBlock" /> to be
 ///     replaced with a new block with the same label without updating other data structures.
 /// </remarks>
-/// <param name="label">The original IL label, or <see langword="null" /> if the block did not have an IL label.</param>
-internal sealed class BlockLabel(Label? label = null, int id = -1)
+/// <param name="Label">The original IL label, or <see langword="null" /> if the block did not have an IL label.</param>
+internal sealed record BlockLabel(int Id, Label? Label = null)
 {
-    public Label? Label { get; } = label;
-    public int Id { get; } = id;
-
     public override string ToString() => $"Block{Id}";
 }
 

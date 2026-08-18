@@ -16,7 +16,7 @@ internal class CreateControlFlowGraph : Pass
         ReturnType = Method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
     }
 
-    public RootRegion RootRegion { get; } = new(new(id: 0));
+    public RootRegion RootRegion { get; } = new(new(Id: 0));
     public Dictionary<Label, BlockLabel> BlockLabels { get; } = [];
     public Dictionary<BlockLabel, (List<StackSlot> IncomingStack, List<StackSlot> OutgoingStack)> BlockStacks { get; } = [];
     public List<Local> Locals { get; } = [];
@@ -108,14 +108,14 @@ internal class CreateControlFlowGraph : Pass
         }
     }
 
-    private BlockLabel CreateBlockLabel() => new(id: NextBlockLabelId++);
+    private BlockLabel CreateBlockLabel() => new(Id: NextBlockLabelId++);
 
     private BlockLabel CreateBlockLabel(CodeInstruction instruction)
     {
         if (instruction.labels.Count <= 0)
             return CreateBlockLabel();
 
-        var blockLabel = new BlockLabel(instruction.labels[0], NextBlockLabelId++);
+        var blockLabel = new BlockLabel(NextBlockLabelId++, instruction.labels[0]);
         foreach (var label in instruction.labels)
             BlockLabels.Add(label, blockLabel);
         return blockLabel;

@@ -13,7 +13,7 @@ public sealed class MergeStackSlotsTests
     [Test]
     public void MergeStackSlots_NoEdgeAssignments_PreservesTheGraph()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         BasicBlock block = new(root.EntryLabel, [], root,
             new Return(Ret, new VoidOp()));
         ControlFlowGraph graph = new(root, [block], [], [], []);
@@ -35,8 +35,8 @@ public sealed class MergeStackSlotsTests
     [Test]
     public void MergeStackSlots_OneEdge_RewritesTheTargetAndRemovesTheCopy()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel destination = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel destination = new(1);
         StackSlot sourceSlot = new(0, typeof(int), 0);
         StackSlot targetSlot = new(0, typeof(int), 1);
         BasicBlock source = new(root.EntryLabel, [], root,
@@ -62,9 +62,9 @@ public sealed class MergeStackSlotsTests
     [Test]
     public void MergeStackSlots_ChainOfEdges_RewritesEverySlotToTheOriginalSource()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel middleLabel = new();
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel middleLabel = new(1);
+        BlockLabel targetLabel = new(2);
         StackSlot sourceSlot = new(0, typeof(int), 0);
         StackSlot middleSlot = new(0, typeof(int), 1);
         StackSlot targetSlot = new(0, typeof(int), 2);
@@ -95,8 +95,8 @@ public sealed class MergeStackSlotsTests
     [Test]
     public void MergeStackSlots_RewritesSlotsUsedByILOperations()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel destination = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel destination = new(1);
         StackSlot sourceSlot = new(0, typeof(int), 0);
         StackSlot targetSlot = new(0, typeof(int), 1);
         ILOp pop = new(new ILInstruction(OpCodes.Pop, null!, []), [targetSlot], typeof(void));
@@ -124,10 +124,10 @@ public sealed class MergeStackSlotsTests
     [Test]
     public void MergeStackSlots_RewritesSlotsUsedByConditionalBranches()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel conditionLabel = new();
-        BlockLabel fallthroughLabel = new();
-        BlockLabel takenLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel conditionLabel = new(1);
+        BlockLabel fallthroughLabel = new(2);
+        BlockLabel takenLabel = new(3);
         StackSlot sourceSlot = new(0, typeof(int), 0);
         StackSlot conditionSlot = new(0, typeof(int), 1);
         BasicBlock source = new(root.EntryLabel, [], root,
@@ -161,9 +161,9 @@ public sealed class MergeStackSlotsTests
     [Test]
     public void MergeStackSlots_DisconnectedSets_RemainDistinct()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel secondLabel = new();
-        BlockLabel thirdLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel secondLabel = new(1);
+        BlockLabel thirdLabel = new(2);
         StackSlot firstSource = new(0, typeof(int), 0);
         StackSlot firstTarget = new(0, typeof(int), 1);
         StackSlot secondSource = new(1, typeof(int), 2);
@@ -199,9 +199,9 @@ public sealed class MergeStackSlotsTests
     [Test]
     public void MergeStackSlots_MultipleIncomingEdgesMergeEverySourceWithTheTarget()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel secondLabel = new();
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel secondLabel = new(1);
+        BlockLabel targetLabel = new(2);
         StackSlot firstSource = new(0, typeof(int), 0);
         StackSlot secondSource = new(0, typeof(int), 1);
         StackSlot targetSlot = new(0, typeof(int), 2);
@@ -231,8 +231,8 @@ public sealed class MergeStackSlotsTests
     [Test]
     public void MergeStackSlots_MultipleAssignmentsOnOneEdgeKeepIndependentSetsDistinct()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel targetLabel = new(1);
         StackSlot firstSource = new(0, typeof(int), 0);
         StackSlot secondSource = new(1, typeof(string), 1);
         StackSlot firstTarget = new(0, typeof(int), 2);
@@ -266,8 +266,8 @@ public sealed class MergeStackSlotsTests
     [Test]
     public void MergeStackSlots_RewritesSlotsReadByAssignmentsInsideBlocks()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel targetLabel = new(1);
         StackSlot sourceSlot = new(0, typeof(int), 0);
         StackSlot targetSlot = new(0, typeof(int), 1);
         Temporary temporary = new(typeof(int), 0);
@@ -295,9 +295,9 @@ public sealed class MergeStackSlotsTests
     [Test]
     public void MergeStackSlots_CatchEntryCopyIsRemovedAndCatchBodyUsesIncomingException()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel catchEntryLabel = new();
-        BlockLabel catchBodyLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel catchEntryLabel = new(1);
+        BlockLabel catchBodyLabel = new(2);
         StackSlot incomingException = new(0, typeof(Exception), 0);
         StackSlot catchBodyException = new(0, typeof(Exception), 1);
         CatchRegion catchRegion = new(catchEntryLabel, root, incomingException);
@@ -373,9 +373,9 @@ public sealed class MergeStackSlotsTests
     [Test]
     public void MergeStackSlots_RewritePreservesUnrelatedGraphAndInstructionState()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel targetLabel = new();
-        CatchRegion catchRegion = new(new BlockLabel(), root, new StackSlot(0, typeof(Exception), 2));
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel targetLabel = new(1);
+        CatchRegion catchRegion = new(new BlockLabel(-1), root, new StackSlot(0, typeof(Exception), 2));
         ExceptionGroup group = new([catchRegion]);
         ProtectedRegion protectedRegion = new(root.EntryLabel, root, group);
         StackSlot sourceSlot = new(0, typeof(int).MakeByRefType(), 0);

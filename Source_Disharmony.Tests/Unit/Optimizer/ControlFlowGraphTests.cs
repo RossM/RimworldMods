@@ -19,7 +19,7 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void Constructor_PreservesComponentsAndIndexesBlocks()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         BasicBlock block = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
         Argument argument = new(0, typeof(int));
         Local local = new(typeof(string), 0);
@@ -45,9 +45,9 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void EdgeQueries_BlockAndLabelOverloadsReturnIndexedRelationships()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel middleLabel = new();
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel middleLabel = new(1);
+        BlockLabel targetLabel = new(2);
         StackSlot condition = new(0, typeof(int), 0);
         BasicBlock source = new(root.EntryLabel, [], root,
             new ConditionalBranch(OpCodes.Brtrue, [condition], [middleLabel, targetLabel]));
@@ -75,8 +75,8 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void GetEdge_BlockAndLabelOverloadsReturnTheSameEdge()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel targetLabel = new(1);
         BasicBlock source = new(root.EntryLabel, [], root, new UnconditionalBranch(targetLabel));
         BasicBlock target = new(targetLabel, [], root, new Return(Ret, new VoidOp()));
         Edge edge = new(source.Label, target.Label, []);
@@ -92,8 +92,8 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void GetEdgeOrNull_BlockAndLabelOverloadsReturnEdgeOrNull()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel targetLabel = new(1);
         BasicBlock source = new(root.EntryLabel, [], root, new UnconditionalBranch(targetLabel));
         BasicBlock target = new(targetLabel, [], root, new Return(Ret, new VoidOp()));
         Edge edge = new(source.Label, target.Label, []);
@@ -111,10 +111,10 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void MissingBlockAndRelationships_ThrowKeyNotFoundException()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         BasicBlock block = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
         ControlFlowGraph graph = new(root, [block], [], [], []);
-        BlockLabel missingLabel = new();
+        BlockLabel missingLabel = new(1);
         BasicBlock missingBlock = new(missingLabel, [], root, new Return(Ret, new VoidOp()));
 
         Assert.Multiple(() =>
@@ -136,10 +136,10 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void ExceptionRegionQueries_ReturnGroupAndHandlerOrder()
     {
-        RootRegion root = new(new BlockLabel());
-        CatchRegion catchRegion = new(new BlockLabel(), root, new StackSlot(0, typeof(Exception), 0));
-        FinallyRegion finallyRegion = new(new BlockLabel(), root);
-        FaultRegion faultRegion = new(new BlockLabel(), root);
+        RootRegion root = new(new BlockLabel(0));
+        CatchRegion catchRegion = new(new BlockLabel(1), root, new StackSlot(0, typeof(Exception), 0));
+        FinallyRegion finallyRegion = new(new BlockLabel(2), root);
+        FaultRegion faultRegion = new(new BlockLabel(3), root);
         ExceptionGroup group = new([catchRegion, finallyRegion, faultRegion]);
         ProtectedRegion protectedRegion = new(root.EntryLabel, root, group);
         BasicBlock block = new(root.EntryLabel, [], protectedRegion, new Return(Ret, new VoidOp()));
@@ -163,11 +163,11 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void NestedProtectedRegions_IndexInnerAndOuterGroups()
     {
-        RootRegion root = new(new BlockLabel());
-        FinallyRegion outerFinally = new(new BlockLabel(), root);
+        RootRegion root = new(new BlockLabel(0));
+        FinallyRegion outerFinally = new(new BlockLabel(1), root);
         ExceptionGroup outerGroup = new([outerFinally]);
         ProtectedRegion outerProtected = new(root.EntryLabel, root, outerGroup);
-        CatchRegion innerCatch = new(new BlockLabel(), outerProtected,
+        CatchRegion innerCatch = new(new BlockLabel(2), outerProtected,
             new StackSlot(0, typeof(Exception), 0));
         ExceptionGroup innerGroup = new([innerCatch]);
         ProtectedRegion innerProtected = new(root.EntryLabel, outerProtected, innerGroup);
@@ -188,10 +188,10 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void ExceptionRegionQueries_UnindexedRegionThrowsKeyNotFoundException()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         BasicBlock block = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
         ControlFlowGraph graph = new(root, [block], [], [], []);
-        FinallyRegion missingRegion = new(new BlockLabel(), root);
+        FinallyRegion missingRegion = new(new BlockLabel(1), root);
 
         Assert.Multiple(() =>
         {
@@ -203,7 +203,7 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void Constructor_DuplicateBlockLabelsThrowArgumentException()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         BasicBlock first = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
         BasicBlock second = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
 
@@ -214,8 +214,8 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void Constructor_DuplicateEdgesThrowInvalidOperationException()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel targetLabel = new(1);
         BasicBlock source = new(root.EntryLabel, [], root, new UnconditionalBranch(targetLabel));
         BasicBlock target = new(targetLabel, [], root, new Return(Ret, new VoidOp()));
         Edge first = new(source.Label, target.Label, []);
@@ -229,8 +229,8 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void Constructor_ValidationRejectsMissingBranchEdge()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel targetLabel = new(1);
         BasicBlock source = new(root.EntryLabel, [], root, new UnconditionalBranch(targetLabel));
         BasicBlock target = new(targetLabel, [], root, new Return(Ret, new VoidOp()));
 
@@ -241,8 +241,8 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void Constructor_ValidationRejectsUnreferencedEdge()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel targetLabel = new(1);
         BasicBlock source = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
         BasicBlock target = new(targetLabel, [], root, new Return(Ret, new VoidOp()));
         Edge edge = new(source.Label, target.Label, []);
@@ -254,7 +254,7 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void Constructor_ValidationRejectsHandlerWithoutExceptionGroup()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         FinallyRegion finallyRegion = new(root.EntryLabel, root);
         BasicBlock block = new(root.EntryLabel, [], finallyRegion, new Return(Ret, new VoidOp()));
 
@@ -266,8 +266,8 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void Constructor_ValidationCanBeDisabledForAnIncompleteGraph()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel missingTarget = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel missingTarget = new(1);
         BasicBlock block = new(root.EntryLabel, [], root, new UnconditionalBranch(missingTarget));
 
         ControlFlowGraph graph = new(root, [block], [], [], [], validate: false);
@@ -282,7 +282,7 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void Accept_DispatchesToControlFlowGraphVisitor()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         BasicBlock block = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
         ControlFlowGraph graph = new(root, [block], [], [], []);
         RecordingVisitor visitor = new();
@@ -299,7 +299,7 @@ public sealed class ControlFlowGraphTests
     [Test]
     public void Equality_SameComponentsAreEqualAndHaveEqualHashCodes()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         BasicBlock block = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
         BasicBlock[] blocks = [block];
         Edge[] edges = [];

@@ -6,6 +6,8 @@ internal record ControlFlowGraph : Node
 {
     public IEnumerable<ExceptionGroup> ExceptionGroups => exceptionGroups;
 
+    public static readonly ControlFlowGraph Empty = new(new RootRegion(new BlockLabel(0)), [], [], [], []);
+
     private readonly HashSet<ExceptionGroup> exceptionGroups = [];
     private readonly Dictionary<ExceptionRegion, ExceptionGroup> exceptionGroupsByRegion = [];
     private readonly Dictionary<ExceptionRegion, ExceptionRegion?> nextRegion = [];

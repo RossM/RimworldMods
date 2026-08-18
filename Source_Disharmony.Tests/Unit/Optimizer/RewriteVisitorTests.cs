@@ -93,7 +93,7 @@ public sealed class RewriteVisitorTests
     {
         StackSlot original = new(0, typeof(int), 0);
         StackSlot replacement = new(0, typeof(int), 1);
-        ConditionalBranch branch = new(OpCodes.Beq, [original, original], [new BlockLabel(), new BlockLabel()]);
+        ConditionalBranch branch = new(OpCodes.Beq, [original, original], [new BlockLabel(1), new BlockLabel(2)]);
         ReplaceVisitor visitor = new();
         visitor.Replacements[original] = replacement;
 
@@ -110,7 +110,7 @@ public sealed class RewriteVisitorTests
     [Test]
     public void BasicBlock_RewritesOpsAndBranch()
     {
-        RootRegion region = new(new BlockLabel());
+        RootRegion region = new(new BlockLabel(-1));
         StackSlot original = new(0, typeof(int), 0);
         StackSlot replacement = new(0, typeof(int), 1);
         AssignmentOp assignment = new(new Temporary(typeof(int), 0), original);
@@ -137,7 +137,7 @@ public sealed class RewriteVisitorTests
         Temporary retainedOutput = new(typeof(int), 0);
         AssignmentOp becomesIdentity = new(replacement, original);
         AssignmentOp retained = new(retainedOutput, original);
-        Edge edge = new(new BlockLabel(), new BlockLabel(), [becomesIdentity, retained]);
+        Edge edge = new(new BlockLabel(1), new BlockLabel(-1), [becomesIdentity, retained]);
         ReplaceVisitor visitor = new();
         visitor.Replacements[original] = replacement;
 
@@ -155,12 +155,12 @@ public sealed class RewriteVisitorTests
     [Test]
     public void ExceptionGroup_RewritesCatchIncomingException()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         StackSlot original = new(0, typeof(Exception), 0);
         StackSlot replacement = new(0, typeof(Exception), 1);
-        CatchRegion catchRegion = new(new BlockLabel(), root, original);
-        FinallyRegion finallyRegion = new(new BlockLabel(), root);
-        FaultRegion faultRegion = new(new BlockLabel(), root);
+        CatchRegion catchRegion = new(new BlockLabel(1), root, original);
+        FinallyRegion finallyRegion = new(new BlockLabel(2), root);
+        FaultRegion faultRegion = new(new BlockLabel(3), root);
         ExceptionGroup group = new([catchRegion, finallyRegion, faultRegion]);
         ReplaceVisitor visitor = new();
         visitor.Replacements[original] = replacement;
@@ -179,13 +179,13 @@ public sealed class RewriteVisitorTests
     [Test]
     public void ExceptionRegions_RewriteTheirParentRegion()
     {
-        RootRegion originalParent = new(new BlockLabel());
-        RootRegion replacementParent = new(new BlockLabel());
-        ProtectedRegion protectedRegion = new(new BlockLabel(), originalParent, new ExceptionGroup([]));
-        CatchRegion catchRegion = new(new BlockLabel(), originalParent,
+        RootRegion originalParent = new(new BlockLabel(1));
+        RootRegion replacementParent = new(new BlockLabel(2));
+        ProtectedRegion protectedRegion = new(new BlockLabel(3), originalParent, new ExceptionGroup([]));
+        CatchRegion catchRegion = new(new BlockLabel(4), originalParent,
             new StackSlot(0, typeof(Exception), 0));
-        FinallyRegion finallyRegion = new(new BlockLabel(), originalParent);
-        FaultRegion faultRegion = new(new BlockLabel(), originalParent);
+        FinallyRegion finallyRegion = new(new BlockLabel(5), originalParent);
+        FaultRegion faultRegion = new(new BlockLabel(6), originalParent);
         RootRegionReplacingVisitor visitor = new(originalParent, replacementParent);
 
         var rewrittenProtected = (ProtectedRegion)protectedRegion.Accept(visitor);
@@ -205,11 +205,11 @@ public sealed class RewriteVisitorTests
     [Test]
     public void UnchangedCompositeNodes_PreserveTheirInstances()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         StackSlot value = new(0, typeof(int), 0);
         AssignmentOp assignment = new(new Temporary(typeof(int), 0), value);
         ILOp operation = new(Nop, [value], typeof(void));
-        ConditionalBranch conditional = new(OpCodes.Brtrue, [value], [new BlockLabel(), new BlockLabel()]);
+        ConditionalBranch conditional = new(OpCodes.Brtrue, [value], [new BlockLabel(1), new BlockLabel(2)]);
         BasicBlock block = new(root.EntryLabel, [assignment, operation], root, conditional);
         Edge edge = new(block.Label, conditional.Labels[0], [assignment]);
         RewriteVisitor visitor = new();
@@ -222,9 +222,9 @@ public sealed class RewriteVisitorTests
             Assert.That(block.Accept(visitor), Is.SameAs(block));
             Assert.That(edge.Accept(visitor), Is.SameAs(edge));
             Assert.That(root.Accept(visitor), Is.SameAs(root));
-            Assert.That(new UnconditionalBranch(new BlockLabel()).Accept(visitor),
+            Assert.That(new UnconditionalBranch(new BlockLabel(1)).Accept(visitor),
                 Is.TypeOf<UnconditionalBranch>());
-            Assert.That(new Leave(new BlockLabel()).Accept(visitor), Is.TypeOf<Leave>());
+            Assert.That(new Leave(new BlockLabel(2)).Accept(visitor), Is.TypeOf<Leave>());
             Assert.That(new Rethrow().Accept(visitor), Is.TypeOf<Rethrow>());
         });
     }
@@ -232,11 +232,11 @@ public sealed class RewriteVisitorTests
     [Test]
     public void ControlFlowGraph_ReplacesChangedBlocksEdgesAndExceptionGroups()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel destination = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel destination = new(1);
         StackSlot original = new(0, typeof(Exception), 0);
         StackSlot replacement = new(0, typeof(Exception), 1);
-        CatchRegion catchRegion = new(new BlockLabel(), root, original);
+        CatchRegion catchRegion = new(new BlockLabel(2), root, original);
         ExceptionGroup group = new([catchRegion]);
         ProtectedRegion protectedRegion = new(root.EntryLabel, root, group);
         BasicBlock source = new(root.EntryLabel, [], protectedRegion,
@@ -263,7 +263,7 @@ public sealed class RewriteVisitorTests
     [Test]
     public void ControlFlowGraph_RewritesArgumentsAndLocalsWithoutLosingUnchangedMetadata()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         BasicBlock block = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
         Argument originalArgument = new(0, typeof(int));
         Argument replacementArgument = new(0, typeof(long));

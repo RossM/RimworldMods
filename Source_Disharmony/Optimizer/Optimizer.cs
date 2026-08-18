@@ -10,9 +10,8 @@ internal class Optimizer
     internal readonly List<Type> parameterTypes;
     internal readonly Type returnType;
 
-    internal ControlFlowGraph cfg = new(new RootRegion(new BlockLabel()), [], [], [], []);
+    internal ControlFlowGraph cfg = ControlFlowGraph.Empty;
 
-    private readonly RootRegion rootRegion = new(new BlockLabel());
 
     public MethodBase Method { get; }
 

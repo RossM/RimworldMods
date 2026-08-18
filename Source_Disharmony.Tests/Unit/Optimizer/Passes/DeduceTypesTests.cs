@@ -14,7 +14,7 @@ public sealed class DeduceTypesTests
     [Test]
     public void Constant_AssignmentAndReturnAreRewrittenWithDeducedType()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         StackSlot result = new(0, TypeLattice.Unknown, 0);
         ILOp constant = new(new ILInstruction(OpCodes.Ldc_I4_1, null!, []), [], TypeLattice.Unknown);
         BasicBlock block = new(root.EntryLabel, [new AssignmentOp(result, constant)], root,
@@ -41,7 +41,7 @@ public sealed class DeduceTypesTests
     [Test]
     public void ArgumentLoad_UsesDeclaredArgumentType()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         StackSlot result = new(0, TypeLattice.Unknown, 0);
         ILOp load = new(new ILInstruction(OpCodes.Ldarg_0, null!, []), [], TypeLattice.Unknown);
         BasicBlock block = new(root.EntryLabel, [new AssignmentOp(result, load)], root,
@@ -66,7 +66,7 @@ public sealed class DeduceTypesTests
     [Test]
     public void LocalLoad_NormalizesDeclaredLocalType()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         StackSlot result = new(0, TypeLattice.Unknown, 0);
         ILOp load = new(new ILInstruction(OpCodes.Ldloc_0, null!, []), [], TypeLattice.Unknown);
         BasicBlock block = new(root.EntryLabel, [new AssignmentOp(result, load)], root,
@@ -91,9 +91,9 @@ public sealed class DeduceTypesTests
     [Test]
     public void IncomingEdges_MergeReferenceTypesAndRewriteEveryUse()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel secondLabel = new();
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel secondLabel = new(1);
+        BlockLabel targetLabel = new(2);
         StackSlot stringValue = new(0, typeof(string), 0);
         StackSlot classValue = new(0, typeof(OpcodeUtilitiesClass), 1);
         StackSlot mergedValue = new(0, TypeLattice.Unknown, 2);
@@ -130,8 +130,8 @@ public sealed class DeduceTypesTests
     [Test]
     public void EdgeThenArithmetic_ReachesFixedPointBeforeRewritingGraph()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel targetLabel = new(1);
         StackSlot sourceValue = new(0, TypeLattice.Unknown, 0);
         StackSlot targetValue = new(0, TypeLattice.Unknown, 1);
         StackSlot result = new(0, TypeLattice.Unknown, 2);
@@ -165,9 +165,9 @@ public sealed class DeduceTypesTests
     [Test]
     public void Loop_BackEdgeTypesReachFixedPoint()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel loopLabel = new();
-        BlockLabel exitLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel loopLabel = new(1);
+        BlockLabel exitLabel = new(2);
         StackSlot initialValue = new(0, TypeLattice.Unknown, 0);
         StackSlot loopValue = new(0, TypeLattice.Unknown, 1);
         StackSlot nextValue = new(0, TypeLattice.Unknown, 2);
@@ -215,9 +215,9 @@ public sealed class DeduceTypesTests
     [Test]
     public void ConditionalBranch_UsesTypeDeducedByEarlierOperation()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel fallthroughLabel = new();
-        BlockLabel takenLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel fallthroughLabel = new(1);
+        BlockLabel takenLabel = new(2);
         StackSlot condition = new(0, TypeLattice.Unknown, 0);
         ILOp constant = new(new ILInstruction(OpCodes.Ldc_I4_1, null!, []), [], TypeLattice.Unknown);
         BasicBlock source = new(root.EntryLabel, [new AssignmentOp(condition, constant)], root,
@@ -251,7 +251,7 @@ public sealed class DeduceTypesTests
     [Test]
     public void Throw_UsesTypeDeducedByEarlierOperation()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         StackSlot exception = new(0, TypeLattice.Unknown, 0);
         ILOp loadNull = new(new ILInstruction(OpCodes.Ldnull, null!, []), [], TypeLattice.Unknown);
         BasicBlock block = new(root.EntryLabel, [new AssignmentOp(exception, loadNull)], root,
@@ -279,9 +279,9 @@ public sealed class DeduceTypesTests
     [Test]
     public void IncomingEdges_NullAndReferenceMergeToTheReferenceType()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel secondLabel = new();
-        BlockLabel targetLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel secondLabel = new(1);
+        BlockLabel targetLabel = new(2);
         StackSlot stringValue = new(0, typeof(string), 0);
         StackSlot nullValue = new(0, TypeLattice.Null, 1);
         StackSlot mergedValue = new(0, TypeLattice.Unknown, 2);
@@ -317,8 +317,8 @@ public sealed class DeduceTypesTests
     [Test]
     public void UnreachableBlock_StillHasItsTypesDeduced()
     {
-        RootRegion root = new(new BlockLabel());
-        BlockLabel unreachableLabel = new();
+        RootRegion root = new(new BlockLabel(0));
+        BlockLabel unreachableLabel = new(1);
         BasicBlock entry = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
         StackSlot result = new(0, TypeLattice.Unknown, 0);
         ILOp constant = new(new ILInstruction(OpCodes.Ldc_I8, 1L, []), [], TypeLattice.Unknown);
@@ -346,7 +346,7 @@ public sealed class DeduceTypesTests
     [Test]
     public void AssignmentToTemporary_DeducesInputWithoutChangingDestinationType()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         Temporary destination = new(typeof(object), 0);
         ILOp constant = new(new ILInstruction(OpCodes.Ldc_I4_1, null!, []), [], TypeLattice.Unknown);
         AssignmentOp assignment = new(destination, constant);
@@ -372,9 +372,9 @@ public sealed class DeduceTypesTests
     [Test]
     public void TypeRewrite_PreservesUnrelatedGraphInstructionAndRegionState()
     {
-        RootRegion root = new(new BlockLabel());
+        RootRegion root = new(new BlockLabel(0));
         StackSlot exception = new(0, typeof(Exception), 0);
-        CatchRegion catchRegion = new(new BlockLabel(), root, exception);
+        CatchRegion catchRegion = new(new BlockLabel(-1), root, exception);
         ExceptionGroup group = new([catchRegion]);
         ProtectedRegion protectedRegion = new(root.EntryLabel, root, group);
         StackSlot address = new(0, typeof(int).MakeByRefType(), 1);
