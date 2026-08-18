@@ -1,0 +1,66 @@
+namespace Disharmony.Tests;
+
+public static class InlineRuleBuilderPatches
+{
+    public static int ArgumentLoaded;
+    public static int ArgumentAddressed;
+    public static int ArgumentStored;
+    public static int Local0Observed;
+    public static int Local4Observed;
+    public static int SwitchObserved;
+
+    public static void Prefix_BranchAndRefWrite_AreInlined(ref int value)
+    {
+        if (value < 0)
+            value = -value;
+    }
+
+    public static void Prefix_ArgumentOpcodeForms_AreRemapped(
+        int first,
+        int second,
+        int third,
+        int fourth,
+        int fifth)
+    {
+        ArgumentLoaded = fifth;
+        System.Threading.Interlocked.Increment(ref fifth);
+        ArgumentAddressed = fifth;
+        fifth = 42;
+        ArgumentStored = fifth;
+    }
+
+    public static void Prefix_LocalOpcodeForms_AreRemapped()
+    {
+        int local0 = 10;
+        int local1 = 11;
+        int local2 = 12;
+        int local3 = 13;
+        int local4 = 14;
+        System.Threading.Interlocked.CompareExchange(ref local0, local0, local0);
+        System.Threading.Interlocked.CompareExchange(ref local1, local1, local1);
+        System.Threading.Interlocked.CompareExchange(ref local2, local2, local2);
+        System.Threading.Interlocked.CompareExchange(ref local3, local3, local3);
+        System.Threading.Interlocked.CompareExchange(ref local4, local4, local4);
+        Local0Observed = local0;
+        Local4Observed = local4;
+    }
+
+    public static void Prefix_SwitchTargets_AreRemapped(int value)
+    {
+        switch (value)
+        {
+            case 0: SwitchObserved = 10; break;
+            case 1: SwitchObserved = 11; break;
+            case 2: SwitchObserved = 12; break;
+            case 3: SwitchObserved = 13; break;
+            case 4: SwitchObserved = 14; break;
+            default: SwitchObserved = 99; break;
+        }
+    }
+}
+
+public static class InlineRuleBuilderTargets
+{
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void FiveArguments(int first, int second, int third, int fourth, int fifth) { }
+}
