@@ -302,23 +302,23 @@ internal record ControlFlowGraph : Node
 
     private void DebugPrintRegion(Region region)
     {
-        if (region is CatchRegion catchRegion)
-            FileLog.LogBuffered($"{region.GetType().Name} ({catchRegion.IncomingException}) -> { region.EntryLabel } {{");
+        if (region is ProtectedRegion or Disharmony.Optimizer.RootRegion)
+            FileLog.LogBuffered($"{region} {{");
         else
-            FileLog.LogBuffered($"{region.GetType().Name} -> {region.EntryLabel} {{");
+            FileLog.LogBuffered($"}} {region} {{");
         FileLog.ChangeIndent(1);
 
-        foreach (var block in BasicBlocks.Where(b => b.Region == region))
+        foreach (var block in BasicBlocks.Where(b => b.Region == region).OrderByDescending(b => region.EntryLabel == b.Label))
             DebugPrintBlock(block);
 
         foreach (var child in exceptionGroupsByRegion.Keys.OfType<ProtectedRegion>().Where(r => r.Parent == region))
             DebugPrintRegion(child);
 
         FileLog.ChangeIndent(-1);
-        FileLog.LogBuffered("}");
-
         if (region is ExceptionRegion e && GetNextRegion(e) is { } next)
             DebugPrintRegion(next);
+        else
+            FileLog.LogBuffered("}");
     }
 
     public virtual bool Equals(ControlFlowGraph? other)

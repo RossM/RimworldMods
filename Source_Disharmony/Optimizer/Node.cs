@@ -28,6 +28,8 @@ internal abstract record Region(BlockLabel EntryLabel) : Node;
 internal sealed record RootRegion(BlockLabel EntryLabel) : Region(EntryLabel)
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => "root";
 }
 
 /// <summary>
@@ -50,6 +52,8 @@ internal abstract record ExceptionRegion(BlockLabel EntryLabel, Region Parent) :
 internal sealed record ProtectedRegion(BlockLabel EntryLabel, Region Parent, ExceptionGroup Group) : ExceptionRegion(EntryLabel, Parent)
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => "try";
 }
 
 internal abstract record HandlerRegion(BlockLabel EntryLabel, Region Parent) : ExceptionRegion(EntryLabel, Parent);
@@ -69,6 +73,8 @@ internal sealed record CatchRegion(BlockLabel EntryLabel, Region Parent, StackSl
 {
     public Type ExceptionType => IncomingException.Type;
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => $"catch ({IncomingException})";
 }
 
 // Note that there is no FilterRegion, because Harmony's filter handling is broken.
@@ -90,6 +96,8 @@ internal sealed record CatchRegion(BlockLabel EntryLabel, Region Parent, StackSl
 internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent)
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => "finally";
 }
 
 /// <summary>
@@ -105,6 +113,8 @@ internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : Han
 internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent)
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public override string ToString() => "fault";
 }
 
 /// <summary>
