@@ -305,7 +305,7 @@ internal record ControlFlowGraph : Node
         if (region is CatchRegion catchRegion)
             FileLog.LogBuffered($"{region.GetType().Name} ({catchRegion.IncomingException}) -> { region.EntryLabel } {{");
         else
-            FileLog.LogBuffered($"{region.GetType().Name}-> {region.EntryLabel} {{");
+            FileLog.LogBuffered($"{region.GetType().Name} -> {region.EntryLabel} {{");
         FileLog.ChangeIndent(1);
 
         foreach (var block in BasicBlocks.Where(b => b.Region == region))
