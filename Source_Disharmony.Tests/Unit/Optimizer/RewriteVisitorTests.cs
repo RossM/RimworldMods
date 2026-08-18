@@ -259,4 +259,37 @@ public sealed class RewriteVisitorTests
                 Is.SameAs(replacement));
         });
     }
+
+    [Test]
+    public void ControlFlowGraph_RewritesArgumentsAndLocalsWithoutLosingUnchangedMetadata()
+    {
+        RootRegion root = new(new BlockLabel());
+        BasicBlock block = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
+        Argument originalArgument = new(0, typeof(int));
+        Argument replacementArgument = new(0, typeof(long));
+        Argument unchangedArgument = new(1, typeof(string));
+        Local originalLocal = new(typeof(int), 0);
+        Local replacementLocal = new(typeof(long), 0);
+        Local unchangedLocal = new(typeof(string), 1);
+        ControlFlowGraph graph = new(root, [block], [],
+            [originalArgument, unchangedArgument], [originalLocal, unchangedLocal]);
+        ReplaceVisitor visitor = new();
+        visitor.Replacements[originalArgument] = replacementArgument;
+        visitor.Replacements[originalLocal] = replacementLocal;
+
+        var rewritten = (ControlFlowGraph)visitor.Visit(graph);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewritten, Is.Not.SameAs(graph));
+            Assert.That(rewritten.Arguments, Is.EqualTo(new[] { replacementArgument, unchangedArgument }));
+            Assert.That(rewritten.Arguments[0], Is.SameAs(replacementArgument));
+            Assert.That(rewritten.Arguments[1], Is.SameAs(unchangedArgument));
+            Assert.That(rewritten.Locals, Is.EqualTo(new[] { replacementLocal, unchangedLocal }));
+            Assert.That(rewritten.Locals[0], Is.SameAs(replacementLocal));
+            Assert.That(rewritten.Locals[1], Is.SameAs(unchangedLocal));
+            Assert.That(rewritten.RootRegion, Is.SameAs(root));
+            Assert.That(rewritten.GetBlock(block.Label), Is.SameAs(block));
+        });
+    }
 }

@@ -175,6 +175,25 @@ public sealed class CreateControlFlowGraphTests
     }
 
     [Test]
+    public void Metadata_ArgumentsAndLocalsAreOwnedByTheResultingGraph()
+    {
+        MethodInfo method = typeof(ControlFlowGraphTargets)
+            .GetMethod(nameof(ControlFlowGraphTargets.MethodWithLocal))!;
+
+        var generator = CreateGenerator(method, PatchProcessor.CreateILGenerator(), ThrowTerminated());
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(generator.ControlFlowGraph.Arguments, Is.EqualTo(generator.Arguments));
+            Assert.That(generator.ControlFlowGraph.Locals, Is.EqualTo(generator.Locals));
+            Assert.That(generator.ControlFlowGraph.Arguments, Has.Count.EqualTo(1));
+            Assert.That(generator.ControlFlowGraph.Arguments[0], Is.SameAs(generator.Arguments[0]));
+            Assert.That(generator.ControlFlowGraph.Locals, Has.Count.EqualTo(1));
+            Assert.That(generator.ControlFlowGraph.Locals[0], Is.SameAs(generator.Locals[0]));
+        });
+    }
+
+    [Test]
     public void StackBehaviourPop_EveryFixedFormCreatesExpectedInputs()
     {
         ILGenerator il = PatchProcessor.CreateILGenerator();

@@ -213,4 +213,59 @@ public sealed class DeduceTypesTests
             Assert.That(((Return)rewritten.GetBlock(exit.Label).Branch).Value.Type, Is.EqualTo(typeof(int)));
         });
     }
+
+    [Test]
+    public void TypeRewrite_PreservesUnrelatedGraphInstructionAndRegionState()
+    {
+        RootRegion root = new(new BlockLabel());
+        StackSlot exception = new(0, typeof(Exception), 0);
+        CatchRegion catchRegion = new(new BlockLabel(), root, exception);
+        ExceptionGroup group = new([catchRegion]);
+        ProtectedRegion protectedRegion = new(root.EntryLabel, root, group);
+        StackSlot address = new(0, typeof(int).MakeByRefType(), 1);
+        StackSlot result = new(0, TypeLattice.Unknown, 2);
+        Prefix[] prefixes = [new(OpCodes.Unaligned, (byte)1), new(OpCodes.Volatile, null)];
+        ILInstruction instruction = new(OpCodes.Ldind_I4, null!, prefixes);
+        ILOp load = new(instruction, [address], TypeLattice.Unknown);
+        BasicBlock block = new(root.EntryLabel, [new AssignmentOp(result, load)], protectedRegion,
+            new Return(Ret, result));
+        Argument argument = new(0, typeof(string));
+        Local local = new(typeof(long), 0);
+        List<Argument> arguments = [argument];
+        List<Local> locals = [local];
+        ControlFlowGraph graph = new(root, [block], [], arguments, locals);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(
+            ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new DeduceTypes(optimizer).RunInternal();
+
+        ControlFlowGraph rewritten = optimizer.cfg;
+        BasicBlock rewrittenBlock = rewritten.GetBlock(block.Label);
+        AssignmentOp rewrittenAssignment = rewrittenBlock.Ops.OfType<AssignmentOp>().Single();
+        var rewrittenLoad = (ILOp)rewrittenAssignment.Input;
+        var rewrittenReturn = (Return)rewrittenBlock.Branch;
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewritten.RootRegion, Is.SameAs(root));
+            Assert.That(rewritten.Arguments, Is.EqualTo(arguments));
+            Assert.That(rewritten.Arguments[0], Is.SameAs(argument));
+            Assert.That(rewritten.Locals, Is.EqualTo(locals));
+            Assert.That(rewritten.Locals[0], Is.SameAs(local));
+            Assert.That(rewrittenBlock.Label, Is.SameAs(block.Label));
+            Assert.That(rewrittenBlock.Region, Is.SameAs(protectedRegion));
+            Assert.That(rewritten.ExceptionGroups.Single(), Is.SameAs(group));
+            Assert.That(rewrittenLoad.IL, Is.SameAs(instruction));
+            Assert.That(rewrittenLoad.IL.Prefixes, Is.SameAs(prefixes));
+            Assert.That(rewrittenLoad.Inputs.Single().Type, Is.EqualTo(typeof(int).MakeByRefType()));
+            Assert.That(((StackSlot)rewrittenLoad.Inputs.Single()).Id, Is.EqualTo(address.Id));
+            Assert.That(((StackSlot)rewrittenAssignment.Output).Depth, Is.EqualTo(result.Depth));
+            Assert.That(((StackSlot)rewrittenAssignment.Output).Id, Is.EqualTo(result.Id));
+            Assert.That(rewrittenAssignment.Output.Type, Is.EqualTo(typeof(int)));
+            Assert.That(rewrittenReturn.IL, Is.SameAs(Ret));
+            Assert.That(rewrittenReturn.Value, Is.SameAs(rewrittenAssignment.Output));
+        });
+    }
 }

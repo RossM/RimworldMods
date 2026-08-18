@@ -236,4 +236,58 @@ public sealed class MergeStackSlotsTests
             Assert.That(graph.Edges.SelectMany(edge => edge.EdgeAssignments), Is.Empty);
         });
     }
+
+    [Test]
+    public void MergeStackSlots_RewritePreservesUnrelatedGraphAndInstructionState()
+    {
+        RootRegion root = new(new BlockLabel());
+        BlockLabel targetLabel = new();
+        CatchRegion catchRegion = new(new BlockLabel(), root, new StackSlot(0, typeof(Exception), 2));
+        ExceptionGroup group = new([catchRegion]);
+        ProtectedRegion protectedRegion = new(root.EntryLabel, root, group);
+        StackSlot sourceSlot = new(0, typeof(int).MakeByRefType(), 0);
+        StackSlot targetSlot = new(0, typeof(int).MakeByRefType(), 1);
+        Temporary loadedValue = new(typeof(int));
+        Prefix[] prefixes = [new(OpCodes.Unaligned, (byte)1), new(OpCodes.Volatile, null)];
+        ILInstruction instruction = new(OpCodes.Ldind_I4, null!, prefixes);
+        ILOp load = new(instruction, [targetSlot], typeof(int));
+        AssignmentOp loadAssignment = new(loadedValue, load);
+        Return returnBranch = new(Ret, new VoidOp());
+        BasicBlock source = new(root.EntryLabel, [], protectedRegion, new UnconditionalBranch(targetLabel));
+        BasicBlock target = new(targetLabel, [loadAssignment], protectedRegion, returnBranch);
+        Edge edge = new(source.Label, target.Label, [new AssignmentOp(targetSlot, sourceSlot)]);
+        Argument argument = new(0, typeof(string));
+        Local local = new(typeof(long), 0);
+        List<Argument> arguments = [argument];
+        List<Local> locals = [local];
+        ControlFlowGraph graph = new(root, [source, target], [edge], arguments, locals);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new MergeStackSlots(optimizer).RunInternal();
+
+        ControlFlowGraph rewritten = optimizer.cfg;
+        BasicBlock rewrittenTarget = rewritten.GetBlock(target.Label);
+        AssignmentOp rewrittenLoadAssignment = rewrittenTarget.Ops.OfType<AssignmentOp>().Single();
+        var rewrittenLoad = (ILOp)rewrittenLoadAssignment.Input;
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewritten.RootRegion, Is.SameAs(root));
+            Assert.That(rewritten.Arguments, Is.EqualTo(arguments));
+            Assert.That(rewritten.Arguments[0], Is.SameAs(argument));
+            Assert.That(rewritten.Locals, Is.EqualTo(locals));
+            Assert.That(rewritten.Locals[0], Is.SameAs(local));
+            Assert.That(rewrittenTarget.Label, Is.SameAs(target.Label));
+            Assert.That(rewrittenTarget.Region, Is.SameAs(protectedRegion));
+            Assert.That(rewritten.ExceptionGroups.Single(), Is.SameAs(group));
+            Assert.That(rewrittenTarget.Branch, Is.SameAs(returnBranch));
+            Assert.That(rewrittenLoad.IL, Is.SameAs(instruction));
+            Assert.That(rewrittenLoad.IL.Prefixes, Is.SameAs(prefixes));
+            Assert.That(rewrittenLoad.Inputs.Single(), Is.SameAs(sourceSlot));
+            Assert.That(rewrittenLoadAssignment.Output, Is.SameAs(loadedValue));
+            Assert.That(rewritten.Edges.Single().EdgeAssignments, Is.Empty);
+        });
+    }
 }
