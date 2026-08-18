@@ -5,11 +5,6 @@ namespace Disharmony.Optimizer;
 internal record ControlFlowGraph : Node
 {
     public IEnumerable<ExceptionGroup> ExceptionGroups => exceptionGroups;
-    public RootRegion RootRegion { get; }
-    public IReadOnlyList<BasicBlock> BasicBlocks { get; }
-    public IReadOnlyList<Edge> Edges { get; }
-    public IReadOnlyList<Argument> Arguments { get; }
-    public IReadOnlyList<Local> Locals { get; }
 
     private readonly HashSet<ExceptionGroup> exceptionGroups = [];
     private readonly Dictionary<ExceptionRegion, ExceptionGroup> exceptionGroupsByRegion = [];
@@ -19,7 +14,13 @@ internal record ControlFlowGraph : Node
     private readonly Dictionary<BlockLabel, HashSet<Edge>> edgesTo = [];
     private readonly Dictionary<BlockLabel, BasicBlock> basicBlocks = [];
 
-    public ControlFlowGraph(RootRegion RootRegion, IReadOnlyList<BasicBlock> BasicBlocks, IReadOnlyList<Edge> Edges, IReadOnlyList<Argument> Arguments, IReadOnlyList<Local> Locals, bool validate = true)
+    public ControlFlowGraph(
+        RootRegion RootRegion,
+        IReadOnlyList<BasicBlock> BasicBlocks,
+        IReadOnlyList<Edge> Edges,
+        IReadOnlyList<Argument> Arguments,
+        IReadOnlyList<Local> Locals,
+        bool validate = true)
     {
         this.RootRegion = RootRegion;
         this.BasicBlocks = BasicBlocks;
@@ -35,6 +36,12 @@ internal record ControlFlowGraph : Node
         if (validate)
             Validate();
     }
+
+    public RootRegion RootRegion { get; }
+    public IReadOnlyList<BasicBlock> BasicBlocks { get; }
+    public IReadOnlyList<Edge> Edges { get; }
+    public IReadOnlyList<Argument> Arguments { get; }
+    public IReadOnlyList<Local> Locals { get; }
 
     /// <summary>
     ///     Returns all incoming <see cref="Edge" />s for a <see cref="BasicBlock" />.
@@ -209,7 +216,7 @@ internal record ControlFlowGraph : Node
     {
         var group = protectedRegion.Group;
         exceptionGroups.Add(group);
-        
+
         ExceptionRegion[] regions = [protectedRegion, .. group.HandlerRegions];
         for (int i = 0; i < regions.Length; i++)
         {
@@ -255,24 +262,28 @@ internal record ControlFlowGraph : Node
         }
     }
 
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
     public virtual bool Equals(ControlFlowGraph? other)
     {
         if (other is null)
             return false;
         if (ReferenceEquals(this, other))
             return true;
-        return RootRegion.Equals(other.RootRegion) && BasicBlocks.Equals(other.BasicBlocks) && Edges.Equals(other.Edges);
+        return base.Equals(other) && RootRegion.Equals(other.RootRegion) && BasicBlocks.Equals(other.BasicBlocks) &&
+               Edges.Equals(other.Edges) && Arguments.Equals(other.Arguments) && Locals.Equals(other.Locals);
     }
-
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
     public override int GetHashCode()
     {
         unchecked
         {
-            int hashCode = RootRegion.GetHashCode();
+            int hashCode = base.GetHashCode();
+            hashCode = (hashCode * 397) ^ RootRegion.GetHashCode();
             hashCode = (hashCode * 397) ^ BasicBlocks.GetHashCode();
             hashCode = (hashCode * 397) ^ Edges.GetHashCode();
+            hashCode = (hashCode * 397) ^ Arguments.GetHashCode();
+            hashCode = (hashCode * 397) ^ Locals.GetHashCode();
             return hashCode;
         }
     }
