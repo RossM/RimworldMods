@@ -46,7 +46,7 @@ internal sealed record ILInstruction(OpCode OpCode, object? Operand, IReadOnlyLi
         var data = OpCodeData.Get(OpCode);
         return operand switch
         {
-            LocalBuilder b => $"Local{b.LocalIndex} @{b.LocalType}",
+            LocalBuilder b => $"Local{b.LocalIndex} :{b.LocalType}",
             _ when data.flags.HasFlag(OpCodeFlags.Argument) => $"Arg{OpCodeData.GetIntOperand(this)}",
             _ when data.flags.HasFlag(OpCodeFlags.Local) => $"Local{OpCodeData.GetIntOperand(this)}",
             _ => operand.ToString(),
@@ -80,7 +80,7 @@ internal sealed record ILOp(ILInstruction IL, IReadOnlyList<Op> Inputs, Type Typ
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
-    public override string ToString() => Inputs.Count > 0 ? $"{IL} ({string.Join(", ", Inputs)}) @{Type}" : $"{IL} @{Type}";
+    public override string ToString() => Inputs.Count > 0 ? $"{IL} ({string.Join(", ", Inputs)}) :{Type}" : $"{IL} :{Type}";
 }
 
 /// <summary>
@@ -99,7 +99,7 @@ internal sealed record StackSlot(int Depth, Type Type, int Id) : Variable(Type)
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
-    public override string ToString() => $"Stack{Id}_{Depth} @{Type}";
+    public override string ToString() => $"Stack{Id}_{Depth} :{Type}";
 }
 
 /// <summary>
@@ -123,7 +123,7 @@ internal sealed record Argument(int Index, Type Type) : MemoryVariable(Type)
 
     public override int Index { get; } = Index;
 
-    public override string ToString() => $"Arg{Index} @{Type}";
+    public override string ToString() => $"Arg{Index} :{Type}";
 }
 
 /// <summary>
@@ -161,7 +161,7 @@ internal sealed record Local : MemoryVariable
 
     public override int Index => Tracker.Index;
 
-    public override string ToString() => $"Local{Index} @{Type}";
+    public override string ToString() => $"Local{Index} :{Type}";
 }
 
 /// <summary>
@@ -177,7 +177,7 @@ internal sealed record Temporary(Type Type, int Id) : Variable(Type)
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
-    public override string ToString() => $"Temp{Id} @{Type}";
+    public override string ToString() => $"Temp{Id} :{Type}";
 }
 
 /// <summary>
