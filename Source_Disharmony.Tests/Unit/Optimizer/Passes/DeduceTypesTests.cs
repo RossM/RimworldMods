@@ -213,6 +213,163 @@ public sealed class DeduceTypesTests
     }
 
     [Test]
+    public void ConditionalBranch_UsesTypeDeducedByEarlierOperation()
+    {
+        RootRegion root = new(new BlockLabel());
+        BlockLabel fallthroughLabel = new();
+        BlockLabel takenLabel = new();
+        StackSlot condition = new(0, TypeLattice.Unknown, 0);
+        ILOp constant = new(new ILInstruction(OpCodes.Ldc_I4_1, null!, []), [], TypeLattice.Unknown);
+        BasicBlock source = new(root.EntryLabel, [new AssignmentOp(condition, constant)], root,
+            new ConditionalBranch(OpCodes.Brtrue, [condition], [fallthroughLabel, takenLabel]));
+        BasicBlock fallthrough = new(fallthroughLabel, [], root, new Return(Ret, new VoidOp()));
+        BasicBlock taken = new(takenLabel, [], root, new Return(Ret, new VoidOp()));
+        ControlFlowGraph graph = new(root, [source, fallthrough, taken],
+        [
+            new Edge(source.Label, fallthrough.Label, []),
+            new Edge(source.Label, taken.Label, []),
+        ], [], []);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(
+            ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new DeduceTypes(optimizer).RunInternal();
+
+        BasicBlock rewrittenSource = optimizer.cfg.GetBlock(source.Label);
+        AssignmentOp rewrittenAssignment = rewrittenSource.Ops.OfType<AssignmentOp>().Single();
+        var rewrittenBranch = (ConditionalBranch)rewrittenSource.Branch;
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewrittenAssignment.Output.Type, Is.EqualTo(typeof(int)));
+            Assert.That(rewrittenBranch.Inputs.Single(), Is.SameAs(rewrittenAssignment.Output));
+            Assert.That(rewrittenBranch.Inputs.Single().Type, Is.EqualTo(typeof(int)));
+        });
+    }
+
+    [Test]
+    public void Throw_UsesTypeDeducedByEarlierOperation()
+    {
+        RootRegion root = new(new BlockLabel());
+        StackSlot exception = new(0, TypeLattice.Unknown, 0);
+        ILOp loadNull = new(new ILInstruction(OpCodes.Ldnull, null!, []), [], TypeLattice.Unknown);
+        BasicBlock block = new(root.EntryLabel, [new AssignmentOp(exception, loadNull)], root,
+            new Throw(exception));
+        ControlFlowGraph graph = new(root, [block], [], [], []);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(
+            ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new DeduceTypes(optimizer).RunInternal();
+
+        BasicBlock rewrittenBlock = optimizer.cfg.GetBlock(block.Label);
+        AssignmentOp rewrittenAssignment = rewrittenBlock.Ops.OfType<AssignmentOp>().Single();
+        var rewrittenThrow = (Throw)rewrittenBlock.Branch;
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewrittenAssignment.Input.Type, Is.EqualTo(TypeLattice.Null));
+            Assert.That(rewrittenAssignment.Output.Type, Is.EqualTo(TypeLattice.Null));
+            Assert.That(rewrittenThrow.Exception, Is.SameAs(rewrittenAssignment.Output));
+        });
+    }
+
+    [Test]
+    public void IncomingEdges_NullAndReferenceMergeToTheReferenceType()
+    {
+        RootRegion root = new(new BlockLabel());
+        BlockLabel secondLabel = new();
+        BlockLabel targetLabel = new();
+        StackSlot stringValue = new(0, typeof(string), 0);
+        StackSlot nullValue = new(0, TypeLattice.Null, 1);
+        StackSlot mergedValue = new(0, TypeLattice.Unknown, 2);
+        BasicBlock first = new(root.EntryLabel, [], root, new UnconditionalBranch(targetLabel));
+        BasicBlock second = new(secondLabel, [], root, new UnconditionalBranch(targetLabel));
+        BasicBlock target = new(targetLabel, [], root, new Return(Ret, mergedValue));
+        ControlFlowGraph graph = new(root, [first, second, target],
+        [
+            new Edge(first.Label, target.Label, [new AssignmentOp(mergedValue, stringValue)]),
+            new Edge(second.Label, target.Label, [new AssignmentOp(mergedValue, nullValue)]),
+        ], [], []);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(
+            ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new DeduceTypes(optimizer).RunInternal();
+
+        ControlFlowGraph rewritten = optimizer.cfg;
+        AssignmentOp[] assignments = rewritten.IncomingEdges(target.Label)
+            .SelectMany(edge => edge.EdgeAssignments).ToArray();
+        Op returnValue = ((Return)rewritten.GetBlock(target.Label).Branch).Value;
+        Assert.Multiple(() =>
+        {
+            Assert.That(assignments.Select(assignment => assignment.Output.Type),
+                Is.All.EqualTo(typeof(string)));
+            Assert.That(assignments.Select(assignment => assignment.Output), Is.All.SameAs(returnValue));
+            Assert.That(returnValue.Type, Is.EqualTo(typeof(string)));
+        });
+    }
+
+    [Test]
+    public void UnreachableBlock_StillHasItsTypesDeduced()
+    {
+        RootRegion root = new(new BlockLabel());
+        BlockLabel unreachableLabel = new();
+        BasicBlock entry = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
+        StackSlot result = new(0, TypeLattice.Unknown, 0);
+        ILOp constant = new(new ILInstruction(OpCodes.Ldc_I8, 1L, []), [], TypeLattice.Unknown);
+        BasicBlock unreachable = new(unreachableLabel, [new AssignmentOp(result, constant)], root,
+            new Return(Ret, result));
+        ControlFlowGraph graph = new(root, [entry, unreachable], [], [], []);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(
+            ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new DeduceTypes(optimizer).RunInternal();
+
+        BasicBlock rewritten = optimizer.cfg.GetBlock(unreachable.Label);
+        AssignmentOp rewrittenAssignment = rewritten.Ops.OfType<AssignmentOp>().Single();
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewrittenAssignment.Input.Type, Is.EqualTo(typeof(long)));
+            Assert.That(rewrittenAssignment.Output.Type, Is.EqualTo(typeof(long)));
+            Assert.That(((Return)rewritten.Branch).Value, Is.SameAs(rewrittenAssignment.Output));
+        });
+    }
+
+    [Test]
+    public void AssignmentToTemporary_DeducesInputWithoutChangingDestinationType()
+    {
+        RootRegion root = new(new BlockLabel());
+        Temporary destination = new(typeof(object));
+        ILOp constant = new(new ILInstruction(OpCodes.Ldc_I4_1, null!, []), [], TypeLattice.Unknown);
+        AssignmentOp assignment = new(destination, constant);
+        BasicBlock block = new(root.EntryLabel, [assignment], root, new Return(Ret, new VoidOp()));
+        ControlFlowGraph graph = new(root, [block], [], [], []);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(
+            ReturnIntMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new DeduceTypes(optimizer).RunInternal();
+
+        AssignmentOp rewritten = optimizer.cfg.GetBlock(block.Label).Ops.OfType<AssignmentOp>().Single();
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewritten.Input.Type, Is.EqualTo(typeof(int)));
+            Assert.That(rewritten.Output, Is.SameAs(destination));
+            Assert.That(rewritten.Output.Type, Is.EqualTo(typeof(object)));
+        });
+    }
+
+    [Test]
     public void TypeRewrite_PreservesUnrelatedGraphInstructionAndRegionState()
     {
         RootRegion root = new(new BlockLabel());

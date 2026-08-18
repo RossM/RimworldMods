@@ -197,6 +197,139 @@ public sealed class MergeStackSlotsTests
     }
 
     [Test]
+    public void MergeStackSlots_MultipleIncomingEdgesMergeEverySourceWithTheTarget()
+    {
+        RootRegion root = new(new BlockLabel());
+        BlockLabel secondLabel = new();
+        BlockLabel targetLabel = new();
+        StackSlot firstSource = new(0, typeof(int), 0);
+        StackSlot secondSource = new(0, typeof(int), 1);
+        StackSlot targetSlot = new(0, typeof(int), 2);
+        BasicBlock first = new(root.EntryLabel, [], root, new UnconditionalBranch(targetLabel));
+        BasicBlock second = new(secondLabel, [], root, new UnconditionalBranch(targetLabel));
+        BasicBlock target = new(targetLabel, [], root, new Return(Ret, targetSlot));
+        ControlFlowGraph graph = new(root, [first, second, target],
+        [
+            new Edge(first.Label, target.Label, [new AssignmentOp(targetSlot, firstSource)]),
+            new Edge(second.Label, target.Label, [new AssignmentOp(targetSlot, secondSource)]),
+        ], [], []);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new MergeStackSlots(optimizer).RunInternal();
+
+        Op rewrittenReturn = ((Return)optimizer.cfg.GetBlock(target.Label).Branch).Value;
+        Assert.Multiple(() =>
+        {
+            Assert.That(new[] { firstSource, secondSource }, Does.Contain(rewrittenReturn));
+            Assert.That(optimizer.cfg.Edges.SelectMany(edge => edge.EdgeAssignments), Is.Empty);
+        });
+    }
+
+    [Test]
+    public void MergeStackSlots_MultipleAssignmentsOnOneEdgeKeepIndependentSetsDistinct()
+    {
+        RootRegion root = new(new BlockLabel());
+        BlockLabel targetLabel = new();
+        StackSlot firstSource = new(0, typeof(int), 0);
+        StackSlot secondSource = new(1, typeof(string), 1);
+        StackSlot firstTarget = new(0, typeof(int), 2);
+        StackSlot secondTarget = new(1, typeof(string), 3);
+        BasicBlock source = new(root.EntryLabel, [], root, new UnconditionalBranch(targetLabel));
+        ILOp consume = new(new ILInstruction(OpCodes.Pop, null!, []), [firstTarget, secondTarget], typeof(void));
+        BasicBlock target = new(targetLabel, [consume], root, new Return(Ret, new VoidOp()));
+        Edge edge = new(source.Label, target.Label,
+        [
+            new AssignmentOp(firstTarget, firstSource),
+            new AssignmentOp(secondTarget, secondSource),
+        ]);
+        ControlFlowGraph graph = new(root, [source, target], [edge], [], []);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new MergeStackSlots(optimizer).RunInternal();
+
+        var rewrittenConsume = (ILOp)optimizer.cfg.GetBlock(target.Label).Ops.Single();
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewrittenConsume.Inputs[0], Is.SameAs(firstSource));
+            Assert.That(rewrittenConsume.Inputs[1], Is.SameAs(secondSource));
+            Assert.That(rewrittenConsume.Inputs[0], Is.Not.SameAs(rewrittenConsume.Inputs[1]));
+            Assert.That(optimizer.cfg.Edges.Single().EdgeAssignments, Is.Empty);
+        });
+    }
+
+    [Test]
+    public void MergeStackSlots_RewritesSlotsReadByAssignmentsInsideBlocks()
+    {
+        RootRegion root = new(new BlockLabel());
+        BlockLabel targetLabel = new();
+        StackSlot sourceSlot = new(0, typeof(int), 0);
+        StackSlot targetSlot = new(0, typeof(int), 1);
+        Temporary temporary = new(typeof(int));
+        BasicBlock source = new(root.EntryLabel, [], root, new UnconditionalBranch(targetLabel));
+        BasicBlock target = new(targetLabel, [new AssignmentOp(temporary, targetSlot)], root,
+            new Return(Ret, new VoidOp()));
+        Edge edge = new(source.Label, target.Label, [new AssignmentOp(targetSlot, sourceSlot)]);
+        ControlFlowGraph graph = new(root, [source, target], [edge], [], []);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new MergeStackSlots(optimizer).RunInternal();
+
+        AssignmentOp rewrittenAssignment = optimizer.cfg.GetBlock(target.Label).Ops.OfType<AssignmentOp>().Single();
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewrittenAssignment.Output, Is.SameAs(temporary));
+            Assert.That(rewrittenAssignment.Input, Is.SameAs(sourceSlot));
+            Assert.That(optimizer.cfg.Edges.Single().EdgeAssignments, Is.Empty);
+        });
+    }
+
+    [Test]
+    public void MergeStackSlots_CatchEntryCopyIsRemovedAndCatchBodyUsesIncomingException()
+    {
+        RootRegion root = new(new BlockLabel());
+        BlockLabel catchEntryLabel = new();
+        BlockLabel catchBodyLabel = new();
+        StackSlot incomingException = new(0, typeof(Exception), 0);
+        StackSlot catchBodyException = new(0, typeof(Exception), 1);
+        CatchRegion catchRegion = new(catchEntryLabel, root, incomingException);
+        ExceptionGroup group = new([catchRegion]);
+        ProtectedRegion protectedRegion = new(root.EntryLabel, root, group);
+        BasicBlock protectedBlock = new(root.EntryLabel, [], protectedRegion,
+            new Return(Ret, new VoidOp()));
+        BasicBlock catchEntry = new(catchEntryLabel, [], catchRegion,
+            new UnconditionalBranch(catchBodyLabel));
+        BasicBlock catchBody = new(catchBodyLabel, [], catchRegion, new Throw(catchBodyException));
+        Edge edge = new(catchEntry.Label, catchBody.Label,
+            [new AssignmentOp(catchBodyException, incomingException)]);
+        ControlFlowGraph graph = new(root, [protectedBlock, catchEntry, catchBody], [edge], [], []);
+        global::Disharmony.Optimizer.Optimizer optimizer = new(VoidMethod, [], PatchProcessor.CreateILGenerator(), false)
+        {
+            cfg = graph
+        };
+
+        new MergeStackSlots(optimizer).RunInternal();
+
+        ControlFlowGraph rewritten = optimizer.cfg;
+        CatchRegion rewrittenCatch = rewritten.ExceptionGroups.Single().HandlerRegions.Cast<CatchRegion>().Single();
+        var rewrittenThrow = (Throw)rewritten.GetBlock(catchBody.Label).Branch;
+        Assert.Multiple(() =>
+        {
+            Assert.That(rewrittenCatch.IncomingException, Is.SameAs(incomingException));
+            Assert.That(rewrittenThrow.Exception, Is.SameAs(incomingException));
+            Assert.That(rewritten.GetEdge(catchEntry.Label, catchBody.Label).EdgeAssignments, Is.Empty);
+        });
+    }
+
+    [Test]
     public void MergeStackSlots_Dup_PreservesTheExplicitCopyBetweenDistinctSlots()
     {
         ILGenerator il = PatchProcessor.CreateILGenerator();
