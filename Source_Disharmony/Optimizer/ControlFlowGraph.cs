@@ -6,10 +6,10 @@ internal record ControlFlowGraph : Node
 {
     public IEnumerable<ExceptionGroup> ExceptionGroups => exceptionGroups;
     public RootRegion RootRegion { get; }
-    public IList<BasicBlock> BasicBlocks { get; }
-    public IList<Edge> Edges { get; }
-    public IList<Argument> Arguments { get; }
-    public IList<Local> Locals { get; }
+    public IReadOnlyList<BasicBlock> BasicBlocks { get; }
+    public IReadOnlyList<Edge> Edges { get; }
+    public IReadOnlyList<Argument> Arguments { get; }
+    public IReadOnlyList<Local> Locals { get; }
 
     private readonly HashSet<ExceptionGroup> exceptionGroups = [];
     private readonly Dictionary<ExceptionRegion, ExceptionGroup> exceptionGroupsByRegion = [];
@@ -19,7 +19,7 @@ internal record ControlFlowGraph : Node
     private readonly Dictionary<BlockLabel, HashSet<Edge>> edgesTo = [];
     private readonly Dictionary<BlockLabel, BasicBlock> basicBlocks = [];
 
-    public ControlFlowGraph(RootRegion RootRegion, IList<BasicBlock> BasicBlocks, IList<Edge> Edges, IList<Argument> Arguments, IList<Local> Locals, bool validate = true)
+    public ControlFlowGraph(RootRegion RootRegion, IReadOnlyList<BasicBlock> BasicBlocks, IReadOnlyList<Edge> Edges, IReadOnlyList<Argument> Arguments, IReadOnlyList<Local> Locals, bool validate = true)
     {
         this.RootRegion = RootRegion;
         this.BasicBlocks = BasicBlocks;
