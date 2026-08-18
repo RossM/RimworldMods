@@ -137,10 +137,13 @@ internal class RewriteVisitor : Visitor
         var rootRegion = (RootRegion)cfg.RootRegion.Accept(this);
         var blocks = cfg.BasicBlocks.Select(block => (BasicBlock)block.Accept(this)).ToList();
         var edges = cfg.Edges.Select(edge => (Edge)edge.Accept(this)).ToList();
+        var arguments = cfg.Arguments.Select(argument => (Argument)argument.Accept(this)).ToList();
+        var locals = cfg.Locals.Select(local => (Local)local.Accept(this)).ToList();
 
-        if (rootRegion == cfg.RootRegion && blocks.SequenceEqual(cfg.BasicBlocks) && edges.SequenceEqual(cfg.Edges))
+        if (rootRegion == cfg.RootRegion && blocks.SequenceEqual(cfg.BasicBlocks) && edges.SequenceEqual(cfg.Edges) &&
+            arguments.SequenceEqual(cfg.Arguments) && locals.SequenceEqual(cfg.Locals))
             return cfg;
 
-        return new ControlFlowGraph(rootRegion, blocks, edges, cfg.Arguments, cfg.Locals);
+        return new ControlFlowGraph(rootRegion, blocks, edges, arguments, locals);
     }
 }
