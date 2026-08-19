@@ -89,12 +89,9 @@ internal sealed record ILInstruction(OpCode OpCode, object? Operand, IReadOnlyLi
 /// <remarks>
 ///     There is one input per stack slot popped by the IL opcode, and the output type is the type of the value pushed by
 ///     the IL opcode,
-///     or <see cref="void" /> if it does not push a value. Numeric values use <see cref="int" />, <see cref="long" />,
-///     <see cref="IntPtr" />, or <see cref="double" /> to represent the IL stack types.
+///     or <see langword="void" /> if it does not push a value. Numeric values use <see langword="int" />, <see langword="long" />,
+///     <see cref="IntPtr" />, or <see langword="double" /> to represent the IL stack types.
 /// </remarks>
-/// <param name="OpCode">The IL opcode.</param>
-/// <param name="Operand">The opcode operand.</param>
-/// <param name="Prefixes">The prefixes applied to the instruction.</param>
 /// <param name="Inputs">The <see cref="Op" />s that produce the instruction's stack inputs.</param>
 /// <param name="Type">The type of value produced by the instruction.</param>
 internal sealed record ILOp(ILInstruction IL, IReadOnlyList<Op> Inputs, Type Type) : Op(Type)
