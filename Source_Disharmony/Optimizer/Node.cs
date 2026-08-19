@@ -371,12 +371,10 @@ internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Regio
 /// </summary>
 /// <remarks>
 ///     <para>
-///         All <paramref name="EdgeAssignments" /> are done in parallel.
+///         All edge assignments are done in parallel.
 ///     </para>
 ///     <para>
-///         There must be one edge for each distinct branch target of a <see cref="BasicBlock" />. Edges are not created
-///         or removed automatically; it is the responsibility of code that adds, removes, or updates a
-///         <see cref="BasicBlock" /> to also update the edges.
+///         There must be one edge for each distinct branch target of a <see cref="BasicBlock" />.
 ///     </para>
 /// </remarks>
 /// <param name="Source">The <see cref="BlockLabel" /> of the source block.</param>
