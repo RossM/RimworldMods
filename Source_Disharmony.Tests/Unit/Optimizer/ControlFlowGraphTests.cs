@@ -34,7 +34,7 @@ public sealed class ControlFlowGraphTests
         {
             Assert.That(graph.RootRegion, Is.SameAs(root));
             Assert.That(graph.BasicBlocks, Is.SameAs(blocks));
-            Assert.That(graph.Edges, Is.SameAs(edges));
+            Assert.That(graph.Edges, Is.Empty);
             Assert.That(graph.Arguments, Is.SameAs(arguments));
             Assert.That(graph.Locals, Is.SameAs(locals));
             Assert.That(graph.GetBlock(block.Label), Is.SameAs(block));
@@ -86,25 +86,6 @@ public sealed class ControlFlowGraphTests
         {
             Assert.That(graph.GetEdge(source, target), Is.SameAs(edge));
             Assert.That(graph.GetEdge(source.Label, target.Label), Is.SameAs(edge));
-        });
-    }
-
-    [Test]
-    public void GetEdgeOrNull_BlockAndLabelOverloadsReturnEdgeOrNull()
-    {
-        RootRegion root = new(new BlockLabel(0));
-        BlockLabel targetLabel = new(1);
-        BasicBlock source = new(root.EntryLabel, [], root, new UnconditionalBranch(targetLabel));
-        BasicBlock target = new(targetLabel, [], root, new Return(Ret, new VoidOp()));
-        Edge edge = new(source.Label, target.Label, []);
-        ControlFlowGraph graph = new(root, [source, target], [edge], [], []);
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(graph.GetEdgeOrNull(source, target), Is.SameAs(edge));
-            Assert.That(graph.GetEdgeOrNull(source.Label, target.Label), Is.SameAs(edge));
-            Assert.That(graph.GetEdgeOrNull(target, source), Is.Null);
-            Assert.That(graph.GetEdgeOrNull(target.Label, source.Label), Is.Null);
         });
     }
 
@@ -212,7 +193,7 @@ public sealed class ControlFlowGraphTests
     }
 
     [Test]
-    public void Constructor_DuplicateEdgesThrowInvalidOperationException()
+    public void Constructor_DuplicateEdgesThrowArgumentException()
     {
         RootRegion root = new(new BlockLabel(0));
         BlockLabel targetLabel = new(1);
@@ -222,7 +203,7 @@ public sealed class ControlFlowGraphTests
         Edge second = new(source.Label, target.Label, []);
 
         Assert.That(() => new ControlFlowGraph(root, [source, target], [first, second], [], []),
-            Throws.TypeOf<InvalidOperationException>());
+            Throws.TypeOf<ArgumentException>());
     }
 
 #if DEBUG

@@ -5,16 +5,18 @@ namespace Disharmony.Optimizer;
 internal record ControlFlowGraph : Node
 {
     public IEnumerable<ExceptionGroup> ExceptionGroups => exceptionGroups;
+    public IEnumerable<Edge> Edges => edgesFrom.Values.SelectMany(edges => edges.Values);
 
     public static readonly ControlFlowGraph Empty = new(new RootRegion(new BlockLabel(0)), [], [], [], []);
 
     private readonly HashSet<ExceptionGroup> exceptionGroups = [];
     private readonly Dictionary<ExceptionRegion, ExceptionGroup> exceptionGroupsByRegion = [];
     private readonly Dictionary<ExceptionRegion, ExceptionRegion?> nextRegion = [];
-    private readonly Dictionary<(BlockLabel Source, BlockLabel Destination), Edge> edges = [];
-    private readonly Dictionary<BlockLabel, HashSet<Edge>> edgesFrom = [];
-    private readonly Dictionary<BlockLabel, HashSet<Edge>> edgesTo = [];
+    private readonly Dictionary<BlockLabel, Dictionary<BlockLabel, Edge>> edgesFrom = [];
+    private readonly Dictionary<BlockLabel, Dictionary<BlockLabel, Edge>> edgesTo = [];
     private readonly Dictionary<BlockLabel, BasicBlock> basicBlocks = [];
+
+    private int cachedHashCode = 0;
 
     public ControlFlowGraph(
         RootRegion RootRegion,
@@ -26,7 +28,6 @@ internal record ControlFlowGraph : Node
     {
         this.RootRegion = RootRegion;
         this.BasicBlocks = BasicBlocks;
-        this.Edges = Edges;
         this.Arguments = Arguments;
         this.Locals = Locals;
 
@@ -41,7 +42,6 @@ internal record ControlFlowGraph : Node
 
     public RootRegion RootRegion { get; }
     public IReadOnlyList<BasicBlock> BasicBlocks { get; }
-    public IReadOnlyList<Edge> Edges { get; }
     public IReadOnlyList<Argument> Arguments { get; }
     public IReadOnlyList<Local> Locals { get; }
 
@@ -51,7 +51,7 @@ internal record ControlFlowGraph : Node
     /// <param name="block">The <see cref="BasicBlock" /> whose incoming <see cref="Edge" />s to return.</param>
     /// <returns>The <see cref="Edge" />s whose destination is <paramref name="block" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="block" /> is not present in the graph.</exception>
-    public IEnumerable<Edge> IncomingEdges(BasicBlock block) => edgesTo[block.Label];
+    public IEnumerable<Edge> IncomingEdges(BasicBlock block) => edgesTo[block.Label].Values;
 
     /// <summary>
     ///     Returns all incoming <see cref="Edge" />s for the <see cref="BasicBlock" /> with the given
@@ -60,7 +60,7 @@ internal record ControlFlowGraph : Node
     /// <param name="label">The label of the <see cref="BasicBlock" /> whose incoming <see cref="Edge" />s to return.</param>
     /// <returns>The <see cref="Edge" />s whose destination is <paramref name="label" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="label" /> is not present in the graph.</exception>
-    public IEnumerable<Edge> IncomingEdges(BlockLabel label) => edgesTo[label];
+    public IEnumerable<Edge> IncomingEdges(BlockLabel label) => edgesTo[label].Values;
 
     /// <summary>
     ///     Returns all outgoing <see cref="Edge" />s for a <see cref="BasicBlock" />.
@@ -68,7 +68,7 @@ internal record ControlFlowGraph : Node
     /// <param name="block">The <see cref="BasicBlock" /> whose outgoing <see cref="Edge" />s to return.</param>
     /// <returns>The <see cref="Edge" />s whose source is <paramref name="block" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="block" /> is not present in the graph.</exception>
-    public IEnumerable<Edge> OutgoingEdges(BasicBlock block) => edgesFrom[block.Label];
+    public IEnumerable<Edge> OutgoingEdges(BasicBlock block) => edgesFrom[block.Label].Values;
 
     /// <summary>
     ///     Returns all outgoing <see cref="Edge" />s for the <see cref="BasicBlock" /> with the given
@@ -77,7 +77,7 @@ internal record ControlFlowGraph : Node
     /// <param name="label">The label of the <see cref="BasicBlock" /> whose outgoing <see cref="Edge" />s to return.</param>
     /// <returns>The <see cref="Edge" />s whose source is <paramref name="label" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="label" /> is not present in the graph.</exception>
-    public IEnumerable<Edge> OutgoingEdges(BlockLabel label) => edgesFrom[label];
+    public IEnumerable<Edge> OutgoingEdges(BlockLabel label) => edgesFrom[label].Values;
 
     /// <summary>
     ///     Gets all <see cref="BasicBlock" />s with edges to <paramref name="block" />.
@@ -85,7 +85,7 @@ internal record ControlFlowGraph : Node
     /// <param name="block">The <see cref="BasicBlock" /> whose predecessors to return.</param>
     /// <returns>The <see cref="BasicBlock" />s with <see cref="Edge" />s to <paramref name="block" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="block" /> is not present in the graph.</exception>
-    public IEnumerable<BasicBlock> Predecessors(BasicBlock block) => edgesTo[block.Label].Select(edge => basicBlocks[edge.Source]);
+    public IEnumerable<BasicBlock> Predecessors(BasicBlock block) => IncomingEdges(block.Label).Select(edge => basicBlocks[edge.Source]);
 
     /// <summary>
     ///     Gets the <see cref="BlockLabel" />s of all <see cref="BasicBlock" />s with edges to the block with
@@ -97,7 +97,7 @@ internal record ControlFlowGraph : Node
     ///     <paramref name="label" />.
     /// </returns>
     /// <exception cref="KeyNotFoundException"><paramref name="label" /> is not present in the graph.</exception>
-    public IEnumerable<BlockLabel> Predecessors(BlockLabel label) => edgesTo[label].Select(edge => edge.Source);
+    public IEnumerable<BlockLabel> Predecessors(BlockLabel label) => IncomingEdges(label).Select(edge => edge.Source);
 
     /// <summary>
     ///     Gets all <see cref="BasicBlock" />s with edges from <paramref name="block" />.
@@ -105,7 +105,7 @@ internal record ControlFlowGraph : Node
     /// <param name="block">The <see cref="BasicBlock" /> whose successors to return.</param>
     /// <returns>The <see cref="BasicBlock" />s with <see cref="Edge" />s from <paramref name="block" />.</returns>
     /// <exception cref="KeyNotFoundException"><paramref name="block" /> is not present in the graph.</exception>
-    public IEnumerable<BasicBlock> Successors(BasicBlock block) => edgesFrom[block.Label].Select(edge => basicBlocks[edge.Destination]);
+    public IEnumerable<BasicBlock> Successors(BasicBlock block) => OutgoingEdges(block.Label).Select(edge => basicBlocks[edge.Destination]);
 
     /// <summary>
     ///     Gets the <see cref="BlockLabel" />s of all <see cref="BasicBlock" />s with edges from the block with
@@ -117,7 +117,7 @@ internal record ControlFlowGraph : Node
     ///     <paramref name="label" />.
     /// </returns>
     /// <exception cref="KeyNotFoundException"><paramref name="label" /> is not present in the graph.</exception>
-    public IEnumerable<BlockLabel> Successors(BlockLabel label) => edgesFrom[label].Select(edge => edge.Destination);
+    public IEnumerable<BlockLabel> Successors(BlockLabel label) => OutgoingEdges(label).Select(edge => edge.Destination);
 
     /// <summary>
     ///     Gets the edge from the block with the given source <see cref="BlockLabel" /> to the block with the given
@@ -127,7 +127,7 @@ internal record ControlFlowGraph : Node
     /// <param name="destination">The destination block label.</param>
     /// <returns>The <see cref="Edge" /> from <paramref name="source" /> to <paramref name="destination" />.</returns>
     /// <exception cref="KeyNotFoundException">No edge exists between the specified blocks.</exception>
-    public Edge GetEdge(BlockLabel source, BlockLabel destination) => edges[(source, destination)];
+    public Edge GetEdge(BlockLabel source, BlockLabel destination) => edgesFrom[source][destination];
 
     /// <summary>
     ///     Gets the <see cref="Edge" /> from the given source <see cref="BasicBlock" /> to the given destination
@@ -137,31 +137,7 @@ internal record ControlFlowGraph : Node
     /// <param name="destination">The destination <see cref="BasicBlock" />.</param>
     /// <returns>The <see cref="Edge" /> from <paramref name="source" /> to <paramref name="destination" />.</returns>
     /// <exception cref="KeyNotFoundException">No edge exists between the specified blocks.</exception>
-    public Edge GetEdge(BasicBlock source, BasicBlock destination) => edges[(source.Label, destination.Label)];
-
-    /// <summary>
-    ///     Gets the edge from the block with the given source <see cref="BlockLabel" /> to the block with the given
-    ///     destination <see cref="BlockLabel" />,
-    ///     or <see langword="null" /> if no edge exists.
-    /// </summary>
-    /// <param name="source">The source block label.</param>
-    /// <param name="destination">The destination block label.</param>
-    /// <returns>The <see cref="Edge" /> between the specified blocks, or <see langword="null" /> if no such edge exists.</returns>
-    public Edge? GetEdgeOrNull(BlockLabel source, BlockLabel destination)
-    {
-        edges.TryGetValue((source, destination), out Edge? result);
-        return result;
-    }
-
-    /// <summary>
-    ///     Gets the <see cref="Edge" /> from the given source <see cref="BasicBlock" /> to the given destination
-    ///     <see cref="BasicBlock" />, or <see langword="null" /> if no edge
-    ///     exists.
-    /// </summary>
-    /// <param name="source">The source <see cref="BasicBlock" />.</param>
-    /// <param name="destination">The destination <see cref="BasicBlock" />.</param>
-    /// <returns>The <see cref="Edge" /> between the specified blocks, or <see langword="null" /> if no such edge exists.</returns>
-    public Edge? GetEdgeOrNull(BasicBlock source, BasicBlock destination) => GetEdgeOrNull(source.Label, destination.Label);
+    public Edge GetEdge(BasicBlock source, BasicBlock destination) => edgesFrom[source.Label][destination.Label];
 
     /// <summary>
     ///     Gets the <see cref="BasicBlock" /> with the given <see cref="BlockLabel" />.
@@ -206,12 +182,8 @@ internal record ControlFlowGraph : Node
 
     private void AddEdge(Edge edge)
     {
-        if (edges.ContainsKey((edge.Source, edge.Destination)))
-            throw new InvalidOperationException();
-
-        edges[(edge.Source, edge.Destination)] = edge;
-        edgesFrom[edge.Source].Add(edge);
-        edgesTo[edge.Destination].Add(edge);
+        edgesFrom[edge.Source].Add(edge.Destination, edge);
+        edgesTo[edge.Destination].Add(edge.Source, edge);
     }
 
     private void AddProtectedRegion(ProtectedRegion protectedRegion)
@@ -239,6 +211,9 @@ internal record ControlFlowGraph : Node
     [Conditional("DEBUG")]
     private void Validate()
     {
+        Dictionary<(BlockLabel Source, BlockLabel Destination), Edge> edges = Edges.ToDictionary(edge => (edge.Source, edge.Destination),
+            edge => edge);
+
         foreach (var block in BasicBlocks)
         foreach (var successor in block.Branch.Labels)
         {
@@ -334,21 +309,33 @@ internal record ControlFlowGraph : Node
             return false;
         if (ReferenceEquals(this, other))
             return true;
-        return base.Equals(other) && RootRegion.Equals(other.RootRegion) && BasicBlocks.Equals(other.BasicBlocks) &&
-               Edges.Equals(other.Edges) && Arguments.Equals(other.Arguments) && Locals.Equals(other.Locals);
+        return base.Equals(other) && RootRegion.Equals(other.RootRegion) && BasicBlocks.SequenceEqual(other.BasicBlocks) &&
+               Edges.ToHashSet().SetEquals(other.Edges.ToHashSet()) &&
+               Arguments.SequenceEqual(other.Arguments) && Locals.SequenceEqual(other.Locals);
     }
 
     public override int GetHashCode()
     {
         unchecked
         {
+            // ReSharper disable NonReadonlyMemberInGetHashCode
+            if (cachedHashCode != 0)
+                return cachedHashCode;
+            // ReSharper restore NonReadonlyMemberInGetHashCode
+
             int hashCode = base.GetHashCode();
             hashCode = (hashCode * 397) ^ RootRegion.GetHashCode();
-            hashCode = (hashCode * 397) ^ BasicBlocks.GetHashCode();
-            hashCode = (hashCode * 397) ^ Edges.GetHashCode();
-            hashCode = (hashCode * 397) ^ Arguments.GetHashCode();
-            hashCode = (hashCode * 397) ^ Locals.GetHashCode();
-            return hashCode;
+            foreach (var block in BasicBlocks)
+                hashCode = (hashCode * 397) ^ block.GetHashCode();
+            foreach (var edge in Edges.OrderBy(e => e.GetHashCode()))
+                hashCode = (hashCode * 397) ^ edge.GetHashCode();
+            foreach (var argument in Arguments)
+                hashCode = (hashCode * 397) ^ argument.GetHashCode();
+            foreach (var local in Locals)
+                hashCode = (hashCode * 397) ^ local.GetHashCode();
+
+            // ReSharper disable once NonReadonlyMemberInGetHashCode
+            return cachedHashCode = hashCode;
         }
     }
 }
