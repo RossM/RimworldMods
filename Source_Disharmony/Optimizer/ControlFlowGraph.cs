@@ -241,8 +241,8 @@ internal record ControlFlowGraph : Node
         FileLog.LogBuffered("ControlFlowGraph {");
         FileLog.ChangeIndent(1);
 
-        PrintVariables("Arguments", Arguments);
-        PrintVariables("Locals", Locals);
+        DebugPrintVariables("Arguments", Arguments);
+        DebugPrintVariables("Locals", Locals);
 
         DebugPrintRegion(RootRegion);
 
@@ -250,7 +250,7 @@ internal record ControlFlowGraph : Node
         FileLog.LogBuffered("}");
     }
 
-    private void PrintVariables(object name, IReadOnlyList<Node> values)
+    private static void DebugPrintVariables(object name, IReadOnlyList<Node> values)
     {
         if (values.Count == 0)
         {
