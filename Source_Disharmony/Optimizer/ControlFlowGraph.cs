@@ -211,13 +211,10 @@ internal record ControlFlowGraph : Node
     [Conditional("DEBUG")]
     private void Validate()
     {
-        Dictionary<(BlockLabel Source, BlockLabel Destination), Edge> edges = Edges.ToDictionary(edge => (edge.Source, edge.Destination),
-            edge => edge);
-
         foreach (var block in BasicBlocks)
         foreach (var successor in block.Branch.Labels)
         {
-            if (!edges.ContainsKey((block.Label, successor)))
+            if (!edgesFrom[block.Label].ContainsKey(successor))
                 throw new InvalidOperationException("Edge not found");
         }
 
