@@ -266,8 +266,9 @@ internal record ControlFlowGraph : Node
     private void DebugPrintBlock(BasicBlock basicBlock)
     {
         basicBlock.DebugPrint();
-        foreach (var edge in OutgoingEdges(basicBlock))
+        foreach (var successor in basicBlock.Branch.Labels.Distinct())
         {
+            var edge = GetEdge(basicBlock.Label, successor);
             FileLog.LogBuffered(edge.EdgeAssignments.Count > 0
                 ? $"-> {edge.Destination} {{ {string.Join(", ", edge.EdgeAssignments)} }}"
                 : $"-> {edge.Destination}");
