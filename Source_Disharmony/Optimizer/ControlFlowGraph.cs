@@ -165,11 +165,8 @@ internal record ControlFlowGraph : Node
     private void AddBlock(BasicBlock block)
     {
         basicBlocks.Add(block.Label, block);
-
-        if (!edgesFrom.ContainsKey(block.Label))
-            edgesFrom[block.Label] = [];
-        if (!edgesTo.ContainsKey(block.Label))
-            edgesTo[block.Label] = [];
+        edgesFrom.Add(block.Label, []);
+        edgesTo.Add(block.Label, []);
 
         for (ExceptionRegion? region = block.Region as ExceptionRegion; region != null; region = region.Parent as ExceptionRegion)
         {
