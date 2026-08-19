@@ -288,8 +288,7 @@ internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Regio
 /// </summary>
 /// <remarks>
 ///     <para>
-///         All <paramref name="EdgeAssignments" /> are done in parallel. Non-SSA form of the control graph will
-///         have no <paramref name="EdgeAssignments" />.
+///         All <paramref name="EdgeAssignments" /> are done in parallel.
 ///     </para>
 ///     <para>
 ///         There must be one edge for each distinct branch target of a <see cref="BasicBlock" />. Edges are not created
