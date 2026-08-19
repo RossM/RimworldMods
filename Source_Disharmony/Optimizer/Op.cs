@@ -60,6 +60,27 @@ internal sealed record ILInstruction(OpCode OpCode, object? Operand, IReadOnlyLi
         else
             return $"{OpCode}";
     }
+
+    public bool Equals(ILInstruction? other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return OpCode.Equals(other.OpCode) && Equals(Operand, other.Operand) && Prefixes.SequenceEqual(other.Prefixes);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hashCode = OpCode.GetHashCode();
+            hashCode = (hashCode * 397) ^ (Operand != null ? Operand.GetHashCode() : 0);
+            foreach (var prefix in Prefixes)
+                hashCode = (hashCode * 397) ^ prefix.GetHashCode();
+            return hashCode;
+        }
+    }
 }
 
 /// <summary>
@@ -81,6 +102,27 @@ internal sealed record ILOp(ILInstruction IL, IReadOnlyList<Op> Inputs, Type Typ
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
     public override string ToString() => Inputs.Count > 0 ? $"{IL} ({string.Join(", ", Inputs)}) :{Type}" : $"{IL} :{Type}";
+
+    public bool Equals(ILOp? other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return base.Equals(other) && IL.Equals(other.IL) && Inputs.SequenceEqual(other.Inputs);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hashCode = base.GetHashCode();
+            hashCode = (hashCode * 397) ^ IL.GetHashCode();
+            foreach (var input in Inputs)
+                hashCode = (hashCode * 397) ^ input.GetHashCode();
+            return hashCode;
+        }
+    }
 }
 
 /// <summary>

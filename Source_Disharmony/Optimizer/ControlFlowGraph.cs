@@ -16,8 +16,6 @@ internal record ControlFlowGraph : Node
     private readonly Dictionary<BlockLabel, Dictionary<BlockLabel, Edge>> edgesTo = [];
     private readonly Dictionary<BlockLabel, BasicBlock> basicBlocks = [];
 
-    private int cachedHashCode = 0;
-
     public ControlFlowGraph(
         RootRegion RootRegion,
         IReadOnlyList<BasicBlock> BasicBlocks,
@@ -315,11 +313,6 @@ internal record ControlFlowGraph : Node
     {
         unchecked
         {
-            // ReSharper disable NonReadonlyMemberInGetHashCode
-            if (cachedHashCode != 0)
-                return cachedHashCode;
-            // ReSharper restore NonReadonlyMemberInGetHashCode
-
             int hashCode = base.GetHashCode();
             hashCode = (hashCode * 397) ^ RootRegion.GetHashCode();
             foreach (var block in BasicBlocks)
@@ -330,9 +323,7 @@ internal record ControlFlowGraph : Node
                 hashCode = (hashCode * 397) ^ argument.GetHashCode();
             foreach (var local in Locals)
                 hashCode = (hashCode * 397) ^ local.GetHashCode();
-
-            // ReSharper disable once NonReadonlyMemberInGetHashCode
-            return cachedHashCode = hashCode;
+            return hashCode;
         }
     }
 }

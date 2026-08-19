@@ -138,6 +138,25 @@ internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : Handl
 internal sealed record ExceptionGroup(IReadOnlyList<HandlerRegion> HandlerRegions) : Node
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public bool Equals(ExceptionGroup? group) {
+        if (group is null)
+            return false;
+        if (ReferenceEquals(this, group))
+            return true;
+        return base.Equals(group) && HandlerRegions.SequenceEqual(group.HandlerRegions);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hashCode = base.GetHashCode();
+            foreach (var region in HandlerRegions)
+                hashCode = (hashCode * 397) ^ region.GetHashCode();
+            return hashCode;
+        }
+    }
 }
 
 /// <summary>
@@ -162,7 +181,29 @@ internal sealed record BlockLabel(int Id, Label? Label = null)
 ///     the <see cref="BasicBlock" /> structure, except for unconditional throws.
 /// </remarks>
 /// <param name="Labels">The <see cref="BlockLabel" />s of the possible successor <see cref="BasicBlock" />s.</param>
-internal abstract record Branch(IReadOnlyList<BlockLabel> Labels) : Node;
+internal abstract record Branch(IReadOnlyList<BlockLabel> Labels) : Node
+{
+    public virtual bool Equals(Branch? branch)
+    {
+        if (branch is null)
+            return false;
+        if (ReferenceEquals(this, branch))
+            return true;
+        return base.Equals(branch) && Labels.SequenceEqual(branch.Labels);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hashCode = base.GetHashCode();
+            foreach (var label in Labels)
+                hashCode = (hashCode * 397) ^ label.GetHashCode();
+            return hashCode;
+        }
+    }
+
+}
 
 /// <summary>
 ///     Represents unconditional transfer of control.
@@ -211,6 +252,26 @@ internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<Op> Inputs
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
     public override string ToString() => $"{OpCode} ({string.Join(", ", Inputs)}) {{ {string.Join(", ", Labels)} }}";
+
+    public bool Equals(ConditionalBranch? branch) {
+        if (branch is null)
+            return false;
+        if (ReferenceEquals(this, branch))
+            return true;
+        return base.Equals(branch) && OpCode.Equals(branch.OpCode) && Inputs.SequenceEqual(branch.Inputs);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hashCode = base.GetHashCode();
+            hashCode = (hashCode * 397) ^ OpCode.GetHashCode();
+            foreach (var input in Inputs)
+                hashCode = (hashCode * 397) ^ input.GetHashCode();
+            return hashCode;
+        }
+    }
 }
 
 /// <summary>
@@ -281,6 +342,28 @@ internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Regio
             op.DebugPrint();
         Branch.DebugPrint();
     }
+
+    public bool Equals(BasicBlock? block) {
+        if (block is null)
+            return false;
+        if (ReferenceEquals(this, block))
+            return true;
+        return base.Equals(block) && Label.Equals(block.Label) && Ops.SequenceEqual(block.Ops) && Region.Equals(block.Region) && Branch.Equals(block.Branch);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hashCode = base.GetHashCode();
+            hashCode = (hashCode * 397) ^ Label.GetHashCode();
+            foreach (var op in Ops)
+                hashCode = (hashCode * 397) ^ op.GetHashCode();
+            hashCode = (hashCode * 397) ^ Region.GetHashCode();
+            hashCode = (hashCode * 397) ^ Branch.GetHashCode();
+            return hashCode;
+        }
+    }
 }
 
 /// <summary>
@@ -302,4 +385,26 @@ internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Regio
 internal sealed record Edge(BlockLabel Source, BlockLabel Destination, IReadOnlyList<AssignmentOp> EdgeAssignments) : Node
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+
+    public bool Equals(Edge? other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return base.Equals(other) && Source.Equals(other.Source) && Destination.Equals(other.Destination) && EdgeAssignments.SequenceEqual(other.EdgeAssignments);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hashCode = base.GetHashCode();
+            hashCode = (hashCode * 397) ^ Source.GetHashCode();
+            hashCode = (hashCode * 397) ^ Destination.GetHashCode();
+            foreach (var assignment in EdgeAssignments)
+                hashCode = (hashCode * 397) ^ assignment.GetHashCode();
+            return hashCode;
+        }
+    }
 }
