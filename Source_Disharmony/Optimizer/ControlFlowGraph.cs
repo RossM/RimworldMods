@@ -271,22 +271,27 @@ internal record ControlFlowGraph : Node
         FileLog.LogBuffered("ControlFlowGraph {");
         FileLog.ChangeIndent(1);
 
-        FileLog.LogBuffered("Arguments {");
-        FileLog.ChangeIndent(1);
-        foreach (var argument in Arguments)
-            argument.DebugPrint();
-        FileLog.ChangeIndent(-1);
-        FileLog.LogBuffered("}");
-
-        FileLog.LogBuffered("Locals {");
-        FileLog.ChangeIndent(1);
-        foreach (var local in Locals)
-            local.DebugPrint();
-        FileLog.ChangeIndent(-1);
-        FileLog.LogBuffered("}");
+        PrintVariables("Arguments", Arguments);
+        PrintVariables("Locals", Locals);
 
         DebugPrintRegion(RootRegion);
 
+        FileLog.ChangeIndent(-1);
+        FileLog.LogBuffered("}");
+    }
+
+    private void PrintVariables(object name, IReadOnlyList<Node> values)
+    {
+        if (values.Count == 0)
+        {
+            FileLog.LogBuffered($"{name} {{ }}");
+            return;
+        }
+
+        FileLog.LogBuffered($"{name} {{");
+        FileLog.ChangeIndent(1);
+        foreach (var argument in values)
+            argument.DebugPrint();
         FileLog.ChangeIndent(-1);
         FileLog.LogBuffered("}");
     }
