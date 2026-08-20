@@ -27,7 +27,7 @@ public sealed class MappingTests
         Assert.Multiple(() =>
         {
             Assert.That(mapping[1], Is.EqualTo(3));
-            Assert.That(mapping, Is.EquivalentTo(new[] { new KeyValuePair<int, int>(1, 3) }));
+            Assert.That(mapping, Is.EquivalentTo(new[] { new MappingElement<int>(1, 3) }));
         });
     }
 
@@ -76,13 +76,13 @@ public sealed class MappingTests
         {
             Assert.That(mapping, Is.EquivalentTo(new[]
             {
-                new KeyValuePair<int, int>(1, 2),
-                new KeyValuePair<int, int>(3, 4),
+                new MappingElement<int>(1, 2),
+                new MappingElement<int>(3, 4),
             }));
-            Assert.That(((IEnumerable)mapping).Cast<KeyValuePair<int, int>>(), Is.EquivalentTo(new[]
+            Assert.That(((IEnumerable)mapping).Cast<MappingElement<int>>(), Is.EquivalentTo(new[]
             {
-                new KeyValuePair<int, int>(1, 2),
-                new KeyValuePair<int, int>(3, 4),
+                new MappingElement<int>(1, 2),
+                new MappingElement<int>(3, 4),
             }));
         });
     }
@@ -90,7 +90,7 @@ public sealed class MappingTests
     [Test]
     public void Merge_SingleElementMappings_ComposesEveryOverlap()
     {
-        (string Name, int Key1, int Value1, int Key2, int Value2, KeyValuePair<int, int>[] Expected)[] cases =
+        (string Name, int Key1, int Value1, int Key2, int Value2, MappingElement<int>[] Expected)[] cases =
         [
             ("Disjoint", 1, 2, 3, 4,
                 [new(1, 2), new(3, 4)]),
@@ -133,11 +133,11 @@ public sealed class MappingTests
                 }
                 Assert.That(first, Is.EquivalentTo(new[]
                 {
-                    new KeyValuePair<int, int>(testCase.Key1, testCase.Value1),
+                    new MappingElement<int>(testCase.Key1, testCase.Value1),
                 }), $"{testCase.Name}: first mapping was mutated");
                 Assert.That(second, Is.EquivalentTo(new[]
                 {
-                    new KeyValuePair<int, int>(testCase.Key2, testCase.Value2),
+                    new MappingElement<int>(testCase.Key2, testCase.Value2),
                 }), $"{testCase.Name}: second mapping was mutated");
             });
         }
