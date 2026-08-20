@@ -116,9 +116,9 @@ public sealed class DisjointSetUnionTests
         {
             Assert.That(groups, Has.Count.EqualTo(2));
             Assert.That(groups.Single(group => ReferenceEquals(group.Key, second)),
-                Is.EquivalentTo(new[] { first, second }));
+                Is.EquivalentTo([first, second]));
             Assert.That(groups.Single(group => ReferenceEquals(group.Key, fourth)),
-                Is.EquivalentTo(new[] { third, fourth }));
+                Is.EquivalentTo([third, fourth]));
             Assert.That(((IEnumerable)sets).Cast<object>().Count(), Is.EqualTo(2));
         });
     }
@@ -164,7 +164,7 @@ public sealed class DisjointSetUnionTests
             Assert.That(sets[left], Is.EqualTo(sets[right]));
             Assert.That(sets[right], Is.EqualTo(sets[equalRight]));
             Assert.That(sets.Count(), Is.EqualTo(1));
-            Assert.That(sets.Single(), Is.EquivalentTo(new[] { left, right }));
+            Assert.That(sets.Single(), Is.EquivalentTo([left, right]));
         });
     }
 

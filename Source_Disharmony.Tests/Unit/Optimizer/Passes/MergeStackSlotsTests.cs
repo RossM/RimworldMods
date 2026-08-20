@@ -359,7 +359,7 @@ public sealed class MergeStackSlotsTests
             .Single(assignment => assignment.Input is StackSlot);
         BasicBlock target = graph.BasicBlocks.Single(block =>
             block.Ops.OfType<ILOp>().Count(operation => operation.IL.OpCode == OpCodes.Pop) == 2);
-        ILOp[] pops = target.Ops.OfType<ILOp>().Where(operation => operation.IL.OpCode == OpCodes.Pop).ToArray();
+        ILOp[] pops = [.. target.Ops.OfType<ILOp>().Where(operation => operation.IL.OpCode == OpCodes.Pop)];
         Assert.Multiple(() =>
         {
             Assert.That(copyAfterMerge, Is.SameAs(copyBeforeMerge));

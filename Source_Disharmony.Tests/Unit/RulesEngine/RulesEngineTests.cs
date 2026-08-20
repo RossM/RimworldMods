@@ -1118,14 +1118,14 @@ public sealed class RulesEngineTests
             generator.DeclareLocal(typeof(int));
 
         LocalBuilder local = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(string));
-        var ruleset = new Ruleset(new List<Rule>
-        {
+        var ruleset = new Ruleset([
+
             new()
             {
                 mode = OutputMode.MethodPrefix,
-                output = replacementOpCodes.Select(opcode => new CodeInstruction(opcode, local)).ToArray(),
+                output = [.. replacementOpCodes.Select(opcode => new CodeInstruction(opcode, local))],
             },
-        });
+        ]);
         ruleset.crossRuleLocals.Add(local);
 
         List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];

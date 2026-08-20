@@ -115,8 +115,11 @@ public sealed class DeduceTypesTests
 
         ControlFlowGraph rewritten = optimizer.cfg;
         Op rewrittenReturnValue = ((Return)rewritten.GetBlock(target.Label).Branch).Value;
-        AssignmentOp[] rewrittenAssignments = rewritten.IncomingEdges(target.Label)
-            .SelectMany(edge => edge.EdgeAssignments).ToArray();
+        AssignmentOp[] rewrittenAssignments =
+        [
+            .. rewritten.IncomingEdges(target.Label)
+                .SelectMany(edge => edge.EdgeAssignments),
+        ];
         Assert.Multiple(() =>
         {
             Assert.That(rewrittenReturnValue.Type, Is.EqualTo(typeof(object)));
@@ -302,8 +305,11 @@ public sealed class DeduceTypesTests
         new DeduceTypes(optimizer).RunInternal();
 
         ControlFlowGraph rewritten = optimizer.cfg;
-        AssignmentOp[] assignments = rewritten.IncomingEdges(target.Label)
-            .SelectMany(edge => edge.EdgeAssignments).ToArray();
+        AssignmentOp[] assignments =
+        [
+            .. rewritten.IncomingEdges(target.Label)
+                .SelectMany(edge => edge.EdgeAssignments),
+        ];
         Op returnValue = ((Return)rewritten.GetBlock(target.Label).Branch).Value;
         Assert.Multiple(() =>
         {

@@ -27,7 +27,7 @@ public sealed class MappingTests
         Assert.Multiple(() =>
         {
             Assert.That(mapping[1], Is.EqualTo(3));
-            Assert.That(mapping, Is.EquivalentTo(new[] { new MappingElement<int>(1, 3) }));
+            Assert.That(mapping, Is.EquivalentTo([new MappingElement<int>(1, 3)]));
         });
     }
 
@@ -74,16 +74,14 @@ public sealed class MappingTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(mapping, Is.EquivalentTo(new[]
-            {
+            Assert.That(mapping, Is.EquivalentTo([
                 new MappingElement<int>(1, 2),
                 new MappingElement<int>(3, 4),
-            }));
-            Assert.That(((IEnumerable)mapping).Cast<MappingElement<int>>(), Is.EquivalentTo(new[]
-            {
+            ]));
+            Assert.That(((IEnumerable)mapping).Cast<MappingElement<int>>(), Is.EquivalentTo([
                 new MappingElement<int>(1, 2),
                 new MappingElement<int>(3, 4),
-            }));
+            ]));
         });
     }
 
@@ -131,14 +129,12 @@ public sealed class MappingTests
                     Assert.That(merged[input], Is.EqualTo(second[first[input]]),
                         $"{testCase.Name}: input {input}");
                 }
-                Assert.That(first, Is.EquivalentTo(new[]
-                {
-                    new MappingElement<int>(testCase.Key1, testCase.Value1),
-                }), $"{testCase.Name}: first mapping was mutated");
-                Assert.That(second, Is.EquivalentTo(new[]
-                {
-                    new MappingElement<int>(testCase.Key2, testCase.Value2),
-                }), $"{testCase.Name}: second mapping was mutated");
+                Assert.That(first, Is.EquivalentTo([
+                        new MappingElement<int>(testCase.Key1, testCase.Value1),
+                    ]), $"{testCase.Name}: first mapping was mutated");
+                Assert.That(second, Is.EquivalentTo([
+                        new MappingElement<int>(testCase.Key2, testCase.Value2),
+                    ]), $"{testCase.Name}: second mapping was mutated");
             });
         }
     }

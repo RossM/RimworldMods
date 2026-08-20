@@ -61,14 +61,14 @@ public sealed class ControlFlowGraphTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(graph.IncomingEdges(target), Is.EquivalentTo(new[] { sourceToTarget, middleToTarget }));
-            Assert.That(graph.IncomingEdges(target.Label), Is.EquivalentTo(new[] { sourceToTarget, middleToTarget }));
-            Assert.That(graph.OutgoingEdges(source), Is.EquivalentTo(new[] { sourceToMiddle, sourceToTarget }));
-            Assert.That(graph.OutgoingEdges(source.Label), Is.EquivalentTo(new[] { sourceToMiddle, sourceToTarget }));
-            Assert.That(graph.Predecessors(target), Is.EquivalentTo(new[] { source, middle }));
-            Assert.That(graph.Predecessors(target.Label), Is.EquivalentTo(new[] { source.Label, middle.Label }));
-            Assert.That(graph.Successors(source), Is.EquivalentTo(new[] { middle, target }));
-            Assert.That(graph.Successors(source.Label), Is.EquivalentTo(new[] { middle.Label, target.Label }));
+            Assert.That(graph.IncomingEdges(target), Is.EquivalentTo([sourceToTarget, middleToTarget]));
+            Assert.That(graph.IncomingEdges(target.Label), Is.EquivalentTo([sourceToTarget, middleToTarget]));
+            Assert.That(graph.OutgoingEdges(source), Is.EquivalentTo([sourceToMiddle, sourceToTarget]));
+            Assert.That(graph.OutgoingEdges(source.Label), Is.EquivalentTo([sourceToMiddle, sourceToTarget]));
+            Assert.That(graph.Predecessors(target), Is.EquivalentTo([source, middle]));
+            Assert.That(graph.Predecessors(target.Label), Is.EquivalentTo([source.Label, middle.Label]));
+            Assert.That(graph.Successors(source), Is.EquivalentTo([middle, target]));
+            Assert.That(graph.Successors(source.Label), Is.EquivalentTo([middle.Label, target.Label]));
         });
     }
 
@@ -158,7 +158,7 @@ public sealed class ControlFlowGraphTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(graph.ExceptionGroups, Is.EquivalentTo(new[] { innerGroup, outerGroup }));
+            Assert.That(graph.ExceptionGroups, Is.EquivalentTo([innerGroup, outerGroup]));
             Assert.That(graph.GetExceptionGroup(innerProtected), Is.SameAs(innerGroup));
             Assert.That(graph.GetExceptionGroup(innerCatch), Is.SameAs(innerGroup));
             Assert.That(graph.GetExceptionGroup(outerProtected), Is.SameAs(outerGroup));

@@ -557,7 +557,7 @@ public sealed class CreateControlFlowGraphTests
 
         ILOp subtract = GetILOp(generator, OpCodes.Sub);
         Assert.That(subtract.Inputs.Cast<StackSlot>().Select(slot => slot.Depth), Is.EqualTo(new[] { 0, 1 }));
-        AssignmentOp[] constantAssignments = FirstInstructionBlock(generator).Ops.OfType<AssignmentOp>().Take(2).ToArray();
+        AssignmentOp[] constantAssignments = [.. FirstInstructionBlock(generator).Ops.OfType<AssignmentOp>().Take(2)];
         Assert.That(constantAssignments.Select(assignment => assignment.Output), Is.EqualTo(subtract.Inputs));
         Assert.That(constantAssignments.Select(assignment => ((ILOp)assignment.Input).IL.OpCode),
             Is.EqualTo(new[] { OpCodes.Ldc_I4_4, OpCodes.Ldc_I4_1 }));
@@ -915,7 +915,7 @@ public sealed class CreateControlFlowGraphTests
 
         BasicBlock mergeBlock = generator.ControlFlowGraph.GetBlock(generator.BlockLabels[mergeLabel]);
         StackSlot incoming = generator.BlockStacks[mergeBlock.Label].IncomingStack.Single();
-        Edge[] incomingEdges = generator.ControlFlowGraph.IncomingEdges(mergeBlock).ToArray();
+        Edge[] incomingEdges = [.. generator.ControlFlowGraph.IncomingEdges(mergeBlock)];
         Assert.That(incomingEdges, Has.Length.EqualTo(2));
         Assert.That(incomingEdges, Has.All.Matches<Edge>(edge => edge.EdgeAssignments.Count == 1));
         Assert.That(incomingEdges.Select(edge => edge.EdgeAssignments[0].Output),
